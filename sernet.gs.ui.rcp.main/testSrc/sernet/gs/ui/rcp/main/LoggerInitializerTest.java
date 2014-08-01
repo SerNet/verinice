@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.UUID;
@@ -63,7 +64,7 @@ public class LoggerInitializerTest extends LoggerInitializer {
         System.setProperty(LOGGING_PATH_KEY, logFileWithUuid);
         Assert.assertEquals(directory, new LoggerInitializer().getLogDirectory());
     }
-    
+
     @Test
     public void getLogInvalidDirectoryTest() {
         String directory = "";
@@ -133,12 +134,38 @@ public class LoggerInitializerTest extends LoggerInitializer {
 
         Assert.assertEquals(System.getProperty("java.io.tmpdir") + "/", getLogDirectory());
     }
-    
-   @Test
+
+    @Test
     public void parseLog4jFile() throws ParserConfigurationException, SAXException, IOException {
 
         Document customLog4jConfig = loadLog4jFile(CUSTOM_LOG4J_XML);
         Assert.assertTrue("could not parse custom_log4j.xml", customLog4jConfig != null);
+    }
+
+    @Test
+    public void removeInvalidPrefixes() {
+        
+        System.setProperty(LOGGING_PATH_KEY, "file:/tmp/" + DEFAULT_VERINICE_LOG);
+        System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(CUSTOM_LOG4J_XML).getPath());
+
+        
+        LoggerInitializer.tryReadingCustomLog4jFile();
+        LoggerInitializer.tryConfiguringLoggingPath();
+        
+        Assert.assertEquals("/tmp/" + DEFAULT_VERINICE_LOG, getPathFromRootLogger());
+        
+        clearEnvironment();
+        
+        System.setProperty(LOGGING_PATH_KEY, "file:\\C:\\tmp\\" + DEFAULT_VERINICE_LOG);
+        System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(CUSTOM_LOG4J_XML).getPath());
+
+        
+        LoggerInitializer.tryReadingCustomLog4jFile();
+        LoggerInitializer.tryConfiguringLoggingPath();
+        
+        Assert.assertEquals("C:/tmp/" + DEFAULT_VERINICE_LOG, getPathFromRootLogger());
+        
+        
     }
 
     @After
@@ -220,4 +247,5 @@ public class LoggerInitializerTest extends LoggerInitializer {
 
         return null;
     }
+
 }

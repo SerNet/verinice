@@ -20,6 +20,8 @@
 package sernet.gs.ui.rcp.main;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.regex.Pattern;
 
@@ -52,6 +54,8 @@ import sernet.verinice.interfaces.ILogPathService;
  */
 public class LoggerInitializer implements ILogPathService {
 
+    private static Logger log = Logger.getLogger(LoggerInitializer.class);
+
     protected static final String LOG4J_CONFIGURATION_JVM_ENV_KEY = "log4j.configuration";
     protected static final String LOGGING_PATH_KEY = "logging.file";
     protected static final String LOG_FOLDER = "log/";
@@ -78,7 +82,7 @@ public class LoggerInitializer implements ILogPathService {
      */
     static void tryConfiguringLoggingPath() {
         String p = getLogFilePath();
-        p = replaceInvalidSuffix(p);
+        p = replaceInvalidPrefix(p);
         configureAllFileAppender(p);
     }
 
@@ -130,9 +134,9 @@ public class LoggerInitializer implements ILogPathService {
     }
 
     private static String getLogFilePath() {
-        
+
         String filePath = null;
-        
+
         if (isConfiguredInVeriniceIniFile()) {
             filePath = readFromVeriniceIniFile();
         } else if (existsFilePathInRootLogger()) {
@@ -140,13 +144,13 @@ public class LoggerInitializer implements ILogPathService {
         } else {
             filePath = getStandardDirectory() + DEFAULT_VERINICE_LOG;
         }
-        
-        if (filePath != null){
-            return replaceSeparatorWithSystemSeparator(filePath);
+
+        if (filePath != null) {
+            return replaceSeparatorWithSystemSeparator(replaceInvalidPrefix(filePath));
         }
-        
+
         return null;
-         
+
     }
 
     private static String getBaseDirectory(String filePath) {
@@ -160,8 +164,8 @@ public class LoggerInitializer implements ILogPathService {
 
         return directory.toString();
     }
-    
-    private static String replaceSeparatorWithSystemSeparator(String s){
+
+    private static String replaceSeparatorWithSystemSeparator(String s) {
         String r = s.replace('\\', File.separatorChar);
         return r.replace('/', File.separatorChar);
     }
@@ -212,9 +216,20 @@ public class LoggerInitializer implements ILogPathService {
         return System.getProperty(LOGGING_PATH_KEY);
     }
 
-    private static String replaceInvalidSuffix(String path) {
-        if (path.startsWith("file:/")) {
-            path = path.replaceFirst("file:", "");
+    protected static String replaceInvalidPrefix(String path) {
+        try {
+            
+            URL url = null;
+            url = new URL(path);
+
+            if (url.getFile().startsWith("\\"))
+                return url.getFile().substring(1);
+            
+            return url.getFile();
+
+        } catch (MalformedURLException e) {
+            if (log.isDebugEnabled())
+                log.debug("invalid path: " + path, e);
         }
 
         return path;
@@ -227,7 +242,7 @@ public class LoggerInitializer implements ILogPathService {
      */
     @Override
     public String getLogDirectory() {
-        return replaceInvalidSuffix(getBaseDirectory(getLogFilePath()));
+        return replaceInvalidPrefix(getBaseDirectory(getLogFilePath()));
     }
 
 }
