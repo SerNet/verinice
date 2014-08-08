@@ -58,6 +58,7 @@
 					<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
 				  	<classpath refid="classpath.test" />
 				  	<formatter type="xml"/>
+				  	<formatter type="plain"/>
 					<batchtest fork="true" todir="${reports}">
 						<fileset dir="${src.tests}">
 							<include name="**/IndividualWorkflowTest.java"/>
