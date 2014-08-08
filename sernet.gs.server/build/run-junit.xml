@@ -52,6 +52,21 @@
 		</jacoco:coverage>
 	</target>
 	
+	<target name="coverageWorkflow" description="Creates coverage reports">
+			<jacoco:coverage destfile="${coverage-reports}/jacoco.exec">
+			    <junit fork="true" forkmode="once" printsummary="yes" haltonfailure="no">
+					<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
+				  	<classpath refid="classpath.test" />
+				  	<formatter type="xml"/>
+					<batchtest fork="true" todir="${reports}">
+						<fileset dir="${src.tests}">
+							<include name="**/IndividualWorkflowTest.java"/>
+						</fileset>
+					</batchtest>
+			    </junit>
+			</jacoco:coverage>
+		</target>
+	
 	<target name="test" description="runs JUnit tests">
 		<mkdir dir="${reports}"/>
 		<junit printsummary="yes" haltonfailure="no">
