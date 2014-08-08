@@ -31,9 +31,9 @@ import sernet.verinice.interfaces.bpm.ITaskParameter;
  */
 public class TaskParameter implements ITaskParameter, Serializable {
  
-    Boolean read;
+    Boolean read = Boolean.TRUE;
     
-    Boolean unread;
+    Boolean unread = Boolean.TRUE;
     
     Date since;
     
@@ -62,7 +62,7 @@ public class TaskParameter implements ITaskParameter, Serializable {
     }
 
     @Override
-    public Boolean getRead() {
+    public Boolean getRead() {    
         return read;
     }
 
