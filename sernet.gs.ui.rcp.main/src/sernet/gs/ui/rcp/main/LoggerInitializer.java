@@ -61,13 +61,19 @@ public class LoggerInitializer implements ILogPathService {
     protected static final String LOG_FOLDER = "log/";
     protected static final String DEFAULT_VERINICE_LOG = "verinice-client.log";
     protected static final String WORKSPACE_PROPERTY_KEY = "osgi.instance.area";
+    
+    
+    public static void initLogging(){
+        tryReadingCustomLog4jFile();
+        tryConfiguringLoggingPath();              
+    }
 
     /**
      * Checks if the -Dlog4j.configuration system property is set and if so it
      * reconfigures the verinice client logger.
      * 
      */
-    static void tryReadingCustomLog4jFile() {
+    private static void tryReadingCustomLog4jFile() {
 
         if (existsCustomLog4jConfigurationFile()) {
             configureWithCustomLog4jFile();
@@ -80,7 +86,7 @@ public class LoggerInitializer implements ILogPathService {
      * this path is applied to all {@link FileAppender} and overrides always the
      * origin file path defined in a log4j file.
      */
-    static void tryConfiguringLoggingPath() {
+    private static void tryConfiguringLoggingPath() {
         String p = getLogFilePath();
         p = replaceInvalidPrefix(p);
         configureAllFileAppender(p);
@@ -228,7 +234,7 @@ public class LoggerInitializer implements ILogPathService {
             return url.getFile();
 
         } catch (MalformedURLException e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) 
                 log.debug("invalid path: " + path, e);
         }
 

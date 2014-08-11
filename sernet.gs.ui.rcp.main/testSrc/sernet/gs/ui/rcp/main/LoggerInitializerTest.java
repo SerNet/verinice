@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.UUID;
@@ -32,7 +31,6 @@ import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -79,8 +77,7 @@ public class LoggerInitializerTest extends LoggerInitializer {
         System.setProperty("osgi.instance.area", System.getProperty("java.io.tmpdir"));
         System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(WITHOUT_FILE_PATH_LOG4J_XML).getPath());
 
-        LoggerInitializer.tryReadingCustomLog4jFile();
-        LoggerInitializer.tryConfiguringLoggingPath();
+        initLogging();
 
         Assert.assertEquals(System.getProperty("osgi.instance.area") + "/" + LOG_FOLDER, new LoggerInitializer().getLogDirectory());
     }
@@ -91,8 +88,7 @@ public class LoggerInitializerTest extends LoggerInitializer {
         System.setProperty("osgi.instance.area", System.getProperty("java.io.tmpdir"));
         System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(WITHOUT_FILE_PATH_LOG4J_XML).getPath());
 
-        LoggerInitializer.tryReadingCustomLog4jFile();
-        LoggerInitializer.tryConfiguringLoggingPath();
+        initLogging();
 
         Assert.assertEquals(System.getProperty("osgi.instance.area") + "/" + LOG_FOLDER + DEFAULT_VERINICE_LOG, getPathFromRootLogger());
     }
@@ -103,8 +99,7 @@ public class LoggerInitializerTest extends LoggerInitializer {
         System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(CUSTOM_LOG4J_XML).getPath());
         String path = extractLoggingPath(CUSTOM_LOG4J_XML);
 
-        LoggerInitializer.tryReadingCustomLog4jFile();
-        LoggerInitializer.tryConfiguringLoggingPath();
+        initLogging();
 
         Assert.assertEquals(path.replaceFirst("\\$\\{java.io.tmpdir\\}", System.getProperty("java.io.tmpdir")), getPathFromRootLogger());
     }
@@ -116,8 +111,7 @@ public class LoggerInitializerTest extends LoggerInitializer {
         System.setProperty(LOGGING_PATH_KEY, uuidLogFile);
         System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(CUSTOM_LOG4J_XML).getPath());
 
-        LoggerInitializer.tryReadingCustomLog4jFile();
-        LoggerInitializer.tryConfiguringLoggingPath();
+        initLogging();
 
         Assert.assertEquals(uuidLogFile, getPathFromRootLogger());
     }
@@ -129,8 +123,7 @@ public class LoggerInitializerTest extends LoggerInitializer {
         System.setProperty(LOGGING_PATH_KEY, uuidLogFile);
         System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(CUSTOM_LOG4J_XML).getPath());
 
-        LoggerInitializer.tryReadingCustomLog4jFile();
-        LoggerInitializer.tryConfiguringLoggingPath();
+        initLogging();
 
         Assert.assertEquals(System.getProperty("java.io.tmpdir") + "/", getLogDirectory());
     }
@@ -144,28 +137,23 @@ public class LoggerInitializerTest extends LoggerInitializer {
 
     @Test
     public void removeInvalidPrefixes() {
-        
+
         System.setProperty(LOGGING_PATH_KEY, "file:/tmp/" + DEFAULT_VERINICE_LOG);
         System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(CUSTOM_LOG4J_XML).getPath());
 
-        
-        LoggerInitializer.tryReadingCustomLog4jFile();
-        LoggerInitializer.tryConfiguringLoggingPath();
-        
+        initLogging();
+
         Assert.assertEquals("/tmp/" + DEFAULT_VERINICE_LOG, getPathFromRootLogger());
-        
+
         clearEnvironment();
-        
+
         System.setProperty(LOGGING_PATH_KEY, "file:\\C:\\tmp\\" + DEFAULT_VERINICE_LOG);
         System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(CUSTOM_LOG4J_XML).getPath());
 
-        
-        LoggerInitializer.tryReadingCustomLog4jFile();
-        LoggerInitializer.tryConfiguringLoggingPath();
-        
+        initLogging();
+
         Assert.assertEquals("C:/tmp/" + DEFAULT_VERINICE_LOG, getPathFromRootLogger());
-        
-        
+
     }
 
     @After

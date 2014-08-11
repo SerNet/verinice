@@ -44,9 +44,7 @@ public class Application implements IApplication {
      */
     public Object start(IApplicationContext context) throws Exception {
 
-        LoggerInitializer.tryReadingCustomLog4jFile();
-        LoggerInitializer.tryConfiguringLoggingPath();
-        
+        LoggerInitializer.initLogging();        
         ConfigurationLogger.logStart();
 
         Activator.getDefault().startApplication();
