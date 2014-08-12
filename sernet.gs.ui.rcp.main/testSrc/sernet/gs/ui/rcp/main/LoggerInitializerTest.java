@@ -60,6 +60,9 @@ public class LoggerInitializerTest extends LoggerInitializer {
         String directory = System.getProperty("java.io.tmpdir") + "/";
         String logFileWithUuid = directory + UUID.randomUUID().toString();
         System.setProperty(LOGGING_PATH_KEY, logFileWithUuid);
+
+        initLogging();
+
         Assert.assertEquals(directory, new LoggerInitializer().getLogDirectory());
     }
 
@@ -68,6 +71,9 @@ public class LoggerInitializerTest extends LoggerInitializer {
         String directory = "";
         String logFileWithUuid = directory + UUID.randomUUID().toString();
         System.setProperty(LOGGING_PATH_KEY, logFileWithUuid);
+
+        initLogging();
+
         Assert.assertEquals(directory, new LoggerInitializer().getLogDirectory());
     }
 
@@ -145,7 +151,10 @@ public class LoggerInitializerTest extends LoggerInitializer {
 
         Assert.assertEquals("/tmp/" + DEFAULT_VERINICE_LOG, getPathFromRootLogger());
 
-        clearEnvironment();
+    }
+
+    @Test
+    public void removeInvalidWindowsPrefix() {
 
         System.setProperty(LOGGING_PATH_KEY, "file:\\C:\\tmp\\" + DEFAULT_VERINICE_LOG);
         System.setProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(CUSTOM_LOG4J_XML).getPath());
@@ -153,7 +162,6 @@ public class LoggerInitializerTest extends LoggerInitializer {
         initLogging();
 
         Assert.assertEquals("C:/tmp/" + DEFAULT_VERINICE_LOG, getPathFromRootLogger());
-
     }
 
     @After

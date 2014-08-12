@@ -61,11 +61,13 @@ public class LoggerInitializer implements ILogPathService {
     protected static final String LOG_FOLDER = "log/";
     protected static final String DEFAULT_VERINICE_LOG = "verinice-client.log";
     protected static final String WORKSPACE_PROPERTY_KEY = "osgi.instance.area";
-    
-    
-    public static void initLogging(){
+
+    protected static String currentLogDirectory = null;
+    protected static String currentLogFilePath = null;
+
+    public static void initLogging() {
         tryReadingCustomLog4jFile();
-        tryConfiguringLoggingPath();              
+        tryConfiguringLoggingPath();
     }
 
     /**
@@ -87,9 +89,11 @@ public class LoggerInitializer implements ILogPathService {
      * origin file path defined in a log4j file.
      */
     private static void tryConfiguringLoggingPath() {
-        String p = getLogFilePath();
-        p = replaceInvalidPrefix(p);
-        configureAllFileAppender(p);
+        getLogFilePath();
+        replaceInvalidPrefix();
+        replaceLogFilePathSeparatorWithSystemSeparator();
+        getBaseDirectory();
+        configureAllFileAppender();
     }
 
     private static boolean existsCustomLog4jConfigurationFile() {
@@ -111,7 +115,7 @@ public class LoggerInitializer implements ILogPathService {
         }
     }
 
-    private static void configureAllFileAppender(String p) {
+    private static void configureAllFileAppender() {
 
         Logger log = Logger.getRootLogger();
         Enumeration<Appender> appenders = log.getAllAppenders();
@@ -122,7 +126,7 @@ public class LoggerInitializer implements ILogPathService {
 
                 FileAppender fileAppender = (FileAppender) appender;
                 if (!isFilePathConfigured(fileAppender) || isConfiguredInVeriniceIniFile()) {
-                    fileAppender.setFile(p);
+                    fileAppender.setFile(currentLogFilePath);
 
                     // without this call, the changes does have no effect
                     fileAppender.activateOptions();
@@ -141,39 +145,35 @@ public class LoggerInitializer implements ILogPathService {
 
     private static String getLogFilePath() {
 
-        String filePath = null;
-
         if (isConfiguredInVeriniceIniFile()) {
-            filePath = readFromVeriniceIniFile();
+            currentLogFilePath = readFromVeriniceIniFile();
         } else if (existsFilePathInRootLogger()) {
-            filePath = getPathFromRootLogger();
+            currentLogFilePath = getPathFromRootLogger();
         } else {
-            filePath = getStandardDirectory() + DEFAULT_VERINICE_LOG;
+            currentLogFilePath = getStandardDirectory() + DEFAULT_VERINICE_LOG;
         }
 
-        if (filePath != null) {
-            return replaceSeparatorWithSystemSeparator(replaceInvalidPrefix(filePath));
-        }
-
-        return null;
-
+        return currentLogFilePath;
     }
 
-    private static String getBaseDirectory(String filePath) {
+    private static String getBaseDirectory() {
 
-        String[] sSplitted = filePath.split(File.separator);
+        String[] sSplitted = currentLogFilePath.split("/|\\\\");
         StringBuilder directory = new StringBuilder();
 
         for (int i = 0; i < sSplitted.length - 1; i++) {
             directory.append(sSplitted[i]).append(File.separatorChar);
         }
 
-        return directory.toString();
+        currentLogDirectory = directory.toString();
+
+        return currentLogDirectory;
     }
 
-    private static String replaceSeparatorWithSystemSeparator(String s) {
-        String r = s.replace('\\', File.separatorChar);
-        return r.replace('/', File.separatorChar);
+    private static String replaceLogFilePathSeparatorWithSystemSeparator() {
+        currentLogFilePath = currentLogFilePath.replace('\\', File.separatorChar);
+        currentLogFilePath = currentLogFilePath.replace('/', File.separatorChar);
+        return currentLogFilePath;
     }
 
     private static String getStandardDirectory() {
@@ -190,6 +190,7 @@ public class LoggerInitializer implements ILogPathService {
 
                 FileAppender fileAppender = (FileAppender) appender;
                 return isFilePathConfigured(fileAppender);
+
             }
         }
 
@@ -222,23 +223,26 @@ public class LoggerInitializer implements ILogPathService {
         return System.getProperty(LOGGING_PATH_KEY);
     }
 
-    protected static String replaceInvalidPrefix(String path) {
+    protected static String replaceInvalidPrefix() {
         try {
-            
-            URL url = null;
-            url = new URL(path);
 
-            if (url.getFile().startsWith("\\"))
-                return url.getFile().substring(1);
-            
-            return url.getFile();
+            URL url = null;
+            url = new URL(currentLogFilePath);
+
+            if (url.getFile().startsWith("\\")) {
+                currentLogFilePath = url.getFile().substring(1);
+                return currentLogFilePath;
+            } else {
+                currentLogFilePath = url.getFile();
+                return currentLogFilePath;
+            }
 
         } catch (MalformedURLException e) {
-            if (log.isDebugEnabled()) 
-                log.debug("invalid path: " + path, e);
+            if (log.isDebugEnabled())
+                log.debug("invalid path: " + currentLogFilePath, e);
         }
 
-        return path;
+        return currentLogFilePath;
     }
 
     /*
@@ -248,7 +252,8 @@ public class LoggerInitializer implements ILogPathService {
      */
     @Override
     public String getLogDirectory() {
-        return replaceInvalidPrefix(getBaseDirectory(getLogFilePath()));
+        return currentLogDirectory;
+
     }
 
 }
