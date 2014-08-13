@@ -17,12 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
-import java.io.IOException;
-
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
@@ -44,7 +38,6 @@ public class Application implements IApplication {
      */
     public Object start(IApplicationContext context) throws Exception {
 
-        LoggerInitializer.initLogging();        
         ConfigurationLogger.logStart();
 
         Activator.getDefault().startApplication();

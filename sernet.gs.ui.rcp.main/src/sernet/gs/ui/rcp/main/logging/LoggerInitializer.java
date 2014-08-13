@@ -17,7 +17,7 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main;
+package sernet.gs.ui.rcp.main.logging;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -33,6 +33,10 @@ import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import sernet.verinice.interfaces.ILogPathService;
+
+import org.apache.commons.lang.SystemUtils;
+
+import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.*;
 
 /**
  * Provides additional logging configuration.
@@ -54,20 +58,26 @@ import sernet.verinice.interfaces.ILogPathService;
  */
 public class LoggerInitializer implements ILogPathService {
 
-    private static Logger log = Logger.getLogger(LoggerInitializer.class);
+    private static LogDirectoryProvider logDirectoryProvider;
 
-    protected static final String LOG4J_CONFIGURATION_JVM_ENV_KEY = "log4j.configuration";
-    protected static final String LOGGING_PATH_KEY = "logging.file";
-    protected static final String LOG_FOLDER = "log/";
-    protected static final String DEFAULT_VERINICE_LOG = "verinice-client.log";
-    protected static final String WORKSPACE_PROPERTY_KEY = "osgi.instance.area";
-
-    protected static String currentLogDirectory = null;
     protected static String currentLogFilePath = null;
 
-    public static void initLogging() {
+    @SuppressWarnings("static-access")
+    protected LoggerInitializer() {
+
         tryReadingCustomLog4jFile();
         tryConfiguringLoggingPath();
+
+        this.logDirectoryProvider = getLogDirectoryProvider();
+
+    }
+
+    private LogDirectoryProvider getLogDirectoryProvider() {
+        if (SystemUtils.IS_OS_WINDOWS) {
+            return new WindowsLogDirectory(currentLogFilePath);
+        } else {
+            return new UnixLogDirectory(currentLogFilePath);
+        }
     }
 
     /**
@@ -90,20 +100,17 @@ public class LoggerInitializer implements ILogPathService {
      */
     private static void tryConfiguringLoggingPath() {
         getLogFilePath();
-        replaceInvalidPrefix();
-        replaceLogFilePathSeparatorWithSystemSeparator();
-        getBaseDirectory();
         configureAllFileAppender();
     }
 
     private static boolean existsCustomLog4jConfigurationFile() {
-        return System.getProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY) != null;
+        return System.getProperty(LogDirectoryProvider.LOG4J_CONFIGURATION_JVM_ENV_KEY) != null;
     }
 
     private static void configureWithCustomLog4jFile() {
 
         Logger.getRootLogger().getLoggerRepository().resetConfiguration();
-        String config = System.getProperty(LOG4J_CONFIGURATION_JVM_ENV_KEY);
+        String config = System.getProperty(LogDirectoryProvider.LOG4J_CONFIGURATION_JVM_ENV_KEY);
         String extension = FilenameUtils.getExtension(config);
 
         if (("xml").equals(extension)) {
@@ -145,39 +152,30 @@ public class LoggerInitializer implements ILogPathService {
 
     private static String getLogFilePath() {
 
+        String filePath = null;
+        
         if (isConfiguredInVeriniceIniFile()) {
-            currentLogFilePath = readFromVeriniceIniFile();
+            filePath = readFromVeriniceIniFile();
         } else if (existsFilePathInRootLogger()) {
-            currentLogFilePath = getPathFromRootLogger();
+            filePath = getPathFromRootLogger();
         } else {
-            currentLogFilePath = getStandardDirectory() + DEFAULT_VERINICE_LOG;
+            filePath = getStandardDirectory() + DEFAULT_VERINICE_LOG;
         }
 
+        currentLogFilePath = removeInvalidPrefix(filePath);
         return currentLogFilePath;
     }
-
-    private static String getBaseDirectory() {
-
-        String[] sSplitted = currentLogFilePath.split("/|\\\\");
-        StringBuilder directory = new StringBuilder();
-
-        for (int i = 0; i < sSplitted.length - 1; i++) {
-            directory.append(sSplitted[i]).append(File.separatorChar);
+    
+    private static String removeInvalidPrefix(String directory){
+        if (directory.startsWith("file:") ){
+            return directory.substring(5);
         }
-
-        currentLogDirectory = directory.toString();
-
-        return currentLogDirectory;
-    }
-
-    private static String replaceLogFilePathSeparatorWithSystemSeparator() {
-        currentLogFilePath = currentLogFilePath.replace('\\', File.separatorChar);
-        currentLogFilePath = currentLogFilePath.replace('/', File.separatorChar);
-        return currentLogFilePath;
+        
+        return directory;
     }
 
     private static String getStandardDirectory() {
-        return appendSlash(System.getProperty(WORKSPACE_PROPERTY_KEY)) + LOG_FOLDER;
+        return FilenameUtils.concat(System.getProperty(WORKSPACE_PROPERTY_KEY), LOG_FOLDER);
     }
 
     private static boolean existsFilePathInRootLogger() {
@@ -213,47 +211,22 @@ public class LoggerInitializer implements ILogPathService {
         return null;
     }
 
-    private static String appendSlash(String string) {
-        if (string.charAt(string.length() - 1) != '/')
-            return string + "/";
-        return string;
-    }
-
     private static String readFromVeriniceIniFile() {
         return System.getProperty(LOGGING_PATH_KEY);
     }
 
-    protected static String replaceInvalidPrefix() {
-        try {
-
-            URL url = null;
-            url = new URL(currentLogFilePath);
-
-            if (url.getFile().startsWith("\\")) {
-                currentLogFilePath = url.getFile().substring(1);
-                return currentLogFilePath;
-            } else {
-                currentLogFilePath = url.getFile();
-                return currentLogFilePath;
-            }
-
-        } catch (MalformedURLException e) {
-            if (log.isDebugEnabled())
-                log.debug("invalid path: " + currentLogFilePath, e);
-        }
-
-        return currentLogFilePath;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.LogPathService#getLogPath()
-     */
     @Override
     public String getLogDirectory() {
-        return currentLogDirectory;
+        return logDirectoryProvider.getLogDirectory();
 
+    }
+
+    public void setLogDirectoryProvider(LogDirectoryProvider logDirectoryProvider) {
+        this.logDirectoryProvider = logDirectoryProvider;
+    }
+    
+    public static LoggerInitializer setupLogFilePath(){
+        return new LoggerInitializer();
     }
 
 }

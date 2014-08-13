@@ -41,6 +41,7 @@ import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
@@ -57,6 +58,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
+import sernet.gs.ui.rcp.main.logging.LoggerInitializer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.security.VeriniceSecurityProvider;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -152,7 +154,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // Makes a representation of this bundle as a service available.
         context.registerService(IMain.class.getName(), this, null);
-        context.registerService(ILogPathService.class.getName(), new LoggerInitializer(), null);
+        context.registerService(ILogPathService.class.getName(), LoggerInitializer.setupLogFilePath(), null);
     }
 
     /**
