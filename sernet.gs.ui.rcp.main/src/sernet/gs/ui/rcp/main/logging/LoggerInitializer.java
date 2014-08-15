@@ -19,13 +19,15 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.logging;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.DEFAULT_VERINICE_LOG;
+import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.LOGGING_PATH_KEY;
+import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.LOG_FOLDER;
+import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.WORKSPACE_PROPERTY_KEY;
+
 import java.util.Enumeration;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Appender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Logger;
@@ -33,10 +35,6 @@ import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 
 import sernet.verinice.interfaces.ILogPathService;
-
-import org.apache.commons.lang.SystemUtils;
-
-import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.*;
 
 /**
  * Provides additional logging configuration.
@@ -62,13 +60,12 @@ public class LoggerInitializer implements ILogPathService {
 
     protected static String currentLogFilePath = null;
 
-    @SuppressWarnings("static-access")
     protected LoggerInitializer() {
 
         tryReadingCustomLog4jFile();
         tryConfiguringLoggingPath();
 
-        this.logDirectoryProvider = getLogDirectoryProvider();
+        logDirectoryProvider = getLogDirectoryProvider();
 
     }
 
@@ -221,8 +218,8 @@ public class LoggerInitializer implements ILogPathService {
 
     }
 
-    public void setLogDirectoryProvider(LogDirectoryProvider logDirectoryProvider) {
-        this.logDirectoryProvider = logDirectoryProvider;
+    public void setLogDirectoryProvider(LogDirectoryProvider ldp) {
+        logDirectoryProvider = ldp;
     }
     
     public static LoggerInitializer setupLogFilePath(){
