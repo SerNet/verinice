@@ -26,6 +26,7 @@ import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.LOG_FOLDER;
 import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.WORKSPACE_PROPERTY_KEY;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -164,7 +165,7 @@ public class LoggerInitializer implements ILogPathService {
             File file = new File(path);
 
             if (file.isDirectory()) {
-                file = new File(concat(path, DEFAULT_VERINICE_LOG));
+                throw new FileNotFoundException("path is a directory");
             }
 
             // Uses the security manager from the java.lang package. A more

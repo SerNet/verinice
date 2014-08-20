@@ -218,6 +218,16 @@ public class LoggerInitializerTest {
         Assert.assertEquals(getFullPath(uuid), loggerInit.getLogDirectory());
     }
 
+    @Test
+    public void writeToDirectory() {
+
+        System.setProperty(LOGGING_PATH_KEY, System.getProperty("java.io.tmpdir"));
+        System.setProperty(LogDirectoryProvider.LOG4J_CONFIGURATION_JVM_ENV_KEY, getClass().getResource(WITHOUT_FILE_PATH_LOG4J_XML).getPath());
+
+        LoggerInitializer loggerInit = LoggerInitializer.setupLogFilePath();
+        Assert.assertEquals(FilenameUtils.concat(System.getProperty("user.home"), "verinice" + File.separator), loggerInit.getLogDirectory());
+    }
+
     @After
     public void clearEnvironment() {
         System.clearProperty(LOGGING_PATH_KEY);
