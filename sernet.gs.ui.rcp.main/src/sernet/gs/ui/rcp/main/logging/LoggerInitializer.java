@@ -19,11 +19,16 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.logging;
 
+import static org.apache.commons.io.FilenameUtils.concat;
 import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.DEFAULT_VERINICE_LOG;
 import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.LOGGING_PATH_KEY;
 import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.LOG_FOLDER;
 import static sernet.gs.ui.rcp.main.logging.LogDirectoryProvider.WORKSPACE_PROPERTY_KEY;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Enumeration;
 
 import org.apache.commons.io.FilenameUtils;
@@ -56,16 +61,16 @@ import sernet.verinice.interfaces.ILogPathService;
  */
 public class LoggerInitializer implements ILogPathService {
 
-    private static LogDirectoryProvider logDirectoryProvider;
+    private LogDirectoryProvider logDirectoryProvider;
 
-    protected static String currentLogFilePath = null;
+    protected String currentLogFilePath = null;
 
     protected LoggerInitializer() {
 
         tryReadingCustomLog4jFile();
         tryConfiguringLoggingPath();
 
-        logDirectoryProvider = getLogDirectoryProvider();
+        this.logDirectoryProvider = getLogDirectoryProvider();
 
     }
 
@@ -82,7 +87,7 @@ public class LoggerInitializer implements ILogPathService {
      * reconfigures the verinice client logger.
      * 
      */
-    private static void tryReadingCustomLog4jFile() {
+    private void tryReadingCustomLog4jFile() {
 
         if (existsCustomLog4jConfigurationFile()) {
             configureWithCustomLog4jFile();
@@ -94,17 +99,20 @@ public class LoggerInitializer implements ILogPathService {
      * If a log path is set by the system property "logging.file" in verinic.ini
      * this path is applied to all {@link FileAppender} and overrides always the
      * origin file path defined in a log4j file.
+     * 
+     * @throws IOException
      */
-    private static void tryConfiguringLoggingPath() {
+    private void tryConfiguringLoggingPath() {
         getLogFilePath();
+        validatePath();
         configureAllFileAppender();
     }
 
-    private static boolean existsCustomLog4jConfigurationFile() {
+    private boolean existsCustomLog4jConfigurationFile() {
         return System.getProperty(LogDirectoryProvider.LOG4J_CONFIGURATION_JVM_ENV_KEY) != null;
     }
 
-    private static void configureWithCustomLog4jFile() {
+    private void configureWithCustomLog4jFile() {
 
         Logger.getRootLogger().getLoggerRepository().resetConfiguration();
         String config = System.getProperty(LogDirectoryProvider.LOG4J_CONFIGURATION_JVM_ENV_KEY);
@@ -119,7 +127,73 @@ public class LoggerInitializer implements ILogPathService {
         }
     }
 
-    private static void configureAllFileAppender() {
+    private void validatePath() {
+
+        if (validatePath(currentLogFilePath)) {
+            return;
+        }
+
+        currentLogFilePath = concat(concat(System.getProperty("user.home"), "verinice"), DEFAULT_VERINICE_LOG);
+        if (validatePath(currentLogFilePath)) {
+            System.out.println(String.format("use fallback path %s", currentLogFilePath));
+            return;
+        }
+
+        currentLogFilePath = concat(concat(System.getProperty("java.io.tmpdir"), "verinice"), DEFAULT_VERINICE_LOG);
+        if (validatePath(currentLogFilePath)) {
+            System.out.println(String.format("use fallback path %s", currentLogFilePath));
+            return;
+        }
+
+        System.err.println("no logging path is configured for file appender");
+    }
+
+    private SecurityManager getSecurityManager() {
+        SecurityManager security = System.getSecurityManager();
+        new SecurityManager();
+        if (security == null) {
+            security = new SecurityManager();
+        }
+
+        return security;
+    }
+
+    private boolean validatePath(String path) {
+        OutputStream out = null;
+        try {
+            File file = new File(path);
+
+            if (file.isDirectory()) {
+                file = new File(concat(path, DEFAULT_VERINICE_LOG));
+            }
+
+            // Uses the security manager from the java.lang package. A more
+            // proper way is to use the security manager directly, but therefore
+            // the junit tests for this class have to be rewritten. As a side
+            // effect this method creates the log file.
+            createParentDirectories(file);
+            out = new FileOutputStream(file, true);
+            out.close();
+            return true;
+
+        } catch (Exception ex) {
+            System.err.println(String.format("logging path is invalid %s", ex.getLocalizedMessage()));
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    System.err.println(String.format("closing of log file stream failed %s", e.getLocalizedMessage()));
+                }
+            }
+            return false;
+        }
+    }
+
+    private void createParentDirectories(File file) throws IOException {
+        new File(FilenameUtils.getFullPath(file.getCanonicalPath())).mkdirs();
+    }
+
+    private void configureAllFileAppender() {
 
         Logger log = Logger.getRootLogger();
         Enumeration<Appender> appenders = log.getAllAppenders();
@@ -139,22 +213,20 @@ public class LoggerInitializer implements ILogPathService {
         }
     }
 
-    private static boolean isConfiguredInVeriniceIniFile() {
+    private boolean isConfiguredInVeriniceIniFile() {
         return System.getProperty(LOGGING_PATH_KEY) != null;
     }
 
-    private static boolean isFilePathConfigured(FileAppender fileAppender) {
+    private boolean isFilePathConfigured(FileAppender fileAppender) {
         return fileAppender.getFile() != null;
     }
 
-    private static String getLogFilePath() {
+    private String getLogFilePath() {
 
         String filePath = null;
-        
+
         if (isConfiguredInVeriniceIniFile()) {
             filePath = readFromVeriniceIniFile();
-        } else if (existsFilePathInRootLogger()) {
-            filePath = getPathFromRootLogger();
         } else {
             filePath = getStandardDirectory() + DEFAULT_VERINICE_LOG;
         }
@@ -162,53 +234,20 @@ public class LoggerInitializer implements ILogPathService {
         currentLogFilePath = removeInvalidPrefix(filePath);
         return currentLogFilePath;
     }
-    
-    private static String removeInvalidPrefix(String directory){
-        if (directory.startsWith("file:") ){
+
+    private String removeInvalidPrefix(String directory) {
+        if (directory.startsWith("file:")) {
             return directory.substring(5);
         }
-        
+
         return directory;
     }
 
-    private static String getStandardDirectory() {
+    private String getStandardDirectory() {
         return FilenameUtils.concat(System.getProperty(WORKSPACE_PROPERTY_KEY), LOG_FOLDER);
     }
 
-    private static boolean existsFilePathInRootLogger() {
-        Logger log = Logger.getRootLogger();
-        Enumeration<Appender> appenders = log.getAllAppenders();
-
-        while (appenders.hasMoreElements()) {
-            Appender appender = appenders.nextElement();
-            if (appender instanceof FileAppender) {
-
-                FileAppender fileAppender = (FileAppender) appender;
-                return isFilePathConfigured(fileAppender);
-
-            }
-        }
-
-        return false;
-    }
-
-    protected static String getPathFromRootLogger() {
-        Logger log = Logger.getRootLogger();
-        Enumeration<Appender> appenders = log.getAllAppenders();
-
-        while (appenders.hasMoreElements()) {
-            Appender appender = appenders.nextElement();
-            if (appender instanceof FileAppender) {
-
-                FileAppender fileAppender = (FileAppender) appender;
-                return fileAppender.getFile();
-            }
-        }
-
-        return null;
-    }
-
-    private static String readFromVeriniceIniFile() {
+    private String readFromVeriniceIniFile() {
         return System.getProperty(LOGGING_PATH_KEY);
     }
 
@@ -218,12 +257,11 @@ public class LoggerInitializer implements ILogPathService {
 
     }
 
-    public void setLogDirectoryProvider(LogDirectoryProvider ldp) {
-        logDirectoryProvider = ldp;
-    }
-    
-    public static LoggerInitializer setupLogFilePath(){
-        return new LoggerInitializer();
+    public void setLogDirectoryProvider(LogDirectoryProvider logDirectoryProvider) {
+        this.logDirectoryProvider = logDirectoryProvider;
     }
 
+    public static LoggerInitializer setupLogFilePath() {
+        return new LoggerInitializer();
+    }
 }
