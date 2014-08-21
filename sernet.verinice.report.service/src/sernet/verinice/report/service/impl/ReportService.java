@@ -39,6 +39,7 @@ public class ReportService implements IReportService {
 		        new UserReportType(), 
 		        new SamtReportType(), 
 		        new SamtComplianceReport(),
+		        new ISAActionReport(),
 		        new ComprehensiveSamtReportType(),
 		        
 		        new ISMRiskManagementResultsReport(), // ISO 27k1 Reports (english)

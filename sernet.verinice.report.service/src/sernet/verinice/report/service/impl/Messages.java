@@ -139,6 +139,9 @@ public class Messages extends NLS {
     public static String VVBSIGSofortMeldung_0;
     public static String VVBSIGSofortMeldung_1;
     public static String VVBSIGSofortMeldung_2;
+    public static String ISAAction_0;
+    public static String ISAAction_1;
+    public static String ISAAction_2;
     
     
     static {
