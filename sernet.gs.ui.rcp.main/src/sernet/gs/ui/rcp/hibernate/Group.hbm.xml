@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="sernet.verinice.model.common.group">
+	<class name="Group" table="accountgroup">
+
+		<id name="dbId" 
+			type="java.lang.Integer" 
+			column="dbId"
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+
+		<property name="name" type="string" column="name" not-null="true" unique="true" />
+
+		<set name="configurations" table="group_configuration" cascade="save-update">
+			<key column="GROUP_ID" />
+			<many-to-many column="CONFIGURATION_ID"
+				class="sernet.verinice.model.common.configuration.Configuration" />
+		</set>
+	</class>
+</hibernate-mapping>

@@ -55,6 +55,13 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
+	<bean id="groupDao" class="sernet.verinice.hibernate.TreeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.common.group.Group</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
 	<bean id="gefaehrdungDao" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.gs.model.Gefaehrdung</value>

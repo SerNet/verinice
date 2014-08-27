@@ -67,6 +67,7 @@
         <mapping resource="sernet/gs/ui/rcp/hibernate/Gefaehrdung.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Risikomassnahme.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/FinishedRiskAnalysisLists.hbm.xml"/>
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Group.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Configuration.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/Permission.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/BausteinVorschlag.hbm.xml"/>

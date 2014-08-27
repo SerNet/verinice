@@ -70,6 +70,7 @@
         <mapping resource="Configuration.hbm.xml"/>
         <mapping resource="BausteinVorschlag.hbm.xml"/>
         <mapping resource="CnAValidation.hbm.xml"/>
+        <mapping resource="Group.hbm.xml"/>
         
         
         <!-- Workaround for Hibernate bug HHH-2146

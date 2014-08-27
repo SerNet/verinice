@@ -32,6 +32,7 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.group.Group;
 
 /**
  * Configuration item. Actual configuration values are saved in Entity.
@@ -93,6 +94,8 @@ public class Configuration implements Serializable, ITypedElement {
 	private CnATreeElement person;
 	
 	private Integer dbId;
+	
+	private Set<Group> groups;
 	
 
 	public Configuration() {
@@ -428,4 +431,12 @@ public class Configuration implements Serializable, ITypedElement {
         sb.append("\n(Auditor) Terminwarnung: bei Ablauf in X Tagen: ").append(getAuditorNotificationExpirationDays());
         return sb.toString();
 	}
+
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
 }

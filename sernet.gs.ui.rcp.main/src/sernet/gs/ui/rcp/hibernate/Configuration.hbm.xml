@@ -24,6 +24,11 @@
 		
 		<many-to-one name="person"
 			column="person_id" lazy="false" fetch="join"/>
+			
+		<set name="groups" table="group_configuration" cascade="save-update">
+			<key column="CONFIGURATION_ID" />
+			<many-to-many column="GROUP_ID"  class="sernet.verinice.model.common.group.Group" />
+		</set>
 
 	</class>
 </hibernate-mapping>
