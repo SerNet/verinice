@@ -22,17 +22,14 @@ package sernet.verinice.service;
 import java.io.Serializable;
 import java.util.List;
 
-import org.hibernate.criterion.DetachedCriteria;
-
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.common.group.Group;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class GroupService implements IGroupService, Serializable {
+public class AccountService implements IAccountService, Serializable {
 
     private DAOFactory daoFactory;
  
@@ -65,24 +62,9 @@ public class GroupService implements IGroupService, Serializable {
 
 
     @Override
-    public void connectGroupWithConfiguration(Group group, Configuration configuration) {
-        group.addConfiguration(configuration);
-        getDao().saveOrUpdate(group);
-    }
-
-
-    @Override
     public void delete(Group group) {
         getDao().delete(group);
     }
-    
-    @Override
-    public List<Group> listHydratedGroups() {
-        DetachedCriteria detachedCriteria = DetachedCriteria.forClass(Group.class);
-                  
-            
-        
-        return null;
-    }
+   
 
 }

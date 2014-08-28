@@ -21,7 +21,6 @@ package sernet.verinice.service;
 
 import java.util.List;
 
-import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.common.group.Group;
 
 /**
@@ -30,10 +29,8 @@ import sernet.verinice.model.common.group.Group;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public interface IGroupService {
-    public void connectGroupWithConfiguration(Group group, Configuration configuration);
+public interface IAccountService {
     public List<Group> listGroups();
-    public List<Group> listHydratedGroups();
     public Group createGroup(String name);
     public void delete(Group group);
     
