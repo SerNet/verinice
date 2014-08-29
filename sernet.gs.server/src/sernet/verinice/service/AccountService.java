@@ -22,7 +22,10 @@ package sernet.verinice.service;
 import java.io.Serializable;
 import java.util.List;
 
+import sernet.verinice.interfaces.IAccountSearchParameter;
+import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.common.group.Group;
 
 /**
@@ -33,6 +36,14 @@ public class AccountService implements IAccountService, Serializable {
 
     private DAOFactory daoFactory;
  
+    private IBaseDao<Configuration, Serializable> configurationDao;
+    
+    @Override
+    public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
+        HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
+        return getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getParams());
+    }
+    
     @Override
     public List<Group> listGroups() {
         return getDao().findAll();
@@ -65,6 +76,16 @@ public class AccountService implements IAccountService, Serializable {
     public void delete(Group group) {
         getDao().delete(group);
     }
+
+    public IBaseDao<Configuration, Serializable> getConfigurationDao() {
+        return configurationDao;
+    }
+
+    public void setConfigurationDao(IBaseDao<Configuration, Serializable> configurationDao) {
+        this.configurationDao = configurationDao;
+    }
+
+    
    
 
 }
