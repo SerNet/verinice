@@ -54,6 +54,14 @@
             name="%view.name.0">
       </view>
       <view
+      	    allowMultiple="true"
+            category="sernet.gs.ui.rcp.main.views"
+            class="sernet.gs.ui.rcp.main.bsi.views.GroupView"
+            icon="icons/tag.png"
+            id="sernet.gs.ui.rcp.main.bsi.views.groupview"
+            name="%view.name.14">
+      </view>
+      <view
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView"
