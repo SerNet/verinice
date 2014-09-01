@@ -71,8 +71,8 @@ import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.common.group.Group;
 import sernet.verinice.model.ds.Datenverarbeitung;
 import sernet.verinice.model.ds.Personengruppen;
 import sernet.verinice.model.ds.StellungnahmeDSB;
@@ -183,9 +183,9 @@ public class DAOFactory implements IDAOFactory {
 	
 	
 	@Override
-	public void setGroupDao(IBaseDao<Gefaehrdung, Integer> dao){
-	    daosByClass.put(Group.class, dao);
-	    daosByTypeID.put(Group.TYPE_ID, dao);
+	public void setAccountGroupDao(IBaseDao<Gefaehrdung, Integer> dao){
+	    daosByClass.put(AccountGroup.class, dao);
+	    daosByTypeID.put(AccountGroup.TYPE_ID, dao);
 	}
 
 	@Override

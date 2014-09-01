@@ -21,8 +21,8 @@ package sernet.verinice.interfaces;
 
 import java.util.List;
 
+import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.common.group.Group;
 
 /**
  * 
@@ -34,8 +34,8 @@ public interface IAccountService {
     
     public List<Configuration> findAccounts(IAccountSearchParameter parameter);
     
-    public List<Group> listGroups();
-    public Group createGroup(String name);
-    public void delete(Group group);
+    public List<AccountGroup> listGroups();
+    public AccountGroup createAccountGroup(String name);
+    public void delete(AccountGroup group);
     
 }

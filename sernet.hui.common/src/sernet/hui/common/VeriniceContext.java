@@ -112,6 +112,8 @@ public final class VeriniceContext {
     
     public static final String COMMAND_CACHE_SERVICE = "commandCacheClient";
     
+    public static final String ACCOUNT_SERVICE = "accountService";
+    
     private static String serverUrl = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();

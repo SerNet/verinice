@@ -67,6 +67,7 @@ import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.bsi.views.DSModelView;
 import sernet.gs.ui.rcp.main.bsi.views.DocumentView;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
+import sernet.gs.ui.rcp.main.bsi.views.GroupView;
 import sernet.gs.ui.rcp.main.bsi.views.NoteView;
 import sernet.gs.ui.rcp.main.bsi.views.RelationView;
 import sernet.gs.ui.rcp.main.bsi.views.TodoView;
@@ -136,6 +137,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openRelationViewAction;
     
     private OpenViewAction openValidationViewAction;
+    
+    private OpenViewAction openGroupViewAction;
 
     private OpenMultipleViewAction openCatalogAction;
     
@@ -208,6 +211,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         closeAllAction = ActionFactory.CLOSE_ALL.create(window);
         closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
         deleteAction = ActionFactory.DELETE.create(window);
+        openGroupViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_36, GroupView.ID, ImageCache.ANWENDUNG, ActionRightIDs.BSIBROWSER);
         openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
         openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
         openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
@@ -257,7 +261,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 accessControlEditAction, profileEditAction, konsolidatorAction,
                 gsmbasicsecuritycheckAction,bausteinZuordnungAction,
                 gsmbausteinZuordnungAction, openDocumentViewAction,
-                introAction
+                introAction, openGroupViewAction
         };
         registerActions(actions);
 
@@ -381,6 +385,9 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
         
+        viewsMenu.add(new Separator());
+        viewsMenu.add(openGroupViewAction);
+        
         MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26, VeriniceActionConstants.MENU_PERSPECTIVES);
         addPerspectiveMenu(window, perspectivesMenu, Iso27kPerspective.ID);
         addPerspectiveMenu(window, perspectivesMenu, Perspective.ID);
@@ -440,6 +447,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(new Separator());
         // common items
         myToolbar.add(openBSIBrowserAction);
+        myToolbar.add(openGroupViewAction);
         myToolbar.add(openNoteAction);
         myToolbar.add(openFileAction);
         myToolbar.add(openRelationViewAction);

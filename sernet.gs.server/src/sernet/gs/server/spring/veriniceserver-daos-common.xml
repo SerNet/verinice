@@ -55,13 +55,6 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="groupDao" class="sernet.verinice.hibernate.TreeElementDao">
-		<constructor-arg>
-			<value>sernet.verinice.model.common.group.Group</value>
-		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>
-
 	<bean id="gefaehrdungDao" class="sernet.verinice.hibernate.TreeElementDao">
 		<constructor-arg>
 			<value>sernet.gs.model.Gefaehrdung</value>
@@ -604,6 +597,14 @@
         </constructor-arg>
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
+    
+    
+	<bean id="accountGroupDao" class="sernet.verinice.hibernate.HibernateDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.common.accountgroup.AccountGroup</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
     
     <bean id="finishedRiskAnalysisListsDao" class="sernet.verinice.hibernate.FinishedRiskAnalysisListsDao">
         <property name="sessionFactory" ref="sessionFactory" />

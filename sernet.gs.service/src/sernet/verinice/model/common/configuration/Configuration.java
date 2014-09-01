@@ -32,7 +32,7 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.group.Group;
+import sernet.verinice.model.common.accountgroup.AccountGroup;
 
 /**
  * Configuration item. Actual configuration values are saved in Entity.
@@ -95,9 +95,8 @@ public class Configuration implements Serializable, ITypedElement {
 	
 	private Integer dbId;
 	
-	private Set<Group> groups;
+	private Set<AccountGroup> accountGroups;
 	
-
 	public Configuration() {
 		setEntity(new Entity(TYPE_ID));
 	}
@@ -432,11 +431,11 @@ public class Configuration implements Serializable, ITypedElement {
         return sb.toString();
 	}
 
-    public Set<Group> getGroups() {
-        return groups;
+    public Set<AccountGroup> getAccountGroups() {
+        return accountGroups;
     }
 
-    public void setGroups(Set<Group> groups) {
-        this.groups = groups;
+    public void setAccountGroups(Set<AccountGroup> accountGroups) {
+        this.accountGroups = accountGroups;
     }
 }

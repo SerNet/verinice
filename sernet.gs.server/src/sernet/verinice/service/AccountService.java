@@ -25,8 +25,9 @@ import java.util.List;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDao;
+import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.common.group.Group;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -34,7 +35,7 @@ import sernet.verinice.model.common.group.Group;
  */
 public class AccountService implements IAccountService, Serializable {
 
-    private DAOFactory daoFactory;
+    private IDao<AccountGroup, Serializable> accountGroupDao;
  
     private IBaseDao<Configuration, Serializable> configurationDao;
     
@@ -45,36 +46,21 @@ public class AccountService implements IAccountService, Serializable {
     }
     
     @Override
-    public List<Group> listGroups() {
-        return getDao().findAll();
+    public List<AccountGroup> listGroups() {
+        return getAccountGroupDao().findAll();
     }
 
     @Override
-    public Group createGroup(String name) {
-        Group group = new Group();
+    public AccountGroup createAccountGroup(String name) {
+        AccountGroup group = new AccountGroup();
         group.setName(name);      
-        getDao().merge(group, false);
+        getAccountGroupDao().saveOrUpdate(group);
         return group;
     }
 
-
-    public DAOFactory getDaoFactory() {
-        return daoFactory;
-    }
-
-
-    public void setDaoFactory(DAOFactory daoFactory) {
-        this.daoFactory = daoFactory;
-    }
-    
-    private IBaseDao<Group, Serializable> getDao(){
-        return getDaoFactory().getDAO(Group.TYPE_ID);
-    }
-
-
     @Override
-    public void delete(Group group) {
-        getDao().delete(group);
+    public void delete(AccountGroup group) {
+        getAccountGroupDao().delete(group);
     }
 
     public IBaseDao<Configuration, Serializable> getConfigurationDao() {
@@ -85,7 +71,11 @@ public class AccountService implements IAccountService, Serializable {
         this.configurationDao = configurationDao;
     }
 
-    
-   
+    public IDao<AccountGroup, Serializable> getAccountGroupDao() {
+        return accountGroupDao;
+    }
 
+    public void setAccountGroupDao(IDao<AccountGroup, Serializable> groupDao) {
+        this.accountGroupDao = groupDao;
+    }
 }

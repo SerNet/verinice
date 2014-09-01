@@ -277,6 +277,25 @@ public final class Messages extends NLS {
 	public static String RelationTypeEditingSupport_1;
 	
 	public static String RelationTypeEditingSupport_2;
+	
+	public static String GroupView_0;
+	
+	public static String GroupView_1;
+	
+	public static String GroupView_2;
+	
+	public static String GroupView_3;
+	
+	public static String GroupView_4;
+	
+	public static String GroupView_5;
+	
+	public static String GroupView_6;
+	
+	public static String GroupView_7;
+	
+	public static String GroupView_8;
+
 
 	static {
 		// initialize resource bundle

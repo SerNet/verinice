@@ -17,7 +17,7 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.common.group;
+package sernet.verinice.model.common.accountgroup;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -31,7 +31,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  * 
  */
 @SuppressWarnings("serial")
-public class Group implements ITypedElement, Serializable {
+public class AccountGroup implements ITypedElement, Serializable {
 
     public final static String TYPE_ID = "user_groups";
 

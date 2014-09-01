@@ -137,7 +137,6 @@ This variant:
 		<property name="gefaehrdungDao" ref="gefaehrdungDao" />
 		<property name="ownGefaehrdungDao" ref="ownGefaehrdungDao" />
 		<property name="configurationDao" ref="configurationDao" />
-		<property name="groupDao" ref="groupDao" />
 		<property name="bausteinVorschlagDao" ref="bausteinVorschlagDao" />
 		<property name="changeLogEntryDAO" ref="changeLogEntryDAO" />
 		<property name="permissionDAO" ref="permissionDAO" />
@@ -306,6 +305,6 @@ This variant:
 		<property name="configurationDao" ref="configurationDao" />
     </bean>
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
-	<!--<import resource="veriniceserver-debug.xml"/>-->
+	<!--<import resource="veriniceserver-debug.xml"/> -->
 
 </beans>

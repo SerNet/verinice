@@ -102,6 +102,18 @@
         </property>
     </bean>
     
+    
+    <bean name="/accountServiceHttpInvoker" 
+		  class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+          lazy-init="false">
+    	<property name="service">
+    		<ref bean="accountService" />
+    	</property>
+    	<property name="serviceInterface">
+    		<value>sernet.verinice.interfaces.IAccountService</value>
+    	</property>
+    </bean>
+    
     <bean name="/validationServiceHttpInvoker"
     	class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
 		lazy-init="false">
