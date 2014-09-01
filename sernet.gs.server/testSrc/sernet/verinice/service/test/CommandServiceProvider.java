@@ -224,6 +224,11 @@ public abstract class CommandServiceProvider extends UuidLoader {
         Class clazz = GROUP_TYPE_MAP.get(group.getTypeId());
         return createNewElement(group, clazz, n);
     }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    protected CnATreeElement createNewElement(Group<CnATreeElement> group, Class clazz) throws CommandException {
+      return createNewElement(group, clazz, (int)Math.round(Math.random()*1000.0));
+    }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     protected CnATreeElement createNewElement(Group<CnATreeElement> group, Class clazz, int n) throws CommandException {

@@ -418,7 +418,12 @@ public class Configuration implements Serializable, ITypedElement {
 	public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Login: " + getUser());
-        sb.append(", Email: " + getNotificationEmail());
+        sb.append("\nis deactivated: " + isDeactivatedUser());
+        sb.append("\nis admin: " + isAdminUser());
+        sb.append("\nis scope only: " + isScopeOnly());
+        sb.append("\nis web user: " + isWebUser());
+        sb.append("\nis rcp user: " + isRcpUser());
+        sb.append("\nEmail: " + getNotificationEmail());
         sb.append("\nMailbenachrichtigung aktivieren: ").append(isNotificationEnabled());
         sb.append("\nAlle Massnahmen / nur eigene: ").append(isNotificationGlobal());
         sb.append("\nNeue zu pruefende Aufgaben: ").append(isNotificationMeasureAssignment());

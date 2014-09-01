@@ -71,6 +71,51 @@ public class AccountSearchParameter implements IAccountSearchParameter {
     public IAccountSearchParameter setIsDeactivated(Boolean isDeactivated) {
         this.isDeactivated = isDeactivated;
         return this;
+    }
+
+    @Override
+    public int getNumberOfAccountParameter() {
+        int n = 0;
+        if(getLogin()!=null) {
+            n++;
+        }
+        if(isAdmin()!=null) {
+            n++;
+        }
+        if(isDeactivated()!=null) {
+            n++;
+        }
+        if(isScopeOnly()!=null) {
+            n++;
+        }
+        return n;
+    }
+    
+    @Override
+    public int getNumberOfPersonParameter() {
+        int n = 0;
+        if(getFamilyName()!=null) {
+            n++;
+        }
+        if(getFirstName()!=null) {
+            n++;
+        }
+        return n;
+    }
+
+    @Override
+    public boolean isParameter() {
+        return isAccountParameter() || isPersonParameter();
+    } 
+    
+    @Override
+    public boolean isAccountParameter() {
+        return getNumberOfAccountParameter()>0 ;
+    } 
+    
+    @Override
+    public boolean isPersonParameter() {
+        return getNumberOfPersonParameter()>0;
     } 
     
    

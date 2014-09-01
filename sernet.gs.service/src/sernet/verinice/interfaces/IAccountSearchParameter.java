@@ -2,6 +2,12 @@ package sernet.verinice.interfaces;
 
 public interface IAccountSearchParameter {
 
+    int getNumberOfAccountParameter();
+    int getNumberOfPersonParameter();
+    boolean isParameter();
+    boolean isAccountParameter();
+    boolean isPersonParameter();
+    
     String getLogin();
     IAccountSearchParameter setLogin(String login);
     

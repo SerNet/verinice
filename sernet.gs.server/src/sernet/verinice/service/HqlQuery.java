@@ -3,6 +3,7 @@ package sernet.verinice.service;
 class HqlQuery {
     
     String hql;
+    String[] names;
     Object[] params;
     
     public HqlQuery(String hql, Object[] params) {
@@ -17,6 +18,14 @@ class HqlQuery {
 
     public void setHql(String hql) {
         this.hql = hql;
+    }
+
+    public String[] getNames() {
+        return names;
+    }
+
+    public void setNames(String[] names) {
+        this.names = names;
     }
 
     public Object[] getParams() {

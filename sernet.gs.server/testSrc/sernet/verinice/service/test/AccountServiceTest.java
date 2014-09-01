@@ -1,10 +1,10 @@
 package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -13,11 +13,8 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.test.context.TestExecutionListeners;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
@@ -28,7 +25,6 @@ import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonIso;
@@ -42,6 +38,17 @@ import sernet.verinice.service.commands.SaveConfiguration;
 public class AccountServiceTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(AccountServiceTest.class);
+    
+    private static final String LOGIN_A = "login_a";
+    private static final String LOGIN_B = "login_b";
+    private static final String LOGIN_C = "login_c";
+    private static final String LOGIN_D = "login_d";
+    
+    private static final String FIRST_NAME_A = "first_a";
+    private static final String FIRST_NAME_B = "first_b";
+  
+    private static final String FAMILY_NAME_A = "family_a";
+    private static final String FAMILY_NAME_B = "family_b";
     
     @Resource(name="accountService")
     private IAccountService accountService;
@@ -69,7 +76,7 @@ public class AccountServiceTest extends CommandServiceProvider {
     @Test
     public void testFindByFamilyName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createFamilyNameParameter(getFamilyName()));
-        assertNumber(configurations, 1);
+        assertNumber(configurations, 2);
         Configuration account = configurations.get(0);
         PersonIso person = (PersonIso) account.getPerson();
         assertEquals("Family name of person is not: " + getFamilyName(), getFamilyName(), person.getSurname());
@@ -78,15 +85,38 @@ public class AccountServiceTest extends CommandServiceProvider {
     @Test
     public void testFindByIsAdmin() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createIsAdminParameter(true));
-        assertNumber(configurations, 1);
-        Configuration account = configurations.get(0);
-        assertEquals("Account is not admin account", true, account.isAdminUser()); 
-        
-        configurations = accountService.findAccounts(AccountSearchParameterFactory.createIsAdminParameter(false));
-        assertNumber(configurations, 2);
+        boolean testuserFound = false;
         for (Configuration configuration : configurations) {
-            assertEquals("Account is admin account", false, configuration.isAdminUser());
+            assertEquals("Account is not admin account", true, configuration.isAdminUser());
+            if(configuration.getUser().startsWith(getLoginName())) {
+                testuserFound = true;
+            }
         }
+        assertTrue("Testuser not found", testuserFound);       
+    }
+    
+    @Test
+    public void testFindByAll() throws Exception {
+        IAccountSearchParameter parameter = AccountSearchParameterFactory.createFamilyNameParameter(FAMILY_NAME_B);
+        parameter.setIsAdmin(true).setFirstName(FIRST_NAME_A).setLogin(LOGIN_A);
+        List<Configuration> configurations = accountService.findAccounts(parameter);
+        assertNumber(configurations, 1);
+        for (Configuration configuration : configurations) {
+            assertEquals("Account is not admin account", true, configuration.isAdminUser());
+            assertEquals("Account login is not: " + LOGIN_A, LOGIN_A, configuration.getUser()); 
+            PersonIso person = (PersonIso) configuration.getPerson();
+            assertEquals("Family name of person is not: " + FAMILY_NAME_B, FAMILY_NAME_B, person.getSurname());         
+            assertEquals("First name of person is not: " + FIRST_NAME_A, FIRST_NAME_A, person.getName());
+        }       
+    }
+    
+    @Test
+    public void testFindByIsNotAdmin() throws Exception {
+        List<Configuration> configurations2 = accountService.findAccounts(AccountSearchParameterFactory.createIsAdminParameter(false));
+        for (Configuration configuration : configurations2) {
+            assertEquals("Account is admin account", false, configuration.isAdminUser());
+            
+        }     
     }
     
     private void assertNumber(List<Configuration> configurations, int expectedNumber) {
@@ -108,36 +138,53 @@ public class AccountServiceTest extends CommandServiceProvider {
    
     private Organization createTestOrganization() throws CommandException {
         Organization organization = createOrganization();
-        uuidList.add(organization.getUuid());  
-        uuidList.addAll(createInOrganisation(organization,PersonIso.class,3));
-        uuidList.addAll(createInOrganisation(organization,Asset.class,10));
+        uuidList.add(organization.getUuid());
         
         Group<CnATreeElement> personGroup = getGroupForClass(organization, PersonIso.class);
-        personGroup = (Group<CnATreeElement>) retrieveChildren(personGroup);
-        Iterator<CnATreeElement> personIterator = personGroup.getChildren().iterator();
-        PersonIso person = (PersonIso) personIterator.next();
-        person.setName(getFirstName());
+        
+        IAccountSearchParameter paramter = new AccountSearchParameter();
+        paramter.setLogin(getLoginName()).setIsAdmin(false).setFirstName(getFirstName());
+        createAccount(personGroup, paramter);
+
+        paramter = new AccountSearchParameter();
+        paramter.setLogin(getRandomLoginName()).setIsAdmin(false).setFamilyName(getFamilyName());
+        createAccount(personGroup, paramter);
+        
+        paramter = new AccountSearchParameter();
+        paramter.setLogin(getRandomLoginName()).setIsAdmin(true).setFamilyName(getFamilyName());
+        createAccount(personGroup, paramter);
+        
+        paramter = new AccountSearchParameter();
+        paramter.setLogin(LOGIN_A).setIsAdmin(true).setFamilyName(FAMILY_NAME_B).setFirstName(FIRST_NAME_A);
+        createAccount(personGroup, paramter);
+        
+        paramter = new AccountSearchParameter();
+        paramter.setLogin(LOGIN_B).setIsAdmin(false).setFamilyName(FAMILY_NAME_A).setFirstName(FIRST_NAME_A);
+        createAccount(personGroup, paramter);
+        
+        paramter = new AccountSearchParameter();
+        paramter.setLogin(LOGIN_C).setIsAdmin(true).setFamilyName(FAMILY_NAME_B).setFirstName(FIRST_NAME_B);
+        createAccount(personGroup, paramter);
+        
+        paramter = new AccountSearchParameter();
+        paramter.setLogin(LOGIN_D).setIsAdmin(false).setFamilyName(FAMILY_NAME_A).setFirstName(FIRST_NAME_B);
+        createAccount(personGroup, paramter);
+        
+        return organization;      
+    }
+
+    private void createAccount(Group<CnATreeElement> personGroup, IAccountSearchParameter paramter) throws CommandException {
+        PersonIso person = (PersonIso) createNewElement(personGroup, PersonIso.class);
+        uuidList.add(person.getUuid());     
+        person.setName(paramter.getFirstName());
+        if(paramter.getFamilyName()!=null) {
+            person.setSurname(paramter.getFamilyName());
+        }
         saveElement(person);
         Configuration configuration = createAccount(person);
-        configuration.setUser(getLoginName());
-        configuration.setAdminUser(false);
+        configuration.setUser(paramter.getLogin());
+        configuration.setAdminUser(paramter.isAdmin());
         saveAccount(configuration);
-        
-        person = (PersonIso) personIterator.next();
-        person.setSurname(getFamilyName());
-        saveElement(person);
-        configuration = createAccount(person);
-        configuration.setUser(getRandomLoginName());
-        configuration.setAdminUser(false);
-        saveAccount(configuration);
-        
-        person = (PersonIso) personIterator.next();
-        configuration = createAccount(person);
-        configuration.setUser(getRandomLoginName());
-        configuration.setAdminUser(true);
-        saveAccount(configuration);
-
-        return organization;      
     }
 
     private CnATreeElement retrieveChildren(Group<CnATreeElement> personGroup) throws CommandException {
@@ -174,11 +221,11 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
     
     private String getFirstName() {
-        return "Foo";
+        return "Dagobert";
     }
     
     private String getFamilyName() {
-        return "Bar";
+        return "Duck";
     }
     
     private void removeTestOrganization(Organization organization) throws CommandException {

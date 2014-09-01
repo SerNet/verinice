@@ -16,11 +16,16 @@
  * 
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
+ *     Daniel Murygin <dm[at]sernet[dot]de> - findAccounts
  ******************************************************************************/
 package sernet.verinice.service;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
@@ -31,7 +36,7 @@ import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
- *
+ * @author Daniel Murygin <dm[at]sernet[dot]de> 
  */
 public class AccountService implements IAccountService, Serializable {
 
@@ -42,7 +47,21 @@ public class AccountService implements IAccountService, Serializable {
     @Override
     public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
-        return getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getParams());
+        List<Configuration> resultNoProps = getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getParams());
+        List<Configuration> result;
+        if(resultNoProps!=null && !resultNoProps.isEmpty()) {
+            Set<Integer> dbIds = new HashSet<Integer>(resultNoProps.size());
+            for (Configuration configuration : resultNoProps) {
+                dbIds.add(configuration.getDbId());
+            }
+            hqlQuery = AccountSearchQueryFactory.createRetrieveHql(dbIds);
+            hqlQuery.setNames(new String[]{"dbIds"});
+            Set<Configuration> set = new HashSet<Configuration>(getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getNames(), hqlQuery.getParams()));
+            result = new ArrayList<Configuration>(set);
+       } else {
+           result = Collections.emptyList(); 
+       }        
+       return result;
     }
     
     @Override
