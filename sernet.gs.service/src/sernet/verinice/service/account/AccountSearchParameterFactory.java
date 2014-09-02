@@ -1,9 +1,13 @@
-package sernet.verinice.service;
+package sernet.verinice.service.account;
 
 import sernet.verinice.interfaces.IAccountSearchParameter;
 
 public final class AccountSearchParameterFactory {
 
+    public static IAccountSearchParameter create() {
+        return AccountSearchParameter.newInstance();
+    }
+    
     public static IAccountSearchParameter createLoginParameter(String login) {
         return AccountSearchParameter.newInstance().setLogin(login);
     }

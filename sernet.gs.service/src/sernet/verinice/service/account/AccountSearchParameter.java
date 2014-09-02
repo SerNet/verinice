@@ -1,8 +1,10 @@
-package sernet.verinice.service;
+package sernet.verinice.service.account;
+
+import java.io.Serializable;
 
 import sernet.verinice.interfaces.IAccountSearchParameter;
 
-public class AccountSearchParameter implements IAccountSearchParameter {
+public class AccountSearchParameter implements IAccountSearchParameter, Serializable {
 
     private String login;
     private String firstName;

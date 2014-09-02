@@ -161,6 +161,16 @@
             id="sernet.verinice.validation.CnAValidationView"
             name="%view.name.13"
             restorable="true">
+      </view>
+      
+      <view
+            allowMultiple="false"
+            category="sernet.gs.ui.rcp.main.views"
+            class="sernet.verinice.rcp.account.AccountView"
+            icon="icons/user.png"
+            id="sernet.verinice.rcp.account.AccountView"
+            name="Account View"
+            restorable="true">
       </view> 
    </extension>
    <extension point="org.eclipse.ui.commands">
