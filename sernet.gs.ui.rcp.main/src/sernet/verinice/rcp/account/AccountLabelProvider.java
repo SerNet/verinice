@@ -24,14 +24,27 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
                 return ""; //$NON-NLS-1$
             }
             Configuration account = (Configuration) element;
+            GenericPerson person = new GenericPerson(account.getPerson());
             switch (columnIndex) {
-            case 1:
-                return account.getUser(); //$NON-NLS-1$
-            case 2:
-                return ((PersonIso)account.getPerson()).getName(); //$NON-NLS-1$
-            
-            default:
-                return null;
+                case 0:
+                    return account.getUser();
+                case 1:
+                    return person.getName();
+                case 2:
+                    return account.getEmail();
+                case 3:
+                    return (account.isAdminUser()) ? "X" : "";
+                case 4:
+                    return (account.isScopeOnly()) ? "X" : ""; 
+                case 5:
+                    return (account.isWebUser()) ? "X" : "";
+                case 6:
+                    return (account.isRcpUser()) ? "X" : "";
+                case 7:
+                    return (account.isDeactivatedUser()) ? "X" : "";  
+                
+                default:
+                    return null;
             }
         } catch (Exception e) {
             AccountView.LOG.error("Error while getting column text", e); //$NON-NLS-1$

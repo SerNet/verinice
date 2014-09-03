@@ -133,6 +133,10 @@ public class Configuration implements Serializable, ITypedElement {
 	public String getUser() {
 		return entity.getSimpleValue(PROP_USERNAME);
 	}
+	
+	public String getEmail() {
+        return entity.getSimpleValue(PROP_NOTIFICATION_EMAIL);
+    }
 
 	public void setPass(String pass) {
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_PASSWORD);

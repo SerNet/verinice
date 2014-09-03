@@ -51,7 +51,7 @@ public class AccountSearchQueryFactory {
         
         if(parameter.getLogin()!=null) {
             parameterList.add(Configuration.PROP_USERNAME);
-            parameterList.add(parameter.getLogin());
+            parameterList.add(addWildcards(parameter.getLogin()));
         }
         
         if(parameter.isAdmin()!=null) {
@@ -61,12 +61,12 @@ public class AccountSearchQueryFactory {
         
         if(parameter.getFirstName()!=null) {
             parameterList.add(PersonIso.PROP_NAME);
-            parameterList.add(parameter.getFirstName());
+            parameterList.add(addWildcards(parameter.getFirstName()));
         }
         
         if(parameter.getFamilyName()!=null) {
             parameterList.add(PersonIso.PROP_SURNAME);
-            parameterList.add(parameter.getFamilyName());
+            parameterList.add(addWildcards(parameter.getFamilyName()));
         }
         
         String hql = sbHql.toString();
@@ -75,6 +75,12 @@ public class AccountSearchQueryFactory {
         }
         
         return new HqlQuery(hql, parameterList.toArray());
+    }
+
+    private static String addWildcards(String login) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("%").append(login).append("%");
+        return sb.toString();
     }
 
     private static String createAccountPropertyJoin(int i) {
@@ -97,14 +103,14 @@ public class AccountSearchQueryFactory {
     private static String createAccountWhere(int i) {
         StringBuilder sb = new StringBuilder();
         sb.append(" props_").append(i).append(".propertyType = ?");
-        sb.append(" and props_").append(i).append(".propertyValue like ?");
+        sb.append(" and lower(props_").append(i).append(".propertyValue) like lower(?)");
         return sb.toString();
     }
     
     private static String createPersonWhere(int i) {
         StringBuilder sb = new StringBuilder();
         sb.append(" pProps_").append(i).append(".propertyType = ?");
-        sb.append(" and pProps_").append(i).append(".propertyValue like ?");
+        sb.append(" and lower(pProps_").append(i).append(".propertyValue) like lower(?)");
         return sb.toString();
     }
     

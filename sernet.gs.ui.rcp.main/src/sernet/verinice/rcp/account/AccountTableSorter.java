@@ -5,8 +5,8 @@ import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.bsi.Attachment;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
 
 class AccountTableSorter extends ViewerSorter {
     private int propertyIndex;
@@ -59,19 +59,64 @@ class AccountTableSorter extends ViewerSorter {
 
     private int compareNullSafe(Configuration a1, Configuration a2) {
         int rc = 0;
+        PersonAdapter adapter = new PersonAdapter(a1.getPerson(), a2.getPerson());
         switch (propertyIndex) {
         case 0:   
             rc = nsc.compare(a1.getUser().toLowerCase(), a2.getUser().toLowerCase());
             break;
-        case 1:
-            PersonIso p1 = (PersonIso) a1.getPerson();
-            PersonIso p2 = (PersonIso) a2.getPerson();
-            // use lowercase here, to avoid separation of lowercase and uppercase words
-            rc = nsc.compare(p1.getName().toLowerCase(), p2.getName().toLowerCase());
+        case 1:       
+            rc = adapter.compareName();
             break;
+        case 2:   
+            rc = nsc.compare(a1.getEmail().toLowerCase(), a2.getEmail().toLowerCase());
+            break;
+        case 3:
+            rc = Boolean.valueOf(a1.isAdminUser()).compareTo(a2.isAdminUser());
+            break; 
+        case 4:
+            rc = Boolean.valueOf(a1.isScopeOnly()).compareTo(a2.isScopeOnly());
+            break;  
+        case 5:
+            rc = Boolean.valueOf(a1.isWebUser()).compareTo(a2.isWebUser());
+            break; 
+        case 6:
+            rc = Boolean.valueOf(a1.isRcpUser()).compareTo(a2.isRcpUser());
+            break; 
+        case 7:
+            rc = Boolean.valueOf(a1.isDeactivatedUser()).compareTo(a2.isDeactivatedUser());
+            break;   
+        
         default:
             rc = 0;
         }
         return rc;
+    }
+    
+    class PersonAdapter {
+        
+        GenericPerson p1;
+        GenericPerson p2;
+        
+        NumericStringComparator nsc = new NumericStringComparator();
+        
+        public PersonAdapter(CnATreeElement p1, CnATreeElement p2) {
+            super();
+            this.p1 = new GenericPerson(p1);
+            this.p2 = new GenericPerson(p2);
+        }
+
+        public int compareName() {
+            String name1 = p1.getName();
+            if(name1!=null) {
+                name1 = name1.toLowerCase();
+            }
+            String name2 = p2.getName();
+            if(name2!=null) {
+                name2 = name2.toLowerCase();
+            }
+            return nsc.compare(name1, name2);
+        }
+
+     
     }
 }
