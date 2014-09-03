@@ -301,7 +301,8 @@ This variant:
     </bean>
     
     <!-- A service to handle user accounts and groups -->
-	<bean id="accountService" class="sernet.verinice.service.AccountService">	
+	<bean id="accountService" class="sernet.verinice.service.AccountService">
+	    <property name="accountGroupDao" ref="accountGroupDao" />
 		<property name="configurationDao" ref="configurationDao" />
     </bean>
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
