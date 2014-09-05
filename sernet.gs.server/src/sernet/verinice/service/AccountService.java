@@ -30,6 +30,7 @@ import java.util.Set;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -41,8 +42,8 @@ import sernet.verinice.model.common.configuration.Configuration;
 public class AccountService implements IAccountService, Serializable {
 
     private IDao<AccountGroup, Serializable> accountGroupDao;
- 
     private IBaseDao<Configuration, Serializable> configurationDao;
+    private ICommandService commandService;
     
     @Override
     public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
@@ -62,6 +63,15 @@ public class AccountService implements IAccountService, Serializable {
            result = Collections.emptyList(); 
        }        
        return result;
+    }
+    
+    @Override
+    public void removeAccount(Configuration account) {
+        getConfigurationDao().delete(account);
+        // When a Configuration instance got deleted the server needs to
+        // update
+        // its cached role map. This is done here.
+        getCommandService().discardUserData();
     }
     
     @Override
@@ -96,5 +106,13 @@ public class AccountService implements IAccountService, Serializable {
 
     public void setAccountGroupDao(IDao<AccountGroup, Serializable> groupDao) {
         this.accountGroupDao = groupDao;
+    }
+
+    public ICommandService getCommandService() {
+        return commandService;
+    }
+
+    public void setCommandService(ICommandService commandService) {
+        this.commandService = commandService;
     }
 }

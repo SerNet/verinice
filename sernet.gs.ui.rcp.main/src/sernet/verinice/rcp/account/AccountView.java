@@ -26,12 +26,14 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -93,12 +95,20 @@ public class AccountView extends RightsEnabledView {
     private static final int COMBO_INDEX_BOTH = 0;
     private static final int COMBO_INDEX_YES = 1;
     private static final int COMBO_INDEX_NO = 2;
+    private final static int textColumnWidth = 150;
+    private final static int booleanColumnWidth = 90;
+    private final static int minWidthText = 100;
     
     private IAccountSearchParameter parameter = new AccountSearchParameter();
     
     private Action searchAction;
     private ConfigurationAction editAction;
     private Action runEditAction;
+    private Action removeAction;
+    
+    private IModelLoadListener modelLoadListener;
+    private IAccountService accountService;
+    private ICommandService commandService;
 
     private ComboModel<CnATreeElement> comboModel;
     private Combo comboOrganization;
@@ -109,30 +119,19 @@ public class AccountView extends RightsEnabledView {
     TableViewer viewer;
     AccountTableSorter tableSorter = new AccountTableSorter();
     private AccountContentProvider contentProvider = new AccountContentProvider();
-    final int textColumnWidth = 150;
-    final int booleanColumnWidth = 90;
-    final int minWidthText = 100;
-
-    WorkspaceJob initDataJob;
-
-    private IModelLoadListener modelLoadListener;
-    private IAccountService accountService;
-    private ICommandService commandService;
+    private WorkspaceJob initDataJob;
 
     public AccountView() {
         super();
-        initDataJob = new WorkspaceJob("") {
+        initDataJob = new WorkspaceJob(Messages.AccountView_0) {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
-                    monitor.beginTask("", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask(Messages.AccountView_0, IProgressMonitor.UNKNOWN);
                     Activator.inheritVeriniceContextState();
-                    ElementTitleCache.load(new Object[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE});             
-                    findAccounts();
-                    loadScopes();
-                    initCombos();                 
-                     } catch (Exception e) {
+                    init();                 
+                } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
                     status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.", e); //$NON-NLS-1$ //$NON-NLS-2$
                 } finally {
@@ -143,33 +142,22 @@ public class AccountView extends RightsEnabledView {
         };
         
     }
-
-   
-
-    @Override
-    public String getRightID() {
-        return ActionRightIDs.ACCOUNTSETTINGS;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
-     */
-    @Override
-    public String getViewId() {
-        return ID;
+    
+    private void init() throws CommandException {
+        ElementTitleCache.load(new Object[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE});                
+        findAccounts();
+        loadScopes();
+        initCombos();
     }
 
     @Override
     public void createPartControl(Composite parent) {
         try {
             super.createPartControl(parent);
-            initView(parent);
-            
+            initView(parent);          
         } catch (Exception e) {
             LOG.error("Error while creating control", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, "Error while opening account view.");
+            ExceptionUtil.log(e, Messages.AccountView_2);
         }
     }
 
@@ -193,25 +181,53 @@ public class AccountView extends RightsEnabledView {
         Composite searchComposite = createSearchComposite(composite);
         createSearchForm(searchComposite);
         Composite tableComposite = createTableComposite(composite);
-        createTable(tableComposite);
-        
+        createTable(tableComposite);      
         getSite().setSelectionProvider(viewer);
-        viewer.setInput(new PlaceHolder("Accounts"));
+        viewer.setInput(new PlaceHolder(Messages.AccountView_3));
+    }
+    
+    private Composite createContainerComposite(Composite parent) {
+        Composite composite = new Composite(parent, SWT.FILL);
+        composite.setLayout(new GridLayout());
+        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        return composite;
+    }
+    
+    private Composite createSearchComposite(Composite composite) {
+        Composite comboComposite = new Composite(composite, SWT.NONE);
+        GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
+        comboComposite.setLayoutData(gridData);
+        GridLayout gridLayout = new GridLayout(6, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        comboComposite.setLayout(gridLayout);
+        return comboComposite;
+    }
+    
+    private Composite createTableComposite(Composite composite) {
+        Composite tableComposite = new Composite(composite, SWT.NONE);
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        tableComposite.setLayoutData(gridData);
+        GridLayout gridLayout = new GridLayout(1, false);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        tableComposite.setLayout(gridLayout);
+        return tableComposite;
     }
 
     private void createSearchForm(Composite searchComposite) {
         Label label = new Label(searchComposite, SWT.WRAP);
-        label.setText("Login");
+        label.setText(Messages.AccountView_4);
         label = new Label(searchComposite, SWT.WRAP);
-        label.setText("First name");
+        label.setText(Messages.AccountView_5);
         label = new Label(searchComposite, SWT.WRAP);
-        label.setText("Family name");
+        label.setText(Messages.AccountView_6);
         label = new Label(searchComposite, SWT.WRAP);
-        label.setText("Scope");
+        label.setText(Messages.AccountView_7);
         label = new Label(searchComposite, SWT.WRAP);
-        label.setText("Admin");
+        label.setText(Messages.AccountView_8);
         label = new Label(searchComposite, SWT.WRAP);
-        label.setText("Scope only");
+        label.setText(Messages.AccountView_9);
         
         final Text textLogin= new Text(searchComposite,SWT.BORDER);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
@@ -304,20 +320,18 @@ public class AccountView extends RightsEnabledView {
         });
         
         final Button searchButton = new Button(searchComposite, SWT.PUSH);
-        searchButton.setText("Search");
+        searchButton.setText(Messages.AccountView_10);
         searchButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 try {
                     findAccounts();
                 } catch (CommandException e1) {
-                    LOG.error("Error while searching accounts", e1);
+                    LOG.error("Error while searching accounts", e1); //$NON-NLS-1$
                 }
             }
         });
         
     }
-    
-    
 
     private void createTable(Composite tableComposite) {
         viewer = new TableViewer(tableComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
@@ -328,56 +342,16 @@ public class AccountView extends RightsEnabledView {
         viewer.setLabelProvider(new AccountLabelProvider());
         Table table = viewer.getTable();
         
-        TableColumn scopeColumn = new TableColumn(table, SWT.LEFT);
-        scopeColumn.setText("Scope");
-        scopeColumn.setWidth(textColumnWidth);
-        scopeColumn.addSelectionListener(new AccountSortSelectionAdapter(this, scopeColumn, 0));
-        
-        TableColumn groupColumn = new TableColumn(table, SWT.LEFT);
-        groupColumn.setText("Group");
-        groupColumn.setWidth(textColumnWidth);
-        groupColumn.addSelectionListener(new AccountSortSelectionAdapter(this, groupColumn, 1));
-
-        TableColumn loginColumn = new TableColumn(table, SWT.LEFT);
-        loginColumn.setText("Login");
-        loginColumn.setWidth(textColumnWidth);
-        loginColumn.addSelectionListener(new AccountSortSelectionAdapter(this, loginColumn, 2));
-
-        TableColumn nameColumn = new TableColumn(table, SWT.LEFT);
-        nameColumn.setText("Name");
-        nameColumn.setWidth(textColumnWidth);
-        nameColumn.addSelectionListener(new AccountSortSelectionAdapter(this, nameColumn, 3));
-
-        TableColumn emailColumn = new TableColumn(table, SWT.LEFT);
-        emailColumn.setText("Email");
-        emailColumn.setWidth(textColumnWidth);
-        emailColumn.addSelectionListener(new AccountSortSelectionAdapter(this, emailColumn, 4));
-        
-        TableColumn adminColumn = new TableColumn(table, SWT.LEFT);
-        adminColumn.setText("Admin");
-        adminColumn.setWidth(booleanColumnWidth);
-        adminColumn.addSelectionListener(new AccountSortSelectionAdapter(this, adminColumn, 5));
-        
-        TableColumn scopeOnlyColumn = new TableColumn(table, SWT.LEFT);
-        scopeOnlyColumn.setText("Scope only");
-        scopeOnlyColumn.setWidth(booleanColumnWidth);
-        scopeOnlyColumn.addSelectionListener(new AccountSortSelectionAdapter(this, scopeOnlyColumn, 6));
-        
-        TableColumn webColumn = new TableColumn(table, SWT.LEFT);
-        webColumn.setText("Web");
-        webColumn.setWidth(booleanColumnWidth);
-        webColumn.addSelectionListener(new AccountSortSelectionAdapter(this, webColumn, 7));
-        
-        TableColumn desktopColumn = new TableColumn(table, SWT.LEFT);
-        desktopColumn.setText("Desktop");
-        desktopColumn.setWidth(booleanColumnWidth);
-        desktopColumn.addSelectionListener(new AccountSortSelectionAdapter(this, desktopColumn, 8));
-        
-        TableColumn disabledColumn = new TableColumn(table, SWT.LEFT);
-        disabledColumn.setText("Disabled");
-        disabledColumn.setWidth(booleanColumnWidth);
-        disabledColumn.addSelectionListener(new AccountSortSelectionAdapter(this, disabledColumn, 9));
-
+        createTableColumn(Messages.AccountView_12, textColumnWidth, 0);
+        createTableColumn(Messages.AccountView_13, textColumnWidth, 1);
+        createTableColumn(Messages.AccountView_14, textColumnWidth, 2);
+        createTableColumn(Messages.AccountView_15, textColumnWidth, 3);
+        createTableColumn(Messages.AccountView_16, textColumnWidth, 4);
+        createTableColumn(Messages.AccountView_17, booleanColumnWidth, 5);
+        createTableColumn(Messages.AccountView_18, booleanColumnWidth, 6);
+        createTableColumn(Messages.AccountView_19, booleanColumnWidth, 7);
+        createTableColumn(Messages.AccountView_20, booleanColumnWidth, 8);
+        createTableColumn(Messages.AccountView_21, booleanColumnWidth, 9);
         
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -386,33 +360,79 @@ public class AccountView extends RightsEnabledView {
         ((AccountTableSorter) viewer.getSorter()).setColumn(1);
     }
 
-    private Composite createContainerComposite(Composite parent) {
-        Composite composite = new Composite(parent, SWT.FILL);
-        composite.setLayout(new GridLayout());
-        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-        return composite;
+    private void createTableColumn(String title, int width, int index) {
+        TableColumn scopeColumn = new TableColumn(viewer.getTable(), SWT.LEFT);
+        scopeColumn.setText(title);
+        scopeColumn.setWidth(textColumnWidth);
+        scopeColumn.addSelectionListener(new AccountSortSelectionAdapter(this, scopeColumn, 0));
     }
     
-    private Composite createSearchComposite(Composite composite) {
-        Composite comboComposite = new Composite(composite, SWT.NONE);
-        GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        comboComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(6, true);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        comboComposite.setLayout(gridLayout);
-        return comboComposite;
-    }
-    
-    private Composite createTableComposite(Composite composite) {
-        Composite tableComposite = new Composite(composite, SWT.NONE);
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        tableComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(1, false);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        tableComposite.setLayout(gridLayout);
-        return tableComposite;
+    private void makeActions() {
+        editAction = new ConfigurationAction();
+        editAction.setText(Messages.AccountView_23);
+        editAction.setToolTipText(Messages.AccountView_24);
+        editAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
+        
+        searchAction = new Action() {
+            /* (non-Javadoc)
+             * @see org.eclipse.jface.action.Action#run()
+             */
+            public void run() {
+                try {
+                    findAccounts();
+                } catch (CommandException e1) {
+                    LOG.error("Error while searching accounts", e1); //$NON-NLS-1$
+                }
+            }
+        };
+        searchAction.setText(Messages.AccountView_26);
+        searchAction.setToolTipText(Messages.AccountView_27);
+        searchAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SEARCH));
+        
+        runEditAction = new Action() {
+            @Override
+            public void run() {
+                if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof Configuration) {
+                    try {
+                        Configuration account = (Configuration) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
+                        editAction.setConfiguration(account);
+                        editAction.run();
+                        findAccounts();
+                    } catch (Exception t) {
+                        LOG.error("Error while opening control.", t); //$NON-NLS-1$
+                    }
+                }
+            }
+        };
+        runEditAction.setText(Messages.AccountView_28);
+        runEditAction.setToolTipText(Messages.AccountView_29);
+        runEditAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
+        
+        removeAction = new Action() {
+            @Override
+            public void run() {
+                if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof Configuration) {
+                    try {
+                        Configuration account = (Configuration) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
+                        removeAccount(account);
+                        findAccounts();
+                    } catch (Exception t) {
+                        LOG.error("Error while opening control.", t); //$NON-NLS-1$
+                    }
+                }
+            }
+        };
+        removeAction.setText(Messages.AccountView_30);
+        removeAction.setToolTipText(Messages.AccountView_31);
+        removeAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
+        
+        
+        getViewer().addDoubleClickListener(new IDoubleClickListener() {
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                runEditAction.run();
+            }
+        });
     }
 
     private void hookActions() {
@@ -423,29 +443,31 @@ public class AccountView extends RightsEnabledView {
             }
         });
     }
-
-    protected void startInitDataJob() {
-        if(CnAElementFactory.isIsoModelLoaded()) {          
-            JobScheduler.scheduleInitJob(initDataJob);    
-        } else if(modelLoadListener==null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("No model loaded, adding model load listener."); //$NON-NLS-1$
-            }
-            createModelLoadListener();         
-        }      
-    }
     
     protected void findAccounts() throws CommandException { 
         if (LOG.isDebugEnabled()) {
             LOG.debug("findAccounts called..."); //$NON-NLS-1$
         }
         final List<Configuration> accountList = getAccountService().findAccounts(parameter);
-        Display.getDefault().syncExec(new Runnable() {
+        getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
                 viewer.setInput(accountList);
             }
         });   
+    }
+    
+    protected void removeAccount(Configuration account) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("removeAccount called..."); //$NON-NLS-1$
+        }
+        if (MessageDialog.openQuestion(
+                getDisplay().getActiveShell(), 
+                Messages.AccountView_32, 
+                NLS.bind(Messages.AccountView_33, account.getUser()))) {
+            getAccountService().removeAccount(account);
+        }
+        
     }
 
     private void loadScopes() throws CommandException {
@@ -457,8 +479,8 @@ public class AccountView extends RightsEnabledView {
         command = getCommandService().executeCommand(command);
         comboModel.addAll(command.getElements());
         comboModel.sort();
-        comboModel.addNoSelectionObject("all");
-        Display.getDefault().syncExec(new Runnable(){
+        comboModel.addNoSelectionObject(Messages.AccountView_34);
+        getDisplay().syncExec(new Runnable(){
             @Override
             public void run() {
                 comboOrganization.setItems(comboModel.getLabelArray());
@@ -468,8 +490,19 @@ public class AccountView extends RightsEnabledView {
         });
     }
     
+    protected void startInitDataJob() {
+        if(CnAElementFactory.isIsoModelLoaded()) {          
+            JobScheduler.scheduleInitJob(initDataJob);    
+        } else if(modelLoadListener==null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No model loaded, adding model load listener."); //$NON-NLS-1$
+            }
+            createModelLoadListener();         
+        }      
+    }
+    
     protected void initCombos() {
-        Display.getDefault().syncExec(new Runnable(){
+        getDisplay().syncExec(new Runnable(){
             @Override
             public void run() {
                 initYesNoCombo(comboAdmin);
@@ -479,9 +512,9 @@ public class AccountView extends RightsEnabledView {
     }
     
     private void initYesNoCombo(Combo combo) {
-        combo.add("all", COMBO_INDEX_BOTH);
-        combo.add("yes", COMBO_INDEX_YES);
-        combo.add("no", COMBO_INDEX_NO);
+        combo.add(Messages.AccountView_35, COMBO_INDEX_BOTH);
+        combo.add(Messages.AccountView_36, COMBO_INDEX_YES);
+        combo.add(Messages.AccountView_37, COMBO_INDEX_NO);
         combo.select(0);
     }
 
@@ -528,66 +561,35 @@ public class AccountView extends RightsEnabledView {
     private void fillLocalToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
+        manager.add(this.removeAction);
         manager.add(this.runEditAction);
         manager.add(this.searchAction);
     }
 
-    private void makeActions() {
-        editAction = new ConfigurationAction();
-        editAction.setText("Edit");
-        editAction.setToolTipText("Edit account");
-        editAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
-        
-        searchAction = new Action() {
-            /* (non-Javadoc)
-             * @see org.eclipse.jface.action.Action#run()
-             */
-            public void run() {
-                try {
-                    findAccounts();
-                } catch (CommandException e1) {
-                    LOG.error("Error while searching accounts", e1);
-                }
-            }
-        };
-        searchAction.setText("Find");
-        searchAction.setToolTipText("Find accounts");
-        searchAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SEARCH));
-        
-        runEditAction = new Action() {
-            @Override
-            public void run() {
-                if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof Configuration) {
-                    try {
-                        Configuration account = (Configuration) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-                        editAction.setConfiguration(account);
-                        editAction.run();
-                        findAccounts();
-                    } catch (Exception t) {
-                        LOG.error("Error while opening control.", t); //$NON-NLS-1$
-                    }
-                }
-            }
-        };
-        runEditAction.setText("Edit");
-        runEditAction.setToolTipText("Edit account");
-        runEditAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
-        
-        getViewer().addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                runEditAction.run();
-            }
-        });
-    }
-
-    public static Display getDisplay() {
+    private static Display getDisplay() {
         Display display = Display.getCurrent();
         // may be null if outside the UI thread
         if (display == null) {
             display = Display.getDefault();
         }
         return display;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.ACCOUNTSETTINGS;
+    }
+
+    /*
+     * (non-Javadoc) 
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
     }
 
     public TableViewer getViewer() {

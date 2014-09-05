@@ -161,15 +161,14 @@
             id="sernet.verinice.validation.CnAValidationView"
             name="%view.name.13"
             restorable="true">
-      </view>
-      
+      </view>    
       <view
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.verinice.rcp.account.AccountView"
             icon="icons/user.png"
             id="sernet.verinice.rcp.account.AccountView"
-            name="Account View"
+            name="%view.name.15"
             restorable="true">
       </view> 
    </extension>

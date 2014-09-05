@@ -103,6 +103,7 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
      */
     public void run() {
         if(!checkRights()) {
+            configuration = null;
             return;
         }
         
@@ -119,6 +120,7 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
         EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);     
         final AccountDialog dialog = new AccountDialog(window2.getShell(), entType, Messages.ConfigurationAction_4, configuration.getEntity());
         if (dialog.open() != Window.OK) {
+            configuration = null;
             return;
         }
 
@@ -166,7 +168,9 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
         } catch (Exception e) {
             LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.ConfigurationAction_5);
-        } 
+        } finally {
+            configuration = null;
+        }
     }
     
 	/* (non-Javadoc)
