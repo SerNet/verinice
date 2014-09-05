@@ -48,13 +48,6 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
 
     private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 
-    private static final String QUERY = "select distinct elmt from CnATreeElement elmt " +
-    		"join fetch elmt.entity as entity " +
-    		"join fetch entity.typedPropertyLists as propertyList " +
-    		"join fetch propertyList.properties as props " +
-    		"where elmt.entity.entityType = ? "; //$NON-NLS-1$
-    private static final String SCOPE = "and elmt.scopeId = ? "; //$NON-NLS-1$
-
     public LoadCnAElementByEntityTypeId(String typeId) {
         this(typeId, null);
     }
@@ -73,17 +66,8 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void execute() {
-        Object[] parameter;
-        
+    public void execute() {        
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
-        StringBuilder sb = new StringBuilder(QUERY);
-        if(scopeId!=null) {
-            sb.append(SCOPE);
-            parameter = new Object[] { typeId, scopeId };
-        } else {
-            parameter = new Object[] { typeId };
-        }
         
         DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);      
         crit.setFetchMode("entity", FetchMode.JOIN);

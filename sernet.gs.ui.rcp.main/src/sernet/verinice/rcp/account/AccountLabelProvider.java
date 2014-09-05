@@ -1,18 +1,28 @@
 package sernet.verinice.rcp.account;
 
-import java.text.DateFormat;
+import java.util.HashMap;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.verinice.model.bsi.Attachment;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.PersonIso;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.rcp.ElementTitleCache;
+import sernet.verinice.service.commands.LoadAllScopesTitles;
 
 class AccountLabelProvider extends LabelProvider implements ITableLabelProvider {           
 
+    
+    private static HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
+    boolean titleMapInitialized = false;
+    
     @Override
     public String getColumnText(Object element, int columnIndex) {
         try {
@@ -25,23 +35,29 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
             }
             Configuration account = (Configuration) element;
             GenericPerson person = new GenericPerson(account.getPerson());
-            switch (columnIndex) {
+            Integer scopeId = account.getPerson().getScopeId();
+            Integer groupId = account.getPerson().getParentId();
+            switch (columnIndex) { 
                 case 0:
+                    return ElementTitleCache.get(scopeId);
+                case 1:               
+                    return person.getParentName();
+                case 2:   
                     return account.getUser();
-                case 1:
-                    return person.getName();
-                case 2:
-                    return account.getEmail();
                 case 3:
-                    return (account.isAdminUser()) ? "X" : "";
+                    return person.getName();
                 case 4:
-                    return (account.isScopeOnly()) ? "X" : ""; 
+                    return account.getEmail();
                 case 5:
-                    return (account.isWebUser()) ? "X" : "";
+                    return convertToX(account.isAdminUser());
                 case 6:
-                    return (account.isRcpUser()) ? "X" : "";
+                    return convertToX(account.isScopeOnly()); 
                 case 7:
-                    return (account.isDeactivatedUser()) ? "X" : "";  
+                    return convertToX(account.isWebUser());
+                case 8:
+                    return convertToX(account.isRcpUser());
+                case 9:
+                    return convertToX(account.isDeactivatedUser());  
                 
                 default:
                     return null;
@@ -51,11 +67,17 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
             throw new RuntimeException(e);
         }
     }
+    
+    public String convertToX(boolean value) {
+        return (value) ? "X" : "";
+    }
 
     @Override
     public Image getColumnImage(Object element, int columnIndex) {
         return null;
     }
+    
+    
 
 
 }

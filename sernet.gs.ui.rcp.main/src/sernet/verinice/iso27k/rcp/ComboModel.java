@@ -51,8 +51,18 @@ public class ComboModel<T> {
     }
 	
 	public void addAll(List<T> objectList) {
-	    objectList.addAll(objectList);
+	    for (T object : objectList) {
+	        this.objectList.add(new ComboModelObject<T>(object, labelProvider.getLabel(object)));
+        }
 	}
+	
+	public void addNoSelectionObject() {
+	    addNoSelectionObject(Messages.ComboModel_0);
+	}
+	
+	public void addNoSelectionObject(String label) {
+        this.objectList.add(0, new ComboModelObject<T>(null, label));
+    }
 	
 	public void remove(int i) {
 		objectList.remove(i);
@@ -120,7 +130,7 @@ public class ComboModel<T> {
 
 	public void setSelectedIndex(int selectedIndex) {
 		if(selectedIndex>=objectList.size()) {
-			throw new IllegalArgumentException("Selected index: " + selectedIndex + " is highter or equal than number of objects: " + objectList.size());
+			throw new IllegalArgumentException("Selected index: " + selectedIndex + " is highter or equal than number of objects: " + objectList.size()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		this.selectedIndex = selectedIndex;
 	}

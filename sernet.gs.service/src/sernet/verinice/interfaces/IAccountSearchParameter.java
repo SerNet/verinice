@@ -25,4 +25,8 @@ public interface IAccountSearchParameter {
     
     Boolean isDeactivated();
     IAccountSearchParameter setIsDeactivated(Boolean isDeactivated);
+    
+    Integer getScopeId();
+    IAccountSearchParameter setScopeId(Integer scopeId);
+    
 }

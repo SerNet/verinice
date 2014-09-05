@@ -24,10 +24,12 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -39,6 +41,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -50,23 +53,31 @@ import org.eclipse.ui.IActionBars;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
+import sernet.gs.ui.rcp.main.actions.ConfigurationAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.iso27k.rcp.ComboModel;
+import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.rcp.Messages;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.rcp.ElementTitleCache;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.account.AccountSearchParameter;
-import sernet.verinice.service.account.AccountSearchParameterFactory;
+import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 
 /**
  * View to find, edit, create and delete accounts.
@@ -79,10 +90,22 @@ public class AccountView extends RightsEnabledView {
 
     public static final String ID = "sernet.verinice.rcp.account.AccountView"; //$NON-NLS-1$
 
+    private static final int COMBO_INDEX_BOTH = 0;
+    private static final int COMBO_INDEX_YES = 1;
+    private static final int COMBO_INDEX_NO = 2;
+    
     private IAccountSearchParameter parameter = new AccountSearchParameter();
     
-    private RightsEnabledAction editAccountAction;
+    private Action searchAction;
+    private ConfigurationAction editAction;
+    private Action runEditAction;
 
+    private ComboModel<CnATreeElement> comboModel;
+    private Combo comboOrganization;
+    
+    private Combo comboAdmin;
+    private Combo comboScopeOnly;
+    
     TableViewer viewer;
     AccountTableSorter tableSorter = new AccountTableSorter();
     private AccountContentProvider contentProvider = new AccountContentProvider();
@@ -90,13 +113,38 @@ public class AccountView extends RightsEnabledView {
     final int booleanColumnWidth = 90;
     final int minWidthText = 100;
 
+    WorkspaceJob initDataJob;
 
     private IModelLoadListener modelLoadListener;
     private IAccountService accountService;
+    private ICommandService commandService;
 
     public AccountView() {
         super();
+        initDataJob = new WorkspaceJob("") {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask("", IProgressMonitor.UNKNOWN);
+                    Activator.inheritVeriniceContextState();
+                    ElementTitleCache.load(new Object[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE});             
+                    findAccounts();
+                    loadScopes();
+                    initCombos();                 
+                     } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.", e); //$NON-NLS-1$ //$NON-NLS-2$
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+        
     }
+
+   
 
     @Override
     public String getRightID() {
@@ -127,7 +175,13 @@ public class AccountView extends RightsEnabledView {
 
     private void initView(Composite parent) {        
         parent.setLayout(new FillLayout());
-        createComposite(parent);      
+        createComposite(parent);
+        comboModel = new ComboModel<CnATreeElement>(new ComboModelLabelProvider<CnATreeElement>() {
+            @Override
+            public String getLabel(CnATreeElement element) {
+                return element.getTitle();
+            }       
+        });
         makeActions();
         hookActions();
         fillLocalToolBar();   
@@ -153,7 +207,7 @@ public class AccountView extends RightsEnabledView {
         label = new Label(searchComposite, SWT.WRAP);
         label.setText("Family name");
         label = new Label(searchComposite, SWT.WRAP);
-        label.setText("Organization");
+        label.setText("Scope");
         label = new Label(searchComposite, SWT.WRAP);
         label.setText("Admin");
         label = new Label(searchComposite, SWT.WRAP);
@@ -200,11 +254,64 @@ public class AccountView extends RightsEnabledView {
             }
         });
         
+        comboOrganization = new Combo(searchComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+        comboOrganization.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        comboOrganization.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                comboModel.setSelectedIndex(comboOrganization.getSelectionIndex());
+                Integer dbId = null;
+                CnATreeElement scope = comboModel.getSelectedObject();
+                if (scope != null) {
+                    dbId = scope.getDbId();
+                }
+                AccountView.this.parameter.setScopeId(dbId);
+            }
+        });
+        
+        comboAdmin = new Combo(searchComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+        comboAdmin.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        comboAdmin.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if(COMBO_INDEX_YES==comboAdmin.getSelectionIndex()) {
+                    AccountView.this.parameter.setIsAdmin(true);
+                }
+                if(COMBO_INDEX_NO==comboAdmin.getSelectionIndex()) {
+                    AccountView.this.parameter.setIsAdmin(false);
+                }
+                if(COMBO_INDEX_BOTH==comboAdmin.getSelectionIndex()) {
+                    AccountView.this.parameter.setIsAdmin(null);
+                }
+            }
+        });
+        
+        comboScopeOnly = new Combo(searchComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+        comboScopeOnly.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        comboScopeOnly.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if(COMBO_INDEX_YES==comboScopeOnly.getSelectionIndex()) {
+                    AccountView.this.parameter.setIsScopeOnly(true);
+                }
+                if(COMBO_INDEX_NO==comboScopeOnly.getSelectionIndex()) {
+                    AccountView.this.parameter.setIsScopeOnly(false);
+                }
+                if(COMBO_INDEX_BOTH==comboScopeOnly.getSelectionIndex()) {
+                    AccountView.this.parameter.setIsScopeOnly(null);
+                }
+            }
+        });
+        
         final Button searchButton = new Button(searchComposite, SWT.PUSH);
         searchButton.setText("Search");
         searchButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                loadData();
+                try {
+                    findAccounts();
+                } catch (CommandException e1) {
+                    LOG.error("Error while searching accounts", e1);
+                }
             }
         });
         
@@ -220,46 +327,56 @@ public class AccountView extends RightsEnabledView {
         viewer.setContentProvider(contentProvider);
         viewer.setLabelProvider(new AccountLabelProvider());
         Table table = viewer.getTable();
+        
+        TableColumn scopeColumn = new TableColumn(table, SWT.LEFT);
+        scopeColumn.setText("Scope");
+        scopeColumn.setWidth(textColumnWidth);
+        scopeColumn.addSelectionListener(new AccountSortSelectionAdapter(this, scopeColumn, 0));
+        
+        TableColumn groupColumn = new TableColumn(table, SWT.LEFT);
+        groupColumn.setText("Group");
+        groupColumn.setWidth(textColumnWidth);
+        groupColumn.addSelectionListener(new AccountSortSelectionAdapter(this, groupColumn, 1));
 
         TableColumn loginColumn = new TableColumn(table, SWT.LEFT);
         loginColumn.setText("Login");
         loginColumn.setWidth(textColumnWidth);
-        loginColumn.addSelectionListener(new AccountSortSelectionAdapter(this, loginColumn, 0));
+        loginColumn.addSelectionListener(new AccountSortSelectionAdapter(this, loginColumn, 2));
 
         TableColumn nameColumn = new TableColumn(table, SWT.LEFT);
         nameColumn.setText("Name");
         nameColumn.setWidth(textColumnWidth);
-        nameColumn.addSelectionListener(new AccountSortSelectionAdapter(this, nameColumn, 1));
+        nameColumn.addSelectionListener(new AccountSortSelectionAdapter(this, nameColumn, 3));
 
         TableColumn emailColumn = new TableColumn(table, SWT.LEFT);
         emailColumn.setText("Email");
         emailColumn.setWidth(textColumnWidth);
-        emailColumn.addSelectionListener(new AccountSortSelectionAdapter(this, emailColumn, 2));
+        emailColumn.addSelectionListener(new AccountSortSelectionAdapter(this, emailColumn, 4));
         
         TableColumn adminColumn = new TableColumn(table, SWT.LEFT);
         adminColumn.setText("Admin");
         adminColumn.setWidth(booleanColumnWidth);
-        adminColumn.addSelectionListener(new AccountSortSelectionAdapter(this, adminColumn, 3));
+        adminColumn.addSelectionListener(new AccountSortSelectionAdapter(this, adminColumn, 5));
         
-        TableColumn scopeColumn = new TableColumn(table, SWT.LEFT);
-        scopeColumn.setText("Scope only");
-        scopeColumn.setWidth(booleanColumnWidth);
-        scopeColumn.addSelectionListener(new AccountSortSelectionAdapter(this, scopeColumn, 4));
+        TableColumn scopeOnlyColumn = new TableColumn(table, SWT.LEFT);
+        scopeOnlyColumn.setText("Scope only");
+        scopeOnlyColumn.setWidth(booleanColumnWidth);
+        scopeOnlyColumn.addSelectionListener(new AccountSortSelectionAdapter(this, scopeOnlyColumn, 6));
         
         TableColumn webColumn = new TableColumn(table, SWT.LEFT);
         webColumn.setText("Web");
         webColumn.setWidth(booleanColumnWidth);
-        webColumn.addSelectionListener(new AccountSortSelectionAdapter(this, webColumn, 5));
+        webColumn.addSelectionListener(new AccountSortSelectionAdapter(this, webColumn, 7));
         
         TableColumn desktopColumn = new TableColumn(table, SWT.LEFT);
         desktopColumn.setText("Desktop");
         desktopColumn.setWidth(booleanColumnWidth);
-        desktopColumn.addSelectionListener(new AccountSortSelectionAdapter(this, desktopColumn, 6));
+        desktopColumn.addSelectionListener(new AccountSortSelectionAdapter(this, desktopColumn, 8));
         
         TableColumn disabledColumn = new TableColumn(table, SWT.LEFT);
         disabledColumn.setText("Disabled");
         disabledColumn.setWidth(booleanColumnWidth);
-        disabledColumn.addSelectionListener(new AccountSortSelectionAdapter(this, disabledColumn, 7));
+        disabledColumn.addSelectionListener(new AccountSortSelectionAdapter(this, disabledColumn, 9));
 
         
         table.setHeaderVisible(true);
@@ -299,12 +416,6 @@ public class AccountView extends RightsEnabledView {
     }
 
     private void hookActions() {
-        viewer.addDoubleClickListener(new IDoubleClickListener() {
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-
-            }
-        });
         viewer.addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
@@ -314,45 +425,64 @@ public class AccountView extends RightsEnabledView {
     }
 
     protected void startInitDataJob() {
-        WorkspaceJob initDataJob = new WorkspaceJob("") {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask("", IProgressMonitor.UNKNOWN);
-                    Activator.inheritVeriniceContextState();
-                    loadData();
-                } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.", e); //$NON-NLS-1$ //$NON-NLS-2$
-                } finally {
-                    monitor.done();
-                }
-                return status;
-            }
-        };
-        JobScheduler.scheduleInitJob(initDataJob);
-    }
-    
-    protected void loadData() { 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("initData called..."); //$NON-NLS-1$
-        }      
-        if(CnAElementFactory.isIsoModelLoaded()) {
-            final List<Configuration> accountList = getAccountService().findAccounts(parameter);
-            Display.getDefault().syncExec(new Runnable() {
-                @Override
-                public void run() {
-                    viewer.setInput(accountList);
-                }
-            });          
+        if(CnAElementFactory.isIsoModelLoaded()) {          
+            JobScheduler.scheduleInitJob(initDataJob);    
         } else if(modelLoadListener==null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("No model loaded, adding model load listener."); //$NON-NLS-1$
             }
             createModelLoadListener();         
+        }      
+    }
+    
+    protected void findAccounts() throws CommandException { 
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("findAccounts called..."); //$NON-NLS-1$
         }
+        final List<Configuration> accountList = getAccountService().findAccounts(parameter);
+        Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                viewer.setInput(accountList);
+            }
+        });   
+    }
 
+    private void loadScopes() throws CommandException {
+        comboModel.clear();
+        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(Organization.TYPE_ID);
+        command = getCommandService().executeCommand(command);
+        comboModel.addAll(command.getElements());
+        command = new LoadCnAElementByEntityTypeId(ITVerbund.TYPE_ID_HIBERNATE);
+        command = getCommandService().executeCommand(command);
+        comboModel.addAll(command.getElements());
+        comboModel.sort();
+        comboModel.addNoSelectionObject("all");
+        Display.getDefault().syncExec(new Runnable(){
+            @Override
+            public void run() {
+                comboOrganization.setItems(comboModel.getLabelArray());
+                comboOrganization.select(0);
+                comboModel.setSelectedIndex(comboOrganization.getSelectionIndex()); 
+            }
+        });
+    }
+    
+    protected void initCombos() {
+        Display.getDefault().syncExec(new Runnable(){
+            @Override
+            public void run() {
+                initYesNoCombo(comboAdmin);
+                initYesNoCombo(comboScopeOnly);
+            }          
+        });    
+    }
+    
+    private void initYesNoCombo(Combo combo) {
+        combo.add("all", COMBO_INDEX_BOTH);
+        combo.add("yes", COMBO_INDEX_YES);
+        combo.add("no", COMBO_INDEX_NO);
+        combo.select(0);
     }
 
     private void createModelLoadListener() {
@@ -368,7 +498,7 @@ public class AccountView extends RightsEnabledView {
             }         
             @Override
             public void loaded(ISO27KModel model) {
-                startInitDataJob();
+                JobScheduler.scheduleInitJob(initDataJob); 
             }             
         };
         CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
@@ -398,20 +528,57 @@ public class AccountView extends RightsEnabledView {
     private void fillLocalToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
-        manager.add(this.editAccountAction);
+        manager.add(this.runEditAction);
+        manager.add(this.searchAction);
     }
 
     private void makeActions() {
-        editAccountAction = new RightsEnabledAction(ActionRightIDs.ADDFILE) {
-            @Override
-            public void doRun() {
-
+        editAction = new ConfigurationAction();
+        editAction.setText("Edit");
+        editAction.setToolTipText("Edit account");
+        editAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
+        
+        searchAction = new Action() {
+            /* (non-Javadoc)
+             * @see org.eclipse.jface.action.Action#run()
+             */
+            public void run() {
+                try {
+                    findAccounts();
+                } catch (CommandException e1) {
+                    LOG.error("Error while searching accounts", e1);
+                }
             }
         };
-        editAccountAction.setText("Edit");
-        editAccountAction.setToolTipText("Edit selected account");
-        editAccountAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
-        editAccountAction.setEnabled(false);
+        searchAction.setText("Find");
+        searchAction.setToolTipText("Find accounts");
+        searchAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SEARCH));
+        
+        runEditAction = new Action() {
+            @Override
+            public void run() {
+                if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof Configuration) {
+                    try {
+                        Configuration account = (Configuration) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
+                        editAction.setConfiguration(account);
+                        editAction.run();
+                        findAccounts();
+                    } catch (Exception t) {
+                        LOG.error("Error while opening control.", t); //$NON-NLS-1$
+                    }
+                }
+            }
+        };
+        runEditAction.setText("Edit");
+        runEditAction.setToolTipText("Edit account");
+        runEditAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
+        
+        getViewer().addDoubleClickListener(new IDoubleClickListener() {
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                runEditAction.run();
+            }
+        });
     }
 
     public static Display getDisplay() {
@@ -427,6 +594,17 @@ public class AccountView extends RightsEnabledView {
         return this.viewer;
     }
 
+    public ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandServive();
+        }
+        return commandService;
+    }
+
+    private ICommandService createCommandServive() {
+        return ServiceFactory.lookupCommandService();
+    }
+
     public IAccountService getAccountService() {
         if (accountService == null) {
             accountService = createAccountServive();
@@ -437,7 +615,7 @@ public class AccountView extends RightsEnabledView {
     private IAccountService createAccountServive() {
         return ServiceFactory.lookupAccountService();
     }
-
+    
     @Override
     public void dispose() {
         super.dispose();

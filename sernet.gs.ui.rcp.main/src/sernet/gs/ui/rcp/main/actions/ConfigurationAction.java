@@ -22,6 +22,7 @@ import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -67,7 +68,7 @@ import sernet.verinice.service.commands.SaveConfiguration;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class ConfigurationAction implements IObjectActionDelegate,  RightEnabledUserInteraction{
+public class ConfigurationAction extends Action implements IObjectActionDelegate,  RightEnabledUserInteraction{
 
 	private static final Logger LOG = Logger.getLogger(ConfigurationAction.class);
 	
@@ -81,27 +82,109 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 	
 	private IRightsServiceClient rightsService;
 
-	@Override
+	public ConfigurationAction() {
+        super();
+    }
+	
+	public ConfigurationAction(Configuration configuration) {
+        super();
+        this.configuration = configuration;
+    }
+
+
+    @Override
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 		this.targetPart = targetPart;
 	}
 	
 
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
+    public void run() {
+        if(!checkRights()) {
+            return;
+        }
+        
+        Activator.inheritVeriniceContextState();
+
+        if(configuration==null) {
+            loadConfiguration();
+        }
+        if(configuration==null) {
+            return;
+        }
+
+        IWorkbenchWindow window2 = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);     
+        final AccountDialog dialog = new AccountDialog(window2.getShell(), entType, Messages.ConfigurationAction_4, configuration.getEntity());
+        if (dialog.open() != Window.OK) {
+            return;
+        }
+
+        try {
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                @Override
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    Activator.inheritVeriniceContextState();
+                    try {
+                        final boolean updatePassword = updateNameAndPassword(dialog.getUserName(), dialog.getPassword(),dialog.getPassword2());
+                        // save configuration:
+                        SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, updatePassword);         
+                        command = getCommandService().executeCommand(command);
+                        getRightService().reload();
+                    } catch (final UsernameExistsException e) {
+                        final String logMessage = "Configuration can not be saved. Username exists: " + e.getUsername(); //$NON-NLS-1$
+                        final String messageTitle = Messages.ConfigurationAction_7; 
+                        final String userMessage = NLS.bind(Messages.ConfigurationAction_7, e.getUsername());       
+                        handleException(e, logMessage, messageTitle, userMessage);  
+                    } catch (final PasswordException e) {
+                        final String logMessage = "Configuration can not be saved. " + e.getMessage(); //$NON-NLS-1$
+                        final String messageTitle = Messages.ConfigurationAction_6; 
+                        final String userMessage = e.getMessage();      
+                        handleException(e, logMessage, messageTitle, userMessage);  
+                    } catch (Exception e) {
+                        LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
+                        ExceptionUtil.log(e, Messages.ConfigurationAction_5);
+                    }
+                }
+
+                private void handleException(final Exception e, final String logMessage, final String messageTitle, final String userMessage) {
+                    LOG.info(logMessage);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("stacktrace: ", e); //$NON-NLS-1$
+                    }
+                    Display.getDefault().syncExec(new Runnable() {
+                        @Override
+                        public void run() {
+                            MessageDialog.openError(Display.getDefault().getActiveShell(),messageTitle, userMessage);
+                        }
+                    });
+                }
+
+            });
+        } catch (Exception e) {
+            LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.ConfigurationAction_5);
+        } 
+    }
+    
+	/* (non-Javadoc)
+	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
+	 */
 	@Override
     @SuppressWarnings("unchecked")
 	public void run(IAction action) {
-	    if(!checkRights()) {
-	        return;
-	    }
-	    
-		Activator.inheritVeriniceContextState();
+	    run();
+	}
 
-		IWorkbenchWindow window = targetPart.getSite().getWorkbenchWindow();
-		IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
+
+    private void loadConfiguration() {
+        IWorkbenchWindow window1 = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+		IStructuredSelection selection = (IStructuredSelection) window1.getSelectionService().getSelection();
 		if (selection == null) {
 			return;
 		}
-		EntityType entType = null;
 		for (Iterator iter = selection.iterator(); iter.hasNext();) {
 			try {
 				Object o = iter.next();
@@ -122,66 +205,14 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
     					configuration = command2.getConfiguration();
     				}
     
-    				entType = HitroUtil.getInstance().getTypeFactory().getEntityType(configuration.getEntity().getEntityType());
-				}
+    			}
 			} catch (CommandException e) {
 				ExceptionUtil.log(e, Messages.ConfigurationAction_2);
 			} catch (RuntimeException e) {
 				ExceptionUtil.log(e, Messages.ConfigurationAction_3);
 			}
 		}
-
-		final AccountDialog dialog = new AccountDialog(window.getShell(), entType, Messages.ConfigurationAction_4, configuration.getEntity());
-		if (dialog.open() != Window.OK) {
-			return;
-		}
-
-		try {
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-				@Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-					Activator.inheritVeriniceContextState();
-					try {
-						final boolean updatePassword = updateNameAndPassword(dialog.getUserName(), dialog.getPassword(),dialog.getPassword2());
-						// save configuration:
-						SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, updatePassword);			
-						command = getCommandService().executeCommand(command);
-						getRightService().reload();
-					} catch (final UsernameExistsException e) {
-						final String logMessage = "Configuration can not be saved. Username exists: " + e.getUsername(); //$NON-NLS-1$
-						final String messageTitle = Messages.ConfigurationAction_7; 
-						final String userMessage = NLS.bind(Messages.ConfigurationAction_7, e.getUsername());		
-						handleException(e, logMessage, messageTitle, userMessage);	
-					} catch (final PasswordException e) {
-						final String logMessage = "Configuration can not be saved. " + e.getMessage(); //$NON-NLS-1$
-						final String messageTitle = Messages.ConfigurationAction_6; 
-						final String userMessage = e.getMessage();		
-						handleException(e, logMessage, messageTitle, userMessage);	
-					} catch (Exception e) {
-						LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
-						ExceptionUtil.log(e, Messages.ConfigurationAction_5);
-					}
-				}
-
-				private void handleException(final Exception e, final String logMessage, final String messageTitle, final String userMessage) {
-					LOG.info(logMessage);
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("stacktrace: ", e); //$NON-NLS-1$
-					}
-					Display.getDefault().syncExec(new Runnable() {
-						@Override
-                        public void run() {
-							MessageDialog.openError(Display.getDefault().getActiveShell(),messageTitle, userMessage);
-						}
-					});
-				}
-
-			});
-		} catch (Exception e) {
-			LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.ConfigurationAction_5);
-		} 
-	}
+    }
 
 	/**
 	 * Checks if the user has entered a new password. If so, the cleartext password is
@@ -247,7 +278,17 @@ public class ConfigurationAction implements IObjectActionDelegate,  RightEnabled
 		}
 	}
 	
-	public ICommandService getCommandService() {
+	public Configuration getConfiguration() {
+        return configuration;
+    }
+
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+
+    public ICommandService getCommandService() {
 		if (commandService == null) {
 			commandService = createCommandServive();
 		}

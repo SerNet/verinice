@@ -7,6 +7,7 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.rcp.ElementTitleCache;
 
 class AccountTableSorter extends ViewerSorter {
     private int propertyIndex;
@@ -59,30 +60,42 @@ class AccountTableSorter extends ViewerSorter {
 
     private int compareNullSafe(Configuration a1, Configuration a2) {
         int rc = 0;
-        PersonAdapter adapter = new PersonAdapter(a1.getPerson(), a2.getPerson());
+        CnATreeElement p1 = a1.getPerson();
+        CnATreeElement p2 = a2.getPerson();
+        PersonAdapter adapter = new PersonAdapter(p1, p2);
         switch (propertyIndex) {
-        case 0:   
-            rc = nsc.compare(a1.getUser().toLowerCase(), a2.getUser().toLowerCase());
+        case 0:  
+            String title1 = ElementTitleCache.get(p1.getScopeId());
+            String title2 = ElementTitleCache.get(p2.getScopeId());
+            if(title1!=null && title2!=null) {
+                rc = nsc.compare(title1.toLowerCase(), title2.toLowerCase());
+            }
             break;
-        case 1:       
-            rc = adapter.compareName();
+        case 1:
+            rc = adapter.compareParentName();
             break;
         case 2:   
+            rc = nsc.compare(a1.getUser().toLowerCase(), a2.getUser().toLowerCase());
+            break;
+        case 3:       
+            rc = adapter.compareName();
+            break;
+        case 4:   
             rc = nsc.compare(a1.getEmail().toLowerCase(), a2.getEmail().toLowerCase());
             break;
-        case 3:
+        case 5:
             rc = Boolean.valueOf(a1.isAdminUser()).compareTo(a2.isAdminUser());
             break; 
-        case 4:
+        case 6:
             rc = Boolean.valueOf(a1.isScopeOnly()).compareTo(a2.isScopeOnly());
             break;  
-        case 5:
+        case 7:
             rc = Boolean.valueOf(a1.isWebUser()).compareTo(a2.isWebUser());
             break; 
-        case 6:
+        case 8:
             rc = Boolean.valueOf(a1.isRcpUser()).compareTo(a2.isRcpUser());
             break; 
-        case 7:
+        case 9:
             rc = Boolean.valueOf(a1.isDeactivatedUser()).compareTo(a2.isDeactivatedUser());
             break;   
         
@@ -111,6 +124,18 @@ class AccountTableSorter extends ViewerSorter {
                 name1 = name1.toLowerCase();
             }
             String name2 = p2.getName();
+            if(name2!=null) {
+                name2 = name2.toLowerCase();
+            }
+            return nsc.compare(name1, name2);
+        }
+        
+        public int compareParentName() {
+            String name1 = p1.getParentName();
+            if(name1!=null) {
+                name1 = name1.toLowerCase();
+            }
+            String name2 = p2.getParentName();
             if(name2!=null) {
                 name2 = name2.toLowerCase();
             }

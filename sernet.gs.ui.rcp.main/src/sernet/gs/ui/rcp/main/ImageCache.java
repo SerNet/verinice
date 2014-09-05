@@ -240,6 +240,8 @@ public final class ImageCache {
     public static final String PRIORITY_NORMAL = "priority-2.gif";
     
     public static final String PRIORITY_HIGH = "priority-1.gif";
+    
+    public static final String SEARCH = "search.png";
 
 	/* ************************************************************************************************** */
 	// ISO 27000 icons - ISM Tree View:

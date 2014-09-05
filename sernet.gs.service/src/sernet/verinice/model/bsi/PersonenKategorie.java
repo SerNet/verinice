@@ -22,6 +22,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class PersonenKategorie extends CnATreeElement implements IBSIStrukturKategorie {
 	
 	public static final String TYPE_ID = "personkategorie"; //$NON-NLS-1$
+	public static final String TYPE_ID_HIBERNATE = "personen-kategorie"; //$NON-NLS-1$
 
 	public PersonenKategorie(CnATreeElement model) {
 		super(model);

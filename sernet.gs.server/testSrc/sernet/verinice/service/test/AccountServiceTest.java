@@ -96,9 +96,28 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
     
     @Test
+    public void testFindByIsScopeOnly() throws Exception {
+        List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createIsScopeOnlyParameter(true));
+        boolean testuserFound = false;
+        for (Configuration configuration : configurations) {
+            assertEquals("Account is not scope only account", true, configuration.isScopeOnly());
+            if(configuration.getUser().equals(LOGIN_B)) {
+                testuserFound = true;
+            }
+        }
+        assertTrue("Testuser not found", testuserFound);       
+    }
+    
+    @Test
+    public void testFindByScopeId() throws Exception {
+        List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createScopeParameter(organization.getDbId()));
+        assertNumber(configurations, 7);
+    }
+    
+    @Test
     public void testFindByAll() throws Exception {
         IAccountSearchParameter parameter = AccountSearchParameterFactory.createFamilyNameParameter(FAMILY_NAME_B);
-        parameter.setIsAdmin(true).setFirstName(FIRST_NAME_A).setLogin(LOGIN_A);
+        parameter.setIsAdmin(true).setFirstName(FIRST_NAME_A).setLogin(LOGIN_A).setScopeId(organization.getDbId());
         List<Configuration> configurations = accountService.findAccounts(parameter);
         assertNumber(configurations, 1);
         for (Configuration configuration : configurations) {
@@ -106,7 +125,8 @@ public class AccountServiceTest extends CommandServiceProvider {
             assertEquals("Account login is not: " + LOGIN_A, LOGIN_A, configuration.getUser()); 
             PersonIso person = (PersonIso) configuration.getPerson();
             assertEquals("Family name of person is not: " + FAMILY_NAME_B, FAMILY_NAME_B, person.getSurname());         
-            assertEquals("First name of person is not: " + FIRST_NAME_A, FIRST_NAME_A, person.getName());
+            assertEquals("First name of person is not: " + FIRST_NAME_A, FIRST_NAME_A, person.getName());   
+            assertEquals("Scope id is not: " + organization.getDbId(), organization.getDbId(), person.getScopeId());
         }       
     }
     
@@ -155,19 +175,19 @@ public class AccountServiceTest extends CommandServiceProvider {
         createAccount(personGroup, paramter);
         
         paramter = new AccountSearchParameter();
-        paramter.setLogin(LOGIN_A).setIsAdmin(true).setFamilyName(FAMILY_NAME_B).setFirstName(FIRST_NAME_A);
+        paramter.setLogin(LOGIN_A).setIsAdmin(true).setIsScopeOnly(false).setFamilyName(FAMILY_NAME_B).setFirstName(FIRST_NAME_A);
         createAccount(personGroup, paramter);
         
         paramter = new AccountSearchParameter();
-        paramter.setLogin(LOGIN_B).setIsAdmin(false).setFamilyName(FAMILY_NAME_A).setFirstName(FIRST_NAME_A);
+        paramter.setLogin(LOGIN_B).setIsAdmin(false).setIsScopeOnly(true).setFamilyName(FAMILY_NAME_A).setFirstName(FIRST_NAME_A);
         createAccount(personGroup, paramter);
         
         paramter = new AccountSearchParameter();
-        paramter.setLogin(LOGIN_C).setIsAdmin(true).setFamilyName(FAMILY_NAME_B).setFirstName(FIRST_NAME_B);
+        paramter.setLogin(LOGIN_C).setIsAdmin(true).setIsScopeOnly(false).setFamilyName(FAMILY_NAME_B).setFirstName(FIRST_NAME_B);
         createAccount(personGroup, paramter);
         
         paramter = new AccountSearchParameter();
-        paramter.setLogin(LOGIN_D).setIsAdmin(false).setFamilyName(FAMILY_NAME_A).setFirstName(FIRST_NAME_B);
+        paramter.setLogin(LOGIN_D).setIsAdmin(false).setIsScopeOnly(false).setFamilyName(FAMILY_NAME_A).setFirstName(FIRST_NAME_B);
         createAccount(personGroup, paramter);
         
         return organization;      
@@ -183,7 +203,12 @@ public class AccountServiceTest extends CommandServiceProvider {
         saveElement(person);
         Configuration configuration = createAccount(person);
         configuration.setUser(paramter.getLogin());
-        configuration.setAdminUser(paramter.isAdmin());
+        if(paramter.isAdmin()!=null) {
+            configuration.setAdminUser(paramter.isAdmin());
+        }
+        if(paramter.isScopeOnly()!=null) {
+            configuration.setScopeOnly(paramter.isScopeOnly());
+        }
         saveAccount(configuration);
     }
 

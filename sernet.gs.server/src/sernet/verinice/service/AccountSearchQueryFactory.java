@@ -22,7 +22,7 @@ public class AccountSearchQueryFactory {
     
     public static final HqlQuery createHql(IAccountSearchParameter parameter) {
         StringBuilder sbHql = new StringBuilder();
-        List<String> parameterList = new ArrayList<String>(10);
+        List<Object> parameterList = new ArrayList<Object>(10);
         
         sbHql.append("from Configuration as conf");
         
@@ -32,48 +32,59 @@ public class AccountSearchQueryFactory {
         for (int i = 0; i < parameter.getNumberOfPersonParameter(); i++) {
             sbHql.append(createPersonPropertyJoin(i));          
         }
+        if(parameter.getScopeId()!=null) {
+            sbHql.append(createPersonJoin(parameter.getNumberOfPersonParameter()));
+        }
         
         if(parameter.isParameter()) {
             sbHql.append(" where");
         }        
         for (int i = 0; i < parameter.getNumberOfAccountParameter(); i++) {
-            sbHql.append(createAccountWhere(i)); 
+            sbHql.append(createAccountPropertyWhere(i)); 
             if(((i+1)<parameter.getNumberOfAccountParameter()) || parameter.isPersonParameter()) {
                 sbHql.append(" and");
             }
         }
         for (int i = 0; i < parameter.getNumberOfPersonParameter(); i++) {
-            sbHql.append(createPersonWhere(i)); 
+            sbHql.append(createPersonPropertyWhere(i)); 
             if((i+1)<parameter.getNumberOfPersonParameter()) {
                 sbHql.append(" and");
             }
+        }
+        if(parameter.getScopeId()!=null) {
+            if(parameter.isAccountParameter() || parameter.isPersonParameter()) {
+                sbHql.append(" and");
+            }
+            sbHql.append(createPersonWhere(parameter.getNumberOfPersonParameter(),"scopeId"));
         }
         
         if(parameter.getLogin()!=null) {
             parameterList.add(Configuration.PROP_USERNAME);
             parameterList.add(addWildcards(parameter.getLogin()));
-        }
-        
+        }        
         if(parameter.isAdmin()!=null) {
             parameterList.add(Configuration.PROP_ISADMIN);
             parameterList.add(parameter.isAdmin() ? Configuration.PROP_ISADMIN_YES : Configuration.PROP_ISADMIN_NO);
-        }
-        
+        }        
+        if(parameter.isScopeOnly()!=null) {
+            parameterList.add(Configuration.PROP_SCOPE);
+            parameterList.add(parameter.isScopeOnly() ? Configuration.PROP_SCOPE_YES : Configuration.PROP_SCOPE_NO);
+        }         
         if(parameter.getFirstName()!=null) {
             parameterList.add(PersonIso.PROP_NAME);
             parameterList.add(addWildcards(parameter.getFirstName()));
-        }
-        
+        }        
         if(parameter.getFamilyName()!=null) {
             parameterList.add(PersonIso.PROP_SURNAME);
             parameterList.add(addWildcards(parameter.getFamilyName()));
-        }
-        
+        }       
+        if(parameter.getScopeId()!=null) {
+            parameterList.add(parameter.getScopeId());
+        }       
         String hql = sbHql.toString();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Hql: " + hql);
-        }
-        
+        }       
         return new HqlQuery(hql, parameterList.toArray());
     }
 
@@ -100,17 +111,29 @@ public class AccountSearchQueryFactory {
         return sb.toString();
     }
     
-    private static String createAccountWhere(int i) {
+    private static String createPersonJoin(int i) {
+        StringBuilder sb = new StringBuilder();      
+        sb.append(" inner join fetch conf.person as person_").append(i);
+        return sb.toString();
+    }
+    
+    private static String createAccountPropertyWhere(int i) {
         StringBuilder sb = new StringBuilder();
         sb.append(" props_").append(i).append(".propertyType = ?");
         sb.append(" and lower(props_").append(i).append(".propertyValue) like lower(?)");
         return sb.toString();
     }
     
-    private static String createPersonWhere(int i) {
+    private static String createPersonPropertyWhere(int i) {
         StringBuilder sb = new StringBuilder();
         sb.append(" pProps_").append(i).append(".propertyType = ?");
         sb.append(" and lower(pProps_").append(i).append(".propertyValue) like lower(?)");
+        return sb.toString();
+    }
+    
+    private static String createPersonWhere(int i, String property) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" person_").append(i).append(".").append(property).append(" = ?");
         return sb.toString();
     }
     

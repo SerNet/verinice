@@ -27,4 +27,8 @@ public final class AccountSearchParameterFactory {
     public static IAccountSearchParameter createIsScopeOnlyParameter(Boolean isScopeOnly) {
         return AccountSearchParameter.newInstance().setIsScopeOnly(isScopeOnly);
     }
+    
+    public static IAccountSearchParameter createScopeParameter(Integer scopeId) {
+        return AccountSearchParameter.newInstance().setScopeId(scopeId);
+    }
 }

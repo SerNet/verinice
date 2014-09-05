@@ -12,6 +12,7 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     private Boolean isAdmin;
     private Boolean isScopeOnly;
     private Boolean isDeactivated;
+    private Integer scopeId;
     
 
     public static AccountSearchParameter newInstance() {
@@ -74,6 +75,15 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
         this.isDeactivated = isDeactivated;
         return this;
     }
+    
+    public Integer getScopeId() {
+        return scopeId;
+    }
+
+    public IAccountSearchParameter setScopeId(Integer scopeId) {
+        this.scopeId = scopeId;
+        return this;
+    }
 
     @Override
     public int getNumberOfAccountParameter() {
@@ -107,7 +117,7 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
 
     @Override
     public boolean isParameter() {
-        return isAccountParameter() || isPersonParameter();
+        return isAccountParameter() || isPersonParameter() || getScopeId()!=null;
     } 
     
     @Override
@@ -118,8 +128,7 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     @Override
     public boolean isPersonParameter() {
         return getNumberOfPersonParameter()>0;
-    } 
-    
-   
+    }
+  
 
 }

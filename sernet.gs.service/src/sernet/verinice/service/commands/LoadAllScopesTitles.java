@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 
@@ -49,15 +50,21 @@ public class LoadAllScopesTitles extends GenericCommand {
             "join fetch elmt.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
-            "where elmt.objectType = ? " + //$NON-NLS-1$
-             "or elmt.objectType = ?"; //$NON-NLS-1$
+            "where elmt.objectType in (:typeIds)"; //$NON-NLS-1$
+        
     
+    private Object[] typeIds;
     
     private HashMap<Integer, String> selectedElements = new HashMap<Integer, String>();
 
     public LoadAllScopesTitles() {
+        this(new Object[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
     }       
      
+    public LoadAllScopesTitles(Object[] typeIds) {
+        super();
+        this.typeIds = typeIds;
+    }
     /*
      * (non-Javadoc)
      * 
@@ -66,7 +73,7 @@ public class LoadAllScopesTitles extends GenericCommand {
     @Override
     public void execute() {
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
-       List<Object> list = dao.findByQuery(QUERY, new Object[] {"it-verbund", Organization.TYPE_ID});
+        List<CnATreeElement> list = (List<CnATreeElement>) dao.findByQuery(QUERY, new String[]{"typeIds"}, new Object[]{typeIds});
         if(list != null && list.size() > 0){
             for(Object obj : list){
                 if(obj instanceof CnATreeElement){
