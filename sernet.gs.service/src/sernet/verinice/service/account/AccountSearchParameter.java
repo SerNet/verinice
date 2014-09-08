@@ -84,6 +84,32 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
         this.scopeId = scopeId;
         return this;
     }
+    
+    @Override
+    public IAccountSearchParameter setParameter(String name, Object value) {
+        if(FAMILY_NAME.equals(name)) {
+            setFamilyName((String) value);
+        }
+        if(FIRST_NAME.equals(name)) {
+            setFirstName((String) value);
+        }
+        if(LOGIN.equals(name)) {
+            setLogin((String) value);
+        }
+        if(IS_ADMIN.equals(name)) {
+            setIsAdmin((Boolean) value);
+        }
+        if(IS_DEACTIVATED.equals(name)) {
+            setIsDeactivated((Boolean) value);
+        }
+        if(IS_SCOPE_ONLY.equals(name)) {
+            setIsScopeOnly((Boolean) value);
+        }
+        if(SCOPE_ID.equals(name)) {
+            setScopeId((Integer) value);
+        }
+        return this;
+    }
 
     @Override
     public int getNumberOfAccountParameter() {
@@ -129,6 +155,5 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     public boolean isPersonParameter() {
         return getNumberOfPersonParameter()>0;
     }
-  
 
 }

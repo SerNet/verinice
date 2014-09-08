@@ -48,14 +48,14 @@ implements IBSIStrukturElement {
 	public static final String PROP_TAG			= "person_tag"; //$NON-NLS-1$
     public static final String P_ANREDE = "person_anrede"; //$NON-NLS-1$
 	public static final String P_NAME = "nachname"; //$NON-NLS-1$
-	private static final String P_VORNAME = "vorname"; //$NON-NLS-1$
-	private static final String PROP_KUERZEL = "person_kuerzel"; //$NON-NLS-1$
-	private static final String P_ROLLEN = "person_rollen"; //$NON-NLS-1$
+	public static final String P_VORNAME = "vorname"; //$NON-NLS-1$
+	public static final String PROP_KUERZEL = "person_kuerzel"; //$NON-NLS-1$
+	public static final String P_ROLLEN = "person_rollen"; //$NON-NLS-1$
 
 	// ID must correspond to entity definition in entitytype XML description:
 	public static final String TYPE_ID = "person"; //$NON-NLS-1$
 	public static final String PROP_ERLAEUTERUNG = "person_erlaeuterung"; //$NON-NLS-1$
-	private static final String PROP_ANZAHL = "person_anzahl"; //$NON-NLS-1$
+	public static final String PROP_ANZAHL = "person_anzahl"; //$NON-NLS-1$
 	
 	
 	public Person(CnATreeElement parent) {

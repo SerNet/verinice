@@ -102,7 +102,19 @@ public class PersonIso extends CnATreeElement implements IISO27kElement {
 	public void setName(String name) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_NAME), name);
 	}
-	
+	public String getFullName() {
+    	if (getEntity() == null){
+            return ""; //$NON-NLS-1$
+        }
+        StringBuffer sb = new StringBuffer();
+        sb.append(getEntity().getSimpleValue(PROP_NAME));
+        if (sb.length() > 0){
+            sb.append(" "); //$NON-NLS-1$
+        }
+        sb.append( getEntity().getSimpleValue(PROP_SURNAME));
+        
+        return sb.toString();       
+	}
 	
 	public Collection<? extends String> getTags() {
 		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));

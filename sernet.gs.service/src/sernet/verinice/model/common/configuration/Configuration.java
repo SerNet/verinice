@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -45,7 +46,7 @@ import sernet.verinice.model.common.accountgroup.AccountGroup;
  *
  */
 @SuppressWarnings("serial")
-public class Configuration implements Serializable, ITypedElement {
+public class Configuration implements Serializable, ITypedElement, Comparable<Configuration> {
 
 	private Entity entity;
 	
@@ -90,6 +91,8 @@ public class Configuration implements Serializable, ITypedElement {
     public static final String PROP_SCOPE_NO = "configuration_scope_no"; //$NON-NLS-1$
 
     public static final String PROP_DEACTIVATED = "configuration_deactivated"; //$NON-NLS-1$
+    
+    private static final NumericStringComparator NSC = new NumericStringComparator();
     
 	private CnATreeElement person;
 	
@@ -402,6 +405,35 @@ public class Configuration implements Serializable, ITypedElement {
 			return false;
 		}
 	}
+	
+	@Override
+    public int compareTo(Configuration c) {
+	    int rc = 0;
+        if (c == null) {
+            rc = -1;
+        } else {
+            // e1 and e2 != null
+            rc = compareNullSafe(c);
+        }
+        return rc;
+    }
+	
+	 private int compareNullSafe(Configuration c) {
+	    int rc = 0;
+        if ((this.getUser() == null && c.getUser() != null)) {
+            rc = 1;
+        } else if (c.getUser() == null && this.getUser() != null) {
+            rc = -1;
+        } else {
+            // e1 and e2 != null
+            rc = compareNullSafe(c.getUser());
+        }
+        return rc;
+    }
+
+    private int compareNullSafe(String login2) {
+        return NSC.compare(this.getUser().toLowerCase(), login2.toLowerCase());
+    }
 
     /* (non-Javadoc)
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
@@ -447,4 +479,5 @@ public class Configuration implements Serializable, ITypedElement {
     public void setAccountGroups(Set<AccountGroup> accountGroups) {
         this.accountGroups = accountGroups;
     }
+    
 }

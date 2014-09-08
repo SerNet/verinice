@@ -371,7 +371,7 @@ public class AccountView extends RightsEnabledView {
         table.setLinesVisible(true);
         viewer.setSorter(tableSorter);
         // ensure initial table sorting (by filename)
-        ((AccountTableSorter) viewer.getSorter()).setColumn(1);
+        ((AccountTableSorter) viewer.getSorter()).setColumn(2);
     }
 
     private void createTableColumn(String title, int width, int index) {

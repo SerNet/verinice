@@ -65,7 +65,8 @@ public class AccountService implements IAccountService, Serializable {
             result = new ArrayList<Configuration>(set);
        } else {
            result = Collections.emptyList(); 
-       }        
+       }
+       Collections.sort(result);
        return result;
     }
     
