@@ -8,24 +8,36 @@ import org.apache.log4j.Logger;
 import org.hibernate.criterion.DetachedCriteria;
 
 import sernet.verinice.interfaces.IAccountSearchParameter;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
 
-public class AccountSearchQueryFactory {
+public final class AccountSearchQueryFactory {
 
     private static final Logger LOG = Logger.getLogger(AccountSearchQueryFactory.class);
+       
+    private AccountSearchQueryFactory() {
+        // do not create instances of this utility class
+    }
     
     public static DetachedCriteria createCriteria(IAccountSearchParameter parameter) {
-        DetachedCriteria crit = DetachedCriteria.forClass(Configuration.class);
-        return crit;
+        return DetachedCriteria.forClass(Configuration.class);
     }
     
     public static final HqlQuery createHql(IAccountSearchParameter parameter) {
-        StringBuilder sbHql = new StringBuilder();
-        List<Object> parameterList = new ArrayList<Object>(10);
-        
-        sbHql.append("from Configuration as conf");
-        
+        StringBuilder sbHql = new StringBuilder();     
+        sbHql.append("from Configuration as conf");      
+        createJoin(sbHql, parameter);       
+        createWhere(sbHql, parameter);       
+        List<Object> parameterList = addParameter(parameter);       
+        String hql = sbHql.toString();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Hql: " + hql);
+        }       
+        return new HqlQuery(hql, parameterList.toArray());
+    }
+
+    private static void createJoin(StringBuilder sbHql, IAccountSearchParameter parameter) {
         for (int i = 0; i < parameter.getNumberOfAccountParameter(); i++) {
             sbHql.append(createAccountPropertyJoin(i));          
         }   
@@ -35,7 +47,9 @@ public class AccountSearchQueryFactory {
         if(parameter.getScopeId()!=null) {
             sbHql.append(createPersonJoin(parameter.getNumberOfPersonParameter()));
         }
-        
+    }
+
+    private static void createWhere(StringBuilder sbHql, IAccountSearchParameter parameter) {
         if(parameter.isParameter()) {
             sbHql.append(" where");
         }        
@@ -57,7 +71,10 @@ public class AccountSearchQueryFactory {
             }
             sbHql.append(createPersonWhere(parameter.getNumberOfPersonParameter(),"scopeId"));
         }
-        
+    }
+
+    private static List<Object> addParameter(IAccountSearchParameter parameter) {
+        List<Object> parameterList = new ArrayList<Object>(10);
         if(parameter.getLogin()!=null) {
             parameterList.add(Configuration.PROP_USERNAME);
             parameterList.add(addWildcards(parameter.getLogin()));
@@ -72,20 +89,18 @@ public class AccountSearchQueryFactory {
         }         
         if(parameter.getFirstName()!=null) {
             parameterList.add(PersonIso.PROP_NAME);
+            parameterList.add(Person.P_VORNAME);
             parameterList.add(addWildcards(parameter.getFirstName()));
         }        
         if(parameter.getFamilyName()!=null) {
             parameterList.add(PersonIso.PROP_SURNAME);
+            parameterList.add(Person.P_NAME);
             parameterList.add(addWildcards(parameter.getFamilyName()));
         }       
         if(parameter.getScopeId()!=null) {
             parameterList.add(parameter.getScopeId());
-        }       
-        String hql = sbHql.toString();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Hql: " + hql);
-        }       
-        return new HqlQuery(hql, parameterList.toArray());
+        }
+        return parameterList;
     }
 
     private static String addWildcards(String login) {
@@ -126,7 +141,7 @@ public class AccountSearchQueryFactory {
     
     private static String createPersonPropertyWhere(int i) {
         StringBuilder sb = new StringBuilder();
-        sb.append(" pProps_").append(i).append(".propertyType = ?");
+        sb.append(" (pProps_").append(i).append(".propertyType = ? or pProps_").append(i).append(".propertyType = ?)");
         sb.append(" and lower(pProps_").append(i).append(".propertyValue) like lower(?)");
         return sb.toString();
     }

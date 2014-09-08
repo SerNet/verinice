@@ -18,6 +18,9 @@ class AccountSortSelectionAdapter extends SelectionAdapter {
         this.index = index;
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
+     */
     @Override
     public void widgetSelected(SelectionEvent e) {
         fileView.tableSorter.setColumn(index);

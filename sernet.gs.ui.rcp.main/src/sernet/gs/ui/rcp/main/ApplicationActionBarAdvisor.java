@@ -93,7 +93,7 @@ import sernet.verinice.validation.CnAValidationView;
  */
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     
-    private static final String WARNING_RESTRICTION = "restriction";
+    private static final String WARNING_RESTRICTION = "restriction"; //$NON-NLS-1$
 
     // Actions - important to allocate these only in makeActions, and then use
     // them
@@ -214,7 +214,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         closeAllAction = ActionFactory.CLOSE_ALL.create(window);
         closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
         deleteAction = ActionFactory.DELETE.create(window);
-        openGroupViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_36, GroupView.ID, ImageCache.ANWENDUNG, ActionRightIDs.BSIBROWSER);
+        openGroupViewAction = new OpenViewAction(window, "", GroupView.ID, ImageCache.ANWENDUNG, ActionRightIDs.BSIBROWSER); //$NON-NLS-1$
         openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
         openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
         openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
@@ -229,7 +229,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT, ActionRightIDs.AUDITVIEW);
         openTaskViewAction = new OpenTaskViewAction(window, ActionRightIDs.TASKVIEW);
         openValidationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_35, CnAValidationView.ID, ImageCache.VIEW_VALIDATION, ActionRightIDs.CNAVALIDATION);
-        openAccountViewAction = new OpenViewAction(window, "Account View", AccountView.ID, ImageCache.PERSON, ActionRightIDs.ACCOUNTSETTINGS);
+        openAccountViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_38, AccountView.ID, ImageCache.PERSON, ActionRightIDs.ACCOUNTSETTINGS);
         
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
@@ -293,8 +293,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     protected void fillStatusLine(IStatusLineManager statusLine) {
         final int statusItemCharWidth = 100;
         if(isServerMode()) {
-            StatusLineContributionItem statusItem = new StatusLineContributionItem("server-url",statusItemCharWidth);
-            statusItem.setText("Server: " + getShortServerUrl());
+            StatusLineContributionItem statusItem = new StatusLineContributionItem("server-url",statusItemCharWidth); //$NON-NLS-1$
+            statusItem.setText(Messages.ApplicationActionBarAdvisor_40 + getShortServerUrl());
             statusLine.add(statusItem);
         }       
     }
@@ -304,10 +304,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         final int httpsURLLength = 8;
         String url = getServerUrlPreference();
         if(url!=null && !url.isEmpty()) {
-           if(url.startsWith("http://")) {
+           if(url.startsWith("http://")) { //$NON-NLS-1$
                url = url.substring(httpURLLength);
            }
-           if(url.startsWith("https://")) {
+           if(url.startsWith("https://")) { //$NON-NLS-1$
                url = url.substring(httpsURLLength);
            }
         }

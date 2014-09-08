@@ -59,9 +59,12 @@ public class AccountServiceTest extends CommandServiceProvider {
     @Test
     public void testFindByLogin() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(getLoginName()));
-        assertNumber(configurations, 1);
-        Configuration account = configurations.get(0);
-        assertEquals("Account login is not: " + getLoginName(), getLoginName(), account.getUser());      
+        assertNotNull("Search result is null",  configurations);
+        assertTrue("Number of accounts is 0", !configurations.isEmpty());
+        for (Configuration account : configurations) {
+            assertNotNull("Account login is null", account.getUser());
+            assertTrue("Account login does not contain: " + getLoginName(), account.getUser().contains(getLoginName()));     
+        }
     }
  
     @Test
@@ -137,6 +140,20 @@ public class AccountServiceTest extends CommandServiceProvider {
             assertEquals("Account is admin account", false, configuration.isAdminUser());
             
         }     
+    }
+    
+    @Test
+    public void testRemove() throws Exception {
+        List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
+        assertNotNull("Search result is null",  configurations);
+        assertTrue("Number of accounts is 0", !configurations.isEmpty());
+        assertNumber(configurations, 1);
+        Configuration account = configurations.get(0);
+        assertEquals("Account login is not: " + LOGIN_A, LOGIN_A, account.getUser());
+        accountService.removeAccount(account);
+        configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
+        assertNotNull("Search result is null",  configurations);
+        assertTrue("Number of accounts is not 0", configurations.isEmpty());
     }
     
     private void assertNumber(List<Configuration> configurations, int expectedNumber) {

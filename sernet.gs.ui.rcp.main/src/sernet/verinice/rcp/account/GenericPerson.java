@@ -17,7 +17,7 @@ class GenericPerson {
     String getName() {
         String name = null;
         if(person instanceof PersonIso) {
-            name = ((PersonIso)person).getName();
+            name = ((PersonIso)person).getFullName();
         }
         if(person instanceof Person) {
             name = ((Person)person).getFullName();

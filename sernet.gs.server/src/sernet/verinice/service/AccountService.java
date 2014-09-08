@@ -36,6 +36,10 @@ import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
+ * Service to find, remove and add new accounts and account groups.
+ * This service is configured in veriniceserver-common.xml. Remote access is configured in
+ * springDispatcher-servlet.xml.
+ * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de> 
  */
