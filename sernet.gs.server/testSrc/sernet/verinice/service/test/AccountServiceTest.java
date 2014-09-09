@@ -59,8 +59,7 @@ public class AccountServiceTest extends CommandServiceProvider {
     @Test
     public void testFindByLogin() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(getLoginName()));
-        assertNotNull("Search result is null",  configurations);
-        assertTrue("Number of accounts is 0", !configurations.isEmpty());
+        testIfNotEmpty(configurations);
         for (Configuration account : configurations) {
             assertNotNull("Account login is null", account.getUser());
             assertTrue("Account login does not contain: " + getLoginName(), account.getUser().contains(getLoginName()));     
@@ -70,19 +69,22 @@ public class AccountServiceTest extends CommandServiceProvider {
     @Test
     public void testFindByFirstName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createFirstNameParameter(getFirstName()));
-        assertNumber(configurations, 1);
-        Configuration account = configurations.get(0);
-        PersonIso person = (PersonIso) account.getPerson();
-        assertEquals("First name of person is not: " + getFirstName(), getFirstName(), person.getName());        
+        testIfNotEmpty(configurations);
+        for (Configuration account : configurations) {
+            PersonIso person = (PersonIso) account.getPerson();
+            assertEquals("First name of person is not: " + getFirstName(), getFirstName(), person.getName());
+        }
+                
     }
     
     @Test
     public void testFindByFamilyName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createFamilyNameParameter(getFamilyName()));
-        assertNumber(configurations, 2);
-        Configuration account = configurations.get(0);
-        PersonIso person = (PersonIso) account.getPerson();
-        assertEquals("Family name of person is not: " + getFamilyName(), getFamilyName(), person.getSurname());
+        testIfNotEmpty(configurations);
+        for (Configuration account : configurations) {
+            PersonIso person = (PersonIso) account.getPerson();
+            assertEquals("Family name of person is not: " + getFamilyName(), getFamilyName(), person.getSurname());
+        }   
     }
     
     @Test
@@ -145,15 +147,24 @@ public class AccountServiceTest extends CommandServiceProvider {
     @Test
     public void testRemove() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
-        assertNotNull("Search result is null",  configurations);
-        assertTrue("Number of accounts is 0", !configurations.isEmpty());
-        assertNumber(configurations, 1);
-        Configuration account = configurations.get(0);
-        assertEquals("Account login is not: " + LOGIN_A, LOGIN_A, account.getUser());
-        accountService.removeAccount(account);
-        configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
+        testIfNotEmpty(configurations);
+        removeAccountsStartingWith(LOGIN_A);
+    }
+
+    private void removeAccountsStartingWith(String login) {      
+        List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(login));
+        for (Configuration account : configurations) {
+            assertTrue("Account login is not: " + login, account.getUser().startsWith(login));
+            accountService.removeAccount(account);
+        }
+        configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(login));
         assertNotNull("Search result is null",  configurations);
         assertTrue("Number of accounts is not 0", configurations.isEmpty());
+    }
+    
+    private void testIfNotEmpty(List<Configuration> configurations) {
+        assertNotNull("Search result is null",  configurations);
+        assertTrue("Number of accounts is 0", !configurations.isEmpty());
     }
     
     private void assertNumber(List<Configuration> configurations, int expectedNumber) {
@@ -170,6 +181,11 @@ public class AccountServiceTest extends CommandServiceProvider {
     
     @After
     public void tearDown() throws CommandException {
+        removeAccountsStartingWith(getLoginName());
+        removeAccountsStartingWith(LOGIN_A);
+        removeAccountsStartingWith(LOGIN_B);
+        removeAccountsStartingWith(LOGIN_C);
+        removeAccountsStartingWith(LOGIN_D);
         removeTestOrganization(organization); 
     }
    

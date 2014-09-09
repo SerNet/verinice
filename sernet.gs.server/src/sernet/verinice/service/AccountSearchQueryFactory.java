@@ -24,7 +24,7 @@ public final class AccountSearchQueryFactory {
         return DetachedCriteria.forClass(Configuration.class);
     }
     
-    public static final HqlQuery createHql(IAccountSearchParameter parameter) {
+    public static HqlQuery createHql(IAccountSearchParameter parameter) {
         StringBuilder sbHql = new StringBuilder();     
         sbHql.append("from Configuration as conf");      
         createJoin(sbHql, parameter);       
@@ -152,7 +152,7 @@ public final class AccountSearchQueryFactory {
         return sb.toString();
     }
     
-    public static final HqlQuery createRetrieveHql(Set<Integer> dbIds) {
+    public static HqlQuery createRetrieveHql(Set<Integer> dbIds) {
         StringBuilder sb = new StringBuilder();
         
         sb.append("from Configuration as conf");
