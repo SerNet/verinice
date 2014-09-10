@@ -71,12 +71,20 @@ public class AccountService implements IAccountService, Serializable {
     }
     
     @Override
-    public void removeAccount(Configuration account) {
+    public void delete(Configuration account) {
         getConfigurationDao().delete(account);
         // When a Configuration instance got deleted the server needs to
         // update
         // its cached role map. This is done here.
         getCommandService().discardUserData();
+    }
+    
+    @Override
+    public void deactivate(Configuration account) {
+        if(!account.isDeactivatedUser()) {
+            account.setIsDeactivatedUser(true);
+            getConfigurationDao().merge(account);
+        }
     }
     
     @Override

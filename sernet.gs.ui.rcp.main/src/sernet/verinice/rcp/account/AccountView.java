@@ -29,9 +29,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -109,6 +107,7 @@ public class AccountView extends RightsEnabledView {
     private ConfigurationAction editAction;
     private Action runEditAction;
     private Action removeAction;
+    private Action createAction;
     
     private IModelLoadListener modelLoadListener;
     private IAccountService accountService;
@@ -434,7 +433,18 @@ public class AccountView extends RightsEnabledView {
         };
         removeAction.setText(Messages.AccountView_30);
         removeAction.setToolTipText(Messages.AccountView_31);
-        removeAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MASSNAHMEN_UMSETZUNG_NEIN));
+        removeAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.USER_DISABLED));
+        
+        createAction = new Action() {
+            @Override
+            public void run() {
+                
+            }
+        };
+        createAction.setText("New...");
+        createAction.setToolTipText("New Account...");
+        createAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.USER_ADD));
+        
         
         getViewer().addDoubleClickListener(new IDoubleClickListener() {
             @Override
@@ -470,7 +480,7 @@ public class AccountView extends RightsEnabledView {
                 getDisplay().getActiveShell(), 
                 Messages.AccountView_32, 
                 NLS.bind(Messages.AccountView_33, account.getUser()))) {
-            getAccountService().removeAccount(account);
+            getAccountService().deactivate(account);
         }
         
     }
@@ -566,6 +576,7 @@ public class AccountView extends RightsEnabledView {
     private void fillLocalToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
+        manager.add(this.createAction);
         manager.add(this.removeAction);
         manager.add(this.runEditAction);
         manager.add(this.searchAction);

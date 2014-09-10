@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.NumericStringComparator;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
@@ -48,6 +50,8 @@ import sernet.verinice.model.common.accountgroup.AccountGroup;
 @SuppressWarnings("serial")
 public class Configuration implements Serializable, ITypedElement, Comparable<Configuration> {
 
+    private static final Logger LOG = Logger.getLogger(Configuration.class);
+    
 	private Entity entity;
 	
 	public static final String TYPE_ID = "configuration";
@@ -91,6 +95,8 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
     public static final String PROP_SCOPE_NO = "configuration_scope_no"; //$NON-NLS-1$
 
     public static final String PROP_DEACTIVATED = "configuration_deactivated"; //$NON-NLS-1$
+    public static final String PROP_DEACTIVATED_TRUE = "1"; //$NON-NLS-1$
+    public static final String PROP_DEACTIVATED_FALSE = "0"; //$NON-NLS-1$
     
     private static final NumericStringComparator NSC = new NumericStringComparator();
     
@@ -175,7 +181,20 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	}
 	
     public boolean isDeactivatedUser() {
-        return isRawPropertyValueEqual(PROP_DEACTIVATED, "1");
+        return isRawPropertyValueEqual(PROP_DEACTIVATED, PROP_DEACTIVATED_TRUE);
+    }
+    
+    public void setIsDeactivatedUser(boolean isDeactivated) {
+        PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_DEACTIVATED);
+        if(type==null) {
+            LOG.error("Can not set property: " + PROP_DEACTIVATED + ". Property type is not defined, check SNCA.xml.");
+            return;
+        }
+        if(isDeactivated) {
+            entity.setSimpleValue(type, PROP_DEACTIVATED_TRUE);
+        } else {
+            entity.setSimpleValue(type, PROP_DEACTIVATED_FALSE);
+        }
     }
 	
 	

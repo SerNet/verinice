@@ -33,7 +33,8 @@ import sernet.verinice.model.common.configuration.Configuration;
 public interface IAccountService {
     
     public List<Configuration> findAccounts(IAccountSearchParameter parameter);
-    public void removeAccount(Configuration account);
+    public void delete(Configuration account);
+    public void deactivate(Configuration account);
     
     public List<AccountGroup> listGroups();
     public AccountGroup createAccountGroup(String name);

@@ -3,6 +3,7 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.LinkedList;
@@ -150,12 +151,27 @@ public class AccountServiceTest extends CommandServiceProvider {
         testIfNotEmpty(configurations);
         removeAccountsStartingWith(LOGIN_A);
     }
+    
+    @Test
+    public void testDisable() throws Exception {
+        List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
+        testIfNotEmpty(configurations);
+        for (Configuration account : configurations) {
+            assertFalse("Account is disabled", account.isDeactivatedUser());
+            accountService.deactivate(account);
+        }
+        configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
+        testIfNotEmpty(configurations);
+        for (Configuration account : configurations) {
+            assertTrue("Account is not disabled", account.isDeactivatedUser());
+        }
+    }
 
     private void removeAccountsStartingWith(String login) {      
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(login));
         for (Configuration account : configurations) {
             assertTrue("Account login is not: " + login, account.getUser().startsWith(login));
-            accountService.removeAccount(account);
+            accountService.delete(account);
         }
         configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(login));
         assertNotNull("Search result is null",  configurations);
