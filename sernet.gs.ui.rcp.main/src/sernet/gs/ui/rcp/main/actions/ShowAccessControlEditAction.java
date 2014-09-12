@@ -63,7 +63,8 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
     private final IWorkbenchWindow window;
     
     private List<CnATreeElement> elements = new ArrayList<CnATreeElement>();
-    private Set<Permission> permissionSet;
+    private Set<Permission> permissionSetAdd;
+    private Set<Permission> permissionSetRemove;
     private boolean isOverride;
     private boolean isUpdateChildren;
 
@@ -109,7 +110,8 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
             return;
         }
         elements = dialog.getElements();
-        permissionSet = dialog.getPermissionSet();
+        permissionSetAdd = dialog.getPermissionSetAdd();
+        permissionSetRemove = dialog.getPermissionSetRemove();
         isOverride = dialog.isOverride();
         isUpdateChildren = dialog.isUpdateChildren();
         
@@ -139,7 +141,7 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
     
     private void updatePermissions() throws CommandException {
         for (CnATreeElement element : elements) {
-            UpdatePermissions up = new UpdatePermissions(element, permissionSet, isUpdateChildren, isOverride);
+            UpdatePermissions up = new UpdatePermissions(element, permissionSetAdd, permissionSetRemove,  isUpdateChildren, isOverride);
             ServiceFactory.lookupCommandService().executeCommand(up);       
         }
     }

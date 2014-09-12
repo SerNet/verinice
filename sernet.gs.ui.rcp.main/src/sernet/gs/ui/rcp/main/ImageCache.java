@@ -290,6 +290,8 @@ public final class ImageCache {
     public static final String PROFILE_64 = "profile_64.png";   
     public static final String USER_ADD = "user_add.png";   
     public static final String USER_DISABLED = "user_disabled.png";
+
+    public static final String OK_DISABLED = "ok-disabled.png";
 	
 	private static ImageCache instance;
 

@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -38,14 +39,15 @@ import sernet.verinice.model.common.Permission;
  * @author Robert Schuster <r.schuster@tarent.de>
  *
  */
-@SuppressWarnings({ "serial", "restriction" })
+@SuppressWarnings({ "serial" })
 public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLoggingCommand {
 	
 	private String cteTypeId;
 
 	private Serializable cteDbId;
 	
-	private Set<Permission> permissionSetNew;
+	private Set<Permission> permissionSetAdd;
+	private Set<Permission> permissionSetRemove;
 	
 	private boolean updateChildren;
 	
@@ -59,18 +61,27 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
 	
 	private transient IBaseDao<Permission, Serializable> permissionDao;
 
-	public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionSet, boolean updateChildren) {
-		this(cte,permissionSet,updateChildren,true);
+	public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd, boolean updateChildren) {
+		this(cte,permissionAdd,null,updateChildren,true);
 	}
 
-	public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionSet, boolean updateChildren, boolean overridePermission) {
-		this.cteTypeId = cte.getTypeId();
-		this.cteDbId = cte.getDbId();
-		this.permissionSetNew = permissionSet;
-		this.updateChildren = updateChildren;
-		this.overridePermission = overridePermission;
-		this.stationId = ChangeLogEntry.STATION_ID;
+	public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd, boolean updateChildren, boolean overridePermission) {
+	    this(cte,permissionAdd,null,updateChildren,true);
 	}
+	
+	public UpdatePermissions(CnATreeElement cte, Set<Permission> permissionAdd, Set<Permission> permissionRemove, boolean updateChildren, boolean overridePermission) {
+        this.cteTypeId = cte.getTypeId();
+        this.cteDbId = cte.getDbId();
+        this.permissionSetAdd = permissionAdd;
+        if(permissionRemove==null) {
+            this.permissionSetRemove = Collections.emptySet();
+        } else {
+            this.permissionSetRemove = permissionRemove;
+        }
+        this.updateChildren = updateChildren;
+        this.overridePermission = overridePermission;
+        this.stationId = ChangeLogEntry.STATION_ID;
+    }
 	
 	public void execute() {
 		IBaseDao<? extends CnATreeElement, Serializable> dao0 = getDaoFactory().getDAO(cteTypeId);
@@ -98,7 +109,7 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
 	private void updateElement(CnATreeElement element) {
 		if(element.getPermissions()==null) {
 			// initialize
-			final int size = (permissionSetNew!=null) ? permissionSetNew.size() : 0; 
+			final int size = (permissionSetAdd!=null) ? permissionSetAdd.size() : 0; 
 			element.setPermissions(new HashSet<Permission>(size));
 		}
 		if(overridePermission) {
@@ -110,7 +121,7 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
 		}
 		// flush, to delete old entries before inserting new ones
 		getPermissionDao().flush();
-		for (Permission permission : permissionSetNew) {
+		for (Permission permission : permissionSetAdd) {
 			// remove old version
 			boolean isNew = true;
 		    for (Permission oldPermission : element.getPermissions()) {
@@ -124,9 +135,14 @@ public class UpdatePermissions extends ChangeLoggingCommand implements IChangeLo
 			if(isNew){
 			    permission = Permission.clonePermission(element, permission);
 	            element.getPermissions().add(permission);
-			}			
-			getDao().saveOrUpdate(element);	
+			}
 		}
+		for (Permission permission : permissionSetRemove) {
+		    Permission permissionForCurrentElement = Permission.clonePermission(element, permission);
+		    getPermissionDao().delete(permissionForCurrentElement);
+		    element.getPermissions().remove(permissionForCurrentElement);
+		}     
+        getDao().saveOrUpdate(element); 
 	}
 	
 	public IBaseDao<CnATreeElement, Serializable> getDao() {
