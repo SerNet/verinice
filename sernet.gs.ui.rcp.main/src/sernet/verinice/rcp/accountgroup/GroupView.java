@@ -54,12 +54,16 @@ import org.springframework.orm.hibernate3.HibernateJdbcException;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAccountService;
 import static sernet.verinice.interfaces.IRightsService.STANDARD_GROUPS;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.IllegalSelectionException;
 import sernet.verinice.rcp.RightsEnabledView;
 
@@ -296,6 +300,14 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                                         groupToAccountList.setItems(accounts);
                                     }
 
+                                    else if (e.getSource() == groupToAccountList) {
+                                        accountList.deselectAll();
+                                    }
+
+                                    else if (e.getSource() == accountList) {
+                                        groupToAccountList.deselectAll();
+                                    }
+
                                     else if (e.getSource() == addBtn) {
                                         addAccounts(accountList.getSelection());
                                     }
@@ -311,6 +323,18 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                                     else if (e.getSource() == removeAllBtn) {
                                         removeAccounts(groupToAccountList.getItems());
                                     }
+
+                                    else if (e.getSource() == editAccountBtn) {
+                                        EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);
+                                        String selectedAccountName = getSelectedAccount();
+                                        if (!"".equals(selectedAccountName)) {
+                                            Configuration configuration = accountService.getAccountByName(getSelectedAccount());
+                                            AccountDialog accountDialog = new AccountDialog(parent.getShell(), entType, "Benutzereinstellungen", configuration.getEntity());
+                                            accountDialog.open();
+                                        } else {
+                                            MessageDialog.openWarning(parent.getShell(),"Warning","no account selected");
+                                        }
+                                    }
                                 }
                             } catch (Exception ex) {
 
@@ -319,11 +343,23 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                             }
                         }
 
+                        private String getSelectedAccount() {
+
+                            if (accountList.getSelectionCount() > 0) {
+                                return accountList.getSelection()[0];
+                            } else if (groupToAccountList.getSelectionCount() > 0) {
+                                return groupToAccountList.getSelection()[0];
+                            }
+
+                            return "";
+                        }
+
                         private void switchButtons(boolean enabled) {
                             addBtn.setEnabled(enabled);
                             addAllBtn.setEnabled(enabled);
                             removeBtn.setEnabled(enabled);
                             removeAllBtn.setEnabled(enabled);
+                            editAccountBtn.setEnabled(enabled);
                         }
                     });
 

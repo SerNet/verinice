@@ -39,6 +39,8 @@ public interface IAccountService {
 
     public void deactivate(Configuration account);
 
+    public Configuration getAccountByName(String name);
+
     public Set<String> listAccounts();
 
     public Set<String> addRole(Set<String> configurations, String role);

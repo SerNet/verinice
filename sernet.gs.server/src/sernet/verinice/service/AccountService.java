@@ -38,6 +38,7 @@ import sernet.verinice.interfaces.IRightsServerHandler;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.account.AccountSearchParameterFactory;
 
 /**
  * Service to find, remove and add new accounts and account groups.
@@ -63,10 +64,18 @@ public class AccountService implements IAccountService, Serializable {
 
     private IBaseDao<Permission, Serializable> permissionDao;
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
         List<Configuration> resultNoProps = getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getParams());
+        List<Configuration> result = initializeProperties(resultNoProps);
+        Collections.sort(result);
+        return result;
+    }
+
+    private List<Configuration> initializeProperties(List<Configuration> resultNoProps) {
+        HqlQuery hqlQuery;
         List<Configuration> result;
         if (resultNoProps != null && !resultNoProps.isEmpty()) {
             Set<Integer> dbIds = new HashSet<Integer>(resultNoProps.size());
@@ -139,14 +148,6 @@ public class AccountService implements IAccountService, Serializable {
     public void setAccountGroupDao(IDao<AccountGroup, Serializable> accountGroupDao) {
         this.accountGroupDao = accountGroupDao;
     }
-
-    public ICommandService getCommandService() {
-        return commandService;
-    }
-
-    public void setCommandService(ICommandService commandService) {
-        this.commandService = commandService;
-    }    
     
     @Override
     public void deleteAccountGroup(String name) {
@@ -191,7 +192,6 @@ public class AccountService implements IAccountService, Serializable {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Set<String> addRole(Set<String> usernames, String role) {
 
@@ -310,16 +310,33 @@ public class AccountService implements IAccountService, Serializable {
         this.permissionDao = permissionDao;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public long countConnectObjectsForGroup(String groupName) {
         String hqlQuery = "select count(perm) from Permission perm where perm.role = ?";
         String[] params = new String[] { groupName };
         List<Long> result = permissionDao.findByQuery(hqlQuery, params);
 
-        if(result != null && result.size() > 0){
+        if (result != null && result.size() > 0) {
             return result.get(0);
         }
 
         return 0;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Configuration getAccountByName(String name) {
+
+        IAccountSearchParameter parameter = AccountSearchParameterFactory.createLoginParameter(name);
+        HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
+        List<Configuration> accounts = getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.params);
+        accounts = initializeProperties(accounts);
+
+        if(accounts != null && !accounts.isEmpty()){
+            return accounts.get(0);
+        }
+
+        return null;
     }
 }
