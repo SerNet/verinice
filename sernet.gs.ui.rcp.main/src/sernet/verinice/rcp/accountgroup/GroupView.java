@@ -19,17 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
-import static sernet.gs.ui.rcp.main.Activator.inheritVeriniceContextState;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -467,7 +465,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         String selection;
 
         public DeleteGroupDialog(Shell parent, String title) {
-            super(parent, title);
+            super(parent, String.format("%s %s", title, getSelectedGroup()));
 
             if (isGroupSelected())
                 this.selection = getSelectedGroup();
@@ -477,13 +475,62 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         @Override
         protected void okPressed() {
-            accountGroupDataService.deleteAccountGroup(selection);
+
+            if (isGroupEmpty())
+                accountGroupDataService.deleteAccountGroup(selection);
+            else
+                openWarningDialog();
             super.okPressed();
+        }
+
+        private void openWarningDialog() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    getDisplay().syncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            MessageDialog dialog = new MessageDialog(parent.getShell(), "Achtung", null, "this group is connected with x accounts and y objects", MessageDialog.ERROR, new String[] { "ok", "cancel" }, 0);
+                            int result = dialog.open();
+
+                            if (result == 0)
+                                openSecondWarningDialog();
+                            else
+                                accountGroupDataService.deleteAccountGroup(selection);
+                        }
+                    });
+
+                }
+            }).start();
+        }
+
+        private void openSecondWarningDialog() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    getDisplay().syncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            MessageDialog dialog = new MessageDialog(parent.getShell(), "Gruppe Löschen", null, "really?", MessageDialog.ERROR, new String[] { "ok", "cancel" }, 0);
+                            int result = dialog.open();
+                            if (result == 0)
+                                accountGroupDataService.deleteAccountGroup(selection);
+                        }
+                    });
+
+                }
+            }).start();
         }
 
         @Override
         protected boolean isEditable() {
             return false;
+        }
+
+        private boolean isGroupEmpty() {
+            return accountGroupDataService.getAccountNamesForGroup(selection).length == 0;
         }
     }
 
