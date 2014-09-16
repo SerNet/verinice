@@ -45,6 +45,7 @@ public interface IAccountService {
 
     public Set<Configuration> deleteRole(Set<Configuration> configurations, String role);
 
+    
     public List<AccountGroup> listGroups();
 
     public void deleteAccountGroup(String name);
