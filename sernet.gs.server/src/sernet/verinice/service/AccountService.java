@@ -150,4 +150,9 @@ public class AccountService implements IAccountService, Serializable {
 
         return null;
     }
+
+    @Override
+    public List<Configuration> listAccounts() {
+        return configurationDao.findAll();
+    }
 }

@@ -35,6 +35,7 @@ public interface IAccountService {
     public List<Configuration> findAccounts(IAccountSearchParameter parameter);
     public void delete(Configuration account);
     public void deactivate(Configuration account);
+    public List<Configuration> listAccounts();
     
     public List<AccountGroup> listGroups();
     public void deleteAccountGroup(String name);
