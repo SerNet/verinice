@@ -76,4 +76,28 @@ public class AccountGroup implements ITypedElement, Serializable {
         }
         configurations.add(configuration);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
+        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null) {
+            return false;
+        }
+        try {
+            // Name of a account group must be unique, so this comparision is as
+            // simple as that:
+            AccountGroup that = (AccountGroup) o;
+            return this.name.equals(that.name);
+        } catch (ClassCastException cce) {
+            return false;
+        }
+    }
 }
