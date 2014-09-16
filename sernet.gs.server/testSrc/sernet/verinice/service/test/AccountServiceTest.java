@@ -75,6 +75,35 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     @Test
+    public void testDeleteAccountGroup() {
+        List<String> groupNames = Arrays.asList("test_1", "test_2");
+
+        AccountGroup accountGroup1 = accountService.createAccountGroup(groupNames.get(0));
+        AccountGroup accountGroup2 = accountService.createAccountGroup(groupNames.get(1));
+
+        accountService.deleteAccountGroup(accountGroup1);
+        accountService.deleteAccountGroup(accountGroup2);
+
+        Assert.assertTrue(accountService.listGroups().isEmpty());
+
+    }
+
+    @Test
+    public void testDeleteAccountGroupByName() {
+        List<String> groupNames = Arrays.asList("test_1", "test_2");
+
+        AccountGroup accountGroup1 = accountService.createAccountGroup(groupNames.get(0));
+        AccountGroup accountGroup2 = accountService.createAccountGroup(groupNames.get(1));
+
+        accountService.deleteAccountGroup(accountGroup1.getName());
+        accountService.deleteAccountGroup(accountGroup2.getName());
+
+        Assert.assertTrue(accountService.listGroups().isEmpty());
+
+    }
+
+
+    @Test
     public void testFindByLogin() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(getLoginName()));
         testIfNotEmpty(configurations);
