@@ -716,7 +716,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
      */
     @Override
     public String getRightID() {
-        return ActionRightIDs.GROUPSETTINGS;
+        return ActionRightIDs.ACCOUNTSETTINGS;
     }
 
     /*
