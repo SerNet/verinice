@@ -24,11 +24,5 @@
 		
 		<many-to-one name="person"
 			column="person_id" lazy="false" fetch="join"/>
-			
-		<set name="accountGroups" table="accountgroup_configuration" cascade="save-update">
-			<key column="CONFIGURATION_ID" />
-			<many-to-many column="ACCOUNT_GROUP_ID"  class="sernet.verinice.model.common.accountgroup.AccountGroup" />
-		</set>
-
 	</class>
 </hibernate-mapping>

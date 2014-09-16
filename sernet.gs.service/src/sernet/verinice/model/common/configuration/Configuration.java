@@ -103,9 +103,7 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	private CnATreeElement person;
 	
 	private Integer dbId;
-	
-	private Set<AccountGroup> accountGroups;
-	
+
 	public Configuration() {
 		setEntity(new Entity(TYPE_ID));
 	}
@@ -490,13 +488,4 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
         sb.append("\n(Auditor) Terminwarnung: bei Ablauf in X Tagen: ").append(getAuditorNotificationExpirationDays());
         return sb.toString();
 	}
-
-    public Set<AccountGroup> getAccountGroups() {
-        return accountGroups;
-    }
-
-    public void setAccountGroups(Set<AccountGroup> accountGroups) {
-        this.accountGroups = accountGroups;
-    }
-    
 }

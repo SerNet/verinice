@@ -13,11 +13,5 @@
 		</id>
 
 		<property name="name" type="string" column="name" not-null="true" unique="true" />
-
-		<set name="configurations" table="accountgroup_configuration" cascade="save-update">
-			<key column="ACCOUNT_GROUP_ID" />
-			<many-to-many column="CONFIGURATION_ID"
-				class="sernet.verinice.model.common.configuration.Configuration" />
-		</set>
 	</class>
 </hibernate-mapping>

@@ -37,8 +37,6 @@ public class AccountGroup implements ITypedElement, Serializable {
 
     private Integer dbId;
 
-    private Set<Configuration> configurations;
-
     private String name;
 
     public Integer getDbId() {
@@ -47,14 +45,6 @@ public class AccountGroup implements ITypedElement, Serializable {
 
     public void setDbId(Integer dbId) {
         this.dbId = dbId;
-    }
-
-    public Set<Configuration> getConfigurations() {
-        return configurations;
-    }
-
-    public void setConfigurations(Set<Configuration> configurations) {
-        this.configurations = configurations;
     }
 
     public String getName() {
@@ -68,13 +58,6 @@ public class AccountGroup implements ITypedElement, Serializable {
     @Override
     public String getTypeId() {
         return TYPE_ID;
-    }
-
-    public void addConfiguration(Configuration configuration) {
-        if (configurations == null) {
-            configurations = new HashSet<Configuration>();
-        }
-        configurations.add(configuration);
     }
 
     @Override
