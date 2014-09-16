@@ -567,7 +567,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                 super.closeTray();
             }
 
-            if (isGroupSelected() && isStandardGroup())
+            if (isGroupSelected())
                 this.selection = getSelectedGroup();
             else
                 throw new IllegalSelectionException("an account group must be selected");
