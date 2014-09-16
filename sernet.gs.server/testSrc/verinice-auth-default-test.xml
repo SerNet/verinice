@@ -22,6 +22,7 @@
         <profile name="user-default-profile" origin="default">
         <!-- missing actions: 
             "accountsettings"
+            "groupsettings"
             "accesscontrol"
             "editprofile"
             "taskdelete"
@@ -90,6 +91,7 @@
         <profile name="user-scope-default-profile" origin="default">
         <!-- missing actions: 
             "accountsettings"
+            "groupsettings"
             "accesscontrol"
             "editprofile"
             "taskdelete"
@@ -164,6 +166,7 @@
     		"addsecurityassessment"-->
            	<action id="accesscontrol" />
 	        <action id="accountsettings" />
+	        <action id="groupsettings" />
 	        <action id="addbsielement" />
 	        <action id="addcatalog" />
 	        <action id="addfile" />
@@ -227,6 +230,7 @@
         	<!-- this user is allowed to do everything -->
    	        <action id="accesscontrol" />
 	        <action id="accountsettings" />
+	        <action id="groupsettings" />
 	        <action id="addbsielement" />
 	        <action id="addcatalog" />
 	        <action id="addfile" />

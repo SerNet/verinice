@@ -44,13 +44,15 @@ import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.rcp.IllegalSelectionException;
+import sernet.verinice.rcp.RightsEnabledView;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class GroupView extends ViewPart implements SelectionListener, KeyListener {
+public class GroupView extends RightsEnabledView implements SelectionListener, KeyListener {
 
     public static final String ID = "sernet.verinice.rcp.accountgroup.GroupView";
 
@@ -462,5 +464,21 @@ public class GroupView extends ViewPart implements SelectionListener, KeyListene
 
     @Override
     public void keyPressed(KeyEvent e) {
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
+     */
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.GROUPSETTINGS;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
+     */
+    @Override
+    public String getViewId() {
+        return ID;
     }
 }
