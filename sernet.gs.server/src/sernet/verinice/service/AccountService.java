@@ -41,7 +41,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  * springDispatcher-servlet.xml.
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
- * @author Daniel Murygin <dm[at]sernet[dot]de> 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
 public class AccountService implements IAccountService, Serializable {
@@ -55,13 +55,13 @@ public class AccountService implements IAccountService, Serializable {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
         List<Configuration> resultNoProps = getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getParams());
         List<Configuration> result;
-        if(resultNoProps!=null && !resultNoProps.isEmpty()) {
+        if (resultNoProps != null && !resultNoProps.isEmpty()) {
             Set<Integer> dbIds = new HashSet<Integer>(resultNoProps.size());
             for (Configuration configuration : resultNoProps) {
                 dbIds.add(configuration.getDbId());
             }
             hqlQuery = AccountSearchQueryFactory.createRetrieveHql(dbIds);
-            hqlQuery.setNames(new String[]{"dbIds"});
+            hqlQuery.setNames(new String[] { "dbIds" });
             Set<Configuration> set = new HashSet<Configuration>(getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getNames(), hqlQuery.getParams()));
             result = new ArrayList<Configuration>(set);
        } else {
@@ -70,7 +70,7 @@ public class AccountService implements IAccountService, Serializable {
        Collections.sort(result);
        return result;
     }
-    
+
     @Override
     public void delete(Configuration account) {
         getConfigurationDao().delete(account);

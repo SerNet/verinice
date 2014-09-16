@@ -236,7 +236,7 @@ public class AccountServiceTest extends CommandServiceProvider {
     @Before
     public void setUp() throws Exception {
         uuidList = new LinkedList<String>();
-        organization = createTestOrganization();
+        //organization = createTestOrganization();
         removeAccountGroups();
     }
 
@@ -248,6 +248,16 @@ public class AccountServiceTest extends CommandServiceProvider {
         removeAccountsStartingWith(LOGIN_C);
         removeAccountsStartingWith(LOGIN_D);
         removeTestOrganization(organization); 
+        //removeTestOrganization(organization);
+        removeAccountGroups();
+    }
+
+    private void removeAccountGroups() {
+        List<AccountGroup> groups = accountService.listGroups();
+        if (groups != null) {
+            for (AccountGroup g : groups)
+                accountService.deleteAccountGroup(g);
+        }
     }
 
     private Organization createTestOrganization() throws CommandException {

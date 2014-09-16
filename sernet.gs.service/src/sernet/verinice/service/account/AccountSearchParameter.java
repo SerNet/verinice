@@ -13,6 +13,8 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     private Boolean isScopeOnly;
     private Boolean isDeactivated;
     private Integer scopeId;
+    private String accountGroup;
+
     
 
     public static AccountSearchParameter newInstance() {
@@ -28,6 +30,15 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
 
     public IAccountSearchParameter setLogin(String login) {
         this.login = login;
+        return this;
+    }
+
+    public String getAccountGroup(){
+        return this.accountGroup;
+    }
+
+    public IAccountSearchParameter setAccountGroup(String accountGroup){
+        this.accountGroup = accountGroup;
         return this;
     }
 
@@ -115,6 +126,9 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     public int getNumberOfAccountParameter() {
         int n = 0;
         if(getLogin()!=null) {
+            n++;
+        }
+        if(getAccountGroup()!=null){
             n++;
         }
         if(isAdmin()!=null) {

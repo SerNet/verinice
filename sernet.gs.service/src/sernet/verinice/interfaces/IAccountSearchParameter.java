@@ -26,6 +26,9 @@ public interface IAccountSearchParameter {
     String getLogin();
     IAccountSearchParameter setLogin(String login);
     
+    String getAccountGroup();
+    IAccountSearchParameter setAccountGroup(String accountGroup);
+
     String getFirstName();
     IAccountSearchParameter setFirstName(String firstName);
     

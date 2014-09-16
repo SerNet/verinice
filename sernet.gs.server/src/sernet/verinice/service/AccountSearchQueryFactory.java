@@ -78,7 +78,13 @@ public final class AccountSearchQueryFactory {
         if(parameter.getLogin()!=null) {
             parameterList.add(Configuration.PROP_USERNAME);
             parameterList.add(addWildcards(parameter.getLogin()));
-        }        
+        }
+        
+        if(parameter.getAccountGroup()!=null){
+            parameterList.add(Configuration.PROP_ROLES);
+            parameterList.add(parameter.getAccountGroup());
+        }
+
         if(parameter.isAdmin()!=null) {
             parameterList.add(Configuration.PROP_ISADMIN);
             parameterList.add(parameter.isAdmin() ? Configuration.PROP_ISADMIN_YES : Configuration.PROP_ISADMIN_NO);
