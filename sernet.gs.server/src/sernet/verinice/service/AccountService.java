@@ -43,6 +43,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de> 
  */
+@SuppressWarnings("serial")
 public class AccountService implements IAccountService, Serializable {
 
     private IDao<AccountGroup, Serializable> accountGroupDao;
@@ -96,7 +97,7 @@ public class AccountService implements IAccountService, Serializable {
     public AccountGroup createAccountGroup(String name) {
         AccountGroup group = new AccountGroup();
         group.setName(name);      
-        getAccountGroupDao().saveOrUpdate(group);
+        getAccountGroupDao().merge(group);
         return group;
     }
 
@@ -117,8 +118,8 @@ public class AccountService implements IAccountService, Serializable {
         return accountGroupDao;
     }
 
-    public void setAccountGroupDao(IDao<AccountGroup, Serializable> groupDao) {
-        this.accountGroupDao = groupDao;
+    public void setAccountGroupDao(IDao<AccountGroup, Serializable> accountGroupDao) {
+        this.accountGroupDao = accountGroupDao;
     }
 
     public ICommandService getCommandService() {
