@@ -61,10 +61,11 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.rcp.ImageColumnProvider;
 /**
  * Dialog that allows changing the access options for elements.
@@ -387,16 +388,18 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 	    return roleArray;	
 	}
 
-	private String[] loadRoles() {
-	    FindAllRoles findAllRoles = new FindAllRoles(true);
-        try {
-            findAllRoles = ServiceFactory.lookupCommandService().executeCommand(findAllRoles);
-        } catch (CommandException e) {
-            throw new RuntimeException(e);
+    private String[] loadRoles() {
+
+        IAccountService accountService = ServiceFactory.lookupAccountService();
+        List<AccountGroup> accountGroups = accountService.listGroups();
+        Collections.sort(accountGroups);
+
+        String[] roleList = new String[accountGroups.size()];
+        for (int i = 0; i < roleList.length; i++) {
+            roleList[i] = accountGroups.get(i).getName();
         }
-        List<String> roleList  = new ArrayList<String>(findAllRoles.getRoles());
-        Collections.sort(roleList);
-        return roleList.toArray(new String[roleList.size()]);
+
+        return roleList;
     }
 	
 	protected void addPermission() {

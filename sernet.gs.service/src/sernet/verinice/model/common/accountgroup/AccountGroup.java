@@ -31,7 +31,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  * 
  */
 @SuppressWarnings("serial")
-public class AccountGroup implements ITypedElement, Serializable {
+public class AccountGroup implements ITypedElement, Serializable, Comparable<AccountGroup> {
 
     public final static String TYPE_ID = "user_groups";
 
@@ -88,5 +88,10 @@ public class AccountGroup implements ITypedElement, Serializable {
         } catch (ClassCastException cce) {
             return false;
         }
+    }
+
+    @Override
+    public int compareTo(AccountGroup o) {
+        return this.getName().toLowerCase().compareTo(o.getName().toLowerCase());
     }
 }
