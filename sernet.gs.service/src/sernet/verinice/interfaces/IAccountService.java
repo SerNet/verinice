@@ -20,6 +20,7 @@
 package sernet.verinice.interfaces;
 
 import java.util.List;
+import java.util.Set;
 
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -41,6 +42,7 @@ public interface IAccountService {
     public void deleteAccountGroup(String name);
     public void deleteAccountGroup(AccountGroup group);
     public AccountGroup createAccountGroup(String name);
+    public void saveAccountGroups(Set<String> accountGroupNames);
 
     
 }

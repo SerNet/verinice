@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import sernet.verinice.interfaces.IAccountSearchParameter;
 
+@SuppressWarnings("serial")
 public class AccountSearchParameter implements IAccountSearchParameter, Serializable {
 
     private String login;

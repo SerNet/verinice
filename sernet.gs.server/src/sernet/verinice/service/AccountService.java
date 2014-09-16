@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -45,6 +46,8 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 @SuppressWarnings("serial")
 public class AccountService implements IAccountService, Serializable {
+
+    public transient static Logger log = Logger.getLogger(AccountService.class);
 
     private IDao<AccountGroup, Serializable> accountGroupDao;
     private IBaseDao<Configuration, Serializable> configurationDao;
@@ -154,5 +157,21 @@ public class AccountService implements IAccountService, Serializable {
     @Override
     public List<Configuration> listAccounts() {
         return configurationDao.findAll();
+    }
+
+    @Override
+    public void saveAccountGroups(Set<String> accountGroupNames) {
+
+        for (String accountGroup : accountGroupNames) {
+            createAccountGroup(accountGroup);
+        }
+    }
+
+    private Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(AccountService.class);
+        }
+
+        return log;
     }
 }
