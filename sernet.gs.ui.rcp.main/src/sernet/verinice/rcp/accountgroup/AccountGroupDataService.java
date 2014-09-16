@@ -19,15 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -47,7 +46,9 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
 
     private IAccountService accountService;
 
-    private Map<String, Set<Configuration>> accountGroupToConfiguration;
+    private Map<String, Configuration> usernameToConfiguration;
+
+    private Map<String, Set<String>> accountGroupToConfiguration;
 
     private Set<Configuration> accounts;
 
@@ -70,15 +71,22 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     final public void loadAccountGroupData() {
 
         List<AccountGroup> accountGroups = accountService.listGroups();
-        accountGroupToConfiguration = new HashMap<String, Set<Configuration>>();
+        accountGroupToConfiguration = new HashMap<String, Set<String>>();
+        usernameToConfiguration = new HashMap<String, Configuration>();
 
         for (AccountGroup accountGroup : accountGroups) {
             IAccountSearchParameter parameter = AccountSearchParameterFactory.createAccountGroupParameter(accountGroup.getName());
             List<Configuration> configurationsForAccountGroup = accountService.findAccounts(parameter);
-            accountGroupToConfiguration.put(accountGroup.getName(), new HashSet<Configuration>(configurationsForAccountGroup));
+            accountGroupToConfiguration.put(accountGroup.getName(), new HashSet<String>());
+            for (Configuration account : configurationsForAccountGroup)
+                accountGroupToConfiguration.get(accountGroup.getName()).add(account.getUser());
         }
 
         accounts = new HashSet<Configuration>(accountService.listAccounts());
+
+        for(Configuration account : accounts){
+            usernameToConfiguration.put(account.getUser(), account);
+        }
     }
 
     @Override
@@ -110,61 +118,73 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     public void addAccountGroup(String accountGroupName) {
         AccountGroup accountGroup = new AccountGroup(accountGroupName);
         if (!accountGroupToConfiguration.containsKey(accountGroup)) {
-            accountGroupToConfiguration.put(accountGroup.getName(), Collections.<Configuration> emptySet());
+            accountGroupToConfiguration.put(accountGroup.getName(), new HashSet<String>());
         }
     }
 
     @Override
-    public void saveAccountGroupData(String groupName, String[] accountNames) {
-        Set<Configuration> selectedAccounts = getSelectedConfigurations(accountNames);
-        selectedAccounts = accountService.addRole(selectedAccounts, groupName);
-        try{
-        accountGroupToConfiguration.get(groupName).addAll(selectedAccounts);
-        } catch (Exception ex){
-            log.warn("updated view for account groups failed", ex);
+    public String[] saveAccountGroupData(String groupName, String[] accountNames) {
+        try {
+
+            Set<Configuration> selectedAccounts = getSelectedConfigurations(accountNames);
+            selectedAccounts = accountService.addRole(selectedAccounts, groupName);
+
+            for (Configuration account  : selectedAccounts)
+                accountGroupToConfiguration.get(groupName).add(account.getUser());
+
+            return convertToStringArray(accountGroupToConfiguration.get(groupName));
+
+        } catch (Exception ex) {
+            log.error("updated view for account groups failed", ex);
         }
+
+        return new String[] {};
     }
 
     @Override
     public void editAccountGroupName(String newName, String oldName) {
 
         // delete role from configurations
-        accountGroupToConfiguration.put(newName, deleteAccountGroup(oldName));
 
-        // add role to configurations
-        Set<Configuration> configurations = accountGroupToConfiguration.get(newName);
-        String[] accountNames = new String[configurations.size()];
-        int i = 0;
-        for (Iterator<Configuration> iterator = configurations.iterator(); iterator.hasNext(); i++) {
-            Configuration configuration = iterator.next();
-            accountNames[i++] = configuration.getUser();
+        accountGroupToConfiguration.put(newName, accountGroupToConfiguration.get(oldName));
+        accountGroupToConfiguration.remove(oldName);
 
-        }
-
-        saveAccountGroupData(newName, accountNames);
+        deleteAccountGroup(oldName);
     }
 
     @Override
     public Set<Configuration> deleteAccountGroup(String groupName) {
-        Set<Configuration> configurations = accountGroupToConfiguration.get(groupName);
+
+        Set<String> accounts = accountGroupToConfiguration.get(groupName);
         accountGroupToConfiguration.remove(groupName);
-        return accountService.deleteRole(configurations, groupName);
+
+        Set<Configuration> victims = new HashSet<Configuration>();
+        for(String account : accounts)
+        {
+            victims.add(usernameToConfiguration.get(account));
+        }
+
+        return accountService.deleteRole(victims, groupName);
     }
 
     @Override
-    public void deleteAccountGroupData(String groupName, String[] accountNames) {
-        Set<Configuration> selectedAccounts = getSelectedConfigurations(accountNames);
-        selectedAccounts = accountService.deleteRole(selectedAccounts, groupName);
-        accountGroupToConfiguration.get(groupName).removeAll(selectedAccounts);
+    public String[] deleteAccountGroupData(String groupName, String[] userNames) {
+
+        accountGroupToConfiguration.get(groupName).removeAll(new HashSet<String>(Arrays.asList(userNames)));
+        Set<Configuration> selectedAccounts = getSelectedConfigurations(userNames);
+
+        Set<Configuration> deletedAccounts = accountService.deleteRole(selectedAccounts, groupName);
+        return convertToStringArray(deletedAccounts);
     }
 
-    private Set<Configuration> getSelectedConfigurations(String[] accountNames) {
+    private Set<Configuration> getSelectedConfigurations(String[] userNames) {
+
         Set<Configuration> selectedAccounts = new HashSet<Configuration>();
-        for (Configuration configuration : accounts) {
-            if (ArrayUtils.contains(accountNames, configuration.getUser())) {
-                selectedAccounts.add(configuration);
-            }
+        for(String userName : userNames)
+        {
+            selectedAccounts.add(usernameToConfiguration.get(userName));
         }
+
         return selectedAccounts;
     }
 

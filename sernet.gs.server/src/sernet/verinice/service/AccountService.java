@@ -50,7 +50,7 @@ import sernet.verinice.model.common.configuration.Configuration;
 @SuppressWarnings("serial")
 public class AccountService implements IAccountService, Serializable {
 
-    public transient static Logger log = Logger.getLogger(AccountService.class);
+    private final static Logger LOG = Logger.getLogger(AccountService.class);
 
     private IDao<AccountGroup, Serializable> accountGroupDao;
     private IBaseDao<Configuration, Serializable> configurationDao;
@@ -168,7 +168,7 @@ public class AccountService implements IAccountService, Serializable {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createRetrieveAllConfigurations();
 
         List<Configuration> configurations = (List<Configuration>) getConfigurationDao().findByQuery(hqlQuery.getHql(), new String[] {}, new Object[] {});
-        return (configurations == null) ? Collections.<Configuration> emptyList() : configurations;
+        return (configurations == null) ? new ArrayList<Configuration>() : configurations;
     }
 
     @Override
@@ -188,7 +188,11 @@ public class AccountService implements IAccountService, Serializable {
 
             if (!isRoleSet(role, configuration)) {
                 configuration.addRole(role);
-                result.add((Configuration) getConfigurationDao().merge(configuration));
+                try {
+                    result.add((Configuration) getConfigurationDao().merge(configuration));
+                } catch (Exception ex) {
+                    LOG.error(String.format("adding role %s for user %s failed: %s", role, configuration.getUser(), ex.getLocalizedMessage()), ex);
+                }
             }
         }
 
@@ -204,19 +208,24 @@ public class AccountService implements IAccountService, Serializable {
 
         Set<Configuration> result = new HashSet<Configuration>();
         for (Configuration configuration : configurations) {
-            if (configuration.deleteRole(role)) {
-                result.add((Configuration) getConfigurationDao().merge(configuration));
+            try {
+                if (configuration.deleteRole(role)) {
+                    Configuration mergedConfiguration = (Configuration) getConfigurationDao().merge(configuration);
+                    result.add(mergedConfiguration);
+                }
+            } catch (Exception ex) {
+                LOG.error(String.format("deleting role %s from user %s failed", role, configuration.getUser()), ex);
             }
         }
 
         return result;
     }
 
-    private Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(AccountService.class);
-        }
+    public ICommandService getCommandService() {
+        return commandService;
+    }
 
-        return log;
+    public void setCommandService(ICommandService commandService) {
+        this.commandService = commandService;
     }
 }

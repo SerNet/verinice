@@ -20,24 +20,20 @@
 package sernet.verinice.rcp.accountgroup;
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
@@ -83,8 +79,6 @@ public class GroupView extends ViewPart implements SelectionListener, KeyListene
     private Button removeAllBtn;
 
     private Button editAccountBtn;
-
-    private String selected;
 
     private IAccountGroupViewDataService accountGroupDataService;
 
@@ -231,48 +225,45 @@ public class GroupView extends ViewPart implements SelectionListener, KeyListene
     @Override
     public void widgetSelected(SelectionEvent e) {
 
-        selected = getSelectedGroup();
+        if (isGroupSelected()) {
 
-        if (e.getSource() == groupList) {
-            groupToAccountList.setItems(accountGroupDataService.getAccountNamesForGroup(selected));
+            if (e.getSource() == groupList) {
+                String[] accounts = accountGroupDataService.getAccountNamesForGroup(getSelectedGroup());
+                groupToAccountList.setItems(accounts);
+            }
+
+            else if (e.getSource() == addBtn) {
+                addAccounts(accountList.getSelection());
+            }
+
+            else if (e.getSource() == addAllBtn) {
+                addAccounts(accountList.getItems());
+            }
+
+            else if (e.getSource() == removeBtn) {
+                removeAccounts(groupToAccountList.getSelection());
+            }
+
+            else if (e.getSource() == removeAllBtn) {
+                removeAccounts(groupToAccountList.getItems());
+            }
         }
-
-        else if (e.getSource() == addBtn) {
-            accountGroupDataService.saveAccountGroupData(selected, accountList.getSelection());
-            updateGroupToAccountsList();
-        }
-
-        else if (e.getSource() == addAllBtn) {
-            accountGroupDataService.saveAccountGroupData(selected, accountList.getItems());
-            updateGroupToAccountsList();
-        }
-
-        else if (e.getSource() == removeBtn) {
-            accountGroupDataService.deleteAccountGroupData(selected, removeSelectedAccountsFromGroup());
-        }
-
-        else if (e.getSource() == removeAllBtn) {
-            accountGroupDataService.deleteAccountGroupData(selected, groupToAccountList.getItems());
-            groupToAccountList.removeAll();
-        }
-
-        // reloadData();
-        // groupList.select(groupList.indexOf(selected));
     }
 
-    private String[] removeSelectedAccountsFromGroup() {
-
-        String [] removed = new String[groupToAccountList.getSelectionCount()];
-        for (int i = 0; i < groupToAccountList.getSelectionCount(); i++) {
-            removed[i] = groupToAccountList.getItem(groupToAccountList.getSelectionIndices()[i]);
-            groupToAccountList.remove(groupToAccountList.getSelectionIndices()[i]);
+    private void addAccounts(String[] selectedAccounts) {
+        String[] accounts = accountGroupDataService.saveAccountGroupData(getSelectedGroup(), selectedAccounts);
+        for(String account : accounts) {
+            if(!ArrayUtils.contains(groupToAccountList.getItems(), account)){
+                groupToAccountList.add(account);
+            }
         }
-
-        return removed;
     }
 
-    private void updateGroupToAccountsList() {
-        groupToAccountList.setItems(accountGroupDataService.getAccountNamesForGroup(getSelectedGroup()));
+    private void removeAccounts(String[] accounts) {
+        String[] items = accountGroupDataService.deleteAccountGroupData(getSelectedGroup(), accounts);
+        for (String i : items) {
+            groupToAccountList.remove(i);
+        }
     }
 
     @Override

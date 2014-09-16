@@ -34,8 +34,8 @@ interface IAccountGroupViewDataService {
         String[] getAllAccounts();
         void addAccountGroup(String accountGroupName);
         void loadAccountGroupData();
-        void saveAccountGroupData(String groupName, String[] accountNames);
-        void deleteAccountGroupData(String groupName, String[] accountNames);
+        String[] saveAccountGroupData(String groupName, String[] accountNames);
+        String[] deleteAccountGroupData(String groupName, String[] accountNames);
         void editAccountGroupName(String newName, String oldName);
         Set<Configuration> deleteAccountGroup(String groupName);
 }
