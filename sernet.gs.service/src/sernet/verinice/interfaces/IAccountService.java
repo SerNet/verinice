@@ -39,13 +39,12 @@ public interface IAccountService {
 
     public void deactivate(Configuration account);
 
-    public List<Configuration> listAccounts();
+    public Set<String> listAccounts();
 
-    public Set<Configuration> addRole(Set<Configuration> configurations, String role);
+    public Set<String> addRole(Set<String> configurations, String role);
 
-    public Set<Configuration> deleteRole(Set<Configuration> configurations, String role);
+    public Set<String> deleteRole(Set<String> configurations, String role);
 
-    
     public List<AccountGroup> listGroups();
 
     public void deleteAccountGroup(String name);

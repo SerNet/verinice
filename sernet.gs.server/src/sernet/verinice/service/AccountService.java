@@ -27,17 +27,22 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDao;
-import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.interfaces.IRightsServerHandler;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.account.AccountSearchParameter;
+import sernet.verinice.service.account.AccountSearchParameterFactory;
 
 /**
  * Service to find, remove and add new accounts and account groups.
@@ -55,7 +60,12 @@ public class AccountService implements IAccountService, Serializable {
     private IDao<AccountGroup, Serializable> accountGroupDao;
     private IBaseDao<Configuration, Serializable> configurationDao;
     private ICommandService commandService;
-    
+
+
+    private IConfigurationService configurationService;
+
+    private IRightsServerHandler rightsServerHandler;
+
     @Override
     public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
@@ -88,12 +98,12 @@ public class AccountService implements IAccountService, Serializable {
     
     @Override
     public void deactivate(Configuration account) {
-        if(!account.isDeactivatedUser()) {
+        if (!account.isDeactivatedUser()) {
             account.setIsDeactivatedUser(true);
             getConfigurationDao().merge(account);
         }
     }
-    
+
     @Override
     public List<AccountGroup> listGroups() {
         return getAccountGroupDao().findAll();
@@ -102,11 +112,10 @@ public class AccountService implements IAccountService, Serializable {
     @Override
     public AccountGroup createAccountGroup(String name) {
 
-        List<Configuration> accounts = listAccounts();
-        for (Configuration account : accounts) {
-            if (account.getUser().equals(name))
-                throw new IllegalArgumentException("group name is equivalent to an account name");
-        }
+        Set<String> accounts = listAccounts();
+
+        if (accounts.contains(name))
+            throw new IllegalArgumentException("group name is equivalent to an account name");
 
         AccountGroup group = new AccountGroup(name);
         AccountGroup savedGroup = getAccountGroupDao().merge(group);
@@ -164,11 +173,17 @@ public class AccountService implements IAccountService, Serializable {
     }
 
     @Override
-    public List<Configuration> listAccounts() {
-        HqlQuery hqlQuery = AccountSearchQueryFactory.createRetrieveAllConfigurations();
+    public Set<String> listAccounts() {
+        List<Configuration> configurations = getAllConfigurations();
+        Set<String> accountNames = new HashSet<String>();
 
-        List<Configuration> configurations = (List<Configuration>) getConfigurationDao().findByQuery(hqlQuery.getHql(), new String[] {}, new Object[] {});
-        return (configurations == null) ? new ArrayList<Configuration>() : configurations;
+        if (configurations != null) {
+            for (Configuration configuration : configurations) {
+                accountNames.add(configuration.getUser());
+            }
+        }
+
+        return accountNames;
     }
 
     @Override
@@ -179,45 +194,58 @@ public class AccountService implements IAccountService, Serializable {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Set<Configuration> addRole(Set<Configuration> configurations, String role) {
+    public Set<String> addRole(Set<String> usernames, String role) {
 
-        Set<Configuration> result = new HashSet<Configuration>();
+        Set<String> result = new HashSet<String>();
+        for (Configuration account : extractConfiguration(usernames, getAllConfigurations())) {
 
-        for (Configuration configuration : configurations) {
-
-            if (!isRoleSet(role, configuration)) {
-                configuration.addRole(role);
+            if (!isRoleSet(role, account)) {
                 try {
-                    result.add((Configuration) getConfigurationDao().merge(configuration));
+
+                    account.addRole(role);
+                    getConfigurationDao().merge(account);
+
+                    result.add(account.getUser());
+
                 } catch (Exception ex) {
-                    LOG.error(String.format("adding role %s for user %s failed: %s", role, configuration.getUser(), ex.getLocalizedMessage()), ex);
+                    LOG.error(String.format("adding role %s for user %s failed: %s", role, account.getUser(), ex.getLocalizedMessage()), ex);
                 }
             }
         }
+
+        configurationService.discardUserData();
+        rightsServerHandler.discardData();
 
         return result;
     }
 
-    private boolean isRoleSet(String role, Configuration configuration) {
-        return configuration.getRoles().contains(role);
+    private boolean isRoleSet(String role, Configuration account) {
+        return account.getRoles(false).contains(role);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public Set<Configuration> deleteRole(Set<Configuration> configurations, String role) {
+    public Set<String> deleteRole(Set<String> usernames, String role) {
 
-        Set<Configuration> result = new HashSet<Configuration>();
-        for (Configuration configuration : configurations) {
+        Set<String> result = new HashSet<String>();
+        for (Configuration account : extractConfiguration(usernames, getAllConfigurations())) {
+
             try {
-                if (configuration.deleteRole(role)) {
-                    Configuration mergedConfiguration = (Configuration) getConfigurationDao().merge(configuration);
-                    result.add(mergedConfiguration);
-                }
+
+                account.deleteRole(role);
+                getConfigurationDao().merge(account);
+
+                result.add(account.getUser());
+
             } catch (Exception ex) {
-                LOG.error(String.format("deleting role %s from user %s failed", role, configuration.getUser()), ex);
+                LOG.error(String.format("deleting role %s for user %s failed: %s", role, account.getUser(), ex.getLocalizedMessage()), ex);
             }
         }
 
+        // configurationService.discardUserData();
+        // rightsServerHandler.discardData();
         return result;
     }
 
@@ -227,5 +255,40 @@ public class AccountService implements IAccountService, Serializable {
 
     public void setCommandService(ICommandService commandService) {
         this.commandService = commandService;
+    }
+
+    public IConfigurationService getConfigurationService() {
+        return configurationService;
+    }
+
+    public void setConfigurationService(IConfigurationService configurationService) {
+        this.configurationService = configurationService;
+    }
+
+    public IRightsServerHandler getRightsServerHandler() {
+        return rightsServerHandler;
+    }
+
+    public void setRightsServerHandler(IRightsServerHandler rightsServerHandler) {
+        this.rightsServerHandler = rightsServerHandler;
+    }
+
+    private List<Configuration> getAllConfigurations() {
+        HqlQuery hqlQuery = AccountSearchQueryFactory.createRetrieveAllConfigurations();
+        List<Configuration> configurations = (List<Configuration>) getConfigurationDao().findByQuery(hqlQuery.getHql(), new String[] {}, new Object[] {});
+
+        return configurations == null ? new ArrayList<Configuration>() : configurations;
+    }
+
+    private Set<Configuration> extractConfiguration(Set<String> usernames, List<Configuration> configurations) {
+        Set<Configuration> result = new HashSet<Configuration>();
+        for (String username : usernames) {
+            for (Configuration c : configurations) {
+                if (c.getUser().equals(username))
+                    result.add(c);
+            }
+        }
+
+        return result;
     }
 }
