@@ -29,13 +29,21 @@ import sernet.verinice.model.common.configuration.Configuration;
  */
 interface IAccountGroupViewDataService {
 
-        String[] getAccountGroups();
-        String[] getAccountNamesForGroup(String accountGroupName);
-        String[] getAllAccounts();
-        void addAccountGroup(String accountGroupName);
-        void loadAccountGroupData();
-        String[] saveAccountGroupData(String groupName, String[] accountNames);
-        String[] deleteAccountGroupData(String groupName, String[] accountNames);
-        void editAccountGroupName(String newName, String oldName);
-        Set<String> deleteAccountGroup(String groupName);
+    String[] getAccountGroups();
+
+    String[] getAccountNamesForGroup(String accountGroupName);
+
+    String[] getAllAccounts();
+
+    void addAccountGroup(String accountGroupName);
+
+    void loadAccountGroupData();
+
+    String[] saveAccountGroupData(String groupName, String[] accountNames);
+
+    String[] deleteAccountGroupData(String groupName, String[] accountNames);
+
+    void editAccountGroupName(String newName, String oldName);
+
+    Set<String> deleteAccountGroup(String groupName);
 }

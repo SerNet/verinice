@@ -19,15 +19,21 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
+import javax.swing.plaf.ListUI;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
@@ -45,7 +51,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
 
     private IAccountService accountService;
 
-    private Map<String, Set<String>> accountGroupToConfiguration;
+    private TreeMap<String, Set<String>> accountGroupToConfiguration;
 
     private Set<String> accounts;
 
@@ -64,11 +70,14 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         return convertToStringArray(accounts);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     final public void loadAccountGroupData() {
 
         List<AccountGroup> accountGroups = accountService.listGroups();
-        accountGroupToConfiguration = new HashMap<String, Set<String>>();
+
+        accountGroupToConfiguration = new TreeMap<String, Set<String>>(new NumericStringComparator());
+
         accounts = accountService.listAccounts();
 
         for (AccountGroup accountGroup : accountGroups) {
@@ -85,9 +94,10 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         return convertToStringArray(accountGroupToConfiguration.get(accountGroupName));
     }
 
+    @SuppressWarnings("unchecked")
     private <T> String[] convertToStringArray(Set<T> accountGroupOrConfiguration) {
 
-        Set<String> set = new HashSet<String>();
+        Set<String> set = new TreeSet<String>(new NumericStringComparator());
         for (T accountOrGroup : accountGroupOrConfiguration) {
             if (accountOrGroup instanceof AccountGroup) {
                 set.add(((AccountGroup) accountOrGroup).getName());
@@ -105,11 +115,12 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         return result;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addAccountGroup(String accountGroupName) {
 
         if (!accountGroupToConfiguration.containsKey(accountGroupName)) {
-            accountGroupToConfiguration.put(accountGroupName, new HashSet<String>());
+            accountGroupToConfiguration.put(accountGroupName, new TreeSet<String>(new NumericStringComparator()));
         }
 
         accountService.createAccountGroup(accountGroupName);
