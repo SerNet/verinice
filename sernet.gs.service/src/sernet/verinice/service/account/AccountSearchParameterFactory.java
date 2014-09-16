@@ -13,7 +13,7 @@ public final class AccountSearchParameterFactory {
     }
     
     public static IAccountSearchParameter createAccountGroupParameter(String accountGroup) {
-        return AccountSearchParameter.newInstance().setLogin(accountGroup);
+        return AccountSearchParameter.newInstance().setAccountGroup(accountGroup);
     }
 
     public static IAccountSearchParameter createFirstNameParameter(String firstName) {
