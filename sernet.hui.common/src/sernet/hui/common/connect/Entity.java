@@ -463,13 +463,15 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     
     public void remove(PropertyType type, String value) {
     	PropertyList list = typedPropertyLists.get(type.getId());
-    	List<Property> setProperties = list.getProperties();
-    	for (Iterator iter = setProperties.iterator(); iter.hasNext();) {
-			Property prop = (Property) iter.next();
-			if (prop.getPropertyValue().equals(value)) {
-				iter.remove();
-			}
-		}
+	if (list != null) {
+	    List<Property> setProperties = list.getProperties();
+	    for (Iterator iter = setProperties.iterator(); iter.hasNext();) {
+	        Property prop = (Property) iter.next();
+	        if (prop.getPropertyValue().equals(value)) {
+	            iter.remove();
+	        }
+	    }
+	}
     }
     
     /**
