@@ -96,13 +96,13 @@ public class AccountService implements IAccountService, Serializable {
     @Override
     public AccountGroup createAccountGroup(String name) {
         AccountGroup group = new AccountGroup();
-        group.setName(name);      
-        getAccountGroupDao().merge(group);
-        return group;
+        group.setName(name);
+        AccountGroup savedGroup = getAccountGroupDao().merge(group);
+        return savedGroup;
     }
 
     @Override
-    public void delete(AccountGroup group) {
+    public void deleteAccountGroup(AccountGroup group) {
         getAccountGroupDao().delete(group);
     }
 
@@ -128,5 +128,26 @@ public class AccountService implements IAccountService, Serializable {
 
     public void setCommandService(ICommandService commandService) {
         this.commandService = commandService;
+    }    
+    
+    @Override
+    public void deleteAccountGroup(String name) {
+        AccountGroup accountGroup = findGroupByHQL(name);
+        getAccountGroupDao().delete(accountGroup);
+    }
+
+    private AccountGroup findGroupByHQL(String name) {
+
+        String hqlQuery = " FROM AccountGroup accountGroup WHERE name = ?";
+        Object[] params = new Object[] { name };
+
+        @SuppressWarnings("unchecked")
+        List<AccountGroup> accountGroups = (List<AccountGroup>) getAccountGroupDao().findByQuery(hqlQuery, params);
+
+        // name of a group is unique, so there only exists one result
+        if (accountGroups != null)
+            return accountGroups.get(0);
+
+        return null;
     }
 }

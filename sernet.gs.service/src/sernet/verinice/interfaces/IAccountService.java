@@ -37,7 +37,9 @@ public interface IAccountService {
     public void deactivate(Configuration account);
     
     public List<AccountGroup> listGroups();
+    public void deleteAccountGroup(String name);
+    public void deleteAccountGroup(AccountGroup group);
     public AccountGroup createAccountGroup(String name);
-    public void delete(AccountGroup group);
+
     
 }
