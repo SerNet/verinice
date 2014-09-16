@@ -249,12 +249,14 @@ public class AccountService implements IAccountService, Serializable {
         String hqlQuery = "delete Permission where role = ?";
         String[] params = new String[] { role };
         getPermissionDao().updateByQuery(hqlQuery, params);
+        rightsServerHandler.discardData();
     }
 
     public void updatePermissions(String newRole, String oldRole){
         String hqlQuery = "update Permission set role = ? where role = ?";
         String[] params = new String[] { newRole, oldRole };
         getPermissionDao().updateByQuery(hqlQuery, params);
+        rightsServerHandler.discardData();
     }
 
     public ICommandService getCommandService() {
