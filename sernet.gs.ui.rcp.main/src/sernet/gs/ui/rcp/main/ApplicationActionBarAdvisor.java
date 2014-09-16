@@ -214,7 +214,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         closeAllAction = ActionFactory.CLOSE_ALL.create(window);
         closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
         deleteAction = ActionFactory.DELETE.create(window);
-        openGroupViewAction = new OpenViewAction(window, "", GroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.GROUPSETTINGS); //$NON-NLS-1$
+        openGroupViewAction = new OpenViewAction(window, "", GroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.ACCOUNTSETTINGS); //$NON-NLS-1$
         openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
         openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
         openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);

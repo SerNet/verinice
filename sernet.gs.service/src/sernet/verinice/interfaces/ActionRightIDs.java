@@ -31,7 +31,6 @@ public class ActionRightIDs {
     
     public static final String ACCESSCONTROL = "accesscontrol";
     public static final String ACCOUNTSETTINGS = "accountsettings";
-    public static final String GROUPSETTINGS = "groupsettings";
     public static final String ADDBSIELEMENT = "addbsielement";
     public static final String ADDCATALOG = "addcatalog";
     public static final String ADDFILE = "addfile";

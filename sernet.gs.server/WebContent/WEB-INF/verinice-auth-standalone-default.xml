@@ -19,9 +19,8 @@
         
         <profile name="admin-default-profile" origin="default">
             <!-- missing actions:
-            	"accountsettings"
-		"groupsettings"
-            	"accesscontrol"
+		"accountsettings"
+		"accesscontrol"
                 "creategreenbonetasks"
                 "createindividualtasks"
                 "createisatasks"
