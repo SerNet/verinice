@@ -134,28 +134,30 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     }
 
     @Override
-    public void editAccountGroupName(String newName, String oldName) {
+    public void editAccountGroupName(String newRoleName, String oldRoleName) {
 
-        if (newName.equals(oldName))
-            new IllegalArgumentException(String.format("name is not changed: %s", newName));
+        if (newRoleName.equals(oldRoleName))
+            new IllegalArgumentException(String.format("name is not changed: %s", newRoleName));
 
         // delete role from configurations
-        accountGroupToConfiguration.put(newName, accountGroupToConfiguration.get(oldName));
-        accountGroupToConfiguration.remove(oldName);
+        accountGroupToConfiguration.put(newRoleName, accountGroupToConfiguration.get(oldRoleName));
+        accountGroupToConfiguration.remove(oldRoleName);
 
-        accountService.deleteAccountGroup(oldName);
-        accountService.deleteRole(accountGroupToConfiguration.get(newName), oldName);
-        accountService.addRole(accountGroupToConfiguration.get(newName), newName);
+        accountService.deleteAccountGroup(oldRoleName);
+        accountService.deleteRole(accountGroupToConfiguration.get(newRoleName), oldRoleName);
+        accountService.addRole(accountGroupToConfiguration.get(newRoleName), newRoleName);
+        accountService.updatePermissions(newRoleName, oldRoleName);
     }
 
     @Override
-    public Set<String> deleteAccountGroup(String groupName) {
+    public Set<String> deleteAccountGroup(String role) {
 
-        Set<String> accounts = accountGroupToConfiguration.get(groupName);
-        accountGroupToConfiguration.remove(groupName);
+        Set<String> accounts = accountGroupToConfiguration.get(role);
+        accountGroupToConfiguration.remove(role);
 
-        accountService.deleteAccountGroup(groupName);
-        return accountService.deleteRole(accounts, groupName);
+        accountService.deleteAccountGroup(role);
+        accountService.deletePermissions(role);
+        return accountService.deleteRole(accounts, role);
     }
 
     @Override

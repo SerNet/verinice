@@ -22,27 +22,22 @@ package sernet.verinice.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IRightsServerHandler;
+import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.service.account.AccountSearchParameter;
-import sernet.verinice.service.account.AccountSearchParameterFactory;
 
 /**
  * Service to find, remove and add new accounts and account groups.
@@ -65,6 +60,8 @@ public class AccountService implements IAccountService, Serializable {
     private IConfigurationService configurationService;
 
     private IRightsServerHandler rightsServerHandler;
+
+    private IBaseDao<Permission, Serializable> permissionDao;
 
     @Override
     public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
@@ -166,7 +163,7 @@ public class AccountService implements IAccountService, Serializable {
         List<AccountGroup> accountGroups = (List<AccountGroup>) getAccountGroupDao().findByQuery(hqlQuery, params);
 
         // name of a group is unique, so there only exists one result
-        if (accountGroups != null)
+        if (accountGroups != null && !accountGroups.isEmpty())
             return accountGroups.get(0);
 
         return null;
@@ -225,7 +222,6 @@ public class AccountService implements IAccountService, Serializable {
         return account.getRoles(false).contains(role);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Set<String> deleteRole(Set<String> usernames, String role) {
 
@@ -244,9 +240,21 @@ public class AccountService implements IAccountService, Serializable {
             }
         }
 
-        // configurationService.discardUserData();
-        // rightsServerHandler.discardData();
+        configurationService.discardUserData();
+        rightsServerHandler.discardData();
         return result;
+    }
+
+    public void deletePermissions(String role) {
+        String hqlQuery = "delete Permission where role = ?";
+        String[] params = new String[] { role };
+        getPermissionDao().updateByQuery(hqlQuery, params);
+    }
+
+    public void updatePermissions(String newRole, String oldRole){
+        String hqlQuery = "update Permission set role = ? where role = ?";
+        String[] params = new String[] { newRole, oldRole };
+        getPermissionDao().updateByQuery(hqlQuery, params);
     }
 
     public ICommandService getCommandService() {
@@ -290,5 +298,13 @@ public class AccountService implements IAccountService, Serializable {
         }
 
         return result;
+    }
+
+    public IBaseDao<Permission, Serializable> getPermissionDao() {
+        return permissionDao;
+    }
+
+    public void setPermissionDao(IBaseDao<Permission, Serializable> permissionDao) {
+        this.permissionDao = permissionDao;
     }
 }

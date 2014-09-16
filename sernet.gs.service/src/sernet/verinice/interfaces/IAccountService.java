@@ -55,4 +55,8 @@ public interface IAccountService {
 
     public void saveAccountGroups(Set<String> accountGroupNames);
 
+    public void deletePermissions(String role);
+
+    public void updatePermissions(String newRole, String oldRole);
+
 }
