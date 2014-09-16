@@ -7,12 +7,8 @@
         
 <!-- BEGIN dao definitions ========================================================================= -->
 
-	<bean id="configurationDao" class="sernet.verinice.hibernate.TreeElementDao">
-		<constructor-arg>
-			<value>sernet.verinice.model.common.configuration.Configuration</value>
-		</constructor-arg>
+	<bean id="configurationDao" class="sernet.verinice.hibernate.ConfigurationDao">
 		<property name="sessionFactory" ref="sessionFactory"/>
-		
 	</bean>
 	
 <!-- END dao definitions ============================================================================ -->

@@ -9,14 +9,13 @@
 
 <!-- BEGIN dao definitions ============================================================================ -->
         
-	<bean id="configurationDao" class="sernet.verinice.hibernate.TreeElementDao">
-		<constructor-arg>
-			<value>sernet.verinice.model.common.configuration.Configuration</value>
-		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory"/>
+	<bean id="configurationDao" class="sernet.verinice.hibernate.ConfigurationDao">
+
+	    <property name="sessionFactory" ref="sessionFactory"/>
+
 		
 		<security:intercept-methods>
-		  <security:protect method="sernet.verinice.hibernate.TreeElementDao.*" access="ROLE_USER,ROLE_WEB" />
+		  <security:protect method="sernet.verinice.hibernate.ConfigurationDao.*" access="ROLE_USER,ROLE_WEB" />
 		</security:intercept-methods>
 	</bean>
 	
