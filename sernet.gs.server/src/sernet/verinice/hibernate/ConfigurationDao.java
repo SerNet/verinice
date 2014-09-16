@@ -43,13 +43,13 @@ public class ConfigurationDao extends TreeElementDao<Configuration, Serializable
 
     @Override
     public Configuration merge(Configuration entity) {
-        saveAccountGroups(entity.getRoles());
+        saveAccountGroups(entity.getRoles(false));
         return (Configuration) super.merge(entity);
     }
 
     @Override
     public void saveOrUpdate(Configuration entity) {
-        saveAccountGroups(entity.getRoles());
+        saveAccountGroups(entity.getRoles(false));
         super.saveOrUpdate(entity);
     }
 
