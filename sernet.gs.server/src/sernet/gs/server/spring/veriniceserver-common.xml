@@ -76,6 +76,7 @@ This variant:
                 <entry key="gsmService" value-ref="gsmService" />
                 <entry key="processEngine" value-ref="processEngine" />
                 <entry key="validationService" value-ref="validationService" />
+                <entry key="accountService" value-ref="accountService" />
 			</map>
 		</property>
 	</bean>
