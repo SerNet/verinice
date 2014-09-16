@@ -55,10 +55,10 @@
       </view>
       <view
       	    allowMultiple="true"
-            category="sernet.gs.ui.rcp.main.views"
-            class="sernet.gs.ui.rcp.main.bsi.views.GroupView"
+            category="sernet.verinice.rcp.accountgroup"
+            class="sernet.verinice.rcp.accountgroup.GroupView"
             icon="icons/tag.png"
-            id="sernet.gs.ui.rcp.main.bsi.views.groupview"
+            id="sernet.verinice.rcp.accountgroup.GroupView"
             name="%view.name.14">
       </view>
       <view

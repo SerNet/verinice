@@ -1,51 +1,59 @@
 /*******************************************************************************
  * Copyright (c) 2014 Benjamin Weißenfels.
  *
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program. 
+ * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.views;
+package sernet.verinice.rcp.accountgroup;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
- * 
+ *
  */
-public class GroupView extends ViewPart {
+public class GroupView extends ViewPart implements SelectionListener {
 
-    public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.groupview";
+    public static final String ID = "sernet.verinice.rcp.accountgroup.GroupView";
 
     private Composite parent;
 
@@ -62,6 +70,8 @@ public class GroupView extends ViewPart {
     private List groupList;
 
     private java.util.List<AccountGroup> groups;
+
+    private Button newBtn;
 
     @Override
     public void createPartControl(Composite parent) {
@@ -152,9 +162,7 @@ public class GroupView extends ViewPart {
 
     private void makeActions() {
 
-        newGroup = new Action() {
-
-        };
+        newGroup = new NewGroupAction(accountService);
 
         newGroup.setText(Messages.GroupView_0);
         newGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
@@ -172,28 +180,60 @@ public class GroupView extends ViewPart {
         saveGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SAVE));
     }
 
-    private void setupCRUDButtons() {
+    private abstract class AccountServiceAction extends Action {
 
-        Group buttonGroup = new Group(groupViewComposite, SWT.NULL);
-        buttonGroup.setText("Edit Groups");
+        protected final IAccountService accountService;
 
-        GridLayout gridLayout = new GridLayout();
-        gridLayout.numColumns = 3;
-        buttonGroup.setLayout(gridLayout);
+        public AccountServiceAction(IAccountService accountService) {
+            this.accountService = accountService;
+        }
 
-        GridData gridData = new GridData();
-        gridData.horizontalSpan = 3;
+        @Override
+        abstract public void run();
+    }
 
-        buttonGroup.setLayoutData(gridData);
+    private class NewGroupAction extends AccountServiceAction {
 
-        Button newBtn = new Button(buttonGroup, SWT.PUSH);
-        newBtn.setText(Messages.GroupView_0);
+        public NewGroupAction(IAccountService accountService) {
+            super(accountService);
+        }
 
-        Button deleteBtn = new Button(buttonGroup, SWT.PUSH);
-        deleteBtn.setText(Messages.GroupView_1);
+        @Override
+        public void run() {
+            Dialog dialog = new Dialog(parent.getShell()) {
 
-        Button saveBtn = new Button(buttonGroup, SWT.PUSH);
-        saveBtn.setText(Messages.GroupView_2);
+            };
+        }
+    }
+
+    private class NewGroupDialog extends TitleAreaDialog {
+
+        public NewGroupDialog(Shell parent) {
+            super(parent);
+        }
+
+        @Override
+        public void create() {
+          super.create();
+          setTitle("This is my first custom dialog");
+          setMessage("This is a TitleAreaDialog");
+        }
+
+        @Override
+        protected Control createDialogArea(Composite parent) {
+
+          Composite area = (Composite) super.createDialogArea(parent);
+          Composite container = new Composite(area, SWT.NONE);
+          container.setLayoutData(new GridData(GridData.FILL_BOTH));
+          GridLayout layout = new GridLayout(2, false);
+          container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+          container.setLayout(layout);
+
+
+          return area;
+        }
+
+
     }
 
     private void fillLocalToolBar() {
@@ -211,6 +251,22 @@ public class GroupView extends ViewPart {
 
     @Override
     public void setFocus() {
-        if (groupViewComposite != null) groupViewComposite.setFocus();
+        if (groupViewComposite != null)
+            groupViewComposite.setFocus();
+    }
+
+    @Override
+    public void widgetSelected(SelectionEvent e) {
+        if (e.getSource() == newBtn) {
+            MessageBox messageDialog = new MessageBox(parent.getShell(), SWT.ICON_QUESTION | SWT.OK | SWT.CANCEL);
+            messageDialog.open();
+        }
+    }
+
+    @Override
+    public void widgetDefaultSelected(SelectionEvent e) {
+        if (e.getSource() == newBtn) {
+
+        }
     }
 }
