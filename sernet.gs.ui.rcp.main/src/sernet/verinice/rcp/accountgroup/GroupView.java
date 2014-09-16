@@ -19,7 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
+import static sernet.gs.ui.rcp.main.Activator.inheritVeriniceContextState;
+
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -34,17 +42,19 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.part.ViewPart;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.IllegalSelectionException;
 import sernet.verinice.rcp.RightsEnabledView;
 
@@ -55,6 +65,8 @@ import sernet.verinice.rcp.RightsEnabledView;
 public class GroupView extends RightsEnabledView implements SelectionListener, KeyListener {
 
     public static final String ID = "sernet.verinice.rcp.accountgroup.GroupView";
+
+    private final static Logger LOG = Logger.getLogger(GroupView.class);
 
     private Composite parent;
 
@@ -89,18 +101,52 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     @Override
     public void createPartControl(Composite parent) {
 
+        super.createPartControl(parent);
+
         this.parent = parent;
-        this.accountGroupDataService = new AccountGroupDataService();
 
         setupView();
-        initData();
-
         makeActions();
         fillLocalToolBar();
+        initData();
     }
 
     private void initData() {
-        reloadData();
+
+        WorkspaceJob test = new WorkspaceJob("load groups") {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask("load groups", IProgressMonitor.UNKNOWN);
+                    Activator.inheritVeriniceContextState();
+
+                    accountGroupDataService = new AccountGroupDataService();
+
+                    getDisplay().syncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            groupList.setItems(accountGroupDataService.getAccountGroups());
+
+                            if (isGroupSelected())
+                                groupToAccountList.setItems(accountGroupDataService.getAccountNamesForGroup(getSelectedGroup()));
+
+                            accountList.setItems(accountGroupDataService.getAllAccounts());
+                        }
+                    });
+
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e);
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.", e);
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+
+        JobScheduler.scheduleInitJob(test);
     }
 
     private void setupView() {
@@ -195,16 +241,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         editGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SAVE));
     }
 
-    private void reloadData() {
-
-        groupList.setItems(accountGroupDataService.getAccountGroups());
-
-        if (isGroupSelected())
-            groupToAccountList.setItems(accountGroupDataService.getAccountNamesForGroup(getSelectedGroup()));
-
-        accountList.setItems(accountGroupDataService.getAllAccounts());
-    }
-
     private void fillLocalToolBar() {
 
         IActionBars bars = getViewSite().getActionBars();
@@ -225,37 +261,83 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     @Override
-    public void widgetSelected(SelectionEvent e) {
+    public void widgetSelected(final SelectionEvent e) {
 
-        if (isGroupSelected()) {
+        WorkspaceJob updateGroups = new WorkspaceJob("update groups") {
 
-            if (e.getSource() == groupList) {
-                String[] accounts = accountGroupDataService.getAccountNamesForGroup(getSelectedGroup());
-                groupToAccountList.setItems(accounts);
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+
+                    monitor.beginTask("update groups", IProgressMonitor.UNKNOWN);
+
+                    Activator.inheritVeriniceContextState();
+
+                    getDisplay().syncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            try {
+
+                                switchButtons(false);
+
+                                if (isGroupSelected()) {
+
+                                    if (e.getSource() == groupList) {
+                                        String[] accounts = accountGroupDataService.getAccountNamesForGroup(getSelectedGroup());
+                                        groupToAccountList.setItems(accounts);
+                                    }
+
+                                    else if (e.getSource() == addBtn) {
+                                        addAccounts(accountList.getSelection());
+                                    }
+
+                                    else if (e.getSource() == addAllBtn) {
+                                        addAccounts(accountList.getItems());
+                                    }
+
+                                    else if (e.getSource() == removeBtn) {
+                                        removeAccounts(groupToAccountList.getSelection());
+                                    }
+
+                                    else if (e.getSource() == removeAllBtn) {
+                                        removeAccounts(groupToAccountList.getItems());
+                                    }
+                                }
+                            } catch (Exception ex) {
+
+                            } finally {
+                                switchButtons(true);
+                            }
+                        }
+
+                        private void switchButtons(boolean enabled) {
+                            addBtn.setEnabled(enabled);
+                            addAllBtn.setEnabled(enabled);
+                            removeBtn.setEnabled(enabled);
+                            removeAllBtn.setEnabled(enabled);
+                        }
+                    });
+
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e);
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.", e);
+                } finally {
+                    monitor.done();
+                }
+                return status;
             }
+        };
 
-            else if (e.getSource() == addBtn) {
-                addAccounts(accountList.getSelection());
-            }
+        JobScheduler.scheduleInitJob(updateGroups);
 
-            else if (e.getSource() == addAllBtn) {
-                addAccounts(accountList.getItems());
-            }
-
-            else if (e.getSource() == removeBtn) {
-                removeAccounts(groupToAccountList.getSelection());
-            }
-
-            else if (e.getSource() == removeAllBtn) {
-                removeAccounts(groupToAccountList.getItems());
-            }
-        }
     }
 
     private void addAccounts(String[] selectedAccounts) {
         String[] accounts = accountGroupDataService.saveAccountGroupData(getSelectedGroup(), selectedAccounts);
-        for(String account : accounts) {
-            if(!ArrayUtils.contains(groupToAccountList.getItems(), account)){
+        for (String account : accounts) {
+            if (!ArrayUtils.contains(groupToAccountList.getItems(), account)) {
                 groupToAccountList.add(account);
             }
         }
@@ -357,7 +439,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         @Override
         protected void okPressed() {
-            reloadData();
+            initData();
             super.okPressed();
         }
     }
@@ -466,7 +548,9 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     public void keyPressed(KeyEvent e) {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
      */
     @Override
@@ -474,11 +558,22 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         return ActionRightIDs.GROUPSETTINGS;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
     public String getViewId() {
         return ID;
+    }
+
+    private static Display getDisplay() {
+        Display display = Display.getCurrent();
+        // may be null if outside the UI thread
+        if (display == null) {
+            display = Display.getDefault();
+        }
+        return display;
     }
 }
