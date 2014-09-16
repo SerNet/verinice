@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +15,7 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,6 +27,7 @@ import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.Organization;
@@ -39,24 +42,38 @@ import sernet.verinice.service.commands.SaveConfiguration;
 public class AccountServiceTest extends CommandServiceProvider {
 
     private static final Logger LOG = Logger.getLogger(AccountServiceTest.class);
-    
+
     private static final String LOGIN_A = "login_a";
     private static final String LOGIN_B = "login_b";
     private static final String LOGIN_C = "login_c";
     private static final String LOGIN_D = "login_d";
-    
+
     private static final String FIRST_NAME_A = "first_a";
     private static final String FIRST_NAME_B = "first_b";
-  
+
     private static final String FAMILY_NAME_A = "family_a";
     private static final String FAMILY_NAME_B = "family_b";
-    
-    @Resource(name="accountService")
+
+    @Resource(name = "accountService")
     private IAccountService accountService;
-    
+
     private Organization organization;
     private List<String> uuidList;
-    
+
+    @Test
+    public void testCreateGroup() {
+
+        List<String> groupNames = Arrays.asList("test_1", "test_2");
+
+        AccountGroup accountGroup1 = accountService.createAccountGroup(groupNames.get(0));
+        AccountGroup accountGroup2 = accountService.createAccountGroup(groupNames.get(1));
+
+        List<AccountGroup> accountGroups = accountService.listGroups();
+
+        Assert.assertTrue(accountGroups.contains(accountGroup1));
+        Assert.assertTrue(accountGroups.contains(accountGroup2));
+    }
+
     @Test
     public void testFindByLogin() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(getLoginName()));
@@ -66,7 +83,7 @@ public class AccountServiceTest extends CommandServiceProvider {
             assertTrue("Account login does not contain: " + getLoginName(), account.getUser().contains(getLoginName()));     
         }
     }
- 
+
     @Test
     public void testFindByFirstName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createFirstNameParameter(getFirstName()));
@@ -75,9 +92,8 @@ public class AccountServiceTest extends CommandServiceProvider {
             PersonIso person = (PersonIso) account.getPerson();
             assertEquals("First name of person is not: " + getFirstName(), getFirstName(), person.getName());
         }
-                
     }
-    
+
     @Test
     public void testFindByFamilyName() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createFamilyNameParameter(getFamilyName()));
@@ -87,20 +103,20 @@ public class AccountServiceTest extends CommandServiceProvider {
             assertEquals("Family name of person is not: " + getFamilyName(), getFamilyName(), person.getSurname());
         }   
     }
-    
+
     @Test
     public void testFindByIsAdmin() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createIsAdminParameter(true));
         boolean testuserFound = false;
         for (Configuration configuration : configurations) {
             assertEquals("Account is not admin account", true, configuration.isAdminUser());
-            if(configuration.getUser().startsWith(getLoginName())) {
+            if (configuration.getUser().startsWith(getLoginName())) {
                 testuserFound = true;
             }
         }
-        assertTrue("Testuser not found", testuserFound);       
+        assertTrue("Testuser not found", testuserFound);
     }
-    
+
     @Test
     public void testFindByIsScopeOnly() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createIsScopeOnlyParameter(true));
@@ -128,21 +144,21 @@ public class AccountServiceTest extends CommandServiceProvider {
         assertNumber(configurations, 1);
         for (Configuration configuration : configurations) {
             assertEquals("Account is not admin account", true, configuration.isAdminUser());
-            assertEquals("Account login is not: " + LOGIN_A, LOGIN_A, configuration.getUser()); 
+            assertEquals("Account login is not: " + LOGIN_A, LOGIN_A, configuration.getUser());
             PersonIso person = (PersonIso) configuration.getPerson();
             assertEquals("Family name of person is not: " + FAMILY_NAME_B, FAMILY_NAME_B, person.getSurname());         
             assertEquals("First name of person is not: " + FIRST_NAME_A, FIRST_NAME_A, person.getName());   
             assertEquals("Scope id is not: " + organization.getDbId(), organization.getDbId(), person.getScopeId());
         }       
     }
-    
+
     @Test
     public void testFindByIsNotAdmin() throws Exception {
         List<Configuration> configurations2 = accountService.findAccounts(AccountSearchParameterFactory.createIsAdminParameter(false));
         for (Configuration configuration : configurations2) {
             assertEquals("Account is admin account", false, configuration.isAdminUser());
-            
-        }     
+
+        }
     }
     
     @Test
@@ -184,17 +200,17 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
     
     private void assertNumber(List<Configuration> configurations, int expectedNumber) {
-        assertNotNull("Search result is null",  configurations);
+        assertNotNull("Search result is null", configurations);
         assertEquals("Number of account is not " + expectedNumber, expectedNumber, configurations.size());
     }
-    
+
     @Before
     public void setUp() throws Exception {
         uuidList = new LinkedList<String>();
         organization = createTestOrganization();
+        removeAccountGroups();
     }
 
-    
     @After
     public void tearDown() throws CommandException {
         removeAccountsStartingWith(getLoginName());
@@ -204,13 +220,13 @@ public class AccountServiceTest extends CommandServiceProvider {
         removeAccountsStartingWith(LOGIN_D);
         removeTestOrganization(organization); 
     }
-   
+
     private Organization createTestOrganization() throws CommandException {
         Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
-        
+
         Group<CnATreeElement> personGroup = getGroupForClass(organization, PersonIso.class);
-        
+
         IAccountSearchParameter paramter = new AccountSearchParameter();
         paramter.setLogin(getLoginName()).setIsAdmin(false).setFirstName(getFirstName());
         createAccount(personGroup, paramter);
@@ -218,35 +234,35 @@ public class AccountServiceTest extends CommandServiceProvider {
         paramter = new AccountSearchParameter();
         paramter.setLogin(getRandomLoginName()).setIsAdmin(false).setFamilyName(getFamilyName());
         createAccount(personGroup, paramter);
-        
+
         paramter = new AccountSearchParameter();
         paramter.setLogin(getRandomLoginName()).setIsAdmin(true).setFamilyName(getFamilyName());
         createAccount(personGroup, paramter);
-        
+
         paramter = new AccountSearchParameter();
         paramter.setLogin(LOGIN_A).setIsAdmin(true).setIsScopeOnly(false).setFamilyName(FAMILY_NAME_B).setFirstName(FIRST_NAME_A);
         createAccount(personGroup, paramter);
-        
+
         paramter = new AccountSearchParameter();
         paramter.setLogin(LOGIN_B).setIsAdmin(false).setIsScopeOnly(true).setFamilyName(FAMILY_NAME_A).setFirstName(FIRST_NAME_A);
         createAccount(personGroup, paramter);
-        
+
         paramter = new AccountSearchParameter();
         paramter.setLogin(LOGIN_C).setIsAdmin(true).setIsScopeOnly(false).setFamilyName(FAMILY_NAME_B).setFirstName(FIRST_NAME_B);
         createAccount(personGroup, paramter);
-        
+
         paramter = new AccountSearchParameter();
         paramter.setLogin(LOGIN_D).setIsAdmin(false).setIsScopeOnly(false).setFamilyName(FAMILY_NAME_A).setFirstName(FIRST_NAME_B);
         createAccount(personGroup, paramter);
-        
-        return organization;      
+
+        return organization;
     }
 
     private void createAccount(Group<CnATreeElement> personGroup, IAccountSearchParameter paramter) throws CommandException {
         PersonIso person = (PersonIso) createNewElement(personGroup, PersonIso.class);
-        uuidList.add(person.getUuid());     
+        uuidList.add(person.getUuid());
         person.setName(paramter.getFirstName());
-        if(paramter.getFamilyName()!=null) {
+        if (paramter.getFamilyName() != null) {
             person.setSurname(paramter.getFamilyName());
         }
         saveElement(person);
@@ -280,39 +296,39 @@ public class AccountServiceTest extends CommandServiceProvider {
         Configuration configuration = createConfiguration.getConfiguration();
         return configuration;
     }
-    
+
     private void saveAccount(Configuration configuration) throws CommandException {
-        SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, false);         
+        SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, false);
         command = commandService.executeCommand(command);
     }
 
     private String getLoginName() {
         return this.getClass().getSimpleName();
     }
-    
+
     private String getRandomLoginName() {
         return this.getClass().getSimpleName() + UUID.randomUUID().toString();
     }
-    
+
     private String getFirstName() {
         return "Dagobert";
     }
-    
+
     private String getFamilyName() {
         return "Duck";
     }
-    
+
     private void removeTestOrganization(Organization organization) throws CommandException {
         PrepareObjectWithAccountDataForDeletion removeAccount = new PrepareObjectWithAccountDataForDeletion(organization);
         commandService.executeCommand(removeAccount);
         RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
         commandService.executeCommand(removeCommand);
-        for (String uuid: uuidList) {
+        for (String uuid : uuidList) {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
             command = commandService.executeCommand(command);
             CnATreeElement element = command.getElement();
             assertNull("Organization was not deleted.", element);
         }
     }
-    
+
 }
