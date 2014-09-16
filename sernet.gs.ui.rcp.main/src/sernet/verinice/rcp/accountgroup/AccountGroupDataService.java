@@ -44,7 +44,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     private Logger log = Logger.getLogger(AccountGroupDataService.class);
 
     private IAccountService accountService;
-    
+
     private Map<String, Set<String>> accountGroupToConfiguration;
 
     private Set<String> accounts;

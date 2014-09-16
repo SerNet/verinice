@@ -37,10 +37,11 @@ public interface IRightsService {
     public static String USERSCOPEDEFAULTGROUPNAME = "user-scope-default-group";
     public static String ADMINSCOPEDEFAULTGROUPNAME = "admin-scope-default-group";
     public static String ADMINDEFAULTGROUPNAME = "admin-default-group";
-    
+
+    public static final String[] STANDARD_GROUPS = { USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME, ADMINDEFAULTGROUPNAME, ADMINSCOPEDEFAULTGROUPNAME };
+
     /**
-     * Returns the authorization configuration
-     * which is defined in one or more 
+     * Returns the authorization configuration which is defined in one or more
      * verinice-auth xml documents.
      * 
      * See schema verinice-auth.xsd for details.
@@ -48,62 +49,65 @@ public interface IRightsService {
      * @return The authorization configuration
      */
     Auth getConfiguration();
-    
+
     /**
      * Updates the configuration defined in <code>auth</code>.
      * 
-     * @param auth Authorization configuration
+     * @param auth
+     *            Authorization configuration
      */
     void updateConfiguration(Auth auth);
-    
+
     /**
-     * Return the userprofiles of an user with name <i>username</i>.
-     * A userprofile can belong to an user or an user group.
+     * Return the userprofiles of an user with name <i>username</i>. A
+     * userprofile can belong to an user or an user group.
      * 
-     * @param username The login name of an user
+     * @param username
+     *            The login name of an user
      * @return A {@link List} of userprofiles
      */
     List<Userprofile> getUserprofile(String username);
-    
+
     /**
      * Returns all profiles of the authorization configuration
      * 
      * @return Profiles of the authorization configuration
      */
     Profiles getProfiles();
-    
+
     /**
      * Returns a list with all user names
      * 
      * @return All user names
      */
     List<String> getUsernames();
-    
+
     /**
      * Returns a list with all user names of one scope for an user.
      * 
-     * @param username An user name
+     * @param username
+     *            An user name
      * @return User names of the scope for an user
      */
     List<String> getUsernames(String username);
-    
+
     /**
      * Returns a list with all group names
      * 
      * @return All group names
      */
     List<String> getGroupnames();
-    
-  
+
     /**
      * Returns a list with all group names of the scope for an user.
      * 
-     * @param username An user name
+     * @param username
+     *            An user name
      * @return Group names of the scope for an user
      */
     List<String> getGroupnames(String username);
-    
+
     String getMessage(String key);
-    
+
     Properties getAllMessages();
 }

@@ -309,4 +309,17 @@ public class AccountService implements IAccountService, Serializable {
     public void setPermissionDao(IBaseDao<Permission, Serializable> permissionDao) {
         this.permissionDao = permissionDao;
     }
+
+    @Override
+    public long countConnectObjectsForGroup(String groupName) {
+        String hqlQuery = "select count(perm) from Permission perm where perm.role = ?";
+        String[] params = new String[] { groupName };
+        List<Long> result = permissionDao.findByQuery(hqlQuery, params);
+
+        if(result != null && result.size() > 0){
+            return result.get(0);
+        }
+
+        return 0;
+    }
 }

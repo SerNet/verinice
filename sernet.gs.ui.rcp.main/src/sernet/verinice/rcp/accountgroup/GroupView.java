@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
+import java.sql.BatchUpdateException;
+
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -47,11 +49,16 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.hibernate3.HibernateJdbcException;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.IAccountService;
+import static sernet.verinice.interfaces.IRightsService.STANDARD_GROUPS;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.IllegalSelectionException;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -96,12 +103,14 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     private Text quickFilter;
 
+    private IAccountService accountService;
+
     @Override
     public void createPartControl(Composite parent) {
 
         super.createPartControl(parent);
-
         this.parent = parent;
+        this.accountService = ServiceFactory.lookupAccountService();
 
         setupView();
         makeActions();
@@ -440,6 +449,29 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             initData();
             super.okPressed();
         }
+
+        protected boolean isStandardGroup() {
+            return ArrayUtils.contains(STANDARD_GROUPS, getSelectedGroup());
+        }
+
+        protected void openStandardGroupWarningDialog() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    getDisplay().syncExec(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                MessageDialog.openWarning(parent.getShell(), "Warning", String.format("%s is a standard group and therefore cannot be deleted or edited", getSelectedGroup()));
+                            } catch (Exception ex) {
+                                LOG.warn("error while deleting group", ex);
+                            }
+                        }
+                    });
+
+                }
+            }).start();
+        }
     }
 
     private class NewGroupDialog extends CRUDAccountGroupDialog {
@@ -450,8 +482,15 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         @Override
         protected void okPressed() {
-            accountGroupDataService.addAccountGroup(textInputField.getText());
-            super.okPressed();
+            try {
+                accountGroupDataService.addAccountGroup(textInputField.getText());
+                super.okPressed();
+            } catch (DataIntegrityViolationException ex) {
+                MessageDialog.openError(parent.getShell(), "Error", "group/role name already exists");
+            } catch (Exception ex) {
+                MessageDialog.openError(parent.getShell(), "Error", ex.getLocalizedMessage());
+                LOG.error("adding group failed", ex);
+            }
         }
 
         @Override
@@ -467,7 +506,12 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         public DeleteGroupDialog(Shell parent, String title) {
             super(parent, String.format("%s %s", title, getSelectedGroup()));
 
-            if (isGroupSelected())
+            if (isStandardGroup()) {
+                openStandardGroupWarningDialog();
+                super.closeTray();
+            }
+
+            if (isGroupSelected() && isStandardGroup())
                 this.selection = getSelectedGroup();
             else
                 throw new IllegalSelectionException("an account group must be selected");
@@ -476,7 +520,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         @Override
         protected void okPressed() {
 
-            if (isGroupEmpty())
+            if (isGroupEmptyAndNotConnectedToObject())
                 accountGroupDataService.deleteAccountGroup(selection);
             else
                 openWarningDialog();
@@ -491,13 +535,19 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
                         @Override
                         public void run() {
-                            MessageDialog dialog = new MessageDialog(parent.getShell(), "Achtung", null, "this group is connected with x accounts and y objects", MessageDialog.ERROR, new String[] { "ok", "cancel" }, 0);
-                            int result = dialog.open();
-
-                            if (result == 0)
-                                openSecondWarningDialog();
-                            else
-                                accountGroupDataService.deleteAccountGroup(selection);
+                            try {
+                                int connectedAccounts = accountGroupDataService.getAccountNamesForGroup(selection).length;
+                                long connectedObjects = accountService.countConnectObjectsForGroup(selection);
+                                String message = String.format("this group is connected with %d accounts and %d objects", connectedAccounts, connectedObjects);
+                                MessageDialog dialog = new MessageDialog(parent.getShell(), "Achtung", null, message, MessageDialog.ERROR, new String[] { "ok", "cancel" }, 0);
+                                int result = dialog.open();
+                                if (result == 0)
+                                    openSecondWarningDialog();
+                                else
+                                    accountGroupDataService.deleteAccountGroup(selection);
+                            } catch (Exception ex) {
+                                LOG.error("error while deleting group", ex);
+                            }
                         }
                     });
 
@@ -513,10 +563,15 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
                         @Override
                         public void run() {
-                            MessageDialog dialog = new MessageDialog(parent.getShell(), "Gruppe Löschen", null, "really?", MessageDialog.ERROR, new String[] { "ok", "cancel" }, 0);
-                            int result = dialog.open();
-                            if (result == 0)
-                                accountGroupDataService.deleteAccountGroup(selection);
+                            try {
+                                MessageDialog dialog = new MessageDialog(parent.getShell(), "Gruppe Löschen", null, "really?", MessageDialog.ERROR, new String[] { "ok", "cancel" }, 0);
+                                int result = dialog.open();
+                                if (result == 0)
+                                    accountGroupDataService.deleteAccountGroup(selection);
+                                initData();
+                            } catch (Exception ex) {
+                                LOG.error("error while deleting group", ex);
+                            }
                         }
                     });
 
@@ -529,8 +584,8 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             return false;
         }
 
-        private boolean isGroupEmpty() {
-            return accountGroupDataService.getAccountNamesForGroup(selection).length == 0;
+        private boolean isGroupEmptyAndNotConnectedToObject() {
+            return accountGroupDataService.getAccountNamesForGroup(selection).length == 0 && accountService.countConnectObjectsForGroup(selection) == 0;
         }
     }
 
@@ -542,7 +597,10 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
             super(parent, title);
 
-            if (isGroupSelected())
+            if (isStandardGroup()) {
+                openStandardGroupWarningDialog();
+                super.closeTray();
+            } else if (isGroupSelected())
                 this.selection = getSelectedGroup();
             else
                 throw new IllegalSelectionException("an account group must be selected");

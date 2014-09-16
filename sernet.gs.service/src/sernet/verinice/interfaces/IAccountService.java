@@ -59,4 +59,6 @@ public interface IAccountService {
 
     public void updatePermissions(String newRole, String oldRole);
 
+    public long countConnectObjectsForGroup(String groupName);
+
 }
