@@ -19,7 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
-import java.sql.BatchUpdateException;
+import static sernet.verinice.interfaces.IRightsService.STANDARD_GROUPS;
+
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
@@ -49,11 +51,14 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.PlatformUI;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.orm.hibernate3.HibernateJdbcException;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.ConfigurationAction;
+import sernet.gs.ui.rcp.main.actions.helper.UpdateConfigurationHelper;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -61,7 +66,6 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAccountService;
-import static sernet.verinice.interfaces.IRightsService.STANDARD_GROUPS;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.IllegalSelectionException;
@@ -323,23 +327,39 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                                     else if (e.getSource() == removeAllBtn) {
                                         removeAccounts(groupToAccountList.getItems());
                                     }
+                                }
 
-                                    else if (e.getSource() == editAccountBtn) {
-                                        EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);
-                                        String selectedAccountName = getSelectedAccount();
-                                        if (!"".equals(selectedAccountName)) {
-                                            Configuration configuration = accountService.getAccountByName(getSelectedAccount());
-                                            AccountDialog accountDialog = new AccountDialog(parent.getShell(), entType, "Benutzereinstellungen", configuration.getEntity());
-                                            accountDialog.open();
-                                        } else {
-                                            MessageDialog.openWarning(parent.getShell(),"Warning","no account selected");
-                                        }
-                                    }
+                                if (e.getSource() == editAccountBtn) {
+                                    updateConfiguration();
                                 }
                             } catch (Exception ex) {
 
                             } finally {
                                 switchButtons(true);
+                            }
+                        }
+
+
+                        private void updateConfiguration() {
+                            EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);
+                            String selectedAccountName = getSelectedAccount();
+                            if (!"".equals(selectedAccountName)) {
+
+                                Configuration configuration = accountService.getAccountByName(getSelectedAccount());
+                                AccountDialog accountDialog = new AccountDialog(parent.getShell(), entType, "Benutzereinstellungen", configuration.getEntity());
+                                accountDialog.open();
+
+                                try {
+                                    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new UpdateConfigurationCallbackHelper(configuration, accountDialog));
+                                } catch (Exception e) {
+                                    LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
+                                    ExceptionUtil.log(e, "things went wrong");
+                                } finally {
+                                    configuration = null;
+                                }
+
+                            } else {
+                                MessageDialog.openWarning(parent.getShell(), "Warning", "no account selected");
                             }
                         }
 
@@ -716,5 +736,19 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             display = Display.getDefault();
         }
         return display;
+    }
+
+    private class UpdateConfigurationCallbackHelper extends UpdateConfigurationHelper {
+
+
+        public UpdateConfigurationCallbackHelper(Configuration configuration, AccountDialog dialog) {
+            super(configuration, dialog);
+
+        }
+
+        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException{
+            super.run(monitor);
+            initData();
+        }
     }
 }

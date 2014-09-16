@@ -17,20 +17,14 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -38,11 +32,10 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.actions.helper.UpdateConfigurationHelper;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.commands.PasswordException;
-import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
@@ -70,11 +63,11 @@ import sernet.verinice.service.commands.SaveConfiguration;
  */
 public class ConfigurationAction extends Action implements IObjectActionDelegate,  RightEnabledUserInteraction{
 
-	private static final Logger LOG = Logger.getLogger(ConfigurationAction.class);
+	static final Logger LOG = Logger.getLogger(ConfigurationAction.class);
 	
 	public static final String ID = "sernet.gs.ui.rcp.main.personconfiguration"; //$NON-NLS-1$
 
-	private Configuration configuration;
+	Configuration configuration;
 
 	private IWorkbenchPart targetPart;
 	
@@ -125,46 +118,7 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
         }
 
         try {
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    Activator.inheritVeriniceContextState();
-                    try {
-                        final boolean updatePassword = updateNameAndPassword(dialog.getUserName(), dialog.getPassword(),dialog.getPassword2());
-                        // save configuration:
-                        SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, updatePassword);         
-                        command = getCommandService().executeCommand(command);
-                        getRightService().reload();
-                    } catch (final UsernameExistsException e) {
-                        final String logMessage = "Configuration can not be saved. Username exists: " + e.getUsername(); //$NON-NLS-1$
-                        final String messageTitle = Messages.ConfigurationAction_7; 
-                        final String userMessage = NLS.bind(Messages.ConfigurationAction_7, e.getUsername());       
-                        handleException(e, logMessage, messageTitle, userMessage);  
-                    } catch (final PasswordException e) {
-                        final String logMessage = "Configuration can not be saved. " + e.getMessage(); //$NON-NLS-1$
-                        final String messageTitle = Messages.ConfigurationAction_6; 
-                        final String userMessage = e.getMessage();      
-                        handleException(e, logMessage, messageTitle, userMessage);  
-                    } catch (Exception e) {
-                        LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
-                        ExceptionUtil.log(e, Messages.ConfigurationAction_5);
-                    }
-                }
-
-                private void handleException(final Exception e, final String logMessage, final String messageTitle, final String userMessage) {
-                    LOG.info(logMessage);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("stacktrace: ", e); //$NON-NLS-1$
-                    }
-                    Display.getDefault().syncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            MessageDialog.openError(Display.getDefault().getActiveShell(),messageTitle, userMessage);
-                        }
-                    });
-                }
-
-            });
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new UpdateConfigurationHelper(configuration, dialog));
         } catch (Exception e) {
             LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.ConfigurationAction_5);
@@ -218,50 +172,6 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
 		}
     }
 
-	/**
-	 * Checks if the user has entered a new password. If so, the cleartext password is
-	 * saved.
-	 * @param string 
-	 * 
-	 * @param entity
-	 *            the entity containing the users input
-	 * @param string 
-	 * @return true if a new cleartext password was saved, that needs to be
-	 *         hashed.
-	 */
-	private boolean updateNameAndPassword(String name, String newPassword, String newPassword2) {
-		boolean updated = false;
-		final String oldName = configuration.getUser();
-		if(isNewName(oldName,name) && (newPassword==null || newPassword.isEmpty())) {
-		    if(getAuthService().isHandlingPasswords()) {	    
-		        throw new PasswordException(Messages.ConfigurationAction_9);
-		    }
-		}	
-		configuration.setUser(name);
-		if(newPassword!=null && !newPassword.isEmpty()) {
-			if(!newPassword.equals(newPassword2)) {
-				throw new PasswordException(Messages.ConfigurationAction_10);
-			}
-			configuration.setPass(newPassword);
-			updated=true;
-		}
-		return updated;
-	}
-
-	private boolean isNewName(String oldName, String name) {
-		boolean result=false;
-		if(oldName!=null) {
-			if(name==null) {
-				result=true;
-			} else {
-				result = !oldName.equals(name);
-			}
-		} else {
-			result = name!=null;
-		}
-		return result;
-	}
-
     public IAuthService getAuthService() {
         return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
     }
@@ -303,31 +213,24 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
 		return ServiceFactory.lookupCommandService();
 	}
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
-     */
     @Override
     public boolean checkRights() {
         return ((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
-     */
+
     @Override
     public String getRightID() {
         return ActionRightIDs.ACCOUNTSETTINGS;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
-     */
+
     @Override
     public void setRightID(String rightID) {
         // DO nothing
     }
     
-    private IRightsServiceClient getRightService() {
+    IRightsServiceClient getRightService() {
         if (rightsService == null) {
             rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         }
