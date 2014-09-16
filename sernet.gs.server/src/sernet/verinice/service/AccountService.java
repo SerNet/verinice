@@ -22,17 +22,20 @@ package sernet.verinice.service;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDao;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 
@@ -98,8 +101,14 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public AccountGroup createAccountGroup(String name) {
-        AccountGroup group = new AccountGroup();
-        group.setName(name);
+
+        List<Configuration> accounts = listAccounts();
+        for (Configuration account : accounts) {
+            if (account.getUser().equals(name))
+                throw new IllegalArgumentException("group name is equivalent to an account name");
+        }
+
+        AccountGroup group = new AccountGroup(name);
         AccountGroup savedGroup = getAccountGroupDao().merge(group);
         return savedGroup;
     }
@@ -156,10 +165,10 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public List<Configuration> listAccounts() {
-        HqlQuery hqlQuery =  AccountSearchQueryFactory.createRetrieveAllConfigurations();
+        HqlQuery hqlQuery = AccountSearchQueryFactory.createRetrieveAllConfigurations();
 
-        List<Configuration> configurations = (List<Configuration>) getConfigurationDao().findByQuery(hqlQuery.getHql(), new String[]{}, new Object[]{});
-        return (configurations == null) ? Collections.<Configuration>emptyList() : configurations;
+        List<Configuration> configurations = (List<Configuration>) getConfigurationDao().findByQuery(hqlQuery.getHql(), new String[] {}, new Object[] {});
+        return (configurations == null) ? Collections.<Configuration> emptyList() : configurations;
     }
 
     @Override
@@ -168,6 +177,39 @@ public class AccountService implements IAccountService, Serializable {
         for (String accountGroup : accountGroupNames) {
             createAccountGroup(accountGroup);
         }
+    }
+
+    @Override
+    public Set<Configuration> addRole(Set<Configuration> configurations, String role) {
+
+        Set<Configuration> result = new HashSet<Configuration>();
+
+        for (Configuration configuration : configurations) {
+
+            if (!isRoleSet(role, configuration)) {
+                configuration.addRole(role);
+                result.add((Configuration) getConfigurationDao().merge(configuration));
+            }
+        }
+
+        return result;
+    }
+
+    private boolean isRoleSet(String role, Configuration configuration) {
+        return configuration.getRoles().contains(role);
+    }
+
+    @Override
+    public Set<Configuration> deleteRole(Set<Configuration> configurations, String role) {
+
+        Set<Configuration> result = new HashSet<Configuration>();
+        for (Configuration configuration : configurations) {
+            if (configuration.deleteRole(role)) {
+                result.add((Configuration) getConfigurationDao().merge(configuration));
+            }
+        }
+
+        return result;
     }
 
     private Logger getLog() {

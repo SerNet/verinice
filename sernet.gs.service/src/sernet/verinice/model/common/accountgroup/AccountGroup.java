@@ -39,6 +39,13 @@ public class AccountGroup implements ITypedElement, Serializable {
 
     private String name;
 
+    private AccountGroup() {
+    };
+
+    public AccountGroup(String name) {
+        this.name = name;
+    }
+
     public Integer getDbId() {
         return dbId;
     }
@@ -64,7 +71,6 @@ public class AccountGroup implements ITypedElement, Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((dbId == null) ? 0 : dbId.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         return result;
     }

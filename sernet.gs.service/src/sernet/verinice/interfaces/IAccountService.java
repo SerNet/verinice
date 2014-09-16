@@ -29,20 +29,30 @@ import sernet.verinice.model.common.configuration.Configuration;
  * 
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
- *
+ * 
  */
 public interface IAccountService {
-    
+
     public List<Configuration> findAccounts(IAccountSearchParameter parameter);
+
     public void delete(Configuration account);
+
     public void deactivate(Configuration account);
+
     public List<Configuration> listAccounts();
-    
+
+    public Set<Configuration> addRole(Set<Configuration> configurations, String role);
+
+    public Set<Configuration> deleteRole(Set<Configuration> configurations, String role);
+
     public List<AccountGroup> listGroups();
+
     public void deleteAccountGroup(String name);
+
     public void deleteAccountGroup(AccountGroup group);
+
     public AccountGroup createAccountGroup(String name);
+
     public void saveAccountGroups(Set<String> accountGroupNames);
 
-    
 }

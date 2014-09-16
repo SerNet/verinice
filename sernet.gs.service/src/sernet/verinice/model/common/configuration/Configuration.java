@@ -155,14 +155,15 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 		entity.createNewProperty(type, string);
 	}
 	
-	public void deleteRole(String string) {
+	public boolean deleteRole(String string) {
 		// cannot delete the special user role:
 		if (string.equals(getUser())){
-			return;
+			return false;
 		}
 		
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_ROLES);
 		entity.remove(type, string);
+		return true;
 	}
 	
 	public void setNotificationEnabled(boolean b) {
