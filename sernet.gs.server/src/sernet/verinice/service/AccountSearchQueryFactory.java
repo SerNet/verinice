@@ -170,19 +170,32 @@ public final class AccountSearchQueryFactory {
         sb.append(" inner join fetch pEntity.typedPropertyLists as pPropertyList");
         sb.append(" inner join fetch pPropertyList.properties as pProps");
         sb.append(" where conf.dbId in (:dbIds)");
-        
+
         String hql = sb.toString();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Hql: " + hql);
         }
         Object[] values;
-        if(dbIds.size()==1) {
+        if (dbIds.size() == 1) {
             values = dbIds.toArray();
         } else {
-            values = new Object[]{dbIds.toArray()};
+            values = new Object[] { dbIds.toArray() };
         }
         return new HqlQuery(hql, values);
     }
-}
 
-    
+    public static final HqlQuery createRetrieveAllConfigurations() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("from Configuration as conf");
+        sb.append(" inner join fetch conf.entity as entity");
+        sb.append(" inner join fetch entity.typedPropertyLists as propertyList");
+        sb.append(" inner join fetch propertyList.properties as props");
+        sb.append(" inner join fetch conf.person as person");
+        sb.append(" inner join fetch person.entity as pEntity");
+        sb.append(" inner join fetch pEntity.typedPropertyLists as pPropertyList");
+        sb.append(" inner join fetch pPropertyList.properties as pProps");
+
+        return new HqlQuery(sb.toString(), null);
+    }
+}

@@ -156,7 +156,10 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public List<Configuration> listAccounts() {
-        return configurationDao.findAll();
+        HqlQuery hqlQuery =  AccountSearchQueryFactory.createRetrieveAllConfigurations();
+
+        List<Configuration> configurations = (List<Configuration>) getConfigurationDao().findByQuery(hqlQuery.getHql(), new String[]{}, new Object[]{});
+        return (configurations == null) ? Collections.<Configuration>emptyList() : configurations;
     }
 
     @Override
