@@ -19,12 +19,18 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -35,7 +41,6 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
@@ -43,15 +48,13 @@ import org.eclipse.ui.part.ViewPart;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.IAccountService;
-import sernet.verinice.model.common.accountgroup.AccountGroup;
+import sernet.verinice.rcp.IllegalSelectionException;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class GroupView extends ViewPart implements SelectionListener {
+public class GroupView extends ViewPart implements SelectionListener, KeyListener {
 
     public static final String ID = "sernet.verinice.rcp.accountgroup.GroupView";
 
@@ -63,31 +66,45 @@ public class GroupView extends ViewPart implements SelectionListener {
 
     private Action deleteGroup;
 
-    private Action saveGroup;
-
-    private IAccountService accountService;
+    private Action editGroup;
 
     private List groupList;
 
-    private java.util.List<AccountGroup> groups;
+    private List groupToAccountList;
 
-    private Button newBtn;
+    private List accountList;
+
+    private Button addBtn;
+
+    private Button addAllBtn;
+
+    private Button removeBtn;
+
+    private Button removeAllBtn;
+
+    private Button editAccountBtn;
+
+    private String selected;
+
+    private IAccountGroupViewDataService accountGroupDataService;
+
+    private Text quickFilter;
 
     @Override
     public void createPartControl(Composite parent) {
 
         this.parent = parent;
+        this.accountGroupDataService = new AccountGroupDataService();
+
+        setupView();
+        initData();
 
         makeActions();
         fillLocalToolBar();
-        setupView();
-
-        initData();
     }
 
     private void initData() {
-        this.accountService = (IAccountService) VeriniceContext.get(VeriniceContext.ACCOUNT_SERVICE);
-        this.groups = accountService.listGroups();
+        reloadData();
     }
 
     private void setupView() {
@@ -102,9 +119,10 @@ public class GroupView extends ViewPart implements SelectionListener {
         ((GridData) groupLabel.getLayoutData()).horizontalSpan = 4;
         groupLabel.setText(Messages.GroupView_3);
 
-        Text quickFilter = new Text(groupViewComposite, SWT.SINGLE | SWT.BORDER);
+        quickFilter = new Text(groupViewComposite, SWT.SINGLE | SWT.BORDER);
         GridData fastFilterGridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         quickFilter.setLayoutData(fastFilterGridData);
+        quickFilter.addKeyListener(this);
 
         Label accountsInGroup = new Label(groupViewComposite, SWT.NULL);
         accountsInGroup.setLayoutData(new GridData());
@@ -115,125 +133,80 @@ public class GroupView extends ViewPart implements SelectionListener {
         accounts.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         accounts.setText("Accounts");
 
-        groupList = new List(groupViewComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
+        groupList = new List(groupViewComposite, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
         GridData groupListGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL);
         Rectangle trim = groupList.computeTrim(0, 0, 0, groupList.getItemHeight() * 12);
         groupListGridData.heightHint = trim.height;
         groupList.setLayoutData(groupListGridData);
+        groupList.addSelectionListener(this);
 
-        List groupAccountList = new List(groupViewComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
-        groupAccountList.setItems(new String[] { "account_1", "account_2", "account_3" });
+        groupToAccountList = new List(groupViewComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
+        groupToAccountList.setItems(new String[] {});
         GridData groupAccountListGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL);
-        groupListGridData.heightHint = groupAccountList.computeTrim(0, 0, 0, groupList.getItemHeight() * 12).height;
-        groupAccountList.setLayoutData(groupAccountListGridData);
+        groupListGridData.heightHint = groupToAccountList.computeTrim(0, 0, 0, groupList.getItemHeight() * 12).height;
+        groupToAccountList.setLayoutData(groupAccountListGridData);
+        groupToAccountList.addSelectionListener(this);
 
         Group connectGroupsWithAccounts = new Group(groupViewComposite, SWT.NULL);
         connectGroupsWithAccounts.setLayout(new GridLayout());
         ((GridLayout) connectGroupsWithAccounts.getLayout()).numColumns = 1;
         connectGroupsWithAccounts.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
-        Button addBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
+        addBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
         addBtn.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
         addBtn.setText(Messages.GroupView_4);
+        addBtn.addSelectionListener(this);
 
-        Button addAllBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
+        addAllBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
         addAllBtn.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
         addAllBtn.setText(Messages.GroupView_5);
+        addAllBtn.addSelectionListener(this);
 
-        Button removeBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
+        removeBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
         removeBtn.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
         removeBtn.setText(Messages.GroupView_6);
+        removeBtn.addSelectionListener(this);
 
-        Button removeAllBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
+        removeAllBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
         removeAllBtn.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
         removeAllBtn.setText(Messages.GroupView_7);
+        removeAllBtn.addSelectionListener(this);
 
-        Button editAccountBtn = new Button(connectGroupsWithAccounts, SWT.END);
+        editAccountBtn = new Button(connectGroupsWithAccounts, SWT.END);
         editAccountBtn.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, true));
         editAccountBtn.setText(Messages.GroupView_8);
+        editAccountBtn.addSelectionListener(this);
 
-        List accountList = new List(groupViewComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
-        accountList.setItems(new String[] { "account_1", "account_2", "account_3", "account_4", "account_5", "account_6" });
+        accountList = new List(groupViewComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
+        accountList.setItems(new String[] {});
         GridData accountListGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
         accountListGridData.heightHint = accountList.computeTrim(0, 0, 0, accountList.getItemHeight() * 12).height;
         accountList.setLayoutData(accountListGridData);
-
+        accountList.addSelectionListener(this);
     }
 
     private void makeActions() {
-
-        newGroup = new NewGroupAction(accountService);
-
+        newGroup = new NewGroupAction();
         newGroup.setText(Messages.GroupView_0);
         newGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
 
-        this.deleteGroup = new Action() {
-        };
-
+        deleteGroup = new DeleteGroupAction();
         deleteGroup.setText(Messages.GroupView_1);
         deleteGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
 
-        this.saveGroup = new Action() {
-        };
-
-        saveGroup.setText(Messages.GroupView_2);
-        saveGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SAVE));
+        editGroup = new EditGroupAction();
+        editGroup.setText(Messages.GroupView_2);
+        editGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SAVE));
     }
 
-    private abstract class AccountServiceAction extends Action {
+    private void reloadData() {
 
-        protected final IAccountService accountService;
+        groupList.setItems(accountGroupDataService.getAccountGroups());
 
-        public AccountServiceAction(IAccountService accountService) {
-            this.accountService = accountService;
-        }
+        if (isGroupSelected())
+            groupToAccountList.setItems(accountGroupDataService.getAccountNamesForGroup(getSelectedGroup()));
 
-        @Override
-        abstract public void run();
-    }
-
-    private class NewGroupAction extends AccountServiceAction {
-
-        public NewGroupAction(IAccountService accountService) {
-            super(accountService);
-        }
-
-        @Override
-        public void run() {
-            Dialog dialog = new Dialog(parent.getShell()) {
-
-            };
-        }
-    }
-
-    private class NewGroupDialog extends TitleAreaDialog {
-
-        public NewGroupDialog(Shell parent) {
-            super(parent);
-        }
-
-        @Override
-        public void create() {
-          super.create();
-          setTitle("This is my first custom dialog");
-          setMessage("This is a TitleAreaDialog");
-        }
-
-        @Override
-        protected Control createDialogArea(Composite parent) {
-
-          Composite area = (Composite) super.createDialogArea(parent);
-          Composite container = new Composite(area, SWT.NONE);
-          container.setLayoutData(new GridData(GridData.FILL_BOTH));
-          GridLayout layout = new GridLayout(2, false);
-          container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-          container.setLayout(layout);
-
-
-          return area;
-        }
-
-
+        accountList.setItems(accountGroupDataService.getAllAccounts());
     }
 
     private void fillLocalToolBar() {
@@ -241,8 +214,8 @@ public class GroupView extends ViewPart implements SelectionListener {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
 
-        if (saveGroup != null)
-            manager.add(saveGroup);
+        if (editGroup != null)
+            manager.add(editGroup);
         if (deleteGroup != null)
             manager.add(deleteGroup);
         if (newGroup != null)
@@ -257,16 +230,246 @@ public class GroupView extends ViewPart implements SelectionListener {
 
     @Override
     public void widgetSelected(SelectionEvent e) {
-        if (e.getSource() == newBtn) {
-            MessageBox messageDialog = new MessageBox(parent.getShell(), SWT.ICON_QUESTION | SWT.OK | SWT.CANCEL);
-            messageDialog.open();
+
+        selected = getSelectedGroup();
+
+        if (e.getSource() == groupList) {
+            groupToAccountList.setItems(accountGroupDataService.getAccountNamesForGroup(selected));
         }
+
+        else if (e.getSource() == addBtn) {
+            accountGroupDataService.saveAccountGroupData(selected, accountList.getSelection());
+            updateGroupToAccountsList();
+        }
+
+        else if (e.getSource() == addAllBtn) {
+            accountGroupDataService.saveAccountGroupData(selected, accountList.getItems());
+            updateGroupToAccountsList();
+        }
+
+        else if (e.getSource() == removeBtn) {
+            accountGroupDataService.deleteAccountGroupData(selected, removeSelectedAccountsFromGroup());
+        }
+
+        else if (e.getSource() == removeAllBtn) {
+            accountGroupDataService.deleteAccountGroupData(selected, groupToAccountList.getItems());
+            groupToAccountList.removeAll();
+        }
+
+        // reloadData();
+        // groupList.select(groupList.indexOf(selected));
+    }
+
+    private String[] removeSelectedAccountsFromGroup() {
+
+        String [] removed = new String[groupToAccountList.getSelectionCount()];
+        for (int i = 0; i < groupToAccountList.getSelectionCount(); i++) {
+            removed[i] = groupToAccountList.getItem(groupToAccountList.getSelectionIndices()[i]);
+            groupToAccountList.remove(groupToAccountList.getSelectionIndices()[i]);
+        }
+
+        return removed;
+    }
+
+    private void updateGroupToAccountsList() {
+        groupToAccountList.setItems(accountGroupDataService.getAccountNamesForGroup(getSelectedGroup()));
     }
 
     @Override
     public void widgetDefaultSelected(SelectionEvent e) {
-        if (e.getSource() == newBtn) {
+
+    }
+
+    private class NewGroupAction extends Action {
+
+        @Override
+        public void run() {
+            NewGroupDialog newGroupDialog = new NewGroupDialog(parent.getShell(), "create new group");
+            newGroupDialog.open();
+        }
+    }
+
+    private class EditGroupAction extends Action {
+
+        @Override
+        public void run() {
+            EditGroupDialog dialog = new EditGroupDialog(parent.getShell(), "edit group");
+            dialog.open();
+        }
+    }
+
+    private class DeleteGroupAction extends Action {
+
+        @Override
+        public void run() {
+            DeleteGroupDialog deleteGroupDialog = new DeleteGroupDialog(parent.getShell(), "delete group");
+            deleteGroupDialog.open();
+        }
+
+    }
+
+    private abstract class CRUDAccountGroupDialog extends TitleAreaDialog {
+
+        protected Text textInputField;
+
+        protected Composite container;
+
+        private String title;
+
+        public CRUDAccountGroupDialog(Shell parent, String title) {
+            super(parent);
+            this.title = title;
+        }
+
+        @Override
+        protected Control createDialogArea(Composite parent) {
+
+            Composite area = (Composite) super.createDialogArea(parent);
+            container = new Composite(area, SWT.NONE);
+            container.setLayoutData(new GridData(GridData.FILL_BOTH));
+            GridLayout layout = new GridLayout(2, false);
+            GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+
+            container.setLayoutData(gridData);
+            container.setLayout(layout);
+
+            if (isEditable()) {
+                GridData dataGroupName = new GridData();
+                dataGroupName.grabExcessHorizontalSpace = true;
+
+                dataGroupName.horizontalAlignment = GridData.FILL;
+
+                Label groupTextLabel = new Label(container, SWT.NONE);
+                groupTextLabel.setText("Group Name");
+
+                textInputField = new Text(container, SWT.BORDER);
+                textInputField.setLayoutData(dataGroupName);
+            }
+
+            return area;
+        }
+
+        protected abstract boolean isEditable();
+
+        @Override
+        public void create() {
+            super.create();
+            setTitle(title);
+        }
+
+        @Override
+        protected boolean isResizable() {
+            return true;
+        }
+
+        @Override
+        protected void okPressed() {
+            reloadData();
+            super.okPressed();
+        }
+    }
+
+    private class NewGroupDialog extends CRUDAccountGroupDialog {
+
+        public NewGroupDialog(Shell parent, String title) {
+            super(parent, title);
+        }
+
+        @Override
+        protected void okPressed() {
+            accountGroupDataService.addAccountGroup(textInputField.getText());
+            super.okPressed();
+        }
+
+        @Override
+        protected boolean isEditable() {
+            return true;
+        }
+    }
+
+    private class DeleteGroupDialog extends CRUDAccountGroupDialog {
+
+        String selection;
+
+        public DeleteGroupDialog(Shell parent, String title) {
+            super(parent, title);
+
+            if (isGroupSelected())
+                this.selection = getSelectedGroup();
+            else
+                throw new IllegalSelectionException("an account group must be selected");
+        }
+
+        @Override
+        protected void okPressed() {
+            accountGroupDataService.deleteAccountGroup(selection);
+            super.okPressed();
+        }
+
+        @Override
+        protected boolean isEditable() {
+            return false;
+        }
+    }
+
+    private class EditGroupDialog extends CRUDAccountGroupDialog {
+
+        private String selection;
+
+        public EditGroupDialog(Shell parent, String title) {
+
+            super(parent, title);
+
+            if (isGroupSelected())
+                this.selection = getSelectedGroup();
+            else
+                throw new IllegalSelectionException("an account group must be selected");
+        }
+
+        @Override
+        public void create() {
+            super.create();
+            textInputField.setText(selection);
 
         }
+
+        @Override
+        protected boolean isEditable() {
+            return true;
+        }
+
+        @Override
+        protected void okPressed() {
+            accountGroupDataService.editAccountGroupName(textInputField.getText(), selection);
+            super.okPressed();
+        }
+    }
+
+    private String getSelectedGroup() {
+        return groupList.getSelection()[0];
+    }
+
+    private boolean isGroupSelected() {
+        return groupList.getSelectionCount() > 0;
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        String text = quickFilter.getText();
+        String[] allAccountGroups = accountGroupDataService.getAccountGroups();
+        if (("").equals(text)) {
+            groupList.setItems(allAccountGroups);
+        } else {
+            groupList.removeAll();
+            for (String group : allAccountGroups) {
+                if (group.contains(text)) {
+                    groupList.add(group);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
     }
 }
