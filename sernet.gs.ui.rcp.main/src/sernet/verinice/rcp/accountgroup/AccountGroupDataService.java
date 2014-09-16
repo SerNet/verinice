@@ -107,21 +107,23 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
 
     @Override
     public void addAccountGroup(String accountGroupName) {
-        AccountGroup accountGroup = new AccountGroup(accountGroupName);
-        if (!accountGroupToConfiguration.containsKey(accountGroup)) {
-            accountGroupToConfiguration.put(accountGroup.getName(), new HashSet<String>());
+
+        if (!accountGroupToConfiguration.containsKey(accountGroupName)) {
+            accountGroupToConfiguration.put(accountGroupName, new HashSet<String>());
         }
+
+        accountService.createAccountGroup(accountGroupName);
     }
 
     @Override
     public String[] saveAccountGroupData(String groupName, String[] accountNames) {
-        try {            
-            
+        try {
+
             Set<String> selectedAccounts = accountService.addRole(new HashSet<String>(Arrays.asList(accountNames)), groupName);
-            
-            for (String account  : selectedAccounts)
+
+            for (String account : selectedAccounts)
                 accountGroupToConfiguration.get(groupName).add(account);
-            
+
             return convertToStringArray(accountGroupToConfiguration.get(groupName));
 
         } catch (Exception ex) {
@@ -134,17 +136,21 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     @Override
     public void editAccountGroupName(String newName, String oldName) {
 
-        // delete role from configurations
+        if (newName.equals(oldName))
+            new IllegalArgumentException(String.format("name is not changed: %s", newName));
 
+        // delete role from configurations
         accountGroupToConfiguration.put(newName, accountGroupToConfiguration.get(oldName));
         accountGroupToConfiguration.remove(oldName);
 
-        deleteAccountGroup(oldName);
+        accountService.deleteAccountGroup(oldName);
+        accountService.deleteRole(accountGroupToConfiguration.get(newName), oldName);
+        accountService.addRole(accountGroupToConfiguration.get(newName), newName);
     }
 
     @Override
     public Set<String> deleteAccountGroup(String groupName) {
-        
+
         Set<String> accounts = accountGroupToConfiguration.get(groupName);
         accountGroupToConfiguration.remove(groupName);
 
