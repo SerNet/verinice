@@ -57,7 +57,7 @@
       	    allowMultiple="true"
             category="sernet.verinice.rcp.accountgroup"
             class="sernet.verinice.rcp.accountgroup.GroupView"
-            icon="icons/tag.png"
+            icon="icons/group.png"
             id="sernet.verinice.rcp.accountgroup.GroupView"
             name="%view.name.14">
       </view>

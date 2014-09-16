@@ -208,12 +208,12 @@ public class GroupView extends ViewPart implements SelectionListener, KeyListene
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
 
+        if (newGroup != null)
+            manager.add(newGroup);
         if (editGroup != null)
             manager.add(editGroup);
         if (deleteGroup != null)
             manager.add(deleteGroup);
-        if (newGroup != null)
-            manager.add(newGroup);
     }
 
     @Override

@@ -227,6 +227,8 @@ public final class ImageCache {
 	public static final String MIME_XML = "mime-xml.png";
 	public static final String MIME_IMAGE = "mime-image.png";
 	
+	public static final String GROUP_VIEW = "group.png";
+
 	public static final String LINKED = "linked.gif";
 	
 	public static final String UNLINKED = "unlinked.gif";
