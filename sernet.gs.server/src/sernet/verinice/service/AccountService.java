@@ -339,4 +339,13 @@ public class AccountService implements IAccountService, Serializable {
 
         return null;
     }
+    
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<String> listGroupNames() {
+        String hqlQuery = "select accountgroup.name from AccountGroup accountgroup";
+        List<String> accountGroupNames = accountGroupDao.findByQuery(hqlQuery, new String[]{});
+        
+        return accountGroupNames == null ? new ArrayList<String>() : accountGroupNames;
+    }
 }

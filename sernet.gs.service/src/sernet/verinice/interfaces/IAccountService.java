@@ -43,6 +43,8 @@ public interface IAccountService {
 
     public Set<String> listAccounts();
 
+    public List<String> listGroupNames();
+
     public Set<String> addRole(Set<String> configurations, String role);
 
     public Set<String> deleteRole(Set<String> configurations, String role);

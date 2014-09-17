@@ -102,6 +102,19 @@ public class AccountServiceTest extends CommandServiceProvider {
 
     }
 
+    @Test
+    public void testListGroupNames() {
+        List<String> groupNames = Arrays.asList("test_1", "test_2");
+
+        AccountGroup accountGroup1 = accountService.createAccountGroup(groupNames.get(0));
+        AccountGroup accountGroup2 = accountService.createAccountGroup(groupNames.get(1));
+
+        List<String> accountGroupNames = accountService.listGroupNames();
+
+        Assert.assertTrue(accountGroupNames.contains(accountGroup1.getName()));
+        Assert.assertTrue(accountGroupNames.contains(accountGroup2.getName()));
+
+    }
 
     @Test
     public void testFindByLogin() throws Exception {
@@ -109,7 +122,7 @@ public class AccountServiceTest extends CommandServiceProvider {
         testIfNotEmpty(configurations);
         for (Configuration account : configurations) {
             assertNotNull("Account login is null", account.getUser());
-            assertTrue("Account login does not contain: " + getLoginName(), account.getUser().contains(getLoginName()));     
+            assertTrue("Account login does not contain: " + getLoginName(), account.getUser().contains(getLoginName()));
         }
     }
 
@@ -130,7 +143,7 @@ public class AccountServiceTest extends CommandServiceProvider {
         for (Configuration account : configurations) {
             PersonIso person = (PersonIso) account.getPerson();
             assertEquals("Family name of person is not: " + getFamilyName(), getFamilyName(), person.getSurname());
-        }   
+        }
     }
 
     @Test
@@ -152,19 +165,19 @@ public class AccountServiceTest extends CommandServiceProvider {
         boolean testuserFound = false;
         for (Configuration configuration : configurations) {
             assertEquals("Account is not scope only account", true, configuration.isScopeOnly());
-            if(configuration.getUser().equals(LOGIN_B)) {
+            if (configuration.getUser().equals(LOGIN_B)) {
                 testuserFound = true;
             }
         }
-        assertTrue("Testuser not found", testuserFound);       
+        assertTrue("Testuser not found", testuserFound);
     }
-    
+
     @Test
     public void testFindByScopeId() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createScopeParameter(organization.getDbId()));
         assertNumber(configurations, 7);
     }
-    
+
     @Test
     public void testFindByAll() throws Exception {
         IAccountSearchParameter parameter = AccountSearchParameterFactory.createFamilyNameParameter(FAMILY_NAME_B);
@@ -175,10 +188,10 @@ public class AccountServiceTest extends CommandServiceProvider {
             assertEquals("Account is not admin account", true, configuration.isAdminUser());
             assertEquals("Account login is not: " + LOGIN_A, LOGIN_A, configuration.getUser());
             PersonIso person = (PersonIso) configuration.getPerson();
-            assertEquals("Family name of person is not: " + FAMILY_NAME_B, FAMILY_NAME_B, person.getSurname());         
-            assertEquals("First name of person is not: " + FIRST_NAME_A, FIRST_NAME_A, person.getName());   
+            assertEquals("Family name of person is not: " + FAMILY_NAME_B, FAMILY_NAME_B, person.getSurname());
+            assertEquals("First name of person is not: " + FIRST_NAME_A, FIRST_NAME_A, person.getName());
             assertEquals("Scope id is not: " + organization.getDbId(), organization.getDbId(), person.getScopeId());
-        }       
+        }
     }
 
     @Test
@@ -189,14 +202,14 @@ public class AccountServiceTest extends CommandServiceProvider {
 
         }
     }
-    
+
     @Test
     public void testRemove() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
         testIfNotEmpty(configurations);
         removeAccountsStartingWith(LOGIN_A);
     }
-    
+
     @Test
     public void testDisable() throws Exception {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(LOGIN_A));
@@ -212,22 +225,22 @@ public class AccountServiceTest extends CommandServiceProvider {
         }
     }
 
-    private void removeAccountsStartingWith(String login) {      
+    private void removeAccountsStartingWith(String login) {
         List<Configuration> configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(login));
         for (Configuration account : configurations) {
             assertTrue("Account login is not: " + login, account.getUser().startsWith(login));
             accountService.delete(account);
         }
         configurations = accountService.findAccounts(AccountSearchParameterFactory.createLoginParameter(login));
-        assertNotNull("Search result is null",  configurations);
+        assertNotNull("Search result is null", configurations);
         assertTrue("Number of accounts is not 0", configurations.isEmpty());
     }
-    
+
     private void testIfNotEmpty(List<Configuration> configurations) {
-        assertNotNull("Search result is null",  configurations);
+        assertNotNull("Search result is null", configurations);
         assertTrue("Number of accounts is 0", !configurations.isEmpty());
     }
-    
+
     private void assertNumber(List<Configuration> configurations, int expectedNumber) {
         assertNotNull("Search result is null", configurations);
         assertEquals("Number of account is not " + expectedNumber, expectedNumber, configurations.size());
@@ -236,7 +249,7 @@ public class AccountServiceTest extends CommandServiceProvider {
     @Before
     public void setUp() throws Exception {
         uuidList = new LinkedList<String>();
-        //organization = createTestOrganization();
+        organization = createTestOrganization();
         removeAccountGroups();
     }
 
@@ -247,8 +260,7 @@ public class AccountServiceTest extends CommandServiceProvider {
         removeAccountsStartingWith(LOGIN_B);
         removeAccountsStartingWith(LOGIN_C);
         removeAccountsStartingWith(LOGIN_D);
-        removeTestOrganization(organization); 
-        //removeTestOrganization(organization);
+        removeTestOrganization(organization);
         removeAccountGroups();
     }
 
@@ -307,10 +319,10 @@ public class AccountServiceTest extends CommandServiceProvider {
         saveElement(person);
         Configuration configuration = createAccount(person);
         configuration.setUser(paramter.getLogin());
-        if(paramter.isAdmin()!=null) {
+        if (paramter.isAdmin() != null) {
             configuration.setAdminUser(paramter.isAdmin());
         }
-        if(paramter.isScopeOnly()!=null) {
+        if (paramter.isScopeOnly() != null) {
             configuration.setScopeOnly(paramter.isScopeOnly());
         }
         saveAccount(configuration);
