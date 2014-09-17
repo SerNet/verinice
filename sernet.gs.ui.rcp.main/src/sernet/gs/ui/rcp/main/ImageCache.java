@@ -118,6 +118,12 @@ public final class ImageCache {
 	
 	public static final String TOOL= "24-tool-a.png";
 
+	public static final String GROUP_ADD = "group_add.png";
+
+	public static final String GROUP_EDIT = "group_edit.png";
+
+	public static final String GROUP_DEL = "group_delete.png";
+
 	public static final String WRENCH= "wrench.png";
 	
 	public static final String EXPLORER = "tree_explorer.gif";

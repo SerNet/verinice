@@ -245,15 +245,15 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     private void makeActions() {
         newGroup = new NewGroupAction();
         newGroup.setText(Messages.GroupView_0);
-        newGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
+        newGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.GROUP_ADD));
 
         deleteGroup = new DeleteGroupAction();
         deleteGroup.setText(Messages.GroupView_1);
-        deleteGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
+        deleteGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.GROUP_DEL));
 
         editGroup = new EditGroupAction();
         editGroup.setText(Messages.GroupView_2);
-        editGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.SAVE));
+        editGroup.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.GROUP_EDIT));
     }
 
     private void fillLocalToolBar() {
