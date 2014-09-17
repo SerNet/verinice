@@ -27,6 +27,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.interfaces.IRightsServiceClient;
@@ -56,6 +57,7 @@ public class RightsServiceClient implements IRightsServiceClient{
     private List<String> userNameList;
     private List<String> groupNameList;
     private Properties messages;
+    private IAccountService accountService;
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IRightsServiceClient#containsAction(java.lang.String)
@@ -163,7 +165,7 @@ public class RightsServiceClient implements IRightsServiceClient{
             if(getAuthService().isScopeOnly()) {
                 groupNameList = getGroupnames(getAuthService().getUsername());
             } else {
-                groupNameList = getRightsServiceExecuter().getGroupnames();
+                groupNameList = getAccountService().listGroupNames();
             }
         }
         return groupNameList;
@@ -295,6 +297,14 @@ public class RightsServiceClient implements IRightsServiceClient{
      */
     public void setRightsServiceExecuter(IRightsService rightsServiceExecuter) {
         this.rightsServiceExecuter = rightsServiceExecuter;
+    }
+
+    public IAccountService getAccountService() {
+        return accountService;
+    }
+
+    public void setAccountService(IAccountService accountService) {
+        this.accountService = accountService;
     }
 
 }

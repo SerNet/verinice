@@ -211,69 +211,74 @@ public class UserprofileDialog extends TitleAreaDialog {
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         rightButtonComposite.setLayout(gridLayout);
-        
+
         tableSelected = createTable(leftComposite, Messages.UserprofileDialog_4);
         tableSelected.setLabelProvider(new ProfileLabelProvider());
         tableSelected.setComparator(new TableComparator());
-        tableSelected.setContentProvider(new ArrayContentProvider());     
+        tableSelected.setContentProvider(new ArrayContentProvider());
         tableSelected.refresh(true);
-       
+
         table = createTable(rightComposite, Messages.UserprofileDialog_5);
         table.setLabelProvider(new ProfileLabelProvider());
         table.setComparator(new TableComparator());
-        table.setContentProvider(new ArrayContentProvider());       
+        table.setContentProvider(new ArrayContentProvider());
         table.refresh(true);
-        
-      
+
         createButtons(centerComposite);
         createProfileButtons(rightButtonComposite);
-        
+
         tableAction = createTable(rightButtonComposite, Messages.UserprofileDialog_6);
         tableAction.setLabelProvider(new ProfileLabelProvider());
         tableAction.setComparator(new TableComparator());
-        tableAction.setContentProvider(new ArrayContentProvider());       
+        tableAction.setContentProvider(new ArrayContentProvider());
         tableAction.refresh(true);
-        
+
         initializeContent();
-        
-        String username = ((IAuthService)VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getUsername();
-        loadProfiles(username);  
+
+        String username = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getUsername();
+        loadProfiles(username);
         comboModel.setSelectedObject(username);
         comboLogin.select(comboModel.getSelectedIndex());
 
         Dialog.applyDialogFont(composite);
-        
+
         return composite;
     }
 
     /**
      * 
      */
-    
+
     private void initializeContent() {
-        tableSelected.setInput(selectedProfiles); 
-        
+        tableSelected.setInput(selectedProfiles);
+
         setUnselected();
         table.setInput(unselectedProfiles);
-        
+
         Set<String> nameSet = new HashSet<String>();
         for (String username : getRightService().getUsernames()) {
-            if(username!=null && !username.isEmpty()) {
+            if (username != null && !username.isEmpty()) {
                 nameSet.add(username);
             }
         }
-        
-        for (String groupname : getRightService().getGroupnames()) {
-            if(groupname!=null && !groupname.isEmpty()) {
-                nameSet.add(groupname);
+
+        try {
+            List<String> groupNames = getRightService().getGroupnames();
+            for (String groupname : groupNames) {
+                if (groupname != null && !groupname.isEmpty()) {
+                    nameSet.add(groupname);
+                }
             }
+        } catch (Exception ex) {
+            LOG.error("account groups loading failed", ex);
         }
+
         for (String name : nameSet) {
             comboModel.add(name);
         }
-        
+
         comboModel.sort();
-        comboLogin.setItems(comboModel.getLabelArray());      
+        comboLogin.setItems(comboModel.getLabelArray());
     }
 
     private void setUnselected() {

@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.IAccountSearchParameter;
@@ -130,6 +131,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public void deleteAccountGroup(AccountGroup group) {
+        validateAccountGroupName(group.getName());
         getAccountGroupDao().delete(group);
     }
 
@@ -148,11 +150,30 @@ public class AccountService implements IAccountService, Serializable {
     public void setAccountGroupDao(IDao<AccountGroup, Serializable> accountGroupDao) {
         this.accountGroupDao = accountGroupDao;
     }
-    
+
     @Override
     public void deleteAccountGroup(String name) {
+
+        validateAccountGroupName(name);
+
         AccountGroup accountGroup = findGroupByHQL(name);
         getAccountGroupDao().delete(accountGroup);
+    }
+
+    private void validateAccountGroupName(String name) {
+
+        if (name == null) {
+            String msg = "group name may not be null";
+            LOG.error(msg);
+            throw new AccountServiceError(msg);
+        }
+
+        if (ArrayUtils.contains(IRightsService.STANDARD_GROUPS, name)) {
+            String msg = "group name may not be null";
+            LOG.error(msg);
+            throw new AccountServiceError("standard groups may not be deleted");
+        }
+
     }
 
     private AccountGroup findGroupByHQL(String name) {

@@ -155,6 +155,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     <bean id="rightsServiceClient" class="sernet.springclient.RightsServiceClient">
     	<property name="authService" ref="authService" />
         <property name="rightsServiceExecuter" ref="rightsServiceExecuter" />
+        <property name="accountService" ref="accountService" />
     </bean>
     
     <bean id="commandCacheClient" class="sernet.springclient.CommandCacheClient">
