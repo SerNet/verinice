@@ -80,7 +80,7 @@ public final class AccountSearchQueryFactory {
             parameterList.add(addWildcards(parameter.getFamilyName()));
         }       
         if(parameter.getScopeId()!=null) {
-            parameterList.add(parameter.getScopeId());
+            parameterList.add(String.valueOf(parameter.getScopeId()));
         }
 
         String hql = sbHql.toString();
