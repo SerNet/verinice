@@ -23,72 +23,90 @@ public final class AccountSearchQueryFactory {
     public static DetachedCriteria createCriteria(IAccountSearchParameter parameter) {
         return DetachedCriteria.forClass(Configuration.class);
     }
+    
+    public static HqlQuery createHql(IAccountSearchParameter parameter) {
+        StringBuilder sbHql = new StringBuilder();     
+        sbHql.append("from Configuration as conf");      
+        createJoin(sbHql, parameter);       
+        createWhere(sbHql, parameter);       
+        List<Object> parameterList = addParameter(parameter);       
+        String hql = sbHql.toString();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Hql: " + hql);
+        }       
+        return new HqlQuery(hql, parameterList.toArray());
+    }
 
-    public static final HqlQuery createHql(IAccountSearchParameter parameter) {
-        StringBuilder sbHql = new StringBuilder();
-        List<String> parameterList = new ArrayList<String>(10);
-
-        sbHql.append("from Configuration as conf");
-
+    private static void createJoin(StringBuilder sbHql, IAccountSearchParameter parameter) {
         for (int i = 0; i < parameter.getNumberOfAccountParameter(); i++) {
-            sbHql.append(createAccountPropertyJoin(i));
-        }
+            sbHql.append(createAccountPropertyJoin(i));          
+        }   
         for (int i = 0; i < parameter.getNumberOfPersonParameter(); i++) {
-            sbHql.append(createPersonPropertyJoin(i));
+            sbHql.append(createPersonPropertyJoin(i));          
         }
+        if(parameter.getScopeId()!=null) {
+            sbHql.append(createPersonJoin(parameter.getNumberOfPersonParameter()));
+        }
+    }
 
-        if (parameter.isParameter()) {
+    private static void createWhere(StringBuilder sbHql, IAccountSearchParameter parameter) {
+        if(parameter.isParameter()) {
             sbHql.append(" where");
-        }
+        }        
         for (int i = 0; i < parameter.getNumberOfAccountParameter(); i++) {
-            sbHql.append(createAccountWhere(i));
-            if (((i + 1) < parameter.getNumberOfAccountParameter()) || parameter.isPersonParameter()) {
+            sbHql.append(createAccountPropertyWhere(i)); 
+            if(((i+1)<parameter.getNumberOfAccountParameter()) || parameter.isPersonParameter()) {
                 sbHql.append(" and");
             }
         }
         for (int i = 0; i < parameter.getNumberOfPersonParameter(); i++) {
-            sbHql.append(createPersonWhere(i));
-            if ((i + 1) < parameter.getNumberOfPersonParameter()) {
+            sbHql.append(createPersonPropertyWhere(i)); 
+            if((i+1)<parameter.getNumberOfPersonParameter()) {
                 sbHql.append(" and");
             }
         }
+        if(parameter.getScopeId()!=null) {
+            if(parameter.isAccountParameter() || parameter.isPersonParameter()) {
+                sbHql.append(" and");
+            }
+            sbHql.append(createPersonWhere(parameter.getNumberOfPersonParameter(),"scopeId"));
+        }
+    }
 
-        if (parameter.getLogin() != null) {
+    private static List<Object> addParameter(IAccountSearchParameter parameter) {
+        List<Object> parameterList = new ArrayList<Object>(10);
+        if(parameter.getLogin()!=null) {
             parameterList.add(Configuration.PROP_USERNAME);
             parameterList.add(addWildcards(parameter.getLogin()));
         }
-
-        if (parameter.getAccountGroup() != null) {
+        
+        if(parameter.getAccountGroup()!=null){
             parameterList.add(Configuration.PROP_ROLES);
             parameterList.add(parameter.getAccountGroup());
         }
 
-        if (parameter.isAdmin() != null) {
+        if(parameter.isAdmin()!=null) {
             parameterList.add(Configuration.PROP_ISADMIN);
             parameterList.add(parameter.isAdmin() ? Configuration.PROP_ISADMIN_YES : Configuration.PROP_ISADMIN_NO);
-        }
-
-        if (parameter.getFirstName() != null) {
+        }        
+        if(parameter.isScopeOnly()!=null) {
+            parameterList.add(Configuration.PROP_SCOPE);
+            parameterList.add(parameter.isScopeOnly() ? Configuration.PROP_SCOPE_YES : Configuration.PROP_SCOPE_NO);
+        }         
+        if(parameter.getFirstName()!=null) {
             parameterList.add(PersonIso.PROP_NAME);
             parameterList.add(Person.P_VORNAME);
             parameterList.add(addWildcards(parameter.getFirstName()));
-        }
-
-        if (parameter.getFamilyName() != null) {
+        }        
+        if(parameter.getFamilyName()!=null) {
             parameterList.add(PersonIso.PROP_SURNAME);
             parameterList.add(Person.P_NAME);
             parameterList.add(addWildcards(parameter.getFamilyName()));
         }       
         if(parameter.getScopeId()!=null) {
-            parameterList.add(String.valueOf(parameter.getScopeId()));
+            parameterList.add(parameter.getScopeId());
         }
-
-        String hql = sbHql.toString();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Hql: " + hql);
-        }
-
-        return new HqlQuery(hql, parameterList.toArray());
+        return parameterList;
     }
 
     private static String addWildcards(String login) {
@@ -104,33 +122,45 @@ public final class AccountSearchQueryFactory {
         sb.append(" inner join fetch propertyList_").append(i).append(".properties as props_").append(i);
         return sb.toString();
     }
-
+    
     private static String createPersonPropertyJoin(int i) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder();      
         sb.append(" inner join fetch conf.person as person_").append(i);
         sb.append(" inner join fetch person_").append(i).append(".entity as pEntity_").append(i);
         sb.append(" inner join fetch pEntity_").append(i).append(".typedPropertyLists as pPropertyList_").append(i);
         sb.append(" inner join fetch pPropertyList_").append(i).append(".properties as pProps_").append(i);
         return sb.toString();
     }
-
-    private static String createAccountWhere(int i) {
+    
+    private static String createPersonJoin(int i) {
+        StringBuilder sb = new StringBuilder();      
+        sb.append(" inner join fetch conf.person as person_").append(i);
+        return sb.toString();
+    }
+    
+    private static String createAccountPropertyWhere(int i) {
         StringBuilder sb = new StringBuilder();
         sb.append(" props_").append(i).append(".propertyType = ?");
         sb.append(" and lower(props_").append(i).append(".propertyValue) like lower(?)");
         return sb.toString();
     }
-
-    private static String createPersonWhere(int i) {
+    
+    private static String createPersonPropertyWhere(int i) {
         StringBuilder sb = new StringBuilder();
         sb.append(" (pProps_").append(i).append(".propertyType = ? or pProps_").append(i).append(".propertyType = ?)");
         sb.append(" and lower(pProps_").append(i).append(".propertyValue) like lower(?)");
         return sb.toString();
     }
     
-    public static final HqlQuery createRetrieveHql(Set<Integer> dbIds) {
+    private static String createPersonWhere(int i, String property) {
         StringBuilder sb = new StringBuilder();
-
+        sb.append(" person_").append(i).append(".").append(property).append(" = ?");
+        return sb.toString();
+    }
+    
+    public static HqlQuery createRetrieveHql(Set<Integer> dbIds) {
+        StringBuilder sb = new StringBuilder();
+        
         sb.append("from Configuration as conf");
         sb.append(" inner join fetch conf.entity as entity");
         sb.append(" inner join fetch entity.typedPropertyLists as propertyList");
