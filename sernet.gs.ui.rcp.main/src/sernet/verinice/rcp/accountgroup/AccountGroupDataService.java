@@ -19,18 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.swing.plaf.ListUI;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
@@ -144,18 +139,23 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         return new String[] {};
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void editAccountGroupName(String newRoleName, String oldRoleName) {
 
         if (newRoleName.equals(oldRoleName))
             new IllegalArgumentException(String.format("name is not changed: %s", newRoleName));
+        
 
         // delete role from configurations
-        accountGroupToConfiguration.put(newRoleName, accountGroupToConfiguration.get(oldRoleName));
+        if(!accountGroupToConfiguration.containsKey(newRoleName))
+            accountGroupToConfiguration.put(newRoleName, new TreeSet<String>(new NumericStringComparator()));
+        
+        accountGroupToConfiguration.get(newRoleName).addAll(accountGroupToConfiguration.get(oldRoleName));
         accountGroupToConfiguration.remove(oldRoleName);
-
         accountService.deleteAccountGroup(oldRoleName);
         accountService.deleteRole(accountGroupToConfiguration.get(newRoleName), oldRoleName);
+        
         accountService.addRole(accountGroupToConfiguration.get(newRoleName), newRoleName);
         accountService.updatePermissions(newRoleName, oldRoleName);
     }

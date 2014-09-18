@@ -25,6 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
+import org.aspectj.bridge.Message;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -73,7 +74,7 @@ import sernet.verinice.rcp.RightsEnabledView;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
- *
+ * 
  */
 public class GroupView extends RightsEnabledView implements SelectionListener, KeyListener {
 
@@ -339,7 +340,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                             }
                         }
 
-
                         private void updateConfiguration() {
                             EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);
                             String selectedAccountName = getSelectedAccount();
@@ -594,7 +594,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                                 int connectedAccounts = accountGroupDataService.getAccountNamesForGroup(selection).length;
                                 long connectedObjects = accountService.countConnectObjectsForGroup(selection);
                                 String message = String.format(Messages.GroupView_25, connectedAccounts, connectedObjects);
-                                MessageDialog dialog = new MessageDialog(parent.getShell(), "Achtung", null, message, MessageDialog.ERROR, new String[] { Messages.GroupView_26,  Messages.GroupView_27 }, 0);
+                                MessageDialog dialog = new MessageDialog(parent.getShell(), "Achtung", null, message, MessageDialog.ERROR, new String[] { Messages.GroupView_26, Messages.GroupView_27 }, 0);
                                 int result = dialog.open();
                                 if (result == 0)
                                     openSecondWarningDialog();
@@ -619,7 +619,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                         @Override
                         public void run() {
                             try {
-                                MessageDialog dialog = new MessageDialog(parent.getShell(), Messages.GroupView_28, null, Messages.GroupView_29, MessageDialog.ERROR, new String[] { Messages.GroupView_26,  Messages.GroupView_27 }, 0);
+                                MessageDialog dialog = new MessageDialog(parent.getShell(), Messages.GroupView_28, null, Messages.GroupView_29, MessageDialog.ERROR, new String[] { Messages.GroupView_26, Messages.GroupView_27 }, 0);
                                 int result = dialog.open();
                                 if (result == 0)
                                     accountGroupDataService.deleteAccountGroup(selection);
@@ -675,8 +675,20 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         @Override
         protected void okPressed() {
-            accountGroupDataService.editAccountGroupName(textInputField.getText(), selection);
-            super.okPressed();
+
+            if (ArrayUtils.contains(groupList.getItems(), selection)) {
+                String msg = String.format(Messages.GroupView_31, textInputField.getText());
+                MessageDialog messageDialog = new MessageDialog(parent.getShell(), Messages.GroupView_16, null, msg, MessageDialog.QUESTION, new String[] {Messages.GroupView_30, Messages.GroupView_27 }, 0);
+                int result = messageDialog.open();
+                if (result == 0) {
+                    accountGroupDataService.editAccountGroupName(textInputField.getText(), selection);
+                    groupList.remove(selection);
+                    super.okPressed();
+                }
+            } else {
+                accountGroupDataService.editAccountGroupName(textInputField.getText(), selection);
+                super.okPressed();
+            }
         }
     }
 
@@ -710,7 +722,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
      */
     @Override
@@ -720,7 +732,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
@@ -739,13 +751,12 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     private class UpdateConfigurationCallbackHelper extends UpdateConfigurationHelper {
 
-
         public UpdateConfigurationCallbackHelper(Configuration configuration) {
             super(configuration);
 
         }
 
-        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException{
+        public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             super.run(monitor);
             initData();
         }
