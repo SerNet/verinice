@@ -350,7 +350,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                                 accountDialog.open();
 
                                 try {
-                                    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new UpdateConfigurationCallbackHelper(configuration, accountDialog));
+                                    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new UpdateConfigurationCallbackHelper(configuration));
                                 } catch (Exception e) {
                                     LOG.error(Messages.GroupView_15, e);
                                 } finally {
@@ -740,8 +740,8 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     private class UpdateConfigurationCallbackHelper extends UpdateConfigurationHelper {
 
 
-        public UpdateConfigurationCallbackHelper(Configuration configuration, AccountDialog dialog) {
-            super(configuration, dialog);
+        public UpdateConfigurationCallbackHelper(Configuration configuration) {
+            super(configuration);
 
         }
 
