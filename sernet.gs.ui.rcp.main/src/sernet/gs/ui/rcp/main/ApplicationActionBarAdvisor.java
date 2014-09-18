@@ -214,7 +214,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         closeAllAction = ActionFactory.CLOSE_ALL.create(window);
         closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
         deleteAction = ActionFactory.DELETE.create(window);
-        openGroupViewAction = new OpenViewAction(window, "", GroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.ACCOUNTSETTINGS); //$NON-NLS-1$
+        openGroupViewAction = new OpenViewAction(window,Messages.ApplicationActionBarAdvisor_36, GroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.ACCOUNTSETTINGS); //$NON-NLS-1$
         openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
         openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
         openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
@@ -380,6 +380,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(openISMViewAction);
         viewsMenu.add(openCatalogAction);
         viewsMenu.add(openAccountViewAction);
+        viewsMenu.add(openGroupViewAction);
         viewsMenu.add(openTaskViewAction);
         viewsMenu.add(new Separator());
 
@@ -390,10 +391,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(openValidationViewAction);
         
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-        
-        viewsMenu.add(new Separator());
-        viewsMenu.add(openGroupViewAction);
-        
+
         MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26, VeriniceActionConstants.MENU_PERSPECTIVES);
         addPerspectiveMenu(window, perspectivesMenu, Iso27kPerspective.ID);
         addPerspectiveMenu(window, perspectivesMenu, Perspective.ID);
