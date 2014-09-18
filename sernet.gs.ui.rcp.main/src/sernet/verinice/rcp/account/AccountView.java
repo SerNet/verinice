@@ -438,7 +438,9 @@ public class AccountView extends RightsEnabledView {
         createAction = new Action() {
             @Override
             public void run() {
-                
+                editAction.setConfiguration(new Configuration());
+                editAction.run();
+                findAccounts();
             }
         };
         createAction.setText("New...");

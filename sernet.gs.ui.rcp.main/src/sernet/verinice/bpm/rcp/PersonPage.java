@@ -194,6 +194,7 @@ public class PersonPage extends WizardPage {
     public void setPersonTypeId(String personTypeId) {
         this.personTypeId = personTypeId;
         if(component!=null) {
+            component.setTypeId(personTypeId);
             component.loadElementsAndSelect(selectedPerson);  
         }
     }

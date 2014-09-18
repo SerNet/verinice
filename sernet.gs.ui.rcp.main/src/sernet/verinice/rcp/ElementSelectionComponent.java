@@ -93,8 +93,9 @@ public class ElementSelectionComponent {
     private CnaTreeElementTitleFilter filter;
     
     private List<CnATreeElement> elementList;
-    private CnATreeElement inputElmt;
-    private String entityType;
+    private Integer scopeId;
+    private Integer groupId;
+    private String typeId;
     private boolean scopeOnly;
     private boolean showScopeCheckbox;
     private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
@@ -104,11 +105,16 @@ public class ElementSelectionComponent {
     
     private List<CnATreeElement> selectedElements = new ArrayList<CnATreeElement>();
     
-    public ElementSelectionComponent(Composite container, String type, CnATreeElement inputElmt) {
+    public ElementSelectionComponent(Composite container, String type, Integer scopeId) {
+        this(container, type, scopeId, null);
+    }
+    
+    public ElementSelectionComponent(Composite container, String type, Integer scopeId, Integer groupId) {
         super();
         this.container = container;
-        this.entityType = type;
-        this.inputElmt = inputElmt;
+        this.typeId = type;
+        this.scopeId = scopeId;
+        this.groupId = groupId;
         scopeOnly = true;
         showScopeCheckbox = true;
     }
@@ -301,7 +307,7 @@ public class ElementSelectionComponent {
 
     @SuppressWarnings("unchecked")
     public void loadElementsAndSelect(final CnATreeElement selected) {
-        if (entityType == null || entityType.length()==0){
+        if (typeId == null || typeId.length()==0){
             return;
         }
         ArrayList temp = new ArrayList(1);
@@ -315,7 +321,8 @@ public class ElementSelectionComponent {
 
                 try {
                     monitor.setTaskName(Messages.CnATreeElementSelectionDialog_8);
-                    scopeAndElmntDpntElmntSlctn(selected);  
+                    loadElementsFromDb(); 
+                    setSelectedElement(selected);
                 } catch (Exception e) {
                     ExceptionUtil.log(e, Messages.CnATreeElementSelectionDialog_0);
                 }
@@ -379,21 +386,18 @@ public class ElementSelectionComponent {
         this.showScopeCheckbox = showScopeCheckbox;
     }
 
-    /**
-     * @param selectedPerson
-     */
-    public void setSelectedElement(CnATreeElement selectedElement) {
-        if(selectedElement!=null) {
-            int i = elementList.indexOf(selectedElement);
-            if(i!=-1) {
-                getViewer().getTable().deselectAll();
-                getViewer().setSelection(new StructuredSelection(selectedElement));
-                selectedElements = ((IStructuredSelection)viewer.getSelection()).toList();
-            }
+    private void loadElementsFromDb() throws CommandException {
+        LoadCnAElementByEntityTypeId command;
+        if (scopeOnly) {
+            command = new LoadCnAElementByEntityTypeId(typeId, getScopeId(), getGroupId());    
+        } else {
+            command = new LoadCnAElementByEntityTypeId(typeId);
         }
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        showElementsInTable(command.getElements());
     }
-
-    private void loadAndSelectElements(final CnATreeElement selected, final List<CnATreeElement> list) {
+    
+    private void showElementsInTable(final List<CnATreeElement> list) {
         Display.getDefault().asyncExec(new Runnable() {
             @Override
             public void run() {
@@ -403,21 +407,25 @@ public class ElementSelectionComponent {
                     ArrayList temp = new ArrayList(0);
                     viewer.setInput(temp);
                 }
-                setSelectedElement(selected);
             }
         });
         elementList = list;
     }
-
-    private void scopeAndElmntDpntElmntSlctn(final CnATreeElement selected) throws CommandException {
-        LoadCnAElementByEntityTypeId command;
-        if (scopeOnly && inputElmt!=null && inputElmt.getScopeId()!=null) {
-            command = new LoadCnAElementByEntityTypeId(entityType, inputElmt.getScopeId());    
-        } else {
-            command = new LoadCnAElementByEntityTypeId(entityType);
+    
+    public void setSelectedElement(final CnATreeElement selectedElement) {
+        if(selectedElement!=null) {
+            int i = elementList.indexOf(selectedElement);
+            if(i!=-1) {
+                Display.getDefault().syncExec(new Runnable() {                 
+                    @Override
+                    public void run() {
+                        getViewer().getTable().deselectAll();
+                        getViewer().setSelection(new StructuredSelection(selectedElement));
+                        selectedElements = ((IStructuredSelection)viewer.getSelection()).toList();
+                    }
+                });
+            }
         }
-        command = ServiceFactory.lookupCommandService().executeCommand(command);
-        loadAndSelectElements(selected, command.getElements());
     }
            
     private String loadElementsTitles(CnATreeElement elmt) throws CommandException {
@@ -426,5 +434,31 @@ public class ElementSelectionComponent {
         scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
         titleMap = scopeCommand.getElements();
         return titleMap.get(elmt.getScopeId());
+    }
+
+    public Integer getScopeId() {
+        return scopeId;
+    }
+
+    public void setScopeId(Integer scopeId) {
+        this.scopeId = scopeId;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(String typeId) {
+        this.typeId = typeId;
     }  
+    
+   
 }

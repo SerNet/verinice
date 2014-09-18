@@ -90,7 +90,11 @@ public class CnATreeElementSelectionDialog extends Dialog {
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
-        selectionComponent = new ElementSelectionComponent(container, this.entityType, this.inputElmt);
+        Integer scopeId = null;
+        if(this.inputElmt!=null) {
+            scopeId = this.inputElmt.getScopeId();
+        }
+        selectionComponent = new ElementSelectionComponent(container, this.entityType, scopeId);
         selectionComponent.setScopeOnly(scopeOnly);
         selectionComponent.setShowScopeCheckbox(showScopeCheckbox);
         selectionComponent.init();

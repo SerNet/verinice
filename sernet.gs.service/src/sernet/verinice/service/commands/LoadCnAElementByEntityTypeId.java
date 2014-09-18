@@ -44,15 +44,20 @@ import sernet.verinice.model.common.CnATreeElement;
 public class LoadCnAElementByEntityTypeId extends GenericCommand {
 
     private String typeId;   
-    private Integer scopeId;
+    private Integer scopeId;   
+    private Integer groupId;
 
     private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
 
     public LoadCnAElementByEntityTypeId(String typeId) {
-        this(typeId, null);
+        this(typeId, null, null);
     }
     
     public LoadCnAElementByEntityTypeId(String typeId, Integer scopeId) {
+        this(typeId, scopeId, null);
+    }
+    
+    public LoadCnAElementByEntityTypeId(String typeId, Integer scopeId, Integer groupId) {
         if(MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
             typeId = MassnahmenUmsetzung.HIBERNATE_TYPE_ID;
         }
@@ -62,6 +67,7 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
 
         this.typeId = typeId;
         this.scopeId = scopeId;
+        this.groupId= groupId;
     }
 
     @SuppressWarnings("unchecked")
@@ -76,6 +82,9 @@ public class LoadCnAElementByEntityTypeId extends GenericCommand {
         crit.add(Restrictions.eq("objectType", typeId));
         if(scopeId!=null) {
             crit.add(Restrictions.eq("scopeId", scopeId));
+        }
+        if(groupId!=null) {
+            crit.add(Restrictions.eq("parentId", groupId));
         }
         crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         list = dao.findByCriteria(crit);

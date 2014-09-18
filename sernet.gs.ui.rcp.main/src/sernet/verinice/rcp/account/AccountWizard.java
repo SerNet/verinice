@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Daniel Murygin.
+ * Copyright (c) 2014 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -22,8 +22,10 @@ package sernet.verinice.rcp.account;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.Wizard;
 
+import sernet.verinice.model.common.configuration.Configuration;
+
 /**
- * Wizard to start jBPM process "individual-task" defined in individual-task.jpdl.xml
+ * Wizard to create and edit user account. 
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -31,25 +33,104 @@ public class AccountWizard extends Wizard {
 
     private static final Logger LOG = Logger.getLogger(AccountWizard.class);
     
-    //private DescriptionPage descriptionPage;
+    private Configuration account;
+    
+    private PersonPage personPage;
+    private AuthenticationPage authenticationPage;
+    private LimitationPage limitationPage;
+    private GroupPage groupPage;
+    private NotificationPage notificationPage;
+    private AuditorNotificationPage auditorNotificationPage;
+    private ProfilePage profilePage;
+    
 
     public AccountWizard() {
         super();
         setNeedsProgressMonitor(true);
         setWindowTitle("Account");
+        account = new Configuration();
+    }
+    
+    public AccountWizard(Configuration account) {
+        this();
+        this.account = account;
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.Wizard#addPages()
+     */
     @Override
     public void addPages() {
-        //descriptionPage = new DescriptionPage(elementTitle);
-        //addPage(descriptionPage);
-     
+        personPage = new PersonPage();
+              
+        addPage(personPage);
+        authenticationPage = new AuthenticationPage();
+        addPage(authenticationPage);
+        limitationPage = new LimitationPage();
+        addPage(limitationPage);
+        /*
+        groupPage = new GroupPage();
+        addPage(groupPage);  
+        */      
+        notificationPage = new NotificationPage();
+        addPage(notificationPage);
+        auditorNotificationPage = new AuditorNotificationPage();
+        addPage(auditorNotificationPage);
+        /*
+        profilePage = new ProfilePage();
+        addPage(profilePage); 
+        */  
+        if(this.account!=null) {
+            personPage.setPerson(account.getPerson());
+            authenticationPage.setLogin(account.getUser());
+            authenticationPage.setEmail(account.getNotificationEmail());
+            limitationPage.setAdmin(account.isAdminUser());
+            limitationPage.setScopeOnly(account.isScopeOnly());
+            limitationPage.setWeb(account.isWebUser());
+            limitationPage.setDesktop(account.isRcpUser());
+            notificationPage.setNotification(getAccount().isNotificationEnabled());
+            notificationPage.setGlobal(getAccount().isNotificationGlobal());
+            notificationPage.setNewTasks(getAccount().isNotificationMeasureAssignment());
+            notificationPage.setModifyReminder(getAccount().isNotificationMeasureModification());
+            notificationPage.setDeadlineWarning(getAccount().isNotificationExpirationEnabled());
+            notificationPage.setDeadlineInDays(getAccount().getNotificationExpirationDays());
+            auditorNotificationPage.setGlobal(getAccount().isAuditorNotificationGlobal());
+            auditorNotificationPage.setDeadlineWarning(getAccount().isAuditorNotificationExpirationEnabled());
+            auditorNotificationPage.setDeadlineInDays(getAccount().getAuditorNotificationExpirationDays());
+        } 
     }
 
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.Wizard#performFinish()
+     */
     @Override
     public boolean performFinish() {
-
+        getAccount().setPerson(personPage.getPerson());
+        getAccount().setUser(authenticationPage.getLogin());
+        getAccount().setPass(authenticationPage.getPassword());
+        getAccount().setNotificationEmail(authenticationPage.getEmail());
+        getAccount().setAdminUser(limitationPage.isAdmin());
+        getAccount().setScopeOnly(limitationPage.isScopeOnly());
+        getAccount().setWebUser(limitationPage.isWeb());
+        getAccount().setRcpUser(limitationPage.isDesktop());
+        getAccount().setNotificationEnabled(notificationPage.isNotification());
+        getAccount().setNotificationGlobal(notificationPage.isGlobal());
+        getAccount().setNotificationMeasureAssignment(notificationPage.isNewTasks());
+        getAccount().setNotificationMeasureModification(notificationPage.isModifyReminder());
+        getAccount().setNotificationExpirationEnabled(notificationPage.isDeadlineWarning());
+        getAccount().setNotificationExpirationDays(notificationPage.getDeadlineInDays());      
+        getAccount().setAuditorNotificationGlobal(auditorNotificationPage.isGlobal());
+        getAccount().setAuditorNotificationExpirationEnabled(auditorNotificationPage.isDeadlineWarning());
+        getAccount().setAuditorNotificationExpirationDays(auditorNotificationPage.getDeadlineInDays());
         return true;
+    }
+
+    public Configuration getAccount() {
+        return account;
+    }
+
+    public void setAccount(Configuration account) {
+        this.account = account;
     }
 
 }

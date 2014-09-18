@@ -32,11 +32,8 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.IWizard;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -62,6 +59,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.InfoDialogWithShowToggle;
+import sernet.verinice.rcp.NonModalWizardDialog;
 
 /**
  * RCP Action to start jBPM process "individual-task" defined in individual-task.jpdl.xml.
@@ -268,15 +266,6 @@ public class StartIndividualProcess implements IObjectActionDelegate, RightEnabl
      */
     @Override
     public void setRightID(String rightID) {
-    }
-    
-    class NonModalWizardDialog extends WizardDialog {
-        public NonModalWizardDialog(Shell parentShell, IWizard newWizard) {
-            super(parentShell, newWizard);
-            int style = SWT.CLOSE | SWT.MAX | SWT.TITLE;
-            style = style | SWT.BORDER | SWT.RESIZE;
-            setShellStyle(style | getDefaultOrientation());         
-        }
     }
 }
 

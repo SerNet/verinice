@@ -53,8 +53,6 @@ public class UpdateConfigurationHelper implements IRunnableWithProgress {
 
     private final Configuration configuration;
 
-    private final AccountDialog dialog;
-
     private IRightsServiceClient rightsService;
 
     private ICommandService commandService;
@@ -64,16 +62,15 @@ public class UpdateConfigurationHelper implements IRunnableWithProgress {
      * @param configurationAction
      *            TODO
      */
-    public UpdateConfigurationHelper(Configuration configuration, AccountDialog dialog) {
+    public UpdateConfigurationHelper(Configuration configuration) {
         this.configuration = configuration;
-        this.dialog = dialog;
     }
 
     @Override
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Activator.inheritVeriniceContextState();
         try {
-            final boolean updatePassword = updateNameAndPassword(dialog.getUserName(), dialog.getPassword(), dialog.getPassword2());
+            final boolean updatePassword = updateNameAndPassword(configuration.getUser(), configuration.getPass());
             // save configuration:
             SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, updatePassword);
             command = getCommandService().executeCommand(command);
@@ -119,7 +116,7 @@ public class UpdateConfigurationHelper implements IRunnableWithProgress {
      * @return true if a new cleartext password was saved, that needs to be
      *         hashed.
      */
-    boolean updateNameAndPassword(String name, String newPassword, String newPassword2) {
+    boolean updateNameAndPassword(String name, String newPassword) {
         boolean updated = false;
         final String oldName = configuration.getUser();
         if (isNewName(oldName, name) && (newPassword == null || newPassword.isEmpty())) {
@@ -129,9 +126,6 @@ public class UpdateConfigurationHelper implements IRunnableWithProgress {
         }
         configuration.setUser(name);
         if (newPassword != null && !newPassword.isEmpty()) {
-            if (!newPassword.equals(newPassword2)) {
-                throw new PasswordException(Messages.ConfigurationAction_10);
-            }
             configuration.setPass(newPassword);
             updated = true;
         }

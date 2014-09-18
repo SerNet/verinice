@@ -22,9 +22,12 @@ import java.util.Iterator;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -49,7 +52,8 @@ import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.service.commands.CreateConfiguration;
+import sernet.verinice.rcp.NonModalWizardDialog;
+import sernet.verinice.rcp.account.AccountWizard;
 import sernet.verinice.service.commands.SaveConfiguration;
 
 /**
@@ -109,22 +113,34 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
             return;
         }
 
-        IWorkbenchWindow window2 = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);     
-        final AccountDialog dialog = new AccountDialog(window2.getShell(), entType, Messages.ConfigurationAction_4, configuration.getEntity());
+        //final TitleAreaDialog dialog = createDialog();
+        final TitleAreaDialog dialog = createWizard();
         if (dialog.open() != Window.OK) {
             configuration = null;
             return;
         }
 
         try {
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new UpdateConfigurationHelper(configuration, dialog));
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new UpdateConfigurationHelper(configuration));
         } catch (Exception e) {
             LOG.error("Error while saving configuration.", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.ConfigurationAction_5);
         } finally {
             configuration = null;
         }
+    }
+
+    private TitleAreaDialog createDialog() {
+        IWorkbenchWindow window2 = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);     
+        final TitleAreaDialog dialog = new AccountDialog(window2.getShell(), entType, Messages.ConfigurationAction_4, configuration.getEntity());
+        return dialog;
+    }
+    
+    private TitleAreaDialog createWizard() {
+        AccountWizard wizard = new AccountWizard(configuration);                 
+        WizardDialog wizardDialog = new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
+        return wizardDialog;
     }
     
 	/* (non-Javadoc)
@@ -157,10 +173,13 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
     
     				if (configuration == null) {
     					// create new configuration
+    				    /*
     					LOG.debug("No config found, creating new configuration object."); //$NON-NLS-1$
     					CreateConfiguration command2 = new CreateConfiguration(elmt);
-    					command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
+    					command2 = ServiceFactory.lookupCommandService().executeCommand(command2); 				
     					configuration = command2.getConfiguration();
+    					*/
+    				    configuration = new Configuration();
     				}
     
     			}

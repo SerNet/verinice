@@ -32,6 +32,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
@@ -66,13 +67,19 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	public static final String PROP_NOTIFICATION_EMAIL = "configuration_mailing_email"; //$NON-NLS-1$
 	
 	public static final String PROP_NOTIFICATION_GLOBAL = "configuration_mailing_owner"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_GLOBAL_ALL = "configuration_mailing_owner_all"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_GLOBAL_SELF = "configuration_mailing_owner_self"; //$NON-NLS-1$
 	
 	public static final String PROP_NOTIFICATION_EXPIRATION = "configuration_mailing_expiring"; //$NON-NLS-1$
 	public static final String PROP_NOTIFICATION_EXPIRATION_DAYS = "configuration_mailing_expiredays"; //$NON-NLS-1$
 
 	public static final String PROP_NOTIFICATION_MEASURE_MODIFICATION = "configuration_mailing_measure_modification"; //$NON-NLS-1$
-	
+	public static final String PROP_NOTIFICATION_MEASURE_MODIFICATION_YES = "configuration_mailing_measure_modification_yesno_yes"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_MEASURE_MODIFICATION_NO = "configuration_mailing_measure_modification_yesno_no"; //$NON-NLS-1$
+    
 	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT = "configuration_mailing_assigned"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT_YES = "configuration_mailing_assigned_yesno_yes"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_MEASURE_ASSIGNMENT_NO = "configuration_mailing_assigned_yesno_no"; //$NON-NLS-1$
 
 	public static final String PROP_ISADMIN = "configuration_isadmin"; //$NON-NLS-1$
 	public static final String PROP_ISADMIN_YES = "configuration_isadmin_yes"; //$NON-NLS-1$
@@ -87,6 +94,9 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
     public static final String PROP_RCP_NO = "configuration_rcp_no"; //$NON-NLS-1$
     
 	public static final String PROP_AUDITOR_NOTIFICATION_GLOBAL = "configuration_auditmailing_owner"; //$NON-NLS-1$
+	public static final String PROP_AUDITOR_NOTIFICATION_GLOBAL_ALL = "configuration_auditmailing_owner_all"; //$NON-NLS-1$
+    public static final String PROP_AUDITOR_NOTIFICATION_GLOBAL_SELF = "configuration_auditmailing_owner_self"; //$NON-NLS-1$
+	
 	public static final String PROP_AUDITOR_NOTIFICATION_EXPIRATION = "configuration_auditmailing_expiring"; //$NON-NLS-1$
 	public static final String PROP_AUDITOR_NOTIFICATION_EXPIRATION_DAYS = "configuration_auditmailing_expiredays"; //$NON-NLS-1$
 
@@ -106,6 +116,11 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 
 	public Configuration() {
 		setEntity(new Entity(TYPE_ID));
+		addRole(IRightsService.USERDEFAULTGROUPNAME);
+        setAdminUser(false);
+        setScopeOnly(false);
+        setWebUser(true);
+        setRcpUser(true);  
 	}
 
 	private void setEntity(Entity entity) {
@@ -149,6 +164,10 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_PASSWORD);
 		entity.setSimpleValue(type, pass);
 	}
+	
+	public String getPass() {
+        return entity.getSimpleValue(PROP_PASSWORD);
+    }
 
 	public void addRole(String string) {
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_ROLES);
@@ -279,11 +298,11 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	
 	public void setNotificationGlobal(boolean b) {
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_GLOBAL);
-		entity.setSimpleValue(type, (b ? "configuration_mailing_owner_all" : "configuration_mailing_owner_self"));
+		entity.setSimpleValue(type, (b ? PROP_NOTIFICATION_GLOBAL_ALL : PROP_NOTIFICATION_GLOBAL_SELF));
 	}
 	
 	public boolean isNotificationGlobal() {
-		return isRawPropertyValueEqual(PROP_NOTIFICATION_GLOBAL, "configuration_mailing_owner_all");
+		return isRawPropertyValueEqual(PROP_NOTIFICATION_GLOBAL, PROP_NOTIFICATION_GLOBAL_ALL);
 	}
 	
 	public void setNotificationMeasureModification(boolean b) {
@@ -296,12 +315,12 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	}
 	
 	public void setNotificationMeasureAssignment(boolean b) {
-		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_MEASURE_MODIFICATION);
-		entity.setSimpleValue(type, (b ? "configuration_mailing_assigned_yesno_yes" : "configuration_mailing_assigned_yesno_no"));
+		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_MEASURE_ASSIGNMENT);
+        entity.setSimpleValue(type, (b ? PROP_NOTIFICATION_MEASURE_ASSIGNMENT_YES : PROP_NOTIFICATION_MEASURE_ASSIGNMENT_NO));
 	}
 	
 	public boolean isNotificationMeasureAssignment() {
-		return isRawPropertyValueEqual(PROP_NOTIFICATION_MEASURE_ASSIGNMENT, "configuration_mailing_assigned_yesno_yes");
+		return isRawPropertyValueEqual(PROP_NOTIFICATION_MEASURE_ASSIGNMENT, PROP_NOTIFICATION_MEASURE_ASSIGNMENT_YES);
 	}
 
 	public void setAuditorNotificationExpirationEnabled(boolean b) {
@@ -329,8 +348,16 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 
 	public void setAuditorNotificationGlobal(boolean b) {
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_AUDITOR_NOTIFICATION_GLOBAL);
-		entity.setSimpleValue(type, (b ? "configuration_auditmailing_owner_all" : "configuration_auditmailing_owner_self"));
+		entity.setSimpleValue(type, (b ? PROP_AUDITOR_NOTIFICATION_GLOBAL_ALL : PROP_AUDITOR_NOTIFICATION_GLOBAL_SELF));
 	}
+	
+	public void setAuditorNotificationGlobal(String value) {
+	    if(value!=null && (!PROP_AUDITOR_NOTIFICATION_GLOBAL_ALL.equals(value)) && (!PROP_AUDITOR_NOTIFICATION_GLOBAL_SELF.equals(value))) {
+	        throw new IllegalArgumentException("Value of property " + PROP_AUDITOR_NOTIFICATION_GLOBAL + " can only set to " + PROP_AUDITOR_NOTIFICATION_GLOBAL_ALL + " or " + PROP_AUDITOR_NOTIFICATION_GLOBAL_SELF);
+	    }
+        PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_AUDITOR_NOTIFICATION_GLOBAL);
+        entity.setSimpleValue(type, value);
+    }
 	
 	public boolean isAuditorNotificationGlobal() {
 		return isRawPropertyValueEqual(PROP_AUDITOR_NOTIFICATION_GLOBAL, "configuration_auditmailing_owner_all");
