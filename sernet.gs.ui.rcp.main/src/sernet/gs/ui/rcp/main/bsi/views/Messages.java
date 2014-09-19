@@ -349,6 +349,12 @@ public final class Messages extends NLS {
 
     public static String GroupView_35;
 
+    public static String GroupView_36;
+
+    public static String GroupView_37;
+    
+    public static String GroupView_38;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

@@ -326,7 +326,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                                     }
 
                                     else if (e.getSource() == removeAllBtn) {
-                                        removeAccounts(groupToAccountList.getItems());
+                                        removeAllAccounts(groupToAccountList.getItems());
                                     }
                                 }
 
@@ -416,6 +416,13 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         String[] items = accountGroupDataService.deleteAccountGroupData(getSelectedGroup(), accounts);
         for (String i : items) {
             groupToAccountList.remove(i);
+        }
+    }
+    
+    private void removeAllAccounts(String[] items) {
+        int result = new MessageDialog(parent.getShell(), Messages.GroupView_38, null, Messages.GroupView_36, MessageDialog.QUESTION, new String[] { Messages.GroupView_37, Messages.GroupView_27 }, 0).open();
+        if (result == 0) {
+            removeAccounts(items);
         }
     }
 
