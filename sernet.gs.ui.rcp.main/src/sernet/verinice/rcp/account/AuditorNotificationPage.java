@@ -49,7 +49,7 @@ public class AuditorNotificationPage extends BaseWizardPage {
 
     @Override
     protected void initGui(Composite composite) {
-        setTitle("Account");
+        setTitle("Account (6/7)");
         setMessage("Auditor notifications");
 
         addAllControlsFields(composite, Configuration.PROP_AUDITOR_NOTIFICATION_GLOBAL_ALL, Configuration.PROP_AUDITOR_NOTIFICATION_GLOBAL_SELF);

@@ -51,6 +51,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.MultiselectWidget;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.sync.VeriniceArchive;
 
@@ -75,7 +76,7 @@ public class ExportDialog extends TitleAreaDialog {
     private String filePath;
     private String sourceId;
     
-    private OrganizationWidget organizationWidget = null;
+    private ElementMultiselectWidget organizationWidget = null;
     
     private Text sourceIdText;
     private Text txtLocation;
@@ -145,7 +146,7 @@ public class ExportDialog extends TitleAreaDialog {
         composite.setLayoutData(gd);
         
         try {
-            organizationWidget = new OrganizationWidget(composite, selection, selectedElement);
+            organizationWidget = new ElementMultiselectWidget(composite, selection, selectedElement);
             setOrgTitle();
             
         } catch (CommandException ex) {

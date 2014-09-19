@@ -400,6 +400,13 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 		return getRoles(true);
 	}
 	
+	public void deleteAllRoles() {
+	    Set<String> allRoles = getRoles();
+	    for (String role : allRoles) {
+            deleteRole(role);
+        }
+	}
+	
 	/**
 	 * Convenience method that safely checks whether the value of a
 	 * given propertytype is equal to a given value.

@@ -60,7 +60,7 @@ public class PersonPage extends BaseWizardPage {
     }
 
     protected void initGui(Composite parent) {
-        setTitle("Account");
+        setTitle("Account (1/7)");
         setMessage("Select Person");   
         
         comboScope = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);

@@ -41,7 +41,7 @@ public class AuthenticationPage extends BaseWizardPage {
    
     @Override
     protected void initGui(Composite composite) {
-        setTitle("Account");
+        setTitle("Account (2/7)");
         setMessage("Login, Password, Email");
         
         createLabel(composite, "Login name");

@@ -24,11 +24,13 @@ public class LimitationPage extends BaseWizardPage {
     private boolean isScopeOnly = false;
     private boolean isDesktop = true;
     private boolean isWeb = true;
+    private boolean isDeactivated = false;
     
     private Button cbAdmin;
     private Button cbScopeOnly;
     private Button cbDesktop;
     private Button cbWeb;
+    private Button cbDeactivated;
     
     protected LimitationPage() {
         super(PAGE_NAME);
@@ -36,7 +38,7 @@ public class LimitationPage extends BaseWizardPage {
     
     @Override
     protected void initGui(Composite composite) {
-        setTitle("Account");
+        setTitle("Account (3/7)");
         setMessage("Account limitations");
         
         cbAdmin = createCheckbox(composite, "Administrator", isAdmin);
@@ -65,6 +67,13 @@ public class LimitationPage extends BaseWizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isWeb = cbWeb.getSelection();
+            } 
+        });
+        cbDeactivated = createCheckbox(composite, "Deactivated", isDeactivated);
+        cbDeactivated.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                isDeactivated = cbDeactivated.getSelection();
             } 
         });
     }
@@ -111,6 +120,14 @@ public class LimitationPage extends BaseWizardPage {
 
     public boolean isWeb() {
         return isWeb;
+    }
+
+    public boolean isDeactivated() {
+        return isDeactivated;
+    }
+
+    public void setDeactivated(boolean isDeactivated) {
+        this.isDeactivated = isDeactivated;
     }
 
     public void setWeb(boolean isWeb) {

@@ -31,7 +31,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -78,6 +77,7 @@ public class ProfileDialog extends TitleAreaDialog {
     
     private TableViewer tableSelected;
     private TableViewer table;
+    private ActionLabelProvider labelProvider = new ActionLabelProvider();
     
     private Button addAllButton;
     private Button removeAllButton;
@@ -212,13 +212,13 @@ public class ProfileDialog extends TitleAreaDialog {
         rightComposite.setLayout(gridLayout);
         
         tableSelected = createTable(leftComposite,Messages.ProfileDialog_5);
-        tableSelected.setLabelProvider(new ActionLabelProvider());
+        tableSelected.setLabelProvider(labelProvider);
         tableSelected.setComparator(new ActionTableComparator());
         tableSelected.setContentProvider(new ArrayContentProvider());     
         tableSelected.refresh(true);
        
         table = createTable(rightComposite,Messages.ProfileDialog_6);
-        table.setLabelProvider(new ActionLabelProvider());
+        table.setLabelProvider(labelProvider);
         table.setComparator(new ActionTableComparator());
         table.setContentProvider(new ArrayContentProvider());       
         table.refresh(true);
@@ -497,31 +497,13 @@ public class ProfileDialog extends TitleAreaDialog {
     }
 
 
-    private IRightsServiceClient getRightService() {
+    IRightsServiceClient getRightService() {
         if (rightsService == null) {
             rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
     }
 
-    class ActionLabelProvider extends ColumnLabelProvider {
-        
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-         */
-        @Override
-        public String getText(Object element) {
-            String text = Messages.ProfileDialog_11;
-            if (element instanceof Action) {
-                text = ((Action) element).getId();
-            }
-            // get translated message
-            text = getRightService().getMessage(text);
-            return text;
-        }
-        
-    }
-    
     class ActionTableComparator extends ViewerComparator {
         private int propertyIndex;
         private static final int ASCENDING = 0;

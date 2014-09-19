@@ -33,7 +33,7 @@ public class NotificationPage extends AuditorNotificationPage {
     
     @Override
     protected void initGui(Composite composite) {
-        setTitle("Account");
+        setTitle("Account (5/7)");
         setMessage("Mail notifications");
 
         cbNotification = createCheckbox(composite, "Mail notification", isNotification);

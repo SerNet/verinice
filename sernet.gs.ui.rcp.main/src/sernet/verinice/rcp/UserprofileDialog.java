@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,15 +32,12 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -85,7 +81,8 @@ public class UserprofileDialog extends TitleAreaDialog {
     private TableViewer tableSelected;
     private TableViewer table;
     private TableViewer tableAction;
-     
+    private ProfileLabelProvider profileLabelProvider = new ProfileLabelProvider(); 
+    private ProfileTableComparator profileTableComparator = new ProfileTableComparator();
     
     private Button addAllButton;
     private Button removeAllButton;
@@ -213,14 +210,14 @@ public class UserprofileDialog extends TitleAreaDialog {
         rightButtonComposite.setLayout(gridLayout);
 
         tableSelected = createTable(leftComposite, Messages.UserprofileDialog_4);
-        tableSelected.setLabelProvider(new ProfileLabelProvider());
-        tableSelected.setComparator(new TableComparator());
+        tableSelected.setLabelProvider(profileLabelProvider);
+        tableSelected.setComparator(profileTableComparator);
         tableSelected.setContentProvider(new ArrayContentProvider());
         tableSelected.refresh(true);
 
         table = createTable(rightComposite, Messages.UserprofileDialog_5);
-        table.setLabelProvider(new ProfileLabelProvider());
-        table.setComparator(new TableComparator());
+        table.setLabelProvider(profileLabelProvider);
+        table.setComparator(profileTableComparator);
         table.setContentProvider(new ArrayContentProvider());
         table.refresh(true);
 
@@ -228,8 +225,8 @@ public class UserprofileDialog extends TitleAreaDialog {
         createProfileButtons(rightButtonComposite);
 
         tableAction = createTable(rightButtonComposite, Messages.UserprofileDialog_6);
-        tableAction.setLabelProvider(new ProfileLabelProvider());
-        tableAction.setComparator(new TableComparator());
+        tableAction.setLabelProvider(profileLabelProvider);
+        tableAction.setComparator(profileTableComparator);
         tableAction.setContentProvider(new ArrayContentProvider());
         tableAction.refresh(true);
 
@@ -652,93 +649,10 @@ public class UserprofileDialog extends TitleAreaDialog {
         userprofile.setOrigin(null);
     }
 
-    private IRightsServiceClient getRightService() {
+    IRightsServiceClient getRightService() {
         if (rightsService == null) {
             rightsService = (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         }
         return rightsService;
-    }
-
-    class ProfileLabelProvider extends ColumnLabelProvider {
-        
-        /* (non-Javadoc)
-         * @see org.eclipse.jface.viewers.ColumnLabelProvider#getText(java.lang.Object)
-         */
-        @Override
-        public String getText(Object element) {
-            String text = Messages.UserprofileDialog_17;
-            if (element instanceof ProfileRef) {
-                text = ((ProfileRef) element).getName();
-            }
-            if (element instanceof Action) {
-                text = ((Action) element).getId();
-            }
-            // get lacalized message
-            text = getRightService().getMessage(text);
-            return text;
-        }
-        
-    }
-   
-
-    class TableComparator extends ViewerComparator {
-        private int propertyIndex;
-        private static final int ASCENDING = 0;
-        private static final int DESCENDING = 1;
-        private int direction = ASCENDING;
-        private Collator collator = Collator.getInstance();
-
-        public TableComparator() {
-            this.propertyIndex = 0;
-            direction = ASCENDING;
-        }
-
-        public int getDirection() {
-            return direction == 1 ? SWT.DOWN : SWT.UP;
-        }
-
-        public void setColumn(int column) {
-            if (column == this.propertyIndex) {
-                // Same column as last sort; toggle the direction
-                direction = 1 - direction;
-            } else {
-                // New column; do an ascending sort
-                this.propertyIndex = column;
-                direction = DESCENDING;
-            }
-        }
-
-        @Override
-        public int compare(Viewer viewer, Object e1, Object e2) {
-            String name1=null,name2=null;
-            if(e1 instanceof ProfileRef) {
-                name1 = ((ProfileRef) e1).getName();
-            }
-            if(e1 instanceof Action) {
-                name1 = ((Action) e1).getId();
-            }
-            if(e2 instanceof ProfileRef) {
-                name2 = ((ProfileRef) e2).getName();
-            }
-            if(e2 instanceof Action) {
-                name2 = ((Action) e2).getId();
-            }
-            name1 = getRightService().getMessage(name1);
-            name2 = getRightService().getMessage(name2);
-            int rc = 0;
-            switch (propertyIndex) {
-            case 0:            
-                rc = collator.compare(name1, name2);
-                break;
-            default:
-                rc = 0;
-            }
-            // If descending order, flip the direction
-            if (direction == DESCENDING) {
-                rc = -rc;
-            }
-            return rc;
-        }
-
     }
 }

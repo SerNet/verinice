@@ -19,9 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.rcp.account;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.Wizard;
 
+import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -68,18 +71,15 @@ public class AccountWizard extends Wizard {
         addPage(authenticationPage);
         limitationPage = new LimitationPage();
         addPage(limitationPage);
-        /*
-        groupPage = new GroupPage();
-        addPage(groupPage);  
-        */      
+        groupPage = new GroupPage(account);
+        addPage(groupPage);     
         notificationPage = new NotificationPage();
         addPage(notificationPage);
         auditorNotificationPage = new AuditorNotificationPage();
         addPage(auditorNotificationPage);
-        /*
         profilePage = new ProfilePage();
         addPage(profilePage); 
-        */  
+
         if(this.account!=null) {
             personPage.setPerson(account.getPerson());
             authenticationPage.setLogin(account.getUser());
@@ -88,6 +88,7 @@ public class AccountWizard extends Wizard {
             limitationPage.setScopeOnly(account.isScopeOnly());
             limitationPage.setWeb(account.isWebUser());
             limitationPage.setDesktop(account.isRcpUser());
+            limitationPage.setDeactivated(account.isDeactivatedUser());
             notificationPage.setNotification(getAccount().isNotificationEnabled());
             notificationPage.setGlobal(getAccount().isNotificationGlobal());
             notificationPage.setNewTasks(getAccount().isNotificationMeasureAssignment());
@@ -97,6 +98,7 @@ public class AccountWizard extends Wizard {
             auditorNotificationPage.setGlobal(getAccount().isAuditorNotificationGlobal());
             auditorNotificationPage.setDeadlineWarning(getAccount().isAuditorNotificationExpirationEnabled());
             auditorNotificationPage.setDeadlineInDays(getAccount().getAuditorNotificationExpirationDays());
+            profilePage.setLogin(account.getUser());
         } 
     }
 
@@ -113,6 +115,14 @@ public class AccountWizard extends Wizard {
         getAccount().setScopeOnly(limitationPage.isScopeOnly());
         getAccount().setWebUser(limitationPage.isWeb());
         getAccount().setRcpUser(limitationPage.isDesktop());
+        getAccount().setIsDeactivatedUser(limitationPage.isDeactivated());
+        
+        getAccount().deleteAllRoles();
+        Set<AccountGroup> selectedGroups = groupPage.getGroups();     
+        for (AccountGroup accountGroup : selectedGroups) {
+            getAccount().addRole(accountGroup.getName());
+        }
+        
         getAccount().setNotificationEnabled(notificationPage.isNotification());
         getAccount().setNotificationGlobal(notificationPage.isGlobal());
         getAccount().setNotificationMeasureAssignment(notificationPage.isNewTasks());
