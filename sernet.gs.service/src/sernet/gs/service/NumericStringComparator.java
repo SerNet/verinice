@@ -54,6 +54,7 @@
 
 package sernet.gs.service;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 import org.apache.log4j.Logger;
@@ -70,9 +71,10 @@ import org.apache.log4j.Logger;
  *
  * @author bayard@generationjava.com
  */
-public class NumericStringComparator implements Comparator {
+@SuppressWarnings({ "rawtypes", "serial" })
+public class NumericStringComparator implements Comparator, Serializable {
 
-	private final Logger log = Logger.getLogger(NumericStringComparator.class);
+	private transient Logger log = Logger.getLogger(NumericStringComparator.class);
 	
 	public NumericStringComparator() {
 	}
@@ -141,7 +143,7 @@ public class NumericStringComparator implements Comparator {
 							ret = comp;
 						}
 					} catch (Exception e) {
-						log.error("Fehler bei Stringvergleich: " + s1 + " : " + s2,e);
+						getLog().error("Fehler bei Stringvergleich: " + s1 + " : " + s2,e);
 					}
 				} else {
 					ret = 1;
@@ -227,5 +229,10 @@ public class NumericStringComparator implements Comparator {
 		return count;
 	}
 
+	private Logger getLog(){
+	    if (log == null)
+	        log = Logger.getLogger(NumericStringComparator.class);
+	    return log;
+	}
 
 }
