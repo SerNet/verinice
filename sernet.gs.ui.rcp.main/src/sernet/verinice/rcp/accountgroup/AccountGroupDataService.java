@@ -145,14 +145,16 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
 
         if (newRoleName.equals(oldRoleName))
             new IllegalArgumentException(String.format("name is not changed: %s", newRoleName));
-        
 
         // delete role from configurations
-        if(!accountGroupToConfiguration.containsKey(newRoleName))
+        if(!accountGroupToConfiguration.containsKey(newRoleName)) {
             accountGroupToConfiguration.put(newRoleName, new TreeSet<String>(new NumericStringComparator()));
+            accountService.createAccountGroup(newRoleName);
+        }
         
         accountGroupToConfiguration.get(newRoleName).addAll(accountGroupToConfiguration.get(oldRoleName));
         accountGroupToConfiguration.remove(oldRoleName);
+
         accountService.deleteAccountGroup(oldRoleName);
         accountService.deleteRole(accountGroupToConfiguration.get(newRoleName), oldRoleName);
         

@@ -318,7 +318,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                                     }
 
                                     else if (e.getSource() == addAllBtn) {
-                                        addAccounts(accountList.getItems());
+                                        addAllAccounts(accountList.getItems());
                                     }
 
                                     else if (e.getSource() == removeBtn) {
@@ -396,6 +396,13 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     }
 
+    private void addAllAccounts(String[] items) {
+        int result = new MessageDialog(parent.getShell(), Messages.GroupView_33, null, Messages.GroupView_34, MessageDialog.QUESTION, new String[] { Messages.GroupView_32, Messages.GroupView_27 }, 0).open();
+        if (result == 0) {
+            addAccounts(items);
+        }
+    }
+
     private void addAccounts(String[] selectedAccounts) {
         String[] accounts = accountGroupDataService.saveAccountGroupData(getSelectedGroup(), selectedAccounts);
         for (String account : accounts) {
@@ -439,8 +446,73 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         @Override
         public void run() {
-            DeleteGroupDialog deleteGroupDialog = new DeleteGroupDialog(parent.getShell(), Messages.GroupView_20);
-            deleteGroupDialog.open();
+
+            if (isStandardGroup()) {
+                openStandardGroupWarningDialog(Messages.GroupView_22);
+                return;
+            }
+
+            getDisplay().syncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        int connectedAccounts = accountGroupDataService.getAccountNamesForGroup(getSelectedGroup()).length;
+                        long connectedObjects = accountService.countConnectObjectsForGroup(getSelectedGroup());
+                        String message = String.format(Messages.GroupView_25, connectedAccounts, connectedObjects);
+                        MessageDialog dialog = new MessageDialog(parent.getShell(), Messages.GroupView_16, null, message, MessageDialog.ERROR, new String[] { Messages.GroupView_26, Messages.GroupView_27 }, 0);
+                        int result = dialog.open();
+                        if (result == 0)
+                            if (!isGroupEmptyAndNotConnectedToObject())
+                                openSecondWarningDialog();
+                            else
+                                deleteGroup();
+                    } catch (Exception ex) {
+                        LOG.error("error while deleting group", ex);
+                    }
+                }
+            });
+
+        }
+
+        private void openSecondWarningDialog() {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    getDisplay().syncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            try {
+                                MessageDialog dialog = new MessageDialog(parent.getShell(), Messages.GroupView_28, null, Messages.GroupView_29, MessageDialog.ERROR, new String[] { Messages.GroupView_26, Messages.GroupView_27 }, 0);
+                                int result = dialog.open();
+                                if (result == 0)
+                                    deleteGroup();
+                            } catch (Exception ex) {
+                                LOG.error("error while deleting group", ex);
+                            }
+                        }
+                    });
+
+                }
+            }).start();
+        }
+
+        private boolean isGroupEmptyAndNotConnectedToObject() {
+            return hasAccounts() && hasObjects();
+        }
+
+        private boolean hasObjects() {
+            return accountService.countConnectObjectsForGroup(getSelectedGroup()) == 0;
+        }
+
+        private boolean hasAccounts() {
+            return accountGroupDataService.getAccountNamesForGroup(getSelectedGroup()).length == 0;
+        }
+
+        private void deleteGroup() {
+            accountGroupDataService.deleteAccountGroup(getSelectedGroup());
+            initData();
         }
 
     }
@@ -504,29 +576,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             initData();
             super.okPressed();
         }
-
-        protected boolean isStandardGroup() {
-            return ArrayUtils.contains(STANDARD_GROUPS, getSelectedGroup());
-        }
-
-        protected void openStandardGroupWarningDialog() {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    getDisplay().syncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                MessageDialog.openWarning(parent.getShell(), Messages.GroupView_16, Messages.GroupView_22);
-                            } catch (Exception ex) {
-                                LOG.warn("error while deleting group", ex);
-                            }
-                        }
-                    });
-
-                }
-            }).start();
-        }
     }
 
     private class NewGroupDialog extends CRUDAccountGroupDialog {
@@ -554,96 +603,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         }
     }
 
-    private class DeleteGroupDialog extends CRUDAccountGroupDialog {
-
-        String selection;
-
-        public DeleteGroupDialog(Shell parent, String title) {
-            super(parent, String.format("%s %s", title, getSelectedGroup()));
-
-            if (isStandardGroup()) {
-                openStandardGroupWarningDialog();
-                super.closeTray();
-            }
-
-            if (isGroupSelected())
-                this.selection = getSelectedGroup();
-            else
-                throw new IllegalSelectionException("an account group must be selected");
-        }
-
-        @Override
-        protected void okPressed() {
-
-            if (isGroupEmptyAndNotConnectedToObject())
-                accountGroupDataService.deleteAccountGroup(selection);
-            else
-                openWarningDialog();
-            super.okPressed();
-        }
-
-        private void openWarningDialog() {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    getDisplay().syncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            try {
-                                int connectedAccounts = accountGroupDataService.getAccountNamesForGroup(selection).length;
-                                long connectedObjects = accountService.countConnectObjectsForGroup(selection);
-                                String message = String.format(Messages.GroupView_25, connectedAccounts, connectedObjects);
-                                MessageDialog dialog = new MessageDialog(parent.getShell(), "Achtung", null, message, MessageDialog.ERROR, new String[] { Messages.GroupView_26, Messages.GroupView_27 }, 0);
-                                int result = dialog.open();
-                                if (result == 0)
-                                    openSecondWarningDialog();
-                                else
-                                    accountGroupDataService.deleteAccountGroup(selection);
-                            } catch (Exception ex) {
-                                LOG.error("error while deleting group", ex);
-                            }
-                        }
-                    });
-
-                }
-            }).start();
-        }
-
-        private void openSecondWarningDialog() {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    getDisplay().syncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            try {
-                                MessageDialog dialog = new MessageDialog(parent.getShell(), Messages.GroupView_28, null, Messages.GroupView_29, MessageDialog.ERROR, new String[] { Messages.GroupView_26, Messages.GroupView_27 }, 0);
-                                int result = dialog.open();
-                                if (result == 0)
-                                    accountGroupDataService.deleteAccountGroup(selection);
-                                initData();
-                            } catch (Exception ex) {
-                                LOG.error("error while deleting group", ex);
-                            }
-                        }
-                    });
-
-                }
-            }).start();
-        }
-
-        @Override
-        protected boolean isEditable() {
-            return false;
-        }
-
-        private boolean isGroupEmptyAndNotConnectedToObject() {
-            return accountGroupDataService.getAccountNamesForGroup(selection).length == 0 && accountService.countConnectObjectsForGroup(selection) == 0;
-        }
-    }
-
     private class EditGroupDialog extends CRUDAccountGroupDialog {
 
         private String selection;
@@ -653,7 +612,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             super(parent, title);
 
             if (isStandardGroup()) {
-                openStandardGroupWarningDialog();
+                openStandardGroupWarningDialog(Messages.GroupView_35);
                 super.closeTray();
             } else if (isGroupSelected())
                 this.selection = getSelectedGroup();
@@ -676,20 +635,29 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         @Override
         protected void okPressed() {
 
-            if (ArrayUtils.contains(groupList.getItems(), selection)) {
+            if (existsGroup()) {
                 String msg = String.format(Messages.GroupView_31, textInputField.getText());
-                MessageDialog messageDialog = new MessageDialog(parent.getShell(), Messages.GroupView_16, null, msg, MessageDialog.QUESTION, new String[] {Messages.GroupView_30, Messages.GroupView_27 }, 0);
+                MessageDialog messageDialog = new MessageDialog(parent.getShell(), Messages.GroupView_16, null, msg, MessageDialog.QUESTION, new String[] { Messages.GroupView_30, Messages.GroupView_27 }, 0);
                 int result = messageDialog.open();
                 if (result == 0) {
                     accountGroupDataService.editAccountGroupName(textInputField.getText(), selection);
-                    groupList.remove(selection);
-                    super.okPressed();
                 }
             } else {
-                accountGroupDataService.editAccountGroupName(textInputField.getText(), selection);
-                super.okPressed();
+                try {
+                    accountGroupDataService.editAccountGroupName(textInputField.getText(), selection);
+                } catch (Exception ex){
+                    MessageDialog.openError(parent.getShell(), "Error", ex.getLocalizedMessage());
+                    LOG.error("editing account group name failed", ex);
+                }
             }
+
+            super.okPressed();
         }
+
+        private boolean existsGroup() {
+            return ArrayUtils.contains(groupList.getItems(), textInputField.getText());
+        }
+
     }
 
     private String getSelectedGroup() {
@@ -760,5 +728,28 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             super.run(monitor);
             initData();
         }
+    }
+
+    private void openStandardGroupWarningDialog(final String message) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                getDisplay().syncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            MessageDialog.openWarning(parent.getShell(), Messages.GroupView_23, message);
+                        } catch (Exception ex) {
+                            LOG.warn("error while deleting group", ex);
+                        }
+                    }
+                });
+
+            }
+        }).start();
+    }
+
+    private boolean isStandardGroup() {
+        return ArrayUtils.contains(STANDARD_GROUPS, getSelectedGroup());
     }
 }
