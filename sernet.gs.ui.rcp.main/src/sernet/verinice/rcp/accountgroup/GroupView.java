@@ -418,7 +418,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             groupToAccountList.remove(i);
         }
     }
-    
+
     private void removeAllAccounts(String[] items) {
         int result = new MessageDialog(parent.getShell(), Messages.GroupView_38, null, Messages.GroupView_36, MessageDialog.QUESTION, new String[] { Messages.GroupView_37, Messages.GroupView_27 }, 0).open();
         if (result == 0) {
@@ -594,6 +594,11 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         @Override
         protected void okPressed() {
             try {
+
+                if (textInputField.getText() == null || textInputField.getText().equals("")) {
+                    return;
+                }
+
                 accountGroupDataService.addAccountGroup(textInputField.getText());
                 super.okPressed();
             } catch (DataIntegrityViolationException ex) {
@@ -642,6 +647,13 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         @Override
         protected void okPressed() {
 
+            if (textInputField.getText() == null || textInputField.getText().equals(""))
+                return;
+
+            if (textInputField.getText().equals(selection)) {
+                super.okPressed();
+            }
+
             if (existsGroup()) {
                 String msg = String.format(Messages.GroupView_31, textInputField.getText());
                 MessageDialog messageDialog = new MessageDialog(parent.getShell(), Messages.GroupView_16, null, msg, MessageDialog.QUESTION, new String[] { Messages.GroupView_30, Messages.GroupView_27 }, 0);
@@ -652,7 +664,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             } else {
                 try {
                     accountGroupDataService.editAccountGroupName(textInputField.getText(), selection);
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     MessageDialog.openError(parent.getShell(), "Error", ex.getLocalizedMessage());
                     LOG.error("editing account group name failed", ex);
                 }
