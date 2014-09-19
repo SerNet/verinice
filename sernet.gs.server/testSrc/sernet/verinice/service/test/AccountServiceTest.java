@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.junit.After;
 import org.junit.Assert;
@@ -25,6 +26,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
+import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
@@ -266,10 +268,11 @@ public class AccountServiceTest extends CommandServiceProvider {
 
     private void removeAccountGroups() {
         List<AccountGroup> groups = accountService.listGroups();
-        if (groups != null) {
+        if (groups != null)
             for (AccountGroup g : groups)
-                accountService.deleteAccountGroup(g);
-        }
+                if (!ArrayUtils.contains(IRightsService.STANDARD_GROUPS, g.getName()))
+                    accountService.deleteAccountGroup(g);
+
     }
 
     private Organization createTestOrganization() throws CommandException {
