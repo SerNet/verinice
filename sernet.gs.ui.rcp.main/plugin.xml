@@ -54,7 +54,7 @@
             name="%view.name.0">
       </view>
       <view
-      	    allowMultiple="true"
+	    allowMultiple="false"
             category="sernet.verinice.rcp.accountgroup"
             class="sernet.verinice.rcp.accountgroup.GroupView"
             icon="icons/group.png"
