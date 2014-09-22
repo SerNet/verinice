@@ -25,7 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
-import org.aspectj.bridge.Message;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -37,6 +36,8 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
@@ -56,9 +57,7 @@ import org.eclipse.ui.PlatformUI;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.actions.ConfigurationAction;
 import sernet.gs.ui.rcp.main.actions.helper.UpdateConfigurationHelper;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
@@ -76,7 +75,7 @@ import sernet.verinice.rcp.RightsEnabledView;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * 
  */
-public class GroupView extends RightsEnabledView implements SelectionListener, KeyListener {
+public class GroupView extends RightsEnabledView implements SelectionListener, KeyListener, MouseListener {
 
     public static final String ID = "sernet.verinice.rcp.accountgroup.GroupView";
 
@@ -197,6 +196,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         groupListGridData.heightHint = trim.height;
         groupList.setLayoutData(groupListGridData);
         groupList.addSelectionListener(this);
+        groupList.addMouseListener(this);
 
         groupToAccountList = new List(groupViewComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
         groupToAccountList.setItems(new String[] {});
@@ -204,6 +204,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         groupListGridData.heightHint = groupToAccountList.computeTrim(0, 0, 0, groupList.getItemHeight() * 12).height;
         groupToAccountList.setLayoutData(groupAccountListGridData);
         groupToAccountList.addSelectionListener(this);
+        groupToAccountList.addMouseListener(this);
 
         Group connectGroupsWithAccounts = new Group(groupViewComposite, SWT.NULL);
         connectGroupsWithAccounts.setLayout(new GridLayout());
@@ -241,6 +242,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         accountListGridData.heightHint = accountList.computeTrim(0, 0, 0, accountList.getItemHeight() * 12).height;
         accountList.setLayoutData(accountListGridData);
         accountList.addSelectionListener(this);
+        accountList.addMouseListener(this);
     }
 
     private void makeActions() {
@@ -338,39 +340,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                             } finally {
                                 switchButtons(true);
                             }
-                        }
-
-                        private void updateConfiguration() {
-                            EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);
-                            String selectedAccountName = getSelectedAccount();
-                            if (!"".equals(selectedAccountName)) {
-
-                                Configuration configuration = accountService.getAccountByName(getSelectedAccount());
-                                AccountDialog accountDialog = new AccountDialog(parent.getShell(), entType, Messages.GroupView_14, configuration.getEntity());
-                                accountDialog.open();
-
-                                try {
-                                    PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new UpdateConfigurationCallbackHelper(configuration));
-                                } catch (Exception e) {
-                                    LOG.error(Messages.GroupView_15, e);
-                                } finally {
-                                    configuration = null;
-                                }
-
-                            } else {
-                                MessageDialog.openWarning(parent.getShell(), Messages.GroupView_16, Messages.GroupView_17);
-                            }
-                        }
-
-                        private String getSelectedAccount() {
-
-                            if (accountList.getSelectionCount() > 0) {
-                                return accountList.getSelection()[0];
-                            } else if (groupToAccountList.getSelectionCount() > 0) {
-                                return groupToAccountList.getSelection()[0];
-                            }
-
-                            return "";
                         }
 
                         private void switchButtons(boolean enabled) {
@@ -704,15 +673,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
-     */
-    @Override
     public String getRightID() {
         return ActionRightIDs.ACCOUNTSETTINGS;
     }
@@ -771,4 +731,62 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     private boolean isStandardGroup() {
         return ArrayUtils.contains(STANDARD_GROUPS, getSelectedGroup());
     }
+
+    @Override
+    public void mouseDoubleClick(MouseEvent e) {
+        if (e.getSource() == groupList) {
+            EditGroupDialog dialog = new EditGroupDialog(parent.getShell(), Messages.GroupView_19);
+            dialog.open();
+        }
+
+        if (e.getSource() == accountList || e.getSource() == groupToAccountList) {
+            updateConfiguration();
+        }
+    }
+
+    private void updateConfiguration() {
+        EntityType entType = HitroUtil.getInstance().getTypeFactory().getEntityType(Configuration.TYPE_ID);
+        String selectedAccountName = getSelectedAccount();
+        if (!"".equals(selectedAccountName)) {
+
+            Configuration configuration = accountService.getAccountByName(getSelectedAccount());
+            AccountDialog accountDialog = new AccountDialog(parent.getShell(), entType, Messages.GroupView_14, configuration.getEntity());
+            accountDialog.open();
+
+            try {
+                PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new UpdateConfigurationCallbackHelper(configuration));
+            } catch (Exception e) {
+                LOG.error(Messages.GroupView_15, e);
+            } finally {
+                configuration = null;
+            }
+
+        } else {
+            MessageDialog.openWarning(parent.getShell(), Messages.GroupView_16, Messages.GroupView_17);
+        }
+    }
+
+    private String getSelectedAccount() {
+
+        if (accountList.getSelectionCount() > 0) {
+            return accountList.getSelection()[0];
+        } else if (groupToAccountList.getSelectionCount() > 0) {
+            return groupToAccountList.getSelection()[0];
+        }
+
+        return "";
+    }
+
+    @Override
+    public void mouseDown(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseUp(MouseEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+    }
+
 }
