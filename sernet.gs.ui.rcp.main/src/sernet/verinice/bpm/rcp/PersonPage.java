@@ -32,12 +32,12 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.ElementSelectionComponent;
+import sernet.verinice.service.commands.LoadConfiguration;
 
 /**
  * Wizard page of wizard {@link IndividualProcessWizard}.

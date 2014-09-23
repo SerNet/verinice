@@ -1,7 +1,9 @@
 package sernet.verinice.rcp.account;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -29,7 +31,7 @@ public class ProfilePage extends BaseWizardPage {
     public static final String PAGE_NAME = "account-wizard-profile-page";
     
     private String login;
-    List<ProfileRef> profileList;
+    Set<ProfileRef> profileSet;
     
     private TableViewer table;
     
@@ -71,12 +73,12 @@ public class ProfilePage extends BaseWizardPage {
 
     @Override
     protected void initData() throws Exception {
-        profileList = new LinkedList<ProfileRef>();
+        profileSet = new HashSet<ProfileRef>();
         List<Userprofile> userProfileList = getRightService().getUserprofile(login);
         for (Userprofile userprofile : userProfileList) {  
-            profileList.addAll(userprofile.getProfileRef());           
+            profileSet.addAll(userprofile.getProfileRef());           
         }
-        table.setInput(profileList);
+        table.setInput(profileSet);
     }
 
     

@@ -22,6 +22,7 @@ package sernet.verinice.rcp.account;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
 import sernet.verinice.model.common.accountgroup.AccountGroup;
@@ -82,6 +83,7 @@ public class AccountWizard extends Wizard {
 
         if(this.account!=null) {
             personPage.setPerson(account.getPerson());
+            personPage.setNewAccount(isNewAccount());
             authenticationPage.setLogin(account.getUser());
             authenticationPage.setEmail(account.getNotificationEmail());
             limitationPage.setAdmin(account.isAdminUser());
@@ -108,8 +110,8 @@ public class AccountWizard extends Wizard {
     @Override
     public boolean performFinish() {
         getAccount().setPerson(personPage.getPerson());
-        getAccount().setUser(authenticationPage.getLogin());
-        getAccount().setPass(authenticationPage.getPassword());
+        getAccount().setUserNew(authenticationPage.getLogin());
+        getAccount().setPassNew(authenticationPage.getPassword());
         getAccount().setNotificationEmail(authenticationPage.getEmail());
         getAccount().setAdminUser(limitationPage.isAdmin());
         getAccount().setScopeOnly(limitationPage.isScopeOnly());
@@ -134,7 +136,24 @@ public class AccountWizard extends Wizard {
         getAccount().setAuditorNotificationExpirationDays(auditorNotificationPage.getDeadlineInDays());
         return true;
     }
-
+    
+    @Override
+    public IWizardPage getStartingPage() {
+        IWizardPage startingPage = super.getStartingPage();
+        if(!isNewAccount()) {
+            startingPage = authenticationPage;
+        }
+        return startingPage;
+    }
+    
+    private boolean isNewAccount() {
+        boolean isNew = true;
+        if(account!=null) {
+            isNew = (account.getDbId()==null);
+        }
+        return isNew;
+    }
+  
     public Configuration getAccount() {
         return account;
     }

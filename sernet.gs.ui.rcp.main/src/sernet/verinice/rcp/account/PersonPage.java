@@ -3,23 +3,21 @@ package sernet.verinice.rcp.account;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.DialogPage;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByScopeId;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
 import sernet.verinice.iso27k.service.Retriever;
@@ -27,11 +25,13 @@ import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.ElementSelectionComponent;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
+import sernet.verinice.service.commands.LoadConfiguration;
 
 /**
  * Wizard page of wizard {@link AccountWizard}.
@@ -55,16 +55,21 @@ public class PersonPage extends BaseWizardPage {
     
     private ElementSelectionComponent personComponent;
     
+    private Label personLabel;
+    
+    private boolean isNewAccount = false;
+    
     protected PersonPage() {
         super(PAGE_NAME);
     }
 
     protected void initGui(Composite parent) {
         setTitle("Account (1/7)");
-        setMessage("Select Person");   
+        selectMessage();   
         
         comboScope = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
         comboScope.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        comboScope.setEnabled(isNewAccount());
         comboScope.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -79,6 +84,7 @@ public class PersonPage extends BaseWizardPage {
         
         comboGroup = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);      
         comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+        comboGroup.setEnabled(isNewAccount());
         comboGroup.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -98,16 +104,61 @@ public class PersonPage extends BaseWizardPage {
         personComponent.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
-                setErrorMessage(null);             
-                List<CnATreeElement> selectedElements = personComponent.getSelectedElements();
-                if(selectedElements!=null && !selectedElements.isEmpty()) {
-                    person = selectedElements.get(0);
-                    setPageComplete(isPageComplete());
-                }
-            }        
+                selectPerson();
+            }            
         });
         
-        
+        personLabel = new Label(parent, SWT.NONE);
+        showSelectedPerson();    
+    }
+
+    private void selectMessage() {
+        if(isNewAccount()) {
+            setMessage("Select Person");
+        } else {
+            setMessage("Person of existing account can not be changed", DialogPage.INFORMATION);
+        }
+    }
+    
+    private void selectPerson() {
+        setErrorMessage(null);   
+        if(!isNewAccount()) {
+            return;
+        }
+        List<CnATreeElement> selectedElements = personComponent.getSelectedElements();
+        if(selectedElements!=null && !selectedElements.isEmpty()) {
+            person = selectedElements.get(0);
+            validatePerson();
+            showSelectedPerson();
+            setPageComplete(isPageComplete());
+        }
+    }   
+
+    private void validatePerson() {
+        try {
+            if(person!=null) {
+                LoadConfiguration command = new LoadConfiguration(person);
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                Configuration account  = command.getConfiguration();
+                if(account!=null) {
+                    person=null;
+                    setErrorMessage("An account for this person exists. Please choose another person.");  
+                }
+            }
+        } catch(Exception e) {
+            LOG.error("Error while validating person", e);   
+        }
+    }
+
+    private void showSelectedPerson() {
+        if(person!=null) {
+            person = Retriever.checkRetrieveElement(person);
+            GenericPerson genericPerson = new GenericPerson(person);
+            personLabel.setText("Selected person: " + genericPerson.getName());
+        } else {
+            personLabel.setText("No person selected");
+        }
+        personLabel.pack();
     }
 
     protected void initData() throws Exception {
@@ -279,6 +330,14 @@ public class PersonPage extends BaseWizardPage {
         this.person = person;
         loadScope();
         laodGroup();
+    }
+
+    public boolean isNewAccount() {
+        return isNewAccount;
+    }
+
+    public void setNewAccount(boolean isNewAccount) {
+        this.isNewAccount = isNewAccount;
     }
 
 }

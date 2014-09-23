@@ -33,6 +33,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -69,7 +70,9 @@ import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.IllegalSelectionException;
+import sernet.verinice.rcp.NonModalWizardDialog;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.rcp.account.AccountWizard;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -750,7 +753,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         if (!"".equals(selectedAccountName)) {
 
             Configuration configuration = accountService.getAccountByName(getSelectedAccount());
-            AccountDialog accountDialog = new AccountDialog(parent.getShell(), entType, Messages.GroupView_14, configuration.getEntity());
+            TitleAreaDialog accountDialog = createWizard(configuration);
             accountDialog.open();
 
             try {
@@ -764,6 +767,12 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         } else {
             MessageDialog.openWarning(parent.getShell(), Messages.GroupView_16, Messages.GroupView_17);
         }
+    }
+    
+    private TitleAreaDialog createWizard(Configuration configuration) {
+        AccountWizard wizard = new AccountWizard(configuration);                 
+        WizardDialog wizardDialog = new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
+        return wizardDialog;
     }
 
     private String getSelectedAccount() {

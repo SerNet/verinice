@@ -45,7 +45,6 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadChildrenForExpansion;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
 import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -60,6 +59,7 @@ import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.RightsEnabledHandler;
+import sernet.verinice.service.commands.LoadConfiguration;
 
 /**
  *

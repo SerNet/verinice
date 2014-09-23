@@ -39,7 +39,6 @@ import sernet.gs.ui.rcp.main.actions.helper.UpdateConfigurationHelper;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccountDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
@@ -54,6 +53,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.NonModalWizardDialog;
 import sernet.verinice.rcp.account.AccountWizard;
+import sernet.verinice.service.commands.LoadConfiguration;
 import sernet.verinice.service.commands.SaveConfiguration;
 
 /**

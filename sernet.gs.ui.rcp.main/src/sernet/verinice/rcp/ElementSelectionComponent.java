@@ -458,7 +458,6 @@ public class ElementSelectionComponent {
 
     public void setTypeId(String typeId) {
         this.typeId = typeId;
-    }  
-    
+    }
    
 }

@@ -113,6 +113,9 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	private CnATreeElement person;
 	
 	private Integer dbId;
+	
+	private String userNew;
+	private String passNew;
 
 	public Configuration() {
 		setEntity(new Entity(TYPE_ID));
@@ -523,4 +526,20 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
         sb.append("\n(Auditor) Terminwarnung: bei Ablauf in X Tagen: ").append(getAuditorNotificationExpirationDays());
         return sb.toString();
 	}
+
+    public String getUserNew() {
+        return userNew;
+    }
+
+    public void setUserNew(String userNew) {
+        this.userNew = userNew;
+    }
+
+    public String getPassNew() {
+        return passNew;
+    }
+
+    public void setPassNew(String passNew) {
+        this.passNew = passNew;
+    }
 }

@@ -49,7 +49,6 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.commands.PasswordException;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.gs.ui.rcp.main.service.taskcommands.BulkEditUpdate;
 import sernet.gs.ui.rcp.main.service.taskcommands.ConfigurationBulkEditUpdate;
 import sernet.hui.common.connect.Entity;
@@ -68,6 +67,7 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.commands.CreateConfiguration;
+import sernet.verinice.service.commands.LoadConfiguration;
 
 /**
  * Erlaubt das gemeinsame Editieren der Eigenschaften von gleichen,

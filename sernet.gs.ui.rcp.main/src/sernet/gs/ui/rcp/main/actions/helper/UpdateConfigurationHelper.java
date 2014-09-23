@@ -70,7 +70,7 @@ public class UpdateConfigurationHelper implements IRunnableWithProgress {
     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
         Activator.inheritVeriniceContextState();
         try {
-            final boolean updatePassword = updateNameAndPassword(configuration.getUser(), configuration.getPass());
+            final boolean updatePassword = updateNameAndPassword(configuration.getUserNew(), configuration.getPassNew());
             // save configuration:
             SaveConfiguration<Configuration> command = new SaveConfiguration<Configuration>(configuration, updatePassword);
             command = getCommandService().executeCommand(command);
@@ -116,15 +116,15 @@ public class UpdateConfigurationHelper implements IRunnableWithProgress {
      * @return true if a new cleartext password was saved, that needs to be
      *         hashed.
      */
-    boolean updateNameAndPassword(String name, String newPassword) {
+    boolean updateNameAndPassword(String newName, String newPassword) {
         boolean updated = false;
         final String oldName = configuration.getUser();
-        if (isNewName(oldName, name) && (newPassword == null || newPassword.isEmpty())) {
+        if (isNewName(oldName, newName) && (newPassword == null || newPassword.isEmpty())) {
             if (getAuthService().isHandlingPasswords()) {
                 throw new PasswordException(Messages.ConfigurationAction_9);
             }
         }
-        configuration.setUser(name);
+        configuration.setUser(newName);
         if (newPassword != null && !newPassword.isEmpty()) {
             configuration.setPass(newPassword);
             updated = true;

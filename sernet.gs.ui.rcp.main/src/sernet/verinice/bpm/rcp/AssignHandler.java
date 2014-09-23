@@ -36,7 +36,6 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.bpm.PersonTypeSelectDialog;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -45,6 +44,7 @@ import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.RightsEnabledHandler;
+import sernet.verinice.service.commands.LoadConfiguration;
 
 /**
  * Sets the assignee of one or more selected tasks in {@link TaskView}.

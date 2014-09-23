@@ -30,11 +30,11 @@ import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.verinice.bpm.rcp.CompletionAbortedException;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.LoadConfiguration;
 
 /**
  * Task complete client handler for task IIsaQmProcess.TASK_IQM_SET_ASSIGNEE 
