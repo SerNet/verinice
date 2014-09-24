@@ -1,12 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="sernet.gs.server">
-        <wb-resource deploy-path="/" source-path="/WebContent"/>
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="DynamicWebProject">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <dependent-module deploy-path="/WEB-INF/lib" handle="module:/resource/sernet.gs.ui.rcp.main/sernet.gs.ui.rcp.main">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <property name="java-output-path"/>
-        <property name="context-root" value="veriniceserver"/>
+        <property name="java-output-path" value="/DynamicWebProject/build/classes"/>
+        <property name="context-root" value="vn"/>
     </wb-module>
 </project-modules>
