@@ -86,8 +86,7 @@ public class AccountServiceTest extends CommandServiceProvider {
         accountService.deleteAccountGroup(accountGroup1);
         accountService.deleteAccountGroup(accountGroup2);
 
-        Assert.assertTrue(accountService.listGroups().isEmpty());
-
+        Assert.assertEquals(IRightsService.STANDARD_GROUPS.length, accountService.listGroups().size());
     }
 
     @Test
@@ -100,7 +99,7 @@ public class AccountServiceTest extends CommandServiceProvider {
         accountService.deleteAccountGroup(accountGroup1.getName());
         accountService.deleteAccountGroup(accountGroup2.getName());
 
-        Assert.assertTrue(accountService.listGroups().isEmpty());
+        Assert.assertEquals(IRightsService.STANDARD_GROUPS.length, accountService.listGroups().size());
 
     }
 
