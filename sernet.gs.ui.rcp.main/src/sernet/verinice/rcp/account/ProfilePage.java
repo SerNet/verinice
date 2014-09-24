@@ -1,7 +1,6 @@
 package sernet.verinice.rcp.account;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +27,7 @@ import sernet.verinice.rcp.ProfileTableComparator;
 public class ProfilePage extends BaseWizardPage {
 
     private static final Logger LOG = Logger.getLogger(ProfilePage.class);    
-    public static final String PAGE_NAME = "account-wizard-profile-page";
+    public static final String PAGE_NAME = "account-wizard-profile-page"; //$NON-NLS-1$
     
     private String login;
     Set<ProfileRef> profileSet;
@@ -43,12 +42,12 @@ public class ProfilePage extends BaseWizardPage {
 
     @Override
     protected void initGui(Composite composite) {
-        setTitle("Account (7/7)");
-        setMessage("User profiles");
+        setTitle(Messages.ProfilePage_1);
+        setMessage(Messages.ProfilePage_2);
         
         Label label = new Label(composite, SWT.NONE);
-        label.setText("Please note that rather than assigning profiles \nto accounts directly you should assign them \nto an account group instead.\n");
-        table = createTable(composite,"User profiles of account");
+        label.setText(Messages.ProfilePage_3);
+        table = createTable(composite,Messages.ProfilePage_4);
         table.setLabelProvider(new ProfileLabelProvider());
         table.setComparator(new ProfileTableComparator());
         table.setContentProvider(new ArrayContentProvider());       

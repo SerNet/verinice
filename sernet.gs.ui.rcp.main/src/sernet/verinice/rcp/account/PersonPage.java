@@ -41,7 +41,7 @@ import sernet.verinice.service.commands.LoadConfiguration;
 public class PersonPage extends BaseWizardPage {
     
     private static final Logger LOG = Logger.getLogger(PersonPage.class);    
-    public static final String PAGE_NAME = "account-wizard-person-page";
+    public static final String PAGE_NAME = "account-wizard-person-page"; //$NON-NLS-1$
      
     private CnATreeElement person;
     private CnATreeElement group;
@@ -64,9 +64,11 @@ public class PersonPage extends BaseWizardPage {
     }
 
     protected void initGui(Composite parent) {
-        setTitle("Account (1/7)");
+        setTitle(Messages.PersonPage_1);
         selectMessage();   
         
+        Label label = new Label(parent, SWT.NONE);
+        label.setText("Scope");
         comboScope = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
         comboScope.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         comboScope.setEnabled(isNewAccount());
@@ -82,6 +84,8 @@ public class PersonPage extends BaseWizardPage {
             }
         });
         
+        label = new Label(parent, SWT.NONE);
+        label.setText("Gruppe");
         comboGroup = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);      
         comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         comboGroup.setEnabled(isNewAccount());
@@ -96,10 +100,10 @@ public class PersonPage extends BaseWizardPage {
         });
 
         final Composite personComposite = createEmptyComposite(parent);
-        
         personComponent = new ElementSelectionComponent(personComposite, getPersonTypeId(), getGroupId());
         personComponent.setScopeOnly(true);
         personComponent.setShowScopeCheckbox(false);
+        personComponent.setHeight(200);
         personComponent.init();
         personComponent.getViewer().addSelectionChangedListener(new ISelectionChangedListener() {
             @Override
@@ -107,16 +111,16 @@ public class PersonPage extends BaseWizardPage {
                 selectPerson();
             }            
         });
-        
         personLabel = new Label(parent, SWT.NONE);
+        
         showSelectedPerson();    
     }
 
     private void selectMessage() {
         if(isNewAccount()) {
-            setMessage("Select Person");
+            setMessage(Messages.PersonPage_2);
         } else {
-            setMessage("Person of existing account can not be changed", DialogPage.INFORMATION);
+            setMessage(Messages.PersonPage_3, DialogPage.INFORMATION);
         }
     }
     
@@ -142,11 +146,11 @@ public class PersonPage extends BaseWizardPage {
                 Configuration account  = command.getConfiguration();
                 if(account!=null) {
                     person=null;
-                    setErrorMessage("An account for this person exists. Please choose another person.");  
+                    setErrorMessage(Messages.PersonPage_4);  
                 }
             }
         } catch(Exception e) {
-            LOG.error("Error while validating person", e);   
+            LOG.error("Error while validating person", e);    //$NON-NLS-1$
         }
     }
 
@@ -154,9 +158,9 @@ public class PersonPage extends BaseWizardPage {
         if(person!=null) {
             person = Retriever.checkRetrieveElement(person);
             GenericPerson genericPerson = new GenericPerson(person);
-            personLabel.setText("Selected person: " + genericPerson.getName());
+            personLabel.setText(Messages.PersonPage_6 + genericPerson.getName());
         } else {
-            personLabel.setText("No person selected");
+            personLabel.setText(Messages.PersonPage_7);
         }
         personLabel.pack();
     }
@@ -199,7 +203,7 @@ public class PersonPage extends BaseWizardPage {
         command = getCommandService().executeCommand(command);
         comboModelScope.addAll(command.getElements());
         comboModelScope.sort();
-        comboModelScope.addNoSelectionObject("all");
+        comboModelScope.addNoSelectionObject(Messages.PersonPage_8);
         getDisplay().syncExec(new Runnable(){
             @Override
             public void run() {
@@ -225,7 +229,7 @@ public class PersonPage extends BaseWizardPage {
                 command = getCommandService().executeCommand(command);
                 comboModelGroup.addAll(command.getElements());       
                 comboModelGroup.sort();
-                comboModelGroup.addNoSelectionObject("all");
+                comboModelGroup.addNoSelectionObject(Messages.PersonPage_9);
             }
             getDisplay().syncExec(new Runnable(){
                 @Override
@@ -243,7 +247,7 @@ public class PersonPage extends BaseWizardPage {
                 }
             });
         } catch(Exception e) {
-            LOG.error("Error while loading groups", e);
+            LOG.error("Error while loading groups", e); //$NON-NLS-1$
             throw new RuntimeException(e);
         }
     }
@@ -259,7 +263,7 @@ public class PersonPage extends BaseWizardPage {
                 group = retrieveCommand.getElement();
             }
         } catch (CommandException e) {
-            LOG.error("Error while loading group.", e);
+            LOG.error("Error while loading group.", e); //$NON-NLS-1$
         }
     }
 
@@ -279,7 +283,7 @@ public class PersonPage extends BaseWizardPage {
             retrieveCommand = getCommandService().executeCommand(retrieveCommand);              
             scope = retrieveCommand.getElement();
         } catch (CommandException e) {
-            LOG.error("Error while loading group.", e);
+            LOG.error("Error while loading group.", e); //$NON-NLS-1$
         }
     }
     

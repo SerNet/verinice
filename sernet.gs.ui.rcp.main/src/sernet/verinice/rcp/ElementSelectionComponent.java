@@ -22,6 +22,7 @@ package sernet.verinice.rcp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -77,13 +78,7 @@ import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
  */
 public class ElementSelectionComponent {
     private transient Logger log = Logger.getLogger(ElementSelectionComponent.class); 
-    
-    private Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ElementSelectionComponent.class);
-        }
-        return log;
-    }
+
     private Composite container;
 
     private TableViewer viewer;
@@ -101,9 +96,11 @@ public class ElementSelectionComponent {
     private static final String COLUMN_IMG = "_img"; //$NON-NLS-1$
     private static final String COLUMN_SCOPE_ID= "_scope_id"; //$NON-NLS-1$
     private static final String COLUMN_LABEL = "_label"; //$NON-NLS-1$
-    private static HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
+    private static Map<Integer, String> titleMap = new HashMap<Integer, String>();
     
     private List<CnATreeElement> selectedElements = new ArrayList<CnATreeElement>();
+    
+    private Integer height;
     
     public ElementSelectionComponent(Composite container, String type, Integer scopeId) {
         this(container, type, scopeId, null);
@@ -187,6 +184,9 @@ public class ElementSelectionComponent {
         formData3.left = new FormAttachment(0, formAttachmentDefaultOffset);
         formData3.right = new FormAttachment(formData3Numerator, (-1) * formAttachmentDefaultOffset);
         formData3.bottom = new FormAttachment(formData3Numerator, (-1) * formAttachmentDefaultOffset);
+        if(getHeight()!=null) {
+            formData3.height = getHeight();
+        }
         viewer.getTable().setLayoutData(formData3);
         viewer.getTable().setHeaderVisible(false);
         viewer.getTable().setLinesVisible(true);
@@ -458,6 +458,14 @@ public class ElementSelectionComponent {
 
     public void setTypeId(String typeId) {
         this.typeId = typeId;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
     }
    
 }

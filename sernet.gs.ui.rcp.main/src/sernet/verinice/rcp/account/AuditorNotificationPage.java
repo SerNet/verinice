@@ -1,6 +1,7 @@
 package sernet.verinice.rcp.account;
 
 import org.apache.log4j.Logger;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -14,7 +15,6 @@ import org.eclipse.swt.widgets.Text;
 import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.KeyAdapter;
 import sernet.verinice.rcp.SelectionAdapter;
@@ -27,7 +27,7 @@ import sernet.verinice.rcp.SelectionAdapter;
 public class AuditorNotificationPage extends BaseWizardPage {
 
     private static final Logger LOG = Logger.getLogger(AuditorNotificationPage.class);    
-    public static final String PAGE_NAME = "account-wizard-auditor-notification-page";
+    public static final String PAGE_NAME = "account-wizard-auditor-notification-page"; //$NON-NLS-1$
      
     private boolean isGlobal = false;
     private boolean isDeadlineWarning = false;
@@ -49,8 +49,8 @@ public class AuditorNotificationPage extends BaseWizardPage {
 
     @Override
     protected void initGui(Composite composite) {
-        setTitle("Account (6/7)");
-        setMessage("Auditor notifications");
+        setTitle(Messages.AuditorNotificationPage_1);
+        setMessage(Messages.AuditorNotificationPage_2);
 
         addAllControlsFields(composite, Configuration.PROP_AUDITOR_NOTIFICATION_GLOBAL_ALL, Configuration.PROP_AUDITOR_NOTIFICATION_GLOBAL_SELF);
         addDeadlineFields(composite);      
@@ -61,7 +61,7 @@ public class AuditorNotificationPage extends BaseWizardPage {
     }
     
     protected void addAllControlsFields(Composite composite, final String keyYes, final String keyNo) {
-        createLabel(composite, "All controls / only my own");
+        createLabel(composite, Messages.AuditorNotificationPage_3);
         comboGlobal = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
         comboGlobal.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         comboGlobal.addSelectionListener(new SelectionAdapter() {
@@ -80,8 +80,8 @@ public class AuditorNotificationPage extends BaseWizardPage {
                 return element.getValue();
             }       
         });   
-        comboModelGlobal.add(new KeyValue(keyYes, "All controls"));
-        comboModelGlobal.add(new KeyValue(keyNo, "Only my own"));
+        comboModelGlobal.add(new KeyValue(keyYes, Messages.AuditorNotificationPage_4));
+        comboModelGlobal.add(new KeyValue(keyNo, Messages.AuditorNotificationPage_5));
         Display.getDefault().syncExec(new Runnable(){
             @Override
             public void run() {
@@ -96,14 +96,14 @@ public class AuditorNotificationPage extends BaseWizardPage {
     
 
     protected void addDeadlineFields(Composite composite) {
-        cbDeadlineWarning = createCheckbox(composite, "Deadline warning", isDeadlineWarning);
+        cbDeadlineWarning = createCheckbox(composite, Messages.AuditorNotificationPage_6, isDeadlineWarning);
         cbDeadlineWarning.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isDeadlineWarning = cbDeadlineWarning.getSelection();
             } 
         });
-        final String label = "Deadline warning: ending in X days";
+        final String label = Messages.AuditorNotificationPage_7;
         createLabel(composite, label);
         textDeadlineInDays = createTextfield(composite);
         textDeadlineInDays.setText(Integer.toString(getDeadlineInDays()));
@@ -114,8 +114,8 @@ public class AuditorNotificationPage extends BaseWizardPage {
                     deadlineInDays = Integer.parseInt(textDeadlineInDays.getText());
                     setErrorMessage(null);
                 } catch(NumberFormatException ex) {
-                    setErrorMessage("Please enter a number in field \"" + label + "\".");
-                    textDeadlineInDays.setText("14");
+                    setErrorMessage(NLS.bind(Messages.AuditorNotificationPage_0, label));
+                    textDeadlineInDays.setText("14"); //$NON-NLS-1$
                     deadlineInDays = 14;
                 }
             }

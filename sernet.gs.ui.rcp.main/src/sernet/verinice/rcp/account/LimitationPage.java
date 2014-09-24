@@ -1,10 +1,7 @@
 package sernet.verinice.rcp.account;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
@@ -18,7 +15,7 @@ import sernet.verinice.rcp.SelectionAdapter;
 public class LimitationPage extends BaseWizardPage {
 
     private static final Logger LOG = Logger.getLogger(LimitationPage.class);    
-    public static final String PAGE_NAME = "account-wizard-limitation-page";
+    public static final String PAGE_NAME = "account-wizard-limitation-page"; //$NON-NLS-1$
      
     private boolean isAdmin = false;
     private boolean isScopeOnly = false;
@@ -38,38 +35,38 @@ public class LimitationPage extends BaseWizardPage {
     
     @Override
     protected void initGui(Composite composite) {
-        setTitle("Account (3/7)");
-        setMessage("Account limitations");
+        setTitle(Messages.LimitationPage_1);
+        setMessage(Messages.LimitationPage_2);
         
-        cbAdmin = createCheckbox(composite, "Administrator", isAdmin);
+        cbAdmin = createCheckbox(composite, Messages.LimitationPage_3, isAdmin);
         cbAdmin.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isAdmin = cbAdmin.getSelection();
             } 
         });
-        cbScopeOnly = createCheckbox(composite, "Scope only", isScopeOnly);
+        cbScopeOnly = createCheckbox(composite, Messages.LimitationPage_4, isScopeOnly);
         cbScopeOnly.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isScopeOnly = cbScopeOnly.getSelection();
             } 
         });
-        cbDesktop = createCheckbox(composite, "Desktop access", isDesktop);
+        cbDesktop = createCheckbox(composite, Messages.LimitationPage_5, isDesktop);
         cbDesktop.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isDesktop = cbDesktop.getSelection();
             } 
         });
-        cbWeb = createCheckbox(composite, "Web access", isWeb);
+        cbWeb = createCheckbox(composite, Messages.LimitationPage_6, isWeb);
         cbWeb.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isWeb = cbWeb.getSelection();
             } 
         });
-        cbDeactivated = createCheckbox(composite, "Deactivated", isDeactivated);
+        cbDeactivated = createCheckbox(composite, Messages.LimitationPage_7, isDeactivated);
         cbDeactivated.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

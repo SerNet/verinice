@@ -1,17 +1,10 @@
 package sernet.verinice.rcp.account;
 
-import org.apache.commons.lang.Validate;
 import org.apache.log4j.Logger;
-import org.eclipse.jface.wizard.WizardPage;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.verinice.rcp.KeyAdapter;
 
 /**
@@ -22,7 +15,7 @@ import sernet.verinice.rcp.KeyAdapter;
 public class AuthenticationPage extends BaseWizardPage {
 
     private static final Logger LOG = Logger.getLogger(AuthenticationPage.class);    
-    public static final String PAGE_NAME = "account-wizard-authentication-page";
+    public static final String PAGE_NAME = "account-wizard-authentication-page"; //$NON-NLS-1$
      
     private String login;
     private String password;
@@ -41,47 +34,47 @@ public class AuthenticationPage extends BaseWizardPage {
    
     @Override
     protected void initGui(Composite composite) {
-        setTitle("Account (2/7)");
-        setMessage("Login, Password, Email");
+        setTitle(sernet.verinice.rcp.account.Messages.AuthenticationPage_1);
+        setMessage(sernet.verinice.rcp.account.Messages.AuthenticationPage_2);
         
-        createLabel(composite, "Login name");
+        createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_3);
         textLogin = createTextfield(composite);
         setText(textLogin,getLogin());
         textLogin.addKeyListener(new KeyAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
-                login = textLogin.getText();
+                login = avoidEmptyStrings(textLogin.getText());
                 setPageComplete(isPageComplete());
             }
         });
 
-        createLabel(composite, "Password");       
+        createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_4);       
         textPassword = createPasswordField(composite);
         textPassword.addKeyListener(new KeyAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
-                password = textPassword.getText();
+                password = avoidEmptyStrings(textPassword.getText());
                 setPageComplete(isPageComplete());
             }
         });
 
-        createLabel(composite, "Retype password");     
+        createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_5);     
         textPassword2 = createPasswordField(composite);
         textPassword2.addKeyListener(new KeyAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
-                password2 = textPassword2.getText();
+                password2 = avoidEmptyStrings(textPassword2.getText());
                 setPageComplete(isPageComplete());
             }
         });
         
-        createLabel(composite, "Email");
+        createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_6);
         textEmail = createTextfield(composite);
         setText(textEmail, getEmail());
         textEmail.addKeyListener(new KeyAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
-                email = textEmail.getText();
+                email = avoidEmptyStrings(textEmail.getText());
                 setPageComplete(isPageComplete());
             }
         });
@@ -112,10 +105,10 @@ public class AuthenticationPage extends BaseWizardPage {
         if(valid && getPassword()!=null) {
             valid = getPassword().equals(getPassword2());
             if(!valid) {
-                setErrorMessage("The passwords does not match.");
+                setErrorMessage(sernet.verinice.rcp.account.Messages.AuthenticationPage_7);
             } else {
                 setErrorMessage(null);
-                setMessage("Login, Password, Email");
+                setMessage(sernet.verinice.rcp.account.Messages.AuthenticationPage_8);
             }   
         }
         return valid;

@@ -1,14 +1,11 @@
 package sernet.verinice.rcp.account;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Group;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
@@ -31,7 +28,7 @@ public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGrou
             initData();
             initGui(parent);
         } catch( CommandException e ) {
-           String message = "Error while creating widget.";
+           String message = "Error while creating widget."; //$NON-NLS-1$
            LOG.error(message, e);
            throw new RuntimeException(message, e);
         }

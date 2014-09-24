@@ -21,7 +21,6 @@ package sernet.verinice.rcp.account;
 
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
@@ -34,8 +33,6 @@ import sernet.verinice.model.common.configuration.Configuration;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class AccountWizard extends Wizard {
-
-    private static final Logger LOG = Logger.getLogger(AccountWizard.class);
     
     private Configuration account;
     
@@ -51,7 +48,7 @@ public class AccountWizard extends Wizard {
     public AccountWizard() {
         super();
         setNeedsProgressMonitor(true);
-        setWindowTitle("Account");
+        setWindowTitle(Messages.AccountWizard_0);
         account = new Configuration();
     }
     

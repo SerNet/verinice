@@ -29,7 +29,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CBanner;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -106,7 +105,7 @@ public abstract class MultiselectWidget<T> {
             initData();
             initGui(parent);
         } catch( CommandException e ) {
-           String message = "Error while creating widget.";
+           String message = "Error while creating widget."; //$NON-NLS-1$
            LOG.error(message, e);
            throw new RuntimeException(message, e);
         }
@@ -187,9 +186,9 @@ public abstract class MultiselectWidget<T> {
 
     private void createFilterTextfield(Composite filterComp) {
         Label label = new Label(filterComp, SWT.NONE);
-        label.setText("Filter");
+        label.setText(Messages.MultiselectWidget_1);
         label = new Label(filterComp, SWT.NONE);
-        label.setText("");
+        label.setText(""); //$NON-NLS-1$
         filter = new Text(filterComp, SWT.BORDER);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         filter.setLayoutData(gridData);
@@ -214,7 +213,7 @@ public abstract class MultiselectWidget<T> {
 
     private void createSelectedCheckbox(Composite filterComp) {
         checkboxOnlySelected = new Button(filterComp, SWT.CHECK);
-        checkboxOnlySelected.setText("Show only selected");
+        checkboxOnlySelected.setText(Messages.MultiselectWidget_3);
         checkboxOnlySelected.setSelection(showOnlySelected);
         checkboxOnlySelected.addSelectionListener(new SelectionListener() {          
             @Override

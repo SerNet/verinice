@@ -1,7 +1,6 @@
 package sernet.verinice.rcp.account;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -17,7 +16,7 @@ import sernet.verinice.rcp.SelectionAdapter;
 public class NotificationPage extends AuditorNotificationPage {
 
     private static final Logger LOG = Logger.getLogger(NotificationPage.class);    
-    public static final String PAGE_NAME = "account-wizard-notification-page";
+    public static final String PAGE_NAME = "account-wizard-notification-page"; //$NON-NLS-1$
      
     private boolean isNotification = false;
     private boolean isNewTasks = false;
@@ -33,10 +32,10 @@ public class NotificationPage extends AuditorNotificationPage {
     
     @Override
     protected void initGui(Composite composite) {
-        setTitle("Account (5/7)");
-        setMessage("Mail notifications");
+        setTitle(Messages.NotificationPage_1);
+        setMessage(Messages.NotificationPage_2);
 
-        cbNotification = createCheckbox(composite, "Mail notification", isNotification);
+        cbNotification = createCheckbox(composite, Messages.NotificationPage_3, isNotification);
         cbNotification.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -44,14 +43,14 @@ public class NotificationPage extends AuditorNotificationPage {
             } 
         });
         addAllControlsFields(composite, Configuration.PROP_NOTIFICATION_GLOBAL_ALL, Configuration.PROP_NOTIFICATION_GLOBAL_SELF);
-        cbNewTasks = createCheckbox(composite, "New tasks to be audited", isNewTasks);
+        cbNewTasks = createCheckbox(composite, Messages.NotificationPage_4, isNewTasks);
         cbNewTasks.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isNewTasks = cbNewTasks.getSelection();
             } 
         });
-        cbModifyReminder = createCheckbox(composite, "Modified controls", isModifyReminder);
+        cbModifyReminder = createCheckbox(composite, Messages.NotificationPage_5, isModifyReminder);
         cbModifyReminder.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {

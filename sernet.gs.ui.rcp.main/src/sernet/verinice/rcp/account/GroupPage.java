@@ -7,10 +7,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IAccountService;
-import sernet.verinice.iso27k.rcp.ElementMultiselectWidget;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.rcp.MultiselectWidget;
 
 /**
  * Wizard page of wizard {@link AccountWizard}.
@@ -20,7 +18,7 @@ import sernet.verinice.rcp.MultiselectWidget;
 public class GroupPage extends BaseWizardPage {
 
     private static final Logger LOG = Logger.getLogger(GroupPage.class);    
-    public static final String PAGE_NAME = "account-wizard-group-page";
+    public static final String PAGE_NAME = "account-wizard-group-page"; //$NON-NLS-1$
      
     private Configuration account;
     
@@ -39,8 +37,8 @@ public class GroupPage extends BaseWizardPage {
 
     @Override
     protected void initGui(Composite composite) {
-        setTitle("Account (4/7)");
-        setMessage("Account groups");
+        setTitle(Messages.GroupPage_1);
+        setMessage(Messages.GroupPage_2);
         
         groupWidget = new AccountGroupMultiselectWidget(composite, account);
     }
