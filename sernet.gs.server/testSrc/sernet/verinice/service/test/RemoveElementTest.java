@@ -35,7 +35,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadConfiguration;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Gebaeude;
@@ -58,6 +57,7 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.LoadBSIModel;
+import sernet.verinice.service.commands.LoadConfiguration;
 import sernet.verinice.service.commands.LoadElementByTypeId;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
@@ -66,8 +66,6 @@ import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.iso27k.LoadModel;
 import sernet.verinice.service.sync.VeriniceArchive;
-import sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper;
-import sernet.verinice.service.test.helper.vnaimport.BeforeAllVNAImportHelper;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
