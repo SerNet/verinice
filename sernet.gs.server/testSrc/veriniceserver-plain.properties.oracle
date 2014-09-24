@@ -27,7 +27,7 @@ hibernate.config.resource=classpath:/server_hibernate_oracle.cfg.xml
 jdbc.driverClass=oracle.jdbc.OracleDriver
 jdbc.hibernate.dialect=sernet.verinice.hibernate.Oracle10gNclobDialect
 jdbc.url=jdbc:oracle:thin:@wendy.sernet.private:1521:XE
-jdbc.username=verinice
+jdbc.username=vnjunit
 jdbc.password=geheim
 ##################################################
 
