@@ -33,6 +33,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -754,8 +755,11 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
             Configuration configuration = accountService.getAccountByName(getSelectedAccount());
             TitleAreaDialog accountDialog = createWizard(configuration);
-            accountDialog.open();
 
+            if (accountDialog.open() != Window.OK) {
+                return;
+            }
+            
             try {
                 PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new UpdateConfigurationCallbackHelper(configuration));
             } catch (Exception e) {
