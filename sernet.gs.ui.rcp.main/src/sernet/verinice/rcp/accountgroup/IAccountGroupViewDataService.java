@@ -21,8 +21,6 @@ package sernet.verinice.rcp.accountgroup;
 
 import java.util.Set;
 
-import sernet.verinice.model.common.configuration.Configuration;
-
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *

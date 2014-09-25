@@ -34,7 +34,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.window.Window;
-import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -146,9 +145,11 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     private void initLabelsForAccountLists() {
+
+        final int horizontal_label_span = 2;
         Label accountsInGroup = new Label(groupViewComposite, SWT.NULL);
         accountsInGroup.setLayoutData(new GridData());
-        ((GridData) accountsInGroup.getLayoutData()).horizontalSpan = 2;
+        ((GridData) accountsInGroup.getLayoutData()).horizontalSpan = horizontal_label_span;
         accountsInGroup.setText(Messages.GroupView_3);
 
         Label accounts = new Label(groupViewComposite, SWT.NULL);
@@ -157,9 +158,10 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     private void initLabelForAccountGroupList() {
+        final int horizontal_label_span = 4;
         Label groupLabel = new Label(groupViewComposite, SWT.NULL);
         groupLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        ((GridData) groupLabel.getLayoutData()).horizontalSpan = 4;
+        ((GridData) groupLabel.getLayoutData()).horizontalSpan = horizontal_label_span;
         groupLabel.setText(Messages.GroupView_2);
     }
 
@@ -171,17 +173,21 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     private void initMainComposite() {
+
+        final int grid_columns = 4;
+
         groupViewComposite = new Composite(parent, SWT.FILL);
         GridLayout gridLayout = new GridLayout();
         groupViewComposite.setLayout(gridLayout);
-        gridLayout.numColumns = 4;
+        gridLayout.numColumns = grid_columns;
         groupViewComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     }
 
     private Group initButtonGroupComposite() {
+        final int grid_columns = 1;
         Group connectGroupsWithAccounts = new Group(groupViewComposite, SWT.NULL);
         connectGroupsWithAccounts.setLayout(new GridLayout());
-        ((GridLayout) connectGroupsWithAccounts.getLayout()).numColumns = 1;
+        ((GridLayout) connectGroupsWithAccounts.getLayout()).numColumns = grid_columns;
         connectGroupsWithAccounts.setLayoutData(new GridData(GridData.FILL_VERTICAL));
         return connectGroupsWithAccounts;
     }
@@ -334,6 +340,68 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     }
 
+    private final class SelectionEventHandler implements Runnable {
+
+        private final SelectionEvent e;
+
+        private SelectionEventHandler(SelectionEvent e) {
+            this.e = e;
+        }
+
+        @Override
+        public void run() {
+            try {
+                switchButtons(false);
+                handleSelection(e);
+
+            } catch (RuntimeException ex) {
+                throw (RuntimeException) ex;
+            } catch (Exception ex) {
+                LOG.error(String.format("problems with updating group view: %s", ex.getLocalizedMessage()), ex);
+            } finally {
+                switchButtons(true);
+            }
+        }
+
+        private void handleSelection(final SelectionEvent e) {
+            if (isGroupSelected()) {
+
+                if (e.getSource() == groupList) {
+                    String[] accounts = accountGroupDataService.getAccountNamesForGroup(getSelectedGroup());
+                    groupToAccountList.setItems(accounts);
+                }
+
+                else if (e.getSource() == groupToAccountList) {
+                    accountList.deselectAll();
+                }
+
+                else if (e.getSource() == accountList) {
+                    groupToAccountList.deselectAll();
+                }
+
+                else if (e.getSource() == addBtn) {
+                    addAccounts(accountList.getSelection());
+                }
+
+                else if (e.getSource() == addAllBtn) {
+                    addAllAccounts(accountList.getItems());
+                }
+
+                else if (e.getSource() == removeBtn) {
+                    removeAccounts(groupToAccountList.getSelection());
+                }
+
+                else if (e.getSource() == removeAllBtn) {
+                    removeAllAccounts(groupToAccountList.getItems());
+                }
+            }
+
+            if (e.getSource() == editAccountBtn) {
+                updateConfiguration();
+            }
+        }
+    }
+
     private final class UpdateGroupsJob extends WorkspaceJob {
 
         private final SelectionEvent e;
@@ -355,7 +423,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
             } catch (Exception e) {
                 LOG.error(Messages.GroupView_1, e);
-                status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.GroupView_1, e);
+                status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.GroupView_1, e);
             } finally {
                 monitor.done();
             }
@@ -364,61 +432,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     private void updateGroups(final SelectionEvent e) {
-        getDisplay().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                try {
-
-                    switchButtons(false);
-
-                    if (isGroupSelected()) {
-
-                        if (e.getSource() == groupList) {
-                            String[] accounts = accountGroupDataService.getAccountNamesForGroup(getSelectedGroup());
-                            groupToAccountList.setItems(accounts);
-                        }
-
-                        else if (e.getSource() == groupToAccountList) {
-                            accountList.deselectAll();
-                        }
-
-                        else if (e.getSource() == accountList) {
-                            groupToAccountList.deselectAll();
-                        }
-
-                        else if (e.getSource() == addBtn) {
-                            addAccounts(accountList.getSelection());
-                        }
-
-                        else if (e.getSource() == addAllBtn) {
-                            addAllAccounts(accountList.getItems());
-                        }
-
-                        else if (e.getSource() == removeBtn) {
-                            removeAccounts(groupToAccountList.getSelection());
-                        }
-
-                        else if (e.getSource() == removeAllBtn) {
-                            removeAllAccounts(groupToAccountList.getItems());
-                        }
-                    }
-
-                    if (e.getSource() == editAccountBtn) {
-                        updateConfiguration();
-                    }
-                } catch (Exception ex) {
-
-                    LOG.error(String.format("problems with updating group view: %s", ex.getLocalizedMessage()), ex);
-
-                    if (ex instanceof RuntimeException) {
-                        throw (RuntimeException) ex;
-                    }
-                } finally {
-                    switchButtons(true);
-                }
-            }
-
-        });
+        getDisplay().syncExec(new SelectionEventHandler(e));
     }
 
     private void switchButtons(boolean enabled) {
@@ -447,7 +461,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
             } catch (Exception e) {
                 LOG.error(Messages.GroupView_1, e);
-                status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.GroupView_1, e);
+                status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.GroupView_1, e);
             } finally {
                 monitor.done();
             }
@@ -509,11 +523,13 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                         String message = String.format(Messages.GroupView_25, connectedAccounts, connectedObjects);
                         MessageDialog dialog = new MessageDialog(parent.getShell(), Messages.GroupView_16, null, message, MessageDialog.ERROR, new String[] { Messages.GroupView_26, Messages.GroupView_27 }, 0);
                         int result = dialog.open();
-                        if (result == 0)
-                            if (!isGroupEmptyAndNotConnectedToObject())
+                        if (result == 0) {
+                            if (!isGroupEmptyAndNotConnectedToObject()) {
                                 openSecondWarningDialog();
-                            else
+                            } else {
                                 deleteGroup();
+                            }
+                        }
                     } catch (Exception ex) {
                         LOG.error("error while deleting group", ex);
                     }
@@ -533,8 +549,9 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                             try {
                                 MessageDialog dialog = new MessageDialog(parent.getShell(), Messages.GroupView_28, null, Messages.GroupView_29, MessageDialog.ERROR, new String[] { Messages.GroupView_26, Messages.GroupView_27 }, 0);
                                 int result = dialog.open();
-                                if (result == 0)
+                                if (result == 0) {
                                     deleteGroup();
+                                }
                             } catch (Exception ex) {
                                 LOG.error("error while deleting group", ex);
                             }
@@ -666,10 +683,11 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             if (isStandardGroup()) {
                 openStandardGroupWarningDialog(Messages.GroupView_35);
                 super.closeTray();
-            } else if (isGroupSelected())
+            } else if (isGroupSelected()) {
                 this.selection = getSelectedGroup();
-            else
+            } else {
                 throw new IllegalSelectionException("an account group must be selected");
+            }
         }
 
         @Override
@@ -776,6 +794,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         }
 
+        @Override
         public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             super.run(monitor);
             initData();

@@ -68,7 +68,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     }
 
     @Override
-    final public void loadAccountGroupData() {
+    public final void loadAccountGroupData() {
 
         List<AccountGroup> accountGroups = accountService.listGroups();
 
@@ -144,21 +144,21 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     public void editAccountGroupName(String newRoleName, String oldRoleName) {
 
         if (newRoleName.equals(oldRoleName)) {
-           throw new IllegalArgumentException(String.format("name is not changed: %s", newRoleName));
+            throw new IllegalArgumentException(String.format("name is not changed: %s", newRoleName));
         }
 
         // delete role from configurations
-        if(!accountGroupToConfiguration.containsKey(newRoleName)) {
+        if (!accountGroupToConfiguration.containsKey(newRoleName)) {
             accountGroupToConfiguration.put(newRoleName, new TreeSet<String>(new NumericStringComparator()));
             accountService.createAccountGroup(newRoleName);
         }
-        
+
         accountGroupToConfiguration.get(newRoleName).addAll(accountGroupToConfiguration.get(oldRoleName));
         accountGroupToConfiguration.remove(oldRoleName);
 
         accountService.deleteAccountGroup(oldRoleName);
         accountService.deleteRole(accountGroupToConfiguration.get(newRoleName), oldRoleName);
-        
+
         accountService.addRole(accountGroupToConfiguration.get(newRoleName), newRoleName);
         accountService.updatePermissions(newRoleName, oldRoleName);
     }
