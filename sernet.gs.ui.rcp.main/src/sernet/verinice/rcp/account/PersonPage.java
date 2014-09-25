@@ -68,7 +68,7 @@ public class PersonPage extends BaseWizardPage {
         selectMessage();   
         
         Label label = new Label(parent, SWT.NONE);
-        label.setText("Scope");
+        label.setText(Messages.PersonPage_0);
         comboScope = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
         comboScope.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         comboScope.setEnabled(isNewAccount());
@@ -85,7 +85,7 @@ public class PersonPage extends BaseWizardPage {
         });
         
         label = new Label(parent, SWT.NONE);
-        label.setText("Gruppe");
+        label.setText(Messages.PersonPage_5);
         comboGroup = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);      
         comboGroup.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
         comboGroup.setEnabled(isNewAccount());

@@ -23,6 +23,8 @@ import org.junit.Test;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataForDeletion;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
+import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
+import sernet.gs.web.AssetNavigationBean;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
@@ -202,6 +204,20 @@ public class AccountServiceTest extends CommandServiceProvider {
             assertEquals("Account is admin account", false, configuration.isAdminUser());
 
         }
+    }
+    
+    @Test
+    public void testGetById() throws Exception {
+        List<Configuration> configurations = accountService.findAccounts(new AccountSearchParameter());
+        boolean userFound = false;
+        for (Configuration configuration : configurations) {
+            userFound = true;
+            Integer dbId = configuration.getDbId();
+            Configuration account = accountService.getAccountById(dbId);
+            assertNotNull("Account is null, db-id: " + dbId, account);
+            assertEquals("Db-id of account is not: " + dbId, dbId, account.getDbId());
+        }
+        assertTrue("No user found", userFound);
     }
 
     @Test

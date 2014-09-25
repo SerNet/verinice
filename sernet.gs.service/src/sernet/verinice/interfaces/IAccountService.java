@@ -40,6 +40,8 @@ public interface IAccountService {
     public void deactivate(Configuration account);
 
     public Configuration getAccountByName(String name);
+    
+    public Configuration getAccountById(Integer dbId);
 
     public Set<String> listAccounts();
 

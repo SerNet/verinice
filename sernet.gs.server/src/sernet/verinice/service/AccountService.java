@@ -84,15 +84,19 @@ public class AccountService implements IAccountService, Serializable {
             for (Configuration configuration : resultNoProps) {
                 dbIds.add(configuration.getDbId());
             }
-            hqlQuery = AccountSearchQueryFactory.createRetrieveHql(dbIds);
-            hqlQuery.setNames(new String[] { "dbIds" });
-            Set<Configuration> set = new HashSet<Configuration>(getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getNames(), hqlQuery.getParams()));
-            result = new ArrayList<Configuration>(set);
+            result = loadAccounts(dbIds);
        } else {
            result = Collections.emptyList(); 
        }
        Collections.sort(result);
        return result;
+    }
+
+    private List<Configuration> loadAccounts(Set<Integer> dbIds) {
+        HqlQuery hqlQuery = AccountSearchQueryFactory.createRetrieveHql(dbIds);
+        hqlQuery.setNames(new String[] { "dbIds" });
+        Set<Configuration> set = new HashSet<Configuration>(getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getNames(), hqlQuery.getParams()));
+        return new ArrayList<Configuration>(set);
     }
 
     @Override
@@ -360,6 +364,20 @@ public class AccountService implements IAccountService, Serializable {
         }
 
         return null;
+    }
+    
+    @Override
+    public Configuration getAccountById(Integer dbId) {
+        Set<Integer> dbIdSet = new HashSet<Integer>();
+        dbIdSet.add(dbId);
+        List<Configuration> result = loadAccounts(dbIdSet);
+        if(result.size()>1) {
+            throw new RuntimeException("More than one account found for db-id: " + dbId);
+        }
+        if(result.isEmpty()) {
+            return null;
+        }
+        return result.get(0);
     }
     
     @SuppressWarnings("unchecked")

@@ -404,6 +404,7 @@ public class AccountView extends RightsEnabledView {
                 if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof Configuration) {
                     try {
                         Configuration account = (Configuration) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
+                        account = getAccountService().getAccountById(account.getDbId());
                         editAction.setConfiguration(account);
                         editAction.run();
                         findAccounts();
@@ -549,6 +550,7 @@ public class AccountView extends RightsEnabledView {
             @Override
             public void loaded(ISO27KModel model) {
                 JobScheduler.scheduleInitJob(initDataJob); 
+                CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
             }             
         };
         CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
