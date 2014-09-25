@@ -22,6 +22,7 @@ package sernet.verinice.rcp.accountgroup;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -40,13 +41,14 @@ import sernet.verinice.service.account.AccountSearchParameterFactory;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
+@SuppressWarnings("unchecked")
 public class AccountGroupDataService implements IAccountGroupViewDataService {
 
     private Logger log = Logger.getLogger(AccountGroupDataService.class);
 
     private IAccountService accountService;
 
-    private TreeMap<String, Set<String>> accountGroupToConfiguration;
+    private Map<String, Set<String>> accountGroupToConfiguration;
 
     private Set<String> accounts;
 
@@ -65,7 +67,6 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         return convertToStringArray(accounts);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     final public void loadAccountGroupData() {
 
@@ -79,8 +80,9 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
             IAccountSearchParameter parameter = AccountSearchParameterFactory.createAccountGroupParameter(accountGroup.getName());
             List<Configuration> configurationsForAccountGroup = accountService.findAccounts(parameter);
             accountGroupToConfiguration.put(accountGroup.getName(), new HashSet<String>());
-            for (Configuration account : configurationsForAccountGroup)
+            for (Configuration account : configurationsForAccountGroup) {
                 accountGroupToConfiguration.get(accountGroup.getName()).add(account.getUser());
+            }
         }
     }
 
@@ -89,7 +91,6 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         return convertToStringArray(accountGroupToConfiguration.get(accountGroupName));
     }
 
-    @SuppressWarnings("unchecked")
     private <T> String[] convertToStringArray(Set<T> accountGroupOrConfiguration) {
 
         Set<String> set = new TreeSet<String>(new NumericStringComparator());
@@ -110,7 +111,6 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void addAccountGroup(String accountGroupName) {
 
@@ -127,8 +127,9 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
 
             Set<String> selectedAccounts = accountService.addRole(new HashSet<String>(Arrays.asList(accountNames)), groupName);
 
-            for (String account : selectedAccounts)
+            for (String account : selectedAccounts) {
                 accountGroupToConfiguration.get(groupName).add(account);
+            }
 
             return convertToStringArray(accountGroupToConfiguration.get(groupName));
 
@@ -139,12 +140,12 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         return new String[] {};
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void editAccountGroupName(String newRoleName, String oldRoleName) {
 
-        if (newRoleName.equals(oldRoleName))
-            new IllegalArgumentException(String.format("name is not changed: %s", newRoleName));
+        if (newRoleName.equals(oldRoleName)) {
+           throw new IllegalArgumentException(String.format("name is not changed: %s", newRoleName));
+        }
 
         // delete role from configurations
         if(!accountGroupToConfiguration.containsKey(newRoleName)) {
@@ -165,12 +166,12 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     @Override
     public Set<String> deleteAccountGroup(String role) {
 
-        Set<String> accounts = accountGroupToConfiguration.get(role);
+        Set<String> evictedAccounts = accountGroupToConfiguration.get(role);
         accountGroupToConfiguration.remove(role);
 
         accountService.deleteAccountGroup(role);
         accountService.deletePermissions(role);
-        return accountService.deleteRole(accounts, role);
+        return accountService.deleteRole(evictedAccounts, role);
     }
 
     @Override
