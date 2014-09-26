@@ -50,10 +50,10 @@ import sernet.verinice.service.account.AccountSearchParameterFactory;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial", "unchecked"})
 public class AccountService implements IAccountService, Serializable {
 
-    private final static Logger LOG = Logger.getLogger(AccountService.class);
+    private static final Logger LOG = Logger.getLogger(AccountService.class);
 
     private IDao<AccountGroup, Serializable> accountGroupDao;
     private IBaseDao<Configuration, Serializable> configurationDao;
@@ -66,7 +66,7 @@ public class AccountService implements IAccountService, Serializable {
 
     private IBaseDao<Permission, Serializable> permissionDao;
 
-    @SuppressWarnings("unchecked")
+   
     @Override
     public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
@@ -77,7 +77,6 @@ public class AccountService implements IAccountService, Serializable {
     }
 
     private List<Configuration> initializeProperties(List<Configuration> resultNoProps) {
-        HqlQuery hqlQuery;
         List<Configuration> result;
         if (resultNoProps != null && !resultNoProps.isEmpty()) {
             Set<Integer> dbIds = new HashSet<Integer>(resultNoProps.size());
@@ -126,12 +125,12 @@ public class AccountService implements IAccountService, Serializable {
 
         Set<String> accounts = listAccounts();
 
-        if (accounts.contains(name))
+        if (accounts.contains(name)) {
             throw new IllegalArgumentException("group name is equivalent to an account name");
+        }
 
         AccountGroup group = new AccountGroup(name);
-        AccountGroup savedGroup = getAccountGroupDao().merge(group);
-        return savedGroup;
+        return getAccountGroupDao().merge(group);
     }
 
     @Override
@@ -186,12 +185,12 @@ public class AccountService implements IAccountService, Serializable {
         String hqlQuery = " FROM AccountGroup accountGroup WHERE name = ?";
         Object[] params = new Object[] { name };
 
-        @SuppressWarnings("unchecked")
-        List<AccountGroup> accountGroups = (List<AccountGroup>) getAccountGroupDao().findByQuery(hqlQuery, params);
+        List<AccountGroup> accountGroups = getAccountGroupDao().findByQuery(hqlQuery, params);
 
         // name of a group is unique, so there only exists one result
-        if (accountGroups != null && !accountGroups.isEmpty())
+        if (accountGroups != null && !accountGroups.isEmpty()) {
             return accountGroups.get(0);
+        }
 
         return null;
     }
@@ -271,6 +270,7 @@ public class AccountService implements IAccountService, Serializable {
         return result;
     }
 
+    @Override
     public void deletePermissions(String role) {
         String hqlQuery = "delete Permission where role = ?";
         String[] params = new String[] { role };
@@ -278,6 +278,7 @@ public class AccountService implements IAccountService, Serializable {
         rightsServerHandler.discardData();
     }
 
+    @Override
     public void updatePermissions(String newRole, String oldRole){
         String hqlQuery = "update Permission set role = ? where role = ?";
         String[] params = new String[] { newRole, oldRole };
@@ -311,7 +312,7 @@ public class AccountService implements IAccountService, Serializable {
 
     private List<Configuration> getAllConfigurations() {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createRetrieveAllConfigurations();
-        List<Configuration> configurations = (List<Configuration>) getConfigurationDao().findByQuery(hqlQuery.getHql(), new String[] {}, new Object[] {});
+        List<Configuration> configurations = getConfigurationDao().findByQuery(hqlQuery.getHql(), new String[] {}, new Object[] {});
 
         return configurations == null ? new ArrayList<Configuration>() : configurations;
     }
@@ -320,8 +321,9 @@ public class AccountService implements IAccountService, Serializable {
         Set<Configuration> result = new HashSet<Configuration>();
         for (String username : usernames) {
             for (Configuration c : configurations) {
-                if (c.getUser().equals(username))
+                if (c.getUser().equals(username)) {
                     result.add(c);
+                }
             }
         }
 
@@ -336,7 +338,6 @@ public class AccountService implements IAccountService, Serializable {
         this.permissionDao = permissionDao;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public long countConnectObjectsForGroup(String groupName) {
         String hqlQuery = "select count(perm) from Permission perm where perm.role = ?";
@@ -350,7 +351,6 @@ public class AccountService implements IAccountService, Serializable {
         return 0;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Configuration getAccountByName(String name) {
 
@@ -380,7 +380,6 @@ public class AccountService implements IAccountService, Serializable {
         return result.get(0);
     }
     
-    @SuppressWarnings("unchecked")
     @Override
     public List<String> listGroupNames() {
         String hqlQuery = "select accountgroup.name from AccountGroup accountgroup";

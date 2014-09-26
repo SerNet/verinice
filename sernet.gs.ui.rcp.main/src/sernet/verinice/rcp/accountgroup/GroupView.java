@@ -142,10 +142,10 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     private void initLabelsForAccountLists() {
 
-        final int horizontal_label_span = 2;
+        final int horizontalLabelSpan = 2;
         Label accountsInGroup = new Label(groupViewComposite, SWT.NULL);
         accountsInGroup.setLayoutData(new GridData());
-        ((GridData) accountsInGroup.getLayoutData()).horizontalSpan = horizontal_label_span;
+        ((GridData) accountsInGroup.getLayoutData()).horizontalSpan = horizontalLabelSpan;
         accountsInGroup.setText(Messages.GroupView_3);
 
         Label accounts = new Label(groupViewComposite, SWT.NULL);
@@ -154,10 +154,10 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     private void initLabelForAccountGroupList() {
-        final int horizontal_label_span = 4;
+        final int horizontalLabelSpan = 4;
         Label groupLabel = new Label(groupViewComposite, SWT.NULL);
         groupLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        ((GridData) groupLabel.getLayoutData()).horizontalSpan = horizontal_label_span;
+        ((GridData) groupLabel.getLayoutData()).horizontalSpan = horizontalLabelSpan;
         groupLabel.setText(Messages.GroupView_2);
     }
 
@@ -170,20 +170,20 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     private void initMainComposite() {
 
-        final int grid_columns = 4;
+        final int gridColumns = 4;
 
         groupViewComposite = new Composite(parent, SWT.FILL);
         GridLayout gridLayout = new GridLayout();
         groupViewComposite.setLayout(gridLayout);
-        gridLayout.numColumns = grid_columns;
+        gridLayout.numColumns = gridColumns;
         groupViewComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
     }
 
     private Group initButtonGroupComposite() {
-        final int grid_columns = 1;
+        final int gridColumns = 1;
         Group connectGroupsWithAccounts = new Group(groupViewComposite, SWT.NULL);
         connectGroupsWithAccounts.setLayout(new GridLayout());
-        ((GridLayout) connectGroupsWithAccounts.getLayout()).numColumns = grid_columns;
+        ((GridLayout) connectGroupsWithAccounts.getLayout()).numColumns = gridColumns;
         connectGroupsWithAccounts.setLayoutData(new GridData(GridData.FILL_VERTICAL));
         return connectGroupsWithAccounts;
     }
@@ -204,7 +204,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         accountList = new List(groupViewComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
         accountList.setItems(new String[] {});
         GridData accountListGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.FILL_VERTICAL);
-        accountListGridData.heightHint = accountList.computeTrim(0, 0, 0, accountList.getItemHeight() * 12).height;
         accountList.setLayoutData(accountListGridData);
         accountList.addSelectionListener(this);
         accountList.addMouseListener(this);
@@ -214,7 +213,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         groupToAccountList = new List(groupViewComposite, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
         groupToAccountList.setItems(new String[] {});
         GridData groupAccountListGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL);
-        groupAccountListGridData.heightHint = groupToAccountList.computeTrim(0, 0, 0, groupList.getItemHeight() * 12).height;
         groupToAccountList.setLayoutData(groupAccountListGridData);
         groupToAccountList.addSelectionListener(this);
         groupToAccountList.addMouseListener(this);
@@ -223,8 +221,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     private GridData initGroupList() {
         groupList = new List(groupViewComposite, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
         GridData groupListGridData = new GridData(GridData.FILL_HORIZONTAL | GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL);
-        Rectangle trim = groupList.computeTrim(0, 0, 0, groupList.getItemHeight() * 12);
-        groupListGridData.heightHint = trim.height;
         groupList.setLayoutData(groupListGridData);
         groupList.addSelectionListener(this);
         groupList.addMouseListener(this);

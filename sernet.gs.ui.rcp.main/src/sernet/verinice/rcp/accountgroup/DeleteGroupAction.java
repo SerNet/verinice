@@ -26,14 +26,8 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
 
 class DeleteGroupAction extends Action {
 
-    /**
-     * 
-     */
     private final GroupView groupView;
 
-    /**
-     * @param groupView
-     */
     DeleteGroupAction(GroupView groupView) {
         this.groupView = groupView;
     }
