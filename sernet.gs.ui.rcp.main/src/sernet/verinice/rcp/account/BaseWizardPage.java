@@ -95,10 +95,11 @@ public abstract class BaseWizardPage extends WizardPage {
     }
     
     protected String avoidEmptyStrings(String s) {
+        String result = s;
         if(s!=null && s.isEmpty()) {
-            s=null;
+            result=null;
         }
-        return s;
+        return result;
     }
     
     protected void setText(Text text, String s) {

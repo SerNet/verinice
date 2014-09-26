@@ -91,7 +91,7 @@ public class AuthenticationPage extends BaseWizardPage {
     @Override
     public boolean isPageComplete() {
         boolean complete = (getLogin()!=null) 
-                && ((getPassword()!=null && getPassword2()!=null) || (getPassword()==null && getPassword2()==null))
+                && isPassword()
                 && (getEmail()!=null);
         boolean isPasswordValid = validatePassword();
         if (LOG.isDebugEnabled()) {
@@ -100,8 +100,12 @@ public class AuthenticationPage extends BaseWizardPage {
         return complete && isPasswordValid;
     }
 
+    private boolean isPassword() {
+        return (getPassword()!=null && getPassword2()!=null) || (getPassword()==null && getPassword2()==null);
+    }
+
     private boolean validatePassword() {
-        boolean valid = ((getPassword()!=null && getPassword2()!=null) || (getPassword()==null && getPassword2()==null));
+        boolean valid = isPassword();
         if(valid && getPassword()!=null) {
             valid = getPassword().equals(getPassword2());
             if(!valid) {
@@ -119,8 +123,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
 
     public void setLogin(String login) {
-        login = avoidEmptyStrings(login);
-        this.login = login;
+        this.login = avoidEmptyStrings(login);
     }
 
     public String getPassword() {
@@ -128,8 +131,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
 
     public void setPassword(String password) {
-        password = avoidEmptyStrings(password);
-        this.password = password;
+        this.password = avoidEmptyStrings(password);
     }
 
     public String getPassword2() {
@@ -137,8 +139,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
 
     public void setPassword2(String password2) {
-        password2 = avoidEmptyStrings(password2);
-        this.password2 = password2;
+        this.password2 = avoidEmptyStrings(password2);
     }
 
     public String getEmail() {
@@ -146,8 +147,7 @@ public class AuthenticationPage extends BaseWizardPage {
     }
 
     public void setEmail(String email) {
-        email = avoidEmptyStrings(email);
-        this.email = email;
+        this.email = avoidEmptyStrings(email);
     }
 
 }

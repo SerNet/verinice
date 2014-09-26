@@ -4,7 +4,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.ElementTitleCache;
@@ -16,7 +15,7 @@ class AccountTableSorter extends ViewerSorter {
     private static final int ASCENDING = 0;
     private int direction = ASCENDING;
     
-    NumericStringComparator nsc = new NumericStringComparator();
+    private static final NumericStringComparator nsc = new NumericStringComparator();
 
     public AccountTableSorter() {
         super();
@@ -39,9 +38,7 @@ class AccountTableSorter extends ViewerSorter {
      * @see org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
      */
     @Override
-    public int compare(Viewer viewer, Object e1, Object e2) {
-        Configuration a1 = (Configuration) e1;
-        Configuration a2 = (Configuration) e2;
+    public int compare(Viewer viewer, Object e1, Object e2) {    
         int rc = 0;
         if (e1 == null && e2 != null) {
             rc = 1;
@@ -49,6 +46,8 @@ class AccountTableSorter extends ViewerSorter {
             rc = -1;
         } else {
             // e1 and e2 != null
+            Configuration a1 = (Configuration) e1;
+            Configuration a2 = (Configuration) e2;
             rc = compareNullSafe(a1, a2);
         }
         // If descending order, flip the direction
@@ -65,11 +64,7 @@ class AccountTableSorter extends ViewerSorter {
         PersonAdapter adapter = new PersonAdapter(p1, p2);
         switch (propertyIndex) {
         case 0:  
-            String title1 = ElementTitleCache.get(p1.getScopeId());
-            String title2 = ElementTitleCache.get(p2.getScopeId());
-            if(title1!=null && title2!=null) {
-                rc = nsc.compare(title1.toLowerCase(), title2.toLowerCase());
-            }
+            rc = compareTitle(p1, p2);
             break;
         case 1:
             rc = adapter.compareParentName();
@@ -101,6 +96,16 @@ class AccountTableSorter extends ViewerSorter {
         
         default:
             rc = 0;
+        }
+        return rc;
+    }
+
+    private int compareTitle(CnATreeElement p1, CnATreeElement p2) {
+        int rc = 0;
+        String title1 = ElementTitleCache.get(p1.getScopeId());
+        String title2 = ElementTitleCache.get(p2.getScopeId());
+        if(title1!=null && title2!=null) {
+            rc = nsc.compare(title1.toLowerCase(), title2.toLowerCase());
         }
         return rc;
     }
