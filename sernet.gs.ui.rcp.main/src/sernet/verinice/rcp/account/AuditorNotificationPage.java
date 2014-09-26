@@ -16,7 +16,7 @@ import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.rcp.KeyAdapter;
+import sernet.verinice.rcp.TextEventAdapter;
 import sernet.verinice.rcp.SelectionAdapter;
 
 /**
@@ -107,7 +107,7 @@ public class AuditorNotificationPage extends BaseWizardPage {
         createLabel(composite, label);
         textDeadlineInDays = createTextfield(composite);
         textDeadlineInDays.setText(Integer.toString(getDeadlineInDays()));
-        textDeadlineInDays.addKeyListener(new KeyAdapter() {   
+        textDeadlineInDays.addKeyListener(new TextEventAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
                 try {

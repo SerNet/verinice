@@ -78,6 +78,7 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.rcp.ElementTitleCache;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.rcp.TextEventAdapter;
 import sernet.verinice.service.account.AccountSearchParameter;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 
@@ -243,15 +244,12 @@ public class AccountView extends RightsEnabledView {
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         gridData.minimumWidth = MIN_WIDTH_TEXT;
         textLogin.setLayoutData(gridData);
-        textLogin.addFocusListener(new FocusListener() {          
+        
+        textLogin.addFocusListener(new TextEventAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
                 AccountView.this.parameter.setLogin(getInput(textLogin));
                 findAccounts();
-            }          
-            @Override
-            public void focusGained(FocusEvent e) {
-                // nothing to do
             }
         });
         
@@ -424,7 +422,7 @@ public class AccountView extends RightsEnabledView {
                 if (getViewer().getSelection() instanceof IStructuredSelection && ((IStructuredSelection) getViewer().getSelection()).getFirstElement() instanceof Configuration) {
                     try {
                         Configuration account = (Configuration) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
-                        removeAccount(account);
+                        deactivateAccount(account);
                         findAccounts();
                     } catch (Exception t) {
                         LOG.error("Error while opening control.", t); //$NON-NLS-1$
@@ -475,7 +473,7 @@ public class AccountView extends RightsEnabledView {
                
     }
     
-    protected void removeAccount(Configuration account) {
+    protected void deactivateAccount(Configuration account) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("removeAccount called..."); //$NON-NLS-1$
         }
@@ -659,6 +657,7 @@ public class AccountView extends RightsEnabledView {
         
         @Override
         public void keyReleased(KeyEvent e) {
+            AccountView.this.parameter.setParameter(this.parameter, this.getInput(textField));
         }         
         @Override
         public void keyPressed(KeyEvent e) {

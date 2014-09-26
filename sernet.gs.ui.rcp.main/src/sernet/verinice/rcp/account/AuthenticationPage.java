@@ -5,7 +5,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.verinice.rcp.KeyAdapter;
+import sernet.verinice.rcp.TextEventAdapter;
 
 /**
  * Wizard page of wizard {@link AccountWizard}.
@@ -40,7 +40,7 @@ public class AuthenticationPage extends BaseWizardPage {
         createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_3);
         textLogin = createTextfield(composite);
         setText(textLogin,getLogin());
-        textLogin.addKeyListener(new KeyAdapter() {   
+        textLogin.addKeyListener(new TextEventAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
                 login = avoidEmptyStrings(textLogin.getText());
@@ -50,7 +50,7 @@ public class AuthenticationPage extends BaseWizardPage {
 
         createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_4);       
         textPassword = createPasswordField(composite);
-        textPassword.addKeyListener(new KeyAdapter() {   
+        textPassword.addKeyListener(new TextEventAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
                 password = avoidEmptyStrings(textPassword.getText());
@@ -60,7 +60,7 @@ public class AuthenticationPage extends BaseWizardPage {
 
         createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_5);     
         textPassword2 = createPasswordField(composite);
-        textPassword2.addKeyListener(new KeyAdapter() {   
+        textPassword2.addKeyListener(new TextEventAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
                 password2 = avoidEmptyStrings(textPassword2.getText());
@@ -71,7 +71,7 @@ public class AuthenticationPage extends BaseWizardPage {
         createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_6);
         textEmail = createTextfield(composite);
         setText(textEmail, getEmail());
-        textEmail.addKeyListener(new KeyAdapter() {   
+        textEmail.addKeyListener(new TextEventAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
                 email = avoidEmptyStrings(textEmail.getText());
