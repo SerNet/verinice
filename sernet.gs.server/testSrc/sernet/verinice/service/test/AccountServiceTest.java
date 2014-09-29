@@ -426,17 +426,10 @@ public class AccountServiceTest extends CommandServiceProvider {
         saveAccount(configuration);
     }
 
-    private CnATreeElement retrieveChildren(Group<CnATreeElement> personGroup) throws CommandException {
-        RetrieveInfo ri = RetrieveInfo.getChildrenInstance().setChildrenProperties(true);
-        LoadElementByUuid<CnATreeElement> retrieveCommand = new LoadElementByUuid<CnATreeElement>(personGroup.getUuid(), ri);
-        retrieveCommand = commandService.executeCommand(retrieveCommand);
-        return retrieveCommand.getElement();
-    }
-
     private void saveElement(CnATreeElement element) throws CommandException {
         UpdateElementEntity<CnATreeElement> updateCommand;
         updateCommand = new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
-        updateCommand = commandService.executeCommand(updateCommand);
+        commandService.executeCommand(updateCommand);
     }
 
     private Configuration createAccount(PersonIso person) throws CommandException {

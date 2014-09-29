@@ -111,12 +111,12 @@ public class SyncParameterTest extends ContextConfiguration {
     private void importFromByteArray(SyncParameter syncParameter, String file) throws IOException, CommandException {
         byte[] it_network_vna = FileUtils.readFileToByteArray(new File(getClass().getResource(file).getPath()));
         SyncCommand syncCommand = new SyncCommand(syncParameter, it_network_vna);
-        syncCommand = commandService.executeCommand(syncCommand);
+        commandService.executeCommand(syncCommand);
     }
 
     private void importFromFile(SyncParameter syncParameter, String file) throws IOException, CommandException {
         SyncCommand syncCommand = new SyncCommand(syncParameter, getFilePathRelativeToThisClass(file));
-        syncCommand = commandService.executeCommand(syncCommand);
+        commandService.executeCommand(syncCommand);
     };
 
     private String getFilePathRelativeToThisClass(String file) {

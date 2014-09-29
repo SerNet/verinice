@@ -227,7 +227,7 @@ public class CommandServiceTest extends CommandServiceProvider {
     protected void changeElement(CnATreeElement element) throws CommandException {
         changeProperties(element);            
         UpdateElementEntity<CnATreeElement> updateCommand = new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
-        updateCommand = commandService.executeCommand(updateCommand);
+        commandService.executeCommand(updateCommand);
     }
     
     protected void loadChildren(CnATreeElement element) throws CommandException {
@@ -257,7 +257,6 @@ public class CommandServiceTest extends CommandServiceProvider {
     }
     
     private void changeProperties(CnATreeElement element) {
-        Calendar now = Calendar.getInstance();
         Entity entity = element.getEntity();
         EntityType type = huiTypeFactory.getEntityType(element.getTypeId());
         assertNotNull("Entity type not found, id: " + element.getTypeId(), type);
