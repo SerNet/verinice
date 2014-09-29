@@ -53,6 +53,9 @@ import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.commands.UpdateElement;
+import sernet.verinice.service.test.helper.util.BFSTravers;
+import sernet.verinice.service.test.helper.util.CnATreeTraverser;
+import sernet.verinice.service.test.helper.util.CnATreeTraverser.CallBack;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**
@@ -90,6 +93,8 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
     private static final String ANWENDUNG_INSERT_2_EXT_ID = "ENTITY_42156";
 
     private static final String CLIENT_EXT_ID = "ENTITY_10072";
+
+    private static final CnATreeTraverser cnATreeTraverser = new BFSTravers();
 
     @Test
     public void insertTest() throws IOException, CommandException, SyncParameterException {
@@ -267,7 +272,7 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
     }
 
     private void setSourceId(CnATreeElement organization) {
-        doBreadthFirstSearch(organization, new CallBack<CnATreeElement>() {
+        cnATreeTraverser.traverse(organization, new CallBack() {
             @Override
             public void execute(CnATreeElement v) {
                 v.setSourceId(SOURCE_ID);
@@ -282,7 +287,7 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
     }
 
     private void deleteSourceId(ITVerbund itVerbund) {
-        doBreadthFirstSearch(itVerbund, new CallBack<CnATreeElement>() {
+        cnATreeTraverser.traverse(itVerbund, new CallBack() {
             @Override
             public void execute(CnATreeElement element) {
                 element.setSourceId(null);
@@ -332,25 +337,5 @@ public class SyncInsertUpdateTest extends BeforeEachVNAImportHelper {
         }
 
         return i;
-    }
-
-    private interface CallBack<V> {
-        public void execute(V v);
-    }
-
-    private void doBreadthFirstSearch(CnATreeElement root, CallBack<CnATreeElement> callback) {
-
-        root = Retriever.retrieveElement(root, new RetrieveInfo().setChildren(true));
-
-        Queue<CnATreeElement> queue = new LinkedList<CnATreeElement>();
-        queue.add(root);
-        CnATreeElement current;
-
-        while (!queue.isEmpty()) {
-            current = queue.poll();
-            current = (CnATreeElement) Retriever.retrieveElement(current, new RetrieveInfo().setChildren(true));
-            queue.addAll(current.getChildren());
-            callback.execute(current);
-        }
     }
 }
