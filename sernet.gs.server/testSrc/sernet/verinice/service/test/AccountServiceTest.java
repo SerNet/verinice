@@ -362,11 +362,16 @@ public class AccountServiceTest extends CommandServiceProvider {
     }
 
     private void removeAccountGroups() {
+        tryRemovingAccountGroups(accountGroupA);
+        tryRemovingAccountGroups(accountGroupB);
+        tryRemovingAccountGroups(accountGroupRandom);
+    }
+
+    private void tryRemovingAccountGroups(AccountGroup ag) {
         try {
-            accountService.deleteAccountGroup(accountGroupA);
-            accountService.deleteAccountGroup(accountGroupB);
+            accountService.deleteAccountGroup(ag);
         } catch (HibernateOptimisticLockingFailureException ex) {
-            LOG.info("nothing to do: groups are already deleted");
+            LOG.info("nothing to do, group are already deleted: " + ag.getName());
         }
     }
 
