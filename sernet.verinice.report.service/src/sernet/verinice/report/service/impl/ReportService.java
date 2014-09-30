@@ -17,14 +17,37 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl;
 
+import java.io.IOException;
+
+import org.apache.log4j.Logger;
+import org.eclipse.birt.report.engine.api.EXCELRenderOption;
+import org.eclipse.birt.report.engine.api.HTMLRenderOption;
+import org.eclipse.birt.report.engine.api.IPDFRenderOption;
+import org.eclipse.birt.report.engine.api.IRenderOption;
+import org.eclipse.birt.report.engine.api.PDFRenderOption;
+import org.eclipse.birt.report.engine.api.RenderOption;
+
+import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.model.report.PropertyFileExistsException;
+import sernet.verinice.model.report.ReportMetaDataException;
+import sernet.verinice.model.report.ReportTemplateMetaData;
 
 
 public class ReportService implements IReportService {
 	
 	private IReportType[] reportTypes;
-
+	
+	private static final Logger LOG = Logger.getLogger(ReportService.class);
+	
+    private static final String PROPERTIES_FILE_EXTENSION = "properties";
+    private static final char EXTENSION_SEPARATOR_CHAR = '.';
+    
+    private static final String PROPERTIES_FILENAME = "filename";
+    private static final String PROPERTIES_OUTPUTFORMATS = "outputformats";
+    private static final String PROPERTIES_OUTPUTNAME = "outputname";
+    
 	/*
 	 * (non-Javadoc)
 	 * @see sernet.verinice.interfaces.report.IReportService#getReportTypes()
@@ -83,5 +106,85 @@ public class ReportService implements IReportService {
 		}
 		return reportTypes.clone();
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.report.IReportService#getOutputFormat(java.lang.String)
+     */
+    @Override
+    public IOutputFormat getOutputFormat(String formatLabel) {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.report.IReportService#getOutputFormats(java.lang.String[])
+     */
+    @Override
+    public IOutputFormat[] getOutputFormats(String[] formatLabel) {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.report.IReportService#getReportTemplates(java.lang.String[])
+     */
+    @Override
+    public ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return null;
+    }
+
+    public IRenderOption getRenderOptions(String format){
+        if("pdf".equalsIgnoreCase(format)){
+            return getPDFRenderOption();
+        } else if("xls".equalsIgnoreCase(format)){
+            return getXLSRenderOption();
+        } else if("doc".equalsIgnoreCase(format)){
+            return getDOCRenderOption();
+        } else if("html".equalsIgnoreCase(format)){
+            return getHTMLRenderOption();
+        } else if("odt".equalsIgnoreCase(format)){
+            return getODTRenderOption();
+        } else if("ods".equalsIgnoreCase(format)){
+            return getODSRenderOption();
+        }
+        return null;
+    }
+    
+    private IRenderOption getPDFRenderOption(){
+        PDFRenderOption pdfOptions = new PDFRenderOption();
+        pdfOptions.setOutputFormat("pdf");
+        pdfOptions.setOption(IPDFRenderOption.PAGE_OVERFLOW, IPDFRenderOption.OUTPUT_TO_MULTIPLE_PAGES);
+        return pdfOptions;
+    }
+    
+    private IRenderOption getXLSRenderOption(){
+        EXCELRenderOption excelOptions = new EXCELRenderOption();
+        excelOptions.setOutputFormat("xls");
+        return excelOptions;
+    }
+    
+    private IRenderOption getDOCRenderOption(){
+        RenderOption options = new RenderOption();
+        options.setOutputFormat("doc");
+        return options;
+    }
+    
+    private IRenderOption getHTMLRenderOption(){
+        HTMLRenderOption htmlOptions = new HTMLRenderOption();
+        htmlOptions.setHtmlPagination(false);
+        htmlOptions.setOutputFormat("html");
+        htmlOptions.setImageDirectory(".");
+        return htmlOptions;
+    }
+    
+    private IRenderOption getODSRenderOption(){
+        RenderOption options = new RenderOption();
+        options.setOutputFormat("ods");
+        return options;
+    }
 	
+    private IRenderOption getODTRenderOption(){
+        RenderOption options = new RenderOption();
+        options.setOutputFormat("odt");
+        return options;
+    }
+    
 }

@@ -26,6 +26,7 @@ import sernet.springclient.SpringClientPlugin;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.bpm.IGsmService;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
@@ -142,6 +143,10 @@ public abstract class ServiceFactory {
 	
 	public static IValidationService lookupValidationService(){
 	    return (IValidationService)VeriniceContext.get(VeriniceContext.VALIDATION_SERVICE);
+	}
+	
+	public static IReportDepositService lookupReportDepositService(){
+	    return (IReportDepositService)VeriniceContext.get(VeriniceContext.REPORT_DEPOSIT_SERVICE);
 	}
 	
 	/**

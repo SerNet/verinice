@@ -24,6 +24,10 @@ import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.model.report.ExcelOutputFormat;
+import sernet.verinice.model.report.HTMLOutputFormat;
+import sernet.verinice.model.report.PDFOutputFormat;
+import sernet.verinice.model.report.WordOutputFormat;
 
 
 public class TestReportType implements IReportType {

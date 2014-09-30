@@ -44,12 +44,14 @@ Export-Package: de.sernet.service.vna,
  sernet.verinice.model.common.configuration,
  sernet.verinice.model.ds,
  sernet.verinice.model.iso27k;uses:="sernet.gs.ui.rcp.main.common.model",
+ sernet.verinice.model.report,
  sernet.verinice.model.samt,
  sernet.verinice.model.validation,
  sernet.verinice.service.account,
  sernet.verinice.service.commands,
  sernet.verinice.service.iso27k,
  sernet.verinice.service.ldap,
+ sernet.verinice.service.report,
  sernet.verinice.service.sync
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
@@ -59,7 +61,8 @@ Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  opencsv;bundle-version="2.1.0",
  jbpm;bundle-version="4.4.0",
  com.springsource.net.sf.ehcache;bundle-version="1.6.0",
- jgrapht;bundle-version="0.8.3"
+ jgrapht;bundle-version="0.8.3",
+ com.springsource.org.apache.commons.lang;bundle-version="2.4.0"
 Import-Package: org.eclipse.osgi.util,
  org.hibernate,
  org.hibernate.criterion,

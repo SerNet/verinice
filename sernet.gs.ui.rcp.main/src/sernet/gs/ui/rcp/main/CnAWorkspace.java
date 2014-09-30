@@ -44,6 +44,7 @@ import org.eclipse.osgi.util.NLS;
 
 import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.verinice.interfaces.report.IReportService;
 
 /**
  * Prepare the workspace directory for the application. Created needed files
@@ -74,7 +75,7 @@ public class CnAWorkspace {
 	public static final Object CONFIG_CURRENT_VERSION = "0.8.1"; //$NON-NLS-1$
 
 	protected static final String VERINICEDB = "verinicedb"; //$NON-NLS-1$
-
+	
 	protected static final String TEMPIMPORTDB = "tempGstoolImportDb"; //$NON-NLS-1$
 
     private static volatile CnAWorkspace instance;
@@ -399,5 +400,37 @@ public class CnAWorkspace {
 	public void prepare() {
 		prepare(false);
 	}
+	
+	public boolean createReportTemplateDir(String reportFolder) {
+	    StringBuilder sb = new StringBuilder();
+	    sb.append(getWorkdir());
+	    sb.append(File.separatorChar);
+	    sb.append(reportFolder);
+	    sb.append(File.separatorChar);
+	    File reportDir = new File(sb.toString());
+	    if(!reportDir.exists()){
+	        return reportDir.mkdirs(); // cretae directory
+	    } else {
+	        return true; // everythings fine
+	    }
+	}
+    
+    public String getLocalReportTemplateDir(){
+        return attachDirToWorkDir(IReportService.VERINICE_REPORTS_LOCAL);
+    }
+    
+    public String getRemoteReportTemplateDir(){
+        return attachDirToWorkDir(IReportService.VERINICE_REPORTS_REMOTE);
+    }
+    
+    private String attachDirToWorkDir(String dir){
+        StringBuilder sb = new StringBuilder();
+        sb.append(getWorkdir());
+        sb.append(File.separatorChar);
+        sb.append(dir);
+        sb.append(File.separatorChar);
+        return sb.toString();
+    }
+	
 
 }

@@ -124,5 +124,17 @@
 			<value>sernet.verinice.interfaces.validation.IValidationService</value>
 		</property>
 	</bean>
+	
+	<bean name="/reportdepositServiceHttpInvoker"
+    	class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+		lazy-init="false">		
+		<property name="service">
+			<ref bean="reportdepositService" />
+		</property>
+		<property name="serviceInterface">
+			<value>sernet.verinice.interfaces.IReportDepositService</value>
+		</property>
+	</bean>
+	
 </beans>
 

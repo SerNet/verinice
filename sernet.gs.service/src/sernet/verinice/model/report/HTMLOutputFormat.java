@@ -15,13 +15,12 @@
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.report.service.impl;
+package sernet.verinice.model.report;
 
-import org.eclipse.birt.report.engine.api.HTMLRenderOption;
-import org.eclipse.birt.report.engine.api.IRenderOption;
+import sernet.verinice.interfaces.report.IOutputFormat;
 
 
-public class HTMLOutputFormat extends AbstractOutputFormat {
+public class HTMLOutputFormat implements IOutputFormat {
 
 	@Override
 	public String getFileSuffix() {
@@ -37,21 +36,4 @@ public class HTMLOutputFormat extends AbstractOutputFormat {
 	public String getLabel() {
 		return "Hypertext Markup Language (HTML)";
 	}
-	
-	@Override
-	IRenderOption createBIRTRenderOptions()
-	{
-		HTMLRenderOption htmlOptions = new HTMLRenderOption();
-		htmlOptions.setHtmlPagination(false);
-		htmlOptions.setOutputFormat("html");
-		htmlOptions.setImageDirectory(".");
-
-		return htmlOptions;
-	}
-
-	@Override
-	boolean isRenderOutput() {
-		return true;
-	}
-
 }

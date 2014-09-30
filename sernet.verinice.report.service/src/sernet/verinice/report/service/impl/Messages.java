@@ -142,6 +142,7 @@ public class Messages extends NLS {
     public static String ISAAction_0;
     public static String ISAAction_1;
     public static String ISAAction_2;
+    public static String PROPERTIES_DEFAULT_OUTPUT_NAME;
     
     
     static {

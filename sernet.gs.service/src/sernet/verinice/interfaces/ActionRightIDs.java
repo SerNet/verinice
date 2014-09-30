@@ -78,6 +78,7 @@ public class ActionRightIDs {
     public static final String NATURALIZE = "naturalize";
     public static final String NOTES = "notes";
     public static final String RELATIONS = "relations";
+    public static final String REPORTDEPOSIT = "reportdeposit";
     public static final String RISKANALYSIS = "riskanalysis";
     public static final String SAMTVIEW = "samtview";
     public static final String SHOWALLFILES = "showallfiles";

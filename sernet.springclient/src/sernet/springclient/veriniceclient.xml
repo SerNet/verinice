@@ -152,6 +152,17 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
+    <bean id="reportdepositService"
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/reportdepositServiceHttpInvoker</value>
+        </property>  
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.IReportDepositService</value>         
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+    </bean>
+              
     <bean id="rightsServiceClient" class="sernet.springclient.RightsServiceClient">
     	<property name="authService" ref="authService" />
         <property name="rightsServiceExecuter" ref="rightsServiceExecuter" />
@@ -287,6 +298,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             <entry key="rightsService" value-ref="rightsServiceClient" />
             <entry key="validationService" value-ref="validationService" />
             <entry key="accountService" value-ref="accountService" />
+            <!-- <entry key="reportdepositService" value-ref="reportdepositService" /> -->
             <entry key="commandCacheClient" value-ref="commandCacheClient" />
 		</map>
 	</property>

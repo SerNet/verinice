@@ -17,13 +17,12 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.report.service.impl;
+package sernet.verinice.model.report;
 
-import org.eclipse.birt.report.engine.api.EXCELRenderOption;
-import org.eclipse.birt.report.engine.api.IRenderOption;
+import sernet.verinice.interfaces.report.IOutputFormat;
 
 
-class ExcelOutputFormat extends AbstractOutputFormat {
+public class ExcelOutputFormat implements IOutputFormat {
 
 	@Override
 	public String getFileSuffix() {
@@ -40,17 +39,5 @@ class ExcelOutputFormat extends AbstractOutputFormat {
 		return "Excel Format (XLS)";
 	}
 	
-	@Override
-	IRenderOption createBIRTRenderOptions()
-	{
-	    EXCELRenderOption excelOptions = new EXCELRenderOption();
-	    excelOptions.setOutputFormat("xls");
-		return excelOptions;
-	}
-
-	@Override
-	boolean isRenderOutput() {
-		return true;
-	}
 
 }

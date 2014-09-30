@@ -17,7 +17,24 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.report;
 
+import java.io.IOException;
+
+import sernet.verinice.model.report.PropertyFileExistsException;
+import sernet.verinice.model.report.ReportMetaDataException;
+import sernet.verinice.model.report.ReportTemplateMetaData;
+
 public interface IReportService {
+    
+    String VERINICE_REPORTS_LOCAL = "report_templates_local"; //$NON-NLS-1$
+    
+    String VERINICE_REPORTS_REMOTE = "report_templates_remote"; //$NON-NLS-1$
+
 
 	IReportType[] getReportTypes();
+	
+	IOutputFormat getOutputFormat(String formatLabel);
+	
+	IOutputFormat[] getOutputFormats(String[] formatLabel);
+	
+	ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException;
 }

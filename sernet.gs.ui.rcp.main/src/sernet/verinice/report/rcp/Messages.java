@@ -56,6 +56,20 @@ public class Messages extends NLS {
     public static String GenerateReportDialog_7;
     public static String GenerateReportDialog_8;
     public static String GenerateReportDialog_9;
+    public static String ReportDepositView_1;
+    public static String ReportDepositView_10;
+    public static String ReportDepositView_11;
+    public static String ReportDepositView_12;
+    public static String ReportDepositView_2;
+    public static String ReportDepositView_3;
+    public static String ReportDepositView_4;
+    public static String ReportDepositView_5;
+    public static String ReportDepositView_6;
+    public static String ReportDepositView_7;
+    public static String ReportDepositView_8;
+    public static String ReportDepositView_9;
+    
+    
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

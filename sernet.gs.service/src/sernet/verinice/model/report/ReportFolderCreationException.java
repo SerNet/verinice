@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Sebastian Hagedorn <sh@sernet.de>.
+ * Copyright (c) 2014 Sebastian Hagedorn <sh@sernet.de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -15,16 +15,19 @@
  * Contributors:
  *     Sebastian Hagedorn <sh@sernet.de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.report.rcp;
+package sernet.verinice.model.report;
 
 /**
  *
  */
-public class GenerateGenericReportAction extends GenerateReportAction {
-
-    @Override
-    public boolean isContextMenuCall() {
-        return false;
+public class ReportFolderCreationException extends Exception {
+    
+    public ReportFolderCreationException(){
+        super();
+    }
+    
+    public ReportFolderCreationException(String message){
+        super(message);
     }
 
 }

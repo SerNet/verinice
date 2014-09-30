@@ -82,6 +82,7 @@ import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
 import sernet.verinice.rcp.accountgroup.GroupView;
+import sernet.verinice.report.rcp.ReportDepositView;
 import sernet.verinice.validation.CnAValidationView;
 
 /**
@@ -146,6 +147,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenTaskViewAction openTaskViewAction;
     
     private OpenViewAction openAccountViewAction;
+    
+    private OpenViewAction openReportdepositViewAction;
 
     private IWorkbenchAction copyAction;
 
@@ -230,6 +233,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openTaskViewAction = new OpenTaskViewAction(window, ActionRightIDs.TASKVIEW);
         openValidationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_35, CnAValidationView.ID, ImageCache.VIEW_VALIDATION, ActionRightIDs.CNAVALIDATION);
         openAccountViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_38, AccountView.ID, ImageCache.PERSON, ActionRightIDs.ACCOUNTSETTINGS);
+        openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.PERSON, ActionRightIDs.REPORTDEPOSIT);
         
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
@@ -380,6 +384,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(openISMViewAction);
         viewsMenu.add(openCatalogAction);
         viewsMenu.add(openAccountViewAction);
+        viewsMenu.add(openReportdepositViewAction);
         viewsMenu.add(openGroupViewAction);
         viewsMenu.add(openTaskViewAction);
         viewsMenu.add(new Separator());
@@ -451,6 +456,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(new Separator());
         // common items
         myToolbar.add(openAccountViewAction);
+        myToolbar.add(openReportdepositViewAction);
         myToolbar.add(openGroupViewAction);
         myToolbar.add(openBSIBrowserAction);
         myToolbar.add(openNoteAction);

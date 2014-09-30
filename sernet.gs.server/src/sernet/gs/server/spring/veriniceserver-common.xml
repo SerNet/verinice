@@ -77,6 +77,7 @@ This variant:
                 <entry key="processEngine" value-ref="processEngine" />
                 <entry key="validationService" value-ref="validationService" />
                 <entry key="accountService" value-ref="accountService" />
+                <entry key="reportdepositService" value-ref="reportdepositService" />
 			</map>
 		</property>
 	</bean>
@@ -285,6 +286,10 @@ This variant:
         <property name="basename">
             <value>/WEB-INF/verinice-auth-messages</value>
         </property>
+    </bean>
+    
+    <bean id="reportdepositService" class="sernet.verinice.service.ReportDepositService">
+    	<property name="reportDeposit" value="/WEB-INF/reportDeposit/" />
     </bean>
     
     <bean id="validationService" class="sernet.verinice.service.ValidationService">

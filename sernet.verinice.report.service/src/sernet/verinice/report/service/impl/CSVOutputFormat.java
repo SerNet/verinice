@@ -20,7 +20,7 @@ package sernet.verinice.report.service.impl;
 import org.eclipse.birt.report.engine.api.DataExtractionOption;
 import org.eclipse.birt.report.engine.api.IDataExtractionOption;
 
-
+@Deprecated
 class CSVOutputFormat extends AbstractOutputFormat {
 
 	@Override

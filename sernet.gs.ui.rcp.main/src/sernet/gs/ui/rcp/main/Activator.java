@@ -41,7 +41,6 @@ import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
@@ -68,10 +67,11 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServer;
 import sernet.verinice.interfaces.IInternalServerStartListener;
+import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IVersionConstants;
-import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
+import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.rcp.StartupImporter;
 import sernet.verinice.rcp.StatusResult;
@@ -187,6 +187,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // set workdir preference:
         CnAWorkspace.getInstance().prepareWorkDir();
+        if(!prepareReportDirs()){
+            LOG.warn("ReportDirs are not created correclty");
+        }
         setProxy();
 
         Preferences prefs = getPluginPreferences();
@@ -254,6 +257,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         ConfigurationLogger.logSystemProperties();
         ConfigurationLogger.logApplicationProperties();
         ConfigurationLogger.logProxyPreferences();
+        
     }
 
     private void checkPKCS11Support(Preferences prefs) {
@@ -812,5 +816,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
         }
         return proxyTracker;
     }
-
+    
+    private boolean prepareReportDirs(){
+     return CnAWorkspace.getInstance().createReportTemplateDir(IReportService.VERINICE_REPORTS_LOCAL) &&
+              CnAWorkspace.getInstance().createReportTemplateDir(IReportService.VERINICE_REPORTS_REMOTE);
+    }
 }

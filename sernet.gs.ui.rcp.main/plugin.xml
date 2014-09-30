@@ -171,6 +171,15 @@
             name="%view.name.15"
             restorable="true">
       </view> 
+      <view
+      		allowMultiple="false"
+      		category="sernet.gs.ui.rcp.main.views"
+      		class="sernet.verinice.report.rcp.ReportDepositView"
+      		icon="icons/user.png"
+      		id="sernet.verinice.report.rcp.ReportDepositView"
+      		name="%view.name.16"
+      		restorable="true">
+      </view>
    </extension>
    <extension point="org.eclipse.ui.commands">
       <command
