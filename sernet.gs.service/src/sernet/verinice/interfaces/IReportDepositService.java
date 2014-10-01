@@ -32,8 +32,8 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public interface IReportDepositService {
 
-    public enum OutputFormats{
-        PDF, HTML, XLS, ODS, ODT
+    public enum OutputFormat{
+        PDF, HTML, XLS, ODS, ODT, DOC
     }
     
     public static final String PROPERTIES_FILE_EXTENSION = "properties";
@@ -46,8 +46,8 @@ public interface IReportDepositService {
     public static final String REPORT_DEPOSIT_CLIENT_LOCAL = "report_templates_local";
     public static final String REPORT_DEPOSIT_CLIENT_REMOTE = "report_templates_remote";
     
-    IOutputFormat getOutputFormat(String formatLabel);
-    IOutputFormat[] getOutputFormats(String[] formatLabel);
+    IOutputFormat getOutputFormat(OutputFormat format);
+    IOutputFormat[] getOutputFormats(OutputFormat[] format);
     ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles, boolean isServer) throws IOException, ReportMetaDataException, PropertyFileExistsException;
     ReportTemplateMetaData getMetaData(File rptDesign, boolean isServer) throws IOException, ReportMetaDataException, PropertyFileExistsException;
     void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file);

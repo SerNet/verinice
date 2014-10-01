@@ -58,6 +58,7 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IReportDepositService;
+import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
@@ -262,7 +263,7 @@ public class ReportDepositView extends RightsEnabledView {
                     return data.getOutputname(); //$NON-NLS-1$
                 case 1:
                     StringBuilder sb = new StringBuilder();
-                    String[] formats = data.getOutputFormats();
+                    OutputFormat[] formats = data.getOutputFormats();
                     for(int i = 0; i < formats.length; i++){
                         sb.append(formats[i]);
                         if(!(i == formats.length - 1)){
@@ -386,10 +387,10 @@ public class ReportDepositView extends RightsEnabledView {
             return rc;
         }
         
-        private String getSortedOutputFormatsString(String[] input){
+        private String getSortedOutputFormatsString(OutputFormat[] input){
             ArrayList<String> list = new ArrayList<String>();
-            for(String s : input){
-                list.add(s);
+            for(OutputFormat format : input){
+                list.add(format.toString());
             }
             Collections.sort(list);
             StringBuilder sb = new StringBuilder();

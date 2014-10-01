@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.service.commands.AddReportTemplateToDepositCommand;
 
@@ -320,27 +321,27 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         return reportName.getText();
     }
     
-    private String[] getReportOutputFormats(){
-            ArrayList<String> list = new ArrayList<String>(0);
+    private OutputFormat[] getReportOutputFormats(){
+            ArrayList<OutputFormat> list = new ArrayList<OutputFormat>(0);
             if(outputTypeExcelCheckbox.getSelection()){
-                list.add(OUTPUT_FORMAT_XLS_LABEL.toLowerCase());
+                list.add(OutputFormat.XLS);
             }
             if(outputTypeHTMLCheckbox.getSelection()){
-                list.add(OUTPUT_FORMAT_HTML_LABEL.toLowerCase());
+                list.add(OutputFormat.HTML);
             } 
             if(outputTypeWordCheckbox.getSelection()){
-                list.add(OUTPUT_FORMAT_DOC_LABEL.toLowerCase());
+                list.add(OutputFormat.DOC);
             } 
             if(outputTypePDFCheckbox.getSelection()){
-                list.add(OUTPUT_FORMAT_PDF_LABEL.toLowerCase());
+                list.add(OutputFormat.PDF);
             }
             if(outputTypeODTCheckbox.getSelection()){
-                list.add(OUTPUT_FORMAT_ODT_LABEL.toLowerCase());
+                list.add(OutputFormat.ODT);
             }
             if(outputTypeODSCheckbox.getSelection()){
-                list.add(OUTPUT_FORMAT_ODS_LABEL.toLowerCase());
+                list.add(OutputFormat.ODS);
             }
-            return list.toArray(new String[list.size()]);
+            return list.toArray(new OutputFormat[list.size()]);
     }
     
     private boolean isAnyFormatSelected(){

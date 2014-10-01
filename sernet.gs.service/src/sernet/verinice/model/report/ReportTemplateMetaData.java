@@ -19,6 +19,8 @@ package sernet.verinice.model.report;
 
 import java.io.Serializable;
 
+import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
+
 
 
 /**
@@ -30,16 +32,16 @@ public class ReportTemplateMetaData implements Serializable{
 
     private String filename;
     
-    private String[] outputFormats;
+    private OutputFormat[] outputFormat;
     
     private String outputname;
     
     private boolean isServerTemplate;
     
-    public ReportTemplateMetaData(String filename, String outputname, String[] outputFormats, boolean serverTemplate){
+    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, boolean serverTemplate){
         this.filename = filename;
         this.outputname = outputname;
-        this.outputFormats = outputFormats;
+        this.outputFormat = outputFormats;
         this.isServerTemplate = serverTemplate;
     }
 
@@ -47,8 +49,8 @@ public class ReportTemplateMetaData implements Serializable{
         return filename;
     }
 
-    public String[] getOutputFormats() {
-        return outputFormats;
+    public OutputFormat[] getOutputFormats() {
+        return outputFormat;
     }
 
     public String getOutputname() {

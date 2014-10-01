@@ -71,33 +71,22 @@ public class ReportDepositService implements IReportDepositService {
      * sernet.verinice.interfaces.report.IReportService#getOutputFormat(java
      * .lang.String)
      */
-    public IOutputFormat getOutputFormat(String formatLabel) {
-        if ("pdf".equalsIgnoreCase(formatLabel)) {
-            return new PDFOutputFormat();
-        } else if ("html".equalsIgnoreCase(formatLabel)) {
-            return new HTMLOutputFormat();
-        } else if ("doc".equalsIgnoreCase(formatLabel)) {
-            return new WordOutputFormat();
-        } else if ("xls".equalsIgnoreCase(formatLabel)) {
-            return new ExcelOutputFormat();
-        } else if ("odt".equalsIgnoreCase(formatLabel)) {
-            return new ODTOutputFormat();
-        } else if ("ods".equalsIgnoreCase(formatLabel)) {
-            return new ODSOutputFormat();
+    public IOutputFormat getOutputFormat(OutputFormat formatLabel) {
+        switch(formatLabel){
+            case PDF: return new PDFOutputFormat();
+            case HTML: return new HTMLOutputFormat();
+            case ODS: return new ODSOutputFormat();
+            case ODT: return new ODTOutputFormat();
+            case XLS: return new ExcelOutputFormat();
+            case DOC: return new WordOutputFormat();
+            default: return null;
         }
-        return null;
+
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.report.IReportService#getOutputFormats(java
-     * .lang.String[])
-     */
-    public IOutputFormat[] getOutputFormats(String[] formatLabel) {
+    public IOutputFormat[] getOutputFormats(OutputFormat[] formatLabel) {
         List<IOutputFormat> list = new ArrayList<IOutputFormat>(formatLabel.length);
-        for (String s : formatLabel) {
+        for (OutputFormat s : formatLabel) {
             IOutputFormat format = getOutputFormat(s);
             if (format != null) {
                 list.add(format);
@@ -163,12 +152,12 @@ public class ReportDepositService implements IReportDepositService {
     private ReportTemplateMetaData createReportMetaData(Properties props, boolean isServer) {
         String outputformatsString = props.getProperty(IReportDepositService.PROPERTIES_OUTPUTFORMATS);
         StringTokenizer tokenizer = new StringTokenizer(outputformatsString, ",");
-        ArrayList<String> formats = new ArrayList<String>(tokenizer.countTokens());
+        ArrayList<OutputFormat> formats = new ArrayList<OutputFormat>(tokenizer.countTokens());
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken().trim();
-            formats.add(token);
+            formats.add(OutputFormat.valueOf(token));
         }
-        return new ReportTemplateMetaData(props.getProperty(IReportDepositService.PROPERTIES_FILENAME), props.getProperty(PROPERTIES_OUTPUTNAME), formats.toArray(new String[formats.size()]), isServer);
+        return new ReportTemplateMetaData(props.getProperty(IReportDepositService.PROPERTIES_FILENAME), props.getProperty(PROPERTIES_OUTPUTNAME), formats.toArray(new OutputFormat[formats.size()]), isServer);
     }
 
     private Properties parseAndExtendMetaData(File rptDesign) throws IOException {
@@ -183,7 +172,7 @@ public class ReportDepositService implements IReportDepositService {
             props.setProperty(PROPERTIES_FILENAME, FilenameUtils.getName(rptDesign.getPath()));
         }
         if (!(props.containsKey(PROPERTIES_OUTPUTFORMATS))) {
-            props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(OutputFormats.values(), ","));
+            props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(OutputFormat.values(), ","));
         }
         if (!(props.containsKey(PROPERTIES_OUTPUTNAME))) {
             props.setProperty(PROPERTIES_OUTPUTNAME, Messages.PROPERTIES_DEFAULT_OUTPUT_NAME);
@@ -229,7 +218,7 @@ public class ReportDepositService implements IReportDepositService {
     private Properties getDefaultProperties() {
         Properties props = new Properties();
         props.put(PROPERTIES_OUTPUTNAME, Messages.PROPERTIES_DEFAULT_OUTPUT_NAME);
-        props.put(PROPERTIES_OUTPUTFORMATS, StringUtils.join(OutputFormats.values(), ','));
+        props.put(PROPERTIES_OUTPUTFORMATS, StringUtils.join(OutputFormat.values(), ','));
         return props;
     }
 

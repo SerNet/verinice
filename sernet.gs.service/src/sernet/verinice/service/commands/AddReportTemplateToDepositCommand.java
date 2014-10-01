@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
+import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.service.report.SaveToReportDepositCommand;
 
@@ -36,16 +37,16 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
     
     private String reportName;
     
-    private String[] outputFormats;
+    private OutputFormat[] outputFormat;
     
     private String reportFilename;
     
     private byte[] rptDesignFile;
     
-    public AddReportTemplateToDepositCommand(String reportName, String[] outputFormats, byte[] rptDesign, String filename, boolean isStandalone){
+    public AddReportTemplateToDepositCommand(String reportName, OutputFormat[] outputFormats, byte[] rptDesign, String filename, boolean isStandalone){
         this.isStandalone = isStandalone;
         this.reportName = reportName;
-        this.outputFormats = outputFormats;
+        this.outputFormat = outputFormats;
         this.reportFilename = filename;
         this.rptDesignFile = rptDesign;
     }
@@ -55,7 +56,7 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
      */
     @Override
     public void execute() {
-        ReportTemplateMetaData metadata = new ReportTemplateMetaData(reportFilename, reportName, outputFormats, true);
+        ReportTemplateMetaData metadata = new ReportTemplateMetaData(reportFilename, reportName, outputFormat, true);
             writeToServerDeposit(metadata, rptDesignFile);
     }
 
