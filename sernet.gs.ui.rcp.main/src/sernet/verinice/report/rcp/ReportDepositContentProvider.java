@@ -61,7 +61,7 @@ public class ReportDepositContentProvider implements IStructuredContentProvider 
     public Object[] getElements(Object inputElement) {
         if (inputElement instanceof PlaceHolder) {
             return new Object[] {inputElement};
-        } else if(inputElement instanceof ReportTemplateMetaData[]){
+        } else if(inputElement instanceof ReportTemplateMetaData[] && ((ReportTemplateMetaData[])inputElement).length > 0 ){
             return (ReportTemplateMetaData[])inputElement;
         }
         
