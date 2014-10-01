@@ -288,10 +288,6 @@ This variant:
         </property>
     </bean>
     
-    <bean id="reportdepositService" class="sernet.verinice.service.ReportDepositService">
-    	<property name="reportDeposit" value="/WEB-INF/reportDeposit/" />
-    </bean>
-    
     <bean id="validationService" class="sernet.verinice.service.ValidationService">
     	<property name="commandService" ref="commandService" />
     	<property name="cnaValidationDAO" ref="cnaValidationDAO" />

@@ -59,7 +59,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
-import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -90,6 +89,8 @@ public class ReportDepositView extends RightsEnabledView {
     private RightsEnabledAction editTemplateAction;
     
     private RightsEnabledAction doubleclickAction;
+    
+    private RightsEnabledAction refreshAction;
     
     @Override
     public void createPartControl(Composite parent) {
@@ -159,8 +160,12 @@ public class ReportDepositView extends RightsEnabledView {
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
         Object element = ((IStructuredSelection) selection).getFirstElement();
 //        elementSelected(element);
-        if (element instanceof CnATreeElement) {
-//           currentCnaElement = (CnATreeElement)element;
+        if (element instanceof ReportTemplateMetaData) {
+           editTemplateAction.setEnabled(true);
+           deleteTemplateAction.setEnabled(true);
+        } else {
+            editTemplateAction.setEnabled(false);
+            deleteTemplateAction.setEnabled(false);            
         }
     }
     
@@ -186,7 +191,7 @@ public class ReportDepositView extends RightsEnabledView {
         addTemplateAction.setText(Messages.ReportDepositView_6);
         addTemplateAction.setToolTipText(Messages.ReportDepositView_7);
         addTemplateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
-        addTemplateAction.setEnabled(false); 
+        addTemplateAction.setEnabled(true); 
 
         deleteTemplateAction = new RightsEnabledAction(ActionRightIDs.REPORTDEPOSITDELETE) {
             
@@ -216,8 +221,26 @@ public class ReportDepositView extends RightsEnabledView {
                     dlg.open();
                 }
             }
+        };        
+        
+        editTemplateAction.setText(Messages.ReportDepositView_17);
+        editTemplateAction.setToolTipText(Messages.ReportDepositView_18);
+        editTemplateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
+        editTemplateAction.setEnabled(false);
+        
+        
+        refreshAction = new RightsEnabledAction() {
+            
+            @Override
+            public void doRun() {
+                viewer.setInput(getContent());
+            }
         };
         
+        refreshAction.setText(Messages.ReportDepositView_19);
+        refreshAction.setToolTipText(Messages.ReportDepositView_19);
+        refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
+        refreshAction.setEnabled(true);        
         
         doubleclickAction = new RightsEnabledAction(){
 
@@ -232,6 +255,7 @@ public class ReportDepositView extends RightsEnabledView {
     private void fillLocalToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
+        manager.add(this.refreshAction);
         manager.add(this.addTemplateAction);
         manager.add(this.editTemplateAction);
         manager.add(this.deleteTemplateAction);

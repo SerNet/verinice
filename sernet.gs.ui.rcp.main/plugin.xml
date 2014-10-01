@@ -1418,7 +1418,7 @@ Artwork:&#x0A;Blackbit http://www.blackbit.de - Icons by Axialis Team http://www
             label="%actionSet.label"
             visible="true">
          <action
-               class="sernet.verinice.report.rcp.GenerateGenericReportAction"
+               class="sernet.verinice.report.actions.GenerateGenericReportAction"
                icon="icons/report.png"
                id="sernet.verinice.report.rcp.GenerateReportAction"
                label="%action.label.25"

@@ -143,10 +143,19 @@ public class ReportDepositService implements IReportDepositService {
             LOG.error("Error reading report deposit location on server", e);
         }
     }
-
-
-    public void removeFromServer(ReportTemplateMetaData metadata) throws IOException {
-        FileUtils.deleteQuietly(new File(getReportDeposit().getFile().getPath() + File.separatorChar + metadata.getFilename()));
+    
+    public void removeFromServer(ReportTemplateMetaData metadata) throws IOException{
+        String filename = metadata.getFilename();
+        filename = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR) + 1);
+        filename = filename + IReportDepositService.PROPERTIES_FILE_EXTENSION;
+        File propFile = new File(filename);
+        if(propFile.exists()){
+            FileUtils.deleteQuietly(propFile);
+        }
+        File rptFile = new File(metadata.getFilename());
+        if(rptFile.exists()){
+            FileUtils.deleteQuietly(rptFile);
+        }
     }
 
     private ReportTemplateMetaData createReportMetaData(Properties props, boolean isServer) {
@@ -188,7 +197,7 @@ public class ReportDepositService implements IReportDepositService {
         String path = rptDesign.getPath();
         return getPropertiesFile(path);
     }
-
+    
     private File getPropertiesFile(String path) {
         path = path.substring(0, path.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
         File propFile = new File(path + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
