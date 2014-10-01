@@ -298,7 +298,6 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             <entry key="rightsService" value-ref="rightsServiceClient" />
             <entry key="validationService" value-ref="validationService" />
             <entry key="accountService" value-ref="accountService" />
-            <!-- <entry key="reportdepositService" value-ref="reportdepositService" /> -->
             <entry key="commandCacheClient" value-ref="commandCacheClient" />
             <entry key="reportdepositService" value-ref="reportdepositService" />
 		</map>
