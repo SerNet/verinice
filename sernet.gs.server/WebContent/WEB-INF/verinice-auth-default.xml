@@ -76,6 +76,7 @@
         <action id="naturalize" />
         <action id="notes" />
         <action id="relations" />
+        <action id="reportdeposit" />
         <action id="riskanalysis" />
         <action id="samtview" />
         <action id="showchartview" />
@@ -145,6 +146,7 @@
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
+	        <action id="reportdeposit" />
 	        <action id="riskanalysis" />
 	        <action id="samtview" />
 	        <action id="showchartview" />
@@ -209,6 +211,7 @@
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
+	        <action id="reportdeposit" />
 	        <action id="riskanalysis" />
 	        <action id="samtview" />
 	        <action id="showchartview" />
@@ -275,6 +278,7 @@
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
+	        <action id="reportdeposit" />
 	        <action id="riskanalysis" />
 	        <action id="samtview" />
 	        <action id="showchartview" />
