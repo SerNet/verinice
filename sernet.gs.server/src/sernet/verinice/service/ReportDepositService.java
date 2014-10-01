@@ -155,7 +155,7 @@ public class ReportDepositService implements IReportDepositService {
         ArrayList<OutputFormat> formats = new ArrayList<OutputFormat>(tokenizer.countTokens());
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken().trim();
-            formats.add(OutputFormat.valueOf(token));
+            formats.add(OutputFormat.valueOf(token.toUpperCase()));
         }
         return new ReportTemplateMetaData(props.getProperty(IReportDepositService.PROPERTIES_FILENAME), props.getProperty(PROPERTIES_OUTPUTNAME), formats.toArray(new OutputFormat[formats.size()]), isServer);
     }
