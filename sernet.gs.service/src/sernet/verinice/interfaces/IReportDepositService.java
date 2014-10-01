@@ -20,6 +20,8 @@ package sernet.verinice.interfaces;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FilenameUtils;
+
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
@@ -31,7 +33,7 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 public interface IReportDepositService {
     
     public static final String PROPERTIES_FILE_EXTENSION = "properties";
-    public static final char EXTENSION_SEPARATOR_CHAR = '.';
+    public static final char EXTENSION_SEPARATOR_CHAR = FilenameUtils.EXTENSION_SEPARATOR;
     
     public static final String PROPERTIES_FILENAME = "filename";
     public static final String PROPERTIES_OUTPUTFORMATS = "outputformats";

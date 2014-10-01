@@ -173,9 +173,7 @@ public class ReportDepositService implements IReportDepositService{
     
     
     private Properties parseMetaData(File rptDesign) throws IOException, ReportMetaDataException{
-        String path = rptDesign.getPath();
-        path = path.substring(0, path.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
-        File propFile = new File(path + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
+        File propFile = getPropertiesFile(rptDesign);
         Properties props = new Properties();
         FileInputStream fis = new FileInputStream(propFile.getAbsoluteFile());
         props.load(fis);
@@ -200,11 +198,16 @@ public class ReportDepositService implements IReportDepositService{
         }
         return props;
     }
+
+    private File getPropertiesFile(File rptDesign) {
+        String path = rptDesign.getPath();
+        path = path.substring(0, path.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
+        File propFile = new File(path + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
+        return propFile;
+    }
     
     private boolean checkReportMetaDataFile(File rptDesign){
-        String path = rptDesign.getPath();
-        path = path.substring(0, path.lastIndexOf(EXTENSION_SEPARATOR_CHAR));
-        File propertiesFile = new File(path + EXTENSION_SEPARATOR_CHAR + PROPERTIES_FILE_EXTENSION);
+        File propertiesFile = getPropertiesFile(rptDesign);
         return propertiesFile.exists();
     }
     
