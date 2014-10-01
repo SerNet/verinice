@@ -31,6 +31,10 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  *
  */
 public interface IReportDepositService {
+
+    public enum OutputFormats{
+        PDF, HTML, XLS, ODS, ODT
+    }
     
     public static final String PROPERTIES_FILE_EXTENSION = "properties";
     public static final char EXTENSION_SEPARATOR_CHAR = FilenameUtils.EXTENSION_SEPARATOR;
