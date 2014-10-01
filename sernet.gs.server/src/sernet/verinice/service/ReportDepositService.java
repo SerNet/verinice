@@ -96,15 +96,6 @@ public class ReportDepositService implements IReportDepositService{
         }
         return list.toArray(new IOutputFormat[list.size()]);
     }
-    
-//    private ReportTemplateMetaData[] getLocalReportTemplates(){
-//        // DirFilter = null means no subdirectories
-//        IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
-//        Iterator<File> iter = FileUtils.iterateFiles(new File(getLocalTemplateFolder()), filter, null);
-//        while(iter.hasNext()){
-//            ReportTemplateMetaData template = null;
-//        }
-//    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.report.IReportService#getReportTemplates()
@@ -157,7 +148,10 @@ public class ReportDepositService implements IReportDepositService{
     }
     
     public void removeFromServer(ReportTemplateMetaData metadata) throws IOException{
-        FileUtils.deleteQuietly(new File(getReportDeposit().getFile().getPath() + File.separatorChar + metadata.getFilename()));
+        File propFile = new File(getReportDeposit().getFile().getPath() + File.separatorChar + metadata.getFilename());
+        FileUtils.deleteQuietly(propFile);
+        File rptFile = new File(metadata.getFilename());
+        FileUtils.deleteQuietly(rptFile);
     }
     
     private ReportTemplateMetaData createReportMetaData(Properties props, boolean isServer){
@@ -180,6 +174,7 @@ public class ReportDepositService implements IReportDepositService{
         fis.close();
         StringBuilder sb = new StringBuilder();
         sb.append("missing Properties:\n");
+        int prefixLength = sb.length();
         boolean propertyMissing = false;
         if(!(props.containsKey(PROPERTIES_FILENAME))){
             sb.append(PROPERTIES_FILENAME).append("\n");
@@ -192,6 +187,10 @@ public class ReportDepositService implements IReportDepositService{
         if(!(props.containsKey(PROPERTIES_OUTPUTNAME))){
             sb.append(PROPERTIES_OUTPUTNAME).append("\n");
             propertyMissing = true;        
+        }
+        if(sb.length() > prefixLength){
+            sb.append("\n");
+            sb.append("for Template:\t " + rptDesign.getAbsolutePath());
         }
         if(propertyMissing){
             throw new ReportMetaDataException(sb.toString());

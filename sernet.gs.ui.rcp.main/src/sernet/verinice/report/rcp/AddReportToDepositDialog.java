@@ -20,6 +20,7 @@ package sernet.verinice.report.rcp;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -44,6 +45,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.service.commands.AddReportTemplateToDepositCommand;
 
 /**
@@ -85,6 +87,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     // perhaps via buttonbar
     private Button cancelButton;
     private Button saveButton;
+    
+    private ReportTemplateMetaData editTemplate;
 
     /**
      * @param parentShell
@@ -92,6 +96,12 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     public AddReportToDepositDialog(Shell parentShell) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
+    }
+    
+    public AddReportToDepositDialog(Shell parentShell,
+            ReportTemplateMetaData metadata){
+        this(parentShell);
+        this.editTemplate = metadata;
     }
     
     @Override
@@ -145,6 +155,9 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportNameTextGd.grabExcessHorizontalSpace = true;
         reportNameTextGd.horizontalSpan = 2;
         reportName.setLayoutData(reportNameTextGd);
+        if(isEditMode()){
+            reportName.setText(editTemplate.getOutputname());
+        }
         
 
 
@@ -170,27 +183,44 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         gdRadio.grabExcessHorizontalSpace = false;
         gdRadio.horizontalSpan = 1;
         outputTypePDFCheckbox.setLayoutData(gdRadio);
+        if(isEditMode()){
+            outputTypePDFCheckbox.setSelection(isOutputFormatPreSelected(OUTPUT_FORMAT_PDF_LABEL.toLowerCase()));
+        }
 
         outputTypeHTMLCheckbox = new Button(checkboxComposite, SWT.CHECK);
         outputTypeHTMLCheckbox.setText(OUTPUT_FORMAT_HTML_LABEL);
         outputTypeHTMLCheckbox.setLayoutData(gdRadio);
+        if(isEditMode()){
+            outputTypeHTMLCheckbox.setSelection(isOutputFormatPreSelected(OUTPUT_FORMAT_HTML_LABEL.toLowerCase()));
+        }
 
         outputTypeWordCheckbox = new Button(checkboxComposite, SWT.CHECK);
         outputTypeWordCheckbox.setText(OUTPUT_FORMAT_DOC_LABEL);
         outputTypeWordCheckbox.setLayoutData(gdRadio);
-
+        if(isEditMode()){
+            outputTypeWordCheckbox.setSelection(isOutputFormatPreSelected(OUTPUT_FORMAT_DOC_LABEL.toLowerCase()));
+        }
+        
         outputTypeODTCheckbox = new Button(checkboxComposite, SWT.CHECK);
         outputTypeODTCheckbox.setText(OUTPUT_FORMAT_ODT_LABEL);
         outputTypeODTCheckbox.setLayoutData(gdRadio);
-
+        if(isEditMode()){
+            outputTypeODTCheckbox.setSelection(isOutputFormatPreSelected(OUTPUT_FORMAT_ODT_LABEL.toLowerCase()));
+        }
+        
         outputTypeODSCheckbox = new Button(checkboxComposite, SWT.CHECK);
         outputTypeODSCheckbox.setText(OUTPUT_FORMAT_ODS_LABEL);
         outputTypeODSCheckbox.setLayoutData(gdRadio);
-
+        if(isEditMode()){
+            outputTypeODSCheckbox.setSelection(isOutputFormatPreSelected(OUTPUT_FORMAT_ODS_LABEL.toLowerCase()));
+        }
+        
         outputTypeExcelCheckbox = new Button(checkboxComposite, SWT.CHECK);
         outputTypeExcelCheckbox.setText(OUTPUT_FORMAT_XLS_LABEL);
         outputTypeExcelCheckbox.setLayoutData(gdRadio);
-        
+        if(isEditMode()){
+            outputTypeExcelCheckbox.setSelection(isOutputFormatPreSelected(OUTPUT_FORMAT_XLS_LABEL.toLowerCase()));
+        }
         
         Label templateLabel = new Label(dialogContent, SWT.NONE);
         templateLabel.setText(Messages.ReportDepositView_3);
@@ -203,6 +233,9 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportTemplateTextGd.grabExcessHorizontalSpace = true;
         reportTemplateTextGd.horizontalSpan = 1;
         reportTemplateText.setLayoutData(reportTemplateTextGd);
+        if(isEditMode()){
+            reportTemplateText.setText(editTemplate.getFilename());
+        }
         
         reportTemplateSelectButton = new Button(dialogContent, SWT.PUSH);
         GridData selectButtonGd = new GridData();
@@ -218,6 +251,9 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
                 selectTemplateFile();
             }
         });
+        if(isEditMode()){
+            reportTemplateSelectButton.setEnabled(false);
+        }
         
         
         return composite;
@@ -316,5 +352,12 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
                 outputTypeWordCheckbox.getSelection();
     }
     
+    private boolean isEditMode(){
+        return editTemplate != null;
+    }
+    
+    private boolean isOutputFormatPreSelected(String format){
+        return Arrays.asList(editTemplate.getOutputFormats()).contains(format);
+    }
     
 }

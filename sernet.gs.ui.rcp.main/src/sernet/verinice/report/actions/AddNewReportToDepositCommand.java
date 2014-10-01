@@ -17,28 +17,20 @@
  ******************************************************************************/
 package sernet.verinice.report.actions;
 
-import org.eclipse.jface.action.IAction;
-
-import sernet.verinice.rcp.RightsEnabledActionDelegate;
+import sernet.verinice.interfaces.GenericCommand;
 
 /**
  *
  */
-public class AddNewReportToDepositAction extends RightsEnabledActionDelegate {
+public class AddNewReportToDepositCommand extends GenericCommand {
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
-     */
-    @Override
-    public String getRightID() {
-        return null;
-    }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.RightsEnabledActionDelegate#doRun(org.eclipse.jface.action.IAction)
-     */
-    @Override
-    public void doRun(IAction action) {
-    }
+        /* (non-Javadoc)
+         * @see sernet.verinice.interfaces.ICommand#execute()
+         */
+        @Override
+        public void execute() {
+
+        }
 
 }

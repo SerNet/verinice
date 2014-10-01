@@ -17,11 +17,14 @@
  ******************************************************************************/
 package sernet.verinice.report.rcp;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -31,6 +34,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -171,7 +175,7 @@ public class ReportDepositView extends RightsEnabledView {
     
     private void makeActions() {
         
-        addTemplateAction = new RightsEnabledAction() {
+        addTemplateAction = new RightsEnabledAction(ActionRightIDs.REPORTDEPOSITADD) {
             @Override
             public void doRun() {
                 AddReportToDepositDialog dlg = new AddReportToDepositDialog(Display.getDefault().getActiveShell());
@@ -181,32 +185,55 @@ public class ReportDepositView extends RightsEnabledView {
         addTemplateAction.setText(Messages.ReportDepositView_6);
         addTemplateAction.setToolTipText(Messages.ReportDepositView_7);
         addTemplateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
-        addTemplateAction.setEnabled(true);
+        addTemplateAction.setEnabled(false); 
 
-        deleteTemplateAction = new RightsEnabledAction() {
+        deleteTemplateAction = new RightsEnabledAction(ActionRightIDs.REPORTDEPOSITDELETE) {
             
             @Override
             public void doRun() {
+                int count = ((IStructuredSelection) viewer.getSelection()).size();
+                boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), Messages.ReportDepositView_15, NLS.bind(Messages.ReportDepositView_16, count));
+                if (!confirm){
+                    return;
+                }
+                deleteAttachments();
             }
         };
         
+        deleteTemplateAction.setText(Messages.ReportDepositView_13);
+        deleteTemplateAction.setToolTipText(Messages.ReportDepositView_14);
+        deleteTemplateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
+        deleteTemplateAction.setEnabled(false);
 
+        editTemplateAction = new RightsEnabledAction(ActionRightIDs.REPORTDEPOSITEDIT) {
+            
+            @Override
+            public void doRun() {
+                int count = ((IStructuredSelection) viewer.getSelection()).size();
+                if(count > 1){
+                    AddReportToDepositDialog dlg = new AddReportToDepositDialog(Display.getDefault().getActiveShell(), (ReportTemplateMetaData)((IStructuredSelection)viewer.getSelection()).getFirstElement());
+                    dlg.open();
+                }
+            }
+        };
+        
+        
         doubleclickAction = new RightsEnabledAction(){
 
             @Override
             public void doRun() {
-                if (viewer.getSelection() instanceof IStructuredSelection && ((IStructuredSelection) viewer.getSelection()).getFirstElement() instanceof ReportTemplateMetaData) {
-                        ReportTemplateMetaData metadata = (ReportTemplateMetaData)((IStructuredSelection)viewer.getSelection()).getFirstElement();
-                }
+                editTemplateAction.run();
             }
         };
+        
     }
     
     private void fillLocalToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
         manager.add(this.addTemplateAction);
-//        manager.add(this.refreshAction);
+        manager.add(this.editTemplateAction);
+        manager.add(this.deleteTemplateAction);
     }
     
     private static class ReportDepositLabelProvider extends LabelProvider implements ITableLabelProvider {      
@@ -427,6 +454,18 @@ public class ReportDepositView extends RightsEnabledView {
     
     private IReportDepositService getReportService(){
         return ServiceFactory.lookupReportDepositService();
+    }
+    
+    private void deleteAttachments() {
+        Iterator iterator = ((IStructuredSelection) viewer.getSelection()).iterator();
+        while (iterator.hasNext()) {
+            ReportTemplateMetaData sel = (ReportTemplateMetaData) iterator.next();
+            try {
+                ServiceFactory.lookupReportDepositService().removeFromServer(sel);
+            } catch (IOException e) {
+                ExceptionUtil.log(e, "Error deleting Reporttemplate:\t" + sel.getOutputname());
+            }
+        }
     }
     
 }

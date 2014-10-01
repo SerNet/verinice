@@ -17,13 +17,17 @@
  ******************************************************************************/
 package sernet.verinice.model.report;
 
+import java.io.Serializable;
+
 
 
 /**
  *
  */
-public class ReportTemplateMetaData {
+public class ReportTemplateMetaData implements Serializable{
     
+    private static final long serialVersionUID = 201410011436L;
+
     private String filename;
     
     private String[] outputFormats;

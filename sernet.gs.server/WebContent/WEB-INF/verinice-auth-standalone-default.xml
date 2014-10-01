@@ -29,7 +29,11 @@
                 "taskchangeduedate"
 	            "taskdelete" 
 	            "taskshowall" 
-                "importldap" -->
+                "importldap"
+                "reportdeposit"
+                "reportdepositadd"
+                "reportdepositdelete"
+                "reportdepositedit" -->
 	        <action id="addbsielement" />
 	        <action id="addcatalog" />
 	        <action id="addfile" />
@@ -72,7 +76,6 @@
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
-	        <action id="reportdeposit" />
 	        <action id="riskanalysis" />
 	        <action id="samtview" />
 	        <action id="showchartview" />
