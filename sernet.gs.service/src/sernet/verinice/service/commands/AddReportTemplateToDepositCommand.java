@@ -25,6 +25,7 @@ import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.service.report.SaveToReportDepositCommand;
+import sernet.verinice.service.report.UpdateReportTemplateCommand;
 
 /**
  *
@@ -32,8 +33,6 @@ import sernet.verinice.service.report.SaveToReportDepositCommand;
 public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand implements IChangeLoggingCommand {
 
     private static final Logger LOG = Logger.getLogger(AddReportTemplateToDepositCommand.class);
-    
-    private boolean isStandalone;
     
     private String reportName;
     
@@ -43,8 +42,9 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
     
     private byte[] rptDesignFile;
     
-    public AddReportTemplateToDepositCommand(String reportName, OutputFormat[] outputFormats, byte[] rptDesign, String filename, boolean isStandalone){
-        this.isStandalone = isStandalone;
+    private boolean errorOccured = false;
+
+    public AddReportTemplateToDepositCommand(String reportName, OutputFormat[] outputFormats, byte[] rptDesign, String filename){
         this.reportName = reportName;
         this.outputFormat = outputFormats;
         this.reportFilename = filename;
@@ -56,10 +56,31 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
      */
     @Override
     public void execute() {
-        ReportTemplateMetaData metadata = new ReportTemplateMetaData(reportFilename, reportName, outputFormat, true);
-            writeToServerDeposit(metadata, rptDesignFile);
+        ReportTemplateMetaData metadata = new ReportTemplateMetaData(reportFilename, reportName, outputFormat);
+        if(rptDesignFile != null){
+                writeToServerDeposit(metadata, rptDesignFile);
+        } else if(metadata != null){
+            errorOccured = updateServerDeposit(metadata);
+        } else {
+            errorOccured = true;
+            return;
+        }
     }
 
+    private boolean updateServerDeposit(ReportTemplateMetaData metaData){
+        UpdateReportTemplateCommand command = new UpdateReportTemplateCommand(metaData);
+        try{
+            command = getCommandService().executeCommand(command);
+            if(command.isErrorOccured()){
+                return false;
+            }
+        } catch(CommandException e){
+            LOG.error("Error updating template on server", e);
+            return false;
+        }
+        return true;        
+    }
+    
     private boolean writeToServerDeposit(ReportTemplateMetaData template, byte[] file){
         // call command on server
         SaveToReportDepositCommand command = new SaveToReportDepositCommand(file, template);
@@ -67,6 +88,7 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
             getCommandService().executeCommand(command);
         } catch(CommandException e){
             LOG.error("Error storing template to server", e);
+            return false;
         }
         return true;
     }
@@ -85,6 +107,10 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
     @Override
     public int getChangeType() {
         return 0;
+    }
+    
+    public boolean isErrorOccured() {
+        return errorOccured;
     }
     
 }

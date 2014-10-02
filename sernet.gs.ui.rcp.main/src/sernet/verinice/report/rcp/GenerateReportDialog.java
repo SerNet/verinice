@@ -74,7 +74,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
 //    private IReportType[] reportTypes;
     
-    private ReportTemplateMetaData[] reportTemplates;
+    private ReportTemplateMetaData[] serverReportTemplates;
 
     private IOutputFormat chosenOutputFormat;
 
@@ -135,7 +135,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
         this.auditId = null;
         this.auditName = null;
         try{
-            reportTemplates = getDepositService().getReportTemplates(getLocalRptdesigns(), false);
+            // adding the server templates
+            serverReportTemplates = getDepositService().getReportTemplates(getLocalRptdesigns());
         } catch (PropertyFileExistsException e){
             String msg = "Something went wrong with reading the propertyfiles";
             ExceptionUtil.log(e, msg);
@@ -248,7 +249,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 //        for (IReportType rt : reportTypes) {
 //            comboReportType.add(rt.getLabel());
 //        }
-        for(ReportTemplateMetaData data : reportTemplates){
+        for(ReportTemplateMetaData data : serverReportTemplates){
             comboReportType.add(data.getOutputname());
         }
         comboReportType.addSelectionListener(new SelectionAdapter() {
@@ -259,7 +260,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 //                    chosenReportType.setReportFile(""); // forget before chosen
 //                                                        // user-report template
 //                }
-                chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+                chosenReportMetaData = serverReportTemplates[comboReportType.getSelectionIndex()];
                 
                 setupComboOutputFormatContent();
                 enableFileSelection();
@@ -401,7 +402,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         comboReportType.select(0);
 //        chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
-        chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+        chosenReportMetaData = serverReportTemplates[comboReportType.getSelectionIndex()];
         setupComboOutputFormatContent();
         setupComboScopes();
 
@@ -602,7 +603,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private void setupComboOutputFormatContent() {
         comboOutputFormat.removeAll();
-        for (IOutputFormat of : getDepositService().getOutputFormats(reportTemplates[comboReportType.getSelectionIndex()].getOutputFormats())) {
+        for (IOutputFormat of : getDepositService().getOutputFormats(serverReportTemplates[comboReportType.getSelectionIndex()].getOutputFormats())) {
             comboOutputFormat.add(of.getLabel());
         }
         comboOutputFormat.select(0);
@@ -707,7 +708,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
 
             String f = textFile.getText();
-            chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+            chosenReportMetaData = serverReportTemplates[comboReportType.getSelectionIndex()];
             chosenOutputFormat = getDepositService().getOutputFormat(chosenReportMetaData.getOutputFormats()[comboOutputFormat.getSelectionIndex()]);
 
 //            chosenReportType.setReportFile(textReportTemplateFile.getText());
@@ -750,7 +751,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
         setupComboScopes();
         comboReportType.select(0);
-        chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+        chosenReportMetaData = serverReportTemplates[comboReportType.getSelectionIndex()];
 //        textReportTemplateFile = null;
     }
 
@@ -841,7 +842,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private void filterReportTypes() {
         ArrayList<ReportTemplateMetaData> list = new ArrayList<ReportTemplateMetaData>();
         if (useCase != null && !useCase.equals("")) {
-            for (ReportTemplateMetaData data : reportTemplates) {
+            for (ReportTemplateMetaData data : serverReportTemplates) {
 //                if (rt.getUseCaseID().equals(useCase) || rt.getUseCaseID().equals(IReportType.USE_CASE_ID_ALWAYS_REPORT)) {
                 /*
                  * TODO: add use case to template properties for filtering
@@ -850,7 +851,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 //                }
             }
         }
-        reportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
+        serverReportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
     }
 
     public boolean isContextMenuCall() {

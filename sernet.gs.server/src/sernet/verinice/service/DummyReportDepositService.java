@@ -33,22 +33,6 @@ public class DummyReportDepositService implements IReportDepositService {
 
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IReportDepositService#getReportTemplates(java.lang.String[], boolean)
-     */
-    @Override
-    public ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles, boolean isServer) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return new ReportTemplateMetaData[]{};
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IReportDepositService#getMetaData(java.io.File, boolean)
-     */
-    @Override
-    public ReportTemplateMetaData getMetaData(File rptDesign, boolean isServer) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return null;
-    }
-
-    /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IReportDepositService#addToServerDeposit(sernet.verinice.model.report.ReportTemplateMetaData, byte[])
      */
     @Override
@@ -84,6 +68,37 @@ public class DummyReportDepositService implements IReportDepositService {
     @Override
     public IOutputFormat[] getOutputFormats(OutputFormat[] format) {
         return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IReportDepositService#getDepositLocation()
+     */
+    @Override
+    public String getDepositLocation() throws IOException {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IReportDepositService#getReportTemplates(java.lang.String[])
+     */
+    @Override
+    public ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IReportDepositService#getMetaData(java.io.File)
+     */
+    @Override
+    public ReportTemplateMetaData getMetaData(File rptDesign) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IReportDepositService#updateInServerDeposit(sernet.verinice.model.report.ReportTemplateMetaData)
+     */
+    @Override
+    public void updateInServerDeposit(ReportTemplateMetaData metadata) throws IOException {
     }
 
 }

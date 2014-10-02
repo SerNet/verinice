@@ -216,9 +216,12 @@ public class ReportDepositView extends RightsEnabledView {
             @Override
             public void doRun() {
                 int count = ((IStructuredSelection) viewer.getSelection()).size();
-                if(count > 1){
+                if(count == 1){
                     AddReportToDepositDialog dlg = new AddReportToDepositDialog(Display.getDefault().getActiveShell(), (ReportTemplateMetaData)((IStructuredSelection)viewer.getSelection()).getFirstElement());
                     dlg.open();
+                } else {
+                    MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.ReportDepositView_20, Messages.ReportDepositView_21);
+                    return;
                 }
             }
         };        

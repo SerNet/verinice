@@ -48,10 +48,13 @@ public interface IReportDepositService {
     
     IOutputFormat getOutputFormat(OutputFormat format);
     IOutputFormat[] getOutputFormats(OutputFormat[] format);
-    ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles, boolean isServer) throws IOException, ReportMetaDataException, PropertyFileExistsException;
-    ReportTemplateMetaData getMetaData(File rptDesign, boolean isServer) throws IOException, ReportMetaDataException, PropertyFileExistsException;
+    ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException;
+    ReportTemplateMetaData getMetaData(File rptDesign) throws IOException, ReportMetaDataException, PropertyFileExistsException;
     void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file);
     void removeFromServer(ReportTemplateMetaData metadata) throws IOException;
+    void updateInServerDeposit(ReportTemplateMetaData metadata) throws IOException;
     ReportTemplateMetaData[] getServerReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException;
+    String getDepositLocation() throws IOException;
+    
 
 }

@@ -36,13 +36,10 @@ public class ReportTemplateMetaData implements Serializable{
     
     private String outputname;
     
-    private boolean isServerTemplate;
-    
-    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, boolean serverTemplate){
+    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats){
         this.filename = filename;
         this.outputname = outputname;
         this.outputFormat = outputFormats;
-        this.isServerTemplate = serverTemplate;
     }
 
     public String getFilename() {
@@ -57,10 +54,4 @@ public class ReportTemplateMetaData implements Serializable{
         return outputname;
     }
     
-    public boolean isServerTemplate() {
-        return isServerTemplate;
-    }
-    
-   
-
 }

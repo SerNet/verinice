@@ -59,8 +59,6 @@ public class ReportDepositService implements IReportDepositService {
 
     private Resource reportDeposit;
 
-    private static ReportDepositService INSTANCE = new ReportDepositService();
-
     private ReportDepositService() {
     }
 
@@ -97,16 +95,16 @@ public class ReportDepositService implements IReportDepositService {
         return list.toArray(new IOutputFormat[list.size()]);
     }
 
-    public ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles, boolean isServer) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         List<ReportTemplateMetaData> list = new ArrayList<ReportTemplateMetaData>(rptDesignFiles.length);
         for (String designFilePath : rptDesignFiles) {
-            list.add(getMetaData(new File(designFilePath), isServer));
+            list.add(getMetaData(new File(designFilePath)));
         }
         return list.toArray(new ReportTemplateMetaData[rptDesignFiles.length]);
     }
 
     public ReportTemplateMetaData[] getServerReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return getReportTemplates(getServerRptDesigns(), true);
+        return getReportTemplates(getServerRptDesigns());
     }
 
     private String[] getServerRptDesigns() throws IOException {
@@ -120,14 +118,14 @@ public class ReportDepositService implements IReportDepositService {
         return list.toArray(new String[list.size()]);
     }
 
-    public ReportTemplateMetaData getMetaData(File rptDesign, boolean isServer) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public ReportTemplateMetaData getMetaData(File rptDesign) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         Properties props = null;
         if (checkReportMetaDataFile(rptDesign)) {
             props = parseAndExtendMetaData(rptDesign);
         } else {
             props = createDefaultProperties(rptDesign.getPath(), rptDesign.getName());
         }
-        return createReportMetaData(props, isServer);
+        return createReportMetaData(props);
     }
 
     public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file) {
@@ -158,7 +156,7 @@ public class ReportDepositService implements IReportDepositService {
         }
     }
 
-    private ReportTemplateMetaData createReportMetaData(Properties props, boolean isServer) {
+    private ReportTemplateMetaData createReportMetaData(Properties props) {
         String outputformatsString = props.getProperty(IReportDepositService.PROPERTIES_OUTPUTFORMATS);
         StringTokenizer tokenizer = new StringTokenizer(outputformatsString, ",");
         ArrayList<OutputFormat> formats = new ArrayList<OutputFormat>(tokenizer.countTokens());
@@ -166,7 +164,7 @@ public class ReportDepositService implements IReportDepositService {
             String token = tokenizer.nextToken().trim();
             formats.add(OutputFormat.valueOf(token.toUpperCase()));
         }
-        return new ReportTemplateMetaData(props.getProperty(IReportDepositService.PROPERTIES_FILENAME), props.getProperty(PROPERTIES_OUTPUTNAME), formats.toArray(new OutputFormat[formats.size()]), isServer);
+        return new ReportTemplateMetaData(props.getProperty(IReportDepositService.PROPERTIES_FILENAME), props.getProperty(PROPERTIES_OUTPUTNAME), formats.toArray(new OutputFormat[formats.size()]));
     }
 
     private Properties parseAndExtendMetaData(File rptDesign) throws IOException {
@@ -231,16 +229,59 @@ public class ReportDepositService implements IReportDepositService {
         return props;
     }
 
-    public static ReportDepositService getInstance() {
-        return INSTANCE;
-    }
-
     public Resource getReportDeposit() {
         return reportDeposit;
     }
 
     public void setReportDeposit(Resource reportDeposit) {
         this.reportDeposit = reportDeposit;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IReportDepositService#getDepositLocation()
+     */
+    @Override
+    public String getDepositLocation() throws IOException {
+        if(getReportDeposit() != null){
+            return getReportDeposit().getFile().getAbsolutePath();
+        }
+        return "";
+    }
+    
+    @Override
+    public void updateInServerDeposit(ReportTemplateMetaData metadata) throws IOException{
+        if(checkReportMetaDataFile(new File(metadata.getFilename()))){
+            File propFile = getPropertiesFile(metadata.getFilename());
+            Properties props = parseAndExtendMetaData(propFile);
+            props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metadata.getOutputFormats(), ','));
+            props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
+            writePropertiesFile(props, metadata.getFilename(), "");
+
+        } else {
+            writePropertiesFile(convertToProperties(metadata), metadata.getFilename(), "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
+        }
+    }
+    
+    private void writePropertiesFile(Properties properties, String name, String comment) throws IOException{
+        String newFilePath = getReportDeposit().getFile().getPath() + File.separatorChar + name;
+        FileOutputStream fos = new FileOutputStream(newFilePath);
+        properties.store(fos, comment);
+        fos.close();
+    }
+    
+    private Properties convertToProperties(ReportTemplateMetaData metaData){
+        Properties props = new Properties();
+        props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metaData.getOutputFormats(), ','));
+        props.setProperty(PROPERTIES_OUTPUTNAME, metaData.getOutputname());
+        props.setProperty(PROPERTIES_FILENAME, metaData.getFilename());
+        return props;
+    }
+    
+    private ReportTemplateMetaData convertToReportTemplateMetadata(Properties props){
+//        return new ReportTemplateMetaData(props.getProperty(IReportDepositService.PROPERTIES_FILENAME),
+//                props.getProperty(IReportDepositService.PROPERTIES_OUTPUTNAME),
+//                props.getProperty(IReportDepositService.PROPERTIES_OUTPUTFORMATS));
+        return null;
     }
 
 }
