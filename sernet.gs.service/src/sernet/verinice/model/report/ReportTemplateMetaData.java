@@ -21,25 +21,30 @@ import java.io.Serializable;
 
 import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
 
-
-
 /**
  *
  */
-public class ReportTemplateMetaData implements Serializable{
-    
+public class ReportTemplateMetaData implements Serializable {
+
     private static final long serialVersionUID = 201410011436L;
 
     private String filename;
-    
+
     private OutputFormat[] outputFormat;
-    
+
     private String outputname;
-    
-    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats){
+
+    private String md5CheckSumm;
+
+    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats) {
         this.filename = filename;
         this.outputname = outputname;
         this.outputFormat = outputFormats;
+    }
+
+    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, String md5CheckSum) {
+        this(filename, outputname, outputFormats);
+        this.setMd5CheckSumm(md5CheckSum);
     }
 
     public String getFilename() {
@@ -53,5 +58,12 @@ public class ReportTemplateMetaData implements Serializable{
     public String getOutputname() {
         return outputname;
     }
-    
+
+    private String getMd5CheckSumm() {
+        return md5CheckSumm;
+    }
+
+    private void setMd5CheckSumm(String md5CheckSumm) {
+        this.md5CheckSumm = md5CheckSumm;
+    }
 }

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOCase;
@@ -141,22 +142,22 @@ public class ReportDepositService implements IReportDepositService {
             LOG.error("Error reading report deposit location on server", e);
         }
     }
-    
-    public void removeFromServer(ReportTemplateMetaData metadata) throws IOException{
+
+    public void removeFromServer(ReportTemplateMetaData metadata) throws IOException {
         String filename = metadata.getFilename();
         filename = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR) + 1);
         filename = filename + IReportDepositService.PROPERTIES_FILE_EXTENSION;
         File propFile = new File(filename);
-        if(propFile.exists()){
+        if (propFile.exists()) {
             FileUtils.deleteQuietly(propFile);
         }
         File rptFile = new File(metadata.getFilename());
-        if(rptFile.exists()){
+        if (rptFile.exists()) {
             FileUtils.deleteQuietly(rptFile);
         }
     }
 
-    private ReportTemplateMetaData createReportMetaData(Properties props) {
+    private ReportTemplateMetaData createReportMetaData(Properties props) throws IOException {
         String outputformatsString = props.getProperty(IReportDepositService.PROPERTIES_OUTPUTFORMATS);
         StringTokenizer tokenizer = new StringTokenizer(outputformatsString, ",");
         ArrayList<OutputFormat> formats = new ArrayList<OutputFormat>(tokenizer.countTokens());
@@ -164,7 +165,19 @@ public class ReportDepositService implements IReportDepositService {
             String token = tokenizer.nextToken().trim();
             formats.add(OutputFormat.valueOf(token.toUpperCase()));
         }
-        return new ReportTemplateMetaData(props.getProperty(IReportDepositService.PROPERTIES_FILENAME), props.getProperty(PROPERTIES_OUTPUTNAME), formats.toArray(new OutputFormat[formats.size()]));
+
+        String fileName = props.getProperty(IReportDepositService.PROPERTIES_FILENAME);
+        String outputName = props.getProperty(IReportDepositService.PROPERTIES_OUTPUTNAME);
+        OutputFormat[] outputFormats = formats.toArray(new OutputFormat[formats.size()]);
+        String md5CheckSum = getChecksum(fileName);
+
+        return new ReportTemplateMetaData(fileName, outputName, outputFormats, md5CheckSum);
+    }
+
+    private String getChecksum(String fileName) throws IOException {
+        String filePath = getReportDeposit().getFile().getPath() + File.separatorChar + fileName;
+        FileInputStream fis = new FileInputStream(new File(filePath));
+        return DigestUtils.md5Hex(fis);
     }
 
     private Properties parseAndExtendMetaData(File rptDesign) throws IOException {
