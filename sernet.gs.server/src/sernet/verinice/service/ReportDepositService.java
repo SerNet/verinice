@@ -58,6 +58,8 @@ public class ReportDepositService implements IReportDepositService {
 
     private Resource reportDeposit;
 
+    private ReportTemplateUtil reportTemplateUtil;
+
     private ReportDepositService() {
     }
 
