@@ -35,7 +35,7 @@ public class ReportTemplateMetaData implements Serializable {
     private String outputname;
 
     private String md5CheckSumm;
-    
+
     private boolean isServer;
 
     public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats) {
@@ -75,5 +75,36 @@ public class ReportTemplateMetaData implements Serializable {
 
     public void setServer(boolean isServer) {
         this.isServer = isServer;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (!(obj instanceof ReportTemplateMetaData))
+            return false;
+
+        ReportTemplateMetaData other = (ReportTemplateMetaData) obj;
+
+        if (md5CheckSumm != null && other.md5CheckSumm != null) {
+            return md5CheckSumm.equals(md5CheckSumm);
+        }
+
+        if (filename != null) {
+            return filename.equals(other.filename);
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 1;
+        hash = hash * 17 + ((md5CheckSumm != null) ? md5CheckSumm.hashCode() : 0);
+        hash = hash * 31 + ((filename != null) ? filename.hashCode() : 0);
+        return hash;
+
     }
 }

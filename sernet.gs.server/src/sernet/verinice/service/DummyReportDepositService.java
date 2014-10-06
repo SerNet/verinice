@@ -19,11 +19,14 @@ package sernet.verinice.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
+import java.util.TreeSet;
 
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
+import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
@@ -50,8 +53,8 @@ public class DummyReportDepositService implements IReportDepositService {
      * @see sernet.verinice.interfaces.IReportDepositService#getServerReportTemplates()
      */
     @Override
-    public ReportTemplateMetaData[] getServerReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return new ReportTemplateMetaData[]{};
+    public Set<ReportTemplateMetaData> getServerReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return new TreeSet<ReportTemplateMetaData>();
     }
 
     /* (non-Javadoc)
@@ -82,7 +85,7 @@ public class DummyReportDepositService implements IReportDepositService {
      * @see sernet.verinice.interfaces.IReportDepositService#getReportTemplates(java.lang.String[])
      */
     @Override
-    public ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         return null;
     }
 
@@ -99,6 +102,15 @@ public class DummyReportDepositService implements IReportDepositService {
      */
     @Override
     public void updateInServerDeposit(ReportTemplateMetaData metadata) throws IOException {
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IReportDepositService#getReportTemplate(sernet.verinice.model.report.ReportTemplateMetaData)
+     */
+    @Override
+    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata) throws IOException {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
