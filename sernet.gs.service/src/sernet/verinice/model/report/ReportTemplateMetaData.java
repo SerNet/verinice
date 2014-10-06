@@ -35,6 +35,8 @@ public class ReportTemplateMetaData implements Serializable {
     private String outputname;
 
     private String md5CheckSumm;
+    
+    private boolean isServer;
 
     public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats) {
         this.filename = filename;
@@ -65,5 +67,13 @@ public class ReportTemplateMetaData implements Serializable {
 
     private void setMd5CheckSumm(String md5CheckSumm) {
         this.md5CheckSumm = md5CheckSumm;
+    }
+
+    public boolean isServer() {
+        return isServer;
+    }
+
+    public void setServer(boolean isServer) {
+        this.isServer = isServer;
     }
 }
