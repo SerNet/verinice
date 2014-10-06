@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
@@ -98,12 +98,7 @@ public class ReportDepositService implements IReportDepositService {
 
     @Override
     public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        Set<ReportTemplateMetaData> set = new TreeSet<ReportTemplateMetaData>();
-
-        for (String designFilePath : rptDesignFiles) {
-            set.add(getMetaData(new File(designFilePath)));
-        }
-        return set;
+        return getReportTemplateUtil().getReportTemplates(rptDesignFiles);
     }
 
     @Override
@@ -224,7 +219,9 @@ public class ReportDepositService implements IReportDepositService {
     public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata) throws IOException {
         String filePath = getReportDeposit().getFile().getPath() + File.separatorChar + metadata.getFilename();
         byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
-        return new ReportTemplate(metadata, rptdesign);
+
+        Map<String, byte[]> propertiesFile = reportTemplateUtil.getPropertiesFiles(metadata.getFilename());
+        return new ReportTemplate(metadata, rptdesign, propertiesFile);
     }
 
     @Override

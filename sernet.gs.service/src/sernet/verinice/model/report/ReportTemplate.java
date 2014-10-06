@@ -20,6 +20,7 @@
 package sernet.verinice.model.report;
 
 import java.io.Serializable;
+import java.util.Map;
 
 
 /**
@@ -37,9 +38,12 @@ public class ReportTemplate implements Serializable{
 
     private byte[] rptdesignFile;
 
-    public ReportTemplate(ReportTemplateMetaData metaData, byte[] rptdesignFile){
+    private Map<String, byte[]> propertiesFiles;
+
+    public ReportTemplate(ReportTemplateMetaData metaData, byte[] rptdesignFile, Map<String, byte[]> propertiesFiles){
         this.metaData = metaData;
         this.rptdesignFile = rptdesignFile;
+        this.setPropertiesFiles(propertiesFiles);
     }
 
     public ReportTemplateMetaData getMetaData() {
@@ -56,6 +60,14 @@ public class ReportTemplate implements Serializable{
 
     public void setRptdesignFile(byte[] rptdesign) {
         this.rptdesignFile = rptdesign;
+    }
+
+    private Map<String, byte[]> getPropertiesFiles() {
+        return propertiesFiles;
+    }
+
+    private void setPropertiesFiles(Map<String, byte[]> propertiesFiles) {
+        this.propertiesFiles = propertiesFiles;
     }
 
 }

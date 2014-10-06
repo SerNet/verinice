@@ -21,34 +21,43 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
+import sernet.gs.service.ReportTemplateUtil;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.IReportDepositService;
+import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
+ * Collects meta data of verinice reports from 2 locations:
+ *
+ * 1. {@link IReportService#VERINICE_REPORTS_REMOTE}
+ *
+ * 2. {@link IReportService#VERINICE_REPORTS_LOCAL}
+ *
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ReportSupplierImpl implements IReportSupplier{
+public class ReportSupplierImpl implements IReportSupplier {
 
-    public ReportSupplierImpl(){}
+    public ReportSupplierImpl() {
+    }
 
-    /* (non-Javadoc)
-     * @see sernet.gs.ui.rcp.main.reports.IReportSupplier#getReportTemplates()
-     */
     @Override
     public List<ReportTemplateMetaData> getReportTemplates() {
         try {
-            return Arrays.asList(getReportMetaData(getLocalRptdesigns()));
+            return Arrays.asList(getReportMetaData());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -56,53 +65,21 @@ public class ReportSupplierImpl implements IReportSupplier{
             // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (PropertyFileExistsException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return new ArrayList<ReportTemplateMetaData>(0);
     }
 
-    private ReportTemplateMetaData[] getReportMetaData(String[] rptDesigns) throws IOException, ReportMetaDataException, PropertyFileExistsException{
-        List<ReportTemplateMetaData> list = new ArrayList<ReportTemplateMetaData>();
-        for(ReportTemplateMetaData metaData : ServiceFactory.lookupReportDepositService().getReportTemplates(getLocalRptdesigns())){
-            metaData.setServer(false);
-            list.add(metaData);
-        }
-        List<ReportTemplateMetaData> localList = new ArrayList<ReportTemplateMetaData>();
-        for(ReportTemplateMetaData metaData : ServiceFactory.lookupReportDepositService().getReportTemplates(getClientRemoteRptdesigns())){
-            metaData.setServer(true);
-            localList.add(metaData);
-        }
-        return list.toArray(new ReportTemplateMetaData[list.size()]);
-    }
+    private ReportTemplateMetaData[] getReportMetaData() throws IOException, ReportMetaDataException, PropertyFileExistsException {
 
-    private String[] getLocalRptdesigns(){
-        List<String> list = new ArrayList<String>();
-        list.addAll(Arrays.asList(getClientLocalRptdesigns()));
-        list.addAll(Arrays.asList(getClientRemoteRptdesigns()));
-        return list.toArray(new String[list.size()]);
-    }
+        ReportTemplateUtil localReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getLocalReportTemplateDir());
+        ReportTemplateUtil serverReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir());
 
-    private String[] getClientLocalRptdesigns(){
-        List<String> list = new ArrayList<String>(0);
-        //    DirFilter = null means no subdirectories
-        IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(CnAWorkspace.getInstance().getLocalReportTemplateDir()), filter, null);
-        while(iter.hasNext()){
-            list.add(iter.next().getAbsolutePath());
-        }
-        return list.toArray(new String[list.size()]);
-    }
+        Set<ReportTemplateMetaData> metadata = new HashSet<ReportTemplateMetaData>();
+        metadata.addAll(localReportTemplateUtil.getReportTemplates(localReportTemplateUtil.getReportTemplateFileNames()));
+        metadata.addAll(serverReportTemplateUtil.getReportTemplates(serverReportTemplateUtil.getReportTemplateFileNames()));
 
-    private String[] getClientRemoteRptdesigns(){
-        List<String> list = new ArrayList<String>();
-        //          // DirFilter = null means no subdirectories
-        IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(CnAWorkspace.getInstance().getRemoteReportTemplateDir()), filter, null);
-        while(iter.hasNext()){
-            list.add(iter.next().getAbsolutePath());
-        }
-        return list.toArray(new String[list.size()]);
+        return metadata.toArray(new ReportTemplateMetaData[metadata.size()]);
     }
 
 }

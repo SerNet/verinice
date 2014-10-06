@@ -18,6 +18,7 @@
 package sernet.verinice.model.report;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
 
@@ -105,6 +106,5 @@ public class ReportTemplateMetaData implements Serializable {
         hash = hash * 17 + ((md5CheckSumm != null) ? md5CheckSumm.hashCode() : 0);
         hash = hash * 31 + ((filename != null) ? filename.hashCode() : 0);
         return hash;
-
     }
 }

@@ -29,14 +29,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringTokenizer;
-
-import javax.annotation.Resource;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.RegexFileFilter;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringUtils;
 
 import sernet.verinice.interfaces.IReportDepositService;
@@ -80,7 +88,6 @@ public class ReportTemplateUtil {
         props.load(fis);
         fis.close();
 
-
         if (!(props.containsKey(PROPERTIES_FILENAME))) {
             props.setProperty(PROPERTIES_FILENAME, FilenameUtils.getName(rptDesign.getPath()));
         }
@@ -95,6 +102,12 @@ public class ReportTemplateUtil {
         props.store(out, "Metadata for the report deposit");
 
         return props;
+    }
+
+    public void parseAndExtendMetaData(String[] rptDesignFiles) throws IOException {
+        for (String rptDesignFile : rptDesignFiles) {
+            parseAndExtendMetaData(new File(rptDesignFile));
+        }
     }
 
     private File getPropertiesFile(File rptDesign) {
@@ -147,8 +160,40 @@ public class ReportTemplateUtil {
         return new ReportTemplateMetaData(fileName, outputName, outputFormats, md5CheckSum);
     }
 
+    public Map<String, byte[]> getPropertiesFiles(String fileName) throws IOException {
+        Map<String, byte[]> propertiesFiles = new TreeMap<String, byte[]>();
+        IOFileFilter filter = new RegexFileFilter(fileName + "_.*\\.properties", IOCase.INSENSITIVE);
+        Iterator<File> iter = FileUtils.iterateFiles(new File(this.reportTemplateDirectory), filter, null);
+        while (iter.hasNext()) {
+            File f = iter.next();
+            propertiesFiles.put(f.getName(), FileUtils.readFileToByteArray(f.getAbsoluteFile()));
+        }
+
+        return propertiesFiles;
+    }
+
     private String getChecksum(String fileName) throws IOException {
         String filePath = reportTemplateDirectory + File.separatorChar + fileName;
         return DigestUtils.md5Hex(FileUtils.readFileToByteArray(new File(filePath)));
+    }
+
+    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        Set<ReportTemplateMetaData> set = new TreeSet<ReportTemplateMetaData>();
+
+        for (String designFilePath : rptDesignFiles) {
+            set.add(getMetaData(new File(designFilePath)));
+        }
+        return set;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public String[] getReportTemplateFileNames() {
+        List<String> list = new ArrayList<String>();
+        IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
+        Iterator<File> iter = FileUtils.iterateFiles(new File(this.reportTemplateDirectory), filter, null);
+        while (iter.hasNext()) {
+            list.add(iter.next().getAbsolutePath());
+        }
+        return list.toArray(new String[list.size()]);
     }
 }

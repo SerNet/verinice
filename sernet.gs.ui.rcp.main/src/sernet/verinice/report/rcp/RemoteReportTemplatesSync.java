@@ -32,6 +32,7 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 
+import sernet.gs.service.ReportTemplateUtil;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IReportDepositService;
@@ -48,10 +49,12 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public class RemoteReportTemplatesSync {
 
+    private ReportTemplateUtil clientServerReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir());
+
     public void syncReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException {
 
-        String[] fileNames = getLocalServerReportTemplateFileNames();
-        Set<ReportTemplateMetaData> localServerTemplates = getIReportDepositService().getReportTemplates(fileNames);
+        String[] fileNames = clientServerReportTemplateUtil.getReportTemplateFileNames();
+        Set<ReportTemplateMetaData> localServerTemplates = clientServerReportTemplateUtil.getReportTemplates(fileNames);
         Set<ReportTemplateMetaData> remoteSeverTemplates = getIReportDepositService().getServerReportTemplates();
 
         for (ReportTemplateMetaData remoteTemplateMetaData : remoteSeverTemplates) {
@@ -63,17 +66,6 @@ public class RemoteReportTemplatesSync {
 
     private IReportDepositService getIReportDepositService() {
         return ServiceFactory.lookupReportDepositService();
-    }
-
-    @SuppressWarnings("rawtypes")
-    private String[] getLocalServerReportTemplateFileNames() {
-        List<String> list = new ArrayList<String>();
-        IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(CnAWorkspace.getInstance().getRemoteReportTemplateDir()), filter, null);
-        while (iter.hasNext()) {
-            list.add(iter.next().getAbsolutePath());
-        }
-        return list.toArray(new String[list.size()]);
     }
 
     private void syncTemplate(ReportTemplateMetaData metadata) throws IOException {
