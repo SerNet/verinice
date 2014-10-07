@@ -72,6 +72,7 @@ public class Messages extends NLS {
     public static String ReportDepositView_21;
     public static String ReportDepositView_22;
     public static String ReportDepositView_23;
+    public static String ReportDepositView_24;
     public static String ReportDepositView_3;
     public static String ReportDepositView_4;
     public static String ReportDepositView_5;

@@ -17,11 +17,18 @@
  ******************************************************************************/
 package sernet.verinice.model.report;
 
+import java.io.Serializable;
+
 import sernet.verinice.interfaces.report.IOutputFormat;
 
 
 
-public class PDFOutputFormat implements IOutputFormat{
+public class PDFOutputFormat extends AbstractOutputFormat implements IOutputFormat, Serializable{
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 20141007L;
 
 	@Override
 	public String getFileSuffix() {
@@ -37,5 +44,19 @@ public class PDFOutputFormat implements IOutputFormat{
 	public String getLabel() {
 		return "Portable Document Format (PDF)";
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.report.AbstractOutputFormat#isRenderOutput()
+     */
+    @Override
+    public boolean isRenderOutput() {
+        return true;
+    }
+    
+    @Override
+    public Object createBIRTRenderOptions()
+    {
+        return null;
+    }
 
 }

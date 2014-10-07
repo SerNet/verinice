@@ -19,15 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.report.rcp;
 
+import static org.apache.commons.io.FilenameUtils.concat;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
-
-import static org.apache.commons.io.FilenameUtils.concat;
 
 import sernet.gs.service.ReportTemplateUtil;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
@@ -52,6 +51,7 @@ public class RemoteReportTemplatesSync {
 
         String[] fileNames = clientServerReportTemplateUtil.getReportTemplateFileNames();
         Set<ReportTemplateMetaData> localServerTemplates = clientServerReportTemplateUtil.getReportTemplates(fileNames);
+        IReportDepositService rds = getIReportDepositService();
         Set<ReportTemplateMetaData> remoteSeverTemplates = getIReportDepositService().getServerReportTemplates();
 
         for (ReportTemplateMetaData remoteTemplateMetaData : remoteSeverTemplates) {

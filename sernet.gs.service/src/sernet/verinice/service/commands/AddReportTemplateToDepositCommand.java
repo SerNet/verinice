@@ -43,6 +43,8 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
     private byte[] rptDesignFile;
     
     private boolean errorOccured = false;
+    
+    private boolean update = false;
 
     public AddReportTemplateToDepositCommand(String reportName, OutputFormat[] outputFormats, byte[] rptDesign, String filename){
         this.reportName = reportName;
@@ -51,15 +53,20 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
         this.rptDesignFile = rptDesign;
     }
     
+    public AddReportTemplateToDepositCommand(String reportName, OutputFormat[] outputFormats, byte[] rptDesign, String filename, boolean update){
+        this(reportName, outputFormats, rptDesign, filename);
+        this.update = update;
+    }
+    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
         ReportTemplateMetaData metadata = new ReportTemplateMetaData(reportFilename, reportName, outputFormat);
-        if(rptDesignFile != null){
+        if(!update){
                 writeToServerDeposit(metadata, rptDesignFile);
-        } else if(metadata != null){
+        } else if(update){
             errorOccured = updateServerDeposit(metadata);
         } else {
             errorOccured = true;

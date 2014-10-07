@@ -51,8 +51,10 @@ import org.eclipse.birt.report.model.api.IResourceLocator;
 import org.eclipse.birt.report.model.api.ModuleHandle;
 import org.eclipse.birt.report.model.api.ModuleOption;
 
+import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportOptions;
+import sernet.verinice.model.report.AbstractOutputFormat;
 import sernet.verinice.oda.driver.impl.VeriniceOdaDriver;
 import sernet.verinice.report.service.Activator;
 
@@ -274,7 +276,7 @@ public class BIRTReportService {
 	@SuppressWarnings("unchecked")
 	public void extract(IDataExtractionTask task, IReportOptions options, int resultSetIndex)
 	{
-		IDataExtractionOption extractionOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTExtractionOptions();
+		IDataExtractionOption extractionOptions = (IDataExtractionOption)((AbstractOutputFormat) options.getOutputFormat()).createBIRTExtractionOptions();
 		try {
 			extractionOptions.setOutputStream(new FileOutputStream(options.getOutputFile()));
 		} catch (FileNotFoundException e) {
@@ -313,8 +315,8 @@ public class BIRTReportService {
 	@SuppressWarnings("unchecked")
 	public void render(IRunAndRenderTask task, IReportOptions options)
 	{
-
-		IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
+	    
+		IRenderOption renderOptions = (IRenderOption)ServiceComponent.getDefault().getReportService().getRenderOptions(options.getOutputFormat().getId());
 		renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
 		// Makes the chosen root element available via the appContext variable 'rootElementId'
 		if(options.getRootElement() != null){
@@ -373,7 +375,7 @@ public class BIRTReportService {
 	}
 	
 	public void render(IRenderTask task, IReportOptions options){
-	    IRenderOption renderOptions = ((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
+	    IRenderOption renderOptions = (IRenderOption)((AbstractOutputFormat) options.getOutputFormat()).createBIRTRenderOptions();
 	    renderOptions.setOutputFileName(options.getOutputFile().getAbsolutePath());
 	    // Makes the chosen root element available via the appContext variable 'rootElementId'
 	    if(options.getRootElement() != null){

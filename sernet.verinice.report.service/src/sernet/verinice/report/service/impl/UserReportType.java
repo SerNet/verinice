@@ -35,11 +35,13 @@ import org.eclipse.birt.report.model.api.VariableElementHandle;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.model.report.AbstractOutputFormat;
 import sernet.verinice.model.report.ExcelOutputFormat;
 import sernet.verinice.model.report.HTMLOutputFormat;
 import sernet.verinice.model.report.ODSOutputFormat;
 import sernet.verinice.model.report.ODTOutputFormat;
 import sernet.verinice.model.report.PDFOutputFormat;
+import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.WordOutputFormat;
 
 public class UserReportType implements IReportType {
@@ -180,5 +182,14 @@ public class UserReportType implements IReportType {
 	    }
 	    return 1; // default / no ReportVariable found
 	}
+	
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.report.IReportType#createReport(sernet.verinice.model.report.ReportTemplate)
+     */
+    @Override
+    public void createReport(ReportTemplateMetaData report) {
+        // nothing here
+    }
+
 
 }

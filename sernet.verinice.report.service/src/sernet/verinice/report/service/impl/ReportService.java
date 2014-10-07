@@ -59,49 +59,49 @@ public class ReportService implements IReportService {
 	public IReportType[] getReportTypes() {
 		if (reportTypes == null){
 			reportTypes = new IReportType[] { 
-		        new UserReportType(), 
-		        new SamtReportType(), 
-		        new SamtComplianceReport(),
-		        new ISAActionReport(),
-		        new ComprehensiveSamtReportType(),
-		        
-		        new ISMRiskManagementResultsReport(), // ISO 27k1 Reports (english)
-		        new ISMRiskManagementResultsReportDe(), // ISO 27k1 Report (german)
-		        
-		        new RiskTreatmentReport(),
-		        
-		        new ControlMaturityReport(),
-		        new StatementOfApplicabilityReport(),
-		        new InventoryOfAssetsReport(),
-		      		        
-		        new VulnerabilitiesReport(), // new Export Reports, since v1.6.0
-		        new ThreatsReport(),
-		        new ScenariosReport(),
-		        new ResponsesReport(),
-		        new RequirementsReport(),
-		        new RecordsReport(),
-		        new ProcessesReport(),
-		        new PersonsReport(),
-		        new IncidentsReport(),
-		        new ExceptionsReport(),
-		        new DocumentsReport(),
-		        new TasksReport(),//Tasks in english
-		        new AufgabenReport(),//Aufgaben in deutsch
-                new VVBSIG_SofortMeldungReport(),
-                new VVBSIG_StatMeldungReport(),		        
-		        
-		        new StrukturanalyseReport(), // BSI reports
-		        new AbhaengigkeitenReport(),
-		        new AllItemsReport(), // this is report ID "schutzbedarf"
-		        new ModellierungReport(),
-		        new BasisSichCheckReport(),
-		        new ErgaenzendeSicherheitsanalyseReport(),
-		        new GSRisikoanalyseReport(),
-		        new ManagementRisikoBewertung(),
-		        new RealisierungsplanReport(),
-		        new GraphischerUmsetzungsstatusReport(),
-		        new AuditberichtReport()
-		        
+//		        new UserReportType(), 
+//		        new SamtReportType(), 
+//		        new SamtComplianceReport(),
+//		        new ISAActionReport(),
+//		        new ComprehensiveSamtReportType(),
+//		        
+//		        new ISMRiskManagementResultsReport(), // ISO 27k1 Reports (english)
+//		        new ISMRiskManagementResultsReportDe(), // ISO 27k1 Report (german)
+//		        
+//		        new RiskTreatmentReport(),
+//		        
+//		        new ControlMaturityReport(),
+//		        new StatementOfApplicabilityReport(),
+//		        new InventoryOfAssetsReport(),
+//		      		        
+//		        new VulnerabilitiesReport(), // new Export Reports, since v1.6.0
+//		        new ThreatsReport(),
+//		        new ScenariosReport(),
+//		        new ResponsesReport(),
+//		        new RequirementsReport(),
+//		        new RecordsReport(),
+//		        new ProcessesReport(),
+//		        new PersonsReport(),
+//		        new IncidentsReport(),
+//		        new ExceptionsReport(),
+//		        new DocumentsReport(),
+//		        new TasksReport(),//Tasks in english
+//		        new AufgabenReport(),//Aufgaben in deutsch
+//                new VVBSIG_SofortMeldungReport(),
+//                new VVBSIG_StatMeldungReport(),		        
+//		        
+//		        new StrukturanalyseReport(), // BSI reports
+//		        new AbhaengigkeitenReport(),
+//		        new AllItemsReport(), // this is report ID "schutzbedarf"
+//		        new ModellierungReport(),
+//		        new BasisSichCheckReport(),
+//		        new ErgaenzendeSicherheitsanalyseReport(),
+//		        new GSRisikoanalyseReport(),
+//		        new ManagementRisikoBewertung(),
+//		        new RealisierungsplanReport(),
+//		        new GraphischerUmsetzungsstatusReport(),
+//		        new AuditberichtReport()
+		        new GenericReportType()
 		    };
 		}
 		return reportTypes.clone();
@@ -131,6 +131,7 @@ public class ReportService implements IReportService {
         return null;
     }
 
+    @Override
     public IRenderOption getRenderOptions(String format){
         if("pdf".equalsIgnoreCase(format)){
             return getPDFRenderOption();

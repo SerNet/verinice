@@ -180,20 +180,25 @@ public class ReportDepositService implements IReportDepositService {
 
     @Override
     public void updateInServerDeposit(ReportTemplateMetaData metadata) throws IOException {
+        String filename = metadata.getFilename();
+        if(filename.contains(String.valueOf(File.separatorChar))){
+            filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
+        }
         if (getReportTemplateUtil().checkReportMetaDataFile(new File(metadata.getFilename()))) {
             File propFile = getReportTemplateUtil().getPropertiesFile(metadata.getFilename());
             Properties props = getReportTemplateUtil().parseAndExtendMetaData(propFile);
             props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metadata.getOutputFormats(), ','));
             props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
-            writePropertiesFile(props, metadata.getFilename(), "");
+            writePropertiesFile(props, filename, "");
 
         } else {
-            writePropertiesFile(convertToProperties(metadata), metadata.getFilename(), "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
+            writePropertiesFile(convertToProperties(metadata), filename, "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
         }
     }
 
     private void writePropertiesFile(Properties properties, String name, String comment) throws IOException {
         String newFilePath = getReportDeposit().getFile().getPath() + File.separatorChar + name;
+        newFilePath = ensurePropertiesExtension(newFilePath);
         FileOutputStream fos = new FileOutputStream(newFilePath);
         properties.store(fos, comment);
         fos.close();
@@ -227,5 +232,12 @@ public class ReportDepositService implements IReportDepositService {
     @Override
     public ReportTemplateMetaData getMetaData(File rptDesign) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         return getReportTemplateUtil().getMetaData(rptDesign);
+    }
+    
+    private String ensurePropertiesExtension(String filename){
+        if(filename.contains(String.valueOf('.'))){
+            filename = filename.substring(0, filename.lastIndexOf('.') + 1);
+        }
+        return filename + IReportDepositService.PROPERTIES_FILE_EXTENSION;
     }
 }

@@ -30,8 +30,10 @@ import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
+import sernet.verinice.model.report.AbstractOutputFormat;
 import sernet.verinice.model.report.ExcelOutputFormat;
 import sernet.verinice.model.report.ODSOutputFormat;
+import sernet.verinice.model.report.ReportTemplateMetaData;
 
 public class TasksReport implements IReportType {
 
@@ -113,5 +115,14 @@ public class TasksReport implements IReportType {
     public String getUseCaseID() {
         return IReportType.USE_CASE_ID_GENERAL_REPORT;
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.report.IReportType#createReport(sernet.verinice.model.report.ReportTemplate)
+     */
+    @Override
+    public void createReport(ReportTemplateMetaData report) {
+        // nothing here
+    }
+
 
 }

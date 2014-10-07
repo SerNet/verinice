@@ -19,21 +19,33 @@ package sernet.verinice.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.report.IOutputFormat;
+import sernet.verinice.model.report.ExcelOutputFormat;
+import sernet.verinice.model.report.HTMLOutputFormat;
+import sernet.verinice.model.report.ODSOutputFormat;
+import sernet.verinice.model.report.ODTOutputFormat;
+import sernet.verinice.model.report.PDFOutputFormat;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.model.report.WordOutputFormat;
 
 /**
  *
  */
 public class DummyReportDepositService implements IReportDepositService {
 
+    
+    private static final Logger LOG = Logger.getLogger(DummyReportDepositService.class);
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IReportDepositService#addToServerDeposit(sernet.verinice.model.report.ReportTemplateMetaData, byte[])
@@ -61,16 +73,33 @@ public class DummyReportDepositService implements IReportDepositService {
      * @see sernet.verinice.interfaces.IReportDepositService#getOutputFormat(sernet.verinice.interfaces.IReportDepositService.OutputFormat)
      */
     @Override
-    public IOutputFormat getOutputFormat(OutputFormat format) {
-        return null;
+    public IOutputFormat getOutputFormat(OutputFormat formatLabel) {
+        switch(formatLabel){
+        case PDF: return new PDFOutputFormat();
+        case HTML: return new HTMLOutputFormat();
+        case ODS: return new ODSOutputFormat();
+        case ODT: return new ODTOutputFormat();
+        case XLS: return new ExcelOutputFormat();
+        case DOC: return new WordOutputFormat();
+        default: return null;
+        }
     }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IReportDepositService#getOutputFormats(sernet.verinice.interfaces.IReportDepositService.OutputFormat[])
      */
     @Override
-    public IOutputFormat[] getOutputFormats(OutputFormat[] format) {
-        return null;
+    public IOutputFormat[] getOutputFormats(OutputFormat[] formatLabel) {
+        List<IOutputFormat> list = new ArrayList<IOutputFormat>(formatLabel.length);
+        for (OutputFormat s : formatLabel) {
+            IOutputFormat format = getOutputFormat(s);
+            if (format != null) {
+                list.add(format);
+            } else {
+                LOG.warn("Report output format:\t" + s + " not available in verinice");
+            }
+        }
+        return list.toArray(new IOutputFormat[list.size()]);
     }
 
     /* (non-Javadoc)

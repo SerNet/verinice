@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.report;
 
+import sernet.verinice.model.report.ReportTemplateMetaData;
+
 
 public interface IReportType {
 	
@@ -59,6 +61,8 @@ public interface IReportType {
 	IOutputFormat[] getOutputFormats();
 	
 	void createReport(IReportOptions reportOptions);
+	
+	void createReport(ReportTemplateMetaData metadata);
 	
 	/**
 	 * Return the selected report file or empty string.

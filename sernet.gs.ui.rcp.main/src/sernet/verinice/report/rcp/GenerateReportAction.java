@@ -60,6 +60,7 @@ public class GenerateReportAction extends RightsEnabledActionDelegate implements
             }
             dialog.setContextMenuCall(isContextMenuCall());
     		if (dialog.open() == Dialog.OK) {
+    		    File f = dialog.getOutputFile();
     			final IReportOptions ro = new IReportOptions() {
     			    Integer rootElmt; 
     			    Integer[] rootElmts;
@@ -91,7 +92,10 @@ public class GenerateReportAction extends RightsEnabledActionDelegate implements
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         monitor.beginTask(Messages.GenerateReportAction_1, IProgressMonitor.UNKNOWN);
                         Activator.inheritVeriniceContextState();
+                        dialog.getReportMetaData();
+                        IOutputFormat format = dialog.getOutputFormat();
                         dialog.getReportType().createReport(ro);
+                        dialog.getReportType().createReport(dialog.getReportMetaData());
                         monitor.done();
                     }
     			 });

@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.IToolBarManager;
@@ -173,7 +174,7 @@ public class ReportDepositView extends RightsEnabledView {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
             @Override
             public void doubleClick(DoubleClickEvent event) {
-//                doubleClickAction.run();
+                doubleclickAction.run();
             }
         });
     }
@@ -469,7 +470,8 @@ public class ReportDepositView extends RightsEnabledView {
     
     private Object getContent(){
         try{
-            return getReportService().getServerReportTemplates();
+            Set<ReportTemplateMetaData> templateSet = getReportService().getServerReportTemplates();
+            return templateSet.toArray(new ReportTemplateMetaData[templateSet.size()]);
         } catch (PropertyFileExistsException e){
             String msg = "Something went wrong with reading the propertyfiles";
             ExceptionUtil.log(e, msg);
@@ -495,5 +497,6 @@ public class ReportDepositView extends RightsEnabledView {
             }
         }
     }
+    
     
 }

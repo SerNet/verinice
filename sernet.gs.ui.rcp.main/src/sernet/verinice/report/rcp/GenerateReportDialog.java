@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -35,6 +34,7 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.reports.IReportSupplier;
 import sernet.gs.ui.rcp.main.reports.ReportSupplierImpl;
@@ -71,6 +71,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private File outputFile;
 
     private ReportTemplateMetaData[] reportTemplates;
+    
+    private IReportType[] reportTypes;
 
     private IOutputFormat chosenOutputFormat;
 
@@ -107,6 +109,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private String defaultTemplateFolder;
 
     private Button useDefaultFolderButton;
+    
+    private IReportType chosenReportType;
 
 //    private Button useDefaultTemplateFolderButton;
 
@@ -127,6 +131,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
         this.auditId = null;
         this.auditName = null;
+        reportTypes = ServiceComponent.getDefault().getReportService().getReportTypes();
         try{
             // adding the server templates
             List<ReportTemplateMetaData> list = getSupplier().getReportTemplates();
@@ -251,12 +256,15 @@ public class GenerateReportDialog extends TitleAreaDialog {
         comboReportType.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-//                chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
+                
 //                if (reportTypes[comboReportType.getSelectionIndex()].getId().equals("user") && !reportTypes[comboReportType.getSelectionIndex()].getReportFile().equals("")) {
 //                    chosenReportType.setReportFile(""); // forget before chosen
 //                                                        // user-report template
 //                }
-                chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+                if(reportTemplates.length > 0){
+                    chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+                    chosenReportType = reportTypes[0];
+                }
                 
                 setupComboOutputFormatContent();
                 enableFileSelection();
@@ -398,7 +406,12 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         comboReportType.select(0);
 //        chosenReportType = reportTypes[comboReportType.getSelectionIndex()];
-        chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+        if(reportTemplates.length > 0){
+        chosenReportType = reportTypes[0];
+            chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+        } else {
+            showNoReportsExistant();
+        }
         setupComboOutputFormatContent();
         setupComboScopes();
 
@@ -599,12 +612,17 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private void setupComboOutputFormatContent() {
         comboOutputFormat.removeAll();
-        for (IOutputFormat of : getDepositService().getOutputFormats(reportTemplates[comboReportType.getSelectionIndex()].getOutputFormats())) {
-            comboOutputFormat.add(of.getLabel());
-        }
-        comboOutputFormat.select(0);
-        if (chosenReportMetaData != null) {
-            chosenOutputFormat = getDepositService().getOutputFormat(chosenReportMetaData.getOutputFormats()[comboOutputFormat.getSelectionIndex()]);
+        if(reportTemplates.length > 0){
+            for (IOutputFormat of : getDepositService().getOutputFormats(reportTemplates[comboReportType.getSelectionIndex()].getOutputFormats())) {
+                comboOutputFormat.add(of.getLabel());
+            }
+            comboOutputFormat.select(0);
+            if (chosenReportMetaData != null) {
+                chosenOutputFormat = getDepositService().getOutputFormat(chosenReportMetaData.getOutputFormats()[comboOutputFormat.getSelectionIndex()]);
+            }
+        } else {
+            showNoReportsExistant();
+            return;
         }
     }
 
@@ -643,7 +661,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     protected String getDefaultOutputFilename() {
         String outputFileName = chosenReportMetaData.getOutputname();
-        if (outputFileName == null || outputFileName.isEmpty() || isReportTemplate()) {
+        if (outputFileName == null || outputFileName.isEmpty()) {
             outputFileName = "unknown";
         }
         StringBuilder sb = new StringBuilder(outputFileName);
@@ -704,7 +722,12 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
 
             String f = textFile.getText();
-            chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+            if(reportTemplates.length > 0){
+                chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+            } else {
+                showNoReportsExistant();
+                return;
+            }
             chosenOutputFormat = getDepositService().getOutputFormat(chosenReportMetaData.getOutputFormats()[comboOutputFormat.getSelectionIndex()]);
 
 //            chosenReportType.setReportFile(textReportTemplateFile.getText());
@@ -747,7 +770,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
         setupComboScopes();
         comboReportType.select(0);
-        chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+        if(reportTemplates.length > 0){
+            chosenReportMetaData = reportTemplates[comboReportType.getSelectionIndex()];
+        } 
 //        textReportTemplateFile = null;
     }
 
@@ -761,8 +786,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     @Deprecated
     public IReportType getReportType() {
-//        return chosenReportType;
-        return null;
+        return chosenReportType;
     }
     
     public ReportTemplateMetaData getReportMetaData(){
@@ -837,7 +861,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     private void filterReportTypes() {
         ArrayList<ReportTemplateMetaData> list = new ArrayList<ReportTemplateMetaData>();
-        if (useCase != null && !useCase.equals("")) {
+        if (useCase != null && !useCase.equals("") && reportTemplates.length > 0) {
             for (ReportTemplateMetaData data : reportTemplates) {
 //                if (rt.getUseCaseID().equals(useCase) || rt.getUseCaseID().equals(IReportType.USE_CASE_ID_ALWAYS_REPORT)) {
                 /*
@@ -910,5 +934,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
     
     private IReportDepositService getDepositService(){
         return ServiceFactory.lookupReportDepositService();
+    }
+    
+    private void showNoReportsExistant(){
+        MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.GenerateReportDialog_28, Messages.ReportDepositView_24);
     }
 }

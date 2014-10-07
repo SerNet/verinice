@@ -15,24 +15,21 @@
  * Contributors:
  *     Robert Schuster <r.schuster@tarent.de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.report.service.impl;
-
-import org.eclipse.birt.report.engine.api.IDataExtractionOption;
-import org.eclipse.birt.report.engine.api.IRenderOption;
+package sernet.verinice.model.report;
 
 import sernet.verinice.interfaces.report.IOutputFormat;
 
 public abstract class AbstractOutputFormat implements IOutputFormat {
 
-	IRenderOption createBIRTRenderOptions()
+	public Object createBIRTRenderOptions()
 	{
 		return null;
 	}
 	
-	IDataExtractionOption createBIRTExtractionOptions()
+	public Object createBIRTExtractionOptions()
 	{
 		return null;
 	}
 	
-	abstract boolean isRenderOutput();
+	public abstract boolean isRenderOutput();
 }

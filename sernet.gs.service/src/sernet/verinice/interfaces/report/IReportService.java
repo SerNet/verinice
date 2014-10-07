@@ -37,4 +37,6 @@ public interface IReportService {
 	IOutputFormat[] getOutputFormats(String[] formatLabel);
 	
 	ReportTemplateMetaData[] getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException;
+	
+	public Object getRenderOptions(String format);
 }

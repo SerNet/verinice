@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Sebastian Hagedorn <sh@sernet.de>.
+ * Copyright (c) 2014 Sebastian Hagedorn <sh@sernet.de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -17,34 +17,33 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.eclipse.birt.report.engine.api.IDataExtractionTask;
+import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 
+import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
-import sernet.verinice.model.report.AbstractOutputFormat;
-import sernet.verinice.model.report.HTMLOutputFormat;
-import sernet.verinice.model.report.ODTOutputFormat;
-import sernet.verinice.model.report.PDFOutputFormat;
 import sernet.verinice.model.report.ReportTemplateMetaData;
-import sernet.verinice.model.report.WordOutputFormat;
 
 /**
  *
  */
-public class ISMRiskManagementResultsReport implements IReportType {
-    
-    private static final String REPORT_DESIGN = "ismRiskManagementResults.rptdesign"; //$NON-NLS-1$
+public class GenericReportType implements IReportType {
 
+    
+    private IReportOptions options;
+    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.report.IReportType#getId()
      */
     @Override
     public String getId() {
-        return "ismRiskAnalysis";
+        return "";
     }
 
     /* (non-Javadoc)
@@ -52,7 +51,7 @@ public class ISMRiskManagementResultsReport implements IReportType {
      */
     @Override
     public String getLabel() {
-        return Messages.ISMRiskManagementResults_2;
+        return "";
     }
 
     /* (non-Javadoc)
@@ -60,7 +59,7 @@ public class ISMRiskManagementResultsReport implements IReportType {
      */
     @Override
     public String getDescription() {
-        return Messages.ISMRiskManagementResults_1;
+        return "";
     }
 
     /* (non-Javadoc)
@@ -68,7 +67,7 @@ public class ISMRiskManagementResultsReport implements IReportType {
      */
     @Override
     public IOutputFormat[] getOutputFormats() {
-        return new IOutputFormat[] { new PDFOutputFormat(), new HTMLOutputFormat(), new WordOutputFormat(), new ODTOutputFormat() };
+        return null;
     }
 
     /* (non-Javadoc)
@@ -76,28 +75,17 @@ public class ISMRiskManagementResultsReport implements IReportType {
      */
     @Override
     public void createReport(IReportOptions reportOptions) {
-        BIRTReportService brs = new BIRTReportService();
-        
-        URL reportDesign = ISMRiskManagementResultsReport.class.getResource(REPORT_DESIGN); //$NON-NLS-1$
-        
-        if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
-        {
-            IRunAndRenderTask task = brs.createTask(reportDesign);
-            brs.render(task, reportOptions);
-        }
-        else
-        {
-            IDataExtractionTask task = brs.createExtractionTask(reportDesign);
-            brs.extract(task, reportOptions, 1);
-        }
+        this.options = reportOptions;
     }
+    
+    
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.report.IReportType#getReportFile()
      */
     @Override
     public String getReportFile() {
-        return Messages.ISMRiskManagementResults_0;
+        return null;
     }
 
     /* (non-Javadoc)
@@ -112,16 +100,54 @@ public class ISMRiskManagementResultsReport implements IReportType {
      */
     @Override
     public String getUseCaseID() {
-        return IReportType.USE_CASE_ID_GENERAL_REPORT;
-    }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.report.IReportType#createReport(sernet.verinice.model.report.ReportTemplate)
-     */
-    @Override
-    public void createReport(ReportTemplateMetaData report) {
-        // nothing here
+        return null;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.report.IReportType#createReport(sernet.verinice.model.report.ReportTemplateMetaData)
+     */
+    @Override
+    public void createReport(ReportTemplateMetaData metadata) {
+        BIRTReportService brs = new BIRTReportService();
+        URL rptURL = null;
+        final String locationConst;
+        if(metadata.isServer()){
+            locationConst = IReportDepositService.REPORT_DEPOSIT_CLIENT_REMOTE;
+        } else {
+            locationConst = IReportDepositService.REPORT_DEPOSIT_CLIENT_LOCAL;
+        }
+
+
+        try {
+            rptURL = new URL(getDepositPath(locationConst) +
+                    metadata.getFilename());
+        } catch (MalformedURLException e) {
+            Logger.getLogger(GenericReportType.class).error("Error reading" +
+                    " rptdesign", e);
+        }
+
+        
+        IRunAndRenderTask task = brs.createTask(rptURL);
+        brs.render(task, options);
+    }
+    
+    /**
+     * only use 
+     * @param locationConstant
+     * @return
+     */
+    
+    private String getDepositPath(String locationConstant){
+        StringBuilder sb = new StringBuilder();
+        sb.append(System.getProperty("osgi.instance.area"));
+        if(!(sb.toString().endsWith(String.valueOf(File.separatorChar)))){
+            sb.append(File.separatorChar);
+        }
+        sb.append(locationConstant);
+        if(!(sb.toString().endsWith(String.valueOf(File.separatorChar)))){
+            sb.append(File.separatorChar);
+        }        
+        return sb.toString();
+    }
 
 }

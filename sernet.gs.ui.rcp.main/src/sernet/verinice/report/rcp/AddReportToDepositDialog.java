@@ -58,13 +58,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     
     private static final Logger LOG = Logger.getLogger(AddReportToDepositDialog.class);
     
-    private static final String OUTPUT_FORMAT_PDF_LABEL = "PDF";
-    private static final String OUTPUT_FORMAT_HTML_LABEL = "HTML";
-    private static final String OUTPUT_FORMAT_ODT_LABEL = "ODT";
-    private static final String OUTPUT_FORMAT_ODS_LABEL = "ODS";
-    private static final String OUTPUT_FORMAT_DOC_LABEL = "DOC";
-    private static final String OUTPUT_FORMAT_XLS_LABEL = "XLS";
-    
     private Text reportName;
     
     private Composite outputTypeComposite;
@@ -161,10 +154,10 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportNameTextGd.horizontalSpan = 2;
         reportName.setLayoutData(reportNameTextGd);
 
-        Composite checkboxComposite = new Composite(dialogContent, SWT.NONE | SWT.BORDER);
-        GridLayout formatLayout = new GridLayout(3, true);
+        Composite checkboxComposite = new Composite(dialogContent, SWT.NONE );
+        GridLayout formatLayout = new GridLayout(3, false);
         checkboxComposite.setLayout(formatLayout);
-        checkboxComposite.setLayoutData(new GridData(GridData.FILL, SWT.LEFT, true, false, 3, 1));
+        checkboxComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 3, 1));
         GridData ofgd = new GridData();
         ofgd.horizontalAlignment = SWT.LEFT;
         ofgd.verticalAlignment = SWT.TOP;
@@ -173,14 +166,20 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         
         Label outputFormatLabel = new Label(checkboxComposite, SWT.NONE);
         outputFormatLabel.setText(Messages.ReportDepositView_2);
-        outputFormatLabel.setLayoutData(ofgd);
-        
+        GridData oflData = new GridData();
+//        oflData.horizontalAlignment = SWT.LEFT;
+//        oflData.verticalAlignment = SWT.TOP;
+//        oflData.grabExcessHorizontalSpace = true;
+//        oflData.grabExcessVerticalSpace = true;
+        oflData.horizontalSpan = 3;
+        outputFormatLabel.setLayoutData(oflData);
+
         outputTypePDFCheckbox = new Button(checkboxComposite, SWT.CHECK);
         outputTypePDFCheckbox.setText(OutputFormat.PDF.toString());
         GridData gdRadio = new GridData();
-        gdRadio.horizontalAlignment = SWT.LEFT;
-        gdRadio.verticalAlignment = SWT.TOP;
-        gdRadio.grabExcessHorizontalSpace = false;
+//        gdRadio.horizontalAlignment = SWT.LEFT;
+//        gdRadio.verticalAlignment = SWT.TOP;
+        gdRadio.grabExcessHorizontalSpace = true;
         gdRadio.horizontalSpan = 1;
         outputTypePDFCheckbox.setLayoutData(gdRadio);
 
@@ -192,7 +191,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         outputTypeWordCheckbox.setText(OutputFormat.DOC.toString());
         outputTypeWordCheckbox.setLayoutData(gdRadio);
         
-        outputTypeODTCheckbox = new Button(checkboxComposite, SWT.CHECK);
+        outputTypeODTCheckbox = new Button(checkboxComposite, SWT.CHECK );
         outputTypeODTCheckbox.setText(OutputFormat.ODT.toString());
         outputTypeODTCheckbox.setLayoutData(gdRadio);
         
@@ -200,15 +199,16 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         outputTypeODSCheckbox.setText(OutputFormat.ODS.toString());
         outputTypeODSCheckbox.setLayoutData(gdRadio);
         
-        outputTypeExcelCheckbox = new Button(checkboxComposite, SWT.CHECK);
+        outputTypeExcelCheckbox = new Button(checkboxComposite, SWT.CHECK );
         outputTypeExcelCheckbox.setText(OutputFormat.XLS.toString());
         outputTypeExcelCheckbox.setLayoutData(gdRadio);
+        
         
         Label templateLabel = new Label(dialogContent, SWT.NONE);
         templateLabel.setText(Messages.ReportDepositView_3);
         templateLabel.setLayoutData(reportNameLabelGd);
         
-        reportTemplateText = new Text(dialogContent, SWT.NONE | SWT.BORDER);
+        reportTemplateText = new Text(dialogContent, SWT.NONE);
         GridData reportTemplateTextGd = new GridData();
         reportTemplateTextGd.horizontalAlignment = SWT.FILL;
         reportTemplateTextGd.verticalAlignment = SWT.TOP;
@@ -291,16 +291,22 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     }
     
     private void updateTemplate(){
-        AddReportTemplateToDepositCommand command = 
-                new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
-                        null, null);
+        byte[] rptDesign = new byte[0];
         try {
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            if(command.isErrorOccured()){
-                
+            rptDesign = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
+            if(rptDesign.length > 0){
+                AddReportTemplateToDepositCommand command = 
+                        new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
+                                rptDesign, getSelectedDesginFile(), true);
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                if(command.isErrorOccured()){
+
+                }
             }
         } catch (CommandException e) {
             LOG.error("Error updating template ", e);
+        } catch (IOException e) {
+            LOG.error("Error updating template in deposit", e);
         }
     }
 

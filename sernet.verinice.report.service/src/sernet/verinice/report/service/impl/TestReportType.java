@@ -27,6 +27,7 @@ import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.model.report.ExcelOutputFormat;
 import sernet.verinice.model.report.HTMLOutputFormat;
 import sernet.verinice.model.report.PDFOutputFormat;
+import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.WordOutputFormat;
 
 
@@ -79,5 +80,14 @@ public class TestReportType implements IReportType {
 	public String getUseCaseID() {
 		return IReportType.USE_CASE_ID_GENERAL_REPORT;
 	}
+	
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.report.IReportType#createReport(sernet.verinice.model.report.ReportTemplate)
+     */
+    @Override
+    public void createReport(ReportTemplateMetaData report) {
+        // nothing here
+    }
+
 
 }

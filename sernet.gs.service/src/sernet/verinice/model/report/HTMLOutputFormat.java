@@ -17,12 +17,19 @@
  ******************************************************************************/
 package sernet.verinice.model.report;
 
+import java.io.Serializable;
+
 import sernet.verinice.interfaces.report.IOutputFormat;
 
 
-public class HTMLOutputFormat implements IOutputFormat {
+public class HTMLOutputFormat extends AbstractOutputFormat implements IOutputFormat, Serializable {
 
-	@Override
+	/**
+     * 
+     */
+    private static final long serialVersionUID = 20141007L;
+
+    @Override
 	public String getFileSuffix() {
 		return "html";
 	}
@@ -36,4 +43,12 @@ public class HTMLOutputFormat implements IOutputFormat {
 	public String getLabel() {
 		return "Hypertext Markup Language (HTML)";
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.report.AbstractOutputFormat#isRenderOutput()
+     */
+    @Override
+    public boolean isRenderOutput() {
+        return true;
+    }
 }

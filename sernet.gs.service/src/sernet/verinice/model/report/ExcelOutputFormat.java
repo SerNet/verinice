@@ -19,10 +19,17 @@
  ******************************************************************************/
 package sernet.verinice.model.report;
 
+import java.io.Serializable;
+
 import sernet.verinice.interfaces.report.IOutputFormat;
 
 
-public class ExcelOutputFormat implements IOutputFormat {
+public class ExcelOutputFormat extends AbstractOutputFormat implements IOutputFormat, Serializable{
+    
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 20141007L;
 
 	@Override
 	public String getFileSuffix() {
@@ -38,6 +45,14 @@ public class ExcelOutputFormat implements IOutputFormat {
 	public String getLabel() {
 		return "Excel Format (XLS)";
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.report.AbstractOutputFormat#isRenderOutput()
+     */
+    @Override
+    public boolean isRenderOutput() {
+        return true;
+    }
 	
 
 }
