@@ -21,16 +21,13 @@ package sernet.verinice.report.rcp;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOCase;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
+
+import static org.apache.commons.io.FilenameUtils.concat;
 
 import sernet.gs.service.ReportTemplateUtil;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
@@ -71,8 +68,11 @@ public class RemoteReportTemplatesSync {
     private void syncTemplate(ReportTemplateMetaData metadata) throws IOException {
         ReportTemplate template = getIReportDepositService().getReportTemplate(metadata);
         String directory = CnAWorkspace.getInstance().getRemoteReportTemplateDir();
-        File rptdesignTemplate = new File(FilenameUtils.concat(directory, template.getMetaData().getFilename()));
+        File rptdesignTemplate = new File(concat(directory, template.getMetaData().getFilename()));
         FileUtils.writeByteArrayToFile(rptdesignTemplate, template.getRptdesignFile());
-    }
 
+        for (Entry<String, byte[]> e : template.getPropertiesFiles().entrySet()) {
+            FileUtils.writeByteArrayToFile(new File(concat(directory, e.getKey())), e.getValue());
+        }
+    }
 }

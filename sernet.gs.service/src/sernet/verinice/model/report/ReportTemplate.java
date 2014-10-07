@@ -62,11 +62,11 @@ public class ReportTemplate implements Serializable{
         this.rptdesignFile = rptdesign;
     }
 
-    private Map<String, byte[]> getPropertiesFiles() {
+    public Map<String, byte[]> getPropertiesFiles() {
         return propertiesFiles;
     }
 
-    private void setPropertiesFiles(Map<String, byte[]> propertiesFiles) {
+    public void setPropertiesFiles(Map<String, byte[]> propertiesFiles) {
         this.propertiesFiles = propertiesFiles;
     }
 
