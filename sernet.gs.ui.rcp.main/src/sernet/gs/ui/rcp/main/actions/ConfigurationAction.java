@@ -164,22 +164,17 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
 				Object o = iter.next();
 				if( o instanceof CnATreeElement) {
 
-    				CnATreeElement elmt = (CnATreeElement) o;
+    				CnATreeElement person = (CnATreeElement) o;
     
-    				LOG.debug("Loading configuration for user " + elmt.getTitle()); //$NON-NLS-1$
-    				LoadConfiguration command = new LoadConfiguration(elmt);
+    				LOG.debug("Loading configuration for user " + person.getTitle()); //$NON-NLS-1$
+    				LoadConfiguration command = new LoadConfiguration(person);
     				command = ServiceFactory.lookupCommandService().executeCommand(command);
     				configuration = command.getConfiguration();
     
     				if (configuration == null) {
     					// create new configuration
-    				    /*
-    					LOG.debug("No config found, creating new configuration object."); //$NON-NLS-1$
-    					CreateConfiguration command2 = new CreateConfiguration(elmt);
-    					command2 = ServiceFactory.lookupCommandService().executeCommand(command2); 				
-    					configuration = command2.getConfiguration();
-    					*/
     				    configuration = new Configuration();
+    				    configuration.setPerson(person);
     				}
     
     			}

@@ -76,7 +76,8 @@ public class PersonPage extends BaseWizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 comboModelScope.setSelectedIndex(comboScope.getSelectionIndex());
-                scope = comboModelScope.getSelectedObject();               
+                scope = comboModelScope.getSelectedObject();
+                checkIfScopeIsPersonScope();
                 personComponent.setTypeId(getPersonTypeId());
                 personComponent.setScopeId(getScopeId());
                 personComponent.loadElements();
@@ -116,6 +117,20 @@ public class PersonPage extends BaseWizardPage {
         showSelectedPerson();    
     }
 
+    protected void checkIfScopeIsPersonScope() {
+        if(scope!=null && person!=null) {
+            if(scope.getDbId()!=person.getScopeId()) {
+                deselectPerson();
+            }
+        }
+        
+    }
+
+    private void deselectPerson() {
+        personComponent.deselectElements();
+        selectPerson();
+    }
+
     private void selectMessage() {
         if(isNewAccount()) {
             setMessage(Messages.PersonPage_2);
@@ -131,11 +146,14 @@ public class PersonPage extends BaseWizardPage {
         }
         List<CnATreeElement> selectedElements = personComponent.getSelectedElements();
         if(selectedElements!=null && !selectedElements.isEmpty()) {
-            person = selectedElements.get(0);
-            validatePerson();
-            showSelectedPerson();
-            setPageComplete(isPageComplete());
+            person = selectedElements.get(0);          
+        } else {
+            person = null;
         }
+        
+        validatePerson();
+        showSelectedPerson();
+        setPageComplete(isPageComplete());
     }   
 
     private void validatePerson() {
@@ -225,11 +243,7 @@ public class PersonPage extends BaseWizardPage {
         try {
             comboModelGroup.clear();
             if(PersonIso.TYPE_ID.equals(getPersonTypeId())) {
-                LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(PersonGroup.TYPE_ID, getScopeId());
-                command = getCommandService().executeCommand(command);
-                comboModelGroup.addAll(command.getElements());       
-                comboModelGroup.sort();
-                comboModelGroup.addNoSelectionObject(Messages.PersonPage_9);
+                loadPersonGroups();
             }
             getDisplay().syncExec(new Runnable(){
                 @Override
@@ -237,18 +251,34 @@ public class PersonPage extends BaseWizardPage {
                     comboGroup.setItems(comboModelGroup.getLabelArray());
                     if(group!=null) {
                         comboModelGroup.setSelectedObject(group);
-                        comboGroup.select(comboModelGroup.getSelectedIndex());
-                        personComponent.setGroupId(getGroupId());
+                        selectFirstIfNoGroupIsSelected();
+                        comboGroup.select(comboModelGroup.getSelectedIndex());                        
                     } else {
                         comboGroup.select(0);
                         comboModelGroup.setSelectedIndex(comboGroup.getSelectionIndex()); 
                     }
+                    group = comboModelGroup.getSelectedObject();
+                    personComponent.setGroupId(getGroupId());
                     personComponent.loadElementsAndSelect(person);
                 }
             });
         } catch(Exception e) {
             LOG.error("Error while loading groups", e); //$NON-NLS-1$
             throw new RuntimeException(e);
+        }
+    }
+
+    private void loadPersonGroups() throws CommandException {
+        LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(PersonGroup.TYPE_ID, getScopeId());
+        command = getCommandService().executeCommand(command);
+        comboModelGroup.addAll(command.getElements());       
+        comboModelGroup.sort();
+        comboModelGroup.addNoSelectionObject(Messages.PersonPage_9);
+    }
+    
+    private void selectFirstIfNoGroupIsSelected() {
+        if(comboModelGroup.getSelectedIndex()==-1) {
+            comboModelGroup.setSelectedIndex(0);
         }
     }
     

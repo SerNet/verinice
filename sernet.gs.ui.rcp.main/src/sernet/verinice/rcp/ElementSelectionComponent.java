@@ -412,6 +412,17 @@ public class ElementSelectionComponent {
         elementList = list;
     }
     
+    public void deselectElements() {
+        Display.getDefault().syncExec(new Runnable() {                 
+            @Override
+            public void run() {
+                getViewer().getTable().deselectAll();
+                getViewer().setSelection(new StructuredSelection());
+                selectedElements.clear();
+            }
+        });
+    }
+    
     public void setSelectedElement(final CnATreeElement selectedElement) {
         if(selectedElement!=null) {
             int i = elementList.indexOf(selectedElement);

@@ -129,13 +129,13 @@ public class ComboModel<T> {
 	}
 
 	public void setSelectedIndex(int selectedIndex) {
-		if(selectedIndex>=objectList.size()) {
-			throw new IllegalArgumentException("Selected index: " + selectedIndex + " is highter or equal than number of objects: " + objectList.size()); //$NON-NLS-1$ //$NON-NLS-2$
-		}
-		this.selectedIndex = selectedIndex;
+		if(selectedIndex<objectList.size()) {
+		    this.selectedIndex = selectedIndex;
+		}	
 	}
 	
 	public void setSelectedObject(T object) {
+	    this.selectedIndex = -1;
 		int i = 0;
 		for (ComboModelObject<T> current : objectList) {
 			if(object.equals(current.getObject())) {

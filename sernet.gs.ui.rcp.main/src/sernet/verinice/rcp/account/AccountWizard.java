@@ -62,8 +62,7 @@ public class AccountWizard extends Wizard {
      */
     @Override
     public void addPages() {
-        personPage = new PersonPage();
-              
+        personPage = new PersonPage();             
         addPage(personPage);
         authenticationPage = new AuthenticationPage();
         addPage(authenticationPage);
