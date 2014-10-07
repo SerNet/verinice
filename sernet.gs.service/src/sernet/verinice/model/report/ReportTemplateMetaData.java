@@ -20,12 +20,10 @@ package sernet.verinice.model.report;
 import java.io.Serializable;
 import java.util.Map;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
 
-/**
- *
- */
-public class ReportTemplateMetaData implements Serializable {
+public class ReportTemplateMetaData implements Serializable, Comparable<ReportTemplateMetaData> {
 
     private static final long serialVersionUID = 201410011436L;
 
@@ -107,5 +105,10 @@ public class ReportTemplateMetaData implements Serializable {
         hash = hash * 17 + ((md5CheckSumm != null) ? md5CheckSumm.hashCode() : 0);
         hash = hash * 31 + ((filename != null) ? filename.hashCode() : 0);
         return hash;
+    }
+
+    @Override
+    public int compareTo(ReportTemplateMetaData other) {
+        return new NumericStringComparator().compare(filename, other.filename);
     }
 }

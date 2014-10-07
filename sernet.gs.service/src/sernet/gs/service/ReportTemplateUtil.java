@@ -169,7 +169,7 @@ public class ReportTemplateUtil {
 
     public Map<String, byte[]> getPropertiesFiles(String fileName) throws IOException {
         Map<String, byte[]> propertiesFiles = new TreeMap<String, byte[]>();
-        IOFileFilter filter = new RegexFileFilter(fileName + "_.*\\.properties", IOCase.INSENSITIVE);
+        IOFileFilter filter = new RegexFileFilter(fileName + "\\_.*\\.properties", IOCase.INSENSITIVE);
         Iterator<File> iter = FileUtils.iterateFiles(new File(this.reportTemplateDirectory), filter, null);
         while (iter.hasNext()) {
             File f = iter.next();
