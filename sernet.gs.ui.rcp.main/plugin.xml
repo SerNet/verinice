@@ -175,7 +175,7 @@
       		allowMultiple="false"
       		category="sernet.gs.ui.rcp.main.views"
       		class="sernet.verinice.report.rcp.ReportDepositView"
-      		icon="icons/user.png"
+      		icon="icons/folder_table.png"
       		id="sernet.verinice.report.rcp.ReportDepositView"
       		name="%view.name.16"
       		restorable="true">

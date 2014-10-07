@@ -116,6 +116,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
         IStatus status = Status.OK_STATUS;
 
         try {
+            Activator.inheritVeriniceContextState();
             syncReportTemplates();
         } catch (IOException e) {
             status = errorHandler(e);

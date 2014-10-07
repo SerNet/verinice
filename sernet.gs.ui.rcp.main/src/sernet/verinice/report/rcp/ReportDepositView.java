@@ -62,6 +62,7 @@ import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.RightsEnabledView;
 
 /**
@@ -187,6 +188,7 @@ public class ReportDepositView extends RightsEnabledView {
             public void doRun() {
                 AddReportToDepositDialog dlg = new AddReportToDepositDialog(Display.getDefault().getActiveShell());
                 dlg.open();
+                updateView();
             }
         };
         addTemplateAction.setText(Messages.ReportDepositView_6);
@@ -204,6 +206,7 @@ public class ReportDepositView extends RightsEnabledView {
                     return;
                 }
                 deleteAttachments();
+                updateView();
             }
         };
         
@@ -220,6 +223,7 @@ public class ReportDepositView extends RightsEnabledView {
                 if(count == 1){
                     AddReportToDepositDialog dlg = new AddReportToDepositDialog(Display.getDefault().getActiveShell(), (ReportTemplateMetaData)((IStructuredSelection)viewer.getSelection()).getFirstElement());
                     dlg.open();
+                    updateView();
                 } else {
                     MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.ReportDepositView_20, Messages.ReportDepositView_21);
                     return;
@@ -496,6 +500,11 @@ public class ReportDepositView extends RightsEnabledView {
                 ExceptionUtil.log(e, "Error deleting Reporttemplate:\t" + sel.getOutputname());
             }
         }
+    }
+    
+    private void updateView(){
+        ReportTemplateSync.sync();
+        viewer.setInput(getContent());
     }
     
     

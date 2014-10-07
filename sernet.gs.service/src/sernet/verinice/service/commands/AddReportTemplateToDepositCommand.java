@@ -79,13 +79,13 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
         try{
             command = getCommandService().executeCommand(command);
             if(command.isErrorOccured()){
-                return false;
+                return true;
             }
         } catch(CommandException e){
             LOG.error("Error updating template on server", e);
-            return false;
+            return true;
         }
-        return true;        
+        return false;        
     }
     
     private boolean writeToServerDeposit(ReportTemplateMetaData template, byte[] file){

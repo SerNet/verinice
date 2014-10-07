@@ -25,7 +25,6 @@ import java.util.Arrays;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -45,6 +44,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
@@ -59,8 +59,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(AddReportToDepositDialog.class);
     
     private Text reportName;
-    
-    private Composite outputTypeComposite;
     
     private Button outputTypePDFCheckbox;
     private Button outputTypeHTMLCheckbox;
@@ -77,12 +75,6 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     final int marginWidth = 10;
 
     final int defaultColNr = 3;
-    
-    private String selectedDesginFile;
-    
-    // perhaps via buttonbar
-    private Button cancelButton;
-    private Button saveButton;
     
     private ReportTemplateMetaData editTemplate;
     
@@ -273,7 +265,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         if(!isAnyFormatSelected() ||
                 getReportOutputName() == null ||
                 getSelectedDesginFile() == null){
-            MessageDialog.openError(this.getParentShell(), Messages.ReportDepositView_11, Messages.ReportDepositView_12);
+            ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_12);
             return;
         }
         if(isEditMode()){
@@ -300,7 +292,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
                                 rptDesign, getSelectedDesginFile(), true);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 if(command.isErrorOccured()){
-
+                    ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_23);
                 }
             }
         } catch (CommandException e) {
@@ -320,7 +312,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
                                 rptDesign, getSelectedDesginFile());
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 if(command.isErrorOccured()){
-                    MessageDialog.openError(Display.getDefault().getActiveShell(), Messages.ReportDepositView_11, Messages.ReportDepositView_22);
+                    ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_22);
                 }
             }
         } catch (IOException e) {
