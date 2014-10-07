@@ -158,7 +158,7 @@ public class ReportDepositService implements IReportDepositService {
 
     private ReportTemplateUtil getReportTemplateUtil() throws IOException {
         if (reportTemplateUtil == null) {
-            reportTemplateUtil = new ReportTemplateUtil(reportDeposit.getFile().getPath());
+            reportTemplateUtil = new ReportTemplateUtil(reportDeposit.getFile().getPath(), true);
         }
 
         return reportTemplateUtil;
@@ -180,7 +180,7 @@ public class ReportDepositService implements IReportDepositService {
 
     @Override
     public void updateInServerDeposit(ReportTemplateMetaData metadata) throws IOException {
-        if (reportTemplateUtil.checkReportMetaDataFile(new File(metadata.getFilename()))) {
+        if (getReportTemplateUtil().checkReportMetaDataFile(new File(metadata.getFilename()))) {
             File propFile = getReportTemplateUtil().getPropertiesFile(metadata.getFilename());
             Properties props = getReportTemplateUtil().parseAndExtendMetaData(propFile);
             props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metadata.getOutputFormats(), ','));
@@ -220,7 +220,7 @@ public class ReportDepositService implements IReportDepositService {
         String filePath = getReportDeposit().getFile().getPath() + File.separatorChar + metadata.getFilename();
         byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
 
-        Map<String, byte[]> propertiesFile = reportTemplateUtil.getPropertiesFiles(metadata.getFilename());
+        Map<String, byte[]> propertiesFile = getReportTemplateUtil().getPropertiesFiles(metadata.getFilename());
         return new ReportTemplate(metadata, rptdesign, propertiesFile);
     }
 

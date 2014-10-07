@@ -62,8 +62,15 @@ public class ReportTemplateUtil {
 
     private String reportTemplateDirectory;
 
-    public ReportTemplateUtil(String reportDepositDirectory){
+    private boolean isServerSide;
+
+    public ReportTemplateUtil(String reportDepositDirectory) {
         this.reportTemplateDirectory = reportDepositDirectory;
+    }
+
+    public ReportTemplateUtil(String reportDepositDirectory, boolean isServerSide) {
+        this.reportTemplateDirectory = reportDepositDirectory;
+        this.isServerSide = isServerSide;
     }
 
     public ReportTemplateMetaData getMetaData(File rptDesign) throws IOException, ReportMetaDataException, PropertyFileExistsException {
@@ -157,7 +164,7 @@ public class ReportTemplateUtil {
         OutputFormat[] outputFormats = formats.toArray(new OutputFormat[formats.size()]);
         String md5CheckSum = getChecksum(fileName);
 
-        return new ReportTemplateMetaData(fileName, outputName, outputFormats, md5CheckSum);
+        return new ReportTemplateMetaData(fileName, outputName, outputFormats, isServerSide, md5CheckSum);
     }
 
     public Map<String, byte[]> getPropertiesFiles(String fileName) throws IOException {

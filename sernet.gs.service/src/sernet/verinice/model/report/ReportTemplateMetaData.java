@@ -45,8 +45,9 @@ public class ReportTemplateMetaData implements Serializable {
         this.outputFormat = outputFormats;
     }
 
-    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, String md5CheckSum) {
+    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, boolean isServer, String md5CheckSum) {
         this(filename, outputname, outputFormats);
+        this.isServer = isServer;
         this.setMd5CheckSumm(md5CheckSum);
     }
 
