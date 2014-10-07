@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,7 +27,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
@@ -75,12 +73,9 @@ import sernet.verinice.interfaces.IVersionConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.model.report.PropertyFileExistsException;
-import sernet.verinice.model.report.ReportMetaDataException;
-import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.StartupImporter;
 import sernet.verinice.rcp.StatusResult;
-import sernet.verinice.report.rcp.RemoteReportTemplatesSync;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -259,27 +254,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         StartupImporter.importVna();
 
-        WorkspaceJob syncReportsJob = new WorkspaceJob("sync-reports") {
-
-            @Override
-            public IStatus runInWorkspace(IProgressMonitor arg0) throws CoreException {
-                Activator.inheritVeriniceContextState();
-                RemoteReportTemplatesSync sync = new RemoteReportTemplatesSync();
-                try {
-                    sync.syncReportTemplates();
-                } catch (IOException e) {
-                    LOG.error("error while syncing reports", e);
-                } catch (ReportMetaDataException e) {
-                    LOG.error("error while syncing reports", e);
-                } catch (PropertyFileExistsException e) {
-                    LOG.error("error while syncing reports", e);
-                }
-
-                return Status.OK_STATUS;
-            }
-        };
-
-        syncReportsJob.schedule();
+        ReportTemplateSync.sync();
 
         // Log the system and application configuration
         ConfigurationLogger.logSystemProperties();
