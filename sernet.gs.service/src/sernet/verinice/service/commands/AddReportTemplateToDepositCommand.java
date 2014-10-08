@@ -63,7 +63,7 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
      */
     @Override
     public void execute() {
-        ReportTemplateMetaData metadata = new ReportTemplateMetaData(reportFilename, reportName, outputFormat);
+        ReportTemplateMetaData metadata = new ReportTemplateMetaData(reportFilename, reportName, outputFormat, true, null);
         if(!update){
                 writeToServerDeposit(metadata, rptDesignFile);
         } else if(update){

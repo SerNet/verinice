@@ -18,7 +18,10 @@
 package sernet.verinice.model.report;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.concurrent.ConcurrentMap;
+
+import org.apache.commons.lang.ArrayUtils;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
@@ -33,20 +36,20 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
 
     private String outputname;
 
-    private String md5CheckSumm;
+    /**
+     * contains checksums from the rptdesign file and also from all propertie
+     * files
+     **/
+    private String[] md5CheckSums;
 
     private boolean isServer;
 
-    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats) {
+    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, boolean isServer, String[] md5CheckSums) {
         this.filename = filename;
         this.outputname = outputname;
         this.outputFormat = outputFormats;
-    }
-
-    public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, boolean isServer, String md5CheckSum) {
-        this(filename, outputname, outputFormats);
         this.isServer = isServer;
-        this.setMd5CheckSumm(md5CheckSum);
+        this.md5CheckSums = md5CheckSums;
     }
 
     public String getFilename() {
@@ -61,14 +64,6 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         return outputname;
     }
 
-    private String getMd5CheckSumm() {
-        return md5CheckSumm;
-    }
-
-    private void setMd5CheckSumm(String md5CheckSumm) {
-        this.md5CheckSumm = md5CheckSumm;
-    }
-
     public boolean isServer() {
         return isServer;
     }
@@ -79,32 +74,39 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if (this == obj)
+            return true;
+        if (obj == null)
             return false;
-        }
-
-        if (!(obj instanceof ReportTemplateMetaData))
+        if (getClass() != obj.getClass())
             return false;
-
         ReportTemplateMetaData other = (ReportTemplateMetaData) obj;
-
-        if (md5CheckSumm != null && other.md5CheckSumm != null) {
-            return md5CheckSumm.equals(md5CheckSumm);
-        }
-
-        if (filename != null) {
-            return filename.equals(other.filename);
-        }
-
-        return false;
+        if (filename == null) {
+            if (other.filename != null)
+                return false;
+        } else if (!filename.equals(other.filename))
+            return false;
+        if (!Arrays.equals(md5CheckSums, other.md5CheckSums))
+            return false;
+        if (!Arrays.equals(outputFormat, other.outputFormat))
+            return false;
+        if (outputname == null) {
+            if (other.outputname != null)
+                return false;
+        } else if (!outputname.equals(other.outputname))
+            return false;
+        return true;
     }
 
     @Override
     public int hashCode() {
-        int hash = 1;
-        hash = hash * 17 + ((md5CheckSumm != null) ? md5CheckSumm.hashCode() : 0);
-        hash = hash * 31 + ((filename != null) ? filename.hashCode() : 0);
-        return hash;
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((filename == null) ? 0 : filename.hashCode());
+        result = prime * result + Arrays.hashCode(md5CheckSums);
+        result = prime * result + Arrays.hashCode(outputFormat);
+        result = prime * result + ((outputname == null) ? 0 : outputname.hashCode());
+        return result;
     }
 
     @Override

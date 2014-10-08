@@ -23,6 +23,7 @@ import static org.apache.commons.io.FilenameUtils.concat;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -55,7 +56,7 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListener {
 
-    private ReportTemplateUtil clientServerReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir());
+    private ReportTemplateUtil clientServerReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir(), true);
 
     private static volatile IModelLoadListener modelLoadListener;
 
@@ -83,13 +84,18 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
     private void syncReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException {
 
-        String[] fileNames = clientServerReportTemplateUtil.getReportTemplateFileNames();
-        Set<ReportTemplateMetaData> localServerTemplates = clientServerReportTemplateUtil.getReportTemplates(fileNames);
+        Set<ReportTemplateMetaData> localServerTemplates = clientServerReportTemplateUtil.getReportTemplates();
         Set<ReportTemplateMetaData> remoteSeverTemplates = getIReportDepositService().getServerReportTemplates();
 
         for (ReportTemplateMetaData remoteTemplateMetaData : remoteSeverTemplates) {
             if (!localServerTemplates.contains(remoteTemplateMetaData)) {
                 syncTemplate(remoteTemplateMetaData);
+            }
+        }
+
+        for (ReportTemplateMetaData localTemplateMetaData : clientServerReportTemplateUtil.getReportTemplates()) {
+            if (!remoteSeverTemplates.contains(localTemplateMetaData)) {
+                deleteRptdesignAndPropertiesFiles(localTemplateMetaData.getFilename());
             }
         }
     }
@@ -98,7 +104,10 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
         return ServiceFactory.lookupReportDepositService();
     }
 
-    private void syncTemplate(ReportTemplateMetaData metadata) throws IOException {
+    private void syncTemplate(ReportTemplateMetaData metadata) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+
+        deleteRptdesignAndPropertiesFiles(metadata.getFilename());
+
         ReportTemplate template = getIReportDepositService().getReportTemplate(metadata);
         String directory = CnAWorkspace.getInstance().getRemoteReportTemplateDir();
         File rptdesignTemplate = new File(concat(directory, template.getMetaData().getFilename()));
@@ -106,6 +115,22 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
         for (Entry<String, byte[]> e : template.getPropertiesFiles().entrySet()) {
             FileUtils.writeByteArrayToFile(new File(concat(directory, e.getKey())), e.getValue());
+        }
+    }
+
+    private void deleteRptdesignAndPropertiesFiles(String fileName) {
+
+        String filePath = CnAWorkspace.getInstance().getRemoteReportTemplateDir() + File.separatorChar + fileName;
+        File rptdesign = new File(filePath);
+
+        if (rptdesign.exists()) {
+            rptdesign.delete();
+        }
+
+        // delete properties files
+        Iterator<File> iter = clientServerReportTemplateUtil.listPropertiesFiles(fileName);
+        while (iter.hasNext()) {
+            iter.next().delete();
         }
     }
 

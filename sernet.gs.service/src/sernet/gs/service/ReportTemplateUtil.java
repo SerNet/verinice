@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
@@ -94,18 +94,24 @@ public class ReportTemplateUtil {
         props.load(fis);
         fis.close();
 
+        boolean changed = false;
         if (!(props.containsKey(PROPERTIES_FILENAME))) {
             props.setProperty(PROPERTIES_FILENAME, FilenameUtils.getName(rptDesign.getPath()));
+            changed = true;
         }
         if (!(props.containsKey(PROPERTIES_OUTPUTFORMATS))) {
             props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(OutputFormat.values(), ","));
+            changed = true;
         }
         if (!(props.containsKey(PROPERTIES_OUTPUTNAME))) {
             props.setProperty(PROPERTIES_OUTPUTNAME, FilenameUtils.getName(rptDesign.getPath()));
+            changed = true;
         }
 
-        OutputStream out = new FileOutputStream(propFile.getAbsoluteFile());
-        props.store(out, "Metadata for the report deposit");
+        if (changed) {
+            OutputStream out = new FileOutputStream(propFile.getAbsoluteFile());
+            props.store(out, String.format("Metadata for the report deposit %s", FilenameUtils.getName(rptDesign.getPath())));
+        }
 
         return props;
     }
@@ -162,16 +168,14 @@ public class ReportTemplateUtil {
         String fileName = props.getProperty(IReportDepositService.PROPERTIES_FILENAME);
         String outputName = props.getProperty(IReportDepositService.PROPERTIES_OUTPUTNAME);
         OutputFormat[] outputFormats = formats.toArray(new OutputFormat[formats.size()]);
-        String md5CheckSum = getChecksum(fileName);
+        String[] md5CheckSums = getCheckSums(fileName);
 
-        return new ReportTemplateMetaData(fileName, outputName, outputFormats, isServerSide, md5CheckSum);
+        return new ReportTemplateMetaData(fileName, outputName, outputFormats, isServerSide, md5CheckSums);
     }
 
     public Map<String, byte[]> getPropertiesFiles(String fileName) throws IOException {
         Map<String, byte[]> propertiesFiles = new TreeMap<String, byte[]>();
-        String baseName = fileName.substring(0, fileName.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
-        IOFileFilter filter = new RegexFileFilter(baseName + "\\_?.*\\.properties", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(this.reportTemplateDirectory), filter, null);
+        Iterator<File> iter = listPropertiesFiles(fileName);
         while (iter.hasNext()) {
             File f = iter.next();
             propertiesFiles.put(f.getName(), FileUtils.readFileToByteArray(f.getAbsoluteFile()));
@@ -180,13 +184,32 @@ public class ReportTemplateUtil {
         return propertiesFiles;
     }
 
-    private String getChecksum(String fileName) throws IOException {
+    @SuppressWarnings("unchecked")
+    public Iterator<File> listPropertiesFiles(String fileName) {
+        String baseName = fileName.substring(0, fileName.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
+        IOFileFilter filter = new RegexFileFilter(baseName + "\\_?.*\\.properties", IOCase.INSENSITIVE);
+        Iterator<File> iter = FileUtils.iterateFiles(new File(this.reportTemplateDirectory), filter, null);
+        return iter;
+    }
+
+    private String[] getCheckSums(String fileName) throws IOException {
+
         String filePath = reportTemplateDirectory + File.separatorChar + fileName;
-        return DigestUtils.md5Hex(FileUtils.readFileToByteArray(new File(filePath)));
+        Iterator<File> iter = listPropertiesFiles(fileName);
+
+        List<String> md5CheckSums = new ArrayList<String>();
+        md5CheckSums.add(DigestUtils.md5Hex(FileUtils.readFileToByteArray(new File(filePath))));
+
+        while (iter.hasNext()) {
+            File f = iter.next();
+            md5CheckSums.add(DigestUtils.md5Hex(FileUtils.readFileToByteArray(f)));
+        }
+
+        return md5CheckSums.toArray(new String[md5CheckSums.size()]);
     }
 
     public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        Set<ReportTemplateMetaData> set = new TreeSet<ReportTemplateMetaData>();
+        Set<ReportTemplateMetaData> set = new HashSet<ReportTemplateMetaData>();
 
         for (String designFilePath : rptDesignFiles) {
             set.add(getMetaData(new File(designFilePath)));
@@ -194,7 +217,11 @@ public class ReportTemplateUtil {
         return set;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public Set<ReportTemplateMetaData> getReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return getReportTemplates(getReportTemplateFileNames());
+    }
+
+    @SuppressWarnings({ "unchecked" })
     public String[] getReportTemplateFileNames() {
         List<String> list = new ArrayList<String>();
         IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
