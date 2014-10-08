@@ -75,8 +75,6 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
     private static void startSync() {
 
-        Activator.inheritVeriniceContextState();
-
         WorkspaceJob syncReportsJob = new ReportTemplateSync();
         JobScheduler.scheduleInitJob(syncReportsJob);
     }
@@ -85,7 +83,6 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
         String[] fileNames = clientServerReportTemplateUtil.getReportTemplateFileNames();
         Set<ReportTemplateMetaData> localServerTemplates = clientServerReportTemplateUtil.getReportTemplates(fileNames);
-        IReportDepositService rds = getIReportDepositService();
         Set<ReportTemplateMetaData> remoteSeverTemplates = getIReportDepositService().getServerReportTemplates();
 
         for (ReportTemplateMetaData remoteTemplateMetaData : remoteSeverTemplates) {

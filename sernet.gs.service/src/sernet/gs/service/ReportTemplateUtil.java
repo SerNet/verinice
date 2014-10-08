@@ -105,7 +105,7 @@ public class ReportTemplateUtil {
             props.setProperty(PROPERTIES_OUTPUTNAME, Messages.PROPERTIES_DEFAULT_OUTPUT_NAME);
         }
 
-        OutputStream out = new FileOutputStream(propFile);
+        OutputStream out = new FileOutputStream(propFile.getAbsoluteFile());
         props.store(out, "Metadata for the report deposit");
 
         return props;
