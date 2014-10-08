@@ -42,9 +42,12 @@ public class SaveToReportDepositCommand extends GenericCommand {
     
     private IReportDepositService depositService;
     
-    public SaveToReportDepositCommand(byte[] rptDesign, ReportTemplateMetaData metaData){
+    private String locale;
+    
+    public SaveToReportDepositCommand(byte[] rptDesign, ReportTemplateMetaData metaData, String locale){
         this.rptdesign = rptDesign;
         this.metadata = metaData;
+        this.locale = locale;
         ServerInitializer.inheritVeriniceContextState();
         this.depositService = (IReportDepositService)VeriniceContext.get(VeriniceContext.REPORT_DEPOSIT_SERVICE);
     }
@@ -55,7 +58,7 @@ public class SaveToReportDepositCommand extends GenericCommand {
     @Override
     public void execute() {     
         try {
-            depositService.addToServerDeposit(metadata, rptdesign);
+            depositService.addToServerDeposit(metadata, rptdesign, locale);
         } catch (IOException e) {
             throw new RuntimeCommandException(e);
         }

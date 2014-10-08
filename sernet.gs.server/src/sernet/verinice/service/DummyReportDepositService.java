@@ -51,21 +51,21 @@ public class DummyReportDepositService implements IReportDepositService {
      * @see sernet.verinice.interfaces.IReportDepositService#addToServerDeposit(sernet.verinice.model.report.ReportTemplateMetaData, byte[])
      */
     @Override
-    public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file) {
+    public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file, String locale) {
     }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IReportDepositService#removeFromServer(sernet.verinice.model.report.ReportTemplateMetaData)
      */
     @Override
-    public void removeFromServer(ReportTemplateMetaData metadata) throws IOException {
+    public void removeFromServer(ReportTemplateMetaData metadata, String locale) throws IOException {
     }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IReportDepositService#getServerReportTemplates()
      */
     @Override
-    public Set<ReportTemplateMetaData> getServerReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         return new TreeSet<ReportTemplateMetaData>();
     }
 
@@ -114,7 +114,7 @@ public class DummyReportDepositService implements IReportDepositService {
      * @see sernet.verinice.interfaces.IReportDepositService#getReportTemplates(java.lang.String[])
      */
     @Override
-    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         return null;
     }
 
@@ -122,7 +122,7 @@ public class DummyReportDepositService implements IReportDepositService {
      * @see sernet.verinice.interfaces.IReportDepositService#getMetaData(java.io.File)
      */
     @Override
-    public ReportTemplateMetaData getMetaData(File rptDesign) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         return null;
     }
 
@@ -130,14 +130,14 @@ public class DummyReportDepositService implements IReportDepositService {
      * @see sernet.verinice.interfaces.IReportDepositService#updateInServerDeposit(sernet.verinice.model.report.ReportTemplateMetaData)
      */
     @Override
-    public void updateInServerDeposit(ReportTemplateMetaData metadata) throws IOException {
+    public void updateInServerDeposit(ReportTemplateMetaData metadata, String locale) throws IOException {
     }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IReportDepositService#getReportTemplate(sernet.verinice.model.report.ReportTemplateMetaData)
      */
     @Override
-    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata) throws IOException {
+    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }

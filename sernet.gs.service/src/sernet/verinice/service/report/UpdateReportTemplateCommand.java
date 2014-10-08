@@ -39,8 +39,11 @@ public class UpdateReportTemplateCommand extends GenericCommand {
     
     private boolean errorOccured = false;
     
-    public UpdateReportTemplateCommand(ReportTemplateMetaData data){
+    private String locale;
+    
+    public UpdateReportTemplateCommand(ReportTemplateMetaData data, String locale){
         this.metaData = data;
+        this.locale = locale;
         depositService = (IReportDepositService)VeriniceContext.get(VeriniceContext.REPORT_DEPOSIT_SERVICE);
     }
     
@@ -51,7 +54,7 @@ public class UpdateReportTemplateCommand extends GenericCommand {
     public void execute() {
         try {
             // TODO: still not working correctly
-            depositService.updateInServerDeposit(metaData);
+            depositService.updateInServerDeposit(metaData, locale);
         } catch (IOException e) {
             LOG.error("Error updating report template for report:\t" + metaData.getOutputname(), e);
             errorOccured = true;

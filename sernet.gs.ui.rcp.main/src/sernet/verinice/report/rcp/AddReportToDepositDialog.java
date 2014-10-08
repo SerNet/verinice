@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -292,7 +293,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             if(rptDesign.length > 0){
                 AddReportTemplateToDepositCommand command = 
                         new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
-                                rptDesign, getSelectedDesginFile(), true);
+                                rptDesign, getSelectedDesginFile(), Locale.getDefault().toString(), true);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 if(command.isErrorOccured()){
                     ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_23);
@@ -312,7 +313,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             if(rptDesign.length > 0){
                 AddReportTemplateToDepositCommand command = 
                         new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
-                                rptDesign, getSelectedDesginFile());
+                                rptDesign, getSelectedDesginFile(), Locale.getDefault().toString());
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 if(command.isErrorOccured()){
                     ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_22);

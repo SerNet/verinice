@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -474,7 +475,7 @@ public class ReportDepositView extends RightsEnabledView {
     
     private Object getContent(){
         try{
-            Set<ReportTemplateMetaData> templateSet = getReportService().getServerReportTemplates();
+            Set<ReportTemplateMetaData> templateSet = getReportService().getServerReportTemplates(Locale.getDefault().toString());
             return templateSet.toArray(new ReportTemplateMetaData[templateSet.size()]);
         } catch (PropertyFileExistsException e){
             String msg = "Something went wrong with reading the propertyfiles";
@@ -495,7 +496,7 @@ public class ReportDepositView extends RightsEnabledView {
         while (iterator.hasNext()) {
             ReportTemplateMetaData sel = (ReportTemplateMetaData) iterator.next();
             try {
-                ServiceFactory.lookupReportDepositService().removeFromServer(sel);
+                ServiceFactory.lookupReportDepositService().removeFromServer(sel, Locale.getDefault().toString());
             } catch (IOException e) {
                 ExceptionUtil.log(e, "Error deleting Reporttemplate:\t" + sel.getOutputname());
             }

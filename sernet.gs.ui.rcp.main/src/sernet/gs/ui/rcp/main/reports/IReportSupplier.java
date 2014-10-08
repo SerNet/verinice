@@ -26,6 +26,6 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public interface IReportSupplier {
     
-    public List<ReportTemplateMetaData> getReportTemplates();
+    public List<ReportTemplateMetaData> getReportTemplates(String locale);
 
 }

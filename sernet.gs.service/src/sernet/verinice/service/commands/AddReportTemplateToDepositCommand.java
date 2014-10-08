@@ -45,16 +45,19 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
     private boolean errorOccured = false;
     
     private boolean update = false;
+    
+    private String locale;
 
-    public AddReportTemplateToDepositCommand(String reportName, OutputFormat[] outputFormats, byte[] rptDesign, String filename){
+    public AddReportTemplateToDepositCommand(String reportName, OutputFormat[] outputFormats, byte[] rptDesign, String filename, String locale){
         this.reportName = reportName;
         this.outputFormat = outputFormats;
         this.reportFilename = filename;
         this.rptDesignFile = rptDesign;
+        this.locale = locale;
     }
     
-    public AddReportTemplateToDepositCommand(String reportName, OutputFormat[] outputFormats, byte[] rptDesign, String filename, boolean update){
-        this(reportName, outputFormats, rptDesign, filename);
+    public AddReportTemplateToDepositCommand(String reportName, OutputFormat[] outputFormats, byte[] rptDesign, String filename, String locale, boolean update){
+        this(reportName, outputFormats, rptDesign, filename, locale);
         this.update = update;
     }
     
@@ -65,17 +68,17 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
     public void execute() {
         ReportTemplateMetaData metadata = new ReportTemplateMetaData(reportFilename, reportName, outputFormat, true, null);
         if(!update){
-                writeToServerDeposit(metadata, rptDesignFile);
+                writeToServerDeposit(metadata, rptDesignFile, locale);
         } else if(update){
-            errorOccured = updateServerDeposit(metadata);
+            errorOccured = updateServerDeposit(metadata, locale);
         } else {
             errorOccured = true;
             return;
         }
     }
 
-    private boolean updateServerDeposit(ReportTemplateMetaData metaData){
-        UpdateReportTemplateCommand command = new UpdateReportTemplateCommand(metaData);
+    private boolean updateServerDeposit(ReportTemplateMetaData metaData, String locale){
+        UpdateReportTemplateCommand command = new UpdateReportTemplateCommand(metaData, locale);
         try{
             command = getCommandService().executeCommand(command);
             if(command.isErrorOccured()){
@@ -88,9 +91,9 @@ public class AddReportTemplateToDepositCommand extends ChangeLoggingCommand impl
         return false;        
     }
     
-    private boolean writeToServerDeposit(ReportTemplateMetaData template, byte[] file){
+    private boolean writeToServerDeposit(ReportTemplateMetaData template, byte[] file, String locale){
         // call command on server
-        SaveToReportDepositCommand command = new SaveToReportDepositCommand(file, template);
+        SaveToReportDepositCommand command = new SaveToReportDepositCommand(file, template, locale);
         try{
             getCommandService().executeCommand(command);
         } catch(CommandException e){

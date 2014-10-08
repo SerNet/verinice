@@ -52,19 +52,19 @@ public interface IReportDepositService {
 
     IOutputFormat[] getOutputFormats(OutputFormat[] format);
 
-    Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException;
+    Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
 
-    ReportTemplateMetaData getMetaData(File rptDesign) throws IOException, ReportMetaDataException, PropertyFileExistsException;
+    ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
 
-    void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file) throws IOException;
+    void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file, String locale) throws IOException;
 
-    void removeFromServer(ReportTemplateMetaData metadata) throws IOException;
+    void removeFromServer(ReportTemplateMetaData metadata, String locale) throws IOException;
 
-    void updateInServerDeposit(ReportTemplateMetaData metadata) throws IOException;
+    void updateInServerDeposit(ReportTemplateMetaData metadata, String locale) throws IOException;
 
-    Set<ReportTemplateMetaData> getServerReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException;
+    Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
 
     String getDepositLocation() throws IOException;
 
-    ReportTemplate getReportTemplate(ReportTemplateMetaData metadata) throws IOException;
+    ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException;
 }

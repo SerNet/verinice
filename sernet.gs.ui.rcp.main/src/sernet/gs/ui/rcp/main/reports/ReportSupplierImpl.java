@@ -17,23 +17,15 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOCase;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
-
 import sernet.gs.service.ReportTemplateUtil;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
@@ -55,9 +47,9 @@ public class ReportSupplierImpl implements IReportSupplier {
     }
 
     @Override
-    public List<ReportTemplateMetaData> getReportTemplates() {
+    public List<ReportTemplateMetaData> getReportTemplates(String locale) {
         try {
-            return Arrays.asList(getReportMetaData());
+            return Arrays.asList(getReportMetaData(locale));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -70,14 +62,14 @@ public class ReportSupplierImpl implements IReportSupplier {
         return new ArrayList<ReportTemplateMetaData>(0);
     }
 
-    private ReportTemplateMetaData[] getReportMetaData() throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private ReportTemplateMetaData[] getReportMetaData(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
 
         ReportTemplateUtil localReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getLocalReportTemplateDir());
         ReportTemplateUtil serverReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir(), true);
 
         Set<ReportTemplateMetaData> metadata = new HashSet<ReportTemplateMetaData>();
-        metadata.addAll(localReportTemplateUtil.getReportTemplates(localReportTemplateUtil.getReportTemplateFileNames()));
-        metadata.addAll(serverReportTemplateUtil.getReportTemplates(serverReportTemplateUtil.getReportTemplateFileNames()));
+        metadata.addAll(localReportTemplateUtil.getReportTemplates(localReportTemplateUtil.getReportTemplateFileNames(), locale));
+        metadata.addAll(serverReportTemplateUtil.getReportTemplates(serverReportTemplateUtil.getReportTemplateFileNames(), locale));
 
         return metadata.toArray(new ReportTemplateMetaData[metadata.size()]);
     }

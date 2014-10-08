@@ -97,13 +97,13 @@ public class ReportDepositService implements IReportDepositService {
     }
 
     @Override
-    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return getReportTemplateUtil().getReportTemplates(rptDesignFiles);
+    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return getReportTemplateUtil().getReportTemplates(rptDesignFiles, locale);
     }
 
     @Override
-    public Set<ReportTemplateMetaData> getServerReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return getReportTemplates(getServerRptDesigns());
+    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return getReportTemplates(getServerRptDesigns(), locale);
     }
 
     @SuppressWarnings("unchecked")
@@ -119,7 +119,7 @@ public class ReportDepositService implements IReportDepositService {
     }
 
     @Override
-    public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file) throws IOException {
+    public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file, String locale) throws IOException {
         String filename = metadata.getFilename();
         filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
         File serverDepositPath;      
@@ -129,10 +129,15 @@ public class ReportDepositService implements IReportDepositService {
     }
 
     @Override
-    public void removeFromServer(ReportTemplateMetaData metadata) throws IOException {
+    public void removeFromServer(ReportTemplateMetaData metadata, String locale) throws IOException {
+        if("en".equals(locale.toLowerCase())){
+            locale = ""; 
+         } else {
+             locale = "_" + locale.toLowerCase();
+         }
         String filename = metadata.getFilename();
         filename = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR) + 1);
-        filename = filename + IReportDepositService.PROPERTIES_FILE_EXTENSION;
+        filename = filename + locale + IReportDepositService.PROPERTIES_FILE_EXTENSION;
         File depositDir = getReportDeposit().getFile();
         File propFile = new File(depositDir, filename);
         if (propFile.exists()) {
@@ -175,14 +180,14 @@ public class ReportDepositService implements IReportDepositService {
     }
 
     @Override
-    public void updateInServerDeposit(ReportTemplateMetaData metadata) throws IOException {
+    public void updateInServerDeposit(ReportTemplateMetaData metadata, String locale) throws IOException {
         String filename = metadata.getFilename();
         if(filename.contains(String.valueOf(File.separatorChar))){
             filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
         }
-        if (getReportTemplateUtil().checkReportMetaDataFile(new File(metadata.getFilename()))) {
-            File propFile = getReportTemplateUtil().getPropertiesFile(metadata.getFilename());
-            Properties props = getReportTemplateUtil().parseAndExtendMetaData(propFile);
+        if (getReportTemplateUtil().checkReportMetaDataFile(new File(metadata.getFilename()), locale)) {
+            File propFile = getReportTemplateUtil().getPropertiesFile(metadata.getFilename(), locale);
+            Properties props = getReportTemplateUtil().parseAndExtendMetaData(propFile, locale);
             props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metadata.getOutputFormats(), ','));
             props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
             writePropertiesFile(props, filename, "");
@@ -217,7 +222,7 @@ public class ReportDepositService implements IReportDepositService {
     }
 
     @Override
-    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata) throws IOException {
+    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException {
         String filePath = getReportDeposit().getFile().getPath() + File.separatorChar + metadata.getFilename();
         byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
 
@@ -226,8 +231,8 @@ public class ReportDepositService implements IReportDepositService {
     }
 
     @Override
-    public ReportTemplateMetaData getMetaData(File rptDesign) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return getReportTemplateUtil().getMetaData(rptDesign);
+    public ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return getReportTemplateUtil().getMetaData(rptDesign, locale);
     }
     
     private String ensurePropertiesExtension(String filename){

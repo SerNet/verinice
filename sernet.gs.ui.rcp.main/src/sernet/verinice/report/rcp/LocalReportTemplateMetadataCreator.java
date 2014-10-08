@@ -34,8 +34,8 @@ public class LocalReportTemplateMetadataCreator {
 
     private ReportTemplateUtil reportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getLocalReportTemplateDir());
 
-    public void createLocalReportTemplateMetaData() throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public void createLocalReportTemplateMetaData(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         String[] filenames = reportTemplateUtil.getReportTemplateFileNames();
-        reportTemplateUtil.parseAndExtendMetaData(filenames);
+        reportTemplateUtil.parseAndExtendMetaData(filenames, locale);
     }
 }

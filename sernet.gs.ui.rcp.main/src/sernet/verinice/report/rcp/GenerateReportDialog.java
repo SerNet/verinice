@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -130,7 +131,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         reportTypes = ServiceComponent.getDefault().getReportService().getReportTypes();
         try{
             // adding the server templates
-            List<ReportTemplateMetaData> list = getSupplier().getReportTemplates();
+            List<ReportTemplateMetaData> list = getSupplier().getReportTemplates(Locale.getDefault().toString());
             reportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
         } catch (Exception e){
             String msg = "Error reading reports from deposit";

@@ -72,23 +72,23 @@ public class ReportTemplateUtil {
         this.isServerSide = isServerSide;
     }
 
-    public ReportTemplateMetaData getMetaData(File rptDesign) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         Properties props = null;
-        if (checkReportMetaDataFile(rptDesign)) {
-            props = parseAndExtendMetaData(rptDesign);
+        if (checkReportMetaDataFile(rptDesign, locale)) {
+            props = parseAndExtendMetaData(rptDesign, locale);
         } else {
-            props = createDefaultProperties(rptDesign.getPath(), rptDesign.getName());
+            props = createDefaultProperties(rptDesign.getPath(), rptDesign.getName(), locale);
         }
         return createReportMetaData(props);
     }
 
-    public boolean checkReportMetaDataFile(File rptDesign) {
-        File propertiesFile = getPropertiesFile(rptDesign);
+    public boolean checkReportMetaDataFile(File rptDesign, String locale) {
+        File propertiesFile = getPropertiesFile(rptDesign, locale);
         return propertiesFile.exists();
     }
 
-    public Properties parseAndExtendMetaData(File rptDesign) throws IOException {
-        File propFile = getPropertiesFile(rptDesign);
+    public Properties parseAndExtendMetaData(File rptDesign, String locale) throws IOException {
+        File propFile = getPropertiesFile(rptDesign, locale);
         Properties props = new Properties();
         FileInputStream fis = new FileInputStream(propFile.getAbsoluteFile());
         props.load(fis);
@@ -121,25 +121,30 @@ public class ReportTemplateUtil {
         return fileName.substring(0, fileName.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
     }
 
-    public void parseAndExtendMetaData(String[] rptDesignFiles) throws IOException {
+    public void parseAndExtendMetaData(String[] rptDesignFiles, String locale) throws IOException {
         for (String rptDesignFile : rptDesignFiles) {
-            parseAndExtendMetaData(new File(rptDesignFile));
+            parseAndExtendMetaData(new File(rptDesignFile), locale);
         }
     }
 
-    private File getPropertiesFile(File rptDesign) {
+    private File getPropertiesFile(File rptDesign, String locale) {
         String path = rptDesign.getPath();
-        return getPropertiesFile(path);
+        return getPropertiesFile(path, locale);
     }
 
-    public File getPropertiesFile(String path) {
+    public File getPropertiesFile(String path, String locale) {
+        if("en".equals(locale.toLowerCase()) || path.contains("_" + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION)){
+           locale = ""; 
+        } else {
+            locale = "_" + locale.toLowerCase();
+        }
         path = removeSuffix(path);
-        File propFile = new File(path + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
+        File propFile = new File(path  + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
         return propFile;
     }
 
-    private Properties createDefaultProperties(String path, String name) throws IOException, PropertyFileExistsException {
-        File propFile = getPropertiesFile(path);
+    private Properties createDefaultProperties(String path, String name, String locale) throws IOException, PropertyFileExistsException {
+        File propFile = getPropertiesFile(path, locale);
         if (propFile.exists()) {
             throw new PropertyFileExistsException();
         } else {
@@ -213,17 +218,17 @@ public class ReportTemplateUtil {
         return md5CheckSums.toArray(new String[md5CheckSums.size()]);
     }
 
-    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         Set<ReportTemplateMetaData> set = new HashSet<ReportTemplateMetaData>();
 
         for (String designFilePath : rptDesignFiles) {
-            set.add(getMetaData(new File(designFilePath)));
+            set.add(getMetaData(new File(designFilePath), locale));
         }
         return set;
     }
 
-    public Set<ReportTemplateMetaData> getReportTemplates() throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return getReportTemplates(getReportTemplateFileNames());
+    public Set<ReportTemplateMetaData> getReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return getReportTemplates(getReportTemplateFileNames(), locale);
     }
 
     @SuppressWarnings({ "unchecked" })
