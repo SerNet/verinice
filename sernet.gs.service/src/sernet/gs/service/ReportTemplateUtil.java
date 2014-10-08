@@ -94,9 +94,10 @@ public class ReportTemplateUtil {
         props.load(fis);
         fis.close();
 
+        String fileName = FilenameUtils.getName(rptDesign.getPath());
         boolean changed = false;
         if (!(props.containsKey(PROPERTIES_FILENAME))) {
-            props.setProperty(PROPERTIES_FILENAME, FilenameUtils.getName(rptDesign.getPath()));
+            props.setProperty(PROPERTIES_FILENAME, fileName);
             changed = true;
         }
         if (!(props.containsKey(PROPERTIES_OUTPUTFORMATS))) {
@@ -104,7 +105,7 @@ public class ReportTemplateUtil {
             changed = true;
         }
         if (!(props.containsKey(PROPERTIES_OUTPUTNAME))) {
-            props.setProperty(PROPERTIES_OUTPUTNAME, FilenameUtils.getName(rptDesign.getPath()));
+            props.setProperty(PROPERTIES_OUTPUTNAME, removeSuffix(fileName));
             changed = true;
         }
 
@@ -114,6 +115,10 @@ public class ReportTemplateUtil {
         }
 
         return props;
+    }
+
+    private String removeSuffix(String fileName) {
+        return fileName.substring(0, fileName.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
     }
 
     public void parseAndExtendMetaData(String[] rptDesignFiles) throws IOException {
@@ -128,7 +133,7 @@ public class ReportTemplateUtil {
     }
 
     public File getPropertiesFile(String path) {
-        path = path.substring(0, path.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
+        path = removeSuffix(path);
         File propFile = new File(path + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
         return propFile;
     }
@@ -151,7 +156,7 @@ public class ReportTemplateUtil {
     private Properties getDefaultProperties(String name) {
         Properties props = new Properties();
         props.setProperty(PROPERTIES_FILENAME, name);
-        props.setProperty(PROPERTIES_OUTPUTNAME, name);
+        props.setProperty(PROPERTIES_OUTPUTNAME, removeSuffix(name));
         props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(OutputFormat.values(), ','));
         return props;
     }
@@ -186,7 +191,7 @@ public class ReportTemplateUtil {
 
     @SuppressWarnings("unchecked")
     public Iterator<File> listPropertiesFiles(String fileName) {
-        String baseName = fileName.substring(0, fileName.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
+        String baseName = removeSuffix(fileName);
         IOFileFilter filter = new RegexFileFilter(baseName + "\\_?.*\\.properties", IOCase.INSENSITIVE);
         Iterator<File> iter = FileUtils.iterateFiles(new File(this.reportTemplateDirectory), filter, null);
         return iter;
