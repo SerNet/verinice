@@ -56,7 +56,7 @@ public interface IReportDepositService {
 
     ReportTemplateMetaData getMetaData(File rptDesign) throws IOException, ReportMetaDataException, PropertyFileExistsException;
 
-    void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file);
+    void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file) throws IOException;
 
     void removeFromServer(ReportTemplateMetaData metadata) throws IOException;
 

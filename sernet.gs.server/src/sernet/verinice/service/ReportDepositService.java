@@ -119,18 +119,13 @@ public class ReportDepositService implements IReportDepositService {
     }
 
     @Override
-    public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file) {
+    public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file) throws IOException {
         String filename = metadata.getFilename();
         filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
-        File serverDepositPath;
-        try {
-            serverDepositPath = getReportDeposit().getFile();
-            String newFilePath = serverDepositPath.getPath() + File.separatorChar + filename;
-            FileUtils.writeByteArrayToFile(new File(newFilePath), file);
-
-        } catch (IOException e) {
-            LOG.error("Error reading report deposit location on server", e);
-        }
+        File serverDepositPath;      
+        serverDepositPath = getReportDeposit().getFile();
+        String newFilePath = serverDepositPath.getPath() + File.separatorChar + filename;
+        FileUtils.writeByteArrayToFile(new File(newFilePath), file);     
     }
 
     @Override
