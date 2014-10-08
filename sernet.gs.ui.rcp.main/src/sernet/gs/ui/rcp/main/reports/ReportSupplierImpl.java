@@ -73,7 +73,7 @@ public class ReportSupplierImpl implements IReportSupplier {
     private ReportTemplateMetaData[] getReportMetaData() throws IOException, ReportMetaDataException, PropertyFileExistsException {
 
         ReportTemplateUtil localReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getLocalReportTemplateDir());
-        ReportTemplateUtil serverReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir());
+        ReportTemplateUtil serverReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir(), true);
 
         Set<ReportTemplateMetaData> metadata = new HashSet<ReportTemplateMetaData>();
         metadata.addAll(localReportTemplateUtil.getReportTemplates(localReportTemplateUtil.getReportTemplateFileNames()));
