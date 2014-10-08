@@ -52,7 +52,6 @@ import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
-import sernet.verinice.service.report.Messages;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -102,7 +101,7 @@ public class ReportTemplateUtil {
             props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(OutputFormat.values(), ","));
         }
         if (!(props.containsKey(PROPERTIES_OUTPUTNAME))) {
-            props.setProperty(PROPERTIES_OUTPUTNAME, Messages.PROPERTIES_DEFAULT_OUTPUT_NAME);
+            props.setProperty(PROPERTIES_OUTPUTNAME, FilenameUtils.getName(rptDesign.getPath()));
         }
 
         OutputStream out = new FileOutputStream(propFile.getAbsoluteFile());
@@ -133,9 +132,9 @@ public class ReportTemplateUtil {
         if (propFile.exists()) {
             throw new PropertyFileExistsException();
         } else {
-            Properties props = getDefaultProperties();
+            Properties props = getDefaultProperties(name);
             FileOutputStream fos = new FileOutputStream(propFile);
-            props.setProperty(PROPERTIES_FILENAME, name);
+
             props.store(fos, "Default Properties for verinice-" + "Report " + name + "\nauto-generated content");
             fos.close();
             return props;
@@ -143,10 +142,11 @@ public class ReportTemplateUtil {
 
     }
 
-    private Properties getDefaultProperties() {
+    private Properties getDefaultProperties(String name) {
         Properties props = new Properties();
-        props.put(PROPERTIES_OUTPUTNAME, Messages.PROPERTIES_DEFAULT_OUTPUT_NAME);
-        props.put(PROPERTIES_OUTPUTFORMATS, StringUtils.join(OutputFormat.values(), ','));
+        props.setProperty(PROPERTIES_FILENAME, name);
+        props.setProperty(PROPERTIES_OUTPUTNAME, name);
+        props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(OutputFormat.values(), ','));
         return props;
     }
 
