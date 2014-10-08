@@ -75,6 +75,8 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
     private static void startSync() {
 
+        Activator.inheritVeriniceContextState();
+
         WorkspaceJob syncReportsJob = new ReportTemplateSync();
         JobScheduler.scheduleInitJob(syncReportsJob);
     }

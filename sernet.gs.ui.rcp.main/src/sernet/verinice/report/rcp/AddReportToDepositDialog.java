@@ -29,9 +29,6 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -39,8 +36,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -78,7 +77,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     
     private ReportTemplateMetaData editTemplate;
     
-    private SelectionListener checkBoxSelectionListener;
+    private Listener checkBoxSelectionListener;
 
     /**
      * @param parentShell
@@ -232,16 +231,19 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     
     private void prepareEditMode(){
         reportName.setText(editTemplate.getOutputname());
-        reportName.addVerifyListener(new VerifyListener() {
-            
-            @Override
-            public void verifyText(VerifyEvent e) {
-                if(editTemplate != null &&
-                        !(reportName.getText().equals(editTemplate.getOutputname()))){
+        reportName.addListener(SWT.CHANGED, new Listener() {
+            public void handleEvent (Event event) {
+                if (!reportName.getText().isEmpty() && !reportName.getText().equals(editTemplate.getOutputname())) {
+                    event.doit = true;
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
+                    
+                } else if(reportName.getText().equals(editTemplate.getOutputname())){
+                    event.doit = false;
+                    getButton(IDialogConstants.OK_ID).setEnabled(false);
                 }
-            }
+            }           
         });
+        
         outputTypePDFCheckbox = checkboxEditMode(outputTypePDFCheckbox, OutputFormat.PDF);
         outputTypeHTMLCheckbox = checkboxEditMode(outputTypeHTMLCheckbox, OutputFormat.HTML);
         outputTypeWordCheckbox = checkboxEditMode(outputTypeWordCheckbox, OutputFormat.DOC);
@@ -256,7 +258,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     
     private Button checkboxEditMode(Button checkbox, OutputFormat format){
         checkbox.setSelection(isOutputFormatPreSelected(format));
-        checkbox.addSelectionListener(getCheckBoxSelectionListener());
+        checkbox.addListener(SWT.CHANGED, getCheckBoxSelectionListener());
         return checkbox;
     }
     
@@ -381,6 +383,15 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             return list.toArray(new OutputFormat[list.size()]);
     }
     
+    private boolean outputFormatEquals(){
+        if(editTemplate != null){
+            return Arrays.equals(getReportOutputFormats(), editTemplate.getOutputFormats());
+        }
+        
+        return false;
+    }
+   
+    
     private boolean isAnyFormatSelected(){
         return outputTypeExcelCheckbox.getSelection() ||
                 outputTypeHTMLCheckbox.getSelection() ||
@@ -398,18 +409,20 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         return Arrays.asList(editTemplate.getOutputFormats()).contains(format);
     }
     
-    private SelectionListener getCheckBoxSelectionListener() {
+    private Listener getCheckBoxSelectionListener() {
         if(checkBoxSelectionListener == null){
-            checkBoxSelectionListener = new SelectionListener() {
-                
+            checkBoxSelectionListener = new Listener() {
                 @Override
-                public void widgetSelected(SelectionEvent e) {
-                    getButton(IDialogConstants.OK_ID).setEnabled(true);
-                }
-                
-                @Override
-                public void widgetDefaultSelected(SelectionEvent e) {
-                    widgetSelected(e);
+                public void handleEvent(Event event) {
+                    if (!outputFormatEquals()) {
+                        event.doit = true;
+                        getButton(IDialogConstants.OK_ID).setEnabled(true);
+
+                    } else {
+                        event.doit = false;
+                        getButton(IDialogConstants.OK_ID).setEnabled(false);
+                    }
+
                 }
             };
         }

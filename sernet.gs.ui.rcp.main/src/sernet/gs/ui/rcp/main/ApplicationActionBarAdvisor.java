@@ -233,7 +233,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openTaskViewAction = new OpenTaskViewAction(window, ActionRightIDs.TASKVIEW);
         openValidationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_35, CnAValidationView.ID, ImageCache.VIEW_VALIDATION, ActionRightIDs.CNAVALIDATION);
         openAccountViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_38, AccountView.ID, ImageCache.PERSON, ActionRightIDs.ACCOUNTSETTINGS);
-        openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.PERSON, ActionRightIDs.REPORTDEPOSIT);
+        openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
         
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
@@ -384,8 +384,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(openISMViewAction);
         viewsMenu.add(openCatalogAction);
         viewsMenu.add(openAccountViewAction);
-        viewsMenu.add(openReportdepositViewAction);
         viewsMenu.add(openGroupViewAction);
+        viewsMenu.add(openReportdepositViewAction);
         viewsMenu.add(openTaskViewAction);
         viewsMenu.add(new Separator());
 

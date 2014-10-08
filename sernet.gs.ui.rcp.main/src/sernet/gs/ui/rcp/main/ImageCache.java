@@ -283,6 +283,8 @@ public final class ImageCache {
 	
 	public static final String ISA_TOPIC		        = "isa-topic.png";
 	
+	public static final String REPORT_DEPOSIT           = "folder_table.png";
+	
 	// ISO 27k icons - other:
 	public static final String ISO27K_RISK = "sweetie-verinice/png/16-paper-calculate-percent.png";
 	/* ************************************************************************************************** */
