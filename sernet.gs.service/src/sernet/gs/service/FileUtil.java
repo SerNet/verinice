@@ -19,6 +19,7 @@ package sernet.gs.service;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,12 +29,16 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 
+import org.apache.log4j.Logger;
+
 /**
  * @author Daniel <dm[at]sernet[dot]de>
  * 
  */
 public class FileUtil {
 
+    private static final Logger LOG = Logger.getLogger(FileUtil.class);
+    
     public static byte[] getBytesFromInputstream(InputStream is) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
@@ -101,6 +106,33 @@ public class FileUtil {
             result += Integer.toString((b[i] & 0xff) + 0x100, 16).substring(1);
         }
         return result;
+    }
+    
+    public static byte[] getFileData(File f){
+        FileInputStream fis=null;        
+        byte[] bFile = new byte[(int) f.length()];  
+        try {
+            fis = new FileInputStream(f);      
+            fis.read(bFile);     
+            fis.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Error while reading file data",e);
+        }     
+        return bFile;
+    }
+    
+    public static boolean deleteDirectory(File path) {
+        if (path.exists()) {
+            File[] files = path.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].isDirectory()) {
+                    deleteDirectory(files[i]);
+                } else {
+                    files[i].delete();
+                }
+            }
+        }
+        return (path.delete());
     }
 
 }

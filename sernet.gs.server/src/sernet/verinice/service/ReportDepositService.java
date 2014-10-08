@@ -133,11 +133,12 @@ public class ReportDepositService implements IReportDepositService {
         String filename = metadata.getFilename();
         filename = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR) + 1);
         filename = filename + IReportDepositService.PROPERTIES_FILE_EXTENSION;
-        File propFile = new File(filename);
+        File depositDir = getReportDeposit().getFile();
+        File propFile = new File(depositDir, filename);
         if (propFile.exists()) {
             FileUtils.deleteQuietly(propFile);
         }
-        File rptFile = new File(metadata.getFilename());
+        File rptFile = new File(depositDir, metadata.getFilename());
         if (rptFile.exists()) {
             FileUtils.deleteQuietly(rptFile);
         }

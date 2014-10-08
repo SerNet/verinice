@@ -20,8 +20,8 @@ package sernet.verinice.service.report;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.jbpm.pvm.internal.cmd.CommandException;
 
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.GenericCommand;
@@ -57,7 +57,7 @@ public class SaveToReportDepositCommand extends GenericCommand {
         try {
             depositService.addToServerDeposit(metadata, rptdesign);
         } catch (IOException e) {
-            throw new CommandException(e);
+            throw new RuntimeCommandException(e);
         }
     }
     

@@ -178,7 +178,7 @@ public class AttachmentTest extends CommandServiceProvider {
 
     private void attachFileData(File f, Attachment a) throws CommandException {
         AttachmentFile attachmentFile = new AttachmentFile();
-        attachmentFile.setFileData(getFileContent(f));
+        attachmentFile.setFileData(getFileData(f));
         SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
         attachmentFile.setDbId(a.getDbId());
         saveFileCommand = commandService.executeCommand(saveFileCommand);
@@ -203,18 +203,8 @@ public class AttachmentTest extends CommandServiceProvider {
         return a;
     }
     
-    private byte[] getFileContent(File f){
-        FileInputStream fis=null;
-        
-        byte[] bFile = new byte[(int) f.length()];
- 
-        try {
-            fis = new FileInputStream(f);
-            fis.read(bFile);
-            fis.close();
-        } catch(Exception e){
-            LOG.error("Error reading file content into byte[]",e );
-        }
+    private byte[] getFileData(File f){ 
+        byte[] bFile = FileUtil.getFileData(f);   
         assertNotNull(bFile);
         assertNotSame(0, bFile.length);
         return bFile;
