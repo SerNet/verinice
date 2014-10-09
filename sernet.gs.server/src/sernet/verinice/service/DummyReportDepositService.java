@@ -20,12 +20,19 @@ package sernet.verinice.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
 
+import sernet.gs.service.ReportTemplateUtil;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.model.report.ExcelOutputFormat;
@@ -46,6 +53,10 @@ public class DummyReportDepositService implements IReportDepositService {
 
     
     private static final Logger LOG = Logger.getLogger(DummyReportDepositService.class);
+    
+    private Resource reportDeposit;
+    
+    private ReportTemplateUtil reportTemplateUtil;
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IReportDepositService#addToServerDeposit(sernet.verinice.model.report.ReportTemplateMetaData, byte[])
@@ -66,7 +77,7 @@ public class DummyReportDepositService implements IReportDepositService {
      */
     @Override
     public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return new TreeSet<ReportTemplateMetaData>();
+        return getReportTemplates(getServerRptDesigns(), locale);
     }
 
     /* (non-Javadoc)
@@ -115,7 +126,7 @@ public class DummyReportDepositService implements IReportDepositService {
      */
     @Override
     public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return null;
+        return getReportTemplateUtil().getReportTemplates(rptDesignFiles, locale);
     }
 
     /* (non-Javadoc)
@@ -138,8 +149,39 @@ public class DummyReportDepositService implements IReportDepositService {
      */
     @Override
     public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+        String filePath = getReportDeposit().getFile().getPath() + File.separatorChar + metadata.getFilename();
+        byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
+
+        Map<String, byte[]> propertiesFile = getReportTemplateUtil().getPropertiesFiles(metadata.getFilename());
+        return new ReportTemplate(metadata, rptdesign, propertiesFile);
+    }
+    
+    @SuppressWarnings("unchecked")
+    private String[] getServerRptDesigns() throws IOException {
+        List<String> list = new ArrayList<String>(0);
+        // // DirFilter = null means no subdirectories
+        IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
+        Iterator<File> iter = FileUtils.iterateFiles(getReportDeposit().getFile(), filter, null);
+        while (iter.hasNext()) {
+            list.add(iter.next().getAbsolutePath());
+        }
+        return list.toArray(new String[list.size()]);
+    }
+    
+    public Resource getReportDeposit() {
+        return reportDeposit;
+    }
+    
+    public void setReportDeposit(Resource reportDeposit) {
+        this.reportDeposit = reportDeposit;
+    }
+
+    private ReportTemplateUtil getReportTemplateUtil() throws IOException {
+        if (reportTemplateUtil == null) {
+            reportTemplateUtil = new ReportTemplateUtil(reportDeposit.getFile().getPath(), true);
+        }
+
+        return reportTemplateUtil;
     }
 
 }
