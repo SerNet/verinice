@@ -59,9 +59,18 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     public OutputFormat[] getOutputFormats() {
         return outputFormat;
     }
+    
+    public void setOutputFormats(OutputFormat[] outputFormats) {
+        this.outputFormat = outputFormats;
+    }
+
 
     public String getOutputname() {
         return outputname;
+    }
+    
+    public void setOutputname(String outputname) {
+        this.outputname = outputname;
     }
 
     public boolean isServer() {
