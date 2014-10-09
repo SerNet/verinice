@@ -19,11 +19,14 @@ package sernet.verinice.report.rcp;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -201,7 +204,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         templateLabel.setText(Messages.ReportDepositView_3);
         templateLabel.setLayoutData(reportNameLabelGd);
         
-        reportTemplateText = new Text(dialogContent, SWT.NONE);
+        reportTemplateText = new Text(dialogContent, SWT.BORDER);
         GridData reportTemplateTextGd = new GridData();
         reportTemplateTextGd.horizontalAlignment = SWT.FILL;
         reportTemplateTextGd.verticalAlignment = SWT.TOP;
@@ -220,7 +223,11 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportTemplateSelectButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
-                selectTemplateFile();
+                try {
+                    selectTemplateFile();
+                } catch (MalformedURLException e) {
+                    ExceptionUtil.log(e, "Error while extracting filename");
+                }
             }
         });
         
@@ -313,7 +320,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
             if(rptDesign.length > 0){
                 AddReportTemplateToDepositCommand command = 
                         new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
-                                rptDesign, getSelectedDesginFile(), Locale.getDefault().toString());
+                                rptDesign, FilenameUtils.getName(getSelectedDesginFile()), Locale.getDefault().toString());
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 if(command.isErrorOccured()){
                     ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_22);
@@ -326,7 +333,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         }
     }
     
-    public void selectTemplateFile() {
+    public void selectTemplateFile() throws MalformedURLException {
         FileDialog dlg = new FileDialog(getParentShell(), SWT.SELECTED);
         ArrayList<String> extensionList = new ArrayList<String>();
         extensionList.add("*.rptdesign"); //$NON-NLS-1$
@@ -335,6 +342,9 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         String fn = dlg.open();
         if (fn != null) {
             reportTemplateText.setText(fn);
+            if(reportName.getText() == null || reportName.getText().isEmpty()){
+                reportName.setText(StringUtils.capitalize(FilenameUtils.getBaseName(fn)));
+            }
             getButton(IDialogConstants.OK_ID).setEnabled(true);
         }
     }

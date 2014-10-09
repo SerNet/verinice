@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ServiceComponent;
@@ -132,6 +133,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         try{
             // adding the server templates
             List<ReportTemplateMetaData> list = getSupplier().getReportTemplates(Locale.getDefault().toString());
+            sortList(list);
             reportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
         } catch (Exception e){
             String msg = "Error reading reports from deposit";
@@ -877,6 +879,17 @@ public class GenerateReportDialog extends TitleAreaDialog {
     
     private void showNoReportsExistant(){
         MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.GenerateReportDialog_28, Messages.ReportDepositView_24);
+    }
+    
+    private void sortList(List list){
+        Collections.sort(list, new Comparator<ReportTemplateMetaData>() {
+
+            @Override
+            public int compare(ReportTemplateMetaData o1, ReportTemplateMetaData o2) {
+                NumericStringComparator nsc = new NumericStringComparator();
+                return nsc.compare(o1.getOutputname(), o2.getOutputname());
+            }
+        });
     }
     
 }

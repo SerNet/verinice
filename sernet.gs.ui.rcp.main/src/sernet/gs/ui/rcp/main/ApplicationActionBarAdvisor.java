@@ -270,7 +270,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 accessControlEditAction, profileEditAction, konsolidatorAction,
                 gsmbasicsecuritycheckAction,bausteinZuordnungAction,
                 gsmbausteinZuordnungAction, openDocumentViewAction,
-                introAction, openGroupViewAction
+                introAction, openGroupViewAction, openReportdepositViewAction
         };
         registerActions(actions);
 
@@ -456,8 +456,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(new Separator());
         // common items
         myToolbar.add(openAccountViewAction);
-        myToolbar.add(openReportdepositViewAction);
         myToolbar.add(openGroupViewAction);
+        myToolbar.add(openReportdepositViewAction);
         myToolbar.add(openBSIBrowserAction);
         myToolbar.add(openNoteAction);
         myToolbar.add(openFileAction);

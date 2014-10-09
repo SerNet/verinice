@@ -203,8 +203,12 @@ public class ReportTemplateUtil {
     }
 
     private String[] getCheckSums(String fileName) throws IOException {
-
-        String filePath = reportTemplateDirectory + File.separatorChar + fileName;
+        String filePath;
+        if(!fileName.contains(reportTemplateDirectory)){
+            filePath = reportTemplateDirectory + File.separatorChar + fileName;
+        } else {
+            filePath = fileName;
+        }
         Iterator<File> iter = listPropertiesFiles(fileName);
 
         List<String> md5CheckSums = new ArrayList<String>();

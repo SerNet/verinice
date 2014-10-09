@@ -120,12 +120,21 @@ public class ReportDepositService implements IReportDepositService {
 
     @Override
     public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file, String locale) throws IOException {
+        if("en".equals(locale.toLowerCase())){
+            locale = ""; 
+         } else {
+             locale = "_" + locale.toLowerCase();
+         }
         String filename = metadata.getFilename();
         filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
         File serverDepositPath;      
         serverDepositPath = getReportDeposit().getFile();
         String newFilePath = serverDepositPath.getPath() + File.separatorChar + filename;
+        String propFilePath = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR)) + locale 
+                +IReportDepositService.EXTENSION_SEPARATOR_CHAR
+                +IReportDepositService.PROPERTIES_FILE_EXTENSION;
         FileUtils.writeByteArrayToFile(new File(newFilePath), file);     
+        writePropertiesFile(convertToProperties(metadata), propFilePath, "");
     }
 
     @Override
@@ -136,8 +145,8 @@ public class ReportDepositService implements IReportDepositService {
              locale = "_" + locale.toLowerCase();
          }
         String filename = metadata.getFilename();
-        filename = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR) + 1);
-        filename = filename + locale + IReportDepositService.PROPERTIES_FILE_EXTENSION;
+        filename = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
+        filename = filename + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION;
         File depositDir = getReportDeposit().getFile();
         File propFile = new File(depositDir, filename);
         if (propFile.exists()) {
@@ -190,10 +199,10 @@ public class ReportDepositService implements IReportDepositService {
             Properties props = getReportTemplateUtil().parseAndExtendMetaData(propFile, locale);
             props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metadata.getOutputFormats(), ','));
             props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
-            writePropertiesFile(props, filename, "");
+            writePropertiesFile(props, propFile.getName(), "");
 
         } else {
-            writePropertiesFile(convertToProperties(metadata), filename, "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
+            writePropertiesFile(convertToProperties(metadata), getReportTemplateUtil().getPropertiesFile(metadata.getFilename(), locale).getName(), "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
         }
     }
 
