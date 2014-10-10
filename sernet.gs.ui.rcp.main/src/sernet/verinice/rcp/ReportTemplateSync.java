@@ -158,8 +158,8 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
     private IStatus errorHandler(Exception e) {
         IStatus status;
-        String msg = "error while syncing report templates";
-        LOG.error(msg);
+        String msg = "error while syncing report templates:\t" + e.getMessage();
+        LOG.error(msg, e);
         status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", msg);
         return status;
     }
