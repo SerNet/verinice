@@ -325,6 +325,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
                 if(command.isErrorOccured()){
                     ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_22);
                 }
+            } else {
+                LOG.warn("users tried to add empty file to reportdeposit");
             }
         } catch (IOException e) {
             LOG.error("Error reading Template file", e);

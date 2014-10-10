@@ -754,7 +754,7 @@ Artwork:&#x0A;Blackbit http://www.blackbit.de - Icons by Axialis Team http://www
             id="sernet.gs.ui.rcp.main.itverbundreport"
             objectClass="sernet.verinice.model.bsi.ITVerbund">
          <action
-               class="sernet.verinice.report.rcp.GenerateSpecificReportAction"
+               class="sernet.verinice.report.actions.GenerateSpecificReportAction"
                enablesFor="+"
                icon="icons/report.png"
                id="sernet.verinice.report.rcp.GenerateITVerbundReportAction.action"
@@ -769,7 +769,7 @@ Artwork:&#x0A;Blackbit http://www.blackbit.de - Icons by Axialis Team http://www
             id="sernet.gs.ui.rcp.main.organisationreport"
             objectClass="sernet.verinice.model.iso27k.Organization">
          <action
-               class="sernet.verinice.report.rcp.GenerateSpecificReportAction"
+               class="sernet.verinice.report.actions.GenerateSpecificReportAction"
                enablesFor="+"
                icon="icons/report.png"
                id="sernet.verinice.report.rcp.GenerateOrganisationReportAction.action"

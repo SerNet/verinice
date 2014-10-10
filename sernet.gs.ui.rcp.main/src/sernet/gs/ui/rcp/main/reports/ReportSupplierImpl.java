@@ -46,10 +46,11 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  *
  */
 public class ReportSupplierImpl implements IReportSupplier {
+   
 
     private final String ERROR_MESSAGE = "reading report templates failed %s";
 
-    private final Logger Log = Logger.getLogger(ReportSupplierImpl.class);
+    private final Logger LOG = Logger.getLogger(ReportSupplierImpl.class);
 
     public ReportSupplierImpl() {
     }
@@ -59,11 +60,11 @@ public class ReportSupplierImpl implements IReportSupplier {
         try {
             return Arrays.asList(getReportMetaData(locale));
         } catch (IOException e) {
-            Log.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
+            LOG.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
         } catch (ReportMetaDataException e) {
-            Log.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
+            LOG.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
         } catch (PropertyFileExistsException e) {
-            Log.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
+            LOG.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
         }
         return new ArrayList<ReportTemplateMetaData>(0);
     }
@@ -74,9 +75,15 @@ public class ReportSupplierImpl implements IReportSupplier {
         ReportTemplateUtil serverReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir(), true);
 
         Set<ReportTemplateMetaData> metadata = new HashSet<ReportTemplateMetaData>();
+        int size = 0;
         metadata.addAll(localReportTemplateUtil.getReportTemplates(localReportTemplateUtil.getReportTemplateFileNames(), locale));
+        size = metadata.size();
         metadata.addAll(serverReportTemplateUtil.getReportTemplates(serverReportTemplateUtil.getReportTemplateFileNames(), locale));
-
+        if(LOG.isDebugEnabled()){
+            LOG.debug(size + " Report templates loaded from workspacefolder:\t" + IReportService.VERINICE_REPORTS_LOCAL);
+            LOG.debug(metadata.size() - size + " Report templates loaded from workspacefolder:\t" + IReportService.VERINICE_REPORTS_REMOTE);
+        }
+        
         return metadata.toArray(new ReportTemplateMetaData[metadata.size()]);
     }
 

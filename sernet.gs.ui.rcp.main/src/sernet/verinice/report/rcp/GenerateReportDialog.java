@@ -133,6 +133,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
         try{
             // adding the server templates
             List<ReportTemplateMetaData> list = getSupplier().getReportTemplates(Locale.getDefault().toString());
+            if(LOG.isDebugEnabled()){
+                LOG.debug(list.size() + " Reporttemplates loaded from deposit folders");
+            }
             sortList(list);
             reportTemplates = list.toArray(new ReportTemplateMetaData[list.size()]);
         } catch (Exception e){
