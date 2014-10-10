@@ -23,9 +23,11 @@ import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
+import static org.apache.commons.io.FilenameUtils.concat;
+
 public interface IReportService {
     
-    String VERINICE_REPORTS_LOCAL = "report_templates_local"; //$NON-NLS-1$
+    String VERINICE_REPORTS_LOCAL = concat(concat(System.getProperty("user.home"), "verinice"), "report_templates_local"); //$NON-NLS-1$
     
     String VERINICE_REPORTS_REMOTE = "report_templates_remote"; //$NON-NLS-1$
 

@@ -69,6 +69,7 @@ import sernet.verinice.interfaces.IInternalServer;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.IMain;
+import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
 import sernet.verinice.interfaces.IVersionConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
@@ -117,6 +118,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private boolean standalone = false;
 
+    private ServiceTracker templateDirTracker;
+
     /**
      * The constructor
      */
@@ -156,6 +159,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
         // Makes a representation of this bundle as a service available.
         context.registerService(IMain.class.getName(), this, null);
         context.registerService(ILogPathService.class.getName(), LoggerInitializer.setupLogFilePath(), null);
+
+        templateDirTracker = new ServiceTracker(context, IReportLocalTemplateDirectoryService.class.getName(), null);
+        templateDirTracker.open();
     }
 
     /**
@@ -821,6 +827,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     private boolean prepareReportDirs() {
-        return CnAWorkspace.getInstance().createReportTemplateDir(IReportService.VERINICE_REPORTS_LOCAL) && CnAWorkspace.getInstance().createReportTemplateDir(IReportService.VERINICE_REPORTS_REMOTE);
+        return CnAWorkspace.getInstance().createLocalReportTemplateDir(IReportService.VERINICE_REPORTS_LOCAL) && CnAWorkspace.getInstance().createReportTemplateDir(IReportService.VERINICE_REPORTS_REMOTE);
+    }
+
+    public IReportLocalTemplateDirectoryService getIReportTemplateDirectoryService(){
+        return (IReportLocalTemplateDirectoryService) templateDirTracker.getService();
     }
 }

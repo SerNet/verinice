@@ -24,6 +24,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.verinice.interfaces.IReportDepositService;
+import sernet.verinice.interfaces.report.IReportService;
 
 /**
  * Class used to initialize default preference values.
@@ -87,6 +89,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.THUMBNAIL_SIZE, defaultThumbnailSize);
 		
 		store.setDefault(PreferenceConstants.RESTART, false);
+
+		store.setDefault(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, IReportService.VERINICE_REPORTS_LOCAL);
 	}
 
 }

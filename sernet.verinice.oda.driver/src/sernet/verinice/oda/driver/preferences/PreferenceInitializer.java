@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import sernet.verinice.interfaces.ILogPathService;
+import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.oda.driver.Activator;
 
 /**
@@ -46,5 +47,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.REPORT_LOG_FILE, logPathService.getLogDirectory() + "verinice-reports.log");
         store.setDefault(PreferenceConstants.REPORT_LOGGING_ENABLED, false);
         store.setDefault(PreferenceConstants.REPORT_LOGGING_LVL, Level.SEVERE.toString());
+        store.setDefault(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, IReportService.VERINICE_REPORTS_LOCAL);
     }
 }

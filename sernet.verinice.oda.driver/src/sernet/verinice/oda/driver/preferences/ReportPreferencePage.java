@@ -43,6 +43,7 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
             new String[]{Messages.getString("ReportLogLevel.3"), Level.SEVERE.toString()},
             new String[]{Messages.getString("ReportLogLevel.4"), Level.ALL.toString()}
     };
+    private StringFieldEditor localTemplateditor;
             
     
     public ReportPreferencePage(){
@@ -74,6 +75,9 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
         StringFieldEditor logFileNameEditor = new StringFieldEditor(PreferenceConstants.REPORT_LOG_FILE, Messages.getString("ReportPreferencePage.3"), getFieldEditorParent());
         addField(logFileNameEditor);
         
+        localTemplateditor = new StringFieldEditor(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, Messages.getString("ReportPreferencePage.8"), getFieldEditorParent());
+        addField(localTemplateditor);
+
         BooleanFieldEditor useCacheEditor = new BooleanFieldEditor(PreferenceConstants.REPORT_USE_CACHE, Messages.getString("ReportPreferencePage.7"), getFieldEditorParent());
         addField(useCacheEditor);
     }
@@ -83,6 +87,10 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
         super.propertyChange(event);
         if (event.getProperty().equals(FieldEditor.VALUE)) {
             checkState();
+        }
+
+        if (event.getSource() == localTemplateditor){
+            Activator.getDefault().getIReportTemplateDirectoryService().setDirectory((String) event.getNewValue());
         }
     }
 

@@ -147,6 +147,8 @@ public class PreferenceConstants {
     
     public static final String RESTART = "is_restart";
     
+    public static final String REPORT_LOCAL_TEMPLATE_DIRECTORY = "local_report_template_dir";
+
 	/**
 	 * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view class.
 	 * 

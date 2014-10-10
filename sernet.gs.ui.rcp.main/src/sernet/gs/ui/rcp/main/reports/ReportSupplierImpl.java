@@ -24,8 +24,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.ReportTemplateUtil;
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
@@ -43,6 +47,10 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public class ReportSupplierImpl implements IReportSupplier {
 
+    private final String ERROR_MESSAGE = "reading report templates failed %s";
+
+    private final Logger Log = Logger.getLogger(ReportSupplierImpl.class);
+
     public ReportSupplierImpl() {
     }
 
@@ -51,20 +59,18 @@ public class ReportSupplierImpl implements IReportSupplier {
         try {
             return Arrays.asList(getReportMetaData(locale));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
         } catch (ReportMetaDataException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
         } catch (PropertyFileExistsException e) {
-            e.printStackTrace();
+            Log.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
         }
         return new ArrayList<ReportTemplateMetaData>(0);
     }
 
     private ReportTemplateMetaData[] getReportMetaData(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
 
-        ReportTemplateUtil localReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getLocalReportTemplateDir());
+        ReportTemplateUtil localReportTemplateUtil = new ReportTemplateUtil(getLocalReportPath());
         ReportTemplateUtil serverReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir(), true);
 
         Set<ReportTemplateMetaData> metadata = new HashSet<ReportTemplateMetaData>();
@@ -72,6 +78,17 @@ public class ReportSupplierImpl implements IReportSupplier {
         metadata.addAll(serverReportTemplateUtil.getReportTemplates(serverReportTemplateUtil.getReportTemplateFileNames(), locale));
 
         return metadata.toArray(new ReportTemplateMetaData[metadata.size()]);
+    }
+
+    private String getLocalReportPath() {
+        String templateDir = Activator.getDefault().getIReportTemplateDirectoryService().getDirectory();
+
+        if (templateDir == null) {
+            templateDir = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY);
+        } else {
+            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, templateDir);
+        }
+        return templateDir;
     }
 
 }
