@@ -41,6 +41,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -87,19 +88,32 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
         String[] fileNames = clientServerReportTemplateUtil.getReportTemplateFileNames();
         Set<ReportTemplateMetaData> localServerTemplates = clientServerReportTemplateUtil.getReportTemplates(fileNames, locale);
-        Set<ReportTemplateMetaData> remoteSeverTemplates = getIReportDepositService().getServerReportTemplates(locale);
+        Set<ReportTemplateMetaData> remoteServerTemplates = getIReportDepositService().getServerReportTemplates(locale);
 
+        addReports(locale, localServerTemplates, remoteServerTemplates);
+        deleteReports(locale, remoteServerTemplates);
+    }
+
+    private void addReports(String locale, Set<ReportTemplateMetaData> localServerTemplates, Set<ReportTemplateMetaData> remoteSeverTemplates) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         for (ReportTemplateMetaData remoteTemplateMetaData : remoteSeverTemplates) {
             if (!localServerTemplates.contains(remoteTemplateMetaData)) {
                 syncTemplate(remoteTemplateMetaData, locale);
             }
         }
+    }
 
-        for (ReportTemplateMetaData localTemplateMetaData : clientServerReportTemplateUtil.getReportTemplates(locale)) {
-            if (!remoteSeverTemplates.contains(localTemplateMetaData)) {
-                deleteRptdesignAndPropertiesFiles(localTemplateMetaData.getFilename());
+    private void deleteReports(String locale, Set<ReportTemplateMetaData> remoteSeverTemplates) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        if (isNotStandalone()) {
+            for (ReportTemplateMetaData localTemplateMetaData : clientServerReportTemplateUtil.getReportTemplates(locale)) {
+                if (!remoteSeverTemplates.contains(localTemplateMetaData)) {
+                    deleteRptdesignAndPropertiesFiles(localTemplateMetaData.getFilename());
+                }
             }
         }
+    }
+
+    private boolean isNotStandalone() {
+        return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_REMOTE_SERVER);
     }
 
     private IReportDepositService getIReportDepositService() {
