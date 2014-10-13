@@ -30,6 +30,7 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.FileLocator;
 import org.springframework.core.io.Resource;
 
 import sernet.gs.service.ReportTemplateUtil;
@@ -149,7 +150,7 @@ public class DummyReportDepositService implements IReportDepositService {
      */
     @Override
     public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException {
-        String filePath = getReportDeposit().getFile().getPath() + File.separatorChar + metadata.getFilename();
+        String filePath = getReportDepositFile().getPath() + File.separatorChar + metadata.getFilename();
         byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
 
         Map<String, byte[]> propertiesFile = getReportTemplateUtil().getPropertiesFiles(metadata.getFilename());
@@ -161,7 +162,7 @@ public class DummyReportDepositService implements IReportDepositService {
         List<String> list = new ArrayList<String>(0);
         // // DirFilter = null means no subdirectories
         IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(getReportDeposit().getFile(), filter, null);
+        Iterator<File> iter = FileUtils.iterateFiles(getReportDepositFile(), filter, null);
         while (iter.hasNext()) {
             list.add(iter.next().getAbsolutePath());
         }
@@ -174,6 +175,10 @@ public class DummyReportDepositService implements IReportDepositService {
     
     public void setReportDeposit(Resource reportDeposit) {
         this.reportDeposit = reportDeposit;
+    }
+    
+    private File getReportDepositFile() throws IOException{
+        return FileUtils.toFile(FileLocator.toFileURL(getReportDeposit().getURL()));
     }
 
     private ReportTemplateUtil getReportTemplateUtil() throws IOException {
