@@ -179,6 +179,10 @@ public class DummyReportDepositService implements IReportDepositService {
     }
     
     private File getReportDepositFile() throws IOException{
+        Resource r = getReportDeposit();
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Resource.toString():\t" + r.toString());
+        }
         URL u1 = getReportDeposit().getURL();
         if(LOG.isDebugEnabled()){
             LOG.debug("BundleLocationPath of reportDeposit:\t" + u1.getPath());
@@ -191,7 +195,7 @@ public class DummyReportDepositService implements IReportDepositService {
         if(LOG.isDebugEnabled()){
             LOG.debug("Location of reportDepositFile:\t" + f.getAbsolutePath());
         }
-        return FileUtils.toFile(FileLocator.toFileURL(getReportDeposit().getURL()));
+        return f;
     }
 
     private ReportTemplateUtil getReportTemplateUtil() throws IOException {
