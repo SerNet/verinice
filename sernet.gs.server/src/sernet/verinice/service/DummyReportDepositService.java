@@ -19,6 +19,7 @@ package sernet.verinice.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -178,6 +179,18 @@ public class DummyReportDepositService implements IReportDepositService {
     }
     
     private File getReportDepositFile() throws IOException{
+        URL u1 = getReportDeposit().getURL();
+        if(LOG.isDebugEnabled()){
+            LOG.debug("BundleLocationPath of reportDeposit:\t" + u1.getPath());
+        }
+        URL u2 = FileLocator.toFileURL(u1);
+        if(LOG.isDebugEnabled()){
+            LOG.debug("FilesystemLocationPath of reportDeposit:\t" + u1.getPath());
+        }
+        File f = FileUtils.toFile(u2);
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Location of reportDepositFile:\t" + f.getAbsolutePath());
+        }
         return FileUtils.toFile(FileLocator.toFileURL(getReportDeposit().getURL()));
     }
 
