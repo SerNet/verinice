@@ -181,21 +181,13 @@ public class DummyReportDepositService implements IReportDepositService {
     private File getReportDepositFile() throws IOException{
         Resource r = getReportDeposit();
         if(LOG.isDebugEnabled()){
-            LOG.debug("Resource.toString():\t" + r.toString());
+            LOG.debug("Resource injected by spring:\t" + r.getDescription());
         }
-        URL u1 = getReportDeposit().getURL();
+        URL url = FileLocator.resolve(r.getURL());
         if(LOG.isDebugEnabled()){
-            LOG.debug("BundleLocationPath of reportDeposit:\t" + u1.getPath());
+            LOG.debug("FilesystemURL of Resource:\t" + url.getPath());
         }
-        URL u2 = FileLocator.toFileURL(u1);
-        if(LOG.isDebugEnabled()){
-            LOG.debug("FilesystemLocationPath of reportDeposit:\t" + u1.getPath());
-        }
-        File f = FileUtils.toFile(u2);
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Location of reportDepositFile:\t" + f.getAbsolutePath());
-        }
-        return f;
+        return FileUtils.toFile(url);
     }
 
     private ReportTemplateUtil getReportTemplateUtil() throws IOException {
