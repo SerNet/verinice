@@ -48,6 +48,9 @@ public class JarService implements IJarService {
                sb.append(File.separatorChar); 
             }
             sb.append(DEPOSIT_LOCATION);
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Directoy extracted from JAR for Report-Deposit-Location:\t" + sb.toString());
+            }
             File f = new File(sb.toString());
             return f;
         } catch (RuntimeException re){
