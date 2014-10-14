@@ -58,6 +58,8 @@ public class DummyReportDepositService implements IReportDepositService {
     
     private Resource reportDeposit;
     
+    private Resource reportDepositTmpFile;
+    
     private ReportTemplateUtil reportTemplateUtil;
 
     /* (non-Javadoc)
@@ -180,12 +182,18 @@ public class DummyReportDepositService implements IReportDepositService {
     
     private File getReportDepositFile() throws IOException{
         Resource r = getReportDeposit();
+        Resource rf = getReportDepositTmpFile();
         if(LOG.isDebugEnabled()){
             LOG.debug("Resource injected by spring:\t" + r.getDescription());
+            LOG.debug("Resource injected by spring:\t" + rf.getDescription());
         }
         URL url = FileLocator.resolve(r.getURL());
+        URL url1 = FileLocator.resolve(rf.getURL());
+        File ff = FileUtils.toFile(url1);
         if(LOG.isDebugEnabled()){
             LOG.debug("FilesystemURL of Resource:\t" + url.getPath());
+            LOG.debug("FilesystemURL of Resource:\t" + url1.getPath());
+            LOG.debug("Filepath of rptdesign:\t" + ff.getAbsolutePath());
         }
         return FileUtils.toFile(url);
     }
@@ -196,6 +204,14 @@ public class DummyReportDepositService implements IReportDepositService {
         }
 
         return reportTemplateUtil;
+    }
+
+    public Resource getReportDepositTmpFile() {
+        return reportDepositTmpFile;
+    }
+
+    public void setReportDepositTmpFile(Resource reportDepositTmpFile) {
+        this.reportDepositTmpFile = reportDepositTmpFile;
     }
 
 }
