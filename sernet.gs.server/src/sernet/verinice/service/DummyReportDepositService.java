@@ -19,7 +19,6 @@ package sernet.verinice.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -31,10 +30,9 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.FileLocator;
-import org.springframework.core.io.Resource;
 
 import sernet.gs.service.ReportTemplateUtil;
+import sernet.verinice.interfaces.IJarService;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.model.report.ExcelOutputFormat;
@@ -55,12 +53,10 @@ public class DummyReportDepositService implements IReportDepositService {
 
     
     private static final Logger LOG = Logger.getLogger(DummyReportDepositService.class);
-    
-    private Resource reportDeposit;
-    
-    private Resource reportDepositTmpFile;
-    
+        
     private ReportTemplateUtil reportTemplateUtil;
+    
+    private IJarService jarService;
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IReportDepositService#addToServerDeposit(sernet.verinice.model.report.ReportTemplateMetaData, byte[])
@@ -172,46 +168,24 @@ public class DummyReportDepositService implements IReportDepositService {
         return list.toArray(new String[list.size()]);
     }
     
-    public Resource getReportDeposit() {
-        return reportDeposit;
-    }
-    
-    public void setReportDeposit(Resource reportDeposit) {
-        this.reportDeposit = reportDeposit;
-    }
-    
-    private File getReportDepositFile() throws IOException{
-        Resource r = getReportDeposit();
-        Resource rf = getReportDepositTmpFile();
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Resource injected by spring:\t" + r.getDescription());
-            LOG.debug("Resource injected by spring:\t" + rf.getDescription());
-        }
-        URL url = FileLocator.resolve(r.getURL());
-        URL url1 = FileLocator.resolve(rf.getURL());
-        File ff = FileUtils.toFile(url1);
-        if(LOG.isDebugEnabled()){
-            LOG.debug("FilesystemURL of Resource:\t" + url.getPath());
-            LOG.debug("FilesystemURL of Resource:\t" + url1.getPath());
-            LOG.debug("Filepath of rptdesign:\t" + ff.getAbsolutePath());
-        }
-        return FileUtils.toFile(url);
+    private File getReportDepositFile() {
+        return getJarService().getReportDepositDirectory();
     }
 
     private ReportTemplateUtil getReportTemplateUtil() throws IOException {
         if (reportTemplateUtil == null) {
-            reportTemplateUtil = new ReportTemplateUtil(reportDeposit.getFile().getPath(), true);
+            reportTemplateUtil = new ReportTemplateUtil(getJarService().getReportDepositDirectory().getPath(), true);
         }
 
         return reportTemplateUtil;
     }
 
-    public Resource getReportDepositTmpFile() {
-        return reportDepositTmpFile;
+    public IJarService getJarService() {
+        return jarService;
     }
 
-    public void setReportDepositTmpFile(Resource reportDepositTmpFile) {
-        this.reportDepositTmpFile = reportDepositTmpFile;
+    public void setJarService(IJarService jarService) {
+        this.jarService = jarService;
     }
 
 }
