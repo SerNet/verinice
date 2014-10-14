@@ -33,7 +33,12 @@ public class JarService implements IJarService {
     
     private static final Logger LOG = Logger.getLogger(JarService.class);
 
-    private static final String DEPOSIT_LOCATION = "WebContent/WEB-INF/reportDeposit/";
+    private static final String DEPOSIT_LOCATION = "WebContent" 
+            + File.separatorChar 
+            + "WEB-INF" 
+            + File.separatorChar 
+            + "reportDeposit"
+            + File.separatorChar;
     
     
     /* (non-Javadoc)
