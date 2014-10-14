@@ -31,14 +31,17 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ITitleAdaptor;
+import sernet.verinice.rcp.SelectionAdapter;
 import sernet.verinice.rcp.WizardPageEnteringAware;
 
 /**
@@ -48,6 +51,8 @@ import sernet.verinice.rcp.WizardPageEnteringAware;
 public class UnifyPageSelectGroup extends WizardPageEnteringAware {
     
     private static final Logger LOG = Logger.getLogger(UnifyPageSelectGroup.class);
+    
+    
     
     private TableViewer table;
     
@@ -97,11 +102,26 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
         table.setInput(groupList); 
         table.getTable().setSelection(0);
         
+        final Button cb = new Button(composite, SWT.CHECK);
+        cb.setText("Migrate to VDA ISA 2.0");
+        cb.setSelection(false);
+        cb.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                selectMigrateToIsa2(cb.getSelection());
+            } 
+        });
+        
         setPageComplete(false);
         
         selectSourceAndDestination();
         
         setControl(composite);
+    }
+
+ 
+    protected void selectMigrateToIsa2(boolean selection) {
+        getUnifyWizard().setMigrateToIsa2(selection);
     }
 
     private void selectSourceAndDestination() {
@@ -157,7 +177,7 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
             LOG.debug("pageLeft..."); //$NON-NLS-1$
         }
     }
-       
+
     class ActionLabelProvider extends ColumnLabelProvider {
         
         /* (non-Javadoc)

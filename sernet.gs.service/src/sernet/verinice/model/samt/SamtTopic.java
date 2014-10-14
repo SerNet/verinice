@@ -48,6 +48,9 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
     public static final String PROP_THRESHOLD2 = "samt_topic_min2"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTED = "samt_topic_implemented"; //$NON-NLS-1$
     public static final String PROP_COMPLETE_UNTIL = "samt_topic_audit_compluntil"; //$NON-NLS-1$
+    public static final String PROP_AUDIT_FINDINGS = "samt_topic_audit_findings"; //$NON-NLS-1$
+    public static final String PROP_EXTERNALNOTE = "samt_topic_externalnote"; //$NON-NLS-1$
+    public static final String PROP_INTERNALNOTE = "samt_topic_internalnote"; //$NON-NLS-1$
     
     public static final String REL_SAMTTOPIC_PERSON_ISO = "rel_samttopic_person-iso_resp"; //$NON-NLS-1$
     
@@ -143,6 +146,18 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
         
     }
     
+    public String getAuditFindings() {
+        return getEntity().getSimpleValue(SamtTopic.PROP_AUDIT_FINDINGS);
+    }
+    
+    public String getExternalNode() {
+        return getEntity().getSimpleValue(SamtTopic.PROP_EXTERNALNOTE);
+    }
+       
+    public String getInternalNote() {
+        return getEntity().getSimpleValue(SamtTopic.PROP_INTERNALNOTE);
+    }
+    
     /**
      * Returns the used weight.
      * @return
@@ -184,6 +199,7 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
     public String getMaturityPropertyId() {
         return PROP_MATURITY;
     }
+    
 
     /* (non-Javadoc)
      * @see sernet.verinice.model.iso27k.IControl#isImplemented()

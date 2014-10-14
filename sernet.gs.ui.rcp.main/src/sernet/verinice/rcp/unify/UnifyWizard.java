@@ -38,9 +38,11 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadParentTitles;
-import sernet.verinice.service.commands.LoadUnifyMapping;
-import sernet.verinice.service.commands.Unify;
-import sernet.verinice.service.commands.UnifyMapping;
+import sernet.verinice.service.commands.unify.Isa20Mapper;
+import sernet.verinice.service.commands.unify.IsaMapper;
+import sernet.verinice.service.commands.unify.LoadUnifyMapping;
+import sernet.verinice.service.commands.unify.Unify;
+import sernet.verinice.service.commands.unify.UnifyMapping;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -55,9 +57,9 @@ public class UnifyWizard extends Wizard {
     
     private List<CnATreeElement> groups;
     
-    private CnATreeElement source;
-    
+    private CnATreeElement source;    
     private CnATreeElement destination;
+    private boolean migrateToIsa2 = false;
 
     private List<UnifyMapping> mappings;
     
@@ -67,7 +69,7 @@ public class UnifyWizard extends Wizard {
     
     private boolean copyLinksEnabled = false;
     private boolean deleteSourceLinksEnabled = false;
-    private boolean copyObjectAttributes = false;
+    private boolean copyAttributesDisabled = false;
     
     /**
      * @param groups
@@ -138,7 +140,7 @@ public class UnifyWizard extends Wizard {
         if(mappings==null) {
             loadMapping();
         }
-        Unify command = new Unify(mappings, copyLinksEnabled, deleteSourceLinksEnabled, copyObjectAttributes);
+        Unify command = new Unify(mappings, copyLinksEnabled, deleteSourceLinksEnabled, copyAttributesDisabled);
         command = getCommandService().executeCommand(command);
         refresh(command.getChangedElements());
     }
@@ -184,7 +186,8 @@ public class UnifyWizard extends Wizard {
     }
 
     private void loadMappingFromServer() throws CommandException {
-        LoadUnifyMapping command = new LoadUnifyMapping(getSource().getUuid(), getDestination().getUuid());
+        String mapperId = (isMigrateToIsa2()) ? Isa20Mapper.ID : IsaMapper.ID;
+        LoadUnifyMapping command = new LoadUnifyMapping(getSource().getUuid(), getDestination().getUuid(), mapperId);
         command = getCommandService().executeCommand(command);    
         mappings = command.getMappings();
     }
@@ -245,12 +248,12 @@ public class UnifyWizard extends Wizard {
         return deleteSourceLinksEnabled;
     }
 
-    public boolean isCopyObjectAttributes() {
-        return copyObjectAttributes;
+    public boolean isCopyObjectAttributesDisabled() {
+        return copyAttributesDisabled;
     }
 
-    public void setCopyObjectAttributes(boolean copyObjectAttributes) {
-        this.copyObjectAttributes = copyObjectAttributes;
+    public void setCopyObjectAttributesDisabled(boolean copyObjectAttributesDisabled) {
+        this.copyAttributesDisabled = copyObjectAttributesDisabled;
     }
 
     /**
@@ -274,6 +277,14 @@ public class UnifyWizard extends Wizard {
         this.destination = destination;
     }
     
+    public boolean isMigrateToIsa2() {
+        return migrateToIsa2;
+    }
+
+    public void setMigrateToIsa2(boolean migrateToIsa2) {
+        this.migrateToIsa2 = migrateToIsa2;
+    }
+
     public ICommandService getCommandService() {
         if(commandService==null) {
             commandService = createCommandServive();

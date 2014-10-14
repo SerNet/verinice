@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.commands;
+package sernet.verinice.service.commands.unify;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,6 +36,9 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.CreateLink;
+import sernet.verinice.service.commands.RemoveLink;
+import sernet.verinice.service.commands.UnifyElement;
 
 /**
  * Unifies a set of elements defined in a list of mappings.
@@ -66,7 +69,7 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
     
     private boolean copyLinksEnabled = false;
     private boolean deleteSourceLinksEnabled = false;
-    private boolean copyObjectAttributesEnabled = true;
+    private boolean copyAttributesDisabled = false;
     
     /**
      * @param mappings
@@ -86,11 +89,11 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
      * @param copyLinks
      * @param deleteExistantLinks
      */
-    public Unify(List<UnifyMapping> mappings, boolean copyLinks, boolean deleteExistantLinks, boolean copyAttributes){
+    public Unify(List<UnifyMapping> mappings, boolean copyLinks, boolean deleteExistantLinks, boolean copyAttributesDisabled){
         this(mappings);
         this.copyLinksEnabled = copyLinks;
         this.deleteSourceLinksEnabled = deleteExistantLinks;
-        this.copyObjectAttributesEnabled = copyAttributes;
+        this.copyAttributesDisabled = copyAttributesDisabled;
     }
     
     /* (non-Javadoc)
@@ -102,12 +105,14 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
             changedElementList = new ArrayList<CnATreeElement>(mappings.size());
             for (UnifyMapping mapping : mappings) {
                 UnifyElement source = mapping.getSourceElement();
-                UnifyElement destination = mapping.getDestinationElement();
-                try{
-                    unify(source,destination);
-                } catch (CommandException e){
-                    getLog().error("Error unifying elements",e);
-                }
+                List<UnifyElement> destinationList = mapping.getDestinationElements();
+                for (UnifyElement destination : destinationList) {
+                    try{
+                        unify(source,destination);
+                    } catch (CommandException e){
+                        getLog().error("Error unifying elements",e);
+                    }
+                }               
             }
         }
     }
@@ -122,7 +127,7 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
         }
         CnATreeElement sourceElement = getDao().findByUuid(source.getUuid(), RetrieveInfo.getPropertyInstance());
         CnATreeElement destinationElement = getDao().findByUuid(destination.getUuid(), RetrieveInfo.getPropertyInstance());
-        if(!copyObjectAttributesEnabled){
+        if(!copyAttributesDisabled){
             destinationElement.getEntity().copyEntity(sourceElement.getEntity(),propertyTypeBlacklist);
         }
         if(copyLinksEnabled){

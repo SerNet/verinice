@@ -50,7 +50,7 @@ import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ITitleAdaptor;
 import sernet.verinice.rcp.WizardPageEnteringAware;
 import sernet.verinice.service.commands.UnifyElement;
-import sernet.verinice.service.commands.UnifyMapping;
+import sernet.verinice.service.commands.unify.UnifyMapping;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -268,10 +268,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
             @Override
             public void update(ViewerCell cell) {
                 UnifyMapping mapping = (UnifyMapping) cell.getElement();
-                UnifyElement destination = mapping.getDestinationElement();
-                if(destination!=null) {
-                    cell.setText(destination.getTitle());
-                }
+                cell.setText(mapping.getDestinationText());
                 setCellColor(cell,mapping); 
             }
         });
@@ -280,33 +277,26 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         return tableViewer;
     }
     
-    
-    /**
-     * @param cell
-     * @param mapping
-     */
     protected void setCellColor(ViewerCell cell, UnifyMapping mapping) {
-        UnifyElement destination = mapping.getDestinationElement();
-        if(destination==null) {
+        List<UnifyElement> destinationList = mapping.getDestinationElements();
+        if(destinationList==null || destinationList.isEmpty()) {
             cell.setBackground(colorNoMapping);
         } else {
             UnifyElement source = mapping.getSourceElement();
-            if(!isTitleEquals(destination, source)) {
+            if(!isTitleEquals(mapping)) {
                 cell.setBackground(colorDifferentTitle);
             }
         }
         
     }
 
-    /**
-     * @param destination
-     * @param source
-     */
-    private boolean isTitleEquals(UnifyElement destination,UnifyElement source){
+    private boolean isTitleEquals(UnifyMapping mapping){
+        UnifyElement source = mapping.getSourceElement();
+        String destinationText = mapping.getDestinationText();
         return source!=null 
                 && source.getTitle()!=null 
-                && destination.getTitle()!=null && 
-                source.getTitle().equals(destination.getTitle());
+                && destinationText!=null && 
+                source.getTitle().equals(destinationText);
     }
 
 
@@ -343,7 +333,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
 
     public void setCopyAttributesEnabled(boolean copyAttributesEnabled) {
         this.copyAttributesEnabled = copyAttributesEnabled;
-        getUnifyWizard().setCopyObjectAttributes(copyAttributesEnabled);
+        getUnifyWizard().setCopyObjectAttributesDisabled(copyAttributesEnabled);
     }
 
 

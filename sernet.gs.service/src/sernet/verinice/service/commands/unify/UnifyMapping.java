@@ -17,9 +17,13 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.commands;
+package sernet.verinice.service.commands.unify;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import sernet.verinice.service.commands.UnifyElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -29,7 +33,7 @@ public class UnifyMapping implements Serializable {
 
     private UnifyElement sourceElement;
     
-    private UnifyElement destinationElement;
+    private List<UnifyElement> destinationElements;
 
     /**
      * @param sourceElement
@@ -44,40 +48,49 @@ public class UnifyMapping implements Serializable {
      * @param destinationElement
      */
     public UnifyMapping(UnifyElement sourceElement, UnifyElement destinationElement) {
-        super();
-        this.sourceElement = sourceElement;
-        this.destinationElement = destinationElement;
+        this(sourceElement);
+        destinationElements = createDestinationElements();
+        addDestinationElement(destinationElement);
+    }
+    
+    public String getDestinationText() {
+        StringBuilder sb = null;
+        for (UnifyElement destination : destinationElements) {
+            if(sb!=null) {
+                sb.append(", \n");
+            } else {
+                sb = new StringBuilder();
+            }
+            sb.append(destination.getTitle());
+        }
+        String text = "";
+        if(sb!=null) {
+            text = sb.toString();
+        }
+        return text;
     }
 
-    /**
-     * @return the sourceElement
-     */
     public UnifyElement getSourceElement() {
         return sourceElement;
     }
 
-    /**
-     * @return the destinationElement
-     */
-    public UnifyElement getDestinationElement() {
-        return destinationElement;
+    public List<UnifyElement> getDestinationElements() {
+        if(destinationElements==null) {
+            destinationElements = createDestinationElements();
+        }
+        return destinationElements;
     }
 
-    /**
-     * @param sourceElement the sourceElement to set
-     */
+    private List<UnifyElement> createDestinationElements() {
+        destinationElements = new ArrayList<UnifyElement>(2);
+        return destinationElements;
+    }
+
     public void setSourceElement(UnifyElement sourceElement) {
         this.sourceElement = sourceElement;
     }
 
-    /**
-     * @param destinationElement the destinationElement to set
-     */
-    public void setDestinationElement(UnifyElement destinationElement) {
-        this.destinationElement = destinationElement;
-    }
-    
-    
-    
-    
+    public void addDestinationElement(UnifyElement destinationElement) {
+        getDestinationElements().add(destinationElement);
+    } 
 }
