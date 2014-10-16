@@ -78,7 +78,6 @@ This variant:
                 <entry key="validationService" value-ref="validationService" />
                 <entry key="accountService" value-ref="accountService" />
                 <entry key="reportdepositService" value-ref="reportdepositService" />
-                <entry key="jarService" value-ref="jarService" />
 			</map>
 		</property>
 	</bean>
@@ -295,8 +294,6 @@ This variant:
     	<property name="cnaTreeElementDAO" ref="cnaTreeElementDao"></property>
     	<property name="huiTypeFactory" ref="huiTypeFactory" />
     </bean>
-    
-    <bean id="jarService" class="sernet.verinice.service.JarService"/>
     
     <!-- A service to load and analyse the element network of verinice with JGraphT. -->
     <!-- JGraphT is a free Java graph library that provides mathematical graph-theory objects and algorithms. -->

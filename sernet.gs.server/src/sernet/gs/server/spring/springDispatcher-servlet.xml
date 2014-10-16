@@ -125,17 +125,6 @@
 		</property>
 	</bean>
 	
-	<bean name="/jarServiceHttpInvoker"
-    	class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
-		lazy-init="false">
-		<property name="service">
-			<ref bean="jarService" />
-		</property>    
-		<property name="serviceInterface">
-			<value>sernet.verinice.interfaces.IJarService</value>
-		</property>
-	</bean>
-	
 	<bean name="/reportdepositServiceHttpInvoker"
     	class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
 		lazy-init="false">		

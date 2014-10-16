@@ -116,8 +116,6 @@ public final class VeriniceContext {
     
     public static final String REPORT_DEPOSIT_SERVICE = "reportdepositService";
     
-    public static final String JAR_SERVICE = "jarService";
-    
     private static String serverUrl = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();

@@ -30,9 +30,9 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.log4j.Logger;
+import org.springframework.core.io.Resource;
 
 import sernet.gs.service.ReportTemplateUtil;
-import sernet.verinice.interfaces.IJarService;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.model.report.ExcelOutputFormat;
@@ -53,10 +53,10 @@ public class DummyReportDepositService implements IReportDepositService {
 
     
     private static final Logger LOG = Logger.getLogger(DummyReportDepositService.class);
-        
-    private ReportTemplateUtil reportTemplateUtil;
     
-    private IJarService jarService;
+    private Resource reportDeposit;
+    
+    private ReportTemplateUtil reportTemplateUtil;
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IReportDepositService#addToServerDeposit(sernet.verinice.model.report.ReportTemplateMetaData, byte[])
@@ -149,7 +149,7 @@ public class DummyReportDepositService implements IReportDepositService {
      */
     @Override
     public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException {
-        String filePath = getReportDepositFile().getPath() + File.separatorChar + metadata.getFilename();
+        String filePath = getReportDeposit().getFile().getPath() + File.separatorChar + metadata.getFilename();
         byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
 
         Map<String, byte[]> propertiesFile = getReportTemplateUtil().getPropertiesFiles(metadata.getFilename());
@@ -161,31 +161,27 @@ public class DummyReportDepositService implements IReportDepositService {
         List<String> list = new ArrayList<String>(0);
         // // DirFilter = null means no subdirectories
         IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(getReportDepositFile(), filter, null);
+        Iterator<File> iter = FileUtils.iterateFiles(getReportDeposit().getFile(), filter, null);
         while (iter.hasNext()) {
             list.add(iter.next().getAbsolutePath());
         }
         return list.toArray(new String[list.size()]);
     }
     
-    private File getReportDepositFile() {
-        return getJarService().getReportDepositDirectory();
+    public Resource getReportDeposit() {
+        return reportDeposit;
+    }
+    
+    public void setReportDeposit(Resource reportDeposit) {
+        this.reportDeposit = reportDeposit;
     }
 
     private ReportTemplateUtil getReportTemplateUtil() throws IOException {
         if (reportTemplateUtil == null) {
-            reportTemplateUtil = new ReportTemplateUtil(getJarService().getReportDepositDirectory().getPath(), true);
+            reportTemplateUtil = new ReportTemplateUtil(reportDeposit.getFile().getPath(), true);
         }
 
         return reportTemplateUtil;
-    }
-
-    public IJarService getJarService() {
-        return jarService;
-    }
-
-    public void setJarService(IJarService jarService) {
-        this.jarService = jarService;
     }
 
 }
