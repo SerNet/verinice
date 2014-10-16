@@ -133,13 +133,13 @@ public class ReportTemplateUtil {
     }
 
     public File getPropertiesFile(String path, String locale) {
-        if("en".equals(locale.toLowerCase()) || path.contains("_" + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION)){
-           locale = ""; 
+        if ("en".equals(locale.toLowerCase()) || path.contains("_" + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION)) {
+            locale = "";
         } else {
             locale = "_" + locale.toLowerCase();
         }
         path = removeSuffix(path);
-        File propFile = new File(path  + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
+        File propFile = new File(path + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
         return propFile;
     }
 
@@ -204,7 +204,7 @@ public class ReportTemplateUtil {
 
     private String[] getCheckSums(String fileName) throws IOException {
         String filePath;
-        if(!fileName.contains(reportTemplateDirectory)){
+        if (!fileName.contains(reportTemplateDirectory)) {
             filePath = reportTemplateDirectory + File.separatorChar + fileName;
         } else {
             filePath = fileName;
