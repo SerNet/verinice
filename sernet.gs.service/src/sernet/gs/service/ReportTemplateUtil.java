@@ -133,6 +133,10 @@ public class ReportTemplateUtil {
     }
 
     public File getPropertiesFile(String path, String locale) {
+        if(locale.length() > 2 && locale.contains(String.valueOf('_'))){
+            // as we do not deal with dialects like en_UK here, we just take the leftside locale (e.g. "en")
+            locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
+        }
         if ("en".equals(locale.toLowerCase()) || path.contains("_" + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION)) {
             locale = "";
         } else {
