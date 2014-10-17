@@ -136,7 +136,11 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
     private void deleteRptdesignAndPropertiesFiles(String fileName) {
 
-        String filePath = CnAWorkspace.getInstance().getRemoteReportTemplateDir() + File.separatorChar + fileName;
+        String filePath = CnAWorkspace.getInstance().getRemoteReportTemplateDir();
+        if(!filePath.endsWith(String.valueOf(File.separatorChar))){
+            filePath = filePath + File.separatorChar;
+        }
+        filePath = filePath + fileName;
         File rptdesign = new File(filePath);
 
         if (rptdesign.exists()) {
@@ -157,7 +161,17 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
         try {
             Activator.inheritVeriniceContextState();
-            syncReportTemplates(Locale.getDefault().toString());
+            String locale = Locale.getDefault().toString(); 
+            if(locale.length() > 2 && locale.contains(String.valueOf('_'))){
+                // as we do not deal with dialects like en_UK here, we just take the leftside locale (e.g. "en")
+                locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
+            }
+            if ("en".equals(locale.toLowerCase())) {
+                locale = "";
+            } else {
+                locale = locale.toLowerCase();
+            }
+            syncReportTemplates(locale);
         } catch (IOException e) {
             status = errorHandler(e);
         } catch (ReportMetaDataException e) {
