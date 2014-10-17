@@ -58,13 +58,22 @@ public class IsaMapper implements IElementMapper {
         }
         return internalMappings;
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.commands.unify.IElementMapper#validate(java.util.Map, java.util.Map)
+     */
+    @Override
+    public void validate(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap) throws UnifyValidationException {
+        // no validation needed in this mapper
+        
+    }
 
     protected List<String> getDestinationKey(Entry<String, CnATreeElement> sourceEntry) {
         List<String> destKeyList = new ArrayList<String>(1);
         destKeyList.add(sourceEntry.getKey());
         return destKeyList;
     }
-
+    
     /* (non-Javadoc)
      * @see sernet.verinice.service.commands.unify.IElementMapper#getId()
      */

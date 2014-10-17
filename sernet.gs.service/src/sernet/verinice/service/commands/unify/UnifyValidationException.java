@@ -19,21 +19,17 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.unify;
 
-import java.util.List;
-import java.util.Map;
-
-import sernet.verinice.model.common.CnATreeElement;
-
 /**
- * IElementMapper is used by command {@link LoadUnifyMapping} to create a mapping between
- * {@link CnATreeElement}s.
- * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ *
  */
-public interface IElementMapper {
-    
-    String getId();
-    void validate(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap) throws UnifyValidationException;
-    List<UnifyMapping> createMapping(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap);
-    
+public class UnifyValidationException extends RuntimeException {
+
+    /**
+     * @param string
+     */
+    public UnifyValidationException(String message) {
+        super(message);
+    }
+
 }

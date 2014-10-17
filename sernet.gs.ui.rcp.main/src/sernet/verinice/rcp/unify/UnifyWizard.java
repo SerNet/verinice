@@ -43,6 +43,7 @@ import sernet.verinice.service.commands.unify.IsaMapper;
 import sernet.verinice.service.commands.unify.LoadUnifyMapping;
 import sernet.verinice.service.commands.unify.Unify;
 import sernet.verinice.service.commands.unify.UnifyMapping;
+import sernet.verinice.service.commands.unify.UnifyValidationException;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -96,14 +97,6 @@ public class UnifyWizard extends Wizard {
         addPage(pageSelectGroup);
         UnifyPageMapping pageMapping = new UnifyPageMapping();
         addPage(pageMapping);
-    }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.wizard.Wizard#canFinish()
-     */
-    @Override
-    public boolean canFinish() {
-        return getSource()!=null && getDestination()!=null;
     }
 
     /* (non-Javadoc)
@@ -176,11 +169,23 @@ public class UnifyWizard extends Wizard {
     public void loadMapping() { 
         try {
             loadMappingFromServer();
+        } catch (UnifyValidationException e) {
+            LOG.error("Error while loading unify mapping from server.", e); //$NON-NLS-1$
+            showError(e.getMessage());
         } catch (CommandException e) {
-            LOG.error("Command exception while loading unify mapping from server.", e); //$NON-NLS-1$
-            showError(Messages.UnifyWizard_6);
+            handleCommandException(e);
         } catch (Exception e) {
             LOG.error("Error while loading unify mapping from server.", e); //$NON-NLS-1$
+            showError(Messages.UnifyWizard_6);
+        }
+    }
+
+    private void handleCommandException(CommandException e) {
+        LOG.error("Command exception while loading unify mapping from server.", e); //$NON-NLS-1$
+        Throwable cause = e.getCause();
+        if(cause instanceof UnifyValidationException) {
+            showError(cause.getMessage());
+        } else {           
             showError(Messages.UnifyWizard_6);
         }
     }

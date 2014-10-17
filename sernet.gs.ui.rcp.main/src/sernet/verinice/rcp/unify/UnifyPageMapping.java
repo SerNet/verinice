@@ -202,6 +202,15 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
         }     
     }
     
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+     */
+    @Override
+    public boolean isPageComplete() {
+        List<UnifyMapping> mappings = getUnifyWizard().getMappings();
+        return (mappings!=null && !mappings.isEmpty());
+    }
+    
     private void loadAndShowMapping() {
         getUnifyWizard().loadMapping();
         List<UnifyMapping> mappings = getUnifyWizard().getMappings();
@@ -210,7 +219,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
             table.setInput(mappings);
             table.refresh();
         }
-        setPageComplete(mappings!=null && !mappings.isEmpty());
+        setPageComplete(isPageComplete());
     }
     
  

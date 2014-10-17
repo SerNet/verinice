@@ -21,6 +21,7 @@ import sernet.gs.ui.rcp.main.service.commands.UsernameExistsException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ldap.SizeLimitExceededException;
 import sernet.verinice.service.commands.UsernameExistsRuntimeException;
+import sernet.verinice.service.commands.unify.UnifyValidationException;
 
 public class BaseExceptionHandler implements ICommandExceptionHandler {
 
@@ -29,7 +30,9 @@ public class BaseExceptionHandler implements ICommandExceptionHandler {
 			throw new UsernameExistsException(e);
 		} else if(e instanceof SizeLimitExceededException) {
 		    throw (SizeLimitExceededException)e;
-		} else {
+		} else if(e instanceof UnifyValidationException) {
+            throw (UnifyValidationException)e;
+        } else {
 			throw new CommandException("Ausführungsfehler in DB-Service-Layer\n\n", getDetails(e));
 		}
 	}

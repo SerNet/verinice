@@ -234,6 +234,7 @@ public class CreateSelfAssessment extends ChangeLoggingCommand implements IChang
             } else {
                 // create an element
                 element = ItemControlTransformer.transformGeneric(item, new SamtTopic());
+                ((SamtTopic) element).setVersion(SamtTopic.VERSION_2_0);
                 element.setParentAndScope(group);
             }
             addPermissions(element);             

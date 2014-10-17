@@ -55,14 +55,13 @@ public class UnifyTest extends BeforeEachVNAImportHelper {
     
     private static final String SOURCE_ID = "VN-872";
     private static final String CONTROL_GROUP_1_X = "ENTITY_46008";
-    private static final String CONTROL_GROUP_2_0 = "ENTITY_47120";
-    private static final String ISA_TOPIC1_X_12_2 = "ENTITY_46053";
-    private static final String ISA_TOPIC_2_0_14_1 = "ENTITY_47151";
-    private static final String ISA_TOPIC_2_0_14_2 = "ENTITY_47177"; 
+    private static final String CONTROL_GROUP_2_0 = "ENTITY_117615";
+    private static final String ISA_TOPIC_2_0_14_1 = "ENTITY_117723";
+    private static final String ISA_TOPIC_2_0_14_2 = "ENTITY_117751"; 
     
-    private static final String ISA_TOPIC_2_0_9_5 = "ENTITY_47728";
-    private static final String ISA_TOPIC_2_0_18_4 = "ENTITY_47605";
-    private static final String ISA_TOPIC_2_0_15_1 = "ENTITY_47686";
+    private static final String ISA_TOPIC_2_0_9_5 = "ENTITY_117973";
+    private static final String ISA_TOPIC_2_0_18_4 = "ENTITY_118115";
+    private static final String ISA_TOPIC_2_0_15_1 = "ENTITY_118151";
     
     private static final String TEXT_FROM_1_X = "sernet.verinice.service.test.UnifyTest";
     private static final int MATURITY_FROM_1_X_LEVEL_3 = 3;

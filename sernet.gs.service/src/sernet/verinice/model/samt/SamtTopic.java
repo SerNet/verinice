@@ -51,10 +51,11 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
     public static final String PROP_AUDIT_FINDINGS = "samt_topic_audit_findings"; //$NON-NLS-1$
     public static final String PROP_EXTERNALNOTE = "samt_topic_externalnote"; //$NON-NLS-1$
     public static final String PROP_INTERNALNOTE = "samt_topic_internalnote"; //$NON-NLS-1$
+    public static final String PROP_VERSION = "samt_topic_version"; //$NON-NLS-1$
     
     public static final String REL_SAMTTOPIC_PERSON_ISO = "rel_samttopic_person-iso_resp"; //$NON-NLS-1$
     
-    
+    public static final String VERSION_2_0 = "2.0"; //$NON-NLS-1$
     
     
     public SamtTopic() {
@@ -189,6 +190,25 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
      */
     public void setWeight2(String value) {
         getEntity().setSimpleValue(getEntityType().getPropertyType(SamtTopic.PROP_WEIGHT2), value);
+        
+    }
+    
+    /**
+     * Return the version of this topic. Can be null or empty.
+     * If no version is set version is 1.x
+     */ 
+    public String getVersion() {
+        return getEntity().getSimpleValue(SamtTopic.PROP_VERSION);
+    }
+    
+    /**
+     * Sets the version of this topic. If no version
+     * is set version is 1.x
+     * 
+     * @param value The version of this topic
+     */
+    public void setVersion(String value) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(SamtTopic.PROP_VERSION), value);
         
     }
 

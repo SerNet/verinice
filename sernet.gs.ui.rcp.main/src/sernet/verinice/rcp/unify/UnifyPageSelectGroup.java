@@ -103,7 +103,7 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
         table.getTable().setSelection(0);
         
         final Button cb = new Button(composite, SWT.CHECK);
-        cb.setText("Migrate to VDA ISA 2.0");
+        cb.setText(Messages.UnifyPageSelectGroup_2);
         cb.setSelection(false);
         cb.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -117,6 +117,15 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
         selectSourceAndDestination();
         
         setControl(composite);
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+     */
+    @Override
+    public boolean isPageComplete() {
+        return (getUnifyWizard().getSource()!=null) && (getUnifyWizard().getDestination()!=null);      
     }
 
  
@@ -133,7 +142,7 @@ public class UnifyPageSelectGroup extends WizardPageEnteringAware {
                 break;
             }
         }
-        setPageComplete(getUnifyWizard().getSource()!=null && getUnifyWizard().getDestination()!=null);
+        setPageComplete(isPageComplete());
     }
   
     

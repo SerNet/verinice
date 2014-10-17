@@ -91,7 +91,9 @@ public class LoadUnifyMapping extends GenericCommand {
     public void execute() {
         Map<String, CnATreeElement> sourceMap = loadChildrenTitleMap(getSourceUuid());
         Map<String, CnATreeElement> destinationMap = loadChildrenTitleMap(getDestinationUuid());
-        mappings = getMapper().createMapping(sourceMap, destinationMap);
+        IElementMapper mapper = getMapper();
+        mapper.validate(sourceMap, destinationMap);
+        mappings = mapper.createMapping(sourceMap, destinationMap);
     }
 
     private Map<String, CnATreeElement> loadChildrenTitleMap(String uuidParent) {

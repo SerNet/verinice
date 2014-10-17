@@ -19,21 +19,35 @@
  ******************************************************************************/
 package sernet.verinice.service.commands.unify;
 
-import java.util.List;
-import java.util.Map;
-
-import sernet.verinice.model.common.CnATreeElement;
+import java.text.MessageFormat;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 /**
- * IElementMapper is used by command {@link LoadUnifyMapping} to create a mapping between
- * {@link CnATreeElement}s.
- * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ *
  */
-public interface IElementMapper {
+public class Messages {
+    private static final String BUNDLE_NAME = "sernet.verinice.service.commands.unify.messages"; //$NON-NLS-1$
+
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+
+    private Messages() {
+    }
+
+    public static String getString(String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
     
-    String getId();
-    void validate(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap) throws UnifyValidationException;
-    List<UnifyMapping> createMapping(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap);
-    
+    public static String getString(String key, Object... params  ) {
+        try {
+            return MessageFormat.format(RESOURCE_BUNDLE.getString(key), params);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
+    }
 }
