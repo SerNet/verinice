@@ -37,137 +37,40 @@ import org.eclipse.core.runtime.Path;
 import sernet.gs.server.Activator;
 import sernet.gs.service.AbstractReportTemplateService;
 import sernet.verinice.interfaces.IReportDepositService;
-import sernet.verinice.interfaces.report.IOutputFormat;
-import sernet.verinice.model.report.ExcelOutputFormat;
-import sernet.verinice.model.report.HTMLOutputFormat;
-import sernet.verinice.model.report.ODSOutputFormat;
-import sernet.verinice.model.report.ODTOutputFormat;
-import sernet.verinice.model.report.PDFOutputFormat;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
-import sernet.verinice.model.report.WordOutputFormat;
 
-/**
- *
- */
+
 public class DummyReportDepositService extends AbstractReportTemplateService implements IReportDepositService {
 
     private static final Logger LOG = Logger.getLogger(DummyReportDepositService.class);
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#addToServerDeposit(sernet
-     * .verinice.model.report.ReportTemplateMetaData, byte[])
-     */
     @Override
     public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file, String locale) {
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#removeFromServer(sernet
-     * .verinice.model.report.ReportTemplateMetaData)
-     */
     @Override
     public void removeFromServer(ReportTemplateMetaData metadata, String locale) throws IOException {
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#getServerReportTemplates
-     * ()
-     */
+
     @Override
     public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         return getReportTemplates(getServerRptDesigns(), locale);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#getOutputFormat(sernet
-     * .verinice.interfaces.IReportDepositService.OutputFormat)
-     */
-    @Override
-    public IOutputFormat getOutputFormat(OutputFormat formatLabel) {
-        switch (formatLabel) {
-        case PDF:
-            return new PDFOutputFormat();
-        case HTML:
-            return new HTMLOutputFormat();
-        case ODS:
-            return new ODSOutputFormat();
-        case ODT:
-            return new ODTOutputFormat();
-        case XLS:
-            return new ExcelOutputFormat();
-        case DOC:
-            return new WordOutputFormat();
-        default:
-            return null;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#getOutputFormats(sernet
-     * .verinice.interfaces.IReportDepositService.OutputFormat[])
-     */
-    @Override
-    public IOutputFormat[] getOutputFormats(OutputFormat[] formatLabel) {
-        List<IOutputFormat> list = new ArrayList<IOutputFormat>(formatLabel.length);
-        for (OutputFormat s : formatLabel) {
-            IOutputFormat format = getOutputFormat(s);
-            if (format != null) {
-                list.add(format);
-            } else {
-                LOG.warn("Report output format:\t" + s + " not available in verinice");
-            }
-        }
-        return list.toArray(new IOutputFormat[list.size()]);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#getDepositLocation()
-     */
     @Override
     public String getDepositLocation() throws IOException {
         return getReportDepositPath();
     }
 
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#updateInServerDeposit
-     * (sernet.verinice.model.report.ReportTemplateMetaData)
-     */
     @Override
     public void updateInServerDeposit(ReportTemplateMetaData metadata, String locale) throws IOException {
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#getReportTemplate(sernet
-     * .verinice.model.report.ReportTemplateMetaData)
-     */
     @Override
     public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException {
         String filePath = getReportDepositPath() + File.separatorChar + metadata.getFilename();
