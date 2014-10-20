@@ -32,25 +32,33 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import sernet.gs.service.AbstractReportTemplateService;
 import sernet.gs.service.FileUtil;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
+import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
-import static sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 
 /**
  * 
@@ -60,34 +68,34 @@ import static sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 public class ReportDepositTest extends CommandServiceProvider {
 
     private static final String LANGUAGE = Locale.ENGLISH.getLanguage();
-
+    
     private static final String REPORT_DIR = "/reports";
     private static final String RPTSUFFIX = ".rptdesign";
     private static final String DEPOSIT_DIR_PART_1 = "bin" + File.separator + "WEB-INF" + File.separator;
     private static final String DEPOSIT_DIR_PART_2 = "reportDeposit";
-
+    
     @Resource(name = "reportdepositService")
     private IReportDepositService depositService;
-
+    
     @Before
     public void setUp() throws Exception {
         File deposit = new File(DEPOSIT_DIR_PART_1 + DEPOSIT_DIR_PART_2);
-        deposit.mkdirs();
+        deposit.mkdirs();        
         assertTrue("Report deposit was not created", deposit.exists());
     }
 
     @After
     public void tearDown() throws CommandException {
-        FileUtil.deleteDirectory(new File(DEPOSIT_DIR_PART_1 + DEPOSIT_DIR_PART_2));
-        FileUtil.deleteDirectory(new File(DEPOSIT_DIR_PART_1));
+        FileUtil.deleteDirectory(new File(DEPOSIT_DIR_PART_1 + DEPOSIT_DIR_PART_2)); 
+        FileUtil.deleteDirectory(new File(DEPOSIT_DIR_PART_1));   
     }
-
+    
     @Test
     public void testAddToServerDeposit() throws Exception {
         List<ReportTemplateMetaData> addedMetadataList = addAllFilesToDeposit();
         checkMetadataInDeposit(addedMetadataList, true);
     }
-
+    
     @Test
     public void testRemoveFromServer() throws Exception {
         List<ReportTemplateMetaData> addedMetadataList = addAllFilesToDeposit();
@@ -97,7 +105,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         }
         checkMetadataInDeposit(addedMetadataList, false);
     }
-
+    
     @Test
     public void testUpdateInServerDeposit() throws Exception {
         addAllFilesToDeposit();
@@ -113,9 +121,36 @@ public class ReportDepositTest extends CommandServiceProvider {
             assertArrayEquals("Output formats name is not as expected.", getOutputFormats(), metadata.getOutputFormats());
         }
     }
+    
+    @Test
+    public void testUpdatingProperties() throws Exception{
+        addAllFilesToDeposit();
+        Set<ReportTemplateMetaData> metadataSet = depositService.getServerReportTemplates(getLanguage());
+        ReportTemplateMetaData randomTemplate = metadataSet.toArray(new ReportTemplateMetaData[metadataSet.size()])[new Random().nextInt(metadataSet.size())];
+        OutputFormat[] toTest = new OutputFormat[]{IReportDepositService.OutputFormat.DOC,
+                IReportDepositService.OutputFormat.XLS,
+                IReportDepositService.OutputFormat.HTML
+                };
+        randomTemplate.setOutputFormats(toTest);
+        
+        URL reportDirectory = ReportDepositTest.class.getResource(REPORT_DIR);
+        assertNotNull("Report directory not found: " + REPORT_DIR, reportDirectory);
+        File dir = new File(reportDirectory.toURI());
+        ReportTemplateMetaData updatedData = new ReportTemplateMetaData(checkServerLocation(randomTemplate.getFilename()), 
+                randomTemplate.getOutputname(), 
+                toTest, 
+                randomTemplate.isServer(), 
+                getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()));
+        
+        
+        depositService.updateInServerDeposit(updatedData, getLanguage());
+        ReportTemplateMetaData storedData = getReportMetaDataFromDeposit(checkServerLocation(randomTemplate.getFilename()));
+        assertArrayEquals(toTest, storedData.getOutputFormats());
+        
+    }
 
     private OutputFormat[] getOutputFormats() {
-        return new IReportDepositService.OutputFormat[] { IReportDepositService.OutputFormat.ODT };
+        return new IReportDepositService.OutputFormat[]{IReportDepositService.OutputFormat.ODT};
     }
 
     private String getOutputname() {
@@ -125,17 +160,17 @@ public class ReportDepositTest extends CommandServiceProvider {
     private void checkMetadataInDeposit(List<ReportTemplateMetaData> checkMetadataList, boolean expected) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         Set<ReportTemplateMetaData> metadataSet = depositService.getServerReportTemplates(getLanguage());
         for (ReportTemplateMetaData metadata : checkMetadataList) {
-            if (expected) {
-                assertTrue("Report metadata not found in deposit, rpt file: " + metadata.getFilename(), isInSet(metadataSet, metadata));
+            if(expected) {
+                assertTrue("Report metadata not found in deposit, rpt file: " + metadata.getFilename(), isInSet(metadataSet,metadata));
             } else {
-                assertFalse("Report metadata found in deposit, rpt file: " + metadata.getFilename(), isInSet(metadataSet, metadata));
+                assertFalse("Report metadata found in deposit, rpt file: " + metadata.getFilename(), isInSet(metadataSet,metadata));
             }
         }
     }
 
     private boolean isInSet(Set<ReportTemplateMetaData> metadataSet, ReportTemplateMetaData metadata) {
         for (ReportTemplateMetaData currentMetadata : metadataSet) {
-            if (arePropertiesEqual(currentMetadata, metadata)) {
+            if(arePropertiesEqual(currentMetadata, metadata)) {
                 return true;
             }
         }
@@ -143,7 +178,9 @@ public class ReportDepositTest extends CommandServiceProvider {
     }
 
     private boolean arePropertiesEqual(ReportTemplateMetaData metadata1, ReportTemplateMetaData metadata2) {
-        return metadata1.getFilename().equals(metadata2.getFilename()) && Arrays.equals(metadata1.getOutputFormats(), metadata2.getOutputFormats()) && metadata1.getOutputname().equals(metadata2.getOutputname());
+        return metadata1.getFilename().equals(metadata2.getFilename())
+                && Arrays.equals(metadata1.getOutputFormats(), metadata2.getOutputFormats())
+                && metadata1.getOutputname().equals(metadata2.getOutputname());
     }
 
     private String getLanguage() {
@@ -186,14 +223,66 @@ public class ReportDepositTest extends CommandServiceProvider {
         depositService.addToServerDeposit(metadata, fileData, getLanguage());
         return metadata;
     }
-
+    
+    private ReportTemplateMetaData getReportMetaDataFromDeposit(String filename) throws IOException, ReportMetaDataException, PropertyFileExistsException{
+        return depositService.getReportTemplates(new String[]{filename}, getLanguage()).toArray(new ReportTemplateMetaData[1])[0];
+    }
+    
     private List<String> getRptfileList(File dir) {
         String[] rptFileNames = dir.list(new FilenameFilter() {
-            @Override
-            public boolean accept(File current, String name) {
-                return name.endsWith(RPTSUFFIX);
-            }
+          @Override
+          public boolean accept(File current, String name) {
+            return name.endsWith(RPTSUFFIX);
+          }
         });
         return Arrays.asList(rptFileNames);
+    }
+    
+    private String checkServerLocation(String path){
+        if(!path.contains(String.valueOf(File.separatorChar))){ // is path missing?
+            String depositLocation;
+            try {
+                depositLocation = ServiceFactory.lookupReportDepositService().getDepositLocation();
+            } catch (IOException e) {
+                return path;
+            }
+            if(!depositLocation.endsWith(String.valueOf(File.separatorChar))){
+                depositLocation = depositLocation + File.separatorChar;
+            }
+            path = depositLocation + path;
+        }
+
+        return path;
+    }
+    
+    private String[] getCheckSums(String fileName, String dir) throws IOException {
+        String filePath;
+        if (!fileName.contains(dir)) {
+            filePath = dir + File.separatorChar + fileName;
+        } else {
+            filePath = fileName;
+        }
+        Iterator<File> iter = listPropertiesFiles(fileName, dir);
+
+        List<String> md5CheckSums = new ArrayList<String>();
+        md5CheckSums.add(DigestUtils.md5Hex(FileUtils.readFileToByteArray(new File(filePath))));
+
+        while (iter.hasNext()) {
+            File f = iter.next();
+            md5CheckSums.add(DigestUtils.md5Hex(FileUtils.readFileToByteArray(f)));
+        }
+
+        return md5CheckSums.toArray(new String[md5CheckSums.size()]);
+    }
+    
+    private Iterator<File> listPropertiesFiles(String fileName, String dir) {
+        String baseName = removeSuffix(fileName);
+        IOFileFilter filter = new RegexFileFilter(baseName + "\\_?.*\\.properties", IOCase.INSENSITIVE);
+        Iterator<File> iter = FileUtils.iterateFiles(new File(dir), filter, null);
+        return iter;
+    }
+    
+    private String removeSuffix(String fileName) {
+        return fileName.substring(0, fileName.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
     }
 }
