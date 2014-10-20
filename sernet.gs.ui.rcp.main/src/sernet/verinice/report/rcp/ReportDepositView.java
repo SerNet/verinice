@@ -68,7 +68,7 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IReportDepositService;
-import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
+import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -308,13 +308,11 @@ public class ReportDepositView extends RightsEnabledView {
 
         @Override
         public void loaded(BSIModel model) {
-            // TODO Auto-generated method stub
 
         }
 
         @Override
         public void closed(BSIModel model) {
-            // TODO Auto-generated method stub
 
         }
     }
