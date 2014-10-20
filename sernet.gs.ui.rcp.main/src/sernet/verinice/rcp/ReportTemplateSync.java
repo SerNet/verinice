@@ -54,6 +54,39 @@ import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
+ * Downloads reports from verinice server. Therefore a set of report metadata
+ * which contain checksums of the report template and the properties files which
+ * belong to the template is calculated in the
+ * {@link IReportTemplateService#REPORT_DEPOSIT_CLIENT_REMOTE} folder and on the
+ * server side folder.
+ *
+ * <h2>Server mode:</h2>
+ *
+ * Only metadata objects are compared and if the client folder does not contain
+ * a metadata object or it differs, the template file is deleted and the server
+ * template will be downloaded.
+ *
+ * <h2>Client mode:</h2>
+ *
+ * If the verinice client operates in standalone mode, no files are deleted,
+ * since new files which are added by the report deposit should also be
+ * accessible in this mode.
+ *
+ * <h2>Note:</h2>
+ *
+ *
+ * <p>
+ * 1. The folder {@link IReportTemplateService#REPORT_DEPOSIT_CLIENT_LOCAL} is
+ * not affected by this. The content of this folder lives only on the client
+ * machine and is under full controll of the end user.
+ * </p>
+ *
+ * <p>
+ * 2. Syncing is only done from server to client, means it is an one way
+ * syncing.
+ * </p>
+ *
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
@@ -90,34 +123,37 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
         Set<ReportTemplateMetaData> localServerTemplates = localReportTemplateService.getReportTemplates(locale);
         Set<ReportTemplateMetaData> remoteServerTemplates = getIReportDepositService().getReportTemplates(locale);
-        
-        if(LOG.isDebugEnabled()){
+
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Found\t" + localServerTemplates.size() + "\tTemplates in local repo (" + CnAWorkspace.getInstance().getRemoteReportTemplateDir() + ") (server mirror) before the sync");
             LOG.debug("Found\t" + remoteServerTemplates.size() + "\tTemplates in server repo, which need to be synced");
             LOG.debug("Syncing will take place with following locale:\t" + locale);
         }
 
-        addReports(locale, localServerTemplates, remoteServerTemplates);
-        deleteReports(localReportTemplateService, remoteServerTemplates, locale);
+        // download or update reports
+        syncReports(localServerTemplates, remoteServerTemplates, locale);
+
+        // delete reports only in server mode
+        deleteReportsInServerMode(localReportTemplateService, remoteServerTemplates, locale);
 
     }
 
-    private void addReports(String locale, Set<ReportTemplateMetaData> localServerTemplates, Set<ReportTemplateMetaData> remoteSeverTemplates) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private void syncReports(Set<ReportTemplateMetaData> localServerTemplates, Set<ReportTemplateMetaData> remoteServerTemplates, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         int i = 0;
-        for (ReportTemplateMetaData remoteTemplateMetaData : remoteSeverTemplates) {
-            if(LOG.isDebugEnabled()){
+        for (ReportTemplateMetaData remoteTemplateMetaData : remoteServerTemplates) {
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("Syncing:\t" + remoteTemplateMetaData.getFilename() + "\t(" + String.valueOf(i) + ")");
             }
             if (!localServerTemplates.contains(remoteTemplateMetaData)) {
                 syncTemplate(remoteTemplateMetaData, locale);
-            } else if(LOG.isDebugEnabled()){
+            } else if (LOG.isDebugEnabled()) {
                 LOG.debug("Template\t" + remoteTemplateMetaData.getOutputname() + "\twill not be synced, since it's already existant on client");
             }
             i++;
         }
     }
 
-    private void deleteReports(IReportTemplateService locaReportTemplateService, Set<ReportTemplateMetaData> remoteSeverTemplates, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private void deleteReportsInServerMode(IReportTemplateService locaReportTemplateService, Set<ReportTemplateMetaData> remoteSeverTemplates, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         if (isNotStandalone()) {
             for (ReportTemplateMetaData localTemplateMetaData : locaReportTemplateService.getReportTemplates(locale)) {
                 if (!remoteSeverTemplates.contains(localTemplateMetaData)) {
@@ -137,24 +173,23 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
     private void syncTemplate(ReportTemplateMetaData metadata, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
 
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Syncing:\t" + metadata.getOutputname());
         }
-        
+
         deleteRptdesignAndPropertiesFiles(metadata.getFilename());
 
         ReportTemplate template = getIReportDepositService().getReportTemplate(metadata, locale);
         String directory = CnAWorkspace.getInstance().getRemoteReportTemplateDir();
         File rptdesignTemplate = new File(concat(directory, template.getMetaData().getFilename()));
         FileUtils.writeByteArrayToFile(rptdesignTemplate, template.getRptdesignFile());
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Template:\t" + metadata.getFilename() + " written to:\t" + rptdesignTemplate.getAbsolutePath());
         }
-        
 
         for (Entry<String, byte[]> e : template.getPropertiesFiles().entrySet()) {
             FileUtils.writeByteArrayToFile(new File(concat(directory, e.getKey())), e.getValue());
-            if(LOG.isDebugEnabled()){
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("Propertyfile:\t" + concat(directory, e.getKey()) + "\twritten");
             }
         }
@@ -171,7 +206,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
         if (rptdesign.exists()) {
             rptdesign.delete();
-            if(LOG.isDebugEnabled()){
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("TemplateFile:\t" + rptdesign.getAbsolutePath() + "\tdeleted");
             }
         }
@@ -182,7 +217,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
             File f = iter.next();
             String path = f.getAbsolutePath();
             f.delete();
-            if(LOG.isDebugEnabled()){
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("PropertyFile:\t" + path + "\tdeleted");
             }
         }
