@@ -416,8 +416,8 @@ public class AccessControlEditDialog extends TitleAreaDialog {
         }
         if (element != null) {
             Permission p = Permission.createPermission(element, comboRole.getText(), buttonRead.getSelection(), buttonWrite.getSelection());
-            // Remove permission first and add it again to replace the
-            // permission
+            // Remove permission first and add it again to replace the permission
+            this.permissionSet.remove(p);
             this.permissionSet.add(p);
             this.permissionSetAdd.remove(p);
             this.permissionSetAdd.add(p);
