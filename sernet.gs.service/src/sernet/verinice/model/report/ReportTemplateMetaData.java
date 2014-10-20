@@ -19,12 +19,9 @@ package sernet.verinice.model.report;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentMap;
-
-import org.apache.commons.lang.ArrayUtils;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
+import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 
 public class ReportTemplateMetaData implements Serializable, Comparable<ReportTemplateMetaData> {
 

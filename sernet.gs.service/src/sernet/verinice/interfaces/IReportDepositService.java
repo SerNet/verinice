@@ -17,44 +17,11 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
-import org.apache.commons.io.FilenameUtils;
-
-import sernet.verinice.interfaces.report.IOutputFormat;
-import sernet.verinice.model.report.PropertyFileExistsException;
-import sernet.verinice.model.report.ReportMetaDataException;
-import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
-/**
- *
- */
-public interface IReportDepositService {
-
-    public enum OutputFormat {
-        PDF, HTML, XLS, ODS, ODT, DOC
-    }
-
-    public static final String PROPERTIES_FILE_EXTENSION = "properties";
-    public static final char EXTENSION_SEPARATOR_CHAR = FilenameUtils.EXTENSION_SEPARATOR;
-
-    public static final String PROPERTIES_FILENAME = "filename";
-    public static final String PROPERTIES_OUTPUTFORMATS = "outputformats";
-    public static final String PROPERTIES_OUTPUTNAME = "outputname";
-
-    public static final String REPORT_DEPOSIT_CLIENT_LOCAL = "report_templates_local";
-    public static final String REPORT_DEPOSIT_CLIENT_REMOTE = "report_templates_remote";
-
-    IOutputFormat getOutputFormat(OutputFormat format);
-
-    IOutputFormat[] getOutputFormats(OutputFormat[] format);
-
-    Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
-
-    ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
+public interface IReportDepositService extends IReportTemplateService {
 
     void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file, String locale) throws IOException;
 
@@ -62,9 +29,6 @@ public interface IReportDepositService {
 
     void updateInServerDeposit(ReportTemplateMetaData metadata, String locale) throws IOException;
 
-    Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
-
     String getDepositLocation() throws IOException;
 
-    ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException;
 }

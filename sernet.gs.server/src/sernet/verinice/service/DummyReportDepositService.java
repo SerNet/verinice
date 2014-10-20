@@ -19,15 +19,12 @@ package sernet.verinice.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
@@ -36,10 +33,9 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
-import org.springframework.core.io.Resource;
 
 import sernet.gs.server.Activator;
-import sernet.gs.service.ReportTemplateUtil;
+import sernet.gs.service.AbstractReportTemplateService;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.model.report.ExcelOutputFormat;
@@ -56,11 +52,9 @@ import sernet.verinice.model.report.WordOutputFormat;
 /**
  *
  */
-public class DummyReportDepositService implements IReportDepositService {
+public class DummyReportDepositService extends AbstractReportTemplateService implements IReportDepositService {
 
     private static final Logger LOG = Logger.getLogger(DummyReportDepositService.class);
-
-    private ReportTemplateUtil reportTemplateUtil;
 
     /*
      * (non-Javadoc)
@@ -152,32 +146,9 @@ public class DummyReportDepositService implements IReportDepositService {
      */
     @Override
     public String getDepositLocation() throws IOException {
-        return null;
+        return getReportDepositPath();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#getReportTemplates(java
-     * .lang.String[])
-     */
-    @Override
-    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return getReportTemplateUtil().getReportTemplates(rptDesignFiles, locale);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#getMetaData(java.io.
-     * File)
-     */
-    @Override
-    public ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return null;
-    }
 
     /*
      * (non-Javadoc)
@@ -202,7 +173,7 @@ public class DummyReportDepositService implements IReportDepositService {
         String filePath = getReportDepositPath() + File.separatorChar + metadata.getFilename();
         byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
 
-        Map<String, byte[]> propertiesFile = getReportTemplateUtil().getPropertiesFiles(metadata.getFilename());
+        Map<String, byte[]> propertiesFile = getPropertiesFiles(metadata.getFilename());
         return new ReportTemplate(metadata, rptdesign, propertiesFile);
     }
 
@@ -230,13 +201,14 @@ public class DummyReportDepositService implements IReportDepositService {
         return null;
     }
 
-    private ReportTemplateUtil getReportTemplateUtil() throws IOException {
+    @Override
+    public boolean isServerSide() {
+        return true;
+    }
 
-        if (reportTemplateUtil == null) {
-            reportTemplateUtil = new ReportTemplateUtil(getReportDepositPath(), true);
-        }
-
-        return reportTemplateUtil;
+    @Override
+    public String getTemplateDirectory() {
+        return getReportDepositPath();
     }
 
 }

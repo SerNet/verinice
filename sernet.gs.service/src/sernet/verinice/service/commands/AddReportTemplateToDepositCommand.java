@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
-import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
+import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.service.report.SaveToReportDepositCommand;
 import sernet.verinice.service.report.UpdateReportTemplateCommand;

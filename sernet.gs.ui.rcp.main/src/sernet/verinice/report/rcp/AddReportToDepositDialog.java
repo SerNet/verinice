@@ -51,7 +51,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
+import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.service.commands.AddReportTemplateToDepositCommand;
 

@@ -36,14 +36,15 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 
-import sernet.gs.service.ReportTemplateUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.reports.LocalReportTemplateService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IReportDepositService;
+import sernet.verinice.interfaces.IReportTemplateService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -58,14 +59,15 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListener {
 
-    private ReportTemplateUtil clientServerReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir(), true);
-
     private static volatile IModelLoadListener modelLoadListener;
 
     private Logger LOG = Logger.getLogger(ReportTemplateSync.class);
 
+    private IReportTemplateService localReportTemplateService;
+
     private ReportTemplateSync() {
         super("sync reports");
+        localReportTemplateService = new LocalReportTemplateService();
     }
 
     public static void sync() {
@@ -86,16 +88,18 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
     private void syncReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
 
-        String[] fileNames = clientServerReportTemplateUtil.getReportTemplateFileNames();
-        Set<ReportTemplateMetaData> localServerTemplates = clientServerReportTemplateUtil.getReportTemplates(fileNames, locale);
-        Set<ReportTemplateMetaData> remoteServerTemplates = getIReportDepositService().getServerReportTemplates(locale);
+        Set<ReportTemplateMetaData> localServerTemplates = localReportTemplateService.getReportTemplates(locale);
+        Set<ReportTemplateMetaData> remoteServerTemplates = getIReportDepositService().getReportTemplates(locale);
+        
         if(LOG.isDebugEnabled()){
             LOG.debug("Found\t" + localServerTemplates.size() + "\tTemplates in local repo (" + CnAWorkspace.getInstance().getRemoteReportTemplateDir() + ") (server mirror) before the sync");
             LOG.debug("Found\t" + remoteServerTemplates.size() + "\tTemplates in server repo, which need to be synced");
             LOG.debug("Syncing will take place with following locale:\t" + locale);
         }
+
         addReports(locale, localServerTemplates, remoteServerTemplates);
-        deleteReports(locale, remoteServerTemplates);
+        deleteReports(localReportTemplateService, remoteServerTemplates, locale);
+
     }
 
     private void addReports(String locale, Set<ReportTemplateMetaData> localServerTemplates, Set<ReportTemplateMetaData> remoteSeverTemplates) throws IOException, ReportMetaDataException, PropertyFileExistsException {
@@ -113,9 +117,9 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
         }
     }
 
-    private void deleteReports(String locale, Set<ReportTemplateMetaData> remoteSeverTemplates) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private void deleteReports(IReportTemplateService locaReportTemplateService, Set<ReportTemplateMetaData> remoteSeverTemplates, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         if (isNotStandalone()) {
-            for (ReportTemplateMetaData localTemplateMetaData : clientServerReportTemplateUtil.getReportTemplates(locale)) {
+            for (ReportTemplateMetaData localTemplateMetaData : locaReportTemplateService.getReportTemplates(locale)) {
                 if (!remoteSeverTemplates.contains(localTemplateMetaData)) {
                     deleteRptdesignAndPropertiesFiles(localTemplateMetaData.getFilename());
                 }
@@ -159,7 +163,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
     private void deleteRptdesignAndPropertiesFiles(String fileName) {
 
         String filePath = CnAWorkspace.getInstance().getRemoteReportTemplateDir();
-        if(!filePath.endsWith(String.valueOf(File.separatorChar))){
+        if (!filePath.endsWith(String.valueOf(File.separatorChar))) {
             filePath = filePath + File.separatorChar;
         }
         filePath = filePath + fileName;
@@ -173,7 +177,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
         }
 
         // delete properties files
-        Iterator<File> iter = clientServerReportTemplateUtil.listPropertiesFiles(fileName);
+        Iterator<File> iter = localReportTemplateService.listPropertiesFiles(fileName);
         while (iter.hasNext()) {
             File f = iter.next();
             String path = f.getAbsolutePath();
@@ -191,22 +195,14 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
         try {
             Activator.inheritVeriniceContextState();
-            String locale = Locale.getDefault().toString(); 
-            if(locale.length() > 2 && locale.contains(String.valueOf('_'))){
-                // as we do not deal with dialects like en_UK here, we just take the leftside locale (e.g. "en")
-                locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
-            }
-            if ("en".equals(locale.toLowerCase())) {
-                locale = "";
-            } else {
-                locale = locale.toLowerCase();
-            }
+
+            String locale = getLocale();
             syncReportTemplates(locale);
+
         } catch (IOException e) {
             status = errorHandler(e);
         } catch (ReportMetaDataException e) {
             status = errorHandler(e);
-            e.printStackTrace();
         } catch (PropertyFileExistsException e) {
             status = errorHandler(e);
         }
@@ -214,9 +210,24 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
         return status;
     }
 
+    private String getLocale() {
+        String locale = Locale.getDefault().toString();
+        if (locale.length() > 2 && locale.contains(String.valueOf('_'))) {
+            // as we do not deal with dialects like en_UK here, we just take
+            // the leftside locale (e.g. "en")
+            locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
+        }
+        if ("en".equals(locale.toLowerCase())) {
+            locale = "";
+        } else {
+            locale = locale.toLowerCase();
+        }
+        return locale;
+    }
+
     private IStatus errorHandler(Exception e) {
         IStatus status;
-        String msg = "error while syncing report templates:\t" + e.getMessage();
+        String msg = "error while syncing report templates:\t" + e.getLocalizedMessage() + e.getStackTrace();
         LOG.error(msg, e);
         status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", msg);
         return status;

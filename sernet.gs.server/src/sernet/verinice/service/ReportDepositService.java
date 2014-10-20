@@ -20,130 +20,50 @@ package sernet.verinice.service;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOCase;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
 
-import sernet.gs.service.ReportTemplateUtil;
+import sernet.gs.service.AbstractReportTemplateService;
 import sernet.verinice.interfaces.IReportDepositService;
-import sernet.verinice.interfaces.report.IOutputFormat;
-import sernet.verinice.model.report.ExcelOutputFormat;
-import sernet.verinice.model.report.HTMLOutputFormat;
-import sernet.verinice.model.report.ODSOutputFormat;
-import sernet.verinice.model.report.ODTOutputFormat;
-import sernet.verinice.model.report.PDFOutputFormat;
-import sernet.verinice.model.report.PropertyFileExistsException;
-import sernet.verinice.model.report.ReportMetaDataException;
-import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
-import sernet.verinice.model.report.WordOutputFormat;
 
-/**
- *
- */
-public class ReportDepositService implements IReportDepositService {
+public class ReportDepositService extends AbstractReportTemplateService implements IReportDepositService {
 
     private static final Logger LOG = Logger.getLogger(ReportDepositService.class);
 
     private Resource reportDeposit;
 
-    private ReportTemplateUtil reportTemplateUtil;
-
     private ReportDepositService() {
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.report.IReportService#getOutputFormat(java
-     * .lang.String)
-     */
-    public IOutputFormat getOutputFormat(OutputFormat formatLabel) {
-        switch(formatLabel){
-            case PDF: return new PDFOutputFormat();
-            case HTML: return new HTMLOutputFormat();
-            case ODS: return new ODSOutputFormat();
-            case ODT: return new ODTOutputFormat();
-            case XLS: return new ExcelOutputFormat();
-            case DOC: return new WordOutputFormat();
-            default: return null;
-        }
-
-    }
-
-    public IOutputFormat[] getOutputFormats(OutputFormat[] formatLabel) {
-        List<IOutputFormat> list = new ArrayList<IOutputFormat>(formatLabel.length);
-        for (OutputFormat s : formatLabel) {
-            IOutputFormat format = getOutputFormat(s);
-            if (format != null) {
-                list.add(format);
-            } else {
-                LOG.warn("Report output format:\t" + s + " not available in verinice");
-            }
-        }
-        return list.toArray(new IOutputFormat[list.size()]);
-    }
-
-    @Override
-    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return getReportTemplateUtil().getReportTemplates(rptDesignFiles, locale);
-    }
-
-    @Override
-    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return getReportTemplates(getServerRptDesigns(), locale);
-    }
-
-    @SuppressWarnings("unchecked")
-    private String[] getServerRptDesigns() throws IOException {
-        List<String> list = new ArrayList<String>(0);
-        // // DirFilter = null means no subdirectories
-        IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(getReportDeposit().getFile(), filter, null);
-        while (iter.hasNext()) {
-            list.add(iter.next().getAbsolutePath());
-        }
-        return list.toArray(new String[list.size()]);
     }
 
     @Override
     public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file, String locale) throws IOException {
-        if("en".equals(locale.toLowerCase())){
-            locale = ""; 
-         } else {
-             locale = "_" + locale.toLowerCase();
-         }
+        if ("en".equals(locale.toLowerCase())) {
+            locale = "";
+        } else {
+            locale = "_" + locale.toLowerCase();
+        }
         String filename = metadata.getFilename();
         filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
-        File serverDepositPath;      
+        File serverDepositPath;
         serverDepositPath = getReportDeposit().getFile();
         String newFilePath = serverDepositPath.getPath() + File.separatorChar + filename;
-        String propFilePath = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR)) + locale 
-                +IReportDepositService.EXTENSION_SEPARATOR_CHAR
-                +IReportDepositService.PROPERTIES_FILE_EXTENSION;
-        FileUtils.writeByteArrayToFile(new File(newFilePath), file);     
+        String propFilePath = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR)) + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION;
+        FileUtils.writeByteArrayToFile(new File(newFilePath), file);
         writePropertiesFile(convertToProperties(metadata), propFilePath, "");
     }
 
     @Override
     public void removeFromServer(ReportTemplateMetaData metadata, String locale) throws IOException {
-        if("en".equals(locale.toLowerCase())){
-            locale = ""; 
-         } else {
-             locale = "_" + locale.toLowerCase();
-         }
+        if ("en".equals(locale.toLowerCase())) {
+            locale = "";
+        } else {
+            locale = "_" + locale.toLowerCase();
+        }
         String filename = metadata.getFilename();
         filename = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
         filename = filename + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION;
@@ -166,20 +86,6 @@ public class ReportDepositService implements IReportDepositService {
         this.reportDeposit = reportDeposit;
     }
 
-    private ReportTemplateUtil getReportTemplateUtil() throws IOException {
-        if (reportTemplateUtil == null) {
-            reportTemplateUtil = new ReportTemplateUtil(reportDeposit.getFile().getPath(), true);
-        }
-
-        return reportTemplateUtil;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.IReportDepositService#getDepositLocation()
-     */
     @Override
     public String getDepositLocation() throws IOException {
         if (getReportDeposit() != null) {
@@ -191,18 +97,18 @@ public class ReportDepositService implements IReportDepositService {
     @Override
     public void updateInServerDeposit(ReportTemplateMetaData metadata, String locale) throws IOException {
         String filename = metadata.getFilename();
-        if(filename.contains(String.valueOf(File.separatorChar))){
+        if (filename.contains(String.valueOf(File.separatorChar))) {
             filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
         }
-        if (getReportTemplateUtil().checkReportMetaDataFile(new File(metadata.getFilename()), locale)) {
-            File propFile = getReportTemplateUtil().getPropertiesFile(metadata.getFilename(), locale);
-            Properties props = getReportTemplateUtil().parseAndExtendMetaData(propFile, locale);
+        if (checkReportMetaDataFile(new File(metadata.getFilename()), locale)) {
+            File propFile = getPropertiesFile(metadata.getFilename(), locale);
+            Properties props = parseAndExtendMetaData(propFile, locale);
             props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metadata.getOutputFormats(), ','));
             props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
             writePropertiesFile(props, propFile.getName(), "");
 
         } else {
-            writePropertiesFile(convertToProperties(metadata), getReportTemplateUtil().getPropertiesFile(metadata.getFilename(), locale).getName(), "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
+            writePropertiesFile(convertToProperties(metadata), getPropertiesFile(metadata.getFilename(), locale).getName(), "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
         }
     }
 
@@ -222,32 +128,25 @@ public class ReportDepositService implements IReportDepositService {
         return props;
     }
 
-    private ReportTemplateMetaData convertToReportTemplateMetadata(Properties props) {
-        // return new
-        // ReportTemplateMetaData(props.getProperty(IReportDepositService.PROPERTIES_FILENAME),
-        // props.getProperty(IReportDepositService.PROPERTIES_OUTPUTNAME),
-        // props.getProperty(IReportDepositService.PROPERTIES_OUTPUTFORMATS));
-        return null;
-    }
-
-    @Override
-    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException {
-        String filePath = getReportDeposit().getFile().getPath() + File.separatorChar + metadata.getFilename();
-        byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
-
-        Map<String, byte[]> propertiesFile = getReportTemplateUtil().getPropertiesFiles(metadata.getFilename());
-        return new ReportTemplate(metadata, rptdesign, propertiesFile);
-    }
-
-    @Override
-    public ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        return getReportTemplateUtil().getMetaData(rptDesign, locale);
-    }
-    
-    private String ensurePropertiesExtension(String filename){
-        if(filename.contains(String.valueOf('.'))){
+    private String ensurePropertiesExtension(String filename) {
+        if (filename.contains(String.valueOf('.'))) {
             filename = filename.substring(0, filename.lastIndexOf('.') + 1);
         }
         return filename + IReportDepositService.PROPERTIES_FILE_EXTENSION;
+    }
+
+    @Override
+    public boolean isServerSide() {
+        return true;
+    }
+
+    @Override
+    public String getTemplateDirectory() {
+        try {
+            return getDepositLocation();
+        } catch (IOException ex) {
+            LOG.error("error while locating report template directory", ex);
+            throw new RuntimeException(ex);
+        }
     }
 }

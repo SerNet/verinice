@@ -42,14 +42,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import sernet.gs.service.AbstractReportTemplateService;
 import sernet.gs.service.FileUtil;
-import sernet.gs.service.ReportTemplateUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IReportDepositService;
-import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
+import sernet.verinice.interfaces.IReportTemplateService;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import static sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 
 /**
  * 
@@ -59,34 +60,34 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 public class ReportDepositTest extends CommandServiceProvider {
 
     private static final String LANGUAGE = Locale.ENGLISH.getLanguage();
-    
+
     private static final String REPORT_DIR = "/reports";
     private static final String RPTSUFFIX = ".rptdesign";
     private static final String DEPOSIT_DIR_PART_1 = "bin" + File.separator + "WEB-INF" + File.separator;
     private static final String DEPOSIT_DIR_PART_2 = "reportDeposit";
-    
+
     @Resource(name = "reportdepositService")
     private IReportDepositService depositService;
-    
+
     @Before
     public void setUp() throws Exception {
         File deposit = new File(DEPOSIT_DIR_PART_1 + DEPOSIT_DIR_PART_2);
-        deposit.mkdirs();        
+        deposit.mkdirs();
         assertTrue("Report deposit was not created", deposit.exists());
     }
 
     @After
     public void tearDown() throws CommandException {
-        FileUtil.deleteDirectory(new File(DEPOSIT_DIR_PART_1 + DEPOSIT_DIR_PART_2)); 
-        FileUtil.deleteDirectory(new File(DEPOSIT_DIR_PART_1));   
+        FileUtil.deleteDirectory(new File(DEPOSIT_DIR_PART_1 + DEPOSIT_DIR_PART_2));
+        FileUtil.deleteDirectory(new File(DEPOSIT_DIR_PART_1));
     }
-    
+
     @Test
     public void testAddToServerDeposit() throws Exception {
         List<ReportTemplateMetaData> addedMetadataList = addAllFilesToDeposit();
         checkMetadataInDeposit(addedMetadataList, true);
     }
-    
+
     @Test
     public void testRemoveFromServer() throws Exception {
         List<ReportTemplateMetaData> addedMetadataList = addAllFilesToDeposit();
@@ -96,7 +97,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         }
         checkMetadataInDeposit(addedMetadataList, false);
     }
-    
+
     @Test
     public void testUpdateInServerDeposit() throws Exception {
         addAllFilesToDeposit();
@@ -114,7 +115,7 @@ public class ReportDepositTest extends CommandServiceProvider {
     }
 
     private OutputFormat[] getOutputFormats() {
-        return new IReportDepositService.OutputFormat[]{IReportDepositService.OutputFormat.ODT};
+        return new IReportDepositService.OutputFormat[] { IReportDepositService.OutputFormat.ODT };
     }
 
     private String getOutputname() {
@@ -124,17 +125,17 @@ public class ReportDepositTest extends CommandServiceProvider {
     private void checkMetadataInDeposit(List<ReportTemplateMetaData> checkMetadataList, boolean expected) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         Set<ReportTemplateMetaData> metadataSet = depositService.getServerReportTemplates(getLanguage());
         for (ReportTemplateMetaData metadata : checkMetadataList) {
-            if(expected) {
-                assertTrue("Report metadata not found in deposit, rpt file: " + metadata.getFilename(), isInSet(metadataSet,metadata));
+            if (expected) {
+                assertTrue("Report metadata not found in deposit, rpt file: " + metadata.getFilename(), isInSet(metadataSet, metadata));
             } else {
-                assertFalse("Report metadata found in deposit, rpt file: " + metadata.getFilename(), isInSet(metadataSet,metadata));
+                assertFalse("Report metadata found in deposit, rpt file: " + metadata.getFilename(), isInSet(metadataSet, metadata));
             }
         }
     }
 
     private boolean isInSet(Set<ReportTemplateMetaData> metadataSet, ReportTemplateMetaData metadata) {
         for (ReportTemplateMetaData currentMetadata : metadataSet) {
-            if(arePropertiesEqual(currentMetadata, metadata)) {
+            if (arePropertiesEqual(currentMetadata, metadata)) {
                 return true;
             }
         }
@@ -142,9 +143,7 @@ public class ReportDepositTest extends CommandServiceProvider {
     }
 
     private boolean arePropertiesEqual(ReportTemplateMetaData metadata1, ReportTemplateMetaData metadata2) {
-        return metadata1.getFilename().equals(metadata2.getFilename())
-                && Arrays.equals(metadata1.getOutputFormats(), metadata2.getOutputFormats())
-                && metadata1.getOutputname().equals(metadata2.getOutputname());
+        return metadata1.getFilename().equals(metadata2.getFilename()) && Arrays.equals(metadata1.getOutputFormats(), metadata2.getOutputFormats()) && metadata1.getOutputname().equals(metadata2.getOutputname());
     }
 
     private String getLanguage() {
@@ -167,21 +166,33 @@ public class ReportDepositTest extends CommandServiceProvider {
         return metadataList;
     }
 
-    private ReportTemplateMetaData addFileToDeposit(File dir, String fileName) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        ReportTemplateUtil templateUtil = new ReportTemplateUtil(dir.getAbsolutePath());
+    private ReportTemplateMetaData addFileToDeposit(final File dir, String fileName) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+
+        IReportTemplateService templateUtil = new AbstractReportTemplateService() {
+            @Override
+            public boolean isServerSide() {
+                return false;
+            }
+
+            @Override
+            public String getTemplateDirectory() {
+                return dir.getAbsolutePath();
+            }
+        };
+
         File rptFile = new File(dir, fileName);
         byte[] fileData = FileUtil.getFileData(rptFile);
         ReportTemplateMetaData metadata = templateUtil.getMetaData(rptFile, getLanguage());
         depositService.addToServerDeposit(metadata, fileData, getLanguage());
         return metadata;
     }
-    
+
     private List<String> getRptfileList(File dir) {
         String[] rptFileNames = dir.list(new FilenameFilter() {
-          @Override
-          public boolean accept(File current, String name) {
-            return name.endsWith(RPTSUFFIX);
-          }
+            @Override
+            public boolean accept(File current, String name) {
+                return name.endsWith(RPTSUFFIX);
+            }
         });
         return Arrays.asList(rptFileNames);
     }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Benjamin Weißenfels.
+ * Copyright (c) 2014 benjamin.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,13 +15,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
+ *     benjamin <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.gs.service;
-
-import static sernet.verinice.interfaces.IReportDepositService.PROPERTIES_FILENAME;
-import static sernet.verinice.interfaces.IReportDepositService.PROPERTIES_OUTPUTFORMATS;
-import static sernet.verinice.interfaces.IReportDepositService.PROPERTIES_OUTPUTNAME;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -46,31 +42,33 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.IReportDepositService;
-import sernet.verinice.interfaces.IReportDepositService.OutputFormat;
+import sernet.verinice.interfaces.IReportTemplateService;
+import sernet.verinice.interfaces.report.IOutputFormat;
+import sernet.verinice.model.report.ExcelOutputFormat;
+import sernet.verinice.model.report.HTMLOutputFormat;
+import sernet.verinice.model.report.ODSOutputFormat;
+import sernet.verinice.model.report.ODTOutputFormat;
+import sernet.verinice.model.report.PDFOutputFormat;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
+import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.model.report.WordOutputFormat;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ReportTemplateUtil {
+abstract public class AbstractReportTemplateService implements IReportTemplateService {
 
-    private String reportTemplateDirectory;
+    private final Logger LOG = Logger.getLogger(AbstractReportTemplateService.class);
 
-    private boolean isServerSide;
+    abstract public boolean isServerSide();
 
-    public ReportTemplateUtil(String reportDepositDirectory) {
-        this.reportTemplateDirectory = reportDepositDirectory;
-    }
-
-    public ReportTemplateUtil(String reportDepositDirectory, boolean isServerSide) {
-        this.reportTemplateDirectory = reportDepositDirectory;
-        this.isServerSide = isServerSide;
-    }
+    abstract public String getTemplateDirectory();
 
     public ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
         Properties props = null;
@@ -87,7 +85,7 @@ public class ReportTemplateUtil {
         return propertiesFile.exists();
     }
 
-    public Properties parseAndExtendMetaData(File rptDesign, String locale) throws IOException {
+    protected Properties parseAndExtendMetaData(File rptDesign, String locale) throws IOException {
         File propFile = getPropertiesFile(rptDesign, locale);
         Properties props = new Properties();
         FileInputStream fis = new FileInputStream(propFile.getAbsoluteFile());
@@ -132,9 +130,10 @@ public class ReportTemplateUtil {
         return getPropertiesFile(path, locale);
     }
 
-    public File getPropertiesFile(String path, String locale) {
-        if(locale.length() > 2 && locale.contains(String.valueOf('_'))){
-            // as we do not deal with dialects like en_UK here, we just take the leftside locale (e.g. "en")
+    protected File getPropertiesFile(String path, String locale) {
+        if (locale.length() > 2 && locale.contains(String.valueOf('_'))) {
+            // as we do not deal with dialects like en_UK here, we just take the
+            // leftside locale (e.g. "en")
             locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
         }
         if ("en".equals(locale.toLowerCase()) || path.contains("_" + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION)) {
@@ -184,10 +183,10 @@ public class ReportTemplateUtil {
         OutputFormat[] outputFormats = formats.toArray(new OutputFormat[formats.size()]);
         String[] md5CheckSums = getCheckSums(fileName);
 
-        return new ReportTemplateMetaData(fileName, outputName, outputFormats, isServerSide, md5CheckSums);
+        return new ReportTemplateMetaData(fileName, outputName, outputFormats, isServerSide(), md5CheckSums);
     }
 
-    public Map<String, byte[]> getPropertiesFiles(String fileName) throws IOException {
+    protected Map<String, byte[]> getPropertiesFiles(String fileName) throws IOException {
         Map<String, byte[]> propertiesFiles = new TreeMap<String, byte[]>();
         Iterator<File> iter = listPropertiesFiles(fileName);
         while (iter.hasNext()) {
@@ -202,14 +201,14 @@ public class ReportTemplateUtil {
     public Iterator<File> listPropertiesFiles(String fileName) {
         String baseName = removeSuffix(fileName);
         IOFileFilter filter = new RegexFileFilter(baseName + "\\_?.*\\.properties", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(this.reportTemplateDirectory), filter, null);
+        Iterator<File> iter = FileUtils.iterateFiles(new File(getTemplateDirectory()), filter, null);
         return iter;
     }
 
     private String[] getCheckSums(String fileName) throws IOException {
         String filePath;
-        if (!fileName.contains(reportTemplateDirectory)) {
-            filePath = reportTemplateDirectory + File.separatorChar + fileName;
+        if (!fileName.contains(getTemplateDirectory())) {
+            filePath = getTemplateDirectory() + File.separatorChar + fileName;
         } else {
             filePath = fileName;
         }
@@ -243,10 +242,75 @@ public class ReportTemplateUtil {
     public String[] getReportTemplateFileNames() {
         List<String> list = new ArrayList<String>();
         IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
-        Iterator<File> iter = FileUtils.iterateFiles(new File(this.reportTemplateDirectory), filter, null);
+        Iterator<File> iter = FileUtils.iterateFiles(new File(getTemplateDirectory()), filter, null);
         while (iter.hasNext()) {
             list.add(iter.next().getAbsolutePath());
         }
         return list.toArray(new String[list.size()]);
     }
+
+    public IOutputFormat getOutputFormat(OutputFormat formatLabel) {
+        switch (formatLabel) {
+        case PDF:
+            return new PDFOutputFormat();
+        case HTML:
+            return new HTMLOutputFormat();
+        case ODS:
+            return new ODSOutputFormat();
+        case ODT:
+            return new ODTOutputFormat();
+        case XLS:
+            return new ExcelOutputFormat();
+        case DOC:
+            return new WordOutputFormat();
+        default:
+            return null;
+        }
+
+    }
+
+    public IOutputFormat[] getOutputFormats(OutputFormat[] formatLabel) {
+        List<IOutputFormat> list = new ArrayList<IOutputFormat>(formatLabel.length);
+        for (OutputFormat s : formatLabel) {
+            IOutputFormat format = getOutputFormat(s);
+            if (format != null) {
+                list.add(format);
+            } else {
+                LOG.warn("Report output format:\t" + s + " not available in verinice");
+            }
+        }
+        return list.toArray(new IOutputFormat[list.size()]);
+    }
+
+    @Override
+    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException {
+        String filePath = getTemplateDirectory() + File.separatorChar + metadata.getFilename();
+        byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
+
+        Map<String, byte[]> propertiesFile = getPropertiesFiles(metadata.getFilename());
+        return new ReportTemplate(metadata, rptdesign, propertiesFile);
+    }
+
+    @Override
+    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return getReportTemplateMetaData(getServerRptDesigns(), locale);
+    }
+
+    @Override
+    public Set<ReportTemplateMetaData> getReportTemplateMetaData(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+        return getReportTemplates(rptDesignFiles, locale);
+    }
+
+    @SuppressWarnings("unchecked")
+    private String[] getServerRptDesigns() throws IOException {
+        List<String> list = new ArrayList<String>(0);
+        // // DirFilter = null means no subdirectories
+        IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
+        Iterator<File> iter = FileUtils.iterateFiles(new File(getTemplateDirectory()), filter, null);
+        while (iter.hasNext()) {
+            list.add(iter.next().getAbsolutePath());
+        }
+        return list.toArray(new String[list.size()]);
+    }
+
 }

@@ -26,10 +26,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.ReportTemplateUtil;
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
@@ -71,8 +67,8 @@ public class ReportSupplierImpl implements IReportSupplier {
 
     private ReportTemplateMetaData[] getReportMetaData(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
 
-        ReportTemplateUtil localReportTemplateUtil = new ReportTemplateUtil(getLocalReportPath());
-        ReportTemplateUtil serverReportTemplateUtil = new ReportTemplateUtil(CnAWorkspace.getInstance().getRemoteReportTemplateDir(), true);
+        LocalReportTemplateService localReportTemplateUtil = new LocalReportTemplateService();
+        ServerReportTemplateService serverReportTemplateUtil = new ServerReportTemplateService();
 
         Set<ReportTemplateMetaData> metadata = new HashSet<ReportTemplateMetaData>();
         int size = 0;
@@ -87,15 +83,6 @@ public class ReportSupplierImpl implements IReportSupplier {
         return metadata.toArray(new ReportTemplateMetaData[metadata.size()]);
     }
 
-    private String getLocalReportPath() {
-        String templateDir = Activator.getDefault().getIReportTemplateDirectoryService().getDirectory();
 
-        if (templateDir == null) {
-            templateDir = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY);
-        } else {
-            Activator.getDefault().getPreferenceStore().setValue(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, templateDir);
-        }
-        return templateDir;
-    }
 
 }
