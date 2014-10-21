@@ -49,6 +49,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.reports.ServerReportTemplateService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
@@ -275,7 +276,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     protected void okPressed() {
         if(!isAnyFormatSelected() ||
                 getReportOutputName() == null ||
-                getSelectedDesginFile() == null){
+                getSelectedDesginFile(false) == null){
             ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_12);
             return;
         }
@@ -296,11 +297,11 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private void updateTemplate(){
         byte[] rptDesign = new byte[0];
         try {
-            rptDesign = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
+            rptDesign = FileUtils.readFileToByteArray(new File(getSelectedDesginFile(false)));
             if(rptDesign.length > 0){
                 AddReportTemplateToDepositCommand command = 
                         new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
-                                rptDesign, getSelectedDesginFile(), Locale.getDefault().toString(), true);
+                                rptDesign, getSelectedDesginFile(true), Locale.getDefault().toString(), true);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 if(command.isErrorOccured()){
                     ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_23);
@@ -316,11 +317,11 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private void addTemplate(){
         byte[] rptDesign = new byte[0];
         try {
-            rptDesign = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
+            rptDesign = FileUtils.readFileToByteArray(new File(getSelectedDesginFile(false)));
             if(rptDesign.length > 0){
                 AddReportTemplateToDepositCommand command = 
                         new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
-                                rptDesign, FilenameUtils.getName(getSelectedDesginFile()), Locale.getDefault().toString());
+                                rptDesign, FilenameUtils.getName(getSelectedDesginFile(true)), Locale.getDefault().toString());
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 if(command.isErrorOccured()){
                     ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_22);
@@ -351,20 +352,26 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         }
     }
     
-    private String getSelectedDesginFile() {
+    private String getSelectedDesginFile(boolean server) {
         String filePath = reportTemplateText.getText();
         if(!filePath.contains(String.valueOf(File.separatorChar))){ // is path missing?
-            String depositLocation;
-            try {
-                depositLocation = ServiceFactory.lookupReportDepositService().getDepositLocation();
-            } catch (IOException e) {
-                LOG.error("Error determing report deposit location", e);
-                return null;
+            String depositLocation = null;
+            ServerReportTemplateService srts = new ServerReportTemplateService();
+            if(server){
+                try {
+                    depositLocation = ServiceFactory.lookupReportDepositService().getDepositLocation();
+                } catch (IOException e) {
+                    ExceptionUtil.log(e, "Error reading serversided reportdepositlocation");
+                }
+            } else {
+                depositLocation = srts.getTemplateDirectory();
             }
-            if(!depositLocation.endsWith(String.valueOf(File.separatorChar))){
-                depositLocation = depositLocation + File.separatorChar;
+            if(depositLocation != null){
+                if(!depositLocation.endsWith(String.valueOf(File.separatorChar))){
+                    depositLocation = depositLocation + File.separatorChar;
+                }
+                filePath = depositLocation + filePath;
             }
-            filePath = depositLocation + filePath;
         }
         
         return filePath;
