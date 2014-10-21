@@ -41,7 +41,7 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.gs.ui.rcp.main.reports.LocalReportTemplateService;
+import sernet.gs.ui.rcp.main.reports.ServerReportTemplateService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
@@ -100,7 +100,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
     private ReportTemplateSync() {
         super("sync reports");
-        localReportTemplateService = new LocalReportTemplateService();
+        localReportTemplateService = new ServerReportTemplateService();
     }
 
     public static void sync() {
