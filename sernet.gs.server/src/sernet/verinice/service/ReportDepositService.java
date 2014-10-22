@@ -113,8 +113,17 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
     }
 
     private void writePropertiesFile(Properties properties, String name, String comment) throws IOException {
-        String newFilePath = getReportDeposit().getFile().getPath() + File.separatorChar + name;
+        String serverDepositLocation = getReportDeposit().getFile().getPath();
+        String newFilePath = "";
+        if(!name.contains(serverDepositLocation)){
+            newFilePath = getReportDeposit().getFile().getPath() + File.separatorChar + name;
+        } else {
+            newFilePath = name;
+        }
         newFilePath = ensurePropertiesExtension(newFilePath);
+        if(LOG.isDebugEnabled()){
+            LOG.debug("writing properties for " + properties.getProperty(PROPERTIES_FILENAME) + " to " + newFilePath);
+        }
         FileOutputStream fos = new FileOutputStream(newFilePath);
         properties.store(fos, comment);
         fos.close();
