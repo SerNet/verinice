@@ -132,7 +132,35 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
 
     protected File getPropertiesFile(String path, String locale) {
 
-        locale = sanitizeLocale(locale);
+        locale = sanitizeLocale(locale, path);
+        path = removeSuffix(path);
+        File propFile = new File(path + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
+        return propFile;
+    }
+
+    /**
+     * Generates a properties file suffix. It does not take into account
+     * regions, so the string is empty, when it is the default english or the
+     * default is already in the properties path.
+     *
+     * <p>Examples</p>
+     *
+     * sanitizeLocale(de_DE, "path/report_de.properties") -> ""
+     * sanitizeLocale(de, "path/report_de.properties") -> ""
+     * sanitizeLocale(DE, "path/report_de.properties") -> ""
+     * sanitizeLocale(DE, "path/report.properties") -> "_de"
+     * sanitizeLocale(en_UK, "path/report.properties") -> ""
+     *
+     * As we do not deal with dialects like en_UK here, we just take the
+     * leftside locale (e.g. "en")
+     *
+     *
+     */
+    private String sanitizeLocale(String locale, String path) {
+
+        if (locale.length() > 2 && locale.contains(String.valueOf('_'))) {
+            locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
+        }
 
         if (!"".equals(locale)) {
             if ("en".equals(locale.toLowerCase()) || path.contains("_" + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION)) {
@@ -142,20 +170,6 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
             }
         }
 
-        path = removeSuffix(path);
-        File propFile = new File(path + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
-        return propFile;
-    }
-
-    /**
-     * As we do not deal with dialects like en_UK here, we just take the
-     * leftside locale (e.g. "en")
-     */
-    private String sanitizeLocale(String locale) {
-        if (locale.length() > 2 && locale.contains(String.valueOf('_'))) {
-
-            locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
-        }
         return locale;
     }
 
