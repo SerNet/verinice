@@ -131,19 +131,32 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
     }
 
     protected File getPropertiesFile(String path, String locale) {
-        if (locale.length() > 2 && locale.contains(String.valueOf('_'))) {
-            // as we do not deal with dialects like en_UK here, we just take the
-            // leftside locale (e.g. "en")
-            locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
+
+        locale = sanitizeLocale(locale);
+
+        if (!"".equals(locale)) {
+            if ("en".equals(locale.toLowerCase()) || path.contains("_" + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION)) {
+                locale = "";
+            } else {
+                locale = "_" + locale.toLowerCase();
+            }
         }
-        if ("en".equals(locale.toLowerCase()) || path.contains("_" + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION)) {
-            locale = "";
-        } else {
-            locale = "_" + locale.toLowerCase();
-        }
+
         path = removeSuffix(path);
         File propFile = new File(path + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
         return propFile;
+    }
+
+    /**
+     * As we do not deal with dialects like en_UK here, we just take the
+     * leftside locale (e.g. "en")
+     */
+    private String sanitizeLocale(String locale) {
+        if (locale.length() > 2 && locale.contains(String.valueOf('_'))) {
+
+            locale = locale.substring(0, locale.indexOf(String.valueOf('_')));
+        }
+        return locale;
     }
 
     private Properties createDefaultProperties(String path, String name, String locale) throws IOException, PropertyFileExistsException {
