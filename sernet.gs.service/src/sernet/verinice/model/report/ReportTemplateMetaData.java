@@ -19,6 +19,8 @@ package sernet.verinice.model.report;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
@@ -37,47 +39,39 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
      * contains checksums from the rptdesign file and also from all propertie
      * files
      **/
-    private String[] md5CheckSums;
+    private Set<String> md5CheckSums;
 
     private boolean isServer;
 
     public ReportTemplateMetaData(String filename, String outputname, OutputFormat[] outputFormats, boolean isServer, String[] md5CheckSums) {
+
         this.filename = filename;
         this.outputname = outputname;
         this.outputFormat = outputFormats;
         this.isServer = isServer;
-        this.md5CheckSums = md5CheckSums;
+
+        if (md5CheckSums != null) {
+            this.md5CheckSums = new HashSet<String>(Arrays.asList(md5CheckSums));
+        }
     }
 
-    public String getFilename() {
-        return filename;
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((filename == null) ? 0 : filename.hashCode());
+        result = prime * result + ((md5CheckSums == null) ? 0 : md5CheckSums.hashCode());
+        result = prime * result + Arrays.hashCode(outputFormat);
+        result = prime * result + ((outputname == null) ? 0 : outputname.hashCode());
+        return result;
     }
 
-    public OutputFormat[] getOutputFormats() {
-        return outputFormat;
-    }
-    
-    public void setOutputFormats(OutputFormat[] outputFormats) {
-        this.outputFormat = outputFormats;
-    }
-
-
-    public String getOutputname() {
-        return outputname;
-    }
-    
-    public void setOutputname(String outputname) {
-        this.outputname = outputname;
-    }
-
-    public boolean isServer() {
-        return isServer;
-    }
-
-    public void setServer(boolean isServer) {
-        this.isServer = isServer;
-    }
-
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -92,7 +86,10 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
                 return false;
         } else if (!filename.equals(other.filename))
             return false;
-        if (!Arrays.equals(md5CheckSums, other.md5CheckSums))
+        if (md5CheckSums == null) {
+            if (other.md5CheckSums != null)
+                return false;
+        } else if (!md5CheckSums.equals(other.md5CheckSums))
             return false;
         if (!Arrays.equals(outputFormat, other.outputFormat))
             return false;
@@ -104,15 +101,32 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
         return true;
     }
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((filename == null) ? 0 : filename.hashCode());
-        result = prime * result + Arrays.hashCode(md5CheckSums);
-        result = prime * result + Arrays.hashCode(outputFormat);
-        result = prime * result + ((outputname == null) ? 0 : outputname.hashCode());
-        return result;
+    public String getFilename() {
+        return filename;
+    }
+
+    public OutputFormat[] getOutputFormats() {
+        return outputFormat;
+    }
+
+    public void setOutputFormats(OutputFormat[] outputFormats) {
+        this.outputFormat = outputFormats;
+    }
+
+    public String getOutputname() {
+        return outputname;
+    }
+
+    public void setOutputname(String outputname) {
+        this.outputname = outputname;
+    }
+
+    public boolean isServer() {
+        return isServer;
+    }
+
+    public void setServer(boolean isServer) {
+        this.isServer = isServer;
     }
 
     @Override
