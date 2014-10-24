@@ -625,7 +625,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         } else {
             sb.append(".pdf");
         }
-        return sb.toString();
+        return convertToFileName(sb.toString());
     }
 
     @Deprecated
