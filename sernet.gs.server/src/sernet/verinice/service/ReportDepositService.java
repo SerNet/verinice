@@ -117,6 +117,12 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
         String newFilePath = "";
         if(!name.contains(serverDepositLocation)){
             newFilePath = getReportDeposit().getFile().getPath() + File.separatorChar + name;
+            if(LOG.isDebugEnabled()){
+                LOG.debug(name + " does not contain the server deposit folder");
+                LOG.debug("current File.separatorChar is:\t" + File.separatorChar);
+                LOG.debug("adding " + getReportDeposit().getFile().getPath());
+                LOG.debug("generated path:\t" + newFilePath);
+            }
         } else {
             newFilePath = name;
         }
