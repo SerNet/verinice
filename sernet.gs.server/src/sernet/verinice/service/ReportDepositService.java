@@ -114,16 +114,22 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
 
     private void writePropertiesFile(Properties properties, String name, String comment) throws IOException {
         String serverDepositLocation = getReportDeposit().getFile().getPath();
+        serverDepositLocation = serverDepositLocation.substring(serverDepositLocation.lastIndexOf(File.separatorChar) + 1);
         String newFilePath = "";
         if(!name.contains(serverDepositLocation)){
             newFilePath = getReportDeposit().getFile().getPath() + File.separatorChar + name;
             if(LOG.isDebugEnabled()){
+                LOG.debug("Check of " + name + " on " + serverDepositLocation + " is negative");
                 LOG.debug(name + " does not contain the server deposit folder");
                 LOG.debug("current File.separatorChar is:\t" + File.separatorChar);
-                LOG.debug("adding " + getReportDeposit().getFile().getPath());
+                LOG.debug("adding " + getReportDeposit().getFile().getPath() + File.separatorChar);
                 LOG.debug("generated path:\t" + newFilePath);
             }
         } else {
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Check of " + name + " on " + serverDepositLocation + " is positive");
+                LOG.debug("using " + name + " as location of propfile");
+            }
             newFilePath = name;
         }
         newFilePath = ensurePropertiesExtension(newFilePath);
