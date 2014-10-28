@@ -111,12 +111,32 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
             writePropertiesFile(convertToProperties(metadata), getPropertiesFile(metadata.getFilename(), locale), "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
         }
     }
+    
+    private String removeWrongPathSeparators(String path){
+        if(path.contains("/")){
+            String oldPath = path;
+            path = path.replaceAll("/", String.valueOf(File.separatorChar));
+            if(LOG.isDebugEnabled()){
+                LOG.debug(oldPath + "\t replaced with \t" + path);
+            }
+        }
+        if(path.contains("\\")){
+            String oldPath = path;
+            path = path.replaceAll("\\", String.valueOf(File.separatorChar));
+            if(LOG.isDebugEnabled()){
+                LOG.debug(oldPath + "\t replaced with \t" + path);
+            }
+        }
+        return path;
+        
+    }
 
     private void writePropertiesFile(Properties properties, File propFile, String comment) throws IOException {
+        String path = removeWrongPathSeparators(propFile.getAbsolutePath());
         if(LOG.isDebugEnabled()){
-            LOG.debug("writing properties for " + properties.getProperty(PROPERTIES_FILENAME) + " to " + propFile.getAbsolutePath());
+            LOG.debug("writing properties for " + properties.getProperty(PROPERTIES_FILENAME) + " to " + path);
         }
-        FileOutputStream fos = new FileOutputStream(propFile);
+        FileOutputStream fos = new FileOutputStream(path);
         properties.store(fos, comment);
         fos.close();
     }
