@@ -54,7 +54,7 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
         String newFilePath = serverDepositPath.getPath() + File.separatorChar + filename;
         String propFilePath = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR)) + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION;
         FileUtils.writeByteArrayToFile(new File(newFilePath), file);
-        writePropertiesFile(convertToProperties(metadata), propFilePath, "");
+        writePropertiesFile(convertToProperties(metadata), new File(ensurePropertiesExtension(newFilePath, locale)), "");
     }
 
     @Override
@@ -105,38 +105,18 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
             Properties props = parseAndExtendMetaData(propFile, locale);
             props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metadata.getOutputFormats(), ','));
             props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
-            writePropertiesFile(props, propFile.getName(), "");
+            writePropertiesFile(props, propFile, "");
 
         } else {
-            writePropertiesFile(convertToProperties(metadata), getPropertiesFile(metadata.getFilename(), locale).getName(), "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
+            writePropertiesFile(convertToProperties(metadata), getPropertiesFile(metadata.getFilename(), locale), "Default Properties for verinice-" + "Report " + metadata.getOutputname() + "\nauto-generated content");
         }
     }
 
-    private void writePropertiesFile(Properties properties, String name, String comment) throws IOException {
-        String serverDepositLocation = getReportDeposit().getFile().getPath();
-        serverDepositLocation = serverDepositLocation.substring(serverDepositLocation.lastIndexOf(File.separatorChar) + 1);
-        String newFilePath = "";
-        if(!name.contains(serverDepositLocation)){
-            newFilePath = getReportDeposit().getFile().getPath() + File.separatorChar + name;
-            if(LOG.isDebugEnabled()){
-                LOG.debug("Check of " + name + " on " + serverDepositLocation + " is negative");
-                LOG.debug(name + " does not contain the server deposit folder");
-                LOG.debug("current File.separatorChar is:\t" + File.separatorChar);
-                LOG.debug("adding " + getReportDeposit().getFile().getPath() + File.separatorChar);
-                LOG.debug("generated path:\t" + newFilePath);
-            }
-        } else {
-            if(LOG.isDebugEnabled()){
-                LOG.debug("Check of " + name + " on " + serverDepositLocation + " is positive");
-                LOG.debug("using " + name + " as location of propfile");
-            }
-            newFilePath = name;
-        }
-        newFilePath = ensurePropertiesExtension(newFilePath);
+    private void writePropertiesFile(Properties properties, File propFile, String comment) throws IOException {
         if(LOG.isDebugEnabled()){
-            LOG.debug("writing properties for " + properties.getProperty(PROPERTIES_FILENAME) + " to " + newFilePath);
+            LOG.debug("writing properties for " + properties.getProperty(PROPERTIES_FILENAME) + " to " + propFile.getAbsolutePath());
         }
-        FileOutputStream fos = new FileOutputStream(newFilePath);
+        FileOutputStream fos = new FileOutputStream(propFile);
         properties.store(fos, comment);
         fos.close();
     }
@@ -149,11 +129,34 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
         return props;
     }
 
-    private String ensurePropertiesExtension(String filename) {
+    private String ensurePropertiesExtension(String filename, String locale) {
         if (filename.contains(String.valueOf('.'))) {
-            filename = filename.substring(0, filename.lastIndexOf('.') + 1);
+            filename = filename.substring(0, filename.lastIndexOf('.'));
         }
-        return filename + IReportDepositService.PROPERTIES_FILE_EXTENSION;
+        String oldLocale = locale;
+        locale = removeUnderscores(locale);
+        if(LOG.isDebugEnabled()){
+            LOG.debug("changed:\t" + oldLocale + "\tto:\t" + locale);
+        }
+        if(locale != null && !(locale.equals("")) && !filename.endsWith(locale)){
+            if(!filename.endsWith("_")){
+                filename = filename + "_";
+            }
+            filename = filename + locale;
+            
+        }
+        return filename + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION;
+    }
+    
+    private String removeUnderscores(String locale){
+        if(locale.startsWith("_")){
+            locale = removeUnderscores(locale.substring(1));
+        }
+        if(locale.endsWith("_")){
+            locale = removeUnderscores(locale.substring(0, locale.length() - 1));
+        }
+        
+        return locale;
     }
 
     @Override

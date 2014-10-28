@@ -516,7 +516,7 @@ public class ReportDepositView extends RightsEnabledView {
     
     private Object getContent(){
         try{
-            Set<ReportTemplateMetaData> templateSet = getReportService().getServerReportTemplates(Locale.getDefault().toString());
+            Set<ReportTemplateMetaData> templateSet = getReportService().getServerReportTemplates(Locale.getDefault().getLanguage());
             return templateSet.toArray(new ReportTemplateMetaData[templateSet.size()]);
         } catch (PropertyFileExistsException e){
             String msg = "Something went wrong with reading the propertyfiles";
@@ -537,7 +537,7 @@ public class ReportDepositView extends RightsEnabledView {
         while (iterator.hasNext()) {
             ReportTemplateMetaData sel = (ReportTemplateMetaData) iterator.next();
             try {
-                ServiceFactory.lookupReportDepositService().removeFromServer(sel, Locale.getDefault().toString());
+                ServiceFactory.lookupReportDepositService().removeFromServer(sel, Locale.getDefault().getLanguage());
             } catch (IOException e) {
                 ExceptionUtil.log(e, "Error deleting Reporttemplate:\t" + sel.getOutputname());
             }

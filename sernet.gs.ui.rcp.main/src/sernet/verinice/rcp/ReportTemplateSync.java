@@ -246,7 +246,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
     }
 
     private String getLocale() {
-        return Locale.getDefault().toString();
+        return Locale.getDefault().getLanguage();
     }
 
     private IStatus errorHandler(Exception e) {
