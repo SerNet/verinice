@@ -49,7 +49,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.reports.ServerReportTemplateService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
@@ -276,7 +275,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     protected void okPressed() {
         if(!isAnyFormatSelected() ||
                 getReportOutputName() == null ||
-                getSelectedDesginFile(false) == null){
+                getSelectedDesginFile() == null){
             ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_12);
             return;
         }
@@ -295,33 +294,28 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     }
     
     private void updateTemplate(){
-        byte[] rptDesign = new byte[0];
-        try {
-            rptDesign = FileUtils.readFileToByteArray(new File(getSelectedDesginFile(false)));
-            if(rptDesign.length > 0){
                 AddReportTemplateToDepositCommand command = 
                         new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
-                                rptDesign, getSelectedDesginFile(true), Locale.getDefault().getLanguage(), true);
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                                new byte[]{}, FilenameUtils.getName(getSelectedDesginFile()), Locale.getDefault().getLanguage(), true);
+                try {
+                    command = ServiceFactory.lookupCommandService().executeCommand(command);
+                } catch (CommandException e) {
+                    LOG.error("Error updating Template file", e);
+                    ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_23);
+                }
                 if(command.isErrorOccured()){
                     ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_23);
                 }
-            }
-        } catch (CommandException e) {
-            LOG.error("Error updating template ", e);
-        } catch (IOException e) {
-            LOG.error("Error updating template in deposit", e);
-        }
     }
 
     private void addTemplate(){
         byte[] rptDesign = new byte[0];
         try {
-            rptDesign = FileUtils.readFileToByteArray(new File(getSelectedDesginFile(false)));
+            rptDesign = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
             if(rptDesign.length > 0){
                 AddReportTemplateToDepositCommand command = 
                         new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
-                                rptDesign, FilenameUtils.getName(getSelectedDesginFile(true)), Locale.getDefault().getLanguage());
+                                rptDesign, FilenameUtils.getName(getSelectedDesginFile()), Locale.getDefault().getLanguage());
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 if(command.isErrorOccured()){
                     ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_22);
@@ -352,29 +346,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         }
     }
     
-    private String getSelectedDesginFile(boolean server) {
-        String filePath = reportTemplateText.getText();
-        if(!filePath.contains(String.valueOf(File.separatorChar))){ // is path missing?
-            String depositLocation = null;
-            ServerReportTemplateService srts = new ServerReportTemplateService();
-            if(server){
-                try {
-                    depositLocation = ServiceFactory.lookupReportDepositService().getDepositLocation();
-                } catch (IOException e) {
-                    ExceptionUtil.log(e, "Error reading serversided reportdepositlocation");
-                }
-            } else {
-                depositLocation = srts.getTemplateDirectory();
-            }
-            if(depositLocation != null){
-                if(!depositLocation.endsWith(String.valueOf(File.separatorChar))){
-                    depositLocation = depositLocation + File.separatorChar;
-                }
-                filePath = depositLocation + filePath;
-            }
-        }
-        
-        return filePath;
+    private String getSelectedDesginFile() {
+        return reportTemplateText.getText();
     }
     
     private String getReportOutputName(){

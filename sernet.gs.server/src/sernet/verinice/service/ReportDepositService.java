@@ -91,7 +91,11 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
     @Override
     public String getDepositLocation() throws IOException {
         if (getReportDeposit() != null) {
-            return getReportDeposit().getFile().getAbsolutePath();
+            String location = getReportDeposit().getFile().getAbsolutePath();
+            if(!(location.endsWith(String.valueOf(File.separatorChar)))){
+                location = location + File.separatorChar;
+            }
+            return location;
         }
         return "";
     }
@@ -102,8 +106,8 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
         if (filename.contains(String.valueOf(File.separatorChar))) {
             filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);
         }
-        if (checkReportMetaDataFile(new File(metadata.getFilename()), locale)) {
-            File propFile = getPropertiesFile(metadata.getFilename(), locale);
+        if (checkReportMetaDataFile(new File(getDepositLocation() + metadata.getFilename()), locale)) {
+            File propFile = getPropertiesFile(getDepositLocation() + metadata.getFilename(), locale);
             Properties props = parseAndExtendMetaData(propFile, locale);
             props.setProperty(PROPERTIES_OUTPUTFORMATS, StringUtils.join(metadata.getOutputFormats(), ','));
             props.setProperty(PROPERTIES_OUTPUTNAME, metadata.getOutputname());
@@ -114,6 +118,7 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
         }
     }
     
+    @Deprecated
     private String removeWrongPathSeparators(String path){
         if(LOG.isDebugEnabled()){
             LOG.debug("File.separatorChar:\t" + File.separatorChar);
@@ -137,7 +142,7 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
     }
 
     private void writePropertiesFile(Properties properties, File propFile, String comment) throws IOException {
-        String path = removeWrongPathSeparators(propFile.getAbsolutePath());
+        String path = getTemplateDirectory() + propFile.getName();
         if(LOG.isDebugEnabled()){
             LOG.debug("writing properties for " + properties.getProperty(PROPERTIES_FILENAME) + " to " + path);
         }

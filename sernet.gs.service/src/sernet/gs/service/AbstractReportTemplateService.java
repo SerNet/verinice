@@ -134,6 +134,13 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
 
         locale = sanitizeLocale(locale, path);
         path = removeSuffix(path);
+        String templateDir = getTemplateDirectory();
+        if(!templateDir.endsWith(String.valueOf(File.separatorChar))){
+            templateDir = templateDir + File.separatorChar;
+        }
+        if(!path.contains(templateDir)){
+            path = templateDir + templateDir;
+        }
         File propFile = new File(path + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
         return propFile;
     }
