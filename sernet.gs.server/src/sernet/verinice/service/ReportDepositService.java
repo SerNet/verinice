@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.regex.Matcher;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
@@ -115,14 +116,14 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
     private String removeWrongPathSeparators(String path){
         if(path.contains("/")){
             String oldPath = path;
-            path = path.replaceAll("/", String.valueOf(File.separatorChar));
+            path = path.replaceAll("/", Matcher.quoteReplacement(String.valueOf(File.separatorChar)));
             if(LOG.isDebugEnabled()){
                 LOG.debug(oldPath + "\t replaced with \t" + path);
             }
         }
         if(path.contains("\\")){
             String oldPath = path;
-            path = path.replaceAll("\\", String.valueOf(File.separatorChar));
+            path = path.replaceAll("\\", Matcher.quoteReplacement(String.valueOf(File.separatorChar)));
             if(LOG.isDebugEnabled()){
                 LOG.debug(oldPath + "\t replaced with \t" + path);
             }
