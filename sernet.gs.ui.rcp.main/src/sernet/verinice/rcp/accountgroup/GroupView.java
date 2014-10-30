@@ -34,6 +34,7 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -41,7 +42,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -63,7 +63,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.rcp.NonModalWizardDialog;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.account.AccountWizard;
 
@@ -597,7 +596,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         if (!"".equals(selectedAccountName)) {
 
             Configuration configuration = accountService.getAccountByName(getSelectedAccount());
-            TitleAreaDialog accountDialog = createWizard(configuration);
+            WizardDialog accountDialog = createWizard(configuration);
 
             if (accountDialog.open() != Window.OK) {
                 return;
@@ -616,9 +615,9 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         }
     }
 
-    private TitleAreaDialog createWizard(Configuration configuration) {
-        AccountWizard wizard = new AccountWizard(configuration);
-        return new NonModalWizardDialog(Display.getCurrent().getActiveShell(), wizard);
+    private WizardDialog createWizard(Configuration configuration) {
+       AccountWizard wizard = new AccountWizard(configuration);
+       return new WizardDialog(getDisplay().getActiveShell(), wizard);
     }
 
     private String getSelectedAccount() {
