@@ -28,6 +28,7 @@ import java.util.List;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
@@ -69,10 +70,11 @@ public class AttachmentBean {
         Attachment attachment = new Attachment();
         attachment.setCnATreeElementId(getElement().getDbId());
         attachment.setCnAElementTitel(getElement().getTitle());
-        attachment.setTitel(item.getFileName());
+        String filename = FilenameUtils.getName(item.getFileName());
+        attachment.setTitel(filename);
         attachment.setDate(Calendar.getInstance().getTime());
         attachment.setFilePath(item.getFileName());
-        attachment.setText("Browser upload");
+        attachment.setText(Messages.getString("AttachmentBean.0")); //$NON-NLS-1$
         
         SaveNote command = new SaveNote(attachment);     
         command = getCommandService().executeCommand(command);
@@ -131,8 +133,8 @@ public class AttachmentBean {
     }
     
     public void download() throws CommandException, IOException {
-        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
-        String name = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("name");
+        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id"); //$NON-NLS-1$
+        String name = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("name"); //$NON-NLS-1$
         LoadAttachmentFile command = new LoadAttachmentFile(Integer.valueOf(id));      
         command = getCommandService().executeCommand(command);      
         AttachmentFile attachmentFile = command.getAttachmentFile();
@@ -141,7 +143,7 @@ public class AttachmentBean {
         HttpServletResponse response = (HttpServletResponse) facesContext.getExternalContext().getResponse();
         response.reset(); // Some JSF component library or some Filter might have set some headers in the buffer beforehand. We want to get rid of them, else it may collide.
         response.setContentLength(attachmentFile.getFileData().length); // Set it with the file size. This header is optional. It will work if it's omitted, but the download progress will be unknown.
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\""); // The Save As popup magic is done here. You can give it any file name you want, this only won't work in MSIE, it will use current request URL as file name instead.
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + name + "\""); // The Save As popup magic is done here. You can give it any file name you want, this only won't work in MSIE, it will use current request URL as file name instead. //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         OutputStream output = response.getOutputStream();
         output.write(attachmentFile.getFileData());
