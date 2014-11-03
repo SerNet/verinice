@@ -52,7 +52,6 @@ Export-Package: de.sernet.service.vna,
  sernet.verinice.service.commands.unify,
  sernet.verinice.service.iso27k,
  sernet.verinice.service.ldap,
- sernet.verinice.service.report,
  sernet.verinice.service.sync
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate

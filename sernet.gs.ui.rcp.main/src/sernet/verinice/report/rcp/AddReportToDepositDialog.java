@@ -50,10 +50,9 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.model.report.ReportTemplateMetaData;
-import sernet.verinice.service.commands.AddReportTemplateToDepositCommand;
 
 /**
  *
@@ -163,18 +162,12 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         Label outputFormatLabel = new Label(checkboxComposite, SWT.NONE);
         outputFormatLabel.setText(Messages.ReportDepositView_2);
         GridData oflData = new GridData();
-//        oflData.horizontalAlignment = SWT.LEFT;
-//        oflData.verticalAlignment = SWT.TOP;
-//        oflData.grabExcessHorizontalSpace = true;
-//        oflData.grabExcessVerticalSpace = true;
         oflData.horizontalSpan = 3;
         outputFormatLabel.setLayoutData(oflData);
 
         outputTypePDFCheckbox = new Button(checkboxComposite, SWT.CHECK);
         outputTypePDFCheckbox.setText(OutputFormat.PDF.toString());
         GridData gdRadio = new GridData();
-//        gdRadio.horizontalAlignment = SWT.LEFT;
-//        gdRadio.verticalAlignment = SWT.TOP;
         gdRadio.grabExcessHorizontalSpace = true;
         gdRadio.horizontalSpan = 1;
         outputTypePDFCheckbox.setLayoutData(gdRadio);
@@ -223,11 +216,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportTemplateSelectButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
-                try {
-                    selectTemplateFile();
-                } catch (MalformedURLException e) {
-                    ExceptionUtil.log(e, "Error while extracting filename");
-                }
+                selectTemplateFile();
             }
         });
         
@@ -293,44 +282,32 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         super.cancelPressed();
     }
     
-    private void updateTemplate(){
-                AddReportTemplateToDepositCommand command = 
-                        new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
-                                new byte[]{}, FilenameUtils.getName(getSelectedDesginFile()), Locale.getDefault().getLanguage(), true);
-                try {
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
-                } catch (CommandException e) {
-                    LOG.error("Error updating Template file", e);
-                    ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_23);
-                }
-                if(command.isErrorOccured()){
-                    ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_23);
-                }
+    private void updateTemplate() {
+        try {
+            ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null);
+            getReportService().updateInServerDeposit(metaData, getLanguage());
+        } catch (IOException e) {
+            LOG.error("Error while updating report template file", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.ReportDepositView_23);
+        }
     }
 
-    private void addTemplate(){
-        byte[] rptDesign = new byte[0];
+    private void addTemplate() {
         try {
-            rptDesign = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));
-            if(rptDesign.length > 0){
-                AddReportTemplateToDepositCommand command = 
-                        new AddReportTemplateToDepositCommand(getReportOutputName(), getReportOutputFormats(), 
-                                rptDesign, FilenameUtils.getName(getSelectedDesginFile()), Locale.getDefault().getLanguage());
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
-                if(command.isErrorOccured()){
-                    ExceptionUtil.log(new RuntimeException(), Messages.ReportDepositView_22);
-                }
-            } else {
-                LOG.warn("users tried to add empty file to reportdeposit");
-            }
+            byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));     
+            ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null);
+            getReportService().addToServerDeposit(metaData, rptDesignFile, getLanguage());                       
         } catch (IOException e) {
-            LOG.error("Error reading Template file", e);
-        } catch (CommandException e){
-            LOG.error("Error writing template to deposit", e);
+            LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AddReportToDepositDialog_3);
         }
     }
     
-    public void selectTemplateFile() throws MalformedURLException {
+    private String getLanguage() {
+        return Locale.getDefault().getLanguage();
+    }
+    
+    public void selectTemplateFile() {
         FileDialog dlg = new FileDialog(getParentShell(), SWT.SELECTED);
         ArrayList<String> extensionList = new ArrayList<String>();
         extensionList.add("*.rptdesign"); //$NON-NLS-1$
@@ -427,4 +404,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         return checkBoxSelectionListener;
     }
     
+    private IReportDepositService getReportService(){
+        return ServiceFactory.lookupReportDepositService();
+    }
 }
