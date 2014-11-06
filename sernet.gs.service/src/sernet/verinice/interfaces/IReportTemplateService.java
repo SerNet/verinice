@@ -20,15 +20,12 @@
 package sernet.verinice.interfaces;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 
 import sernet.verinice.interfaces.report.IOutputFormat;
-import sernet.verinice.model.report.PropertyFileExistsException;
-import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
