@@ -224,7 +224,7 @@ public class ReportDepositView extends RightsEnabledView {
                 updateView();
             }
         };
-        addTemplateAction.setText(Messages.ReportDepositView_6);
+        addTemplateAction.setText(Messages.ReportDepositView_5);
         addTemplateAction.setToolTipText(Messages.ReportDepositView_7);
         addTemplateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
         addTemplateAction.setEnabled(true); 

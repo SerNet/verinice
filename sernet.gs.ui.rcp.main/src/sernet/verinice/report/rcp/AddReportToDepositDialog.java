@@ -99,7 +99,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
-        newShell.setText(Messages.ReportDepositView_5);
+        newShell.setText(isEditMode() ? Messages.ReportDepositView_17 : Messages.ReportDepositView_5);
         // newShell.setSize(SIZE_X, SIZE_Y);
 
         // open the window right under the mouse pointer:
@@ -117,8 +117,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
 
     @Override
     protected Control createDialogArea(Composite parent) {
-        setTitle(Messages.ReportDepositView_6);
-        setMessage(Messages.ReportDepositView_7);
+        setTitle(isEditMode() ? Messages.ReportDepositView_17 : Messages.ReportDepositView_5);
+        setMessage(isEditMode() ?  Messages.ReportDepositView_18 : Messages.ReportDepositView_7);
 
         final Composite composite = (Composite) super.createDialogArea(parent);
 
