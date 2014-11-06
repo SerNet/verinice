@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
@@ -57,29 +58,29 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  *
  */
 public class AddReportToDepositDialog extends TitleAreaDialog {
-    
+
     private static final Logger LOG = Logger.getLogger(AddReportToDepositDialog.class);
-    
+
     private Text reportName;
-    
+
     private Button outputTypePDFCheckbox;
     private Button outputTypeHTMLCheckbox;
     private Button outputTypeWordCheckbox;
     private Button outputTypeODTCheckbox;
     private Button outputTypeODSCheckbox;
     private Button outputTypeExcelCheckbox;
-    
+
     private Text reportTemplateText;
     private Button reportTemplateSelectButton;
-    
+
     private static final int SIZE_X = 150;
     private static final int SIZE_Y = 500;
     final int marginWidth = 10;
 
     final int defaultColNr = 3;
-    
+
     private ReportTemplateMetaData editTemplate;
-    
+
     private SelectionListener checkBoxSelectionListener;
 
     /**
@@ -89,13 +90,12 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
     }
-    
-    public AddReportToDepositDialog(Shell parentShell,
-            ReportTemplateMetaData metadata){
+
+    public AddReportToDepositDialog(Shell parentShell, ReportTemplateMetaData metadata) {
         this(parentShell);
         this.editTemplate = metadata;
     }
-    
+
     @Override
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
@@ -114,19 +114,16 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         getButton(IDialogConstants.OK_ID).setText(Messages.ReportDepositView_9);
         getButton(IDialogConstants.CANCEL_ID).setText(Messages.ReportDepositView_10);
     }
-    
+
     @Override
     protected Control createDialogArea(Composite parent) {
         setTitle(Messages.ReportDepositView_6);
         setMessage(Messages.ReportDepositView_7);
 
         final Composite composite = (Composite) super.createDialogArea(parent);
-        GridLayout layout = (GridLayout) composite.getLayout();
-        layout.marginWidth = marginWidth;
-        layout.marginHeight = marginWidth;
+
         composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        
-        
+
         Composite dialogContent = new Composite(composite, SWT.NONE);
         GridLayout threeColumnLayout = new GridLayout(3, false);
         dialogContent.setLayout(threeColumnLayout);
@@ -139,7 +136,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportNameLabelGd.grabExcessHorizontalSpace = false;
         reportNameLabelGd.horizontalSpan = 1;
         reportNameLabel.setLayoutData(reportNameLabelGd);
-        
+
         reportName = new Text(dialogContent, SWT.NONE | SWT.BORDER);
         GridData reportNameTextGd = new GridData();
         reportNameTextGd.horizontalAlignment = SWT.FILL;
@@ -148,7 +145,7 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         reportNameTextGd.horizontalSpan = 2;
         reportName.setLayoutData(reportNameTextGd);
 
-        Composite checkboxComposite = new Composite(dialogContent, SWT.NONE );
+        Composite checkboxComposite = new Composite(dialogContent, SWT.NONE);
         GridLayout formatLayout = new GridLayout(3, false);
         checkboxComposite.setLayout(formatLayout);
         checkboxComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false, 3, 1));
@@ -157,45 +154,48 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         ofgd.verticalAlignment = SWT.TOP;
         ofgd.grabExcessHorizontalSpace = true;
         ofgd.horizontalSpan = defaultColNr;
-        
-        Label outputFormatLabel = new Label(checkboxComposite, SWT.NONE);
-        outputFormatLabel.setText(Messages.ReportDepositView_2);
-        GridData oflData = new GridData();
-        oflData.horizontalSpan = 3;
-        outputFormatLabel.setLayoutData(oflData);
 
-        outputTypePDFCheckbox = new Button(checkboxComposite, SWT.CHECK);
-        outputTypePDFCheckbox.setText(OutputFormat.PDF.toString());
         GridData gdRadio = new GridData();
         gdRadio.grabExcessHorizontalSpace = true;
         gdRadio.horizontalSpan = 1;
-        outputTypePDFCheckbox.setLayoutData(gdRadio);
 
-        outputTypeHTMLCheckbox = new Button(checkboxComposite, SWT.CHECK);
+        Group outputFormatGroup = new Group(dialogContent, SWT.NULL);
+        outputFormatGroup.setText(Messages.ReportDepositView_2);
+
+        GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 3;
+        outputFormatGroup.setLayout(gridLayout);
+
+        GridData oflData = new GridData();
+        oflData.horizontalSpan = 3;
+        oflData.grabExcessHorizontalSpace = true;
+        outputFormatGroup.setLayoutData(oflData);
+
+        // Label outputFormatLabel = new Label(checkboxComposite, SWT.NONE);
+        // outputFormatLabel.setText(Messages.ReportDepositView_2);
+
+        outputTypePDFCheckbox = new Button(outputFormatGroup, SWT.CHECK);
+        outputTypePDFCheckbox.setText(OutputFormat.PDF.toString());
+
+        outputTypeHTMLCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeHTMLCheckbox.setText(OutputFormat.HTML.toString());
-        outputTypeHTMLCheckbox.setLayoutData(gdRadio);
 
-        outputTypeWordCheckbox = new Button(checkboxComposite, SWT.CHECK);
+        outputTypeWordCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeWordCheckbox.setText(OutputFormat.DOC.toString());
-        outputTypeWordCheckbox.setLayoutData(gdRadio);
-        
-        outputTypeODTCheckbox = new Button(checkboxComposite, SWT.CHECK );
+
+        outputTypeODTCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeODTCheckbox.setText(OutputFormat.ODT.toString());
-        outputTypeODTCheckbox.setLayoutData(gdRadio);
-        
-        outputTypeODSCheckbox = new Button(checkboxComposite, SWT.CHECK);
+
+        outputTypeODSCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeODSCheckbox.setText(OutputFormat.ODS.toString());
-        outputTypeODSCheckbox.setLayoutData(gdRadio);
-        
-        outputTypeExcelCheckbox = new Button(checkboxComposite, SWT.CHECK );
+
+        outputTypeExcelCheckbox = new Button(outputFormatGroup, SWT.CHECK);
         outputTypeExcelCheckbox.setText(OutputFormat.XLS.toString());
-        outputTypeExcelCheckbox.setLayoutData(gdRadio);
-        
-        
+
         Label templateLabel = new Label(dialogContent, SWT.NONE);
         templateLabel.setText(Messages.ReportDepositView_3);
         templateLabel.setLayoutData(reportNameLabelGd);
-        
+
         reportTemplateText = new Text(dialogContent, SWT.BORDER);
         GridData reportTemplateTextGd = new GridData();
         reportTemplateTextGd.horizontalAlignment = SWT.FILL;
