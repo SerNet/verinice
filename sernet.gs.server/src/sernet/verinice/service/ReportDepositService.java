@@ -36,7 +36,7 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 
 public class ReportDepositService extends AbstractReportTemplateService implements IReportDepositService {
 
-    private static final Logger LOG = Logger.getLogger(ReportDepositService.class);
+    private Logger LOG = Logger.getLogger(ReportDepositService.class);
 
     private Resource reportDeposit;
 

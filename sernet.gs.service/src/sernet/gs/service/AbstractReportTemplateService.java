@@ -42,9 +42,7 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Category;
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggerFactory;
 
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
@@ -56,7 +54,6 @@ import sernet.verinice.model.report.ODSOutputFormat;
 import sernet.verinice.model.report.ODTOutputFormat;
 import sernet.verinice.model.report.PDFOutputFormat;
 import sernet.verinice.model.report.PropertyFileExistsException;
-import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.WordOutputFormat;
@@ -67,7 +64,7 @@ import sernet.verinice.model.report.WordOutputFormat;
  */
 abstract public class AbstractReportTemplateService implements IReportTemplateService {
 
-    private transient Logger log;
+    private final Logger LOG = Logger.getLogger(AbstractReportTemplateService.class);
 
     abstract public boolean isServerSide();
 
@@ -92,16 +89,8 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
     }
 
     protected void handleException(String msg, Exception ex) throws ReportTemplateServiceException {
-        getLog().error(msg, ex);
+        LOG.error(msg, ex);
         throw new ReportTemplateServiceException(ex);
-    }
-
-    private Category getLog() {
-       if (log == null){
-           log = Logger.getLogger(AbstractReportTemplateService.class);
-       }
-
-       return log;
     }
 
     public boolean checkReportMetaDataFile(File rptDesign, String locale) {
@@ -334,7 +323,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
             if (format != null) {
                 list.add(format);
             } else {
-                getLog().warn("Report output format:\t" + s + " not available in verinice");
+                LOG.warn("Report output format:\t" + s + " not available in verinice");
             }
         }
         return list.toArray(new IOutputFormat[list.size()]);
