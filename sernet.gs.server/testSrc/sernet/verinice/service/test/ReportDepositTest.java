@@ -209,7 +209,7 @@ public class ReportDepositTest extends CommandServiceProvider {
 
         IReportTemplateService templateUtil = new AbstractReportTemplateService() {
             @Override
-            public boolean isServerSide() {
+            public boolean isHandeledByReportDeposit() {
                 return false;
             }
 

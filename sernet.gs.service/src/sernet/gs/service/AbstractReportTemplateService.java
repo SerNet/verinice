@@ -59,6 +59,19 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.WordOutputFormat;
 
 /**
+ * Provides report template metadata and report templates.
+ *
+ * <p>
+ * The implementation is file based, thus it can run on server side and on
+ * client side. The user of this class must provide the report directory path
+ * and if this directory is handled by the {@link IReportDepositService}.
+ * </p>
+ *
+ * <p>
+ * As a side effect, this implementation creates default properties for all
+ * rptdesign files without a properties file automatically, if they don't exist.
+ * <p>
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
@@ -66,7 +79,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
 
     private final Logger LOG = Logger.getLogger(AbstractReportTemplateService.class);
 
-    abstract public boolean isServerSide();
+    abstract public boolean isHandeledByReportDeposit();
 
     abstract public String getTemplateDirectory();
 
@@ -230,7 +243,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
         OutputFormat[] outputFormats = formats.toArray(new OutputFormat[formats.size()]);
         String[] md5CheckSums = getCheckSums(fileName);
 
-        return new ReportTemplateMetaData(fileName, outputName, outputFormats, isServerSide(), md5CheckSums);
+        return new ReportTemplateMetaData(fileName, outputName, outputFormats, isHandeledByReportDeposit(), md5CheckSums);
     }
 
     protected Map<String, byte[]> getPropertiesFiles(String fileName) throws IOException {

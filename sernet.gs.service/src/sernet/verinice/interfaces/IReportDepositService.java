@@ -19,6 +19,13 @@ package sernet.verinice.interfaces;
 
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
+/**
+ * Provides some methods to upload and editing customer report templates. For
+ * retrieving reports look at {@link IReportTemplateService}.
+ *
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ *
+ */
 public interface IReportDepositService extends IReportTemplateService {
 
     void add(ReportTemplateMetaData metadata, byte[] file, String locale) throws ReportDepositException;

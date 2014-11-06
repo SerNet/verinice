@@ -22,15 +22,15 @@ package sernet.verinice.model.report;
 import java.io.Serializable;
 import java.util.Map;
 
-
 /**
- * Represents a rptdesignFile file in memory.
+ * Represents a rptdesignFile file in memory and also contains the properties
+ * files.
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 
-public class ReportTemplate implements Serializable{
+public class ReportTemplate implements Serializable {
 
     private static final long serialVersionUID = -3027918113110500864L;
 
@@ -40,7 +40,7 @@ public class ReportTemplate implements Serializable{
 
     private Map<String, byte[]> propertiesFiles;
 
-    public ReportTemplate(ReportTemplateMetaData metaData, byte[] rptdesignFile, Map<String, byte[]> propertiesFiles){
+    public ReportTemplate(ReportTemplateMetaData metaData, byte[] rptdesignFile, Map<String, byte[]> propertiesFiles) {
         this.metaData = metaData;
         this.rptdesignFile = rptdesignFile;
         this.setPropertiesFiles(propertiesFiles);

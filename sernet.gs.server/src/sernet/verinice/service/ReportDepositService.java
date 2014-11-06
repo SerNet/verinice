@@ -211,7 +211,7 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
     }
 
     @Override
-    public boolean isServerSide() {
+    public boolean isHandeledByReportDeposit() {
         return true;
     }
 

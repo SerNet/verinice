@@ -61,7 +61,7 @@ public class ReportSupplierImpl implements IReportSupplier {
     private ReportTemplateMetaData[] getReportMetaData(String locale) throws ReportTemplateServiceException {
 
         LocalReportTemplateService localReportTemplateUtil = new LocalReportTemplateService();
-        ServerReportTemplateService serverReportTemplateUtil = new ServerReportTemplateService();
+        ReportDepositCache serverReportTemplateUtil = new ReportDepositCache();
 
         Set<ReportTemplateMetaData> metadata = new HashSet<ReportTemplateMetaData>();
         int size = 0;

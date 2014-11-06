@@ -25,11 +25,22 @@ import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 
+import sernet.gs.service.AbstractReportTemplateService;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
+ * Provides an interfaces for report metadata and retrieving full template
+ * together with their report property files. A full report template is
+ * represented {@link ReportTemplate}.
+ *
+ * <p>
+ * There exists in abstract Implementation which is files system based:
+ * {@link AbstractReportTemplateService}
+ * </p>
+ *
+ * @see AbstractReportTemplateService
  *
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>

@@ -24,13 +24,16 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
+ * Represents the local report directory, which can be filled by the user and is
+ * not synchronized with report deposit.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 public class LocalReportTemplateService extends AbstractReportTemplateService {
 
     @Override
-    public boolean isServerSide() {
+    public boolean isHandeledByReportDeposit() {
         return false;
     }
 
