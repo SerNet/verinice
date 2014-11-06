@@ -53,15 +53,15 @@ public class LoadAllScopesTitles extends GenericCommand {
             "where elmt.objectType in (:typeIds)"; //$NON-NLS-1$
         
     
-    private Object[] typeIds;
+    private String[] typeIds;
     
     private HashMap<Integer, String> selectedElements = new HashMap<Integer, String>();
 
     public LoadAllScopesTitles() {
-        this(new Object[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
+        this(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
     }       
      
-    public LoadAllScopesTitles(Object[] typeIds) {
+    public LoadAllScopesTitles(String[] typeIds) {
         super();
         this.typeIds = typeIds;
     }
@@ -72,6 +72,9 @@ public class LoadAllScopesTitles extends GenericCommand {
      */
     @Override
     public void execute() {
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Number of type ids: " + typeIds.length);
+        }
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
         List<CnATreeElement> list = (List<CnATreeElement>) dao.findByQuery(QUERY, new String[]{"typeIds"}, new Object[]{typeIds});
         if(list != null && list.size() > 0){

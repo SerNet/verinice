@@ -3,7 +3,9 @@ package sernet.verinice.rcp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -31,7 +33,7 @@ public class ElementTitleCache implements IBSIModelListener, IISO27KModelListene
        
     private static ElementTitleCache instance;
     
-    private static List<Object> typeIdList = new ArrayList<Object>(30);
+    private static Set<String> typeIdSet = new HashSet<String>(30);
     
     private static ElementTitleCache init() {
         if(instance==null) {
@@ -51,7 +53,7 @@ public class ElementTitleCache implements IBSIModelListener, IISO27KModelListene
         return titleMap.get(dbId);
     }
     
-    public static void load(Object[] typeIds)  {
+    public static void load(String[] typeIds)  {
         try {
             Activator.inheritVeriniceContextState();
             init();
@@ -59,7 +61,7 @@ public class ElementTitleCache implements IBSIModelListener, IISO27KModelListene
             scopeCommand = new LoadAllScopesTitles(typeIds);      
             scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
             titleMap = scopeCommand.getElements();
-            typeIdList.addAll(Arrays.asList(typeIds));
+            typeIdSet.addAll(Arrays.asList(typeIds));
         } catch (CommandException e) {
             LOG.error("Error while loading element titles.", e);
         }
@@ -70,14 +72,14 @@ public class ElementTitleCache implements IBSIModelListener, IISO27KModelListene
         if(element==null) {
             return;
         }
-        if(typeIdList.contains(element.getTypeId())) {
+        if(typeIdSet.contains(element.getTypeId())) {
             titleMap.put(element.getDbId(), element.getTitle());
         }
     }
     
     private void reload() {
         titleMap.clear();
-        load(typeIdList.toArray());
+        load(typeIdSet.toArray(new String[typeIdSet.size()]));
     }
 
     @Override

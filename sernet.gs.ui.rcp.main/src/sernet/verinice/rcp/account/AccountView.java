@@ -153,7 +153,7 @@ public class AccountView extends RightsEnabledView {
     }
     
     private void init() throws CommandException {
-        ElementTitleCache.load(new Object[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE});                
+        ElementTitleCache.load(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID, PersonGroup.TYPE_ID, PersonenKategorie.TYPE_ID_HIBERNATE});                
         findAccounts();
         loadScopes();
         initCombos();
