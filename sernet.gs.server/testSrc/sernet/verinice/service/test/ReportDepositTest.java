@@ -101,7 +101,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         List<ReportTemplateMetaData> addedMetadataList = addAllFilesToDeposit();
         checkMetadataInDeposit(addedMetadataList, true);
         for (ReportTemplateMetaData metadata : addedMetadataList) {
-            depositService.removeFromServer(metadata, getLanguage());
+            depositService.remove(metadata, getLanguage());
         }
         checkMetadataInDeposit(addedMetadataList, false);
     }
@@ -113,7 +113,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         for (ReportTemplateMetaData metadata : metadataSet) {
             metadata.setOutputname(getOutputname());
             metadata.setOutputFormats(getOutputFormats());
-            depositService.updateInServerDeposit(metadata, getLanguage());
+            depositService.update(metadata, getLanguage());
         }
         metadataSet = depositService.getServerReportTemplates(getLanguage());
         for (ReportTemplateMetaData metadata : metadataSet) {
@@ -143,7 +143,7 @@ public class ReportDepositTest extends CommandServiceProvider {
                 getCheckSums(randomTemplate.getFilename(), dir.getAbsolutePath()));
         
         
-        depositService.updateInServerDeposit(updatedData, getLanguage());
+        depositService.update(updatedData, getLanguage());
         ReportTemplateMetaData storedData = getReportMetaDataFromDeposit(checkServerLocation(randomTemplate.getFilename()));
         assertArrayEquals(toTest, storedData.getOutputFormats());
         
@@ -220,7 +220,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         File rptFile = new File(dir, fileName);
         byte[] fileData = FileUtil.getFileData(rptFile);
         ReportTemplateMetaData metadata = templateUtil.getMetaData(rptFile, getLanguage());
-        depositService.addToServerDeposit(metadata, fileData, getLanguage());
+        depositService.add(metadata, fileData, getLanguage());
         return metadata;
     }
     

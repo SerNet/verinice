@@ -43,7 +43,7 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
     }
 
     @Override
-    public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file, String locale) throws IOException {
+    public void add(ReportTemplateMetaData metadata, byte[] file, String locale) throws IOException {
         if ("en".equals(locale.toLowerCase())) {
             locale = "";
         } else {
@@ -60,7 +60,7 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
     }
 
     @Override
-    public void removeFromServer(ReportTemplateMetaData metadata, String locale) throws IOException {
+    public void remove(ReportTemplateMetaData metadata, String locale) throws IOException {
         if ("en".equals(locale.toLowerCase())) {
             locale = "";
         } else {
@@ -101,7 +101,7 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
     }
 
     @Override
-    public void updateInServerDeposit(ReportTemplateMetaData metadata, String locale) throws IOException {
+    public void update(ReportTemplateMetaData metadata, String locale) throws IOException {
         String filename = metadata.getFilename();
         if (filename.contains(String.valueOf(File.separatorChar))) {
             filename = filename.substring(filename.lastIndexOf(File.separatorChar) + 1);

@@ -23,11 +23,11 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 
 public interface IReportDepositService extends IReportTemplateService {
 
-    void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file, String locale) throws IOException;
+    void add(ReportTemplateMetaData metadata, byte[] file, String locale) throws IOException;
 
-    void removeFromServer(ReportTemplateMetaData metadata, String locale) throws IOException;
+    void remove(ReportTemplateMetaData metadata, String locale) throws IOException;
 
-    void updateInServerDeposit(ReportTemplateMetaData metadata, String locale) throws IOException;
+    void update(ReportTemplateMetaData metadata, String locale) throws IOException;
 
     String getDepositLocation() throws IOException;
 

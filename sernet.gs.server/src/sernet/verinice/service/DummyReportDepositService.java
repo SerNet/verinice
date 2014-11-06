@@ -48,11 +48,11 @@ public class DummyReportDepositService extends AbstractReportTemplateService imp
     private static final Logger LOG = Logger.getLogger(DummyReportDepositService.class);
 
     @Override
-    public void addToServerDeposit(ReportTemplateMetaData metadata, byte[] file, String locale) {
+    public void add(ReportTemplateMetaData metadata, byte[] file, String locale) {
     }
 
     @Override
-    public void removeFromServer(ReportTemplateMetaData metadata, String locale) throws IOException {
+    public void remove(ReportTemplateMetaData metadata, String locale) throws IOException {
     }
 
 
@@ -68,7 +68,7 @@ public class DummyReportDepositService extends AbstractReportTemplateService imp
 
 
     @Override
-    public void updateInServerDeposit(ReportTemplateMetaData metadata, String locale) throws IOException {
+    public void update(ReportTemplateMetaData metadata, String locale) throws IOException {
     }
 
     @Override
