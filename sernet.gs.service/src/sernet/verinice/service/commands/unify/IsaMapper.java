@@ -45,7 +45,7 @@ public class IsaMapper implements IElementMapper {
     public List<UnifyMapping> createMapping(Map<String, CnATreeElement> sourceMap, Map<String, CnATreeElement> destinationMap) {
         List<UnifyMapping> internalMappings = new ArrayList<UnifyMapping>(sourceMap.size());      
         for(Entry<String, CnATreeElement> sourceEntry : sourceMap.entrySet()){
-            CnATreeElement source = sourceMap.get(sourceEntry.getKey());
+            CnATreeElement source = sourceEntry.getValue();
             UnifyMapping mapping = new UnifyMapping(new UnifyElement(source.getUuid(), source.getTitle())); 
             List<String> destinationKeyList = getDestinationKey(sourceEntry);
             for (String destinationKey : destinationKeyList) {
