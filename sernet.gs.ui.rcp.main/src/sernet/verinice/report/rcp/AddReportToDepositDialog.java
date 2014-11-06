@@ -52,6 +52,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
+import sernet.verinice.interfaces.ReportDepositException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
@@ -284,8 +285,8 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     private void updateTemplate() {
         try {
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null);
-            getReportService().updateInServerDeposit(metaData, getLanguage());
-        } catch (IOException e) {
+            getReportService().update(metaData, getLanguage());
+        } catch (ReportDepositException e) {
             LOG.error("Error while updating report template file", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.ReportDepositView_23);
         }
@@ -295,8 +296,11 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
         try {
             byte[] rptDesignFile = FileUtils.readFileToByteArray(new File(getSelectedDesginFile()));     
             ReportTemplateMetaData metaData = new ReportTemplateMetaData(FilenameUtils.getName(getSelectedDesginFile()), getReportOutputName(), getReportOutputFormats(), true, null);
-            getReportService().addToServerDeposit(metaData, rptDesignFile, getLanguage());                       
+            getReportService().add(metaData, rptDesignFile, getLanguage());
         } catch (IOException e) {
+            LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.AddReportToDepositDialog_3);
+        }catch (ReportDepositException e) {
             LOG.error("Error while adding new report template file", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.AddReportToDepositDialog_3);
         }
