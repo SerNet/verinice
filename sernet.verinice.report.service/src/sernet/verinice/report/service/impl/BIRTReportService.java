@@ -71,6 +71,8 @@ public class BIRTReportService {
     private static final String COULD_NOT_OPEN_DESIGN_ERR = "Could not open report design: ";
     
     private static final int MILLIS_PER_SECOND = 1000;
+    
+    private VeriniceOdaDriver odaDriver;
 
 	public BIRTReportService() {
         final int logMaxBackupIndex = 10;
@@ -127,19 +129,19 @@ public class BIRTReportService {
 		hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
 		config.setAppContext(hm);
 		
-		VeriniceOdaDriver driver = (VeriniceOdaDriver)Activator.getDefault().getOdaDriver();
-		boolean useReportLogging = driver.getReportLoggingState();
+		odaDriver = (VeriniceOdaDriver)Activator.getDefault().getOdaDriver();
+		boolean useReportLogging = odaDriver.getReportLoggingState();
 		
 		if(useReportLogging){
-		    String pref = driver.getLogFile();
+		    String pref = odaDriver.getLogFile();
 		    String logDir = pref.substring(0, pref.lastIndexOf(File.separator));
 		    String logFile = pref.substring(pref.lastIndexOf(File.separator) + 1);
-		    config.setLogConfig(logDir, Level.parse(driver.getLogLvl()));
+		    config.setLogConfig(logDir, Level.parse(odaDriver.getLogLvl()));
 		    config.setLogFile(logFile);
 		    config.setLogMaxBackupIndex(logMaxBackupIndex);
 		    config.setLogRollingSize(logRollingSize); // equals 3MB
 		    if(log.isDebugEnabled()){
-		        log.debug("LogParameter:\t\tLogFile:\t" + logFile + "\tLogDir:\t" + logDir + "\tLogLvl:\t" + driver.getLogLvl());
+		        log.debug("LogParameter:\t\tLogFile:\t" + logFile + "\tLogDir:\t" + logDir + "\tLogLvl:\t" + odaDriver.getLogLvl());
 		    }
 		}
 
@@ -147,6 +149,10 @@ public class BIRTReportService {
 				.createFactoryObject(IReportEngineFactory.EXTENSION_REPORT_ENGINE_FACTORY);
 		
 		engine = factory.createReportEngine(config);
+	}
+	
+	public VeriniceOdaDriver getOdaDriver(){
+	    return odaDriver;
 	}
 	
 	public IRunAndRenderTask createTask(URL rptDesignURL)

@@ -110,16 +110,23 @@ public class GenericReportType implements IReportType {
     public void createReport(ReportTemplateMetaData metadata) {
         BIRTReportService brs = new BIRTReportService();
         URL rptURL = null;
-        final String locationConst;
+        String locationConst;
         if(metadata.isServer()){
-            locationConst = IReportDepositService.REPORT_DEPOSIT_CLIENT_REMOTE;
+            locationConst = getDepositPath(IReportDepositService.REPORT_DEPOSIT_CLIENT_REMOTE);
         } else {
-            locationConst = IReportDepositService.REPORT_DEPOSIT_CLIENT_LOCAL;
+            locationConst = brs.getOdaDriver().getLocalReportLocation();
+            if(!locationConst.endsWith(String.valueOf(File.separatorChar))){
+                locationConst = locationConst + File.separatorChar;
+            }
+            if(!locationConst.startsWith("file://")){
+                locationConst = "file://" + locationConst; 
+            }
         }
+        
 
 
         try {
-            rptURL = new URL(getDepositPath(locationConst) +
+            rptURL = new URL(locationConst +
                     metadata.getFilename());
         } catch (MalformedURLException e) {
             Logger.getLogger(GenericReportType.class).error("Error reading" +

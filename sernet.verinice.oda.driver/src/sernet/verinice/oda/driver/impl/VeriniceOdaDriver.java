@@ -82,4 +82,8 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	public String getLogFile(){
 	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOG_FILE);
 	}
+	
+	public String getLocalReportLocation(){
+	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY);
+	}
 }
