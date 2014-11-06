@@ -37,11 +37,11 @@ import org.eclipse.core.runtime.Path;
 import sernet.gs.server.Activator;
 import sernet.gs.service.AbstractReportTemplateService;
 import sernet.verinice.interfaces.IReportDepositService;
+import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplate;
 import sernet.verinice.model.report.ReportTemplateMetaData;
-
 
 public class DummyReportDepositService extends AbstractReportTemplateService implements IReportDepositService {
 
@@ -52,36 +52,41 @@ public class DummyReportDepositService extends AbstractReportTemplateService imp
     }
 
     @Override
-    public void remove(ReportTemplateMetaData metadata, String locale) throws IOException {
+    public void remove(ReportTemplateMetaData metadata, String locale) {
     }
 
-
     @Override
-    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws ReportTemplateServiceException {
         return getReportTemplates(getServerRptDesigns(), locale);
     }
 
     @Override
-    public String getDepositLocation() throws IOException {
+    public String getDepositLocation() {
         return getReportDepositPath();
     }
 
-
     @Override
-    public void update(ReportTemplateMetaData metadata, String locale) throws IOException {
+    public void update(ReportTemplateMetaData metadata, String locale) {
     }
 
     @Override
-    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException {
-        String filePath = getReportDepositPath() + File.separatorChar + metadata.getFilename();
-        byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
+    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws ReportTemplateServiceException {
+        try {
 
-        Map<String, byte[]> propertiesFile = getPropertiesFiles(metadata.getFilename());
-        return new ReportTemplate(metadata, rptdesign, propertiesFile);
+            String filePath = getReportDepositPath() + File.separatorChar + metadata.getFilename();
+            byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
+            Map<String, byte[]> propertiesFile = getPropertiesFiles(metadata.getFilename());
+            return new ReportTemplate(metadata, rptdesign, propertiesFile);
+
+        } catch (IOException ex) {
+            handleException("error while fetching reports in standalone mode", ex);
+        }
+
+        return null;
     }
 
     @SuppressWarnings("unchecked")
-    private String[] getServerRptDesigns() throws IOException {
+    private String[] getServerRptDesigns() {
         List<String> list = new ArrayList<String>(0);
         // // DirFilter = null means no subdirectories
         IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);

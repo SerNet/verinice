@@ -56,6 +56,8 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
+import sernet.verinice.interfaces.ReportDepositException;
+import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.model.report.PropertyFileExistsException;
 import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
@@ -157,7 +159,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         return ReportDepositTest.class.getSimpleName();
     }
 
-    private void checkMetadataInDeposit(List<ReportTemplateMetaData> checkMetadataList, boolean expected) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private void checkMetadataInDeposit(List<ReportTemplateMetaData> checkMetadataList, boolean expected) throws ReportTemplateServiceException {
         Set<ReportTemplateMetaData> metadataSet = depositService.getServerReportTemplates(getLanguage());
         for (ReportTemplateMetaData metadata : checkMetadataList) {
             if(expected) {
@@ -187,7 +189,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         return LANGUAGE;
     }
 
-    private List<ReportTemplateMetaData> addAllFilesToDeposit() throws URISyntaxException, IOException, ReportMetaDataException, PropertyFileExistsException {
+    private List<ReportTemplateMetaData> addAllFilesToDeposit() throws  ReportTemplateServiceException, URISyntaxException, ReportDepositException {
         URL reportDirectory = ReportDepositTest.class.getResource(REPORT_DIR);
         assertNotNull("Report directory not found: " + REPORT_DIR, reportDirectory);
         File dir = new File(reportDirectory.toURI());
@@ -203,7 +205,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         return metadataList;
     }
 
-    private ReportTemplateMetaData addFileToDeposit(final File dir, String fileName) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private ReportTemplateMetaData addFileToDeposit(final File dir, String fileName) throws ReportTemplateServiceException, ReportDepositException {
 
         IReportTemplateService templateUtil = new AbstractReportTemplateService() {
             @Override
@@ -224,7 +226,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         return metadata;
     }
     
-    private ReportTemplateMetaData getReportMetaDataFromDeposit(String filename) throws IOException, ReportMetaDataException, PropertyFileExistsException{
+    private ReportTemplateMetaData getReportMetaDataFromDeposit(String filename) throws ReportTemplateServiceException{
         return depositService.getReportTemplates(new String[]{filename}, getLanguage()).toArray(new ReportTemplateMetaData[1])[0];
     }
     
@@ -243,7 +245,7 @@ public class ReportDepositTest extends CommandServiceProvider {
             String depositLocation;
             try {
                 depositLocation = ServiceFactory.lookupReportDepositService().getDepositLocation();
-            } catch (IOException e) {
+            } catch (ReportDepositException e) {
                 return path;
             }
             if(!depositLocation.endsWith(String.valueOf(File.separatorChar))){

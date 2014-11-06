@@ -68,7 +68,9 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IReportDepositService;
+import sernet.verinice.interfaces.ReportDepositException;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
+import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -518,7 +520,7 @@ public class ReportDepositView extends RightsEnabledView {
         try{
             Set<ReportTemplateMetaData> templateSet = getReportService().getServerReportTemplates(Locale.getDefault().getLanguage());
             return templateSet.toArray(new ReportTemplateMetaData[templateSet.size()]);
-        } catch (PropertyFileExistsException e){
+        } catch (ReportTemplateServiceException e){
             String msg = "Something went wrong with reading the propertyfiles";
             ExceptionUtil.log(e, msg);
         } catch (Exception e){
@@ -538,7 +540,7 @@ public class ReportDepositView extends RightsEnabledView {
             ReportTemplateMetaData sel = (ReportTemplateMetaData) iterator.next();
             try {
                 ServiceFactory.lookupReportDepositService().remove(sel, Locale.getDefault().getLanguage());
-            } catch (IOException e) {
+            } catch (ReportDepositException e) {
                 ExceptionUtil.log(e, "Error deleting Reporttemplate:\t" + sel.getOutputname());
             }
         }

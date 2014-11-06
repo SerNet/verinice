@@ -17,18 +17,16 @@
  ******************************************************************************/
 package sernet.verinice.interfaces;
 
-import java.io.IOException;
-
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 public interface IReportDepositService extends IReportTemplateService {
 
-    void add(ReportTemplateMetaData metadata, byte[] file, String locale) throws IOException;
+    void add(ReportTemplateMetaData metadata, byte[] file, String locale) throws ReportDepositException;
 
-    void remove(ReportTemplateMetaData metadata, String locale) throws IOException;
+    void remove(ReportTemplateMetaData metadata, String locale) throws ReportDepositException;
 
-    void update(ReportTemplateMetaData metadata, String locale) throws IOException;
+    void update(ReportTemplateMetaData metadata, String locale) throws ReportDepositException;
 
-    String getDepositLocation() throws IOException;
+    String getDepositLocation() throws ReportDepositException;
 
 }

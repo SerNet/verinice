@@ -58,19 +58,18 @@ public interface IReportTemplateService {
 
     IOutputFormat[] getOutputFormats(OutputFormat[] format);
 
+    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws ReportTemplateServiceException;
 
-    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException;
+    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws ReportTemplateServiceException;
 
-    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
+    public Set<ReportTemplateMetaData> getReportTemplateMetaData(String[] rptDesignFiles, String locale) throws ReportTemplateServiceException;
 
-    public Set<ReportTemplateMetaData> getReportTemplateMetaData(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
+    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws ReportTemplateServiceException;
 
-    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
-
-    public Set<ReportTemplateMetaData> getReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
+    public Set<ReportTemplateMetaData> getReportTemplates(String locale) throws ReportTemplateServiceException;
 
     public Iterator<File> listPropertiesFiles(String fileName);
 
     @Deprecated
-    ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException;
+    ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws ReportTemplateServiceException;
 }

@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.reports;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -26,9 +25,8 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.interfaces.report.IReportService;
-import sernet.verinice.model.report.PropertyFileExistsException;
-import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
@@ -42,7 +40,6 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  *
  */
 public class ReportSupplierImpl implements IReportSupplier {
-   
 
     private final String ERROR_MESSAGE = "reading report templates failed %s";
 
@@ -55,17 +52,13 @@ public class ReportSupplierImpl implements IReportSupplier {
     public List<ReportTemplateMetaData> getReportTemplates(String locale) {
         try {
             return Arrays.asList(getReportMetaData(locale));
-        } catch (IOException e) {
-            LOG.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
-        } catch (ReportMetaDataException e) {
-            LOG.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
-        } catch (PropertyFileExistsException e) {
+        } catch (ReportTemplateServiceException e) {
             LOG.error(String.format(ERROR_MESSAGE, e.getLocalizedMessage()), e);
         }
         return new ArrayList<ReportTemplateMetaData>(0);
     }
 
-    private ReportTemplateMetaData[] getReportMetaData(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private ReportTemplateMetaData[] getReportMetaData(String locale) throws ReportTemplateServiceException {
 
         LocalReportTemplateService localReportTemplateUtil = new LocalReportTemplateService();
         ServerReportTemplateService serverReportTemplateUtil = new ServerReportTemplateService();
@@ -75,14 +68,12 @@ public class ReportSupplierImpl implements IReportSupplier {
         metadata.addAll(localReportTemplateUtil.getReportTemplates(localReportTemplateUtil.getReportTemplateFileNames(), locale));
         size = metadata.size();
         metadata.addAll(serverReportTemplateUtil.getReportTemplates(serverReportTemplateUtil.getReportTemplateFileNames(), locale));
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug(size + " Report templates loaded from workspacefolder:\t" + IReportService.VERINICE_REPORTS_LOCAL);
             LOG.debug(metadata.size() - size + " Report templates loaded from workspacefolder:\t" + IReportService.VERINICE_REPORTS_REMOTE);
         }
-        
+
         return metadata.toArray(new ReportTemplateMetaData[metadata.size()]);
     }
-
-
 
 }

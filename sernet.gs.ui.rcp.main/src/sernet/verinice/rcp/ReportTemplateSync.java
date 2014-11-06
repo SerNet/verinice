@@ -45,6 +45,8 @@ import sernet.gs.ui.rcp.main.reports.ServerReportTemplateService;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
+import sernet.verinice.interfaces.ReportDepositException;
+import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -119,7 +121,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
         JobScheduler.scheduleInitJob(syncReportsJob);
     }
 
-    private void syncReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private void syncReportTemplates(String locale) throws ReportTemplateServiceException, ReportDepositException, IOException {
 
         Set<ReportTemplateMetaData> localServerTemplates = localReportTemplateService.getReportTemplates(locale);
         Set<ReportTemplateMetaData> remoteServerTemplates = getIReportDepositService().getReportTemplates(locale);
@@ -138,7 +140,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
     }
 
-    private void syncReports(Set<ReportTemplateMetaData> localServerTemplates, Set<ReportTemplateMetaData> remoteServerTemplates, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private void syncReports(Set<ReportTemplateMetaData> localServerTemplates, Set<ReportTemplateMetaData> remoteServerTemplates, String locale) throws ReportTemplateServiceException, ReportDepositException, IOException {
         int i = 0;
         for (ReportTemplateMetaData remoteTemplateMetaData : remoteServerTemplates) {
             if (LOG.isDebugEnabled()) {
@@ -153,7 +155,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
         }
     }
 
-    private void deleteReportsInServerMode(IReportTemplateService locaReportTemplateService, Set<ReportTemplateMetaData> remoteSeverTemplates, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private void deleteReportsInServerMode(IReportTemplateService locaReportTemplateService, Set<ReportTemplateMetaData> remoteSeverTemplates, String locale) throws ReportTemplateServiceException {
         if (isNotStandalone()) {
             for (ReportTemplateMetaData localTemplateMetaData : locaReportTemplateService.getReportTemplates(locale)) {
                 if (!remoteSeverTemplates.contains(localTemplateMetaData)) {
@@ -171,7 +173,7 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
         return ServiceFactory.lookupReportDepositService();
     }
 
-    private void syncTemplate(ReportTemplateMetaData metadata, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    private void syncTemplate(ReportTemplateMetaData metadata, String locale) throws ReportDepositException, ReportTemplateServiceException, IOException {
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Syncing:\t" + metadata.getOutputname());
@@ -230,15 +232,14 @@ public class ReportTemplateSync extends WorkspaceJob implements IModelLoadListen
 
         try {
             Activator.inheritVeriniceContextState();
-
             String locale = getLocale();
-            syncReportTemplates(locale);
 
+            syncReportTemplates(locale);
+        } catch (ReportDepositException e) {
+            status = errorHandler(e);
         } catch (IOException e) {
             status = errorHandler(e);
-        } catch (ReportMetaDataException e) {
-            status = errorHandler(e);
-        } catch (PropertyFileExistsException e) {
+        } catch (ReportTemplateServiceException e) {
             status = errorHandler(e);
         }
 

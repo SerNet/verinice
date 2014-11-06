@@ -42,10 +42,13 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Category;
 import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggerFactory;
 
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService;
+import sernet.verinice.interfaces.ReportTemplateServiceException;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.model.report.ExcelOutputFormat;
 import sernet.verinice.model.report.HTMLOutputFormat;
@@ -64,20 +67,41 @@ import sernet.verinice.model.report.WordOutputFormat;
  */
 abstract public class AbstractReportTemplateService implements IReportTemplateService {
 
-    private final Logger LOG = Logger.getLogger(AbstractReportTemplateService.class);
+    private transient Logger log;
 
     abstract public boolean isServerSide();
 
     abstract public String getTemplateDirectory();
 
-    public ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
-        Properties props = null;
-        if (checkReportMetaDataFile(rptDesign, locale)) {
-            props = parseAndExtendMetaData(rptDesign, locale);
-        } else {
-            props = createDefaultProperties(rptDesign.getPath(), rptDesign.getName(), locale);
+    public ReportTemplateMetaData getMetaData(File rptDesign, String locale) throws ReportTemplateServiceException {
+        try {
+            Properties props = null;
+            if (checkReportMetaDataFile(rptDesign, locale)) {
+                props = parseAndExtendMetaData(rptDesign, locale);
+            } else {
+                props = createDefaultProperties(rptDesign.getPath(), rptDesign.getName(), locale);
+            }
+            return createReportMetaData(props);
+        } catch (IOException ex) {
+            handleException("error while fetching/generating metadata", ex);
+        } catch (PropertyFileExistsException ex) {
+            handleException("error while fetching/generating metadata", ex);
         }
-        return createReportMetaData(props);
+
+        return null;
+    }
+
+    protected void handleException(String msg, Exception ex) throws ReportTemplateServiceException {
+        getLog().error(msg, ex);
+        throw new ReportTemplateServiceException(ex);
+    }
+
+    private Category getLog() {
+       if (log == null){
+           log = Logger.getLogger(AbstractReportTemplateService.class);
+       }
+
+       return log;
     }
 
     public boolean checkReportMetaDataFile(File rptDesign, String locale) {
@@ -135,10 +159,10 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
         locale = sanitizeLocale(locale, path);
         path = removeSuffix(path);
         String templateDir = getTemplateDirectory();
-        if(!templateDir.endsWith(String.valueOf(File.separatorChar))){
+        if (!templateDir.endsWith(String.valueOf(File.separatorChar))) {
             templateDir = templateDir + File.separatorChar;
         }
-        if(!path.contains(templateDir)){
+        if (!path.contains(templateDir)) {
             path = templateDir + templateDir;
         }
         File propFile = new File(path + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION);
@@ -259,7 +283,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
         return md5CheckSums.toArray(new String[md5CheckSums.size()]);
     }
 
-    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public Set<ReportTemplateMetaData> getReportTemplates(String[] rptDesignFiles, String locale) throws ReportTemplateServiceException {
         Set<ReportTemplateMetaData> set = new HashSet<ReportTemplateMetaData>();
 
         for (String designFilePath : rptDesignFiles) {
@@ -268,7 +292,7 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
         return set;
     }
 
-    public Set<ReportTemplateMetaData> getReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public Set<ReportTemplateMetaData> getReportTemplates(String locale) throws ReportTemplateServiceException {
         return getReportTemplates(getReportTemplateFileNames(), locale);
     }
 
@@ -310,33 +334,41 @@ abstract public class AbstractReportTemplateService implements IReportTemplateSe
             if (format != null) {
                 list.add(format);
             } else {
-                LOG.warn("Report output format:\t" + s + " not available in verinice");
+                getLog().warn("Report output format:\t" + s + " not available in verinice");
             }
         }
         return list.toArray(new IOutputFormat[list.size()]);
     }
 
     @Override
-    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws IOException {
-        String filePath = getTemplateDirectory() + File.separatorChar + metadata.getFilename();
-        byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
+    public ReportTemplate getReportTemplate(ReportTemplateMetaData metadata, String locale) throws ReportTemplateServiceException {
+        try {
 
-        Map<String, byte[]> propertiesFile = getPropertiesFiles(metadata.getFilename());
-        return new ReportTemplate(metadata, rptdesign, propertiesFile);
+            String filePath = getTemplateDirectory() + File.separatorChar + metadata.getFilename();
+            byte[] rptdesign = FileUtils.readFileToByteArray(new File(filePath));
+
+            Map<String, byte[]> propertiesFile = getPropertiesFiles(metadata.getFilename());
+
+            return new ReportTemplate(metadata, rptdesign, propertiesFile);
+        } catch (IOException ex) {
+            handleException("error while fetching template", ex);
+        }
+
+        return null;
     }
 
     @Override
-    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public Set<ReportTemplateMetaData> getServerReportTemplates(String locale) throws ReportTemplateServiceException {
         return getReportTemplateMetaData(getServerRptDesigns(), locale);
     }
 
     @Override
-    public Set<ReportTemplateMetaData> getReportTemplateMetaData(String[] rptDesignFiles, String locale) throws IOException, ReportMetaDataException, PropertyFileExistsException {
+    public Set<ReportTemplateMetaData> getReportTemplateMetaData(String[] rptDesignFiles, String locale) throws ReportTemplateServiceException {
         return getReportTemplates(rptDesignFiles, locale);
     }
 
     @SuppressWarnings("unchecked")
-    private String[] getServerRptDesigns() throws IOException {
+    private String[] getServerRptDesigns() throws ReportTemplateServiceException {
         List<String> list = new ArrayList<String>(0);
         // // DirFilter = null means no subdirectories
         IOFileFilter filter = new SuffixFileFilter("rptdesign", IOCase.INSENSITIVE);
