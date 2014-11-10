@@ -85,7 +85,7 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
                 FileUtils.deleteQuietly(rptFile);
             }
         } catch (IOException ex) {
-
+            throw new ReportDepositException(ex);
         }
     }
 
