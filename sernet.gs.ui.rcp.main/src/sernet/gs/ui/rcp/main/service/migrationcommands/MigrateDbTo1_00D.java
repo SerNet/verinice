@@ -34,6 +34,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.account.AccountSearchParameter;
 
 /**
  * Writes the default user groups (sometimes also called accountGroups or roles)
@@ -51,45 +52,78 @@ public class MigrateDbTo1_00D extends DbMigration {
 
     private transient Logger log;
 
+    private IAccountService accountService;
+
     @Override
     public void execute() throws RuntimeException {
 
-        IAccountService accountService = (IAccountService) VeriniceContext.get(VeriniceContext.ACCOUNT_SERVICE);
-        final String[] defaultGroups = new String[] { ADMINDEFAULTGROUPNAME, ADMINSCOPEDEFAULTGROUPNAME, USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME };
-        Set<String> accountGroupNames = getAccountGroupNameSetFromList(accountService.listGroups());
-
-        for (String defaultGroup : defaultGroups) {
-            if (accountGroupNames.contains(defaultGroup)) continue;
-            try {
-                accountService.createAccountGroup(defaultGroup);
-            } catch (Exception ex) {
-                String message = String.format("default group %s not added to account group table: %s", defaultGroup, ex.getLocalizedMessage());
-                getLog().error(message, ex);
-                throw new RuntimeException(message);
-            }
-        }
+        accountService = (IAccountService) VeriniceContext.get(VeriniceContext.ACCOUNT_SERVICE);
+        updateAccountGroupTableWithDefaultAccountGroups();
+        updateAccountGroupTableWithExistingAccountGroups();
 
         super.updateVersion();
     }
 
-    private Logger getLog()
-    {
-        if (log == null) log = Logger.getLogger(MigrateDbTo1_00D.class);
+    private void updateAccountGroupTableWithDefaultAccountGroups() {
+        final String[] defaultGroups = new String[] { ADMINDEFAULTGROUPNAME, ADMINSCOPEDEFAULTGROUPNAME, USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME };
+        Set<String> accountGroupNames = getAccountGroupNameSetFromList(accountService.listGroups());
+
+        for (String defaultGroup : defaultGroups) {
+            if (accountGroupNames.contains(defaultGroup))
+                continue;
+            try {
+                accountService.createAccountGroup(defaultGroup);
+            } catch (Exception ex) {
+                String message = String.format("default group %s not added to account group table: %s", defaultGroup, ex.getLocalizedMessage());
+                handleError(ex, message);
+            }
+        }
+    }
+
+    private void handleError(Exception ex, String message) {
+        getLog().error(message, ex);
+        throw new RuntimeException(message);
+    }
+
+    private void updateAccountGroupTableWithExistingAccountGroups() {
+
+        List<Configuration> accounts = accountService.findAccounts(new AccountSearchParameter());
+        Set<String> accountGroupNames = getAccountGroupNameSetFromList(accountService.listGroups());
+
+        for (Configuration account : accounts) {
+            for (String accountGroupName : account.getRoles(false)) {
+                if (accountGroupNames.contains(accountGroupName)) {
+                    continue;
+                }
+
+                try {
+                    accountService.createAccountGroup(accountGroupName);
+                } catch (Exception ex) {
+                    String message = String.format("migration of account group %s failed: %s", accountGroupName, ex.getLocalizedMessage());
+                    handleError(ex, message);
+                }
+            }
+        }
+    }
+
+    private Set<String> getAccountGroupNameSetFromList(List<AccountGroup> accountGroups) {
+        Set<String> accountGroupNames = new HashSet<String>();
+        for (AccountGroup accountGroup : accountGroups) {
+            accountGroupNames.add(accountGroup.getName());
+        }
+
+        return accountGroupNames;
+    }
+
+    private Logger getLog() {
+        if (log == null)
+            log = Logger.getLogger(MigrateDbTo1_00D.class);
         return log;
     }
 
     @Override
     public double getVersion() {
         return 1.00D;
-    }
-
-    private Set<String> getAccountGroupNameSetFromList(List<AccountGroup> accountGroups){
-        Set<String> accountGroupNames = new HashSet<String>();
-        for (AccountGroup accountGroup : accountGroups){
-            accountGroupNames.add(accountGroup.getName());
-        }
-
-        return accountGroupNames;
     }
 
 }
