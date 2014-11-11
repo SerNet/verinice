@@ -76,6 +76,7 @@ public class AuditReportAction extends ActionDelegate implements IWorkbenchWindo
                         monitor.beginTask(Messages.GenerateReportAction_1, IProgressMonitor.UNKNOWN);
                         Activator.inheritVeriniceContextState();
                         dialog.getReportType().createReport(ro);
+                        dialog.getReportType().createReport(dialog.getReportMetaData());
                         monitor.done();
                     }
                  });
