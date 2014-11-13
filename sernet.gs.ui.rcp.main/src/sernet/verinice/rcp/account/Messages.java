@@ -47,6 +47,7 @@ public class Messages extends NLS {
     public static String AuditorNotificationPage_5;
     public static String AuditorNotificationPage_6;
     public static String AuditorNotificationPage_7;
+    public static String AuthenticationPage_0;
     public static String AuthenticationPage_1;
     public static String AuthenticationPage_2;
     public static String AuthenticationPage_3;

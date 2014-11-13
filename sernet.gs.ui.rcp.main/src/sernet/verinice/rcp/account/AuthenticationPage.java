@@ -24,6 +24,8 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.rcp.TextEventAdapter;
 
 /**
@@ -54,7 +56,7 @@ public class AuthenticationPage extends BaseWizardPage {
     @Override
     protected void initGui(Composite composite) {
         setTitle(sernet.verinice.rcp.account.Messages.AuthenticationPage_1);
-        setMessage(sernet.verinice.rcp.account.Messages.AuthenticationPage_2);
+        setMessage(createMessage());
         
         createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_3);
         textLogin = createTextfield(composite);
@@ -67,25 +69,27 @@ public class AuthenticationPage extends BaseWizardPage {
             }
         });
 
-        createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_4);       
-        textPassword = createPasswordField(composite);
-        textPassword.addKeyListener(new TextEventAdapter() {   
-            @Override
-            public void keyReleased(KeyEvent e) {
-                password = avoidEmptyStrings(textPassword.getText());
-                setPageComplete(isPageComplete());
-            }
-        });
-
-        createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_5);     
-        textPassword2 = createPasswordField(composite);
-        textPassword2.addKeyListener(new TextEventAdapter() {   
-            @Override
-            public void keyReleased(KeyEvent e) {
-                password2 = avoidEmptyStrings(textPassword2.getText());
-                setPageComplete(isPageComplete());
-            }
-        });
+        if(isPasswordManagedInternally()) {   
+            createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_4);       
+            textPassword = createPasswordField(composite);
+            textPassword.addKeyListener(new TextEventAdapter() {   
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    password = avoidEmptyStrings(textPassword.getText());
+                    setPageComplete(isPageComplete());
+                }
+            });
+    
+            createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_5);     
+            textPassword2 = createPasswordField(composite);
+            textPassword2.addKeyListener(new TextEventAdapter() {   
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    password2 = avoidEmptyStrings(textPassword2.getText());
+                    setPageComplete(isPageComplete());
+                }
+            });
+        }
         
         createLabel(composite, sernet.verinice.rcp.account.Messages.AuthenticationPage_6);
         textEmail = createTextfield(composite);
@@ -97,6 +101,14 @@ public class AuthenticationPage extends BaseWizardPage {
                 setPageComplete(isPageComplete());
             }
         });
+    }
+
+    private String createMessage() {
+        if(isPasswordManagedInternally()) { 
+            return Messages.AuthenticationPage_2;
+        } else {
+            return Messages.AuthenticationPage_0;
+        }
     }
 
     @Override
@@ -117,6 +129,10 @@ public class AuthenticationPage extends BaseWizardPage {
             LOG.debug("page complete: " + complete); //$NON-NLS-1$
         }
         return complete && isPasswordValid;
+    }
+    
+    private boolean isPasswordManagedInternally() {
+        return getAuthService().isHandlingPasswords();
     }
 
     private boolean isPassword() {
@@ -167,6 +183,10 @@ public class AuthenticationPage extends BaseWizardPage {
 
     public void setEmail(String email) {
         this.email = avoidEmptyStrings(email);
+    }
+    
+    private IAuthService getAuthService() {
+        return (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
     }
 
 }
