@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
@@ -36,7 +37,6 @@ import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.common.accountgroup.AccountGroup;
 
 /**
  * Configuration item. Actual configuration values are saved in Entity.
@@ -172,19 +172,25 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
         return entity.getSimpleValue(PROP_PASSWORD);
     }
 
-	public void addRole(String string) {
+	public void addRole(String name) {
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_ROLES);
-		entity.createNewProperty(type, string);
+		entity.createNewProperty(type, name);
+		if (LOG.isDebugEnabled()) {
+            LOG.debug("Role " + name + " added to account.");
+        }
 	}
 	
-	public boolean deleteRole(String string) {
+	public boolean deleteRole(String name) {
 		// cannot delete the special user role:
-		if (string.equals(getUser())){
+		if (name.equals(getUser())){
 			return false;
 		}
 		
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_ROLES);
-		entity.remove(type, string);
+		entity.remove(type, name);
+		if (LOG.isDebugEnabled()) {
+            LOG.debug("Role " + name + " deleted from account.");
+		}
 		return true;
 	}
 	
@@ -409,6 +415,17 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
             deleteRole(role);
         }
 	}
+	
+	public Set<String> getStandartGroups() {
+        Set<String> groupsOfAccount = getRoles(false);
+        Set<String> standartGroupsOfAccount = new HashSet<String>();
+        for (String group : groupsOfAccount) {
+            if (ArrayUtils.contains(IRightsService.STANDARD_GROUPS, group)) {
+                standartGroupsOfAccount.add(group);
+            }
+        }      
+        return standartGroupsOfAccount;
+    }
 	
 	/**
 	 * Convenience method that safely checks whether the value of a

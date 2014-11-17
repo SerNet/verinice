@@ -46,7 +46,7 @@ public class GroupPage extends BaseWizardPage {
     private IAccountService accountService;
     
     protected GroupPage() {
-        super(PAGE_NAME);
+        super(PAGE_NAME);      
     }
     
     protected GroupPage(Configuration account) {
@@ -66,6 +66,36 @@ public class GroupPage extends BaseWizardPage {
     protected void initData() throws Exception {
     }
     
+    public void syncCheckboxesToAccountGroups() {
+        account.deleteAllRoles();    
+        for (AccountGroup accountGroup : getGroupsFromWidget()) {
+            account.addRole(accountGroup.getName());
+        }
+    }
+    
+    public void reSelectStandartGroups(Set<String> standartGroupSet) {
+        deselectStandartGroups();
+        this.groupWidget.resetData();
+        
+    }
+    
+    private void deselectStandartGroups() {
+        Set<AccountGroup> allStandartAccountGroups = AccountGroup.createStandartGroupSet();
+        for (AccountGroup accountGroup : allStandartAccountGroups) {
+            this.groupWidget.removeSelectedElements(accountGroup);      
+        }
+    }
+        
+    
+    public void selectStandartGroups(Set<String> standartGroupNames) {
+        Set<AccountGroup> accountGroupSet = AccountGroup.createSetForNames(standartGroupNames);
+        for (AccountGroup accountGroup : accountGroupSet) {
+            this.groupWidget.selectCheckboxForElement(accountGroup);      
+        }    
+    }
+
+    
+
     /* (non-Javadoc)
      * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
      */
@@ -78,7 +108,7 @@ public class GroupPage extends BaseWizardPage {
         return complete;
     }
     
-    public Set<AccountGroup> getGroups() {
+    public Set<AccountGroup> getGroupsFromWidget() {
         return groupWidget.getSelectedElementSet();
     }
     
@@ -99,5 +129,7 @@ public class GroupPage extends BaseWizardPage {
     private IAccountService createAccountServive() {
         return ServiceFactory.lookupAccountService();
     }
+
+    
 
 }

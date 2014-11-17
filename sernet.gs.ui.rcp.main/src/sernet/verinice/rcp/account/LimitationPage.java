@@ -19,11 +19,18 @@
  ******************************************************************************/
 package sernet.verinice.rcp.account;
 
+import static sernet.verinice.interfaces.IRightsService.STANDARD_GROUPS;
+
+import java.util.Set;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
+import sernet.verinice.interfaces.IRightsService;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.SelectionAdapter;
 
 /**
@@ -36,6 +43,8 @@ public class LimitationPage extends BaseWizardPage {
     private static final Logger LOG = Logger.getLogger(LimitationPage.class);    
     public static final String PAGE_NAME = "account-wizard-limitation-page"; //$NON-NLS-1$
      
+    private Configuration account;
+    
     private boolean isAdmin = false;
     private boolean isScopeOnly = false;
     private boolean isDesktop = true;
@@ -48,8 +57,9 @@ public class LimitationPage extends BaseWizardPage {
     private Button cbWeb;
     private Button cbDeactivated;
     
-    protected LimitationPage() {
+    protected LimitationPage(Configuration account) {
         super(PAGE_NAME);
+        this.account = account;
     }
     
     @Override
@@ -62,6 +72,8 @@ public class LimitationPage extends BaseWizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isAdmin = cbAdmin.getSelection();
+                configureStandartGroup();
+                changeGroupPage();
             } 
         });
         cbScopeOnly = createCheckbox(composite, Messages.LimitationPage_4, isScopeOnly);
@@ -69,6 +81,8 @@ public class LimitationPage extends BaseWizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isScopeOnly = cbScopeOnly.getSelection();
+                configureStandartGroup();
+                changeGroupPage();
             } 
         });
         cbDesktop = createCheckbox(composite, Messages.LimitationPage_5, isDesktop);
@@ -92,6 +106,51 @@ public class LimitationPage extends BaseWizardPage {
                 isDeactivated = cbDeactivated.getSelection();
             } 
         });
+    }
+    
+    private void changeGroupPage() {
+        GroupPage groupPage = (GroupPage) getNextPage();
+        Set<String> standartGroupsOfAccount = account.getStandartGroups();
+        groupPage.reSelectStandartGroups(standartGroupsOfAccount);
+    }
+
+    private void configureStandartGroup() {
+        deleteStandartGroups();
+        if(isAdmin()) {
+           configureAdminGroup();
+        } else {
+           configureUserGroup();
+        }
+    }
+
+    private void configureAdminGroup() {
+        if(isScopeOnly()) {
+            account.addRole(IRightsService.ADMINSCOPEDEFAULTGROUPNAME);   
+        } else {
+            account.addRole(IRightsService.ADMINDEFAULTGROUPNAME); 
+        }
+    }
+    
+    private void configureUserGroup() {
+        if(isScopeOnly()) {
+            account.addRole(IRightsService.USERSCOPEDEFAULTGROUPNAME);    
+        } else {
+            account.addRole(IRightsService.USERDEFAULTGROUPNAME);   
+        }
+    }
+
+    private void deleteStandartGroups() {
+        Set<String> rolesInAccount = account.getRoles(false);
+        for (String role : rolesInAccount) {
+            if(isStandardGroup(role)) {
+                account.deleteRole(role);
+            }
+        }
+    }
+
+
+    private static boolean isStandardGroup(String role) {
+        return ArrayUtils.contains(STANDARD_GROUPS, role);
     }
 
     @Override

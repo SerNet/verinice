@@ -19,11 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -58,8 +58,8 @@ public abstract class MultiselectWidget<T> {
     protected List<T> itemList;   
     private ITreeSelection selection;
     private T selectedElement;
-    protected Set<T> selectedElementSet;
-    protected List<T> preSelectedElements = new ArrayList<T>(10);
+    protected Set<T> selectedElementSet = new HashSet<T>();  
+    protected Set<T> preSelectedElements = new HashSet<T>(10);
     
     protected boolean showOnlySelected = true;
     protected boolean showOnlySelectedCheckbox = true;
@@ -70,7 +70,9 @@ public abstract class MultiselectWidget<T> {
     protected Group group;
     protected ScrolledComposite scrolledComposite;
     protected Composite innerComposite;
-    private List<Button> radioOrganizationList;
+    
+    private Map<T, Button> checkboxMap;
+    
     private Button checkboxOnlySelected;
     
     private SelectionListener organizationListener = new SelectionAdapter() {
@@ -154,11 +156,7 @@ public abstract class MultiselectWidget<T> {
         innerComposite = new Composite (scrolledComposite, SWT.NONE); 
         scrolledComposite.setContent(innerComposite); 
         innerComposite.setLayoutData(new GridData (SWT.FILL, SWT.FILL,true, false)); 
-        innerComposite.setLayout(new GridLayout (1, false));
-        
-        if(selectedElement==null) {
-            selectedElementSet = new HashSet<T>();     
-        }
+        innerComposite.setLayout(new GridLayout (1, false));   
            
         if(selection != null && !selection.isEmpty()){
             Iterator<T> iter = selection.iterator();
@@ -168,7 +166,9 @@ public abstract class MultiselectWidget<T> {
         } else if(selectedElement != null) {
             preSelectedElements.add(selectedElement);
         }
-        radioOrganizationList = new LinkedList<Button>();
+        
+        checkboxMap = new HashMap<T, Button>();
+        
         addCheckboxes();   
     }
 
@@ -232,6 +232,9 @@ public abstract class MultiselectWidget<T> {
         for(T item : itemList) {        
             if(isItemVisible(item)) {
                 boolean selected = preSelectedElements.contains(item);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(item.toString() + " is visible, select state is: " + selected);
+                }
                 Button checkbox = new Button(innerComposite, SWT.CHECK);
                 checkbox.setText(getLabel(item));
                 checkbox.setData(item);
@@ -246,7 +249,7 @@ public abstract class MultiselectWidget<T> {
                     selectedElement = item;
                     selectedElementSet.add(item);
                 }
-                radioOrganizationList.add(checkbox);
+                checkboxMap.put(item, checkbox);
             }
         }
         
@@ -265,11 +268,11 @@ public abstract class MultiselectWidget<T> {
     }
 
     protected void removeCheckboxes() {
-        for (Button cb : radioOrganizationList) {
-            cb.removeSelectionListener(organizationListener);
-            cb.dispose();
+        for (Button checkbox : checkboxMap.values()) {
+            checkbox.removeSelectionListener(organizationListener);
+            checkbox.dispose();
         }
-        radioOrganizationList.clear();
+        checkboxMap.clear();
     }
 
     public String getTitle() {
@@ -317,9 +320,9 @@ public abstract class MultiselectWidget<T> {
     }
 
     public void addSelectionLiustener(SelectionListener listener) {
-        if(radioOrganizationList!=null) {
-            for (Button radioButton : radioOrganizationList) {
-                radioButton.addSelectionListener(listener);
+        if(checkboxMap!=null) {
+            for (Button checkbox : checkboxMap.values()) {
+                checkbox.addSelectionListener(listener);
             }
         }
     }
@@ -337,5 +340,21 @@ public abstract class MultiselectWidget<T> {
     public Set<T> getSelectedElementSet() {
         return selectedElementSet;
     }
+
+    public void deselectCheckboxForElement(T element) {
+        setSelectionForElement(element, false);
+    }
+    public void selectCheckboxForElement(T element) {
+        setSelectionForElement(element, false);
+    }
+
+    private void setSelectionForElement(T element, boolean selection) {
+        Button checkbox = checkboxMap.get(element);
+        if(checkbox!=null) {
+            checkbox.setSelection(selection);
+        }
+    }
+    
+    
 
 }

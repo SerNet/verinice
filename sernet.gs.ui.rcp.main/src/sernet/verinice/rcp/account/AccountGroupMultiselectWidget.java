@@ -46,7 +46,7 @@ public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGrou
         try{
             initData();
             initGui(parent);
-        } catch( CommandException e ) {
+        } catch( Exception e ) {
            String message = "Error while creating widget."; //$NON-NLS-1$
            LOG.error(message, e);
            throw new RuntimeException(message, e);
@@ -63,14 +63,28 @@ public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGrou
         itemList = getAccountService().listGroups();
         itemList = sortItems(itemList);
         Set<String> rolesOfAccount = account.getRoles(false);
+        
         for (AccountGroup group : itemList) {
             if(rolesOfAccount.contains(group.getName())) {
                 preSelectedElements.add(group);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(group.getName() + " added to preSelectedElements");
+                }
             }
         }
         if(rolesOfAccount.isEmpty()) {
             setShowOnlySelected(false);
         }
+    }
+    
+    public void resetData() {
+        try {
+            initData();
+        } catch (CommandException e) {
+            LOG.error("Error while resetting data.", e);
+        }
+        removeCheckboxes();
+        addCheckboxes();
     }
     
     public IAccountService getAccountService() {
@@ -92,6 +106,14 @@ public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGrou
 
     public void setAccount(Configuration account) {
         this.account = account;
+    }
+
+    public void removeSelectedElements(AccountGroup accountGroup) {
+        preSelectedElements.remove(accountGroup);
+        selectedElementSet.remove(accountGroup);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(accountGroup + " removed from preSelectedElements");
+        }
     }
 
     

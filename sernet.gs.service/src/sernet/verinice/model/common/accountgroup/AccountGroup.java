@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import sernet.hui.common.connect.ITypedElement;
-import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.interfaces.IRightsService;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -93,5 +93,33 @@ public class AccountGroup implements ITypedElement, Serializable, Comparable<Acc
     @Override
     public int compareTo(AccountGroup o) {
         return this.getName().toLowerCase().compareTo(o.getName().toLowerCase());
+    }
+    
+    public static Set<AccountGroup> createStandartGroupSet() {
+        Set<String> groupNameSet = new HashSet<String>();
+        for (String name : IRightsService.STANDARD_GROUPS) {
+            groupNameSet.add(name);
+        }       
+        return createSetForNames(groupNameSet);
+     }
+
+    /**
+     * @param standartGroupNames
+     * @return
+     */
+    public static Set<AccountGroup> createSetForNames(Set<String> groupNames) {
+        Set<AccountGroup> standartGroupSet = new HashSet<AccountGroup>();
+        for (String groupName : groupNames) {
+            standartGroupSet.add(new AccountGroup(groupName));
+        }
+        return standartGroupSet;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "Account group: " + getName();
     }
 }

@@ -46,15 +46,20 @@ public class AccountWizard extends Wizard {
     
 
     public AccountWizard() {
-        super();
-        setNeedsProgressMonitor(true);
-        setWindowTitle(Messages.AccountWizard_0);
+        super();    
         account = new Configuration();
+        init();
     }
     
     public AccountWizard(Configuration account) {
-        this();
+        super(); 
         this.account = account;
+        init();
+    }
+    
+    private void init() {
+        setNeedsProgressMonitor(true);
+        setWindowTitle(Messages.AccountWizard_0);
     }
 
     /* (non-Javadoc)
@@ -66,7 +71,7 @@ public class AccountWizard extends Wizard {
         addPage(personPage);
         authenticationPage = new AuthenticationPage();
         addPage(authenticationPage);
-        limitationPage = new LimitationPage();
+        limitationPage = new LimitationPage(account);
         addPage(limitationPage);
         groupPage = new GroupPage(account);
         addPage(groupPage);     
@@ -104,7 +109,7 @@ public class AccountWizard extends Wizard {
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
-    public boolean performFinish() {
+    public boolean performFinish() {       
         getAccount().setPerson(personPage.getPerson());
         getAccount().setUserNew(authenticationPage.getLogin());
         getAccount().setPassNew(authenticationPage.getPassword());
@@ -115,12 +120,8 @@ public class AccountWizard extends Wizard {
         getAccount().setRcpUser(limitationPage.isDesktop());
         getAccount().setIsDeactivatedUser(limitationPage.isDeactivated());
         
-        getAccount().deleteAllRoles();
-        Set<AccountGroup> selectedGroups = groupPage.getGroups();     
-        for (AccountGroup accountGroup : selectedGroups) {
-            getAccount().addRole(accountGroup.getName());
-        }
-        
+        groupPage.syncCheckboxesToAccountGroups();
+
         getAccount().setNotificationEnabled(notificationPage.isNotification());
         getAccount().setNotificationGlobal(notificationPage.isGlobal());
         getAccount().setNotificationMeasureAssignment(notificationPage.isNewTasks());
