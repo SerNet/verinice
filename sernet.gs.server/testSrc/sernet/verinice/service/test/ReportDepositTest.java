@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import static org.apache.commons.io.FilenameUtils.concat;
+import static org.apache.commons.io.FilenameUtils.getFullPath;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -58,8 +60,6 @@ import sernet.verinice.interfaces.IReportTemplateService;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 import sernet.verinice.interfaces.ReportDepositException;
 import sernet.verinice.interfaces.ReportTemplateServiceException;
-import sernet.verinice.model.report.PropertyFileExistsException;
-import sernet.verinice.model.report.ReportMetaDataException;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
@@ -70,34 +70,64 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 public class ReportDepositTest extends CommandServiceProvider {
 
     private static final String LANGUAGE = Locale.ENGLISH.getLanguage();
-    
+
     private static final String REPORT_DIR = "/reports";
     private static final String RPTSUFFIX = ".rptdesign";
-    private static final String DEPOSIT_DIR_PART_1 = "bin" + File.separator + "WEB-INF" + File.separator;
+    private static final String DEPOSIT_DIR_PART_1 = "WEB-INF";
     private static final String DEPOSIT_DIR_PART_2 = "reportDeposit";
     
+    private File deposit;
+
     @Resource(name = "reportdepositService")
     private IReportDepositService depositService;
-    
+
     @Before
     public void setUp() throws Exception {
-        File deposit = new File(DEPOSIT_DIR_PART_1 + DEPOSIT_DIR_PART_2);
-        deposit.mkdirs();        
+
+    deposit = createWEBINFFolder();
+
         assertTrue("Report deposit was not created", deposit.exists());
+    }
+
+    private File createWEBINFFolder() {
+
+        String absolutePath = getTestBinariesRootDirectory();
+
+        // concat root directory with the WEB-INF/reportDeposit
+        File deposit = new File(concat(absolutePath, concat(DEPOSIT_DIR_PART_1, DEPOSIT_DIR_PART_2)));
+        deposit.mkdirs();
+
+        return deposit;
+    }
+
+    private String getTestBinariesRootDirectory() {
+
+        // retrieve the current path to the actual report repository class file
+        String className = depositService.getClass().getSimpleName() + ".class";
+        URL resource = depositService.getClass().getResource(className);
+
+        // cut off the base name (file name of the repository implementation)
+        String absolutePath = getFullPath(resource.getPath());
+
+        // convert the java package syntax (package1.package2. ...
+        // .pacckagex.ClassName) to (package1/package2/ ... )
+        // This way we get the root directory of the test classloader.
+        String pathSuffix = getFullPath(depositService.getClass().getName().replace(".", File.separator));
+        absolutePath = absolutePath.replaceAll(pathSuffix, "");
+        return absolutePath;
     }
 
     @After
     public void tearDown() throws CommandException {
-        FileUtil.deleteDirectory(new File(DEPOSIT_DIR_PART_1 + DEPOSIT_DIR_PART_2)); 
-        FileUtil.deleteDirectory(new File(DEPOSIT_DIR_PART_1));   
+        FileUtil.deleteDirectory(deposit);
     }
-    
+
     @Test
     public void testAddToServerDeposit() throws Exception {
         List<ReportTemplateMetaData> addedMetadataList = addAllFilesToDeposit();
         checkMetadataInDeposit(addedMetadataList, true);
     }
-    
+
     @Test
     public void testRemoveFromServer() throws Exception {
         List<ReportTemplateMetaData> addedMetadataList = addAllFilesToDeposit();
@@ -107,7 +137,7 @@ public class ReportDepositTest extends CommandServiceProvider {
         }
         checkMetadataInDeposit(addedMetadataList, false);
     }
-    
+
     @Test
     public void testUpdateInServerDeposit() throws Exception {
         addAllFilesToDeposit();
