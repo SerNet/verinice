@@ -20,8 +20,14 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
+import static sernet.verinice.interfaces.IRightsService.ADMINDEFAULTGROUPNAME;
+import static sernet.verinice.interfaces.IRightsService.ADMINSCOPEDEFAULTGROUPNAME;
+import static sernet.verinice.interfaces.IRightsService.USERDEFAULTGROUPNAME;
+import static sernet.verinice.interfaces.IRightsService.USERSCOPEDEFAULTGROUPNAME;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -59,14 +65,14 @@ public class AccountService implements IAccountService, Serializable {
     private IBaseDao<Configuration, Serializable> configurationDao;
     private ICommandService commandService;
 
-
     private IConfigurationService configurationService;
 
     private IRightsServerHandler rightsServerHandler;
 
     private IBaseDao<Permission, Serializable> permissionDao;
 
-   
+    private final Set<String> STANDARD_GROUPS = new HashSet<String>(Arrays.asList(new String[] { ADMINDEFAULTGROUPNAME, ADMINSCOPEDEFAULTGROUPNAME, USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME }));
+
     @Override
     public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
@@ -117,7 +123,35 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public List<AccountGroup> listGroups() {
+
+        // TODO Ugly hack. Inits the account group table with default values, if
+        // they not exist yet.
+        if (!existStandardGroups()) {
+            createStandardGroups();
+        }
+
         return getAccountGroupDao().findAll();
+    }
+
+    private boolean existStandardGroups() {
+
+        boolean exists = true;
+
+        List<String> accountGroupNames = listAccountGroupsViaHQL();
+
+        for (String standardGroup : STANDARD_GROUPS)
+            if (!accountGroupNames.contains(standardGroup)) {
+                exists = false;
+                break;
+            }
+
+        return exists;
+    }
+
+    private List<String> listAccountGroupsViaHQL() {
+        String hqlQuery = "select accountgroup.name from AccountGroup accountgroup";
+        List<String> accountGroupNames = accountGroupDao.findByQuery(hqlQuery, new String[] {});
+        return accountGroupNames;
     }
 
     @Override
@@ -359,32 +393,57 @@ public class AccountService implements IAccountService, Serializable {
         List<Configuration> accounts = getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.params);
         accounts = initializeProperties(accounts);
 
-        if(accounts != null && !accounts.isEmpty()){
+        if (accounts != null && !accounts.isEmpty()) {
             return accounts.get(0);
         }
 
         return null;
     }
-    
+
     @Override
     public Configuration getAccountById(Integer dbId) {
         Set<Integer> dbIdSet = new HashSet<Integer>();
         dbIdSet.add(dbId);
         List<Configuration> result = loadAccounts(dbIdSet);
-        if(result.size()>1) {
+        if (result.size() > 1) {
             throw new RuntimeException("More than one account found for db-id: " + dbId);
         }
-        if(result.isEmpty()) {
+        if (result.isEmpty()) {
             return null;
         }
         return result.get(0);
     }
-    
+
     @Override
     public List<String> listGroupNames() {
-        String hqlQuery = "select accountgroup.name from AccountGroup accountgroup";
-        List<String> accountGroupNames = accountGroupDao.findByQuery(hqlQuery, new String[]{});
-        
-        return accountGroupNames == null ? new ArrayList<String>() : accountGroupNames;
+
+        List<AccountGroup> accountGroups = listGroups();
+        List<String> accountGroupNames = new ArrayList<String>();
+
+        if (accountGroups == null) {
+            return new ArrayList<String>(0);
+        } else {
+            for (AccountGroup accountGroup : accountGroups) {
+                accountGroupNames.add(accountGroup.getName());
+            }
+            return accountGroupNames;
+        }
+    }
+
+    public void createStandardGroups() {
+
+        Set<String> alreadyStoredAccountGroups = new HashSet<String>(listAccountGroupsViaHQL());
+
+        for (String defaultGroup : STANDARD_GROUPS) {
+            if (alreadyStoredAccountGroups.contains(defaultGroup))
+                continue;
+            try {
+                createAccountGroup(defaultGroup);
+            } catch (Exception ex) {
+                String message = String.format("default group %s not added to account group table: %s", defaultGroup, ex.getLocalizedMessage());
+                LOG.error(message, ex);
+                throw new RuntimeException(ex);
+            }
+        }
     }
 }
