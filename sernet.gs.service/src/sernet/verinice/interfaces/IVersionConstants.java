@@ -28,7 +28,7 @@ public interface IVersionConstants {
     /**
      * Version number of DB that can be used:
      */
-    public static final double COMPATIBLE_DB_VERSION = 0.98D;
+    public static final double COMPATIBLE_DB_VERSION = 1D;
     /**
      * Version number of client that can be used.
      * (Must be the same in client / server code of this class.)
