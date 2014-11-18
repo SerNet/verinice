@@ -96,6 +96,8 @@ public class MigrateDbTo1_00D extends DbMigration {
                     continue;
                 }
 
+                accountGroupNames.add(accountGroupName);
+
                 try {
                     accountService.createAccountGroup(accountGroupName);
                 } catch (Exception ex) {
