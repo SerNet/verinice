@@ -117,13 +117,20 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	private String userNew;
 	private String passNew;
 
+	public static Configuration createDefaultAccount() {
+	    Configuration account = new Configuration();
+	    account.addRole(IRightsService.USERDEFAULTGROUPNAME);
+	    account.setAdminUser(false);
+	    account.setScopeOnly(false);
+	    account.setWebUser(true);
+	    account.setRcpUser(true);
+	    account.setNotificationExpirationDays(14);
+        account.setAuditorNotificationExpirationDays(14);
+	    return account;
+	}
+	
 	public Configuration() {
-		setEntity(new Entity(TYPE_ID));
-		addRole(IRightsService.USERDEFAULTGROUPNAME);
-        setAdminUser(false);
-        setScopeOnly(false);
-        setWebUser(true);
-        setRcpUser(true);  
+		setEntity(new Entity(TYPE_ID));	  
 	}
 
 	private void setEntity(Entity entity) {

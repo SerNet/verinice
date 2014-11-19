@@ -35,17 +35,11 @@ public class CreateConfiguration extends GenericCommand {
 
 	@Override
     public void execute() {
-	    configuration = new Configuration();
+	    configuration = Configuration.createDefaultAccount();
         if (person == null){
             throw new RuntimeCommandException("Default Konfiguration wurde bereits gesetzt.");
         }
-        configuration.setPerson(person);
-        configuration.addRole(IRightsService.USERDEFAULTGROUPNAME);
-        configuration.setAdminUser(false);
-        configuration.setScopeOnly(false);
-        configuration.setWebUser(true);
-        configuration.setRcpUser(true);       
-       
+        configuration.setPerson(person);      
         getDaoFactory().getDAO(Configuration.class).saveOrUpdate(configuration);
 	}
 

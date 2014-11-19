@@ -1,0 +1,3 @@
+--Donwgrade a a verinice database from version 1 to 0.99
+UPDATE CNATREEELEMENT SET DBVERSION=.99 WHERE DBID=67;
+DROP TABLE ACCOUNTGROUP;

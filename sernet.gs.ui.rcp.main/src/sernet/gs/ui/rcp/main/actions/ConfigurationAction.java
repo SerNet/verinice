@@ -173,8 +173,8 @@ public class ConfigurationAction extends Action implements IObjectActionDelegate
     
     				if (configuration == null) {
     					// create new configuration
-    				    configuration = new Configuration();
-    				    configuration.setPerson(person);
+    				    configuration = Configuration.createDefaultAccount();
+    				    configuration.setPerson(person);   				    
     				}
     
     			}

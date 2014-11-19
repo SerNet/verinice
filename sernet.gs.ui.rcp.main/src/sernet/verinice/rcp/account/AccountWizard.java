@@ -44,13 +44,6 @@ public class AccountWizard extends Wizard {
     private AuditorNotificationPage auditorNotificationPage;
     private ProfilePage profilePage;
     
-
-    public AccountWizard() {
-        super();    
-        account = new Configuration();
-        init();
-    }
-    
     public AccountWizard(Configuration account) {
         super(); 
         this.account = account;
@@ -127,10 +120,14 @@ public class AccountWizard extends Wizard {
         getAccount().setNotificationMeasureAssignment(notificationPage.isNewTasks());
         getAccount().setNotificationMeasureModification(notificationPage.isModifyReminder());
         getAccount().setNotificationExpirationEnabled(notificationPage.isDeadlineWarning());
-        getAccount().setNotificationExpirationDays(notificationPage.getDeadlineInDays());      
+        
+        getAccount().setNotificationExpirationDays(notificationPage.getDeadlineInDays());
+        
         getAccount().setAuditorNotificationGlobal(auditorNotificationPage.isGlobal());
         getAccount().setAuditorNotificationExpirationEnabled(auditorNotificationPage.isDeadlineWarning());
+        
         getAccount().setAuditorNotificationExpirationDays(auditorNotificationPage.getDeadlineInDays());
+        
         return true;
     }
     

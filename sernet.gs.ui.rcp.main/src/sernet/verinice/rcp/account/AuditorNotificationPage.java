@@ -125,7 +125,7 @@ public class AuditorNotificationPage extends BaseWizardPage {
         final String label = Messages.AuditorNotificationPage_7;
         createLabel(composite, label);
         textDeadlineInDays = createTextfield(composite);
-        textDeadlineInDays.setText(Integer.toString(getDeadlineInDays()));
+        textDeadlineInDays.setText(String.valueOf(getDeadlineInDays()));
         textDeadlineInDays.addKeyListener(new TextEventAdapter() {   
             @Override
             public void keyReleased(KeyEvent e) {
