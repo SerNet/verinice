@@ -19,6 +19,7 @@ package sernet.verinice.encryption.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,16 +48,20 @@ import java.util.Calendar;
 import javax.security.auth.x500.X500Principal;
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.Arrays;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.junit.Test;
 
 import sernet.gs.service.FileUtil;
 import sernet.verinice.encryption.impl.EncryptionService;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.service.commands.SyncParameterException;
 
 /**
  *
@@ -68,6 +73,8 @@ public class CryptoTest  {
     private static final int MAX_PASSWORD_LENGTH = 100;
     
     private EncryptionService encryptionService;
+    
+    private static final String VNA_FILE = "CryptoTest.vna";
     
     private static final String SECRET = "Lorem ipsum dolor sit amet, consectetur adipiscing elit." +
             " Donec at ligula et nibh pretium vulputate vitae quis tortor. " +
@@ -147,6 +154,15 @@ public class CryptoTest  {
         byte[] decryptedData = getEncryptionService().decrypt(encryptedData, certFile, keyFile);
         assertEquals(SECRET, new String(decryptedData));
     }
+    
+    @Test
+    public void VNAPBCryptoTest() throws SyncParameterException, IOException, CommandException{
+        byte[] plainContent = FileUtils.readFileToByteArray(new File(getAbsoluteFilePath(VNA_FILE)));
+        char[] password = getPassword(10);
+        byte[] encryptedContent = getEncryptionService().encrypt(plainContent, password);
+        byte[] decryptedContent = getEncryptionService().decrypt(encryptedContent, password);
+        assertTrue(Arrays.areEqual(plainContent, decryptedContent));
+    }
 
     private char[] getPassword(int length){
         return RandomStringUtils.randomAscii(length).toCharArray();
@@ -221,11 +237,16 @@ public class CryptoTest  {
         }
         String certData;
         try {
-            certData = DatatypeConverter.printBase64Binary(data);
-            return prefix + certData + suffix;
+            return certData = prefix + DatatypeConverter.printBase64Binary(data) + suffix;
         } catch (Exception e) {
             LOG.error("Error converting cert",e);
         }
         return null;
     }
+    
+    
+    private String getAbsoluteFilePath(String path) {
+        return getClass().getResource(path).getPath();
+    }
+    
 }
