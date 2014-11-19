@@ -48,7 +48,6 @@ import java.util.Calendar;
 import javax.security.auth.x500.X500Principal;
 import javax.xml.bind.DatatypeConverter;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.x509.BasicConstraints;
@@ -157,7 +156,7 @@ public class CryptoTest  {
     
     @Test
     public void VNAPBCryptoTest() throws SyncParameterException, IOException, CommandException{
-        byte[] plainContent = FileUtils.readFileToByteArray(new File(getAbsoluteFilePath(VNA_FILE)));
+        byte[] plainContent = FileUtil.getFileData(new File(getAbsoluteFilePath(VNA_FILE)));
         char[] password = getPassword(10);
         byte[] encryptedContent = getEncryptionService().encrypt(plainContent, password);
         byte[] decryptedContent = getEncryptionService().decrypt(encryptedContent, password);
