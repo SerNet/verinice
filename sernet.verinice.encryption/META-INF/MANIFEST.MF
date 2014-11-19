@@ -17,5 +17,6 @@ Bundle-ClassPath: .,
 Export-Package: sernet.verinice.encryption
 Service-Component: OSGI-INF/component.xml
 Bundle-ActivationPolicy: lazy
-Import-Package: org.apache.commons.lang;version="2.4.0",
+Import-Package: org.apache.commons.io,
+ org.apache.commons.lang;version="2.4.0",
  org.apache.log4j
