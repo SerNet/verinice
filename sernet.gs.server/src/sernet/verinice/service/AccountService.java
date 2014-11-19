@@ -36,6 +36,7 @@ import java.util.Set;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -75,6 +76,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
+        ServerInitializer.inheritVeriniceContextState();
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
         List<Configuration> resultNoProps = getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.getParams());
         List<Configuration> result = initializeProperties(resultNoProps);
@@ -106,6 +108,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public void delete(Configuration account) {
+        ServerInitializer.inheritVeriniceContextState();
         getConfigurationDao().delete(account);
         // When a Configuration instance got deleted the server needs to
         // update
@@ -115,6 +118,7 @@ public class AccountService implements IAccountService, Serializable {
     
     @Override
     public void deactivate(Configuration account) {
+        ServerInitializer.inheritVeriniceContextState();
         if (!account.isDeactivatedUser()) {
             account.setIsDeactivatedUser(true);
             getConfigurationDao().merge(account);
@@ -123,8 +127,8 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public List<AccountGroup> listGroups() {
-
-        // TODO Ugly hack. Inits the account group table with default values, if
+        ServerInitializer.inheritVeriniceContextState();
+        // Inits the account group table with default values, if
         // they not exist yet.
         if (!existStandardGroups()) {
             createStandardGroups();
@@ -156,7 +160,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public AccountGroup createAccountGroup(String name) {
-
+        ServerInitializer.inheritVeriniceContextState();
         Set<String> accounts = listAccounts();
 
         if (accounts.contains(name)) {
@@ -169,6 +173,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public void deleteAccountGroup(AccountGroup group) {
+        ServerInitializer.inheritVeriniceContextState();
         validateAccountGroupName(group.getName());
         getAccountGroupDao().delete(group);
     }
@@ -191,7 +196,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public void deleteAccountGroup(String name) {
-
+        ServerInitializer.inheritVeriniceContextState();
         validateAccountGroupName(name);
 
         AccountGroup accountGroup = findGroupByHQL(name);
@@ -231,6 +236,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public Set<String> listAccounts() {
+        ServerInitializer.inheritVeriniceContextState();
         List<Configuration> configurations = getAllConfigurations();
         Set<String> accountNames = new HashSet<String>();
 
@@ -245,7 +251,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public void saveAccountGroups(Set<String> accountGroupNames) {
-
+        ServerInitializer.inheritVeriniceContextState();
         for (String accountGroup : accountGroupNames) {
             createAccountGroup(accountGroup);
         }
@@ -253,7 +259,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public Set<String> addRole(Set<String> usernames, String role) {
-
+        ServerInitializer.inheritVeriniceContextState();
         Set<String> result = new HashSet<String>();
         for (Configuration account : extractConfiguration(usernames, getAllConfigurations())) {
 
@@ -283,7 +289,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public Set<String> deleteRole(Set<String> usernames, String role) {
-
+        ServerInitializer.inheritVeriniceContextState();
         Set<String> result = new HashSet<String>();
         for (Configuration account : extractConfiguration(usernames, getAllConfigurations())) {
 
@@ -306,6 +312,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public void deletePermissions(String role) {
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = "delete Permission where role = ?";
         String[] params = new String[] { role };
         getPermissionDao().updateByQuery(hqlQuery, params);
@@ -314,6 +321,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public void updatePermissions(String newRole, String oldRole){
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = "update Permission set role = ? where role = ?";
         String[] params = new String[] { newRole, oldRole };
         getPermissionDao().updateByQuery(hqlQuery, params);
@@ -374,6 +382,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public long countConnectObjectsForGroup(String groupName) {
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = "select count(perm) from Permission perm where perm.role = ?";
         String[] params = new String[] { groupName };
         List<Long> result = permissionDao.findByQuery(hqlQuery, params);
@@ -387,7 +396,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public Configuration getAccountByName(String name) {
-
+        ServerInitializer.inheritVeriniceContextState();
         IAccountSearchParameter parameter = AccountSearchParameterFactory.createLoginParameter(name);
         HqlQuery hqlQuery = AccountSearchQueryFactory.createHql(parameter);
         List<Configuration> accounts = getConfigurationDao().findByQuery(hqlQuery.getHql(), hqlQuery.params);
@@ -402,6 +411,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public Configuration getAccountById(Integer dbId) {
+        ServerInitializer.inheritVeriniceContextState();
         Set<Integer> dbIdSet = new HashSet<Integer>();
         dbIdSet.add(dbId);
         List<Configuration> result = loadAccounts(dbIdSet);
@@ -416,7 +426,7 @@ public class AccountService implements IAccountService, Serializable {
 
     @Override
     public List<String> listGroupNames() {
-
+        ServerInitializer.inheritVeriniceContextState();
         List<AccountGroup> accountGroups = listGroups();
         List<String> accountGroupNames = new ArrayList<String>();
 
