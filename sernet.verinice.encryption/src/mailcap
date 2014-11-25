@@ -1,0 +1,1 @@
+application/pkcs7-mime; name="smime.p7m"; smime-type=enveloped-data; content-handler=org.bouncycastle.mail.smime.handlers.pkcs7_mime

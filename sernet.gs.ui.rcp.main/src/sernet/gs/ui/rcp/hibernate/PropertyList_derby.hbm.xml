@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="sernet.hui.common.connect">
+	<class name="PropertyList" 
+		table="propertylist" 
+		batch-size="100">
+	
+		<id name="dbId" 
+			column="dbId" 
+			type="java.lang.Integer" 
+			unsaved-value="null">
+			<generator class="native" />
+		</id>
+		
+		<property
+			name="uuid"
+		/>
+		
+		<property name="entityId" column="typedlist_id" insert="false" update="false"/>
+		
+		<list 
+			name="properties" 
+			cascade="all,delete-orphan"
+			fetch="join"
+			>
+			
+			<key column="properties_id" />
+			
+			<index 
+				column="properties_idx" />
+				
+			<composite-element 
+			class="Property"
+			>
+			
+				<property name="propertyType"/>
+        
+		        <property 
+		        	name="propertyValue"
+		        	type="java.lang.String"
+		        	length="30000"/>
+				<!--
+				<many-to-one 
+					name="parent"
+					class="Entity"
+					fetch="join"
+					 />
+				-->	 
+					 
+			</composite-element>
+				
+		</list>
+
+	</class>
+</hibernate-mapping>

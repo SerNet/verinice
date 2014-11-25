@@ -1,0 +1,14 @@
+## Velocity template for tasks descriptions
+## of GSM vulnerability tracking process.
+##
+## Process definition is: gsm-ism-execute.jpdl.xml
+##
+## Don't add white space
+<b>Anwendung</b>: ${GSM_ISM_CONTROL_GROUP_TITLE}
+<b>Risikowert:</b> ${GSM_ISM_RISK_VALUE}<br/>
+<b>Beschreibung:</b>
+${GSM_ISM_CONTROL_DESCRIPTION}<br/>
+<b>Assets:</b>
+#foreach( $element in $GSM_ISM_ASSET_DESCRIPTION_LIST )
+$element
+#end

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+<cheatsheet title="Reports">
+
+	<intro 
+		>
+		<description>
+		So erzeugen Sie die nötigen Referenzdokumente!
+		</description>
+	</intro>
+
+	<item title="Reports">
+		<description>
+		Mit verinice können Sie alle nötigen Referenzdokumente erzeugen, die für ein Audit benötigt 
+		werden. Die Dokumente können in den Formaten PDF, HTML, Microsoft Office oder OpenOffice/LibreOffice
+		erzeugt werden.
+		</description>
+	</item>
+	
+	<item title="Report auswählen">
+		<description>
+		Wählen Sie im Menü: "Datei > "Report erzeugen...". Wählen Sie in Feld "Report auswählen" aus der Liste den Report
+		"BSI IT-Grundschutz: A.4 Basis-Sicherheitscheck". Wählen Sie ein Ausgabeformat, einen Dateinamen und gehen Sie weiter.
+		</description>
+	</item>
+	
+	<item title="Report wird erzeugt">
+		<description>
+		Der Report wird erzeugt, was üblicherweise einige Sekunden dauert. Je nach Größe der Datenbank kann die Erzeugung aber auch einige Minuten dauern.
+		Schauen Sie sich den Report an, den Sie gerade erzeugt haben. 
+		</description>
+		<onCompletion>
+	    Fertig! Probieren Sie noch aus, auch einige andere Reports zu generieren.
+		</onCompletion>
+	</item>
+	
+	
+</cheatsheet>

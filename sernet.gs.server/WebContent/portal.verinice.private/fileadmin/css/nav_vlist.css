@@ -1,0 +1,39 @@
+/* ######################################################################################################
+** # "Yet Another Multicolum Layout" (c) by Dirk Jesse (http://www.yaml.de) #############################
+** # "YAML for TYPO3" (c) by Dieter Bunkerd (http://yaml.t3net.de) ######################################
+** ######################################################################################################
+**
+**  YAML Version:2.5.2
+**  Dateiversion:6.11.06
+**  Datei       :nav_vlist.css
+**  Funktion    :Formatierung der linken Hauptnavigation
+**  Checked with http://jigsaw.w3.org/css-validator/ 19.1.07 - DB
+*/
+
+@media all
+{
+/*******************************************
+* Vertikale Listennavigation
+********************************************/
+#col1_content h3 {padding:0; font-weight:bold; margin:1.4em 0 0.3em 0; color:#444; background-color:#fff; border-bottom:5px #ccc solid;}
+.mainMenu {width:100%; overflow:hidden; color:#222; margin:0; padding:0 0 0 0;}
+.mainMenu img {margin-right:0.7em;}
+.mainMenu ul {width:100%; overflow:hidden; margin:0em 0 0em 0; list-style-type:none; border-top:1px #ddd solid; border-bottom:1px #ddd solid;}
+.mainMenu ul a {display:block; text-decoration:none;}
+.mainMenu ul li {float:left; width:100%; margin:0; padding:0;}
+.mainMenu ul li strong {display:block; width:95%; padding:3px 0px 3px 7%; background-color:#aab; color:#fff; font-weight:bold; border-bottom:1px #ddd solid;}
+.mainMenu ul li ul li strong {display:block; width:95%; padding:3px 0px 3px 14%; background-color:#aab; color:#fff; font-weight:bold; border-bottom:1px #ddd solid;}
+.mainMenu ul li ul li ul li strong {display:block; width:95%; padding:3px 0px 3px 21%; background-color:#aab; color:#fff; font-weight:bold; border-bottom:1px #ddd solid;}
+.mainMenu ul li a { width:95%; padding:3px 0px 3px 7%; background-color:#fff; color:#444; border-bottom:1px #eee solid;}
+.mainMenu ul li a:hover {background-color:#F1EEE9;}
+.mainMenu ul li ul {list-style-type:none; margin:0; padding:0;}
+.mainMenu ul li ul li {float:left; width:100%; margin:0; padding:0;}
+.mainMenu ul li ul li a {width:90%; padding:3px 0px 3px 14%; background-color:#f8f8f8; color:#666; border-bottom:1px #ddd solid;}
+.mainMenu ul li ul li ul {list-style-type:none; margin:0; padding:0;}
+.mainMenu ul li ul li ul li {float:left; width:100%; margin:0; padding:0;}
+.mainMenu ul li ul li ul li a {width:90%; padding:3px 0px 3px 21%; background-color:#e4e4e4; color:#666; border-bottom:1px #ddd solid;}
+.mainMenu ul li ul li a:hover {background-color:#f63; color:#fff;}
+.mainMenu ul li#title {width:95%; padding:3px 0px 3px 7%; font-weight:bold; color:#444; background-color:#fff; border-bottom:4px #888 solid;}
+
+/* Close @media all - DO NOT DELETE! */
+}

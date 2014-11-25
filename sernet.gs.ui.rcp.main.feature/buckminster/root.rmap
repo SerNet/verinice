@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	(c) 2004-2005
+	Thomas Hallgren, Kenneth Olwing, Mitch Sonies
+	Pontus Rydin, Nils Unden, Peer Torngren
+	The code, documentation and other materials contained herein have been
+	licensed under the Eclipse Public License - v 1.0 by the individual
+	copyright holders listed above, as Initial Contributors under such license.
+	The text of such license is available at www.eclipse.org.
+-->
+<rmap xmlns="http://www.eclipse.org/buckminster/RMap-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mp="http://www.eclipse.org/buckminster/MavenProvider-1.0"
+	xmlns:pmp="http://www.eclipse.org/buckminster/PDEMapProvider-1.0"
+	xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0">
+
+	<searchPath name="org.eclipse.buckminster">
+		<provider readerType="svn" componentTypes="osgi.bundle,eclipse.feature,buckminster" mutable="true"
+			source="true">
+			<uri
+				format="http://dev.eclipse.org/svnroot/tools/org.eclipse.buckminster/trunk/{0}?moduleAfterTag&amp;moduleAfterBranch">
+				<bc:propertyRef key="buckminster.component" />
+			</uri>
+		</provider>
+	</searchPath>
+
+	<searchPath name="org.eclipse.ecf">
+		<provider readerType="eclipse.import" componentTypes="osgi.bundle,eclipse.feature" mutable="false" source="false">
+			<uri format="http://download.eclipse.org/rt/ecf/2.0/updateSite?importType=binary"/>
+		</provider>
+		<provider xsi:type="pmp:PDEMapProvider" readerType="cvs" componentTypes="osgi.bundle,eclipse.feature" mutable="false" source="true">
+			<uri format=":pserver:anonymous@dev.eclipse.org:/cvsroot/rt,org.eclipse.ecf/releng/org.eclipse.ecf.releng.maps"/>
+		</provider>
+	</searchPath>
+
+	<searchPath name="org.eclipse.spaces">
+		<provider readerType="svn" componentTypes="osgi.bundle,eclipse.feature,buckminster" mutable="true"
+			source="true">
+			<uri
+				format="http://dev.eclipse.org/svnroot/technology/org.eclipse.spaces/BRANCHES/1.4/{0}?moduleAfterTag&amp;moduleAfterBranch">
+				<bc:propertyRef key="buckminster.component" />
+			</uri>
+		</provider>
+	</searchPath>
+
+	<searchPath name="org.eclipse.platform">
+		<provider readerType="eclipse.import" componentTypes="osgi.bundle,eclipse.feature" mutable="false" source="false">
+			<uri format="http://download.eclipse.org/releases/indigo?importType=binary"/>
+		</provider>
+	</searchPath>
+	
+	<searchPath name="org.eclipse.language-packs">
+		<provider readerType="eclipse.import" componentTypes="osgi.bundle,eclipse.feature" mutable="false" source="false">
+			<uri format="http://download.eclipse.org/technology/babel/update-site/R0.9.0/indigo?importType=binary"/>
+		</provider>
+	</searchPath>
+
+	<searchPath name="buckminster.test">
+		<provider readerType="cvs" componentTypes="osgi.bundle,eclipse.feature,buckminster" mutable="true"
+			source="true">
+			<uri format=":pserver:anonymous@dev.eclipse.org:/cvsroot/technology,org.eclipse.buckminster/test/{0}">
+				<bc:replace pattern="^buckminster\.test\.(.+)" replacement="$1" quotePattern="false">
+					<bc:propertyRef key="buckminster.component" />
+				</bc:replace>
+			</uri>
+		</provider>
+	</searchPath>
+
+	<searchPath name="org.eclipse.dash">
+		<provider readerType="cvs" componentTypes="osgi.bundle,eclipse.feature,buckminster" mutable="true"
+			source="true">
+			<uri format=":pserver:anonymous@dev.eclipse.org:/cvsroot/technology,org.eclipse.dash/{0}">
+				<bc:replace pattern="^buckminster\.test\.(.+)" replacement="$1" quotePattern="false">
+					<bc:propertyRef key="buckminster.component" />
+				</bc:replace>
+			</uri>
+		</provider>
+	</searchPath>
+
+	<searchPath name="subclipse">
+		<provider readerType="eclipse.import" componentTypes="osgi.bundle,eclipse.feature" mutable="false"
+			source="true">
+			<uri format="http://subclipse.tigris.org/update_1.4.x?importType=binary" />
+		</provider>
+	</searchPath>
+
+	<searchPath name="svnkit">
+		<provider readerType="eclipse.import" componentTypes="osgi.bundle,eclipse.feature" mutable="false"
+			source="true">
+			<uri format="http://eclipse.svnkit.com/1.2.x?importType=binary" />
+		</provider>
+	</searchPath>
+
+	<searchPath name="polarion">
+		<provider readerType="eclipse.import" componentTypes="osgi.bundle,eclipse.feature" mutable="false"
+			source="true">
+			<uri format="http://www.polarion.org/projects/subversive/download/eclipse/2.0/update-site?importType=binary" />
+		</provider>
+	</searchPath>
+
+	<searchPath name="org.eclipse.team.svn">
+		<provider readerType="eclipse.import" componentTypes="osgi.bundle,eclipse.feature" mutable="false"
+			source="true">
+			<uri format="http://download.eclipse.org/technology/subversive/0.7/update-site?importType=binary" />
+		</provider>
+	</searchPath>
+
+	<searchPath name="default">
+		<!--
+			Let's try orbit first and then maven. The componentTypes will discriminate and
+			make it quick.
+		-->
+		<provider readerType="eclipse.import" componentTypes="osgi.bundle" mutable="false" source="false">
+		    <uri format="http://download.eclipse.org/tools/orbit/downloads/drops/R20090529135407/updateSite?importType=binary"/>
+			<!-- The following update site was used before
+				 It's offline since April 26th 2011, *Sigh*
+			-->
+			<!--			
+			<uri format="http://download.eclipse.org/tools/orbit/downloads/drops/S20090426201227/updateSite?importType=binary"/>
+			-->
+		</provider>
+		<provider xsi:type="mp:MavenProvider" readerType="maven2" componentTypes="maven" mutable="false"
+			source="false">
+			<uri format="http://repo1.maven.org/maven2" />
+		</provider>
+	</searchPath>
+
+	<locator searchPathRef="org.eclipse.buckminster" pattern="^org\.eclipse\.buckminster(\..+)?" />
+	<locator searchPathRef="org.eclipse.buckminster" pattern="^org\.slf4j\.extendable$" />
+	<locator searchPathRef="org.eclipse.buckminster" pattern="^org\.eclipse\.equinox\.p2\.director\.product$" />
+	<locator searchPathRef="org.eclipse.ecf" pattern="^org\.eclipse\.ecf(\..+)?" />
+	<locator searchPathRef="org.eclipse.ecf" pattern="^org\.jivesoftware\.smack$" />
+	<locator searchPathRef="org.eclipse.ecf" pattern="^org\.eclipse\.bittorrent$" />
+	<locator searchPathRef="org.eclipse.spaces" pattern="^org\.eclipse\.spaces(\..+)?" />
+	<locator searchPathRef="org.eclipse.dash" pattern="^org\.eclipse\.dash(\..+)?" />
+	<locator searchPathRef="buckminster.test" pattern="^buckminster\.test(\..+)?" />
+	<locator searchPathRef="svnkit" pattern="^org\.tmatesoft\.svnkit(\..+)?" />
+	<locator searchPathRef="subclipse" pattern="^org\.tigris\.subversion(\..+)?" />
+	<locator searchPathRef="polarion" pattern="^org\.polarion\.team(\..+)?" />
+	<locator searchPathRef="polarion" pattern="^org\.polarion\.eclipse\.team(\..+)?" />
+	<locator searchPathRef="org.eclipse.team.svn" pattern="^org\.eclipse\.team\.svn(\..+)?$" />
+	<locator searchPathRef="org.eclipse.platform" pattern="^org\.eclipse(\..+)?$" />
+	<locator searchPathRef="org.eclipse.platform" pattern="^org\.junit4(\..+)?$" />
+	<locator searchPathRef="org.eclipse.language-packs" pattern="^org\.eclipse(\..+)?$" />
+	<locator searchPathRef="default" pattern=".*" />
+</rmap>
