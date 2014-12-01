@@ -1336,9 +1336,9 @@ columns(newcols);</value>
                     <text-property name="heading">ControlTitle</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Description</property>
-                    <text-property name="displayName">Description</text-property>
-                    <text-property name="heading">Description</text-property>
+                    <property name="columnName">Description-Process</property>
+                    <text-property name="displayName">Description-Process</text-property>
+                    <text-property name="heading">Description-Process</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">ElementType</property>
@@ -1354,11 +1354,6 @@ columns(newcols);</value>
                     <property name="columnName">Priority</property>
                     <text-property name="displayName">Priority</text-property>
                     <text-property name="heading">Priority</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">ProcessName</property>
-                    <text-property name="displayName">ProcessName</text-property>
-                    <text-property name="heading">ProcessName</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">auditUuid</property>
@@ -1430,7 +1425,7 @@ columns(newcols);</value>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">Description</property>
+                        <property name="name">Description-Process</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
@@ -1450,21 +1445,16 @@ columns(newcols);</value>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">ProcessName</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
                         <property name="name">auditUuid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">14</property>
+                        <property name="position">13</property>
                         <property name="name">finding</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">15</property>
+                        <property name="position">14</property>
                         <property name="name">measure</property>
                         <property name="dataType">javaObject</property>
                     </structure>
@@ -1523,8 +1513,8 @@ columns(newcols);</value>
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">Description</property>
-                    <property name="nativeName">Description</property>
+                    <property name="name">Description-Process</property>
+                    <property name="nativeName">Description-Process</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1551,27 +1541,20 @@ columns(newcols);</value>
                 </structure>
                 <structure>
                     <property name="position">12</property>
-                    <property name="name">ProcessName</property>
-                    <property name="nativeName">ProcessName</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">13</property>
                     <property name="name">auditUuid</property>
                     <property name="nativeName">auditUuid</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">13</property>
                     <property name="name">finding</property>
                     <property name="nativeName">finding</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">14</property>
                     <property name="name">measure</property>
                     <property name="nativeName">measure</property>
                     <property name="dataType">javaObject</property>
@@ -1598,7 +1581,11 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.report.service.impl.TocHelper2;
 
-import sernet.verinice.report.service.impl;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+
 
 
 /** Property which stores  Maßnahmen or Measures in english */
@@ -1635,6 +1622,15 @@ void addMeasureAndFinding(List row, ITask task){
     }
 }
 
+
+/** removes tags: <tag>hello</tag> -> hello */ 
+String removeHTMLTags(String description){
+    if(description == null)
+	return "";
+    else
+	return description.replaceAll("\\<[^>]*>", "");
+}
+
 // set top level element for report:
 root = helper.getRoot();
 // try to get manual parameter if set:
@@ -1667,8 +1663,7 @@ for (ITask task : taskList) {
     row.add(task.getUuid());
     row.add(task.getAuditTitle());
     row.add(task.getControlTitle());
-    row.add(task.getDescription());
-    row.add(task.getElementType());
+    row.add(removeHTMLTags(task.getDescription()) + "\nProcess: " + task.getElementType());
     row.add(task.getIsRead());
     row.add(task.getPriority());
     row.add(task.getProcessName());
@@ -1677,10 +1672,11 @@ for (ITask task : taskList) {
     addMeasureAndFinding(row, task);
 
     tasks.add(row);
-
 }
+
 sortedElements = sort(tasks);
 return sortedElements ;
+
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -1936,8 +1932,8 @@ return sortedElements ;
 inParameters(new String[] { "root_object" });
 
 String[] cols = new String[] {"Assignee", "Name", "CreateDate", "DueDate",
- "CnaUuid", "AuditTitle", "ControlTitle", "Description", "ElementType",
- "IsRead", "Priority", "ProcessName", "auditUuid", "finding", "measure"};
+ "CnaUuid", "AuditTitle", "ControlTitle", "Description-Process", "ElementType",
+ "IsRead", "Priority", "auditUuid", "finding", "measure"};
 
 columns(cols);</value>
                 </ex-property>
@@ -2114,9 +2110,9 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Description</property>
-                    <text-property name="displayName">Description</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Description"]</expression>
+                    <property name="name">Description-Process</property>
+                    <text-property name="displayName">Description-Process</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Description-Process"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
@@ -2135,12 +2131,6 @@ columns(cols);</value>
                     <property name="name">Priority</property>
                     <text-property name="displayName">Priority</text-property>
                     <expression name="expression" type="javascript">dataSetRow["Priority"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">ProcessName</property>
-                    <text-property name="displayName">ProcessName</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["ProcessName"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
@@ -2182,12 +2172,8 @@ columns(cols);</value>
                 <property name="width">1.0625in</property>
                 <property name="repeat">1</property>
             </column>
-            <column id="3359">
-                <property name="width">0.6145833333333334in</property>
-                <property name="repeat">1</property>
-            </column>
             <column id="3348">
-                <property name="width">0.8125in</property>
+                <property name="width">0.625in</property>
             </column>
             <column id="3350">
                 <property name="width">0.6354166666666666in</property>
@@ -2245,12 +2231,7 @@ columns(cols);</value>
                         <label id="3296">
                             <property name="marginLeft">0pt</property>
                             <property name="textAlign">left</property>
-                            <text-property name="text">Description</text-property>
-                        </label>
-                    </cell>
-                    <cell id="3303">
-                        <label id="3304">
-                            <text-property name="text">Process</text-property>
+                            <text-property name="text">Description / Process</text-property>
                         </label>
                     </cell>
                     <cell id="3281">
@@ -2357,19 +2338,8 @@ columns(cols);</value>
                         </data>
                     </cell>
                     <cell id="3322">
-                        <text-data id="3361">
-                            <property name="marginLeft">0pt</property>
-                            <property name="marginRight">0pt</property>
-                            <property name="paddingRight">0.5cm</property>
-                            <structure name="toc"/>
-                            <expression name="valueExpr" type="javascript">row["Description"]</expression>
-                            <property name="contentType">html</property>
-                        </text-data>
-                    </cell>
-                    <cell id="3330">
-                        <data id="3331">
-                            <property name="marginRight">0.5cm</property>
-                            <property name="resultSetColumn">ProcessName</property>
+                        <data id="3377">
+                            <property name="resultSetColumn">Description-Process</property>
                         </data>
                     </cell>
                     <cell id="3308">
