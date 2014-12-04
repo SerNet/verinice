@@ -78,6 +78,7 @@ This variant:
                 <entry key="validationService" value-ref="validationService" />
                 <entry key="accountService" value-ref="accountService" />
                 <entry key="reportdepositService" value-ref="reportdepositService" />
+                <entry key="reportHQLService" value-ref="reportHQLService"/>
 			</map>
 		</property>
 	</bean>
@@ -311,6 +312,9 @@ This variant:
     	<property name="rightsServerHandler" ref="rightsServerHandler" />
 	    <property name="permissionDao" ref="permissionDAO" />
     </bean>
+    
+     <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
+    
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
 	<!--<import resource="veriniceserver-debug.xml"/> -->
 

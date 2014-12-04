@@ -135,6 +135,18 @@
 			<value>sernet.verinice.interfaces.IReportDepositService</value>
 		</property>
 	</bean>
+
+	<bean name="/hqlServiceHttpInvoker"
+    	class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+		lazy-init="false">		
+		<property name="service">
+			<ref bean="reportHQLService" />
+		</property>
+		<property name="serviceInterface">
+			<value>sernet.verinice.interfaces.IReportHQLService</value>
+		</property>
+	</bean>
+	
 	
 </beans>
 

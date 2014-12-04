@@ -21,8 +21,11 @@ import java.util.Collections;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICachedCommand;
+import sernet.verinice.model.report.HQLSecurityException;
 
 /**
  * Command to enable report designers to execute hql from within a rptdesign file.
@@ -70,16 +73,26 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
      */
     @Override
     public void execute() {
-    
+
         if(!resultInjectedFromCache){
-            if(typeId instanceof String){
-                results = getDaoFactory().getDAO((String)typeId).findByQuery(hql, hqlParams);
-            } else if (typeId instanceof Class && paramNames == null){
-                results = getDaoFactory().getDAO((Class)typeId).findByQuery(hql, hqlParams);
-            } else if(typeId instanceof Class && paramNames != null){
-                results = getDaoFactory().getDAO((Class)typeId).findByQuery(hql, paramNames, hqlParams);
-            } else {
-                results = Collections.emptyList();
+            try{
+                IBaseDao dao = null;
+                if(typeId instanceof String){
+                    dao = getDaoFactory().getDAO((String)typeId);
+                } else if (typeId instanceof Class){
+                    dao = getDaoFactory().getDAO((Class<?>)typeId);
+                }
+                if(ServiceFactory.lookupReportHQLService().isQueryAllowed(hql)){
+                    if (paramNames == null || paramNames.length == 0){
+                        results = dao.findByQuery(hql, hqlParams);
+                    } else {
+                        results = dao.findByQuery(hql, paramNames, hqlParams);
+                    } 
+                } else {
+                    throw new RuntimeException(new HQLSecurityException("HQL-Query:\n\t" + hql + "\nviolates verinice security policies, execution of query denied"));
+                }
+            } catch (Throwable t){
+                LOG.error("Exception occured", t);
             }
         }
     }
@@ -114,10 +127,13 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
      */
     @Override
     public Object getCacheableResult() {
-        return results;
+        return getResult();
     }
     
     public Object getResult(){
+        if(results == null){
+            return Collections.emptyList();
+        }
         return results;
     }
     
