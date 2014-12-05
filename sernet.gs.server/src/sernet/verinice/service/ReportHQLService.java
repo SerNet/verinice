@@ -108,7 +108,7 @@ public class ReportHQLService implements IReportHQLService {
         Set<String> allowedSelections = new HashSet<String>();
         allowedSelections.add(CnATreeElement.class.getSimpleName());
         allowedSelections.add(CnALink.class.getSimpleName());
-        if(120 == child.getType() && !(allowedSelections.contains(child.getText()))){
+        if(HqlParser.IDENT == child.getType() && !(allowedSelections.contains(child.getText()))){
             if(LOG.isDebugEnabled()){
                 LOG.debug("qry is not allowed to be executed from a verinice report because usage of:\t\"" + child.getText() + "\" in a select statement");
             }
