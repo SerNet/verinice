@@ -17,22 +17,20 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.service;
+package sernet.verinice.iso27k.rcp;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class NumericStringComparator extends AbstractNumericStringComparator<Object> {
-
-    private static final long serialVersionUID = 2971144218737520545L;
+public class StringComboModelLabelProvider extends ComboModelLabelProvider<String> {
 
     /* (non-Javadoc)
-     * @see sernet.gs.service.AbstractNumericStringComparator#convertToString(java.lang.Object)
+     * @see sernet.verinice.iso27k.rcp.ComboModelLabelProvider#getLabel(java.lang.Object)
      */
     @Override
-    public String convertToString(Object o) {
-        return o.toString();
+    public String getLabel(String s) {
+        return s;
     }
 
 }

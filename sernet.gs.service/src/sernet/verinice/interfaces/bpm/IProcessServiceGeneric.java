@@ -19,7 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.bpm;
 
+import java.util.List;
 import java.util.Map;
+
+import org.jbpm.api.ProcessDefinition;
 
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -69,5 +72,7 @@ public interface IProcessServiceGeneric {
      * @return true id this process is really active
      */
     boolean isActive();
+    
+    List<KeyMessage> findAllProcessDefinitions();
     
 }

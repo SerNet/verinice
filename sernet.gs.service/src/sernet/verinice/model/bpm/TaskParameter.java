@@ -31,23 +31,17 @@ import sernet.verinice.interfaces.bpm.ITaskParameter;
  */
 public class TaskParameter implements ITaskParameter, Serializable {
  
-    Boolean read = Boolean.TRUE;
-    
-    Boolean unread = Boolean.TRUE;
-    
-    Date since;
-    
-    String username;
-    
-    String auditUuid;
-    
-    boolean allUser;
-    
-    String processKey;
-    
-    String taskId;
-    
-    Set<String> blacklist;
+    private Boolean read = Boolean.TRUE;    
+    private Boolean unread = Boolean.TRUE;   
+    private Date since;
+    private Date dueDateFrom;
+    private Date dueDateTo;
+    private String username;
+    private String auditUuid;
+    private boolean allUser;
+    private String processKey;
+    private String taskId;
+    private Set<String> blacklist;
     
     public TaskParameter() {
         super();
@@ -92,6 +86,22 @@ public class TaskParameter implements ITaskParameter, Serializable {
     @Override
     public void setSince(Date since) {
         this.since = since;
+    }
+
+    public Date getDueDateFrom() {
+        return dueDateFrom;
+    }
+
+    public void setDueDateFrom(Date dueDateFrom) {
+        this.dueDateFrom = dueDateFrom;
+    }
+
+    public Date getDueDateTo() {
+        return dueDateTo;
+    }
+
+    public void setDueDateTo(Date dueDateTo) {
+        this.dueDateTo = dueDateTo;
     }
 
     @Override

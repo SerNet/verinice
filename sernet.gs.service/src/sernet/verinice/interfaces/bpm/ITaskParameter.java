@@ -41,6 +41,14 @@ public interface ITaskParameter extends Serializable {
     
     void setSince(Date since);
     
+    Date getDueDateFrom();
+    
+    void setDueDateFrom(Date dueDateFrom);
+    
+    Date getDueDateTo();
+    
+    void setDueDateTo(Date dueDateTo);
+    
     Boolean getRead();
     
     void setRead(Boolean read);

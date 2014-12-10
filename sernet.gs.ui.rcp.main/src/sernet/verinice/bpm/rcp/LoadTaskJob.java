@@ -33,12 +33,23 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 
+
+/**
+ * Task loader job for task view.
+ * 
+ * @see sernet.verinice.bpm.rcp.TaskView
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ */
 final class LoadTaskJob extends NotifyingThread implements IRunnableWithProgress { 
     
     private static final Logger LOG = Logger.getLogger(LoadTaskJob.class);
     
     private ITaskParameter param;       
     private List<ITask> taskList;
+
+    public LoadTaskJob() {
+        super();
+    }
 
     public LoadTaskJob(ITaskParameter param) {
         super();
@@ -73,6 +84,14 @@ final class LoadTaskJob extends NotifyingThread implements IRunnableWithProgress
         }
     }
     
+    public ITaskParameter getParam() {
+        return param;
+    }
+
+    public void setParam(ITaskParameter param) {
+        this.param = param;
+    }
+
     public List<ITask> getTaskList() {
         return taskList;
     }

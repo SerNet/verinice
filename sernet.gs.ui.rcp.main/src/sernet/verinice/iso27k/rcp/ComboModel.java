@@ -21,7 +21,11 @@ package sernet.verinice.iso27k.rcp;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+
+import sernet.gs.service.NumericStringComparator;
 
 /**
  * Data model for selection lists (combo boxes)
@@ -96,6 +100,11 @@ public class ComboModel<T> {
 	    Collections.sort(objectList);
 	}
 	
+	@SuppressWarnings("unchecked")
+    public void sort(Comparator comparator) {
+        Collections.sort(objectList, comparator);
+    }
+	
 	public int size() {
 	    return objectList.size();
 	}
@@ -146,9 +155,6 @@ public class ComboModel<T> {
 		}
 	}
 
-	/**
-	 * @return
-	 */
 	public String[] getLabelArray() {
 		String[] array = new String[objectList.size()];
 		int i = 0;
@@ -158,6 +164,15 @@ public class ComboModel<T> {
 		}
 		return array;
 	}
+	
+	public List<T> getObjectList() {
+        List<T> list = new LinkedList<T>();
+        int i = 0;
+        for (ComboModelObject<T> object : objectList) {
+            list.add(object.getObject());
+        }
+        return list;
+    }
 
 	
 }

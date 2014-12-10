@@ -21,86 +21,146 @@ package sernet.verinice.bpm.rcp;
 
 import java.util.List;
 
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.verinice.interfaces.bpm.ITask;
-import sernet.verinice.interfaces.bpm.KeyValue;
 
 /**
- * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * Content provider for the table in task view.
  * 
+ * @see sernet.verinice.bpm.rcp.TaskView
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TaskContentProvider implements ITreeContentProvider {
-
-    private TreeViewer viewer;
-
-    private TaskTreeModel model;
+public class TaskContentProvider implements IStructuredContentProvider {
     
-    /**
-     * @param treeViewer
+    private TableViewer viewer;
+    
+    private List<ITask> taskList;
+    
+    public TaskContentProvider(TableViewer viewer) {
+        this.viewer = viewer;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
-    public TaskContentProvider(TreeViewer treeViewer) {
-        this.viewer = treeViewer;
+    public Object[] getElements(Object inputElement) {
+        return taskList.toArray(new Object[taskList.size()]);
     }
 
-    @Override
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
+     */
     public void dispose() {
+        // empty
     }
 
-    @Override
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         if (newInput instanceof List/* <ITask> */) {
-            this.model = new TaskTreeModel((List<ITask>) newInput);
-        }
-        if (newInput instanceof TaskTreeModel) {
-            this.model = (TaskTreeModel) newInput;
+            this.taskList =  (List<ITask>) newInput;
         }
     }
-
-    @Override
-    public Object[] getElements(Object inputElement) {
-        return model.getRootElementArray();
-    }
-
-    @Override
-    public Object[] getChildren(Object parentElement) {
-        Object[] children = new Object[0];
-        if (parentElement instanceof KeyValue) {
-            children = model.getChildrenArray((KeyValue) parentElement);
-        }
-        return children;
-    }
-
-    @Override
-    public Object getParent(Object element) {
-        Object parent = null;
-        if (element instanceof ITask) {
-            parent = new KeyValue(((ITask) element).getUuidAudit(), ((ITask) element).getAuditTitle());
-        }
-        return parent;
-    }
-
-    @Override
-    public boolean hasChildren(Object element) {
-        return getChildren(element).length > 0;
-    }
-
+    
     public void removeTask(final ITask task) {
         Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
-                model.remove(task);
+                taskList.remove(task);
                 viewer.remove(task);
                 viewer.refresh();
             }
         });
     }
     
-    public int getNumberOfGroups() {
-        return model.getRootElementSet().size();
-    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+//    private TableViewer viewer;
+//
+//    private TaskTreeModel model;
+//    
+//    /**
+//     * @param tableViewer
+//     */
+//    public TaskContentProvider(TableViewer tableViewer) {
+//        this.viewer = tableViewer;
+//    }
+//
+//    @Override
+//    public void dispose() {
+//    }
+//
+//    @Override
+//    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+//        if (newInput instanceof List/* <ITask> */) {
+//            this.model = new TaskTreeModel((List<ITask>) newInput);
+//        }
+//        if (newInput instanceof TaskTreeModel) {
+//            this.model = (TaskTreeModel) newInput;
+//        }
+//    }
+//
+//    @Override
+//    public Object[] getElements(Object inputElement) {
+//        return model.getRootElementArray();
+//    }
+//
+//    @Override
+//    public Object[] getChildren(Object parentElement) {
+//        Object[] children = new Object[0];
+//        if (parentElement instanceof KeyValue) {
+//            children = model.getChildrenArray((KeyValue) parentElement);
+//        }
+//        return children;
+//    }
+//
+//    @Override
+//    public Object getParent(Object element) {
+//        Object parent = null;
+//        if (element instanceof ITask) {
+//            parent = new KeyValue(((ITask) element).getUuidAudit(), ((ITask) element).getAuditTitle());
+//        }
+//        return parent;
+//    }
+//
+//    @Override
+//    public boolean hasChildren(Object element) {
+//        return getChildren(element).length > 0;
+//    }
+//
+//    public void removeTask(final ITask task) {
+//        Display.getDefault().syncExec(new Runnable() {
+//            @Override
+//            public void run() {
+//                model.remove(task);
+//                viewer.remove(task);
+//                viewer.refresh();
+//            }
+//        });
+//    }
+//    
+//    public int getNumberOfGroups() {
+//        return model.getRootElementSet().size();
+//    }
 
 }

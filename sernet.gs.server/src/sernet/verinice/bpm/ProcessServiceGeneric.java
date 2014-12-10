@@ -20,6 +20,7 @@
 package sernet.verinice.bpm;
 
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +43,7 @@ import org.jbpm.pvm.internal.xml.Parse;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.IProcessServiceGeneric;
+import sernet.verinice.interfaces.bpm.KeyMessage;
 
 /**
  * ProcessServiceGeneric implements all generic methods to handle jBPM processes. 
@@ -186,6 +188,21 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
             id = processDefinitionList.get(0).getId();
         }
         return id;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
+     */
+    @Override
+    public List<KeyMessage> findAllProcessDefinitions() {
+        List<ProcessDefinition> processDefinitionList = getRepositoryService()
+                .createProcessDefinitionQuery()
+                .orderDesc(ProcessDefinitionQuery.PROPERTY_KEY).list();
+        List<KeyMessage> keyMessageList = new LinkedList<KeyMessage>();
+        for (ProcessDefinition processDefinition : processDefinitionList) {
+            keyMessageList.add(new KeyMessage(processDefinition.getKey()));
+        }
+        return keyMessageList;
     }
     
     public List<ExecutionImpl> findExecutionForElement(String key, String uuid) {    

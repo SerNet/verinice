@@ -27,12 +27,14 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.LoadUsername;
 
 /**
- *
+ * jBPM 4 process activity for different processes.
+ * e.g: individual-task.jpdl.xml
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -42,6 +44,14 @@ public class ProzessExecution {
     
     private ICommandService commandService;
     
+    /**
+     * Loads the username of an account which linked to a {@link CnATreeElement}
+     * by a {@link CnALink}.
+     * 
+     * @param uuid UUID of the person which is linked to an account
+     * @param relationId The id of a {@link CnALink}
+     * @return The username of an account
+     */
     public String loadAssignee(String uuid, String relationId) {
         ServerInitializer.inheritVeriniceContextState();
         String username = null;

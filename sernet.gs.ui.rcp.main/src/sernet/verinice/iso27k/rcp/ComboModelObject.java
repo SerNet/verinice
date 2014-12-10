@@ -21,6 +21,8 @@ package sernet.verinice.iso27k.rcp;
 
 import java.text.Collator;
 
+import org.aspectj.weaver.Iterators.Getter;
+
 /**
  * Object in a {@link ComboModel}
  * 
@@ -100,6 +102,14 @@ public class ComboModelObject<T> implements Comparable<ComboModelObject<T>> {
             }
         }
         return result;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getLabel();
     }
 	
 	

@@ -22,6 +22,7 @@ package sernet.verinice.bpm.indi;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import sernet.verinice.bpm.ProcessServiceVerinice;
@@ -67,6 +68,7 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
         final int maxDescriptionLength = 254;
         Map<String, Object> map = new HashMap<String, Object>();
         map.put(IGenericProcess.VAR_UUID, parameter.getUuid());
+        map.put(IGenericProcess.VAR_AUDIT_UUID, loadScopeUuid(parameter.getUuid()));
         map.put(IGenericProcess.VAR_ASSIGNEE_NAME, parameter.getAssignee());
         map.put(IIndividualProcess.VAR_RELATION_ID, parameter.getAssigneeRelationId());
         map.put(IGenericProcess.VAR_DUEDATE, parameter.getDueDate()); 
@@ -85,6 +87,40 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
         map.put(IGenericProcess.VAR_TYPE_ID, parameter.getTypeId());
         map.put(IIndividualProcess.VAR_PROPERTY_TYPES, parameter.getProperties());
         return map;
+    }
+
+
+    private Object loadScopeUuid(String elementUuid) {
+        String scopeUuid = null;
+        Integer scopeDbId = loadScopeDbId(elementUuid);
+        if(scopeDbId!=null) {
+            scopeUuid = loadUuid(scopeDbId);
+        }
+        return scopeUuid;
+    }
+    
+    private Integer loadScopeDbId(String uuid) {
+        if(uuid==null) {
+            return null;
+        }
+        Integer scopeDbId = null;
+        List<Integer> scopeIdList = getElementDao().findByQuery("select e.scopeId from CnATreeElement e where e.uuid = ?", new Object[]{uuid});
+        if(!scopeIdList.isEmpty()) {
+            scopeDbId = scopeIdList.get(0);
+        }
+        return scopeDbId;
+    }
+
+    private String loadUuid(Integer dbId) {
+        if(dbId==null) {
+            return null;
+        }
+        String scopeUuid = null;
+        List<String> uuidList = getElementDao().findByQuery("select e.uuid from CnATreeElement e where e.dbId = ?", new Object[]{dbId});
+        if(!uuidList.isEmpty()) {
+            scopeUuid = uuidList.get(0);
+        }
+        return scopeUuid;
     }
 
     /**

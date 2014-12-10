@@ -31,15 +31,14 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.bpm.ITask;
-import sernet.verinice.interfaces.bpm.KeyValue;
 
 /**
+ * Label provider for the table in task view.
+ * 
+ * @see sernet.verinice.bpm.rcp.TaskView
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 public class TaskLabelProvider implements ITableLabelProvider {
-
-    private boolean onlyMyTasks = true;
     
     private static final Map<String, String> PRIO_IMAGE_MAP;
     
@@ -53,8 +52,8 @@ public class TaskLabelProvider implements ITableLabelProvider {
     /**
      * @param onlyMyTasks
      */
-    public TaskLabelProvider(boolean onlyMyTasks) {
-        this.onlyMyTasks = onlyMyTasks;
+    public TaskLabelProvider() {
+        super();
     }
 
     /* (non-Javadoc)
@@ -83,36 +82,34 @@ public class TaskLabelProvider implements ITableLabelProvider {
     public String getColumnText(Object element, int columnIndex) {
         final int maxColumnTextLength = 100;
         String text = null;
-        if(element instanceof KeyValue && columnIndex==0) {
-            text = ((KeyValue)element).getValue();
-        }
-        if(element instanceof ITask) {
-            ITask task = (ITask) element;
-            switch (columnIndex) {
-            case 0:
-                text = task.getControlTitle();
-                break;
-            case 1:
-                text = task.getProcessName();
-                break;
-            case 2:
-                text = task.getName();
-                break;
-            case 3:
-                IAuthService authService = ServiceFactory.lookupAuthService();
-                text = task.getAssignee();
-                if(text!=null && text.equals(authService.getUsername())) {
-                    text = text + " (you)";
-                }                          
-                break;    
-            case 4:
-                if(task.getDueDate()!=null) {
-                    text = DateFormat.getDateInstance().format(task.getDueDate());
-                }
-                break;          
-            default:
-                break;
+        ITask task = (ITask) element;
+        switch (columnIndex) {
+        case 1:
+            text = task.getAuditTitle();
+            break;
+        case 2:
+            text = task.getControlTitle();
+            break;
+        case 3:
+            text = task.getProcessName();
+            break;
+        case 4:
+            text = task.getName();
+            break;
+        case 5:
+            IAuthService authService = ServiceFactory.lookupAuthService();
+            text = task.getAssignee();
+            if(text!=null && text.equals(authService.getUsername())) {
+                text = text + " (you)";
+            }                          
+            break;    
+        case 6:
+            if(task.getDueDate()!=null) {
+                text = DateFormat.getDateInstance().format(task.getDueDate());
             }
+            break;          
+        default:
+            break;
         }
         if(text!=null && text.length()>maxColumnTextLength) {
             text = text.substring(0, maxColumnTextLength - 1) + "...";
@@ -120,21 +117,12 @@ public class TaskLabelProvider implements ITableLabelProvider {
         return text;
     }
 
-    public boolean isOnlyMyTasks() {
-        return onlyMyTasks;
-    }
-
-    public void setOnlyMyTasks(boolean onlyMyTasks) {
-        this.onlyMyTasks = onlyMyTasks;
-    }
 
     /* (non-Javadoc)
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     @Override
     public void addListener(ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
-
     }
 
     /* (non-Javadoc)
@@ -142,8 +130,6 @@ public class TaskLabelProvider implements ITableLabelProvider {
      */
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
-
     }
 
     /* (non-Javadoc)
@@ -151,7 +137,6 @@ public class TaskLabelProvider implements ITableLabelProvider {
      */
     @Override
     public boolean isLabelProperty(Object element, String property) {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -160,8 +145,6 @@ public class TaskLabelProvider implements ITableLabelProvider {
      */
     @Override
     public void removeListener(ILabelProviderListener listener) {
-        // TODO Auto-generated method stub
-
     }
 
 }

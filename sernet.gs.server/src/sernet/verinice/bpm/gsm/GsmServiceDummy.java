@@ -19,12 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.bpm.gsm;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import sernet.verinice.interfaces.bpm.IGsmService;
 import sernet.verinice.interfaces.bpm.IGsmValidationResult;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
+import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.model.bpm.ProcessInformation;
 
 /**
@@ -94,6 +97,14 @@ public class GsmServiceDummy implements IGsmService {
      */
     @Override
     public void cleanUpOrganization(Integer orgId) { 
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
+     */
+    @Override
+    public List<KeyMessage> findAllProcessDefinitions() {
+        return Collections.emptyList();
     }
 
 

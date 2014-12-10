@@ -8,6 +8,7 @@ import org.jbpm.pvm.internal.model.ExecutionImpl;
 
 import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
+import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.model.bpm.ProcessInformation;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;
@@ -66,6 +67,14 @@ public class ProcessServiceDummy implements IProcessServiceIsa {
     @Override
     public boolean isActive() {
         return false;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
+     */
+    @Override
+    public List<KeyMessage> findAllProcessDefinitions() {
+        return Collections.emptyList();
     }
 
 }

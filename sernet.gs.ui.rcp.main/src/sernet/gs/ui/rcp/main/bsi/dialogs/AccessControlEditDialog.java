@@ -68,6 +68,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.rcp.ImageColumnProvider;
+import sernet.verinice.rcp.account.AccountLoader;
 
 /**
  * Dialog that allows changing the access options for elements.
@@ -386,27 +387,10 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 
     private String[] getRoles() {
         if (roleArray == null) {
-            roleArray = loadRoles();
+            List<String> accountAndGroupList = AccountLoader.loadLoginAndGroupNames();
+            roleArray = accountAndGroupList.toArray(new String[accountAndGroupList.size()]);       
         }
         return roleArray;
-    }
-
-    @SuppressWarnings("unchecked")
-    private String[] loadRoles() {
-
-        IAccountService accountService = ServiceFactory.lookupAccountService();
-        List<String> accountGroups = accountService.listGroupNames();
-        Set<String> accounts = accountService.listAccounts();
-        accountGroups.addAll(accounts);
-
-        Collections.sort(accountGroups, new NumericStringComparator());
-
-        String[] roleList = new String[accountGroups.size()];
-        for (int i = 0; i < roleList.length; i++) {
-            roleList[i] = accountGroups.get(i);
-        }
-
-        return roleList;
     }
 
     protected void addPermission() {

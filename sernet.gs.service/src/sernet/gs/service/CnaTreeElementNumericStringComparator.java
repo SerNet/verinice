@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Daniel Murygin.
+ * Copyright (c) 2014 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -19,44 +19,23 @@
  ******************************************************************************/
 package sernet.gs.service;
 
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
+import sernet.verinice.model.common.CnATreeElement;
+
 
 /**
- * A Thread which notifies listeners when it's finished.
- * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ *
  */
-public abstract class NotifyingThread extends Thread {
-    
-    private final Set<IThreadCompleteListener> listeners = new CopyOnWriteArraySet<IThreadCompleteListener>();
-    
-    public final void addListener(final IThreadCompleteListener listener) {
-      listeners.add(listener);
-    }
-    
-    public final void removeListener(final IThreadCompleteListener listener) {
-      listeners.remove(listener);
-    }
-    
-    public final void removeAllListener() {
-        listeners.clear();
-      }
-    
-    private final void notifyListeners() {
-      for (IThreadCompleteListener listener : listeners) {
-        listener.notifyOfThreadComplete(this);
-      }
-    }
-    
+public class CnaTreeElementNumericStringComparator extends AbstractNumericStringComparator<CnATreeElement> {
+
+    private static final long serialVersionUID = -1848460666860207431L;
+
+    /* (non-Javadoc)
+     * @see sernet.gs.service.AbstractNumericStringComparator#convertToString(java.lang.Object)
+     */
     @Override
-    public final void run() {
-      try {
-        doRun();
-      } finally {
-        notifyListeners();
-      }
-    
+    public String convertToString(CnATreeElement element) {
+        return element.getTitle();
     }
-    public abstract void doRun();
- }
+
+}

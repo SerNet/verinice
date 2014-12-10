@@ -64,6 +64,7 @@
         <property name="jbpmExecutionDao" ref="jbpmExecutionDao" />
         <property name="processDao" ref="processDao" />
         <property name="authService" ref="authService" />
+        <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
     <bean id="gsmService" class="sernet.verinice.bpm.gsm.GsmService">
@@ -153,6 +154,8 @@
         <property name="jbpmVariableDao" ref="jbpmVariableDao" />
         <property name="auditDao" ref="auditDAO" />
         <property name="configurationService" ref="configurationService" />
+        <!-- Add a transition id (<TRANS_ID>) here to hide a transition / outcome-->
+        <!-- from a user in GUI -->
         <property name="taskOutcomeBlacklist">
             <set>
                 <value>icf.trans.reminderDeadline</value>

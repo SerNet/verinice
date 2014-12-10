@@ -19,11 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.bpm.isam;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
+import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.model.bpm.ProcessInformation;
 
 /**
@@ -85,6 +87,14 @@ public class IsaControlFlowServiceDummy implements IIsaControlFlowService {
     @Override
     public IProcessStartInformation startProcessesForAudits(List<String> auditUuids) {
         return new ProcessInformation(0);
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
+     */
+    @Override
+    public List<KeyMessage> findAllProcessDefinitions() {
+        return Collections.emptyList();
     }
 
 }

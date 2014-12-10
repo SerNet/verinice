@@ -21,21 +21,31 @@ package sernet.verinice.bpm.rcp;
 
 import java.util.List;
 
-import org.eclipse.jface.viewers.TreeViewer;
+import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.TableViewer;
 
 import sernet.verinice.interfaces.bpm.ITask;
 
+/**
+ * This class refresh the task table in task view after task loading job is done.
+ *
+ * @see sernet.verinice.bpm.rcp.TaskView
+ * @see sernet.verinice.bpm.rcp.LoadTaskJob
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ */
 public class RefreshTaskView {
+    
+    private static final Logger LOG = Logger.getLogger(RefreshTaskView.class);
     
     List<ITask> taskList;
     
-    TreeViewer viewer;
+    TableViewer viewer;
     
     /**
      * @param taskList
      * @param viewer
      */
-    public RefreshTaskView(List<ITask> taskList, TreeViewer viewer) {
+    public RefreshTaskView(List<ITask> taskList, TableViewer viewer) {
         super();
         this.taskList = taskList;
         this.viewer = viewer;
@@ -45,13 +55,9 @@ public class RefreshTaskView {
         // Get the content for the viewer, setInput will call getElements in the
         // contentProvider
         try {
-            viewer.setInput(taskList);
-            if(((TaskContentProvider)viewer.getContentProvider()).getNumberOfGroups()==1) {
-                viewer.expandToLevel(2);
-            }
-            
+            viewer.setInput(taskList);                     
         } catch (Exception t) {
-            TaskView.LOG.error("Error while setting table data", t); //$NON-NLS-1$
+            LOG.error("Error while setting table data", t); //$NON-NLS-1$
         }
     }
 }

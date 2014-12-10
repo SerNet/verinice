@@ -17,22 +17,18 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.service;
+package sernet.verinice.interfaces.bpm;
 
-/**
- * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
- */
-public class NumericStringComparator extends AbstractNumericStringComparator<Object> {
+import sernet.verinice.model.bpm.Messages;
 
-    private static final long serialVersionUID = 2971144218737520545L;
-
-    /* (non-Javadoc)
-     * @see sernet.gs.service.AbstractNumericStringComparator#convertToString(java.lang.Object)
-     */
-    @Override
-    public String convertToString(Object o) {
-        return o.toString();
+public class KeyMessage extends KeyValue {
+    
+    public KeyMessage(String key) {
+        super(key,Messages.getString(key));
     }
-
+    
+    public KeyMessage(String key,String message) {
+        super(key,message);
+    }
+    
 }

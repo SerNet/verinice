@@ -281,6 +281,18 @@ public class TaskService implements ITaskService {
             paramList.add(parameter.getSince());
         }
         
+        if(parameter.getDueDateFrom()!=null) {
+            where = concat(sb,where);
+            sb.append("task.duedate>=? "); //$NON-NLS-1$
+            paramList.add(parameter.getDueDateFrom());
+        }
+        
+        if(parameter.getDueDateTo()!=null) {
+            where = concat(sb,where);
+            sb.append("task.duedate<=? "); //$NON-NLS-1$
+            paramList.add(parameter.getDueDateTo());
+        }
+        
         if(parameter.getAuditUuid()!=null) {
             where = concat(sb,where);
             sb.append("auditVar.key=? "); //$NON-NLS-1$
@@ -410,7 +422,7 @@ public class TaskService implements ITaskService {
 
     private Map<String, Object> loadVariables(Task task) {
         if (log.isDebugEnabled()) {
-            log.debug("map, loading element..."); //$NON-NLS-1$
+            log.debug("loadVariables, loading element..."); //$NON-NLS-1$
         }
         String executionId = task.getExecutionId();
         return loadVariablesForProcess(executionId);
@@ -423,7 +435,7 @@ public class TaskService implements ITaskService {
 
     private TaskInformation mapAudit(TaskInformation taskInformation, Map<String, Object> varMap) {
         
-        log.debug("map, loading audit..."); //$NON-NLS-1$
+        log.debug("mapAudit, loading audit..."); //$NON-NLS-1$
                 
         CnATreeElement audit = null;
         String uuidAudit = (String) varMap.get(IIsaExecutionProcess.VAR_AUDIT_UUID); 

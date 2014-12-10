@@ -19,10 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.bpm.qm;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import sernet.verinice.interfaces.bpm.IIsaQmService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
+import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.model.bpm.ProcessInformation;
 
 /**
@@ -77,5 +80,13 @@ public class IsaQmServiceDummy implements IIsaQmService {
     public boolean isActive() {
         return false;
     } 
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
+     */
+    @Override
+    public List<KeyMessage> findAllProcessDefinitions() {
+        return Collections.emptyList();
+    }
 
 }

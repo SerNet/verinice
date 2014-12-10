@@ -32,6 +32,8 @@ public class IndividualServiceParameter implements Serializable, Comparable<Indi
 
     private String uuid;
     
+    private String orgUuid;
+    
     private String typeId;
     
     private String assignee;
@@ -54,6 +56,18 @@ public class IndividualServiceParameter implements Serializable, Comparable<Indi
 
     public String getUuid() {
         return uuid;
+    }
+    
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getOrgUuid() {
+        return orgUuid;
+    }
+
+    public void setOrgUuid(String orgUuid) {
+        this.orgUuid = orgUuid;
     }
 
     public String getTypeId() {
@@ -99,10 +113,6 @@ public class IndividualServiceParameter implements Serializable, Comparable<Indi
 
     public Integer getReminderPeriodDays() {
         return reminderPeriodDays;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public void setAssignee(String assignee) {
