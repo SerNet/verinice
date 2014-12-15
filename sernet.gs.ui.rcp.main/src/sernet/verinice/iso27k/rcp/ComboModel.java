@@ -20,6 +20,7 @@
 package sernet.verinice.iso27k.rcp;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -54,7 +55,7 @@ public class ComboModel<T> {
         objectList.add(position, new ComboModelObject<T>(object, labelProvider.getLabel(object)));
     }
 	
-	public void addAll(List<T> objectList) {
+	public void addAll(Collection<T> objectList) {
 	    for (T object : objectList) {
 	        this.objectList.add(new ComboModelObject<T>(object, labelProvider.getLabel(object)));
         }

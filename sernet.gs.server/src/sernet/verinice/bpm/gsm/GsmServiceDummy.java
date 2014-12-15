@@ -103,8 +103,8 @@ public class GsmServiceDummy implements IGsmService {
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
      */
     @Override
-    public List<KeyMessage> findAllProcessDefinitions() {
-        return Collections.emptyList();
+    public Set<KeyMessage> findAllProcessDefinitions() {
+        return Collections.emptySet();
     }
 
 

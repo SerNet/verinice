@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -223,7 +224,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     }
     
     private void createTablePanel(Composite parent) {
-        this.tableViewer = new TableViewer(parent);
+        this.tableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
         final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         this.tableViewer.getControl().setLayoutData(gridData);
         this.tableViewer.setUseHashlookup(true);
@@ -599,8 +600,8 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private void loadProcessTypes() {
         comboModelProcessType.clear();
         // you can use an arbitrary process service here
-        List<KeyMessage> processDefinitionList =  ServiceFactory.lookupIndividualService().findAllProcessDefinitions();
-        comboModelProcessType.addAll(processDefinitionList);
+        Set<KeyMessage> processDefinitionSet =  ServiceFactory.lookupIndividualService().findAllProcessDefinitions();
+        comboModelProcessType.addAll(processDefinitionSet);
         comboModelProcessType.sort(NSC);
         comboModelProcessType.addNoSelectionObject(Messages.TaskView_23);
         getDisplay().syncExec(new Runnable(){

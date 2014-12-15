@@ -3,6 +3,7 @@ package sernet.verinice.bpm;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jbpm.pvm.internal.model.ExecutionImpl;
 
@@ -73,8 +74,8 @@ public class ProcessServiceDummy implements IProcessServiceIsa {
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
      */
     @Override
-    public List<KeyMessage> findAllProcessDefinitions() {
-        return Collections.emptyList();
+    public Set<KeyMessage> findAllProcessDefinitions() {
+        return Collections.emptySet();
     }
 
 }

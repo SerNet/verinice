@@ -19,10 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.bpm;
 
-import java.util.List;
 import java.util.Map;
-
-import org.jbpm.api.ProcessDefinition;
+import java.util.Set;
 
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -73,6 +71,13 @@ public interface IProcessServiceGeneric {
      */
     boolean isActive();
     
-    List<KeyMessage> findAllProcessDefinitions();
+    /**
+     * Returns a set with all process definitions.
+     * Set contains {@link KeyMessage}s with the process
+     * key and a label.
+     * 
+     * @return All process definition key and labels
+     */
+    Set<KeyMessage> findAllProcessDefinitions();
     
 }

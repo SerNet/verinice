@@ -20,6 +20,7 @@
 package sernet.verinice.bpm;
 
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -194,15 +195,15 @@ public class ProcessServiceGeneric implements IProcessServiceGeneric {
      * @see sernet.verinice.interfaces.bpm.IProcessServiceGeneric#findAllProcessDefinitions()
      */
     @Override
-    public List<KeyMessage> findAllProcessDefinitions() {
+    public Set<KeyMessage> findAllProcessDefinitions() {
         List<ProcessDefinition> processDefinitionList = getRepositoryService()
                 .createProcessDefinitionQuery()
                 .orderDesc(ProcessDefinitionQuery.PROPERTY_KEY).list();
-        List<KeyMessage> keyMessageList = new LinkedList<KeyMessage>();
+        Set<KeyMessage> keyMessageSet = new HashSet<KeyMessage>();
         for (ProcessDefinition processDefinition : processDefinitionList) {
-            keyMessageList.add(new KeyMessage(processDefinition.getKey()));
+            keyMessageSet.add(new KeyMessage(processDefinition.getKey()));
         }
-        return keyMessageList;
+        return keyMessageSet;
     }
     
     public List<ExecutionImpl> findExecutionForElement(String key, String uuid) {    
