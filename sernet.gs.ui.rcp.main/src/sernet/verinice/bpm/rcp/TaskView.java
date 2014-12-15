@@ -25,10 +25,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,7 +49,6 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -75,23 +70,18 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-import sernet.gs.service.IThreadCompleteListener;
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.bpm.TaskLoader;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
@@ -104,19 +94,11 @@ import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.model.bpm.TaskInformation;
-import sernet.verinice.model.bpm.TaskParameter;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.account.AccountLoader;
 import sernet.verinice.service.commands.LoadAncestors;
-import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 
 /**
  * RCP view to show task loaded by instances of {@link ITaskService}.
@@ -127,12 +109,13 @@ import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
  * Double clicking a task opens {@link CnATreeElement} in an editor. View
  * toolbar provides a button to complete tasks.
  * 
+ * @see TaskViewDataLoader
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class TaskView extends RightsEnabledView implements IAttachedToPerspective, IPartListener2 {
     
     private static final Logger LOG = Logger.getLogger(TaskView.class);
-    private static final NumericStringComparator NSC = new NumericStringComparator();
+    static final NumericStringComparator NSC = new NumericStringComparator();
     
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView"; //$NON-NLS-1$
     
@@ -141,56 +124,49 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private static final int WEIGHT_25 = 25;
     private static final int WIDTH_4 = 4;
     
-    private CnATreeElement selectedGroup;
-    private String selectedAssignee;
-    private KeyMessage selectedProcessType;
-    private KeyMessage selectedTaskType;
+    CnATreeElement selectedGroup;
+    String selectedAssignee;
+    KeyMessage selectedProcessType;
+    KeyMessage selectedTaskType;
     
     private TableViewer tableViewer;
     private TaskTableSorter tableSorter = new TaskTableSorter();
     private TaskLabelProvider labelProvider;
     private TaskContentProvider contentProvider;    
     private Browser textPanel;
-    private Date dueDateFrom = null;
-    private Date dueDateTo = null;
-    private Button searchButton;
+    Date dueDateFrom = null;
+    Date dueDateTo = null;
+    Button searchButton;
 
-    private ComboModel<CnATreeElement> comboModelGroup;
-    private Combo comboGroup;    
-    private ComboModel<Configuration> comboModelAccount;
-    private Combo comboAccount;
+    private TaskViewDataLoader dataLoader;
     
-    private ComboModel<KeyMessage> comboModelProcessType;
-    private Combo comboProcessType;
-    private ComboModelTaskType comboModelTaskType;
-    private Combo comboTaskType;
+    ComboModel<CnATreeElement> comboModelGroup;
+    Combo comboGroup;    
+    ComboModel<Configuration> comboModelAccount;
+    Combo comboAccount;
+    
+    ComboModel<KeyMessage> comboModelProcessType;
+    Combo comboProcessType;
+    ComboModelTaskType comboModelTaskType;
+    Combo comboTaskType;
     
     private Action refreshAction;
     private Action doubleClickAction;
     private Action cancelTaskAction;
-    private LoadTaskJob job;
     
     private ICommandService commandService;
     private RightsServiceClient rightsService;
-    private IModelLoadListener modelLoadListener;
     private ITaskListener taskListener;
-    private ExecutorService executer = Executors.newFixedThreadPool(1);
 
     public TaskView() {
         super();
-        job = new LoadTaskJob();
-        IThreadCompleteListener listener = new RefreshListener(job);
-        job.addListener(listener);
+        dataLoader = new TaskViewDataLoader(this);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets
-     * .Composite)
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.RightsEnabledView#createPartControl(org.eclipse.swt.widgets.Composite)
      */
-    @Override
+    @Override   
     public void createPartControl(Composite parent) {
         try {
             super.createPartControl(parent);
@@ -203,11 +179,14 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
 
     private void initView(Composite parent) {
         createRootComposite(parent);
-
-        initData();
+        dataLoader.initData();
         makeActions();
         addActions();
         addListener();
+    }
+    
+    public void loadTasks() {
+        dataLoader.loadTasks();
     }
 
     private void createRootComposite(Composite parent) {
@@ -406,7 +385,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         searchButton.setText(Messages.TaskView_17);
         searchButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                loadTasks();
+                dataLoader.loadTasks();
             }
         });
     } 
@@ -462,179 +441,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         cal.set(Calendar.DATE, dueDate.getDay());
         return cal;
     }
-
-    private void initData() {
-        if (CnAElementFactory.isModelLoaded()) {  
-            loadGroups();         
-            loadAssignees();
-            loadProcessTypes();
-            loadTaskTypes();
-            loadTasks();
-        } else if (modelLoadListener == null) {
-            // model is not loaded yet: add a listener to load data when it's
-            // laoded
-            modelLoadListener = new IModelLoadListener() {
-                @Override
-                public void closed(BSIModel model) {
-                    // nothing to do
-                }
-
-                @Override
-                public void loaded(BSIModel model) {
-                    Display.getDefault().syncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            initData();
-                        }
-                    });
-                }
-
-                @Override
-                public void loaded(ISO27KModel model) {
-                    // work is done in loaded(BSIModel model)
-                }
-            };
-            CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
-        }
-    }
     
-    public void loadTasks() {
-        TaskParameter param = new TaskParameter();        
-        param.setUsername(selectedAssignee);
-        if(selectedAssignee!=null) {           
-            param.setAllUser(false);
-        } else {
-            param.setAllUser(true);
-        }       
-        if(selectedGroup!=null) {
-            param.setAuditUuid(selectedGroup.getUuid());
-        }       
-        if(selectedProcessType!=null) {
-            param.setProcessKey(selectedProcessType.getKey());
-        }      
-        if(selectedTaskType!=null) {
-            param.setTaskId(selectedTaskType.getKey());
-        }
-        if(dueDateFrom!=null) {
-            param.setDueDateFrom(dueDateFrom);
-        }
-        if(dueDateTo!=null) {
-            param.setDueDateTo(dueDateTo);
-        }
-        job.setParam(param);
-        loadTasksInBackground(job);
-
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                getInfoPanel().setText(""); //$NON-NLS-1$
-            }
-        });
-    }
-    
-    private void loadTasksInBackground(final LoadTaskJob job) {
-        searchButton.setText(Messages.TaskView_19);
-        searchButton.setEnabled(false);
-        executer.execute(job);
-    }
-    
-    private void loadAssignees() {
-        comboModelAccount.addAll(AccountLoader.loadAccounts());
-        comboModelAccount.addNoSelectionObject(Messages.TaskView_20);
-        getDisplay().syncExec(new Runnable(){
-            @Override
-            public void run() {
-                comboAccount.setItems(comboModelAccount.getLabelArray());
-                selectDefaultAssignee(); 
-            }
-        });
-    }
-    
-    private void selectDefaultAssignee() {
-        String logedInUserName = ServiceFactory.lookupAuthService().getUsername();
-        List<Configuration> allAccounts = comboModelAccount.getObjectList();
-        for (Configuration account : allAccounts) {
-            if(account!=null) {
-                if(logedInUserName.equals(account.getUser())) {             
-                    comboModelAccount.setSelectedObject(account);
-                    comboAccount.select(comboModelAccount.getSelectedIndex());
-                    selectedAssignee = account.getUser();
-                }  
-            }
-        }       
-    }
-    
-    private void loadGroups()  {
-        try {
-            comboModelGroup.clear();
-            LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(Organization.TYPE_ID);
-            command = getCommandService().executeCommand(command);
-            comboModelGroup.addAll(command.getElements());
-            command = new LoadCnAElementByEntityTypeId(ITVerbund.TYPE_ID_HIBERNATE);      
-            command = getCommandService().executeCommand(command); 
-            comboModelGroup.addAll(command.getElements());
-            command = new LoadCnAElementByEntityTypeId(Audit.TYPE_ID);      
-            command = getCommandService().executeCommand(command); 
-            comboModelGroup.addAll(command.getElements());
-            comboModelGroup.sort(NSC);
-            comboModelGroup.addNoSelectionObject(Messages.TaskView_21);
-            getDisplay().syncExec(new Runnable(){
-                @Override
-                public void run() {
-                    comboGroup.setItems(comboModelGroup.getLabelArray());
-                    selectDefaultGroup();               
-                }  
-            });
-        } catch (CommandException e) {
-            // exception is not logged here, but in createPartControl
-            throw new RuntimeCommandException("Error while loading organizations, it-verbunds or audits", e); //$NON-NLS-1$
-        }
-    }
-    
-    private void selectDefaultGroup() {
-        comboGroup.select(0);
-        comboModelGroup.setSelectedIndex(comboGroup.getSelectionIndex());
-        selectedGroup = comboModelGroup.getSelectedObject();
-    }
-    
-    private void loadProcessTypes() {
-        comboModelProcessType.clear();
-        // you can use an arbitrary process service here
-        Set<KeyMessage> processDefinitionSet =  ServiceFactory.lookupIndividualService().findAllProcessDefinitions();
-        comboModelProcessType.addAll(processDefinitionSet);
-        comboModelProcessType.sort(NSC);
-        comboModelProcessType.addNoSelectionObject(Messages.TaskView_23);
-        getDisplay().syncExec(new Runnable(){
-            @Override
-            public void run() {
-                comboProcessType.setItems(comboModelProcessType.getLabelArray());    
-                selectDefaultProcessType();
-            }  
-        });
-    }
-    
-    private void selectDefaultProcessType() {
-        comboProcessType.select(0);
-        comboModelProcessType.setSelectedIndex(comboProcessType.getSelectionIndex());
-        selectedProcessType = comboModelProcessType.getSelectedObject();
-    }
-    
-    private void loadTaskTypes() {
-        getDisplay().syncExec(new Runnable(){
-            @Override
-            public void run() {
-                comboTaskType.setItems(comboModelTaskType.getLabelArray());      
-                selectDefaultTaskType();
-            }  
-        });
-    }
-    
-    private void selectDefaultTaskType() {
-        comboTaskType.select(0);
-        comboModelTaskType.setSelectedIndex(comboTaskType.getSelectionIndex());
-        selectedTaskType = comboModelTaskType.getSelectedObject();
-    }
-
     private Listener getCollapseExpandListener() {
         Listener listener = new Listener() {
 
@@ -658,7 +465,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         refreshAction = new Action() {
             @Override
             public void run() {
-                loadTasks();
+                dataLoader.loadTasks();
             }
         };
         refreshAction.setText(Messages.ButtonRefresh);
@@ -760,7 +567,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                 Display.getDefault().syncExec(new Runnable() {
                     @Override
                     public void run() {
-                        loadTasks();
+                        dataLoader.loadTasks();
                     }
                 });
             }
@@ -798,42 +605,16 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
-    @Override
+    @Override  
     public void dispose() {
-        CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
         TaskChangeRegistry.removeTaskChangeListener(taskListener);
-        job.removeAllListener();
-        shutdownAndAwaitTermination(executer);
+        dataLoader.dispose();
         super.dispose();
     }
 
-    private void shutdownAndAwaitTermination(ExecutorService executer) {
-        executer.shutdown(); // Disable new tasks from being submitted
-        try {
-            // Wait a while for existing tasks to terminate
-            if (!executer.awaitTermination(30, TimeUnit.SECONDS)) {
-                executer.shutdownNow(); // Cancel currently executing tasks
-                // Wait a while for tasks to respond to being cancelled
-                if (!executer.awaitTermination(30, TimeUnit.SECONDS)) {
-                    LOG.error("Task loader (ExecutorService) shutdown failed."); //$NON-NLS-1$
-                }
-            }
-        } catch (InterruptedException ie) {
-            // (Re-)Cancel if current thread also interrupted
-            executer.shutdownNow();
-            // Preserve interrupt status
-            Thread.currentThread().interrupt();
-        }
-    }
-
-    /**
-     * @param manager
-     */
     private void taskSelected() {
         IToolBarManager manager = resetToolbar();
 
@@ -939,7 +720,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         return tableSorter;
     }
 
-    private Browser getInfoPanel() {
+    Browser getInfoPanel() {
         return textPanel;
     }
 
@@ -965,7 +746,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         });
     }
 
-    private static Display getDisplay() {
+    static Display getDisplay() {
         Display display = Display.getCurrent();
         // may be null if outside the UI thread
         if (display == null) {
@@ -999,13 +780,10 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     public void setFocus() {
         // empty
     }
-
-    /*
-     * (non-Javadoc)
-     * 
+   
+    /* (non-Javadoc)
      * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
      */
-    @Override
     public String getPerspectiveId() {
         return Iso27kPerspective.ID;
     }
@@ -1025,26 +803,5 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     public String getViewId() {
         return ID;
     }
-    
-    private final class RefreshListener implements IThreadCompleteListener {
-        private final LoadTaskJob job;
-
-        private RefreshListener(LoadTaskJob job) {
-            this.job = job;
-        }
-
-        @Override
-        public void notifyOfThreadComplete(Thread thread) {
-            final RefreshTaskView refresh = new RefreshTaskView(job.getTaskList(), getViewer());
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    refresh.refresh();
-                    searchButton.setText(Messages.TaskView_29);
-                    searchButton.setEnabled(true);
-                }
-            });
-        }
-    }
-    
+ 
 }
