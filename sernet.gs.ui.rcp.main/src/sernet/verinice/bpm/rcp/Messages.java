@@ -109,13 +109,16 @@ public class Messages extends NLS {
     public static String TaskFilterDialog_5;
     public static String TaskFilterDialog_6;
     public static String TaskView_0;
+    public static String TaskView_1;
     public static String TaskView_10;
     public static String TaskView_11;
     public static String TaskView_12;
     public static String TaskView_13;
     public static String TaskView_14;
     public static String TaskView_15;
+    public static String TaskView_16;
     public static String TaskView_17;
+    public static String TaskView_18;
     public static String TaskView_19;
     public static String TaskView_2;
     public static String TaskView_20;

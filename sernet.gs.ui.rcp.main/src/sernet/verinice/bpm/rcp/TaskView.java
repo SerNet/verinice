@@ -119,9 +119,9 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView"; //$NON-NLS-1$
     
+    private static final int WEIGHT_40 = 40;
     private static final int WEIGHT_50 = 50;
-    private static final int WEIGHT_75 = 75;
-    private static final int WEIGHT_25 = 25;
+    private static final int WEIGHT_60 = 60;
     private static final int WIDTH_4 = 4;
     
     CnATreeElement selectedGroup;
@@ -134,6 +134,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private TaskLabelProvider labelProvider;
     private TaskContentProvider contentProvider;    
     private Browser textPanel;
+    Label labelDateFrom;
     Date dueDateFrom = null;
     Date dueDateTo = null;
     Button searchButton;
@@ -149,6 +150,11 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     Combo comboProcessType;
     ComboModelTaskType comboModelTaskType;
     Combo comboTaskType;
+    
+    DateTime dateTimeFrom; 
+    Button disableDateButtonFrom;
+    DateTime dateTimeTo; 
+    Button disableDateButtonTo;
     
     private Action refreshAction;
     private Action doubleClickAction;
@@ -195,11 +201,11 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         createTablePanel(rootSashComposite);
         
         createInfoPanel(upperSashComposite);
-        Composite searchComposite = createSearchComposite(upperSashComposite);
+        Composite searchComposite = createOneColumnComposite(upperSashComposite, 5, 5);
         createSearchForm(searchComposite);
    
         rootSashComposite.setWeights(new int[] { WEIGHT_50, WEIGHT_50 });
-        upperSashComposite.setWeights(new int[] { WEIGHT_75, WEIGHT_25 });
+        upperSashComposite.setWeights(new int[] { WEIGHT_60, WEIGHT_40 });
     }
     
     private void createTablePanel(Composite parent) {
@@ -249,7 +255,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         final int gridDataHeight = 80;
         textPanel = new Browser(container, SWT.NONE);
         textPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
-        final GridData gridData = new GridData(SWT.FILL, SWT.TOP, true, false);
+        final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.heightHint = gridDataHeight;
         textPanel.setLayoutData(gridData);
     }
@@ -348,35 +354,83 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         });
     }
 
-    private void createDueDateControls(Composite searchComposite) {
-        Label label = new Label(searchComposite, SWT.WRAP);
-        label.setText(Messages.TaskView_15);       
-        Composite dateComposite = create2ColumnComposite(searchComposite);      
-        final DateTime dueDate = new DateTime(dateComposite, SWT.DATE | SWT.DROP_DOWN);
-        dueDate.addSelectionListener (new SelectionAdapter () {
+    private void createDueDateControls(Composite searchComposite) {        
+        Composite dateComposite = create2ColumnComposite(searchComposite); 
+        
+        Composite leftColumn = createOneColumnComposite(dateComposite, 0, 0);
+        
+        labelDateFrom = new Label(leftColumn, SWT.WRAP);
+        labelDateFrom.setText(Messages.TaskView_15);
+        
+        Composite dateFromComposite = create2ColumnComposite(leftColumn); 
+        dateTimeFrom = new DateTime(dateFromComposite, SWT.DATE | SWT.DROP_DOWN);
+        dateTimeFrom.setEnabled(false);  
+        dateTimeFrom.addSelectionListener (new SelectionAdapter () {
             @Override
             public void widgetSelected (SelectionEvent e) {
-                dueDateFrom = extractDateFrom(dueDate);
-                dueDateTo = extractDateTo(dueDate);
+                dueDateFrom = extractDateFrom(dateTimeFrom);
+                dueDateTo = extractDateTo(dateTimeFrom);
             }
         });
-        dueDate.setEnabled(false);
-        final Button enableDateButton = new Button(dateComposite, SWT.TOGGLE);
-        enableDateButton.setText("< X"); //$NON-NLS-1$
-        enableDateButton.setSelection(true);
-        enableDateButton.addSelectionListener(new SelectionAdapter() {
+        
+        disableDateButtonFrom = new Button(dateFromComposite, SWT.TOGGLE);
+        disableDateButtonFrom.setText("< X"); //$NON-NLS-1$
+        disableDateButtonFrom.setSelection(true);     
+        disableDateButtonFrom.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                dueDate.setEnabled(!dueDate.isEnabled());
-                if(!dueDate.isEnabled()) {
-                    dueDateFrom = null;
-                    dueDateTo = null;
-                } else {
-                    dueDateFrom = extractDateFrom(dueDate);
-                    dueDateTo = extractDateTo(dueDate);
-                }
-                enableDateButton.setSelection(!dueDate.isEnabled());
+                dateTimeFrom.setEnabled(!dateTimeFrom.isEnabled());
+                disableDateButtonFrom.setSelection(!dateTimeFrom.isEnabled());
+                setDuedateFromLabel();
+                extractDates();           
             }
         });
+        
+        Composite rightColumn = createOneColumnComposite(dateComposite, 0, 0);
+        
+        Label label = new Label(rightColumn, SWT.WRAP);
+        label.setText(Messages.TaskView_1);       
+        Composite dateToComposite = create2ColumnComposite(rightColumn);      
+        dateTimeTo = new DateTime(dateToComposite, SWT.DATE | SWT.DROP_DOWN);
+        dateTimeTo.setEnabled(false);
+        dateTimeTo.addSelectionListener (new SelectionAdapter () {
+            @Override
+            public void widgetSelected (SelectionEvent e) {
+                dueDateTo = extractDateTo(dateTimeTo);
+            }
+        });       
+        disableDateButtonTo = new Button(dateToComposite, SWT.TOGGLE);
+        disableDateButtonTo.setText("< X"); //$NON-NLS-1$
+        disableDateButtonTo.setSelection(true);
+        disableDateButtonTo.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                dateTimeTo.setEnabled(!dateTimeTo.isEnabled());
+                disableDateButtonTo.setSelection(!dateTimeTo.isEnabled());
+                setDuedateFromLabel();
+                extractDates(); 
+            }      
+        });
+    }
+    
+    private void setDuedateFromLabel() {
+        if(disableDateButtonTo.getSelection()) {
+            labelDateFrom.setText(Messages.TaskView_16);
+        } else {
+            labelDateFrom.setText(Messages.TaskView_18);
+        }
+    }
+    
+    private void extractDates() {
+        if(!dateTimeFrom.isEnabled()) {
+            dueDateFrom = null;
+            dueDateTo = null;
+        } else {
+            dueDateFrom = extractDateFrom(dateTimeFrom);
+            if(!dateTimeTo.isEnabled()) {
+                dueDateTo = extractDateTo(dateTimeFrom);
+            } else {
+                dueDateTo = extractDateTo(dateTimeTo);
+            }
+        }
     }
 
     private void createButtonControls(Composite searchComposite) {
@@ -398,13 +452,13 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         return container;
     }
     
-    private Composite createSearchComposite(Composite composite) {
+    private Composite createOneColumnComposite(Composite composite, int marginHeight, int marginWidth) {
         Composite comboComposite = new Composite(composite, SWT.NONE);
-        GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         comboComposite.setLayoutData(gridData);
         GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = 5;
-        gridLayout.marginWidth = 5;
+        gridLayout.marginHeight = marginHeight;
+        gridLayout.marginWidth = marginWidth;
         comboComposite.setLayout(gridLayout);
         return comboComposite;
     }
