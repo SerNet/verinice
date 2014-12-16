@@ -161,7 +161,7 @@ public class ReportHQLService implements IReportHQLService {
      * @return if ast is the query root
      */
     private boolean isQueryRoot(AST ast){
-        return HqlParser.QUERY ==  ast.getType();
+        return ast != null && HqlParser.QUERY ==  ast.getType();
     }
     
     /**
