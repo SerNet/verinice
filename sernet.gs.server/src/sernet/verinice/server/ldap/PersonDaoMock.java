@@ -53,4 +53,12 @@ public class PersonDaoMock implements IPersonDao {
 		return personList;		
 	}
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ldap.IPersonDao#getPersonList(sernet.verinice.interfaces.ldap.PersonParameter, boolean)
+     */
+    @Override
+    public List<PersonInfo> getPersonList(PersonParameter parameter, boolean importToITGS) {
+        return getPersonList(parameter);
+    }
+
 }

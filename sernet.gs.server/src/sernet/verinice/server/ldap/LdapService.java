@@ -26,7 +26,7 @@ public class LdapService implements ILdapService {
 	    try { 
 	        return  getPersonDao().getPersonList(parameter);
 	    } catch(SizeLimitExceededException sizeLimitException ) {
-	        LOG.warn("To many results ehen searching for LDAP users.");
+	        LOG.warn("To many results when searching for LDAP users.");
 	        if (LOG.isDebugEnabled()) {
                 LOG.debug("stacktrace: ", sizeLimitException);
             }
@@ -41,6 +41,22 @@ public class LdapService implements ILdapService {
 	public void setPersonDao(IPersonDao personDao) {
 		this.personDao = personDao;
 	}
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ldap.ILdapService#getPersonList(sernet.verinice.interfaces.ldap.PersonParameter, boolean)
+     */
+    @Override
+    public List<PersonInfo> getPersonList(PersonParameter parameter, boolean importToITGS) {
+        try { 
+            return  getPersonDao().getPersonList(parameter, importToITGS);
+        } catch(SizeLimitExceededException sizeLimitException ) {
+            LOG.warn("To many results when searching for LDAP users.");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("stacktrace: ", sizeLimitException);
+            }
+            throw new sernet.verinice.interfaces.ldap.SizeLimitExceededException();
+        }
+    }
 
 	
 

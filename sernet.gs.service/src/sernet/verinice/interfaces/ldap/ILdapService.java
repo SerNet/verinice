@@ -8,7 +8,8 @@ public interface ILdapService {
 	
 	List<PersonInfo> getPersonList();
 	
-	List<PersonInfo> getPersonList(PersonParameter paramerter);
+	List<PersonInfo> getPersonList(PersonParameter parameter);
 	
+	List<PersonInfo> getPersonList(PersonParameter parameter, boolean importToITGS);
 }
 

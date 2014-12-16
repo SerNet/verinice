@@ -1,5 +1,6 @@
 package sernet.verinice.service.ldap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -58,6 +60,8 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 	
 	CnATreeElement importRootObject;
 	
+	private boolean importToITGS = false;
+	
 	@SuppressWarnings("unchecked")
 	private Map<Class,CnATreeElement> containerMap = new HashMap<Class,CnATreeElement>(2);
 	
@@ -65,10 +69,16 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 		super();
         this.stationId = ChangeLogEntry.STATION_ID;
 	}
+	
 
 	public SaveLdapUser(Set<PersonInfo> personSet) {
 		this();
 		this.personSet = personSet;
+	}
+
+	public SaveLdapUser(Set<PersonInfo> personSet, boolean importITGS){
+	    this(personSet);
+	    this.importToITGS = importITGS;
 	}
 
 	@Override
@@ -79,14 +89,16 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 				// check username
 				checkUsername(personInfo.getLoginName());
 				// create person
-				PersonIso person = personInfo.getPerson();
+				CnATreeElement person = personInfo.getPerson();
 				CnATreeElement parent = loadContainer(person.getClass());
 				person.setParentAndScope(parent);
 				if (authService.isPermissionHandlingNeeded()) {
 				    person.setPermissions(Permission.clonePermissionSet(person, parent.getPermissions()));
 		        }
 				setImportRootObject(parent);
-				IBaseDao<PersonIso, Integer> dao = getDaoFactory().getDAO(person.getTypeId());
+				
+				IBaseDao<CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
+
 				person = dao.merge(person);
 				dao.flush();
 				savedPersonList.add(person);
@@ -100,8 +112,16 @@ public class SaveLdapUser extends ChangeLoggingCommand implements IChangeLogging
 				// save username in person
 				Configuration configuration = createConfiguration.getConfiguration();
 				configuration.setUser(personInfo.getLoginName());
-				if(person!=null && person.getEmail()!=null && !person.getEmail().isEmpty()) {
-				    configuration.setNotificationEmail(person.getEmail());
+				String email = "";
+				if(person!=null) {
+				    if(person instanceof Person){
+				        email = ((Person)person).getEntity().getSimpleValue(Person.P_EMAIL);
+				    } else if(person instanceof PersonIso){
+				        email = ((PersonIso)person).getEmail();
+				    }
+				    if(email != null && !email.isEmpty()){
+				        configuration.setNotificationEmail(email);
+				    }
 				}
 				SaveConfiguration<Configuration> saveConfiguration = new SaveConfiguration<Configuration>(configuration, false);
 				try {

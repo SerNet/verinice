@@ -16,6 +16,8 @@ public class LoadLdapUser extends GenericCommand implements ILdapCommand,Seriali
 	private PersonParameter parameter;
 	
 	private List<PersonInfo> personList;
+	
+	private boolean importToGS = false; // default case
 
 	public LoadLdapUser() {
 		super();
@@ -25,10 +27,15 @@ public class LoadLdapUser extends GenericCommand implements ILdapCommand,Seriali
 		super();
 		this.parameter = parameter;
 	}
+	
+	public LoadLdapUser(PersonParameter paramater, boolean importToITGS){
+	    this(paramater);
+	    this.importToGS = importToITGS;
+	}
 
 	@Override
 	public void execute() {
-		personList = getLdapService().getPersonList(getParameter());		
+		personList = getLdapService().getPersonList(getParameter(), importToGS);		
 	}
 	
 	public PersonParameter getParameter() {

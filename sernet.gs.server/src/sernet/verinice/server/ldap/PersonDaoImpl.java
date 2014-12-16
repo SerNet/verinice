@@ -5,11 +5,14 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 
+import org.apache.log4j.Logger;
 import org.springframework.ldap.core.AttributesMapper;
 import org.springframework.ldap.core.LdapTemplate;
 
 import sernet.verinice.interfaces.ldap.IPersonDao;
 import sernet.verinice.interfaces.ldap.PersonParameter;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.ldap.PersonInfo;
 
@@ -20,12 +23,23 @@ public class PersonDaoImpl implements IPersonDao {
 	private String filter;
 	
 	private LdapTemplate ldapTemplate;
-
+	
+	private static final Logger LOG = Logger.getLogger(PersonDaoImpl.class); 
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<PersonInfo> getPersonList(PersonParameter parameter) {
 	    return ldapTemplate.search(getBase(), getUserFilter(parameter),new LdapPersonMapper());
 	}
+	
+	/* (non-Javadoc)
+	 * @see sernet.verinice.interfaces.ldap.IPersonDao#getPersonList(sernet.verinice.interfaces.ldap.PersonParameter, boolean)
+	 */
+	@Override
+	public List<PersonInfo> getPersonList(PersonParameter parameter, boolean importToITGS) {
+	    return ldapTemplate.search(getBase(), getUserFilter(parameter),new LdapPersonMapper(importToITGS));
+	}
+	
 	
 	private String getForename(String fullName) {
         String forename = null;
@@ -109,9 +123,21 @@ public class PersonDaoImpl implements IPersonDao {
 	}
 	
     private final class LdapPersonMapper implements AttributesMapper {
+        private boolean useITGS = false;
+        
+        public LdapPersonMapper(){super();};
+        public LdapPersonMapper(boolean itgs){
+            super();
+            this.useITGS = itgs;
+        }
         public Object mapFromAttributes(Attributes attrs)
            throws NamingException {
-           PersonIso person = new PersonIso();
+           CnATreeElement person = null;
+           if(!useITGS){
+               person = new PersonIso();
+           } else  {
+               person = new Person(null);
+           }
            String login = determineLogin(attrs);
            person = determineGivenName(attrs, person);
            person = determineSurname(attrs, person);
@@ -156,43 +182,44 @@ public class PersonDaoImpl implements IPersonDao {
             return title;
         }
 
-        private PersonIso determineEmailPhone(Attributes attrs, PersonIso person) throws NamingException {
+        private CnATreeElement determineEmailPhone(Attributes attrs, CnATreeElement person) throws NamingException {
             if(attrs.get("telephoneNumber")!=null) {
                    // AD
-                   person.setPhone((String) attrs.get("telephoneNumber").get());
+                   person = setPersonPhone(person, ((String) attrs.get("telephoneNumber").get()));
                }
                if(attrs.get("mail")!=null) {
                    // AD
-                   person.setEmail((String) attrs.get("mail").get());
+                   person = setPersonEmail(person, ((String) attrs.get("mail").get()));
                }
                return person;
         }
 
-        private PersonIso determineSurname(Attributes attrs, PersonIso person) throws NamingException {
+        private CnATreeElement determineSurname(Attributes attrs, CnATreeElement person) throws NamingException {
+            String surname = null;
             if(attrs.get("sn")!=null) {
                    // AD
-                   person.setSurname((String) attrs.get("sn").get());
+                   person = setPersonSurname(person, (String) attrs.get("sn").get());
                } else {
                    // OpenLDAP
-                   String surname = getSurname((String) attrs.get("cn").get());
+                   surname = getSurname((String) attrs.get("cn").get());
                    if(surname!=null) {
-                       person.setSurname(surname);
+                       person = setPersonSurname(person, surname);
                    }
                }
             return person;
         }
 
-        private PersonIso determineGivenName(Attributes attrs, PersonIso person) throws NamingException {
+        private CnATreeElement determineGivenName(Attributes attrs, CnATreeElement person) throws NamingException {
             if(attrs.get("givenName")!=null) {
-                   // AD
-                   person.setName((String) attrs.get("givenName").get());
-               }else {
-                   // OpenLDAP
-                   String forname = getForename((String) attrs.get("cn").get());
-                   if(forname!=null) {
-                       person.setName(forname);
-                   }
-               }
+                // AD
+                person = setPersonName(person, (String)attrs.get("givenName").get());
+            }else {
+                // OpenLDAP
+                String forname = getForename((String) attrs.get("cn").get());
+                if(forname!=null) {
+                    person = setPersonName(person, forname);
+                }
+            }
             return person;
         }
 
@@ -210,5 +237,53 @@ public class PersonDaoImpl implements IPersonDao {
             return login;
         }
     }
+    
+    private CnATreeElement setPersonEmail(CnATreeElement person, String data) {
+        if(person instanceof Person){
+            ((Person)person).getEntity().setSimpleValue(
+                    ((Person)person).getEntityType().getPropertyType(Person.P_EMAIL),
+                    data);
+            
+        } else if (person instanceof PersonIso){
+            ((PersonIso)person).setEmail(data);
+        }
+        
+        return person;        
+    } 
+    
+    private CnATreeElement setPersonSurname(CnATreeElement person, String data){
+        if(person instanceof Person){
+            ((Person)person).getEntity().setSimpleValue(
+                    ((Person)person).getEntityType().getPropertyType(Person.P_NAME),
+                    data);
+        } else if(person instanceof PersonIso){
+            ((PersonIso)person).setSurname(data);
+        }
+        return person;
+    }
+    
+    private CnATreeElement setPersonName(CnATreeElement person, String data){
+        if(person instanceof Person){
+            ((Person)person).getEntity().setSimpleValue(
+                    ((Person)person).getEntityType().getPropertyType(Person.P_VORNAME),
+                    data);
+         } else if (person instanceof PersonIso){
+             ((PersonIso)person).setName(data);
+         }
+        return person;
+    }
+    
+    private CnATreeElement setPersonPhone(CnATreeElement person, String data){
+        if(person instanceof Person){
+            ((Person)person).getEntity().setSimpleValue(
+                    ((Person)person).getEntityType().getPropertyType(Person.P_PHONE),
+                    data);
+        } else if (person instanceof PersonIso){
+            ((PersonIso)person).setPhone(data);
+        }
+        
+        return person;
+    }
+    
 
 }

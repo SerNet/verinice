@@ -51,6 +51,8 @@ implements IBSIStrukturElement {
 	public static final String P_VORNAME = "vorname"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "person_kuerzel"; //$NON-NLS-1$
 	public static final String P_ROLLEN = "person_rollen"; //$NON-NLS-1$
+	public static final String P_EMAIL = "person_email"; //$NON-NLS-1$
+	public static final String P_PHONE = "person_telefon"; //$NON-NLS-1$
 
 	// ID must correspond to entity definition in entitytype XML description:
 	public static final String TYPE_ID = "person"; //$NON-NLS-1$
@@ -216,6 +218,5 @@ implements IBSIStrukturElement {
 	public void setAnzahl(int anzahl) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_ANZAHL), Integer.toString(anzahl));
 	}
-	
 	
 }

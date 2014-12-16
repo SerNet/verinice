@@ -2,16 +2,17 @@ package sernet.verinice.service.ldap;
 
 import java.io.Serializable;
 
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.PersonIso;
 
 public class PersonInfo implements Serializable, Comparable<PersonInfo>{
 	
-	private PersonIso person;
+	private CnATreeElement person;
 	private String loginName;
 
     private String title, department, company;
 	
-	public PersonInfo(PersonIso person, String loginName, String title, String department, String company) {
+	public PersonInfo(CnATreeElement person, String loginName, String title, String department, String company) {
 		super();
 		this.person = person;
 		this.loginName = loginName;
@@ -20,7 +21,7 @@ public class PersonInfo implements Serializable, Comparable<PersonInfo>{
         this.company = company;
 	}
 
-	public PersonIso getPerson() {
+	public CnATreeElement getPerson() {
 		return person;
 	}
 
