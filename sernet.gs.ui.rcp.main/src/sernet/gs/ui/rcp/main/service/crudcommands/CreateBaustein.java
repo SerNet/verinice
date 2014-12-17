@@ -66,14 +66,17 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 	private Integer dbId;
 	private transient IAuthService authService;
     private String typeId;
+    private String language;
 
-	public CreateBaustein(CnATreeElement container, Baustein baustein) {
+	public CreateBaustein(CnATreeElement container, Baustein baustein, String language) {
 		
 		dbId = container.getDbId();
 		typeId = container.getTypeId();
 		
 		this.baustein = baustein;
 		stationId = ChangeLogEntry.STATION_ID;
+		
+		this.language = language;
 		
 	}
 	
@@ -105,7 +108,7 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 			List<Massnahme> massnahmen = baustein
 					.getMassnahmen();
 			for (Massnahme mn : massnahmen) {
-				massnahmenFactory.createMassnahmenUmsetzung(child, mn);
+				massnahmenFactory.createMassnahmenUmsetzung(child, mn, language);
 			}
 			
 			if (authService.isPermissionHandlingNeeded())

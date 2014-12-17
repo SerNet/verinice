@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dnd.DNDItems;
+import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -222,7 +223,7 @@ public final class CnAElementHome {
         if (log.isDebugEnabled()) {
             log.debug("Creating new element, parent uuid: " + container.getUuid()); //$NON-NLS-1$
         }
-        CreateBaustein saveCommand = new CreateBaustein(container, baustein);
+        CreateBaustein saveCommand = new CreateBaustein(container, baustein, BSIKatalogInvisibleRoot.getInstance().getLanguage());
         saveCommand = getCommandService().executeCommand(saveCommand);
         if(Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.USE_AUTOMATIC_VALIDATION)){
             validateElement(saveCommand.getNewElement());

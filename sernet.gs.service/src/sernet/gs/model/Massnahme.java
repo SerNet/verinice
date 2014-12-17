@@ -24,6 +24,8 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.scraper.GSScraper;
+
 public class Massnahme implements IGSModel {
 	private String id;
 	private String titel;
@@ -44,12 +46,18 @@ public class Massnahme implements IGSModel {
 	
 	public static final String LZ_STRING_Planung 		= "Planung und Konzeption";
 	public static final String LZ_STRING_Beschaffung 	= "Beschaffung";
-	public static final String LZ_STRING_Umsetzung 	= "Umsetzung";
+	public static final String LZ_STRING_Umsetzung 	    = "Umsetzung";
 	public static final String LZ_STRING_Betrieb 		= "Betrieb";
 	public static final String LZ_STRING_Ausonderung 	= "Aussonderung";
 	public static final String LZ_STRING_Notfall 		= "Notfallvorsorge";
 	
-	
+	public static final String LZ_STRING_Planung_EN        = "Planning and Design";
+	public static final String LZ_STRING_Beschaffung_EN    = "Purchasing";
+	public static final String LZ_STRING_Umsetzung_EN      = "Implemantation";
+	public static final String LZ_STRING_Betrieb_EN        = "Operation";
+	public static final String LZ_STRING_Ausonderung_EN    = "Disposal";
+	public static final String LZ_STRING_Notfall_EN        = "Contingency Planning";
+		
 	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)");
 
 	
@@ -101,22 +109,32 @@ public class Massnahme implements IGSModel {
 		this.lebenszyklus = lebenszyklus;
 	}
 	
-	public String getLZAsString() {
-		switch (this.lebenszyklus) {
-		case LZ_AUSSONDERUNG:
-			return LZ_STRING_Ausonderung;
-		case LZ_BESCHAFFUNG:
-			return LZ_STRING_Beschaffung;
-		case LZ_BETRIEB:
-			return LZ_STRING_Betrieb;
-		case LZ_NOTFALL:
-			return LZ_STRING_Notfall;
-		case LZ_PLANUNG:
-			return LZ_STRING_Planung;
-		case LZ_UMSETZUNG:
-			return LZ_STRING_Umsetzung;
-		}
-		return "";
+	public String getLZAsString(String language) {
+	    return getLocalizedLZAsString(this.lebenszyklus, language);
+	}
+	
+	private String getLocalizedLZAsString(int lzId, String language){
+	    if(GSScraper.LANGUAGE_IDENTIFIER_ENGLISH.equals(language)){
+	        switch(lzId){
+	        case LZ_AUSSONDERUNG: return LZ_STRING_Ausonderung_EN;
+	        case LZ_BESCHAFFUNG: return LZ_STRING_Beschaffung_EN;
+	        case LZ_BETRIEB: return LZ_STRING_Betrieb_EN;
+	        case LZ_NOTFALL: return LZ_STRING_Notfall_EN;
+	        case LZ_PLANUNG: return LZ_STRING_Planung_EN;
+	        case LZ_UMSETZUNG: return LZ_STRING_Umsetzung_EN;
+	        }
+	    } else if(GSScraper.LANGUAGE_IDENTIFIER_GERMAN.equals(language)){
+	           switch(lzId){
+	            case LZ_AUSSONDERUNG: return LZ_STRING_Ausonderung;
+	            case LZ_BESCHAFFUNG: return LZ_STRING_Beschaffung;
+	            case LZ_BETRIEB: return LZ_STRING_Betrieb;
+	            case LZ_NOTFALL: return LZ_STRING_Notfall;
+	            case LZ_PLANUNG: return LZ_STRING_Planung;
+	            case LZ_UMSETZUNG: return LZ_STRING_Umsetzung;	    
+	            }    
+	    }
+	    return "";
+	    
 	}
 	
 	public  boolean isStufeA() {

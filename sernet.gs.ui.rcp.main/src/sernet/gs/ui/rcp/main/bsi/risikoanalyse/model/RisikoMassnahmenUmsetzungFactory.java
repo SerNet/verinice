@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
@@ -48,7 +49,7 @@ public class RisikoMassnahmenUmsetzungFactory {
 		umsetzung.setUrl(draftMn.getUrl());
 		umsetzung.setStand(draftMn.getStand());
 		umsetzung.setStufe(draftMn.getSiegelstufe());
-		umsetzung.setLebenszyklus(draftMn.getLZAsString());
+		umsetzung.setLebenszyklus(draftMn.getLZAsString(BSIKatalogInvisibleRoot.getInstance().getLanguage()));
 		
 		return umsetzung;
 	}
@@ -67,7 +68,7 @@ public class RisikoMassnahmenUmsetzungFactory {
 		massnahmenUmsetzung.setUrl(massnahme.getUrl());
 		massnahmenUmsetzung.setStand(massnahme.getStand());
 		massnahmenUmsetzung.setStufe(massnahme.getSiegelstufe());
-		massnahmenUmsetzung.setLebenszyklus(massnahme.getLZAsString());
+		massnahmenUmsetzung.setLebenszyklus(massnahme.getLZAsString(BSIKatalogInvisibleRoot.getInstance().getLanguage()));
 		
 		return massnahmenUmsetzung;
 	}

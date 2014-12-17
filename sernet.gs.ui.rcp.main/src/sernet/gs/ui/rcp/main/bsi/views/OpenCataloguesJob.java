@@ -89,6 +89,7 @@ public class OpenCataloguesJob extends WorkspaceJob {
 			List<Baustein> bausteine = model.loadBausteine(new ProgressAdapter(monitor));
 
 			BSIKatalogInvisibleRoot.getInstance().setBausteine(bausteine);
+			BSIKatalogInvisibleRoot.getInstance().setLanguage(model.getLanguage());
 		} catch (Exception e) {
 			Logger.getLogger(this.getClass()).error(
 					Messages.BSIMassnahmenView_1, e);

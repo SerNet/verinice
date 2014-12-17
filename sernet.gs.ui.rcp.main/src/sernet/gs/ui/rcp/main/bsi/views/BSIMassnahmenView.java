@@ -397,7 +397,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
 			if (obj instanceof Massnahme) {
 				Massnahme mn = (Massnahme) obj;
 				return mn.getId() + " " + mn.getTitel() + " [" //$NON-NLS-1$ //$NON-NLS-2$
-						+ mn.getSiegelstufe() + "] (" + mn.getLZAsString() //$NON-NLS-1$
+						+ mn.getSiegelstufe() + "] (" + mn.getLZAsString(BSIKatalogInvisibleRoot.getInstance().getLanguage()) //$NON-NLS-1$
 						+ ")"; //$NON-NLS-1$
 			}
 

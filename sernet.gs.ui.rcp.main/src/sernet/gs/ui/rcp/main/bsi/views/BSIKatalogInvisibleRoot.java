@@ -32,6 +32,7 @@ import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
 import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.scraper.GSScraper;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -45,6 +46,8 @@ public final class BSIKatalogInvisibleRoot {
 	private static final int DEFAULT_LISTENER_AMOUNT = 5;
 	
 	private static final int WHOLE_FACTOR = 1000;
+		
+	private String language = "";
 
 	/**
 	 * Listen for preference changes and update model if necessary:
@@ -119,6 +122,10 @@ public final class BSIKatalogInvisibleRoot {
 		if (bausteine.size() < 1){
 			bausteine.add(new NullBaustein());
 		}
+		// language is only set, if gs content is load from file (not from cache)
+		if(language == null || language.isEmpty()){
+		    language = determineLanguage(bausteine);
+		}
 		return bausteine;
 	}
 
@@ -173,5 +180,32 @@ public final class BSIKatalogInvisibleRoot {
 		}
 		return null;
 	}
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    /**
+     * since sernet.gs.scraper.GSScraper.getLanguage(Node) is only used, when content is not existant in gscache, this needs to be done if language is not
+     * determined by scraper (because of existing cache-entry)
+     * @param bausteine
+     * @return
+     */
+    private String determineLanguage(List<Baustein> bausteine){
+        Baustein firstBaustein = null;
+        if(bausteine.size() > 1){ // avoid call on dummy list
+            firstBaustein = getBaustein(GSScraper.FIRST_BAUSTEIN_ID);
+        }
+        if(firstBaustein != null && GSScraper.TITLE_OF_FIRST_BAUSTEIN_GERMAN.equals(firstBaustein.getTitel())){
+            return GSScraper.CATALOG_LANGUAGE_GERMAN;
+        } else if(firstBaustein != null && GSScraper.TITLE_OF_FIRST_BAUSTEIN_ENGLISH.equals(firstBaustein.getTitel())){ 
+            return GSScraper.CATALOG_LANGUAGE_ENGLISH;
+        }
+        return "";
+    }
 
 }

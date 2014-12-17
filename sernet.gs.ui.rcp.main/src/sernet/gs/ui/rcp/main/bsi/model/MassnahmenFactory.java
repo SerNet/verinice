@@ -29,10 +29,10 @@ public class MassnahmenFactory {
 	 * @param bu
 	 * @param mn
 	 */
-	public void createMassnahmenUmsetzung(BausteinUmsetzung bu, Massnahme mn) {
+	public void createMassnahmenUmsetzung(BausteinUmsetzung bu, Massnahme mn, String language) {
 		MassnahmenUmsetzung mu = new MassnahmenUmsetzung(bu);
 		
-		copyValues(mn, mu);
+		copyValues(mn, mu, language);
 		bu.addChild(mu);
 	}
 
@@ -42,18 +42,18 @@ public class MassnahmenFactory {
 	 * @param mn
 	 * @return
 	 */
-	public MassnahmenUmsetzung createMassnahmenUmsetzung(Massnahme mn) {
+	public MassnahmenUmsetzung createMassnahmenUmsetzung(Massnahme mn, String language) {
 		MassnahmenUmsetzung mu = new MassnahmenUmsetzung();
 		mu.setEntity(new Entity(MassnahmenUmsetzung.TYPE_ID));
-		copyValues(mn, mu);
+		copyValues(mn, mu, language);
 		return mu;
 	}
 	
-	private void copyValues(Massnahme mn, MassnahmenUmsetzung mu) {
+	private void copyValues(Massnahme mn, MassnahmenUmsetzung mu, String language) {
 		mu.setKapitel(mn.getId());
 		mu.setUrl(mn.getUrl());
 		mu.setName(mn.getTitel());
-		mu.setLebenszyklus(mn.getLZAsString());
+		mu.setLebenszyklus(mn.getLZAsString(language));
 		mu.setStufe(mn.getSiegelstufe());
 		mu.setStand(mn.getStand());
 		mu.setVerantwortlicheRollenInitiierung(mn.getVerantwortlichInitiierung());

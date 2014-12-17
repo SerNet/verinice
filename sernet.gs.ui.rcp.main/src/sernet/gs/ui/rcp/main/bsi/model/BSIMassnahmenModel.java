@@ -77,6 +77,8 @@ public class BSIMassnahmenModel {
 	
 	// not configured by Spring
 	private ILayoutConfig layoutConfig;
+	
+	private String language = "";
 
 	private String encoding = VeriniceCharset.CHARSET_UTF_8.name();
 	
@@ -146,6 +148,7 @@ public class BSIMassnahmenModel {
             processBausteinLayer(mon, alleBst, "b04", 3);
             processBausteinLayer(mon, alleBst, "b05", 4);
 			
+            this.language = scrape.getLanguage();
 			
 			// if a source for data privacy module is defined, replace the temporary module with the real one:
 			cache = handleDataPrivacyModule(dsPath, cacheDir, alleBst);
@@ -444,5 +447,9 @@ public class BSIMassnahmenModel {
 		}
 		return "iso-8859-1"; //$NON-NLS-1$
 	}
+
+    public String getLanguage() {
+        return language;
+    }
 	
 }

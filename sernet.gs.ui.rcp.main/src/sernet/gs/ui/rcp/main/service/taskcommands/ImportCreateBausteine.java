@@ -38,6 +38,7 @@ import sernet.gs.ui.rcp.gsimport.TransferData;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
+import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
@@ -174,7 +175,7 @@ public class ImportCreateBausteine extends GenericCommand {
         }
 
         if (baustein != null && refZobId == null) {
-                CreateBaustein command = new CreateBaustein(element, baustein);
+                CreateBaustein command = new CreateBaustein(element, baustein, BSIKatalogInvisibleRoot.getInstance().getLanguage());
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
 

@@ -253,7 +253,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
                 if (!duplicate) {
                     MassnahmenUmsetzung massnahmeUmsetzung;
                     try {
-                        massnahmeUmsetzung = massnahmenFactory.createMassnahmenUmsetzung(massnahme);
+                        massnahmeUmsetzung = massnahmenFactory.createMassnahmenUmsetzung(massnahme, BSIKatalogInvisibleRoot.getInstance().getLanguage());
                         allMassnahmenUmsetzungen.add(massnahmeUmsetzung);
                     } catch (Exception e) {
                         Logger.getLogger(this.getClass()).error(Messages.RiskAnalysisWizard_4, e);
