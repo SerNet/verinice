@@ -141,7 +141,6 @@ public class ReportHQLServiceTest extends ContextConfiguration{
         invalidHQLQueries.add(" from Property prop " + 
         "where prop.propertyType IN (:types) ");
         invalidHQLQueries.add(" from CnATreeElement elmt, Property prop ");
-        invalidHQLQueries.add("this is some stupid crap");
         
     }
     
@@ -170,6 +169,15 @@ public class ReportHQLServiceTest extends ContextConfiguration{
         queries.addAll(validHQLQueries);
         for(String query : queries){
             assertTrue("query seems not to be well-formed hql:\n\"" + query + "\"", hqlService.isValidQuery(query));
+        }
+    }
+    
+    @Test
+    public void testNonHQLStrings(){
+        List<String> queries = new ArrayList<String>();
+        queries.add("this is not a hql query");
+        for(String query : queries){
+            assertTrue("query passes the parser, but it should not:\n\"" + query + "\"", !(hqlService.isValidQuery(query)) );
         }
     }
     
