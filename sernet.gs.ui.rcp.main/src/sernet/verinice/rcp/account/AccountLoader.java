@@ -62,7 +62,6 @@ public final class AccountLoader {
     
     public static List<Configuration> loadAccounts() {
         IAccountService accountService = ServiceFactory.lookupAccountService();
-        List<Configuration> accounts = accountService.findAccounts(AccountSearchParameter.newInstance());
-        return accounts;
+        return accountService.findAccounts(AccountSearchParameter.newInstance());
     } 
 }

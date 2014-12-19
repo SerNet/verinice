@@ -45,7 +45,7 @@ class TaskTableSorter extends ViewerSorter {
     private static final int ASCENDING = 0;
     private int direction = ASCENDING;
     
-    private static final NumericStringComparator nsc = new NumericStringComparator();
+    private static final NumericStringComparator NSC = new NumericStringComparator();
 
     public TaskTableSorter() {
         super();
@@ -92,15 +92,15 @@ class TaskTableSorter extends ViewerSorter {
         switch (propertyIndex) {
         case 0:  
             // prio           
-            rc = nsc.compare(a1.getPriority(), a2.getPriority());
+            rc = NSC.compare(a1.getPriority(), a2.getPriority());
             break;
         case 1:  
             // Group           
-            rc = nsc.compare(a1.getAuditTitle(), a2.getAuditTitle());
+            rc = NSC.compare(a1.getAuditTitle(), a2.getAuditTitle());
             break;
         case 2:
             // Object
-            rc = nsc.compare(a1.getControlTitle(), a2.getControlTitle());
+            rc = NSC.compare(a1.getControlTitle(), a2.getControlTitle());
             break;
         case 3:  
             // Process
@@ -116,7 +116,7 @@ class TaskTableSorter extends ViewerSorter {
             break;
         case 6:
             // due date
-            rc = compareDateNullSave(a1.getDueDate(), a2.getDueDate());;
+            rc = compareDateNullSave(a1.getDueDate(), a2.getDueDate());
             break; 
         default:
             rc = 0;

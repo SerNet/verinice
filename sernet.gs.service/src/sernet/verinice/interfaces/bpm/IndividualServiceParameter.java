@@ -100,7 +100,7 @@ public class IndividualServiceParameter implements Serializable, Comparable<Indi
     }
 
     public Date getDueDate() {
-        return dueDate;
+        return (dueDate != null) ? new Date(dueDate.getTime()) : null;
     }
 
     public String getTitle() {

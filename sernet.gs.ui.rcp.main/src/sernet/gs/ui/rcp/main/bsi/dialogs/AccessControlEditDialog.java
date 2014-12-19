@@ -58,15 +58,12 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadPermissions;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
-import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.rcp.ImageColumnProvider;
 import sernet.verinice.rcp.account.AccountLoader;
 
@@ -325,7 +322,6 @@ public class AccessControlEditDialog extends TitleAreaDialog {
             i++;
             p = (Permission) viewer.getElementAt(i);
         }
-        ;
 
     }
 

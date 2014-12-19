@@ -37,12 +37,12 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public class GroupLabelProvider extends ComboModelLabelProvider<CnATreeElement> {
     
-    final static Map<String, String> typeSuffixMap = new Hashtable<String, String>();
+    static final Map<String, String> TYPE_SUFFIX_MAP = new Hashtable<String, String>();
     
     static {
-        typeSuffixMap.put(Organization.TYPE_ID, Messages.GroupLabelProvider_0);
-        typeSuffixMap.put(Audit.TYPE_ID, Messages.GroupLabelProvider_1);
-        typeSuffixMap.put(ITVerbund.TYPE_ID, Messages.GroupLabelProvider_2);
+        TYPE_SUFFIX_MAP.put(Organization.TYPE_ID, Messages.GroupLabelProvider_0);
+        TYPE_SUFFIX_MAP.put(Audit.TYPE_ID, Messages.GroupLabelProvider_1);
+        TYPE_SUFFIX_MAP.put(ITVerbund.TYPE_ID, Messages.GroupLabelProvider_2);
     }
     
     @Override
@@ -58,6 +58,6 @@ public class GroupLabelProvider extends ComboModelLabelProvider<CnATreeElement> 
     }
 
     private Object createSuffix(CnATreeElement element) {     
-        return typeSuffixMap.get(element.getTypeId());
+        return TYPE_SUFFIX_MAP.get(element.getTypeId());
     }
 }
