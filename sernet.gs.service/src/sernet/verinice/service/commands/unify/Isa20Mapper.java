@@ -41,7 +41,10 @@ public class Isa20Mapper extends IsaMapper implements IElementMapper {
 
     private static final Logger LOG = Logger.getLogger(Isa20Mapper.class);
     
-    public static final String ID = "unify.mapper.isa.2.0"; //$NON-NLS-1$
+    public static final String ID = "unify.mapper.isa.2.x"; //$NON-NLS-1$
+    
+    public static final String VERSION_1_PREFIX = "1"; //$NON-NLS-1$
+    public static final String VERSION_2_PREFIX = "2"; //$NON-NLS-1$
     
     private static final Map<String, String[]> MAP_FROM_ISA_1_TO_2;
     static {
@@ -122,25 +125,40 @@ public class Isa20Mapper extends IsaMapper implements IElementMapper {
             LOG.debug("Starting validation..."); //$NON-NLS-1$
         }
         for (CnATreeElement sourceElement : sourceMap.values()) {
-            if(!(sourceElement instanceof SamtTopic)) {
-                throw new UnifyValidationException(Messages.getString("Isa20Mapper.79", sourceElement.getTitle())); //$NON-NLS-1$
-            }
-            SamtTopic sourceTopic = (SamtTopic) sourceElement;
-            logSourceTopicVersion(sourceTopic);
-            if(sourceTopic.getVersion()!=null && !sourceTopic.getVersion().isEmpty()) {
+            validateSourceElement(sourceElement);
+        }
+        for (CnATreeElement destinationElement : destinationMap.values()) {
+            validateDestinationElement(destinationElement);
+        }
+    }
+
+    private void validateSourceElement(CnATreeElement sourceElement) {
+        if(!(sourceElement instanceof SamtTopic)) {
+            throw new UnifyValidationException(Messages.getString("Isa20Mapper.79", sourceElement.getTitle())); //$NON-NLS-1$
+        }
+        SamtTopic sourceTopic = (SamtTopic) sourceElement;
+        logSourceTopicVersion(sourceTopic);
+        String sourceVersion = sourceTopic.getVersion();
+        if(isNotEmpty(sourceVersion)) {
+            if(!sourceVersion.startsWith(VERSION_1_PREFIX)) {
                 throw new UnifyValidationException(Messages.getString("Isa20Mapper.80", sourceElement.getTitle())); //$NON-NLS-1$
             }
         }
-        for (CnATreeElement destinationElement : destinationMap.values()) {
-            if(!(destinationElement instanceof SamtTopic)) {
-                throw new UnifyValidationException(Messages.getString("Isa20Mapper.81", destinationElement.getTitle())); //$NON-NLS-1$
-            }
-            SamtTopic destinationTopic = (SamtTopic) destinationElement;
-            logDestinationTopicVersion(destinationTopic);
-            if(destinationTopic.getVersion()==null || !(destinationTopic.getVersion().equals(SamtTopic.VERSION_2_0))) {
-                throw new UnifyValidationException(Messages.getString("Isa20Mapper.82", destinationElement.getTitle())); //$NON-NLS-1$
-            }
+    }
+
+    private void validateDestinationElement(CnATreeElement destinationElement) {
+        if(!(destinationElement instanceof SamtTopic)) {
+            throw new UnifyValidationException(Messages.getString("Isa20Mapper.81", destinationElement.getTitle())); //$NON-NLS-1$
         }
+        SamtTopic destinationTopic = (SamtTopic) destinationElement;
+        logDestinationTopicVersion(destinationTopic);
+        if(destinationTopic.getVersion()==null || !(destinationTopic.getVersion().startsWith(VERSION_2_PREFIX))) {
+            throw new UnifyValidationException(Messages.getString("Isa20Mapper.82", destinationElement.getTitle())); //$NON-NLS-1$
+        }
+    }
+
+    private boolean isNotEmpty(String sourceVersion) {
+        return sourceVersion!=null && !sourceVersion.isEmpty();
     }
     
     private void logSourceTopicVersion(SamtTopic destinationTopic) {
