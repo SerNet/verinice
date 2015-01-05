@@ -20,7 +20,8 @@ package sernet.verinice.interfaces;
 
 
 /**
- *
+ * Service that analyses if a hql-queries are valid and / or allowed to be executed on 
+ * the verinice database 
  */
 public interface IReportHQLService {
     

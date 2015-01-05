@@ -41,8 +41,9 @@ public class ReportHQLService implements IReportHQLService {
     
     private static final Logger LOG = Logger.getLogger(ReportHQLService.class);
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IReportHQLService#isQueryAllowed(java.lang.String)
+    /**
+     * analyzes the given hql on its content, 
+     * decides if the query fulfills the verinice policies
      */
     @Override
     public boolean isQueryAllowed(String qry) {
@@ -76,6 +77,15 @@ public class ReportHQLService implements IReportHQLService {
         return true;
     }
 
+    /**
+     * validates a given list of select-statements 
+     * which can be one of the following:
+     * SELECT, SELECT FROM, FROM
+     * @param qry
+     * @param ast
+     * @param selectStatements
+     * @return
+     */
     private boolean validateSelectStatements(String qry, AST ast, List<AST> selectStatements) {
         for(AST selectStatement : selectStatements){
             if(!checkRangeStatements(selectStatement)){
@@ -90,6 +100,12 @@ public class ReportHQLService implements IReportHQLService {
         return true;
     }
 
+    /**
+     * checks if the target of a range statement (argument of an select statement) is element
+     * of the whitelist
+     * @param selectStatement
+     * @return
+     */
     private boolean checkRangeStatements(AST selectStatement) {
         for (AST rangeStatement : getRangeofSelectStatement(selectStatement)){
             AST child = rangeStatement.getFirstChild();
@@ -103,6 +119,11 @@ public class ReportHQLService implements IReportHQLService {
         return true;
     }
 
+    /**
+     * is AST-element instance of {@link CnATreeElement} or {@link CnALink}
+     * @param child
+     * @return
+     */
     private boolean isSelectionTargetValid(AST child) {
         // whitelisting, only select on cnatreeelement and cnalink allowed
         Set<String> allowedSelections = new HashSet<String>();
@@ -127,6 +148,11 @@ public class ReportHQLService implements IReportHQLService {
         }
     }
     
+    /**
+     * filters given {@link AST}-Tree on select statementes (/elements)
+     * @param astRoot
+     * @return
+     */
     private List<AST> getAllSelectStatements(AST astRoot){
         ASTUtil.FilterPredicate selectPredicate = new ASTUtil.IncludePredicate() {
             
@@ -139,6 +165,11 @@ public class ReportHQLService implements IReportHQLService {
         return ASTUtil.collectChildren(astRoot, selectPredicate);
     }
     
+    /**
+     * returns the target of a select-statement
+     * @param selectRoot
+     * @return
+     */
     private List<AST> getRangeofSelectStatement(AST selectRoot){
         ASTUtil.FilterPredicate rangePredicate = new ASTUtil.IncludePredicate() {
             
@@ -150,6 +181,13 @@ public class ReportHQLService implements IReportHQLService {
         return ASTUtil.collectChildren(selectRoot, rangePredicate);
     }
     
+    /**
+     * validates query on well-formed hql
+     * @param hql
+     * @return
+     * @throws RecognitionException
+     * @throws TokenStreamException
+     */
     private boolean isValidHQL(String hql) throws RecognitionException, TokenStreamException{
         HqlParser parser = HqlParser.getInstance(hql);
         parser.statement();
@@ -165,7 +203,7 @@ public class ReportHQLService implements IReportHQLService {
     }
     
     /**
-     * 
+     * defines a whitelist for query start-elements
      * @param an ast node
      * @return if node is an allowed beginning of a hql query
      */
