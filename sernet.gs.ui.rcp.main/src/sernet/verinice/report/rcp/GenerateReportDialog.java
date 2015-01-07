@@ -64,6 +64,8 @@ public class GenerateReportDialog extends TitleAreaDialog {
     
     private static final String REPORT_LOCAL_DECORATOR = "(L)";
     private static final String REPORT_SERVER_DECORATOR = "(S)";
+    
+    private static final NumericStringComparator comparator = new NumericStringComparator();
 
     private Combo comboReportType;
 
@@ -390,21 +392,19 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 data.setOutputname(REPORT_LOCAL_DECORATOR + " " + name);
             }
         }
-        List<ReportTemplateMetaData> sortedTemplateList = new ArrayList<ReportTemplateMetaData>(0); 
-        sortedTemplateList.addAll(Arrays.asList(reportTemplates));
-        Collections.sort(sortedTemplateList, new Comparator() {
-
+        
+        Arrays.sort(reportTemplates, new Comparator() {
             @Override
             public int compare(Object template1, Object template2) {
-                NumericStringComparator comparator = new NumericStringComparator();
                 return comparator.compare(((ReportTemplateMetaData)template1).getOutputname(), ((ReportTemplateMetaData)template2).getOutputname());
             }
-            
         });
-        for(ReportTemplateMetaData data : sortedTemplateList){
+        
+        for(ReportTemplateMetaData data : reportTemplates){
             comboReportType.add(data.getOutputname());
         }
-        return sortedTemplateList.toArray(new ReportTemplateMetaData[sortedTemplateList.size()]);
+        
+        return reportTemplates;
     }
 
     protected GridData createTextGridData() {
