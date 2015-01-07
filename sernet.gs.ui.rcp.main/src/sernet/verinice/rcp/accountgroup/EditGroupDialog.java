@@ -90,7 +90,7 @@ class EditGroupDialog extends CRUDAccountGroupDialog {
     }
 
     private boolean existsGroup() {
-        return ArrayUtils.contains(this.groupView.groupList.getItems(), textInputField.getText());
+        return ArrayUtils.contains(this.groupView.getAllGroupsFromTable(), textInputField.getText());
     }
 
 }
