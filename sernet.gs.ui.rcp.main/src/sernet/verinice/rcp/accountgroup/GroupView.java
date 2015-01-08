@@ -24,12 +24,14 @@ package sernet.verinice.rcp.accountgroup;
 import static sernet.verinice.interfaces.IRightsService.STANDARD_GROUPS;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.text.Collator;
 import java.util.Arrays;
 import java.util.EventObject;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
@@ -87,49 +89,34 @@ import sernet.verinice.rcp.account.AccountWizard;
  */
 public class GroupView extends RightsEnabledView implements SelectionListener, KeyListener, MouseListener, IModelLoadListener {
 
-    public static final String ID = "sernet.verinice.rcp.accountgroup.GroupView";
-    
+    private static final Logger LOG = Logger.getLogger(GroupView.class);  
     private static final String EMPTY_STRING = "";
-
-    static final Logger LOG = Logger.getLogger(GroupView.class);
-
-    Composite parent;
-
-    private Composite groupViewComposite;
-
-    private Action newGroup;
-
-    private Action deleteGroup;
-
-    private Action editGroup;
-
-    private TableViewer tableAccounts;
+    private static final Collator COLLATOR = Collator.getInstance();
     
-    private TableViewer tableGroupToAccounts;
+    public static final String ID = "sernet.verinice.rcp.accountgroup.GroupView";   
     
-    TableViewer tableGroups;
-    
-    private Set<String> tableGroupSet = new HashSet<String>(0);
-    
-    private Set<String> tableAccountSet = new HashSet<String>(0);
-    
-    private Set<String> tableGroupToAccountSet = new HashSet<String>(0);
-
-    private Button addBtn;
-
-    private Button addAllBtn;
-
-    private Button removeBtn;
-
-    private Button removeAllBtn;
-
-    private Button editAccountBtn;
-
     IAccountGroupViewDataService accountGroupDataService;
-
-    private Text quickFilter;
-
     IAccountService accountService;
+    
+    private Action newGroup;
+    private Action deleteGroup;
+    private Action editGroup;
+    
+    private String[] accountGroupArray;   
+    private String[] accountArray;  
+    private Set<String> accountinGroupSet = new TreeSet<String>(COLLATOR);
+    
+    Composite parent;
+    private Composite groupViewComposite;
+    private TableViewer tableAccounts;
+    private TableViewer tableGroupToAccounts;    
+    TableViewer tableGroups;
+    private Button addBtn;
+    private Button addAllBtn;
+    private Button removeBtn;
+    private Button removeAllBtn;
+    private Button editAccountBtn;
+    private Text quickFilter;  
 
     @Override
     public void createPartControl(Composite parent) {
@@ -163,22 +150,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         initQuickFilter();
 
-        initLabelsForAccountLists();
-
         initLists();
-    }
-
-    private void initLabelsForAccountLists() {
-
-        final int horizontalLabelSpan = 2;
-        Label accountsInGroup = new Label(groupViewComposite, SWT.NULL);
-        accountsInGroup.setLayoutData(new GridData());
-        ((GridData) accountsInGroup.getLayoutData()).horizontalSpan = horizontalLabelSpan;
-        accountsInGroup.setText(Messages.GroupView_3);
-
-        Label accounts = new Label(groupViewComposite, SWT.NULL);
-        accounts.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        accounts.setText(Messages.GroupView_4);
     }
 
     private void initLabelForAccountGroupList() {
@@ -194,6 +166,11 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         GridData fastFilterGridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
         quickFilter.setLayoutData(fastFilterGridData);
         quickFilter.addKeyListener(this);
+        
+        Label placeholder = new Label(groupViewComposite, SWT.NULL);
+        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
+        gridData.horizontalSpan = 3;
+        placeholder.setLayoutData(gridData);
     }
 
     private void initMainComposite() {
@@ -238,7 +215,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         gridLayout.marginWidth = 0;
         leftComposite.setLayout(gridLayout);        
         
-        tableAccounts = createTable(leftComposite, EMPTY_STRING);
+        tableAccounts = createTable(leftComposite, Messages.GroupView_4);
         
         tableAccounts.setContentProvider(new ArrayContentProvider());
         tableAccounts.setLabelProvider(new AccountLabelProvider());
@@ -256,7 +233,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         gridLayout.marginWidth = 0;
         leftComposite.setLayout(gridLayout);        
         
-        tableGroupToAccounts = createTable(leftComposite, EMPTY_STRING);
+        tableGroupToAccounts = createTable(leftComposite, Messages.GroupView_3);
         
         tableGroupToAccounts.setContentProvider(new ArrayContentProvider());
         tableGroupToAccounts.setLabelProvider(new AccountLabelProvider());
@@ -373,8 +350,8 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     private void addAccounts(String[] selectedAccounts) {
         String[] accounts = accountGroupDataService.saveAccountGroupData(getSelectedGroup(), selectedAccounts);
         for (String account : accounts) {
-            if(!tableGroupToAccountSet.contains(account)){
-                tableGroupToAccountSet.add(account);
+            if(!accountinGroupSet.contains(account)){
+                accountinGroupSet.add(account);
             }
         }
     }
@@ -382,7 +359,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     private void removeAccounts(String[] accounts) {
         String[] items = accountGroupDataService.deleteAccountGroupData(getSelectedGroup(), accounts);
         for (String i : items) {
-            tableGroupToAccountSet.remove(i);
+            accountinGroupSet.remove(i);
         }
     }
 
@@ -431,8 +408,8 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
                 if (e.getSource() == tableGroups) {
                     String[] accounts = accountGroupDataService.getAccountNamesForGroup(getSelectedGroup());
-                    tableGroupToAccountSet.clear();
-                    tableGroupToAccountSet.addAll(Arrays.asList(accounts));
+                    accountinGroupSet.clear();
+                    accountinGroupSet.addAll(Arrays.asList(accounts));
                 }
 
                 else if (e.getSource() == tableGroupToAccounts) {
@@ -449,7 +426,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                 }
 
                 else if (e.getSource() == addAllBtn) {
-                    addAllAccounts(tableAccountSet.toArray(new String[tableAccountSet.size()]));
+                    addAllAccounts(accountArray);
                 }
 
                 else if (e.getSource() == removeBtn) {
@@ -458,7 +435,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                 }
 
                 else if (e.getSource() == removeAllBtn) {
-                    Set set = (HashSet)tableGroupToAccounts.getInput();
+                    Set set = (Set)tableGroupToAccounts.getInput();
                     removeAllAccounts(Arrays.copyOf(set.toArray(), set.size(), String[].class));
                 }
                 updateAllLists();
@@ -542,21 +519,18 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
             @Override
             public void run() {
-            tableGroupSet.clear();
-                tableGroupSet.addAll(Arrays.asList(accountGroupDataService.getAccountGroups()));
-                tableGroups.setInput(tableGroupSet);
+                updateAccountGroupList();
 
                 if (isGroupSelected()) {
-                    tableGroupToAccountSet.clear();
+                    accountinGroupSet.clear();
                     String group = getSelectedGroup();
                     String[] names = accountGroupDataService.getAccountNamesForGroup(group);
-                    tableGroupToAccountSet.addAll(Arrays.asList(names));
-                    tableGroupToAccounts.setInput(tableGroupToAccountSet);
+                    accountinGroupSet.addAll(Arrays.asList(names));                  
+                    tableGroupToAccounts.setInput(accountinGroupSet);
                 }
-
-				tableAccountSet.clear();
-                tableAccountSet.addAll(Arrays.asList(accountGroupDataService.getAllAccounts()));
-                tableAccounts.setInput(tableAccountSet);
+				accountArray = accountGroupDataService.getAllAccounts();  
+				Arrays.sort(accountArray, COLLATOR);
+                tableAccounts.setInput(accountArray);
             }
         });
         getDisplay().asyncExec(new Runnable() {
@@ -567,6 +541,24 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                 tableGroupToAccounts.refresh(true);
             }
         });
+    }
+    
+    private void updateAccountGroupList() {
+        String text = quickFilter.getText();
+        String[] allAccountGroups = accountGroupDataService.getAccountGroups();      
+        if (text==null || text.isEmpty()) {
+            accountGroupArray= allAccountGroups;
+        } else {
+            List<String> filteredList = new LinkedList<String>();
+            for (String group : allAccountGroups) {
+                if (group.toLowerCase().contains(text.toLowerCase())) {
+                    filteredList.add(group);
+                }
+            }
+            accountGroupArray =  filteredList.toArray(new String[filteredList.size()]);
+        }        
+        Arrays.sort(accountGroupArray, COLLATOR);
+        tableGroups.setInput(accountGroupArray);
     }
 
     private class NewGroupAction extends Action {
@@ -596,26 +588,12 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
     
     String[] getAllGroupsFromTable(){
-        List<String> list = (ArrayList<String>)tableGroups.getInput(); 
-        return list.toArray(new String[list.size()]);
+        return (String[]) tableGroups.getInput();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        String text = quickFilter.getText();
-        String[] allAccountGroups = accountGroupDataService.getAccountGroups();
-        if (("").equals(text)) {
-            tableGroupSet.clear();
-            tableGroupSet.addAll(Arrays.asList(allAccountGroups));
-        } else {
-            tableGroupSet.clear();
-            for (String group : allAccountGroups) {
-                if (group.contains(text)) {
-                    tableGroupSet.add(group);
-                }
-            }
-        }
-        tableGroups.setInput(tableGroupSet);
+        updateAccountGroupList();
     }
 
     @Override
@@ -729,7 +707,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                 return (String)selectionList.get(0);
             }
         } else if (((StructuredSelection)tableGroupToAccounts.getSelection()).toList().size()   > 0) {
-            return tableGroupToAccountSet.toArray(new String[tableGroupToAccountSet.size()])[0];
+            return accountinGroupSet.toArray(new String[accountinGroupSet.size()])[0];
         }
 
         return "";

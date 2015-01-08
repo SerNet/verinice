@@ -20,6 +20,7 @@
 package sernet.verinice.rcp.accountgroup;
 
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 
@@ -28,6 +29,8 @@ import sernet.verinice.rcp.IllegalSelectionException;
 
 class EditGroupDialog extends CRUDAccountGroupDialog {
 
+    private static final Logger LOG = Logger.getLogger(EditGroupDialog.class);
+    
     private final GroupView groupView;
     private String selection;
 
@@ -60,7 +63,7 @@ class EditGroupDialog extends CRUDAccountGroupDialog {
 
     @Override
     protected void okPressed() {
-
+        
         if (textInputField.getText() == null || textInputField.getText().equals("")) {
             return;
         }
@@ -82,7 +85,7 @@ class EditGroupDialog extends CRUDAccountGroupDialog {
                 this.groupView.accountGroupDataService.editAccountGroupName(textInputField.getText(), selection);
             } catch (Exception ex) {
                 MessageDialog.openError(this.groupView.parent.getShell(), "Error", ex.getLocalizedMessage());
-                GroupView.LOG.error("editing account group name failed", ex);
+                LOG.error("editing account group name failed", ex);
             }
         }
 

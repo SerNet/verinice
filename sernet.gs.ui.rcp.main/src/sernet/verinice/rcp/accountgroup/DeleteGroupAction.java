@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 
@@ -26,6 +27,8 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
 
 class DeleteGroupAction extends Action {
 
+    private static final Logger LOG = Logger.getLogger(DeleteGroupAction.class);
+    
     private final GroupView groupView;
 
     DeleteGroupAction(GroupView groupView) {
@@ -58,7 +61,7 @@ class DeleteGroupAction extends Action {
                         }
                     }
                 } catch (Exception ex) {
-                    GroupView.LOG.error("error while deleting group", ex);
+                    LOG.error("error while deleting group", ex);
                 }
             }
         });
@@ -80,7 +83,7 @@ class DeleteGroupAction extends Action {
                                 deleteGroup();
                             }
                         } catch (Exception ex) {
-                            GroupView.LOG.error("error while deleting group", ex);
+                            LOG.error("error while deleting group", ex);
                         }
                     }
                 });

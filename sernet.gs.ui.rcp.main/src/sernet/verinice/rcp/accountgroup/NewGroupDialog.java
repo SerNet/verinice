@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,6 +28,8 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
 
 class NewGroupDialog extends CRUDAccountGroupDialog {
 
+    private static final Logger LOG = Logger.getLogger(NewGroupDialog.class);
+    
     private final GroupView groupView;
 
     public NewGroupDialog(GroupView groupView, Shell parent, String title) {
@@ -48,7 +51,7 @@ class NewGroupDialog extends CRUDAccountGroupDialog {
             MessageDialog.openError(this.groupView.parent.getShell(), Messages.GroupView_23, Messages.GroupView_24);
         } catch (Exception ex) {
             MessageDialog.openError(this.groupView.parent.getShell(), Messages.GroupView_23, ex.getLocalizedMessage());
-            GroupView.LOG.error("adding group failed", ex);
+            LOG.error("adding group failed", ex);
         }
     }
 
