@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -37,6 +38,8 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -96,6 +99,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
     private Button buttonRead;
     private Button buttonWrite;
     private Button buttonInherit;
+    private Button buttonAdd;
     private Button[] radioButtonMode = new Button[2];
 
     public AccessControlEditDialog(Shell parent, IStructuredSelection selection) {
@@ -181,11 +185,36 @@ public class AccessControlEditDialog extends TitleAreaDialog {
         filter.addKeyListener(new KeyListener() {
             @Override
             public void keyPressed(KeyEvent e) {
+                // do nothing
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
                 filterRoleCombo();
+            }
+        });
+        
+        filter.addFocusListener(new FocusListener() {
+            
+            @Override
+            public void focusLost(FocusEvent e) {
+                String filterText = filter.getText();
+                if(filterText == null || filterText.isEmpty()){
+                    String tableText = ((Permission)
+                            ((StructuredSelection)
+                                    viewer.getSelection()).getFirstElement()).getRole();
+                    comboRole.setItems(getRoles());
+                    if(ArrayUtils.contains(getRoles(), tableText)){
+                        syncCombo(tableText);
+                    }
+                } 
+                String comboText = comboRole.getText();
+                switchButtons(comboText != null && !comboText.isEmpty());
+            }
+            
+            @Override
+            public void focusGained(FocusEvent e) {
+                // do nothing
             }
         });
 
@@ -194,12 +223,16 @@ public class AccessControlEditDialog extends TitleAreaDialog {
         comboRole.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
+                String text = comboRole.getText();
                 syncTable(comboRole.getText());
+                switchButtons(text != null && !(text.trim().isEmpty()));
             }
         });
 
         buttonRead = generateButton(containerRoles, Integer.valueOf(SWT.CHECK), Messages.AccessControlEditDialog_13, Boolean.FALSE, null);
         buttonWrite = generateButton(containerRoles, Integer.valueOf(SWT.CHECK), Messages.AccessControlEditDialog_14, Boolean.FALSE, null);
+        buttonRead.setEnabled(false);
+        buttonWrite.setEnabled(false);
         SelectionListener addListener = new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -210,8 +243,8 @@ public class AccessControlEditDialog extends TitleAreaDialog {
             public void widgetDefaultSelected(SelectionEvent e) {
             }
         };
-        Button buttonAdd = generateButton(containerRoles, Integer.valueOf(SWT.PUSH), Messages.AccessControlEditDialog_15, null, addListener);
-
+        buttonAdd = generateButton(containerRoles, Integer.valueOf(SWT.PUSH), Messages.AccessControlEditDialog_15, null, addListener);
+        buttonAdd.setEnabled(false);
         gridData = generateGridData(null, Boolean.TRUE, null, Integer.valueOf(SWT.RIGHT), null, null);
         buttonAdd.setLayoutData(gridData);
 
@@ -223,6 +256,14 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 
         return containerRoles;
     }
+    
+    private void switchButtons(boolean enabled){
+        buttonRead.setEnabled(enabled);
+        buttonWrite.setEnabled(enabled);
+        buttonAdd.setEnabled(enabled);
+        
+    }
+
 
     private TableViewer createViewer(Composite parent) {
         final int gridDataHorizontalSpan = 5;
@@ -324,6 +365,26 @@ public class AccessControlEditDialog extends TitleAreaDialog {
         }
 
     }
+    
+    private void syncCombo(String tableRole){
+        int i = 0;
+        try{
+            String cRole = comboRole.getItem(i);
+            while(cRole != null){
+                if(cRole.equals(tableRole)){
+                    comboRole.select(i);
+                    break;
+                }
+                i++;
+                cRole = comboRole.getItem(i);
+            }
+        }catch (IllegalArgumentException e){
+            // no Element found, dont change selection
+        }
+        String selection = comboRole.getText();
+        switchButtons(selection != null && !selection.isEmpty());
+    }
+    
 
     protected void syncComboAndCheckboxes(Permission permission) {
         setPermissionInCombo(permission);
