@@ -19,6 +19,7 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -191,6 +192,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
             @Override
             public void keyReleased(KeyEvent e) {
                 filterRoleCombo();
+                switchButtons(comboRole.getText() != null && !comboRole.getText().isEmpty());
             }
         });
         
@@ -398,14 +400,36 @@ public class AccessControlEditDialog extends TitleAreaDialog {
 
     private void selectCombo(String role) {
         String[] items = comboRole.getItems();
+        boolean set = false;
         for (int i = 0; i < items.length; i++) {
             if (items[i].equals(role)) {
                 comboRole.select(i);
+                set = true;
             }
         }
+        // if role is not element of combobox, select empty entry
+        if(!set){
+            List<String> list = new ArrayList(0);
+            list.add("");
+            list.addAll(removeEmptyEntries(Arrays.asList(comboRole.getItems())));
+            comboRole.setItems(list.toArray(new String[list.size()]));
+            comboRole.select(0);
+        }
+        
+    }
+    
+    private List<String> removeEmptyEntries(List<String> list){
+        List<String> filteredList = new ArrayList(0);
+        for(String s : list){
+            if(!s.isEmpty()){
+                filteredList.add(s);
+            }
+        }
+        return filteredList;
     }
 
     protected void setPermissionInCheckboxes(Permission permission) {
+        switchButtons(comboRole.getText() != null && !comboRole.getText().isEmpty());
         buttonRead.setSelection(permission.isReadAllowed());
         buttonWrite.setSelection(permission.isWriteAllowed());
 
