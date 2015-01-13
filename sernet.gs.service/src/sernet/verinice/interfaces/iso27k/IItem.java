@@ -66,5 +66,7 @@ public interface IItem extends Serializable {
 
 	public String getThreshold1();
 	public String getThreshold2();
+	
+	public String getVersion();
 
 }

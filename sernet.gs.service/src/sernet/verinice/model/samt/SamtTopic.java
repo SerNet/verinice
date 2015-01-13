@@ -55,9 +55,6 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
     
     public static final String REL_SAMTTOPIC_PERSON_ISO = "rel_samttopic_person-iso_resp"; //$NON-NLS-1$
     
-    public static final String VERSION_2_0 = "2.0"; //$NON-NLS-1$
-    
-    
     public SamtTopic() {
         super();
         setEntity(new Entity(TYPE_ID));

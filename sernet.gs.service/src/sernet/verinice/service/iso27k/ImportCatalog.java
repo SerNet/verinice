@@ -108,6 +108,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
      */
     public void importCatalog() {
         try {
+            @SuppressWarnings("resource")
             CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(new ByteArrayInputStream(csvFile.getFileContent()), Charset.forName("UTF-8"))), config.getSeperator(), '"', false);
             String[] nextLine;
             Item item = null;
@@ -115,65 +116,9 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
             while ((nextLine = reader.readNext()) != null) {
                 // nextLine[] is an array of values from the line
                 if (nextLine.length >= 4) {
-                	String number = nextLine[0];
-                	String heading = nextLine[1];
-                	String type = nextLine[2];
-                	String text = nextLine[3];
-                	String weight1=null, weight2=null,maturity=null,threshold1=null,threshold2=null;
-                	if (hasMaturityLevels(nextLine)) {
-	                	weight1 = nextLine[4];
-	                	weight2 = nextLine[5];
-	                	maturity = nextLine[6];
-	                	threshold1 = nextLine[7];
-	                	threshold2 = nextLine[8];
-                	}
-                    if (isNewTopic(nextLine)) {             	
-                        if (getLog().isDebugEnabled()) {
-                            getLog().debug("#: " + number);
-                            getLog().debug("heading: " + heading);
-                            getLog().debug("type: " + type);
-                            getLog().debug("text: " + text);
-                        }
-
-                        if (item != null) {
-                            // buffer the old item
-                            catalog.bufferItem(item);
-                        }
-                        // create a new one
-                        item = new Item(heading, type);
-                        item.setNumberString(number.trim());
-
-                        item.setDescription(text);
-
-                        // line can have optional weight and threshold
-                        // levels:
-                        if (hasMaturityLevels(nextLine)) {
-                        	if (getLog().isDebugEnabled()) {
-                        		getLog().debug("maturity: " + maturity);
-                                getLog().debug("weight 1: " + weight1);
-                                getLog().debug("weight 2: " + weight2);
-                                getLog().debug("threshold 1: " + threshold1);
-                                getLog().debug("threshold 2: " + threshold2);
-                        	}
-                        	item.setWeight1(weight1);
-                            item.setWeight2(weight2);
-                            if(maturity==null || maturity.isEmpty()) {
-                                maturity = String.valueOf(IControl.IMPLEMENTED_NOTEDITED_NUMERIC);
-                            }
-                            item.setMaturity(maturity);
-                            item.setThreshold1(threshold1);
-                            item.setThreshold2(threshold2);
-                            item.setMaturityLevelSupport(true);
-                        }
-
-                    } else { // if (isNewTopic(nextLine))
-                        // add a new paragraph to the existing item
-                        StringBuilder sb = new StringBuilder(item.getDescription());
-                        sb.append("<p>").append(text).append("</p>");
-                        item.setDescription(sb.toString());
-                    }
-                } else { // if (nextLine.length >= 4)
-                    getLog().warn("Invalid line number: " + n + " in CSV file. Line content is: '");
+                	item = processLine(nextLine, item);
+                } else {
+                    getLog().warn("Invalid line (number: " + n + ") in CSV file. Line content is: '");
                     for (int i = 0; i < nextLine.length; i++) {
                     	getLog().warn(nextLine[i]);
                     }
@@ -190,11 +135,74 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
             if (getLog().isDebugEnabled()) {
                 getLog().debug(catalog);
             }
-
         } catch (IOException e) {
             getLog().error("Error while importing", e);
             throw new RuntimeException("Error while importing", e);
         }
+    }
+
+    private Item processLine(String[] nextLine, Item item) {
+        String number = nextLine[0];
+        String heading = nextLine[1];
+        String type = nextLine[2];
+        String text = nextLine[3];
+        String weight1=null, weight2=null,maturity=null,threshold1=null,threshold2=null;
+        if (hasMaturityLevels(nextLine)) {
+        	weight1 = nextLine[4];
+        	weight2 = nextLine[5];
+        	maturity = nextLine[6];
+        	threshold1 = nextLine[7];
+        	threshold2 = nextLine[8];
+        }
+        if (isNewTopic(nextLine)) {             	
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("#: " + number);
+                getLog().debug("heading: " + heading);
+                getLog().debug("type: " + type);
+                getLog().debug("text: " + text);
+            }
+
+            if (item != null) {
+                // buffer the old item
+                catalog.bufferItem(item);
+            }
+            // create a new one
+            item = new Item(heading, type);
+            item.setNumberString(number.trim());
+
+            item.setDescription(text);
+
+            // line can have optional weight and threshold
+            // levels:
+            if (hasMaturityLevels(nextLine)) {
+            	if (getLog().isDebugEnabled()) {
+            		getLog().debug("maturity: " + maturity);
+                    getLog().debug("weight 1: " + weight1);
+                    getLog().debug("weight 2: " + weight2);
+                    getLog().debug("threshold 1: " + threshold1);
+                    getLog().debug("threshold 2: " + threshold2);
+            	}
+            	item.setWeight1(weight1);
+                item.setWeight2(weight2);
+                if(maturity==null || maturity.isEmpty()) {
+                    maturity = String.valueOf(IControl.IMPLEMENTED_NOTEDITED_NUMERIC);
+                }
+                item.setMaturity(maturity);
+                item.setThreshold1(threshold1);
+                item.setThreshold2(threshold2);
+                item.setMaturityLevelSupport(true);
+            }
+            if(hasVersion(nextLine)) {
+                String version = nextLine[9];
+                item.setVersion(version);
+            }
+        } else { // if (isNewTopic(nextLine))
+            // add a new paragraph to the existing item
+            StringBuilder sb = new StringBuilder(item.getDescription());
+            sb.append("<p>").append(text).append("</p>");
+            item.setDescription(sb.toString());
+        }
+        return item;
     }
 
     /**
@@ -202,7 +210,7 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
      * @return
      */
     private boolean isNewTopic(String[] nextLine) {
-        return nextLine[0] != null && nextLine[0].length() > 0;
+        return nextLine[0] != null && !nextLine[0].isEmpty();
     }
 
     /**
@@ -210,7 +218,11 @@ public class ImportCatalog extends GenericCommand implements ICatalogImporter {
      * @return
      */
     private boolean hasMaturityLevels(String[] nextLine) {
-        return nextLine.length == 9;
+        return nextLine.length >= 9;
+    }
+    
+    private boolean hasVersion(String[] nextLine) {
+        return nextLine.length >= 10;
     }
 
     public void setCsvFile(CsvFile csvFile) {

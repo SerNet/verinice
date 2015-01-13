@@ -103,6 +103,10 @@ public interface IControl {
      */
     void setWeight2(String value);
     
+    void setVersion(String version);
+    
+    String getVersion();
+    
     /**
      * @return the type-id of the implementation of {@link IControl} in SNCA.xml
      */

@@ -52,7 +52,10 @@ public class ItemControlTransformer {
 			control.setWeight2(item.getWeight2());
 			control.setThreshold1(item.getThreshold1());
 			control.setThreshold2(item.getThreshold2());
-		}	
+		}
+		if(item.getVersion()!=null && !item.getVersion().isEmpty()) {
+		    control.setVersion(item.getVersion());
+		}
 		return control;
 	}
 	

@@ -308,4 +308,23 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
         return PROP_ISR_MATURITY;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#setVersion(java.lang.String)
+     */
+    @Override
+    public void setVersion(String version) {
+        // at the moment there it is not necessary to save the version Controls
+        // see VN-1007 for details
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#getVersion()
+     */
+    @Override
+    public String getVersion() {
+        // at the moment there it is not necessary to save the version in Controls
+        // see VN-1007 for details
+        return null;
+    }
+
 }

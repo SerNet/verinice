@@ -69,6 +69,8 @@ public class Item implements IItem {
 	private String threshold2;
 	
 	private int typeId = CONTROL;
+	
+    private String version;
 
 	/**
 	 * tree map to store and sort the items
@@ -247,7 +249,15 @@ public class Item implements IItem {
 		this.typeId = typeId;
 	}
 
-	/* (non-Javadoc)
+	public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    /* (non-Javadoc)
 	 * @see sernet.verinice.iso27k.service.IFolder#addFolder(sernet.verinice.iso27k.service.IFolder)
 	 */
 	@Override
