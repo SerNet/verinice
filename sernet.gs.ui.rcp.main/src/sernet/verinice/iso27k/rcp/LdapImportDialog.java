@@ -19,6 +19,7 @@ package sernet.verinice.iso27k.rcp;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -49,6 +50,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -312,7 +314,13 @@ public class LdapImportDialog extends TitleAreaDialog {
 
 	private void refreshTable() {
 		Object[] personArray = personSet.toArray();
-		Arrays.sort(personArray);	
+		Arrays.sort(personArray, new Comparator() {
+		    NumericStringComparator comparator = new NumericStringComparator();
+            @Override
+            public int compare(Object o1, Object o2) {
+                return comparator.compare(((PersonInfo)o1).getLoginName(), ((PersonInfo)o2).getLoginName());
+            }
+        });	
 		viewer.setInput(personArray);
 	}
 	
