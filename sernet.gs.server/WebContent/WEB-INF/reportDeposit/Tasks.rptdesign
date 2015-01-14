@@ -1336,9 +1336,9 @@ columns(newcols);</value>
                     <text-property name="heading">ControlTitle</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">Description-Process</property>
-                    <text-property name="displayName">Description-Process</text-property>
-                    <text-property name="heading">Description-Process</text-property>
+                    <property name="columnName">Description</property>
+                    <text-property name="displayName">Description</text-property>
+                    <text-property name="heading">Description</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">ElementType</property>
@@ -1356,10 +1356,20 @@ columns(newcols);</value>
                     <text-property name="heading">Priority</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">ProcessName</property>
+                    <text-property name="displayName">ProcessName</text-property>
+                    <text-property name="heading">ProcessName</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">auditUuid</property>
                     <property name="analysis">dimension</property>
                     <text-property name="displayName">auditUuid</text-property>
                     <text-property name="heading">auditUuid</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">organization</property>
+                    <text-property name="displayName">organization</text-property>
+                    <text-property name="heading">organization</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">finding</property>
@@ -1370,6 +1380,11 @@ columns(newcols);</value>
                     <property name="columnName">measure</property>
                     <text-property name="displayName">measure</text-property>
                     <text-property name="heading">measure</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">MajurityLevel</property>
+                    <text-property name="displayName">MajurityLevel</text-property>
+                    <text-property name="heading">MajurityLevel</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -1425,7 +1440,7 @@ columns(newcols);</value>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">Description-Process</property>
+                        <property name="name">Description</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
@@ -1445,17 +1460,32 @@ columns(newcols);</value>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">auditUuid</property>
+                        <property name="name">ProcessName</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">finding</property>
+                        <property name="name">auditUuid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
+                        <property name="name">organization</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">finding</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
                         <property name="name">measure</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">MajurityLevel</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -1513,8 +1543,8 @@ columns(newcols);</value>
                 </structure>
                 <structure>
                     <property name="position">8</property>
-                    <property name="name">Description-Process</property>
-                    <property name="nativeName">Description-Process</property>
+                    <property name="name">Description</property>
+                    <property name="nativeName">Description</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1541,22 +1571,43 @@ columns(newcols);</value>
                 </structure>
                 <structure>
                     <property name="position">12</property>
+                    <property name="name">ProcessName</property>
+                    <property name="nativeName">ProcessName</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
                     <property name="name">auditUuid</property>
                     <property name="nativeName">auditUuid</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">14</property>
+                    <property name="name">organization</property>
+                    <property name="nativeName">organization</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
                     <property name="name">finding</property>
                     <property name="nativeName">finding</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">16</property>
                     <property name="name">measure</property>
                     <property name="nativeName">measure</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">MajurityLevel</property>
+                    <property name="nativeName">MajurityLevel</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1577,19 +1628,17 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.gs.service.RetrieveInfo;
-
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.gs.service.NumericStringComparator;
-import sernet.verinice.report.service.impl.TocHelper2;
-
-
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-
-
-
-/** Property which stores  Maßnahmen or Measures in english */
+/** SamtTopics constants for backward compatibility */
 String SAMT_TOPIC_CONTROLNOTE = "samt_topic_controlnote";
+String PROP_AUDIT_FINDINGS = "samt_topic_audit_findings";
+String PROP_MATURITY = "samt_topic_maturity";
 	
 List sort(List list) {
     Collections.sort(list, new Comparator() {
@@ -1606,20 +1655,40 @@ List sort(List list) {
     return list;
 }
 
-void addMeasureAndFinding(List row, ITask task){
 
+CnATreeElement loadParentObject(ITask task){
     RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
     LoadAncestors loadControl = new LoadAncestors(task.getElementType(), task.getUuid(), ri);
     loadControl = helper.execute(loadControl);
 
-    if(loadControl.getElement() != null &amp;&amp; (loadControl.getElement() instanceof SamtTopic)){
-	SamtTopic samtTopic = (SamtTopic) loadControl.getElement();
-	row.add(samtTopic.getAuditFindings());
+    return loadControl.getElement();
+}
+
+void addMeasureFindingMaturity(CnATreeElement elem, List row, ITask task){
+
+    if(elem instanceof SamtTopic){
+	SamtTopic samtTopic = (SamtTopic) elem;
+	row.add(samtTopic.getEntity().getSimpleValue(PROP_AUDIT_FINDINGS));
 	row.add(samtTopic.getEntity().getSimpleValue(SAMT_TOPIC_CONTROLNOTE));
+	row.add(samtTopic.getEntity().getSimpleValue(PROP_MATURITY));
     } else {
 	row.add("-");
 	row.add("-");
+	row.add("-");
     }
+}
+
+
+String loadOrganizationOrVerbund(CnATreeElement elem){
+    if (elem instanceof Organization ) {
+	return ((Organization) elem).getTitle();
+    }
+
+    if (elem instanceof ITVerbund) {
+	return ((ITVerbund) elem).getTitle();
+    }
+
+    return loadOrganizationOrVerbund(elem.getParent());
 }
 
 
@@ -1663,20 +1732,28 @@ for (ITask task : taskList) {
     row.add(task.getUuid());
     row.add(task.getAuditTitle());
     row.add(task.getControlTitle());
-    row.add(removeHTMLTags(task.getDescription()) + "\nProcess: " + task.getElementType());
+    row.add(removeHTMLTags(task.getDescription()));
+    row.add(task.getElementType());
     row.add(task.getIsRead());
     row.add(task.getPriority());
     row.add(task.getProcessName());
     row.add(task.getUuidAudit());
 
-    addMeasureAndFinding(row, task);
+
+    CnATreeElement ancestor = loadParentObject(task);
+
+    row.add(loadOrganizationOrVerbund(ancestor));
+
+    if(ancestor != null){
+	// load samt topic specifica
+	addMeasureFindingMaturity(ancestor, row, task);
+    }
 
     tasks.add(row);
 }
 
 sortedElements = sort(tasks);
 return sortedElements ;
-
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
@@ -1932,8 +2009,7 @@ return sortedElements ;
 inParameters(new String[] { "root_object" });
 
 String[] cols = new String[] {"Assignee", "Name", "CreateDate", "DueDate",
- "CnaUuid", "AuditTitle", "ControlTitle", "Description-Process", "ElementType",
- "IsRead", "Priority", "auditUuid", "finding", "measure"};
+ "CnaUuid", "AuditTitle", "ControlTitle", "Description", "ElementType", "IsRead", "Priority", "ProcessName", "auditUuid", "organization", "finding", "measure", "MajurityLevel" };
 
 columns(cols);</value>
                 </ex-property>
@@ -2064,7 +2140,7 @@ columns(cols);</value>
     </page-setup>
     <body>
         <table id="3279">
-            <property name="width">11.15625in</property>
+            <property name="width">11.177083333333334in</property>
             <property name="dataSet">Tasks</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -2110,12 +2186,6 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Description-Process</property>
-                    <text-property name="displayName">Description-Process</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Description-Process"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
                     <property name="name">ElementType</property>
                     <text-property name="displayName">ElementType</text-property>
                     <expression name="expression" type="javascript">dataSetRow["ElementType"]</expression>
@@ -2151,70 +2221,108 @@ columns(cols);</value>
                     <expression name="expression" type="javascript">dataSetRow["measure"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
+                <structure>
+                    <property name="name">Description</property>
+                    <text-property name="displayName">Description</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Description"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">ProcessName</property>
+                    <text-property name="displayName">ProcessName</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ProcessName"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">organization</property>
+                    <text-property name="displayName">organization</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["organization"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">MajurityLevel</property>
+                    <text-property name="displayName">MajurityLevel</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["MajurityLevel"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
             </list-property>
+            <structure name="toc"/>
+            <column id="3389">
+                <property name="width">0.7083333333333334in</property>
+                <property name="repeat">1</property>
+            </column>
             <column id="3353">
-                <property name="width">0.78125in</property>
+                <property name="width">0.71875in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3354">
-                <property name="width">1.0729166666666667in</property>
+                <property name="width">0.9791666666666666in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3356">
-                <property name="width">0.5625in</property>
+                <property name="width">0.5104166666666666in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3349">
-                <property name="width">1.0104166666666667in</property>
+                <property name="width">0.9270833333333334in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3355">
-                <property name="width">1.0625in</property>
+                <property name="width">0.96875in</property>
+                <property name="repeat">1</property>
+            </column>
+            <column id="3394">
+                <property name="width">0.96875in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3348">
-                <property name="width">0.625in</property>
+                <property name="width">0.5729166666666666in</property>
             </column>
             <column id="3350">
-                <property name="width">0.6354166666666666in</property>
+                <property name="width">0.5833333333333334in</property>
                 <property name="textAlign">center</property>
             </column>
             <column id="3358">
-                <property name="width">0.6354166666666666in</property>
+                <property name="width">0.5833333333333334in</property>
                 <property name="textAlign">center</property>
             </column>
             <column id="3351">
-                <property name="width">0.6770833333333334in</property>
+                <property name="width">0.625in</property>
                 <property name="repeat">1</property>
                 <property name="textAlign">center</property>
             </column>
             <column id="3357">
-                <property name="width">0.5104166666666666in</property>
+                <property name="width">0.46875in</property>
                 <property name="repeat">1</property>
                 <property name="textAlign">center</property>
             </column>
             <column id="3360">
-                <property name="width">0.9270833333333334in</property>
+                <property name="width">0.8541666666666666in</property>
             </column>
             <column id="3367">
-                <property name="width">0.9270833333333334in</property>
+                <property name="width">0.8541666666666666in</property>
             </column>
             <column id="3372">
-                <property name="width">0.9270833333333334in</property>
+                <property name="width">0.8541666666666666in</property>
             </column>
             <header>
                 <row id="3280">
-                    <property name="height">0.4375in</property>
+                    <property name="height">0.5520833333333334in</property>
                     <property name="backgroundColor">silver</property>
                     <property name="textAlign">left</property>
+                    <cell id="3387">
+                        <label id="3390">
+                            <text-property name="text">Organization / Scope</text-property>
+                        </label>
+                    </cell>
                     <cell id="3291">
                         <label id="3292">
-                            <text-property name="text">Audit Title</text-property>
+                            <text-property name="text">Audit Object</text-property>
                         </label>
                     </cell>
                     <cell id="3293">
                         <label id="3294">
-                            <text-property name="text">Objekt  Title</text-property>
+                            <text-property name="text">Object Title</text-property>
                         </label>
                     </cell>
                     <cell id="3297">
@@ -2231,7 +2339,14 @@ columns(cols);</value>
                         <label id="3296">
                             <property name="marginLeft">0pt</property>
                             <property name="textAlign">left</property>
-                            <text-property name="text">Description / Process</text-property>
+                            <text-property name="text">Description</text-property>
+                        </label>
+                    </cell>
+                    <cell id="3392">
+                        <label id="3395">
+                            <property name="marginLeft">0pt</property>
+                            <property name="textAlign">left</property>
+                            <text-property name="text">Maturity Level</text-property>
                         </label>
                     </cell>
                     <cell id="3281">
@@ -2282,7 +2397,12 @@ columns(cols);</value>
             </header>
             <detail>
                 <row id="3307">
-                    <property name="height">0.4270833333333333in</property>
+                    <property name="height">0.53125in</property>
+                    <cell id="3388">
+                        <data id="3391">
+                            <property name="resultSetColumn">organization</property>
+                        </data>
+                    </cell>
                     <cell id="3318">
                         <data id="3319">
                             <property name="marginLeft">0pt</property>
@@ -2338,8 +2458,13 @@ columns(cols);</value>
                         </data>
                     </cell>
                     <cell id="3322">
-                        <data id="3377">
-                            <property name="resultSetColumn">Description-Process</property>
+                        <data id="3386">
+                            <property name="resultSetColumn">Description</property>
+                        </data>
+                    </cell>
+                    <cell id="3393">
+                        <data id="3396">
+                            <property name="resultSetColumn">MajurityLevel</property>
                         </data>
                     </cell>
                     <cell id="3308">
