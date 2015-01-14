@@ -47,6 +47,7 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -56,15 +57,12 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TreeColumn;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.PlatformUI;
@@ -120,9 +118,10 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView"; //$NON-NLS-1$
     
     private static final int WEIGHT_40 = 40;
-    private static final int WEIGHT_50 = 50;
     private static final int WEIGHT_60 = 60;
-    private static final int WIDTH_4 = 4;
+    
+    private static final int WIDTH_SEARCH_FORM = 1060;
+    private static final int HEIGHT_SEARCH_FORM = 60;
     
     CnATreeElement selectedGroup;
     String selectedAssignee;
@@ -133,6 +132,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private TaskTableSorter tableSorter = new TaskTableSorter();
     private TaskLabelProvider labelProvider;
     private TaskContentProvider contentProvider;    
+    private Listener collapseAndExpandListener = new TableCollapseAndExpandListener();
     private Browser textPanel;
     Label labelDateFrom;
     Date dueDateFrom = null;
@@ -196,19 +196,87 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     }
 
     private void createRootComposite(Composite parent) {
-        SashForm rootSashComposite = createSashComposite(parent, SWT.VERTICAL);      
-        SashForm upperSashComposite = createSashComposite(rootSashComposite, SWT.HORIZONTAL);   
-        createTablePanel(rootSashComposite);
+        Composite rootComposite = CompositeCreator.create1ColumnComposite(parent, 0, 0);
+        Composite topComposite =  CompositeCreator.create2ColumnComposite(rootComposite);
         
-        createInfoPanel(upperSashComposite);
-        Composite searchComposite = createOneColumnComposite(upperSashComposite, 5, 5);
-        createSearchForm(searchComposite);
-   
-        rootSashComposite.setWeights(new int[] { WEIGHT_50, WEIGHT_50 });
-        upperSashComposite.setWeights(new int[] { WEIGHT_60, WEIGHT_40 });
+        createSearchComposite(topComposite);
+           
+        SashForm splitComposite = CompositeCreator.createSplitComposite(rootComposite, SWT.VERTICAL);   
+        createInfoComposite(splitComposite);
+        createTableComposite(splitComposite);
+        splitComposite.setWeights(new int[] { WEIGHT_40, WEIGHT_60 });
     }
     
-    private void createTablePanel(Composite parent) {
+    private void createSearchComposite(Composite composite) {  
+        ScrolledComposite scrolledComposite = CompositeCreator.createScrolledComposite(composite);
+        
+        Composite formComposite = createSearchFormComposite(scrolledComposite);    
+                
+        scrolledComposite.setContent(formComposite); 
+        scrolledComposite.setVisible(true);
+        scrolledComposite.setMinSize(WIDTH_SEARCH_FORM,HEIGHT_SEARCH_FORM);
+        
+        createLoadButtonComposite(composite);     
+    }
+
+    private void createLoadButtonComposite(Composite parent) {
+        // Load button
+        Composite buttonComposite = CompositeCreator.create1ColumnComposite(parent, 4, 4, true, true); 
+        GridData gridData = (GridData) buttonComposite.getLayoutData();
+        gridData.minimumWidth = 70;
+        buttonComposite.setLayoutData(gridData);
+        // create a dummy label
+        new Label(buttonComposite, SWT.WRAP);  
+        createButtonControls(buttonComposite);
+    }
+
+    private Composite createSearchFormComposite(Composite parent) {
+        Composite formComposite = createInnerFormComposite(parent);
+        
+        // Group
+        Label label = new Label(formComposite, SWT.WRAP);
+        label.setText(Messages.TaskView_11);
+        // Assignee
+        label = new Label(formComposite, SWT.WRAP);
+        label.setText(Messages.TaskView_12);
+        // Process
+        label = new Label(formComposite, SWT.WRAP);
+        label.setText(Messages.TaskView_13); 
+        // Task type
+        label = new Label(formComposite, SWT.WRAP);
+        label.setText(Messages.TaskView_14);    
+        // Due date
+        labelDateFrom = new Label(formComposite, SWT.WRAP);
+        labelDateFrom.setText(Messages.TaskView_15);
+        label = new Label(formComposite, SWT.WRAP);
+        label.setText(Messages.TaskView_1);   
+             
+        // Group
+        createGroupControls(formComposite);      
+        // Assignee
+        createAssigneeControls(formComposite);           
+        // Process
+        createProcessTypeControls(formComposite);        
+        // Task type
+        createTaskTypeControls(formComposite);      
+        // Due date
+        createDateFromControls(formComposite); 
+        createDateToControls(formComposite);
+        return formComposite;
+    }
+    
+    public static Composite createInnerFormComposite(Composite parentComposite) {
+        Composite composite = new Composite(parentComposite, SWT.NONE);
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        composite.setLayoutData(gridData);
+        GridLayout gridLayout = new GridLayout(6, true);
+        gridLayout.marginHeight = 4;
+        gridLayout.marginWidth = 4;
+        composite.setLayout(gridLayout);
+        return composite;
+    }
+
+    private void createTableComposite(Composite parent) {
         this.tableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
         final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         this.tableViewer.getControl().setLayoutData(gridData);
@@ -241,8 +309,8 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
             tc.pack();
         }
 
-        getTable().addListener(SWT.Expand, getCollapseExpandListener());
-        getTable().addListener(SWT.Collapse, getCollapseExpandListener());
+        getTable().addListener(SWT.Expand, collapseAndExpandListener);
+        getTable().addListener(SWT.Collapse, collapseAndExpandListener);
 
         this.contentProvider = new TaskContentProvider(tableViewer);
         this.tableViewer.setContentProvider(this.contentProvider);
@@ -251,7 +319,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         this.tableViewer.setSorter(tableSorter);
     }
 
-    private void createInfoPanel(Composite container) {
+    private void createInfoComposite(Composite container) {
         final int gridDataHeight = 80;
         textPanel = new Browser(container, SWT.NONE);
         textPanel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.GRAB_HORIZONTAL));
@@ -259,30 +327,8 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         gridData.heightHint = gridDataHeight;
         textPanel.setLayoutData(gridData);
     }
-    
-    private void createSearchForm(Composite searchComposite) {
-        // Group
-        createGroupControls(searchComposite);
-        
-        // Assignee
-        createAssigneeControls(searchComposite);    
-        
-        // Process
-        createProcessTypeControls(searchComposite);
-        
-        // Task type
-        createTaskTypeControls(searchComposite);
-        
-        // Due date
-        createDueDateControls(searchComposite);
-        
-        // Load button
-        createButtonControls(searchComposite);
-    }
 
-    private void createGroupControls(Composite searchComposite) {
-        Label label = new Label(searchComposite, SWT.WRAP);
-        label.setText(Messages.TaskView_11);      
+    private void createGroupControls(Composite searchComposite) {     
         comboModelGroup = new ComboModel<CnATreeElement>(new GroupLabelProvider());       
         comboGroup = createComboBox(searchComposite);      
         comboGroup.addSelectionListener(new SelectionAdapter() {
@@ -294,10 +340,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         });
     }
 
-    private void createAssigneeControls(Composite searchComposite) {
-        Label label;
-        label = new Label(searchComposite, SWT.WRAP);
-        label.setText(Messages.TaskView_12);      
+    private void createAssigneeControls(Composite searchComposite) {      
         comboModelAccount = new ComboModel<Configuration>(new ComboModelLabelProvider<Configuration>() {
             @Override
             public String getLabel(Configuration account) {
@@ -319,10 +362,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         });
     }
 
-    private void createProcessTypeControls(Composite searchComposite) {
-        Label label;
-        label = new Label(searchComposite, SWT.WRAP);
-        label.setText(Messages.TaskView_13);       
+    private void createProcessTypeControls(Composite searchComposite) {      
         comboModelProcessType = new ComboModel<KeyMessage>(new ComboModelLabelProvider<KeyMessage>() {
             @Override
             public String getLabel(KeyMessage object) {
@@ -339,10 +379,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         });
     }
 
-    private void createTaskTypeControls(Composite searchComposite) {
-        Label label;
-        label = new Label(searchComposite, SWT.WRAP);
-        label.setText(Messages.TaskView_14);       
+    private void createTaskTypeControls(Composite searchComposite) {   
         comboModelTaskType = new ComboModelTaskType();     
         comboTaskType = createComboBox(searchComposite);        
         comboTaskType.addSelectionListener(new SelectionAdapter() {
@@ -354,15 +391,8 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         });
     }
 
-    private void createDueDateControls(Composite searchComposite) {        
-        Composite dateComposite = create2ColumnComposite(searchComposite); 
-        
-        Composite leftColumn = createOneColumnComposite(dateComposite, 0, 0);
-        
-        labelDateFrom = new Label(leftColumn, SWT.WRAP);
-        labelDateFrom.setText(Messages.TaskView_15);
-        
-        Composite dateFromComposite = create2ColumnComposite(leftColumn); 
+    private void createDateFromControls(Composite searchComposite) {                   
+        Composite dateFromComposite = CompositeCreator.create2ColumnComposite(searchComposite); 
         dateTimeFrom = new DateTime(dateFromComposite, SWT.DATE | SWT.DROP_DOWN);
         dateTimeFrom.setEnabled(false);  
         dateTimeFrom.addSelectionListener (new SelectionAdapter () {
@@ -384,12 +414,10 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                 extractDates();           
             }
         });
-        
-        Composite rightColumn = createOneColumnComposite(dateComposite, 0, 0);
-        
-        Label label = new Label(rightColumn, SWT.WRAP);
-        label.setText(Messages.TaskView_1);       
-        Composite dateToComposite = create2ColumnComposite(rightColumn);      
+    }
+    
+    private void createDateToControls(Composite searchComposite) {               
+        Composite dateToComposite = CompositeCreator.create2ColumnComposite(searchComposite);      
         dateTimeTo = new DateTime(dateToComposite, SWT.DATE | SWT.DROP_DOWN);
         dateTimeTo.setEnabled(false);
         dateTimeTo.addSelectionListener (new SelectionAdapter () {
@@ -434,8 +462,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     }
 
     private void createButtonControls(Composite searchComposite) {
-        Composite buttonComposite = create2ColumnComposite(searchComposite);
-        searchButton = new Button(buttonComposite, SWT.NONE);
+        searchButton = new Button(searchComposite, SWT.NONE);
         searchButton.setText(Messages.TaskView_17);
         searchButton.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
@@ -443,34 +470,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
             }
         });
     } 
-
-    private SashForm createSashComposite(Composite parent, int orientation) {
-        SashForm container = new SashForm(parent, orientation);
-        
-        container.setSashWidth(WIDTH_4);
-        container.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
-        return container;
-    }
-    
-    private Composite createOneColumnComposite(Composite composite, int marginHeight, int marginWidth) {
-        Composite comboComposite = new Composite(composite, SWT.NONE);
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        comboComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = marginHeight;
-        gridLayout.marginWidth = marginWidth;
-        comboComposite.setLayout(gridLayout);
-        return comboComposite;
-    }
-    
-    private Composite create2ColumnComposite(Composite composite) {
-        Composite comboComposite = new Composite(composite, SWT.NONE);
-        GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        comboComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(2, true);
-        comboComposite.setLayout(gridLayout);
-        return comboComposite;
-    }
 
     private Date extractDateFrom(DateTime dueDate) {
         Calendar cal = getDateWithoutTime(dueDate);
@@ -494,25 +493,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         cal.set(Calendar.MONTH, dueDate.getMonth());
         cal.set(Calendar.DATE, dueDate.getDay());
         return cal;
-    }
-    
-    private Listener getCollapseExpandListener() {
-        Listener listener = new Listener() {
-
-            @Override
-            public void handleEvent(Event e) {
-                final TreeItem treeItem = (TreeItem) e.item;
-                Display.getDefault().asyncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (TreeColumn tc : treeItem.getParent().getColumns()) {
-                            tc.pack();
-                        }
-                    }
-                });
-            }
-        };
-        return listener;
     }
 
     private void makeActions() {
@@ -545,8 +525,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                 }
             }
         };
-        
-       
+           
         cancelTaskAction = new Action(Messages.ButtonCancel, SWT.TOGGLE) {
             @Override
             public void run() {
@@ -570,7 +549,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                         configureActions();
                     }
                 }
-
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else {
@@ -654,9 +632,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         tableViewer.getTable().setMenu(menu);
         getSite().registerContextMenu(menuManager, tableViewer);
         // Make the selection available
-        getSite().setSelectionProvider(tableViewer);
-        
-        
+        getSite().setSelectionProvider(tableViewer);   
     }
 
     /* (non-Javadoc)
