@@ -69,7 +69,7 @@ public class GSScraper {
     
     // used when gs contant loaded from file
     public static final String LANGUAGE_IDENTIFIER_GERMAN = "1 Übergreifende Aspekte";
-    public static final String LANGUAGE_IDENTIFIER_ENGLISH = "1 Common Aspects";
+    public static final String LANGUAGE_IDENTIFIER_ENGLISH = "M 1 Common aspects";
     
     // used when gs content loaded from cache
     public static final String TITLE_OF_FIRST_BAUSTEIN_GERMAN = "Sicherheitsmanagement";
@@ -340,8 +340,15 @@ public class GSScraper {
 			return result;
 		}
 		try {
-			Node root = source.parseBausteinDocument(baustein);
-			this.language = getLanguage(root);
+		    Node root = source.parseBausteinDocument(baustein);
+		    // first baustein contains language relevant information
+		    if("b01000".equals(baustein)){
+			    getLanguage(root);
+			}
+		     if("".equals(this.language)){
+		         // use default if nothing is set
+		         this.language = CATALOG_LANGUAGE_GERMAN;
+		     }
 			getStand(baustein, root);
 			massnahmenContext.setContextItem(new DocumentWrapper(root,
 					baustein, config));
@@ -356,23 +363,33 @@ public class GSScraper {
 
 	}
 	
+	public String getLanguage(String url){
+	    Node root;
+        try {
+            root = source.parseBausteinDocument(url);
+            getLanguage(root);
+            return this.language;
+        } catch (GSServiceException e) {
+            LOG.error("Error parsing GS-Catalogue Language", e);
+        }
+        // german is the default value
+        return CATALOG_LANGUAGE_GERMAN;
+	}
 	
-	private String getLanguage(Node node){
-	    String language = "";
-	    NodeList nodeList = node.getChildNodes();
-	    for(int i = 0; i < nodeList.getLength(); i++){
-	        Node currentNode = nodeList.item(i);
-	        if(LANGUAGE_IDENTIFIER_GERMAN.equals(currentNode.getTextContent())){
-	            language = CATALOG_LANGUAGE_GERMAN;
-	        } else if(LANGUAGE_IDENTIFIER_ENGLISH.equals(currentNode.getTextContent())){
-	            language = CATALOG_LANGUAGE_ENGLISH;
-	        } else if ("".equals(language)){
-	            language = getLanguage(currentNode);
+	private void getLanguage(Node node){
+	    if(LANGUAGE_IDENTIFIER_ENGLISH.equals(node.getTextContent())){
+	        this.language = CATALOG_LANGUAGE_ENGLISH;
+	    } else if(this.language.isEmpty()){
+	        NodeList list = node.getChildNodes();
+	        for(int i = 0; i < list.getLength(); i++){
+	            Node currentNode = list.item(i);
+	            if(currentNode.getNodeType() == Node.ELEMENT_NODE){
+	                getLanguage(currentNode);
+	            }
 	        }
 	    }
-	    return language;
 	}
-
+	
     private ArrayList<Massnahme> fillResult(ArrayList<Massnahme> result) throws XPathException, GSServiceException {
         SequenceIterator iterator = getMassnahmenExp
         		.iterator(massnahmenContext);

@@ -114,7 +114,7 @@ public class Massnahme implements IGSModel {
 	}
 	
 	private String getLocalizedLZAsString(int lzId, String language){
-	    if(GSScraper.LANGUAGE_IDENTIFIER_ENGLISH.equals(language)){
+	    if(GSScraper.CATALOG_LANGUAGE_ENGLISH.equals(language)){
 	        switch(lzId){
 	        case LZ_AUSSONDERUNG: return LZ_STRING_Ausonderung_EN;
 	        case LZ_BESCHAFFUNG: return LZ_STRING_Beschaffung_EN;
