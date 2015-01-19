@@ -223,7 +223,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         // Load button
         Composite buttonComposite = CompositeCreator.create1ColumnComposite(parent, 4, 4, true, true); 
         GridData gridData = (GridData) buttonComposite.getLayoutData();
-        gridData.minimumWidth = 70;
+        gridData.minimumWidth = 75;
         buttonComposite.setLayoutData(gridData);
         // create a dummy label
         new Label(buttonComposite, SWT.WRAP);  
