@@ -117,6 +117,8 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	}
 	
 	public synchronized BeanFactory getBeanFactory() {
+		if (beanFactory == null)
+			openBeanFactory();
 		return beanFactory;
 	}
 

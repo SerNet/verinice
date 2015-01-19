@@ -4,7 +4,15 @@ Bundle-Name: SpringClient Plug-in
 Bundle-SymbolicName: sernet.springclient
 Bundle-Version: 1.2.2.qualifier
 Bundle-Activator: sernet.springclient.SpringClientPlugin
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ lib/guava-18.0.jar,
+ lib/jna-4.1.0.jar,
+ lib/jna-platform-4.1.0.jar,
+ lib/logback-classic-1.1.2.jar,
+ lib/logback-core-1.1.2.jar,
+ lib/slf4j-api-1.7.7.jar,
+ lib/waffle-jna-1.7.1.jar,
+ lib/waffle-spring-security2-1.7.jar
 Export-Package: sernet.springclient;
   uses:="org.eclipse.jface.resource,
    org.eclipse.ui.plugin,
