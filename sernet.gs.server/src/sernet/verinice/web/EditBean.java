@@ -193,7 +193,7 @@ public class EditBean {
                         LOG.debug("prop: " + id + " (" + propertyType.getInputName() + ") - " + value);
                     }
                 }
-            }   
+            }
         } else {
             // (sometimes) his is not an error, GSM workflow tasks doesn't have an element
             LOG.info("Element not found, type: " + getTypeId() + ", uuid: " + getUuid());
@@ -533,7 +533,21 @@ public class EditBean {
         if(propertyList==null) {
             propertyList = Collections.emptyList();
         }
+        moveURLPropertyToEndOfList();
         return propertyList;
+    }
+
+    private void moveURLPropertyToEndOfList() {
+        HuiProperty<String, String> docProp = null;
+        for(int i = 0; i < propertyList.size(); i++){
+            if(propertyList.get(i).getIsURL()){
+               docProp = propertyList.get(i); 
+               break;
+            }
+        }
+        if(docProp != null){
+            Collections.swap(propertyList, propertyList.indexOf(docProp), propertyList.size() - 1);
+        }
     }
 
     public void setPropertyList(List<HuiProperty<String, String>> properties) {

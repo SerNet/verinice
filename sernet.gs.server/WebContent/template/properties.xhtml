@@ -30,20 +30,20 @@
 									showOn="button"
 									navigator="true"/>
 							</p:outputPanel>
-							<p:outputPanel rendered="#{p.isSingleSelect and p.isEditable}">
+							<p:outputPanel rendered="#{p.isSingleSelect and p.isEditable  and (not p.isURL)}">
 								<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui" effectDuration="40">
 									 <f:selectItems value="#{p.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 								</p:selectOneMenu>
 							</p:outputPanel>
-							<p:outputPanel rendered="#{p.isNumericSelect and not empty p.optionList and p.isEditable}" >
+							<p:outputPanel rendered="#{p.isNumericSelect and not empty p.optionList and p.isEditable  and (not p.isURL)}" >
 								<p:selectOneMenu value="#{p.selectedOption}" styleClass="hui" effectDuration="40">	
 									 <f:selectItems value="#{p.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 								</p:selectOneMenu>
 							</p:outputPanel>
-							<p:outputPanel rendered="#{p.isNumericSelect and empty p.optionList and p.isEditable}">
+							<p:outputPanel rendered="#{p.isNumericSelect and empty p.optionList and p.isEditable  and (not p.isURL)}">
 								<p:spinner value="#{p.value}" min="#{p.min}" max="#{p.max}" onkeydown="return false;" styleClass="hui"/>
-							</p:outputPanel>						
-							<p:panel rendered="#{p.isLine and p.isEditable and p.isURL}" header="#{p.name}" collapsed="true" toggleable="true" toggleSpeed="50" styleClass="hui ui-corner-all" >
+							</p:outputPanel>
+							<p:panel rendered="#{p.isLine and p.isEditable and p.isURL}" header="#{p.name}" collapsed="true" toggleable="true" toggleSpeed="50" styleClass="hui" >
 							<table>
 								<tr>
 									<td>
@@ -71,7 +71,7 @@
 								</tr>
 
 							</table>
-							</p:panel>
+							</p:panel>		
 						</td>
 					</tr>               	
 				</c:forEach>
@@ -82,10 +82,10 @@
 				<c:forEach var="i" items="#{listNoLabel}">
 					<tr>
 						<td width="530px" style="padding-bottom: 12px;">
-							<h:inputText value="#{i.value}" rendered="#{i.isLine and p.isEditable and (not p.isURL)}" styleClass="hui ui-corner-all"/>
-							<h:outputText value="#{i.value}" rendered="#{(not i.isText) and (not p.isEditable) and (not p.isURL)}" styleClass="roText"/>
-							<h:inputTextarea value="#{i.value}" rendered="#{i.isText and p.isEditable and (not p.isURL)}" styleClass="hui"/>
-							<h:outputText value="#{i.value}" escape="false" rendered="#{i.isText and (not p.isEditable) and (not p.isURL)}" styleClass="roText"/>
+							<h:inputText value="#{i.value}" rendered="#{i.isLine and i.isEditable and (not i.isURL)}" styleClass="hui ui-corner-all"/>
+							<h:outputText value="#{i.value}" rendered="#{(not i.isText) and (not i.isEditable) and (not i.isURL)}" styleClass="roText"/>
+							<h:inputTextarea value="#{i.value}" rendered="#{i.isText and i.isEditable and (not i.isURL)}" styleClass="hui"/>
+							<h:outputText value="#{i.value}" escape="false" rendered="#{i.isText and (not i.isEditable) and (not i.isURL)}" styleClass="roText"/>
 							<p:outputPanel rendered="#{i.isDate}">
 								<p:calendar value="#{i.date}" 
 									showButtonPanel="true" 
@@ -94,49 +94,48 @@
 									showOn="button"
 									navigator="true"/>
 							</p:outputPanel>
-							<p:outputPanel rendered="#{i.isSingleSelect and p.isEditable}">
+							<p:outputPanel rendered="#{i.isSingleSelect and i.isEditable}">
 								<p:selectOneMenu value="#{i.selectedOption}" styleClass="hui" effectDuration="40">
 									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 								</p:selectOneMenu>
 							</p:outputPanel>
-							<p:outputPanel rendered="#{i.isNumericSelect and not empty p.optionList and p.isEditable}">
+							<p:outputPanel rendered="#{i.isNumericSelect and not empty i.optionList and p.isEditable}">
 								<p:selectOneMenu value="#{i.selectedOption}" styleClass="hui" effectDuration="40">
 									 <f:selectItems value="#{i.optionList}" var="option" itemLabel="#{option}" itemValue="#{option}"/>
 								</p:selectOneMenu>
 							</p:outputPanel>
-							<p:outputPanel rendered="#{i.isNumericSelect and empty p.optionList and p.isEditable}">
+							<p:outputPanel rendered="#{i.isNumericSelect and empty i.optionList and i.isEditable}">
 								<p:spinner value="#{i.value}" min="#{i.min}" max="#{i.max}" onkeydown="return false;"  styleClass="hui" />
 							</p:outputPanel>
-							<p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" />
-							<p:panel rendered="#{i.isLine and i.isEditable and p.isURL}" header="#{i.name}" collapsed="true" toggleable="true" toggleSpeed="50" styleClass="hui ui-corner-all" >
-							<table>
-								<tr>
-									<td>
-										<h:outputText rendered="#{i.isURL}" value="#{msgEdit['document.URLValue']}"/>
-									</td>
-									<td>
-										<h:inputText value="#{i.URLValue}" rendered="#{i.isLine and i.isEditable and i.isURL}" style="width:450px"/>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<h:outputText rendered="#{i.isURL}" value="#{msgEdit['document.URLText']}"/>
-									</td>								
-									<td>
-										<h:inputText value="#{i.URLText}" rendered="#{i.isLine and i.isEditable and i.isURL}" style="width:450px"/>									
-									</td>
-								</tr>
-								<tr>
-									<td>
-										<h:outputText rendered="#{i.isURL}" value="#{msgEdit['document.Link']}"/>
-									</td>								
-									<td>
-										<a href="#{i.URLValue}" target="_blank">#{p.URLText}</a>
-									</td>								
-								</tr>
-
-							</table>
-							</p:panel>
+							<p:selectBooleanCheckbox value="#{i.boolean}" rendered="#{i.isBooleanSelect}" />
+							<p:panel rendered="#{i.isLine and i.isEditable and i.isURL}" header="#{i.name}" collapsed="true" toggleable="true" toggleSpeed="50" >
+								<table>
+									<tr>
+										<td>
+											<h:outputText rendered="#{i.isURL}" value="#{msgEdit['document.URLValue']}"/>
+										</td>
+										<td>
+											<h:inputText value="#{i.URLValue}" rendered="#{i.isLine and i.isEditable and i.isURL}" style="width:450px"/>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<h:outputText rendered="#{i.isURL}" value="#{msgEdit['document.URLText']}"/>
+										</td>								
+										<td>
+											<h:inputText value="#{i.URLText}" rendered="#{i.isLine and i.isEditable and i.isURL}" style="width:450px"/>									
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<h:outputText rendered="#{i.isURL}" value="#{msgEdit['document.Link']}"/>
+											</td>								
+										<td>
+											<a href="#{i.URLValue}" target="_blank">#{i.URLText}</a>
+										</td>								
+									</tr>
+								</table>
+							</p:panel>							
 						</td>
 					</tr>	
 				</c:forEach>
