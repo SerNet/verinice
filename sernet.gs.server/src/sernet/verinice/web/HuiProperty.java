@@ -91,7 +91,8 @@ public class HuiProperty<K,V> implements Serializable{
     }
     
     public String getURLValue(){
-        if(getIsURL()){
+        if(getIsURL() && getValue() != null && !((String)getValue()).isEmpty()){
+            try{
                 int n = getIndexOf((String)getValue(), '"', 0);
                 String[] a = ((String)getValue()).substring(n).split(">");
                 String url = a[0].replaceAll("\"", "");
@@ -99,16 +100,23 @@ public class HuiProperty<K,V> implements Serializable{
                     url = "http://" + url;
                 }
                 return url;
+            } catch (Exception e){
+                LOG.warn("Something went wrong on reading the URLValue", e);
+            }
         }
         return "";
     }
     
     public String getURLText(){
-        if(getIsURL()){
-            int n = getIndexOf((String)getValue(), '"', 0);
-            String[] a = ((String)getValue()).substring(n).split(">");
-            String value = a[1].replaceAll("</a", "");
-            return value;
+        if(getIsURL() && getValue() != null && !((String)getValue()).isEmpty()){
+            try{
+                int n = getIndexOf((String)getValue(), '"', 0);
+                String[] a = ((String)getValue()).substring(n).split(">");
+                String value = a[1].replaceAll("</a", "");
+                return value;
+            } catch (Exception e){
+                LOG.warn("Something went wrong on reading the URLText", e);
+            }
     }
     return "";
     }
