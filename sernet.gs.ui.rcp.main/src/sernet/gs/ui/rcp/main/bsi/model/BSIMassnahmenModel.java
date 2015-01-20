@@ -107,6 +107,15 @@ public class BSIMassnahmenModel {
         IGSSource gsSource = null;
         String cacheDir = config.getCacheDir();
 
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Loading Grundschutzkatalog, path: " + gsPath);
+            LOG.info("Loading Datenschutzbaustein, path: " + dsPath);
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Cache dir is: " + cacheDir);
+            LOG.debug("Grundschutzkatalog isFromZipFile=" + fromZipFile);
+        }
+              
         // did user really change the path to file?
         if (!(previouslyReadFile.equals(gsPath) && previouslyReadFileDS.equals(dsPath))) {
             previouslyReadFile = gsPath;
