@@ -202,11 +202,16 @@ public class AccessControlEditDialog extends TitleAreaDialog {
             public void focusLost(FocusEvent e) {
                 String filterText = filter.getText();
                 if(filterText == null || filterText.isEmpty()){
-                    String tableText = ((Permission)
-                            ((StructuredSelection)
-                                    viewer.getSelection()).getFirstElement()).getRole();
+                    StructuredSelection selection = ((StructuredSelection)viewer.getSelection());
+                    String tableText = "";
+                    if(selection != null && selection.size() > 0){
+                        Object firstElement = selection.getFirstElement();
+                        if(firstElement != null){
+                            tableText = ((Permission)firstElement).getRole();
+                        }
+                    }
                     comboRole.setItems(getRoles());
-                    if(ArrayUtils.contains(getRoles(), tableText)){
+                    if(!"".equals(tableText) && ArrayUtils.contains(getRoles(), tableText)){
                         syncCombo(tableText);
                     }
                 } 
