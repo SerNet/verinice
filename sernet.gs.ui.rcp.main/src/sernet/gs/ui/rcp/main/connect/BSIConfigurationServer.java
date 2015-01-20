@@ -19,6 +19,7 @@
 package sernet.gs.ui.rcp.main.connect;
 
 import java.io.File;
+
 import java.io.IOException;
 import java.net.URL;
 
@@ -27,71 +28,70 @@ import org.springframework.core.io.Resource;
 
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
 
+@SuppressWarnings("restriction")
 public class BSIConfigurationServer implements IBSIConfig {
 
-	private static final Logger LOG = Logger.getLogger(BSIConfigurationServer.class);
+    private static final Logger LOG = Logger.getLogger(BSIConfigurationServer.class);
 
-	private Resource grundschutzKataloge;
-	
-	private Resource datenschutzBaustein;
-	
-	private URL getGrundschutzKatalogeURL()
-	{
-		try {
-			return grundschutzKataloge.getURL();
-		} catch (IOException e) {
-			LOG.error("accessing the URL for the Grundschutz catalog failed.");
-			throw new RuntimeException(e);
-		}
-	}
-	
-	private URL getDatenschutzBausteinURL()
-	{
-		try {
-			return datenschutzBaustein.getURL();
-		} catch (IOException e) {
-			LOG.error("accessing the URL for the Datenschutzbaustein catalog failed.");
-			throw new RuntimeException(e);
-		}
-	}
+    private Resource grundschutzKataloge;
 
-	public String getCacheDir() {
-		String property = System
-				.getProperty("java.io.tmpdir")+ File.separator + "gscache";
-		Logger.getLogger(this.getClass()).debug("Setting temp dir to " + property);
-		return property;
-	}
+    private Resource datenschutzBaustein;
 
-	public String getDsPath() {
-		return getDatenschutzBausteinURL().toString();
-	}
+    private URL getGrundschutzKatalogeURL() {
+        try {
+            return grundschutzKataloge.getURL();
+        } catch (IOException e) {
+            LOG.error("accessing the URL for the Grundschutz catalog failed.");
+            throw new RuntimeException(e);
+        }
+    }
 
-	public String getGsPath() {
-		return getGrundschutzKatalogeURL().toString();
-	}
+    private URL getDatenschutzBausteinURL() {
+        try {
+            return datenschutzBaustein.getURL();
+        } catch (IOException e) {
+            LOG.error("accessing the URL for the Datenschutzbaustein catalog failed.");
+            throw new RuntimeException(e);
+        }
+    }
 
-	public boolean isFromZipFile() {
-		try {
-			return grundschutzKataloge.getFile().isFile();
-		} catch (IOException e) {
-			return false;
-		}
-	}
+    public String getCacheDir() {
+        String property = System.getProperty("java.io.tmpdir") + File.separator + "gscache";
+        Logger.getLogger(this.getClass()).debug("Setting temp dir to " + property);
+        return property;
+    }
 
-	public void setGrundschutzKataloge(Resource grundschutzKataloge) {
-		this.grundschutzKataloge = grundschutzKataloge;
-	}
+    public String getDsPath() {
+        return getDatenschutzBausteinURL().toString();
+    }
 
-	public Resource getGrundschutzKataloge() {
-		return grundschutzKataloge;
-	}
+    public String getGsPath() {
+        return getGrundschutzKatalogeURL().toString();
+    }
 
-	public void setDatenschutzBaustein(Resource datenschutzBaustein) {
-		this.datenschutzBaustein = datenschutzBaustein;
-	}
+    public boolean isFromZipFile() {
+        try {
+            return grundschutzKataloge.getFile().isFile();
+        } catch (IOException e) {
+            LOG.error("Error in isFromZipFile(), returning false", e);
+            return false;
+        }
+    }
 
-	public Resource getDatenschutzBaustein() {
-		return datenschutzBaustein;
-	}
+    public void setGrundschutzKataloge(Resource grundschutzKataloge) {
+        this.grundschutzKataloge = grundschutzKataloge;
+    }
+
+    public Resource getGrundschutzKataloge() {
+        return grundschutzKataloge;
+    }
+
+    public void setDatenschutzBaustein(Resource datenschutzBaustein) {
+        this.datenschutzBaustein = datenschutzBaustein;
+    }
+
+    public Resource getDatenschutzBaustein() {
+        return datenschutzBaustein;
+    }
 
 }
