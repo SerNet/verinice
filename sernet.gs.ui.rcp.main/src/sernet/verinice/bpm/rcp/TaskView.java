@@ -135,6 +135,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private Listener collapseAndExpandListener = new TableCollapseAndExpandListener();
     private Browser textPanel;
     Label labelDateFrom;
+    Label labelDateUntil;
     Date dueDateFrom = null;
     Date dueDateTo = null;
     Button searchButton;
@@ -153,7 +154,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     
     DateTime dateTimeFrom; 
     Button disableDateButtonFrom;
-    DateTime dateTimeTo; 
+    DateTime dateTimeUntil; 
     Button disableDateButtonTo;
     
     private Action refreshAction;
@@ -247,9 +248,9 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         label.setText(Messages.TaskView_14);    
         // Due date
         labelDateFrom = new Label(formComposite, SWT.WRAP);
-        labelDateFrom.setText(Messages.TaskView_15);
-        label = new Label(formComposite, SWT.WRAP);
-        label.setText(Messages.TaskView_1);   
+        labelDateFrom.setText(Messages.TaskView_16);
+        labelDateUntil = new Label(formComposite, SWT.WRAP);
+        labelDateUntil.setText(Messages.TaskView_1);   
              
         // Group
         createGroupControls(formComposite);      
@@ -394,7 +395,8 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private void createDateFromControls(Composite searchComposite) {                   
         Composite dateFromComposite = CompositeCreator.create2ColumnComposite(searchComposite); 
         dateTimeFrom = new DateTime(dateFromComposite, SWT.DATE | SWT.DROP_DOWN);
-        dateTimeFrom.setEnabled(false);  
+        dateTimeFrom.setEnabled(false);
+        labelDateFrom.setEnabled(false);  
         dateTimeFrom.addSelectionListener (new SelectionAdapter () {
             @Override
             public void widgetSelected (SelectionEvent e) {
@@ -403,13 +405,13 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
             }
         });
         
-        disableDateButtonFrom = new Button(dateFromComposite, SWT.TOGGLE);
-        disableDateButtonFrom.setText("< X"); //$NON-NLS-1$
-        disableDateButtonFrom.setSelection(true);     
+        disableDateButtonFrom = new Button(dateFromComposite, SWT.CHECK);
+        disableDateButtonFrom.setSelection(false);     
         disableDateButtonFrom.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
                 dateTimeFrom.setEnabled(!dateTimeFrom.isEnabled());
-                disableDateButtonFrom.setSelection(!dateTimeFrom.isEnabled());
+                labelDateFrom.setEnabled(dateTimeFrom.isEnabled());
+                disableDateButtonFrom.setSelection(dateTimeFrom.isEnabled());
                 setDuedateFromLabel();
                 extractDates();           
             }
@@ -418,21 +420,22 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     
     private void createDateToControls(Composite searchComposite) {               
         Composite dateToComposite = CompositeCreator.create2ColumnComposite(searchComposite);      
-        dateTimeTo = new DateTime(dateToComposite, SWT.DATE | SWT.DROP_DOWN);
-        dateTimeTo.setEnabled(false);
-        dateTimeTo.addSelectionListener (new SelectionAdapter () {
+        dateTimeUntil = new DateTime(dateToComposite, SWT.DATE | SWT.DROP_DOWN);
+        dateTimeUntil.setEnabled(false);
+        labelDateUntil.setEnabled(false);
+        dateTimeUntil.addSelectionListener (new SelectionAdapter () {
             @Override
             public void widgetSelected (SelectionEvent e) {
-                dueDateTo = extractDateTo(dateTimeTo);
+                dueDateTo = extractDateTo(dateTimeUntil);
             }
         });       
-        disableDateButtonTo = new Button(dateToComposite, SWT.TOGGLE);
-        disableDateButtonTo.setText("< X"); //$NON-NLS-1$
-        disableDateButtonTo.setSelection(true);
+        disableDateButtonTo = new Button(dateToComposite, SWT.CHECK);
+        disableDateButtonTo.setSelection(false);
         disableDateButtonTo.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent e) {
-                dateTimeTo.setEnabled(!dateTimeTo.isEnabled());
-                disableDateButtonTo.setSelection(!dateTimeTo.isEnabled());
+                dateTimeUntil.setEnabled(!dateTimeUntil.isEnabled());
+                labelDateUntil.setEnabled(dateTimeUntil.isEnabled());
+                disableDateButtonTo.setSelection(dateTimeUntil.isEnabled());
                 setDuedateFromLabel();
                 extractDates(); 
             }      
@@ -441,9 +444,9 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     
     private void setDuedateFromLabel() {
         if(disableDateButtonTo.getSelection()) {
-            labelDateFrom.setText(Messages.TaskView_16);
-        } else {
             labelDateFrom.setText(Messages.TaskView_18);
+        } else {
+            labelDateFrom.setText(Messages.TaskView_16);
         }
     }
     
@@ -453,10 +456,10 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
             dueDateTo = null;
         } else {
             dueDateFrom = extractDateFrom(dateTimeFrom);
-            if(!dateTimeTo.isEnabled()) {
+            if(!dateTimeUntil.isEnabled()) {
                 dueDateTo = extractDateTo(dateTimeFrom);
             } else {
-                dueDateTo = extractDateTo(dateTimeTo);
+                dueDateTo = extractDateTo(dateTimeUntil);
             }
         }
     }
