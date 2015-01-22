@@ -30,10 +30,13 @@ import sernet.verinice.model.bpm.TaskParameter;
 
 /**
  * Loads new tasks using the ITaskService.
- * TaskLoader is for use in a Spring/Quartz cron job.
+ * You can use TaskLoader in a Spring/Quartz cron job.
  * See: sernet/springclient/veriniceclient.xml
  * 
- * Method load is called periodically and loads 
+ * TaskLoader was disabled after release verinice 1.9.
+ * It is not used anymore in verinice > 1.9.
+ * 
+ * (If configured in veriniceclient.xml) method load is called periodically and loads 
  * newly created tasks after last call.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>

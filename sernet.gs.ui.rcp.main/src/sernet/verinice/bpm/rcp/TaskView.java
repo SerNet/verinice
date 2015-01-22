@@ -157,7 +157,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     DateTime dateTimeUntil; 
     Button disableDateButtonTo;
     
-    private Action refreshAction;
     private Action doubleClickAction;
     private Action cancelTaskAction;
     
@@ -499,15 +498,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     }
 
     private void makeActions() {
-        refreshAction = new Action() {
-            @Override
-            public void run() {
-                dataLoader.loadTasks();
-            }
-        };
-        refreshAction.setText(Messages.ButtonRefresh);
-        refreshAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
-
         doubleClickAction = new Action() {
             @Override
             public void run() {
@@ -586,7 +576,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         ActionContributionItem item = new ActionContributionItem(dummyAction);
         item.setMode(ActionContributionItem.MODE_FORCE_TEXT);
         manager.add(item);
-        manager.add(this.refreshAction);
         manager.add(cancelTaskAction);
     }
 
