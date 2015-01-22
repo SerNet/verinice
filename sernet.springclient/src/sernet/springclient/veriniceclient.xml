@@ -193,7 +193,6 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     	<property name="triggers">
     		<list>
     			<ref bean="simpleTrigger" />
-                <ref bean="taskTrigger" />
     		</list>
     	</property>
     </bean>
@@ -214,26 +213,6 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="commandService" ref="commandService"/>
     </bean>
     
-    <!-- Loads jbpm new tasks and notifies registered task listener -->
-    <bean id="taskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="jobDetail" ref="taskLoaderJob" />
-        <!-- check every 5 minutes -->
-        <property name="cronExpression" value="45 */5 * * * ?" />
-        <!-- for debug only, check every minute -->
-        <!--
-        <property name="cronExpression" value="30 * * * * ?" />
-        --> 
-    </bean>
-    
-    <bean id="taskLoaderJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="taskLoader"/>
-        <property name="targetMethod" value="load"/>
-    </bean>
-    
-    <bean id="taskLoader" class="sernet.verinice.bpm.TaskLoader">
-        <property name="taskService" ref="taskService"/>
-    </bean>
-
 	<!-- Prepares a hitroUtil instance that can be used from within
          the client and which reads its information from a verinice
          server.
