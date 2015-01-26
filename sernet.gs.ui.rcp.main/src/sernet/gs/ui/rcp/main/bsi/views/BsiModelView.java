@@ -76,6 +76,8 @@ import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
+import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
@@ -97,6 +99,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
@@ -582,8 +585,13 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(editor);
+        if(element == null){
+            element = getElementFromAttachment(editor);
+        }
         if(element!=null               
-           && ((element instanceof IBSIStrukturElement) || (element instanceof MassnahmenUmsetzung) || (element instanceof BausteinUmsetzung) )) {
+           && ((element instanceof IBSIStrukturElement) || 
+                   (element instanceof MassnahmenUmsetzung) || 
+                   (element instanceof BausteinUmsetzung))) {
            viewer.setSelection(new StructuredSelection(element),true);          
         }      
         return;    
@@ -598,5 +606,14 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
     
     protected boolean isLinkingActive() {
         return linkingActive;
+    }
+    
+    /**
+     * gets Element that is referenced by attachment shown by editor
+     * @param editor - ({@link AttachmentEditor}) Editor of {@link Attachment}
+     * @return {@link CnATreeElement}
+     */
+    private CnATreeElement getElementFromAttachment(IEditorPart editor) {
+        return AttachmentEditorInput.extractCnaTreeElement(editor);
     }
 }

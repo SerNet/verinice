@@ -68,6 +68,8 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
+import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
+import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -86,6 +88,7 @@ import sernet.verinice.iso27k.rcp.action.FileDropPerformer;
 import sernet.verinice.iso27k.rcp.action.HideEmptyFilter;
 import sernet.verinice.iso27k.rcp.action.ISMViewFilter;
 import sernet.verinice.iso27k.rcp.action.MetaDropAdapter;
+import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.TagParameter;
@@ -567,6 +570,11 @@ public class ISMView extends RightsEnabledView implements IAttachedToPerspective
             return;
         }
         CnATreeElement element = BSIElementEditorInput.extractElement(editor);
+        if(element == null && editor.getEditorInput() instanceof AttachmentEditorInput){
+            element = getElementFromAttachment(editor);
+            
+            
+        }
         if(!(element instanceof IISO27kElement)) {
             return;
         }
@@ -581,6 +589,15 @@ public class ISMView extends RightsEnabledView implements IAttachedToPerspective
         if (LOG.isDebugEnabled()) {
             LOG.debug("Tree is expanded."); //$NON-NLS-1$
         } 
+    }
+
+    /**
+     * gets Element that is referenced by attachment shown by editor
+     * @param editor - ({@link AttachmentEditor}) Editor of {@link Attachment}
+     * @return {@link CnATreeElement}
+     */
+    private CnATreeElement getElementFromAttachment(IEditorPart editor) {
+        return AttachmentEditorInput.extractCnaTreeElement(editor);
     }
     
     protected void toggleLinking(boolean checked) {
