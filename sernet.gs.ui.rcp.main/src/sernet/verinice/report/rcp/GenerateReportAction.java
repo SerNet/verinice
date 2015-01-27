@@ -8,15 +8,18 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.report.IOutputFormat;
@@ -32,6 +35,8 @@ public class GenerateReportAction extends RightsEnabledActionDelegate implements
 
     private GenerateReportDialog dialog;
     private List<Object> rootObjects;
+    
+    private boolean generationSuccessful = false;
     
     private boolean isContextMenuCall;
 
@@ -92,17 +97,30 @@ public class GenerateReportAction extends RightsEnabledActionDelegate implements
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         monitor.beginTask(Messages.GenerateReportAction_1, IProgressMonitor.UNKNOWN);
                         Activator.inheritVeriniceContextState();
-                        dialog.getReportMetaData();
                         IOutputFormat format = dialog.getOutputFormat();
                         dialog.getReportType().createReport(ro);
                         dialog.getReportType().createReport(dialog.getReportMetaData());
                         monitor.done();
+                        setGenerationSuccessful(Boolean.TRUE);
                     }
     			 });
     			
     		}
 	    } catch(Exception t) {
-	        LOG.error("Error while generation report", t); //$NON-NLS-1$
+	        ExceptionUtil.log(t, Messages.GenerateReportDialog_32);
+	        setGenerationSuccessful(Boolean.FALSE);
+	    }
+	    
+	    if(isGenerationSuccessful()){
+            Display.getDefault().asyncExec(new Runnable() {
+                
+                @Override
+                public void run() {
+                    String path =  dialog.getOutputFile().getAbsolutePath();
+                    String reportName = dialog.getReportMetaData().getOutputname();
+                    MessageDialog.openInformation(Display.getCurrent().getActiveShell(), Messages.GenerateReportDialog_30, Messages.bind(Messages.GenerateReportDialog_31, new Object[]{reportName, path}));
+                }
+            });
 	    }
 	}
 
@@ -127,6 +145,20 @@ public class GenerateReportAction extends RightsEnabledActionDelegate implements
 
     public boolean isContextMenuCall() {
         return isContextMenuCall;
+    }
+
+    /**
+     * @return the generationSuccessful
+     */
+    private boolean isGenerationSuccessful() {
+        return generationSuccessful;
+    }
+
+    /**
+     * @param generationSuccessful the generationSuccessful to set
+     */
+    private void setGenerationSuccessful(boolean generationSuccessful) {
+        this.generationSuccessful = generationSuccessful;
     }
 
 }

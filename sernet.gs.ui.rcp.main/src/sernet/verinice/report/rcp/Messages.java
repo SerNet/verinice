@@ -51,6 +51,9 @@ public class Messages extends NLS {
     public static String GenerateReportDialog_28;
     public static String GenerateReportDialog_29;
     public static String GenerateReportDialog_3;
+    public static String GenerateReportDialog_30;
+    public static String GenerateReportDialog_31;
+    public static String GenerateReportDialog_32;
     public static String GenerateReportDialog_4;
     public static String GenerateReportDialog_5;
     public static String GenerateReportDialog_6;
