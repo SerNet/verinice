@@ -62,9 +62,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
     // manual filename mode or auto filename mode
     private static final boolean FILENAME_MANUAL = true;
     
-    private static final String REPORT_LOCAL_DECORATOR = "(L)";
-    private static final String REPORT_SERVER_DECORATOR = "(S)";
-    
     private static final NumericStringComparator comparator = new NumericStringComparator();
 
     private Combo comboReportType;
@@ -382,26 +379,18 @@ public class GenerateReportDialog extends TitleAreaDialog {
      * adds sorted name list to the reportCombo
      * @return sorted Array (for access later on)
      */
+    @SuppressWarnings("unchecked")
     private ReportTemplateMetaData[] fillReportCombo() {
-        for(ReportTemplateMetaData data : reportTemplates){
-            String name = data.getOutputname();
-            
-            if(data.isServer()){
-                data.setOutputname( REPORT_SERVER_DECORATOR + " " + name);
-            } else {
-                data.setOutputname(REPORT_LOCAL_DECORATOR + " " + name);
-            }
-        }
         
         Arrays.sort(reportTemplates, new Comparator() {
             @Override
             public int compare(Object template1, Object template2) {
-                return comparator.compare(((ReportTemplateMetaData)template1).getOutputname(), ((ReportTemplateMetaData)template2).getOutputname());
+                return comparator.compare(((ReportTemplateMetaData)template1).getDecoratedOutputname(), ((ReportTemplateMetaData)template2).getDecoratedOutputname());
             }
         });
         
         for(ReportTemplateMetaData data : reportTemplates){
-            comboReportType.add(data.getOutputname());
+            comboReportType.add(data.getDecoratedOutputname());
         }
         
         return reportTemplates;

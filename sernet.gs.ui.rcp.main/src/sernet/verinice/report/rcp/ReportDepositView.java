@@ -406,7 +406,7 @@ public class ReportDepositView extends RightsEnabledView {
         public TableSorter() {
             super();
             this.propertyIndex = DEFAULT_SORT_COLUMN;
-            this.direction = ASCENDING;
+            this.direction = DESCENDING;
         }
 
         public void setColumn(int column) {
@@ -442,20 +442,18 @@ public class ReportDepositView extends RightsEnabledView {
                 // e1 and e2 != null
                 switch (propertyIndex) {
                 case 0:
-                    if(data1.getOutputname() != null && data2.getOutputname() != null){
-                        rc = data1.getOutputname().compareTo(data2.getOutputname());
-                        break;
-                    }
+                    rc = comporeToLowerCase(data1.getDecoratedOutputname(), data2.getDecoratedOutputname());
+                    break;
                 case 1:
                     // implement a sorted list here that needs to be compared
                     String s1 = getSortedOutputFormatsString(data1.getOutputFormats()); 
                     String s2 = getSortedOutputFormatsString(data2.getOutputFormats());
                     if(s1 != null &&  s2 != null){
                         rc = s1.compareTo(s2);
-                        break;
                     }
+                    break;
                 case 2:
-                    rc = data1.getFilename().compareTo(data2.getFilename());
+                    rc = comporeToLowerCase(data1.getFilename(), data2.getFilename());
                     break;
                 default:
                     rc = 0;
@@ -465,6 +463,14 @@ public class ReportDepositView extends RightsEnabledView {
             // If descending order, flip the direction
             if (direction == DESCENDING) {
                 rc = -rc;
+            }
+            return rc;
+        }
+
+        private int comporeToLowerCase(String filename1, String filename2) {
+            int rc = 0;
+            if(filename1!=null && filename2!=null) {
+                rc = filename1.toLowerCase().compareTo(filename2.toLowerCase());
             }
             return rc;
         }

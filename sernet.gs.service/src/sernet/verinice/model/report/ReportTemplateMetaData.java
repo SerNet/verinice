@@ -27,8 +27,13 @@ import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
 
 public class ReportTemplateMetaData implements Serializable, Comparable<ReportTemplateMetaData> {
 
-    private static final long serialVersionUID = 201410011436L;
+    private static final long serialVersionUID = 1208760677224489421L;
 
+    private static final NumericStringComparator NSC = new NumericStringComparator();
+    
+    public static final String REPORT_LOCAL_DECORATOR = "(L)";
+    public static final String REPORT_SERVER_DECORATOR = "(S)";
+    
     private String filename;
 
     private OutputFormat[] outputFormat;
@@ -112,6 +117,16 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     public void setOutputFormats(OutputFormat[] outputFormats) {
         this.outputFormat = outputFormats;
     }
+    
+    public String getDecoratedOutputname() {
+        String name;
+        if(isServer()){
+            name = (ReportTemplateMetaData.REPORT_SERVER_DECORATOR + " " + getOutputname());
+        } else {
+            name = (ReportTemplateMetaData.REPORT_LOCAL_DECORATOR + " " + getOutputname());
+        }
+        return name;
+    }
 
     public String getOutputname() {
         return outputname;
@@ -131,6 +146,6 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
 
     @Override
     public int compareTo(ReportTemplateMetaData other) {
-        return new NumericStringComparator().compare(filename, other.filename);
+        return NSC.compare(getDecoratedOutputname(), other.getDecoratedOutputname());
     }
 }
