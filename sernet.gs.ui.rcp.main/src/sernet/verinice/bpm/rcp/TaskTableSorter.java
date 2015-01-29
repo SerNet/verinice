@@ -96,11 +96,11 @@ class TaskTableSorter extends ViewerSorter {
             break;
         case 1:  
             // Group           
-            rc = NSC.compare(a1.getAuditTitle(), a2.getAuditTitle());
+            rc = NSC.compare(a1.getGroupTitle(), a2.getGroupTitle());
             break;
         case 2:
             // Object
-            rc = NSC.compare(a1.getControlTitle(), a2.getControlTitle());
+            rc = NSC.compare(a1.getElementTitle(), a2.getElementTitle());
             break;
         case 3:  
             // Process

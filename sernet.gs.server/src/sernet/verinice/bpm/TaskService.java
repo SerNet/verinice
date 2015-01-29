@@ -455,10 +455,10 @@ public class TaskService implements ITaskService {
         String uuid = dbResult[1];
         
         if(title == null || title.equals("")){
-            taskInformation.setAuditTitle(Messages.getString("TaskService.0")); //$NON-NLS-1$
+            taskInformation.setGroupTitle(Messages.getString("TaskService.0")); //$NON-NLS-1$
         } else {
-            taskInformation.setAuditTitle(title);
-            taskInformation.setUuidAudit(uuid);
+            taskInformation.setGroupTitle(title);
+            taskInformation.setUuidGroup(uuid);
         }
         
         return taskInformation;
@@ -466,13 +466,13 @@ public class TaskService implements ITaskService {
 
     private TaskInformation handleAuditElement(TaskInformation taskInformation, String uuidAudit, String elementUuid) {
         CnATreeElement audit;
-        taskInformation.setUuidAudit(uuidAudit);
+        taskInformation.setUuidGroup(uuidAudit);
         RetrieveInfo ri = new RetrieveInfo();
         ri.setProperties(true);
         audit = getElementDao().findByUuid(uuidAudit, ri);
         
         if(audit!=null) { 
-            taskInformation.setAuditTitle(audit.getTitle());
+            taskInformation.setGroupTitle(audit.getTitle());
         }
         
         return taskInformation;
@@ -523,7 +523,7 @@ public class TaskService implements ITaskService {
         
         String uuid = (String) varMap.get(IGenericProcess.VAR_UUID);       
         taskInformation.setUuid(uuid);
-        taskInformation.setControlTitle("no object");
+        taskInformation.setElementTitle("no object");
     
         if(uuid==null) {
             return taskInformation;
@@ -534,8 +534,8 @@ public class TaskService implements ITaskService {
         CnATreeElement element = getElementDao().findByUuid(uuid, ri);
         
         if(element!=null) {
-            taskInformation.setControlTitle(element.getTitle());
-            taskInformation.setSortValue(createSortableString(taskInformation.getControlTitle()));
+            taskInformation.setElementTitle(element.getTitle());
+            taskInformation.setSortValue(createSortableString(taskInformation.getElementTitle()));
             if(element instanceof SamtTopic) {
                 taskInformation.setIsProcessed(((SamtTopic)element).getMaturity()!=SamtTopic.IMPLEMENTED_NOTEDITED_NUMERIC);
             }          

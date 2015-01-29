@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.KeyValue;
@@ -34,6 +36,10 @@ import sernet.verinice.interfaces.bpm.KeyValue;
  */
 public class TaskInformation implements ITask, Serializable {
 
+    private static final Logger LOG = Logger.getLogger(TaskInformation.class);
+    
+    private static final NumericStringComparator COMPARATOR = new NumericStringComparator();
+    
     private String id;
     
     private String type;
@@ -48,7 +54,7 @@ public class TaskInformation implements ITask, Serializable {
     
     private String description;
     
-    private String controlTitle;
+    private String elementTitle;
     
     private String uuid;
     
@@ -62,9 +68,9 @@ public class TaskInformation implements ITask, Serializable {
     
     private String style;
 
-    private String uuidAudit;
+    private String uuidGroup;
 
-    private String auditTitle;
+    private String groupTitle;
     
     private String assignee;
     
@@ -152,12 +158,12 @@ public class TaskInformation implements ITask, Serializable {
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ITask#getControlTitle()
      */
-    public String getControlTitle() {
-        return controlTitle;
+    public String getElementTitle() {
+        return elementTitle;
     }
 
-    public void setControlTitle(String controlTitle) {
-        this.controlTitle = controlTitle;
+    public void setElementTitle(String elementTitle) {
+        this.elementTitle = elementTitle;
     }
 
     /* (non-Javadoc)
@@ -236,25 +242,25 @@ public class TaskInformation implements ITask, Serializable {
     }
     
     /**
-     * @param uuidAudit
+     * @param uuidGroup
      */
-    public void setUuidAudit(String uuidAudit) {
-        this.uuidAudit = uuidAudit;  
+    public void setUuidGroup(String uuidGroup) {
+        this.uuidGroup = uuidGroup;  
     }
 
-    public String getUuidAudit() {
-        return uuidAudit;
+    public String getUuidGroup() {
+        return uuidGroup;
     }
 
     /**
      * @param title
      */
-    public void setAuditTitle(String title) {
-       this.auditTitle =title;
+    public void setGroupTitle(String title) {
+       this.groupTitle =title;
     }
 
-    public String getAuditTitle() {
-        return auditTitle;
+    public String getGroupTitle() {
+        return groupTitle;
     }
 
   
@@ -327,23 +333,42 @@ public class TaskInformation implements ITask, Serializable {
         return true;
     }
 
-    /* (non-Javadoc)
+    /**
+     * Sort order: groupTitle, elementTitle, processName, name
+     * NumericStringComparator is used for sorting.
+     * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
-    public int compareTo(ITask o) {
-        NumericStringComparator comparator = new NumericStringComparator();
+    public int compareTo(ITask t) {
+        setSortValue(getGroupTitle());
+        t.setSortValue(t.getGroupTitle());
+        int result = compareBySortValue(t);
+        if(result==0) {
+            setSortValue(getElementTitle());
+            t.setSortValue(t.getElementTitle());
+            result = compareBySortValue(t);  
+        }
+        if(result==0) {
+            setSortValue(getProcessName());
+            t.setSortValue(t.getProcessName());
+            result = compareBySortValue(t);  
+        }
+        if(result==0) {
+            setSortValue(getName());
+            t.setSortValue(t.getName());
+            result = compareBySortValue(t);  
+        }
+        return result;
+    }
+    
+    public int compareBySortValue(ITask t) {
         int result = 0;
-        if(this.getName()!=null && o!=null && o.getName()!=null) {
-            result = comparator.compare(this.getName(), o.getName());
-        }
-        if(result==0
-           && this.getSortValue()!=null && o!=null && o.getSortValue()!=null) {
-            result = comparator.compare(this.getSortValue(), o.getSortValue());
-        }
-        if(result==0 &&
-                this.getDueDate()!=null && o!=null && o.getDueDate()!=null){
-            result = this.getDueDate().compareTo(o.getDueDate());
+        if(this.getSortValue()!=null && t!=null && t.getSortValue()!=null) {
+            result = COMPARATOR.compare(this.getSortValue(), t.getSortValue());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("compare: " + result + " (" + this.getSortValue() + " and " + t.getSortValue() + ")");
+            }
         }
         return result;
     }

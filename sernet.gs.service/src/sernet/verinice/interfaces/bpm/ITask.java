@@ -57,9 +57,9 @@ public interface ITask extends Comparable<ITask> {
     
     String getDescription();
     
-    String getControlTitle();
+    String getElementTitle();
     
-    void setControlTitle(String title);
+    void setElementTitle(String title);
 
     Date getCreateDate();
 
@@ -101,9 +101,9 @@ public interface ITask extends Comparable<ITask> {
     
     void addStyle(String style);
     
-    String getUuidAudit();
+    String getUuidGroup();
     
-    String getAuditTitle();
+    String getGroupTitle();
     
     String getPriority();
 
@@ -115,5 +115,7 @@ public interface ITask extends Comparable<ITask> {
     Set<String> getProperties();
 
     void setProperties(Set<String> properties);
+    
+    void setSortValue(String sortValue);
 
 }

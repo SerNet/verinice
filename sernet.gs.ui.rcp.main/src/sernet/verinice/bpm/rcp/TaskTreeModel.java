@@ -48,7 +48,7 @@ public class TaskTreeModel {
     private void init() {
         nodeMap = new HashMap<KeyValue, List<ITask>>();
         for (ITask task : taskList) {
-            KeyValue keyValue = new KeyValue(task.getUuidAudit(), task.getAuditTitle());
+            KeyValue keyValue = new KeyValue(task.getUuidGroup(), task.getGroupTitle());
             List<ITask> taskList = nodeMap.get(keyValue);
             if(taskList==null) {
                 taskList = new LinkedList<ITask>();
@@ -88,7 +88,7 @@ public class TaskTreeModel {
      */
     public void remove(ITask task) {
         taskList.remove(task);   
-        KeyValue keyValue = new KeyValue(task.getUuidAudit(), task.getAuditTitle());
+        KeyValue keyValue = new KeyValue(task.getUuidGroup(), task.getGroupTitle());
         List<ITask> nodeChildren = nodeMap.get(keyValue);
         if(nodeChildren!=null) {
             nodeChildren.remove(task);

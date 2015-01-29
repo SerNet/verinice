@@ -93,9 +93,9 @@ public class TaskBean {
         taskList = getTaskService().getTaskList(parameter);
         Collections.sort(taskList);
         for (ITask task : taskList) {
-            String controlTitle = task.getControlTitle();
+            String controlTitle = task.getElementTitle();
             if(controlTitle!=null && controlTitle.length()>MAX_TITLE_LENGTH) {
-                task.setControlTitle(controlTitle.substring(0, MAX_TITLE_LENGTH-1) + "...");
+                task.setElementTitle(controlTitle.substring(0, MAX_TITLE_LENGTH-1) + "...");
             }
         }
         if (LOG.isDebugEnabled()) {
@@ -132,7 +132,7 @@ public class TaskBean {
             }
             getEditBean().setSaveButtonHidden(false);
             getEditBean().setUuid(getSelectedTask().getUuid());
-            String title = getSelectedTask().getControlTitle();
+            String title = getSelectedTask().getElementTitle();
             if(title.length()>MAX_TITLE_LENGTH) {
                 title = title.substring(0, MAX_TITLE_LENGTH-1) + "...";
             }

@@ -85,10 +85,10 @@ public class TaskLabelProvider implements ITableLabelProvider {
         ITask task = (ITask) element;
         switch (columnIndex) {
         case 1:
-            text = task.getAuditTitle();
+            text = task.getGroupTitle();
             break;
         case 2:
-            text = task.getControlTitle();
+            text = task.getElementTitle();
             break;
         case 3:
             text = task.getProcessName();
