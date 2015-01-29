@@ -1386,6 +1386,11 @@ columns(newcols);</value>
                     <text-property name="displayName">MajurityLevel</text-property>
                     <text-property name="heading">MajurityLevel</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">genericAuditTitle</property>
+                    <text-property name="displayName">genericAuditTitle</text-property>
+                    <text-property name="heading">genericAuditTitle</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -1486,6 +1491,11 @@ columns(newcols);</value>
                     <structure>
                         <property name="position">17</property>
                         <property name="name">MajurityLevel</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">genericAuditTitle</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -1611,6 +1621,13 @@ columns(newcols);</value>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">genericAuditTitle</property>
+                    <property name="nativeName">genericAuditTitle</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
@@ -1664,18 +1681,27 @@ CnATreeElement loadParentObject(ITask task){
     return loadControl.getElement();
 }
 
-void addMeasureFindingMaturity(CnATreeElement elem, List row, ITask task){
 
-    if(elem instanceof SamtTopic){
-	SamtTopic samtTopic = (SamtTopic) elem;
-	row.add(samtTopic.getEntity().getSimpleValue(PROP_AUDIT_FINDINGS));
-	row.add(samtTopic.getEntity().getSimpleValue(SAMT_TOPIC_CONTROLNOTE));
-	row.add(samtTopic.getEntity().getSimpleValue(PROP_MATURITY));
-    } else {
-	row.add("-");
-	row.add("-");
-	row.add("-");
+String getSamtTopicEntityProperty(CnATreeElement elem, String propertyKey){
+    return (elem instanceof SamtTopic) ? ((SamtTopic) elem).getEntity().getSimpleValue(propertyKey) : "-";
+}
+
+String getAuditTitle(CnATreeElement elem) {
+    Audit audit = getParentAudit(elem);
+    return audit != null ? audit.getTitle() : "-";
+}
+
+Audit getParentAudit(CnATreeElement elem){
+
+    if(elem == null) {
+	return null;
     }
+    
+    if("audit".equals(elem.getTypeId())){
+	return (Audit) elem;
+    }
+
+    return getParentAudit(elem.getParent());
 }
 
 
@@ -1719,12 +1745,13 @@ Activator.inheritVeriniceContextState();
 taskList = ServiceFactory.lookupTaskService().getTaskList(param);
 
 
-
 List tasks = new ArrayList();
 
 for (ITask task : taskList) {
 
     List row = new ArrayList();
+    CnATreeElement ancestor = loadParentObject(task);
+    
     row.add(task.getAssignee());
     row.add(task.getName());
     row.add(task.getCreateDate());
@@ -1738,17 +1765,13 @@ for (ITask task : taskList) {
     row.add(task.getPriority());
     row.add(task.getProcessName());
     row.add(task.getUuidAudit());
-
-
-    CnATreeElement ancestor = loadParentObject(task);
-
+    
     row.add(loadOrganizationOrVerbund(ancestor));
-
-    if(ancestor != null){
-	// load samt topic specifica
-	addMeasureFindingMaturity(ancestor, row, task);
-    }
-
+    row.add(getSamtTopicEntityProperty(ancestor, PROP_AUDIT_FINDINGS));
+    row.add(getSamtTopicEntityProperty(ancestor, SAMT_TOPIC_CONTROLNOTE));
+    row.add(getSamtTopicEntityProperty(ancestor, PROP_MATURITY));
+    row.add(getAuditTitle(ancestor));
+    
     tasks.add(row);
 }
 
@@ -2009,7 +2032,7 @@ return sortedElements ;
 inParameters(new String[] { "root_object" });
 
 String[] cols = new String[] {"Assignee", "Name", "CreateDate", "DueDate",
- "CnaUuid", "AuditTitle", "ControlTitle", "Description", "ElementType", "IsRead", "Priority", "ProcessName", "auditUuid", "organization", "finding", "measure", "MajurityLevel" };
+ "CnaUuid", "AuditTitle", "ControlTitle", "Description", "ElementType", "IsRead", "Priority", "ProcessName", "auditUuid", "organization", "finding", "measure", "MajurityLevel" , "genericAuditTitle"};
 
 columns(cols);</value>
                 </ex-property>
@@ -2245,6 +2268,12 @@ columns(cols);</value>
                     <expression name="expression" type="javascript">dataSetRow["MajurityLevel"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
+                <structure>
+                    <property name="name">genericAuditTitle</property>
+                    <text-property name="displayName">genericAuditTitle</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["genericAuditTitle"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
             </list-property>
             <structure name="toc"/>
             <column id="3389">
@@ -2404,10 +2433,8 @@ columns(cols);</value>
                         </data>
                     </cell>
                     <cell id="3318">
-                        <data id="3319">
-                            <property name="marginLeft">0pt</property>
-                            <property name="marginRight">0.5cm</property>
-                            <property name="resultSetColumn">AuditTitle</property>
+                        <data id="3397">
+                            <property name="resultSetColumn">genericAuditTitle</property>
                         </data>
                     </cell>
                     <cell id="3320">
