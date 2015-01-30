@@ -21,9 +21,7 @@ package sernet.springclient;
 
 import java.io.IOException;
 
-import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.SimpleHttpConnectionManager;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
 import org.springframework.remoting.httpinvoker.HttpInvokerClientConfiguration;
@@ -42,7 +40,7 @@ public class KerberosExecuter extends AbstractExecuter {
     private static final String HEADER_NAME_AUTHORIZATION = "Authorization";
 
     // TODO must be configurable or extracted from the TGT
-    private static final String TARGET_NAME = "HTTP/verinicepro-1.7@DOM1.CUNDA.PRIVATE";
+    private static final String TARGET_NAME = "verinicepro-1.7";
 
     private static final Logger LOG = Logger.getLogger(KerberosExecuter.class);
     
@@ -63,19 +61,7 @@ public class KerberosExecuter extends AbstractExecuter {
     }
 
     public void init() {
-
-        SimpleHttpConnectionManager connectionManager = new SimpleHttpConnectionManager();
-        connectionManager.getParams().setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, MAX_CONNECTIONS_PER_HOST);
-        connectionManager.getParams().setMaxTotalConnections(MAX_TOTAL_CONNECTIONS);
-        // set connection timeout (how long it takes to connect to remote host)
-        connectionManager.getParams().setConnectionTimeout(getConnectionTimeout());
-        connectionManager.getParams().setSoTimeout(getReadTimeout());
-        connectionManager.getParams();
-
-        HttpClient httpClient = new HttpClient(connectionManager);
-
-        configureProxy(httpClient);
-        setHttpClient(httpClient);
+        super.init();
     }
 
     @Override
@@ -122,6 +108,9 @@ public class KerberosExecuter extends AbstractExecuter {
         }
     }
 
+    /**
+     * Read the initial token.
+     */
     private void initClientToken() {
 
         clientCredentials = WindowsCredentialsHandleImpl.getCurrent(securityPackage);
@@ -133,9 +122,6 @@ public class KerberosExecuter extends AbstractExecuter {
         clientContext.initialize(clientContext.getHandle(), null, TARGET_NAME);
 
         clientToken = securityPackage + " " + BaseEncoding.base64().encode(clientContext.getToken());
-
-        LOG.info("client token: " + clientToken);
-
         isClienTokenInit = true;
     }
 
@@ -144,13 +130,4 @@ public class KerberosExecuter extends AbstractExecuter {
         postMethod.addRequestHeader(HEADER_NAME_AUTHORIZATION, clientToken);
         super.executePostMethod(config, httpClient, postMethod);
     }
-
-    public String getTestUser() {
-        return testUser;
-    }
-
-    public void setTestUser(String testUser) {
-        this.testUser = testUser;
-    }
-
 }

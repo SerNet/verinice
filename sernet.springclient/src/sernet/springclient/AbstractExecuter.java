@@ -1,6 +1,8 @@
 package sernet.springclient;
 
+import org.apache.commons.httpclient.HostConfiguration;
 import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.log4j.Logger;
@@ -22,12 +24,24 @@ public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
     public AbstractExecuter() {
         super();
     }
+    
+    public void init(){
 
-    public AbstractExecuter(HttpClient httpClient) {
-        super(httpClient);
+        MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
+
+        connectionManager.getParams().setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, MAX_CONNECTIONS_PER_HOST);
+        connectionManager.getParams().setMaxTotalConnections(MAX_TOTAL_CONNECTIONS);
+
+        // set connection timeout (how long it takes to connect to remote host)
+        connectionManager.getParams().setConnectionTimeout(getConnectionTimeout());
+        connectionManager.getParams().setSoTimeout(getReadTimeout());
+
+        setHttpClient(new HttpClient(connectionManager));         
+
+        configureProxy();        
     }
 
-    protected void configureProxy(HttpClient httpClient) {
+    protected void configureProxy() {
         String proxyHost = System.getProperty("http.proxyHost"); 
         Integer proxyPort = null;
         if(System.getProperty("http.proxyPort")!=null) {
@@ -35,7 +49,7 @@ public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
         }
         
         if(proxyHost!=null && proxyPort!=null && !proxyHost.isEmpty() ) {
-            httpClient.getHostConfiguration().setProxy(proxyHost,proxyPort);
+            getHttpClient().getHostConfiguration().setProxy(proxyHost,proxyPort);
             if (LOG.isInfoEnabled()) {
                 LOG.info("Using proxy host: " + proxyHost + ", port: " + proxyPort);
             }
@@ -43,7 +57,7 @@ public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
             String proxyPassword = System.getProperty("http.proxyPassword");
             
             if(proxyName!=null && proxyPassword!=null) {
-                httpClient.getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxyName, proxyPassword));
+                getHttpClient().getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxyName, proxyPassword));
                 if (LOG.isInfoEnabled()) {
                     LOG.info("Using proxy user name: " + proxyHost + " and password");
                 }
