@@ -21,16 +21,14 @@ package sernet.springclient;
 
 import java.io.IOException;
 
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
-import org.eclipse.core.internal.runtime.Activator;
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
 import org.springframework.remoting.httpinvoker.HttpInvokerClientConfiguration;
 
 import sernet.verinice.service.auth.KerberosTicketService;
+import static sernet.verinice.service.auth.KerberosTicketService.*;
 
 public class KerberosExecuter extends AbstractExecuter {
 
@@ -80,11 +78,18 @@ public class KerberosExecuter extends AbstractExecuter {
 
     private void updateClientToken(PostMethod postMethod) {
 
-        String negotiate = postMethod.getResponseHeader(KerberosTicketService.WWW_AUTHENTICATE).getValue();
+        Header negotiateParam = postMethod.getResponseHeader(WWW_AUTHENTICATE);
 
-        // call update service
+        // server does not want to talk with us
+        if (negotiateParam == null) {
+            if (LOG.isDebugEnabled())
+                LOG.debug("response header " + WWW_AUTHENTICATE + " is not set");
+            return;
+        }
+
+        // update client token
+        String negotiate = postMethod.getResponseHeader(WWW_AUTHENTICATE).getValue();
         clientToken = kerberosTicketService.updateClientToken(negotiate);
-
     }
 
     /**

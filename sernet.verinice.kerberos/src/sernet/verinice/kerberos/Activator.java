@@ -1,5 +1,6 @@
 package sernet.verinice.kerberos;
 
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -17,15 +18,17 @@ public class Activator extends AbstractUIPlugin {
     // The shared instance
     private static Activator plugin;
 
+    /** Needed by OSGI */
     public Activator() {
     }
 
     public void start(BundleContext context) throws Exception {
 
+        super.start(context);
+
         // register an osgi service
         context.registerService(KerberosTicketService.class.getName(), new KerberosTicketServiceWindowsImpl(), null);
-        
-        super.start(context);
+
         plugin = this;
     }
 

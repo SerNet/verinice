@@ -87,13 +87,12 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 			}
 		}
 		
-		getKerberosService(bundle);
+		initKerberosServiceTracker(bundle);
 	
 	}
 	
-	 private void getKerberosService(Bundle bundle) {
+	 private void initKerberosServiceTracker(Bundle bundle) {
 	        BundleContext bundleContext = bundle.getBundleContext();
-	        ServiceReference ticketServiceReference = bundleContext.getServiceReference(KerberosTicketService.class.getName());
 	        kerberosTicketServiceTracker = new ServiceTracker(bundleContext, KerberosTicketService.class.getName(), null);
 	        kerberosTicketServiceTracker.open();
 	    }
