@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="sernet.verinice.kerberos.preferences.KerberosPreferencePage"
+            id="sernet.verinice.kerberos.preferences.KerberosPreferencePage"
+            name="Kerberos Preferences">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="sernet.verinice.kerberos.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
+
+</plugin>
