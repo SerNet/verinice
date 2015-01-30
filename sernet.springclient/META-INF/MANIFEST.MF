@@ -30,8 +30,7 @@ Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.ui.net;bundle-version="[1.2.1.r35x_20090812-1200_FIX_FOR_VERINICE,1.2.1.r35x_20090812-1200_FIX_FOR_VERINICE]",
  sernet.hui.common;bundle-version="1.1.1",
  com.springsource.net.sf.ehcache;bundle-version="1.6.0",
- jgrapht;bundle-version="0.8.3",
- waffle;bundle-version="1.7.3"
+ jgrapht;bundle-version="0.8.3"
 Import-Package: org.apache.log4j,
  org.eclipse.core.runtime;version="3.4.0",
  org.osgi.framework;version="1.5.0",
