@@ -44,7 +44,7 @@
 	</bean>
   	
   	<!-- userDetailsService is loading user data -->
-    <bean id="userDetailsService" class="sernet.gs.server.security.DbUserDetailsService">
+    <bean id="userDetailsService" class="sernet.gs.server.security.PreAuthUserDetailsService">
         <property name="entityDao" ref="entityDao" />
         <property name="adminuser">
             <value>${admin.username}</value>

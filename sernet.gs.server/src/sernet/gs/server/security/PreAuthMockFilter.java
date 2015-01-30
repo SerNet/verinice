@@ -36,101 +36,88 @@ import org.apache.log4j.Logger;
 /**
  * Use this for testing only!
  * 
- * Sevlet filter which adds a HTTP-Header to every request to test
- * HTTP Header pre authentication of verinice.
- * See veriniceserver-security-preauth.xml
+ * Sevlet filter which adds a HTTP-Header to every request to test HTTP Header
+ * pre authentication of verinice. See veriniceserver-security-preauth.xml
  * 
  * You can activate this filter in web.xml by adding a filter definition:
- * <filter>
- *	<filter-name>preauthMockFilter</filter-name>
- *	<filter-class>sernet.gs.server.security.PreAuthMockFilter</filter-class>
+ * <filter> <filter-name>preauthMockFilter</filter-name>
+ * <filter-class>sernet.gs.server.security.PreAuthMockFilter</filter-class>
  * </filter>
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class PreAuthMockFilter implements Filter {
-	
-	private static Logger log = Logger.getLogger(PreAuthMockFilter.class);
-	
-	private FilterConfig filterConfig = null;
-	
-	/**
-	 * Values of HTTP header: user name in a pre auth senario
-	 */
-	private static final String DEFAULT_USER_NAME = "admin"; 
-	
-	private static final String USER_NAME_PARAM = "preauthMockUser";
-	
-	/**
-	 * Name of HTTP header
-	 */
-	private static String httpRequestHeaderName = "iv-user";
-	
-	
-	public void destroy() {
-		log.debug("entered MockAuthFilter.destroy() method");
-		this.filterConfig = null;
-		log.debug("exited MockAuthFilter.destroy() method");
-	}
-	
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		if(log.isDebugEnabled()) {
-			log.debug("entered MockAuthFilter.doFilter() method");
-		}
-		String userName = DEFAULT_USER_NAME;
-		ServletContext context = this.filterConfig.getServletContext();
-		if(context==null){
-			log.warn("this.filterConfig.getServletContext()== NULL !!");
-		} else {
-		    if(context.getInitParameter(USER_NAME_PARAM)!=null) {
-		        userName = context.getInitParameter(USER_NAME_PARAM);
-		    }
-		}
-		
-		MockHttpServletRequest mockRequest = new MockHttpServletRequest((HttpServletRequest) request);
-		
-		if(mockRequest.getHeader(httpRequestHeaderName)==null || !mockRequest.getHeader(httpRequestHeaderName).equalsIgnoreCase(userName)){
-			mockRequest.addHeader(httpRequestHeaderName, userName);	
-			if(log.isDebugEnabled()) {
-				log.debug("HTTP header added, name: " + httpRequestHeaderName + ", value: " + userName);
-			}
-		}
-		chain.doFilter(mockRequest, response);
-	}
 
-	public void init(FilterConfig arg0) throws ServletException {
-		log.debug("entered MockAuthFilter.init() method");
-		this.filterConfig = arg0;
-		log.debug("exited MockAuthFilter.init() method");
-	}
-	
-	class MockHttpServletRequest extends HttpServletRequestWrapper {
+    private static Logger log = Logger.getLogger(PreAuthMockFilter.class);
 
-		private Hashtable<String, String> headerMap;
-		
-		public MockHttpServletRequest(HttpServletRequest request) {
-			super(request);
-			headerMap = new Hashtable<String, String>();
-		}
-		
-		@Override
-		public String getHeader(String name) {
-			String value = headerMap.get(name);
-			if(value==null) {
-				value = super.getHeader(name);
-			}
-			return value;
-		}
-		
-		@Override
-		public Enumeration<String> getHeaderNames() {
-			// TODO: add headerMap keys
-			return super.getHeaderNames();
-		}
+    private FilterConfig filterConfig = null;
 
-		public void addHeader(String name, String value) {
-			headerMap.put(name, value);
-		}
-		
-	}
+    private static final String USER_NAME_PARAM = "verinice";
+
+    /**
+     * Name of HTTP header
+     */
+    private static String httpRequestHeaderName = "iv-user";
+
+    public void destroy() {
+        log.debug("entered MockAuthFilter.destroy() method");
+        this.filterConfig = null;
+        log.debug("exited MockAuthFilter.destroy() method");
+    }
+
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (log.isDebugEnabled()) {
+            log.debug("entered MockAuthFilter.doFilter() method");
+        }
+
+        ServletContext context = this.filterConfig.getServletContext();
+        if (context == null) {
+            log.warn("this.filterConfig.getServletContext()== NULL !!");
+        }
+
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest((HttpServletRequest) request);
+        mockRequest.addHeader(httpRequestHeaderName, USER_NAME_PARAM);
+
+        if (log.isDebugEnabled()) {
+            log.debug("HTTP header added, name: " + httpRequestHeaderName + ", value: " + USER_NAME_PARAM);
+        }
+
+        chain.doFilter(mockRequest, response);
+    }
+
+    public void init(FilterConfig arg0) throws ServletException {
+        log.debug("entered MockAuthFilter.init() method");
+        this.filterConfig = arg0;
+        log.debug("exited MockAuthFilter.init() method");
+    }
+
+    class MockHttpServletRequest extends HttpServletRequestWrapper {
+
+        private Hashtable<String, String> headerMap;
+
+        public MockHttpServletRequest(HttpServletRequest request) {
+            super(request);
+            headerMap = new Hashtable<String, String>();
+        }
+
+        @Override
+        public String getHeader(String name) {
+            String value = headerMap.get(name);
+            if (value == null) {
+                value = super.getHeader(name);
+            }
+            return value;
+        }
+
+        @Override
+        public Enumeration<String> getHeaderNames() {
+            // TODO: add headerMap keys
+            return super.getHeaderNames();
+        }
+
+        public void addHeader(String name, String value) {
+            headerMap.put(name, value);
+        }
+
+    }
 }

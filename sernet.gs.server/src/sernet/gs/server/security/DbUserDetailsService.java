@@ -95,7 +95,7 @@ public class DbUserDetailsService extends UserLoader implements UserDetailsServi
 		return user;
 	}
 
-	private UserDetails databaseUser(Entity entity) {	    
+	protected UserDetails databaseUser(Entity entity) {
 	    boolean scopeOnly = false;
 	    Property p = entity.getProperties(Configuration.PROP_SCOPE).getProperty(0);
         if (p != null) {
