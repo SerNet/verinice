@@ -89,6 +89,7 @@ public class KerberosExecuter extends AbstractExecuter {
 
         // update client token
         String negotiate = postMethod.getResponseHeader(WWW_AUTHENTICATE).getValue();
+        negotiate = negotiate.substring(SECURITY_PACKAGE.length() + 1);
         clientToken = kerberosTicketService.updateClientToken(negotiate);
     }
 

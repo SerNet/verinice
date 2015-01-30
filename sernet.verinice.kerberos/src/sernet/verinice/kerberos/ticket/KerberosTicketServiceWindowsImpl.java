@@ -21,6 +21,8 @@ package sernet.verinice.kerberos.ticket;
 
 import javax.naming.AuthenticationNotSupportedException;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.kerberos.Activator;
 import sernet.verinice.kerberos.preferences.PreferenceConstants;
 import sernet.verinice.service.auth.KerberosTicketService;
@@ -39,6 +41,8 @@ import com.sun.jna.platform.win32.Sspi.SecBufferDesc;
  */
 public class KerberosTicketServiceWindowsImpl implements KerberosTicketService {
 
+    private static Logger LOG = Logger.getLogger(KerberosStatusServiceImpl.class);
+    
     private String clientToken;
 
     private IWindowsCredentialsHandle clientCredentials;
@@ -56,6 +60,11 @@ public class KerberosTicketServiceWindowsImpl implements KerberosTicketService {
         clientContext.initialize(clientContext.getHandle(), null, getADServiceName());
 
         clientToken = SECURITY_PACKAGE + " " + BaseEncoding.base64().encode(clientContext.getToken());
+        
+        if(LOG.isDebugEnabled()){
+            LOG.debug("client AD token: " + clientToken);
+        }
+        
         return clientToken;
     }
  
