@@ -28,9 +28,13 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.osgi.context.support.OsgiBundleXmlApplicationContext;
+
+import sernet.verinice.service.auth.KerberosTicketService;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -47,6 +51,8 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 	private static SpringClientPlugin plugin;
 	
 	private BundleContext ctx;
+
+    private ServiceTracker kerberosTicketServiceTracker;
 	
 	/**
 	 * The constructor.
@@ -80,7 +86,17 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 				throw new RuntimeException(e);
 			}
 		}
+		
+		getKerberosService(bundle);
+	
 	}
+	
+	 private void getKerberosService(Bundle bundle) {
+	        BundleContext bundleContext = bundle.getBundleContext();
+	        ServiceReference ticketServiceReference = bundleContext.getServiceReference(KerberosTicketService.class.getName());
+	        kerberosTicketServiceTracker = new ServiceTracker(bundleContext, KerberosTicketService.class.getName(), null);
+	        kerberosTicketServiceTracker.open();
+	    }
 
 	/**
 	 * This method is called when the plug-in is stopped
@@ -132,5 +148,9 @@ public class SpringClientPlugin extends AbstractUIPlugin {
 			
 			beanFactory = appCtx;
 		}
-	}	
+	}
+	
+	public KerberosTicketService getKerberosTicketService(){
+	    return (KerberosTicketService) kerberosTicketServiceTracker.getService();
+	}
 }

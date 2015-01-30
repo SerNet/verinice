@@ -24,45 +24,34 @@ import java.io.IOException;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.log4j.Logger;
+import org.eclipse.core.internal.runtime.Activator;
+import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 import org.springframework.remoting.httpinvoker.HttpInvokerClientConfiguration;
 
-import waffle.windows.auth.IWindowsCredentialsHandle;
-import waffle.windows.auth.impl.WindowsAccountImpl;
-import waffle.windows.auth.impl.WindowsCredentialsHandleImpl;
-import waffle.windows.auth.impl.WindowsSecurityContextImpl;
-
-import com.google.common.io.BaseEncoding;
-import com.sun.jna.platform.win32.Sspi;
-import com.sun.jna.platform.win32.Sspi.SecBufferDesc;
+import sernet.verinice.service.auth.KerberosTicketService;
 
 public class KerberosExecuter extends AbstractExecuter {
 
-    private static final String HEADER_NAME_AUTHORIZATION = "Authorization";
-
-    // TODO must be configurable or extracted from the TGT
-    private static final String TARGET_NAME = "verinicepro-1.7";
-
     private static final Logger LOG = Logger.getLogger(KerberosExecuter.class);
-    
+
     private String clientToken;
 
-    final String securityPackage = "NEGOTIATE";
+    private boolean isClientTokenInit;
 
-    private IWindowsCredentialsHandle clientCredentials;
-
-    private WindowsSecurityContextImpl clientContext;
-
-    private boolean isClienTokenInit;
-
-    private String testUser = null;
+    private KerberosTicketService kerberosTicketService;
 
     public KerberosExecuter() {
         super();
     }
 
     public void init() {
+        kerberosTicketService = SpringClientPlugin.getDefault().getKerberosTicketService();
         super.init();
     }
+
+   
 
     @Override
     protected void validateResponse(HttpInvokerClientConfiguration config, PostMethod postMethod) throws IOException {
@@ -77,7 +66,7 @@ public class KerberosExecuter extends AbstractExecuter {
 
         if (postMethod.getStatusCode() == 401) {
 
-            if (isClienTokenInit) {
+            if (isClientTokenInit) {
                 updateClientToken(postMethod);
             } else {
                 initClientToken();
@@ -91,43 +80,24 @@ public class KerberosExecuter extends AbstractExecuter {
 
     private void updateClientToken(PostMethod postMethod) {
 
-        String negotiate = postMethod.getResponseHeader("WWW-Authenticate").getValue();
+        String negotiate = postMethod.getResponseHeader(KerberosTicketService.WWW_AUTHENTICATE).getValue();
 
-        String continueToken = negotiate.substring(securityPackage.length() + 1);
-        byte[] continueTokenBytes = BaseEncoding.base64().decode(continueToken);
+        // call update service
+        clientToken = kerberosTicketService.updateClientToken(negotiate);
 
-        if (continueTokenBytes.length > 0) {
-
-            SecBufferDesc continueTokenBuffer = new SecBufferDesc(Sspi.SECBUFFER_TOKEN, continueTokenBytes);
-
-            // FIXME
-            clientContext.initialize(clientContext.getHandle(), continueTokenBuffer, TARGET_NAME);
-
-            clientToken = securityPackage + " " + BaseEncoding.base64().encode(clientContext.getToken());
-
-        }
     }
 
     /**
      * Read the initial token.
      */
     private void initClientToken() {
-
-        clientCredentials = WindowsCredentialsHandleImpl.getCurrent(securityPackage);
-        clientCredentials.initialize();
-        clientContext = new WindowsSecurityContextImpl();
-        clientContext.setPrincipalName(WindowsAccountImpl.getCurrentUsername());
-        clientContext.setCredentialsHandle(clientCredentials.getHandle());
-        clientContext.setSecurityPackage(securityPackage);
-        clientContext.initialize(clientContext.getHandle(), null, TARGET_NAME);
-
-        clientToken = securityPackage + " " + BaseEncoding.base64().encode(clientContext.getToken());
-        isClienTokenInit = true;
+        clientToken = kerberosTicketService.getClientToken();
+        isClientTokenInit = true;
     }
 
     @Override
     protected void executePostMethod(HttpInvokerClientConfiguration config, HttpClient httpClient, PostMethod postMethod) throws IOException {
-        postMethod.addRequestHeader(HEADER_NAME_AUTHORIZATION, clientToken);
+        postMethod.addRequestHeader(KerberosTicketService.HEADER_NAME_AUTHORIZATION, clientToken);
         super.executePostMethod(config, httpClient, postMethod);
     }
 }
