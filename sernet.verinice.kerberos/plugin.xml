@@ -6,7 +6,7 @@
       <page
             class="sernet.verinice.kerberos.preferences.KerberosPreferencePage"
             id="sernet.verinice.kerberos.preferences.KerberosPreferencePage"
-            name="Kerberos">
+            name="Active Directory">
       </page>
    </extension>
    <extension
