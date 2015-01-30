@@ -19,9 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.kerberos.preferences;
 
-import org.eclipse.jface.preference.*;
-import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.FieldEditor;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
+import org.eclipse.ui.internal.Workbench;
 
 import sernet.verinice.kerberos.Activator;
 
@@ -40,6 +47,12 @@ import sernet.verinice.kerberos.Activator;
  */
 public class KerberosPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
+    private FieldEditor aDServiceName;
+    
+    private boolean initialKerberosStatus;
+
+    private BooleanFieldEditor activate;
+
     public KerberosPreferencePage() {
         super(GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
@@ -52,11 +65,48 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
      * editor knows how to save and restore itself.
      */
     public void createFieldEditors() {
-        addField(new BooleanFieldEditor(PreferenceConstants.VERINICEPRO_SERVICE, "Kerberos active", getFieldEditorParent()));
-        addField(new StringFieldEditor(PreferenceConstants.VERINICEPRO_SERVICE, "verinicepro AD service", getFieldEditorParent()));
+        
+        activate = new BooleanFieldEditor(PreferenceConstants.KERBEROS_STATUS, "Kerberos active", getFieldEditorParent());
+        initialKerberosStatus = getPreferenceStore().getBoolean(PreferenceConstants.KERBEROS_STATUS);
+        addField(activate);     
+        
+        aDServiceName = new StringFieldEditor(PreferenceConstants.VERINICEPRO_SERVICE_NAME, "verinicepro AD service", getFieldEditorParent());
+        aDServiceName.setEnabled(initialKerberosStatus, getFieldEditorParent());
+        
+        addField(aDServiceName);
+    }
+    
+    @Override
+    public void propertyChange(PropertyChangeEvent event) {
+        if(event.getSource() == activate){
+            aDServiceName.setEnabled(activate.getBooleanValue(), getFieldEditorParent());
+        }
+    };
+    
+    
+
+    @Override
+    public boolean performOk() {
+        boolean status = super.performOk();
+        if(activate.getBooleanValue() != initialKerberosStatus){
+            MessageDialog mDialog = new MessageDialog(
+                    Display.getDefault().getActiveShell(), 
+                    "blah",
+                    null,
+                    "blub",
+                    MessageDialog.QUESTION, 
+                    new String[] { "1", "2" }, 1); //$NON-NLS-1$ //$NON-NLS-2$
+            int result = mDialog.open();
+            if(result==1) {
+                Workbench.getInstance().restart();
+            }
+        }
+        
+        return status;
     }
 
-    public void init(IWorkbench workbench) {
+    @Override
+    public void init(IWorkbench arg0) {
     }
 
 }

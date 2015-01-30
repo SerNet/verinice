@@ -53,11 +53,12 @@ public class KerberosTicketServiceWindowsImpl implements KerberosTicketService {
         clientContext.setPrincipalName(WindowsAccountImpl.getCurrentUsername());
         clientContext.setCredentialsHandle(clientCredentials.getHandle());
         clientContext.setSecurityPackage(SECURITY_PACKAGE);
-        clientContext.initialize(clientContext.getHandle(), null, Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.VERINICEPRO_SERVICE));
+        clientContext.initialize(clientContext.getHandle(), null, getADServiceName());
 
         clientToken = SECURITY_PACKAGE + " " + BaseEncoding.base64().encode(clientContext.getToken());
         return clientToken;
     }
+ 
 
     @Override
     public String updateClientToken(String serviceNegatiationAnswer) {
@@ -67,10 +68,14 @@ public class KerberosTicketServiceWindowsImpl implements KerberosTicketService {
         if (continueTokenBytes.length > 0) {
 
             SecBufferDesc continueTokenBuffer = new SecBufferDesc(Sspi.SECBUFFER_TOKEN, continueTokenBytes);
-            clientContext.initialize(clientContext.getHandle(), continueTokenBuffer, Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.VERINICEPRO_SERVICE));
+            clientContext.initialize(clientContext.getHandle(), continueTokenBuffer, getADServiceName());
             return SECURITY_PACKAGE + " " + BaseEncoding.base64().encode(clientContext.getToken());
         }
 
         throw new RuntimeException(new AuthenticationNotSupportedException("no continue token was sent by the server"));
+    }
+    
+    private String getADServiceName() {
+        return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.VERINICEPRO_SERVICE_NAME);
     }
 }

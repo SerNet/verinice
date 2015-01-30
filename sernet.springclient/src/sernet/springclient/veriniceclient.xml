@@ -35,7 +35,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
-    <bean name="veriniceCommonsExecuter" class="sernet.springclient.CommonsExecuter" init-method="init">
+    <bean name="veriniceCommonsExecuter" class="sernet.springclient.AbstractExecuter" factory-method="initExecuter">
         <!-- Request-timeout in ms 24h = 24*60*60*1000 = 86.400.000-->
         <property name="readTimeout" value="86400000"/>
         <!-- Connection-timeout in ms -->

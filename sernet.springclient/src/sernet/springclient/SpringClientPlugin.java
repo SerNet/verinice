@@ -34,122 +34,143 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.osgi.context.support.OsgiBundleXmlApplicationContext;
 
+import sernet.verinice.service.auth.KerberosStatusService;
 import sernet.verinice.service.auth.KerberosTicketService;
 
 /**
  * The main plugin class to be used in the desktop.
  */
 public class SpringClientPlugin extends AbstractUIPlugin {
-	
-	private static final Logger LOG = Logger.getLogger(SpringClientPlugin.class);
 
-	private static final String OSGI_EXTENDER_SYMBOLIC_NAME = "org.springframework.osgi.extender";
-	
-	private BeanFactory beanFactory;
+    private static final Logger LOG = Logger.getLogger(SpringClientPlugin.class);
 
-	//The shared instance.
-	private static SpringClientPlugin plugin;
-	
-	private BundleContext ctx;
+    private static final String OSGI_EXTENDER_SYMBOLIC_NAME = "org.springframework.osgi.extender";
+
+    private BeanFactory beanFactory;
+
+    // The shared instance.
+    private static SpringClientPlugin plugin;
+
+    private BundleContext ctx;
 
     private ServiceTracker kerberosTicketServiceTracker;
-	
-	/**
-	 * The constructor.
-	 */
-	public SpringClientPlugin() {
-		plugin = this;
-	}
 
-	/**
-	 * This method is called upon plug-in activation
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		ctx = context;
-		
-		// Starts the Spring OSGi Extender which provides registering the Spring
-		// namespace handlers. If you get an exception saying there is no schema
-		// for Spring security, then the OSGi extender is not running.
-		// Another way this can happen is when you cannot start verinice when you
-		// do not have a working internet connection.
-		Bundle bundle = Platform.getBundle(OSGI_EXTENDER_SYMBOLIC_NAME);
-		if (bundle == null) {
-			LOG.error("Spring OSGi Extender bundle is not available. Giving up!");
-			throw new RuntimeException();
-		} else if (bundle.getState() == Bundle.INSTALLED
-				|| bundle.getState() == Bundle.RESOLVED) {
-			LOG.debug("Manually starting Spring's OSGi Extender");
-			try {
-				bundle.start();
-			} catch (BundleException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		
-		initKerberosServiceTracker(bundle);
-	
-	}
-	
-	 private void initKerberosServiceTracker(Bundle bundle) {
-	        BundleContext bundleContext = bundle.getBundleContext();
-	        kerberosTicketServiceTracker = new ServiceTracker(bundleContext, KerberosTicketService.class.getName(), null);
-	        kerberosTicketServiceTracker.open();
-	    }
+    private ServiceTracker kerberosStatusTracker;
 
-	/**
-	 * This method is called when the plug-in is stopped
-	 */
-	public void stop(BundleContext context) throws Exception {
-		super.stop(context);
-		plugin = null;
-	}
+    /**
+     * The constructor.
+     */
+    public SpringClientPlugin() {
+        plugin = this;
+    }
 
-	/**
-	 * Returns the shared instance.
-	 */
-	public static SpringClientPlugin getDefault() {
-		return plugin;
-	}
+    /**
+     * This method is called upon plug-in activation
+     */
+    public void start(BundleContext context) throws Exception {
+        super.start(context);
+        ctx = context;
 
-	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path.
-	 *
-	 * @param path the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("SpringClient", path);
-	}
-	
-	public synchronized void closeBeanFactory() {
-		if (beanFactory != null) {
-			AbstractApplicationContext internalCtx = (AbstractApplicationContext) beanFactory;
-			internalCtx.close();
-			beanFactory = null;
-		}
-	}
-	
-	public synchronized BeanFactory getBeanFactory() {
-		return beanFactory;
-	}
+        // Starts the Spring OSGi Extender which provides registering the Spring
+        // namespace handlers. If you get an exception saying there is no schema
+        // for Spring security, then the OSGi extender is not running.
+        // Another way this can happen is when you cannot start verinice when
+        // you
+        // do not have a working internet connection.
+        Bundle bundle = Platform.getBundle(OSGI_EXTENDER_SYMBOLIC_NAME);
+        if (bundle == null) {
+            LOG.error("Spring OSGi Extender bundle is not available. Giving up!");
+            throw new RuntimeException();
+        } else if (bundle.getState() == Bundle.INSTALLED || bundle.getState() == Bundle.RESOLVED) {
+            LOG.debug("Manually starting Spring's OSGi Extender");
+            try {
+                bundle.start();
+            } catch (BundleException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
-	public synchronized void openBeanFactory() {
-		if (beanFactory == null) {
-			
-			URL url = getClass().getResource("veriniceclient.xml");
-			OsgiBundleXmlApplicationContext appCtx =
-				new OsgiBundleXmlApplicationContext(new String[] { url.toString() });
-			Assert.isNotNull(ctx);
-			appCtx.setBundleContext(ctx);
-			appCtx.refresh();
-			
-			beanFactory = appCtx;
-		}
-	}
-	
-	public KerberosTicketService getKerberosTicketService(){
-	    return (KerberosTicketService) kerberosTicketServiceTracker.getService();
-	}
+        initKerberosStatusTracker(bundle);
+        initKerberosServiceTracker(bundle);
+    }
+
+    private void initKerberosStatusTracker(Bundle bundle) {
+        
+        BundleContext bundleContext = bundle.getBundleContext();
+        kerberosStatusTracker = new ServiceTracker(bundleContext, KerberosStatusService.class.getName(), null);
+  
+        if(kerberosStatusTracker != null) {
+            kerberosStatusTracker.open();
+        }
+    }
+
+    private void initKerberosServiceTracker(Bundle bundle) {
+        BundleContext bundleContext = bundle.getBundleContext();
+        kerberosTicketServiceTracker = new ServiceTracker(bundleContext, KerberosTicketService.class.getName(), null);
+
+        if (kerberosStatusTracker != null) {
+            kerberosTicketServiceTracker.open();
+        }
+    }
+
+    /**
+     * This method is called when the plug-in is stopped
+     */
+    public void stop(BundleContext context) throws Exception {
+        super.stop(context);
+        plugin = null;
+    }
+
+    /**
+     * Returns the shared instance.
+     */
+    public static SpringClientPlugin getDefault() {
+        return plugin;
+    }
+
+    /**
+     * Returns an image descriptor for the image file at the given plug-in
+     * relative path.
+     *
+     * @param path
+     *            the path
+     * @return the image descriptor
+     */
+    public static ImageDescriptor getImageDescriptor(String path) {
+        return AbstractUIPlugin.imageDescriptorFromPlugin("SpringClient", path);
+    }
+
+    public synchronized void closeBeanFactory() {
+        if (beanFactory != null) {
+            AbstractApplicationContext internalCtx = (AbstractApplicationContext) beanFactory;
+            internalCtx.close();
+            beanFactory = null;
+        }
+    }
+
+    public synchronized BeanFactory getBeanFactory() {
+        return beanFactory;
+    }
+
+    public synchronized void openBeanFactory() {
+        if (beanFactory == null) {
+
+            URL url = getClass().getResource("veriniceclient.xml");
+            OsgiBundleXmlApplicationContext appCtx = new OsgiBundleXmlApplicationContext(new String[] { url.toString() });
+            Assert.isNotNull(ctx);
+            appCtx.setBundleContext(ctx);
+            appCtx.refresh();
+
+            beanFactory = appCtx;
+        }
+    }
+
+    
+    public KerberosStatusService getKerberosStatusService(){
+        return (KerberosStatusService) kerberosStatusTracker.getService();
+    }
+    
+    public KerberosTicketService getKerberosTicketService() {
+        return (KerberosTicketService) kerberosTicketServiceTracker.getService();
+    }
 }

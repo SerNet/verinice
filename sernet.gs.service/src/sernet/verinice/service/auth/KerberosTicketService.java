@@ -47,9 +47,8 @@ public interface KerberosTicketService {
      */
     public static final String HEADER_NAME_AUTHORIZATION = "Authorization";
 
-    
     public static final String SECURITY_PACKAGE = "NEGOTIATE";
-    
+
     /**
      * Returns the initial TGS for verinice Kerberos authentification.
      *
@@ -57,8 +56,8 @@ public interface KerberosTicketService {
     public String getClientToken();
 
     /**
-     * Service sends back an answer string, which is calculated with initial
-     * client token and the server response.
+     * Under circumstances the server sends back an answer string, which is
+     * calculated with initial client token and the server response.
      * 
      * @param serviceNegatiationAnswer
      *            The value of the server response parameter
@@ -66,4 +65,5 @@ public interface KerberosTicketService {
      * @return Hopefully a valid TSG
      */
     public String updateClientToken(String serviceNegatiationAnswer);
+
 }

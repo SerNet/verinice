@@ -6,26 +6,29 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.log4j.Logger;
+import org.eclipse.core.internal.runtime.Activator;
 import org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor;
 
+import sernet.verinice.service.auth.KerberosStatusService;
+
 public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
-    
-    public static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS =  1000;
-    public static final int DEFAULT_READ_TIMEOUT_MILLISECONDS =  (30 * 60 * 1000);
-    
+
+    public static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS = 1000;
+    public static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = (30 * 60 * 1000);
+
     public int readTimeout = DEFAULT_READ_TIMEOUT_MILLISECONDS;
     public int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS;
-    
+
     public static final int MAX_TOTAL_CONNECTIONS = 20;
     public static final int MAX_CONNECTIONS_PER_HOST = 5;
 
     private static final Logger LOG = Logger.getLogger(AbstractExecuter.class);
-    
+
     public AbstractExecuter() {
         super();
     }
-    
-    public void init(){
+
+    public void init() {
 
         MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
 
@@ -36,27 +39,27 @@ public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
         connectionManager.getParams().setConnectionTimeout(getConnectionTimeout());
         connectionManager.getParams().setSoTimeout(getReadTimeout());
 
-        setHttpClient(new HttpClient(connectionManager));         
+        setHttpClient(new HttpClient(connectionManager));
 
-        configureProxy();        
+        configureProxy();
     }
 
     protected void configureProxy() {
-        String proxyHost = System.getProperty("http.proxyHost"); 
+        String proxyHost = System.getProperty("http.proxyHost");
         Integer proxyPort = null;
-        if(System.getProperty("http.proxyPort")!=null) {
+        if (System.getProperty("http.proxyPort") != null) {
             proxyPort = Integer.parseInt(System.getProperty("http.proxyPort"));
         }
-        
-        if(proxyHost!=null && proxyPort!=null && !proxyHost.isEmpty() ) {
-            getHttpClient().getHostConfiguration().setProxy(proxyHost,proxyPort);
+
+        if (proxyHost != null && proxyPort != null && !proxyHost.isEmpty()) {
+            getHttpClient().getHostConfiguration().setProxy(proxyHost, proxyPort);
             if (LOG.isInfoEnabled()) {
                 LOG.info("Using proxy host: " + proxyHost + ", port: " + proxyPort);
             }
             String proxyName = System.getProperty("http.proxyName");
             String proxyPassword = System.getProperty("http.proxyPassword");
-            
-            if(proxyName!=null && proxyPassword!=null) {
+
+            if (proxyName != null && proxyPassword != null) {
                 getHttpClient().getState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials(proxyName, proxyPassword));
                 if (LOG.isInfoEnabled()) {
                     LOG.info("Using proxy user name: " + proxyHost + " and password");
@@ -83,5 +86,20 @@ public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
 
     public void setConnectionTimeout(int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
+    }
+
+    public static AbstractExecuter initExecuter() {
+
+        KerberosStatusService kerberosStatusService = SpringClientPlugin.getDefault().getKerberosStatusService();
+
+        if (kerberosStatusService != null && kerberosStatusService.isActive()) {
+            KerberosExecuter executer = new KerberosExecuter();
+            executer.init();
+            return executer;
+        } else {
+            CommonsExecuter commonsExecuter = new CommonsExecuter();
+            commonsExecuter.init();
+            return commonsExecuter;
+        }
     }
 }

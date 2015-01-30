@@ -17,16 +17,14 @@
  * Contributors:
  *     verinice <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.kerberos.preferences;
+package sernet.verinice.service.auth;
 
 /**
+ * Indicates if the kerberos plugin is available and active.
+ * 
  * @author Benjamin Weiﬂenfels <bw[at]sernet[dot]de>
  *
  */
-public class PreferenceConstants {
-
-	public static final String VERINICEPRO_SERVICE_NAME = "verinicepro";
-	
-	public static final String KERBEROS_STATUS = "kerberos_status";
-	
+public interface KerberosStatusService {
+    public boolean isActive();
 }

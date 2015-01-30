@@ -17,16 +17,21 @@
  * Contributors:
  *     verinice <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.kerberos.preferences;
+package sernet.verinice.kerberos.ticket;
+
+import sernet.verinice.kerberos.Activator;
+import sernet.verinice.kerberos.preferences.PreferenceConstants;
+import sernet.verinice.service.auth.KerberosStatusService;
 
 /**
  * @author Benjamin Weiﬂenfels <bw[at]sernet[dot]de>
  *
  */
-public class PreferenceConstants {
+public class KerberosStatusServiceImpl implements KerberosStatusService {
 
-	public static final String VERINICEPRO_SERVICE_NAME = "verinicepro";
-	
-	public static final String KERBEROS_STATUS = "kerberos_status";
-	
+    @Override
+    public boolean isActive() {
+        return Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.KERBEROS_STATUS);
+    }
+
 }
