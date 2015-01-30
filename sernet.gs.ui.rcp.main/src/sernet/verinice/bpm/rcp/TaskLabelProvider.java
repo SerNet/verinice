@@ -28,6 +28,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.bpm.ITask;
@@ -82,7 +83,22 @@ public class TaskLabelProvider implements ITableLabelProvider {
     public String getColumnText(Object element, int columnIndex) {
         final int maxColumnTextLength = 100;
         String text = null;
-        ITask task = (ITask) element;
+        if(element instanceof ITask) {
+            ITask task = (ITask) element;
+            text = getColumnText(columnIndex, task);
+        }
+        if(element instanceof PlaceHolder) {
+            PlaceHolder placeHolder = (PlaceHolder) element;
+            text = getColumnText(columnIndex, placeHolder);
+        }
+        if(text!=null && text.length()>maxColumnTextLength) {
+            text = text.substring(0, maxColumnTextLength - 1) + "...";
+        }
+        return text;
+    }
+
+    private String getColumnText(int columnIndex, ITask task) {
+        String text = null;
         switch (columnIndex) {
         case 1:
             text = task.getGroupTitle();
@@ -111,8 +127,17 @@ public class TaskLabelProvider implements ITableLabelProvider {
         default:
             break;
         }
-        if(text!=null && text.length()>maxColumnTextLength) {
-            text = text.substring(0, maxColumnTextLength - 1) + "...";
+        return text;
+    }
+    
+    private String getColumnText(int columnIndex, PlaceHolder placeHolder) {
+        String text = null;
+        switch (columnIndex) {       
+        case 2:
+            text = placeHolder.getTitle();
+            break;        
+        default:
+            break;
         }
         return text;
     }

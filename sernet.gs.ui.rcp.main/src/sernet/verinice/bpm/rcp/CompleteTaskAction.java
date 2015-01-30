@@ -21,6 +21,7 @@ package sernet.verinice.bpm.rcp;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -63,35 +64,23 @@ final class CompleteTaskAction extends Action {
     public void run() {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
-            final StructuredSelection selection = (StructuredSelection) this.taskView.getViewer().getSelection();
-            final int number = selection.size();       
-                progressService.run(true, true, new IRunnableWithProgress() {
-                    @Override
-                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        Activator.inheritVeriniceContextState();
-                        try {
-                            for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-                                Object sel = iterator.next();
-                                if (sel instanceof TaskInformation) {
-                                    completeTask((TaskInformation) sel, outcomeId);
-                                }
-                            }
-                        } catch (CompletionAbortedException e) {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug("Completion aborted: " + e.getMessage()); //$NON-NLS-1$
-                            }
-                            return;
+            final List<TaskInformation> taskList = taskView.getSelectedTasks();      
+            progressService.run(true, true, new IRunnableWithProgress() {
+                @Override
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    Activator.inheritVeriniceContextState();    
+                    for (TaskInformation task: taskList) {            
+                        completeTask(task, outcomeId);
+                    }                                         
+                    CompleteTaskAction.this.taskView.showInformation(Messages.CompleteTaskAction_3, NLS.bind(Messages.CompleteTaskAction_4, taskList.size()));                   
+                    Display.getDefault().asyncExec(new Runnable(){
+                        @Override
+                        public void run() {
+                            CompleteTaskAction.this.taskView.loadTasks();                         
                         }
-                        
-                        CompleteTaskAction.this.taskView.showInformation(Messages.CompleteTaskAction_3, NLS.bind(Messages.CompleteTaskAction_4, number));                   
-                        Display.getDefault().asyncExec(new Runnable(){
-                            @Override
-                            public void run() {
-                                CompleteTaskAction.this.taskView.loadTasks();                         
-                            }
-                        });                  
-                    }
-                });          
+                    });                  
+                }
+            });          
         } catch (Exception t) {
             LOG.error("Error while completing tasks.", t); //$NON-NLS-1$
             this.taskView.showError(Messages.CompleteTaskAction_6, Messages.CompleteTaskAction_7);

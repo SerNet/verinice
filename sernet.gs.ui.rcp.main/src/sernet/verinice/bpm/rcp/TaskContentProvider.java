@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.interfaces.bpm.ITask;
 
 /**
@@ -35,6 +36,13 @@ import sernet.verinice.interfaces.bpm.ITask;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class TaskContentProvider implements IStructuredContentProvider {
+    
+    private static final PlaceHolder[] PLACE_HOLDER = new PlaceHolder[1];
+            
+    static {
+        PLACE_HOLDER[0] = new PlaceHolder(Messages.TaskContentProvider_0);
+    }
+            
     
     private TableViewer viewer;
     
@@ -48,7 +56,11 @@ public class TaskContentProvider implements IStructuredContentProvider {
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
     public Object[] getElements(Object inputElement) {
-        return taskList.toArray(new Object[taskList.size()]);
+        if(taskList!=null && !taskList.isEmpty()) {
+            return taskList.toArray(new Object[taskList.size()]);
+        } else {
+            return PLACE_HOLDER;
+        }
     }
 
     /* (non-Javadoc)

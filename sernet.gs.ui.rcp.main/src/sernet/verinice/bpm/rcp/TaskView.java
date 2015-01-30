@@ -20,6 +20,7 @@
 package sernet.verinice.bpm.rcp;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -693,27 +694,34 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
 
     private void cancelTask() throws InvocationTargetException, InterruptedException {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-        final StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
-        final int number = selection.size();
-        if (number > 0 && MessageDialog.openConfirm(getShell(), Messages.ConfirmTaskDelete_0, Messages.bind(Messages.ConfirmTaskDelete_1, selection.size()))) {
+        final List<TaskInformation> taskList = getSelectedTasks();       
+        if (!taskList.isEmpty() && MessageDialog.openConfirm(getShell(), Messages.ConfirmTaskDelete_0, Messages.bind(Messages.ConfirmTaskDelete_1, taskList.size()))) {
             progressService.run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    Activator.inheritVeriniceContextState();
-                    for (Iterator iterator = selection.iterator(); iterator.hasNext();) {
-                        Object sel = iterator.next();
-                        if (sel instanceof TaskInformation) {
-                            TaskInformation task = (TaskInformation) sel;
-                            ServiceFactory.lookupTaskService().cancelTask(task.getId());
-                            TaskView.this.contentProvider.removeTask(task);
-                        }
-                    }
+                    Activator.inheritVeriniceContextState();                    
+                    for (TaskInformation task : taskList) {
+                        ServiceFactory.lookupTaskService().cancelTask(task.getId());
+                        TaskView.this.contentProvider.removeTask(task);
+                    }            
                 }
             });
             getInfoPanel().setText(""); //$NON-NLS-1$
-            showInformation(Messages.TaskView_0, NLS.bind(Messages.TaskView_8, number));
+            showInformation(Messages.TaskView_0, NLS.bind(Messages.TaskView_8, taskList.size()));
         }
     } 
+    
+    protected List<TaskInformation> getSelectedTasks() {
+        final StructuredSelection selection = (StructuredSelection) getViewer().getSelection();
+        List<TaskInformation> taskList = new ArrayList<TaskInformation>(selection.size());
+        for (Iterator<Object> iterator = selection.iterator(); iterator.hasNext();) {
+            Object sel = iterator.next();
+            if (sel instanceof TaskInformation) {
+                taskList.add((TaskInformation) sel);
+            }
+        }
+        return taskList;
+    }
 
     public void removeTask(ITask task) {
         contentProvider.removeTask(task);

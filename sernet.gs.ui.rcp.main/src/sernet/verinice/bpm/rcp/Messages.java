@@ -101,6 +101,7 @@ public class Messages extends NLS {
     public static String RelationPage_1;
     public static String RelationPage_2;
     public static String RelationPage_3;
+    public static String TaskContentProvider_0;
     public static String TaskFilterAction_0;
     public static String TaskFilterDialog_1;
     public static String TaskFilterDialog_2;
