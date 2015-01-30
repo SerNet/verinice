@@ -19,9 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.kerberos.preferences;
 
+import static sernet.verinice.kerberos.preferences.Messages.*;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -58,7 +59,8 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
     public KerberosPreferencePage() {
         super(GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
-        setDescription("Configure the kerberos authentification");
+        setTitle(KerberosPreferencePage_0);
+        setDescription(KerberosPreferencePage_1);
     }
 
     /**
@@ -68,11 +70,11 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
      */
     public void createFieldEditors() {
 
-        activate = new BooleanFieldEditor(PreferenceConstants.KERBEROS_STATUS, "Kerberos active", getFieldEditorParent());
+        activate = new BooleanFieldEditor(PreferenceConstants.KERBEROS_STATUS, KerberosPreferencePage_2, getFieldEditorParent());
         initialKerberosStatus = getPreferenceStore().getBoolean(PreferenceConstants.KERBEROS_STATUS);
         addField(activate);
 
-        aDServiceName = new StringFieldEditor(PreferenceConstants.VERINICEPRO_SERVICE_NAME, "verinicepro AD service", getFieldEditorParent());
+        aDServiceName = new StringFieldEditor(PreferenceConstants.VERINICEPRO_SERVICE_NAME, KerberosPreferencePage_3, getFieldEditorParent());
         initialADServiceName = getPreferenceStore().getString(PreferenceConstants.VERINICEPRO_SERVICE_NAME);
         aDServiceName.setEnabled(initialKerberosStatus, getFieldEditorParent());
 
@@ -90,7 +92,7 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
     public boolean performOk() {
         boolean status = super.performOk();
         if (activate.getBooleanValue() != initialKerberosStatus || !initialADServiceName.equals(aDServiceName.getStringValue())) {
-            MessageDialog mDialog = new MessageDialog(Display.getDefault().getActiveShell(), "blah", null, "blub", MessageDialog.QUESTION, new String[] { "1", "2" }, 1); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialog mDialog = new MessageDialog(Display.getDefault().getActiveShell(), KerberosPreferencePage_4, null, KerberosPreferencePage_5, MessageDialog.QUESTION, new String[] { KerberosPreferencePage_6, KerberosPreferencePage_7 }, 1); //$NON-NLS-1$ //$NON-NLS-2$
             
             int result = mDialog.open();            
             if (result == 1) {
