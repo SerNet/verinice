@@ -47,8 +47,10 @@ import sernet.verinice.kerberos.Activator;
  */
 public class KerberosPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    private FieldEditor aDServiceName;
-    
+    private StringFieldEditor aDServiceName;
+
+    private String initialADServiceName;
+
     private boolean initialKerberosStatus;
 
     private BooleanFieldEditor activate;
@@ -65,43 +67,37 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
      * editor knows how to save and restore itself.
      */
     public void createFieldEditors() {
-        
+
         activate = new BooleanFieldEditor(PreferenceConstants.KERBEROS_STATUS, "Kerberos active", getFieldEditorParent());
         initialKerberosStatus = getPreferenceStore().getBoolean(PreferenceConstants.KERBEROS_STATUS);
-        addField(activate);     
-        
+        addField(activate);
+
         aDServiceName = new StringFieldEditor(PreferenceConstants.VERINICEPRO_SERVICE_NAME, "verinicepro AD service", getFieldEditorParent());
+        initialADServiceName = getPreferenceStore().getString(PreferenceConstants.VERINICEPRO_SERVICE_NAME);
         aDServiceName.setEnabled(initialKerberosStatus, getFieldEditorParent());
-        
+
         addField(aDServiceName);
     }
-    
+
     @Override
     public void propertyChange(PropertyChangeEvent event) {
-        if(event.getSource() == activate){
+        if (event.getSource() == activate) {
             aDServiceName.setEnabled(activate.getBooleanValue(), getFieldEditorParent());
         }
     };
-    
-    
 
     @Override
     public boolean performOk() {
         boolean status = super.performOk();
-        if(activate.getBooleanValue() != initialKerberosStatus){
-            MessageDialog mDialog = new MessageDialog(
-                    Display.getDefault().getActiveShell(), 
-                    "blah",
-                    null,
-                    "blub",
-                    MessageDialog.QUESTION, 
-                    new String[] { "1", "2" }, 1); //$NON-NLS-1$ //$NON-NLS-2$
-            int result = mDialog.open();
-            if(result==1) {
+        if (activate.getBooleanValue() != initialKerberosStatus || !initialADServiceName.equals(aDServiceName.getStringValue())) {
+            MessageDialog mDialog = new MessageDialog(Display.getDefault().getActiveShell(), "blah", null, "blub", MessageDialog.QUESTION, new String[] { "1", "2" }, 1); //$NON-NLS-1$ //$NON-NLS-2$
+            
+            int result = mDialog.open();            
+            if (result == 1) {
                 Workbench.getInstance().restart();
             }
         }
-        
+
         return status;
     }
 
