@@ -19,7 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.kerberos.preferences;
 
-import static sernet.verinice.kerberos.preferences.Messages.*;
+import static sernet.verinice.kerberos.preferences.Messages.KerberosPreferencePage_0;
+import static sernet.verinice.kerberos.preferences.Messages.KerberosPreferencePage_2;
+import static sernet.verinice.kerberos.preferences.Messages.KerberosPreferencePage_3;
+import static sernet.verinice.kerberos.preferences.Messages.KerberosPreferencePage_4;
+import static sernet.verinice.kerberos.preferences.Messages.KerberosPreferencePage_5;
+import static sernet.verinice.kerberos.preferences.Messages.KerberosPreferencePage_6;
+import static sernet.verinice.kerberos.preferences.Messages.KerberosPreferencePage_7;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -60,7 +66,6 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
         super(GRID);
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
         setTitle(KerberosPreferencePage_0);
-        setDescription(KerberosPreferencePage_1);
     }
 
     /**
@@ -71,18 +76,19 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
     public void createFieldEditors() {
 
         activate = new BooleanFieldEditor(PreferenceConstants.KERBEROS_STATUS, KerberosPreferencePage_2, getFieldEditorParent());
-        initialKerberosStatus = getPreferenceStore().getBoolean(PreferenceConstants.KERBEROS_STATUS);
-        addField(activate);
-
         aDServiceName = new StringFieldEditor(PreferenceConstants.VERINICEPRO_SERVICE_NAME, KerberosPreferencePage_3, getFieldEditorParent());
-        initialADServiceName = getPreferenceStore().getString(PreferenceConstants.VERINICEPRO_SERVICE_NAME);
+
         aDServiceName.setEnabled(initialKerberosStatus, getFieldEditorParent());
 
+        addField(activate);
         addField(aDServiceName);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent event) {
+
+        super.propertyChange(event);
+
         if (event.getSource() == activate) {
             aDServiceName.setEnabled(activate.getBooleanValue(), getFieldEditorParent());
         }
@@ -91,10 +97,11 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
     @Override
     public boolean performOk() {
         boolean status = super.performOk();
+
         if (activate.getBooleanValue() != initialKerberosStatus || !initialADServiceName.equals(aDServiceName.getStringValue())) {
             MessageDialog mDialog = new MessageDialog(Display.getDefault().getActiveShell(), KerberosPreferencePage_4, null, KerberosPreferencePage_5, MessageDialog.QUESTION, new String[] { KerberosPreferencePage_6, KerberosPreferencePage_7 }, 1); //$NON-NLS-1$ //$NON-NLS-2$
-            
-            int result = mDialog.open();            
+
+            int result = mDialog.open();
             if (result == 1) {
                 Workbench.getInstance().restart();
             }
@@ -104,7 +111,10 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
     }
 
     @Override
-    public void init(IWorkbench arg0) {
+    public void init(IWorkbench workbench) {
+        initialKerberosStatus = getPreferenceStore().getBoolean(PreferenceConstants.KERBEROS_STATUS);
+        initialADServiceName = getPreferenceStore().getString(PreferenceConstants.VERINICEPRO_SERVICE_NAME);
+        noDefaultAndApplyButton();
     }
 
 }

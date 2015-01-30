@@ -31,9 +31,9 @@ import sernet.verinice.kerberos.Activator;
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
 
     
-    private static final String VERINICEPRO_AD_DEFAULT_SERVICE_NAME = "verinicepro";
+    public static final String VERINICEPRO_AD_DEFAULT_SERVICE_NAME = "verinicepro";
     
-    private static final boolean KERBEROS_DEFAULT_STATUS = false;
+    public static final boolean KERBEROS_DEFAULT_STATUS = false;
 
     public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
