@@ -251,6 +251,7 @@ Library.
       <import plugin="sernet.hui.swtclient"/>
       <import plugin="sernet.springclient"/>
       <import plugin="sernet.verinice.encryption"/>
+      <import plugin="sernet.verinice.kerberos"/>
       <import plugin="com.springsource.antlr"/>
    </requires>
 
