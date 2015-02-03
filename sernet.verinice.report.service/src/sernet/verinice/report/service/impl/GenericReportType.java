@@ -35,6 +35,7 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
  */
 public class GenericReportType implements IReportType {
 
+    private final static Logger LOG = Logger.getLogger(GenericReportType.class);
     
     private IReportOptions options;
     
@@ -115,27 +116,51 @@ public class GenericReportType implements IReportType {
             locationConst = getDepositPath(IReportDepositService.REPORT_DEPOSIT_CLIENT_REMOTE);
         } else {
             locationConst = brs.getOdaDriver().getLocalReportLocation();
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Value from odaDriver:\t" + locationConst);
+            }
             if(!locationConst.endsWith(String.valueOf(File.separatorChar))){
                 locationConst = locationConst + File.separatorChar;
             }
-            if(!locationConst.startsWith("file://")){
-                locationConst = "file://" + locationConst; 
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Value after checking for SeperatorChar:\t" + locationConst);
+                LOG.debug("SeparatorChar:\t" +  File.separatorChar);
+            }            
+            if(!locationConst.startsWith("file:///")){
+                String fileprotocol = "file:///";
+                if(locationConst.startsWith("/")){
+                    locationConst = locationConst.substring(1);
+                }
+                if(LOG.isDebugEnabled()){
+                    LOG.debug("fileProtocl:\t" + fileprotocol);
+                    LOG.debug("locationConst:\t" +  locationConst);
+                }                
+                locationConst = fileprotocol + locationConst; 
             }
         }
         
+        if(LOG.isDebugEnabled()){
+            LOG.debug("determined value for \"locationConst\":\t" + locationConst);
+            LOG.debug("File to open:\t" + metadata.getFilename());
+        }
 
 
         try {
             rptURL = new URL(locationConst +
                     metadata.getFilename());
         } catch (MalformedURLException e) {
-            Logger.getLogger(GenericReportType.class).error("Error reading" +
+            LOG.error("Error reading" +
                     " rptdesign", e);
         }
 
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Trying to open report from template at:\t" + rptURL.toString());
+        }
         
         IRunAndRenderTask task = brs.createTask(rptURL);
         brs.render(task, options);
+        // could be enhancement in logging
+        // List errors = task.getErrors(); // returns list of engineexceptions
     }
     
     /**
@@ -156,5 +181,6 @@ public class GenericReportType implements IReportType {
         }        
         return sb.toString();
     }
+    
 
 }
