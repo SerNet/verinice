@@ -2821,7 +2821,7 @@ Library.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-         
+
    <plugin
          id="waffle"
          os="win32"
@@ -2830,13 +2830,19 @@ Library.
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-         
+
    <plugin
          id="sernet.verinice.kerberos"
          os="win32"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>         
+         unpack="false"/>
+
+   <plugin
+         id="bouncycastle_1.45.0"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>
