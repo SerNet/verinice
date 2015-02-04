@@ -18,6 +18,7 @@
  ******************************************************************************/
 package sernet.verinice.oda.driver.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,8 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	private Map<String, Object> vars = new HashMap<String, Object>();
 	
 	private static Object instance;
+	
+	private static final String REPORT_LOGFILE = "verinice-reports.log";
 	
 	public VeriniceOdaDriver()
 	{
@@ -80,7 +83,11 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	}
 	
 	public String getLogFile(){
-	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOG_FILE);
+	    String path = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOG_FILE); 
+	    if(path != null && !path.endsWith(String.valueOf(File.separatorChar))){
+	        path = path + File.separatorChar;
+	    }
+	    return path + REPORT_LOGFILE;
 	}
 	
 	public String getLocalReportLocation(){

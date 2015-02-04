@@ -22,9 +22,9 @@ import java.util.logging.Level;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
+import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
@@ -43,7 +43,7 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
             new String[]{Messages.getString("ReportLogLevel.3"), Level.SEVERE.toString()},
             new String[]{Messages.getString("ReportLogLevel.4"), Level.ALL.toString()}
     };
-    private StringFieldEditor localTemplateditor;
+    private DirectoryFieldEditor localTemplateEditor;
             
     
     public ReportPreferencePage(){
@@ -72,11 +72,11 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
         ComboFieldEditor logLvlFieldEditor = new ComboFieldEditor(PreferenceConstants.REPORT_LOGGING_LVL, Messages.getString("ReportPreferencePage.2"), logLvlValues, getFieldEditorParent());
         addField(logLvlFieldEditor);
         
-        StringFieldEditor logFileNameEditor = new StringFieldEditor(PreferenceConstants.REPORT_LOG_FILE, Messages.getString("ReportPreferencePage.3"), getFieldEditorParent());
+        DirectoryFieldEditor logFileNameEditor = new DirectoryFieldEditor(PreferenceConstants.REPORT_LOG_FILE, Messages.getString("ReportPreferencePage.3"), getFieldEditorParent());
         addField(logFileNameEditor);
         
-        localTemplateditor = new StringFieldEditor(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, Messages.getString("ReportPreferencePage.8"), getFieldEditorParent());
-        addField(localTemplateditor);
+        localTemplateEditor =  new DirectoryFieldEditor(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, Messages.getString("ReportPreferencePage.8"), getFieldEditorParent());
+        addField(localTemplateEditor);
 
         BooleanFieldEditor useCacheEditor = new BooleanFieldEditor(PreferenceConstants.REPORT_USE_CACHE, Messages.getString("ReportPreferencePage.7"), getFieldEditorParent());
         addField(useCacheEditor);
@@ -89,7 +89,7 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
             checkState();
         }
 
-        if (event.getSource() == localTemplateditor){
+        if (event.getSource() == localTemplateEditor){
             Activator.getDefault().getIReportTemplateDirectoryService().setDirectory((String) event.getNewValue());
         }
     }
