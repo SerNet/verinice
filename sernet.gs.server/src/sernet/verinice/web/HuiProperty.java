@@ -95,11 +95,7 @@ public class HuiProperty<K,V> implements Serializable{
             try{
                 int n = getIndexOf((String)getValue(), '"', 0);
                 String[] a = ((String)getValue()).substring(n).split(">");
-                String url = a[0].replaceAll("\"", "");
-                if(!url.matches("^(https?|ftp|file)://.*$")){
-                    url = "http://" + url;
-                }
-                return url;
+                return a[0].replaceAll("\"", "");
             } catch (Exception e){
                 LOG.warn("Something went wrong on reading the URLValue", e);
             }
