@@ -40,26 +40,30 @@ public final class CompositeCreator {
         // Don't create instances of this class
     }
     
-    public static Composite create1ColumnComposite(Composite composite, int marginHeight, int marginWidth) {
-        return create1ColumnComposite(composite, marginHeight, marginWidth, true, true);
+    public static Composite create1ColumnComposite(Composite composite) {
+        return create1ColumnComposite(composite, true, true);
     }
     
-    public static Composite create1ColumnComposite(Composite composite, int marginHeight, int marginWidth, boolean grabExcessHorizontalSpace, boolean grabExcessVerticalSpace ) {
+    public static Composite create1ColumnComposite(Composite composite, boolean grabExcessHorizontalSpace, boolean grabExcessVerticalSpace ) {
         Composite comboComposite = new Composite(composite, SWT.NONE);
         int horizontalAlignment = (grabExcessHorizontalSpace) ? SWT.FILL : SWT.LEFT;
         int verticalAlignment = (grabExcessVerticalSpace) ? SWT.FILL : SWT.LEFT;
         GridData gridData = new GridData(horizontalAlignment, verticalAlignment, grabExcessHorizontalSpace, grabExcessVerticalSpace);
         comboComposite.setLayoutData(gridData);
         GridLayout gridLayout = new GridLayout(1, true);
-        gridLayout.marginHeight = marginHeight;
-        gridLayout.marginWidth = marginWidth;
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
         comboComposite.setLayout(gridLayout);
         return comboComposite;
     }
     
     public static Composite create2ColumnComposite(Composite composite) {
-        Composite comboComposite = new Composite(composite, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
+        return create2ColumnComposite(composite, gridData);
+    }
+    
+    public static Composite create2ColumnComposite(Composite composite, GridData gridData) {
+        Composite comboComposite = new Composite(composite, SWT.NONE);
         comboComposite.setLayoutData(gridData);
         GridLayout gridLayout = new GridLayout(2, false);
         gridLayout.marginHeight = 0;
@@ -73,8 +77,8 @@ public final class CompositeCreator {
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         composite.setLayoutData(gridData);
         GridLayout gridLayout = new GridLayout(6, true);
-        gridLayout.marginHeight = 4;
-        gridLayout.marginWidth = 4;
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
         composite.setLayout(gridLayout);
         return composite;
     }
@@ -82,6 +86,8 @@ public final class CompositeCreator {
     public static SashForm createSplitComposite(Composite parent, int orientation) {
         SashForm container = new SashForm(parent, orientation);
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.grabExcessVerticalSpace = true;
         container.setLayoutData(gridData);
         container.setSashWidth(WIDTH_4);
         container.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
@@ -90,7 +96,7 @@ public final class CompositeCreator {
     
     public static ScrolledComposite createScrolledComposite(Composite parent) {
         ScrolledComposite scrolledComposite = new ScrolledComposite(parent, SWT.H_SCROLL );
-        scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
         scrolledComposite.setExpandHorizontal(true);
         scrolledComposite.setExpandVertical(true);
         return scrolledComposite;

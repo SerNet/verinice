@@ -120,7 +120,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     
     private static final int WEIGHT_40 = 40;
     private static final int WEIGHT_60 = 60;
-    
+    private static final int COMBO_WIDTH = 140;    
     private static final int WIDTH_SEARCH_FORM = 1060;
     private static final int HEIGHT_SEARCH_FORM = 60;
     
@@ -197,7 +197,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     }
 
     private void createRootComposite(Composite parent) {
-        Composite rootComposite = CompositeCreator.create1ColumnComposite(parent, 0, 0);
+        Composite rootComposite = CompositeCreator.create1ColumnComposite(parent);
         Composite topComposite =  CompositeCreator.create2ColumnComposite(rootComposite);
         
         createSearchComposite(topComposite);
@@ -222,13 +222,11 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
 
     private void createLoadButtonComposite(Composite parent) {
         // Load button
-        Composite buttonComposite = CompositeCreator.create1ColumnComposite(parent, 4, 4, true, true); 
-        GridData gridData = (GridData) buttonComposite.getLayoutData();
-        gridData.minimumWidth = 75;
-        buttonComposite.setLayoutData(gridData);
+        Composite buttonComposite = CompositeCreator.create1ColumnComposite(parent, false, true); 
         // create a dummy label
         new Label(buttonComposite, SWT.WRAP);  
         createButtonControls(buttonComposite);
+        buttonComposite.pack();
     }
 
     private Composite createSearchFormComposite(Composite parent) {
@@ -237,15 +235,19 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         // Group
         Label label = new Label(formComposite, SWT.WRAP);
         label.setText(Messages.TaskView_11);
+        setLayoutData(label, true);
         // Assignee
         label = new Label(formComposite, SWT.WRAP);
         label.setText(Messages.TaskView_12);
+        setLayoutData(label, true);
         // Process
         label = new Label(formComposite, SWT.WRAP);
-        label.setText(Messages.TaskView_13); 
+        label.setText(Messages.TaskView_13);
+        setLayoutData(label, true);
         // Task type
         label = new Label(formComposite, SWT.WRAP);
-        label.setText(Messages.TaskView_14);    
+        label.setText(Messages.TaskView_14);
+        setLayoutData(label, false);
         // Due date
         labelDateFrom = new Label(formComposite, SWT.WRAP);
         labelDateFrom.setText(Messages.TaskView_16);
@@ -265,12 +267,19 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         createDateToControls(formComposite);
         return formComposite;
     }
+
+    private void setLayoutData(Label label, boolean grabExcessHorizontalSpace) {    
+        GridData gridData = new GridData();
+        gridData.minimumWidth = COMBO_WIDTH;
+        gridData.grabExcessHorizontalSpace = grabExcessHorizontalSpace;
+        label.setLayoutData(gridData);
+    }
     
     public static Composite createInnerFormComposite(Composite parentComposite) {
         Composite composite = new Composite(parentComposite, SWT.NONE);
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         composite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(6, true);
+        GridLayout gridLayout = new GridLayout(6, false);
         gridLayout.marginHeight = 4;
         gridLayout.marginWidth = 4;
         composite.setLayout(gridLayout);
@@ -392,8 +401,9 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         });
     }
 
-    private void createDateFromControls(Composite searchComposite) {                   
-        Composite dateFromComposite = CompositeCreator.create2ColumnComposite(searchComposite); 
+    private void createDateFromControls(Composite searchComposite) {
+        GridData gridData = new GridData(SWT.LEFT, SWT.LEFT, false, false);
+        Composite dateFromComposite = CompositeCreator.create2ColumnComposite(searchComposite, gridData);       
         dateTimeFrom = new DateTime(dateFromComposite, SWT.DATE | SWT.DROP_DOWN);
         dateTimeFrom.setEnabled(false);
         labelDateFrom.setEnabled(false);  
@@ -416,10 +426,12 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                 extractDates();           
             }
         });
+        dateFromComposite.pack();
     }
     
-    private void createDateToControls(Composite searchComposite) {               
-        Composite dateToComposite = CompositeCreator.create2ColumnComposite(searchComposite);      
+    private void createDateToControls(Composite searchComposite) {
+        GridData gridData = new GridData(SWT.LEFT, SWT.LEFT, false, false);        
+        Composite dateToComposite = CompositeCreator.create2ColumnComposite(searchComposite, gridData);      
         dateTimeUntil = new DateTime(dateToComposite, SWT.DATE | SWT.DROP_DOWN);
         dateTimeUntil.setEnabled(false);
         labelDateUntil.setEnabled(false);
@@ -440,6 +452,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                 extractDates(); 
             }      
         });
+        dateToComposite.pack();
     }
     
     private void setDuedateFromLabel() {
