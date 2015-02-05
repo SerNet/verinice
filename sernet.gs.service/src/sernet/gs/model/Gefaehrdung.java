@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.scraper.GSScraper;
+
 
 public class Gefaehrdung implements IGSModel {
 	private Integer dbId;
@@ -64,6 +66,13 @@ public class Gefaehrdung implements IGSModel {
 	public static final String KAT_STRING_MENSCH 			= "Menschliche Fehlhandlungen";
 	public static final String KAT_STRING_TECHNIK 			= "Technisches Versagen";
 	public static final String KAT_STRING_VORSATZ 			= "Vorsätzliche Handlungen";
+	
+	public static final String KAT_STRING_EN_ALLGEMEIN        = "Basic threats"; 
+	public static final String KAT_STRING_EN_HOEHERE_GEWALT   = "Force majeure";
+	public static final String KAT_STRING_EN_ORG_MANGEL       = "Organisational shortcomings" ;
+	public static final String KAT_STRING_EN_MENSCH           = "Human error" ;
+	public static final String KAT_STRING_EN_TECHNIK          = "Tecnical failure";
+	public static final String KAT_STRING_EN_VORSATZ          = "Deliberate acts";
 
     public static final String TYPE_ID = "gefaehrdung";
 	
@@ -76,7 +85,7 @@ public class Gefaehrdung implements IGSModel {
 	
 	@Override
 	public String toString() {
-		return id + " "+ titel + " ["  + getKategorieAsString() + "]"; 
+		return id + " "+ titel + " ["  + getKategorieAsString(GSScraper.LANGUAGE_IDENTIFIER_GERMAN) + "]"; 
 	}
 	
 	@Override
@@ -131,21 +140,30 @@ public class Gefaehrdung implements IGSModel {
 		this.titel = titel;
 	}
 	
-	public String getKategorieAsString() {
-		switch (this.kategorie) {
-		case KAT_HOEHERE_GEWALT:
-			return KAT_STRING_HOEHERE_GEWALT;
-		case KAT_MENSCH:
-			return KAT_STRING_MENSCH;
-		case KAT_ORG_MANGEL:
-			return KAT_STRING_ORG_MANGEL;
-		case KAT_TECHNIK:
-			return KAT_STRING_TECHNIK;
-		case KAT_VORSATZ:
-			return KAT_STRING_VORSATZ;
-		}
-		return "";
+	public String getKategorieAsString(String language) {
+		return getLocalizedKategorie(this.kategorie, language);
 	}
+	
+	private String getLocalizedKategorie(int kat, String language){
+        if(GSScraper.CATALOG_LANGUAGE_ENGLISH.equals(language)){
+            switch(kat){
+            case KAT_HOEHERE_GEWALT: return KAT_STRING_EN_HOEHERE_GEWALT;
+            case KAT_MENSCH: return KAT_STRING_EN_MENSCH;
+            case KAT_ORG_MANGEL: return KAT_STRING_EN_ORG_MANGEL;
+            case KAT_TECHNIK: return KAT_STRING_EN_TECHNIK;
+            case KAT_VORSATZ: return KAT_STRING_EN_VORSATZ;
+            }
+        } else if(GSScraper.LANGUAGE_IDENTIFIER_GERMAN.equals(language)){
+               switch(kat){
+               case KAT_HOEHERE_GEWALT: return KAT_STRING_HOEHERE_GEWALT;
+               case KAT_MENSCH: return KAT_STRING_MENSCH;
+               case KAT_ORG_MANGEL: return KAT_STRING_ORG_MANGEL;
+               case KAT_TECHNIK: return KAT_STRING_TECHNIK;
+               case KAT_VORSATZ: return KAT_STRING_VORSATZ;                }    
+        }
+        return "";
+        
+    }
 	
 	
 	public void setUrl(String url) {

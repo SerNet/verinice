@@ -403,7 +403,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
 
 			if (obj instanceof Gefaehrdung) {
 				Gefaehrdung gef = (Gefaehrdung) obj;
-				return gef.getId() + " " + gef.getTitel() + " [" + gef.getKategorieAsString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				return gef.getId() + " " + gef.getTitel() + " [" + gef.getKategorieAsString(BSIKatalogInvisibleRoot.getInstance().getLanguage()) + "]"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 
 			return obj.toString();

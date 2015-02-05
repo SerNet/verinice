@@ -23,6 +23,7 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 
 /**
@@ -88,7 +89,7 @@ public class CheckboxTableViewerLabelProvider implements ITableLabelProvider {
 		case 3:
 			return gefaehrdung.getTitel();
 		case 4:
-			return gefaehrdung.getKategorieAsString();
+			return gefaehrdung.getKategorieAsString(BSIKatalogInvisibleRoot.getInstance().getLanguage());
 		}
 		return "";
 	}
