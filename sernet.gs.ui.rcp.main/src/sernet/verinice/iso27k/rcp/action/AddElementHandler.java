@@ -42,6 +42,7 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -129,7 +130,9 @@ public class AddElementHandler extends RightsEnabledHandler implements IElementU
                         LOG.error(Messages.getString("AddElement.17")); //$NON-NLS-1$
                     }
                     if(childType!=null) {
-                        newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, childType, null);                  
+                        boolean inheritIcon = Activator.getDefault().getPreferenceStore()
+                                .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
+                        newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, childType, null, inheritIcon);                  
                     }
                 }
                 if (newElement != null) {

@@ -52,7 +52,7 @@ public class AddITVerbundActionDelegate extends RightsEnabledActionDelegate impl
     public void doRun(IAction action) {
         try {
             CnATreeElement newElement = null;
-            newElement = CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null);
+            newElement = CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
             if (newElement != null) {
                 EditorFactory.getInstance().openEditor(newElement);
             }

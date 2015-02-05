@@ -132,7 +132,8 @@ public class GS2BSITransformService {
 			            saveNew = CnAElementFactory.getInstance().saveNew(group,
 			                    IncidentScenarioGroup.TYPE_ID,
 			                    new BuildInput<IncidentScenarioGroup>(newGroup),
-			                    false /* do not notify single elements*/);
+			                    false /* do not notify single elements*/, 
+			                    false /* do not inherit icon */);
 			            saveNew.setTitel(b.getId() + " " + b.getTitel());
 			            CnAElementHome.getInstance().updateEntity(saveNew);
 			            CnAElementFactory.getLoadedModel().childAdded(group,saveNew);
@@ -147,7 +148,8 @@ public class GS2BSITransformService {
                         saveNew = CnAElementFactory.getInstance().saveNew(group,
                                 ControlGroup.TYPE_ID,
                                 new BuildInput<ControlGroup>(newGroup),
-                                false /* do not notify single elements*/);
+                                false /* do not notify single elements*/,
+                                false /* do not inherit icon */);
                         saveNew.setTitel(b.getId() + " " + b.getTitel());
                         CnAElementHome.getInstance().updateEntity(saveNew);
                         CnAElementFactory.getLoadedModel().childAdded(group,saveNew);

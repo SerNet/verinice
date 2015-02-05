@@ -21,9 +21,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.ClientsKategorie;
 import sernet.verinice.model.common.CnATreeElement;
@@ -41,8 +43,10 @@ public class AddClientActionDelegate extends AbstractAddCnATreeElementActionDele
             Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
             CnATreeElement newElement = null;
             if (sel instanceof ClientsKategorie) {
+                boolean inheritIcon = Activator.getDefault().getPreferenceStore()
+                        .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
                 CnATreeElement cont = (CnATreeElement) sel;
-                newElement = CnAElementFactory.getInstance().saveNew(cont, Client.TYPE_ID, null);
+                newElement = CnAElementFactory.getInstance().saveNew(cont, Client.TYPE_ID, null, inheritIcon);
             }
             if (newElement != null) {
                 EditorFactory.getInstance().openEditor(newElement);

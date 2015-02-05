@@ -112,7 +112,8 @@ public class CopyBausteineService {
 					saveNew = CnAElementFactory.getInstance().saveNew(target,
 							BausteinUmsetzung.TYPE_ID,
 							new BuildInput<Baustein>(baustein),
-							false /* do not notify single elements*/);
+							false /* do not notify single elements*/, 
+							false /* do not inherit icon */);
 				} catch (Exception e) {
 					log.error(Messages.getString("PasteBsiModelViewAction.5"), e); //$NON-NLS-1$
 				}	

@@ -106,6 +106,7 @@ import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CreateAnwendung;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.CreateITVerbund;
+import sernet.verinice.service.commands.UpdateElement;
 import sernet.verinice.service.iso27k.LoadModel;
 
 /**
@@ -927,17 +928,17 @@ public final class CnAElementFactory {
 		}
 		if (createChildren) {
 			CnAElementFactory.getInstance().saveNew(child, AssetGroup.TYPE_ID,
-					null);
+					null, false);
 			CnAElementFactory.getInstance().saveNew(child,
-					ControlGroup.TYPE_ID, null);
+					ControlGroup.TYPE_ID, null, false);
 			CnAElementFactory.getInstance().saveNew(child, PersonGroup.TYPE_ID,
-					null);
+					null, false);
 			CnAElementFactory.getInstance().saveNew(child,
-					FindingGroup.TYPE_ID, null);
+					FindingGroup.TYPE_ID, null, false);
 			CnAElementFactory.getInstance().saveNew(child,
-					EvidenceGroup.TYPE_ID, null);
+					EvidenceGroup.TYPE_ID, null, false);
 			CnAElementFactory.getInstance().saveNew(child,
-					InterviewGroup.TYPE_ID, null);
+					InterviewGroup.TYPE_ID, null, false);
 		}
 		return child;
 	}
@@ -952,7 +953,7 @@ public final class CnAElementFactory {
 	 */
 	@SuppressWarnings({WARNING_RAWTYPES, WARNING_UNCHECKED})
 	public CnATreeElement saveNew(CnATreeElement container,
-			String buildableTypeId, BuildInput input, boolean fireUpdates)
+			String buildableTypeId, BuildInput input, boolean fireUpdates, boolean inheritIcon)
 			throws CnATreeElementBuildException, CommandException {
 		IElementBuilder builder = elementbuilders.get(buildableTypeId);
 		if (builder == null) {
@@ -963,6 +964,11 @@ public final class CnAElementFactory {
 		}
 		CnATreeElement child = builder.build(container, input);
 
+		if(inheritIcon){
+		    child = inheritIcon(container.getIconPath(), container.getTypeId(), inheritIcon, child);
+		    CnAElementFactory.getModel(container).childChanged(child);
+		}
+
 		// notify all listeners:
 		if (fireUpdates) {
 			CnAElementFactory.getModel(child).childAdded(container, child);
@@ -971,10 +977,27 @@ public final class CnAElementFactory {
 		return child;
 	}
 
+
+    private CnATreeElement inheritIcon(String iconPath, String containerTypeId, boolean inheritIcon, CnATreeElement child) throws CommandException {
+        if(inheritIcon && !(ITVerbund.TYPE_ID.equals(containerTypeId) ||
+		        Organization.TYPE_ID.equals(containerTypeId) ||
+		        Audit.TYPE_ID.equals(containerTypeId))){
+            child.setIconPath(iconPath);
+            Activator.inheritVeriniceContextState();
+            UpdateElement<CnATreeElement> updateCommand = new UpdateElement<CnATreeElement>(child, false, ChangeLogEntry.STATION_ID);
+            getCommandService().executeCommand(updateCommand);
+            if(log.isDebugEnabled()){
+                log.debug("IconPath of containerElement:\t" + iconPath);
+                log.debug("IconPath of child (after setter was called):\t" + child.getIconPath());
+            }
+		}
+        return child;
+    }
+
 	@SuppressWarnings(WARNING_RAWTYPES)
 	public CnATreeElement saveNew(CnATreeElement container,
-			String buildableTypeId, BuildInput input) throws CommandException, CnATreeElementBuildException {
-		return saveNew(container, buildableTypeId, input, true);
+			String buildableTypeId, BuildInput input, boolean inheritIcon) throws CommandException, CnATreeElementBuildException {
+		return saveNew(container, buildableTypeId, input, true, inheritIcon);
 	}
 
 	public static BSIModel getLoadedModel() {
@@ -1130,7 +1153,7 @@ public final class CnAElementFactory {
 		createBausteinVorschlaege();
 
 		loadedModel = dbHome.save(loadedModel);
-		ITVerbund verbund = (ITVerbund)CnAElementFactory.getInstance().saveNew(loadedModel, ITVerbund.TYPE_ID, null);
+		ITVerbund verbund = (ITVerbund)CnAElementFactory.getInstance().saveNew(loadedModel, ITVerbund.TYPE_ID, null, false);
 		loadedModel.addChild(verbund);
 
 		fireLoad();

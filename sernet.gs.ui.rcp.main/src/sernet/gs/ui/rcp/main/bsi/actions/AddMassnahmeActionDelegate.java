@@ -21,9 +21,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -40,8 +42,10 @@ public class  AddMassnahmeActionDelegate extends AddModulandMethodActionDelegate
             Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
 
                 if (sel instanceof CnATreeElement) {
+                    boolean inheritIcon = Activator.getDefault().getPreferenceStore()
+                            .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
                 CnATreeElement parent = (CnATreeElement) sel;
-                CnATreeElement  newMassnahme = CnAElementFactory.getInstance().saveNew(parent, MassnahmenUmsetzung.TYPE_ID, null);
+                CnATreeElement  newMassnahme = CnAElementFactory.getInstance().saveNew(parent, MassnahmenUmsetzung.TYPE_ID, null, inheritIcon);
                 
                 EditorFactory.getInstance().openEditor(newMassnahme);
             }

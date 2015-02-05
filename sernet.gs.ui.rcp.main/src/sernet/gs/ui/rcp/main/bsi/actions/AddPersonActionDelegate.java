@@ -21,9 +21,11 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.common.CnATreeElement;
@@ -43,7 +45,9 @@ public class AddPersonActionDelegate extends AbstractAddCnATreeElementActionDele
             CnATreeElement newElement = null;
             if (sel instanceof PersonenKategorie) {
                 PersonenKategorie kat = (PersonenKategorie) sel;
-                newElement = CnAElementFactory.getInstance().saveNew(kat, Person.TYPE_ID, null);
+                boolean inheritIcon = Activator.getDefault().getPreferenceStore()
+                        .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
+                newElement = CnAElementFactory.getInstance().saveNew(kat, Person.TYPE_ID, null, inheritIcon);
             }
 
             if (newElement != null) {

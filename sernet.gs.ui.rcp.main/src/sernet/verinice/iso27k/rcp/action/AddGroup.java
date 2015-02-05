@@ -31,12 +31,14 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -141,7 +143,9 @@ public class AddGroup extends Action implements IObjectActionDelegate, RightEnab
     						currentType = ControlGroup.TYPE_ID;
     	                }
     			    }
-    				newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent, currentType, null);		
+    		        boolean inheritIcon = Activator.getDefault().getPreferenceStore()
+    		                .getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);    			    
+    				newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) parent, currentType, null, inheritIcon);		
     			}
     			if (newElement != null) {
     				EditorFactory.getInstance().openEditor(newElement);

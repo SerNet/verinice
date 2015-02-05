@@ -92,8 +92,11 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		BooleanFieldEditor useValidationGuiHints = new BooleanFieldEditor(PreferenceConstants.USE_VALIDATION_GUI_HINTS, Messages.getString("GeneralSettingsPage.UseValidationGuiHints"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(useValidationGuiHints);
 		
-		BooleanFieldEditor useAutomaticValidation = new BooleanFieldEditor(PreferenceConstants.USE_AUTOMATIC_VALIDATION, Messages.getString("GeneralSettingsPage.UseValidationAlways"), getFieldEditorParent());
+		BooleanFieldEditor useAutomaticValidation = new BooleanFieldEditor(PreferenceConstants.USE_AUTOMATIC_VALIDATION, Messages.getString("GeneralSettingsPage.UseValidationAlways"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(useAutomaticValidation);
+		
+		BooleanFieldEditor inheritSpecialIcon = new BooleanFieldEditor(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON, Messages.getString("GeneralSettingsPage.InheritSpecialIcon"), getFieldEditorParent()); //$NON-NLS-1$
+		addField(inheritSpecialIcon);
 		
 		ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$

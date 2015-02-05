@@ -91,7 +91,7 @@ public class AddAction extends Action implements ISelectionListener {
             CnATreeElement group = this.groupView.getGroupToAdd();
             if (group != null) {
                 group = Retriever.retrieveElement(group, new RetrieveInfo().setProperties(true).setChildren(true).setParent(true));
-                newElement = CnAElementFactory.getInstance().saveNew(group, this.objectTypeId, null);
+                newElement = CnAElementFactory.getInstance().saveNew(group, this.objectTypeId, null, false);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("New element - type: " + newElement.getObjectType() + ", title: " + newElement.getTitle() + ", group: " + group.getTitle()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 }

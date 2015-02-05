@@ -163,7 +163,7 @@ public class GSMBausteinZuordnungAction extends RightsEnabledAction implements I
                     // assign baustein to every selected target object:
                     if (!serverelement.containsBausteinUmsetzung(baustein.getId())) {
                         try {
-                            CnAElementFactory.getInstance().saveNew(serverelement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein));
+                            CnAElementFactory.getInstance().saveNew(serverelement, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein), false);
                         } catch (Exception e) {
                             LOG.error("Error by saving.", e);
                             throw new RuntimeException(e);

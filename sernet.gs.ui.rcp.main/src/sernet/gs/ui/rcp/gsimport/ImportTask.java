@@ -235,7 +235,7 @@ public class ImportTask {
         for (ZielobjektTypeResult result : zielobjekte) {
             try{
                 if (ITVerbund.TYPE_ID.equals(ImportZielobjektTypUtil.translateZielobjektType(result.type, result.subtype))) {
-                    ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null);
+                    ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
                     neueVerbuende.add(itverbund);
                     monitor.worked(1);
 

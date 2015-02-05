@@ -143,7 +143,8 @@ public class BSIModelViewDropPerformer implements DropPerformer, RightEnabledUse
 			saveNew = CnAElementFactory.getInstance().saveNew(target,
 					BausteinUmsetzung.TYPE_ID,
 					new BuildInput<Baustein>(baustein),
-					false /* do not notify single elements*/);
+					false /* do not notify single elements*/,
+					false /* do not inherit icon */);
 		}
 		// notifying for the last element is sufficient to update all views:
 		CnAElementFactory.getLoadedModel().childAdded(target,saveNew);

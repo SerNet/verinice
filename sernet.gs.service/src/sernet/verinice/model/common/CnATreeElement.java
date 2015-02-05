@@ -269,7 +269,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     protected void inherit(CnATreeElement parent) {
         if (parent != null) {
             inheritScopeId(parent);
-            inheritIcon(parent);
         }
     }
 

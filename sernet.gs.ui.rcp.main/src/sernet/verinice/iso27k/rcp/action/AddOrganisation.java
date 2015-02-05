@@ -60,7 +60,7 @@ public class AddOrganisation extends RightsEnabledActionDelegate implements IVie
 		    Activator.inheritVeriniceContextState();
 		    if(checkRights()){
     			CnATreeElement newElement=null;	
-    			newElement = CnAElementFactory.getInstance().saveNew(CnAElementFactory.getInstance().getISO27kModel(), Organization.TYPE_ID, null);
+    			newElement = CnAElementFactory.getInstance().saveNew(CnAElementFactory.getInstance().getISO27kModel(), Organization.TYPE_ID, null, false);
     			if (newElement != null) {
     				EditorFactory.getInstance().openEditor(newElement);
     			}

@@ -38,6 +38,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.NotSufficientRightsException;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
@@ -60,8 +62,6 @@ import sernet.verinice.model.iso27k.RequirementGroup;
 import sernet.verinice.model.iso27k.ResponseGroup;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -124,7 +124,7 @@ public class AddElement implements IObjectActionDelegate, RightEnabledUserIntera
     					LOG.error(Messages.getString("AddElement.17")); //$NON-NLS-1$
     				}
     				if(childType!=null) {
-    				    newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, childType, null);           		
+    				    newElement = CnAElementFactory.getInstance().saveNew((CnATreeElement) group, childType, null, false);           		
     				}
     			}
     			if (newElement != null) {
