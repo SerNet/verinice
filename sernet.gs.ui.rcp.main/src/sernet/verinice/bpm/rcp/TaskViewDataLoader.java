@@ -178,6 +178,7 @@ public class TaskViewDataLoader {
     }
     
     void loadAssignees() {
+        taskView.comboModelAccount.clear();
         taskView.comboModelAccount.addAll(AccountLoader.loadAccounts());
         taskView.comboModelAccount.addNoSelectionObject(Messages.TaskView_20);
         TaskView.getDisplay().syncExec(new Runnable(){
