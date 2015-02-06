@@ -160,7 +160,7 @@
             <set>
                 <value>icf.trans.reminderDeadline</value>
                 <value>indi.trans.reminderDeadline</value>
-                <value>gsm.ism.execute.trans.reminder</value>
+                <value>gsm.ism.execute.trans.autocomplete</value>
                 <value>timeout</value>
             </set>
         </property>

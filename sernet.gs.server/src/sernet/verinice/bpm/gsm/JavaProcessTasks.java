@@ -23,7 +23,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.springframework.security.context.SecurityContext;
+import org.springframework.security.context.SecurityContextHolder;
 
+import sernet.gs.server.security.DummyAuthentication;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.bpm.BaseJavaProcessTasks;
 import sernet.verinice.interfaces.bpm.IGsmIsmExecuteProzess;
@@ -39,6 +42,8 @@ public class JavaProcessTasks extends BaseJavaProcessTasks {
 
     private static final Logger LOG = Logger.getLogger(JavaProcessTasks.class);
     
+    private DummyAuthentication authentication = new DummyAuthentication(); 
+    
     private IGsmService gsmService; 
     
     /**
@@ -47,6 +52,26 @@ public class JavaProcessTasks extends BaseJavaProcessTasks {
      * @param executionId
      */
     public void deleteAssetScenarioLinks(String executionId) {
+        // JavaProcessTasks can not do a real login
+        // authentication is a fake instance to run secured commands and dao actions
+        // without a login
+        boolean dummyAuthAdded = false;
+        SecurityContext ctx = SecurityContextHolder.getContext(); 
+        try {                    
+            if(ctx.getAuthentication()==null) {
+                ctx.setAuthentication(authentication);
+                dummyAuthAdded = true;
+            }
+            doDeleteAssetScenarioLinks(executionId);
+        } finally {
+            if(dummyAuthAdded) {
+                ctx.setAuthentication(null);
+                dummyAuthAdded = false;
+            }
+        }
+    }
+
+    private void doDeleteAssetScenarioLinks(String executionId) {
         Map<String, Object> processVars = loadVariablesForProcess(executionId);
                 
         Object value = processVars.get(IGsmIsmExecuteProzess.VAR_ELEMENT_UUID_SET);
