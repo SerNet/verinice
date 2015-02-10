@@ -70,9 +70,8 @@
 														<h:outputText rendered="#{p.isURL}" value="#{msgEdit['document.URLValue']}"/>
 													</td>
 													<td>
-														<p:inputText value="#{p.URLValue}" rendered="#{p.isLine and p.isEditable and p.isURL}" style="width:450px">
-															<p:ajax event="blur" update=":editForm"/>
-														</p:inputText>
+														<p:inputText value="#{p.URLValue}" rendered="#{p.isLine and p.isEditable and p.isURL}" style="width:450px"/>
+															
 													</td>
 												</tr>
 												<tr>
@@ -80,19 +79,24 @@
 														<h:outputText rendered="#{p.isURL}" value="#{msgEdit['document.URLText']}"/>
 													</td>								
 													<td>
-														<p:inputText value="#{p.URLText}" rendered="#{p.isLine and p.isEditable and p.isURL}" style="width:450px">
-															<p:ajax event="blur" update=":editForm"/>
-														</p:inputText>	
+														<p:inputText value="#{p.URLText}" rendered="#{p.isLine and p.isEditable and p.isURL}" style="width:450px"/>
 													</td>
 												</tr>
 												<tr>
 													<td>
 														
 													</td>
-													<td style="text-align:right">
-														<div>#{msgEdit['document.updateNote']}</div>
-													</td>
-												</tr>									
+												<td style="text-align: right">
+													<p:commandButton
+														value="#{msgEdit['save']}"
+														action="#{edit.save}" styleClass="button"
+														update=":editForm :tableForm" /> 
+													<p:remoteCommand
+														name="submitEditForm" process="@form"
+														update=":editForm :tableForm :navForm"
+														action="#{edit.save}" />
+												</td>
+											</tr>									
 										</table>
 										</p:panel>								
 									</td>
