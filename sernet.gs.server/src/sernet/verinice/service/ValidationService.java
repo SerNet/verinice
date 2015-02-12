@@ -116,6 +116,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public List<CnAValidation> getValidations(Integer scopeId) {
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.scopeId = ?";
         return getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{scopeId});
     }
@@ -130,6 +131,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public List<CnAValidation> getValidations(Integer scopeId, Integer cnaId) {
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = VALIDATION_SQL_SELECT_BASE;
         ArrayList<Object> paramList = new ArrayList<Object>(0);
         if(cnaId != null && scopeId == null){
@@ -148,6 +150,7 @@ public class ValidationService implements IValidationService {
 
     @Override
     public List<CnAValidation> getValidations(Integer elmtDbId, String propertyType){
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = VALIDATION_SQL_SELECT_BASE +
         		" validation.elmtDbId = ? AND " +
         		"validation.propertyId = ?";
@@ -160,6 +163,7 @@ public class ValidationService implements IValidationService {
     
     @Override
     public boolean isValidationExistant(Integer elmtDbId, String propertyType, String hintID, Integer scopeId){
+        ServerInitializer.inheritVeriniceContextState();
         if(scopeId != null && elmtDbId != null){
             String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
                     " AND validation.propertyId = ?" +
@@ -173,11 +177,13 @@ public class ValidationService implements IValidationService {
     }
     
     public boolean isValidationExistant(CnAValidation validation){
+        ServerInitializer.inheritVeriniceContextState();
         return isValidationExistant(validation.getDbId(), validation.getPropertyId(), validation.getHintId(), validation.getScopeId());
     }
     
     @Override
     public boolean isValidationExistant(Integer elmtDbId, String propertyType) {
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
                 " AND validation.propertyId = ?";
         return getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, propertyType}).size() > 0;
@@ -220,6 +226,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public CnAValidation deleteValidation(Integer elmtDbId, String propertyType, String hintID, Integer scopeId) {
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
                 " AND validation.propertyId = ? " +
                 "AND validation.hintId = ?"+ 
@@ -287,6 +294,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public CnAValidation deleteValidation(Integer elmtDbId, String propertyType, Integer scopeId) {
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
                 " AND validation.propertyId = ? " + 
                 " AND validation.scopeId = ?";
@@ -297,6 +305,7 @@ public class ValidationService implements IValidationService {
     
     @Override
     public CnAValidation deleteValidation(CnAValidation validation){
+        ServerInitializer.inheritVeriniceContextState();
         getCnaValidationDAO().delete(validation);
         return validation;
     }
@@ -306,6 +315,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public CnAValidation getValidation(Integer cnaDbId, String propertyType, String hint, Integer scopeId) {
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
                 " AND validation.propertyId = ? " +
                 "AND validation.hintId = ?"+ 
@@ -318,6 +328,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public void createValidationsForScope(Integer scope) throws CommandException{
+        ServerInitializer.inheritVeriniceContextState();
         LoadScopeElementsById command = new LoadScopeElementsById(scope);
         command = getCommandService().executeCommand(command);
         List<CnATreeElement> filteredList = new ArrayList<CnATreeElement>(0);
@@ -334,6 +345,7 @@ public class ValidationService implements IValidationService {
     
     @Override
     public void createValidationsForSubTree(CnATreeElement elmt) throws CommandException{
+        ServerInitializer.inheritVeriniceContextState();
         if(Hibernate.isInitialized(elmt) || !elmt.isChildrenLoaded()){
             elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setChildren(true).setChildrenProperties(true).setProperties(true));
             elmt.setChildrenLoaded(true);
@@ -354,6 +366,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public void updateValidations(Integer scopeId, Integer elmtDbId,  String title) {
+        ServerInitializer.inheritVeriniceContextState();
         for(CnAValidation validation : getValidations(scopeId, elmtDbId)){
             validation.setElmtTitle(truncateString(title, MAXLENGTH_DBSTRING));
             getCnaValidationDAO().saveOrUpdate(validation); 
@@ -365,6 +378,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public void deleteValidations(Integer scopeId, Integer elmtDbId) {
+        ServerInitializer.inheritVeriniceContextState();
         String hqlQuery = VALIDATION_SQL_SELECT_BASE + " validation.elmtDbId = ?" +
                 " AND validation.scopeId = ?";
         for(CnAValidation validation : (List<CnAValidation>)getCnaValidationDAO().findByQuery(hqlQuery, new Object[]{elmtDbId, scopeId})){
@@ -379,6 +393,8 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public List<String> getPropertyTypesToValidate(Entity entity, Integer dbid) {
+        
+        ServerInitializer.inheritVeriniceContextState();
         
         List<String> failedValidationPropertyTypes = new ArrayList<String>(0);
         for(Object pElement : getHuiTypeFactory().getEntityType(entity.getEntityType()).getAllPropertyTypes()){
@@ -403,6 +419,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public void deleteValidationsOfSubtree(CnATreeElement elmt) {
+        ServerInitializer.inheritVeriniceContextState();
         if(!Hibernate.isInitialized(elmt) || !elmt.isChildrenLoaded()){
             elmt = Retriever.retrieveElement(elmt, new RetrieveInfo().setChildren(true).setChildrenProperties(true).setProperties(true));
         }
@@ -420,6 +437,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public void createValidationByUuid(String uuid) throws CommandException{
+        ServerInitializer.inheritVeriniceContextState();
         LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(uuid, new RetrieveInfo().setProperties(true));
         elementLoader = getCommandService().executeCommand(elementLoader);
         createValidationForSingleElement(elementLoader.getElement());
@@ -429,6 +447,7 @@ public class ValidationService implements IValidationService {
      */
     @Override
     public void createValidationsForSubTreeByUuid(String uuid) throws CommandException {
+        ServerInitializer.inheritVeriniceContextState();
         LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(uuid, new RetrieveInfo().setProperties(true).setChildren(true));
         elementLoader = getCommandService().executeCommand(elementLoader);
         createValidationsForSubTree(elementLoader.getElement());
