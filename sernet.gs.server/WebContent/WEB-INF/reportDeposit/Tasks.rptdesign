@@ -2277,11 +2277,11 @@ columns(cols);</value>
             </list-property>
             <structure name="toc"/>
             <column id="3389">
-                <property name="width">0.7083333333333334in</property>
+                <property name="width">1in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3353">
-                <property name="width">0.71875in</property>
+                <property name="width">0.4270833333333333in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3354">
@@ -2297,10 +2297,6 @@ columns(cols);</value>
                 <property name="repeat">1</property>
             </column>
             <column id="3355">
-                <property name="width">0.96875in</property>
-                <property name="repeat">1</property>
-            </column>
-            <column id="3394">
                 <property name="width">0.96875in</property>
                 <property name="repeat">1</property>
             </column>
@@ -2326,12 +2322,6 @@ columns(cols);</value>
                 <property name="textAlign">center</property>
             </column>
             <column id="3360">
-                <property name="width">0.8541666666666666in</property>
-            </column>
-            <column id="3367">
-                <property name="width">0.8541666666666666in</property>
-            </column>
-            <column id="3372">
                 <property name="width">0.8541666666666666in</property>
             </column>
             <header>
@@ -2371,13 +2361,6 @@ columns(cols);</value>
                             <text-property name="text">Description</text-property>
                         </label>
                     </cell>
-                    <cell id="3392">
-                        <label id="3395">
-                            <property name="marginLeft">0pt</property>
-                            <property name="textAlign">left</property>
-                            <text-property name="text">Maturity Level</text-property>
-                        </label>
-                    </cell>
                     <cell id="3281">
                         <label id="3282">
                             <property name="marginLeft">0pt</property>
@@ -2409,17 +2392,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="3305">
                         <label id="3306">
-                            <text-property name="text">Audit Uuid</text-property>
-                        </label>
-                    </cell>
-                    <cell id="3365">
-                        <label id="3368">
-                            <text-property name="text">Findings</text-property>
-                        </label>
-                    </cell>
-                    <cell id="3370">
-                        <label id="3373">
-                            <text-property name="text">Measures</text-property>
+                            <text-property name="text">Object Uuid</text-property>
                         </label>
                     </cell>
                 </row>
@@ -2487,11 +2460,6 @@ columns(cols);</value>
                     <cell id="3322">
                         <data id="3386">
                             <property name="resultSetColumn">Description</property>
-                        </data>
-                    </cell>
-                    <cell id="3393">
-                        <data id="3396">
-                            <property name="resultSetColumn">MajurityLevel</property>
                         </data>
                     </cell>
                     <cell id="3308">
@@ -2631,19 +2599,8 @@ function formatLongDate(inputDate){
                         </data>
                     </cell>
                     <cell id="3332">
-                        <data id="3333">
-                            <property name="marginRight">0pt</property>
-                            <property name="resultSetColumn">auditUuid</property>
-                        </data>
-                    </cell>
-                    <cell id="3366">
-                        <data id="3374">
-                            <property name="resultSetColumn">finding</property>
-                        </data>
-                    </cell>
-                    <cell id="3371">
-                        <data id="3375">
-                            <property name="resultSetColumn">measure</property>
+                        <data id="3398">
+                            <property name="resultSetColumn">CnaUuid</property>
                         </data>
                     </cell>
                 </row>
