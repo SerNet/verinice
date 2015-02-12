@@ -48,7 +48,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportTemplateService.OutputFormat;
@@ -312,6 +314,10 @@ public class AddReportToDepositDialog extends TitleAreaDialog {
     
     public void selectTemplateFile() {
         FileDialog dlg = new FileDialog(getParentShell(), SWT.SELECTED);
+        String defaultTemplatePath = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.DEFAULT_TEMPLATE_FOLDER_REPORT); 
+        if(defaultTemplatePath != null && !defaultTemplatePath.isEmpty()){
+            dlg.setFilterPath(defaultTemplatePath);
+        }
         ArrayList<String> extensionList = new ArrayList<String>();
         extensionList.add("*.rptdesign"); //$NON-NLS-1$
         extensionList.add("*.*"); //$NON-NLS-1$
