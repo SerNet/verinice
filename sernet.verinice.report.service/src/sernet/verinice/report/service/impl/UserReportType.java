@@ -192,14 +192,4 @@ public class UserReportType implements IReportType {
     public void createReport(ReportTemplateMetaData report) {
         // nothing here
     }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.report.IReportType#getTaskErrors()
-     */
-    @Override
-    public List<Exception> getTaskErrors() {
-        return new ArrayList<Exception>(0);
-    }
-
-
 }
