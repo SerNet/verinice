@@ -32,6 +32,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -91,7 +92,9 @@ public class ConfigurationService implements IConfigurationService {
                 if(person!=null) {
                     person = getCnaTreeElementDao().findByUuid(person.getUuid(), RetrieveInfo.getPropertyInstance());
                     if(person!=null) {
-                        nameMap.put(user, person.getTitle());  
+                        StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(person));
+                        sb.append(" [").append(c.getUser()).append("]");
+                        nameMap.put(user, sb.toString());  
                     }
                 }
             }

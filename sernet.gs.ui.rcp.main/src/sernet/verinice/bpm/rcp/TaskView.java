@@ -94,6 +94,7 @@ import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -309,9 +310,9 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         layout.addColumnData(new ColumnWeightData(192, 192, true));
         layout.addColumnData(new ColumnWeightData(350, 350, true));
         layout.addColumnData(new ColumnWeightData(130, 130, true));
-        layout.addColumnData(new ColumnWeightData(138, 138, true));
-        layout.addColumnData(new ColumnWeightData(82, 82, true));
-        layout.addColumnData(new ColumnWeightData(86, 86, true));
+        layout.addColumnData(new ColumnWeightData(110, 110, true));
+        layout.addColumnData(new ColumnWeightData(120, 120, true));
+        layout.addColumnData(new ColumnWeightData(76, 76, true));
 
         getTable().setLayout(layout);
 
@@ -354,7 +355,9 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         comboModelAccount = new ComboModel<Configuration>(new ComboModelLabelProvider<Configuration>() {
             @Override
             public String getLabel(Configuration account) {
-                return account.getUser();
+                StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(account.getPerson()));
+                sb.append(" [").append(account.getUser()).append("]");
+                return sb.toString();
             }
         });  
         comboAccount = createComboBox(searchComposite);     
