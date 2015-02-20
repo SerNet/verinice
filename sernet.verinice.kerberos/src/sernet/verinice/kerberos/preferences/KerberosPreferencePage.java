@@ -27,6 +27,7 @@ import static sernet.verinice.kerberos.preferences.Messages.KerberosPreferencePa
 import static sernet.verinice.kerberos.preferences.Messages.KerberosPreferencePage_6;
 import static sernet.verinice.kerberos.preferences.Messages.KerberosPreferencePage_7;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -53,6 +54,8 @@ import sernet.verinice.kerberos.Activator;
  *
  */
 public class KerberosPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+
+    private static Logger LOG = Logger.getLogger(KerberosPreferencePage.class);
 
     private StringFieldEditor aDServiceName;
 
@@ -99,12 +102,7 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
         boolean status = super.performOk();
 
         if (activate.getBooleanValue() != initialKerberosStatus || !initialADServiceName.equals(aDServiceName.getStringValue())) {
-            MessageDialog mDialog = new MessageDialog(Display.getDefault().getActiveShell(), KerberosPreferencePage_4, null, KerberosPreferencePage_5, MessageDialog.QUESTION, new String[] { KerberosPreferencePage_6, KerberosPreferencePage_7 }, 1); //$NON-NLS-1$ //$NON-NLS-2$
-
-            int result = mDialog.open();
-            if (result == 1) {
-                Workbench.getInstance().restart();
-            }
+            restartMessageDialog();
         }
 
         return status;
@@ -117,4 +115,41 @@ public class KerberosPreferencePage extends FieldEditorPreferencePage implements
         noDefaultAndApplyButton();
     }
 
+    public void restartMessageDialog() {
+        Thread restart = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(50L);
+                } catch (InterruptedException e) {
+                    LOG.error("error while storing ad sso configuration occured.", e);
+                }
+                getDisplay().syncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        MessageDialog mDialog = new MessageDialog(Display.getDefault().getActiveShell(), KerberosPreferencePage_4, null, KerberosPreferencePage_5, MessageDialog.QUESTION, new String[] { KerberosPreferencePage_6, KerberosPreferencePage_7 }, 1); //$NON-NLS-1$ //$NON-NLS-2$
+
+                        int result = mDialog.open();
+                        if (result == 1) {
+                            Workbench.getInstance().restart();
+                        }
+                    }
+                });
+
+            }
+        });
+
+        restart.start();
+
+    }
+
+    static Display getDisplay() {
+        Display display = Display.getCurrent();
+        // may be null if outside the UI thread
+        if (display == null) {
+            display = Display.getDefault();
+        }
+        return display;
+    }
 }
