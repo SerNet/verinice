@@ -49,8 +49,6 @@ public class KerberosExecuter extends AbstractExecuter {
         super.init();
     }
 
-   
-
     @Override
     protected void validateResponse(HttpInvokerClientConfiguration config, PostMethod postMethod) throws IOException {
 
@@ -64,16 +62,24 @@ public class KerberosExecuter extends AbstractExecuter {
 
         if (postMethod.getStatusCode() == 401) {
 
-            if (isClientTokenInit) {
+            if (isSendingKeepAlive(postMethod)) {
                 updateClientToken(postMethod);
             } else {
                 initClientToken();
             }
-
-            LOG.info("client token: " + clientToken);
         } else {
             super.validateResponse(config, postMethod);
         }
+
+        LOG.info("client token: " + clientToken);
+    }
+
+    private boolean isSendingKeepAlive(PostMethod postMethod) {
+
+        return (postMethod.getResponseHeader(WWW_AUTHENTICATE) != null
+                && postMethod.getResponseHeader(WWW_AUTHENTICATE).getValue().toUpperCase().startsWith(SECURITY_PACKAGE + " ")
+                && postMethod.getResponseHeader("keep-alive") != null
+                && postMethod.getResponseHeader("keep-alive").getValue().equalsIgnoreCase("Connection"));
     }
 
     private void updateClientToken(PostMethod postMethod) {
@@ -98,7 +104,6 @@ public class KerberosExecuter extends AbstractExecuter {
      */
     private void initClientToken() {
         clientToken = kerberosTicketService.getClientToken();
-        isClientTokenInit = true;
     }
 
     @Override
