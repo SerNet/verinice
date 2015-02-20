@@ -85,7 +85,7 @@ final class CompleteTaskAction extends Action {
     }
     
     protected void completeTask(final TaskInformation task, String outcomeId) {
-        CompleteTaskJob job = new CompleteTaskJob(task, outcomeId);
+        CompleteTaskJob job = new CompleteTaskJob(task, outcomeId, taskView.getSite().getShell());
         job.addListener(new IThreadCompleteListener() {         
             @Override
             public void notifyOfThreadComplete(Thread thread) {

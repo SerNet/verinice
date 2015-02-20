@@ -23,6 +23,7 @@ package sernet.verinice.bpm.rcp;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
@@ -48,15 +49,17 @@ final class CompleteTaskJob extends NotifyingThread {
    
     private TaskInformation task;
     private String outcomeId;
+    private Shell shell;
     
     public CompleteTaskJob() {
         super();
     }
 
-    public CompleteTaskJob(TaskInformation task, String outcomeId) {
+    public CompleteTaskJob(TaskInformation task, String outcomeId, Shell shell) {
         super();
         this.task = task;
         this.outcomeId = outcomeId;
+        this.shell = shell;
     }
 
 
@@ -96,7 +99,7 @@ final class CompleteTaskJob extends NotifyingThread {
     }
     
     private Shell getShell() {
-        return PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+        return shell;
     }
 
 }
