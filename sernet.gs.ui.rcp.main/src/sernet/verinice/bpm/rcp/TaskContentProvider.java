@@ -67,7 +67,6 @@ public class TaskContentProvider implements IStructuredContentProvider {
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     public void dispose() {
-        // empty
     }
 
     /* (non-Javadoc)
@@ -78,15 +77,23 @@ public class TaskContentProvider implements IStructuredContentProvider {
             this.taskList =  (List<ITask>) newInput;
         }
     }
+
+    private boolean isViewerActive() {
+        return viewer != null && !viewer.getControl().isDisposed();
+    }
     
-    public void removeTask(final ITask task) {
+    public void removeTask(final ITask task) {    
         Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
                 taskList.remove(task);
-                viewer.remove(task);
-                viewer.refresh();
+                if (isViewerActive()) {
+                    viewer.remove(task);
+                    viewer.refresh();
+                }              
             }
+
+            
         });
     }
     

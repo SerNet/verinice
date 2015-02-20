@@ -19,13 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 
 import sernet.gs.service.NotifyingThread;
 import sernet.gs.ui.rcp.main.Activator;
@@ -40,7 +38,7 @@ import sernet.verinice.interfaces.bpm.ITaskParameter;
  * @see sernet.verinice.bpm.rcp.TaskView
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-final class LoadTaskJob extends NotifyingThread implements IRunnableWithProgress { 
+final class LoadTaskJob extends NotifyingThread { 
     
     private static final Logger LOG = Logger.getLogger(LoadTaskJob.class);
     
@@ -54,14 +52,6 @@ final class LoadTaskJob extends NotifyingThread implements IRunnableWithProgress
     public LoadTaskJob(ITaskParameter param) {
         super();
         this.param = param;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-        loadTasks();
     }
     
     /* (non-Javadoc)

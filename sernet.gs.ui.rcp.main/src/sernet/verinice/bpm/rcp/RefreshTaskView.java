@@ -24,7 +24,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.TableViewer;
 
-import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.interfaces.bpm.ITask;
 
 /**

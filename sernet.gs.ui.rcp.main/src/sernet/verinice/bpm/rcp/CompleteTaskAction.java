@@ -19,30 +19,30 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.osgi.util.NLS;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.progress.IProgressService;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.bpm.CompleteHandlerRegistry;
-import sernet.verinice.bpm.ICompleteClientHandler;
+import sernet.gs.service.IThreadCompleteListener;
 import sernet.verinice.model.bpm.TaskInformation;
 
 /**
+ * GUI action which completes task. Tasks are completed
+ * concurrently by {@link ExecutorService}.
  * 
+ * Instances of this action are created on demand in {@link TaskView}
+ * after the user selects a task in the view.
  * 
+ * To complete a task this action creates a {@link CompleteTaskJob}
+ * and executes it by {@link ExecutorService}.
+ * 
+ * @see TaskView
+ * @see CompleteTaskJob
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 final class CompleteTaskAction extends Action {
@@ -52,6 +52,8 @@ final class CompleteTaskAction extends Action {
     private final TaskView taskView;
     final String id = TaskView.class.getName() + ".complete"; //$NON-NLS-1$
     String outcomeId;
+    
+    private ExecutorService executer;
 
     public CompleteTaskAction(TaskView taskView, String outcomeId) {
         super();
@@ -59,48 +61,64 @@ final class CompleteTaskAction extends Action {
         this.outcomeId = outcomeId;
         setId(id + "." + outcomeId); //$NON-NLS-1$
     }
-
+   
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.action.Action#run()
+     */
     @Override
     public void run() {
-        IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         try {
-            final List<TaskInformation> taskList = taskView.getSelectedTasks();      
-            progressService.run(true, true, new IRunnableWithProgress() {
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    Activator.inheritVeriniceContextState();    
-                    for (TaskInformation task: taskList) {            
-                        completeTask(task, outcomeId);
-                    }                                         
-                    CompleteTaskAction.this.taskView.showInformation(Messages.CompleteTaskAction_3, NLS.bind(Messages.CompleteTaskAction_4, taskList.size()));                   
-                    Display.getDefault().asyncExec(new Runnable(){
-                        @Override
-                        public void run() {
-                            CompleteTaskAction.this.taskView.loadTasks();                         
-                        }
-                    });                  
-                }
-            });          
+            executer = Executors.newFixedThreadPool(2);
+            List<TaskInformation> taskList = taskView.getSelectedTasks();
+            for (TaskInformation task: taskList) {            
+                completeTask(task, outcomeId);
+            }
+            this.setEnabled(false);
+            executer.shutdown();
+            int n = taskList.size();
+            showInformation(n); 
         } catch (Exception t) {
             LOG.error("Error while completing tasks.", t); //$NON-NLS-1$
+            shutdownAndAwaitTermination();
             this.taskView.showError(Messages.CompleteTaskAction_6, Messages.CompleteTaskAction_7);
         }
     }
     
-    protected void completeTask(TaskInformation task, String outcomeId) {
-        String type = task.getType();
-        ICompleteClientHandler handler = CompleteHandlerRegistry.getHandler(new StringBuilder(type).append(".").append(outcomeId).toString()); //$NON-NLS-1$
-        Map<String, Object> parameter = null;
-        if(handler!=null) {
-            handler.setShell(this.taskView.getViewSite().getShell());
-            parameter = handler.execute();          
+    protected void completeTask(final TaskInformation task, String outcomeId) {
+        CompleteTaskJob job = new CompleteTaskJob(task, outcomeId);
+        job.addListener(new IThreadCompleteListener() {         
+            @Override
+            public void notifyOfThreadComplete(Thread thread) {
+                taskView.removeTask(task);
+            }
+        });
+        executer.execute(job);
+    }
+    
+    private void showInformation(int n) {
+        String message = NLS.bind(Messages.CompleteTaskAction_4, n);
+        if(n==1) { 
+            message = NLS.bind(Messages.CompleteTaskAction_0, n);
         }
-            
-        if (outcomeId == null) {
-            ServiceFactory.lookupTaskService().completeTask(task.getId());
-        } else {
-            ServiceFactory.lookupTaskService().completeTask(task.getId(), outcomeId, parameter);
+        CompleteTaskAction.this.taskView.showInformation(Messages.CompleteTaskAction_3, message);
+    }
+  
+    private void shutdownAndAwaitTermination() {
+        executer.shutdown(); // Disable new tasks from being submitted
+        try {
+            // Wait a while for existing tasks to terminate
+            if (!executer.awaitTermination(10, TimeUnit.SECONDS)) {
+                executer.shutdownNow(); // Cancel currently executing tasks
+                // Wait a while for tasks to respond to being cancelled
+                if (!executer.awaitTermination(10, TimeUnit.SECONDS)) {
+                    LOG.error("Task loader (ExecutorService) shutdown failed."); //$NON-NLS-1$
+                }
+            }
+        } catch (InterruptedException ie) {
+            // (Re-)Cancel if current thread also interrupted
+            executer.shutdownNow();
+            // Preserve interrupt status
+            Thread.currentThread().interrupt();
         }
-        taskView.removeTask(task);
     }
 }

@@ -76,6 +76,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
@@ -97,6 +98,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.IAttachedToPerspective;
+import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAncestors;
 
@@ -619,7 +621,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
             public void selectionChanged(SelectionChangedEvent event) {
                 if (isTaskSelected()) {
                     try {
-                        taskSelected();
+                        selectTask();
                     } catch (Exception t) {
                         LOG.error("Error while configuring task actions.", t); //$NON-NLS-1$
                     }
@@ -651,10 +653,11 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     public void dispose() {
         TaskChangeRegistry.removeTaskChangeListener(taskListener);
         dataLoader.dispose();
+        contentProvider.dispose();
         super.dispose();
     }
 
-    private void taskSelected() {
+    private void selectTask() {
         IToolBarManager manager = resetToolbar();
 
         cancelTaskAction.setEnabled(false);
@@ -740,7 +743,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     }
 
     public void removeTask(ITask task) {
-        contentProvider.removeTask(task);
+        contentProvider.removeTask(task);  
     }
   
     private Combo createComboBox(Composite composite) {
@@ -787,7 +790,11 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
-                MessageDialog.openInformation(getShell(), title, message);
+                InfoDialogWithShowToggle.openInformation(
+                        title,  
+                        message,
+                        Messages.TaskView_30,
+                        PreferenceConstants.INFO_TASKS_COMPLETED);
             }
         });
     }
