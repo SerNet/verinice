@@ -23,9 +23,7 @@ package sernet.verinice.bpm.rcp;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.service.NotifyingThread;
 import sernet.gs.ui.rcp.main.Activator;
