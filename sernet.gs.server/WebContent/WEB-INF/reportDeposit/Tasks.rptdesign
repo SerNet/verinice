@@ -1651,6 +1651,9 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.gs.service.NumericStringComparator;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+						  
 
 /** SamtTopics constants for backward compatibility */
 String SAMT_TOPIC_CONTROLNOTE = "samt_topic_controlnote";
@@ -1746,6 +1749,7 @@ taskList = ServiceFactory.lookupTaskService().getTaskList(param);
 
 
 List tasks = new ArrayList();
+DateFormat formatter = new SimpleDateFormat();
 
 for (ITask task : taskList) {
 
@@ -1754,8 +1758,8 @@ for (ITask task : taskList) {
     
     row.add(task.getAssignee());
     row.add(task.getName());
-    row.add(task.getCreateDate());
-    row.add(task.getDueDate());
+    row.add(formatter.format(task.getCreateDate()));
+    row.add(formatter.format(task.getDueDate()));
     row.add(task.getUuid());
     row.add(task.getGroupTitle());
     row.add(task.getElementTitle());
@@ -2469,52 +2473,15 @@ columns(cols);</value>
                         </data>
                     </cell>
                     <cell id="3312">
-                        <text-data id="3363">
-                            <method name="onRender"><![CDATA[this.text = formatLongDate(row["CreateDate"]);
-
-function tryParseDate(inputDate){
-	importPackage(Packages.java.lang);
-	importPackage(Packages.java.util);
-	importPackage(Packages.java.text);
-	importPackage(Packages.sernet.verinice.report.service.impl);
-	var	patterns = new Array("EEE MMM dd HH:mm:ss z yyyy", "dd.MM.yyyy HH:mm","EEE MMM dd HH:mm:ss zzz yyyy");
-	var locales = new Array(Locale.GERMAN, Locale.ENGLISH);
-	for(var i = 0; i < patterns.length; i++){
-		for(var j = 0; j < locales.length; j++){
-			try{
-				formatter = new SimpleDateFormat(patterns[i], locales[j]);
-				formatter.setLenient(true);
-				return formatter.parse(inputDate);
-			} catch(e){
-				
-			}
-		}
-	}	
-	return null;
-}
-
-function formatLongDate(inputDate){
-	importPackage(Packages.java.lang);
-	importPackage(Packages.java.util);
-	importPackage(Packages.java.text);
-	importPackage(Packages.sernet.verinice.report.service.impl);
-		
-	fDate = tryParseDate(inputDate);
-	if(fDate != null){
-		destinationFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
-		retVal = destinationFormat.format(fDate);
-		sb = new StringBuilder();
-		tokens = retVal.split("\\s");
-		for(var i = 0; i < tokens.length; i++){
-			sb.append(tokens[i]);
-		}
-		return sb.toString().trim();
-	} else {
-		return null;
-}
-}]]></method>
-                            <property name="contentType">auto</property>
-                        </text-data>
+                        <data id="3399">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Unformatted</property>
+                            </structure>
+                            <structure name="stringFormat">
+                                <property name="category">Unformatted</property>
+                            </structure>
+                            <property name="resultSetColumn">CreateDate</property>
+                        </data>
                     </cell>
                     <cell id="3328">
                         <data id="3329">
@@ -2533,52 +2500,12 @@ function formatLongDate(inputDate){
                         </data>
                     </cell>
                     <cell id="3314">
-                        <text-data id="3364">
-                            <method name="onRender"><![CDATA[this.text = formatLongDate(row["DueDate"]);
-
-function tryParseDate(inputDate){
-	importPackage(Packages.java.lang);
-	importPackage(Packages.java.util);
-	importPackage(Packages.java.text);
-	importPackage(Packages.sernet.verinice.report.service.impl);
-	var	patterns = new Array("EEE MMM dd HH:mm:ss z yyyy", "dd.MM.yyyy HH:mm","EEE MMM dd HH:mm:ss zzz yyyy");
-	var locales = new Array(Locale.GERMAN, Locale.ENGLISH);
-	for(var i = 0; i < patterns.length; i++){
-		for(var j = 0; j < locales.length; j++){
-			try{
-				formatter = new SimpleDateFormat(patterns[i], locales[j]);
-				formatter.setLenient(true);
-				return formatter.parse(inputDate);
-			} catch(e){
-				
-			}
-		}
-	}	
-	return null;
-}
-
-function formatLongDate(inputDate){
-	importPackage(Packages.java.lang);
-	importPackage(Packages.java.util);
-	importPackage(Packages.java.text);
-	importPackage(Packages.sernet.verinice.report.service.impl);
-		
-	fDate = tryParseDate(inputDate);
-	if(fDate != null){
-		destinationFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
-		retVal = destinationFormat.format(fDate);
-		sb = new StringBuilder();
-		tokens = retVal.split("\\s");
-		for(var i = 0; i < tokens.length; i++){
-			sb.append(tokens[i]);
-		}
-		return sb.toString().trim();
-	} else {
-		return null;
-}
-}]]></method>
-                            <property name="contentType">auto</property>
-                        </text-data>
+                        <data id="3400">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Unformatted</property>
+                            </structure>
+                            <property name="resultSetColumn">DueDate</property>
+                        </data>
                     </cell>
                     <cell id="3326">
                         <data id="3327">
