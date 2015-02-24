@@ -31,6 +31,7 @@ import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.configuration.Configuration;

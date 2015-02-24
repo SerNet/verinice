@@ -56,6 +56,7 @@ import sernet.hui.common.connect.Property;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.IRightsChangeListener;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.Action;

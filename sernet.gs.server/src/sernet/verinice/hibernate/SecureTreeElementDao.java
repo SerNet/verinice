@@ -30,10 +30,10 @@ import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.SecurityException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.service.IConfigurationService;
 
 /**
  * Extends {@link TreeElementDao} to check write and delete authorization for {@link CnATreeElement}s.

@@ -118,6 +118,8 @@ public final class VeriniceContext {
     
     public static final String REPORT_HQL_SERVICE = "reportHQLService";
     
+    public static final String CONFIGURATION_SERVICE = "configurationService";
+    
     private static String serverUrl = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();

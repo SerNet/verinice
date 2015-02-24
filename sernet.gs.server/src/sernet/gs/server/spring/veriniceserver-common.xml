@@ -79,6 +79,7 @@ This variant:
                 <entry key="accountService" value-ref="accountService" />
                 <entry key="reportdepositService" value-ref="reportdepositService" />
                 <entry key="reportHQLService" value-ref="reportHQLService"/>
+                <entry key="configurationService" value-ref="configurationService"/>
 			</map>
 		</property>
 	</bean>

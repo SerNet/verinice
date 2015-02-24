@@ -46,6 +46,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
@@ -67,7 +68,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.service.IConfigurationService;
 
 /**
  * JBoss jBPM implementation of {@link ITaskService}.

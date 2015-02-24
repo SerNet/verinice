@@ -41,6 +41,7 @@ import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.IRightsServerHandler;
 import sernet.verinice.interfaces.IRightsService;

@@ -38,6 +38,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IChangeLoggingCommand;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.IGraphCommand;
 import sernet.verinice.interfaces.IHibernateCommandService;
 import sernet.verinice.interfaces.INoAccessControl;

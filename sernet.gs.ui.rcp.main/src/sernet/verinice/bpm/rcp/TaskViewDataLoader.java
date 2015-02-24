@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -34,6 +35,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.bsi.BSIModel;
@@ -44,6 +46,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.account.AccountLoader;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
+import sernet.verinice.service.commands.LoadVisibleAccounts;
 
 /**
  * TaskViewDataLoader loads data for task view
@@ -60,7 +63,9 @@ public class TaskViewDataLoader {
     private IModelLoadListener modelLoadListener;
     private LoadTaskJob job;
     private ExecutorService executer = Executors.newFixedThreadPool(1);
-
+    private ICommandService commandService;
+    
+    
     public TaskViewDataLoader(TaskView taskView) {
         super();
         this.taskView = taskView;
@@ -178,8 +183,8 @@ public class TaskViewDataLoader {
     }
     
     void loadAssignees() {
-        taskView.comboModelAccount.clear();
-        taskView.comboModelAccount.addAll(AccountLoader.loadAccounts());
+        taskView.comboModelAccount.clear();     
+        taskView.comboModelAccount.addAll(loadAccounts());
         taskView.comboModelAccount.addNoSelectionObject(Messages.TaskView_20);
         TaskView.getDisplay().syncExec(new Runnable(){
             @Override
@@ -190,6 +195,18 @@ public class TaskViewDataLoader {
         });
     }
     
+
+    private Collection<Configuration> loadAccounts() {
+        try {
+            LoadVisibleAccounts command = new LoadVisibleAccounts();     
+            command = getCommandService().executeCommand(command);     
+            return command.getAccountList();
+        } catch (CommandException e) {
+            LOG.error("Error while loading accounts.", e);
+            throw new RuntimeException(e);
+        }
+    }
+
     private void selectDefaultAssignee() {
         String logedInUserName = ServiceFactory.lookupAuthService().getUsername();
         List<Configuration> allAccounts = taskView.comboModelAccount.getObjectList();
@@ -265,6 +282,13 @@ public class TaskViewDataLoader {
             // Preserve interrupt status
             Thread.currentThread().interrupt();
         }
+    }
+    
+    public ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = ServiceFactory.lookupCommandService();
+        }
+        return commandService;
     }
     
     private final class RefreshListener implements IThreadCompleteListener {

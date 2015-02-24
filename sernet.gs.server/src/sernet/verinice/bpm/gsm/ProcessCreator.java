@@ -36,13 +36,13 @@ import sernet.verinice.bpm.IProcessCreater;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.bpm.IGsmService;
 import sernet.verinice.interfaces.bpm.IProcessStartInformation;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.service.IConfigurationService;
 import sernet.verinice.service.commands.GroupByTags;
 
 /**

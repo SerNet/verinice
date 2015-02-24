@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service;
+package sernet.verinice.interfaces;
 
 /**
  * User configuration service to load information about users. 
