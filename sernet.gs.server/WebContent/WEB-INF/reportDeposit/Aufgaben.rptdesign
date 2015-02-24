@@ -1027,6 +1027,31 @@ columns(newcols);</value>
                     <text-property name="displayName">auditUuid</text-property>
                     <text-property name="heading">auditUuid</text-property>
                 </structure>
+                <structure>
+                    <property name="columnName">organization</property>
+                    <text-property name="displayName">organization</text-property>
+                    <text-property name="heading">organization</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">finding</property>
+                    <text-property name="displayName">finding</text-property>
+                    <text-property name="heading">finding</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">measure</property>
+                    <text-property name="displayName">measure</text-property>
+                    <text-property name="heading">measure</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">MajurityLevel</property>
+                    <text-property name="displayName">MajurityLevel</text-property>
+                    <text-property name="heading">MajurityLevel</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">genericAuditTitle</property>
+                    <text-property name="displayName">genericAuditTitle</text-property>
+                    <text-property name="heading">genericAuditTitle</text-property>
+                </structure>
             </list-property>
             <list-property name="parameters">
                 <structure>
@@ -1107,6 +1132,31 @@ columns(newcols);</value>
                     <structure>
                         <property name="position">13</property>
                         <property name="name">auditUuid</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">organization</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">finding</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">measure</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">MajurityLevel</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">genericAuditTitle</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -1204,6 +1254,41 @@ columns(newcols);</value>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">organization</property>
+                    <property name="nativeName">organization</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">finding</property>
+                    <property name="nativeName">finding</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">measure</property>
+                    <property name="nativeName">measure</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">MajurityLevel</property>
+                    <property name="nativeName">MajurityLevel</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">genericAuditTitle</property>
+                    <property name="nativeName">genericAuditTitle</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
@@ -1211,7 +1296,7 @@ import sernet.verinice.report.service.commands.*;
 import java.util.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 import sernet.verinice.model.iso27k.*;
-
+import sernet.verinice.service.commands.LoadAncestors;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.bpm.ITask;
@@ -1219,69 +1304,141 @@ import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-
+import sernet.verinice.model.samt.SamtTopic;
+import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.gs.service.NumericStringComparator;
-import sernet.verinice.report.service.impl.TocHelper2;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
-import sernet.verinice.report.service.impl;
-
+/** SamtTopics constants for backward compatibility */
+String SAMT_TOPIC_CONTROLNOTE = "samt_topic_controlnote";
+String PROP_AUDIT_FINDINGS = "samt_topic_audit_findings";
+String PROP_MATURITY = "samt_topic_maturity";
 	
 List sort(List list) {
-       Collections.sort(list, new Comparator() {
-	public int compare(Object o1, Object o2) {
+    Collections.sort(list, new Comparator() {
+	    public int compare(Object o1, Object o2) {
 		NumericStringComparator comp = new NumericStringComparator();
 		int compareresult =  comp.compare(o1.get(5), o2.get(5));
 		if(compareresult == 0){
-		return comp.compare(o1.get(6), o2.get(6));
-}else{
-	return comp.compare(o1.get(5),o2.get(5));
-}
-	}
-});
-        return list;
+		    return comp.compare(o1.get(6), o2.get(6));
+		}else{
+		    return comp.compare(o1.get(5),o2.get(5));
+		}
+	    }
+	});
+    return list;
 }
 
 
-        // set top level element for report:
-        root = helper.getRoot();
-        // try to get manual parameter if set:
-        myroot = _inpv.get("root_object");
-        if (myroot != null &amp;&amp; myroot != -1) {
-            root = myroot;
-        }
+CnATreeElement loadParentObject(ITask task){
+    RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+    LoadAncestors loadControl = new LoadAncestors(task.getElementType(), task.getUuid(), ri);
+    loadControl = helper.execute(loadControl);
+
+    return loadControl.getElement();
+}
+
+
+String getSamtTopicEntityProperty(CnATreeElement elem, String propertyKey){
+    return (elem instanceof SamtTopic) ? ((SamtTopic) elem).getEntity().getSimpleValue(propertyKey) : "-";
+}
+
+String getAuditTitle(CnATreeElement elem) {
+    Audit audit = getParentAudit(elem);
+    return audit != null ? audit.getTitle() : "-";
+}
+
+Audit getParentAudit(CnATreeElement elem){
+
+    if(elem == null) {
+	return null;
+    }
+    
+    if("audit".equals(elem.getTypeId())){
+	return (Audit) elem;
+    }
+
+    return getParentAudit(elem.getParent());
+}
+
+
+String loadOrganizationOrVerbund(CnATreeElement elem){
+    if (elem instanceof Organization ) {
+	return ((Organization) elem).getTitle();
+    }
+
+    if (elem instanceof ITVerbund) {
+	return ((ITVerbund) elem).getTitle();
+    }
+
+    return loadOrganizationOrVerbund(elem.getParent());
+}
+
+
+/** removes tags: <tag>hello</tag> -> hello */ 
+String removeHTMLTags(String description){
+    if(description == null)
+	return "";
+    else
+	return description.replaceAll("\\<[^>]*>", "");
+}
+
+// set top level element for report:
+root = helper.getRoot();
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+    root = myroot;
+}
 
 TaskParameter param = new TaskParameter();
 rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
 boolean enabled =  rightsService.isEnabled(ActionRightIDs.TASKSHOWALL);
 if(enabled){
-param.setAllUser(true);
+    param.setAllUser(true);
 }
 
 Activator.inheritVeriniceContextState();
 taskList = ServiceFactory.lookupTaskService().getTaskList(param);
+
+
 List tasks = new ArrayList();
 
-        for (ITask task : taskList) {
+for (ITask task : taskList) {
 
-         List row = new ArrayList();
-            row.add(task.getAssignee());
-            row.add(task.getName());
-            row.add(task.getCreateDate());
-            row.add(task.getDueDate());
-            row.add(task.getUuid());
-	    row.add(task.getAuditTitle());
-            row.add(task.getControlTitle());
-            row.add(task.getDescription());
-            row.add(task.getElementType());
-            row.add(task.getIsRead());
-            row.add(task.getPriority());
-            row.add(task.getProcessName());
-            row.add(task.getUuidAudit());
-            tasks.add(row);
+    List row = new ArrayList();
+    CnATreeElement ancestor = loadParentObject(task);
+    
+    row.add(task.getAssignee());
+    row.add(task.getName());
+    row.add(task.getCreateDate());
+    row.add(task.getDueDate());
+    row.add(task.getUuid());
+    row.add(task.getGroupTitle());
+    row.add(task.getElementTitle());
+    row.add(removeHTMLTags(task.getDescription()));
+    row.add(task.getElementType());
+    row.add(task.getIsRead());
+    row.add(task.getPriority());
+    row.add(task.getProcessName());
+    row.add(task.getUuidGroup());
+    
+    row.add(loadOrganizationOrVerbund(ancestor));
+    row.add(getSamtTopicEntityProperty(ancestor, PROP_AUDIT_FINDINGS));
+    row.add(getSamtTopicEntityProperty(ancestor, SAMT_TOPIC_CONTROLNOTE));
+    row.add(getSamtTopicEntityProperty(ancestor, PROP_MATURITY));
+    row.add(getAuditTitle(ancestor));
+    
+    tasks.add(row);
+}
 
-        }
 sortedElements = sort(tasks);
-return sortedElements ;]]></xml-property>
+return sortedElements ;
+]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -1536,8 +1693,7 @@ return sortedElements ;]]></xml-property>
 inParameters(new String[] { "root_object" });
 
 String[] cols = new String[] {"Assignee", "Name", "CreateDate", "DueDate",
- "CnaUuid", "AuditTitle", "ControlTitle", "Description", "ElementType",
- "IsRead", "Priority", "ProcessName", "auditUuid"};
+ "CnaUuid", "AuditTitle", "ControlTitle", "Description", "ElementType", "IsRead", "Priority", "ProcessName", "auditUuid", "organization", "finding", "measure", "MajurityLevel" , "genericAuditTitle"};
 
 columns(cols);</value>
                 </ex-property>
@@ -1747,6 +1903,36 @@ columns(cols);</value>
                     <property name="name">auditUuid</property>
                     <text-property name="displayName">auditUuid</text-property>
                     <expression name="expression" type="javascript">dataSetRow["auditUuid"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">organization</property>
+                    <text-property name="displayName">organization</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["organization"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">finding</property>
+                    <text-property name="displayName">finding</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["finding"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">measure</property>
+                    <text-property name="displayName">measure</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["measure"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">MajurityLevel</property>
+                    <text-property name="displayName">MajurityLevel</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["MajurityLevel"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">genericAuditTitle</property>
+                    <text-property name="displayName">genericAuditTitle</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["genericAuditTitle"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
