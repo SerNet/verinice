@@ -19,6 +19,8 @@ package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Hashtable;
@@ -96,6 +98,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadAttachmentFile;
+import sernet.verinice.service.commands.LoadAttachments;
 import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
 import sernet.verinice.service.commands.LoadFileSizeLimit;
 
@@ -115,7 +118,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.FileView"; //$NON-NLS-1$
     
     private static final int DEFAULT_THUMBNAIL_SIZE = 0;
-
+    
     private static Map<String, String> mimeImageMap = new Hashtable<String, String>();
     static {
         for (int i = 0; i < Attachment.getArchiveMimeTypes().length; i++) {
@@ -250,6 +253,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         TableColumn textColumn;
         TableColumn dateColumn;
         TableColumn versionColumn;
+        TableColumn sizeColumn;
         
         final int widthHeightPadding = 4;
         final int itemColumnWidth = 26;
@@ -258,6 +262,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         final int textColumnWidth = 250;
         final int dateColumnWidth = 120;
         final int versionColumnWidth = 60;
+        final int sizeColumnWidth = 50;
         
         viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
         viewer.setContentProvider(contentProvider);
@@ -309,6 +314,11 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         versionColumn.setText(Messages.FileView_6);
         versionColumn.setWidth(versionColumnWidth);
         versionColumn.addSelectionListener(new SortSelectionAdapter(this, versionColumn, 5));
+        
+        sizeColumn = new TableColumn(table, SWT.LEFT);
+        sizeColumn.setText(Messages.FileView_35);
+        sizeColumn.setWidth(sizeColumnWidth);
+        sizeColumn.addSelectionListener(new SortSelectionAdapter(this, sizeColumn, 6));
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -739,6 +749,13 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                     return (attachment.getDate() != null) ? dateFormat.format(attachment.getDate()) : null; //$NON-NLS-1$
                 case 6:
                     return attachment.getVersion(); //$NON-NLS-1$
+                case 7:
+                    if(attachment.getFileSize() != null){
+                        String size = attachment.getFileSize();
+                        return humanReadableByteCount(Integer.parseInt(size), false);
+                    } else {
+                        return "0 KB";
+                    }
                 default:
                     return null;
                 }
@@ -750,7 +767,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
  
 
     }
-
+    
     private static class TableSorter extends ViewerSorter {
         private int propertyIndex;
         private static final int DEFAULT_SORT_COLUMN = 0;
@@ -834,6 +851,11 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                 break;
             case 5:
                 rc = a1.getVersion().compareTo(a2.getVersion());
+                break;
+            case 6 :
+                int a1Size = (a1.getFileSize() != null) ? Integer.parseInt(a1.getFileSize()) : 0;
+                int a2Size = (a2.getFileSize() != null) ? Integer.parseInt(a2.getFileSize()) : 0; 
+                rc = (a2Size > a1Size) ? 1 : ((a1Size > a2Size) ? -1 : 0); 
                 break;
             default:
                 rc = 0;
@@ -929,6 +951,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         attachment.setTitel(file.getName());
         attachment.setDate(Calendar.getInstance().getTime());
         attachment.setFilePath(selected);
+        attachment.setFileSize(String.valueOf(size));
         attachment.addListener(new Attachment.INoteChangedListener() {
             @Override
             public void noteChanged() {
@@ -992,6 +1015,25 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
         }
+    }
+    
+    private static double round (double value){
+        BigDecimal bd = new BigDecimal(value);
+        return bd.setScale(3, RoundingMode.HALF_UP).doubleValue();
+    }
+        
+    /**
+     * @param bytes
+     * @param si
+     * @return
+     */
+    private static String humanReadableByteCount(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+//        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp-1) + (si ? "" : "i");
+        String pre = String.valueOf((si ? "kMGTPE" : "KMGTPE").charAt(exp-1));
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
     }
 
 }

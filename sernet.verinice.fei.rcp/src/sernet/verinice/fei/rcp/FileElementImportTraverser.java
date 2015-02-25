@@ -190,6 +190,7 @@ public class FileElementImportTraverser extends FileSystemTraverser {
         attachment.setTitel(file.getName());
         attachment.setDate(Calendar.getInstance().getTime());
         attachment.setFilePath(file.getPath());
+        attachment.setFileSize(String.valueOf(file.length()));
         SaveNote command = new SaveNote(attachment);
         command = getCommandService().executeCommand(command);
         attachment = (Attachment) command.getAddition();

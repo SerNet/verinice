@@ -6318,6 +6318,7 @@ Wurden bereits weitere Stellen informiert?
 			name="Datum"
 			inputtype="date"
             editable="false" />
+        <huiproperty id="attachment_size" name="Groesse" />
       </huientity>
       
       <!-- Information Security Assessment (ISA), previously called "Self Assessment (SAMT)" Elements ========================= -->

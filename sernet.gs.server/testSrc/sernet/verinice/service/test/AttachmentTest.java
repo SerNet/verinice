@@ -25,7 +25,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Calendar;
@@ -199,6 +198,7 @@ public class AttachmentTest extends CommandServiceProvider {
         a.setTitel(f.getName());
         a.setDate(Calendar.getInstance().getTime());
         a.setFilePath(f.getCanonicalPath());
+        a.setFileSize(String.valueOf(f.length()));
         a.setText("Automated Text by Unittest: " + AttachmentTest.class.getCanonicalName());
         return a;
     }

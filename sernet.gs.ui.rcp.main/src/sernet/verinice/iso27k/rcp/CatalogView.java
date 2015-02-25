@@ -313,6 +313,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 			attachment.setDate(now);
 			attachment.setFilePath(csvFile.getFilePath());
 			attachment.setTitel(attachment.getFileName());
+			attachment.setFileSize(String.valueOf(csvFile.getFileContent().length));
 			attachment.setText(Messages.CatalogView_10 + DateFormat.getDateTimeInstance().format(now));
 			SaveNote command = new SaveNote(attachment);	
 			command = getCommandService().executeCommand(command);

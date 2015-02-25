@@ -75,6 +75,7 @@ public class AttachmentBean {
         attachment.setDate(Calendar.getInstance().getTime());
         attachment.setFilePath(item.getFileName());
         attachment.setText(Messages.getString("AttachmentBean.0")); //$NON-NLS-1$
+        attachment.setFileSize(String.valueOf(item.getContents().length));
         
         SaveNote command = new SaveNote(attachment);     
         command = getCommandService().executeCommand(command);

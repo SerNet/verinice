@@ -44,6 +44,8 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 
 	public static final String PROP_DATE = "attachment_date"; //$NON-NLS-1$
 	
+	public static final String PROP_SIZE = "attachment_size"; //$NON-NLS-1$
+	
 	public static final String TYPE_ID = "attachment"; //$NON-NLS-1$
 	
 	private static final String[] DOCUMENT_MIME_TYPES = new String[] {"doc","odt","docx","dot"}; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
@@ -137,6 +139,18 @@ public class Attachment extends Addition implements Serializable, Comparable<Att
 	
 	public void setVersion(String version) {
 		getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_VERSION), version);
+	}
+	
+	public String getFileSize(){
+	    if(getEntity()!=null && getEntity().getProperties(PROP_SIZE)!=null && getEntity().getProperties(PROP_SIZE).getProperty(0) != null){
+	        return getEntity().getProperties(PROP_SIZE).getProperty(0).getPropertyValue();
+	    } else {
+	        return null;
+	    }
+	}
+	
+	public void setFileSize(String size){
+	    getEntity().setSimpleValue(getEntityType().getPropertyType(PROP_SIZE), size);
 	}
 	
 	public Date getDate() {

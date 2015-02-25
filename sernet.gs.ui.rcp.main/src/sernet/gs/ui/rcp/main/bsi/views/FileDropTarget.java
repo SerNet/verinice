@@ -96,6 +96,7 @@ public class FileDropTarget extends DropTargetAdapter {
 				view.loadFiles();
 			}
 		});
+		attachment.setFileSize(String.valueOf(file.length()));
 		EditorFactory.getInstance().openEditor(attachment);			
 	}
 }

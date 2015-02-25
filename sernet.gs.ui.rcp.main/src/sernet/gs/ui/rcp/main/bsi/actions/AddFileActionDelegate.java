@@ -34,10 +34,10 @@ import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.interfaces.RightEnabledUserInteraction;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 public class AddFileActionDelegate implements IObjectActionDelegate, RightEnabledUserInteraction {
 
@@ -73,13 +73,14 @@ public class AddFileActionDelegate implements IObjectActionDelegate, RightEnable
                     if (file.isDirectory()) {
                         return;
                     }
-
+                    
                     Attachment attachment = new Attachment();
                     attachment.setCnATreeElementId(element.getDbId());
                     attachment.setCnAElementTitel(element.getTitle());
                     attachment.setTitel(file.getName());
                     attachment.setDate(Calendar.getInstance().getTime());
                     attachment.setFilePath(selected);
+                    attachment.setFileSize(String.valueOf(file.length()));
 
                     attachment.addListener(new Attachment.INoteChangedListener() {
                         public void noteChanged() {

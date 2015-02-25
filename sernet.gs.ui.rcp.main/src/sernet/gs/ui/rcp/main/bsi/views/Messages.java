@@ -168,6 +168,8 @@ public final class Messages extends NLS {
     public static String FileView_30;
 
     public static String FileView_34;
+    
+    public static String FileView_35;
 
     public static String FileView_4;
 
