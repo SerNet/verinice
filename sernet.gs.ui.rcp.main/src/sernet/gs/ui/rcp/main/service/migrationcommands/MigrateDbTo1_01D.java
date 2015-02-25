@@ -94,6 +94,9 @@ public class MigrateDbTo1_01D extends DbMigration {
      */
     private void addFileSizeToAttachments(List<Object[]> idToSizeList) {
         for(Object[] element : idToSizeList){
+            if(getLog().isDebugEnabled()){
+                getLog().debug("Updating Attachment (" + idToSizeList.indexOf(element) + "/" + idToSizeList.size() + ")");
+            }
             int dbid = 0;
             int filesize = -1;
             if(element[0] instanceof Integer){

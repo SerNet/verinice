@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -408,6 +409,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             attachment.setCnATreeElementId(elementInDB.getDbId());
             attachment.setCnAElementTitel(elementInDB.getTitle());
             attachment.setTitel(fileXml.getFile());
+            attachment.setFileSize(String.valueOf(getSyncObjectFileSize(fileXml)));
                    
             SaveNote command = new SaveNote(attachment);        
             command = getCommandService().executeCommand(command);
@@ -431,6 +433,14 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             
             
         }   
+    }
+    
+    private long getSyncObjectFileSize(SyncFile syncFile){
+        if(syncFile != null && syncFile.getFile() != null){
+            return new File(syncFile.getFile()).length();
+            
+        }
+        return 0;
     }
     
     /**
