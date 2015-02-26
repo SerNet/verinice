@@ -198,7 +198,7 @@ public class AttachmentTest extends CommandServiceProvider {
         a.setTitel(f.getName());
         a.setDate(Calendar.getInstance().getTime());
         a.setFilePath(f.getCanonicalPath());
-        a.setFileSize(String.valueOf(f.length()));
+        a.setFileSize(String.valueOf(getFileData(f).length));
         a.setText("Automated Text by Unittest: " + AttachmentTest.class.getCanonicalName());
         return a;
     }
