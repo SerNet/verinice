@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -58,15 +59,42 @@ public class LoadVisibleAccounts extends GenericCommand implements IAuthAwareCom
      */
     @Override
     public void execute() { 
+        if(isAdmin()) {
+            accountList = getAllAccounts();
+        } else {
+            accountList = getVisibleAccounts();
+        }
+    }
+
+    private List<Configuration> getVisibleAccounts() {
         List<String> roles = Arrays.asList(getConfigurationService().getRoles(getAuthService().getUsername()));
         List visibleElementIdList = getDao().findByQuery(hql, new String[]{"roles"}, new Object[]{roles});
-        List<Configuration> allAccounts = getAccountService().findAccounts(AccountSearchParameter.newInstance());
-        accountList = new LinkedList<Configuration>();
+        List<Configuration> allAccounts = getAllAccounts();
+        List<Configuration> visibleAccounts = new LinkedList<Configuration>();
         for (Configuration account : allAccounts) {
             if(visibleElementIdList.contains(account.getPerson().getDbId())) {
-                accountList.add(account); 
+                visibleAccounts.add(account); 
             }
         }
+        return visibleAccounts;
+    }
+
+    private List<Configuration> getAllAccounts() {
+        return getAccountService().findAccounts(AccountSearchParameter.newInstance());
+    }
+    
+    private boolean isAdmin() {
+        return containsAdminRole(getAuthService().getRoles());
+    }
+    
+    private boolean containsAdminRole(String[] roles) {
+        if(roles!=null) {
+            for (String r : roles) {
+                if (ApplicationRoles.ROLE_ADMIN.equals(r))
+                    return true;
+            }   
+        }
+        return false;
     }
  
     public List<Configuration> getAccountList() {
