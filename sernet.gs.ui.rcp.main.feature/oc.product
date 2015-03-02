@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.7.90" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="2.0.qualifier" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/icons/product_lg.gif"/>
@@ -60,9 +60,12 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
    </configIni>
 
    <launcherArgs>
-      <programArgs>-data @user.home/verinice/workspace</programArgs>
-      <vmArgs>-Xms256m -Xmx768m -XX:MaxPermSize=256m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost  -Dosgi.parentClassloader=ext</vmArgs>
-      <vmArgsMac>-Djava.awt.headless=true</vmArgsMac>
+      <programArgs>-data @user.home/verinice/workspace
+      </programArgs>
+      <vmArgs>-Xms256m -Xmx768m -XX:MaxPermSize=256m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost  -Dosgi.parentClassloader=ext
+      </vmArgs>
+      <vmArgsMac>-Djava.awt.headless=true
+      </vmArgsMac>
    </launcherArgs>
 
    <windowImages i16="/sernet.gs.ui.rcp.main/icons/v-16.gif" i32="/sernet.gs.ui.rcp.main/icons/v-32.gif" i48="/sernet.gs.ui.rcp.main/icons/v-48.gif" i64="/sernet.gs.ui.rcp.main/icons/v-64.gif" i128="/sernet.gs.ui.rcp.main/icons/v-128.gif"/>
@@ -767,9 +770,9 @@ Public License instead of this License.  But first, please read
    </license>
 
    <plugins>
-      <plugin id="SpringClient" fragment=""/>
+      <plugin id="SpringClient"/>
       <plugin id="com.ibm.icu"/>
-      <plugin id="com.ibm.icu.source" fragment=""/>
+      <plugin id="com.ibm.icu.source"/>
       <plugin id="org.apache.lucene"/>
       <plugin id="org.apache.lucene.analysis"/>
       <plugin id="org.eclipse.core.commands"/>
@@ -823,10 +826,10 @@ Public License instead of this License.  But first, please read
       <plugin id="org.eclipse.ui.win32" fragment="true"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
-      <plugin id="sernet.gs.log4j" fragment=""/>
-      <plugin id="sernet.gs.saxon9" fragment=""/>
+      <plugin id="sernet.gs.log4j"/>
+      <plugin id="sernet.gs.saxon9"/>
       <plugin id="sernet.gs.service"/>
-      <plugin id="sernet.gs.tagsoup_ak" fragment=""/>
+      <plugin id="sernet.gs.tagsoup_ak"/>
       <plugin id="sernet.gs.ui.rcp.main"/>
       <plugin id="verinice.nl1.org.eclipse.jface" fragment="true"/>
       <plugin id="verinice.nl1.org.eclipse.swt" fragment="true"/>
