@@ -90,7 +90,7 @@ abstract class CRUDAccountGroupDialog extends TitleAreaDialog {
 
     @Override
     protected void okPressed() {
-        this.groupView.initData();
+        this.groupView.refreshView();
         super.okPressed();
     }
 }

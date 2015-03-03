@@ -106,7 +106,7 @@ class DeleteGroupAction extends Action {
 
     private void deleteGroup() {
         this.groupView.accountGroupDataService.deleteAccountGroup(this.groupView.getSelectedGroup());
-        this.groupView.initData();
+        this.groupView.refreshView();
     }
 
 }
