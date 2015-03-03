@@ -27,7 +27,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.Collator;
 import java.util.Arrays;
 import java.util.EventObject;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +38,8 @@ import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -69,6 +70,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.helper.UpdateConfigurationHelper;
 import sernet.gs.ui.rcp.main.bsi.views.Messages;
@@ -125,20 +127,37 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         this.parent = parent;
         this.accountService = ServiceFactory.lookupAccountService();
 
-        setupView();
-        makeActions();
-        fillLocalToolBar();
-        initData();
-
         if (CnAElementFactory.isModelLoaded()) {
             initData();
         } else{
             CnAElementFactory.getInstance().addLoadListener((IModelLoadListener) this);
         }
+        
+        setupView();
+        makeActions();
+        fillLocalToolBar();
+
     }
 
     void initData() {
         WorkspaceJob initDataJob = new InitDataJob(Messages.GroupView_0);
+        initDataJob.addJobChangeListener(new JobChangeAdapter(){
+            @Override
+            public void done(IJobChangeEvent event){
+                long start_time = System.currentTimeMillis();
+                if(event.getResult().isOK()){
+                    final long MAX_DURATION = 15000; // wait max 15 secss before canceling 
+                    while(tableAccounts == null && ((System.currentTimeMillis() - start_time) < MAX_DURATION )){
+                        // do nothing, wait until tableAccounts is initialized
+                    }
+                    if(System.currentTimeMillis() - start_time > MAX_DURATION){
+                        ExceptionUtil.log(new RuntimeException(Messages.GroupView_39), Messages.GroupView_40);
+                    } else {
+                        updateAllLists();
+                    }
+                }
+            }
+        });
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
@@ -194,6 +213,8 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     private void initLists() {
+        
+        initDataService();
 
         initGroupList();
 
@@ -218,7 +239,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         tableAccounts = createTable(leftComposite, Messages.GroupView_4);
         
         tableAccounts.setContentProvider(new ArrayContentProvider());
-        tableAccounts.setLabelProvider(new AccountLabelProvider());
+        tableAccounts.setLabelProvider(new AccountLabelProvider(accountGroupDataService));
         
         tableAccounts.refresh(true);
     }
@@ -236,7 +257,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         tableGroupToAccounts = createTable(leftComposite, Messages.GroupView_3);
         
         tableGroupToAccounts.setContentProvider(new ArrayContentProvider());
-        tableGroupToAccounts.setLabelProvider(new AccountLabelProvider());
+        tableGroupToAccounts.setLabelProvider(new AccountLabelProvider(accountGroupDataService));
         
         tableGroupToAccounts.refresh(true);
         
@@ -255,7 +276,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         tableGroups = createTable(leftComposite, EMPTY_STRING);
         
         tableGroups.setContentProvider(new ArrayContentProvider());
-        tableGroups.setLabelProvider(new AccountLabelProvider());
+        tableGroups.setLabelProvider(new AccountLabelProvider(null));
         
         tableGroups.addSelectionChangedListener(new ISelectionChangedListener() {
             
@@ -502,7 +523,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                 Activator.inheritVeriniceContextState();
 
                 initDataService();
-                updateAllLists();
 
             } catch (Exception e) {
                 LOG.error(Messages.GroupView_1, e);
@@ -528,7 +548,13 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                     accountinGroupSet.addAll(Arrays.asList(names));                  
                     tableGroupToAccounts.setInput(accountinGroupSet);
                 }
-				accountArray = accountGroupDataService.getAllAccounts();  
+                accountArray = accountGroupDataService.getAllAccounts();
+				// remove accounts that are enlisted in tableToGroupAccounts
+                for(String account : accountinGroupSet){
+				    if(ArrayUtils.contains(accountArray, account)){
+				        accountArray = (String[])ArrayUtils.remove(accountArray, ArrayUtils.indexOf(accountArray, account));
+				    }
+				}
 				Arrays.sort(accountArray, COLLATOR);
                 tableAccounts.setInput(accountArray);
             }
@@ -726,7 +752,9 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     private void initDataService() {
-        accountGroupDataService = new AccountGroupDataService();
+        if(accountGroupDataService == null){
+            accountGroupDataService = new AccountGroupDataService();
+        }
     }
 
 

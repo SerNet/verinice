@@ -26,20 +26,19 @@ import sernet.verinice.rcp.Messages;
  */
 public class AccountLabelProvider extends ColumnLabelProvider {
     
-    public AccountLabelProvider(){};
+    IAccountGroupViewDataService accountGroupDataService;
+    
+    public AccountLabelProvider(IAccountGroupViewDataService dataService){
+        this.accountGroupDataService = dataService;
+    };
     
     @Override
     public String getText(Object element) {
         String text = Messages.UserprofileDialog_17;
         if (element instanceof String) {
-            text = (String)element;
-        }
-        else {
-            if(element != null){
-                text = element.toString();
-            } else {
-                text = "No Label available";
-            }
+            text = ((accountGroupDataService != null) ? accountGroupDataService.getPrettyPrintAccountName((String)element) : (String) element);
+        } else {
+            text = (element != null) ? element.toString() : "No Label available";
         }
         return text;
     }

@@ -20,6 +20,7 @@
 package sernet.verinice.rcp.accountgroup;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,10 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
+import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.account.AccountSearchParameter;
 import sernet.verinice.service.account.AccountSearchParameterFactory;
 
 /**
@@ -51,6 +54,8 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     private Map<String, Set<String>> accountGroupToConfiguration;
 
     private Set<String> accounts;
+    
+    private Map<String, String> prettyAccountNames;
 
     public AccountGroupDataService() {
         accountService = ServiceFactory.lookupAccountService();
@@ -110,7 +115,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         set.toArray(result);
         return result;
     }
-
+    
     @Override
     public void addAccountGroup(String accountGroupName) {
 
@@ -180,6 +185,33 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         accountGroupToConfiguration.get(groupName).removeAll(new HashSet<String>(Arrays.asList(userNames)));
         Set<String> deletedAccounts = accountService.deleteRole(new HashSet<String>(Arrays.asList(userNames)), groupName);
         return convertToStringArray(deletedAccounts);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.accountgroup.IAccountGroupViewDataService#prettyPrintAccountName(java.lang.String)
+     */
+    @Override
+    public String getPrettyPrintAccountName(String account) {
+        initPrettyAccountNames();
+        if(prettyAccountNames.containsKey(account)){
+            return prettyAccountNames.get(account);
+        }
+        return account;
+    }
+    
+    private void initPrettyAccountNames(){
+        if(prettyAccountNames == null){
+            prettyAccountNames = new HashMap<String, String>(0);
+            for(Configuration conf : accountService.findAccounts(AccountSearchParameter.newInstance())){
+                prettyAccountNames.put(conf.getUser(), createPrettyAccountName(conf));
+            }
+        }
+    }
+    
+    private String createPrettyAccountName(Configuration account){
+        StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(account.getPerson()));
+        sb.append(" [").append(account.getUser()).append("]");
+        return sb.toString();
     }
 
 }

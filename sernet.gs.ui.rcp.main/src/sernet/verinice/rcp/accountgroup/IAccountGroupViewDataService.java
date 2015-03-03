@@ -44,4 +44,7 @@ interface IAccountGroupViewDataService {
     void editAccountGroupName(String newName, String oldName);
 
     Set<String> deleteAccountGroup(String groupName);
+    
+    String getPrettyPrintAccountName(String account);
+
 }
