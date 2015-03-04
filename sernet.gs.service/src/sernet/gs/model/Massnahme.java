@@ -123,7 +123,7 @@ public class Massnahme implements IGSModel {
 	        case LZ_PLANUNG: return LZ_STRING_Planung_EN;
 	        case LZ_UMSETZUNG: return LZ_STRING_Umsetzung_EN;
 	        }
-	    } else if(GSScraper.LANGUAGE_IDENTIFIER_GERMAN.equals(language)){
+	    } else if(GSScraper.CATALOG_LANGUAGE_GERMAN.equals(language)){
 	           switch(lzId){
 	            case LZ_AUSSONDERUNG: return LZ_STRING_Ausonderung;
 	            case LZ_BESCHAFFUNG: return LZ_STRING_Beschaffung;

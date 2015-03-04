@@ -85,7 +85,7 @@ public class Gefaehrdung implements IGSModel {
 	
 	@Override
 	public String toString() {
-		return id + " "+ titel + " ["  + getKategorieAsString(GSScraper.LANGUAGE_IDENTIFIER_GERMAN) + "]"; 
+		return id + " "+ titel + " ["  + getKategorieAsString(GSScraper.CATALOG_LANGUAGE_GERMAN) + "]"; 
 	}
 	
 	@Override
@@ -153,7 +153,7 @@ public class Gefaehrdung implements IGSModel {
             case KAT_TECHNIK: return KAT_STRING_EN_TECHNIK;
             case KAT_VORSATZ: return KAT_STRING_EN_VORSATZ;
             }
-        } else if(GSScraper.LANGUAGE_IDENTIFIER_GERMAN.equals(language)){
+        } else if(GSScraper.CATALOG_LANGUAGE_GERMAN.equals(language)){
                switch(kat){
                case KAT_HOEHERE_GEWALT: return KAT_STRING_HOEHERE_GEWALT;
                case KAT_MENSCH: return KAT_STRING_MENSCH;
