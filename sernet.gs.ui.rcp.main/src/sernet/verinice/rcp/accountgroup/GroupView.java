@@ -190,7 +190,11 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     private void initLists() {
         
-        initDataService();
+        if (CnAElementFactory.isModelLoaded()) {
+            initDataService();
+        } else{
+            CnAElementFactory.getInstance().addLoadListener((IModelLoadListener) this);
+        }
 
         initGroupList();
 
@@ -746,7 +750,11 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
     
     void refreshView(){
-        initDataService();
+        if (CnAElementFactory.isModelLoaded()) {
+            initDataService();
+        } else{
+            CnAElementFactory.getInstance().addLoadListener((IModelLoadListener) this);
+        }
         updateAllLists();
     }
 }
