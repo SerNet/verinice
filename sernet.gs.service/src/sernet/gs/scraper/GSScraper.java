@@ -184,7 +184,24 @@ public class GSScraper {
 		}
 		// else parse from HTML:
 		try {
+		    if(LOG.isDebugEnabled()){
+		        LOG.debug("Inspecting " + kapitel + " for parsing on ITGS-Bausteine");
+		    }
 			Node root = source.parseBausteinDocument(kapitel);
+			if("b01".equals(kapitel)){
+			    getLanguage(root);
+			    if("".equals(this.language)){
+			        // use default if nothing is set
+			        if(LOG.isDebugEnabled()){
+			            LOG.debug("Could not determine language of ITGS-Catalogue, using the default (german)");
+			        }
+			        this.language = CATALOG_LANGUAGE_GERMAN;
+			        
+			    }
+			    if(LOG.isDebugEnabled()){
+			        LOG.debug("Cataloglanguage determined:\t" + this.language);
+			    }
+			}
 			getStand(kapitel, root);
 
 			bausteinContext.setContextItem(new DocumentWrapper(root, kapitel,
@@ -341,14 +358,6 @@ public class GSScraper {
 		}
 		try {
 		    Node root = source.parseBausteinDocument(baustein);
-		    // first baustein contains language relevant information
-		    if("b01000".equals(baustein)){
-			    getLanguage(root);
-			}
-		     if("".equals(this.language)){
-		         // use default if nothing is set
-		         this.language = CATALOG_LANGUAGE_GERMAN;
-		     }
 			getStand(baustein, root);
 			massnahmenContext.setContextItem(new DocumentWrapper(root,
 					baustein, config));
