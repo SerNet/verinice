@@ -97,7 +97,9 @@ reportContext.getRenderOption().setOption(EXCELRenderOption.OFFICE_VERSION, "off
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">totalSecurityFigure</property>
+                    <property name="analysis">attribute</property>
                     <text-property name="displayName">totalSecurityFigure</text-property>
+                    <text-property name="heading">totalSecurityFigure</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -142,40 +144,46 @@ if (myroot != null &amp;&amp; myroot != -1) {
 }
 
 return helper.execute(
-	new sernet.verinice.samt.service.TotalSecurityFigureCommand(
+	new sernet.verinice.samt.service.TotalSecurityFigureISA2Command(root)(
 		root
 	)
 ).getResult();]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>root_object</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>root_object</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>Column1</design:name>
-            <design:position>1</design:position>
+            <design:identifier>
+              <design:name>Column1</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -3604,6 +3612,11 @@ columns(new String[]{"minorCount", "majorCount", "topicCount"});</value>
                     <text-property name="heading">samt_topicimplemented</text-property>
                 </structure>
                 <structure>
+                    <property name="columnName">samt_topic_version</property>
+                    <text-property name="displayName">samt_topic_version</text-property>
+                    <text-property name="heading">samt_topic_version</text-property>
+                </structure>
+                <structure>
                     <property name="columnName">samt_topic_maturity</property>
                     <text-property name="displayName">samt_topic_maturity</text-property>
                     <text-property name="heading">samt_topic_maturity</text-property>
@@ -3774,101 +3787,106 @@ columns(new String[]{"minorCount", "majorCount", "topicCount"});</value>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">samt_topic_maturity</property>
+                        <property name="name">samt_topic_version</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">samt_topic_audit_ra</property>
+                        <property name="name">samt_topic_maturity</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">samt_user_classification</property>
+                        <property name="name">samt_topic_audit_ra</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">samt_topic_name</property>
+                        <property name="name">samt_user_classification</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">samt_topic_classification_comment</property>
+                        <property name="name">samt_topic_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">samt_topic_min1</property>
+                        <property name="name">samt_topic_classification_comment</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">samt_topic_abbr</property>
+                        <property name="name">samt_topic_min1</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">samt_topic_min2</property>
+                        <property name="name">samt_topic_abbr</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
-                        <property name="name">dbid</property>
+                        <property name="name">samt_topic_min2</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">22</property>
-                        <property name="name">persons</property>
+                        <property name="name">dbid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">23</property>
-                        <property name="name">relationID</property>
+                        <property name="name">persons</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">24</property>
-                        <property name="name">relationName</property>
+                        <property name="name">relationID</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">25</property>
-                        <property name="name">orgName</property>
+                        <property name="name">relationName</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">26</property>
-                        <property name="name">auditName</property>
+                        <property name="name">orgName</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">27</property>
-                        <property name="name">securityFigure</property>
+                        <property name="name">auditName</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">28</property>
-                        <property name="name">deviationMinor</property>
+                        <property name="name">securityFigure</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">29</property>
-                        <property name="name">deviationMajor</property>
+                        <property name="name">deviationMinor</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">30</property>
-                        <property name="name">deviationSum</property>
+                        <property name="name">deviationMajor</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">31</property>
+                        <property name="name">deviationSum</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">32</property>
                         <property name="name">maturitytext</property>
                         <property name="dataType">string</property>
                     </structure>
                     <structure>
-                        <property name="position">32</property>
+                        <property name="position">33</property>
                         <property name="name">deviationtext</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -3962,125 +3980,132 @@ columns(new String[]{"minorCount", "majorCount", "topicCount"});</value>
                 </structure>
                 <structure>
                     <property name="position">13</property>
+                    <property name="name">samt_topic_version</property>
+                    <property name="nativeName">samt_topic_version</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
                     <property name="name">samt_topic_maturity</property>
                     <property name="nativeName">samt_topic_maturity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">15</property>
                     <property name="name">samt_topic_audit_ra</property>
                     <property name="nativeName">samt_topic_audit_ra</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">16</property>
                     <property name="name">samt_user_classification</property>
                     <property name="nativeName">samt_user_classification</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">17</property>
                     <property name="name">samt_topic_name</property>
                     <property name="nativeName">samt_topic_name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">17</property>
+                    <property name="position">18</property>
                     <property name="name">samt_topic_classification_comment</property>
                     <property name="nativeName">samt_topic_classification_comment</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">18</property>
+                    <property name="position">19</property>
                     <property name="name">samt_topic_min1</property>
                     <property name="nativeName">samt_topic_min1</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">19</property>
+                    <property name="position">20</property>
                     <property name="name">samt_topic_abbr</property>
                     <property name="nativeName">samt_topic_abbr</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">20</property>
+                    <property name="position">21</property>
                     <property name="name">samt_topic_min2</property>
                     <property name="nativeName">samt_topic_min2</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">21</property>
+                    <property name="position">22</property>
                     <property name="name">dbid</property>
                     <property name="nativeName">dbid</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">22</property>
+                    <property name="position">23</property>
                     <property name="name">persons</property>
                     <property name="nativeName">persons</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">23</property>
+                    <property name="position">24</property>
                     <property name="name">relationID</property>
                     <property name="nativeName">relationID</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">24</property>
+                    <property name="position">25</property>
                     <property name="name">relationName</property>
                     <property name="nativeName">relationName</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">26</property>
                     <property name="name">orgName</property>
                     <property name="nativeName">orgName</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">26</property>
+                    <property name="position">27</property>
                     <property name="name">auditName</property>
                     <property name="nativeName">auditName</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">27</property>
+                    <property name="position">28</property>
                     <property name="name">securityFigure</property>
                     <property name="nativeName">securityFigure</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">29</property>
                     <property name="name">deviationMinor</property>
                     <property name="nativeName">deviationMinor</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">30</property>
                     <property name="name">deviationMajor</property>
                     <property name="nativeName">deviationMajor</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">30</property>
+                    <property name="position">31</property>
                     <property name="name">deviationSum</property>
                     <property name="nativeName">deviationSum</property>
                     <property name="dataType">javaObject</property>
@@ -4178,10 +4203,10 @@ result = helper.map(
 orgName =  getElmtPropByHql(orgId, "org_name");
 auditName = getElmtPropByHql(root, "audit_name");
 
-sfLoader = new sernet.verinice.samt.service.TotalSecurityFigureCommand(root);
-bd = new BigDecimal(helper.execute(sfLoader).getResult() * 100);
+sfLoader = new sernet.verinice.samt.service.TotalSecurityFigureISA2Command(root);
+bd = new BigDecimal(helper.execute(sfLoader).getResult());
 bd= bd.setScale(2, RoundingMode.HALF_UP);
-securityFigure = String.valueOf(bd.doubleValue()) + " %";
+securityFigure = String.valueOf(bd.doubleValue());
 
 minorCount = 0;
 majorCount = 0;

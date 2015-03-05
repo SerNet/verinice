@@ -81,253 +81,11 @@
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
-            <xml-property name="queryText"><![CDATA[import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
+            <xml-property name="queryText"><![CDATA[import java.util.ArrayList;
+import sernet.verinice.samt.service.TotalSecurityFigureISA2Command;
+import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.IControl;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.LoadElementByUuid;
-import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.iso27k.service.Retriever;
-
-
-seenControls = new HashSet();
-seenControlGroups = new HashSet();
-seenControlsThreshold = new HashSet();
-seenControlGroupsThreshold = new HashSet();
-
-controlMaturityMap = new HashMap(0);
-
-int getWeightedMaturity(IControl control) {
-	if(!(controlMaturityMap.containsKey(control.getDbId()))){
-	
-		mat = getMaturity(control.getDbId());
-		weight2 = getElmtPropByHql(control.getDbId(), getWeight2Prop(control.getDbId()));
-		if(weight2 == null || "".equals(weight2) || Integer.valueOf(weight2) < 0){
-			weight2 = 1;
-		}
-		weightedThreshold = getWeightedThreshold(control);
-		value = mat * Integer.valueOf(weight2); 
-		if (value > weightedThreshold){
-			value = weightedThreshold;
-		}
-		controlMaturityMap.put(control.getDbId(), value);
-		return value; 
-	} else {
-		return controlMaturityMap.get(control.getDbId());
-	}
-}
-
-matMap = new HashMap(0);
-
-int getMaturity(int contrId){
-	if(!(matMap.containsKey(contrId))){
-		typeId = getTypeId(contrId);
-		mat = 0;
-		if(Control.TYPE_ID.equals(typeId)){
-			mat = Integer.valueOf(getElmtPropByHql(contrId, Control.PROP_MATURITY));
-		} else if(SamtTopic.TYPE_ID.equals(typeId)){
-			mat = Integer.valueOf(getElmtPropByHql(contrId, SamtTopic.PROP_MATURITY));
-		}
-		matMap.put(contrId, mat);
-		return mat;
-	} else {
-		return matMap.get(contrId);
-	}
-}
-
-propMap = new HashMap(0);
-
-String getElmtPropByHql(int dbid, String propType){
-	elementHql = "select props.propertyValue from CnATreeElement elmt " +
-                	"inner join elmt.entity as entity " + 
-	                "inner join entity.typedPropertyLists as propertyList " + 
-        	        "inner join propertyList.properties as props " +
-			"where  elmt.dbId = ? AND props.propertyType = ?";
-	params = new Object[]{dbid, propType};
-	if(!(propMap.containsKey(params))){
-		c2 = new ExecuteHQLInReportCommand(elementHql, params, CnATreeElement.class);
-		result3 = helper.execute(c2).getResult();
-		if(result3 instanceof ArrayList){
-			if(result3.size() > 1){
-				// remove duplicates
-				s = new LinkedHashSet(result);
-				result3.clear();
-				// remove empty entries
-				s.remove("");
-				s.remove(null);
-				tmpSet = new LinkedHashSet();
-				for(Object entry : s){
-					tmpSet.add(String.valueOf(entry).trim());
-				}
-				result3.addAll(tmpSet);
-				
-				if(result3.size() > 1){
-					propMap.put(params, "");
-					return "";
-				}  else if (result3.size() == 1){	
-					propMap.put(params, result3.get(0));
-					return result3.get(0);
-				} else return "";
-			} else {
-				if(result3.size() > 0 &amp;&amp; (result3.get(0) instanceof String)){
-					propMap.put(params, (String)result3.get(0));
-					return (String)result3.get(0);
-				}
-			}
-			if(result3.size() == 1 &amp;&amp; result3.get(0) instanceof String){
-				propMap.put(params, (String)result3.get(0));
-				return (String)result3.get(0);
-			}
-		}
-		propMap.put(params, "");
-		return "";
-	} else {
-		return propMap.get(params);
-	}
-}
-
-wtMap = new HashMap(0);
-
-int getWeightedThreshold(int cgId) {
-	if(!(wtMap.containsKey(cgId))){
-		maturity = 0;
-	        for (CnATreeElement child : getChildren(cgId)) {
-			if (child instanceof IControl &amp;&amp; !(seenControlsThreshold.contains(child))) {
-				IControl control = (IControl) child;
-				maturity += getWeightedThreshold(control);
-				seenControlsThreshold.add(control);
-		    	}
-			if (child instanceof ControlGroup &amp;&amp; !(seenControlGroupsThreshold.contains(child))) {
-	                	ControlGroup controlgroup = (ControlGroup) child;
-	                	maturity += getWeightedThreshold(controlgroup.getDbId());
-				seenControlGroupsThreshold.add(child);
-			}
-		}
-		wtMap.put(cgId, maturity);
-		return maturity;
-	} else {
-		return wtMap.get(cgId);
-	}
-}
-
-wtControlMap = new HashMap(0);
-
-int getWeightedThreshold(IControl contr) {
-	if(!(wtControlMap.containsKey(contr.getDbId()))){
-	        value = 0;
-	        maturity = getMaturity(contr.getDbId());
-	        // if maturity is "not applicable" we don't count the threshold 
-		t2 = getElmtPropByHql(contr.getDbId(),  getThreshold2Prop(contr.getDbId()));
-		w2 = getElmtPropByHql(contr.getDbId(),  getWeight2Prop(contr.getDbId()));
-	        if(IControl.IMPLEMENTED_NA_NUMERIC!=maturity &amp;&amp; hasValue(t2) &amp;&amp; hasValue(w2)) {
-			value = Integer.valueOf(t2)  * Integer.valueOf(w2);
-	        }
-		wtControlMap.put(contr.getDbId(), value);
-	        return value;
-	} else {
-		return wtControlMap.get(contr.getDbId());
-	}
-}
-
-boolean hasValue(String s){
-	if(s != null &amp;&amp; !("".equals(s))){
-		return Boolean.TRUE;
-	}
-	return Boolean.FALSE;
-}
-
-typeIdMap = new HashMap();
-
-String getTypeId(int elmtId){
-	if(!(typeIdMap.containsKey(elmtId))){
-		typeIdHQL = "select elmt.objectType from CnATreeElement elmt " + 
-	                	"inner join elmt.entity as entity " + 
-		                "inner join entity.typedPropertyLists as propertyList " + 
-	        	        "inner join propertyList.properties as props " + 
-	                	"where elmt.dbId = ? ";
-		params = new Object[]{elmtId};
-		idLoader = new ExecuteHQLInReportCommand(typeIdHQL, params, CnATreeElement.class);
-		result2 = helper.execute(idLoader).getResult();
-		typeId = "";
-		for(Object r : result2){
-			if(r instanceof String){
-				typeId = r;
-			}
-		}
-		typeIdMap.put(elmtId, typeId);
-		return typeId;	
-	} else {
-		return typeIdMap.get(elmtId);
-	}
-}
-
-String getThreshold2Prop(int contrId){
-	typeId = getTypeId(contrId);
-	if(Control.TYPE_ID.equals(typeId)){
-		return Control.PROP_THRESHOLD2;
-	} else if(SamtTopic.TYPE_ID.equals(typeId)){
-		return SamtTopic.PROP_THRESHOLD2;
-	}
-	return "";
-}
-
-String getWeight2Prop(int contrId){
-	typeId = getTypeId(contrId);
-	if(Control.TYPE_ID.equals(typeId)){
-		return Control.PROP_WEIGHT2;
-	} else if(SamtTopic.TYPE_ID.equals(typeId)){
-		return SamtTopic.PROP_WEIGHT2;
-	}
-	return "";
-}
-
-wmMap = new HashMap(0);
-
-int getWeightedMaturity(int cgId) {
-	if(!(wmMap.containsKey(cgId))){	
-		maturity = 0;
-		for (CnATreeElement child : getChildren(cgId)) {
-			if (child instanceof IControl &amp;&amp; !(seenControls.contains(child))) {
-				control = (IControl) child;
-				cMat = getWeightedMaturity(control);
-				if(cMat > 0){
-					maturity += cMat;
-					seenControls.add(child);
-				}
-	            	}
-			if (child instanceof ControlGroup &amp;&amp; !(seenControlGroups.contains(child))) {
-				controlgroup = (ControlGroup) child;
-				maturity += getWeightedMaturity(controlgroup.getDbId());
-				seenControlGroups.add(child);
-			}
-	        }
-		wmMap.put(cgId, maturity);
-	        return maturity;
-	} else {
-		return wmMap.get(cgId);
-	}
-}
-
-childrenMap = new HashMap(0);
-
-List getChildren(int id){
-	if(!(childrenMap.containsKey(id))){
-		hql = "from CnATreeElement elmt " +
-	                	"left join fetch elmt.entity as entity " + 
-		                "left join fetch entity.typedPropertyLists as propertyList " + 
-	        	        "left join fetch propertyList.properties as props " + 
-				"where elmt.parentId = ? ";
-		params = new Object[]{id};
-		loader = new ExecuteHQLInReportCommand(hql, params, CnATreeElement.class);
-		result = helper.execute(loader).getResult();	
-		childrenMap.put(id, result);
-		return result;
-	} else {
-		return childrenMap.get(id);
-	}
-}
 
 // set top level element for report:
 root = helper.getRoot();
@@ -337,34 +95,13 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 
-
-controlgroupHQL = "select elmt.dbId from CnATreeElement elmt " + 
-                	"inner join elmt.entity as entity " + 
-	                "inner join entity.typedPropertyLists as propertyList " + 
-        	        "inner join propertyList.properties as props " + 
-                	"where elmt.parentId = ? and elmt.objectType = ? ";
-	params = new Object[]{root, ControlGroup.TYPE_ID};
-	idLoader = new ExecuteHQLInReportCommand(controlgroupHQL, params, CnATreeElement.class);
-	result2 = helper.execute(idLoader).getResult();
-	samtGroupId = -1;
-	for(Object r : result2){
-		if(r instanceof Integer){
-			samtGroupId = r;
-		}
-	}
-	//groupReloader = new LoadElementByUuid(samtGroup.getUuid(), new RetrieveInfo().setChildren(true).setChildrenProperties(true).setProperties(true));
-	//samtGroup = helper.execute(groupReloader).getElement();
-	weightedMaturity = getWeightedMaturity(samtGroupId);
-        weightedThreshold = getWeightedThreshold(samtGroupId);
-        totalSecurityFigure = 1.0;
-        if(weightedThreshold!=0) {
-           totalSecurityFigure = (double) weightedMaturity / (double) weightedThreshold;
-        }
-	if(totalSecurityFigure > 1.0){
-		return Double.valueOf(1.0);
-	} else {
-		return Double.valueOf(totalSecurityFigure);
-	}]]></xml-property>
+c = new TotalSecurityFigureISA2Command(root);
+secfig = helper.execute(c).getResult();
+results = new ArrayList(0);
+result = new ArrayList(0);
+result.add(String.valueOf(secfig));
+results.add(result);
+return results;]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -5329,8 +5066,8 @@ this.text = result;]]></method>
                         <property name="paddingBottom">0pt</property>
                         <property name="paddingRight">0pt</property>
                         <structure name="numberFormat">
-                            <property name="category">Percent</property>
-                            <property name="pattern">Percent</property>
+                            <property name="category">General Number</property>
+                            <property name="pattern">General Number</property>
                         </structure>
                         <property name="textAlign">center</property>
                         <property name="dataSet">totalSecurityFigure</property>

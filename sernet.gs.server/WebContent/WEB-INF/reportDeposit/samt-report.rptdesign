@@ -32,8 +32,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8080/veriniceserver</property>
+            <property name="sncaUrl">http://localhost:8088/veriniceserver-1.9/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8088/veriniceserver-1.9</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -103,73 +103,6 @@ return helper.execute(c).getSelfAssessmentGroup().getParent().getTitle();]]></xm
                 </ex-property>
             </list-property>
         </oda-data-set>
-        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="totalSecurityFigure" id="61">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">totalSecurityFigure</property>
-                    <text-property name="displayName">totalSecurityFigure</text-property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">totalSecurityFigure</property>
-                        <property name="dataType">string</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">verinice</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">totalSecurityFigure</property>
-                    <property name="nativeName">totalSecurityFigure</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[root = _vars.get("vn_root_element");
-return helper.execute(
-	new sernet.verinice.samt.service.TotalSecurityFigureCommand(root)
-).getResult();]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:name>Column1</design:name>
-            <design:position>1</design:position>
-            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
-            <design:precision>-1</design:precision>
-            <design:scale>-1</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>Column1</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>Column1</design:label>
-            <design:formattingHints>
-              <design:displaySize>8</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>setupQueryText</name>
-                    <value>columns(new String[] { "totalSecurityFigure" });</value>
-                </ex-property>
-            </list-property>
-        </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="samtTopics" id="63">
             <list-property name="computedColumns">
                 <structure>
@@ -184,70 +117,107 @@ else {row["samt_topic_maturity"]}</expression>
                 <structure>
                     <property name="columnName">samt_topic_audit_devi</property>
                     <text-property name="displayName">samt_topic_audit_devi</text-property>
+                    <text-property name="heading">samt_topic_audit_devi</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_controlnote</property>
+                    <text-property name="displayName">samt_topic_controlnote</text-property>
+                    <text-property name="heading">samt_topic_controlnote</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">samt_topic_isaauditnote</property>
                     <text-property name="displayName">samt_topic_isaauditnote</text-property>
+                    <text-property name="heading">samt_topic_isaauditnote</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">samt_topic_audit_findings</property>
                     <text-property name="displayName">samt_topic_audit_findings</text-property>
+                    <text-property name="heading">samt_topic_audit_findings</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">samt_topic_tag</property>
                     <text-property name="displayName">samt_topic_tag</text-property>
+                    <text-property name="heading">samt_topic_tag</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">samt_topic_ownweight</property>
                     <text-property name="displayName">samt_topic_ownweight</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_internalnote</property>
-                    <text-property name="displayName">samt_topic_internalnote</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_audit_compluntil</property>
-                    <text-property name="displayName">samt_topic_audit_compluntil</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_weight</property>
-                    <text-property name="displayName">samt_topic_weight</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_externalnote</property>
-                    <text-property name="displayName">samt_topic_externalnote</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topicimplemented</property>
-                    <text-property name="displayName">samt_topicimplemented</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_maturity</property>
-                    <text-property name="displayName">samt_topic_maturity</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_audit_ra</property>
-                    <text-property name="displayName">samt_topic_audit_ra</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_name</property>
-                    <text-property name="displayName">samt_topic_name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_min1</property>
-                    <text-property name="displayName">samt_topic_min1</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_abbr</property>
-                    <text-property name="displayName">samt_topic_abbr</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">samt_topic_min2</property>
-                    <text-property name="displayName">samt_topic_min2</text-property>
+                    <text-property name="heading">samt_topic_ownweight</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">samt_topic_desc</property>
                     <text-property name="displayName">samt_topic_desc</text-property>
+                    <text-property name="heading">samt_topic_desc</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_internalnote</property>
+                    <text-property name="displayName">samt_topic_internalnote</text-property>
+                    <text-property name="heading">samt_topic_internalnote</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_audit_compluntil</property>
+                    <text-property name="displayName">samt_topic_audit_compluntil</text-property>
+                    <text-property name="heading">samt_topic_audit_compluntil</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_weight</property>
+                    <text-property name="displayName">samt_topic_weight</text-property>
+                    <text-property name="heading">samt_topic_weight</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_externalnote</property>
+                    <text-property name="displayName">samt_topic_externalnote</text-property>
+                    <text-property name="heading">samt_topic_externalnote</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topicimplemented</property>
+                    <text-property name="displayName">samt_topicimplemented</text-property>
+                    <text-property name="heading">samt_topicimplemented</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_version</property>
+                    <text-property name="displayName">samt_topic_version</text-property>
+                    <text-property name="heading">samt_topic_version</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_maturity</property>
+                    <text-property name="displayName">samt_topic_maturity</text-property>
+                    <text-property name="heading">samt_topic_maturity</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_audit_ra</property>
+                    <text-property name="displayName">samt_topic_audit_ra</text-property>
+                    <text-property name="heading">samt_topic_audit_ra</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_user_classification</property>
+                    <text-property name="displayName">samt_user_classification</text-property>
+                    <text-property name="heading">samt_user_classification</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_name</property>
+                    <text-property name="displayName">samt_topic_name</text-property>
+                    <text-property name="heading">samt_topic_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_classification_comment</property>
+                    <text-property name="displayName">samt_topic_classification_comment</text-property>
+                    <text-property name="heading">samt_topic_classification_comment</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_min1</property>
+                    <text-property name="displayName">samt_topic_min1</text-property>
+                    <text-property name="heading">samt_topic_min1</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_abbr</property>
+                    <text-property name="displayName">samt_topic_abbr</text-property>
+                    <text-property name="heading">samt_topic_abbr</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">samt_topic_min2</property>
+                    <text-property name="displayName">samt_topic_min2</text-property>
+                    <text-property name="heading">samt_topic_min2</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -273,86 +243,106 @@ else {row["samt_topic_maturity"]}</expression>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">samt_topic_isaauditnote</property>
+                        <property name="name">samt_topic_controlnote</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">samt_topic_audit_findings</property>
+                        <property name="name">samt_topic_isaauditnote</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">samt_topic_tag</property>
+                        <property name="name">samt_topic_audit_findings</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">samt_topic_ownweight</property>
+                        <property name="name">samt_topic_tag</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">samt_topic_internalnote</property>
+                        <property name="name">samt_topic_ownweight</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">samt_topic_audit_compluntil</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">8</property>
-                        <property name="name">samt_topic_weight</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">9</property>
-                        <property name="name">samt_topic_externalnote</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">10</property>
-                        <property name="name">samt_topicimplemented</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">11</property>
-                        <property name="name">samt_topic_maturity</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">12</property>
-                        <property name="name">samt_topic_audit_ra</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">13</property>
-                        <property name="name">samt_topic_name</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">14</property>
-                        <property name="name">samt_topic_min1</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">15</property>
-                        <property name="name">samt_topic_abbr</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">16</property>
-                        <property name="name">samt_topic_min2</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">17</property>
                         <property name="name">samt_topic_desc</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
+                        <property name="position">8</property>
+                        <property name="name">samt_topic_internalnote</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">9</property>
+                        <property name="name">samt_topic_audit_compluntil</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">10</property>
+                        <property name="name">samt_topic_weight</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">samt_topic_externalnote</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">samt_topicimplemented</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">samt_topic_version</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">samt_topic_maturity</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">samt_topic_audit_ra</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">samt_user_classification</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">samt_topic_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
                         <property name="position">18</property>
+                        <property name="name">samt_topic_classification_comment</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">samt_topic_min1</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">samt_topic_abbr</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">samt_topic_min2</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
                         <property name="name">maturitytext</property>
                         <property name="dataType">string</property>
                     </structure>
@@ -369,119 +359,153 @@ else {row["samt_topic_maturity"]}</expression>
                 </structure>
                 <structure>
                     <property name="position">2</property>
+                    <property name="name">samt_topic_controlnote</property>
+                    <property name="nativeName">samt_topic_controlnote</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
                     <property name="name">samt_topic_isaauditnote</property>
                     <property name="nativeName">samt_topic_isaauditnote</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">3</property>
+                    <property name="position">4</property>
                     <property name="name">samt_topic_audit_findings</property>
                     <property name="nativeName">samt_topic_audit_findings</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">4</property>
+                    <property name="position">5</property>
                     <property name="name">samt_topic_tag</property>
                     <property name="nativeName">samt_topic_tag</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">5</property>
+                    <property name="position">6</property>
                     <property name="name">samt_topic_ownweight</property>
                     <property name="nativeName">samt_topic_ownweight</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
+                    <property name="name">samt_topic_desc</property>
+                    <property name="nativeName">samt_topic_desc</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
                     <property name="name">samt_topic_internalnote</property>
                     <property name="nativeName">samt_topic_internalnote</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">9</property>
                     <property name="name">samt_topic_audit_compluntil</property>
                     <property name="nativeName">samt_topic_audit_compluntil</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">10</property>
                     <property name="name">samt_topic_weight</property>
                     <property name="nativeName">samt_topic_weight</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">11</property>
                     <property name="name">samt_topic_externalnote</property>
                     <property name="nativeName">samt_topic_externalnote</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">12</property>
                     <property name="name">samt_topicimplemented</property>
                     <property name="nativeName">samt_topicimplemented</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">13</property>
+                    <property name="name">samt_topic_version</property>
+                    <property name="nativeName">samt_topic_version</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
                     <property name="name">samt_topic_maturity</property>
                     <property name="nativeName">samt_topic_maturity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">12</property>
+                    <property name="position">15</property>
                     <property name="name">samt_topic_audit_ra</property>
                     <property name="nativeName">samt_topic_audit_ra</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">13</property>
+                    <property name="position">16</property>
+                    <property name="name">samt_user_classification</property>
+                    <property name="nativeName">samt_user_classification</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
                     <property name="name">samt_topic_name</property>
                     <property name="nativeName">samt_topic_name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">14</property>
+                    <property name="position">18</property>
+                    <property name="name">samt_topic_classification_comment</property>
+                    <property name="nativeName">samt_topic_classification_comment</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
                     <property name="name">samt_topic_min1</property>
                     <property name="nativeName">samt_topic_min1</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">15</property>
+                    <property name="position">20</property>
                     <property name="name">samt_topic_abbr</property>
                     <property name="nativeName">samt_topic_abbr</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">16</property>
+                    <property name="position">21</property>
                     <property name="name">samt_topic_min2</property>
                     <property name="nativeName">samt_topic_min2</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">17</property>
-                    <property name="name">samt_topic_desc</property>
-                    <property name="nativeName">samt_topic_desc</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Group;
+import java.util.Comparator;
+import java.util.Collections;
+import sernet.gs.service.NumericStringComparator;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -491,41 +515,90 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 
-sag = helper.execute(
-	new sernet.verinice.samt.service.FindSamtGroup(true, root)
-	).getSelfAssessmentGroup();
+object = "samt_topic";
 
+Set getAllElementsHQL(String zielObjektTyp, int rootElement){
+	hql = "from CnATreeElement elmt " +
+                	"left join fetch elmt.entity as entity " + 
+	                "left join fetch entity.typedPropertyLists as propertyList " + 
+        	        "left join fetch propertyList.properties as props " + 
+			"where elmt.parentId = ?";
+	params = new Object[]{rootElement};
+	loader = new ExecuteHQLInReportCommand(hql, params, CnATreeElement.class);
+	result = helper.execute(loader).getResult();
+	filteredResult  = new HashSet(0);
+	for(Object o : result){
+		if(zielObjektTyp.equals(o.getTypeId())){
+			filteredResult.add(o);
+		} else if(o instanceof ControlGroup){
+			filteredResult.addAll(getAllElementsHQL(zielObjektTyp, o.getDbId()));
+		}
+	}
+	return filteredResult;
 
-cols = helper.getAllPropertyTypes("samt_topic");
-c2 = new LoadReportElements("samt_topic", sag.getDbId());
-elements = helper.execute(c2).getElements();
-return helper.map(
-	elements,
+}
+
+controlgroupHQL = "select elmt.dbId from CnATreeElement elmt " + 
+                	"inner join elmt.entity as entity " + 
+	                "inner join entity.typedPropertyLists as propertyList " + 
+        	        "inner join propertyList.properties as props " + 
+                	"where elmt.parentId = ? and elmt.objectType = ? ";
+	params = new Object[]{root, ControlGroup.TYPE_ID};
+	idLoader = new ExecuteHQLInReportCommand(controlgroupHQL, params, CnATreeElement.class);
+	result2 = helper.execute(idLoader).getResult();
+	samtGroupId = null;
+	for(Object r : result2){
+		if(r instanceof Integer){
+			samtGroupId = r;
+		}
+	}
+
+elements = getAllElementsHQL(object, Integer.valueOf(samtGroupId));
+elementList = new ArrayList(elements.size());
+elementList.addAll(elements);
+            // pre-sort list by chapter name:
+            Collections.sort(elementList, new Comparator() {
+                public int compare(CnATreeElement e1, CnATreeElement e2) {
+                    NumericStringComparator comp = new NumericStringComparator();
+                    if (e1 == null || e2 == null)
+                        return 0;
+                    if (e1.getTitle() == null || e2.getTitle() == null)
+                        return 0;
+                    return comp.compare(e1.getTitle(), e2.getTitle());
+                }
+            });
+cols = helper.getAllPropertyTypes(object);
+return helper.mapfast(
+	elementList,
 	cols
 );]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>root_object</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>root_object</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
 </model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
@@ -676,90 +749,148 @@ inParameters(new String[] { "width", "height" });</value>
                 <structure>
                     <property name="columnName">org_name</property>
                     <text-property name="displayName">org_name</text-property>
+                    <text-property name="heading">org_name</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_isa_contphone</property>
                     <text-property name="displayName">org_isa_contphone</text-property>
+                    <text-property name="heading">org_isa_contphone</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_tag</property>
                     <text-property name="displayName">org_tag</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">org_abbr</property>
-                    <text-property name="displayName">org_abbr</text-property>
+                    <text-property name="heading">org_tag</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_created</property>
                     <text-property name="displayName">org_created</text-property>
+                    <text-property name="heading">org_created</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">org_abbr</property>
+                    <text-property name="displayName">org_abbr</text-property>
+                    <text-property name="heading">org_abbr</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_isa_contmail</property>
                     <text-property name="displayName">org_isa_contmail</text-property>
+                    <text-property name="heading">org_isa_contmail</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_isa_duns</property>
                     <text-property name="displayName">org_isa_duns</text-property>
+                    <text-property name="heading">org_isa_duns</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_isa_loc</property>
                     <text-property name="displayName">org_isa_loc</text-property>
+                    <text-property name="heading">org_isa_loc</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">org_description</property>
+                    <text-property name="displayName">org_description</text-property>
+                    <text-property name="heading">org_description</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_isa_web</property>
                     <text-property name="displayName">org_isa_web</text-property>
+                    <text-property name="heading">org_isa_web</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_isa_addr</property>
                     <text-property name="displayName">org_isa_addr</text-property>
+                    <text-property name="heading">org_isa_addr</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_isa_compgroup</property>
                     <text-property name="displayName">org_isa_compgroup</text-property>
+                    <text-property name="heading">org_isa_compgroup</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_isa_cont</property>
                     <text-property name="displayName">org_isa_cont</text-property>
+                    <text-property name="heading">org_isa_cont</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_isa_compdesc</property>
                     <text-property name="displayName">org_isa_compdesc</text-property>
+                    <text-property name="heading">org_isa_compdesc</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">org_document</property>
+                    <text-property name="displayName">org_document</text-property>
+                    <text-property name="heading">org_document</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_riskaccept_confid</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">org_riskaccept_confid</text-property>
+                    <text-property name="heading">org_riskaccept_confid</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_riskaccept_integ</property>
                     <text-property name="displayName">org_riskaccept_integ</text-property>
+                    <text-property name="heading">org_riskaccept_integ</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_riskaccept_avail</property>
                     <text-property name="displayName">org_riskaccept_avail</text-property>
+                    <text-property name="heading">org_riskaccept_avail</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_riskaccept_expl</property>
                     <text-property name="displayName">org_riskaccept_expl</text-property>
+                    <text-property name="heading">org_riskaccept_expl</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_class_asset_c</property>
                     <text-property name="displayName">org_class_asset_c</text-property>
+                    <text-property name="heading">org_class_asset_c</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_class_asset_i</property>
                     <text-property name="displayName">org_class_asset_i</text-property>
+                    <text-property name="heading">org_class_asset_i</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_class_asset_a</property>
                     <text-property name="displayName">org_class_asset_a</text-property>
+                    <text-property name="heading">org_class_asset_a</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_class_threat</property>
                     <text-property name="displayName">org_class_threat</text-property>
+                    <text-property name="heading">org_class_threat</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">org_class_vuln</property>
                     <text-property name="displayName">org_class_vuln</text-property>
+                    <text-property name="heading">org_class_vuln</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">org_vv_bsig_authority</property>
+                    <text-property name="displayName">org_vv_bsig_authority</text-property>
+                    <text-property name="heading">org_vv_bsig_authority</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">org_vv_bsig_availability_phone</property>
+                    <text-property name="displayName">org_vv_bsig_availability_phone</text-property>
+                    <text-property name="heading">org_vv_bsig_availability_phone</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">org_vv_bsig_availability_email</property>
+                    <text-property name="displayName">org_vv_bsig_availability_email</text-property>
+                    <text-property name="heading">org_vv_bsig_availability_email</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">org_vv_bsig_enquiry_phone</property>
+                    <text-property name="displayName">org_vv_bsig_enquiry_phone</text-property>
+                    <text-property name="heading">org_vv_bsig_enquiry_phone</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">org_vv_bsig_equiry_email</property>
+                    <text-property name="displayName">org_vv_bsig_equiry_email</text-property>
+                    <text-property name="heading">org_vv_bsig_equiry_email</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -795,12 +926,12 @@ inParameters(new String[] { "width", "height" });</value>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">org_abbr</property>
+                        <property name="name">org_created</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">org_created</property>
+                        <property name="name">org_abbr</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
@@ -820,80 +951,323 @@ inParameters(new String[] { "width", "height" });</value>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">org_isa_web</property>
+                        <property name="name">org_description</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">org_isa_addr</property>
+                        <property name="name">org_isa_web</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
-                        <property name="name">org_isa_compgroup</property>
+                        <property name="name">org_isa_addr</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">12</property>
-                        <property name="name">org_isa_cont</property>
+                        <property name="name">org_isa_compgroup</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">13</property>
-                        <property name="name">org_isa_compdesc</property>
+                        <property name="name">org_isa_cont</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">14</property>
-                        <property name="name">org_riskaccept_confid</property>
+                        <property name="name">org_isa_compdesc</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">15</property>
-                        <property name="name">org_riskaccept_integ</property>
+                        <property name="name">org_document</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">16</property>
-                        <property name="name">org_riskaccept_avail</property>
+                        <property name="name">org_riskaccept_confid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">17</property>
-                        <property name="name">org_riskaccept_expl</property>
+                        <property name="name">org_riskaccept_integ</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">18</property>
-                        <property name="name">org_class_asset_c</property>
+                        <property name="name">org_riskaccept_avail</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">19</property>
-                        <property name="name">org_class_asset_i</property>
+                        <property name="name">org_riskaccept_expl</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">20</property>
-                        <property name="name">org_class_asset_a</property>
+                        <property name="name">org_class_asset_c</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">21</property>
-                        <property name="name">org_class_threat</property>
+                        <property name="name">org_class_asset_i</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">22</property>
+                        <property name="name">org_class_asset_a</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">org_class_threat</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
                         <property name="name">org_class_vuln</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">org_vv_bsig_authority</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
+                        <property name="name">org_vv_bsig_availability_phone</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">org_vv_bsig_availability_email</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">org_vv_bsig_enquiry_phone</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">29</property>
+                        <property name="name">org_vv_bsig_equiry_email</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
             </structure>
             <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">org_name</property>
+                    <property name="nativeName">org_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">org_isa_contphone</property>
+                    <property name="nativeName">org_isa_contphone</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">org_tag</property>
+                    <property name="nativeName">org_tag</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">org_created</property>
+                    <property name="nativeName">org_created</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">5</property>
+                    <property name="name">org_abbr</property>
+                    <property name="nativeName">org_abbr</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
+                    <property name="name">org_isa_contmail</property>
+                    <property name="nativeName">org_isa_contmail</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">7</property>
+                    <property name="name">org_isa_duns</property>
+                    <property name="nativeName">org_isa_duns</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">8</property>
+                    <property name="name">org_isa_loc</property>
+                    <property name="nativeName">org_isa_loc</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">9</property>
+                    <property name="name">org_description</property>
+                    <property name="nativeName">org_description</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">10</property>
+                    <property name="name">org_isa_web</property>
+                    <property name="nativeName">org_isa_web</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">org_isa_addr</property>
+                    <property name="nativeName">org_isa_addr</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">org_isa_compgroup</property>
+                    <property name="nativeName">org_isa_compgroup</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">org_isa_cont</property>
+                    <property name="nativeName">org_isa_cont</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">org_isa_compdesc</property>
+                    <property name="nativeName">org_isa_compdesc</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">org_document</property>
+                    <property name="nativeName">org_document</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">org_riskaccept_confid</property>
+                    <property name="nativeName">org_riskaccept_confid</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">org_riskaccept_integ</property>
+                    <property name="nativeName">org_riskaccept_integ</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">org_riskaccept_avail</property>
+                    <property name="nativeName">org_riskaccept_avail</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">org_riskaccept_expl</property>
+                    <property name="nativeName">org_riskaccept_expl</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">org_class_asset_c</property>
+                    <property name="nativeName">org_class_asset_c</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">org_class_asset_i</property>
+                    <property name="nativeName">org_class_asset_i</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">org_class_asset_a</property>
+                    <property name="nativeName">org_class_asset_a</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">org_class_threat</property>
+                    <property name="nativeName">org_class_threat</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">org_class_vuln</property>
+                    <property name="nativeName">org_class_vuln</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">org_vv_bsig_authority</property>
+                    <property name="nativeName">org_vv_bsig_authority</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
+                    <property name="name">org_vv_bsig_availability_phone</property>
+                    <property name="nativeName">org_vv_bsig_availability_phone</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">org_vv_bsig_availability_email</property>
+                    <property name="nativeName">org_vv_bsig_availability_email</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">org_vv_bsig_enquiry_phone</property>
+                    <property name="nativeName">org_vv_bsig_enquiry_phone</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">29</property>
+                    <property name="name">org_vv_bsig_equiry_email</property>
+                    <property name="nativeName">org_vv_bsig_equiry_email</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 import sernet.verinice.report.service.commands.*;
+import java.util.ArrayList;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -905,44 +1279,58 @@ if (myroot != null &amp;&amp; myroot != -1) {
 
 child=null;
 
-c3 = new LoadCnAElementById("audit", root);
-child = helper.execute(c3).getFound();
+hql = "from CnATreeElement org " +
+                	"left join fetch org.entity as entity " + 
+	                "left join fetch entity.typedPropertyLists as propertyList " + 
+        	        "left join fetch propertyList.properties as props " + 
+			"where org.dbId IN (" +
+				"select elmt.scopeId from CnATreeElement elmt " +
+				"where elmt.dbId = ?)";
 
-if (child == null) {
-	c3 = new LoadCnAElementById("org", root);
-	child = helper.execute(c3).getFound();
+c3 = new ExecuteHQLInReportCommand(hql, new Object[]{root}, CnATreeElement.class);
+elementList = helper.execute(c3).getResult();
+
+elements = new ArrayList(0);
+for(Object o : elementList){
+	if(o instanceof Organization){
+		if(!(elements.contains(o))){
+			elements.add(o);
+		}
+	}
 }
 cols = helper.getAllPropertyTypes("org");
-c2 = new LoadReportParentOrgForObject(child);
-elements = helper.execute(c2).getElements();
-return helper.map(
+return helper.mapfast(
 	elements,
 	cols
 );
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>root_object</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>root_object</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
 </model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
@@ -958,44 +1346,143 @@ columns(cols);</value>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="audits" id="965">
             <list-property name="columnHints">
                 <structure>
-                    <property name="columnName">audit_description</property>
-                    <text-property name="displayName">audit_description</text-property>
+                    <property name="columnName">audit_executing_company</property>
+                    <text-property name="displayName">audit_executing_company</text-property>
+                    <text-property name="heading">audit_executing_company</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">audit_type</property>
-                    <text-property name="displayName">audit_type</text-property>
+                    <property name="columnName">audit_release_date</property>
+                    <text-property name="displayName">audit_release_date</text-property>
+                    <text-property name="heading">audit_release_date</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">audit_name</property>
-                    <text-property name="displayName">audit_name</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">audit_abbr</property>
-                    <text-property name="displayName">audit_abbr</text-property>
+                    <property name="columnName">audit_document</property>
+                    <text-property name="displayName">audit_document</text-property>
+                    <text-property name="heading">audit_document</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">audit_enddate</property>
                     <text-property name="displayName">audit_enddate</text-property>
+                    <text-property name="heading">audit_enddate</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">audit_startdate</property>
                     <text-property name="displayName">audit_startdate</text-property>
+                    <text-property name="heading">audit_startdate</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">audit_tag</property>
-                    <text-property name="displayName">audit_tag</text-property>
+                    <property name="columnName">audit_isa_creat</property>
+                    <text-property name="displayName">audit_isa_creat</text-property>
+                    <text-property name="heading">audit_isa_creat</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_isa_creatphone</property>
+                    <text-property name="displayName">audit_isa_creatphone</text-property>
+                    <text-property name="heading">audit_isa_creatphone</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">audit_isa_creatmail</property>
                     <text-property name="displayName">audit_isa_creatmail</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">audit_isa_creatphone</property>
-                    <text-property name="displayName">audit_isa_creatphone</text-property>
+                    <property name="columnName">audit_included_topics</property>
+                    <text-property name="displayName">audit_included_topics</text-property>
+                    <text-property name="heading">audit_included_topics</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">audit_isa_creat</property>
-                    <text-property name="displayName">audit_isa_creat</text-property>
+                    <property name="columnName">audit_approved_by</property>
+                    <text-property name="displayName">audit_approved_by</text-property>
+                    <text-property name="heading">audit_approved_by</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_description</property>
+                    <text-property name="displayName">audit_description</text-property>
+                    <text-property name="heading">audit_description</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_type</property>
+                    <text-property name="displayName">audit_type</text-property>
+                    <text-property name="heading">audit_type</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_name</property>
+                    <text-property name="displayName">audit_name</text-property>
+                    <text-property name="heading">audit_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_abbr</property>
+                    <text-property name="displayName">audit_abbr</text-property>
+                    <text-property name="heading">audit_abbr</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_tag</property>
+                    <text-property name="displayName">audit_tag</text-property>
+                    <text-property name="heading">audit_tag</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_target_audience</property>
+                    <text-property name="displayName">audit_target_audience</text-property>
+                    <text-property name="heading">audit_target_audience</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_excluded_topics</property>
+                    <text-property name="displayName">audit_excluded_topics</text-property>
+                    <text-property name="heading">audit_excluded_topics</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_isr_approval</property>
+                    <text-property name="displayName">audit_isr_approval</text-property>
+                    <text-property name="heading">audit_isr_approval</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_isr_year</property>
+                    <text-property name="displayName">audit_isr_year</text-property>
+                    <text-property name="heading">audit_isr_year</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_isr_version</property>
+                    <text-property name="displayName">audit_isr_version</text-property>
+                    <text-property name="heading">audit_isr_version</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_isr_classfc</property>
+                    <text-property name="displayName">audit_isr_classfc</text-property>
+                    <text-property name="heading">audit_isr_classfc</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_responsible_scope</property>
+                    <text-property name="displayName">audit_document_data_responsible_scope</text-property>
+                    <text-property name="heading">audit_document_data_responsible_scope</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_document_basis</property>
+                    <text-property name="displayName">audit_document_data_document_basis</text-property>
+                    <text-property name="heading">audit_document_data_document_basis</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_author_name</property>
+                    <text-property name="displayName">audit_document_data_author_name</text-property>
+                    <text-property name="heading">audit_document_data_author_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_author_date</property>
+                    <text-property name="displayName">audit_document_data_author_date</text-property>
+                    <text-property name="heading">audit_document_data_author_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_final_approval_distribution</property>
+                    <text-property name="displayName">audit_document_data_final_approval_distribution</text-property>
+                    <text-property name="heading">audit_document_data_final_approval_distribution</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_topics_good_results</property>
+                    <text-property name="displayName">audit_topics_good_results</text-property>
+                    <text-property name="heading">audit_topics_good_results</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_topics_bad_results</property>
+                    <text-property name="displayName">audit_topics_bad_results</text-property>
+                    <text-property name="heading">audit_topics_bad_results</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -1016,37 +1503,37 @@ columns(cols);</value>
                 <list-property name="resultSet">
                     <structure>
                         <property name="position">1</property>
-                        <property name="name">audit_description</property>
+                        <property name="name">audit_executing_company</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">2</property>
-                        <property name="name">audit_type</property>
+                        <property name="name">audit_release_date</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">3</property>
-                        <property name="name">audit_name</property>
+                        <property name="name">audit_document</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">4</property>
-                        <property name="name">audit_abbr</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
                         <property name="name">audit_enddate</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">6</property>
+                        <property name="position">5</property>
                         <property name="name">audit_startdate</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
+                        <property name="position">6</property>
+                        <property name="name">audit_isa_creat</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
                         <property name="position">7</property>
-                        <property name="name">audit_tag</property>
+                        <property name="name">audit_isa_creatphone</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
@@ -1056,12 +1543,102 @@ columns(cols);</value>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">audit_isa_creatphone</property>
+                        <property name="name">audit_included_topics</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">audit_isa_creat</property>
+                        <property name="name">audit_approved_by</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">11</property>
+                        <property name="name">audit_description</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
+                        <property name="name">audit_type</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">13</property>
+                        <property name="name">audit_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">14</property>
+                        <property name="name">audit_abbr</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">15</property>
+                        <property name="name">audit_tag</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">16</property>
+                        <property name="name">audit_target_audience</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">17</property>
+                        <property name="name">audit_excluded_topics</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">18</property>
+                        <property name="name">audit_isr_approval</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">19</property>
+                        <property name="name">audit_isr_year</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">20</property>
+                        <property name="name">audit_isr_version</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">21</property>
+                        <property name="name">audit_isr_classfc</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">22</property>
+                        <property name="name">audit_document_data_responsible_scope</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">23</property>
+                        <property name="name">audit_document_data_document_basis</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">24</property>
+                        <property name="name">audit_document_data_author_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">audit_document_data_author_date</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">26</property>
+                        <property name="name">audit_document_data_final_approval_distribution</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">27</property>
+                        <property name="name">audit_topics_good_results</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">28</property>
+                        <property name="name">audit_topics_bad_results</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -1070,50 +1647,50 @@ columns(cols);</value>
             <list-property name="resultSet">
                 <structure>
                     <property name="position">1</property>
-                    <property name="name">audit_description</property>
-                    <property name="nativeName">audit_description</property>
+                    <property name="name">audit_executing_company</property>
+                    <property name="nativeName">audit_executing_company</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">2</property>
-                    <property name="name">audit_type</property>
-                    <property name="nativeName">audit_type</property>
+                    <property name="name">audit_release_date</property>
+                    <property name="nativeName">audit_release_date</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">3</property>
-                    <property name="name">audit_name</property>
-                    <property name="nativeName">audit_name</property>
+                    <property name="name">audit_document</property>
+                    <property name="nativeName">audit_document</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">4</property>
-                    <property name="name">audit_abbr</property>
-                    <property name="nativeName">audit_abbr</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
                     <property name="name">audit_enddate</property>
                     <property name="nativeName">audit_enddate</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">5</property>
                     <property name="name">audit_startdate</property>
                     <property name="nativeName">audit_startdate</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
+                    <property name="position">6</property>
+                    <property name="name">audit_isa_creat</property>
+                    <property name="nativeName">audit_isa_creat</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
                     <property name="position">7</property>
-                    <property name="name">audit_tag</property>
-                    <property name="nativeName">audit_tag</property>
+                    <property name="name">audit_isa_creatphone</property>
+                    <property name="nativeName">audit_isa_creatphone</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1126,22 +1703,151 @@ columns(cols);</value>
                 </structure>
                 <structure>
                     <property name="position">9</property>
-                    <property name="name">audit_isa_creatphone</property>
-                    <property name="nativeName">audit_isa_creatphone</property>
+                    <property name="name">audit_included_topics</property>
+                    <property name="nativeName">audit_included_topics</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">10</property>
-                    <property name="name">audit_isa_creat</property>
-                    <property name="nativeName">audit_isa_creat</property>
+                    <property name="name">audit_approved_by</property>
+                    <property name="nativeName">audit_approved_by</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">11</property>
+                    <property name="name">audit_description</property>
+                    <property name="nativeName">audit_description</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">12</property>
+                    <property name="name">audit_type</property>
+                    <property name="nativeName">audit_type</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">13</property>
+                    <property name="name">audit_name</property>
+                    <property name="nativeName">audit_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">14</property>
+                    <property name="name">audit_abbr</property>
+                    <property name="nativeName">audit_abbr</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">15</property>
+                    <property name="name">audit_tag</property>
+                    <property name="nativeName">audit_tag</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">16</property>
+                    <property name="name">audit_target_audience</property>
+                    <property name="nativeName">audit_target_audience</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">17</property>
+                    <property name="name">audit_excluded_topics</property>
+                    <property name="nativeName">audit_excluded_topics</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">18</property>
+                    <property name="name">audit_isr_approval</property>
+                    <property name="nativeName">audit_isr_approval</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">19</property>
+                    <property name="name">audit_isr_year</property>
+                    <property name="nativeName">audit_isr_year</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">20</property>
+                    <property name="name">audit_isr_version</property>
+                    <property name="nativeName">audit_isr_version</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">21</property>
+                    <property name="name">audit_isr_classfc</property>
+                    <property name="nativeName">audit_isr_classfc</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">22</property>
+                    <property name="name">audit_document_data_responsible_scope</property>
+                    <property name="nativeName">audit_document_data_responsible_scope</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">23</property>
+                    <property name="name">audit_document_data_document_basis</property>
+                    <property name="nativeName">audit_document_data_document_basis</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">24</property>
+                    <property name="name">audit_document_data_author_name</property>
+                    <property name="nativeName">audit_document_data_author_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">audit_document_data_author_date</property>
+                    <property name="nativeName">audit_document_data_author_date</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">26</property>
+                    <property name="name">audit_document_data_final_approval_distribution</property>
+                    <property name="nativeName">audit_document_data_final_approval_distribution</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">27</property>
+                    <property name="name">audit_topics_good_results</property>
+                    <property name="nativeName">audit_topics_good_results</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">audit_topics_bad_results</property>
+                    <property name="nativeName">audit_topics_bad_results</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
-import sernet.verinice.report.service.commands.*;
+import java.lang.Integer;
+import sernet.verinice.model.common.CnATreeElement;
+import java.util.ArrayList;
+import sernet.verinice.model.iso27k.Audit;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -1151,44 +1857,71 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 
+hql = "from CnATreeElement elmt " +
+                	"left join fetch elmt.entity as entity " + 
+	                "left join fetch entity.typedPropertyLists as propertyList " + 
+        	        "left join fetch propertyList.properties as props " + 
+			"where elmt.dbId = ?";
+	params = new Object[]{root};
+	loader = new ExecuteHQLInReportCommand(hql, params, CnATreeElement.class);
+	elementList = helper.execute(loader).getResult();
+
+
+elements = new ArrayList(0);
+for(Object o : elementList){
+	if(o instanceof Audit){
+		if(!(elements.contains(o))){
+					elements.add(o);
+		}
+	}
+}
+
 cols = helper.getAllPropertyTypes("audit");
-c2 = new LoadReportElements("audit", root);
-elements = helper.execute(c2).getElements();
-return helper.map(
+
+//c2 = new LoadReportElements("audit", root);
+//elements = helper.execute(c2).getElements();
+//elements = getAllElementsHQL("audit", Integer.valueOf(root));
+return helper.mapfast(
 	elements,
 	cols
 );
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>root_object</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>root_object</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
   <design:ResultSets derivedMetaData="true">
     <design:resultSetDefinitions>
       <design:resultSetColumns>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>audit_description</design:name>
-            <design:position>1</design:position>
+            <design:identifier>
+              <design:name>audit_description</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1206,8 +1939,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>audit_type</design:name>
-            <design:position>2</design:position>
+            <design:identifier>
+              <design:name>audit_type</design:name>
+              <design:position>2</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1225,8 +1960,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>audit_name</design:name>
-            <design:position>3</design:position>
+            <design:identifier>
+              <design:name>audit_name</design:name>
+              <design:position>3</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1244,8 +1981,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>audit_abbr</design:name>
-            <design:position>4</design:position>
+            <design:identifier>
+              <design:name>audit_abbr</design:name>
+              <design:position>4</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1263,8 +2002,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>audit_enddate</design:name>
-            <design:position>5</design:position>
+            <design:identifier>
+              <design:name>audit_enddate</design:name>
+              <design:position>5</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1282,8 +2023,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>audit_startdate</design:name>
-            <design:position>6</design:position>
+            <design:identifier>
+              <design:name>audit_startdate</design:name>
+              <design:position>6</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1301,8 +2044,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>audit_tag</design:name>
-            <design:position>7</design:position>
+            <design:identifier>
+              <design:name>audit_tag</design:name>
+              <design:position>7</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1320,8 +2065,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>audit_isa_creatmail</design:name>
-            <design:position>8</design:position>
+            <design:identifier>
+              <design:name>audit_isa_creatmail</design:name>
+              <design:position>8</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1339,8 +2086,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>audit_isa_creatphone</design:name>
-            <design:position>9</design:position>
+            <design:identifier>
+              <design:name>audit_isa_creatphone</design:name>
+              <design:position>9</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -1358,8 +2107,10 @@ return helper.map(
         </design:resultColumnDefinitions>
         <design:resultColumnDefinitions>
           <design:attributes>
-            <design:name>audit_isa_creat</design:name>
-            <design:position>10</design:position>
+            <design:identifier>
+              <design:name>audit_isa_creat</design:name>
+              <design:position>10</design:position>
+            </design:identifier>
             <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
             <design:precision>-1</design:precision>
             <design:scale>-1</design:scale>
@@ -2393,57 +3144,128 @@ this.text = result;]]></method>
             <property name="dataSet">samtTopics</property>
             <list-property name="boundDataColumns">
                 <structure>
-                    <property name="name">samt_topic_externalnote</property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_externalnote"]</expression>
+                    <property name="name">samt_topic_audit_devi</property>
+                    <text-property name="displayName">samt_topic_audit_devi</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_audit_devi"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">samt_topic_maturity</property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_maturity"]</expression>
+                    <property name="name">samt_topic_controlnote</property>
+                    <text-property name="displayName">samt_topic_controlnote</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_controlnote"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">samt_topic_ownweight</property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_ownweight"]</expression>
+                    <property name="name">samt_topic_isaauditnote</property>
+                    <text-property name="displayName">samt_topic_isaauditnote</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_isaauditnote"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_audit_findings</property>
+                    <text-property name="displayName">samt_topic_audit_findings</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_audit_findings"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">samt_topic_tag</property>
+                    <text-property name="displayName">samt_topic_tag</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_tag"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">samt_topic_internalnote</property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_internalnote"]</expression>
+                    <property name="name">samt_topic_ownweight</property>
+                    <text-property name="displayName">samt_topic_ownweight</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_ownweight"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">samt_topic_desc</property>
+                    <text-property name="displayName">samt_topic_desc</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_desc"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">samt_topic_name</property>
-                    <expression name="expression" type="javascript">dataSetRow["samt_topic_name"]</expression>
+                    <property name="name">samt_topic_internalnote</property>
+                    <text-property name="displayName">samt_topic_internalnote</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_internalnote"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_audit_compluntil</property>
+                    <text-property name="displayName">samt_topic_audit_compluntil</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_audit_compluntil"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">samt_topic_weight</property>
+                    <text-property name="displayName">samt_topic_weight</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_weight"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
+                    <property name="name">samt_topic_externalnote</property>
+                    <text-property name="displayName">samt_topic_externalnote</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_externalnote"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topicimplemented</property>
+                    <text-property name="displayName">samt_topicimplemented</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topicimplemented"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_version</property>
+                    <text-property name="displayName">samt_topic_version</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_version"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_maturity</property>
+                    <text-property name="displayName">samt_topic_maturity</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_maturity"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_audit_ra</property>
+                    <text-property name="displayName">samt_topic_audit_ra</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_audit_ra"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_user_classification</property>
+                    <text-property name="displayName">samt_user_classification</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_user_classification"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_name</property>
+                    <text-property name="displayName">samt_topic_name</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_name"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">samt_topic_classification_comment</property>
+                    <text-property name="displayName">samt_topic_classification_comment</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["samt_topic_classification_comment"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
                     <property name="name">samt_topic_min1</property>
+                    <text-property name="displayName">samt_topic_min1</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_min1"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">samt_topic_abbr</property>
+                    <text-property name="displayName">samt_topic_abbr</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_abbr"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
                     <property name="name">samt_topic_min2</property>
+                    <text-property name="displayName">samt_topic_min2</text-property>
                     <expression name="expression" type="javascript">dataSetRow["samt_topic_min2"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
