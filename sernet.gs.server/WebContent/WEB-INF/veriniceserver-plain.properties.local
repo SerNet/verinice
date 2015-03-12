@@ -18,7 +18,8 @@
 # Please adjust host, port, database name, user and pass according to your database.
 # jdbc.driverClass=org.postgresql.Driver
 # jdbc.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-# jdbc.url=jdbc:postgresql://127.0.0.1:5432/verinicedb
+jdbc.url=jdbc:postgresql://127.0.0.1:5433/verinicedb
+# jdbc.url=jdbc:postgresql://bob.sernet.private:5432/verinicedb
 # jdbc.username=verinice
 # jdbc.password=verinice
 
@@ -26,7 +27,7 @@
 # also change hibernate config above!!!
 # jdbc.driverClass=oracle.jdbc.OracleDriver
 # jdbc.hibernate.dialect=sernet.verinice.hibernate.Oracle10gNclobDialect
-# jdbc.url=jdbc:oracle:thin:@localhost:1521:XE
+# jdbc.url=jdbc:oracle:thin:@wendy.sernet.private:1521:XE
 # jdbc.username=verinice
 # jdbc.password=geheim
 
@@ -67,24 +68,24 @@
 
 # Location of the catalogue files. The filenames denote a Java resource path.
 # By default put the catalogue files into
-# veriniceserver.grundschutzKataloge=/WEB-INF/it-grundschutz_el13_html_de.zip
+veriniceserver.grundschutzKataloge=/WEB-INF/ITGS-catalog-13el-en-13.1.zip
 # veriniceserver.datenschutzBaustein=/WEB-INF/B1.5-Datenschutz-2008-08-26.zip
 
 
 # Access credentials of the mail server that should be used to send email notifications.
-# veriniceserver.notification.smtp.host=
-# veriniceserver.notification.smtp.port=25
+veriniceserver.notification.smtp.host=gabi.sernet.private
+veriniceserver.notification.smtp.port=25
 # veriniceserver.notification.smtp.username=
 # veriniceserver.notification.smtp.password=
 # The notification.enabled property controls whether the email notificationfeature is
 # active or not. Possible values are 'false' and 'true' (default is 'false').
-# veriniceserver.notification.enabled=false
+veriniceserver.notification.enabled=false
 
 # Time of day at which the verinice server starts processing the email notifications. 
-# veriniceserver.notification.hour=03
-# veriniceserver.notification.minute=35
-# veriniceserver.notification.email.from=donotreply@verinice.invalid
-# veriniceserver.notification.email.replyto=donotreply@verinice.invalid
+veriniceserver.notification.hour=08
+veriniceserver.notification.minute=48
+veriniceserver.notification.email.from=donotreply@cassini
+veriniceserver.notification.email.replyto=dm@sernet.de
 # CC and BCC address for every email the server is sending (optional)
 # veriniceserver.notification.email.cc=
 # veriniceserver.notification.email.bcc=

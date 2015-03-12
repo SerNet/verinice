@@ -33,11 +33,14 @@ import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.InheritLogger;
+import sernet.verinice.search.IElementSearchDao;
+import sernet.verinice.search.JsonBuilder;
 
 public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, ID> implements IBaseDao<T, ID> {
 
     private static final Logger LOG = Logger.getLogger(TreeElementDao.class);
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(TreeElementDao.class);
+    private IElementSearchDao searchDao;
     
     public TreeElementDao(Class<T> type) {
         super(type);
@@ -85,6 +88,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         super.saveOrUpdate(entity);
         if (entity instanceof CnATreeElement) {
             CnATreeElement elmt = (CnATreeElement) entity;
+            index(elmt);
             fireChange(elmt);
         }
     }
@@ -220,6 +224,16 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         }
         return result;
     }
+    
+    public T merge(T entity) {
+        T mergedElement = super.merge(entity);
+
+        if(mergedElement instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement) mergedElement;
+            index(element);   
+        }
+        return mergedElement;
+    }
 
     public T merge(T entity, boolean fireChange) {
         if(LOG_INHERIT.isDebug()) {
@@ -228,17 +242,33 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
         
         T mergedElement = super.merge(entity);
 
-        if (fireChange && mergedElement instanceof CnATreeElement) {
-            CnATreeElement elmt = (CnATreeElement) mergedElement;
-            fireChange(elmt);
+        if(mergedElement instanceof CnATreeElement) {
+            CnATreeElement element = (CnATreeElement) mergedElement;
+            index(element);     
+            if (fireChange) {
+                fireChange(element);
+            }
         }
 
         if (fireChange && mergedElement instanceof CnALink) {
             CnALink link = (CnALink) mergedElement;
             fireChange(link.getDependency());
         }
+        
 
         return mergedElement;
+    }
+
+    protected void index(CnATreeElement element) {
+        if(getSearchDao()!=null) {
+            getSearchDao().updateOrIndex(element.getUuid(), JsonBuilder.getJson(element));
+        }
+    }
+    
+    protected void indexDelete(CnATreeElement element) {
+        if(getSearchDao()!=null) {
+            getSearchDao().delete(element.getUuid());
+        }
     }
 
     /**
@@ -275,6 +305,14 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     @Override
     public void checkRights(T entity, String username) {
         // empty
+    }
+
+    public IElementSearchDao getSearchDao() {
+        return searchDao;
+    }
+
+    public void setSearchDao(IElementSearchDao searchDao) {
+        this.searchDao = searchDao;
     }
 
 }

@@ -24,6 +24,8 @@ import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.IElementEntityDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.InheritLogger;
+import sernet.verinice.search.IElementSearchDao;
+import sernet.verinice.search.JsonBuilder;
 
 /**
  * Special dao for saving the entity of a CnaTreeElement but not the
@@ -37,6 +39,7 @@ import sernet.verinice.model.iso27k.InheritLogger;
 public class ElementEntityDao extends TreeElementDao<Entity, Integer> implements IElementEntityDao{
 
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(ElementEntityDao.class);
+    
     
     public ElementEntityDao() {
         super(Entity.class);
@@ -67,6 +70,8 @@ public class ElementEntityDao extends TreeElementDao<Entity, Integer> implements
         if (fireChange) {
             fireChange(element);
         }
+        
+        index(element);
 
         return element;
     }

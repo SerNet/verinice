@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -48,6 +49,8 @@ import sernet.verinice.model.iso27k.IISO27kElement;
  */
 public class NeueRisikoanalyseAction implements IObjectActionDelegate {
 	
+    private static final Logger LOG = Logger.getLogger(NeueRisikoanalyseAction.class);
+    
 	private IWorkbenchPart targetPart;
 	
 	/**
@@ -106,8 +109,10 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate {
 						}
 					});
 		} catch (InvocationTargetException e) {
+		    LOG.error("Error while starting new Risikoanalyse", e);
 			ExceptionUtil.log(e, "Fehler beim Öffnen der Risikoanalyse.");
 		} catch (InterruptedException e) {
+            LOG.error("Error while starting new Risikoanalyse", e);
 			ExceptionUtil.log(e, "Fehler beim Öffnen der Risikoanalyse.");
 		}
 	}

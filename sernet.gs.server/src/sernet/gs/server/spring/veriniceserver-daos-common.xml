@@ -9,13 +9,18 @@
 
 	<!-- BEGIN dao definitions ========================================================================= -->
 
-	<bean id="secureDao" abstract="true"
-        class="sernet.verinice.hibernate.SecureTreeElementDao">
+	<bean id="secureDao" abstract="true" class="sernet.verinice.hibernate.SecureTreeElementDao">
         <property name="sessionFactory" ref="sessionFactory" />
 		<property name="authService" ref="authService" />
 		<property name="configurationDao" ref="configurationDao" />
 		<property name="permissionDao" ref="permissionDAO" />
         <property name="configurationService" ref="configurationService" />
+        <property name="searchDao" ref="searchElementDao" />
+    </bean>
+    
+    <bean id="treeElementDao" abstract="true" class="sernet.verinice.hibernate.TreeElementDao">
+        <property name="sessionFactory" ref="sessionFactory" />
+        <property name="searchDao" ref="searchElementDao" />
     </bean>
     
     <aop:config>
@@ -91,18 +96,16 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="anwendungenKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="anwendungenKategorieDAO" parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.AnwendungenKategorie</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="bausteinUmsetzungDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="bausteinUmsetzungDAO" parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.BausteinUmsetzung</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="bausteinVorschlagDao" class="sernet.verinice.hibernate.TreeElementDao">
@@ -132,11 +135,10 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="datenverarbeitungDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="datenverarbeitungDAO" parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.Datenverarbeitung</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="finishedRiskAnalysisDAO" class="sernet.verinice.hibernate.TreeElementDao">
@@ -159,18 +161,16 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="gefaehrdungsUmsetzungDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="gefaehrdungsUmsetzungDAO" parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="ITVerbundDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="ITVerbundDAO" parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.ITVerbund</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="massnahmenUmsetzungDAO" parent="secureDao">
@@ -185,11 +185,10 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="NKKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="NKKategorieDAO" parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.bsi.NKKategorie</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="permissionDAO" class="sernet.verinice.hibernate.TreeElementDao">
@@ -205,11 +204,10 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="personengruppenDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="personengruppenDAO"  parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.Personengruppen</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="personenKategorieDAO" class="sernet.verinice.hibernate.TreeElementDao">
@@ -258,11 +256,10 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="stellungnahmeDSBDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="stellungnahmeDSBDAO" parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.StellungnahmeDSB</value>
 		</constructor-arg>
-		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<bean id="telefonKomponenteDAO" parent="secureDao">
@@ -278,21 +275,21 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="verantwortlicheStelleDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="verantwortlicheStelleDAO" parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.VerantwortlicheStelle</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="verarbeitungsangabenDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="verarbeitungsangabenDAO" parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.Verarbeitungsangaben</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-	<bean id="zweckbestimmungDAO" class="sernet.verinice.hibernate.TreeElementDao">
+	<bean id="zweckbestimmungDAO" parent="treeElementDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.ds.Zweckbestimmung</value>
 		</constructor-arg>
@@ -589,6 +586,7 @@
     <!-- See: sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity -->
 	<bean id="elementEntityDao" class="sernet.verinice.hibernate.ElementEntityDao">
 		<property name="sessionFactory" ref="sessionFactory" />
+        <property name="searchDao" ref="searchElementDao" />
 	</bean>
 	
 	<bean id="cnaValidationDAO" class="sernet.verinice.hibernate.HibernateDao">

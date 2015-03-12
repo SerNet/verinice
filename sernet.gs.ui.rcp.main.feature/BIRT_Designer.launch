@@ -13,10 +13,6 @@
 <stringAttribute key="deselected_workspace_plugins" value="sernet.gs.db.fragment,sernet.gs.ehcache.fragment,sernet.gs.hibernate.fragment,sernet.gs.log4j.fragment,sernet.gs.pax_web.fragment,sernet.gs.server,sernet.gs.server.feature,sernet.gs.springweb.fragment,sernet.gs.ui.rcp.main.feature,sernet.hui.server,sernet.verinice.encryption,sernet.verinice.samt.rcp"/>
 <booleanAttribute key="includeOptional" value="true"/>
 <stringAttribute key="location" value="${workspace_loc}/../runtime-New_configuration3"/>
-<listAttribute key="org.eclipse.debug.ui.favoriteGroups">
-<listEntry value="org.eclipse.debug.ui.launchGroup.debug"/>
-<listEntry value="org.eclipse.debug.ui.launchGroup.run"/>
-</listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -console"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dorg.eclipse.swt.browser.XULRunnerPath=/usr/lib/xulrunner-1.9.2.17 &#10;-Xms64m -Xmx1024m -XX:MaxPermSize=256m"/>

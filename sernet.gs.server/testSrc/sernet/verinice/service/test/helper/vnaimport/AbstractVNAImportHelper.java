@@ -21,6 +21,7 @@ package sernet.verinice.service.test.helper.vnaimport;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -114,5 +115,14 @@ abstract public class AbstractVNAImportHelper extends CommandServiceProvider {
             log.error("deleting element of " + vnaFilePath + " failed", e);
             throw e;
         }
+    }
+    
+    public Set<Integer> getScopeIds() {
+        Set<CnATreeElement> importedScopes = syncCommand.getImportRootObject();
+        Set<Integer> scopeIds = new HashSet<Integer>(importedScopes.size());
+        for (CnATreeElement scope : importedScopes) {
+            scopeIds.add(scope.getDbId());         
+        }
+        return scopeIds;
     }
 }
