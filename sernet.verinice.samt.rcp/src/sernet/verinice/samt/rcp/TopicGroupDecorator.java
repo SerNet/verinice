@@ -18,7 +18,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
-import sernet.verinice.samt.service.TotalSecurityFigureCommand;
+import sernet.verinice.samt.service.TotalSecurityFigureISA2Command;
 
 @SuppressWarnings("restriction")
 public class TopicGroupDecorator extends LabelProvider implements ILightweightLabelDecorator {
@@ -42,7 +42,7 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 			        audit = (Audit) Retriever.checkRetrieveChildren(audit);
 			        group = (ControlGroup) audit.getGroup(ControlGroup.TYPE_ID);
 			        group = (ControlGroup) Retriever.checkRetrieveChildren(group);
-			        TotalSecurityFigureCommand command = new TotalSecurityFigureCommand(audit.getDbId());
+			        TotalSecurityFigureISA2Command command = new TotalSecurityFigureISA2Command(audit.getDbId());
 			        command = getCommandService().executeCommand(command);
 			        securityFigure = command.getResult();
 			        if (LOG.isDebugEnabled()) {
@@ -76,7 +76,7 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
         }
         if(securityFigure!=null) {
             StringBuilder sb = new StringBuilder();
-            sb.append(" [").append(getPercent(securityFigure)).append(" %") .append("]");
+            sb.append(" [").append(String.format("%.2f", securityFigure)).append("]");
             decoration.addSuffix(sb.toString());
         }
     }
@@ -108,12 +108,6 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
         }
         group.setChildren(childrenRetrieved);
         return isIsa;
-	}
-	
-	private Double getPercent(Double d) {
-	    final double factor = 10000.0;
-	    final double divisor = 100.0;
-	    return Math.round(d*factor) / divisor;
 	}
 	
 	private ICommandService getCommandService() {
