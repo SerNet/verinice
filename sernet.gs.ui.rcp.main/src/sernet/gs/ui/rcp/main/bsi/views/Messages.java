@@ -360,6 +360,8 @@ public final class Messages extends NLS {
     public static String GroupView_39;
     
     public static String GroupView_40;
+    
+    public static String GroupView_41;
 
     static {
         // initialize resource bundle

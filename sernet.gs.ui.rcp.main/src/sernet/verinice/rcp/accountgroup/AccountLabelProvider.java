@@ -19,6 +19,7 @@ package sernet.verinice.rcp.accountgroup;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 
+import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.rcp.Messages;
 
 /**
@@ -29,18 +30,29 @@ public class AccountLabelProvider extends ColumnLabelProvider {
     IAccountGroupViewDataService accountGroupDataService;
     
     public AccountLabelProvider(IAccountGroupViewDataService dataService){
+        super();
         this.accountGroupDataService = dataService;
     };
+    
+    public AccountLabelProvider(){
+        super();
+    }
     
     @Override
     public String getText(Object element) {
         String text = Messages.UserprofileDialog_17;
-        if (element instanceof String) {
+        if(element instanceof PlaceHolder){
+            text = ((PlaceHolder)element).getTitle();
+        } else if (element instanceof String) {
             text = ((accountGroupDataService != null) ? accountGroupDataService.getPrettyPrintAccountName((String)element) : (String) element);
         } else {
             text = (element != null) ? element.toString() : "No Label available";
         }
         return text;
+    }
+    
+    public void setDataService(IAccountGroupViewDataService service){
+        this.accountGroupDataService = service;
     }
 
 }

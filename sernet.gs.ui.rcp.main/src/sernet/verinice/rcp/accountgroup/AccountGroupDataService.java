@@ -29,8 +29,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.service.NumericStringComparator;
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
@@ -42,12 +44,13 @@ import sernet.verinice.service.account.AccountSearchParameterFactory;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ * @contributor Sebastian Hagedorn <sh[at]sernet[dot]de> - Concurrency Implementation
  *
  */
 @SuppressWarnings("unchecked")
 public class AccountGroupDataService implements IAccountGroupViewDataService {
 
-    private Logger log = Logger.getLogger(AccountGroupDataService.class);
+    private static final Logger LOG = Logger.getLogger(AccountGroupDataService.class);
 
     private IAccountService accountService;
 
@@ -56,41 +59,79 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     private Set<String> accounts;
     
     private Map<String, String> prettyAccountNames;
+    
+    private GroupView view;
 
     public AccountGroupDataService() {
         accountService = ServiceFactory.lookupAccountService();
         loadAccountGroupData();
     }
-
+    
+    public AccountGroupDataService(GroupView view){
+        this();
+        this.view = view;
+    }
+    
     @Override
     public String[] getAccountGroups() {
-        return convertToStringArray(accountGroupToConfiguration.keySet());
+        if(accountGroupToConfiguration != null && accountGroupToConfiguration.keySet() != null){
+            return convertToStringArray(accountGroupToConfiguration.keySet());
+        } else {
+            return null;
+        }
     }
 
     @Override
     public String[] getAllAccounts() {
-        return convertToStringArray(accounts);
+        if(accounts != null){
+            return convertToStringArray(accounts);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public final void loadAccountGroupData() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
 
-        List<AccountGroup> accountGroups = accountService.listGroups();
+                try{
+                    Activator.inheritVeriniceContextState();
+                    List<AccountGroup> accountGroups = accountService.listGroups();
 
-        accountGroupToConfiguration = new TreeMap<String, Set<String>>(new NumericStringComparator());
+                    accountGroupToConfiguration = new TreeMap<String, Set<String>>(new NumericStringComparator());
 
-        accounts = accountService.listAccounts();
+                    accounts = accountService.listAccounts();
 
-        for (AccountGroup accountGroup : accountGroups) {
-            IAccountSearchParameter parameter = AccountSearchParameterFactory.createAccountGroupParameter(accountGroup.getName());
-            List<Configuration> configurationsForAccountGroup = accountService.findAccounts(parameter);
-            accountGroupToConfiguration.put(accountGroup.getName(), new HashSet<String>());
-            for (Configuration account : configurationsForAccountGroup) {
-                accountGroupToConfiguration.get(accountGroup.getName()).add(account.getUser());
+                    for (AccountGroup accountGroup : accountGroups) {
+                        IAccountSearchParameter parameter = AccountSearchParameterFactory.createAccountGroupParameter(accountGroup.getName());
+                        List<Configuration> configurationsForAccountGroup = accountService.findAccounts(parameter);
+                        accountGroupToConfiguration.put(accountGroup.getName(), new HashSet<String>());
+                        for (Configuration account : configurationsForAccountGroup) {
+                            accountGroupToConfiguration.get(accountGroup.getName()).add(account.getUser());
+                        }
+                    }
+                    initPrettyAccountNames();
+                    if(view != null){
+                        Display.getDefault().syncExec(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                view.passServiceToLabelProvider();
+                                view.refreshView();
+                                view.switchButtons(true);
+                            }
+                        });
+                    }
+                } catch(Exception e){
+                    LOG.error("Somethin went wrong on initializing groupview data",e);
+                }
             }
-        }
+        }).start();
     }
 
+    
     @Override
     public String[] getAccountNamesForGroup(String accountGroupName) {
         return convertToStringArray(accountGroupToConfiguration.get(accountGroupName));
@@ -139,7 +180,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
             return convertToStringArray(accountGroupToConfiguration.get(groupName));
 
         } catch (Exception ex) {
-            log.error("updated view for account groups failed", ex);
+            LOG.error("updated view for account groups failed", ex);
         }
 
         return new String[] {};
@@ -213,5 +254,6 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         sb.append(" [").append(account.getUser()).append("]");
         return sb.toString();
     }
+    
 
 }
