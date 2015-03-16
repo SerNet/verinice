@@ -19,7 +19,6 @@
 # jdbc.driverClass=org.postgresql.Driver
 # jdbc.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 # jdbc.url=jdbc:postgresql://127.0.0.1:5433/verinicedb
-# jdbc.url=jdbc:postgresql://bob.sernet.private:5432/verinicedb
 # jdbc.username=verinice
 # jdbc.password=verinice
 
