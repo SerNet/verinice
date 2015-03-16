@@ -418,7 +418,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             try {
                 switchButtons(false);
                 handleSelection(e);
-
             } catch (RuntimeException ex) {
                 throw (RuntimeException) ex;
             } catch (Exception ex) {
@@ -430,7 +429,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         private void handleSelection(final EventObject e) {
             if (isGroupSelected()) {
-
+                switchButtons(true);
                 if (e.getSource() == tableGroups) {
                     String[] accounts = accountGroupDataService.getAccountNamesForGroup(getSelectedGroup());
                     accountinGroupSet.clear();
@@ -464,6 +463,8 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                     removeAllAccounts(Arrays.copyOf(set.toArray(), set.size(), String[].class));
                 }
                 updateAllLists();
+            } else {
+                switchButtons(false);
             }
 
             if (e.getSource() == editAccountBtn) {
@@ -512,39 +513,59 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         removeAllBtn.setEnabled(enabled);
         editAccountBtn.setEnabled(enabled);
     }
-
+    
     private void updateAllLists() {
-        if(accountGroupDataService != null) {
-            updateAccountGroupList();
-            if (isGroupSelected()) {
-                accountinGroupSet.clear();
-                String group = getSelectedGroup();
-                String[] names = accountGroupDataService.getAccountNamesForGroup(group);
-                accountinGroupSet.addAll(Arrays.asList(names));                  
-                tableGroupToAccounts.setInput(accountinGroupSet);
-            }
-            if(accountGroupDataService != null && accountGroupDataService.getAllAccounts() != null){
-                accountArray = accountGroupDataService.getAllAccounts();
-                // remove accounts that are enlisted in tableToGroupAccounts
-                for(String account : accountinGroupSet){
-                    if(ArrayUtils.contains(accountArray, account)){
-                        accountArray = (String[])ArrayUtils.remove(accountArray, ArrayUtils.indexOf(accountArray, account));
-                    }
+        try{
+            if(accountGroupDataService != null) {
+                updateGroupList();
+                updateGroupToAccountList();
+                updateAccountList();
+            } else {
+                if(LOG.isDebugEnabled()){
+                    LOG.debug("Dataservice not Initialized, cannot update lists");
                 }
-                Arrays.sort(accountArray, COLLATOR);
-                tableAccounts.setInput(accountArray);
             }
-        } else {
-            if(LOG.isDebugEnabled()){
-                LOG.debug("Dataservice not Initialized, cannot update lists");
-            }
+            tableAccounts.refresh(true);
+            tableGroups.refresh(true);
+            tableGroupToAccounts.refresh(true);
+        } catch(Exception e){
+            LOG.error("Error while setting data to ui widgets",e );
         }
-        tableAccounts.refresh(true);
-        tableGroups.refresh(true);
-        tableGroupToAccounts.refresh(true);
     }
 
-    private void updateAccountGroupList() {
+
+    /**
+     * 
+     */
+    private void updateAccountList() {
+        if(accountGroupDataService != null && accountGroupDataService.getAllAccounts() != null){
+            accountArray = accountGroupDataService.getAllAccounts();
+            // remove accounts that are enlisted in tableToGroupAccounts
+            for(String account : accountinGroupSet){
+                if(ArrayUtils.contains(accountArray, account)){
+                    accountArray = (String[])ArrayUtils.remove(accountArray, ArrayUtils.indexOf(accountArray, account));
+                }
+            }
+            Arrays.sort(accountArray, COLLATOR);
+            tableAccounts.setInput(accountArray);
+        }
+    }
+
+
+    /**
+     * 
+     */
+    private void updateGroupToAccountList() {
+        if (isGroupSelected()) {
+            accountinGroupSet.clear();
+            String group = getSelectedGroup();
+            String[] names = accountGroupDataService.getAccountNamesForGroup(group);
+            accountinGroupSet.addAll(Arrays.asList(names));                  
+            tableGroupToAccounts.setInput(accountinGroupSet);
+        }
+    }
+
+    private void updateGroupList() {
         String text = quickFilter.getText();
         if(accountGroupDataService != null && accountGroupDataService.getAccountGroups() != null){
             String[] allAccountGroups = accountGroupDataService.getAccountGroups();
@@ -594,13 +615,17 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         return ((StructuredSelection)tableGroups.getSelection()).toList().size() > 0;
     }
     
+    private boolean isAccountSelected(){
+        return ((StructuredSelection)tableAccounts.getSelection()).toList().size() > 0;
+    }
+    
     String[] getAllGroupsFromTable(){
         return (String[]) tableGroups.getInput();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        updateAccountGroupList();
+        updateGroupList();
     }
 
     @Override
@@ -735,7 +760,9 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     private void initDataService() {
         if(accountGroupDataService == null && !Activator.getDefault().isStandalone()){
-            LOG.error("Initializing DataService");
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Initializing DataService");
+            }
             accountGroupDataService = new AccountGroupDataService(this);
         }
     }

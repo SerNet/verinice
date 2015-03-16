@@ -17,11 +17,16 @@
  ******************************************************************************/
 package sernet.verinice.rcp.accountgroup;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TreeSet;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 
+import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 
 /**
@@ -61,8 +66,20 @@ public class AccountContentProvider extends ArrayContentProvider {
             return new Object[] {};
         }
         
-        Object result = tableView.getInput(); 
-        return (Object[])result;
+        Object input = tableView.getInput(); 
+        if(input instanceof TreeSet){
+            List<String> list = new ArrayList<String>(0);
+            if(((TreeSet<Object>)input).size() > 0){
+                Object element = ((TreeSet<Object>)input).first();
+                list.addAll((TreeSet<String>)input);
+                return list.toArray(new Object[((TreeSet<String>)input).size()]);
+            } else {
+                return new Object[]{};
+            }
+        } else if(input instanceof String[]){
+            return (String[])input;
+        } 
+        return new Object[]{new PlaceHolder(Messages.GroupView_41)};
     }
     
     private Logger getLog(){
