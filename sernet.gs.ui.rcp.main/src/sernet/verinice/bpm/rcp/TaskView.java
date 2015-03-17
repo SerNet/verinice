@@ -127,7 +127,8 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private static final int WIDTH_SEARCH_FORM = 1060;
     private static final int HEIGHT_SEARCH_FORM = 60;
     
-    CnATreeElement selectedGroup;
+    CnATreeElement selectedScope;
+    CnATreeElement selectedAudit;
     String selectedAssignee;
     KeyMessage selectedProcessType;
     KeyMessage selectedTaskType;
@@ -138,16 +139,18 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private TaskContentProvider contentProvider;    
     private Listener collapseAndExpandListener = new TableCollapseAndExpandListener();
     private Browser textPanel;
-    Label labelDateFrom;
-    Label labelDateUntil;
+    private Label labelDateFrom;
+    private Label labelDateUntil;
     Date dueDateFrom = null;
     Date dueDateTo = null;
     Button searchButton;
 
     private TaskViewDataLoader dataLoader;
     
-    ComboModel<CnATreeElement> comboModelGroup;
-    Combo comboGroup;    
+    ComboModel<CnATreeElement> comboModelScope;
+    Combo comboScope;
+    ComboModel<CnATreeElement> comboModelAudit;
+    Combo comboAudit;
     ComboModel<Configuration> comboModelAccount;
     Combo comboAccount;
     
@@ -235,9 +238,13 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private Composite createSearchFormComposite(Composite parent) {
         Composite formComposite = createInnerFormComposite(parent);
         
-        // Group
+        // Scope
         Label label = new Label(formComposite, SWT.WRAP);
         label.setText(Messages.TaskView_11);
+        setLayoutData(label, true);
+        // Audit
+        label = new Label(formComposite, SWT.WRAP);
+        label.setText(Messages.TaskView_22);
         setLayoutData(label, true);
         // Assignee
         label = new Label(formComposite, SWT.WRAP);
@@ -282,7 +289,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         Composite composite = new Composite(parentComposite, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         composite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(6, false);
+        GridLayout gridLayout = new GridLayout(7, false);
         gridLayout.marginHeight = 4;
         gridLayout.marginWidth = 4;
         composite.setLayout(gridLayout);
@@ -342,13 +349,24 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     }
 
     private void createGroupControls(Composite searchComposite) {     
-        comboModelGroup = new ComboModel<CnATreeElement>(new GroupLabelProvider());       
-        comboGroup = createComboBox(searchComposite);      
-        comboGroup.addSelectionListener(new SelectionAdapter() {
+        comboModelScope = new ComboModel<CnATreeElement>(new GroupLabelProvider());       
+        comboScope = createComboBox(searchComposite);      
+        comboScope.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                comboModelGroup.setSelectedIndex(comboGroup.getSelectionIndex());
-                selectedGroup = comboModelGroup.getSelectedObject();
+                comboModelScope.setSelectedIndex(comboScope.getSelectionIndex());
+                selectedScope = comboModelScope.getSelectedObject();
+                selectedAudit = null;
+                dataLoader.loadAudits();
+            }
+        });
+        comboModelAudit = new ComboModel<CnATreeElement>(new GroupLabelProvider());       
+        comboAudit = createComboBox(searchComposite);      
+        comboAudit.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                comboModelAudit.setSelectedIndex(comboAudit.getSelectionIndex());
+                selectedAudit = comboModelAudit.getSelectedObject();
             }
         });
     }
@@ -358,7 +376,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
             @Override
             public String getLabel(Configuration account) {
                 StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(account.getPerson()));
-                sb.append(" [").append(account.getUser()).append("]");
+                sb.append(" [").append(account.getUser()).append("]"); //$NON-NLS-1$ //$NON-NLS-2$
                 return sb.toString();
             }
         });  
