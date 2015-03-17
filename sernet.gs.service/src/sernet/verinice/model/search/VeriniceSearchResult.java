@@ -17,29 +17,53 @@
  ******************************************************************************/
 package sernet.verinice.model.search;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
-
-import org.elasticsearch.search.SearchHits;
+import java.util.Map;
 
 /**
  *
  */
-public class VeriniceSearchResult {
+public class VeriniceSearchResult implements Serializable{
     
-    private SearchHits hits;
+    private static final long serialVersionUID = 201503171549L;
+    
     private String typeId;
     private List<String> allColumns;
     private List<String> defaultColumns;
+    
+    private Map<String, Map<String, String>> results;
 
-    public VeriniceSearchResult(SearchHits hits, String typpeId){
-        this.hits = hits;
-        this.typeId = typpeId;
+    public VeriniceSearchResult(Map<String, Map<String, String>> results, String typeId){
+        this.results = results;
+        this.typeId = typeId;
     }
     
-    int getResultCount(){return 1;};
-    String getValueFromResult(String property_type, String uuid){return "";};
-    String[] getDefaultColumns(){return defaultColumns.toArray(new String[defaultColumns.size()]);};
-    String[] getAllColumns(){return allColumns.toArray(new String[allColumns.size()]);};
-    String getTypeID(){return typeId;};
+    public int getResultCount(){
+        return results.size();
+    }
+    public String getValueFromResult(String uuid, String property_type){
+        if(results.containsKey(uuid) && results.get(uuid).containsKey(property_type)){
+            return results.get(uuid).get(property_type);
+        }
+        return null;
+    }
+    public String[] getDefaultColumns(){
+        return defaultColumns.toArray(new String[defaultColumns.size()]);
+    }
+    public String[] getAllColumns(){
+        return allColumns.toArray(new String[allColumns.size()]);
+    }
+    public String getTypeID(){
+        return typeId;
+    }
+    Map<String, String> getResult(String uuid){
+        if(results.containsKey(uuid)){
+            return results.get(uuid);
+        } else {
+            return new HashMap<String, String>(0);
+        }
+    }
 
 }

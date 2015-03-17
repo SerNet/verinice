@@ -19,12 +19,7 @@ package sernet.verinice.interfaces.search;
 
 import java.io.File;
 import java.util.List;
-import java.util.Map;
 
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
-
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.search.VeriniceSearchResult;
 
@@ -35,62 +30,26 @@ public interface ISearchService {
     
     /**
     * returns preconfigured set of default columns for a given propertytype
-    * @param TYPE_ID
+    * @param  {@link CnATreeElement#TYPE_ID}
     * @return preconfigured default columns for given {@link CnATreeElement#TYPE_ID}
     **/
     String[] getDefaultColumns(String typeID);
+    
+    /**
+     * returns all columns (properties) to a given {@link CnATreeElement#TYPE_ID} that are defined in SNCA-model
+     * @param typeID
+     * @return
+     */
     String[] getAllColumns(String typeID);
-    String[] getResultColumns(SearchHits result);
-    
-    Object getValueFromResult(SearchHit hit, PropertyType type);
     
 
-    /**
-    * executes a fulltextsearch with a given query / searchitem and a given propertytype
-    * TODO: define result class
-    * @param {@link CnATreeElement#TYPE_ID}
-    **/
-    Object executeSimpleSearchQuery(String query, String typeID);
-
-    /**
-    * returns only the count of a result of a query to show in propertytype dropdownlist
-    * @param a search query (does not have to be instanceof {@link String}
-    * @return result count by {@link PropertyType}
-    **/
-     Map<String, SearchHits> getSimpleSearchQueryResultCount(String query);
-
-     
-     
     /**
     * executes a search result to a csv file
-    * (e.g. JsonObject=>CnATreeElement=>CSV-Entry), discuss if cnatreeelement is needed here, inspect existing csv importer
-    * TODO: define result class 
+    * (e.g. JsonObject=>CnATreeElement=>CSV-Entry), discuss if {@link CnATreeElement} is needed here, inspect existing csv importer
     * @return file that contains the csv
     * @param a search result
     **/
-    File exportSearchResultToCsv(Object result);
-
-    /**
-    * loads Result of PropertyType with the largest ResultCount (default Result)
-    * TODO: define result class
-    * @return result for default (most results in proptype-search) selection 
-    **/
-    Object loadDefaultResult(String typeID);
-
-    /**
-    * adds filter to given searchquery, so that only a limited set (200 by default) rows are returned with the resultset
-    * TODO: define queryClass
-    * @param unfiltered query
-    * @return filtered query
-    **/ 
-    Object addResultCountReduceFilter(Object query);
-    
-    /**
-     * exports a given SearchResult to a csv file
-     * @param hits
-     * @return File with csv-content
-     */
-    File exportSearchResultToCsv(SearchHits hits);
+    File exportSearchResultToCsv(VeriniceSearchResult result);
     
     /**
      * adds filter to query that reduces size of resultset to preconfigurable size
@@ -107,7 +66,9 @@ public interface ISearchService {
     String addAccessFilter(String query);
     
     /**
-     * executes query
+     * executes query 
+     * if typeID equals <code>null</code>, result will not be restricted on objecttype
+     * (only use this for initial search) 
      * @param query
      * @param typeID
      * @return List SearchResult-Objects
@@ -128,7 +89,7 @@ public interface ISearchService {
      * removes a given SearchHit from the index
      * @param hit
      */
-    void removeFromIndex(SearchHit hit);
+//    void removeFromIndex(SearchHit hit);
     
     /**
      * removes a given {@link CnATreeElement} from the index
