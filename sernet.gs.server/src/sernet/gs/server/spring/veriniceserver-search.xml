@@ -26,7 +26,8 @@
     <property name="searchDao" ref="searchElementDao" />
   </bean>
 
-  <bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer" init-method="init">
+  <bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer">
+<!--   <bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer" init-method="init"> -->
     <property name="scheduler" ref="quartzSchedulerFactoryBean" />
     <property name="indexJobFactory">
       <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
