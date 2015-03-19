@@ -42,6 +42,8 @@ public interface IRiskAnalysisService {
     String PROP_SCENARIO_PROBABILITY_WITH_CONTROLS = "incscen_likelihood_wcontrol";
     String PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS = "incscen_likelihood_wplancontrol";
     
+    String PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS = "incscen_likelihood_without_na_control";
+
     String PROP_SCENARIO_AFFECTS_C = "scenario_value_method_confidentiality";
     String PROP_SCENARIO_AFFECTS_I = "scenario_value_method_integrity";
     String PROP_SCENARIO_AFFECTS_A = "scenario_value_method_availability";
@@ -61,6 +63,12 @@ public interface IRiskAnalysisService {
     String PROP_ASSET_PLANCONTROLRISK_I ="asset_riskwplancontrolvalue_i";
     String PROP_ASSET_PLANCONTROLRISK_A ="asset_riskwplancontrolvalue_a";
     
+
+    String PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_C ="asset_risk_without_na_plancontrolvalue_c";
+    String PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_I ="asset_risk_without_na_plancontrolvalue_i";
+    String PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_A ="asset_risk_without_na_plancontrolvalue_a";
+
+
     String PROP_CONTROL_EFFECT_C ="control_effectiveness_confidentiality";
     String PROP_CONTROL_EFFECT_I ="control_effectiveness_integrity";
     String PROP_CONTROL_EFFECT_A ="control_effectiveness_availability";
@@ -69,6 +77,7 @@ public interface IRiskAnalysisService {
     int RISK_PRE_CONTROLS = 0;
     int RISK_WITH_IMPLEMENTED_CONTROLS = 1;
     int RISK_WITH_ALL_CONTROLS = 2;
+    int RISK_WITHOUT_NA_CONTROLS = 3;
     
     int RISK_COLOR_GREEN = 0;
     int RISK_COLOR_YELLOW = 1;

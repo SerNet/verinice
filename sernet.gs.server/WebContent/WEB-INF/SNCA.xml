@@ -3672,6 +3672,18 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty
              tags="Risk"
                 name="Availability risk with planned controls" id="asset_riskwplancontrolvalue_a" editable="false"/>
+
+            <huiproperty
+             tags="Risk"
+                name="Confidentiality risk without N.A controls" id="asset_risk_without_na_plancontrolvalue_c" editable="false"/>
+
+            <huiproperty
+             tags="Risk"
+                name="Integrity risk without N.A controls" id="asset_risk_without_na_plancontrolvalue_i" editable="false"/>
+
+            <huiproperty
+             tags="Risk"
+                name="Availability risk without N.A controls" id="asset_risk_without_na_plancontrolvalue_a" editable="false"/>
 		</huipropertygroup>
             
 		<huipropertygroup name="Risk Treatment" id="asset_risktreatgroup" tags="Risk">
@@ -5152,6 +5164,19 @@ Wurden bereits weitere Stellen informiert?
                 <option id="incscen_likelypc_6" name="6: 70%" value="6" />
                 <option id="incscen_likelypc_7" name="7: 80%" value="7" />
                 <option id="incscen_likelypc_8" name="8: 90% and higher" value="8" />
+          </huiproperty>
+
+          <huiproperty id="incscen_likelihood_without_na_control" name="Probability without N.A. controls "
+              inputtype="numericoption" min="0" max="8" editable="false"  tags="Risk">
+                <option id="incscen_likelynac_0" name="0: Less than 10%" value="0" />
+                <option id="incscen_likelynac_1" name="1: 20%" value="1" />
+                <option id="incscen_likelynac_2" name="2: 30%" value="2" />
+                <option id="incscen_likelynac_3" name="3: 40%" value="3" />
+                <option id="incscen_likelynac_4" name="4: 50%" value="4" />
+                <option id="incscen_likelynac_5" name="5: 60%" value="5" />
+                <option id="incscen_likelynac_6" name="6: 70%" value="6" />
+                <option id="incscen_likelynac_7" name="7: 80%" value="7" />
+                <option id="incscen_likelynac_8" name="8: 90% and higher" value="8" />
           </huiproperty>
             
 			        	

@@ -185,6 +185,10 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
         case IRiskAnalysisService.RISK_WITH_ALL_CONTROLS:
             probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
             break;
+
+        case IRiskAnalysisService.RISK_WITHOUT_NA_CONTROLS:
+            probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+            break;
         default:
             break;
         }

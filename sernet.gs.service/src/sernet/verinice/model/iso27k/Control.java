@@ -327,4 +327,12 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
         return null;
     }
 
+    /**
+     * Returns true if control implementation status is everything but not
+     * {@link IControl#IMPLEMENTED_NA}.
+     */
+    public static boolean isPlanned(Entity entity) {
+       return !getImplementation(entity).equals(IMPLEMENTED_NA);
+    }
+
 }

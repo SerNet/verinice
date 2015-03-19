@@ -38,31 +38,28 @@ import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
+import static sernet.verinice.iso27k.service.IRiskAnalysisService.*;
 
 /**
- * Adds more columns to the normal list of links for an element in case of scnearios: threat and vuln. levels and titles
+ * Adds more columns to the normal list of links for an element in case of
+ * scnearios: threat and vuln. levels and titles
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class LoadReportScenarioDetails extends GenericCommand implements ICachedCommand{
-    
-    public static final String[] COLUMNS = new String[] {"relationName", "toAbbrev", "toElement", "riskC", "riskI", "riskA", "dbid",
-        "threatLevel", "vulnLevel", "threatTitle", "vulnTitle", "threatLevelDesc", "vulnLevelDesc", 
-        "treatedRiskC", "treatedRiskI", "treatedRiskA", "scenarioDbId"};
+public class LoadReportScenarioDetails extends GenericCommand implements ICachedCommand {
 
-    
+    public static final String[] COLUMNS = new String[] { "relationName", "toAbbrev", "toElement", "riskC", "riskI", "riskA", "dbid", "threatLevel", "vulnLevel", "threatTitle", "vulnTitle", "threatLevelDesc", "vulnLevelDesc", "treatedRiskC", "treatedRiskI", "treatedRiskA", "treatedWithPlannedControlRiskC", "treatedWithPlannedControlRiskI", "treatedWithPlannedControlRiskA", "scenarioDbId" };
     
     private LoadReportElementWithLinks loadReportElementWithLinks;
 
     private List<List<String>> result;
-    
+
     private boolean resultInjectedFromCache = false;
-    
+
     private String typeId;
-    
+
     private Integer rootElmt;
 
     public LoadReportScenarioDetails(String typeId, Integer rootElement) {
@@ -77,17 +74,19 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
         this.rootElmt = Integer.valueOf(Integer.parseInt(rootElement));
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
     public void execute() {
-        if(!resultInjectedFromCache){
+        if (!resultInjectedFromCache) {
             try {
                 loadReportElementWithLinks = getCommandService().executeCommand(loadReportElementWithLinks);
                 result = loadReportElementWithLinks.getResult();
                 List<CnALink> links = loadReportElementWithLinks.getLinkList();
-                int i=0;
+                int i = 0;
                 for (CnALink cnALink : links) {
                     addCols(cnALink, result.get(i));
                     i++;
@@ -96,18 +95,48 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
             } catch (CommandException e) {
                 throw new RuntimeCommandException(e);
             }
-        } 
+        }
+    }
+
+    private static class Impact {
+
+        int riskC;
+        int riskI;
+        int riskA;
+
+        Impact(int c, int i, int a) {
+            riskC = c;
+            riskI = i;
+            riskA = a;
+        }
+
+        public String getRiskC() {
+            return riskC == 0 ? "0" : String.valueOf(riskC);
+        }
+
+        public String getRiskI() {
+            return riskI == 0 ? "0" : String.valueOf(riskI);
+        }
+
+        public String getRiskA() {
+            return riskA == 0 ? "0" : String.valueOf(riskA);
+        }
+
+        @Override
+        public String toString() {
+            return "Impact [riskC=" + riskC + ", riskI=" + riskI + ", riskA=" + riskA + "]";
+        }
     }
 
     /**
      * @param cnALink
-     * @param row 
-     * @throws CommandException 
+     * @param row
+     * @throws CommandException
      */
     private void addCols(CnALink cnALink, List<String> row) throws CommandException {
         CnATreeElement scenario;
         CnATreeElement asset = null;
-        
+
         if (cnALink.getDependant().getTypeId().equals(IncidentScenario.TYPE_ID)) {
             scenario = cnALink.getDependant();
             if (cnALink.getDependency().getTypeId().equals(Asset.TYPE_ID)) {
@@ -119,103 +148,118 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
                 asset = cnALink.getDependant();
             }
         }
-        
+
         // get the reduced probability of the scenario:
         int probabilityWithControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
-        
+        int probalilityWithoutNAControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+
         // get the CIA deciders
         boolean isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
         boolean isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
         boolean isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
 
-        
         // initialize risk with base risk - with no controls:
-        Integer treatedRiskC = Integer.parseInt(row.get(3));
-        Integer treatedRiskI = Integer.parseInt(row.get(4));
-        Integer treatedRiskA = Integer.parseInt(row.get(5));
-        
-        // get all controls for the asset and reduce the impact of the asset and thereby the risk:
+        Impact treatedRisks = new Impact(Integer.parseInt(row.get(3)), Integer.parseInt(row.get(4)), Integer.parseInt(row.get(5)));
+        Impact treatedRisksWithoutNAControls = new Impact(Integer.parseInt(row.get(3)), Integer.parseInt(row.get(4)), Integer.parseInt(row.get(5)));
+
+        // get all controls for the asset and reduce the impact of the asset and
+        // thereby the risk:
         if (asset != null) {
-            Integer impactC = 0;
-            Integer impactI = 0;
-            Integer impactA = 0;
             AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
-            RiskAnalysisServiceImpl ras = new RiskAnalysisServiceImpl();
-            
-            impactC = valueAdapter.getVertraulichkeit();
-            impactI = valueAdapter.getIntegritaet();
-            impactA = valueAdapter.getVerfuegbarkeit();
-            
-            Integer[] reducedImpact = ras.applyControlsToImpact(IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
-            if (reducedImpact != null) {
-                impactC = reducedImpact[0];
-                impactI = reducedImpact[1];
-                impactA = reducedImpact[2];
-            }
-            
-            treatedRiskC = probabilityWithControls + impactC;
-            treatedRiskI = probabilityWithControls + impactI;
-            treatedRiskA = probabilityWithControls + impactA;
+
+            treatedRisks = calcRiskWithControls(asset, RISK_WITH_IMPLEMENTED_CONTROLS, valueAdapter, treatedRisks, probabilityWithControls);
+            treatedRisksWithoutNAControls = calcRiskWithControls(asset, RISK_WITHOUT_NA_CONTROLS, valueAdapter, treatedRisksWithoutNAControls, probalilityWithoutNAControls);
+
         }
-        
+
         HUITypeFactory hui = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 
         int threatLevel = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_THREAT_PROBABILITY);
         PropertyType propertyType = hui.getPropertyType(IncidentScenario.TYPE_ID, IRiskAnalysisService.PROP_SCENARIO_THREAT_PROBABILITY);
         String threatDesc = propertyType.getNameForValue(threatLevel);
-        
+
         int vulnLevel = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_VULN_PROBABILITY);
         propertyType = hui.getPropertyType(IncidentScenario.TYPE_ID, IRiskAnalysisService.PROP_SCENARIO_VULN_PROBABILITY);
         String vulnDesc = propertyType.getNameForValue(vulnLevel);
-        
+
         String threatTitle;
         String vulnTitle;
-        
+
         Map<CnATreeElement, CnALink> threats = CnALink.getLinkedElements(scenario, Threat.TYPE_ID);
         Map<CnATreeElement, CnALink> vulns = CnALink.getLinkedElements(scenario, Vulnerability.TYPE_ID);
-        
-        if (threats.size()==0) {
-               threatTitle = "";
+
+        if (threats.size() == 0) {
+            threatTitle = "";
         } else {
-            // scenario may be linked to more than one threat, add all to description:
-            // (for risk calculation, the highest threat will be used, see RiskAnalysisServiceImpl.java)
+            // scenario may be linked to more than one threat, add all to
+            // description:
+            // (for risk calculation, the highest threat will be used, see
+            // RiskAnalysisServiceImpl.java)
             StringBuilder sb = new StringBuilder();
             for (Iterator iterator = threats.keySet().iterator(); iterator.hasNext();) {
                 CnATreeElement t = (CnATreeElement) iterator.next();
                 sb.append(t.getTitle());
-                if (iterator.hasNext()){
+                if (iterator.hasNext()) {
                     sb.append(", ");
                 }
             }
             threatTitle = sb.toString();
         }
-        
-        if (vulns.size()==0){
+
+        if (vulns.size() == 0) {
             vulnTitle = "";
         } else {
             StringBuilder sb = new StringBuilder();
             for (Iterator iterator = vulns.keySet().iterator(); iterator.hasNext();) {
                 CnATreeElement t = (CnATreeElement) iterator.next();
                 sb.append(t.getTitle());
-                if (iterator.hasNext()){
+                if (iterator.hasNext()) {
                     sb.append(", ");
                 }
             }
             vulnTitle = sb.toString();
         }
-        
+
         row.add(Integer.toString(threatLevel));
         row.add(Integer.toString(vulnLevel));
         row.add(threatTitle);
         row.add(vulnTitle);
         row.add(threatDesc);
         row.add(vulnDesc);
-        row.add(isCRelevant ? treatedRiskC.toString() : "0");
-        row.add(isIRelevant ? treatedRiskI.toString() : "0");
-        row.add(isARelevant ? treatedRiskA.toString() : "0");
+
+        row.add(isCRelevant ? treatedRisks.getRiskC() : "0");
+        row.add(isIRelevant ? treatedRisks.getRiskI() : "0");
+        row.add(isARelevant ? treatedRisks.getRiskA() : "0");
+
+        row.add(isCRelevant ? treatedRisksWithoutNAControls.getRiskC() : "0");
+        row.add(isIRelevant ? treatedRisksWithoutNAControls.getRiskI() : "0");
+        row.add(isARelevant ? treatedRisksWithoutNAControls.getRiskA() : "0");
+
         row.add(scenario.getDbId().toString());
     }
 
+    private Impact calcRiskWithControls(CnATreeElement asset, int riskType, AssetValueAdapter assetValueAdapter, Impact initialImpact, int probalitity){
+
+        Integer impactC = 0;
+        Integer impactI = 0;
+        Integer impactA = 0;
+        AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
+        RiskAnalysisServiceImpl ras = new RiskAnalysisServiceImpl();
+
+        impactC = valueAdapter.getVertraulichkeit();
+        impactI = valueAdapter.getIntegritaet();
+        impactA = valueAdapter.getVerfuegbarkeit();
+
+        Integer[] reducedImpact = ras.applyControlsToImpact(riskType, asset, impactC, impactI, impactA);
+        if (reducedImpact != null) {
+            impactC = reducedImpact[0];
+            impactI = reducedImpact[1];
+            impactA = reducedImpact[2];
+        }
+
+        return new Impact(probalitity + impactC, probalitity + impactI, probalitity + impactA);
+
+    }
 
     /**
      * @return the result
@@ -224,7 +268,9 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
         return result;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheID()
      */
     @Override
@@ -236,16 +282,22 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
         return cacheID.toString();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.ICachedCommand#injectCacheResult(java.lang
+     * .Object)
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.result = (ArrayList<List<String>>)result;
+        this.result = (ArrayList<List<String>>) result;
         resultInjectedFromCache = true;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.interfaces.ICachedCommand#getCacheableResult()
      */
     @Override
@@ -254,5 +306,3 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
     }
 
 }
-
-
