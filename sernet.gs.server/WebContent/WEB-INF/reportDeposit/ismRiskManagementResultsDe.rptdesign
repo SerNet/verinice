@@ -11466,7 +11466,7 @@ columns(cols);</value>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Summary"</expression>
             </structure>
-            <text-property name="text">Risiko Register</text-property>
+            <text-property name="text">IS-Risikobeurteilung</text-property>
         </label>
         <label id="136">
             <property name="style">head2</property>
@@ -20724,7 +20724,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
             <property name="paddingTop">20pt</property>
             <property name="pageBreakAfter">avoid</property>
             <property name="pageBreakBefore">auto</property>
-            <text-property name="text">Detaillierte Risikobewertung (mit Controls)</text-property>
+            <text-property name="text">Detaillierte Risikobeurteilung (mit Controls)</text-property>
         </label>
         <grid id="2104">
             <property name="borderBottomColor">#FFFFFF</property>
@@ -21520,7 +21520,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                                                 <property name="verticalAlign">middle</property>
                                                                 <label id="2037">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Kennzahlen nach Risikokategorien</text-property>
+                                                                    <text-property name="text">Risiko</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="2038">
@@ -21699,7 +21699,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
                                                                 <text-data id="1737">
                                                                     <property name="marginRight">10pt</property>
                                                                     <property name="textAlign">right</property>
-                                                                    <expression name="valueExpr">"Total Risk for " + row._outer["process_name"] + ":  "</expression>
+                                                                    <expression name="valueExpr">"Gesamtrestrisiko für " + row._outer["process_name"] + ":  "</expression>
                                                                     <property name="contentType">html</property>
                                                                 </text-data>
                                                             </cell>

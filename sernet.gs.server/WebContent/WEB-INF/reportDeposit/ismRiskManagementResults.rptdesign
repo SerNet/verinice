@@ -11446,7 +11446,7 @@ columns(cols);</value>
             <structure name="toc">
                 <expression name="expressionValue" type="javascript">"Summary"</expression>
             </structure>
-            <text-property name="text">Risk Register</text-property>
+            <text-property name="text">Risk Assessment</text-property>
         </label>
         <label id="136">
             <property name="style">head2</property>
@@ -21492,7 +21492,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                 <property name="verticalAlign">middle</property>
                                                                 <label id="2037">
                                                                     <property name="textAlign">center</property>
-                                                                    <text-property name="text">Key Figures by Risk Category</text-property>
+                                                                    <text-property name="text">Risk</text-property>
                                                                 </label>
                                                             </cell>
                                                             <cell id="2038">
@@ -21671,7 +21671,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
                                                                 <text-data id="1737">
                                                                     <property name="marginRight">10pt</property>
                                                                     <property name="textAlign">right</property>
-                                                                    <expression name="valueExpr">"Total Risk for " + row._outer["process_name"] + ":  "</expression>
+                                                                    <expression name="valueExpr">"Total residiual risk for " + row._outer["process_name"] + ":  "</expression>
                                                                     <property name="contentType">html</property>
                                                                 </text-data>
                                                             </cell>
