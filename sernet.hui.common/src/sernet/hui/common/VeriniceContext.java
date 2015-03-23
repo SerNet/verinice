@@ -120,6 +120,8 @@ public final class VeriniceContext {
     
     public static final String CONFIGURATION_SERVICE = "configurationService";
     
+    public static final String SEARCH_SERVICE = "searchService";
+    
     private static String serverUrl = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();

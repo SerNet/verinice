@@ -34,6 +34,7 @@ import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
 import sernet.verinice.interfaces.bpm.IIsaQmService;
 import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.interfaces.validation.IValidationService;
 
 @SuppressWarnings("restriction")
@@ -152,6 +153,10 @@ public abstract class ServiceFactory {
 	
 	public static IReportHQLService lookupReportHQLService(){
 	    return (IReportHQLService)VeriniceContext.get(VeriniceContext.REPORT_HQL_SERVICE);
+	}
+	
+	public static ISearchService lookupSearchService(){
+	    return (ISearchService)VeriniceContext.get(VeriniceContext.SEARCH_SERVICE);
 	}
 	
 	/**

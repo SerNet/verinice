@@ -82,6 +82,7 @@ import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
 import sernet.verinice.rcp.accountgroup.GroupView;
+import sernet.verinice.rcp.search.SearchView;
 import sernet.verinice.report.rcp.ReportDepositView;
 import sernet.verinice.validation.CnAValidationView;
 
@@ -141,6 +142,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openValidationViewAction;
     
     private OpenViewAction openGroupViewAction;
+    
+    private OpenMultipleViewAction openSearchViewAction;
 
     private OpenMultipleViewAction openCatalogAction;
     
@@ -234,6 +237,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         openValidationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_35, CnAValidationView.ID, ImageCache.VIEW_VALIDATION, ActionRightIDs.CNAVALIDATION);
         openAccountViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_38, AccountView.ID, ImageCache.PERSON, ActionRightIDs.ACCOUNTSETTINGS);
         openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
+        openSearchViewAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_42, SearchView.ID, ImageCache.SEARCH, ActionRightIDs.SEARCHVIEW);
         
         reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
@@ -270,7 +274,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 accessControlEditAction, profileEditAction, konsolidatorAction,
                 gsmbasicsecuritycheckAction,bausteinZuordnungAction,
                 gsmbausteinZuordnungAction, openDocumentViewAction,
-                introAction, openGroupViewAction, openReportdepositViewAction
+                introAction, openGroupViewAction, openReportdepositViewAction, 
+                openSearchViewAction
         };
         registerActions(actions);
 
@@ -394,6 +399,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(openFileAction);
         viewsMenu.add(openRelationViewAction);
         viewsMenu.add(openValidationViewAction);
+        viewsMenu.add(openSearchViewAction);
         
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
@@ -463,6 +469,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(openFileAction);
         myToolbar.add(openRelationViewAction);
         myToolbar.add(openValidationViewAction);
+        myToolbar.add(openSearchViewAction);
     }
 
     /**
