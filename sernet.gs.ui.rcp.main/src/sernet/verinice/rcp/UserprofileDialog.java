@@ -57,7 +57,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
+import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.model.auth.Action;
 import sernet.verinice.model.auth.Auth;
 import sernet.verinice.model.auth.ConfigurationType;
@@ -159,7 +159,7 @@ public class UserprofileDialog extends TitleAreaDialog {
               }
 
             });
-        comboModel = new ComboModel<String>(new ComboModelLabelProvider() {
+        comboModel = new ComboModel<String>(new IComboModelLabelProvider() {
             @Override
             public String getLabel(Object label) {
                 return (String) label;

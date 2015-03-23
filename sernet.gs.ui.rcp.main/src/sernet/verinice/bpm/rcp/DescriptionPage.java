@@ -48,7 +48,7 @@ import org.osgi.service.prefs.Preferences;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
+import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 
 /**
  * Wizard page of wizard {@link IndividualProcessWizard}.
@@ -231,7 +231,7 @@ public class DescriptionPage extends WizardPage {
     }
 
     private void initComboValues() {
-        templateComboModel = new ComboModel<IndividualServiceParameter>(new ComboModelLabelProvider<IndividualServiceParameter>() {
+        templateComboModel = new ComboModel<IndividualServiceParameter>(new IComboModelLabelProvider<IndividualServiceParameter>() {
             @Override
             public String getLabel(IndividualServiceParameter template) {
                 return template.getTitle();

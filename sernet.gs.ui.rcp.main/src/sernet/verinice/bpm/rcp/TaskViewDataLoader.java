@@ -186,7 +186,15 @@ public class TaskViewDataLoader {
             LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(Audit.TYPE_ID);      
             command = taskView.getCommandService().executeCommand(command); 
             auditList = command.getElements();    
-            showAudits(filterAudits());
+            List<CnATreeElement> filteredList = filterAudits();
+            taskView.comboModelAudit.addAll(filteredList);
+            taskView.comboModelAudit.sort(TaskView.NSC);
+            if(filteredList!=null && !filteredList.isEmpty()) {
+                taskView.comboModelAudit.addNoSelectionObject(Messages.TaskView_21);
+            } else {
+                taskView.comboModelAudit.addNoSelectionObject(Messages.TaskViewDataLoader_0);
+            }
+            refreshAudits();
         } catch (CommandException e) {
             // exception is not logged here, but in createPartControl
             throw new RuntimeCommandException("Error while loading organizations, it-verbunds or audits", e); //$NON-NLS-1$
@@ -209,19 +217,22 @@ public class TaskViewDataLoader {
         return filteredList;
     }
 
-    private void showAudits(List<CnATreeElement> audits) {
-        taskView.comboModelAudit.addAll(audits);
-        taskView.comboModelAudit.sort(TaskView.NSC);
-        if(audits!=null && !audits.isEmpty()) {
-            taskView.comboModelAudit.addNoSelectionObject(Messages.TaskView_21);
-        } else {
-            taskView.comboModelAudit.addNoSelectionObject(Messages.TaskViewDataLoader_0);
-        }
+    private void refreshAudits() {     
         TaskView.getDisplay().syncExec(new Runnable(){
             @Override
             public void run() {
                 taskView.comboAudit.setItems(taskView.comboModelAudit.getLabelArray());            
                 selectDefaultAudit();
+            }  
+        });
+    }
+    
+    public void refreshScopes() {     
+        TaskView.getDisplay().syncExec(new Runnable(){
+            @Override
+            public void run() {
+                taskView.comboScope.setItems(taskView.comboModelScope.getLabelArray());            
+                selectDefaultGroup();
             }  
         });
     }
@@ -241,6 +252,7 @@ public class TaskViewDataLoader {
     void loadAssignees() {
         taskView.comboModelAccount.clear();     
         taskView.comboModelAccount.addAll(loadAccounts());
+        taskView.comboModelAccount.sort(TaskView.NSC);
         taskView.comboModelAccount.addNoSelectionObject(Messages.TaskView_20);
         TaskView.getDisplay().syncExec(new Runnable(){
             @Override

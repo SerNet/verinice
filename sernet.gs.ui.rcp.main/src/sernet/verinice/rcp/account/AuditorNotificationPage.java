@@ -33,7 +33,7 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
+import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.SelectionAdapter;
 import sernet.verinice.rcp.TextEventAdapter;
@@ -93,7 +93,7 @@ public class AuditorNotificationPage extends BaseWizardPage {
                 }
             }
         });
-        comboModelGlobal = new ComboModel<KeyValue>(new ComboModelLabelProvider<KeyValue>() {
+        comboModelGlobal = new ComboModel<KeyValue>(new IComboModelLabelProvider<KeyValue>() {
             @Override
             public String getLabel(KeyValue element) {
                 return element.getValue();

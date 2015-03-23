@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2014 Daniel Murygin.
+ * Copyright (c) 2010 Daniel Murygin <dm[at]sernet[dot]de>.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -10,8 +10,8 @@
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program. 
+ * You should have received a copy of the GNU Lesser General Public 
+ * License along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
@@ -23,14 +23,7 @@ package sernet.verinice.iso27k.rcp;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class StringComboModelLabelProvider implements IComboModelLabelProvider<String> {
+public interface IComboModelLabelProvider<T> {
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.rcp.ComboModelLabelProvider#getLabel(java.lang.Object)
-     */
-    @Override
-    public String getLabel(String s) {
-        return s;
-    }
-
+	public abstract String getLabel(T object);
 }

@@ -66,7 +66,7 @@ import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
+import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -176,7 +176,7 @@ public class AccountView extends RightsEnabledView {
     private void initView(Composite parent) {         
         parent.setLayout(new FillLayout());
         createComposite(parent);
-        comboModel = new ComboModel<CnATreeElement>(new ComboModelLabelProvider<CnATreeElement>() {
+        comboModel = new ComboModel<CnATreeElement>(new IComboModelLabelProvider<CnATreeElement>() {
             @Override
             public String getLabel(CnATreeElement element) {
                 return element.getTitle();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Daniel Murygin <dm[at]sernet[dot]de>.
+ * Copyright (c) 2015 Daniel Murygin.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -10,8 +10,8 @@
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
@@ -19,11 +19,38 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import sernet.verinice.model.common.CnATreeElement;
+
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
-public abstract class ComboModelLabelProvider<T> {
+public class ComboModelFilter implements IComboModelFilter<CnATreeElement> {
 
-	public abstract String getLabel(T object);
+    private String filter;
+    
+    public ComboModelFilter() {
+        super();
+    }
+
+    public ComboModelFilter(String filter) {
+        super();
+        this.filter = filter;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.rcp.IComboModelFilter#isVisible(java.lang.Object)
+     */
+    @Override
+    public boolean isVisible(CnATreeElement element) {
+        return (getFilter()==null) ? true : element.getTitle().toLowerCase().contains(getFilter().toLowerCase());
+    }
+    
+    public String getFilter() {
+        return filter;
+    }
+
+    public void setFilter(String filter) {
+        this.filter = filter;
+    }
+
 }

@@ -37,7 +37,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
+import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.model.iso27k.PersonIso;
 
 /**
@@ -108,7 +108,7 @@ public class RelationPage extends WizardPage {
     }
     
     private void initComboValues() {
-        relationComboModel = new ComboModel<HuiRelation>(new ComboModelLabelProvider<HuiRelation>() {
+        relationComboModel = new ComboModel<HuiRelation>(new IComboModelLabelProvider<HuiRelation>() {
             @Override
             public String getLabel(HuiRelation relation) {
                 return relation.getName();

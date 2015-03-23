@@ -19,7 +19,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
+import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -184,13 +184,13 @@ public class PersonPage extends BaseWizardPage {
     }
 
     protected void initData() throws Exception {
-        comboModelScope = new ComboModel<CnATreeElement>(new ComboModelLabelProvider<CnATreeElement>() {
+        comboModelScope = new ComboModel<CnATreeElement>(new IComboModelLabelProvider<CnATreeElement>() {
             @Override
             public String getLabel(CnATreeElement element) {
                 return element.getTitle();
             }       
         }); 
-        comboModelGroup = new ComboModel<CnATreeElement>(new ComboModelLabelProvider<CnATreeElement>() {
+        comboModelGroup = new ComboModel<CnATreeElement>(new IComboModelLabelProvider<CnATreeElement>() {
             @Override
             public String getLabel(CnATreeElement element) {
                 return element.getTitle();

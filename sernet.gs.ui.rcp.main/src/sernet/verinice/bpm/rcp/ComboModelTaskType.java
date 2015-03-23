@@ -25,7 +25,7 @@ import sernet.verinice.interfaces.bpm.IIsaExecutionProcess;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
 import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
+import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -38,7 +38,7 @@ public class ComboModelTaskType extends ComboModel<KeyMessage> {
      * @param labelProvider
      */
     public ComboModelTaskType() {
-        super(new ComboModelLabelProvider<KeyMessage>() {
+        super(new IComboModelLabelProvider<KeyMessage>() {
             @Override
             public String getLabel(KeyMessage keyMessage) {
                 return keyMessage.getValue();

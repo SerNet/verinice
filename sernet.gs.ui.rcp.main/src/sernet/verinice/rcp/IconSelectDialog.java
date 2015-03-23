@@ -66,7 +66,7 @@ import org.eclipse.swt.widgets.Table;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.ComboModelLabelProvider;
+import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 
 /**
  * 
@@ -107,7 +107,7 @@ public class IconSelectDialog extends Dialog {
     }
 
     private void initComboValues() {
-        dirComboModel = new ComboModel<IconPathDescriptor>(new ComboModelLabelProvider<IconPathDescriptor>() {
+        dirComboModel = new ComboModel<IconPathDescriptor>(new IComboModelLabelProvider<IconPathDescriptor>() {
             @Override
             public String getLabel(IconPathDescriptor descriptor) {
                 return descriptor.getName();

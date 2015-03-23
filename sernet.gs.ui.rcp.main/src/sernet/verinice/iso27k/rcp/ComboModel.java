@@ -26,8 +26,6 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import sernet.gs.service.NumericStringComparator;
-
 /**
  * Data model for selection lists (combo boxes)
  * 
@@ -37,11 +35,13 @@ public class ComboModel<T> {
 
 	private List<ComboModelObject<T>> objectList;
 	
-	ComboModelLabelProvider<T> labelProvider;
+	IComboModelLabelProvider<T> labelProvider;
+	
+	IComboModelFilter<T> filter;
 	
 	int selectedIndex = -1;
 	
-	public ComboModel(ComboModelLabelProvider<T> labelProvider) {
+	public ComboModel(IComboModelLabelProvider<T> labelProvider) {
 		super();
 		objectList = new ArrayList<ComboModelObject<T>>();
 		this.labelProvider = labelProvider;
@@ -70,7 +70,7 @@ public class ComboModel<T> {
     }
 	
 	public void remove(int i) {
-		objectList.remove(i);
+	    remove(getObject(i));
 	}
 	
 	public boolean remove(T object) {
@@ -87,7 +87,7 @@ public class ComboModel<T> {
 	
 	public void removeSelected() {
 		remove(selectedIndex);
-		if(selectedIndex>0 || objectList.size()==0) {
+		if(selectedIndex>0 || getComboModelObjectList().size()==0) {
 			selectedIndex--;
 		}
 	}
@@ -101,7 +101,7 @@ public class ComboModel<T> {
 	    Collections.sort(objectList);
 	}
 	
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void sort(Comparator comparator) {
         Collections.sort(objectList, comparator);
     }
@@ -119,19 +119,19 @@ public class ComboModel<T> {
     }
 	
 	public T getSelectedObject() {
-		return (selectedIndex>=0) ? objectList.get(selectedIndex).getObject() : null;
+		return (selectedIndex>=0) ? getComboModelObjectListFiltered().get(selectedIndex).getObject() : null;
 	}
 	
 	public String getSelectedLabel() {
-		return (selectedIndex>=0) ? objectList.get(selectedIndex).getLabel() : null;
+		return (selectedIndex>=0) ? getComboModelObjectListFiltered().get(selectedIndex).getLabel() : null;
 	}
 	
 	public T getObject(int i) {
-		return objectList.get(i).getObject();
+		return getComboModelObjectListFiltered().get(i).getObject();
 	}
 	
 	public String getLabel(int i) {
-		return objectList.get(i).getLabel();
+		return getComboModelObjectListFiltered().get(i).getLabel();
 	}
 	
 	public int getSelectedIndex() {
@@ -139,7 +139,7 @@ public class ComboModel<T> {
 	}
 
 	public void setSelectedIndex(int selectedIndex) {
-		if(selectedIndex<objectList.size()) {
+		if(selectedIndex<getComboModelObjectListFiltered().size()) {
 		    this.selectedIndex = selectedIndex;
 		}	
 	}
@@ -147,7 +147,7 @@ public class ComboModel<T> {
 	public void setSelectedObject(T object) {
 	    this.selectedIndex = -1;
 		int i = 0;
-		for (ComboModelObject<T> current : objectList) {
+		for (ComboModelObject<T> current : getComboModelObjectList()) {
 			if(object.equals(current.getObject())) {
 				this.selectedIndex = i;
 				break;
@@ -157,13 +157,43 @@ public class ComboModel<T> {
 	}
 
 	public String[] getLabelArray() {
-		String[] array = new String[objectList.size()];
-		int i = 0;
-		for (ComboModelObject<T> object : objectList) {
-			array[i]=object.getLabel();
-			i++;
+		List<String> labelList = new LinkedList<String>();
+		for (ComboModelObject<T> object : getComboModelObjectListFiltered()) {
+		    labelList.add(object.getLabel());;
 		}
-		return array;
+		return labelList.toArray(new String[labelList.size()]);
+	}
+	
+	public List<ComboModelObject<T>> getComboModelObjectListFiltered() {
+	    if(filter!=null)  {
+	        return createFilteredList();
+	    } else {
+	        return objectList;
+	    }
+      
+    }
+	
+    private List<ComboModelObject<T>> createFilteredList() {
+        List<ComboModelObject<T>> filteredList = new LinkedList<ComboModelObject<T>>();
+        for (ComboModelObject<T> comboModelObject : objectList) {
+            if(isVisible(comboModelObject)) {
+                filteredList.add(comboModelObject);
+            }
+        }
+        return filteredList;
+    }
+
+ 
+    private boolean isVisible(ComboModelObject<T> comboModelObject) {
+        boolean visible = true;
+        if(comboModelObject.getObject()!=null) {       
+            visible = filter.isVisible(comboModelObject.getObject());
+        }
+        return visible;
+    }
+
+    public List<ComboModelObject<T>> getComboModelObjectList() {
+	    return objectList;
 	}
 	
 	public List<T> getObjectList() {
@@ -173,6 +203,14 @@ public class ComboModel<T> {
             list.add(object.getObject());
         }
         return list;
+    }
+
+    public IComboModelFilter<T> getFilter() {
+        return filter;
+    }
+
+    public void setFilter(IComboModelFilter<T> filter) {
+        this.filter = filter;
     }
 
 	
