@@ -19,51 +19,59 @@ package sernet.verinice.model.search;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  *
  */
 public class VeriniceSearchResult implements Serializable{
     
-    private static final long serialVersionUID = 201503171549L;
+    private static final long serialVersionUID = 201503181427L;
     
-    private String typeId;
-    private List<String> allColumns;
-    private List<String> defaultColumns;
+    private Map<String, String> properties;
     
-    private Map<String, Map<String, String>> results;
+    /**
+     * should be uuid of corresponding {@link CnATreeElement} 
+     **/
+    private String identifier;
+    
+    private String fieldOfOccurence;
+    
 
-    public VeriniceSearchResult(Map<String, Map<String, String>> results, String typeId){
-        this.results = results;
-        this.typeId = typeId;
+    public VeriniceSearchResult(String identifier, String occurence){
+        this.properties = new HashMap<String, String>(0);
+        this.identifier = identifier;
+        this.fieldOfOccurence = occurence;
     }
     
-    public int getResultCount(){
-        return results.size();
+    public int getColumnCount(){
+        return properties.size();
     }
-    public String getValueFromResult(String uuid, String property_type){
-        if(results.containsKey(uuid) && results.get(uuid).containsKey(property_type)){
-            return results.get(uuid).get(property_type);
+    
+    public Set<String> getResultColumns(){
+        return properties.keySet();
+    }
+    
+    public String getValueFromResultString(String propertyType){
+        if(properties.containsKey(propertyType)){
+            return properties.get(propertyType);
         }
-        return null;
+        return "";
     }
-    public String[] getDefaultColumns(){
-        return defaultColumns.toArray(new String[defaultColumns.size()]);
+    
+    public void addProperty(String propertyType, String value){
+        properties.put(propertyType, value);
     }
-    public String[] getAllColumns(){
-        return allColumns.toArray(new String[allColumns.size()]);
+    
+    public String getIdentifier(){
+        return identifier;
     }
-    public String getTypeID(){
-        return typeId;
-    }
-    Map<String, String> getResult(String uuid){
-        if(results.containsKey(uuid)){
-            return results.get(uuid);
-        } else {
-            return new HashMap<String, String>(0);
-        }
+    
+    public String getFieldOfOccurence(){
+        return fieldOfOccurence;
     }
 
 }

@@ -19,18 +19,26 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.engine.DocumentMissingException;
+import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
+
+import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HUITypeFactory;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -140,10 +148,40 @@ public abstract class BaseDao implements ISearchDao {
      */
     @Override
     public SearchResponse findByPhrase(String title) {
-        return getClient().prepareSearch(getIndex()).setTypes(getType())
+        Set<String> highlightProperties = new HashSet<String>(0);
+            for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
+                 for(String propertyTypeId : type.getAllPropertyTypeIds()){
+                     highlightProperties.add(propertyTypeId);
+                 }
+             }
+        SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType())
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setQuery(QueryBuilders.matchPhraseQuery("_all", title))
-                .execute()
+                .setQuery(QueryBuilders.matchPhraseQuery("_all", title));
+        for(String s : highlightProperties){
+            srb.addHighlightedField(s);
+        }
+        
+        return srb.execute()
+                .actionGet();
+    }
+    
+    @Override 
+    public SearchResponse findByPhrase(String phrase, String entityType){
+        Set<String> highlightProperties = new HashSet<String>(0);
+        for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
+            for(String propertyTypeId : type.getAllPropertyTypeIds()){
+                highlightProperties.add(propertyTypeId);
+            }
+        }
+        SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType())
+                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                .setQuery(QueryBuilders.matchPhraseQuery("_all", phrase));
+        for(String s : highlightProperties){
+            srb.addHighlightedField(s);
+        }
+
+        srb.setPostFilter(FilterBuilders.boolFilter().must(FilterBuilders.termFilter("element-type", entityType)));
+        return srb.execute()
                 .actionGet();
     }
     
@@ -161,10 +199,25 @@ public abstract class BaseDao implements ISearchDao {
      */
     @Override
     public SearchResponse find(String property, String title, Operator operator) {
-        return getClient().prepareSearch(getIndex()).setTypes(getType())
+        Set<String> highlightProperties = new HashSet<String>(0);
+       if("_all".equals(property)){
+           for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
+                for(String propertyTypeId : type.getAllPropertyTypeIds()){
+                    highlightProperties.add(propertyTypeId);
+                }
+            }
+        } else {
+            highlightProperties.add(property);
+        }
+        SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType())
                 .setQuery(QueryBuilders.matchQuery(property, title).operator(operator))
-                .setSize(20)
-                .execute()
+                .setSize(20);
+                
+        for(String s : highlightProperties){
+            srb.addHighlightedField(s);
+        }
+        
+                return srb.execute()
                 .actionGet();
     }
     

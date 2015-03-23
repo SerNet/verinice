@@ -25,6 +25,7 @@ import java.util.Map;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -63,7 +64,10 @@ public class JsonBuilder {
 
     private static void addProperties(XContentBuilder builder, Map<String, PropertyList> properties) throws IOException {
         for (String key : properties.keySet()) {
-            builder.field(key, properties.get(key));
+            PropertyList list = (PropertyList)properties.get(key);
+            for(Property p : list.getProperties()){
+                builder.field(p.getPropertyTypeID(), p.getPropertyValue());
+            }
         }    
     }
 }

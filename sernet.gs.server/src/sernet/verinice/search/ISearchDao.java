@@ -20,14 +20,11 @@
 package sernet.verinice.search;
 
 import org.elasticsearch.action.ActionResponse;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexResponse;
-import org.elasticsearch.action.admin.indices.flush.FlushResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
-import org.elasticsearch.search.SearchHits;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -55,6 +52,8 @@ public interface ISearchDao {
     public SearchResponse find(String title, Operator operator);
     
     public SearchResponse findByPhrase(String title);
+    
+    public SearchResponse findByPhrase(String phrase, String entityType);
 
     public SearchResponse find(String property, String title);
 

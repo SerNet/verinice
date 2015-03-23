@@ -84,6 +84,7 @@ public class ActionRightIDs {
     public static final String REPORTDEPOSITEDIT = "reportdepositedit";
     public static final String RISKANALYSIS = "riskanalysis";
     public static final String SAMTVIEW = "samtview";
+    public static final String SEARCHVIEW = "searchview";
     public static final String SHOWALLFILES = "showallfiles";
     public static final String SHOWCHARTVIEW = "showchartview";
     public static final String SHOWPREFERENCES = "showpreferences";

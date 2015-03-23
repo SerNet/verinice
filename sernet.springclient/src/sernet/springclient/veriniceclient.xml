@@ -173,6 +173,19 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         </property>
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>    	
     </bean> 
+
+    <bean id="searchService"
+    	class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/searchServiceHttpInvoker</value>
+        </property>  
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.search.ISearchService</value>         
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>    	
+    </bean> 
+    
+    
               
     <bean id="rightsServiceClient" class="sernet.springclient.RightsServiceClient">
     	<property name="authService" ref="authService" />
@@ -291,6 +304,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             <entry key="commandCacheClient" value-ref="commandCacheClient" />
             <entry key="reportdepositService" value-ref="reportdepositService" />
             <entry key="reportHQLService" value-ref="reportHQLService" />
+            <entry key="searchService" value-ref="searchService" />
 		</map>
 	</property>
 	</bean>

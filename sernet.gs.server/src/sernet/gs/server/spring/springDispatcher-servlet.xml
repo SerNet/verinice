@@ -147,6 +147,16 @@
 		</property>
 	</bean>
 	
+	<bean name="/searchServiceHttpInvoker"
+		class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+		lazy-init="false">
+		<property name="service">
+			<ref bean="searchService"/>
+		</property>
+		<property name="serviceInterface">
+			<value>sernet.verinice.interfaces.search.ISearchService</value>
+		</property>
+	</bean>
 	
 </beans>
 

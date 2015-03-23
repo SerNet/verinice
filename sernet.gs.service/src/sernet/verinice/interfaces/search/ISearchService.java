@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.List;
 
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.search.VeriniceSearchResult;
+import sernet.verinice.model.search.VeriniceSearchResults;
 
 /**
  *
@@ -29,27 +29,12 @@ import sernet.verinice.model.search.VeriniceSearchResult;
 public interface ISearchService {
     
     /**
-    * returns preconfigured set of default columns for a given propertytype
-    * @param  {@link CnATreeElement#TYPE_ID}
-    * @return preconfigured default columns for given {@link CnATreeElement#TYPE_ID}
-    **/
-    String[] getDefaultColumns(String typeID);
-    
-    /**
-     * returns all columns (properties) to a given {@link CnATreeElement#TYPE_ID} that are defined in SNCA-model
-     * @param typeID
-     * @return
-     */
-    String[] getAllColumns(String typeID);
-    
-
-    /**
     * executes a search result to a csv file
     * (e.g. JsonObject=>CnATreeElement=>CSV-Entry), discuss if {@link CnATreeElement} is needed here, inspect existing csv importer
     * @return file that contains the csv
     * @param a search result
     **/
-    File exportSearchResultToCsv(VeriniceSearchResult result);
+    File exportSearchResultToCsv(VeriniceSearchResults result);
     
     /**
      * adds filter to query that reduces size of resultset to preconfigurable size
@@ -73,7 +58,14 @@ public interface ISearchService {
      * @param typeID
      * @return List SearchResult-Objects
      */
-    List<VeriniceSearchResult> getSearchResults(String query, String typeID);
+    VeriniceSearchResults getSearchResults(String query, String typeID);
+    
+    /**
+     * executs a query without a given typeId, so all object types are queried
+     * to fill the typeId-Combobox in the searchView
+     */
+    List<VeriniceSearchResults> executeSimpleQuery(String query);
+    
     
     /**
      * triggers job to create the search index initially
@@ -108,5 +100,7 @@ public interface ISearchService {
      * @param element
      */
     void updateOnIndex(CnATreeElement element);
+    
+    String convertElementToJson(CnATreeElement element);
 
 }

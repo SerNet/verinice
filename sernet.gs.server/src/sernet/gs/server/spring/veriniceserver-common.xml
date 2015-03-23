@@ -315,6 +315,11 @@ This variant:
     </bean>
     
      <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
+     
+     <bean id="searchService" class="sernet.verinice.service.SearchService">
+     	<property name="searchDao" ref="searchElementDao" />
+     	<property name="searchIndexer" ref="searchIndexer" />
+     </bean>
     
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
 	<!--<import resource="veriniceserver-debug.xml"/> -->

@@ -23,7 +23,6 @@ import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.ActionResponse;
-import org.elasticsearch.action.index.IndexResponse;
 
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.model.common.CnATreeElement;
