@@ -46,7 +46,6 @@ public class KerberosExecuter extends AbstractExecuter {
 
     public void init() {
         kerberosTicketService = SpringClientPlugin.getDefault().getKerberosTicketService();
-        super.init();
     }
 
     @Override

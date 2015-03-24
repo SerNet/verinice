@@ -44,13 +44,9 @@ public class CommonsExecuter extends AbstractExecuter {
         super();
     }
 
-    /**
-     * This method is configured as Spring init-method in veriniceclient.xml
-     */
-    public void init() {
-        
-        super.init();
-        
+    @Override
+    void init() {
+
         /**
          * Sets the verinice password dialog.
          */

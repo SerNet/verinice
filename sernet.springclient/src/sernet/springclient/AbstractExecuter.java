@@ -11,7 +11,7 @@ import org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecuto
 
 import sernet.verinice.service.auth.KerberosStatusService;
 
-public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
+abstract public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
 
     public static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS = 1000;
     public static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = (30 * 60 * 1000);
@@ -26,9 +26,6 @@ public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
 
     public AbstractExecuter() {
         super();
-    }
-
-    public void init() {
 
         MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
 
@@ -42,7 +39,14 @@ public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
         setHttpClient(new HttpClient(connectionManager));
 
         configureProxy();
+
     }
+
+    /**
+     * Exceuted by the {@link ExecuterFactoryBean}. Do special initialization stuff in
+     * this method.
+     */
+    abstract void init();
 
     protected void configureProxy() {
         String proxyHost = System.getProperty("http.proxyHost");
@@ -67,19 +71,17 @@ public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
             }
         } else if (LOG.isDebugEnabled()) {
             LOG.debug("No proxy is used.");
-        }    
+        }
     }
 
     public int getReadTimeout() {
         return readTimeout;
     }
 
-
     public void setReadTimeout(int readTimeout) {
-        this.readTimeout = readTimeout;      
+        this.readTimeout = readTimeout;
     }
 
-  
     public int getConnectionTimeout() {
         return connectionTimeout;
     }
