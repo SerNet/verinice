@@ -37,13 +37,10 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
 
 /**
- * Perform risk analysis according to ISO 27005.
- * 
- * Dokumentation:
- * http://www.verinice.org/priv/mediawiki-1.6.12/index.php/Benutzerdokumentation#Anhang:_Beschreibung_der_Methode_zum_Risk_Assessment_in_verinice
- * 
+ * Performs risk analysis according to ISO 27005.
+ *  
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
 public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
     
