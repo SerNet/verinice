@@ -239,7 +239,7 @@ public class TaskService implements ITaskService {
         StringBuilder sb = new StringBuilder("from org.jbpm.pvm.internal.task.TaskImpl as task "); //$NON-NLS-1$
         List<Object> paramList = new LinkedList<Object>();
             
-        if(parameter.getAuditUuid()!=null) {
+        if(parameter.getAuditUuid()!=null || (parameter.getGroupIdList()!=null && !parameter.getGroupIdList().isEmpty())) {
             sb.append("inner join task.execution.processInstance.variables as auditVar "); //$NON-NLS-1$
         }    
         // create (un)read query if one is false:
@@ -293,7 +293,21 @@ public class TaskService implements ITaskService {
             paramList.add(parameter.getDueDateTo());
         }
         
-        if(parameter.getAuditUuid()!=null) {
+        if(parameter.getGroupIdList()!=null && !parameter.getGroupIdList().isEmpty()) {
+            List<String> uuidList = parameter.getGroupIdList();
+            if(parameter.getAuditUuid()!=null) {
+                uuidList.add(parameter.getAuditUuid());
+            }
+            where = concat(sb,where);
+            sb.append("auditVar.key=? "); //$NON-NLS-1$
+            paramList.add(IIsaExecutionProcess.VAR_AUDIT_UUID);
+            sb.append("and auditVar.string in (");
+            sb.append(getQuestionMarkList(uuidList));
+            sb.append(") "); //$NON-NLS-1$
+            for (String uuid : uuidList) {
+                paramList.add(uuid);
+            }         
+        } else if(parameter.getAuditUuid()!=null) {
             where = concat(sb,where);
             sb.append("auditVar.key=? "); //$NON-NLS-1$
             paramList.add(IIsaExecutionProcess.VAR_AUDIT_UUID);
@@ -302,24 +316,37 @@ public class TaskService implements ITaskService {
         }
         
         if(parameter.getRead()!=null && parameter.getRead() && parameter.getUnread()!=null && !parameter.getUnread()) { 
-            where = concat(sb,where);           
-            sb.append("readVar.key=? "); //$NON-NLS-1$
-            paramList.add(ITaskService.VAR_READ_STATUS);
-            sb.append("and readVar.string=? "); //$NON-NLS-1$
-            paramList.add(ITaskService.VAR_READ);
+            addReadStatus(sb, paramList, where, ITaskService.VAR_READ);
         }
         if(parameter.getUnread()!=null && parameter.getUnread() && parameter.getRead()!=null && !parameter.getRead()) {
-            where = concat(sb,where);
-            sb.append("readVar.key=? "); //$NON-NLS-1$
-            paramList.add(ITaskService.VAR_READ_STATUS);
-            sb.append("and readVar.string=? "); //$NON-NLS-1$
-            paramList.add(ITaskService.VAR_UNREAD);
+            addReadStatus(sb, paramList, where, ITaskService.VAR_UNREAD);
         }
         retValues[0] = paramList;
         retValues[1] = sb.toString();
         return retValues;
     }
+
+    private void addReadStatus(StringBuilder sb, List<Object> paramList, boolean where, String status) {
+        where = concat(sb,where);
+        sb.append("readVar.key=? "); //$NON-NLS-1$
+        paramList.add(ITaskService.VAR_READ_STATUS);
+        sb.append("and readVar.string=? "); //$NON-NLS-1$
+        paramList.add(status);
+    }
     
+    private String getQuestionMarkList(List<String> uuidList) {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (String uuid : uuidList) {
+            if(!first) {
+                sb.append(",");
+            }
+            sb.append("?");
+            first = false;
+        }
+        return sb.toString();
+    }
+
     /**
      * @param hql
      * @param where

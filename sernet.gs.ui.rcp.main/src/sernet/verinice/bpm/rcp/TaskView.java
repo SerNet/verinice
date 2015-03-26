@@ -274,7 +274,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         setLayoutData(label, false);
         // Due date
         labelDateFrom = new Label(formComposite, SWT.WRAP);
-        labelDateFrom.setText(Messages.TaskView_16);
+        labelDateFrom.setText(Messages.TaskView_18);
         labelDateUntil = new Label(formComposite, SWT.WRAP);
         labelDateUntil.setText(Messages.TaskView_1);
 

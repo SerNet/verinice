@@ -21,6 +21,7 @@ package sernet.verinice.model.bpm;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import sernet.verinice.interfaces.bpm.ITaskParameter;
@@ -38,6 +39,7 @@ public class TaskParameter implements ITaskParameter, Serializable {
     private Date dueDateTo;
     private String username;
     private String auditUuid;
+    private List<String> groupIdList;
     private boolean allUser;
     private String processKey;
     private String taskId;
@@ -122,6 +124,16 @@ public class TaskParameter implements ITaskParameter, Serializable {
     @Override
     public void setAuditUuid(String auditUuid) {
         this.auditUuid = auditUuid;
+    }
+    
+    @Override
+    public List<String> getGroupIdList() {
+        return this.groupIdList;
+    }
+    
+    @Override
+    public void setGroupIdList(List<String> groupIdList) {
+        this.groupIdList = groupIdList;
     }
 
     @Override

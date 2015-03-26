@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,6 +68,7 @@ public class TaskViewDataLoader {
     private ICommandService commandService;
     
     private List<CnATreeElement> auditList;
+    private List<CnATreeElement> filteredAuditList;
     
     
     public TaskViewDataLoader(TaskView taskView) {
@@ -125,6 +127,8 @@ public class TaskViewDataLoader {
         }  
         if(taskView.selectedAudit!=null) {
             param.setAuditUuid(taskView.selectedAudit.getUuid());
+        } else if(taskView.selectedScope!=null && filteredAuditList!=null && !filteredAuditList.isEmpty()) {
+            param.setGroupIdList(getUuidList(filteredAuditList));
         }
         if(taskView.selectedProcessType!=null) {
             param.setProcessKey(taskView.selectedProcessType.getKey());
@@ -149,6 +153,15 @@ public class TaskViewDataLoader {
         });
     }
     
+
+    private List<String> getUuidList(List<CnATreeElement> auditList) {
+        List<String> uuidList = new ArrayList<String>(auditList.size());
+        for (CnATreeElement audit : auditList) {
+            uuidList.add(audit.getUuid());
+        }
+        return uuidList;
+    }
+
     private void loadTasksInBackground(final LoadTaskJob job) {
         taskView.searchButton.setText(Messages.TaskView_19);
         taskView.searchButton.setEnabled(false);
@@ -186,10 +199,10 @@ public class TaskViewDataLoader {
             LoadCnAElementByEntityTypeId command = new LoadCnAElementByEntityTypeId(Audit.TYPE_ID);      
             command = taskView.getCommandService().executeCommand(command); 
             auditList = command.getElements();    
-            List<CnATreeElement> filteredList = filterAudits();
-            taskView.comboModelAudit.addAll(filteredList);
+            filteredAuditList = filterAudits();
+            taskView.comboModelAudit.addAll(filteredAuditList);
             taskView.comboModelAudit.sort(TaskView.NSC);
-            if(filteredList!=null && !filteredList.isEmpty()) {
+            if(filteredAuditList!=null && !filteredAuditList.isEmpty()) {
                 taskView.comboModelAudit.addNoSelectionObject(Messages.TaskView_21);
             } else {
                 taskView.comboModelAudit.addNoSelectionObject(Messages.TaskViewDataLoader_0);

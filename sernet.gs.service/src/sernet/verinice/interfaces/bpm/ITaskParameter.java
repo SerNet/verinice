@@ -21,6 +21,7 @@ package sernet.verinice.interfaces.bpm;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -60,6 +61,10 @@ public interface ITaskParameter extends Serializable {
     String getAuditUuid();
     
     void setAuditUuid(String uuid);
+    
+    List<String> getGroupIdList();
+    
+    void setGroupIdList(List<String> groupIdList);
     
     public String getProcessKey();
 
