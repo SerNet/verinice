@@ -254,7 +254,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         setLayoutData(label, 50, false);
         // Scope
         label = new Label(formComposite, SWT.WRAP);
-        label.setText("");
+        label.setText(""); //$NON-NLS-1$
         setLayoutData(label, true);
         // Audit
         label = new Label(formComposite, SWT.WRAP);
@@ -368,6 +368,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
 
     private void createGroupControls(Composite searchComposite) {
         final Text textFilterScope = new Text(searchComposite, SWT.BORDER);
+        textFilterScope.setToolTipText(Messages.TaskView_26);
         textFilterScope.addKeyListener(new TextEventAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
@@ -376,6 +377,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                 dataLoader.loadAudits();
             }
         });
+        
         comboModelScope = new ComboModel<CnATreeElement>(new GroupLabelProvider());
         filterScope = new RegexComboModelFilter();
         comboModelScope.setFilter(filterScope);
