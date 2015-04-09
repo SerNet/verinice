@@ -49,9 +49,8 @@ public class AccountContentProvider extends ArrayContentProvider {
             return;
         }
         try{
-            v.refresh();
-            
-        } catch (Throwable e){
+            v.refresh();           
+        } catch (Exception e){
             getLog().error("Wrong input for viewer", e);
         }
     }
@@ -70,7 +69,6 @@ public class AccountContentProvider extends ArrayContentProvider {
         if(input instanceof TreeSet){
             List<String> list = new ArrayList<String>(0);
             if(((TreeSet<Object>)input).size() > 0){
-                Object element = ((TreeSet<Object>)input).first();
                 list.addAll((TreeSet<String>)input);
                 return list.toArray(new Object[((TreeSet<String>)input).size()]);
             } else {
