@@ -57,6 +57,8 @@ import sernet.verinice.model.report.ReportTemplateMetaData;
 
 public class GenerateReportDialog extends TitleAreaDialog {
 
+    private static final String FILE_SEPARATOR = "file.separator";
+
     private static final Logger LOG = Logger.getLogger(GenerateReportDialog.class);
 
     // manual filename mode or auto filename mode
@@ -594,7 +596,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         String currentPath = textFile.getText();
         String path = currentPath;
         if (currentPath != null && !currentPath.isEmpty()) {
-            int lastSlash = currentPath.lastIndexOf(System.getProperty("file.separator"));
+            int lastSlash = currentPath.lastIndexOf(System.getProperty(FILE_SEPARATOR));
             if (lastSlash != -1) {
                 path = currentPath.substring(0, lastSlash + 1);
             } else {
@@ -850,11 +852,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
         if (defaultTemplateFolder == null || defaultTemplateFolder.isEmpty()) {
             defaultTemplateFolder = System.getProperty("user.home");
         }
-        if (!defaultFolder.endsWith(System.getProperty("file.separator"))) {
-            defaultFolder = defaultFolder + System.getProperty("file.separator");
+        if (!defaultFolder.endsWith(System.getProperty(FILE_SEPARATOR))) {
+            defaultFolder = defaultFolder + System.getProperty(FILE_SEPARATOR);
         }
-        if (!defaultTemplateFolder.endsWith(System.getProperty("file.separator"))) {
-            defaultTemplateFolder = defaultTemplateFolder + System.getProperty("file.separator");
+        if (!defaultTemplateFolder.endsWith(System.getProperty(FILE_SEPARATOR))) {
+            defaultTemplateFolder = defaultTemplateFolder + System.getProperty(FILE_SEPARATOR);
         }
         return defaultFolder;
     }

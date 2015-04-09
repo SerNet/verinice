@@ -166,7 +166,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
                 childChanged(child.getParent());
             }
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(DEFAULT_ERR_MSG, e);
         }
     }
 
@@ -202,7 +202,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
             }
             updater.refresh();
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(DEFAULT_ERR_MSG, e);
         }
     }
 
@@ -224,7 +224,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
                 updater.refresh();
             }
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(DEFAULT_ERR_MSG, e);
         }
     }
 
@@ -296,7 +296,7 @@ public class ISO27KModelViewUpdate implements IISO27KModelListener {
             job.setRule(new ExpandJobRule());
             job.schedule(Job.DECORATE);
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(DEFAULT_ERR_MSG, e);
         }
     }
 

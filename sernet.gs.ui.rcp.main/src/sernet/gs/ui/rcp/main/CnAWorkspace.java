@@ -55,6 +55,8 @@ import sernet.verinice.interfaces.report.IReportService;
  */
 public class CnAWorkspace {
 
+    private static final String CONF = "conf";
+
     private static final Logger LOG = Logger.getLogger(CnAWorkspace.class);
 
     private static final String OFFICEDIR = "office"; //$NON-NLS-1$
@@ -174,7 +176,7 @@ public class CnAWorkspace {
         URL url = Platform.getInstanceLocation().getURL();
         String path = url.getPath().replaceAll("/", "\\" + File.separator); //$NON-NLS-1$ //$NON-NLS-2$
         workDir = (new File(path)).getAbsolutePath();
-        confDir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
+        confDir = new File(url.getPath() + File.separator + CONF); //$NON-NLS-1$
     }
 
     public String getWorkdir() {
@@ -189,17 +191,17 @@ public class CnAWorkspace {
      * @return the full path to configuration dir of the client
      */
     public String getConfDir() {
-        return workDir + File.separator + "conf"; //$NON-NLS-1$
+        return workDir + File.separator + CONF; //$NON-NLS-1$
     }
 
     private void createConfDirFiles() throws IOException {
-        createTextFile("conf" + File.separator + "reports.properties_skeleton", workDir, "conf" + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        createTextFile("conf" + File.separator + "configuration.version", workDir); //$NON-NLS-1$ //$NON-NLS-2$
+        createTextFile(CONF + File.separator + "reports.properties_skeleton", workDir, CONF + File.separator + "reports.properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        createTextFile(CONF + File.separator + "configuration.version", workDir); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public void createConfDir() throws IOException {
         URL url = Platform.getInstanceLocation().getURL();
-        File dir = new File(url.getPath() + File.separator + "conf"); //$NON-NLS-1$
+        File dir = new File(url.getPath() + File.separator + CONF); //$NON-NLS-1$
         dir.mkdirs();
     }
 
@@ -281,8 +283,8 @@ public class CnAWorkspace {
             settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_JTDS); //$NON-NLS-1$
         }
 
-        createTextFile("conf" + File.separator + "skel_hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
-                workDir, "conf" + File.separator + "hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
+        createTextFile(CONF + File.separator + "skel_hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
+                workDir, CONF + File.separator + "hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
                 settings);
     }
 

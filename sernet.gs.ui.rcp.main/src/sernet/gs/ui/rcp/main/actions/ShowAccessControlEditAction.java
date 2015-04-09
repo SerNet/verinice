@@ -57,6 +57,8 @@ import sernet.verinice.model.common.Permission;
  */
 public class ShowAccessControlEditAction extends RightsEnabledAction implements ISelectionListener {
 
+    private static final String ERROR_MESSAGE = "Error while setting access rights.";
+
     private static final Logger LOG = Logger.getLogger(ShowAccessControlEditAction.class);
     
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showaccesscontroleditaction"; //$NON-NLS-1$
@@ -124,8 +126,8 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
                         Activator.inheritVeriniceContextState();
                         updatePermissions();
                     } catch (CommandException e) {
-                        LOG.error("Error while setting access rights.", e); //$NON-NLS-1$
-                        throw new RuntimeException("Error while setting access rights.", e); //$NON-NLS-1$
+                        LOG.error(ERROR_MESSAGE, e); //$NON-NLS-1$
+                        throw new RuntimeException(ERROR_MESSAGE, e); //$NON-NLS-1$
                     } finally {
                         if(monitor!=null) {
                             monitor.done();
@@ -134,8 +136,8 @@ public class ShowAccessControlEditAction extends RightsEnabledAction implements 
                 }
             }); 
         } catch (Exception e) {
-            LOG.error("Error while setting access rights.", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, "Error while setting access rights."); //$NON-NLS-1$
+            LOG.error(ERROR_MESSAGE, e); //$NON-NLS-1$
+            ExceptionUtil.log(e, ERROR_MESSAGE); //$NON-NLS-1$
         }       
     }
     

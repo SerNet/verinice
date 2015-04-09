@@ -45,6 +45,8 @@ import sernet.verinice.model.validation.CnAValidation;
  */
 public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListener {
 
+    private static final String ERROR_MESSAGE = "Error while updating treeview";
+
     private static final Logger LOG = Logger.getLogger(TreeUpdateListener.class);
 
     private TreeViewer viewer;
@@ -75,7 +77,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
             getElementManager().elementRemoved(child);
             updater.remove(child);
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(ERROR_MESSAGE, e);
         }
     }
     
@@ -94,7 +96,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
                 updater.refresh();
             }
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(ERROR_MESSAGE, e);
         }
     }
 
@@ -113,7 +115,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
             updater.add(parent, child);
             updater.refresh();
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(ERROR_MESSAGE, e);
         }
     }
 
@@ -155,7 +157,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
         try {
             updater.refresh();
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(ERROR_MESSAGE, e);
         }
     }
 
@@ -173,7 +175,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
             getElementManager().elementChanged(child);
             updater.refresh(child);
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(ERROR_MESSAGE, e);
         }
     }
 
@@ -202,7 +204,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
             getElementManager().elementChanged(child);
             updater.refresh(child);
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(ERROR_MESSAGE, e);
         }
     }
 
@@ -298,7 +300,7 @@ public class TreeUpdateListener implements IISO27KModelListener,IBSIModelListene
             job.setRule(new ExpandJobRule());
             job.schedule(Job.DECORATE);
         } catch (Exception e) {
-            LOG.error("Error while updating treeview", e);
+            LOG.error(ERROR_MESSAGE, e);
         }
     }
     
