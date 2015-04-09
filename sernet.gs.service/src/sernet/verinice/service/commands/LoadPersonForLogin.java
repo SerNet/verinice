@@ -68,7 +68,7 @@ public class LoadPersonForLogin extends GenericCommand {
     
     private void loadPerson(Integer dbId) {
         if(dbId!=null) {
-            String HQL = "from Configuration as conf " + //$NON-NLS-1$
+            String HQL_LOAD_PERSON = "from Configuration as conf " + //$NON-NLS-1$
             "inner join fetch conf.person as person " + //$NON-NLS-1$
             "inner join fetch person.entity as entity " + //$NON-NLS-1$
             "inner join fetch entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
@@ -76,7 +76,7 @@ public class LoadPersonForLogin extends GenericCommand {
             "where conf.dbId = ? "; //$NON-NLS-1$
             
             Object[] params = new Object[]{dbId};        
-            List<Configuration> configurationList = getConfigurationDao().findByQuery(HQL,params);
+            List<Configuration> configurationList = getConfigurationDao().findByQuery(HQL_LOAD_PERSON,params);
             for (Configuration configuration : configurationList) {
                 person  = configuration.getPerson();              
             }

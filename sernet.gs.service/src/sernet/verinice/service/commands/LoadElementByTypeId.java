@@ -43,7 +43,7 @@ public class LoadElementByTypeId extends GenericCommand {
 
     public void execute() {
         if(ri==null) {
-            RetrieveInfo ri = new RetrieveInfo();
+            ri = new RetrieveInfo();
         }
 		elementList = getDaoFactory().getDAO(typeId).findAll(ri);		
 	}

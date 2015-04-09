@@ -79,17 +79,17 @@ public abstract class GenericCommand implements ICommand {
 	}
 	
 	private Properties readProperties() {
-    	Properties properties = new Properties();  
+    	Properties newProperties = new Properties();  
         String className = this.getClass().getName();
         Properties allProperties = getCommandService().getProperties();
         if(allProperties!=null) {
             for (Object keyObject : allProperties.keySet()) {
                 String key = (String) keyObject;
                 if(key.startsWith(className)) {
-                    properties.put(key.substring(key.indexOf(className)+className.length()+1), allProperties.getProperty(key));
+                    newProperties.put(key.substring(key.indexOf(className)+className.length()+1), allProperties.getProperty(key));
                 }
             }
         }
-        return properties;
+        return newProperties;
 	}
 }
