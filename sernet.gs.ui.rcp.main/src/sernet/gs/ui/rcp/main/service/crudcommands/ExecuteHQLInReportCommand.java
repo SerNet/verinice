@@ -91,7 +91,7 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
                 } else {
                     throw new RuntimeException(new HQLSecurityException("HQL-Query:\n\t" + hql + "\nviolates verinice security policies, execution of query denied"));
                 }
-            } catch (Throwable t){
+            } catch (Exception t){
                 LOG.error("Exception occured", t);
             }
         }
