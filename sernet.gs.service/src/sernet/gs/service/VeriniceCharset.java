@@ -27,10 +27,13 @@ import java.nio.charset.Charset;
  */
 public class VeriniceCharset {
 
-    public final static Charset CHARSET_WINDOWS_1252 = Charset.forName("windows-1252");
-    public final static Charset CHARSET_ISO_8859_15 = Charset.forName("ISO-8859-15");
-    public final static Charset CHARSET_UTF_8 = Charset.forName("UTF-8");
-    public final static Charset CHARSET_DEFAULT = CHARSET_UTF_8;
+    private VeriniceCharset() {
+        super();
+    }
+    public static final Charset CHARSET_WINDOWS_1252 = Charset.forName("windows-1252");
+    public static final Charset CHARSET_ISO_8859_15 = Charset.forName("ISO-8859-15");
+    public static final Charset CHARSET_UTF_8 = Charset.forName("UTF-8");
+    public static final Charset CHARSET_DEFAULT = CHARSET_UTF_8;
 
 }
 

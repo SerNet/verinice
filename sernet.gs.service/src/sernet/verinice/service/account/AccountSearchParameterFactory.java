@@ -3,6 +3,10 @@ package sernet.verinice.service.account;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 
 public final class AccountSearchParameterFactory {
+    
+    private AccountSearchParameterFactory() {
+        super();
+    }
 
     public static IAccountSearchParameter create() {
         return AccountSearchParameter.newInstance();

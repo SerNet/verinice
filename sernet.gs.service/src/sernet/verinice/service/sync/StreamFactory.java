@@ -30,6 +30,10 @@ import java.io.InputStream;
  */
 public class StreamFactory {
 
+    private StreamFactory() {
+        super();
+    }
+
     private static final String DATA_XSD = "sernet/verinice/service/sync/data.xsd";
     private static final String MAPPING_XSD = "sernet/verinice/service/sync/mapping.xsd";
     private static final String SYNC_XSD = "sernet/verinice/service/sync/sync.xsd";

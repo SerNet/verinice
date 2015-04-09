@@ -37,8 +37,10 @@ import org.apache.log4j.Logger;
  */
 public class FileUtil {
 
-    private static final Logger LOG = Logger.getLogger(FileUtil.class);
-    
+    private FileUtil() {
+        super();
+    }
+
     public static byte[] getBytesFromInputstream(InputStream is) throws IOException {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         int nRead;
