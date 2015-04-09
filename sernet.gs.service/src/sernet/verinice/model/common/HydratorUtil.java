@@ -46,7 +46,7 @@ import sernet.verinice.model.common.configuration.Configuration;
  * $LastChangedBy$
  *
  */
-public class HydratorUtil {
+public final class HydratorUtil {
 	
 	private HydratorUtil(){}
 

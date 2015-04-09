@@ -26,7 +26,7 @@ import org.eclipse.osgi.util.NLS;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class Messages extends NLS {
+public final class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.model.bsi.risikoanalyse.messages"; //$NON-NLS-1$
     public static String GefaehrdungsUmsetzung_4;
     public static String GefaehrdungsUmsetzung_5;

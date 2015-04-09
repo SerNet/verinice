@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-public class Messages {
+public final class Messages {
     private static final String BUNDLE_NAME = "sernet.verinice.model.common.messages"; //$NON-NLS-1$
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
