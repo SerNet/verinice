@@ -26,6 +26,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.usertype.UserType;
 
@@ -36,7 +37,18 @@ import org.hibernate.usertype.UserType;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
+@SuppressWarnings("restriction")
 public class OracleLongStringType implements UserType {
+    
+    private transient Logger log = Logger.getLogger(OracleLongStringType.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(OracleLongStringType.class);
+        }
+        return log;
+    }
+    
     public OracleLongStringType() {
     }
 
@@ -66,7 +78,7 @@ public class OracleLongStringType implements UserType {
         } catch (IOException ex) {
             // worth printing b/c this means a failure occurred reading from
             // stream
-            ex.printStackTrace();
+            getLog().error(ex);
         } catch (Exception t) {
             // eat this exception b/c it is of no interest (i.e. stream is null
             // for null attribute value)
@@ -83,7 +95,7 @@ public class OracleLongStringType implements UserType {
             InputStream is = new ByteArrayInputStream(s.getBytes());
             st.setAsciiStream(index, is, s.length());
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getLog().error(ex);
         }
     }
 
