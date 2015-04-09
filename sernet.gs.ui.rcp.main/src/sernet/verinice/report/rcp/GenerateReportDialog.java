@@ -449,9 +449,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
         dlg.setFilterPath(path);
         dlg.setFilterExtensions(new String[] { "*.rptdesign", "*.rpt", "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         String fn = dlg.open();
-        if (fn != null) {
-//            textReportTemplateFile.setText(fn);
-        }
     }
 
     public void selectOutputFile() {

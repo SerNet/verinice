@@ -64,8 +64,6 @@ public class CnAValidationAction extends RightsEnabledActionDelegate implements 
                     return;
                     //tell user element can't be validated
                 }
-            } else {
-                // tell user only 1 object can be validated
             }
         } catch (Exception e){
             LOG.error("Error while executin validation action", e);
