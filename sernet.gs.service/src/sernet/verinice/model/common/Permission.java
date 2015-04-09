@@ -164,7 +164,7 @@ public class Permission implements Serializable, ITypedElement, Comparable<Permi
 			
 			result = prime * result + ((cnaTreeElement==null) ? 0 : cnaTreeElement.hashCode());
 			result = prime * result + ((role == null) ? 0 : role.hashCode());
-		} catch(Throwable t ) {
+		} catch(Exception t ) {
 			getLog().error("Error while creating hashcode, element UUID: " + cnaTreeElement.getUuid() + ", role: " + role, t);
 		}
 		return result;
@@ -191,7 +191,7 @@ public class Permission implements Serializable, ITypedElement, Comparable<Permi
 				return false;
 			}
 			return true;
-		} catch(Throwable t ) {
+		} catch(Exception t ) {
 			getLog().error("Error in equals, element UUID: " + cnaTreeElement.getUuid() + ", role: " + role, t);
 			return false;
 		}
