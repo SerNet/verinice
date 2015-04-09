@@ -40,6 +40,9 @@ import com.heatonresearch.datamover.db.DatabaseException;
  *
  */
 public class DataMover {
+    
+    private static final Logger LOG = Logger.getLogger(DataMover.class);
+    
     /**
      * The source database.
      */
@@ -83,18 +86,6 @@ public class DataMover {
      */
     public void createTable(String table) throws DatabaseException {
         String sql;
-
-        // // if the table already exists, then drop it
-        // if (target.tableExists(table))
-        // {
-        // sql = source.generateDrop(table);
-        // target.execute(sql);
-        // }
-        //
-        // // now create the table
-        // sql = source.generateCreate(table);
-        // target.execute(sql);
-
         if (!target.tableExists(table)) {
             sql = source.generateCreate(table);
             target.execute(sql);
@@ -118,7 +109,7 @@ public class DataMover {
                 createTable(table);
                 tables.add(table);
             } catch (DatabaseException e) {
-                e.printStackTrace();
+                LOG.error("Error while creating table", e);
             }
         }
     }
@@ -152,8 +143,9 @@ public class DataMover {
                 selectSQL.append(",");
                 insertSQL.append(",");
                 values.append(",");
-            } else
+            } else {
                 first = false;
+            }
 
             selectSQL.append(column);
             insertSQL.append(column);
@@ -194,20 +186,25 @@ public class DataMover {
                 statement.execute();
             }
 
-            Logger.getLogger(this.getClass()).debug("Copied " + rows + " rows.");
-            Logger.getLogger(this.getClass()).debug("");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Copied " + rows + " rows.");
+                LOG.debug("");
+            }
+            
         } catch (SQLException e) {
             throw (new DatabaseException(e));
         } finally {
             try {
-                if (statement != null)
+                if (statement != null) {
                     statement.close();
+                }
             } catch (SQLException e) {
                 throw (new DatabaseException(e));
             }
             try {
-                if (rs != null)
+                if (rs != null) {
                     statement.close();
+                }
             } catch (SQLException e) {
                 throw (new DatabaseException(e));
             }
