@@ -34,7 +34,7 @@ public class SearchTableSorter extends ViewerSorter {
     private static final int ASCENDING = 0;
     private int direction = ASCENDING;
     
-    private static final NumericStringComparator nsc = new NumericStringComparator();
+    private static final NumericStringComparator NSC = new NumericStringComparator();
     
     public SearchTableSorter(){
         super();
@@ -78,8 +78,6 @@ public class SearchTableSorter extends ViewerSorter {
     
     private int compareNullSafe(VeriniceSearchResult a1, VeriniceSearchResult a2) {
         int rc = 0;
-        String p1 = a1.getIdentifier();
-        String p2 = a2.getIdentifier();
         switch (propertyIndex) {
         case 0:  
             rc = a1.getValueFromResultString("typeId").compareTo(a2.getValueFromResultString("typeId"));
@@ -89,7 +87,7 @@ public class SearchTableSorter extends ViewerSorter {
             rc = 1;
             break;
         case 2:   
-            rc = nsc.compare(a1.getFieldOfOccurence(), a2.getFieldOfOccurence());
+            rc = NSC.compare(a1.getFieldOfOccurence(), a2.getFieldOfOccurence());
             break;
         case 3:       
             rc = a1.getValueFromResultString("uuid").compareTo(a2.getValueFromResultString("uuid"));
@@ -100,15 +98,5 @@ public class SearchTableSorter extends ViewerSorter {
         }
         return rc;
     }
-    
-//    private int compareTitle(CnATreeElement p1, CnATreeElement p2) {
-//        int rc = 0;
-//        String title1 = ElementTitleCache.get(p1.getScopeId());
-//        String title2 = ElementTitleCache.get(p2.getScopeId());
-//        if(title1!=null && title2!=null) {
-//            rc = nsc.compare(title1.toLowerCase(), title2.toLowerCase());
-//        }
-//        return rc;
-//    }
 
 }
