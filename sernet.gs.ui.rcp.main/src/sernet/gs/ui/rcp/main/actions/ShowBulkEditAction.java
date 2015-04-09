@@ -300,9 +300,9 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         if(((ConfigurationBulkEditUpdate)command).getFailedUpdates().size() > 0){
             StringBuilder sb = new StringBuilder();
-            sb.append(Messages.ShowBulkEditAction_15 +":\n");
+            sb.append(Messages.ShowBulkEditAction_15).append(":\n");
             for(String username : ((ConfigurationBulkEditUpdate)command).getFailedUpdates()){
-                sb.append(username + "\n");
+                sb.append(username).append("\n");
             }
             ExceptionUtil.log(new ConfigurationException(Messages.ShowBulkEditAction_16), Messages.ShowBulkEditAction_16 + "\n" + sb.toString() );
         }
