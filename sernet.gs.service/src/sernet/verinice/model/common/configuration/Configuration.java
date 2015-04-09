@@ -532,13 +532,13 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	@Override
 	public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Login: " + getUser());
-        sb.append("\nis deactivated: " + isDeactivatedUser());
-        sb.append("\nis admin: " + isAdminUser());
-        sb.append("\nis scope only: " + isScopeOnly());
-        sb.append("\nis web user: " + isWebUser());
-        sb.append("\nis rcp user: " + isRcpUser());
-        sb.append("\nEmail: " + getNotificationEmail());
+        sb.append("Login: ").append(getUser());
+        sb.append("\nis deactivated: ").append(isDeactivatedUser());
+        sb.append("\nis admin: ").append(isAdminUser());
+        sb.append("\nis scope only: ").append(isScopeOnly());
+        sb.append("\nis web user: ").append(isWebUser());
+        sb.append("\nis rcp user: ").append(isRcpUser());
+        sb.append("\nEmail: ").append(getNotificationEmail());
         sb.append("\nMailbenachrichtigung aktivieren: ").append(isNotificationEnabled());
         sb.append("\nAlle Massnahmen / nur eigene: ").append(isNotificationGlobal());
         sb.append("\nNeue zu pruefende Aufgaben: ").append(isNotificationMeasureAssignment());
