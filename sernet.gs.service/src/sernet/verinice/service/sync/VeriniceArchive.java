@@ -115,51 +115,36 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
      * @throws IOException
      */
     public void extractZipEntries(byte[] zipFileData) throws IOException {
-        byte[] buffer = new byte[1024];
-        //String archiveFileName = getTempFileName() + EXTENSION_VERINICE_ARCHIVE;
-        //File tempFile = new File(archiveFileName);
-        try {
-            
-            new File(getTempFileName()).mkdirs();
-            // get the zip file content
-            ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zipFileData));
-            // get the zipped file list entry
-            ZipEntry ze = zis.getNextEntry();
-            
-            while (ze != null) {
-                if(!ze.isDirectory()) {              
-                    String fileName = ze.getName();
-                    File newFile = new File(getTempFileName() + File.separator + fileName);
-                    new File(newFile.getParent()).mkdirs();
-    
-                    FileOutputStream fos = new FileOutputStream(newFile);
-    
-                    int len;
-                    while ((len = zis.read(buffer)) > 0) {
-                        fos.write(buffer, 0, len);
-                    }
-    
-                    fos.close();
-    
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("File unzipped: " + newFile.getAbsoluteFile());
-                    }
-                }
-                ze = zis.getNextEntry();
-            }
+        byte[] buffer = new byte[1024];;        
+        new File(getTempFileName()).mkdirs();
+        // get the zip file content
+        ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zipFileData));
+        // get the zipped file list entry
+        ZipEntry ze = zis.getNextEntry();
+        
+        while (ze != null) {
+            if(!ze.isDirectory()) {              
+                String fileName = ze.getName();
+                File newFile = new File(getTempFileName() + File.separator + fileName);
+                new File(newFile.getParent()).mkdirs();
 
-            zis.closeEntry();
-            zis.close();
-        } finally {
-            /*
-            if (tempFile != null && tempFile.exists()) {
-                tempFile.delete();
+                FileOutputStream fos = new FileOutputStream(newFile);
+
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+
+                fos.close();
+
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("VeriniceArchive temp file deleted: tempFileName");
+                    LOG.debug("File unzipped: " + newFile.getAbsoluteFile());
                 }
             }
-            */
+            ze = zis.getNextEntry();
         }
+        zis.closeEntry();
+        zis.close();      
     }
     
     /**
@@ -187,7 +172,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
      * 
      * @throws VeriniceArchiveNotValidException In case of a missing entry
      */
-    public void checkArchive() throws VeriniceArchiveNotValidException {
+    public void checkArchive() {
         if(contentMap.get(VERINICE_XML) == null) {
             throw new VeriniceArchiveNotValidException("File missing in verinice archive: " + VERINICE_XML);
         }
@@ -209,8 +194,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     public String getUuid() {
         return uuid;
     }
-
-    
+ 
     public String getTempFileName() {
         if(tempFileName==null) {
             tempFileName = createTempFileName(getUuid());
@@ -226,7 +210,5 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
         }
         return sb.append(uuid).toString();
     }
-
-    
 
 }

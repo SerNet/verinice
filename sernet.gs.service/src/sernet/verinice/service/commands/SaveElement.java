@@ -63,12 +63,7 @@ public class SaveElement<T extends ITypedElement> extends ChangeLoggingCommand i
 	@Override
     public void execute() {
 		IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(element.getTypeId());
-		//dao.saveOrUpdate(element);
 		element = dao.merge(element);
-		if(flush) {
-		    //dao.flush();
-		    //dao.clear();
-		}
 	}
 
 	public T getElement() {
