@@ -99,7 +99,7 @@ public class LoadAttachments extends GenericCommand implements IAuthAwareCommand
 	
 	public LoadAttachments(Integer cnAElementId, String[] roles, boolean isAdmin, boolean isScopeOnly, Integer scopeId){
 	    this(cnAElementId);
-	    this.roles = roles;
+	    this.roles = (roles!=null) ? roles.clone() : null;
 	    this.isAdmin = isAdmin;
 	    this.isScopeOnly = isScopeOnly;
 	    this.scopeId = scopeId;

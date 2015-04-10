@@ -52,7 +52,7 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
 
         this.filename = filename;
         this.outputname = outputname;
-        this.outputFormat = outputFormats;
+        setOutputFormats(outputFormats);
         this.isServer = isServer;
 
         if (md5CheckSums != null) {
@@ -79,30 +79,40 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
      */
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         ReportTemplateMetaData other = (ReportTemplateMetaData) obj;
         if (filename == null) {
-            if (other.filename != null)
+            if (other.filename != null) {
                 return false;
-        } else if (!filename.equals(other.filename))
+            }
+        } else if (!filename.equals(other.filename)) {
             return false;
+        }
         if (md5CheckSums == null) {
-            if (other.md5CheckSums != null)
+            if (other.md5CheckSums != null) {
                 return false;
-        } else if (!md5CheckSums.equals(other.md5CheckSums))
+            }
+        } else if (!md5CheckSums.equals(other.md5CheckSums)) {
             return false;
-        if (!Arrays.equals(outputFormat, other.outputFormat))
+        }
+        if (!Arrays.equals(outputFormat, other.outputFormat)) {
             return false;
+        }
         if (outputname == null) {
-            if (other.outputname != null)
+            if (other.outputname != null) {
                 return false;
-        } else if (!outputname.equals(other.outputname))
+            }
+        } else if (!outputname.equals(other.outputname)) {
             return false;
+        }
         return true;
     }
 
@@ -115,7 +125,7 @@ public class ReportTemplateMetaData implements Serializable, Comparable<ReportTe
     }
 
     public void setOutputFormats(OutputFormat[] outputFormats) {
-        this.outputFormat = outputFormats;
+        this.outputFormat = (outputFormats!=null) ? outputFormats.clone() : null;
     }
     
     public String getDecoratedOutputname() {

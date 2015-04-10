@@ -63,7 +63,7 @@ public class LoadAllScopesTitles extends GenericCommand {
      
     public LoadAllScopesTitles(String[] typeIds) {
         super();
-        this.typeIds = typeIds;
+        this.typeIds = (typeIds!=null) ? typeIds.clone() : null;
     }
     /*
      * (non-Javadoc)

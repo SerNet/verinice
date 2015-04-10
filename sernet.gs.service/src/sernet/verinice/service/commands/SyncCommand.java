@@ -99,7 +99,7 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
      */
     public SyncCommand(SyncParameter parameter, byte[] syncRequestSerialized) {     
         this.parameter = parameter;
-        this.fileData = syncRequestSerialized;
+        this.fileData = (syncRequestSerialized!=null) ? syncRequestSerialized.clone() : null;
         this.stationId = ChangeLogEntry.STATION_ID;
     }
     
@@ -228,11 +228,12 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
     }
 
     private void loadVeriniceArchive(byte[] syncRequestSerialized) {
+        byte[] request = (syncRequestSerialized!=null) ? syncRequestSerialized.clone() : null;
         if(isVeriniceArchive()) {
-            veriniceArchive = new VeriniceArchive(syncRequestSerialized);
+            veriniceArchive = new VeriniceArchive(request);
         }
         if(SyncParameter.EXPORT_FORMAT_XML_PURE.equals(parameter.getFormat())) {
-            veriniceArchive = new PureXml(syncRequestSerialized);
+            veriniceArchive = new PureXml(request);
         }
         logXml();
     }

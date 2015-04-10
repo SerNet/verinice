@@ -44,7 +44,7 @@ public class PureXml implements IVeriniceArchive {
     
     public PureXml(byte[] veriniceXml) {
         super();
-        this.veriniceXml = veriniceXml;
+        setVeriniceXml(veriniceXml);
     }
 
     public PureXml() {
@@ -60,7 +60,7 @@ public class PureXml implements IVeriniceArchive {
     }
 
     public void setVeriniceXml(byte[] veriniceXml) {
-        this.veriniceXml = veriniceXml;
+        this.veriniceXml = (veriniceXml!=null) ? veriniceXml.clone() : null;
     }
     
     @Override

@@ -42,7 +42,7 @@ public class ReportTemplate implements Serializable {
 
     public ReportTemplate(ReportTemplateMetaData metaData, byte[] rptdesignFile, Map<String, byte[]> propertiesFiles) {
         this.metaData = metaData;
-        this.rptdesignFile = rptdesignFile;
+        setRptdesignFile(rptdesignFile);
         this.setPropertiesFiles(propertiesFiles);
     }
 
@@ -59,7 +59,7 @@ public class ReportTemplate implements Serializable {
     }
 
     public void setRptdesignFile(byte[] rptdesign) {
-        this.rptdesignFile = rptdesign;
+        this.rptdesignFile = (rptdesign!=null) ? rptdesign.clone() : null;
     }
 
     public Map<String, byte[]> getPropertiesFiles() {

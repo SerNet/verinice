@@ -51,21 +51,21 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
     
     public ExecuteHQLInReportCommand(String hql, Object[] params, String typeId){
         this.hql = hql;
-        this.hqlParams = params;
+        setHqlParams(params);
         this.typeId = typeId;
     }
     
     public ExecuteHQLInReportCommand(String hql, Object[] params, Class typeId){
         this.hql = hql;
-        this.hqlParams = params;
+        setHqlParams(params);
         this.typeId = typeId;
     }
     
     public ExecuteHQLInReportCommand(String hql, String[] paramNames, Object[] params, Class typeId){
         this.hql = hql;
-        this.hqlParams = params;
+        setHqlParams(params);
         this.typeId = typeId;
-        this.paramNames = paramNames;
+        setParamNames(paramNames);
     }    
     
     /* (non-Javadoc)
@@ -135,6 +135,14 @@ public class ExecuteHQLInReportCommand extends GenericCommand implements ICached
             return Collections.emptyList();
         }
         return results;
+    }
+
+    public void setHqlParams(Object[] hqlParams) {
+        this.hqlParams = (hqlParams!=null) ? hqlParams.clone() : null;
+    }
+
+    public void setParamNames(String[] paramNames) {
+        this.paramNames = (paramNames!=null) ? paramNames.clone() : null;
     }
     
 

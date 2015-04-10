@@ -9,7 +9,7 @@ class HqlQuery {
     public HqlQuery(String hql, Object[] params) {
         super();
         this.hql = hql;
-        this.params = params;
+        setParams(params);
     }
 
     public String getHql() {
@@ -25,7 +25,7 @@ class HqlQuery {
     }
 
     public void setNames(String[] names) {
-        this.names = names;
+        this.names = (names!=null ) ? names.clone() : null;
     }
 
     public Object[] getParams() {
@@ -33,6 +33,6 @@ class HqlQuery {
     }
 
     public void setParams(Object[] params) {
-        this.params = params;
+         this.params = (params!=null ) ? params.clone() : null;
     }
 }
