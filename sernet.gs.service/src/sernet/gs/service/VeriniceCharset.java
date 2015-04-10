@@ -25,7 +25,7 @@ import java.nio.charset.Charset;
  * $LastChangedBy$
  *
  */
-public class VeriniceCharset {
+public final class VeriniceCharset {
 
     private VeriniceCharset() {
         super();

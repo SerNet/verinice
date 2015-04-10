@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 /**
  * List of all possible actions that should be controlable by right-management
  */
-public class ActionRightIDs {
+public final class ActionRightIDs {
     
     private static Logger log = Logger.getLogger(ActionRightIDs.class);
 

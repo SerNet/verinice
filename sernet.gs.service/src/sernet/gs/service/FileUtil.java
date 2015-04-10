@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
  * @author Daniel <dm[at]sernet[dot]de>
  * 
  */
-public class FileUtil {
+public final class FileUtil {
 
     private FileUtil() {
         super();

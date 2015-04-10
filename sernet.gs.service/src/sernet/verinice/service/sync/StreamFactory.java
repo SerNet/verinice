@@ -28,7 +28,7 @@ import java.io.InputStream;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class StreamFactory {
+public final class StreamFactory {
 
     private StreamFactory() {
         super();
