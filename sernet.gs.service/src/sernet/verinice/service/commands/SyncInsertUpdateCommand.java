@@ -373,8 +373,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
     
     private void addPermissions(/*not final*/ CnATreeElement element) {
-        String userName = authService.getUsername();
-        addPermissions(element, userName);
+        addPermissions(element, authService.getUsername());
     }
 
     private void addPermissions(CnATreeElement element, String userName) {
