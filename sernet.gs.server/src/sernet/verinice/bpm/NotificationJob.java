@@ -237,7 +237,7 @@ public class NotificationJob extends QuartzJobBean implements StatefulJob {
                     log.debug("Email was send successfully.");
                 }
             }
-        } catch (Throwable t){
+        } catch (Exception t){
             log.error("Error in sendNotification()", t);
         }
     }
