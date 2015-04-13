@@ -45,6 +45,7 @@
             classpath:sernet/gs/server/spring/veriniceserver-jbpm.xml
             classpath:sernet/gs/server/spring/veriniceserver-rightmanagement.xml
             classpath:sernet/gs/server/spring/veriniceserver-reportdeposit.xml
+            classpath:sernet/gs/server/spring/veriniceserver-search-base.xml
             classpath:sernet/gs/server/spring/veriniceserver-search.xml
         </param-value>
 	</context-param>

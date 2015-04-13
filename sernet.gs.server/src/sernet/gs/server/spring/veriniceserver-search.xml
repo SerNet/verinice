@@ -1,50 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Spring configuration for business process engine JBoss jBPM (https://www.jboss.org/jbpm) -->
-<!-- See jBPM developer guide - Chapter 17. Spring Integration -->
-<!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration -->
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-  <bean id="clientFactory" class="sernet.verinice.search.ElasticsearchClientFactory" init-method="init" />
+	<bean id="indexThread" class="sernet.verinice.search.IndexThread"
+		scope="prototype">
+		<property name="searchDao" ref="searchElementDao" />
+	</bean>
 
-  <bean id="searchElementDao" class="sernet.verinice.search.ElementDao">
-    <property name="clientFactory" ref="clientFactory" />
-  </bean>
+	<bean id="searchIndexer" class="sernet.verinice.search.Indexer">
+		<property name="elementDao" ref="cnaTreeElementDao" />
+		<property name="indexThreadFactory">
+			<bean
+				class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+				<property name="targetBeanName">
+					<idref local="indexThread" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 
-  <bean id="searchIndexer" class="sernet.verinice.search.Indexer">
-    <property name="elementDao" ref="cnaTreeElementDao" />
-    <property name="indexThreadFactory">
-      <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
-        <property name="targetBeanName">
-          <idref local="indexThread" />
-        </property>
-      </bean>
-    </property>
-  </bean>
 
-  <bean id="indexThread" class="sernet.verinice.search.IndexThread" scope="prototype">
-    <property name="searchDao" ref="searchElementDao" />
-  </bean>
+	<!-- ><bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer"> -->
+	<bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer"
+		init-method="init">
+		<property name="scheduler" ref="quartzSchedulerFactoryBean" />
+		<property name="indexJobFactory">
+			<bean
+				class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+				<property name="targetBeanName">
+					<idref local="indexJob" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 
-  <bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer">
-<!--   <bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer" init-method="init"> -->
-    <property name="scheduler" ref="quartzSchedulerFactoryBean" />
-    <property name="indexJobFactory">
-      <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
-        <property name="targetBeanName">
-          <idref local="indexJob" />
-        </property>
-      </bean>
-    </property>
-  </bean>
-
-  <bean id="indexJob" class="org.springframework.scheduling.quartz.JobDetailBean" scope="prototype">
-    <property name="jobClass" value="sernet.verinice.search.IndexJob" />
-    <property name="jobDataAsMap">
-      <map>
-        <entry key="indexer" value-ref="searchIndexer" />
-      </map>
-    </property>
-  </bean>
+	<bean id="indexJob" class="org.springframework.scheduling.quartz.JobDetailBean"
+		scope="prototype">
+		<property name="jobClass" value="sernet.verinice.search.IndexJob" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="indexer" value-ref="searchIndexer" />
+			</map>
+		</property>
+	</bean>
 
 </beans>
