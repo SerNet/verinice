@@ -92,6 +92,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, IReportService.VERINICE_REPORTS_LOCAL);
 		
 		store.setDefault(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON, true);
+		
+		store.setDefault(PreferenceConstants.CUT_INHERIT_PERMISSIONS, false);
 	}
 
 }

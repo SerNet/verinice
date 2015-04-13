@@ -98,6 +98,9 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		BooleanFieldEditor inheritSpecialIcon = new BooleanFieldEditor(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON, Messages.getString("GeneralSettingsPage.InheritSpecialIcon"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(inheritSpecialIcon);
 		
+		BooleanFieldEditor cutInheritPermissions = new BooleanFieldEditor(PreferenceConstants.CUT_INHERIT_PERMISSIONS, Messages.getString("GeneralSettingsPage.CutInheritPermissions"), getFieldEditorParent()); //$NON-NLS-1$
+        addField(cutInheritPermissions);
+		
 		ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$
 				ENCODING_COMBO_VALUES, 

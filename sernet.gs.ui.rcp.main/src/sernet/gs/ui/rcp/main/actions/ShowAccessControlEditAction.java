@@ -40,13 +40,13 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.dialogs.AccessControlEditDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdatePermissions;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.service.commands.UpdatePermissions;
 
 /**
  * {@link Action} that creates a dialog to modify the access rights of a

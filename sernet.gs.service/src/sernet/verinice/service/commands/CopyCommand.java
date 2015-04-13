@@ -262,16 +262,16 @@ public class CopyCommand extends GenericCommand {
     private void createInsertList(CnATreeElement element, List<CnATreeElement> tempList, List<CnATreeElement> insertList, int depth, int removed) {
         if(!tempList.contains(element)) {
             tempList.add(element);
-            int depth_ = depth;
-            if(depth_==0) {
+            int depthLocal = depth;
+            if(depthLocal==0) {
                 insertList.add(element);
             }
             if((element instanceof IISO27kGroup || element instanceof BausteinUmsetzung) 
                && element.getChildren()!=null) {
 
-                depth_++;
+                depthLocal++;
                 for (CnATreeElement child : element.getChildren()) {
-                    createInsertList(child,tempList,insertList,depth_,removed);
+                    createInsertList(child,tempList,insertList,depthLocal,removed);
                 }
             }
         } else {
@@ -289,11 +289,11 @@ public class CopyCommand extends GenericCommand {
      */
     private String getUniqueTitle(String title, String copyTitle, Set<CnATreeElement> siblings, int n) {
         String result = copyTitle;
-        int n_ = n;
+        int nLocal = n;
         for (CnATreeElement cnATreeElement : siblings) {
             if(cnATreeElement!=null && cnATreeElement.getTitle()!=null && (cnATreeElement.getTitle().equals(copyTitle)) ) {
-                n_++;
-                return getUniqueTitle(title, getCopyTitle(title, n_), siblings, n_);
+                nLocal++;
+                return getUniqueTitle(title, getCopyTitle(title, nLocal), siblings, nLocal);
             }
         }
         return result;

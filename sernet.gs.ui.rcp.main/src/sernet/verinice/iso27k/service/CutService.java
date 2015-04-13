@@ -29,6 +29,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.interfaces.ElementChange;
+import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.service.commands.CutCommand;
@@ -45,6 +46,8 @@ public class CutService extends PasteService implements IProgressTask {
 	private final Logger log = Logger.getLogger(CutService.class);
 	
 	private List<ElementChange> elementChanges;
+    
+    private boolean inheritPermissions = false;
 	
 	   /**
      * Creates a new CopyService
@@ -88,8 +91,10 @@ public class CutService extends PasteService implements IProgressTask {
                 uuidList.add(element.getUuid());
             }
             numberOfElements = uuidList.size();
+            
             progressObserver.beginTask(Messages.getString("CutService.1",numberOfElements), numberOfElements);  
             CutCommand cc = new CutCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList());
+            configurePermissions(cc);
             cc = getCommandService().executeCommand(cc);
             numberOfElements = cc.getNumber();
             progressObserver.setTaskName(Messages.getString("CutService.3"));
@@ -111,7 +116,15 @@ public class CutService extends PasteService implements IProgressTask {
 		}
 	}
 	
-	private boolean checkPermissions(List<CnATreeElement> elementList) {
+    private void configurePermissions(CutCommand cc) {
+        if(isInheritPermissions()) {
+            IPostProcessor postProcessor = cc.new InheritPermissions(this.selectedGroup);
+            addPostProcessor(postProcessor);
+        }
+        
+    }
+
+    private boolean checkPermissions(List<CnATreeElement> elementList) {
 		boolean ok = true;
 		for (CnATreeElement element : elementList) {
 			if(!CnAElementHome.getInstance().isDeleteAllowed(element)) {
@@ -134,6 +147,14 @@ public class CutService extends PasteService implements IProgressTask {
 
     public List<ElementChange> getElementChanges() {
         return elementChanges;
+    }
+
+    public boolean isInheritPermissions() {
+        return inheritPermissions;
+    }
+
+    public void setInheritPermissions(boolean inheritPermissions) {
+        this.inheritPermissions = inheritPermissions;
     }
 
 

@@ -208,11 +208,10 @@ public class PasteHandler extends AbstractHandler {
 	}
 	
 	
-
-	@SuppressWarnings("restriction")
 	private void cut(final CnATreeElement target, List cutList) throws InvocationTargetException, InterruptedException {
 		if(cutList.get(0) instanceof CnATreeElement && target!=null) {
 			CutOperation operation = new CutOperation(target, cutList);
+			operation.setInheritPermissions(inheritPermissions());
 			IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
 			progressService.run(true, true, operation);
 			InfoDialogWithShowToggle.openInformation(
@@ -305,5 +304,10 @@ public class PasteHandler extends AbstractHandler {
         }
         return elementLoader.getElement();
     }
+    
+    private boolean inheritPermissions() {
+       return Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.CUT_INHERIT_PERMISSIONS);
+    }
+    
 
 }

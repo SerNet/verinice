@@ -133,6 +133,7 @@ public class PreferenceConstants {
 	public static final String SWITCH_PERSPECTIVE = "switch_perspective";
 	public static final String DONT_ASK_BEFORE_SWITCH_PERSPECTIVE = "switch_perspective_dont_ask";
     public static final String LINK_TO_EDITOR = "link_to_editor";
+    public static final String CUT_INHERIT_PERMISSIONS = "cut_inherit_permissions";
 	
 	
 	// catalog import preferences

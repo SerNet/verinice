@@ -47,6 +47,7 @@ public class CutOperation implements IRunnableWithProgress {
 	
 	private List<ElementChange> changes;
 	
+	private boolean inheritPermissions = false;
 
 	@SuppressWarnings("unchecked")
 	public CutOperation(CnATreeElement selectedGroup, List<CnATreeElement> elements) {
@@ -61,6 +62,7 @@ public class CutOperation implements IRunnableWithProgress {
 	public void run(IProgressMonitor monitor)  {	
 	    IProgressObserver progressObserver = new RcpProgressObserver(monitor);
 		service = new CutService(progressObserver,this.selectedGroup, elements);
+		service.setInheritPermissions(isInheritPermissions());
 		service.run();
 		changes = service.getElementChanges();
 	}
@@ -79,6 +81,16 @@ public class CutOperation implements IRunnableWithProgress {
 
     public List<ElementChange> getChanges() {
         return changes;
+    }
+
+
+    public boolean isInheritPermissions() {
+        return inheritPermissions;
+    }
+
+
+    public void setInheritPermissions(boolean inheritPermissions) {
+        this.inheritPermissions = inheritPermissions;
     }
 
 }
