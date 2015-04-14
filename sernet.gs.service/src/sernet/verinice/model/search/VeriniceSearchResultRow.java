@@ -21,7 +21,6 @@ package sernet.verinice.model.search;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -36,13 +35,18 @@ public class VeriniceSearchResultRow implements Serializable{
      */
     private String identifier;
 
-    private String fieldOfOccurence;
+    /**
+     * represents the occurence of the searchphrase highlighted with an html-tag :
+     * e.g.: 
+     * [asset_description]\t lorem ipsum <em>occurence</em> ipsum lorem 
+     */
+    private String occurence;
 
 
     public VeriniceSearchResultRow(String identifier, String occurence){
         this.properties = new HashMap<String, String>(0);
         this.identifier = identifier;
-        this.fieldOfOccurence = occurence;
+        this.occurence = occurence;
     }
 
 
@@ -62,7 +66,7 @@ public class VeriniceSearchResultRow implements Serializable{
     }
 
     public String getFieldOfOccurence(){
-        return fieldOfOccurence;
+        return occurence;
     }
 
 
@@ -70,7 +74,7 @@ public class VeriniceSearchResultRow implements Serializable{
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((fieldOfOccurence == null) ? 0 : fieldOfOccurence.hashCode());
+        result = prime * result + ((occurence == null) ? 0 : occurence.hashCode());
         result = prime * result + ((identifier == null) ? 0 : identifier.hashCode());
         result = prime * result + ((properties == null) ? 0 : properties.hashCode());
         return result;
@@ -86,10 +90,10 @@ public class VeriniceSearchResultRow implements Serializable{
         if (getClass() != obj.getClass())
             return false;
         VeriniceSearchResultRow other = (VeriniceSearchResultRow) obj;
-        if (fieldOfOccurence == null) {
-            if (other.fieldOfOccurence != null)
+        if (occurence == null) {
+            if (other.occurence != null)
                 return false;
-        } else if (!fieldOfOccurence.equals(other.fieldOfOccurence))
+        } else if (!occurence.equals(other.occurence))
             return false;
         if (identifier == null) {
             if (other.identifier != null)
