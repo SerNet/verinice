@@ -161,7 +161,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
 	            }
 	            modelRefresh(null);
 	        }
-	    } catch (Throwable t){
+	    } catch (Exception t){
 	        Logger.getLogger(DocumentContentProvider.class).error("Error in changing documentlinkroot children:", t);
 	    }
 	      
