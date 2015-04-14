@@ -23,8 +23,8 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.verinice.model.search.VeriniceSearchResult;
-import sernet.verinice.model.search.VeriniceSearchResults;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.model.search.VeriniceSearchResultObject;
 
 /**
  *
@@ -57,9 +57,9 @@ public class SearchContentProvider implements IStructuredContentProvider {
         if (inputElement instanceof PlaceHolder) {
             return new Object[] {inputElement};
         }
-        if(inputElement instanceof VeriniceSearchResults){
-            VeriniceSearchResults results = (VeriniceSearchResults)inputElement;
-            List<VeriniceSearchResult> resultList = results.getAllResults();
+        if(inputElement instanceof VeriniceSearchResultObject){
+            VeriniceSearchResultObject results = (VeriniceSearchResultObject)inputElement;
+            List<VeriniceSearchResultRow> resultList = results.getAllResults();
             return resultList.toArray(new Object[resultList.size()]);
         }
         

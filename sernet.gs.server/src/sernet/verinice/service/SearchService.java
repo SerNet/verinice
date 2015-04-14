@@ -35,8 +35,8 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.search.VeriniceSearchResult;
-import sernet.verinice.model.search.VeriniceSearchResults;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.search.IElementSearchDao;
 import sernet.verinice.search.Indexer;
 import sernet.verinice.search.JsonBuilder;
@@ -55,10 +55,10 @@ public class SearchService implements ISearchService {
     protected IElementSearchDao searchDao;
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#exportSearchResultToCsv(sernet.verinice.model.search.VeriniceSearchResult)
+     * @see sernet.verinice.interfaces.search.ISearchService#exportSearchResultToCsv(sernet.verinice.model.search.VeriniceSearchResultRow)
      */
     @Override
-    public File exportSearchResultToCsv(VeriniceSearchResults result) {
+    public File exportSearchResultToCsv(VeriniceSearchResultObject result) {
         return null;
     }
 
@@ -79,11 +79,11 @@ public class SearchService implements ISearchService {
     }
     
     @Override
-    public List<VeriniceSearchResults> executeSimpleQuery(String query){
-        List<VeriniceSearchResults> results = new ArrayList<VeriniceSearchResults>(0);
+    public List<VeriniceSearchResultObject> executeSimpleQuery(String query){
+        List<VeriniceSearchResultObject> results = new ArrayList<VeriniceSearchResultObject>(0);
         for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
             String typeId = type.getId();
-            VeriniceSearchResults result = getSearchResults(query, typeId);
+            VeriniceSearchResultObject result = getSearchResults(query, typeId);
             results.add(result);
         }
         return results;
@@ -93,12 +93,12 @@ public class SearchService implements ISearchService {
      * @see sernet.verinice.interfaces.search.ISearchService#getSearchResults(java.lang.String, java.lang.String)
      */
     @Override
-    public VeriniceSearchResults getSearchResults(String query, String typeID) {
+    public VeriniceSearchResultObject getSearchResults(String query, String typeID) {
         query = addResultCountReduceFilter(query);
         query = addAccessFilter(query);
         SearchHits hits = searchDao.findByPhrase(query, typeID).getHits();
         String identifier = "";
-        VeriniceSearchResults results = new VeriniceSearchResults(typeID);
+        VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID);
         for(SearchHit hit : hits.getHits()){
             identifier = hit.getId();
             StringBuilder occurence = new StringBuilder();
@@ -112,7 +112,7 @@ public class SearchService implements ISearchService {
                 }
             }
             
-            VeriniceSearchResult result = new VeriniceSearchResult(identifier, occurence.toString());
+            VeriniceSearchResultRow result = new VeriniceSearchResultRow(identifier, occurence.toString());
             for(String key : hit.getSource().keySet()){
                 if(hit.getSource().get(key) != null){
                     if(LOG.isDebugEnabled()){

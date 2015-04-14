@@ -23,7 +23,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.verinice.model.search.VeriniceSearchResult;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
 
 /**
  *
@@ -49,7 +49,7 @@ public class SearchLabelProvider extends LabelProvider implements ITableLabelPro
             if (element instanceof PlaceHolder) {
                 return getPlaceHolderText(element, columnIndex);
             }
-            VeriniceSearchResult result = (VeriniceSearchResult)element;
+            VeriniceSearchResultRow result = (VeriniceSearchResultRow)element;
             switch(columnIndex){
                 case 0:
                     return result.getValueFromResultString("element-type");

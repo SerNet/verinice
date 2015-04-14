@@ -21,7 +21,7 @@ import java.io.File;
 import java.util.List;
 
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.search.VeriniceSearchResults;
+import sernet.verinice.model.search.VeriniceSearchResultObject;
 
 /**
  *
@@ -34,7 +34,7 @@ public interface ISearchService {
     * @return file that contains the csv
     * @param a search result
     **/
-    File exportSearchResultToCsv(VeriniceSearchResults result);
+    File exportSearchResultToCsv(VeriniceSearchResultObject result);
     
     /**
      * adds filter to query that reduces size of resultset to preconfigurable size
@@ -58,13 +58,13 @@ public interface ISearchService {
      * @param typeID
      * @return List SearchResult-Objects
      */
-    VeriniceSearchResults getSearchResults(String query, String typeID);
+    VeriniceSearchResultObject getSearchResults(String query, String typeID);
     
     /**
      * executs a query without a given typeId, so all object types are queried
      * to fill the typeId-Combobox in the searchView
      */
-    List<VeriniceSearchResults> executeSimpleQuery(String query);
+    List<VeriniceSearchResultObject> executeSimpleQuery(String query);
     
     
     /**

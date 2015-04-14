@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.verinice.model.search.VeriniceSearchResult;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
 
 /**
  *
@@ -65,8 +65,8 @@ public class SearchTableSorter extends ViewerSorter {
             rc = -1;
         } else {
             // e1 and e2 != null
-            VeriniceSearchResult a1 = (VeriniceSearchResult) e1;
-            VeriniceSearchResult a2 = (VeriniceSearchResult) e2;
+            VeriniceSearchResultRow a1 = (VeriniceSearchResultRow) e1;
+            VeriniceSearchResultRow a2 = (VeriniceSearchResultRow) e2;
             rc = compareNullSafe(a1, a2);
         }
         // If descending order, flip the direction
@@ -76,7 +76,7 @@ public class SearchTableSorter extends ViewerSorter {
         return rc;
     }
     
-    private int compareNullSafe(VeriniceSearchResult a1, VeriniceSearchResult a2) {
+    private int compareNullSafe(VeriniceSearchResultRow a1, VeriniceSearchResultRow a2) {
         int rc = 0;
         switch (propertyIndex) {
         case 0:  

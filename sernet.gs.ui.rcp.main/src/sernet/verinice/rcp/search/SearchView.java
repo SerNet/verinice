@@ -49,8 +49,8 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.search.VeriniceSearchResult;
-import sernet.verinice.model.search.VeriniceSearchResults;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
@@ -114,7 +114,7 @@ public class SearchView extends RightsEnabledView {
             public void run() {
                 ISelection selection = viewer.getSelection();
                 Object obj = ((IStructuredSelection) selection).getFirstElement();
-                VeriniceSearchResult result = (VeriniceSearchResult) obj;
+                VeriniceSearchResultRow result = (VeriniceSearchResultRow) obj;
 
                 // open the object on the other side of the link:
                 LoadElementByUuid<CnATreeElement> elementLoader = new LoadElementByUuid<CnATreeElement>(result.getIdentifier());
@@ -196,7 +196,7 @@ public class SearchView extends RightsEnabledView {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 Activator.inheritVeriniceContextState();
-                List<VeriniceSearchResults> results = ServiceFactory.lookupSearchService().executeSimpleQuery(queryText.getText());
+                List<VeriniceSearchResultObject> results = ServiceFactory.lookupSearchService().executeSimpleQuery(queryText.getText());
                 fillResultByTypeCombo(results);
 //                refreshTable(results);
             }
@@ -262,18 +262,18 @@ public class SearchView extends RightsEnabledView {
         return ID;
     }
     
-    private void refreshTable(VeriniceSearchResults results){
+    private void refreshTable(VeriniceSearchResultObject results){
         if(viewer != null){
             viewer.setInput(results);
             viewer.refresh(true);
         }
     }
     
-    private void fillResultByTypeCombo(List<VeriniceSearchResults> results){
+    private void fillResultByTypeCombo(List<VeriniceSearchResultObject> results){
         List<String> resultList = new ArrayList<String>();
-        for(VeriniceSearchResults r : results){
-            if(r.getSearchCount() > 0){
-                resultList.add(r.getTypeId() + "\t(" + String.valueOf(r.getSearchCount()) + ")");
+        for(VeriniceSearchResultObject r : results){
+            if(r.getHits() > 0){
+                resultList.add(r.getEntityTypeId() + "\t(" + String.valueOf(r.getHits()) + ")");
             }
         }
         resultsByTypeCombo.setItems(resultList.toArray(new String[resultList.size()]));
