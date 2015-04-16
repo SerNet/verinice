@@ -40,10 +40,15 @@
     </logger>
     -->
     
+    <logger name="sernet.verinice.bpm.TaskService">
+        <level value="DEBUG" />
+    </logger>
+    
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
 		<appender-ref ref="FILE" />
+        <appender-ref ref="STDOUT" />
 	</root>
 
 </log4j:configuration>

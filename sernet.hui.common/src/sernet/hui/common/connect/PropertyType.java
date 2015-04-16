@@ -543,11 +543,40 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
     public int getTextrows() {
         return textrows;
     }
+    
+    
 
-	/**
+	@Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PropertyType other = (PropertyType) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
+    }
+
+    /**
 	 * Compares this object with the specified object for order.  Returns a
      * negative integer, zero, or a positive integer as this object is less
      * than, equal to, or greater than the specified object.
+     * 
+     * Compared the id of a {@link PropertyType}
      * 
 	 * @see java.lang.Comparable#compareTo(java.lang.Object)
 	 */
@@ -558,10 +587,10 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 		final int greater = 1;
 		int result = less;
 		if(o!=null) {
-			if(getName()==null) {
-				result = (o.getName()==null) ? equal : greater;
-			} else if(o.getName()!=null) {
-				result = this.getName().compareTo(o.getName());
+			if(getId()==null) {
+				result = (o.getId()==null) ? equal : greater;
+			} else if(o.getId()!=null) {
+				result = this.getId().compareTo(o.getId());
 			}
 		}
 		return result;

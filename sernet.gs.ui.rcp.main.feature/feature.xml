@@ -1843,12 +1843,6 @@ Library.
          unpack="false"/>
 
    <plugin
-         id="opencsv"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"/>
-
-   <plugin
          id="org.eclipse.birt.report.engine.dataextraction.csv"
          download-size="0"
          install-size="0"
@@ -2843,5 +2837,11 @@ Library.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+
+   <plugin
+         id="opencsv-3.3"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
 
 </feature>

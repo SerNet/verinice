@@ -61,7 +61,7 @@ Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
 Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  sernet.hui.common,
- opencsv;bundle-version="2.1.0",
+ opencsv-3.3;bundle-version="3.3.0",
  jbpm;bundle-version="4.4.0",
  com.springsource.net.sf.ehcache;bundle-version="1.6.0",
  jgrapht;bundle-version="0.8.3",

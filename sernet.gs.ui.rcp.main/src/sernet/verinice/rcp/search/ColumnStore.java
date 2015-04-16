@@ -1,60 +1,98 @@
 /*******************************************************************************
- * Copyright (c) 2015 benjamin.
+ * Copyright (c) 2015 Daniel Murygin.
  *
- * This program is free software: you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public License
- * as published by the Free Software Foundation, either version 3
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU Lesser General Public License 
+ * as published by the Free Software Foundation, either version 3 
  * of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program.
+ * along with this program. 
  * If not, see <http://www.gnu.org/licenses/>.
- *
+ * 
  * Contributors:
- *     benjamin <bw[at]sernet[dot]de> - initial API and implementation
+ *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.rcp.search;
 
 import java.util.SortedSet;
+import java.util.TreeSet;
 
-import sernet.hui.common.connect.Entity;
+import org.apache.commons.lang.NotImplementedException;
+
 import sernet.hui.common.connect.PropertyType;
 
 /**
- * Provides modifying access to search view table columns.
- *
- * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
- *
+ * This implementation of {@link IColumnStore} is based
+ * on two {@link TreeSet}s for visible and invisible columns.
+ * 
+ * A column (or {@link PropertyType}) is either in set
+ * visibleColumns or invisibleColumns.
+ * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-interface ColumnStore {
+public class ColumnStore implements IColumnStore {
 
-    /**
-     * Returns a set of columns which should be rendered by the search view
-     * table.
-     *
+    private SortedSet<PropertyType> visibleColumns;
+    private SortedSet<PropertyType> invisibleColumns;
+
+    public ColumnStore() {
+        super();
+        visibleColumns = new TreeSet<PropertyType>();
+        invisibleColumns = new TreeSet<PropertyType>();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.search.IColumnStore#getColumns()
      */
-    public SortedSet<PropertyType> getColumns();
+    @Override
+    public SortedSet<PropertyType> getColumns() {
+        return visibleColumns;
+    }
 
-    /**
-     * Set the visible columns back to default.
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.search.IColumnStore#addColumn(sernet.hui.common.connect.PropertyType)
      */
-    public void restoreDefault();
+    @Override
+    public void addColumn(PropertyType column) {
+        visibleColumns.add(column);
+        invisibleColumns.remove(column);
+    }
+    
+    public void addInvisibleColumn(PropertyType column) {
+        visibleColumns.remove(column);
+        invisibleColumns.add(column);
+    }
 
-    /**
-     * Returns all possible columns for an {@link Entity} minus the columns
-     * which are returned by {{@link #getColumns()}. Possible Columns are
-     * defined in the SNCA.xml.
-     *
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.search.IColumnStore#restoreDefault()
      */
-    public SortedSet<PropertyType> getNotVisible();
+    @Override
+    public void restoreDefault() {
+       throw new NotImplementedException("Muss Benni machen...");
+    }
 
-    /**
-     * Configures visibility of column.
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.search.IColumnStore#getNotVisible()
      */
-    public void setVisible(PropertyType column, boolean visible);
+    @Override
+    public SortedSet<PropertyType> getInvisible() {
+        return invisibleColumns;
+    }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.search.IColumnStore#setVisible(sernet.hui.common.connect.PropertyType, boolean)
+     */
+    @Override
+    public void setVisible(PropertyType column, boolean visible) {
+        if(visible) {
+            addColumn(column);
+        } else {
+            addInvisibleColumn(column);
+        }
+    }
 }

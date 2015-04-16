@@ -30,12 +30,14 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import com.opencsv.CSVReader;
+
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.IEntityElement;
 import sernet.hui.common.connect.PropertyType;
-import au.com.bytecode.opencsv.CSVReader;
+import sernet.hui.common.connect.PropertyTypeNameComparator;
 
 public class PropertiesSelectionPage extends WizardPage {
 
@@ -141,7 +143,7 @@ public class PropertiesSelectionPage extends WizardPage {
             Activator.inheritVeriniceContextState();
             EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entityId);         
             List<PropertyType> propertyTypes = entityType.getAllPropertyTypes();
-            Collections.sort(propertyTypes);
+            Collections.sort(propertyTypes, PropertyTypeNameComparator.getInstance());
             propertyNames = new String[propertyTypes.size()];
             int count = 0;
             for (IEntityElement element : propertyTypes) {

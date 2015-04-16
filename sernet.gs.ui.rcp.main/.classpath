@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="testlib/jlorem-1.3.jar" sourcepath="/home/dm/temp/16/jlorem/src/main/java"/>
 	<classpathentry exported="true" kind="lib" path="lib/miglayout/miglayout-3.7.1-swt.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>

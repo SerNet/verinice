@@ -33,7 +33,8 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.iso27k.ICatalog;
 import sernet.verinice.interfaces.iso27k.ICatalogImporter;
 import sernet.verinice.model.iso27k.IControl;
-import au.com.bytecode.opencsv.CSVReader;
+
+import com.opencsv.CSVReader;
 
 /**
  * Command to import a CSV file.

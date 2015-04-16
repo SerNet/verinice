@@ -21,6 +21,7 @@ package sernet.verinice.model.search;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -55,6 +56,14 @@ public class VeriniceSearchResultRow implements Serializable{
             return properties.get(propertyType);
         }
         return "";
+    }
+    
+    public Set<String> getPropertyTypes() {
+        return this.properties.keySet();
+    }
+    
+    public int getNumberOfProperties() {
+        return this.properties.size();
     }
 
     public void addProperty(String propertyType, String value){
