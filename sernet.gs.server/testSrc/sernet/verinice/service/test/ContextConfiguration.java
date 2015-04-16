@@ -38,6 +38,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         "classpath:/sernet/gs/server/spring/veriniceserver-jbpm.xml", //$NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-rightmanagement.xml", //NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-reportdeposit.xml", //NON-NLS-1$
+        "classpath:/sernet/gs/server/spring/veriniceserver-search-base.xml", //NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-search.xml", //NON-NLS-1$
         "classpath:/verinice-test.xml"
 })
