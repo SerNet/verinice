@@ -94,6 +94,9 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
         
         BooleanFieldEditor showValidationGsmProcessWarning = new BooleanFieldEditor(PreferenceConstants.INFO_PROCESS_VALIDATE, Messages.getString("GeneralSettingsPage.ShowValidationProcessWarning"), getFieldEditorParent()); //$NON-NLS-1$
         addField(showValidationGsmProcessWarning);
+        
+        BooleanFieldEditor infoDialogSearchElementNotFound = new BooleanFieldEditor(PreferenceConstants.INFO_SEARCH_ELEMENT_NOT_FOUND, Messages.getString("GeneralSettingsPage.SearchElementNotFound"), getFieldEditorParent());
+        addField(infoDialogSearchElementNotFound);
     }
     
     @Override

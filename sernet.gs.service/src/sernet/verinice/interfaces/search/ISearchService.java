@@ -19,6 +19,9 @@ package sernet.verinice.interfaces.search;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
+
+import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
@@ -41,14 +44,14 @@ public interface ISearchService {
      * @param query
      * @return filtered-query
      */
-    String addResultCountReduceFilter(String query);
+    MultiSearchRequestBuilder addResultCountReduceFilter(MultiSearchRequestBuilder srb);
     
     /**
      * adds filter to query that considers verinice access-management 
      * @param query
      * @return filtered-quers
      */
-    String addAccessFilter(String query);
+    MultiSearchRequestBuilder addAccessFilter(MultiSearchRequestBuilder srb);
     
     /**
      * executes query 
@@ -102,5 +105,11 @@ public interface ISearchService {
     void updateOnIndex(CnATreeElement element);
     
     String convertElementToJson(CnATreeElement element);
+    
+    Map<String, String> getNumericalValues(String input);
+    
+    String[] getInternationalReplacements(String input);
+    
+    
 
 }

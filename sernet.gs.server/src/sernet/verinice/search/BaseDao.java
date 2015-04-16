@@ -20,19 +20,24 @@
 package sernet.verinice.search;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
+import org.elasticsearch.action.ActionRequestValidationException;
 import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.engine.DocumentMissingException;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -46,8 +51,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 public abstract class BaseDao implements ISearchDao {
 
     private static final Logger LOG = Logger.getLogger(BaseDao.class);
-    
-    public static final String INDEX_NAME = "verinice";
     
     private ElasticsearchClientFactory clientFactory;
     
@@ -165,6 +168,77 @@ public abstract class BaseDao implements ISearchDao {
                 .actionGet();
     }
     
+    @Override
+    public SearchRequestBuilder prepareQueryWithAllFields(String typeId, String phrase){
+        Map<String, String> map = new ConcurrentHashMap<String, String>();
+        for(String property : HUITypeFactory.getInstance().getEntityType(typeId).getAllPropertyTypeIds()){
+            map.put(property, phrase);
+        }
+//        return prepareQueryWithSpecializedFields(map, typeId);
+        return buildBooleanMultiFieldQuery(map, typeId);
+        
+    }
+    
+    @Override
+    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId){
+        MultiSearchRequestBuilder multiSearchBuilder = getClient().prepareMultiSearch();
+        for(String field : fieldmap.keySet()){
+            String value = null;
+            if(fieldmap.containsKey(field)){
+                value = fieldmap.get(field);
+            }
+            if(value != null){
+                SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                        .setQuery(QueryBuilders.matchPhraseQuery(field, value)).addHighlightedField(field)
+                        .setPostFilter(FilterBuilders.boolFilter().must(FilterBuilders.termFilter("element-type", typeId)));
+                if(LOG.isDebugEnabled()){
+                    LOG.debug("SingleSearchQuery for <" + field + ">:\t" + srb.toString());
+                }
+                multiSearchBuilder.add(srb); 
+                        
+            }
+        }
+        
+        return multiSearchBuilder;
+    }
+    
+    private SearchRequestBuilder buildBooleanMultiFieldQuery(Map<String, String> map, String typeId){
+        SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
+        BoolQueryBuilder bqb = QueryBuilders.boolQuery();
+        
+        if(typeId != null && !("".equals(typeId))){
+            bqb.must(QueryBuilders.termQuery("element-type", typeId));
+        }
+        for(String field : map.keySet()){
+            String value = map.get(field);
+            if(value != null){
+                bqb.must(QueryBuilders.queryString(value).defaultField(field));
+            }
+        }
+        
+        srb.setQuery(bqb);
+        srb.setPostFilter(FilterBuilders.regexpFilter(ISearchDao.FIELD_PERMISSION, ISearchDao.PATTERN_IS_READ_ALLOWED));
+        return srb;
+    }
+    
+    @Override
+    public SearchResponse executeMultiSearch (SearchRequestBuilder srb){
+        if(LOG.isDebugEnabled()){
+//            LOG.debug("MSRB:\t" + srb.toString());
+//            LOG.debug("ListenableActionFuture:\t" + srb.execute().toString());
+//            LOG.debug("MSR:\t" + srb.execute().actionGet().toString());
+        }
+        try{
+            return srb.execute().actionGet();
+        } catch (ActionRequestValidationException e){
+            LOG.error("Request is not valid", e);
+            
+        } catch (Throwable t){
+            LOG.error("Do the donts", t);
+        }
+        return null;
+    }
+    
     @Override 
     public SearchResponse findByPhrase(String phrase, String entityType){
         Set<String> highlightProperties = new HashSet<String>(0);
@@ -180,7 +254,6 @@ public abstract class BaseDao implements ISearchDao {
             srb.addHighlightedField(s);
         }
 
-        srb.setPostFilter(FilterBuilders.boolFilter().must(FilterBuilders.termFilter("element-type", entityType)));
         return srb.execute()
                 .actionGet();
     }

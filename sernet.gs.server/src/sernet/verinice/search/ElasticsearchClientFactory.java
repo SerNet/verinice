@@ -1,5 +1,8 @@
 package sernet.verinice.search;
 
+import java.util.Map.Entry;
+
+import org.apache.log4j.Logger;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.network.NetworkUtils;
 import org.elasticsearch.common.settings.ImmutableSettings;
@@ -37,11 +40,18 @@ public class ElasticsearchClientFactory implements DisposableBean {
     private Node node = null;
     private Client client = null;
     private Settings settings = null;
+    
+    private final static Logger LOG = Logger.getLogger(ElasticsearchClientFactory.class);
 
     public void init() {
         if (node == null || node.isClosed()) {
             // Build and start the node
             node = NodeBuilder.nodeBuilder().settings(buildNodeSettings()).node();
+            if(LOG.isDebugEnabled()){
+                for(Entry<String, String> entry : node.settings().getAsMap().entrySet()){
+                    LOG.debug("nodeEntry:\t <" + entry.getKey() + ", " + entry.getValue() + ">");
+                }
+            }
             // Get a client
             client = node.client();
             // Wait for Yellow status
@@ -87,6 +97,14 @@ public class ElasticsearchClientFactory implements DisposableBean {
             .put("node.local", true);
         if (settings != null) {
             builder.put(settings);
+            if(LOG.isDebugEnabled()){
+                if(builder.internalMap() == null ||  builder.internalMap().size() == 0){
+                    LOG.debug("nothing is on the builder map");
+                }
+                for(Entry<String, String> entry : builder.internalMap().entrySet()){
+                    LOG.debug("<" + entry.getKey() + ", " + entry.getValue() + ">");
+                }
+            }
         }
         return builder.build();
     }

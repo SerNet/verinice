@@ -9,6 +9,25 @@
 	<bean id="clientFactory" class="sernet.verinice.search.ElasticsearchClientFactory"
 		init-method="init" />
 
+	<bean id="indexThread" class="sernet.verinice.search.IndexThread"
+		scope="prototype">
+		<property name="searchDao" ref="searchElementDao" />
+	</bean>
+	
+	<bean id="searchIndexer" class="sernet.verinice.search.Indexer">
+	<!-- <bean id="searchIndexer" class="sernet.verinice.search.Indexer" init-method="init"> -->
+		<property name="elementDao" ref="cnaTreeElementDao" />
+		<property name="indexThreadFactory">
+			<bean
+				class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+				<property name="targetBeanName">
+					<idref local="indexThread" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+
 	<bean id="searchElementDao" class="sernet.verinice.search.ElementDao">
 		<property name="clientFactory" ref="clientFactory" />
 	</bean>

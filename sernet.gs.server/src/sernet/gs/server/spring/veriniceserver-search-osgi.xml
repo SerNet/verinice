@@ -6,22 +6,22 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    	<property name="corePoolSize" value="5" />
+    	<property name="maxPoolSize" value="10" />
+    	<property name="queueCapacity" value="25" />
+	</bean>
+
+	<bean id="OSGIIndexer" class="sernet.verinice.search.OSGIIndexer" init-method="run">
+		<constructor-arg ref="taskExecutor"/>
+		<property name="indexer" ref="searchIndexer"/>
+	</bean>
+
 	<bean id="indexThread" class="sernet.verinice.search.IndexThread"
 		scope="prototype">
 		<property name="searchDao" ref="searchElementDao" />
 	</bean>
+	
 
-	<bean id="searchIndexer" class="sernet.verinice.search.Indexer"
-		init-method="init">
-		<property name="elementDao" ref="cnaTreeElementDao" />
-		<property name="indexThreadFactory">
-			<bean
-				class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
-				<property name="targetBeanName">
-					<idref local="indexThread" />
-				</property>
-			</bean>
-		</property>
-	</bean>
 
 </beans>

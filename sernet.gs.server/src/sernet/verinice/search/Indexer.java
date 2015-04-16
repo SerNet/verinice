@@ -81,6 +81,7 @@ public class Indexer {
                 dummyAuthAdded = true;
             }
             ServerInitializer.inheritVeriniceContextState();
+            
             doIndex();
             if (LOG.isInfoEnabled()) {
                 long ms = System.currentTimeMillis() - start;
@@ -94,11 +95,15 @@ public class Indexer {
                 dummyAuthAdded = false;
             }
             shutdownAndAwaitTermination(taskExecutor);
+            if (LOG.isInfoEnabled()) {
+                long ms = System.currentTimeMillis() - start;
+                LOG.info("Import finished, runtime: " + TimeFormatter.getHumanRedableTime(ms));
+            }
         } 
     }
 
     private void doIndex() throws InterruptedException, ExecutionException {
-        List<CnATreeElement> elementList = getElementDao().findAll(RetrieveInfo.getPropertyInstance());
+        List<CnATreeElement> elementList = getElementDao().findAll(RetrieveInfo.getPropertyInstance().setPermissions(true));
         if (LOG.isInfoEnabled()) {
             LOG.info("Elements: " + elementList.size() + ", start indexing...");
         }

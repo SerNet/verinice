@@ -16,20 +16,32 @@
  * 
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
+ *     Sebastian Hagedorn <sh[at]sernet[dot]de> - fine-tuning for communication with {@link ISearchService}
  ******************************************************************************/
 package sernet.verinice.search;
+
+import java.util.Map;
 
 import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.MultiSearchRequestBuilder;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
+
+import sernet.verinice.interfaces.search.ISearchService;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface ISearchDao {
+    
+    static final String FIELD_PERMISSION = "permission-roles";
+    static final String INDEX_NAME = "verinice";
+    static final String PATTERN_IS_READ_ALLOWED = "^[\\w]+\\(r+.*\\)";
+    static final String PATTERN_IS_WRITE_ALLOWED = "^[\\w]+\\(.*w+\\)";
     
     public String getIndex();
     
@@ -58,4 +70,10 @@ public interface ISearchDao {
     public SearchResponse find(String property, String title);
 
     public SearchResponse find(String property, String title, Operator operator);
+    
+    public SearchRequestBuilder prepareQueryWithAllFields(String typeId, String phrase);
+    
+    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId);
+    
+    public SearchResponse executeMultiSearch(SearchRequestBuilder srb);
 }
