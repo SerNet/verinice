@@ -41,6 +41,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.search.IElementSearchDao;
@@ -70,12 +71,12 @@ public class SearchService implements ISearchService {
 
     
     @Override
-    public List<VeriniceSearchResultObject> executeSimpleQuery(String query){
-        List<VeriniceSearchResultObject> results = new ArrayList<VeriniceSearchResultObject>(0);
+    public VeriniceSearchResult executeSimpleQuery(String query){
+        VeriniceSearchResult results = new VeriniceSearchResult();
         for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
             String typeId = type.getId();
             VeriniceSearchResultObject result = getSearchResults(query, typeId);
-            results.add(result);
+            results.addVeriniceSearchObjects(result);
         }
         return results;
     }
