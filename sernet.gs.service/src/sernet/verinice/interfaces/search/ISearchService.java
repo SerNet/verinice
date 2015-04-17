@@ -24,6 +24,7 @@ import java.util.Map;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 
 /**
@@ -67,7 +68,7 @@ public interface ISearchService {
      * executs a query without a given typeId, so all object types are queried
      * to fill the typeId-Combobox in the searchView
      */
-    List<VeriniceSearchResultObject> executeSimpleQuery(String query);
+    VeriniceSearchResult executeSimpleQuery(String query);
     
     
     /**
