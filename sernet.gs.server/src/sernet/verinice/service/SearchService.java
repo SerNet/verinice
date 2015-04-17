@@ -33,6 +33,7 @@ import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.highlight.HighlightField;
 
 import sernet.hui.common.connect.EntityType;
@@ -40,8 +41,8 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.search.IElementSearchDao;
 import sernet.verinice.search.Indexer;
 import sernet.verinice.search.JsonBuilder;
@@ -83,12 +84,54 @@ public class SearchService implements ISearchService {
         String type = HUITypeFactory.getInstance().getMessage(typeId);
         return type;
     }
-
+    
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.search.ISearchService#getSearchResults(java.lang.String, java.lang.String)
      */
     @Override
     public VeriniceSearchResultObject getSearchResults(String query, String typeID) {
+        SearchHits hits = searchDao.findByPhrase(query, typeID).getHits();
+        String identifier = "";
+        VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID);
+        for(SearchHit hit : hits.getHits()){
+            identifier = hit.getId();
+            StringBuilder occurence = new StringBuilder();
+            Iterator<Entry<String, HighlightField>> iter =hit.getHighlightFields().entrySet().iterator() ;  
+            while(iter.hasNext() ){
+                Entry<String, HighlightField> entry =  iter.next();
+                occurence.append("[" + entry.getKey()+ "]");
+                occurence.append("\t").append(entry.getValue().fragments()[0]);
+                if(iter.hasNext()){
+                    occurence.append("\n\n\n");
+                }
+            }
+            
+            VeriniceSearchResultRow result = new VeriniceSearchResultRow(identifier, occurence.toString());
+            for(String key : hit.getSource().keySet()){
+                if(hit.getSource().get(key) != null){
+                    if(LOG.isDebugEnabled()){
+                        LOG.debug("adding <" + key + ", " + hit.getSource().get(key).toString() + "> to properties of result");
+                    }
+                    result.addProperty(key, hit.getSource().get(key).toString());
+                }
+            }
+            results.addSearchResult(result);
+            
+        }
+        return results;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.search.ISearchService#getSearchResults(java.lang.String, java.lang.String)
+     */
+//    @Override
+    /**
+     * method to experiment with different query builders
+     * @param query
+     * @param typeID
+     * @return
+     */
+    public VeriniceSearchResultObject getSearchResultsByQueryBuilder(String query, String typeID) {
 //        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 //        QueryStringQueryBuilder queryBuilder = QueryBuilders.queryString(query);
 //        queryBuilder.defaultOperator(QueryStringQueryBuilder.Operator.OR);
