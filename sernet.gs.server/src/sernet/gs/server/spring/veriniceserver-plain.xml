@@ -112,7 +112,8 @@
               <ref bean="cronTrigger" />
               <ref bean="processJobTrigger" />
               <!-- Activate this to activate GSM process generation -->
-              <!-- <ref bean="gsmProcessJobTrigger" /> -->
+              <!-- <ref bean="gsmProcessJobTrigger" /> -->             
+              <ref bean="indexTrigger" />
               <ref bean="taskNotificationTrigger" />  
               
               <!-- <ref bean="indexJobTrigger" /> -->

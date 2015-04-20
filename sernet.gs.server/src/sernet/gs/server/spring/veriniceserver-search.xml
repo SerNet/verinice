@@ -3,9 +3,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<!-- ><bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer"> -->
-	<bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer"
-		init-method="init">
+	<!-- <bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer" init-method="init"> -->
+	<bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer">
 		<property name="scheduler" ref="quartzSchedulerFactoryBean" />
 		<property name="indexJobFactory">
 			<bean
@@ -26,5 +25,14 @@
 			</map>
 		</property>
 	</bean>
+  
+  <bean id="indexTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+     <property name="jobDetail" ref="indexJob" />
+     <!-- Set time for search reindex job here  -->
+     <!-- Every N minutes value="0 */N * * * ?" -->
+     <!-- Every N hours value="0 * */N * * ?" -->
+     <!-- Once a day: value="0 MIN HOUR * * ?" -->
+     <property name="cronExpression" value="0 45 4 * * ?" />
+</bean>
 
 </beans>
