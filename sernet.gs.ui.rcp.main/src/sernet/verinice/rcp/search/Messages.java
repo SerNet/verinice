@@ -19,9 +19,24 @@ package sernet.verinice.rcp.search;
 
 import org.eclipse.osgi.util.NLS;
 
-/**
- *
- */
+
+@SuppressWarnings("restriction")
 public class Messages extends NLS {
 
+    @SuppressWarnings("unused")
+    private static final String BUNDLE_NAME = "sernet.verinice.rcp.search.messages";
+
+    public static String SearchView_0;
+    public static String SearchView_1;
+    public static String SearchView_2;
+    public static String SearchView_3;
+    public static String SearchView_4;
+
+    static {
+        // initialize resource bundle
+        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+    }
+
+    private Messages() {
+    }
 }

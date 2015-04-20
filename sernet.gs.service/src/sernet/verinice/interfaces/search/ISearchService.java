@@ -24,14 +24,19 @@ import java.util.Map;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 
 /**
+ * Methods for searching and indexing verinice data.
  *
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
 public interface ISearchService {
     
+    VeriniceSearchResult query(VeriniceQuery veriniceQuery);
+
     /**
     * executes a search result to a csv file
     * (e.g. JsonObject=>CnATreeElement=>CSV-Entry), discuss if {@link CnATreeElement} is needed here, inspect existing csv importer

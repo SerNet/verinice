@@ -25,8 +25,8 @@ import java.util.SortedSet;
 import sernet.hui.common.connect.PropertyType;
 
 /**
- * Stores a set of visible and invisible columns / {@link PropertyType}s.
- * Is used by {@link SearchView} to modify access to table columns.
+ * Stores a set of visible and invisible columns / {@link PropertyType}s. Is
+ * used by {@link SearchView} to modify access to table columns.
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -34,8 +34,8 @@ import sernet.hui.common.connect.PropertyType;
 public interface IColumnStore {
 
     /**
-     * Returns a set of columns 
-     * which should be visible in the search view table.
+     * Returns a set of columns which should be visible in the search view
+     * table.
      */
     public SortedSet<PropertyType> getColumns();
 
@@ -46,7 +46,6 @@ public interface IColumnStore {
      */
     public SortedSet<PropertyType> getInvisible();
 
-    
     /**
      * Adds a column. The column is visible by default.
      */
@@ -56,10 +55,16 @@ public interface IColumnStore {
      * Configures visibility of column.
      */
     public void setVisible(PropertyType column, boolean visible);
-    
+
     /**
      * Set the visibility columns back to default.
      */
     public void restoreDefault();
+
+    /**
+     * Returns all visible and un not visible columns.
+     *
+     */
+    public SortedSet<PropertyType> getAllColumns();
 
 }

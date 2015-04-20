@@ -27,12 +27,12 @@ import org.eclipse.swt.widgets.TableColumn;
  */
 public class SearchSortSelectionAdapter extends SelectionAdapter {
     
-    private SearchView view;
+    private SearchView searchView;
     private TableColumn column;
     private int index;
     
     public SearchSortSelectionAdapter(SearchView view, TableColumn column, int index){
-        this.view = view;
+        this.searchView = view;
         this.column = column;
         this.index = index;
     }
@@ -42,17 +42,17 @@ public class SearchSortSelectionAdapter extends SelectionAdapter {
      */
     @Override
     public void widgetSelected(SelectionEvent e) {
-        view.tableSorter.setColumn(index);
-        int dir = view.viewer.getTable().getSortDirection();
-        if (view.viewer.getTable().getSortColumn() == column) {
+        searchView.getTableSorter().setColumn(index);
+        int dir = searchView.getCurrentViewer().getTable().getSortDirection();
+        if (searchView.getCurrentViewer().getTable().getSortColumn() == column) {
             dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
         } else {
 
             dir = SWT.DOWN;
         }
-        view.viewer.getTable().setSortDirection(dir);
-        view.viewer.getTable().setSortColumn(column);
-        view.viewer.refresh();
+        searchView.getCurrentViewer().getTable().setSortDirection(dir);
+        searchView.getCurrentViewer().getTable().setSortColumn(column);
+        searchView.getCurrentViewer().refresh();
     }
 
 }

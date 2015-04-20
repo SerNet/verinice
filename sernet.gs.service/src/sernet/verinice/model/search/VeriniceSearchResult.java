@@ -31,9 +31,8 @@ import java.util.Set;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class VeriniceSearchResult implements Serializable{
-
-    private static final long serialVersionUID = 201504200953L;
+@SuppressWarnings("serial")
+public class VeriniceSearchResult implements Serializable {
 
     private Map<String, VeriniceSearchResultObject> entityTypeIdToSearchResult;
     
@@ -43,7 +42,7 @@ public class VeriniceSearchResult implements Serializable{
         entityTypeIdToSearchResult = new HashMap<String, VeriniceSearchResultObject>();
     }
     
-    public void addVeriniceSearchObjects(VeriniceSearchResultObject veriniceSearchResultObject){
+    public void addVeriniceSearchObject(VeriniceSearchResultObject veriniceSearchResultObject){
         entityTypeIdToSearchResult.put(veriniceSearchResultObject.getEntityTypeId(), veriniceSearchResultObject);
         hits += veriniceSearchResultObject.getHits();
     }

@@ -124,6 +124,8 @@ public final class ImageCache {
 
 	public static final String GROUP_DEL = "group_delete.png";
 
+	public static final String EXPORT_ICON = "export.gif";
+
 	public static final String WRENCH= "wrench.png";
 	
 	public static final String EXPLORER = "tree_explorer.gif";

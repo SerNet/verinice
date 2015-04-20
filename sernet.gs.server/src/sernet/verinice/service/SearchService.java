@@ -36,11 +36,14 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.highlight.HighlightField;
 
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
@@ -52,33 +55,50 @@ import sernet.verinice.search.JsonBuilder;
  *
  */
 public class SearchService implements ISearchService {
-    
+
     private static final Logger LOG = Logger.getLogger(SearchService.class);
-    
-    @Resource(name="searchIndexer")
+
+    @Resource(name = "searchIndexer")
     protected Indexer searchIndexer;
-    
-    @Resource(name="searchElementDao")
+
+    @Resource(name = "searchElementDao")
     protected IElementSearchDao searchDao;
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#exportSearchResultToCsv(sernet.verinice.model.search.VeriniceSearchResultRow)
+     * @see sernet.verinice.interfaces.search.ISearchService#query(sernet.verinice.model.search.VeriniceQuery)
+     */
+    @Override
+    public VeriniceSearchResult query(VeriniceQuery veriniceQuery) {
+        return executeSimpleQuery(veriniceQuery.getQuery());
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#exportSearchResultToCsv
+     * (sernet.verinice.model.search.VeriniceSearchResultRow)
      */
     @Override
     public File exportSearchResultToCsv(VeriniceSearchResultObject result) {
         return null;
     }
-
     
     @Override
-    public VeriniceSearchResult executeSimpleQuery(String query){
-        VeriniceSearchResult results = new VeriniceSearchResult();
-        for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
+    public VeriniceSearchResult executeSimpleQuery(String query) {
+        Activator.inheritVeriniceContextState();
+        VeriniceSearchResult veriniceSearchResult = new VeriniceSearchResult();
+        for (EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()) {
+
             String typeId = type.getId();
             VeriniceSearchResultObject result = getSearchResults(query, typeId);
-            results.addVeriniceSearchObjects(result);
+
+            if (result.getHits() > 0) {
+                veriniceSearchResult.addVeriniceSearchObject(result);
+            }
         }
-        return results;
+
+        return veriniceSearchResult;
     }
     
     private String getTypeIDTranslation(String typeId){
@@ -155,29 +175,32 @@ public class SearchService implements ISearchService {
         for(SearchHit hit : hitList){
             identifier = hit.getId();
             StringBuilder occurence = new StringBuilder();
-            Iterator<Entry<String, HighlightField>> iter =hit.getHighlightFields().entrySet().iterator() ;  
-            while(iter.hasNext() ){
-                Entry<String, HighlightField> entry =  iter.next();
-                occurence.append("[" + entry.getKey()+ "]");
+            Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
+            while (iter.hasNext()) {
+                Entry<String, HighlightField> entry = iter.next();
+                occurence.append("[" + entry.getKey() + "]");
                 occurence.append("\t").append(entry.getValue().fragments()[0]);
-                if(iter.hasNext()){
+                if (iter.hasNext()) {
                     occurence.append("\n\n\n");
                 }
             }
-            
+
             VeriniceSearchResultRow result = new VeriniceSearchResultRow(identifier, occurence.toString());
+
             for(String key : hit.getSource().keySet()){
                 if(hit.getSource().get(key) != null){
                     result.addProperty(key, hit.getSource().get(key).toString());
                 }
             }
             results.addSearchResult(result);
-            
+
         }
         return results;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.interfaces.search.ISearchService#index()
      */
     @Override
@@ -185,7 +208,9 @@ public class SearchService implements ISearchService {
         searchIndexer.init();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.interfaces.search.ISearchService#reindex()
      */
     @Override
@@ -193,41 +218,57 @@ public class SearchService implements ISearchService {
         searchIndexer.index();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#removeFromIndex(sernet.verinice.model.common.CnATreeElement)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#removeFromIndex(sernet
+     * .verinice.model.common.CnATreeElement)
      */
     @Override
     public void removeFromIndex(CnATreeElement element) {
         searchDao.delete(element.getUuid());
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#addToIndex(sernet.verinice.model.common.CnATreeElement)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#addToIndex(sernet.verinice
+     * .model.common.CnATreeElement)
      */
     @Override
     public void addToIndex(CnATreeElement element) {
         searchDao.index(element.getUuid(), convertElementToJson(element));
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#updateOnIndex(sernet.verinice.model.common.CnATreeElement)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#updateOnIndex(sernet
+     * .verinice.model.common.CnATreeElement)
      */
     @Override
     public void updateOnIndex(CnATreeElement element) {
         searchDao.update(element.getUuid(), convertElementToJson(element));
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#convertElementToJson(sernet.verinice.model.common.CnATreeElement)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#convertElementToJson
+     * (sernet.verinice.model.common.CnATreeElement)
      */
     @Override
     public String convertElementToJson(CnATreeElement element) {
         return JsonBuilder.getJson(element);
     }
-    
-    private Text[] getFirstOccurence(SearchHit hit){
+
+    private Text[] getFirstOccurence(SearchHit hit) {
         Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
-        if(iter.hasNext()){
+        if (iter.hasNext()) {
             return iter.next().getValue().getFragments();
         }
         return null;
@@ -241,7 +282,8 @@ public class SearchService implements ISearchService {
     }
 
     /**
-     * @param searchIndexer the searchIndexer to set
+     * @param searchIndexer
+     *            the searchIndexer to set
      */
     public void setSearchIndexer(Indexer searchIndexer) {
         this.searchIndexer = searchIndexer;
@@ -255,7 +297,8 @@ public class SearchService implements ISearchService {
     }
 
     /**
-     * @param searchDao the searchDao to set
+     * @param searchDao
+     *            the searchDao to set
      */
     public void setSearchDao(IElementSearchDao searchDao) {
         this.searchDao = searchDao;

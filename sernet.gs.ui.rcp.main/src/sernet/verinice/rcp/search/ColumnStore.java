@@ -27,14 +27,15 @@ import org.apache.commons.lang.NotImplementedException;
 import sernet.hui.common.connect.PropertyType;
 
 /**
- * This implementation of {@link IColumnStore} is based
- * on two {@link TreeSet}s for visible and invisible columns.
+ * This implementation of {@link IColumnStore} is based on two {@link TreeSet}s
+ * for visible and invisible columns.
  * 
- * A column (or {@link PropertyType}) is either in set
- * visibleColumns or invisibleColumns.
+ * A column (or {@link PropertyType}) is either in set visibleColumns or
+ * invisibleColumns.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+
 public class ColumnStore implements IColumnStore {
 
     private SortedSet<PropertyType> visibleColumns;
@@ -46,7 +47,13 @@ public class ColumnStore implements IColumnStore {
         invisibleColumns = new TreeSet<PropertyType>();
     }
 
-    /* (non-Javadoc)
+    public ColumnStore(String entityTypeid) {
+        this();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.rcp.search.IColumnStore#getColumns()
      */
     @Override
@@ -54,29 +61,37 @@ public class ColumnStore implements IColumnStore {
         return visibleColumns;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.IColumnStore#addColumn(sernet.hui.common.connect.PropertyType)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.rcp.search.IColumnStore#addColumn(sernet.hui.common.connect
+     * .PropertyType)
      */
     @Override
     public void addColumn(PropertyType column) {
         visibleColumns.add(column);
         invisibleColumns.remove(column);
     }
-    
+
     public void addInvisibleColumn(PropertyType column) {
         visibleColumns.remove(column);
         invisibleColumns.add(column);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.rcp.search.IColumnStore#restoreDefault()
      */
     @Override
     public void restoreDefault() {
-       throw new NotImplementedException("Muss Benni machen...");
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.rcp.search.IColumnStore#getNotVisible()
      */
     @Override
@@ -84,15 +99,25 @@ public class ColumnStore implements IColumnStore {
         return invisibleColumns;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.IColumnStore#setVisible(sernet.hui.common.connect.PropertyType, boolean)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.rcp.search.IColumnStore#setVisible(sernet.hui.common.
+     * connect.PropertyType, boolean)
      */
     @Override
     public void setVisible(PropertyType column, boolean visible) {
-        if(visible) {
+        if (visible) {
             addColumn(column);
         } else {
             addInvisibleColumn(column);
         }
+    }
+
+    public SortedSet<PropertyType> getAllColumns() {
+        SortedSet<PropertyType> allColumns = getColumns();
+        allColumns.addAll(getInvisible());
+        return allColumns;
     }
 }

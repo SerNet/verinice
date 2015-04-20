@@ -20,6 +20,7 @@ package sernet.verinice.model.search;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import org.apache.commons.lang.NotImplementedException;
 import sernet.hui.common.connect.HUITypeFactory;
 
 @SuppressWarnings("serial")
-public class VeriniceSearchResultObject implements Serializable, Iterable<VeriniceSearchResultRow> {
+public class VeriniceSearchResultObject implements Serializable {
 
 
     private List<VeriniceSearchResultRow> results;
@@ -76,28 +77,8 @@ public class VeriniceSearchResultObject implements Serializable, Iterable<Verini
         return typeId;
     }
 
-    @Override
-    public Iterator<VeriniceSearchResultRow> iterator() {
-        return new VeriniceSearchRowIterator();
-    }
-
-    private class VeriniceSearchRowIterator implements Iterator<VeriniceSearchResultRow>{
-
-        @Override
-        public boolean hasNext() {
-            throw new NotImplementedException();
-        }
-
-        @Override
-        public VeriniceSearchResultRow next() {
-            throw new NotImplementedException();
-        }
-
-
-        @Override
-        public void remove() {
-            throw new NotImplementedException();
-        }
+    public List<VeriniceSearchResultRow> getRows(){
+        return results;
     }
 
     @Override
