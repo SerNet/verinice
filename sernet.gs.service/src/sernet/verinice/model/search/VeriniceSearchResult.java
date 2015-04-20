@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.model.search;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,7 +31,9 @@ import java.util.Set;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class VeriniceSearchResult {
+public class VeriniceSearchResult implements Serializable{
+
+    private static final long serialVersionUID = 201504200953L;
 
     private Map<String, VeriniceSearchResultObject> entityTypeIdToSearchResult;
     
