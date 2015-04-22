@@ -27,7 +27,7 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
-import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 
@@ -71,9 +71,9 @@ public interface ISearchDao {
 
     public SearchResponse find(String property, String title, Operator operator);
     
-    public SearchRequestBuilder prepareQueryWithAllFields(String typeId, String phrase);
+    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, String phrase);
     
     public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId);
     
-    public SearchResponse executeMultiSearch(SearchRequestBuilder srb);
+    public MultiSearchResponse executeMultiSearch(MultiSearchRequestBuilder srb);
 }

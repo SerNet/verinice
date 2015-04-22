@@ -18,8 +18,8 @@
 package sernet.verinice.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,21 +28,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
-import org.elasticsearch.action.search.SearchRequestBuilder;
+import org.elasticsearch.action.search.MultiSearchResponse;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.common.text.Text;
+import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.highlight.HighlightField;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.hui.common.VeriniceContext;
+import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
@@ -69,7 +72,8 @@ public class SearchService implements ISearchService {
      */
     @Override
     public VeriniceSearchResult query(VeriniceQuery veriniceQuery) {
-        return executeSimpleQuery(veriniceQuery.getQuery());
+//        return executeSimpleQuery(veriniceQuery.getQuery());
+        return getSearchResultsByQueryBuilder(veriniceQuery.getQuery(), null);
     }
 
     /*
@@ -86,7 +90,7 @@ public class SearchService implements ISearchService {
     
     @Override
     public VeriniceSearchResult executeSimpleQuery(String query) {
-        Activator.inheritVeriniceContextState();
+        ServerInitializer.inheritVeriniceContextState();
         VeriniceSearchResult veriniceSearchResult = new VeriniceSearchResult();
         for (EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()) {
 
@@ -102,8 +106,7 @@ public class SearchService implements ISearchService {
     }
     
     private String getTypeIDTranslation(String typeId){
-        String type = HUITypeFactory.getInstance().getMessage(typeId);
-        return type;
+        return HUITypeFactory.getInstance().getMessage(typeId);
     }
     
     /* (non-Javadoc)
@@ -152,35 +155,60 @@ public class SearchService implements ISearchService {
      * @param typeID
      * @return
      */
-    public VeriniceSearchResultObject getSearchResultsByQueryBuilder(String query, String typeID) {
+    @Override
+    public VeriniceSearchResult getSearchResultsByQueryBuilder(String query, String typeID) {
 //        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 //        QueryStringQueryBuilder queryBuilder = QueryBuilders.queryString(query);
 //        queryBuilder.defaultOperator(QueryStringQueryBuilder.Operator.OR);
 //        queryBuilder.analyzeWildcard(true);
 //        queryBuilder.lenient(true);
 //        searchSourceBuilder.query(queryBuilder);
-        SearchRequestBuilder srb = searchDao.prepareQueryWithAllFields(typeID, query);
+        VeriniceSearchResult results = new VeriniceSearchResult();
+        if(StringUtils.isNotEmpty(typeID)){
+            results.addVeriniceSearchObject(processMultiSearchRequest(typeID, searchDao.prepareQueryWithAllFields(typeID, query)));
+        } else {
+            for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
+                results.addVeriniceSearchObject(processMultiSearchRequest(type.getId(), searchDao.prepareQueryWithAllFields(type.getId(), query)));
+            }
+        }
 //        srb = addResultCountReduceFilter(srb);
 //        srb = addAccessFilter(srb);
 //        SearchHits hits = searchDao.findByPhrase(query, typeID).getHits();
+        return results;
+    }
+
+
+    /**
+     * @param typeID
+     * @param msrb
+     * @return
+     */
+    private VeriniceSearchResultObject processMultiSearchRequest(String typeID, MultiSearchRequestBuilder msrb) {
         List<SearchHit> hitList = new ArrayList<SearchHit>(0);
 //        for(Item item : searchDao.executeMultiSearch(srb).getResponses()){
 //            for(SearchHit hit : item.getResponse().getHits().getHits()){
 //                hitList.add(hit);
 //            }
 //        }
-        hitList.addAll(Arrays.asList(searchDao.executeMultiSearch(srb).getHits().hits()));
+        
+        MultiSearchResponse msr = searchDao.executeMultiSearch(msrb);
+        for(MultiSearchResponse.Item i : msr.getResponses()){
+            for(SearchHit hit : i.getResponse().getHits().getHits()){
+                hitList.add(hit);
+            }
+        }
         String identifier = "";
+//        VeriniceSearchResultObject results = new VeriniceSearchResultObject(getTypeIDTranslation(typeID));
         VeriniceSearchResultObject results = new VeriniceSearchResultObject(getTypeIDTranslation(typeID));
         for(SearchHit hit : hitList){
             identifier = hit.getId();
             StringBuilder occurence = new StringBuilder();
-            Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
-            while (iter.hasNext()) {
-                Entry<String, HighlightField> entry = iter.next();
-                occurence.append("[" + entry.getKey() + "]");
+            Iterator<Entry<String, HighlightField>> iter =hit.getHighlightFields().entrySet().iterator() ;  
+            while(iter.hasNext() ){
+                Entry<String, HighlightField> entry =  iter.next();
+                occurence.append("[" + entry.getKey()+ "]");
                 occurence.append("\t").append(entry.getValue().fragments()[0]);
-                if (iter.hasNext()) {
+                if(iter.hasNext()){
                     occurence.append("\n\n\n");
                 }
             }

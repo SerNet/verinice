@@ -20,11 +20,11 @@
 package sernet.verinice.search;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -33,8 +33,7 @@ import org.elasticsearch.common.xcontent.XContentFactory;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
+import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -67,6 +66,19 @@ public class JsonBuilder {
         builder.field("source-id", element.getSourceId());
         builder.field("scope-id", element.getScopeId());
         builder.field("parent-id", element.getParentId());
+        builder.field("icon-path", element.getIconPath());
+        builder.field("permission-roles", getPermissionString(element));
+        if(element.getEntity()!=null && element.getEntity().getTypedPropertyLists()!=null) {
+            builder = addProperties(builder, element.getEntityType().getAllPropertyTypeIds(), element.getEntity());
+        }
+        return builder.endObject().string();
+    }
+
+    /**
+     * @param element
+     * @return
+     */
+    private static String getPermissionString(CnATreeElement element) {
         Iterator<Permission> iter = element.getPermissions().iterator();
         StringBuilder sb = new StringBuilder();
         while(iter.hasNext()){
@@ -85,81 +97,111 @@ public class JsonBuilder {
                 sb.append(", ");
             }
         }
-        builder.field("permission-roles", sb.toString());
-        if(element.getEntity()!=null && element.getEntity().getTypedPropertyLists()!=null) {
-            Entity e = element.getEntity();
-            Map<String, PropertyList> properties = element.getEntity().getTypedPropertyLists();
-            addProperties(builder, properties, e);
-        }
-        return builder.endObject().string();
+        return sb.toString();
     }
 
-    private static void addProperties(XContentBuilder builder, Map<String, PropertyList> properties, Entity e) throws IOException {
-        for (String key : properties.keySet()) {
-            PropertyList list = (PropertyList)properties.get(key);
-            HUITypeFactory factory = HUITypeFactory.getInstance();
-            for(Property p : list.getProperties()){
-                String eType = e.getEntityType();
-                String pTypeId = p.getPropertyTypeID();
-                PropertyType pType = factory.getPropertyType(eType, pTypeId);
-                String value = "";
-                if(eType != null && pTypeId != null && pType != null){
-                    value = mapPropertyToString(p, pType);
-                } else {
-                    value = p.getPropertyValue();
-                }
-                if(StringUtils.isNotEmpty(value)){
-                    builder.field(p.getPropertyTypeID(), value);
+    private static XContentBuilder addProperties(XContentBuilder builder, String[] propertyTypeIds, Entity e) throws IOException {
+        HUITypeFactory factory = HUITypeFactory.getInstance();
+        for(String propertyTypeId : propertyTypeIds){
+            builder.field(propertyTypeId, mapPropertyString(e, factory.getPropertyType(e.getEntityType(), propertyTypeId)));
+
+        }
+        return builder;
+    }
+    
+    
+    private static String mapPropertyString(Entity e, PropertyType pType){
+        String value = e.getSimpleValue(pType.getId());
+        String mappedValue = "";
+        if(StringUtils.isEmpty(value)){
+            mappedValue = getNullValue();
+        } else if(pType.isDate()){
+            mappedValue = mapDateProperty(value);
+        } else if(pType.isSingleSelect() || pType.isMultiselect()){
+            mappedValue = mapMultiSelectProperty(value, pType);
+        } else if(pType.isNumericSelect()){
+            mappedValue = mapNumericSelectProperty(value, pType);
+        } else {
+            mappedValue = value;
+        }
+        return mappedValue;
+    }
+    
+    private static String getNullValue(){
+        if(Locale.GERMAN.equals(Locale.getDefault()) || Locale.GERMANY.equals(Locale.getDefault())){
+            return "unbearbeitet";
+        } else {
+            return "unedited";
+        }
+    }
+    
+    
+    
+    private static String mapNumericSelectProperty(String value, PropertyType type){
+        return type.getNameForValue(Integer.parseInt(value));
+    }
+    
+    private static String mapMultiSelectProperty(String value, PropertyType type){
+        PropertyOption o = type.getOption(value);
+        if(value == null || type == null || o == null){
+            if(LOG.isDebugEnabled()){
+                LOG.debug("No mapping for:\t" + value + "\t on <" + type.getId() + "> found, returning value");
+            }
+            return value;
+        }
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Mapping for:\t" + value + "\t on <" + type.getId() + ">:\t" + o.getName());
+        }
+        return type.getOption(value).getName();
+    }
+    
+    private static String mapDateProperty(String value){
+        if(StringUtils.isNotEmpty(value)){
+            try{
+                return tryParseDate(value);
+            } catch (Exception e){
+                LOG.error("Error on mapping date property", e);
+            }
+        }
+        return value;
+    }
+    
+    private static String tryParseDate(String value){
+
+        String[] patterns = new String[]{"EEE MMM dd HH:mm:ss zzzz yyyy",
+                "dd.MM.yy",
+                "EE, dd.MM.yyyy",
+                "dd.MM.yyyy",
+                "dd.MM.yyyy HH:mm",
+                "MMM dd, yyyy hh:mm aa",
+                "MMM dd, yyyy hh:mm aa",
+                "yyyy-MM-dd",
+        "EEE MMM dd HH:mm:ss z yyyy"};
+
+        
+        Locale[] locales = new Locale[]{null, Locale.GERMAN, Locale.GERMANY, Locale.ENGLISH, Locale.US, Locale.UK, Locale.FRANCE, Locale.FRENCH, Locale.ITALIAN, Locale.ITALY};
+        for(int i = 0; i < patterns.length; i++){
+            for(int j = 0; j < locales.length; j++){
+                try{
+                    SimpleDateFormat formatter = null;
+                    if(locales[j] == null){
+                        formatter = new SimpleDateFormat(patterns[i]);
+                    } else {
+                        formatter = new SimpleDateFormat(patterns[i], locales[j]);
+                    }
+                    formatter.setLenient(true);
+                    Date parsedDate = formatter.parse(value);
+                    return getLocalizedDatePattern().format(parsedDate);
+                } catch (Exception e) {
+                    // do nothing and go on with next locale
                 }
             }
-        }    
+        }
+        LOG.error("Date not parseable:\t" + value);
+        return "unparseable Date:\t" + value;
     }
     
-    private static String mapPropertyToString(Property p, PropertyType type){
-        if(type.isDate()){
-           return mapDateProperty(p); 
-        } else if(type.isMultiselect()){
-            return mapMultiSelectProperty(p, type);
-        } else if(type.isSingleSelect()){
-            return mapMultiSelectProperty(p, type);
-        } else if(type.isNumericSelect()){
-            return mapNumericSelectProperty(p, type);
-        }
-        
-        return p.getPropertyValue();
-    }
-    
-    private static String mapNumericSelectProperty(Property p, PropertyType type){
-        String r = type.getNameForValue(Integer.parseInt(p.getPropertyValue()));
-        if(LOG.isDebugEnabled()){
-            LOG.debug("ID:\t" + p.getPropertyTypeID() + "\tValue:\t" + p.getPropertyValue() + "\tNameForValue:\t" + r);
-        }
-        return r;
-    }
-    
-    private static String mapMultiSelectProperty(Property p, PropertyType type){
-       if(!p.getPropertyValue().contains("none") && !("".equals(p.getPropertyValue()))){
-           return type.getOption(p.getPropertyValue()).getName();
-        }
-       return p.getPropertyValue();
-    }
-    
-    private static String mapDateProperty(Property p){
-        if(StringUtils.isNotEmpty(p.getPropertyValue())){
-            Date d = new Date(Long.parseLong(p.getPropertyValue()));
-            SimpleDateFormat sdf = new SimpleDateFormat(getLocalizedDatePattern(), Locale.getDefault());
-            sdf.setLenient(true);
-            return sdf.format(d);
-        }
-        return p.getPropertyValue();
-        
-    }
-    
-    private static String getLocalizedDatePattern(){
-        if(Locale.getDefault().equals(Locale.GERMAN)){
-            return "dd.MM.yyyy";
-        } else {
-            return "MM.dd.yyyy";
-        }
+    private static DateFormat getLocalizedDatePattern(){
+        return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, Locale.getDefault());
     }
 }

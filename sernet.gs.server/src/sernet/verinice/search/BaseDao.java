@@ -31,13 +31,14 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
+import org.elasticsearch.action.search.MultiSearchResponse;
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.engine.DocumentMissingException;
-import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -169,11 +170,13 @@ public abstract class BaseDao implements ISearchDao {
     }
     
     @Override
-    public SearchRequestBuilder prepareQueryWithAllFields(String typeId, String phrase){
+    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, String phrase){
         Map<String, String> map = new ConcurrentHashMap<String, String>();
         for(String property : HUITypeFactory.getInstance().getEntityType(typeId).getAllPropertyTypeIds()){
             map.put(property, phrase);
         }
+        map.put("title", phrase);
+        map.put("element-type", phrase);
 //        return prepareQueryWithSpecializedFields(map, typeId);
         return buildBooleanMultiFieldQuery(map, typeId);
         
@@ -182,6 +185,7 @@ public abstract class BaseDao implements ISearchDao {
     @Override
     public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId){
         MultiSearchRequestBuilder multiSearchBuilder = getClient().prepareMultiSearch();
+
         for(String field : fieldmap.keySet()){
             String value = null;
             if(fieldmap.containsKey(field)){
@@ -189,7 +193,7 @@ public abstract class BaseDao implements ISearchDao {
             }
             if(value != null){
                 SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                        .setQuery(QueryBuilders.matchPhraseQuery(field, value)).addHighlightedField(field)
+                        .setQuery(QueryBuilders.matchPhraseQuery(field, value))
                         .setPostFilter(FilterBuilders.boolFilter().must(FilterBuilders.termFilter("element-type", typeId)));
                 if(LOG.isDebugEnabled()){
                     LOG.debug("SingleSearchQuery for <" + field + ">:\t" + srb.toString());
@@ -202,33 +206,48 @@ public abstract class BaseDao implements ISearchDao {
         return multiSearchBuilder;
     }
     
-    private SearchRequestBuilder buildBooleanMultiFieldQuery(Map<String, String> map, String typeId){
-        SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
-        BoolQueryBuilder bqb = QueryBuilders.boolQuery();
-        
-        if(typeId != null && !("".equals(typeId))){
-            bqb.must(QueryBuilders.termQuery("element-type", typeId));
+    private MultiSearchRequestBuilder buildBooleanMultiFieldQuery(Map<String, String> map, String typeId){
+        Set<String> highlightProperties = new HashSet<String>(0);
+        MultiSearchRequestBuilder msrb = getClient().prepareMultiSearch();
+        for(String propertyTypeId : HUITypeFactory.getInstance().getEntityType(typeId).getAllPropertyTypeIds()){
+            highlightProperties.add(propertyTypeId);
         }
+//        BoolQueryBuilder bqb = QueryBuilders.boolQuery();
+//        
+//        if(typeId != null && !("".equals(typeId))){
+//            bqb.must(QueryBuilders.termQuery("element-type", typeId));
+//            
+//        }
+//        msrb.add(getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH).setQuery(QueryBuilders.matchPhraseQuery("element-type", typeId)));
+        
         for(String field : map.keySet()){
             String value = map.get(field);
             if(value != null){
-                bqb.must(QueryBuilders.queryString(value).defaultField(field));
+                SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                        .setQuery(QueryBuilders.filteredQuery(QueryBuilders.matchPhraseQuery(field, value), FilterBuilders.inFilter("element-type", new String[]{typeId})));
+                    
+                
+                
+                for(String s : highlightProperties){
+                    srb.addHighlightedField(s);
+                }
+//                srb.setPostFilter(FilterBuilders.regexpFilter(ISearchDao.FIELD_PERMISSION, ISearchDao.PATTERN_IS_READ_ALLOWED));
+                msrb.add(srb);
             }
         }
-        
-        srb.setQuery(bqb);
-        srb.setPostFilter(FilterBuilders.regexpFilter(ISearchDao.FIELD_PERMISSION, ISearchDao.PATTERN_IS_READ_ALLOWED));
-        return srb;
+//        msrb.setIndicesOptions(null);
+        return msrb;
     }
     
     @Override
-    public SearchResponse executeMultiSearch (SearchRequestBuilder srb){
+    public MultiSearchResponse executeMultiSearch (MultiSearchRequestBuilder srb){
         if(LOG.isDebugEnabled()){
-//            LOG.debug("MSRB:\t" + srb.toString());
-//            LOG.debug("ListenableActionFuture:\t" + srb.execute().toString());
-//            LOG.debug("MSR:\t" + srb.execute().actionGet().toString());
+            for(SearchRequest r : srb.request().requests()){
+                LOG.debug("Request:\t" + r.toString());
+            }
         }
         try{
+            
             return srb.execute().actionGet();
         } catch (ActionRequestValidationException e){
             LOG.error("Request is not valid", e);

@@ -54,10 +54,15 @@ public class VeriniceQuery implements Serializable{
     }
 
     public String getQuery() {
-        return query;
+        return escapeQuery(query);
     }
 
     public void setQuery(String query) {
         this.query = query;
+    }
+    
+    private String escapeQuery(String query){
+        String escapedQuery = query.replaceAll("/", "");
+        return escapedQuery;
     }
 }

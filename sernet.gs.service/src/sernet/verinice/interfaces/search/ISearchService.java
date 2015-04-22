@@ -18,7 +18,6 @@
 package sernet.verinice.interfaces.search;
 
 import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
@@ -115,6 +114,8 @@ public interface ISearchService {
     Map<String, String> getNumericalValues(String input);
     
     String[] getInternationalReplacements(String input);
+    
+    VeriniceSearchResult getSearchResultsByQueryBuilder(String query, String typeID);
     
     
 

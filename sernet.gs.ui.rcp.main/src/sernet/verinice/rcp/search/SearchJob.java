@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.verinice.interfaces.search.ISearchService;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 
@@ -69,8 +69,7 @@ public class SearchJob extends WorkspaceJob {
 
             Activator.inheritVeriniceContextState();
 
-            ISearchService searchService = sernet.gs.ui.rcp.main.service.ServiceFactory.lookupSearchService();
-            final VeriniceSearchResult result = searchService.query(query);
+            final VeriniceSearchResult result = ServiceFactory.lookupSearchService().query(query);
 
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
