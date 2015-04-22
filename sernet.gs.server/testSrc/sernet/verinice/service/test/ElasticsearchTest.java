@@ -82,7 +82,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         result = searchDao.find("title", "Cryptography").getHits();
         assertTrue("No element found with 'Cryptography' in title", result.getTotalHits()>0);
         SearchHit hit = result.getHits()[0];
-        CnATreeElement element = elementDao.findByUuid(hit.getId(), RetrieveInfo.getPropertyInstance());
+        CnATreeElement element = elementDao.findByUuid(hit.getId(), RetrieveInfo.getPropertyInstance().setPermissions(true));
         assertNotNull("No element found with uuid: " + hit.getId(), element);
         element.setTitel(name);
         String json = JsonBuilder.getJson(element);
