@@ -27,5 +27,5 @@
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.7.0_51"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="sernet.verinice.service.test.ElasticsearchTest"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="sernet.gs.server"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dlog4j.configuration=log4j-test.xml"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dlog4j.configuration=log4j-test-server.xml"/>
 </launchConfiguration>

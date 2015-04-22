@@ -61,7 +61,7 @@ abstract public class AbstractVNAImportHelper extends CommandServiceProvider {
             this.syncParameter = getSyncParameter();
             this.syncCommand = importFile(vnaFilePath, syncParameter);            
         } catch (Exception e) {
-            log.debug("import of " + vnaFilePath + " aborted", e);
+            log.error("import of " + vnaFilePath + " aborted", e);
             throw e;
         }
     }

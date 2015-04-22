@@ -22,5 +22,5 @@
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="sernet.verinice.service.test.LinkTest"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="sernet.gs.server"/>
-<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dlog4j.configuration=log4j-test.xml"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dlog4j.configuration=log4j-test-server.xml"/>
 </launchConfiguration>
