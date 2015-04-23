@@ -171,14 +171,21 @@ public class SearchService implements ISearchService {
     @Override
     public VeriniceSearchResult getSearchResultsByQueryBuilder(VeriniceQuery query, String typeID) {
         VeriniceSearchResult results = new VeriniceSearchResult();
-        if(StringUtils.isNotEmpty(typeID)){
-            results.addVeriniceSearchObject(processMultiSearchRequest(typeID, searchDao.prepareQueryWithAllFields(typeID, query, getAuthenticationService().getUsername())));
+        if (StringUtils.isNotEmpty(typeID)) {
+            addVeriniceSearchResultObject(query, typeID, results);
         } else {
-            for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
-                results.addVeriniceSearchObject(processMultiSearchRequest(type.getId(), searchDao.prepareQueryWithAllFields(type.getId(), query, getAuthenticationService().getUsername())));
+            for (EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()) {
+                addVeriniceSearchResultObject(query, type.getId(), results);
             }
         }
         return results;
+    }
+
+    private void addVeriniceSearchResultObject(VeriniceQuery query, String typeID, VeriniceSearchResult results) {
+        VeriniceSearchResultObject veriniceSearchResultObject = processMultiSearchRequest(typeID, searchDao.prepareQueryWithAllFields(typeID, query, getAuthenticationService().getUsername()));
+        if (veriniceSearchResultObject.getHits() > 0) {
+            results.addVeriniceSearchObject(veriniceSearchResultObject);
+        }
     }
 
     /**
@@ -198,7 +205,7 @@ public class SearchService implements ISearchService {
         String identifier = "";
         // VeriniceSearchResultObject results = new
         // VeriniceSearchResultObject(getTypeIDTranslation(typeID));
-        VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID, getEntityName(typeID),  getPropertyIds(typeID));
+        VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID, getEntityName(typeID), getPropertyIds(typeID));
         for (SearchHit hit : hitList) {
             identifier = hit.getId();
             StringBuilder occurence = new StringBuilder();
