@@ -77,7 +77,7 @@ public class SearchView extends RightsEnabledView {
 
     private Action editMode;
 
-    private Action autoUpdate;
+    Action reindex;
 
     private Composite searchComposite;
 
@@ -136,16 +136,16 @@ public class SearchView extends RightsEnabledView {
         editMode.setToolTipText(Messages.SearchView_1);
         editMode.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
 
-        autoUpdate = new Action() {
+        reindex = new Action() {
             @Override
             public void run() {
-
+                reindex();
             }
         };
 
-        autoUpdate.setText(Messages.SearchView_2);
-        autoUpdate.setToolTipText(Messages.SearchView_2);
-        autoUpdate.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
+        reindex.setText(Messages.SearchView_2);
+        reindex.setToolTipText(Messages.SearchView_2);
+        reindex.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
     }
     
     private void doCsvExport() throws CsvExportException {
@@ -170,8 +170,8 @@ public class SearchView extends RightsEnabledView {
             manager.add(editMode);
         }
 
-        if (autoUpdate != null) {
-            manager.add(autoUpdate);
+        if (reindex != null) {
+            manager.add(reindex);
         }
     }
 
@@ -299,6 +299,11 @@ public class SearchView extends RightsEnabledView {
        veriniceQuery.setQuery(queryText.getText());
        WorkspaceJob job = new SearchJob(veriniceQuery, searchButton, queryText, this);
        job.schedule();
+    }
+    
+    private void reindex() {
+        WorkspaceJob job = new IndexJob(this);
+        job.schedule();
     }
 
     public TableViewer getCurrentViewer() {

@@ -26,6 +26,8 @@ public class Messages extends NLS {
     @SuppressWarnings("unused")
     private static final String BUNDLE_NAME = "sernet.verinice.rcp.search.messages";
 
+    public static String IndexJob_0;
+
     public static String SearchView_0;
     public static String SearchView_1;
     public static String SearchView_2;
