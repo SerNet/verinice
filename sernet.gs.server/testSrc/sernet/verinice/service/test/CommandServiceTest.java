@@ -81,6 +81,7 @@ public class CommandServiceTest extends CommandServiceProvider {
     private static final int NUMBER_OF_IMPORTED_ELEMENTS = 29;   
     private static final String SOURCE_ID = "CommandServiceTest";
     private static final String VALUE_PREFIX = "****";
+    private static final int NUMBER_OF_ELEMENTS = 300;
      
     @Resource(name="huiTypeFactory")
     private HUITypeFactory huiTypeFactory;
@@ -91,7 +92,7 @@ public class CommandServiceTest extends CommandServiceProvider {
     
     
     /**
-     * For all elements:
+     * For randomly choosed NUMBER_OF_ELEMENTS elements:
      *  -Open the element similar to BSIElementEditor,
      *  -Changes all simple (line and text type) properties.
      *  -Saves the element.
@@ -104,10 +105,20 @@ public class CommandServiceTest extends CommandServiceProvider {
     public void testOpenEditor() throws Exception {
         Calendar now = Calendar.getInstance();
         currentDate = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT).format(now.getTime());
-        List<String> uuidList = getAllUuids();        
+        List<String> uuidList = getAllUuids();
+        double factor = 1;
+        if(uuidList.size()>NUMBER_OF_ELEMENTS) {
+            factor = (NUMBER_OF_ELEMENTS*1.0) / uuidList.size();
+        } 
+        LOG.info(uuidList.size() + " elements, test factor is: " + factor);
+        int n = 0;
         for (String uuid : uuidList) {
-            loadChangeAndCheckElement(uuid);           
+            if(Math.random()<factor) {              
+                loadChangeAndCheckElement(uuid);  
+                n++;
+            }
         }
+        LOG.info(n + " of " + uuidList.size() + " elements tested.");
     }
 
     /**
@@ -172,7 +183,7 @@ public class CommandServiceTest extends CommandServiceProvider {
         checkOrganization(organization);       
         uuidList.addAll(createElementsInGroups(organization, NUMBER_PER_GROUP));
         
-        LOG.debug("Total number of created elements: " + uuidList.size());
+        LOG.info("Total number of created elements: " + uuidList.size());
         
         RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
         commandService.executeCommand(removeCommand);
@@ -306,7 +317,7 @@ public class CommandServiceTest extends CommandServiceProvider {
         String hql = "select element.uuid from CnATreeElement element where element.sourceId = ?"; 
         Object[] params = new Object[]{SOURCE_ID}; 
         List<String> importedUuids = elementDao.findByQuery(hql, params);
-        LOG.debug("Number of imported elements: " + importedUuids.size());
+        LOG.info("Number of imported elements: " + importedUuids.size());
         
         assertEquals("number of imported elements is not: " + NUMBER_OF_IMPORTED_ELEMENTS, NUMBER_OF_IMPORTED_ELEMENTS, importedUuids.size());
         
@@ -327,7 +338,7 @@ public class CommandServiceTest extends CommandServiceProvider {
         
         //sessionFactory.getCurrentSession().flush(); 
         
-        LOG.debug("VNA imported: " + vnaUrl.getPath());
+        LOG.info("VNA imported: " + vnaUrl.getPath());
     }
     
     public void removeImport() throws Exception {
