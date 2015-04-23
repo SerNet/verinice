@@ -43,6 +43,7 @@ import org.eclipse.ui.IActionBars;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
@@ -73,11 +74,11 @@ public class SearchView extends RightsEnabledView {
 
     private SearchTableViewerFactory tableFactory;
 
-    private Action export2CSV;
+    private RightsEnabledAction export2CSV;
 
     private Action editMode;
 
-    Action reindex;
+    RightsEnabledAction reindex;
 
     private Composite searchComposite;
 
@@ -109,12 +110,12 @@ public class SearchView extends RightsEnabledView {
 
     private void makeActions() {
 
-        export2CSV = new Action() {
+        export2CSV = new RightsEnabledAction(ActionRightIDs.SEARCHEXPORT) {
             @Override
-            public void run() {
+            public void doRun() {
                 try {
                     doCsvExport();
-                } catch (CsvExportException e) {
+                } catch (Exception e) {
                     LOG.error("Error during CSV export", e);
                     MessageDialog.openError(getShell(), "Error", "Error during CSV export: " + e.getMessage());
                 }
@@ -136,10 +137,15 @@ public class SearchView extends RightsEnabledView {
         editMode.setToolTipText(Messages.SearchView_1);
         editMode.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
 
-        reindex = new Action() {
+        reindex = new RightsEnabledAction(ActionRightIDs.SEARCHREINDEX) {
             @Override
-            public void run() {
-                reindex();
+            public void doRun() {            
+                try {
+                    reindex();
+                } catch (Exception e) {
+                    LOG.error("Error while creating search index", e);
+                    MessageDialog.openError(getShell(), "Error", "Error while creating search index: " + e.getMessage());
+                }
             }
         };
 

@@ -78,6 +78,8 @@
 	        <action id="relations" />
 	        <action id="riskanalysis" />
 	        <action id="samtview" />
+            <action id="searchexport" />
+            <action id="searchreindex" />
 	        <action id="searchview" />
 	        <action id="showchartview" />
 	        <action id="showpreferences" />

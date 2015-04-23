@@ -82,7 +82,9 @@
         <action id="reportdepositedit" />
         <action id="riskanalysis" />
         <action id="samtview" />
-        <action id="searchview" />
+        <action id="searchexport" />
+        <action id="searchreindex" />
+        <action id="searchview" />    
         <action id="showchartview" />
         <action id="showpreferences" />
         <action id="simpleauditview" />
@@ -156,6 +158,8 @@
 	        <action id="reportdepositedit" />
 	        <action id="riskanalysis" />
 	        <action id="samtview" />
+            <action id="searchexport" />
+            <action id="searchreindex" />
             <action id="searchview" />
 	        <action id="showchartview" />
 	        <action id="showpreferences" />
@@ -225,6 +229,8 @@
         	<action id="reportdepositedit" />
 	        <action id="riskanalysis" />
 	        <action id="samtview" />
+            <action id="searchexport" />
+            <action id="searchreindex" />
             <action id="searchview" />
 	        <action id="showchartview" />
 	        <action id="showpreferences" />
@@ -296,6 +302,8 @@
         	<action id="reportdepositedit" />
 	        <action id="riskanalysis" />
 	        <action id="samtview" />
+            <action id="searchexport" />
+            <action id="searchreindex" />
             <action id="searchview" />
 	        <action id="showchartview" />
 	        <action id="showpreferences" />
