@@ -20,6 +20,7 @@
 package sernet.verinice.rcp.search;
 
 import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.rcp.search.column.IColumnStore;
 
 /**
  * Exports a {@link VeriniceSearchResultObject} to a CSV table.

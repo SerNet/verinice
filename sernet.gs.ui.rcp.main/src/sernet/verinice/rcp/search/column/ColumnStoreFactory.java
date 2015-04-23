@@ -17,35 +17,26 @@
  * Contributors:
  *     benjamin <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.search.tables;
+package sernet.verinice.rcp.search.column;
 
-import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.swt.widgets.Composite;
-
-import sernet.verinice.model.search.VeriniceSearchResultObject;
-import sernet.verinice.rcp.search.column.IColumnStore;
-import sernet.verinice.rcp.search.column.PersistedSortedColumnStore;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class SearchTableViewerFactory {
+public class ColumnStoreFactory {
 
-    final static Logger LOG = Logger.getLogger(SearchTableViewerFactory.class);
+    private static Map<String, ColumnStore> entity2ColumnStore = new HashMap<String, ColumnStore>();
 
-    public TableViewer getSearchResultTable(VeriniceSearchResultObject veriniceSearchResultObject, Composite parent) {
-
-        try {
-            IColumnStore columnStore = new PersistedSortedColumnStore(veriniceSearchResultObject.getEntityTypeId());
-            TableViewer viewer = new SearchResultsTableViewer(parent, columnStore, veriniceSearchResultObject);
-
-            return viewer;
-        } catch (Exception ex) {
-            LOG.debug("creating table failed", ex);
-            throw new RuntimeException(ex);
+    public static ColumnStore getColumnStore(String entityTypeId) {
+        if (entity2ColumnStore.containsKey(entityTypeId)) {
+            return entity2ColumnStore.get(entityTypeId);
+        } else {
+            entity2ColumnStore.put(entityTypeId, new PersistedSortedColumnStore(entityTypeId));
         }
-    }
 
+        return entity2ColumnStore.get(entityTypeId);
+    }
 }

@@ -19,15 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.tables;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnLabelProvider;
-import org.eclipse.jface.viewers.ColumnViewer;
-import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -35,9 +29,8 @@ import org.eclipse.swt.widgets.Table;
 
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
-import sernet.verinice.model.search.VeriniceSearchResultRow;
-import sernet.verinice.rcp.search.ColumnStore;
-import sernet.verinice.rcp.search.IColumnStore;
+import sernet.verinice.rcp.search.column.IColumn;
+import sernet.verinice.rcp.search.column.IColumnStore;
 
 /**
  *
@@ -53,44 +46,34 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
 
         super(parent);
 
-        this.columnStore = columnStore;
-
         Table table = getTable();
-
-        setContentProvider(this);
-
-        createColumns();
-
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
+        this.columnStore = columnStore;
+
+        createColumns();
+
+        setContentProvider(this);
         setInput(veriniceSearchResultObject);
-        refresh();
+
+
+
+        parent.pack(true);
     }
 
     private void createColumns() {
 
-        for (final PropertyType propertyType : columnStore.getColumns()) {
+        for (final IColumn col : columnStore.getColumns()) {
 
             TableViewerColumn column = new TableViewerColumn(this, SWT.NONE);
-            column.setLabelProvider(new ColumnLabelProvider() {
-
-                @Override
-                public String getText(Object element) {
-                    VeriniceSearchResultRow row = (VeriniceSearchResultRow) element;
-                    return row.getValueFromResultString(propertyType.getName());
-                }
-            });
-
+            column.getColumn().setText(col.getColumnText());
+            column.getColumn().setMoveable(true);
+            column.getColumn().setResizable(true);
+            column.setLabelProvider(new SearchTableColumnLabelProvider(col));
         }
-
     }
 
-
-    @Override
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
-    }
 
     @Override
     public void dispose() {
@@ -104,6 +87,15 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
         }
 
         return new Object[0];
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+     */
+    @Override
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        // TODO Auto-generated method stub
+
     }
 
 }

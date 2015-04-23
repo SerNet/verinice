@@ -18,11 +18,12 @@
  *     benjamin <bw[at]sernet[dot]de> - initial API and implementation
  *     Daniel Murygin <dm[at]sernet[dot]de> - Additional improvements
  ******************************************************************************/
-package sernet.verinice.rcp.search;
+package sernet.verinice.rcp.search.column;
 
 import java.util.SortedSet;
 
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.rcp.search.SearchView;
 
 /**
  * Stores a set of visible and invisible columns / {@link PropertyType}s. Is
@@ -37,24 +38,24 @@ public interface IColumnStore {
      * Returns a set of columns which should be visible in the search view
      * table.
      */
-    public SortedSet<PropertyType> getColumns();
+    public SortedSet<IColumn> getColumns();
 
     /**
      * Returns all possible columns for an {@link Entity} minus the columns
      * which are returned by {{@link #getColumns()}. Possible Columns are
      * defined in the SNCA.xml.
      */
-    public SortedSet<PropertyType> getInvisible();
+    public SortedSet<IColumn> getInvisible();
 
     /**
      * Adds a column. The column is visible by default.
      */
-    public void addColumn(PropertyType column);
+    public void addColumn(IColumn column);
 
     /**
      * Configures visibility of column.
      */
-    public void setVisible(PropertyType column, boolean visible);
+    public void setVisible(IColumn column, boolean visible);
 
     /**
      * Set the visibility columns back to default.
@@ -65,6 +66,6 @@ public interface IColumnStore {
      * Returns all visible and un not visible columns.
      *
      */
-    public SortedSet<PropertyType> getAllColumns();
+    public SortedSet<IColumn> getAllColumns();
 
 }

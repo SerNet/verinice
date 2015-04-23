@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 benjamin.
+ * Copyright (c) 2015 Benjamin Weißenfels.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,28 +15,31 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     benjamin <bw[at]sernet[dot]de> - initial API and implementation
+ *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.search;
+package sernet.verinice.rcp.search.column;
 
-import java.util.HashMap;
-import java.util.Map;
+import sernet.hui.common.connect.PropertyType;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
- *
  */
-public class ColumnStoreFactory {
+public class IColumnFactory {
 
-    private static Map<String, ColumnStore> entity2ColumnStore = new HashMap<String, ColumnStore>();
+    public static IColumn getTitleColumn(String title) {
+        return new TitleColumn(title);
+    }
 
-    public static ColumnStore getColumnStore(String entityTypeId) {
-        if (entity2ColumnStore.containsKey(entityTypeId)) {
-            return entity2ColumnStore.get(entityTypeId);
-        } else {
-            entity2ColumnStore.put(entityTypeId, new PersistedColumnStore(entityTypeId));
-        }
+    public static IColumn getIconColumn(String imagePath) {
+        return new IconColumn(imagePath);
+    }
 
-        return entity2ColumnStore.get(entityTypeId);
+    public static IColumn getScopeColumn(String scope) {
+        return new ScopeColumn(scope);
+    }
+
+
+    public static IColumn getPropertyTypeColumn(PropertyType propertyType) {
+        return new PropertyTypeColumn(propertyType);
     }
 }

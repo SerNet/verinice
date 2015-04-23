@@ -17,7 +17,7 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.search;
+package sernet.verinice.rcp.search.column;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ import sernet.hui.common.connect.PropertyType;
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class PersistedColumnStore extends ColumnStore {
+public class PersistedSortedColumnStore extends ColumnStore {
 
     /**
      * All properties tag width this constant are displayed as default column.
@@ -48,7 +48,7 @@ public class PersistedColumnStore extends ColumnStore {
 
     private final static String COLUMNS_PERSISTED = "search_table_columns_preferences_";
 
-    public PersistedColumnStore(String entityTypeId) {
+    public PersistedSortedColumnStore(String entityTypeId) {
         super();
 
         this.entityTypeId = entityTypeId;
@@ -63,20 +63,22 @@ public class PersistedColumnStore extends ColumnStore {
     @Override
     public void restoreDefault() {
         for (PropertyType propertyType : getAllPropertyTypes()) {
-            if (isDefaultColumn(propertyType)) {
-                addColumn(propertyType);
+            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType);
+            if (isDefaultColumn(col)) {
+                addColumn(col);
             } else {
-                setVisible(propertyType, false);
+                setVisible(col, false);
             }
         }
     }
 
     private void readColumns() {
         for (PropertyType propertyType : getAllPropertyTypes()) {
-            if (isColumnVisible(propertyType)) {
-                addColumn(propertyType);
+            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType);
+            if (isColumnVisible(col)) {
+                addColumn(col);
             } else {
-                setVisible(propertyType, false);
+                setVisible(col, false);
             }
         }
 
@@ -86,18 +88,20 @@ public class PersistedColumnStore extends ColumnStore {
         return preferenceStore.getBoolean(COLUMNS_PERSISTED + entityTypeId);
     }
 
-    private boolean isColumnVisible(PropertyType column) {
+    private boolean isColumnVisible(IColumn column) {
         return preferenceStore.getBoolean((getPropertyVisibilitySettingIdentifier(column)));
     }
 
-    private String getPropertyVisibilitySettingIdentifier(PropertyType propertyType) {
-        return COLUMN_PREFIX + propertyType.getName();
+    private String getPropertyVisibilitySettingIdentifier(IColumn propertyType) {
+        return COLUMN_PREFIX + propertyType.getTitle();
     }
 
-    public boolean isDefaultColumn(PropertyType propertyType) {
+    public boolean isDefaultColumn(IColumn propertyType) {
 
-        if (propertyType.getTags() != null) {
-            return propertyType.getTags().toLowerCase().contains(DEFAULT_TAG_BASIC);
+        if (propertyType instanceof PropertyTypeColumn) {
+            if (((PropertyTypeColumn) propertyType).getPropertyTags() != null) {
+                return ((PropertyTypeColumn) propertyType).getPropertyTags().toLowerCase().contains(DEFAULT_TAG_BASIC);
+            }
         }
 
         return false;
@@ -111,13 +115,13 @@ public class PersistedColumnStore extends ColumnStore {
     }
 
     @Override
-    public void addColumn(PropertyType column) {
+    public void addColumn(IColumn column) {
         super.addColumn(column);
         preferenceStore.setValue(getPropertyVisibilitySettingIdentifier(column), true);
     }
 
     @Override
-    public void setVisible(PropertyType column, boolean visible) {
+    public void setVisible(IColumn column, boolean visible) {
         super.setVisible(column, visible);
         preferenceStore.setValue(getPropertyVisibilitySettingIdentifier(column), false);
     }

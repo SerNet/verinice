@@ -32,6 +32,10 @@ import org.apache.commons.io.FileUtils;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.rcp.search.column.ColumnStore;
+import sernet.verinice.rcp.search.column.IColumn;
+import sernet.verinice.rcp.search.column.IColumnFactory;
+import sernet.verinice.rcp.search.column.IColumnStore;
 
 import com.opencsv.CSVWriter;
 
@@ -104,20 +108,21 @@ public class CsvExport implements ICsvExport {
     }
 
     private void exportHeader(IColumnStore columnStore, CSVWriter csvWriter) {
-        Iterator<PropertyType> columns = columnStore.getColumns().iterator();
+        Iterator<IColumn> columns = columnStore.getColumns().iterator();
         String[] csvColumns = new String[columnStore.getColumns().size()];
         for (int i = 0; i < csvColumns.length; i++) {
-            csvColumns[i] = columns.next().getId();          
+            IColumn column = columns.next();
+            csvColumns[i] = column.getTitle();
         }
         csvWriter.writeNext(csvColumns);
     }
 
     private void exportRow(VeriniceSearchResultRow row, IColumnStore columnStore, CSVWriter csvWriter) {
-        Set<PropertyType> columns = columnStore.getColumns();
+        Set<IColumn> columns = columnStore.getColumns();
         String[] rowArray = new String[columns.size()];
         int i=0;
-        for (PropertyType type : columns ) {
-            rowArray[i] = row.getValueFromResultString(type.getId());
+        for (IColumn column : columns ) {
+            rowArray[i] = row.getValueFromResultString(column.getColumnText());
             i++;                         
         }
         csvWriter.writeNext(rowArray);
@@ -131,7 +136,7 @@ public class CsvExport implements ICsvExport {
             for (String id : types ) {
                 PropertyType type = new PropertyType();
                 type.setId(id);   
-                columnStore.setVisible(type, true); 
+                columnStore.setVisible(IColumnFactory.getPropertyTypeColumn(type), true);
             }                                 
         }
         return columnStore;

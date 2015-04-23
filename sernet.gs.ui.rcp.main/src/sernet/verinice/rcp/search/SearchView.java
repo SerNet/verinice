@@ -193,6 +193,7 @@ public class SearchView extends RightsEnabledView {
         queryText = new Text(searchComposite, SWT.SINGLE | SWT.BORDER);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         gridData.minimumWidth = 30;
+        gridData.horizontalSpan = 2;
         queryText.setLayoutData(gridData);
         queryText.addKeyListener(new KeyListener() {
 
@@ -237,8 +238,10 @@ public class SearchView extends RightsEnabledView {
 
         GridData resultsByTypeComboGridData = new GridData();
         resultsByTypeComboGridData.horizontalAlignment = SWT.FILL;
-        resultsByTypeComboGridData.horizontalSpan = 2;
+        resultsByTypeComboGridData.horizontalSpan = 3;
         resultCombo.setLayoutData(resultsByTypeComboGridData);
+
+
     }
 
     private Composite createSearchComposite(Composite composite) {
@@ -298,6 +301,8 @@ public class SearchView extends RightsEnabledView {
         }
 
         currentViewer = tableFactory.getSearchResultTable(veriniceSearchResultObject, searchComposite);
+        currentViewer.refresh();
+        currentViewer.getControl().pack();
     }
 
     private void search() {
