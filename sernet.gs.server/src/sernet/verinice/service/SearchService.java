@@ -18,7 +18,6 @@
 package sernet.verinice.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,9 +31,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.MultiSearchResponse;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.common.text.Text;
-import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.highlight.HighlightField;
@@ -43,9 +39,10 @@ import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
@@ -66,14 +63,19 @@ public class SearchService implements ISearchService {
 
     @Resource(name = "searchElementDao")
     protected IElementSearchDao searchDao;
+    
+    @Resource(name ="configurationService")
+    protected IConfigurationService configurationService;
+    
+    @Resource(name = "authenticationService")
+    protected IAuthService authenticationService;
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.search.ISearchService#query(sernet.verinice.model.search.VeriniceQuery)
      */
     @Override
     public VeriniceSearchResult query(VeriniceQuery veriniceQuery) {
-//        return executeSimpleQuery(veriniceQuery.getQuery());
-        return getSearchResultsByQueryBuilder(veriniceQuery.getQuery(), null);
+        return getSearchResultsByQueryBuilder(veriniceQuery, null);
     }
 
     /*
@@ -145,10 +147,6 @@ public class SearchService implements ISearchService {
         return results;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#getSearchResults(java.lang.String, java.lang.String)
-     */
-//    @Override
     /**
      * method to experiment with different query builders
      * @param query
@@ -156,24 +154,15 @@ public class SearchService implements ISearchService {
      * @return
      */
     @Override
-    public VeriniceSearchResult getSearchResultsByQueryBuilder(String query, String typeID) {
-//        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-//        QueryStringQueryBuilder queryBuilder = QueryBuilders.queryString(query);
-//        queryBuilder.defaultOperator(QueryStringQueryBuilder.Operator.OR);
-//        queryBuilder.analyzeWildcard(true);
-//        queryBuilder.lenient(true);
-//        searchSourceBuilder.query(queryBuilder);
+    public VeriniceSearchResult getSearchResultsByQueryBuilder(VeriniceQuery query, String typeID) {
         VeriniceSearchResult results = new VeriniceSearchResult();
         if(StringUtils.isNotEmpty(typeID)){
-            results.addVeriniceSearchObject(processMultiSearchRequest(typeID, searchDao.prepareQueryWithAllFields(typeID, query)));
+            results.addVeriniceSearchObject(processMultiSearchRequest(typeID, searchDao.prepareQueryWithAllFields(typeID, query, getAuthenticationService().getUsername())));
         } else {
             for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
-                results.addVeriniceSearchObject(processMultiSearchRequest(type.getId(), searchDao.prepareQueryWithAllFields(type.getId(), query)));
+                results.addVeriniceSearchObject(processMultiSearchRequest(type.getId(), searchDao.prepareQueryWithAllFields(type.getId(), query, getAuthenticationService().getUsername())));
             }
         }
-//        srb = addResultCountReduceFilter(srb);
-//        srb = addAccessFilter(srb);
-//        SearchHits hits = searchDao.findByPhrase(query, typeID).getHits();
         return results;
     }
 
@@ -185,12 +174,7 @@ public class SearchService implements ISearchService {
      */
     private VeriniceSearchResultObject processMultiSearchRequest(String typeID, MultiSearchRequestBuilder msrb) {
         List<SearchHit> hitList = new ArrayList<SearchHit>(0);
-//        for(Item item : searchDao.executeMultiSearch(srb).getResponses()){
-//            for(SearchHit hit : item.getResponse().getHits().getHits()){
-//                hitList.add(hit);
-//            }
-//        }
-        
+
         MultiSearchResponse msr = searchDao.executeMultiSearch(msrb);
         for(MultiSearchResponse.Item i : msr.getResponses()){
             for(SearchHit hit : i.getResponse().getHits().getHits()){
@@ -198,7 +182,6 @@ public class SearchService implements ISearchService {
             }
         }
         String identifier = "";
-//        VeriniceSearchResultObject results = new VeriniceSearchResultObject(getTypeIDTranslation(typeID));
         VeriniceSearchResultObject results = new VeriniceSearchResultObject(getTypeIDTranslation(typeID));
         for(SearchHit hit : hitList){
             identifier = hit.getId();
@@ -294,14 +277,6 @@ public class SearchService implements ISearchService {
         return JsonBuilder.getJson(element);
     }
 
-    private Text[] getFirstOccurence(SearchHit hit) {
-        Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
-        if (iter.hasNext()) {
-            return iter.next().getValue().getFragments();
-        }
-        return null;
-    }
-
     /**
      * @return the searchIndexer
      */
@@ -374,6 +349,20 @@ public class SearchService implements ISearchService {
     @Override
     public MultiSearchRequestBuilder addAccessFilter(MultiSearchRequestBuilder srb) {
         return srb;
+    }
+
+    /**
+     * @return the authenticationService
+     */
+    public IAuthService getAuthenticationService() {
+        return authenticationService;
+    }
+
+    /**
+     * @param authenticationService the authenticationService to set
+     */
+    public void setAuthenticationService(IAuthService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
 }

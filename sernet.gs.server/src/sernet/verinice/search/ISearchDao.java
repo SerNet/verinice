@@ -32,6 +32,7 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 
 import sernet.verinice.interfaces.search.ISearchService;
+import sernet.verinice.model.search.VeriniceQuery;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -71,9 +72,9 @@ public interface ISearchDao {
 
     public SearchResponse find(String property, String title, Operator operator);
     
-    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, String phrase);
+    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query, String username);
     
-    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId);
+    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId, String username);
     
     public MultiSearchResponse executeMultiSearch(MultiSearchRequestBuilder srb);
 }

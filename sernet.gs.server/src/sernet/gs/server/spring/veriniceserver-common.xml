@@ -319,6 +319,7 @@ This variant:
      <bean id="searchService" class="sernet.verinice.service.SearchService">
      	<property name="searchDao" ref="searchElementDao" />
      	<property name="searchIndexer" ref="searchIndexer" />
+     	<property name="authenticationService" ref="authService" />
      </bean>
     
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->

@@ -19,7 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,10 +44,14 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.index.engine.DocumentMissingException;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
+import org.elasticsearch.index.query.OrFilterBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.verinice.interfaces.ApplicationRoles;
+import sernet.verinice.interfaces.IConfigurationService;
+import sernet.verinice.model.search.VeriniceQuery;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -54,6 +61,11 @@ public abstract class BaseDao implements ISearchDao {
     private static final Logger LOG = Logger.getLogger(BaseDao.class);
     
     private ElasticsearchClientFactory clientFactory;
+    
+    private IConfigurationService configurationService;
+    
+    private final String preGroupPattern = ".*(";
+    private final String postGroupPattern = "\\(r{1}w?\\)\\,+).*";
     
   
     /* (non-Javadoc)
@@ -170,20 +182,19 @@ public abstract class BaseDao implements ISearchDao {
     }
     
     @Override
-    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, String phrase){
+    public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query, String username){
         Map<String, String> map = new ConcurrentHashMap<String, String>();
         for(String property : HUITypeFactory.getInstance().getEntityType(typeId).getAllPropertyTypeIds()){
-            map.put(property, phrase);
+            map.put(property, query.getQuery());
         }
-        map.put("title", phrase);
-        map.put("element-type", phrase);
-//        return prepareQueryWithSpecializedFields(map, typeId);
-        return buildBooleanMultiFieldQuery(map, typeId);
+        map.put("title", query.getQuery());
+        map.put("element-type", query.getQuery());
+        return buildBooleanMultiFieldQuery(map, typeId, username);
         
     }
     
     @Override
-    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId){
+    public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId, String username){
         MultiSearchRequestBuilder multiSearchBuilder = getClient().prepareMultiSearch();
 
         for(String field : fieldmap.keySet()){
@@ -206,36 +217,47 @@ public abstract class BaseDao implements ISearchDao {
         return multiSearchBuilder;
     }
     
-    private MultiSearchRequestBuilder buildBooleanMultiFieldQuery(Map<String, String> map, String typeId){
+    private MultiSearchRequestBuilder buildBooleanMultiFieldQuery(Map<String, String> map, String typeId, String username){
         Set<String> highlightProperties = new HashSet<String>(0);
         MultiSearchRequestBuilder msrb = getClient().prepareMultiSearch();
         for(String propertyTypeId : HUITypeFactory.getInstance().getEntityType(typeId).getAllPropertyTypeIds()){
             highlightProperties.add(propertyTypeId);
         }
-//        BoolQueryBuilder bqb = QueryBuilders.boolQuery();
-//        
-//        if(typeId != null && !("".equals(typeId))){
-//            bqb.must(QueryBuilders.termQuery("element-type", typeId));
-//            
-//        }
-//        msrb.add(getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH).setQuery(QueryBuilders.matchPhraseQuery("element-type", typeId)));
         
         for(String field : map.keySet()){
             String value = map.get(field);
             if(value != null){
-                SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                        .setQuery(QueryBuilders.filteredQuery(QueryBuilders.matchPhraseQuery(field, value), FilterBuilders.inFilter("element-type", new String[]{typeId})));
-                    
-                
+                OrFilterBuilder ofb = null;
+                for(String role : getRoleString(username)){
+                    if(ofb == null){
+                        ofb = FilterBuilders.orFilter(FilterBuilders.regexpFilter("permission-role", role));
+                    } else {
+                        ofb.add(FilterBuilders.regexpFilter("permission-role", role));
+                    }
+                }
+                SearchRequestBuilder srb = null;
+                if(ofb != null){
+                    srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                            .setQuery(QueryBuilders.filteredQuery(
+                                    QueryBuilders.filteredQuery(
+                                            QueryBuilders.matchPhraseQuery(field, value), ofb) 
+                                            ,FilterBuilders.inFilter("element-type", new String[]{typeId}))
+                                    );
+                } else {
+                    srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                            .setQuery(QueryBuilders.filteredQuery(
+                                    QueryBuilders.matchPhraseQuery(field, value) 
+                                            ,FilterBuilders.inFilter("element-type", new String[]{typeId}))
+                                    );
+                }
+
                 
                 for(String s : highlightProperties){
                     srb.addHighlightedField(s);
                 }
-//                srb.setPostFilter(FilterBuilders.regexpFilter(ISearchDao.FIELD_PERMISSION, ISearchDao.PATTERN_IS_READ_ALLOWED));
                 msrb.add(srb);
             }
         }
-//        msrb.setIndicesOptions(null);
         return msrb;
     }
     
@@ -338,5 +360,40 @@ public abstract class BaseDao implements ISearchDao {
 
     public void setClientFactory(ElasticsearchClientFactory clientFactory) {
         this.clientFactory = clientFactory;
+    }
+    
+    private List<String> getRoleString(String username){
+      List<String> applicationRoles = Arrays.asList(new String[]{ApplicationRoles.ROLE_ADMIN, 
+              ApplicationRoles.ROLE_GUEST,
+              ApplicationRoles.ROLE_LDAPUSER, 
+              ApplicationRoles.ROLE_USER,
+              ApplicationRoles.ROLE_WEB});
+      List<String> userRoles = new ArrayList<String>(0);
+      String[] roles = getConfigurationService().getRoles(username);
+      for(int i = 0; i < roles.length; i++){
+          if(!applicationRoles.contains(roles[i])){
+              userRoles.add(getGroupPattern(roles[i]));
+          }
+      }
+      return userRoles;
+    }
+
+    /**
+     * @return the confService
+     */
+    public IConfigurationService getConfigurationService() {
+        return configurationService;
+    }
+
+    /**
+     * @param confService the confService to set
+     */
+    public void setConfigurationService(IConfigurationService confService) {
+        this.configurationService = confService;
+    }
+    
+    private String getGroupPattern (String groupname){
+        StringBuilder sb = new StringBuilder();
+        return sb.append(preGroupPattern).append(groupname).append(postGroupPattern).toString();
     }
 }

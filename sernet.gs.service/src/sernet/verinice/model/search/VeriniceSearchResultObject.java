@@ -20,11 +20,9 @@ package sernet.verinice.model.search;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
-
-import org.apache.commons.lang.NotImplementedException;
+import java.util.Set;
 
 import sernet.hui.common.connect.HUITypeFactory;
 
@@ -37,10 +35,10 @@ public class VeriniceSearchResultObject implements Serializable {
     private String typeId;
 
     private int hits = 0;
-
+    
     public VeriniceSearchResultObject(String typeId){
         this.typeId = typeId;
-        this.results = new ArrayList<VeriniceSearchResultRow>(0);
+        this.results = new ArrayList<VeriniceSearchResultRow>();
     }
 
     public void addSearchResult(VeriniceSearchResultRow result){
@@ -53,6 +51,11 @@ public class VeriniceSearchResultObject implements Serializable {
     }
 
     public List<VeriniceSearchResultRow> getAllResults(){
+        Set<VeriniceSearchResultRow> set = new HashSet<VeriniceSearchResultRow>();
+        set.addAll(results);
+        results.clear();
+        results.addAll(set);
+        hits = results.size();
         return results;
     }
 

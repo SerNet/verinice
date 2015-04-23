@@ -30,6 +30,7 @@
 
 	<bean id="searchElementDao" class="sernet.verinice.search.ElementDao">
 		<property name="clientFactory" ref="clientFactory" />
+		<property name="configurationService" ref="configurationService" />
 	</bean>
 
 </beans>

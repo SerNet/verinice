@@ -115,7 +115,7 @@ public interface ISearchService {
     
     String[] getInternationalReplacements(String input);
     
-    VeriniceSearchResult getSearchResultsByQueryBuilder(String query, String typeID);
+    VeriniceSearchResult getSearchResultsByQueryBuilder(VeriniceQuery query, String typeID);
     
     
 
