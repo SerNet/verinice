@@ -19,26 +19,24 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
-import sernet.hui.common.connect.PropertyType;
-
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class IColumnFactory {
+public abstract class AbstractColumn implements IColumn {
 
-    public static IColumn getTitleColumn(ColumnStore columnStore) {
-        return new TitleColumn(columnStore);
+    IColumnStore columnStore;
+
+    public AbstractColumn(ColumnStore columnStore) {
+        this.columnStore = columnStore;
     }
 
-    public static IColumn getIconColumn(ColumnStore columnStore) {
-        return new IconColumn(columnStore);
+    @Override
+    public void setVisible(boolean visible) {
+        columnStore.setVisible(this, visible);
     }
 
-    public static IColumn getScopeColumn(ColumnStore columnStore) {
-        return new ScopeColumn(columnStore);
-    }
-
-    public static IColumn getPropertyTypeColumn(PropertyType propertyType, ColumnStore columnStore) {
-        return new PropertyTypeColumn(columnStore, propertyType);
+    @Override
+    public boolean isVisible() {
+        return columnStore.isColumnVisible(this);
     }
 }

@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -28,15 +26,8 @@ import java.util.Map;
  */
 public class ColumnStoreFactory {
 
-    private static Map<String, ColumnStore> entity2ColumnStore = new HashMap<String, ColumnStore>();
 
     public static ColumnStore getColumnStore(String entityTypeId) {
-        if (entity2ColumnStore.containsKey(entityTypeId)) {
-            return entity2ColumnStore.get(entityTypeId);
-        } else {
-            entity2ColumnStore.put(entityTypeId, new PersistedSortedColumnStore(entityTypeId));
-        }
-
-        return entity2ColumnStore.get(entityTypeId);
+       return new PersistedSortedColumnStore(entityTypeId);
     }
 }

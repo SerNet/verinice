@@ -23,6 +23,9 @@ import org.eclipse.jface.viewers.ColumnLabelProvider;
 
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.column.IColumn;
+import sernet.verinice.rcp.search.column.IconColumn;
+import sernet.verinice.rcp.search.column.ScopeColumn;
+import sernet.verinice.rcp.search.column.TitleColumn;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -32,6 +35,7 @@ public class SearchTableColumnLabelProvider extends ColumnLabelProvider {
     private IColumn column;
 
     public SearchTableColumnLabelProvider(IColumn column) {
+        super();
         this.column = column;
     }
 
@@ -39,9 +43,24 @@ public class SearchTableColumnLabelProvider extends ColumnLabelProvider {
     public String getText(Object element) {
         if (element instanceof VeriniceSearchResultRow) {
             VeriniceSearchResultRow row = (VeriniceSearchResultRow) element;
-            return row.getValueFromResultString(column.getColumnText());
+
+
+            if(column instanceof IconColumn){
+                return row.getValueFromResultString(IconColumn.ICON_PROPERTY_NAME);
+            }
+
+            if(column instanceof TitleColumn)
+                return row.getValueFromResultString(TitleColumn.TITLE_PROPERTY_NAME);
+
+            if(column instanceof ScopeColumn){
+                return row.getValueFromResultString(ScopeColumn.SCOPE_PROPERTY_NAME);
+            }
+
+            return row.getValueFromResultString(column.getTitle());
+
         } else {
             throw new RuntimeException("you holded it wrong");
         }
     }
+
 }

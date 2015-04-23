@@ -20,67 +20,82 @@ package sernet.verinice.model.search;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.EntityType;
 
+
+/**
+ * Represents a table for the search view.
+ *
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ */
 @SuppressWarnings("serial")
 public class VeriniceSearchResultObject implements Serializable {
 
-
     private List<VeriniceSearchResultRow> results;
 
-    private String typeId;
+    private String id;
+
+    private String name;
 
     private int hits = 0;
-    
-    public VeriniceSearchResultObject(String typeId){
-        this.typeId = typeId;
-        this.results = new ArrayList<VeriniceSearchResultRow>();
+
+    private String[] propertyTypeIds;
+
+    /**
+     * Represents a pojo for the searchview.
+     *
+     * @param typeId
+     *            Is the return value of: {@link EntityType#getId()}
+     * @param name
+     *            This is the human readable name of the entity.
+     * @param propertyTypeIds
+     *            Is the return value of:
+     *            {@link EntityType#getAllPropertyTypeIds()}
+     */
+    public VeriniceSearchResultObject(String typeId, String name, String[] propertyTypeIds) {
+        this.id = typeId;
+        this.results = new ArrayList<VeriniceSearchResultRow>(0);
+        this.name = name;
+        this.propertyTypeIds = propertyTypeIds;
     }
 
-    public void addSearchResult(VeriniceSearchResultRow result){
+    public void addSearchResult(VeriniceSearchResultRow result) {
         results.add(result);
         hits++;
     }
 
-    public int getHits(){
+    public int getHits() {
         return hits;
     }
 
-    public List<VeriniceSearchResultRow> getAllResults(){
-        Set<VeriniceSearchResultRow> set = new HashSet<VeriniceSearchResultRow>();
-        set.addAll(results);
-        results.clear();
-        results.addAll(set);
-        hits = results.size();
+    public List<VeriniceSearchResultRow> getAllResults() {
         return results;
     }
 
-    public VeriniceSearchResultRow getSearchResultByUUID(String uuid){
-        for(VeriniceSearchResultRow result : results){
-            if(uuid.equals(result.getIdentifier())){
+    public VeriniceSearchResultRow getSearchResultByUUID(String uuid) {
+        for (VeriniceSearchResultRow result : results) {
+            if (uuid.equals(result.getIdentifier())) {
                 return result;
             }
         }
         return null;
     }
 
-    public String[] getDefaultColumns(String typeId){
-        // TODO get default columns for objecttype from somewhere
-        return new String[]{};
-    }
-    public String[] getAllColumns(){
-        return HUITypeFactory.getInstance().getEntityType(typeId).getAllPropertyTypeIds();
+    public String[] getAllColumns() {
+        return propertyTypeIds;
     }
 
-    public String getEntityTypeId(){
-        return typeId;
+    public String getEntityTypeId() {
+        return id;
     }
 
-    public List<VeriniceSearchResultRow> getRows(){
+    public String getEntityName() {
+        return name;
+    }
+
+    public List<VeriniceSearchResultRow> getRows() {
         return results;
     }
 
@@ -90,7 +105,7 @@ public class VeriniceSearchResultObject implements Serializable {
         int result = 1;
         result = prime * result + hits;
         result = prime * result + ((results == null) ? 0 : results.hashCode());
-        result = prime * result + ((typeId == null) ? 0 : typeId.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
 
@@ -110,10 +125,10 @@ public class VeriniceSearchResultObject implements Serializable {
                 return false;
         } else if (!results.equals(other.results))
             return false;
-        if (typeId == null) {
-            if (other.typeId != null)
+        if (id == null) {
+            if (other.id != null)
                 return false;
-        } else if (!typeId.equals(other.typeId))
+        } else if (!id.equals(other.id))
             return false;
         return true;
     }

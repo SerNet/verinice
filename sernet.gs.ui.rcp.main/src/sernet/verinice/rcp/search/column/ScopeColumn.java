@@ -22,31 +22,16 @@ package sernet.verinice.rcp.search.column;
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class ScopeColumn implements IColumn {
-
-    private String scope;
+public class ScopeColumn extends AbstractColumn {
 
 
-    public ScopeColumn(String scope) {
-        this.scope = scope;
+    public ScopeColumn(ColumnStore columnStore) {
+        super(columnStore);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#getColumnText()
-     */
-    @Override
-    public String getColumnText() {
-        return scope;
-    }
+    private final static String SCOPE_COLUMN = "scope";
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#getImagePath()
-     */
-    @Override
-    public String getImagePath() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    public final static String SCOPE_PROPERTY_NAME = "scope-id";
 
     /* (non-Javadoc)
      * @see sernet.verinice.rcp.search.column.IColumn#isMultiselect()
@@ -143,7 +128,12 @@ public class ScopeColumn implements IColumn {
      */
     @Override
     public String getTitle() {
-        return "scope";
+        return SCOPE_COLUMN;
+    }
+
+    @Override
+    public int getRank(){
+        return -1;
     }
 
 }

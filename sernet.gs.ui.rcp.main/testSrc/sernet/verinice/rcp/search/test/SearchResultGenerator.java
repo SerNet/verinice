@@ -48,12 +48,15 @@ public final class SearchResultGenerator {
     
     public static VeriniceSearchResultObject createResult(String phrase) {
         String type = LOREM.randomWord();
-        VeriniceSearchResultObject result = new VeriniceSearchResultObject(type);
+
         List<String> propertyList = createPropertyList(type); 
+        VeriniceSearchResultObject result = new VeriniceSearchResultObject(type, type, propertyList.toArray(new String[propertyList.size()]));
         long n = Math.round(Math.random()*(getRows()*1.0)) + 1;
         for (int i = 0; i < n; i++) {
             result.addSearchResult(createRow(propertyList, phrase));
         }
+
+
         return result;
     }
 

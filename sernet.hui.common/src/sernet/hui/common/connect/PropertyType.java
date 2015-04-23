@@ -38,6 +38,7 @@ import sernet.hui.common.rules.NullRule;
  * @author prack
  * @version $Id: PropertyType.java,v 1.6 2006/10/20 14:55:16 aprack Exp $
  */
+@SuppressWarnings("serial")
 public class PropertyType implements IMLPropertyType, IEntityElement, Comparable<PropertyType>, Serializable {
 
 	private final Logger log = Logger.getLogger(PropertyType.class);

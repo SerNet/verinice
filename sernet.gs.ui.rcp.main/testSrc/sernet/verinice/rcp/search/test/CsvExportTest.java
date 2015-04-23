@@ -97,7 +97,7 @@ public class CsvExportTest {
         ICsvExport exporter = new CsvExport();
         exporter.setFilePath(getFilePath());
         String phrase = LOREM.randomWord();
-        VeriniceSearchResultObject result = new VeriniceSearchResultObject(phrase);
+        VeriniceSearchResultObject result = new VeriniceSearchResultObject(phrase, phrase, new String[]{});
         IColumnStore columnStore = CsvExport.createColumnStore(result);
         exporter.exportToFile(result, columnStore);  
         checkExportFile(result, columnStore);
@@ -150,8 +150,8 @@ public class CsvExportTest {
         Set<IColumn> columns = columnStore.getColumns();
         assertTrue("Wrong number of columns in CSV line: " + nextLine.length, nextLine.length==1 || columns.size()==nextLine.length);
         int i=0;
-        for (IColumn type : columns ) {
-            String searchResultValue = row.getValueFromResultString(type.getColumnText());
+        for (IColumn col : columns ) {
+            String searchResultValue = row.getValueFromResultString(col.getTitle());
             String csvValue = nextLine[i];
             while(!searchResultValue.isEmpty() && csvValue.isEmpty()) {
                 i++;

@@ -22,14 +22,15 @@ package sernet.verinice.rcp.search.column;
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class TitleColumn implements IColumn {
+public class TitleColumn extends AbstractColumn {
 
-    private String title;
-
-    public TitleColumn(String title) {
-        this.title = title;
+    public TitleColumn(ColumnStore columnStore) {
+        super(columnStore);
     }
 
+    private static final String TITLE_COLUMN = "title";
+
+    public final static String TITLE_PROPERTY_NAME = TITLE_COLUMN;
 
     /*
      * (non-Javadoc)
@@ -141,27 +142,19 @@ public class TitleColumn implements IColumn {
         return false;
     }
 
-    @Override
-    public String getTitle() {
-        return title;
-    }
 
     /*
      * (non-Javadoc)
      *
-     * @see sernet.verinice.rcp.search.column.IColumn#getColumnText()
+     * @see sernet.verinice.rcp.search.column.IColumn#getTitle()
      */
     @Override
-    public String getColumnText() {
-        return title;
+    public String getTitle() {
+        return TITLE_COLUMN;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#getImagePath()
-     */
     @Override
-    public String getImagePath() {
-        // TODO Auto-generated method stub
-        return null;
+    public int getRank() {
+        return -2;
     }
 }

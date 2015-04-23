@@ -68,4 +68,10 @@ public interface IColumnStore {
      */
     public SortedSet<IColumn> getAllColumns();
 
+    /**
+     * Checks the visibility of an column. If the column is not contained in
+     * this column store false will be returned.
+     */
+    public boolean isColumnVisible(IColumn iColumn);
+
 }

@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.hui.common.connect.PropertyType;
 
 /**
@@ -28,16 +29,18 @@ import sernet.hui.common.connect.PropertyType;
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class PropertyTypeColumn implements IColumn {
+public class PropertyTypeColumn extends AbstractColumn {
 
     private PropertyType propertyType;
 
-    public PropertyTypeColumn(PropertyType propertyType) {
-        super();
+    public PropertyTypeColumn(ColumnStore columnstore, PropertyType propertyType) {
+        super(columnstore);
         this.propertyType = propertyType;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.rcp.search.IColumn#isMultiselect()
      */
     @Override
@@ -45,7 +48,9 @@ public class PropertyTypeColumn implements IColumn {
         return (propertyType == null) ? false : propertyType.isMultiselect();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.rcp.search.IColumn#isSingleSelect()
      */
     @Override
@@ -53,7 +58,9 @@ public class PropertyTypeColumn implements IColumn {
         return (propertyType == null) ? false : propertyType.isSingleSelect();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.rcp.search.IColumn#isNumericSelect()
      */
     @Override
@@ -117,32 +124,22 @@ public class PropertyTypeColumn implements IColumn {
         return (propertyType == null) ? false : propertyType.isDate();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#getColumnText()
-     */
-    @Override
-    public String getColumnText() {
-        return propertyType.getName();
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#getImagePath()
-     */
-    @Override
-    public String getImagePath() {
-        return null;
-    }
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see sernet.verinice.rcp.search.column.IColumn#getTitle()
      */
     @Override
     public String getTitle() {
-        return propertyType.getId();
+        return propertyType.getName();
     }
 
-
-    public String getPropertyTags(){
+    public String getPropertyTags() {
         return propertyType.getTags();
+    }
+
+    @Override
+    public int getRank(){
+        return 0;
     }
 }

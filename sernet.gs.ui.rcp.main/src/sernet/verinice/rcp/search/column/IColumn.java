@@ -24,10 +24,6 @@ package sernet.verinice.rcp.search.column;
  */
 public interface IColumn {
 
-    public String getColumnText();
-
-    public String getImagePath();
-
     public String getTitle();
 
     public boolean isMultiselect();
@@ -49,5 +45,11 @@ public interface IColumn {
     public boolean isText();
 
     public boolean isDate();
+
+    public void setVisible(boolean visible);
+
+    public boolean isVisible();
+
+    public int getRank();
 
 }

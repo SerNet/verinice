@@ -22,24 +22,15 @@ package sernet.verinice.rcp.search.column;
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class IconColumn implements IColumn {
+public class IconColumn extends AbstractColumn {
 
-    private String iconPath;
-
-    public IconColumn(String iconPath) {
-        this.iconPath = iconPath;
+    public IconColumn(ColumnStore columnStore) {
+        super(columnStore);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#getColumnText()
-     */
-    @Override
-    public String getColumnText() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    private final static String ICON_COLUMN_TITLE = "icon";
 
-
+    public final static String ICON_PROPERTY_NAME = "icon-path";
 
     /* (non-Javadoc)
      * @see sernet.verinice.rcp.search.column.IColumn#isMultiselect()
@@ -131,21 +122,18 @@ public class IconColumn implements IColumn {
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#getImagePath()
-     */
-    @Override
-    public String getImagePath() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+
 
     /* (non-Javadoc)
      * @see sernet.verinice.rcp.search.column.IColumn#getTitle()
      */
     @Override
     public String getTitle() {
-        return "";
+        return ICON_COLUMN_TITLE;
     }
 
+    @Override
+    public int getRank(){
+        return -4;
+    }
 }

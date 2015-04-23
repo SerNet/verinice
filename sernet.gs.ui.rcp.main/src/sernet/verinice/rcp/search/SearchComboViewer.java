@@ -28,13 +28,20 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 
 /**
+ * Viewer for a search result.
+ *
+ * Shows a set available {@link VeriniceSearchResultObject}. Displays the
+ * {@link VeriniceSearchResultObject} with the most hits first.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
@@ -44,7 +51,7 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
 
     public SearchComboViewer(Composite searchComboComposite, SearchView searchView) {
 
-        super(searchComboComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+        super(searchComboComposite, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL);
 
         this.searchView = searchView;
         this.setContentProvider(this);
@@ -57,7 +64,47 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
             }
         });
 
-        this.addSelectionChangedListener(this);;
+        this.addSelectionChangedListener(this);
+
+        this.setComparator(setSearchViewerComparator());
+    }
+
+    /**
+     * Entries are sorted by there hits pro {@link VeriniceSearchResultObject}.
+     * When hits are equal the entries are sorted by the
+     * {@link NumericStringComparator}.
+     *
+     * There is one interesting detail. Because in a sorted Set the smallest
+     * element comes first, the sign of the
+     * {@link VeriniceSearchResultObject#getHits()} has to be inverted. After
+     * that the {@link SearchComboViewer} shows the elements in a descending
+     * order.
+     *
+     */
+    private ViewerComparator setSearchViewerComparator() {
+        return new ViewerComparator() {
+
+            NumericStringComparator comparator = new NumericStringComparator();
+
+            public int compare(Viewer viewer, Object object1, Object object2) {
+
+                if (object1 instanceof VeriniceSearchResultObject && object2 instanceof VeriniceSearchResultObject) {
+
+                    VeriniceSearchResultObject vResultObject1 = (VeriniceSearchResultObject) object1;
+                    VeriniceSearchResultObject vResultObject2 = (VeriniceSearchResultObject) object2;
+
+                    if (vResultObject1.getHits() == vResultObject2.getHits()) {
+                        return comparator.compare(vResultObject1.getEntityName(), vResultObject2.getEntityName());
+                    } else {
+                        return Integer.compare(-vResultObject1.getHits(), -vResultObject2.getHits());
+                    }
+
+                } else {
+                    return super.compare(viewer, object1, object2);
+                }
+
+            }
+        };
     }
 
     /*
@@ -105,14 +152,16 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
         }
     }
 
-
     /*
      * (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+     *
+     * @see
+     * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
+     * org.eclipse.jface.viewers.SelectionChangedEvent)
      */
     @Override
     public void selectionChanged(SelectionChangedEvent event) {
-        if(!event.getSelection().isEmpty()){
+        if (!event.getSelection().isEmpty()) {
             VeriniceSearchResultObject veriniceSearchResultObject = (VeriniceSearchResultObject) ((StructuredSelection) event.getSelection()).getFirstElement();
             searchView.setTableViewer(veriniceSearchResultObject);
         }

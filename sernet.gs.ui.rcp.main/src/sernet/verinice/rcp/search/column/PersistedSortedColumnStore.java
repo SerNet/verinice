@@ -57,24 +57,44 @@ public class PersistedSortedColumnStore extends ColumnStore {
             restoreDefault();
         }
 
-        readColumns();
+        initColumnStore();
     }
 
     @Override
     public void restoreDefault() {
+
+        IColumn iconColumn = IColumnFactory.getIconColumn(this);
+        IColumn titleColumn = IColumnFactory.getTitleColumn(this);
+        IColumn scopeColumn = IColumnFactory.getScopeColumn(this);
+
+        addColumn(iconColumn);
+        addColumn(titleColumn);
+        addColumn(scopeColumn);
+
         for (PropertyType propertyType : getAllPropertyTypes()) {
-            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType);
+            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this);
             if (isDefaultColumn(col)) {
                 addColumn(col);
             } else {
                 setVisible(col, false);
             }
         }
+
+        preferenceStore.setValue(COLUMNS_PERSISTED + entityTypeId, true);
     }
 
-    private void readColumns() {
+    private void initColumnStore() {
+
+        IColumn iconColumn = IColumnFactory.getIconColumn(this);
+        IColumn titleColumn = IColumnFactory.getTitleColumn(this);
+        IColumn scopeColumn = IColumnFactory.getScopeColumn(this);
+
+        addColumn(iconColumn);
+        addColumn(titleColumn);
+        addColumn(scopeColumn);
+
         for (PropertyType propertyType : getAllPropertyTypes()) {
-            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType);
+            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this);
             if (isColumnVisible(col)) {
                 addColumn(col);
             } else {
@@ -88,7 +108,7 @@ public class PersistedSortedColumnStore extends ColumnStore {
         return preferenceStore.getBoolean(COLUMNS_PERSISTED + entityTypeId);
     }
 
-    private boolean isColumnVisible(IColumn column) {
+    public boolean isColumnVisible(IColumn column) {
         return preferenceStore.getBoolean((getPropertyVisibilitySettingIdentifier(column)));
     }
 
@@ -123,6 +143,6 @@ public class PersistedSortedColumnStore extends ColumnStore {
     @Override
     public void setVisible(IColumn column, boolean visible) {
         super.setVisible(column, visible);
-        preferenceStore.setValue(getPropertyVisibilitySettingIdentifier(column), false);
+        preferenceStore.setValue(getPropertyVisibilitySettingIdentifier(column), visible);
     }
 }

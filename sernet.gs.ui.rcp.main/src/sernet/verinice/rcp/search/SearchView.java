@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -36,7 +37,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
@@ -49,6 +50,7 @@ import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.rcp.search.tables.SearchTableSorter;
 import sernet.verinice.rcp.search.tables.SearchTableViewerFactory;
 
 /**
@@ -81,6 +83,8 @@ public class SearchView extends RightsEnabledView {
     RightsEnabledAction reindex;
 
     private Composite searchComposite;
+
+    private Composite tableComposite;
 
     public SearchView() {
         super();
@@ -182,9 +186,14 @@ public class SearchView extends RightsEnabledView {
     }
 
     private void createComposite(Composite parent) {
+
         Composite composite = createContainerComposite(parent);
         searchComposite = createSearchComposite(composite);
+
+        // add elements to search form
         createSearchForm(searchComposite);
+
+        createTableComposite(searchComposite);
     }
 
     private void createSearchForm(Composite searchComposite) {
@@ -240,15 +249,20 @@ public class SearchView extends RightsEnabledView {
         resultsByTypeComboGridData.horizontalAlignment = SWT.FILL;
         resultsByTypeComboGridData.horizontalSpan = 3;
         resultCombo.setLayoutData(resultsByTypeComboGridData);
+    }
 
-
+    private Composite createContainerComposite(Composite parent) {
+        Composite composite = new Composite(parent, SWT.FILL);
+        composite.setLayout(new GridLayout(1, true));
+        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        return composite;
     }
 
     private Composite createSearchComposite(Composite composite) {
 
         Composite comboComposite = new Composite(composite, SWT.NONE);
 
-        GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
+        GridData gridData = new GridData(GridData.FILL_BOTH);
         comboComposite.setLayoutData(gridData);
 
         GridLayout gridLayout = new GridLayout(3, true);
@@ -258,11 +272,11 @@ public class SearchView extends RightsEnabledView {
         return comboComposite;
     }
 
-    private Composite createContainerComposite(Composite parent) {
-        Composite composite = new Composite(parent, SWT.FILL);
-        composite.setLayout(new GridLayout());
-        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-        return composite;
+    private void createTableComposite(Composite searchComposite2) {
+        tableComposite = new Composite(searchComposite, SWT.NONE);
+        GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        tableGridData.horizontalSpan = 3;
+        tableComposite.setLayoutData(tableGridData);
     }
 
     /*
@@ -300,16 +314,24 @@ public class SearchView extends RightsEnabledView {
             currentViewer.getTable().dispose();
         }
 
-        currentViewer = tableFactory.getSearchResultTable(veriniceSearchResultObject, searchComposite);
-        currentViewer.refresh();
+        currentViewer = tableFactory.getSearchResultTable(veriniceSearchResultObject, tableComposite);
+
+        MenuManager menuMgr = new MenuManager("#ContextMenu");
+        Menu menu = menuMgr.createContextMenu(currentViewer.getControl());
+
+        menuMgr.addMenuListener(new TableMenuListener(this, veriniceSearchResultObject));
+
+        currentViewer.getControl().setMenu(menu);
+        getSite().registerContextMenu(menuMgr, currentViewer);
+
         currentViewer.getControl().pack();
     }
 
     private void search() {
-       VeriniceQuery veriniceQuery = new VeriniceQuery();
-       veriniceQuery.setQuery(queryText.getText());
-       WorkspaceJob job = new SearchJob(veriniceQuery, searchButton, queryText, this);
-       job.schedule();
+        VeriniceQuery veriniceQuery = new VeriniceQuery();
+        veriniceQuery.setQuery(queryText.getText());
+        WorkspaceJob job = new SearchJob(veriniceQuery, searchButton, queryText, this);
+        job.schedule();
     }
     
     private void reindex() {
@@ -320,6 +342,7 @@ public class SearchView extends RightsEnabledView {
     public TableViewer getCurrentViewer() {
         return currentViewer;
     }
+
 
     public SearchTableSorter getTableSorter() {
         return tableSorter;

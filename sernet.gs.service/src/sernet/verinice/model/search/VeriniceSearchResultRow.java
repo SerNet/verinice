@@ -31,6 +31,8 @@ public class VeriniceSearchResultRow implements Serializable{
 
     private Map<String, String> properties;
 
+    private VeriniceSearchResultObject parent;
+
     /**
      * Should be uuid of corresponding {@link CnATreeElement}
      */
@@ -48,6 +50,11 @@ public class VeriniceSearchResultRow implements Serializable{
         this.properties = new HashMap<String, String>(0);
         this.identifier = identifier;
         this.occurence = occurence;
+    }
+
+    public VeriniceSearchResultRow(VeriniceSearchResultObject parent, String identifier, String occurence){
+        this(identifier, occurence);
+        this.parent = parent;
     }
 
 
@@ -116,4 +123,12 @@ public class VeriniceSearchResultRow implements Serializable{
             return false;
         return true;
     }
+
+
+    @Override
+    public String toString() {
+        return "VeriniceSearchResultRow [properties=" + properties + ", identifier=" + identifier + ", occurence=" + occurence + "]";
+    }
+
+
 }

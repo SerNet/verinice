@@ -70,11 +70,17 @@ public class SearchService implements ISearchService {
     @Resource(name = "authenticationService")
     protected IAuthService authenticationService;
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#query(sernet.verinice.model.search.VeriniceQuery)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#query(sernet.verinice
+     * .model.search.VeriniceQuery)
      */
     @Override
     public VeriniceSearchResult query(VeriniceQuery veriniceQuery) {
+        ServerInitializer.inheritVeriniceContextState();
+        // return executeSimpleQuery(veriniceQuery.getQuery());
         return getSearchResultsByQueryBuilder(veriniceQuery, null);
     }
 
@@ -89,7 +95,7 @@ public class SearchService implements ISearchService {
     public File exportSearchResultToCsv(VeriniceSearchResultObject result) {
         return null;
     }
-    
+
     @Override
     public VeriniceSearchResult executeSimpleQuery(String query) {
         ServerInitializer.inheritVeriniceContextState();
@@ -106,49 +112,58 @@ public class SearchService implements ISearchService {
 
         return veriniceSearchResult;
     }
-    
-    private String getTypeIDTranslation(String typeId){
-        return HUITypeFactory.getInstance().getMessage(typeId);
-    }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#getSearchResults(java.lang.String, java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#getSearchResults(java
+     * .lang.String, java.lang.String)
      */
     @Override
     public VeriniceSearchResultObject getSearchResults(String query, String typeID) {
+        ServerInitializer.inheritVeriniceContextState();
         SearchHits hits = searchDao.findByPhrase(query, typeID).getHits();
         String identifier = "";
-        VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID);
-        for(SearchHit hit : hits.getHits()){
+        VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID, getEntityName(typeID), getPropertyIds(typeID));
+        for (SearchHit hit : hits.getHits()) {
             identifier = hit.getId();
             StringBuilder occurence = new StringBuilder();
-            Iterator<Entry<String, HighlightField>> iter =hit.getHighlightFields().entrySet().iterator() ;  
-            while(iter.hasNext() ){
-                Entry<String, HighlightField> entry =  iter.next();
-                occurence.append("[" + entry.getKey()+ "]");
+            Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
+            while (iter.hasNext()) {
+                Entry<String, HighlightField> entry = iter.next();
+                occurence.append("[" + entry.getKey() + "]");
                 occurence.append("\t").append(entry.getValue().fragments()[0]);
-                if(iter.hasNext()){
+                if (iter.hasNext()) {
                     occurence.append("\n\n\n");
                 }
             }
-            
-            VeriniceSearchResultRow result = new VeriniceSearchResultRow(identifier, occurence.toString());
-            for(String key : hit.getSource().keySet()){
-                if(hit.getSource().get(key) != null){
-                    if(LOG.isDebugEnabled()){
+
+            VeriniceSearchResultRow result = new VeriniceSearchResultRow(results, identifier, occurence.toString());
+            for (String key : hit.getSource().keySet()) {
+                if (hit.getSource().get(key) != null) {
+                    if (LOG.isDebugEnabled()) {
                         LOG.debug("adding <" + key + ", " + hit.getSource().get(key).toString() + "> to properties of result");
                     }
                     result.addProperty(key, hit.getSource().get(key).toString());
                 }
             }
             results.addSearchResult(result);
-            
+
         }
         return results;
     }
 
+
+    private String getEntityName(String typeID) {
+        ServerInitializer.inheritVeriniceContextState();
+        return HUITypeFactory.getInstance().getEntityType(typeID).getName();
+    }
+
+
     /**
      * method to experiment with different query builders
+     *
      * @param query
      * @param typeID
      * @return
@@ -166,7 +181,6 @@ public class SearchService implements ISearchService {
         return results;
     }
 
-
     /**
      * @param typeID
      * @param msrb
@@ -176,30 +190,32 @@ public class SearchService implements ISearchService {
         List<SearchHit> hitList = new ArrayList<SearchHit>(0);
 
         MultiSearchResponse msr = searchDao.executeMultiSearch(msrb);
-        for(MultiSearchResponse.Item i : msr.getResponses()){
-            for(SearchHit hit : i.getResponse().getHits().getHits()){
+        for (MultiSearchResponse.Item i : msr.getResponses()) {
+            for (SearchHit hit : i.getResponse().getHits().getHits()) {
                 hitList.add(hit);
             }
         }
         String identifier = "";
-        VeriniceSearchResultObject results = new VeriniceSearchResultObject(getTypeIDTranslation(typeID));
-        for(SearchHit hit : hitList){
+        // VeriniceSearchResultObject results = new
+        // VeriniceSearchResultObject(getTypeIDTranslation(typeID));
+        VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID, getEntityName(typeID),  getPropertyIds(typeID));
+        for (SearchHit hit : hitList) {
             identifier = hit.getId();
             StringBuilder occurence = new StringBuilder();
-            Iterator<Entry<String, HighlightField>> iter =hit.getHighlightFields().entrySet().iterator() ;  
-            while(iter.hasNext() ){
-                Entry<String, HighlightField> entry =  iter.next();
-                occurence.append("[" + entry.getKey()+ "]");
+            Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
+            while (iter.hasNext()) {
+                Entry<String, HighlightField> entry = iter.next();
+                occurence.append("[" + entry.getKey() + "]");
                 occurence.append("\t").append(entry.getValue().fragments()[0]);
-                if(iter.hasNext()){
+                if (iter.hasNext()) {
                     occurence.append("\n\n\n");
                 }
             }
 
-            VeriniceSearchResultRow result = new VeriniceSearchResultRow(identifier, occurence.toString());
+            VeriniceSearchResultRow result = new VeriniceSearchResultRow(results, identifier, occurence.toString());
 
-            for(String key : hit.getSource().keySet()){
-                if(hit.getSource().get(key) != null){
+            for (String key : hit.getSource().keySet()) {
+                if (hit.getSource().get(key) != null) {
                     result.addProperty(key, hit.getSource().get(key).toString());
                 }
             }
@@ -207,6 +223,11 @@ public class SearchService implements ISearchService {
 
         }
         return results;
+    }
+
+    private String[] getPropertyIds(String typeID) {
+        ServerInitializer.inheritVeriniceContextState();
+        return HUITypeFactory.getInstance().getEntityType(typeID).getAllPropertyTypeIds();
     }
 
     /*
@@ -307,17 +328,21 @@ public class SearchService implements ISearchService {
         this.searchDao = searchDao;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#getNumericalValues(java.lang.String)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#getNumericalValues(java
+     * .lang.String)
      */
     @Override
     public Map<String, String> getNumericalValues(String input) {
         Map<String, String> map = new ConcurrentHashMap<String, String>();
-        for(EntityType entityType : HUITypeFactory.getInstance().getAllEntityTypes()){
-            for(PropertyType type : entityType.getAllPropertyTypes()){
-                if(type.isNumericSelect()){
-                    for(int i = type.getMinValue(); i <= type.getMaxValue(); i++){
-                        if(input.equals(type.getNameForValue(i))){
+        for (EntityType entityType : HUITypeFactory.getInstance().getAllEntityTypes()) {
+            for (PropertyType type : entityType.getAllPropertyTypes()) {
+                if (type.isNumericSelect()) {
+                    for (int i = type.getMinValue(); i <= type.getMaxValue(); i++) {
+                        if (input.equals(type.getNameForValue(i))) {
                             map.put(type.getId(), String.valueOf(i));
                         }
                     }
@@ -327,24 +352,36 @@ public class SearchService implements ISearchService {
         return map;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#getInternationalReplacements(java.lang.String)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#getInternationalReplacements
+     * (java.lang.String)
      */
     @Override
     public String[] getInternationalReplacements(String input) {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#addResultCountReduceFilter(org.elasticsearch.action.search.SearchRequestBuilder)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#addResultCountReduceFilter
+     * (org.elasticsearch.action.search.SearchRequestBuilder)
      */
     @Override
     public MultiSearchRequestBuilder addResultCountReduceFilter(MultiSearchRequestBuilder srb) {
         return srb;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#addAccessFilter(org.elasticsearch.action.search.SearchRequestBuilder)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#addAccessFilter(org.
+     * elasticsearch.action.search.SearchRequestBuilder)
      */
     @Override
     public MultiSearchRequestBuilder addAccessFilter(MultiSearchRequestBuilder srb) {
