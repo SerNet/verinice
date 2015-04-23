@@ -128,6 +128,7 @@ public class PreferenceConstants {
 	public static final String DEFAULT_FOLDER_IMPORT = "default_folder_import";
 	public static final String DEFAULT_FOLDER_EXPORT = "default_folder_export";
     public static final String DEFAULT_FOLDER_REPORT = "default_folder_report";
+    public static final String DEFAULT_FOLDER_CSV_EXPORT = "default_folder_csv_export";
     public static final String DEFAULT_TEMPLATE_FOLDER_REPORT = "default_template_folder_report";
 	
 	// additional gui preferences

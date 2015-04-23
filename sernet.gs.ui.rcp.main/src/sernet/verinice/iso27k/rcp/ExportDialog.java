@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.service.FileUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
@@ -163,7 +164,7 @@ public class ExportDialog extends TitleAreaDialog {
                     setOrgTitle();
                     if(txtLocation!=null) {
                         if(isFilepath()) {
-                            filePath = getFolderFromPath(txtLocation.getText()) + organizationTitle + getDefaultExtension();
+                            filePath = FileUtil.getFolderFromPath(txtLocation.getText()) + organizationTitle + getDefaultExtension();
                         } else {                  
                             filePath = defaultFolder + organizationTitle + getDefaultExtension();
                         }
@@ -277,8 +278,8 @@ public class ExportDialog extends TitleAreaDialog {
                     dialog.setText(Messages.SamtExportDialog_3);
                     if(isFilepath()) {                 
                         try {   
-                            dialog.setFilterPath(getFolderFromPath(txtLocation.getText()));
-                            dialog.setFileName(getFileNameFromPath(txtLocation.getText()));                      
+                            dialog.setFilterPath(FileUtil.getFolderFromPath(txtLocation.getText()));
+                            dialog.setFileName(FileUtil.getFileNameFromPath(txtLocation.getText()));                      
                         } catch (Exception e1) {
                             LOG.debug(Messages.ExportDialog_1, e1);
                             dialog.setFileName(""); //$NON-NLS-1$
@@ -407,23 +408,7 @@ public class ExportDialog extends TitleAreaDialog {
 		}
 	}
 
-	private String getFileNameFromPath(String path) {
-	    String returnPath = null;
-        if(path!=null && path.indexOf(File.separatorChar)!=-1) {
-            returnPath = path.substring(path.lastIndexOf(File.separatorChar)+1);
-        } else {
-            returnPath = path;
-        }
-        return returnPath;
-    }
 	
-	private String getFolderFromPath(String path) {
-        String returnPath = null;
-        if(path!=null && path.indexOf(File.separatorChar)!=-1) {
-            returnPath = path.substring(0, path.lastIndexOf(File.separatorChar)+1);
-        }
-        return returnPath;
-    }
 	
 	private static String convertToFileName(String label) {
         String filename = ""; //$NON-NLS-1$

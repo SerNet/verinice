@@ -21,6 +21,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -33,6 +35,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 
@@ -107,8 +112,13 @@ public class SearchView extends RightsEnabledView {
         export2CSV = new Action() {
             @Override
             public void run() {
-
-            }
+                try {
+                    doCsvExport();
+                } catch (CsvExportException e) {
+                    LOG.error("Error during CSV export", e);
+                    MessageDialog.openError(getShell(), "Error", "Error during CSV export: " + e.getMessage());
+                }
+            }     
         };
 
         export2CSV.setText(Messages.SearchView_0);
@@ -136,7 +146,15 @@ public class SearchView extends RightsEnabledView {
         autoUpdate.setText(Messages.SearchView_2);
         autoUpdate.setToolTipText(Messages.SearchView_2);
         autoUpdate.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
-
+    }
+    
+    private void doCsvExport() throws CsvExportException {
+        StructuredSelection selection = ((StructuredSelection)resultsByTypeCombo.getSelection());
+        if(selection!=null && !selection.isEmpty()) {
+            VeriniceSearchResultObject result = (VeriniceSearchResultObject) selection.getFirstElement();
+            CsvExportHandler handler = new CsvExportHandler(result, getShell());
+            handler.run();
+        }
     }
 
     private void fillLocalToolBar() {
@@ -289,5 +307,18 @@ public class SearchView extends RightsEnabledView {
 
     public SearchTableSorter getTableSorter() {
         return tableSorter;
+    }
+    
+    private static Shell getShell() {
+        return getDisplay().getActiveShell();
+    }
+    
+    static Display getDisplay() {
+        Display display = Display.getCurrent();
+        // may be null if outside the UI thread
+        if (display == null) {
+            display = Display.getDefault();
+        }
+        return display;
     }
 }

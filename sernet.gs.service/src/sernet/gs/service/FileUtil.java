@@ -136,5 +136,23 @@ public final class FileUtil {
         }
         return (path.delete());
     }
+    
+    public static String getFileNameFromPath(String path) {
+        String returnPath = null;
+        if(path!=null && path.indexOf(File.separatorChar)!=-1) {
+            returnPath = path.substring(path.lastIndexOf(File.separatorChar)+1);
+        } else {
+            returnPath = path;
+        }
+        return returnPath;
+    }
+    
+    public static String getFolderFromPath(String path) {
+        String returnPath = null;
+        if(path!=null && path.indexOf(File.separatorChar)!=-1) {
+            returnPath = path.substring(0, path.lastIndexOf(File.separatorChar)+1);
+        }
+        return returnPath;
+    }
 
 }
