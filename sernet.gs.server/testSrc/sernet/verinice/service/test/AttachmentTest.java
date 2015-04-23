@@ -63,8 +63,8 @@ public class AttachmentTest extends CommandServiceProvider {
     
     private static final Logger LOG = Logger.getLogger(AttachmentTest.class);
     
-    private static final int numberOfFiles = 100;
-    private static final int maxFileSizeInMb = 5;
+    private static final int numberOfFiles = 20;
+    private static final int maxFileSizeInMb = 3;
     
     @Resource(name="additionDAO")
     private IBaseDao<Addition, Integer> additionDao;
