@@ -42,8 +42,9 @@ import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.CsvExport;
 import sernet.verinice.rcp.search.CsvExportException;
-import sernet.verinice.rcp.search.IColumnStore;
 import sernet.verinice.rcp.search.ICsvExport;
+import sernet.verinice.rcp.search.column.IColumn;
+import sernet.verinice.rcp.search.column.IColumnStore;
 
 import com.opencsv.CSVReader;
 
@@ -146,11 +147,11 @@ public class CsvExportTest {
     }
 
     private void checkLine(String[] nextLine, VeriniceSearchResultRow row, IColumnStore columnStore) {
-        Set<PropertyType> columns = columnStore.getColumns();
+        Set<IColumn> columns = columnStore.getColumns();
         assertTrue("Wrong number of columns in CSV line: " + nextLine.length, nextLine.length==1 || columns.size()==nextLine.length);
         int i=0;
-        for (PropertyType type : columns ) {
-            String searchResultValue = row.getValueFromResultString(type.getId());
+        for (IColumn type : columns ) {
+            String searchResultValue = row.getValueFromResultString(type.getColumnText());
             String csvValue = nextLine[i];
             while(!searchResultValue.isEmpty() && csvValue.isEmpty()) {
                 i++;
@@ -162,10 +163,10 @@ public class CsvExportTest {
     }
     
     private IColumnStore setInvisibleColumns(IColumnStore columnStore) {
-        List<PropertyType> columns = new LinkedList<PropertyType>(columnStore.getColumns());
-        for (PropertyType propertyType : columns) {
+        List<IColumn> columns = new LinkedList<IColumn>(columnStore.getColumns());
+        for (IColumn column : columns) {
             if(Math.random() > visabilityFactor) {
-                columnStore.setVisible(propertyType, false);
+                columnStore.setVisible(column, false);
             }
         }
         return columnStore;
