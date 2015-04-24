@@ -608,7 +608,7 @@ Library.
          id="org.eclipse.ui.cheatsheets"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="3.4.100.v20110425_FIX_FOR_VERINICE"
          unpack="false"/>
 
    <plugin
@@ -1230,7 +1230,7 @@ Library.
          id="org.eclipse.ui.cheatsheets.nl_de"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="3.7.0.v20110723043401_FIX_FOR_VERINICE"
          fragment="true"
          unpack="false"/>
 
