@@ -17,17 +17,21 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.search;
+package sernet.verinice.rcp.search.tables;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.Separator;
 
 import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.rcp.search.Messages;
+import sernet.verinice.rcp.search.SearchView;
 import sernet.verinice.rcp.search.column.ColumnStoreFactory;
 import sernet.verinice.rcp.search.column.IColumn;
 import sernet.verinice.rcp.search.column.IColumnStore;
 
-final class TableMenuListener implements IMenuListener {
+public class TableMenuListener implements IMenuListener {
 
     private final SearchView searchView;
 
@@ -47,10 +51,28 @@ final class TableMenuListener implements IMenuListener {
             for (IColumn col : columnStore.getAllColumns()) {
                 manager.add(new ColumnContribution(this.searchView, col, vSearchResultObject));
             }
+
+            manager.add(new Separator());
+            manager.add(new RestoreDefaultAction());
         }
     }
 
     private boolean hasNoColumnEntries(IMenuManager manager) {
         return manager.getItems() != null && manager.getItems().length == 0;
     }
+
+    private class RestoreDefaultAction extends Action {
+
+        public RestoreDefaultAction() {
+            setText(Messages.SearchView_6);
+            setToolTipText(Messages.SearchView_6);
+        }
+
+        @Override
+        public void run() {
+            columnStore.restoreDefault();
+            searchView.setTableViewer(vSearchResultObject);
+        }
+    };
+
 }

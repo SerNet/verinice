@@ -20,6 +20,7 @@
 package sernet.verinice.rcp.search.tables;
 
 import org.eclipse.jface.viewers.ColumnLabelProvider;
+import org.eclipse.swt.graphics.Image;
 
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.column.IColumn;
@@ -44,23 +45,31 @@ public class SearchTableColumnLabelProvider extends ColumnLabelProvider {
         if (element instanceof VeriniceSearchResultRow) {
             VeriniceSearchResultRow row = (VeriniceSearchResultRow) element;
 
-
-            if(column instanceof IconColumn){
-                return row.getValueFromResultString(IconColumn.ICON_PROPERTY_NAME);
-            }
-
-            if(column instanceof TitleColumn)
+            if (column instanceof TitleColumn)
                 return row.getValueFromResultString(TitleColumn.TITLE_PROPERTY_NAME);
 
-            if(column instanceof ScopeColumn){
+            if (column instanceof ScopeColumn) {
                 return row.getValueFromResultString(ScopeColumn.SCOPE_PROPERTY_NAME);
             }
 
-            return row.getValueFromResultString(column.getTitle());
+            return row.getValueFromResultString(column.getId());
 
         } else {
             throw new RuntimeException("you holded it wrong");
         }
+    }
+
+    @Override
+    public Image getImage(Object element) {
+
+        if (column instanceof IconColumn) {
+            if (element instanceof VeriniceSearchResultRow) {
+                VeriniceSearchResultRow row = (VeriniceSearchResultRow) element;
+                return TableImageProvider.getImagePath(row);
+            }
+        }
+
+        return null;
     }
 
 }

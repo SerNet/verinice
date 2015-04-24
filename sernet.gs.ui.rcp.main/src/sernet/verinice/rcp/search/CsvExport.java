@@ -136,7 +136,7 @@ public class CsvExport implements ICsvExport {
             for (String id : types ) {
                 PropertyType type = new PropertyType();
                 type.setId(id);   
-                columnStore.setVisible(IColumnFactory.getPropertyTypeColumn(type), true);
+                columnStore.setVisible(IColumnFactory.getPropertyTypeColumn(type, columnStore), true);
             }                                 
         }
         return columnStore;

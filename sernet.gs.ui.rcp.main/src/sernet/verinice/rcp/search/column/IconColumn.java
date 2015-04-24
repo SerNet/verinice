@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
+import sernet.verinice.rcp.search.Messages;
+
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
@@ -28,7 +30,7 @@ public class IconColumn extends AbstractColumn {
         super(columnStore);
     }
 
-    private final static String ICON_COLUMN_TITLE = "icon";
+    private final static String ICON_COLUMN_TITLE = Messages.IconColumn_0;
 
     public final static String ICON_PROPERTY_NAME = "icon-path";
 
@@ -130,6 +132,14 @@ public class IconColumn extends AbstractColumn {
     @Override
     public String getTitle() {
         return ICON_COLUMN_TITLE;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.search.column.AbstractColumn#getId()
+     */
+    @Override
+    public String getId() {
+        return "icon_column_" + getTitle();
     }
 
     @Override

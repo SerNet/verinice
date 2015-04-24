@@ -38,7 +38,7 @@ public class IColumnFactory {
         return new ScopeColumn(columnStore);
     }
 
-    public static IColumn getPropertyTypeColumn(PropertyType propertyType, ColumnStore columnStore) {
+    public static IColumn getPropertyTypeColumn(PropertyType propertyType, IColumnStore columnStore) {
         return new PropertyTypeColumn(columnStore, propertyType);
     }
 }

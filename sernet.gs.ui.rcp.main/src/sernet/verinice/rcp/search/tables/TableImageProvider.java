@@ -17,41 +17,43 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.search.column;
+package sernet.verinice.rcp.search.tables;
+
+import org.eclipse.swt.graphics.Image;
+
+import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.rcp.search.column.IconColumn;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public interface IColumn {
+public class TableImageProvider {
 
-    public String getId();
 
-    public String getTitle();
+    public static Image getImagePath(VeriniceSearchResultRow row) {
 
-    public boolean isMultiselect();
+        ImageCache imgCache = ImageCache.getInstance();
 
-    public boolean isSingleSelect();
+        // check if custom image is set
+        String imagePath = row.getValueFromResultString(IconColumn.ICON_PROPERTY_NAME);
+        if (!imagePath.isEmpty()){
+            return imgCache.getImage(imagePath);
+        }
 
-    public boolean isNumericSelect();
+        String typeId = row.getParent().getEntityTypeId();
 
-    public boolean isBooleanSelect();
+        // retrieve default images
+        if(imgCache.isBSITypeElement(typeId)){
+            return ImageCache.getInstance().getBSITypeImage(typeId);
+        }
 
-    public boolean isEnum();
+        if(imgCache.isISO27kTypeElement(typeId)){
+            return imgCache.getISO27kTypeImage(typeId);
+        }
 
-    public boolean isLine();
 
-    public boolean isReference();
-
-    public boolean isCnaLinkReference();
-
-    public boolean isText();
-
-    public boolean isDate();
-
-    public void setVisible(boolean visible);
-
-    public boolean isVisible();
-
-    public int getRank();
+        return null;
+    }
 
 }

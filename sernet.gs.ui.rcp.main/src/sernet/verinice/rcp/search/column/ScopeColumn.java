@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
+import sernet.verinice.rcp.search.Messages;
+
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
@@ -29,7 +31,7 @@ public class ScopeColumn extends AbstractColumn {
         super(columnStore);
     }
 
-    private final static String SCOPE_COLUMN = "scope";
+    private final static String SCOPE_COLUMN = Messages.ScopeColumn_0;
 
     public final static String SCOPE_PROPERTY_NAME = "scope-id";
 
@@ -134,6 +136,14 @@ public class ScopeColumn extends AbstractColumn {
     @Override
     public int getRank(){
         return -1;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.search.column.AbstractColumn#getId()
+     */
+    @Override
+    public String getId() {
+        return "scope_column_" + getTitle();
     }
 
 }

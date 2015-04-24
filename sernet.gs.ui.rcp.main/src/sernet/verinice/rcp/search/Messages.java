@@ -33,6 +33,11 @@ public class Messages extends NLS {
     public static String SearchView_2;
     public static String SearchView_3;
     public static String SearchView_4;
+    public static String SearchView_5;
+    public static String SearchView_6;
+    public static String IconColumn_0;
+    public static String TitleColumn_0;
+    public static String ScopeColumn_0;
 
     static {
         // initialize resource bundle

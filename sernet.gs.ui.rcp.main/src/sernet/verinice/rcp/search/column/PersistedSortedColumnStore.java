@@ -55,9 +55,9 @@ public class PersistedSortedColumnStore extends ColumnStore {
 
         if (!columnsArePersisted()) {
             restoreDefault();
+        } else {
+            initColumnStore();
         }
-
-        initColumnStore();
     }
 
     @Override
@@ -89,9 +89,9 @@ public class PersistedSortedColumnStore extends ColumnStore {
         IColumn titleColumn = IColumnFactory.getTitleColumn(this);
         IColumn scopeColumn = IColumnFactory.getScopeColumn(this);
 
-        addColumn(iconColumn);
-        addColumn(titleColumn);
-        addColumn(scopeColumn);
+        setVisible(iconColumn, isColumnVisible(iconColumn));
+        setVisible(titleColumn, isColumnVisible(titleColumn));
+        setVisible(scopeColumn, isColumnVisible(scopeColumn));
 
         for (PropertyType propertyType : getAllPropertyTypes()) {
             IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this);
@@ -112,8 +112,8 @@ public class PersistedSortedColumnStore extends ColumnStore {
         return preferenceStore.getBoolean((getPropertyVisibilitySettingIdentifier(column)));
     }
 
-    private String getPropertyVisibilitySettingIdentifier(IColumn propertyType) {
-        return COLUMN_PREFIX + propertyType.getTitle();
+    private String getPropertyVisibilitySettingIdentifier(IColumn column) {
+        return COLUMN_PREFIX + column.getId();
     }
 
     public boolean isDefaultColumn(IColumn propertyType) {

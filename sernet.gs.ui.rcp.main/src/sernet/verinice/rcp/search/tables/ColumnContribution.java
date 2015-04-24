@@ -17,7 +17,7 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.search;
+package sernet.verinice.rcp.search.tables;
 
 import org.eclipse.jface.action.ContributionItem;
 import org.eclipse.swt.SWT;
@@ -27,9 +27,10 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
 import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.rcp.search.SearchView;
 import sernet.verinice.rcp.search.column.IColumn;
 
-class ColumnContribution extends ContributionItem {
+public class ColumnContribution extends ContributionItem {
 
     private final SearchView searchView;
 

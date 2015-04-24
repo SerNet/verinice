@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.hui.common.connect.PropertyType;
 
 /**
@@ -33,7 +32,7 @@ public class PropertyTypeColumn extends AbstractColumn {
 
     private PropertyType propertyType;
 
-    public PropertyTypeColumn(ColumnStore columnstore, PropertyType propertyType) {
+    public PropertyTypeColumn(IColumnStore columnstore, PropertyType propertyType) {
         super(columnstore);
         this.propertyType = propertyType;
     }
@@ -132,6 +131,14 @@ public class PropertyTypeColumn extends AbstractColumn {
     @Override
     public String getTitle() {
         return propertyType.getName();
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.search.column.AbstractColumn#getId()
+     */
+    @Override
+    public String getId() {
+        return propertyType.getId();
     }
 
     public String getPropertyTags() {

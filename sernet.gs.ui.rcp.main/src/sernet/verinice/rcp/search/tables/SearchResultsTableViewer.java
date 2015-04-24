@@ -19,14 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.tables;
 
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
@@ -46,6 +47,8 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
 
     private IColumnStore columnStore;
 
+    private SearchTableComparator searchTableComparator;
+
     public SearchResultsTableViewer(Composite parent, IColumnStore columnStore, VeriniceSearchResultObject veriniceSearchResultObject) {
 
         super(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER | SWT.HORIZONTAL | SWT.VERTICAL);
@@ -54,25 +57,40 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
+        searchTableComparator = new SearchTableComparator();
+        setComparator(searchTableComparator);
+
         this.columnStore = columnStore;
 
         createColumns();
 
         setContentProvider(this);
         setInput(veriniceSearchResultObject);
+
     }
 
     private void createColumns() {
 
         for (final IColumn col : columnStore.getColumns()) {
 
-            TableViewerColumn columnViewer = new TableViewerColumn(this, SWT.NONE);
+            final TableViewerColumn columnViewer = new TableViewerColumn(this, SWT.NONE);
             columnViewer.getColumn().setText(col.getTitle());
-            columnViewer.getColumn().setMoveable(true);
+            columnViewer.getColumn().setMoveable(false);
             columnViewer.getColumn().setResizable(true);
             columnViewer.getColumn().setWidth(200);
+            columnViewer.getColumn().addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    SearchResultsTableViewer.this.searchTableComparator.setColumn(col);
+                    SearchResultsTableViewer.this.getTable().setSortDirection(SWT.UP);
+                    SearchResultsTableViewer.this.getTable().setSortColumn(columnViewer.getColumn());
+                    SearchResultsTableViewer.this.refresh();
+                }
+            });
 
             if (col instanceof IconColumn){
+                columnViewer.getColumn().setText("");
                 columnViewer.getColumn().setWidth(32);
             }
 

@@ -19,9 +19,12 @@ package sernet.verinice.rcp.search;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -41,6 +44,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.internal.intro.impl.util.Log;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -52,6 +56,7 @@ import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.search.tables.SearchTableSorter;
 import sernet.verinice.rcp.search.tables.SearchTableViewerFactory;
+import sernet.verinice.rcp.search.tables.TableMenuListener;
 
 /**
  *
@@ -80,7 +85,7 @@ public class SearchView extends RightsEnabledView {
 
     private Action editMode;
 
-    RightsEnabledAction reindex;
+    private RightsEnabledAction reindex;
 
     private Composite searchComposite;
 
@@ -123,7 +128,7 @@ public class SearchView extends RightsEnabledView {
                     LOG.error("Error during CSV export", e);
                     MessageDialog.openError(getShell(), "Error", "Error during CSV export: " + e.getMessage());
                 }
-            }     
+            }
         };
 
         export2CSV.setText(Messages.SearchView_0);
@@ -143,7 +148,7 @@ public class SearchView extends RightsEnabledView {
 
         reindex = new RightsEnabledAction(ActionRightIDs.SEARCHREINDEX) {
             @Override
-            public void doRun() {            
+            public void doRun() {
                 try {
                     reindex();
                 } catch (Exception e) {
@@ -157,10 +162,10 @@ public class SearchView extends RightsEnabledView {
         reindex.setToolTipText(Messages.SearchView_2);
         reindex.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
     }
-    
+
     private void doCsvExport() throws CsvExportException {
-        StructuredSelection selection = ((StructuredSelection)resultsByTypeCombo.getSelection());
-        if(selection!=null && !selection.isEmpty()) {
+        StructuredSelection selection = ((StructuredSelection) resultsByTypeCombo.getSelection());
+        if (selection != null && !selection.isEmpty()) {
             VeriniceSearchResultObject result = (VeriniceSearchResultObject) selection.getFirstElement();
             CsvExportHandler handler = new CsvExportHandler(result, getShell());
             handler.run();
@@ -213,7 +218,6 @@ public class SearchView extends RightsEnabledView {
                     search();
                     searchButton.setEnabled(true);
                 }
-
             }
 
             @Override
@@ -309,22 +313,26 @@ public class SearchView extends RightsEnabledView {
     }
 
     public void setTableViewer(VeriniceSearchResultObject veriniceSearchResultObject) {
+        try {
+            if (currentViewer != null) {
+                currentViewer.getTable().dispose();
+            }
 
-        if (currentViewer != null) {
-            currentViewer.getTable().dispose();
+            currentViewer = tableFactory.getSearchResultTable(veriniceSearchResultObject, tableComposite);
+
+            MenuManager menuMgr = new MenuManager("#ContextMenu");
+            Menu menu = menuMgr.createContextMenu(currentViewer.getControl());
+
+            menuMgr.addMenuListener(new TableMenuListener(this, veriniceSearchResultObject));
+
+            currentViewer.getControl().setMenu(menu);
+            getSite().registerContextMenu(menuMgr, currentViewer);
+
+            currentViewer.getControl().pack();
+        } catch (Exception ex) {
+            LOG.error("table rendering failed", ex);
+            throw new RuntimeException(ex);
         }
-
-        currentViewer = tableFactory.getSearchResultTable(veriniceSearchResultObject, tableComposite);
-
-        MenuManager menuMgr = new MenuManager("#ContextMenu");
-        Menu menu = menuMgr.createContextMenu(currentViewer.getControl());
-
-        menuMgr.addMenuListener(new TableMenuListener(this, veriniceSearchResultObject));
-
-        currentViewer.getControl().setMenu(menu);
-        getSite().registerContextMenu(menuMgr, currentViewer);
-
-        currentViewer.getControl().pack();
     }
 
     private void search() {
@@ -333,7 +341,7 @@ public class SearchView extends RightsEnabledView {
         WorkspaceJob job = new SearchJob(veriniceQuery, searchButton, queryText, this);
         job.schedule();
     }
-    
+
     private void reindex() {
         WorkspaceJob job = new IndexJob(this);
         job.schedule();
@@ -343,15 +351,14 @@ public class SearchView extends RightsEnabledView {
         return currentViewer;
     }
 
-
     public SearchTableSorter getTableSorter() {
         return tableSorter;
     }
-    
+
     private static Shell getShell() {
         return getDisplay().getActiveShell();
     }
-    
+
     static Display getDisplay() {
         Display display = Display.getCurrent();
         // may be null if outside the UI thread
@@ -359,5 +366,9 @@ public class SearchView extends RightsEnabledView {
             display = Display.getDefault();
         }
         return display;
+    }
+
+    public RightsEnabledAction getReindex() {
+        return reindex;
     }
 }

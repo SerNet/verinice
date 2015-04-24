@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.rcp.search.column.IColumnStore;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

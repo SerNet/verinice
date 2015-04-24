@@ -49,7 +49,7 @@ public class IndexJob extends WorkspaceJob {
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
-                    searchView.reindex.setEnabled(false);
+                    searchView.getReindex().setEnabled(false);
                 }
             });
             Activator.inheritVeriniceContextState();
@@ -58,7 +58,7 @@ public class IndexJob extends WorkspaceJob {
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
-                    searchView.reindex.setEnabled(true);
+                    searchView.getReindex().setEnabled(true);
                 }
             });
         }

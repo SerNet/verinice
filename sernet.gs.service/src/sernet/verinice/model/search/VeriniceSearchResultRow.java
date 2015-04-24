@@ -130,5 +130,9 @@ public class VeriniceSearchResultRow implements Serializable{
         return "VeriniceSearchResultRow [properties=" + properties + ", identifier=" + identifier + ", occurence=" + occurence + "]";
     }
 
+    public VeriniceSearchResultObject getParent() {
+        return parent;
+    }
+
 
 }

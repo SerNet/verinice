@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
+import sernet.verinice.rcp.search.Messages;
+
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
@@ -28,9 +30,9 @@ public class TitleColumn extends AbstractColumn {
         super(columnStore);
     }
 
-    private static final String TITLE_COLUMN = "title";
+    private static final String TITLE_COLUMN = Messages.TitleColumn_0;
 
-    public final static String TITLE_PROPERTY_NAME = TITLE_COLUMN;
+    public final static String TITLE_PROPERTY_NAME = "title";
 
     /*
      * (non-Javadoc)
@@ -156,5 +158,10 @@ public class TitleColumn extends AbstractColumn {
     @Override
     public int getRank() {
         return -2;
+    }
+
+    @Override
+    public String getId() {
+        return "title_column_" + getTitle();
     }
 }

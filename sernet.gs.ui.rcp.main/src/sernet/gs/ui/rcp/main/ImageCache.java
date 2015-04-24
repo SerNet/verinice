@@ -514,4 +514,11 @@ public final class ImageCache {
 		return getImage(ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET);
 	}
 	
+    public boolean isBSITypeElement(String typeID) {
+        return BSI_ICON_MAP.containsKey(typeID);
+    }
+
+    public boolean isISO27kTypeElement(String typeID) {
+        return ISO27K_ICON_MAP.containsKey(typeID);
+    }
 }

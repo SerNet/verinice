@@ -47,7 +47,7 @@ public class SearchJob extends WorkspaceJob {
     private Text searchText;
 
     public SearchJob(VeriniceQuery query, Button searchButton, Text searchText, SearchView searchView) {
-        super(Messages.SearchView_4);
+        super(Messages.SearchView_5);
         this.query = query;
         this.searchButton = searchButton;
         this.searchText = searchText;

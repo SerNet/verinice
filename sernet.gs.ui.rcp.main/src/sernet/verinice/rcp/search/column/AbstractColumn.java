@@ -26,7 +26,7 @@ public abstract class AbstractColumn implements IColumn {
 
     IColumnStore columnStore;
 
-    public AbstractColumn(ColumnStore columnStore) {
+    public AbstractColumn(IColumnStore columnStore) {
         this.columnStore = columnStore;
     }
 
