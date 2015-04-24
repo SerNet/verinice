@@ -96,7 +96,7 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
                     if (vResultObject1.getHits() == vResultObject2.getHits()) {
                         return comparator.compare(vResultObject1.getEntityName(), vResultObject2.getEntityName());
                     } else {
-                        return Integer.compare(-vResultObject1.getHits(), -vResultObject2.getHits());
+                        return compare(-vResultObject1.getHits(), -vResultObject2.getHits());
                     }
 
                 } else {
@@ -104,12 +104,16 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
                 }
 
             }
+            
+            private int compare(int x, int y) {
+                return (x < y) ? -1 : ((x == y) ? 0 : 1);
+            }
         };
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     @Override
@@ -120,7 +124,7 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface
      * .viewers.Viewer, java.lang.Object, java.lang.Object)
@@ -136,7 +140,7 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
      * .lang.Object)
@@ -154,7 +158,7 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
      * org.eclipse.jface.viewers.SelectionChangedEvent)
