@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 
 import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.common.CnATreeElement;
@@ -26,7 +25,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class GefaehrdungsUmsetzungFactory {
 
 	public static GefaehrdungsUmsetzung build(
-			CnATreeElement parent, Gefaehrdung source) {
+			CnATreeElement parent, Gefaehrdung source, String language) {
 		GefaehrdungsUmsetzung gefaehrdungsUmsetzung = new GefaehrdungsUmsetzung(parent);
 		
 		gefaehrdungsUmsetzung.setId(source.getId());
@@ -36,7 +35,7 @@ public class GefaehrdungsUmsetzungFactory {
 		gefaehrdungsUmsetzung.setUrl(source.getUrl());
 
 		
-		gefaehrdungsUmsetzung.setKategorie(source.getKategorieAsString(BSIKatalogInvisibleRoot.getInstance().getLanguage()));
+		gefaehrdungsUmsetzung.setKategorie(source.getKategorieAsString(language));
 		gefaehrdungsUmsetzung.setStand(source.getStand());
 
 		if (source instanceof OwnGefaehrdung) {

@@ -271,7 +271,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      */
     private void loadAssociatedGefaehrdungen() {
         try {
-            LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(cnaElement);
+            LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(cnaElement, BSIKatalogInvisibleRoot.getInstance().getLanguage());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<GefaehrdungsUmsetzung> associatedGefaehrdungen = command.getAssociatedGefaehrdungen();
             for (GefaehrdungsUmsetzung gefaehrdung : associatedGefaehrdungen) {
