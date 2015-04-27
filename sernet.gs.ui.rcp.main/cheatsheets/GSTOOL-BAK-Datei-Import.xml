@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
-<cheatsheet title="Protection Levels">
+<cheatsheet title="Please consult ISO 27000 Instructions">
 
   <intro>
     <description>
@@ -14,9 +14,8 @@
 
   <item title="Tutorials">
     <description>
-      To proceed with the English-relevant part, please click on the menu <b>Help > Tutorials ...</b>.
+      To proceed with the English-relevant part, please click the menu <b>Help > Tutorials ...</b>.
     </description>
   </item>
 
 </cheatsheet>
-
