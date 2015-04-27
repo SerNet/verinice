@@ -67,7 +67,7 @@ public class SearchService implements ISearchService {
     @Resource(name ="configurationService")
     protected IConfigurationService configurationService;
     
-    @Resource(name = "authenticationService")
+    @Resource(name = "authService")
     protected IAuthService authenticationService;
 
     /*
