@@ -162,6 +162,6 @@ public class TitleColumn extends AbstractColumn {
 
     @Override
     public String getId() {
-        return "title_column_" + getTitle();
+        return TITLE_PROPERTY_NAME;
     }
 }

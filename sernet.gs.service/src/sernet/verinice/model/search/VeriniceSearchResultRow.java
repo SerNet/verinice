@@ -29,6 +29,8 @@ import sernet.verinice.model.common.CnATreeElement;
 @SuppressWarnings("serial")
 public class VeriniceSearchResultRow implements Serializable{
 
+    public final static String OCCURENCE_PROPERTY_NAME = "occurence-path";
+    
     private Map<String, String> properties;
 
     private VeriniceSearchResultObject parent;
@@ -50,6 +52,7 @@ public class VeriniceSearchResultRow implements Serializable{
         this.properties = new HashMap<String, String>(0);
         this.identifier = identifier;
         this.occurence = occurence;
+        this.properties.put(OCCURENCE_PROPERTY_NAME, occurence);
     }
 
     public VeriniceSearchResultRow(VeriniceSearchResultObject parent, String identifier, String occurence){

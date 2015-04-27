@@ -198,8 +198,10 @@ public class SearchService implements ISearchService {
 
         MultiSearchResponse msr = searchDao.executeMultiSearch(msrb);
         for (MultiSearchResponse.Item i : msr.getResponses()) {
-            for (SearchHit hit : i.getResponse().getHits().getHits()) {
-                hitList.add(hit);
+            if(i!=null && i.getResponse()!=null && i.getResponse().getHits()!=null) {
+                for (SearchHit hit : i.getResponse().getHits().getHits()) {
+                    hitList.add(hit);
+                }
             }
         }
         String identifier = "";

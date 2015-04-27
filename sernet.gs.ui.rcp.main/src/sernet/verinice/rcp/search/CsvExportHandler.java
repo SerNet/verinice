@@ -33,6 +33,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.rcp.search.column.ColumnStoreFactory;
 import sernet.verinice.rcp.search.column.IColumnStore;
 
 /**
@@ -70,9 +71,9 @@ public class CsvExportHandler {
 
     private void export(String filePath) throws CsvExportException {    
         // Selected columns
-        // IColumnStore columnStore = ColumnStoreFactory.getColumnStore(result.getEntityTypeId());
+        IColumnStore columnStore = ColumnStoreFactory.getColumnStore(result.getEntityTypeId());
         // All columns:
-        IColumnStore columnStore = CsvExport.createColumnStore(result);
+        // IColumnStore columnStore = CsvExport.createColumnStore(result);
         ICsvExport exporter = new CsvExport();
         exporter.setFilePath(filePath);
         exporter.exportToFile(result, columnStore);

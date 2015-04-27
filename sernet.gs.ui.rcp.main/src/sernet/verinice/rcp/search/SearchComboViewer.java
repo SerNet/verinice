@@ -113,7 +113,7 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     @Override
@@ -124,7 +124,7 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface
      * .viewers.Viewer, java.lang.Object, java.lang.Object)
@@ -140,7 +140,7 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java
      * .lang.Object)
@@ -158,7 +158,7 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(
      * org.eclipse.jface.viewers.SelectionChangedEvent)

@@ -54,7 +54,7 @@ public class ScopeColumn extends AbstractColumn {
      */
     @Override
     public String getId() {
-        return "scope_column_" + getTitle();
+        return SCOPE_PROPERTY_NAME;
     }
 
 }

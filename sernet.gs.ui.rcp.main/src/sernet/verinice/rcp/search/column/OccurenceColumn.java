@@ -25,15 +25,16 @@ import sernet.verinice.rcp.search.Messages;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
 public class OccurenceColumn extends AbstractColumn {
-
-
+    
+    public final static String OCCURENCE_PROPERTY_NAME = "occurence-path";
+    
     public OccurenceColumn(IColumnStore columnStore) {
         super(columnStore);
     }
 
     @Override
     public String getId() {
-        return "occurences_column_" + getTitle();
+        return OCCURENCE_PROPERTY_NAME;
     }
 
     @Override

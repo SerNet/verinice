@@ -49,7 +49,7 @@ public class IconColumn extends AbstractColumn {
      */
     @Override
     public String getId() {
-        return "icon_column_" + getTitle();
+        return ICON_PROPERTY_NAME;
     }
 
     @Override
