@@ -122,7 +122,7 @@ public class CsvExport implements ICsvExport {
         String[] rowArray = new String[columns.size()];
         int i=0;
         for (IColumn column : columns ) {
-            rowArray[i] = row.getValueFromResultString(row.getValueFromResultString(column.getTitle()));
+            rowArray[i] = row.getValueFromResultString(row.getValueFromResultString(column.getId()));
             i++;                         
         }
         csvWriter.writeNext(rowArray);
