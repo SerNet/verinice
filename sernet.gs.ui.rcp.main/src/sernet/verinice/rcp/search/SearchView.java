@@ -17,12 +17,17 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search;
 
+import java.util.Arrays;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -42,16 +47,22 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.search.tables.SearchTableViewerFactory;
 import sernet.verinice.rcp.search.tables.TableMenuListener;
+import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
  *
@@ -77,6 +88,8 @@ public class SearchView extends RightsEnabledView {
     private RightsEnabledAction export2CSV;
 
     private Action editMode;
+
+    private IDoubleClickListener doubleClickListener;
 
     private RightsEnabledAction reindex;
 
@@ -128,17 +141,17 @@ public class SearchView extends RightsEnabledView {
         export2CSV.setToolTipText(Messages.SearchView_0);
         export2CSV.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPORT_ICON));
 
-        editMode = new Action() {
-            @Override
-            public void run() {
+        // editMode = new Action() {
+        // @Override
+        // public void run() {
+        //
+        // }
+        // };
 
-            }
-        };
-
-        editMode.setText(Messages.SearchView_1);
-        editMode.setToolTipText(Messages.SearchView_1);
-        editMode.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
-
+        // editMode.setText(Messages.SearchView_1);
+        // editMode.setToolTipText(Messages.SearchView_1);
+        // editMode.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
+        //
         reindex = new RightsEnabledAction(ActionRightIDs.SEARCHREINDEX) {
             @Override
             public void doRun() {
@@ -154,6 +167,39 @@ public class SearchView extends RightsEnabledView {
         reindex.setText(Messages.SearchView_2);
         reindex.setToolTipText(Messages.SearchView_2);
         reindex.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
+
+        doubleClickListener = new IDoubleClickListener() {
+
+            private ICommandService commandService;
+
+            @SuppressWarnings("rawtypes")
+            @Override
+            public void doubleClick(DoubleClickEvent event) {
+                if (currentViewer.getSelection() instanceof IStructuredSelection && ((IStructuredSelection) currentViewer.getSelection()).getFirstElement() instanceof VeriniceSearchResultRow) {
+                    try {
+                        VeriniceSearchResultRow row = (VeriniceSearchResultRow) ((IStructuredSelection) currentViewer.getSelection()).getFirstElement();
+                        RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+                        LoadElementByUuid loadElementByUuid = new LoadElementByUuid(row.getValueFromResultString("uuid"), ri);
+                        loadElementByUuid = getCommandService().executeCommand(loadElementByUuid);
+                        if (loadElementByUuid.getElement() != null) {
+                            EditorFactory.getInstance().updateAndOpenObject(loadElementByUuid.getElement());
+                        } else {
+                            showError(Messages.SearchView_8, Messages.SearchView_7); //$NON-NLS-1$
+                        }
+                    } catch (Exception t) {
+                        LOG.error("Error while opening control.", t); //$NON-NLS-1$
+                    }
+                }
+
+            }
+
+            private ICommandService getCommandService() {
+                if (commandService == null) {
+                    commandService = ServiceFactory.lookupCommandService();
+                }
+                return commandService;
+            }
+        };
     }
 
     private void doCsvExport() throws CsvExportException {
@@ -297,8 +343,31 @@ public class SearchView extends RightsEnabledView {
     }
 
     public void updateResultCombobox(VeriniceSearchResult veriniceSearchResult) {
+
         resultsByTypeCombo.setInput(veriniceSearchResult);
+
+        if (isResultEmpty(veriniceSearchResult)) {
+            currentViewer.getTable().dispose();
+        }
+
+        if (!isResultEmpty(veriniceSearchResult)) {
+            selectedFirstEntry(veriniceSearchResult);
+        }
+
+        // resultsByTypeCombo.getCombo().select(0);
         resultsByTypeCombo.refresh();
+    }
+
+    private void selectedFirstEntry(VeriniceSearchResult veriniceSearchResult) {
+        VeriniceSearchResultObject[] result = new VeriniceSearchResultObject[veriniceSearchResult.getAllVeriniceSearchObjects().size()];
+        result = veriniceSearchResult.getAllVeriniceSearchObjects().toArray(result);
+        Arrays.sort(result, new VeriniceSearchResultComparator());
+
+        resultsByTypeCombo.setSelection(new StructuredSelection(result[0]));
+    }
+
+    private boolean isResultEmpty(VeriniceSearchResult veriniceSearchResult) {
+        return veriniceSearchResult.getHits() == 0;
     }
 
     public Composite getParent() {
@@ -307,25 +376,33 @@ public class SearchView extends RightsEnabledView {
 
     public void setTableViewer(VeriniceSearchResultObject veriniceSearchResultObject) {
         try {
+
             if (currentViewer != null) {
                 currentViewer.getTable().dispose();
             }
 
             currentViewer = tableFactory.getSearchResultTable(veriniceSearchResultObject, tableComposite);
 
-            MenuManager menuMgr = new MenuManager("#ContextMenu");
-            Menu menu = menuMgr.createContextMenu(currentViewer.getControl());
+            addTableColumnContextMenu(veriniceSearchResultObject);
 
-            menuMgr.addMenuListener(new TableMenuListener(this, veriniceSearchResultObject));
-
-            currentViewer.getControl().setMenu(menu);
-            getSite().registerContextMenu(menuMgr, currentViewer);
+            currentViewer.addDoubleClickListener(doubleClickListener);
 
             currentViewer.getControl().pack();
         } catch (Exception ex) {
             LOG.error("table rendering failed", ex);
+            showError("Table rendering faile", ex.getLocalizedMessage());
             throw new RuntimeException(ex);
         }
+    }
+
+    private void addTableColumnContextMenu(VeriniceSearchResultObject veriniceSearchResultObject) {
+        MenuManager menuMgr = new MenuManager("#ContextMenu");
+        Menu menu = menuMgr.createContextMenu(currentViewer.getControl());
+
+        menuMgr.addMenuListener(new TableMenuListener(this, veriniceSearchResultObject));
+
+        currentViewer.getControl().setMenu(menu);
+        getSite().registerContextMenu(menuMgr, currentViewer);
     }
 
     private void search() {
@@ -344,7 +421,6 @@ public class SearchView extends RightsEnabledView {
         return currentViewer;
     }
 
-
     private static Shell getShell() {
         return getDisplay().getActiveShell();
     }
@@ -360,5 +436,14 @@ public class SearchView extends RightsEnabledView {
 
     public RightsEnabledAction getReindex() {
         return reindex;
+    }
+
+    protected void showError(final String title, final String message) {
+        Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                MessageDialog.openError(getShell(), title, message);
+            }
+        });
     }
 }

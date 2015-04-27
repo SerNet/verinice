@@ -69,22 +69,11 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
         this.setComparator(setSearchViewerComparator());
     }
 
-    /**
-     * Entries are sorted by there hits pro {@link VeriniceSearchResultObject}.
-     * When hits are equal the entries are sorted by the
-     * {@link NumericStringComparator}.
-     *
-     * There is one interesting detail. Because in a sorted Set the smallest
-     * element comes first, the sign of the
-     * {@link VeriniceSearchResultObject#getHits()} has to be inverted. After
-     * that the {@link SearchComboViewer} shows the elements in a descending
-     * order.
-     *
-     */
     private ViewerComparator setSearchViewerComparator() {
+
         return new ViewerComparator() {
 
-            NumericStringComparator comparator = new NumericStringComparator();
+            VeriniceSearchResultComparator comparator = new VeriniceSearchResultComparator();
 
             public int compare(Viewer viewer, Object object1, Object object2) {
 
@@ -93,20 +82,10 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
                     VeriniceSearchResultObject vResultObject1 = (VeriniceSearchResultObject) object1;
                     VeriniceSearchResultObject vResultObject2 = (VeriniceSearchResultObject) object2;
 
-                    if (vResultObject1.getHits() == vResultObject2.getHits()) {
-                        return comparator.compare(vResultObject1.getEntityName(), vResultObject2.getEntityName());
-                    } else {
-                        return compare(-vResultObject1.getHits(), -vResultObject2.getHits());
-                    }
-
+                    return comparator.compare(vResultObject1, vResultObject2);
                 } else {
-                    return super.compare(viewer, object1, object2);
+                    return compare(viewer, object1, object2);
                 }
-
-            }
-            
-            private int compare(int x, int y) {
-                return (x < y) ? -1 : ((x == y) ? 0 : 1);
             }
         };
     }
@@ -131,11 +110,11 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
      */
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-        if (newInput instanceof VeriniceSearchResult) {
-            Set<VeriniceSearchResultObject> input = ((VeriniceSearchResult) newInput).getAllVeriniceSearchObjects();
-            if (!input.isEmpty())
-                viewer.setSelection(new StructuredSelection(input), true);
-        }
+//        if (newInput instanceof VeriniceSearchResult) {
+//            Set<VeriniceSearchResultObject> input = ((VeriniceSearchResult) newInput).getAllVeriniceSearchObjects();
+//            if (!input.isEmpty())
+//                 viewer.setSelection(new StructuredSelection(getElements(newInput)[0]), true);
+//         }
     }
 
     /*
@@ -168,6 +147,8 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
         if (!event.getSelection().isEmpty()) {
             VeriniceSearchResultObject veriniceSearchResultObject = (VeriniceSearchResultObject) ((StructuredSelection) event.getSelection()).getFirstElement();
             searchView.setTableViewer(veriniceSearchResultObject);
+        } else {
+            searchView.setTableViewer((VeriniceSearchResultObject) getElementAt(0));
         }
     }
 }

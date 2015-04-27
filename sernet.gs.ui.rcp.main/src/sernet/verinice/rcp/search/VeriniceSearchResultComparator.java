@@ -33,8 +33,6 @@ import sernet.verinice.model.search.VeriniceSearchResultObject;
  * to be inverted. After that the {@link SearchComboViewer} shows the elements
  * in a descending order.
  *
- *
- *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
 final class VeriniceSearchResultComparator implements Comparator<VeriniceSearchResultObject> {
