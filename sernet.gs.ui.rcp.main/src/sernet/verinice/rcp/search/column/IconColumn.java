@@ -34,96 +34,6 @@ public class IconColumn extends AbstractColumn {
 
     public final static String ICON_PROPERTY_NAME = "icon-path";
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#isMultiselect()
-     */
-    @Override
-    public boolean isMultiselect() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#isSingleSelect()
-     */
-    @Override
-    public boolean isSingleSelect() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#isNumericSelect()
-     */
-    @Override
-    public boolean isNumericSelect() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#isBooleanSelect()
-     */
-    @Override
-    public boolean isBooleanSelect() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#isEnum()
-     */
-    @Override
-    public boolean isEnum() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#isLine()
-     */
-    @Override
-    public boolean isLine() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#isReference()
-     */
-    @Override
-    public boolean isReference() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#isCnaLinkReference()
-     */
-    @Override
-    public boolean isCnaLinkReference() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#isText()
-     */
-    @Override
-    public boolean isText() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumn#isDate()
-     */
-    @Override
-    public boolean isDate() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
 
 
     /* (non-Javadoc)
@@ -144,6 +54,6 @@ public class IconColumn extends AbstractColumn {
 
     @Override
     public int getRank(){
-        return -4;
+        return -5;
     }
 }

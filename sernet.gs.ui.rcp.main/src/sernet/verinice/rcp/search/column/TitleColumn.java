@@ -157,7 +157,7 @@ public class TitleColumn extends AbstractColumn {
 
     @Override
     public int getRank() {
-        return -2;
+        return -3;
     }
 
     @Override

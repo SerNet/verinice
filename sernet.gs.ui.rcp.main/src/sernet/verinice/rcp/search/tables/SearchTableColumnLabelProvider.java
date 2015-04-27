@@ -25,6 +25,7 @@ import org.eclipse.swt.graphics.Image;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.column.IColumn;
 import sernet.verinice.rcp.search.column.IconColumn;
+import sernet.verinice.rcp.search.column.OccurenceColumn;
 import sernet.verinice.rcp.search.column.ScopeColumn;
 import sernet.verinice.rcp.search.column.TitleColumn;
 
@@ -48,8 +49,12 @@ public class SearchTableColumnLabelProvider extends ColumnLabelProvider {
             if (column instanceof TitleColumn)
                 return row.getValueFromResultString(TitleColumn.TITLE_PROPERTY_NAME);
 
-            if (column instanceof ScopeColumn) {
+            else if (column instanceof ScopeColumn) {
                 return row.getValueFromResultString(ScopeColumn.SCOPE_PROPERTY_NAME);
+            }
+
+            else if (column instanceof OccurenceColumn){
+                return row.getFieldOfOccurence();
             }
 
             return row.getValueFromResultString(column.getId());

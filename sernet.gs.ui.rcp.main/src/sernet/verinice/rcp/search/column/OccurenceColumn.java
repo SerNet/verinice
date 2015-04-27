@@ -19,57 +19,32 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
-import sernet.verinice.model.search.VeriniceSearchResultRow;
-import sernet.verinice.rcp.search.tables.SearchResultsTableViewer;
+import sernet.verinice.rcp.search.Messages;
 
 /**
- * Maps the column headers from {@link SearchResultsTableViewer} to this
- * interface.
- *
- *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public interface IColumn {
+public class OccurenceColumn extends AbstractColumn {
 
-    /**
-     * The id can be used to retrieve an value from
-     * {@link VeriniceSearchResultRow#getValueFromResultString(String)}.
-     */
-    public String getId();
 
-    /**
-     * Returns an human readable title. Not implemented by every subclass.
-     *
-     */
-    public String getTitle();
+    public OccurenceColumn(IColumnStore columnStore) {
+        super(columnStore);
+    }
 
-    public void setVisible(boolean visible);
+    @Override
+    public String getId() {
+        return "occurences_column_" + getTitle();
+    }
 
-    public boolean isVisible();
+    @Override
+    public int getRank() {
+        // TODO Auto-generated method stub
+        return -1;
+    }
 
-    /**
-     * Sets the order of the column.
-     *
-     */
-    public int getRank();
+    @Override
+    public String getTitle() {
+        return  Messages.OccurenceColumn_0;
+    }
 
-    public boolean isMultiselect();
-
-    public boolean isSingleSelect();
-
-    public boolean isNumericSelect();
-
-    public boolean isBooleanSelect();
-
-    public boolean isEnum();
-
-    public boolean isLine();
-
-    public boolean isReference();
-
-    public boolean isCnaLinkReference();
-
-    public boolean isText();
-
-    public boolean isDate();
 }

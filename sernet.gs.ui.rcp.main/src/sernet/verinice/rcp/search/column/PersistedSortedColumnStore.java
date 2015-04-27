@@ -66,10 +66,12 @@ public class PersistedSortedColumnStore extends ColumnStore {
         IColumn iconColumn = IColumnFactory.getIconColumn(this);
         IColumn titleColumn = IColumnFactory.getTitleColumn(this);
         IColumn scopeColumn = IColumnFactory.getScopeColumn(this);
+        IColumn occurenceColumn = IColumnFactory.getOccurenceColumn(this);
 
         addColumn(iconColumn);
         addColumn(titleColumn);
         addColumn(scopeColumn);
+        addColumn(occurenceColumn);
 
         for (PropertyType propertyType : getAllPropertyTypes()) {
             IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this);
@@ -88,10 +90,12 @@ public class PersistedSortedColumnStore extends ColumnStore {
         IColumn iconColumn = IColumnFactory.getIconColumn(this);
         IColumn titleColumn = IColumnFactory.getTitleColumn(this);
         IColumn scopeColumn = IColumnFactory.getScopeColumn(this);
+        IColumn occurenceColumn = IColumnFactory.getOccurenceColumn(this);
 
         setVisible(iconColumn, isColumnVisible(iconColumn));
         setVisible(titleColumn, isColumnVisible(titleColumn));
         setVisible(scopeColumn, isColumnVisible(scopeColumn));
+        addColumn(occurenceColumn);
 
         for (PropertyType propertyType : getAllPropertyTypes()) {
             IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this);

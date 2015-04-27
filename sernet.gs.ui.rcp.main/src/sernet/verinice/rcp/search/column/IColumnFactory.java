@@ -41,4 +41,9 @@ public class IColumnFactory {
     public static IColumn getPropertyTypeColumn(PropertyType propertyType, IColumnStore columnStore) {
         return new PropertyTypeColumn(columnStore, propertyType);
     }
+
+
+    public static IColumn getOccurenceColumn(IColumnStore columnStore) {
+        return new OccurenceColumn(columnStore);
+    }
 }

@@ -19,12 +19,9 @@ package sernet.verinice.rcp.search;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
@@ -44,7 +41,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.internal.intro.impl.util.Log;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
@@ -54,7 +50,6 @@ import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.search.tables.SearchTableSorter;
 import sernet.verinice.rcp.search.tables.SearchTableViewerFactory;
 import sernet.verinice.rcp.search.tables.TableMenuListener;
 
@@ -74,8 +69,6 @@ public class SearchView extends RightsEnabledView {
     private SearchComboViewer resultsByTypeCombo;
 
     private TableViewer currentViewer;
-
-    private SearchTableSorter tableSorter = new SearchTableSorter();
 
     private Composite parent;
 
@@ -351,9 +344,6 @@ public class SearchView extends RightsEnabledView {
         return currentViewer;
     }
 
-    public SearchTableSorter getTableSorter() {
-        return tableSorter;
-    }
 
     private static Shell getShell() {
         return getDisplay().getActiveShell();
