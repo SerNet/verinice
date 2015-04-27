@@ -39,7 +39,7 @@
 	
 	<target name="coverage" description="Creates coverage reports">
 		<jacoco:coverage destfile="${coverage-reports}/jacoco.exec">
-		    <junit fork="true" forkmode="once" printsummary="yes" haltonfailure="no">
+		    <junit fork="true" forkmode="perTest" maxmemory="2048m" printsummary="yes" haltonfailure="no">
 				<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
 			  	<classpath refid="classpath.test" />
 			  	<formatter type="xml"/>
@@ -54,7 +54,7 @@
 	
 	<target name="test" description="runs JUnit tests">
 		<mkdir dir="${reports}"/>
-		<junit printsummary="yes" haltonfailure="no">
+		<junit fork="true" forkmode="perTest" maxmemory="2048m" printsummary="yes" haltonfailure="no">
 			<jvmarg value="-Dlog4j.configuration=log4j-test-server.xml" />
 		  	<classpath refid="classpath.test" />
 		  	<formatter type="xml"/>
@@ -72,7 +72,7 @@
 		<move file="${bin}/veriniceserver-plain.properties.test" tofile="${bin}/veriniceserver-plain.properties.postgresql"/>
 		<move file="${bin}/veriniceserver-plain.properties.oracle" tofile="${bin}/veriniceserver-plain.properties.test"/>					
 		<mkdir dir="${reports.oracle}"/>
-		<junit printsummary="yes" haltonfailure="no">
+		<junit fork="true" forkmode="perTest" maxmemory="2048m" printsummary="yes" haltonfailure="no">
 			<jvmarg value="-Dlog4j.configuration=log4j-test-server.xml" />
 		  	<classpath refid="classpath.test" />
 		  	<formatter type="xml"/>
