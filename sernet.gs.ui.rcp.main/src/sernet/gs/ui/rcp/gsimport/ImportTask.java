@@ -19,8 +19,10 @@ package sernet.gs.ui.rcp.gsimport;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -285,9 +287,26 @@ public class ImportTask {
         importMassnahmenVerknuepfungen();
         monitor.subTask(defaultSubTaskDescription);
 
+        // update this.alleMassnahmen
+        Collection<MassnahmenUmsetzung> allMnUms = this.alleMassnahmen.values();
+        ArrayList<CnATreeElement> toUpdate = new ArrayList<CnATreeElement>();
+        toUpdate.addAll(allMnUms);
+        LOG.debug("Saving person links to measures.");
+        monitor.subTask("Saving person links to measures.");
+        CnAElementHome.getInstance().update(toUpdate);
+
         importBausteinPersonVerknuepfungen();
         monitor.subTask(defaultSubTaskDescription);
+        
+        // update this. alleBausteineToBausteinUmsetzungMap
+        toUpdate = new ArrayList<CnATreeElement>();
+        toUpdate.addAll(this.alleBausteineToBausteinUmsetzungMap.values());
+        LOG.debug("Saving person links to modules.");
+        monitor.subTask("Saving person links to modules.");
+        
+        CnAElementHome.getInstance().update(toUpdate);
 
+        
         importZielobjektVerknuepfungen();
         monitor.subTask(defaultSubTaskDescription);
 
