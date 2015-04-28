@@ -56,7 +56,7 @@ public class LoadCnAElementByExternalID extends GenericCommand {
     private boolean properties = false;
 
 	public LoadCnAElementByExternalID( String sourceID, String id) {
-		this(id,sourceID,false,false);
+		this(sourceID,id,false,false);
 	}
 	
 	/**
