@@ -34,6 +34,22 @@ import sernet.verinice.model.search.VeriniceSearchResultObject;
  */
 public interface ISearchService {
     
+    
+    /*
+     * fields of {@link CnATreeElement} not given by property of entity-type
+     */
+    
+    public static final String ES_FIELD_UUID = "uuid";
+    public static final String ES_FIELD_DBID = "dbid";
+    public static final String ES_FIELD_TITLE = "title";
+    public static final String ES_FIELD_ELEMENT_TYPE = "element-type";
+    public static final String ES_FIELD_EXT_ID = "ext-id";
+    public static final String ES_FIELD_SOURCE_ID = "source-id";
+    public static final String ES_FIELD_SCOPE_ID = "scope-id";
+    public static final String ES_FIELD_PARENT_ID = "parent-id";
+    public static final String ES_FIELD_ICON_PATH = "icon-path";
+    public static final String ES_FIELD_PERMISSION_ROLES = "permission-roles";
+    
     VeriniceSearchResult query(VeriniceQuery veriniceQuery);
 
     /**

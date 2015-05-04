@@ -3,7 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<!-- <bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer" init-method="init"> -->
+	<bean id="clientFactory" class="sernet.verinice.search.ElasticsearchClientFactory"
+		init-method="init" >
+		<property name="indexLocation" value="/WEB-INF/elasticsearch/"/>
+	</bean>
+
 	<bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer">
 		<property name="scheduler" ref="quartzSchedulerFactoryBean" />
 		<property name="indexJobFactory">

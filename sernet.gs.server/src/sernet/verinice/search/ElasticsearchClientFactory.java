@@ -1,5 +1,6 @@
 package sernet.verinice.search;
 
+import java.io.IOException;
 import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
@@ -11,6 +12,7 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.core.io.Resource;
 
 /*******************************************************************************
  * Copyright (c) 2015 Daniel Murygin.
@@ -40,6 +42,11 @@ public class ElasticsearchClientFactory implements DisposableBean {
     private Node node = null;
     private Client client = null;
     private Settings settings = null;
+    
+    /*
+     * location of ES-working directory, injected by spring, different in Tier2 and Tier3
+     */
+    private Resource indexLocation;
     
     private final static Logger LOG = Logger.getLogger(ElasticsearchClientFactory.class);
 
@@ -83,6 +90,7 @@ public class ElasticsearchClientFactory implements DisposableBean {
     }
 
     protected Settings buildNodeSettings() {
+        try {
         // Build settings
         ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder()
             .put("node.name", "elasticsearch-" + NetworkUtils.getLocalAddress().getHostName())
@@ -91,9 +99,9 @@ public class ElasticsearchClientFactory implements DisposableBean {
             .put("index.store.type", "niofs")
             //.put("index.store.fs.memory.enabled", "true")
             .put("gateway.type", "local")
-            .put("path.data", "./elasticsearch/data")
-            .put("path.work", "./elasticsearch/work")
-            .put("path.logs", "./elasticsearch/logs")
+            .put("path.data", getIndexLocation().getFile().getAbsolutePath() + "/data")
+            .put("path.work", getIndexLocation().getFile().getAbsolutePath() + "/work")
+            .put("path.logs", getIndexLocation().getFile().getAbsolutePath() + "/logs")
             .put("node.local", true);
         if (settings != null) {
             builder.put(settings);
@@ -107,6 +115,24 @@ public class ElasticsearchClientFactory implements DisposableBean {
             }
         }
         return builder.build();
+        } catch (IOException e) {
+            LOG.error("Error setting up ES-Client-Factory", e);
+        }
+        return null;
+    }
+
+    /**
+     * @return the indexLocation
+     */
+    public Resource getIndexLocation() {
+        return indexLocation;
+    }
+
+    /**
+     * @param indexLocation the indexLocation to set
+     */
+    public void setIndexLocation(Resource indexLocation) {
+        this.indexLocation = indexLocation;
     }
 
 }

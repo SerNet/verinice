@@ -35,8 +35,11 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.search.ISearchService;
+import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.model.iso27k.ImportIsoGroup;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -47,7 +50,11 @@ public class JsonBuilder {
     
     public static final String getJson(CnATreeElement element) {       
         try {
-            return doGetJson(element);
+            if(isIndexableElement(element)){
+                return doGetJson(element);
+            } else {
+                return "";
+            }
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -58,16 +65,16 @@ public class JsonBuilder {
     private static String doGetJson(CnATreeElement element) throws IOException {
         XContentBuilder builder;
         builder = XContentFactory.jsonBuilder().startObject();      
-        builder.field("uuid", element.getUuid());
-        builder.field("dbid", element.getDbId());
-        builder.field("title", element.getTitle());
-        builder.field("element-type", element.getTypeId());
-        builder.field("ext-id", element.getExtId());
-        builder.field("source-id", element.getSourceId());
-        builder.field("scope-id", element.getScopeId());
-        builder.field("parent-id", element.getParentId());
-        builder.field("icon-path", element.getIconPath());
-        builder.field("permission-roles", getPermissionString(element));
+        builder.field(ISearchService.ES_FIELD_UUID, element.getUuid());
+        builder.field(ISearchService.ES_FIELD_DBID, element.getDbId());
+        builder.field(ISearchService.ES_FIELD_TITLE, element.getTitle());
+        builder.field(ISearchService.ES_FIELD_ELEMENT_TYPE, element.getTypeId());
+        builder.field(ISearchService.ES_FIELD_EXT_ID, element.getExtId());
+        builder.field(ISearchService.ES_FIELD_SOURCE_ID, element.getSourceId());
+        builder.field(ISearchService.ES_FIELD_SCOPE_ID, element.getScopeId());
+        builder.field(ISearchService.ES_FIELD_PARENT_ID, element.getParentId());
+        builder.field(ISearchService.ES_FIELD_ICON_PATH, element.getIconPath());
+        builder.field(ISearchService.ES_FIELD_PERMISSION_ROLES, getPermissionString(element));
         if(element.getEntity()!=null && element.getEntity().getTypedPropertyLists()!=null) {
             builder = addProperties(builder, element.getEntityType().getAllPropertyTypeIds(), element.getEntity());
         }
@@ -83,7 +90,7 @@ public class JsonBuilder {
         StringBuilder sb = new StringBuilder();
         while(iter.hasNext()){
             Permission p = iter.next();
-            sb.append(p.getRole()).append("(");
+            sb.append(p.getRole()).append("#");
             if(p.isReadAllowed()){
                 sb.append("r");
             }
@@ -91,7 +98,7 @@ public class JsonBuilder {
                 sb.append("w");
             }
             
-            sb.append(")");
+            sb.append("#");
             
             if(iter.hasNext()){
                 sb.append(", ");
@@ -145,7 +152,7 @@ public class JsonBuilder {
         PropertyOption o = type.getOption(value);
         if(value == null || type == null || o == null){
             if(LOG.isDebugEnabled()){
-                LOG.debug("No mapping for:\t" + value + "\t on <" + type.getId() + "> found, returning value");
+//                LOG.debug("No mapping for:\t" + value + "\t on <" + type.getId() + "> found, returning value");
             }
             return value;
         }
@@ -203,5 +210,13 @@ public class JsonBuilder {
     
     private static DateFormat getLocalizedDatePattern(){
         return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, Locale.getDefault());
+    }
+    
+    private static boolean isIndexableElement(CnATreeElement element){
+        if(element instanceof ImportIsoGroup || element instanceof ImportBsiGroup){
+            return false;
+        } else {
+            return true;
+        }
     }
 }

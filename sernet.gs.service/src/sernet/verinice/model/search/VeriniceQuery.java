@@ -32,13 +32,18 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class VeriniceQuery implements Serializable{
 
-    private final static int DEFAULT_LIMIT = 200;
+    public final static int DEFAULT_LIMIT = 200;
 
     private final static String EMPTY_QUERY = "";
 
-    private int limit = DEFAULT_LIMIT;
+    private int limit = 0;
 
     private String query = EMPTY_QUERY;
+    
+    public VeriniceQuery(String query, int limit){
+        this.query = query;
+        this.limit = (limit > 0) ? limit : DEFAULT_LIMIT;
+    }
 
     /**
      * Limits the results. Default value is 200
@@ -57,10 +62,6 @@ public class VeriniceQuery implements Serializable{
         return escapeQuery(query);
     }
 
-    public void setQuery(String query) {
-        this.query = query;
-    }
-    
     private String escapeQuery(String query){
         String escapedQuery = query.replaceAll("/", "");
         return escapedQuery;

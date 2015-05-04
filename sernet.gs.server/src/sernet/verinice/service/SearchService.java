@@ -29,6 +29,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.elasticsearch.action.search.MultiSearchRequest;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.search.SearchHit;
@@ -77,10 +78,14 @@ public class SearchService implements ISearchService {
      * sernet.verinice.interfaces.search.ISearchService#query(sernet.verinice
      * .model.search.VeriniceQuery)
      */
+    /**
+     * should be used by client to pass a query to the service
+     * in future releases the method should decide which kind of query must be send to 
+     * es. 
+     */
     @Override
     public VeriniceSearchResult query(VeriniceQuery veriniceQuery) {
         ServerInitializer.inheritVeriniceContextState();
-        // return executeSimpleQuery(veriniceQuery.getQuery());
         return getSearchResultsByQueryBuilder(veriniceQuery, null);
     }
 
@@ -112,13 +117,22 @@ public class SearchService implements ISearchService {
 
         return veriniceSearchResult;
     }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.interfaces.search.ISearchService#getSearchResults(java
-     * .lang.String, java.lang.String)
+    
+    /**
+     * gets value shown in ui for a given id
+     * @param id
+     * @return translated id
+     */
+    private String getTypeIDTranslation(String id){
+        return HUITypeFactory.getInstance().getMessage(id);
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.search.ISearchService#getSearchResults(java.lang.String, java.lang.String)
+     */
+    /**
+     * executes a simple query with uses "_all" to search over all fields defined 
+     * within the es index
      */
     @Override
     public VeriniceSearchResultObject getSearchResults(String query, String typeID) {
@@ -126,7 +140,7 @@ public class SearchService implements ISearchService {
         SearchHits hits = searchDao.findByPhrase(query, typeID).getHits();
         String identifier = "";
         VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID, getEntityName(typeID), getPropertyIds(typeID));
-        for (SearchHit hit : hits.getHits()) {
+        for (SearchHit hit : hits.getHits() ){
             identifier = hit.getId();
             StringBuilder occurence = new StringBuilder();
             Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
@@ -162,8 +176,9 @@ public class SearchService implements ISearchService {
 
 
     /**
-     * method to experiment with different query builders
-     *
+     * uses the es querybuilder api to build a query that could be paramterized to
+     * search on given fields only, and adding filters for rightmanagement and 
+     * type-filtered results
      * @param query
      * @param typeID
      * @return
@@ -189,24 +204,35 @@ public class SearchService implements ISearchService {
     }
 
     /**
+     * executess and processes a {@link MultiSearchRequest}, transforms search hits 
+     * into {@link VeriniceSearchResultObject} including occurences
      * @param typeID
      * @param msrb
-     * @return
+     * @return {@link VeriniceSearchResultObject}
      */
     private VeriniceSearchResultObject processMultiSearchRequest(String typeID, MultiSearchRequestBuilder msrb) {
         List<SearchHit> hitList = new ArrayList<SearchHit>(0);
-
+        
         MultiSearchResponse msr = searchDao.executeMultiSearch(msrb);
         for (MultiSearchResponse.Item i : msr.getResponses()) {
             if(i!=null && i.getResponse()!=null && i.getResponse().getHits()!=null) {
                 for (SearchHit hit : i.getResponse().getHits().getHits()) {
+//                    try {
+//                        XContentBuilder builder = XContentFactory.jsonBuilder().prettyPrint();
+//                        builder.startObject();
+//                        builder = msr.toXContent(builder, ToXContent.EMPTY_PARAMS);
+//                        builder.endObject();
+//                        BytesReference reference = builder.bytes();
+//                        FileUtils.writeStringToFile(File.createTempFile("verinice", "es_data"), XContentHelper.convertToJson(reference, true));
+//                    } catch (IOException e) {
+//                        // TODO Auto-generated catch block
+//                        e.printStackTrace();
+//                    }
                     hitList.add(hit);
                 }
             }
         }
         String identifier = "";
-        // VeriniceSearchResultObject results = new
-        // VeriniceSearchResultObject(getTypeIDTranslation(typeID));
         VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID, getEntityName(typeID), getPropertyIds(typeID));
         for (SearchHit hit : hitList) {
             identifier = hit.getId();
@@ -256,6 +282,7 @@ public class SearchService implements ISearchService {
      */
     @Override
     public void reindex() {
+        searchDao.clear();
         searchIndexer.index();
     }
 

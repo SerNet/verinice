@@ -6,6 +6,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
+	<bean id="clientFactory" class="sernet.verinice.search.ElasticsearchClientFactory"
+		init-method="init" >
+		<property name="indexLocation" value="./elasticsearch/"/>
+	</bean>
+
 	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
     	<property name="corePoolSize" value="5" />
     	<property name="maxPoolSize" value="10" />

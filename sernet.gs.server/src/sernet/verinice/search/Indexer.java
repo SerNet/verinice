@@ -129,19 +129,23 @@ public class Indexer {
     }
 
     private void logVersion() throws InterruptedException, ExecutionException {
-        ActionResponse response = completionService.take().get();
-        long version = 0;
-        String id = "unknown";
-        if(response instanceof IndexResponse) {
-            version = ((IndexResponse)response).getVersion();
-            id = ((IndexResponse)response).getId();
-        }
-        if(response instanceof UpdateResponse) {
-            version = ((UpdateResponse)response).getVersion();
-            id = ((UpdateResponse)response).getId();
-        }
-        if(version>1) {
-            LOG.debug("Version " + version + " for id: " + id);
+        if(completionService != null &&
+                completionService.take() != null &&
+                completionService.take().get() != null){
+            ActionResponse response = completionService.take().get();
+            long version = 0;
+            String id = "unknown";
+            if(response instanceof IndexResponse) {
+                version = ((IndexResponse)response).getVersion();
+                id = ((IndexResponse)response).getId();
+            }
+            if(response instanceof UpdateResponse) {
+                version = ((UpdateResponse)response).getVersion();
+                id = ((UpdateResponse)response).getId();
+            }
+            if(version>1) {
+                LOG.debug("Version " + version + " for id: " + id);
+            }
         }
     }
     

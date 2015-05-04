@@ -31,6 +31,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -42,6 +45,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -74,6 +78,10 @@ public class SearchView extends RightsEnabledView {
     public static final String ID = "sernet.verinice.rcp.search.SearchView";
 
     private Text queryText;
+    
+    private Label limitLabel;
+    
+    private Text limitText;
 
     private Button searchButton;
 
@@ -95,7 +103,7 @@ public class SearchView extends RightsEnabledView {
 
     private Composite searchComposite;
 
-    private Composite tableComposite;
+    private ScrolledComposite tableComposite;
 
     public SearchView() {
         super();
@@ -232,6 +240,8 @@ public class SearchView extends RightsEnabledView {
     private void createComposite(Composite parent) {
 
         Composite composite = createContainerComposite(parent);
+
+        
         searchComposite = createSearchComposite(composite);
 
         // add elements to search form
@@ -261,6 +271,31 @@ public class SearchView extends RightsEnabledView {
 
             @Override
             public void keyPressed(KeyEvent e) {
+
+            }
+        });
+        
+        limitLabel = new Label(searchComposite, SWT.RIGHT);
+        limitLabel.setText("Limit:");
+        
+        limitText = new Text(searchComposite, SWT.SINGLE | SWT.BORDER);
+        limitText.setLayoutData(gridData);
+        limitText.setText(String.valueOf(VeriniceQuery.DEFAULT_LIMIT));
+        limitText.addFocusListener(new FocusListener() {
+            
+            @Override
+            public void focusLost(FocusEvent e) {
+                try{
+                    Integer.parseInt(((Text)e.getSource()).getText());
+                } catch (NumberFormatException nfe){
+                    limitText.setFocus();
+                    limitText.selectAll();
+                }
+                
+            }
+            
+            @Override
+            public void focusGained(FocusEvent e) {
 
             }
         });
@@ -308,7 +343,7 @@ public class SearchView extends RightsEnabledView {
         GridData gridData = new GridData(GridData.FILL_BOTH);
         comboComposite.setLayoutData(gridData);
 
-        GridLayout gridLayout = new GridLayout(3, true);
+        GridLayout gridLayout = new GridLayout(5, true);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         comboComposite.setLayout(gridLayout);
@@ -316,7 +351,19 @@ public class SearchView extends RightsEnabledView {
     }
 
     private void createTableComposite(Composite searchComposite2) {
-        tableComposite = new Composite(searchComposite, SWT.NONE);
+//        ScrolledComposite scrolledComposite = new ScrolledComposite(searchComposite, SWT.V_SCROLL);
+//        scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+//        scrolledComposite.setExpandHorizontal(true);
+//        scrolledComposite.setExpandVertical(true);
+        
+//        tableComposite = new Composite(searchComposite, SWT.H_SCROLL | SWT.V_SCROLL);
+//        GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        //        tableGridData.horizontalSpan = 3;
+        //        tableComposite.setLayoutData(tableGridData);
+        tableComposite = new ScrolledComposite(searchComposite, SWT.V_SCROLL | SWT.H_SCROLL);
+        tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        tableComposite.setExpandHorizontal(true);
+        tableComposite.setExpandVertical(true);
         GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         tableGridData.horizontalSpan = 3;
         tableComposite.setLayoutData(tableGridData);
@@ -406,8 +453,7 @@ public class SearchView extends RightsEnabledView {
     }
 
     private void search() {
-        VeriniceQuery veriniceQuery = new VeriniceQuery();
-        veriniceQuery.setQuery(queryText.getText());
+        VeriniceQuery veriniceQuery = new VeriniceQuery(queryText.getText(), Integer.valueOf(limitText.getText()));
         WorkspaceJob job = new SearchJob(veriniceQuery, searchButton, queryText, this);
         job.schedule();
     }
