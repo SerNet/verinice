@@ -32,8 +32,10 @@ import java.util.TimeZone;
 import org.apache.log4j.Logger;
 
 import sernet.gs.common.ApplicationRoles;
+import sernet.gs.service.GSServiceException;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.TimeFormatter;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.web.SecurityException;
@@ -46,6 +48,7 @@ import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -110,7 +113,14 @@ public class EditBean {
     private Set<String> visiblePropertyIds = new HashSet<String>(); 
     
     private String saveMessage = null;
-       
+    
+    private boolean showDescription = false;
+    
+    private boolean massnahmenUmsetzungFlag = false;
+    
+    private MassnahmenUmsetzung massnahmenUmsetzung;
+    
+
     public void init() {
         long start = 0;
         if (LOG.isDebugEnabled()) {
@@ -136,6 +146,8 @@ public class EditBean {
         command = getCommandService().executeCommand(command);    
         setElement(command.getElement());
         
+        checkMassnahmenUmsetzung();
+                
         if(getElement()!=null) {
             Entity entity = getElement().getEntity();           
             setEntityType(getHuiService().getEntityType(getTypeId())); 
@@ -146,7 +158,7 @@ public class EditBean {
             getLinkBean().reset();
             if(!(getLinkCollapsed())) {
                 getLinkBean().init();
-            } 
+            }
             
             getAttachmentBean().setElement(getElement());
             getAttachmentBean().init();
@@ -199,6 +211,14 @@ public class EditBean {
             LOG.info("Element not found, type: " + getTypeId() + ", uuid: " + getUuid());
         }
         
+    }
+
+    private void checkMassnahmenUmsetzung() {
+        if(getElement() instanceof MassnahmenUmsetzung){
+            setMassnahmenUmsetzung((MassnahmenUmsetzung)element);
+        } else {
+            setMassnahmenUmsetzung(null);
+        }
     }
 
     private boolean isVisible(PropertyType huiType) {
@@ -682,4 +702,45 @@ public class EditBean {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
     
-}
+    public void toggleDescription() {
+        showDescription = !showDescription;
+    }
+     
+    public boolean isShowDescription() {
+        return showDescription;
+    }
+    
+    public MassnahmenUmsetzung getMassnahmenUmsetzung() {
+        return massnahmenUmsetzung;
+    }
+    
+    public void setMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
+        this.massnahmenUmsetzung = massnahmenUmsetzung;
+    }
+    
+    public String getMassnahmeHtml() {
+        final MassnahmenUmsetzung massnahme = getMassnahmenUmsetzung();
+        String text = null;
+        if(massnahme!=null) {
+            try {
+                text = GSScraperUtil.getInstanceWeb().getModel().getMassnahmeHtml(massnahme.getUrl(), massnahme.getStand());
+            } catch (GSServiceException e) {
+                LOG.error("Error while loading massnahme description.", e);
+                Util.addError("submit", Util.getMessage("todo.load.failed"));
+            }
+        }
+        if(text!=null) {
+            int start = text.indexOf("<div id=\"content\">");
+            int end = text.lastIndexOf("</body>");
+            if(start==-1 || end==-1) {
+                LOG.error("Can not find content of control description: " + text);
+                text = "";
+            } else {
+                text = text.substring(start, end);
+            }
+        } else {
+            text = "";
+        }
+        return text;
+    }
+} 
