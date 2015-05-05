@@ -31,7 +31,6 @@ import org.elasticsearch.action.search.MultiSearchResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 
-import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.search.VeriniceQuery;
 
 /**

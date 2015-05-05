@@ -46,6 +46,8 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.index.engine.DocumentMissingException;
 import org.elasticsearch.index.query.AndFilterBuilder;
+import org.elasticsearch.index.query.BaseFilterBuilder;
+import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 import org.elasticsearch.index.query.OrFilterBuilder;
@@ -243,102 +245,37 @@ public abstract class BaseDao implements ISearchDao {
         if(Asset.TYPE_ID.equals(typeId)){
             this.hashCode();
         }
-        MultiSearchRequestBuilder msrb = getClient().prepareMultiSearch();
+        MultiSearchRequestBuilder requestBuilder = getClient().prepareMultiSearch();
         for(String field : map.keySet()){
             String value = map.get(field);
             if(value != null){
-                OrFilterBuilder ofb = null;
-                for(String role : getRoleString(username)){
-                    if(ofb == null){
-                        ofb = FilterBuilders.orFilter(FilterBuilders.regexpFilter(ISearchService.ES_FIELD_PERMISSION_ROLES, role));
-                    } else {
-                        ofb.add(FilterBuilders.regexpFilter(ISearchService.ES_FIELD_PERMISSION_ROLES, role));
-                    }
-                }
-                SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
-//                BaseQueryBuilder fqb = (ofb != null) ? QueryBuilders.filteredQuery(QueryBuilders.matchPhraseQuery(field, value), ofb) : QueryBuilders.matchPhraseQuery(field, value) ;
-                srb = srb.setQuery(QueryBuilders.matchPhraseQuery(field, value));
-                TermsFilterBuilder tfb = FilterBuilders.inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[]{typeId});
-                AndFilterBuilder f = FilterBuilders.andFilter(tfb);
-                if(ofb != null){
-                    f = f.add(ofb);
+                BaseFilterBuilder permissionBuilder = createPermissionFilter(username);
+                SearchRequestBuilder searchBuilder = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
+                searchBuilder = searchBuilder.setQuery(QueryBuilders.matchPhraseQuery(field, value));
+                TermsFilterBuilder typeBuilder = FilterBuilders.inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[]{typeId});
+                AndFilterBuilder andBuilder = FilterBuilders.andFilter(typeBuilder);
+                
+                if(permissionBuilder != null){
+                    andBuilder = andBuilder.add(permissionBuilder);
                 } else {
                     // should only happen if superadmin is logged in
                     this.hashCode();
                 }
-                srb = srb.setPostFilter(tfb);
+                searchBuilder = searchBuilder.setPostFilter(andBuilder);
                 
-                srb = srb.setFrom(0);
-                srb = srb.setSize(query.getLimit());
-                msrb = msrb.add(srb);
+                searchBuilder = searchBuilder.setFrom(0);
+                searchBuilder = searchBuilder.setSize(query.getLimit());
+                requestBuilder = requestBuilder.add(searchBuilder);
             }
         }
-        return msrb;
+        return requestBuilder;
+    }
+
+    private TermsFilterBuilder createPermissionFilter(String username) {
+        return FilterBuilders.inFilter(ISearchService.ES_FIELD_PERMISSION_ROLES + "." + ISearchService.ES_FIELD_PERMISSION_NAME, getRoleString(username).toArray());
     }
     
-    private MultiSearchRequestBuilder buildBooleanMultiFieldQuery(Map<String, String> map, String typeId, String username, VeriniceQuery query){
-        Set<String> highlightProperties = new HashSet<String>(0);
-        MultiSearchRequestBuilder msrb = getClient().prepareMultiSearch();
-        for(String propertyTypeId : HUITypeFactory.getInstance().getEntityType(typeId).getAllPropertyTypeIds()){
-            highlightProperties.add(propertyTypeId);
-        }
-        highlightProperties.addAll(EXTRA_FIELDS);
-        
-        ;
-        
-        for(String field : map.keySet()){
-            String value = map.get(field);
-            if(value != null){
-                OrFilterBuilder ofb = null;
-                for(String role : getRoleString(username)){
-                    if(ofb == null){
-                        ofb = FilterBuilders.orFilter(FilterBuilders.regexpFilter(ISearchService.ES_FIELD_PERMISSION_ROLES, role));
-                    } else {
-                        ofb.add(FilterBuilders.regexpFilter(ISearchService.ES_FIELD_PERMISSION_ROLES, role));
-                    }
-                }
-                SearchRequestBuilder srb = null;
-                if(ofb != null){
-                    if(LOG.isDebugEnabled()){
-                        try {
-                            LOG.debug(XContentHelper.convertToJson(ofb.buildAsBytes(), true));
-                        } catch (ElasticsearchException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                    }
-                    srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                            .setQuery(QueryBuilders.filteredQuery(
-                                                QueryBuilders.filteredQuery(
-                                                        QueryBuilders.matchPhraseQuery(field, value), ofb) 
-                                                        ,FilterBuilders.inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[]{typeId}))
-                                    );
-                    srb.setFrom(0);
-                    srb.setSize(query.getLimit());
-
-                } else {
-                    srb = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                            .setQuery(QueryBuilders.filteredQuery(
-                                                QueryBuilders.matchPhraseQuery(field, value) 
-                                                ,FilterBuilders.inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[]{typeId}))
-                                    );
-                    srb.setFrom(0);
-                    srb.setSize(query.getLimit());
-                }
-                
-                
-                for(String s : highlightProperties){
-                    srb.addHighlightedField(s);
-                }
-                msrb.add(srb);
-            }
-        }
-        
-        return msrb;
-    }
+  
     
     @Override
     public MultiSearchResponse executeMultiSearch (MultiSearchRequestBuilder srb){
@@ -460,7 +397,7 @@ public abstract class BaseDao implements ISearchDao {
       String[] roles = getConfigurationService().getRoles(username);
       for(int i = 0; i < roles.length; i++){
           if(!applicationRoles.contains(roles[i])){
-              userRoles.add(getGroupPattern(roles[i]));
+              userRoles.add(roles[i]);
           }
       }
       return userRoles;

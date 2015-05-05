@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
@@ -50,11 +49,16 @@ public class JsonBuilder {
     
     public static final String getJson(CnATreeElement element) {       
         try {
+            String json = null;
             if(isIndexableElement(element)){
-                return doGetJson(element);
+                json = doGetJson(element);
             } else {
-                return "";
+                json = "";
             }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(json);
+            }
+            return json;
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -74,7 +78,9 @@ public class JsonBuilder {
         builder.field(ISearchService.ES_FIELD_SCOPE_ID, element.getScopeId());
         builder.field(ISearchService.ES_FIELD_PARENT_ID, element.getParentId());
         builder.field(ISearchService.ES_FIELD_ICON_PATH, element.getIconPath());
-        builder.field(ISearchService.ES_FIELD_PERMISSION_ROLES, getPermissionString(element));
+       
+        addPermissions(builder, element);
+        
         if(element.getEntity()!=null && element.getEntity().getTypedPropertyLists()!=null) {
             builder = addProperties(builder, element.getEntityType().getAllPropertyTypeIds(), element.getEntity());
         }
@@ -84,27 +90,29 @@ public class JsonBuilder {
     /**
      * @param element
      * @return
+     * @throws IOException 
      */
-    private static String getPermissionString(CnATreeElement element) {
-        Iterator<Permission> iter = element.getPermissions().iterator();
-        StringBuilder sb = new StringBuilder();
-        while(iter.hasNext()){
-            Permission p = iter.next();
-            sb.append(p.getRole()).append("#");
-            if(p.isReadAllowed()){
-                sb.append("r");
+    private static void addPermissions(XContentBuilder builder, CnATreeElement element) throws IOException {
+        if(element.getPermissions()==null || element.getPermissions().isEmpty()) {
+            return;
+        }
+        builder.startArray(ISearchService.ES_FIELD_PERMISSION_ROLES);
+        for (Permission p : element.getPermissions()) {          
+            int value = 0;
+            if(p.isReadAllowed()) {
+                value = 1;
             }
-            if(p.isWriteAllowed()){
-                sb.append("w");
+            if(p.isWriteAllowed()) {
+                value = 2;
             }
-            
-            sb.append("#");
-            
-            if(iter.hasNext()){
-                sb.append(", ");
+            if(value > 0) {
+                builder.startObject();
+                builder.field( ISearchService.ES_FIELD_PERMISSION_NAME, p.getRole());
+                builder.field( ISearchService.ES_FIELD_PERMISSION_VALUE, value);
+                builder.endObject();
             }
         }
-        return sb.toString();
+        builder.endArray();
     }
 
     private static XContentBuilder addProperties(XContentBuilder builder, String[] propertyTypeIds, Entity e) throws IOException {
@@ -152,7 +160,7 @@ public class JsonBuilder {
         PropertyOption o = type.getOption(value);
         if(value == null || type == null || o == null){
             if(LOG.isDebugEnabled()){
-//                LOG.debug("No mapping for:\t" + value + "\t on <" + type.getId() + "> found, returning value");
+                LOG.debug("No mapping for:\t" + value + "\t on <" + type.getId() + "> found, returning value");
             }
             return value;
         }

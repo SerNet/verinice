@@ -49,6 +49,8 @@ public interface ISearchService {
     public static final String ES_FIELD_PARENT_ID = "parent-id";
     public static final String ES_FIELD_ICON_PATH = "icon-path";
     public static final String ES_FIELD_PERMISSION_ROLES = "permission-roles";
+    public static final String ES_FIELD_PERMISSION_NAME = "p-name";
+    public static final String ES_FIELD_PERMISSION_VALUE = "p-value";
     
     VeriniceSearchResult query(VeriniceQuery veriniceQuery);
 
