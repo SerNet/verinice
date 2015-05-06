@@ -1,12 +1,16 @@
 package sernet.verinice.search;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Map.Entry;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.network.NetworkUtils;
 import org.elasticsearch.common.settings.ImmutableSettings;
+import org.elasticsearch.common.settings.ImmutableSettings.Builder;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.node.Node;
@@ -61,6 +65,7 @@ public class ElasticsearchClientFactory implements DisposableBean {
             }
             // Get a client
             client = node.client();
+            configure();
             // Wait for Yellow status
             client
                 .admin()
@@ -71,6 +76,35 @@ public class ElasticsearchClientFactory implements DisposableBean {
                 .execute()
                 .actionGet();
         }
+    }
+
+    private void configure() {
+        if(!client.admin().indices().prepareExists(ISearchDao.INDEX_NAME).execute().actionGet().isExists()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Creating index " + ISearchDao.INDEX_NAME + "...");
+            }              
+            client.admin().indices().prepareCreate(ISearchDao.INDEX_NAME)
+            .setSettings(getAnylysisConf())
+            .addMapping(ElementDao.TYPE_NAME, getMapping())
+            .execute().actionGet();
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("Index " + ISearchDao.INDEX_NAME + " exists");
+        } 
+    }
+
+    private Builder getAnylysisConf() {
+        return ImmutableSettings.settingsBuilder().loadFromClasspath("sernet/verinice/search/analysis.json");
+    }
+
+    private String getMapping() {
+        InputStream in = this.getClass().getResourceAsStream("/sernet/verinice/search/mapping.json");
+        String mapping = null;
+        try {
+            mapping = IOUtils.toString(in, "UTF-8");
+        } catch (IOException e) {
+            LOG.error("Error while reading mapping file", e);
+        }
+        return mapping;
     }
 
     /*

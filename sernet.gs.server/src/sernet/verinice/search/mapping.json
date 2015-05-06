@@ -1,0 +1,19 @@
+{
+   "element": {
+      "properties" : {
+         "permission-roles" : {
+            "type" : "nested",
+            "include_in_parent": true,
+            "properties": {
+               "p-name" : {
+                  "type" : "string",
+                  "index" : "not_analyzed"
+               },
+               "p-value" : {
+                  "type": "long"
+               }
+            }
+         }
+      }
+   }      
+}

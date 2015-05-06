@@ -397,7 +397,7 @@ public abstract class BaseDao implements ISearchDao {
       String[] roles = getConfigurationService().getRoles(username);
       for(int i = 0; i < roles.length; i++){
           if(!applicationRoles.contains(roles[i])){
-              userRoles.add(roles[i]);
+              userRoles.add(roles[i].toLowerCase());
           }
       }
       return userRoles;
