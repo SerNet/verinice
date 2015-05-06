@@ -60,7 +60,7 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
             @Override
             public String getText(Object element) {
                 VeriniceSearchResultObject veriniceSearchResult = (VeriniceSearchResultObject) element;
-                return new StringBuilder().append(veriniceSearchResult.getEntityTypeId()).append(" - ").append(veriniceSearchResult.getHits()).toString();
+                return new StringBuilder().append(veriniceSearchResult.getEntityName()).append(" (").append(veriniceSearchResult.getHits()).append(")").toString();
             }
         });
 

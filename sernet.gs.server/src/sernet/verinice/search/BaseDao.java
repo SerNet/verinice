@@ -22,18 +22,14 @@ package sernet.verinice.search;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
-import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.ActionRequestValidationException;
 import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.action.delete.DeleteResponse;
-import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.MultiSearchResponse;
@@ -47,15 +43,12 @@ import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.index.engine.DocumentMissingException;
 import org.elasticsearch.index.query.AndFilterBuilder;
 import org.elasticsearch.index.query.BaseFilterBuilder;
-import org.elasticsearch.index.query.BoolFilterBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
-import org.elasticsearch.index.query.OrFilterBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermsFilterBuilder;
 import org.elasticsearch.indices.IndexMissingException;
 
-import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IConfigurationService;
@@ -187,21 +180,12 @@ public abstract class BaseDao implements ISearchDao {
      */
     @Override
     public SearchResponse findByPhrase(String title) {
-        Set<String> highlightProperties = new HashSet<String>(0);
-            for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
-                 for(String propertyTypeId : type.getAllPropertyTypeIds()){
-                     highlightProperties.add(propertyTypeId);
-                 }
-             }
-        SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType())
+        SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex()).setTypes(getType())
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryBuilders.matchPhraseQuery("_all", title));
-        for(String s : highlightProperties){
-            srb.addHighlightedField(s);
-        }
-        
-        return srb.execute()
-                .actionGet();
+
+        requestBuilder = HighlightFieldAdder.addAll(requestBuilder);       
+        return requestBuilder.execute().actionGet();
     }
     
     @Override
@@ -213,7 +197,6 @@ public abstract class BaseDao implements ISearchDao {
         for(String field : EXTRA_FIELDS){
             map.put(field, query.getQuery());
         }
-//        return buildBooleanMultiFieldQuery(map, typeId, username, query);
         return buildQueryIterative(map, typeId, username, query);
         
     }
@@ -249,25 +232,29 @@ public abstract class BaseDao implements ISearchDao {
         MultiSearchRequestBuilder requestBuilder = getClient().prepareMultiSearch();
         for(String field : map.keySet()){
             String value = map.get(field);
-            if(value != null){
-                BaseFilterBuilder permissionBuilder = createPermissionFilter(username);
-                SearchRequestBuilder searchBuilder = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
+            SearchRequestBuilder searchBuilder = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH);           
+            if(value != null && !value.isEmpty()){
                 searchBuilder = searchBuilder.setQuery(QueryBuilders.matchPhraseQuery(field, value));
-                TermsFilterBuilder typeBuilder = FilterBuilders.inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[]{typeId});
-                AndFilterBuilder andBuilder = FilterBuilders.andFilter(typeBuilder);
-                
-                if(permissionBuilder != null){
-                    andBuilder = andBuilder.add(permissionBuilder);
-                } else {
-                    // should only happen if superadmin is logged in
-                    this.hashCode();
-                }
-                searchBuilder = searchBuilder.setPostFilter(andBuilder);
-                
-                searchBuilder = searchBuilder.setFrom(0);
-                searchBuilder = searchBuilder.setSize(query.getLimit());
-                requestBuilder = requestBuilder.add(searchBuilder);
+            } else {
+                searchBuilder = searchBuilder.setQuery(QueryBuilders.matchAllQuery());
             }
+            BaseFilterBuilder permissionBuilder = createPermissionFilter(username);
+            
+            searchBuilder = HighlightFieldAdder.add(typeId, searchBuilder);
+            TermsFilterBuilder typeBuilder = FilterBuilders.inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[]{typeId});
+            AndFilterBuilder andBuilder = FilterBuilders.andFilter(typeBuilder);
+            
+            if(permissionBuilder != null){
+                andBuilder = andBuilder.add(permissionBuilder);
+            } else {
+                // should only happen if superadmin is logged in
+                this.hashCode();
+            }
+            searchBuilder = searchBuilder.setPostFilter(andBuilder);
+            
+            searchBuilder = searchBuilder.setFrom(0);
+            searchBuilder = searchBuilder.setSize(query.getLimit());
+            requestBuilder = requestBuilder.add(searchBuilder);
         }
         return requestBuilder;
     }
@@ -308,21 +295,12 @@ public abstract class BaseDao implements ISearchDao {
     
     @Override 
     public SearchResponse findByPhrase(String phrase, String entityType){
-        Set<String> highlightProperties = new HashSet<String>(0);
-        for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
-            for(String propertyTypeId : type.getAllPropertyTypeIds()){
-                highlightProperties.add(propertyTypeId);
-            }
-        }
-        SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType())
+        SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex()).setTypes(getType())
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryBuilders.matchPhraseQuery("_all", phrase));
-        for(String s : highlightProperties){
-            srb.addHighlightedField(s);
-        }
 
-        return srb.execute()
-                .actionGet();
+        requestBuilder = HighlightFieldAdder.addAll(requestBuilder);
+        return requestBuilder.execute().actionGet();
     }
     
     /* (non-Javadoc)
@@ -339,26 +317,15 @@ public abstract class BaseDao implements ISearchDao {
      */
     @Override
     public SearchResponse find(String property, String title, Operator operator) {
-        Set<String> highlightProperties = new HashSet<String>(0);
-       if("_all".equals(property)){
-           for(EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()){
-                for(String propertyTypeId : type.getAllPropertyTypeIds()){
-                    highlightProperties.add(propertyTypeId);
-                }
-            }
-        } else {
-            highlightProperties.add(property);
-        }
-        SearchRequestBuilder srb = getClient().prepareSearch(getIndex()).setTypes(getType())
+        SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex()).setTypes(getType())
                 .setQuery(QueryBuilders.matchQuery(property, title).operator(operator))
-                .setSize(20);
-                
-        for(String s : highlightProperties){
-            srb.addHighlightedField(s);
-        }
-        
-                return srb.execute()
-                .actionGet();
+                .setSize(20);              
+        if("_all".equals(property)){
+            requestBuilder = HighlightFieldAdder.addAll(requestBuilder);
+         } else {
+             requestBuilder.addHighlightedField(property);
+         }
+        return requestBuilder.execute().actionGet();
     }
     
     public void clear() {

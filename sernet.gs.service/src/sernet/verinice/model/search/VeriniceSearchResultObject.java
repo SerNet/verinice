@@ -20,7 +20,9 @@ package sernet.verinice.model.search;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import sernet.hui.common.connect.EntityType;
 
@@ -33,7 +35,7 @@ import sernet.hui.common.connect.EntityType;
 @SuppressWarnings("serial")
 public class VeriniceSearchResultObject implements Serializable {
 
-    private List<VeriniceSearchResultRow> results;
+    private Set<VeriniceSearchResultRow> results;
 
     private String id;
 
@@ -56,21 +58,21 @@ public class VeriniceSearchResultObject implements Serializable {
      */
     public VeriniceSearchResultObject(String typeId, String name, String[] propertyTypeIds) {
         this.id = typeId;
-        this.results = new ArrayList<VeriniceSearchResultRow>(0);
+        this.results = new HashSet<VeriniceSearchResultRow>(0);
         this.name = name;
         this.propertyTypeIds = propertyTypeIds;
     }
 
     public void addSearchResult(VeriniceSearchResultRow result) {
         results.add(result);
-        hits++;
+        hits = results.size();
     }
 
     public int getHits() {
         return hits;
     }
 
-    public List<VeriniceSearchResultRow> getAllResults() {
+    public Set<VeriniceSearchResultRow> getAllResults() {
         return results;
     }
 
@@ -95,7 +97,7 @@ public class VeriniceSearchResultObject implements Serializable {
         return name;
     }
 
-    public List<VeriniceSearchResultRow> getRows() {
+    public Set<VeriniceSearchResultRow> getRows() {
         return results;
     }
 

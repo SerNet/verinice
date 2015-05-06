@@ -18,6 +18,7 @@
 package sernet.verinice.rcp.search;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -59,7 +60,7 @@ public class SearchContentProvider implements IStructuredContentProvider {
         }
         if(inputElement instanceof VeriniceSearchResultObject){
             VeriniceSearchResultObject results = (VeriniceSearchResultObject)inputElement;
-            List<VeriniceSearchResultRow> resultList = results.getAllResults();
+            Set<VeriniceSearchResultRow> resultList = results.getAllResults();
             return resultList.toArray(new Object[resultList.size()]);
         }
         

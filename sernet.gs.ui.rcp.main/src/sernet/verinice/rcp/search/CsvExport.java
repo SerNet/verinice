@@ -96,7 +96,7 @@ public class CsvExport implements ICsvExport {
 
     private CSVWriter doExport(VeriniceSearchResultObject result, IColumnStore columnStore, Writer writer ) {      
         CSVWriter csvWriter = new CSVWriter(writer);
-        List<VeriniceSearchResultRow> rows = result.getAllResults();
+        Set<VeriniceSearchResultRow> rows = result.getAllResults();
         exportHeader(columnStore, csvWriter);
         if(rows==null || rows.isEmpty()) {
             return csvWriter;
@@ -130,7 +130,7 @@ public class CsvExport implements ICsvExport {
     
     public static IColumnStore createColumnStore(VeriniceSearchResultObject result) {
         IColumnStore columnStore = new ColumnStore();
-        List<VeriniceSearchResultRow> rows = result.getAllResults();
+        Set<VeriniceSearchResultRow> rows = result.getAllResults();
         for (VeriniceSearchResultRow row : rows) {
             Set<String> types = row.getPropertyTypes();
             for (String id : types ) {

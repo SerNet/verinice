@@ -176,7 +176,7 @@ public class SearchService implements ISearchService {
 
 
     /**
-     * Uses the  querybuilder api to build a query that could be paramterized to
+     * uses the es querybuilder api to build a query that could be paramterized to
      * search on given fields only, and adding filters for rightmanagement and 
      * type-filtered results.
      */
@@ -214,17 +214,6 @@ public class SearchService implements ISearchService {
         for (MultiSearchResponse.Item i : msr.getResponses()) {
             if(i!=null && i.getResponse()!=null && i.getResponse().getHits()!=null) {
                 for (SearchHit hit : i.getResponse().getHits().getHits()) {
-//                    try {
-//                        XContentBuilder builder = XContentFactory.jsonBuilder().prettyPrint();
-//                        builder.startObject();
-//                        builder = msr.toXContent(builder, ToXContent.EMPTY_PARAMS);
-//                        builder.endObject();
-//                        BytesReference reference = builder.bytes();
-//                        FileUtils.writeStringToFile(File.createTempFile("verinice", "es_data"), XContentHelper.convertToJson(reference, true));
-//                    } catch (IOException e) {
-//                        // TODO Auto-generated catch block
-//                        e.printStackTrace();
-//                    }
                     hitList.add(hit);
                 }
             }

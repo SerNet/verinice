@@ -107,7 +107,7 @@ public class CsvExportTest {
         String phrase = LOREM.randomWord();
         VeriniceSearchResultObject result = SearchResultGenerator.createResult(phrase);
         assertNotNull("Result is null", result);
-        List<VeriniceSearchResultRow> rows = result.getAllResults();
+        Set<VeriniceSearchResultRow> rows = result.getAllResults();
         assertFalse("Result is empty", rows.isEmpty());
         for (VeriniceSearchResultRow row : rows) {
             String occurence = row.getFieldOfOccurence();

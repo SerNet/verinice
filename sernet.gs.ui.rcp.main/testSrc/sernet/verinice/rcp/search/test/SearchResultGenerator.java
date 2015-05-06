@@ -56,7 +56,6 @@ public final class SearchResultGenerator {
             result.addSearchResult(createRow(propertyList, phrase));
         }
 
-
         return result;
     }
 
