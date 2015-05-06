@@ -31,8 +31,7 @@
 
       <p:panel header="#{msgEdit['description']}" collapsed="true" toggleable="true" toggleSpeed="50"
         style="margin-top: 3px" rendered="#{edit.massnahmenUmsetzung!=null}">
-        <h:outputText value="#{edit.massnahmeHtml}" escape="false"
-          rendered="#{edit.massnahmenUmsetzung!=null and edit.showDescription}" />
+        <h:outputText value="#{edit.massnahmeHtml}" escape="false" />
       </p:panel>
 
       <p:panel header="#{msgEdit['general']}" collapsed="#{not edit.generalOpen}" toggleable="true" toggleSpeed="50"

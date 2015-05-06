@@ -113,14 +113,9 @@ public class EditBean {
     private Set<String> visiblePropertyIds = new HashSet<String>(); 
     
     private String saveMessage = null;
-    
-    private boolean showDescription = false;
-    
-    private boolean massnahmenUmsetzungFlag = false;
-    
+        
     private MassnahmenUmsetzung massnahmenUmsetzung;
     
-
     public void init() {
         long start = 0;
         if (LOG.isDebugEnabled()) {
@@ -700,14 +695,6 @@ public class EditBean {
     
     private ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
-    }
-    
-    public void toggleDescription() {
-        showDescription = !showDescription;
-    }
-     
-    public boolean isShowDescription() {
-        return showDescription;
     }
     
     public MassnahmenUmsetzung getMassnahmenUmsetzung() {
