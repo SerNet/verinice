@@ -40,17 +40,12 @@ public class SearchJob extends WorkspaceJob {
 
     private VeriniceQuery query;
 
-    private Button searchButton;
-
     private SearchView searchView;
 
-    private Text searchText;
-
-    public SearchJob(VeriniceQuery query, Button searchButton, Text searchText, SearchView searchView) {
+    public SearchJob(VeriniceQuery query, SearchView searchView) {
         super(Messages.SearchView_5);
         this.query = query;
-        this.searchButton = searchButton;
-        this.searchText = searchText;
+
         this.searchView = searchView;
     }
 
@@ -62,8 +57,7 @@ public class SearchJob extends WorkspaceJob {
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
-                    searchButton.setEnabled(false);
-                    searchText.setEnabled(false);
+                    searchView.disableSearch();
                 }
             });
 
@@ -82,8 +76,7 @@ public class SearchJob extends WorkspaceJob {
             Display.getDefault().asyncExec(new Runnable() {
                 @Override
                 public void run() {
-                    searchButton.setEnabled(true);
-                    searchText.setEnabled(true);
+                    searchView.enableSearch();
                 }
             });
         }

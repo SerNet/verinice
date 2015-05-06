@@ -14,6 +14,7 @@
  * 
  * Contributors:
  *     Sebastian Hagedorn <sh@sernet.de> - initial API and implementation
+ *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.rcp.search;
 
@@ -25,9 +26,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -51,43 +50,57 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
-import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.search.tables.SearchTableViewerFactory;
 import sernet.verinice.rcp.search.tables.TableMenuListener;
-import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
+ * Provides input fields for searching the verinice databases and renders the
+ * result into a table view.
+ * <p>
+ * The main form composite contains a 4 column grid, and the sub composites gets
+ * their position with the {@link GridData#horizontalSpan} field.
  *
+ * <pre>
+ * | 1.        | 2.        | 3.        | 4.        |
+ * |-----------------------------------------------|
+ * | Query Title           | Limit Title           | {@link #createTitlesForSearchForm(Composite)}
+ * |-----------------------------------------------|
+ * |         query         | limit     | searchbtn | {@link #createSearchForm(Composite)}
+ * |-----------------------------------------------|
+ * |         combobox for selecting result         | {@link #createResultCombobox(Composite)}
+ * |-----------------------------------------------|
+ * |         result table with flexibel columns    | {@link #createTableComposite(Composite)}
+ * |-----------------------------------------------|
+ * </pre>
+ *
+ * </p>
+ *
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ * @author Sebastian Hagedorn <sh@sernet.de>
  */
 public class SearchView extends RightsEnabledView {
 
-    private static final Logger LOG = Logger.getLogger(SearchView.class);
+    static final Logger LOG = Logger.getLogger(SearchView.class);
 
     public static final String ID = "sernet.verinice.rcp.search.SearchView";
 
     private Text queryText;
-    
-    private Label limitLabel;
-    
+
     private Text limitText;
 
     private Button searchButton;
 
     private SearchComboViewer resultsByTypeCombo;
 
-    private TableViewer currentViewer;
+    TableViewer currentViewer;
 
     private Composite parent;
 
@@ -128,7 +141,7 @@ public class SearchView extends RightsEnabledView {
 
         makeActions();
         fillLocalToolBar();
-
+        initDoubleClickListener();
     }
 
     private void makeActions() {
@@ -148,18 +161,8 @@ public class SearchView extends RightsEnabledView {
         export2CSV.setText(Messages.SearchView_0);
         export2CSV.setToolTipText(Messages.SearchView_0);
         export2CSV.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPORT_ICON));
+        export2CSV.setEnabled(false);
 
-        // editMode = new Action() {
-        // @Override
-        // public void run() {
-        //
-        // }
-        // };
-
-        // editMode.setText(Messages.SearchView_1);
-        // editMode.setToolTipText(Messages.SearchView_1);
-        // editMode.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EDIT));
-        //
         reindex = new RightsEnabledAction(ActionRightIDs.SEARCHREINDEX) {
             @Override
             public void doRun() {
@@ -175,39 +178,10 @@ public class SearchView extends RightsEnabledView {
         reindex.setText(Messages.SearchView_2);
         reindex.setToolTipText(Messages.SearchView_2);
         reindex.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
+    }
 
-        doubleClickListener = new IDoubleClickListener() {
-
-            private ICommandService commandService;
-
-            @SuppressWarnings("rawtypes")
-            @Override
-            public void doubleClick(DoubleClickEvent event) {
-                if (currentViewer.getSelection() instanceof IStructuredSelection && ((IStructuredSelection) currentViewer.getSelection()).getFirstElement() instanceof VeriniceSearchResultRow) {
-                    try {
-                        VeriniceSearchResultRow row = (VeriniceSearchResultRow) ((IStructuredSelection) currentViewer.getSelection()).getFirstElement();
-                        RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
-                        LoadElementByUuid loadElementByUuid = new LoadElementByUuid(row.getValueFromResultString("uuid"), ri);
-                        loadElementByUuid = getCommandService().executeCommand(loadElementByUuid);
-                        if (loadElementByUuid.getElement() != null) {
-                            EditorFactory.getInstance().updateAndOpenObject(loadElementByUuid.getElement());
-                        } else {
-                            showError(Messages.SearchView_8, Messages.SearchView_7); //$NON-NLS-1$
-                        }
-                    } catch (Exception t) {
-                        LOG.error("Error while opening control.", t); //$NON-NLS-1$
-                    }
-                }
-
-            }
-
-            private ICommandService getCommandService() {
-                if (commandService == null) {
-                    commandService = ServiceFactory.lookupCommandService();
-                }
-                return commandService;
-            }
-        };
+    private void initDoubleClickListener() {
+        doubleClickListener = new TableDoubleClickListener(this);
     }
 
     private void doCsvExport() throws CsvExportException {
@@ -240,65 +214,55 @@ public class SearchView extends RightsEnabledView {
     private void createComposite(Composite parent) {
 
         Composite composite = createContainerComposite(parent);
-
-        
         searchComposite = createSearchComposite(composite);
 
-        // add elements to search form
+        createTitlesForSearchForm(searchComposite);
         createSearchForm(searchComposite);
-
+        createResultCombobox(searchComposite);
         createTableComposite(searchComposite);
+    }
+
+    private Composite createContainerComposite(Composite parent) {
+        Composite composite = new Composite(parent, SWT.FILL);
+        composite.setLayout(new GridLayout(1, true));
+        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
+        return composite;
+    }
+
+    private Composite createSearchComposite(Composite composite) {
+
+        Composite comboComposite = new Composite(composite, SWT.NONE);
+
+        GridData gridData = new GridData(GridData.FILL_BOTH);
+        comboComposite.setLayoutData(gridData);
+
+        GridLayout gridLayout = new GridLayout(4, true);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        comboComposite.setLayout(gridLayout);
+        return comboComposite;
+    }
+
+    /**
+     * Sets labels for query and limit input field.
+     */
+    private void createTitlesForSearchForm(Composite searchComposite) {
+        Label queryTextLabel = new Label(searchComposite, SWT.NONE);
+        queryTextLabel.setText(Messages.SearchView_9);
+        GridData queryTextLabelData = new GridData(SWT.BEGINNING, SWT.FILL, true, false);
+        queryTextLabelData.horizontalSpan = 2;
+        queryTextLabel.setLayoutData(queryTextLabelData);
+
+        Label limitTextLabel = new Label(searchComposite, SWT.NONE);
+        limitTextLabel.setText(Messages.SearchView_10);
+        GridData limitTextLabelData = new GridData(SWT.BEGINNING, SWT.FILL, true, false);
+        limitTextLabelData.horizontalSpan = 2;
+        limitTextLabel.setLayoutData(limitTextLabelData);
     }
 
     private void createSearchForm(Composite searchComposite) {
 
-        // init query textfield
-        queryText = new Text(searchComposite, SWT.SINGLE | SWT.BORDER);
-        GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
-        gridData.minimumWidth = 30;
-        gridData.horizontalSpan = 2;
-        queryText.setLayoutData(gridData);
-        queryText.addKeyListener(new KeyListener() {
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if (e.character == SWT.CR) {
-                    searchButton.setEnabled(false);
-                    search();
-                    searchButton.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-            }
-        });
-        
-        limitLabel = new Label(searchComposite, SWT.RIGHT);
-        limitLabel.setText("Limit:");
-        
-        limitText = new Text(searchComposite, SWT.SINGLE | SWT.BORDER);
-        limitText.setLayoutData(gridData);
-        limitText.setText(String.valueOf(VeriniceQuery.DEFAULT_LIMIT));
-        limitText.addFocusListener(new FocusListener() {
-            
-            @Override
-            public void focusLost(FocusEvent e) {
-                try{
-                    Integer.parseInt(((Text)e.getSource()).getText());
-                } catch (NumberFormatException nfe){
-                    limitText.setFocus();
-                    limitText.selectAll();
-                }
-                
-            }
-            
-            @Override
-            public void focusGained(FocusEvent e) {
-
-            }
-        });
+        createInputFields(searchComposite);
 
         searchButton = new Button(searchComposite, SWT.BUTTON1);
         searchButton.setText(Messages.SearchView_3);
@@ -318,54 +282,82 @@ public class SearchView extends RightsEnabledView {
         GridData searchButtonGridData = new GridData();
         searchButtonGridData.horizontalAlignment = SWT.FILL;
         searchButton.setLayoutData(searchButtonGridData);
+    }
 
+    private void createResultCombobox(Composite searchComposite) {
         // next line in search view
         resultsByTypeCombo = new SearchComboViewer(searchComposite, this);
         Combo resultCombo = resultsByTypeCombo.getCombo();
 
         GridData resultsByTypeComboGridData = new GridData();
         resultsByTypeComboGridData.horizontalAlignment = SWT.FILL;
-        resultsByTypeComboGridData.horizontalSpan = 3;
+        resultsByTypeComboGridData.horizontalSpan = 4;
         resultCombo.setLayoutData(resultsByTypeComboGridData);
     }
 
-    private Composite createContainerComposite(Composite parent) {
-        Composite composite = new Composite(parent, SWT.FILL);
-        composite.setLayout(new GridLayout(1, true));
-        composite.setLayoutData(new GridData(GridData.FILL_BOTH));
-        return composite;
+    private void createInputFields(Composite searchComposite) {
+        createQueryInputField(searchComposite);
+        createLimitInputField(searchComposite);
     }
 
-    private Composite createSearchComposite(Composite composite) {
+    private void createQueryInputField(Composite searchComposite) {
+        // init query textfield
+        queryText = new Text(searchComposite, SWT.SINGLE | SWT.BORDER);
+        GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
+        gridData.minimumWidth = 30;
+        gridData.horizontalSpan = 2;
+        queryText.setLayoutData(gridData);
+        queryText.addKeyListener(new KeyListener() {
 
-        Composite comboComposite = new Composite(composite, SWT.NONE);
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.character == SWT.CR) {
+                    searchButton.setEnabled(false);
+                    enableExport2CSVAction(false);
+                    search();
+                    searchButton.setEnabled(true);
+                }
+            }
 
-        GridData gridData = new GridData(GridData.FILL_BOTH);
-        comboComposite.setLayoutData(gridData);
+            @Override
+            public void keyPressed(KeyEvent e) {
 
-        GridLayout gridLayout = new GridLayout(5, true);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        comboComposite.setLayout(gridLayout);
-        return comboComposite;
+            }
+        });
+    }
+
+    private void createLimitInputField(Composite searchComposite) {
+        limitText = new Text(searchComposite, SWT.SINGLE | SWT.BORDER);
+        GridData gridLimitData = new GridData(SWT.FILL, SWT.NONE, true, false);
+        limitText.setLayoutData(gridLimitData);
+        limitText.setText(String.valueOf(VeriniceQuery.DEFAULT_LIMIT));
+        limitText.addFocusListener(new FocusListener() {
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                try {
+                    Integer.parseInt(((Text) e.getSource()).getText());
+                } catch (NumberFormatException nfe) {
+                    limitText.setFocus();
+                    limitText.selectAll();
+                }
+
+            }
+
+            @Override
+            public void focusGained(FocusEvent e) {
+
+            }
+        });
     }
 
     private void createTableComposite(Composite searchComposite2) {
-//        ScrolledComposite scrolledComposite = new ScrolledComposite(searchComposite, SWT.V_SCROLL);
-//        scrolledComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-//        scrolledComposite.setExpandHorizontal(true);
-//        scrolledComposite.setExpandVertical(true);
-        
-//        tableComposite = new Composite(searchComposite, SWT.H_SCROLL | SWT.V_SCROLL);
-//        GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        //        tableGridData.horizontalSpan = 3;
-        //        tableComposite.setLayoutData(tableGridData);
         tableComposite = new ScrolledComposite(searchComposite, SWT.V_SCROLL | SWT.H_SCROLL);
         tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         tableComposite.setExpandHorizontal(true);
         tableComposite.setExpandVertical(true);
         GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        tableGridData.horizontalSpan = 3;
+        tableGridData.horizontalSpan = 4;
         tableComposite.setLayoutData(tableGridData);
     }
 
@@ -454,12 +446,12 @@ public class SearchView extends RightsEnabledView {
 
     private void search() {
         VeriniceQuery veriniceQuery = new VeriniceQuery(queryText.getText(), Integer.valueOf(limitText.getText()));
-        WorkspaceJob job = new SearchJob(veriniceQuery, searchButton, queryText, this);
+        WorkspaceJob job = new SearchJob(veriniceQuery, this);
         job.schedule();
     }
 
     private void reindex() {
-        WorkspaceJob job = new IndexJob(this);
+        WorkspaceJob job = new ReIndexJob(reindex);
         job.schedule();
     }
 
@@ -480,10 +472,6 @@ public class SearchView extends RightsEnabledView {
         return display;
     }
 
-    public RightsEnabledAction getReindex() {
-        return reindex;
-    }
-
     protected void showError(final String title, final String message) {
         Display.getDefault().syncExec(new Runnable() {
             @Override
@@ -491,5 +479,21 @@ public class SearchView extends RightsEnabledView {
                 MessageDialog.openError(getShell(), title, message);
             }
         });
+    }
+
+    public void enableExport2CSVAction(boolean enable) {
+        export2CSV.setEnabled(enable);
+    }
+
+    void disableSearch() {
+        limitText.setEnabled(false);
+        queryText.setEnabled(false);
+        searchButton.setEnabled(false);
+    }
+
+    void enableSearch() {
+        limitText.setEnabled(true);
+        queryText.setEnabled(true);
+        searchButton.setEnabled(true);
     }
 }

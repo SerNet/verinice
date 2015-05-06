@@ -176,12 +176,9 @@ public class SearchService implements ISearchService {
 
 
     /**
-     * uses the es querybuilder api to build a query that could be paramterized to
+     * Uses the  querybuilder api to build a query that could be paramterized to
      * search on given fields only, and adding filters for rightmanagement and 
-     * type-filtered results
-     * @param query
-     * @param typeID
-     * @return
+     * type-filtered results.
      */
     @Override
     public VeriniceSearchResult getSearchResultsByQueryBuilder(VeriniceQuery query, String typeID) {

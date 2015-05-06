@@ -147,8 +147,11 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
         if (!event.getSelection().isEmpty()) {
             VeriniceSearchResultObject veriniceSearchResultObject = (VeriniceSearchResultObject) ((StructuredSelection) event.getSelection()).getFirstElement();
             searchView.setTableViewer(veriniceSearchResultObject);
+            searchView.enableExport2CSVAction(true);
         } else {
-            searchView.setTableViewer((VeriniceSearchResultObject) getElementAt(0));
+            VeriniceSearchResultObject firstResult = (VeriniceSearchResultObject) getElementAt(0);
+            searchView.setTableViewer(firstResult);
+            searchView.enableExport2CSVAction(true);
         }
     }
 }

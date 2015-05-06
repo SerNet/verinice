@@ -55,7 +55,7 @@ public interface ISearchDao {
     
     public DeleteResponse delete(String id);
 
-    public DeleteByQueryResponse clear();
+    public void clear();
     
     public SearchResponse findAll();
     

@@ -53,6 +53,7 @@ import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 import org.elasticsearch.index.query.OrFilterBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermsFilterBuilder;
+import org.elasticsearch.indices.IndexMissingException;
 
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -360,11 +361,18 @@ public abstract class BaseDao implements ISearchDao {
                 .actionGet();
     }
     
-    public DeleteByQueryResponse clear() {
-        return getClient().prepareDeleteByQuery(getIndex())
-                .setQuery(QueryBuilders.termsQuery("_type", getType()))
-                .execute()
-                .actionGet();
+    public void clear() {
+        try {
+           getClient().prepareDeleteByQuery(getIndex())
+               .setQuery(QueryBuilders.termsQuery("_type", getType()))
+               .execute()
+               .actionGet();
+
+        } catch (IndexMissingException ex){
+            LOG.error("error occured while deleting index: \"" + getIndex() + "\". This index seems not to exists so it is no problem to ignore this error", ex);
+        }
+
+
     }
     
     /* (non-Javadoc)
