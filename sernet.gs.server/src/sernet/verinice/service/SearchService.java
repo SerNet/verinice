@@ -226,7 +226,7 @@ public class SearchService implements ISearchService {
             Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
             while (iter.hasNext()) {
                 Entry<String, HighlightField> entry = iter.next();
-                occurence.append("[" + entry.getKey() + "]");
+                occurence.append("[" + getHuiTranslation(entry.getKey(), typeID) + "]");
                 occurence.append("\t").append(entry.getValue().fragments()[0]);
                 if (iter.hasNext()) {
                     occurence.append("\n\n\n");
@@ -244,6 +244,16 @@ public class SearchService implements ISearchService {
 
         }
         return results;
+    }
+    
+    private String getHuiTranslation(String id, String entityType){
+        for(PropertyType type : HUITypeFactory.getInstance().getEntityType(entityType).getAllPropertyTypes()){
+            if(type.getId().equals(id)){
+                return type.getName();
+            }
+        }
+        LOG.warn("No i8ln found for id:\t" + id + "\t of type:\t" + entityType);
+        return id;
     }
 
     private String[] getPropertyIds(String typeID) {
