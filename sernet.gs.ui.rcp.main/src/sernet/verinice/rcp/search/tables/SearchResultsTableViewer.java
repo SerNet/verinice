@@ -23,12 +23,12 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
@@ -45,15 +45,22 @@ import sernet.verinice.rcp.search.column.IconColumn;
  */
 public class SearchResultsTableViewer extends TableViewer implements IStructuredContentProvider {
 
+
+    private static final int STANDAR_COLUMN_WITH_200 = 200;
+
+    private static final int COLUMN_WIDTH_ICON_32 = 32;
+
     private IColumnStore columnStore;
 
     private SearchTableComparator searchTableComparator;
 
+    private Table table;
+
     public SearchResultsTableViewer(Composite parent, IColumnStore columnStore, VeriniceSearchResultObject veriniceSearchResultObject) {
 
-        super(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER | SWT.HORIZONTAL | SWT.VERTICAL);
+        super(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 
-        Table table = getTable();
+        table = getTable();
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
@@ -77,7 +84,7 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
             columnViewer.getColumn().setText(col.getTitle());
             columnViewer.getColumn().setMoveable(false);
             columnViewer.getColumn().setResizable(true);
-            columnViewer.getColumn().setWidth(200);
+            columnViewer.getColumn().setWidth(STANDAR_COLUMN_WITH_200);
             columnViewer.getColumn().addSelectionListener(new SelectionAdapter() {
 
                 @Override
@@ -89,9 +96,9 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
                 }
             });
 
-            if (col instanceof IconColumn){
+            if (col instanceof IconColumn) {
                 columnViewer.getColumn().setText("");
-                columnViewer.getColumn().setWidth(32);
+                columnViewer.getColumn().setWidth(COLUMN_WIDTH_ICON_32);
             }
 
             columnViewer.setLabelProvider(new SearchTableColumnLabelProvider(col));

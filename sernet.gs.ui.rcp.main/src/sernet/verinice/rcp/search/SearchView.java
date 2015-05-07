@@ -47,6 +47,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 
@@ -77,7 +78,7 @@ import sernet.verinice.rcp.search.tables.TableMenuListener;
  * |-----------------------------------------------|
  * |         combobox for selecting result         | {@link #createResultCombobox(Composite)}
  * |-----------------------------------------------|
- * |         result table with flexibel columns    | {@link #createTableComposite(Composite)}
+ * |         result table with flexibel columns    | {@link #createTableComposite()}
  * |-----------------------------------------------|
  * </pre>
  *
@@ -116,7 +117,7 @@ public class SearchView extends RightsEnabledView {
 
     private Composite searchComposite;
 
-    private ScrolledComposite tableComposite;
+    private Composite tableComposite;
 
     public SearchView() {
         super();
@@ -219,7 +220,7 @@ public class SearchView extends RightsEnabledView {
         createTitlesForSearchForm(searchComposite);
         createSearchForm(searchComposite);
         createResultCombobox(searchComposite);
-        createTableComposite(searchComposite);
+        createTableComposite();
     }
 
     private Composite createContainerComposite(Composite parent) {
@@ -351,14 +352,10 @@ public class SearchView extends RightsEnabledView {
         });
     }
 
-    private void createTableComposite(Composite searchComposite2) {
-        tableComposite = new ScrolledComposite(searchComposite, SWT.V_SCROLL | SWT.H_SCROLL);
-        tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-        tableComposite.setExpandHorizontal(true);
-        tableComposite.setExpandVertical(true);
-        GridData tableGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        tableGridData.horizontalSpan = 4;
-        tableComposite.setLayoutData(tableGridData);
+    private void createTableComposite() {
+        tableComposite = new Composite(searchComposite, SWT.SINGLE | SWT.NONE);
+        tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 4, 1));
+        tableComposite.setLayout(new FillLayout());
     }
 
     /*
@@ -425,8 +422,7 @@ public class SearchView extends RightsEnabledView {
             addTableColumnContextMenu(veriniceSearchResultObject);
 
             currentViewer.addDoubleClickListener(doubleClickListener);
-
-            currentViewer.getControl().pack();
+            tableComposite.layout();
         } catch (Exception ex) {
             LOG.error("table rendering failed", ex);
             showError("Table rendering faile", ex.getLocalizedMessage());
@@ -441,6 +437,7 @@ public class SearchView extends RightsEnabledView {
         menuMgr.addMenuListener(new TableMenuListener(this, veriniceSearchResultObject));
 
         currentViewer.getControl().setMenu(menu);
+
         getSite().registerContextMenu(menuMgr, currentViewer);
     }
 
