@@ -19,7 +19,6 @@ package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
-import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
@@ -45,6 +44,8 @@ public class AssociateGefaehrdungsUmsetzung extends GenericCommand implements IA
 	private FinishedRiskAnalysisLists finishedRiskLists;
 	private Integer riskAnalysisDbId;
 	
+	private String language;
+	
 	private transient IAuthService authService;
 
 	
@@ -62,12 +63,13 @@ public class AssociateGefaehrdungsUmsetzung extends GenericCommand implements IA
 	 * @param integer 
 	 * @param finishedRiskAnalysis 
 	 */
-	public AssociateGefaehrdungsUmsetzung(Integer listDbId, Gefaehrdung currentGefaehrdung, Integer riskAnalysisDbId) {
+	public AssociateGefaehrdungsUmsetzung(Integer listDbId, Gefaehrdung currentGefaehrdung, Integer riskAnalysisDbId, String language) {
 		this.currentGefaehrdung = currentGefaehrdung;
 		this.listDbId = listDbId;
 		this.riskAnalysisDbId = riskAnalysisDbId;
+		this.language = language;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
 	 */
@@ -75,7 +77,7 @@ public class AssociateGefaehrdungsUmsetzung extends GenericCommand implements IA
 		FinishedRiskAnalysis riskAnalysis = getDaoFactory().getDAO(FinishedRiskAnalysis.class).findById(riskAnalysisDbId);
 		finishedRiskLists = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class).findById(listDbId);
 		
-		gefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory.build(null, currentGefaehrdung, BSIKatalogInvisibleRoot.getInstance().getLanguage());
+		gefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory.build(null, currentGefaehrdung, language);
 		getDaoFactory().getDAO(GefaehrdungsUmsetzung.class).saveOrUpdate(gefaehrdungsUmsetzung);
 		
 		if (authService.isPermissionHandlingNeeded())
