@@ -46,6 +46,9 @@ public class SearchTableColumnLabelProvider extends ColumnLabelProvider {
         if (element instanceof VeriniceSearchResultRow) {
             VeriniceSearchResultRow row = (VeriniceSearchResultRow) element;
 
+            if (column instanceof IconColumn)
+                return "";
+
             if (column instanceof TitleColumn)
                 return row.getValueFromResultString(TitleColumn.TITLE_PROPERTY_NAME);
 
