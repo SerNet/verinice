@@ -1,10 +1,12 @@
 package sernet.verinice.report.rcp;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -105,12 +107,16 @@ public class GenerateReportDialog extends TitleAreaDialog {
     private boolean useCache = true;
 
     private boolean useDefaultFolder = true;
+    
+    private boolean useDate = true;
 
     private String defaultFolder;
 
     private String defaultTemplateFolder;
 
     private Button useDefaultFolderButton;
+    
+    private Button useDateCheckbox;
     
     private IReportType chosenReportType;
 
@@ -307,6 +313,21 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         });
 
+        useDateCheckbox = new Button(groupFile, SWT.CHECK);
+        useDateCheckbox.setText(Messages.GenerateReportDialog_33);
+        useDateCheckbox.setSelection(true);
+        GridData useDateCheckboxGridData = new GridData();
+        useDateCheckboxGridData.horizontalSpan = 3;
+        useDateCheckboxGridData.grabExcessHorizontalSpace = true;
+        useDateCheckboxGridData.horizontalAlignment = SWT.RIGHT;
+        useDateCheckbox.setLayoutData(useDateCheckboxGridData);
+        useDateCheckbox.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                useDate = ((Button) e.getSource()).getSelection();
+            }
+        });
+                
         Label labelFile = new Label(groupFile, SWT.NONE);
         labelFile.setText(Messages.GenerateReportDialog_10);
         labelFile.setLayoutData(gridDataLabel);
@@ -634,6 +655,10 @@ public class GenerateReportDialog extends TitleAreaDialog {
         String scopeName = convertToFileName(scopeCombo.getText());
         if (scopeName != null && !scopeName.isEmpty()) {
             sb.append("_").append(scopeName);
+        }
+        if (useDate) {
+            String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+            sb.append("_").append(date);
         }
         if (chosenOutputFormat != null) {
             sb.append(".").append(chosenOutputFormat.getFileSuffix());
