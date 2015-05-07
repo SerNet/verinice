@@ -55,26 +55,33 @@ public class ElasticsearchClientFactory implements DisposableBean {
     private final static Logger LOG = Logger.getLogger(ElasticsearchClientFactory.class);
 
     public void init() {
-        if (node == null || node.isClosed()) {
-            // Build and start the node
-            node = NodeBuilder.nodeBuilder().settings(buildNodeSettings()).node();
-            if(LOG.isDebugEnabled()){
-                for(Entry<String, String> entry : node.settings().getAsMap().entrySet()){
-                    LOG.debug("nodeEntry:\t <" + entry.getKey() + ", " + entry.getValue() + ">");
+        try {
+            if (node == null || node.isClosed()) {
+                if(!getIndexLocation().exists()) {
+                    getIndexLocation().createRelative("./");
                 }
-            }
-            // Get a client
-            client = node.client();
-            configure();
-            // Wait for Yellow status
-            client
-                .admin()
-                .cluster()
-                .prepareHealth()
-                .setWaitForYellowStatus()
-                .setTimeout(TimeValue.timeValueMinutes(1))
-                .execute()
-                .actionGet();
+                // Build and start the node
+                node = NodeBuilder.nodeBuilder().settings(buildNodeSettings()).node();
+                if(LOG.isDebugEnabled()){
+                    for(Entry<String, String> entry : node.settings().getAsMap().entrySet()){
+                        LOG.debug("nodeEntry:\t <" + entry.getKey() + ", " + entry.getValue() + ">");
+                    }
+                }
+                // Get a client
+                client = node.client();
+                configure();
+                // Wait for Yellow status
+                client
+                    .admin()
+                    .cluster()
+                    .prepareHealth()
+                    .setWaitForYellowStatus()
+                    .setTimeout(TimeValue.timeValueMinutes(1))
+                    .execute()
+                    .actionGet();
+            } 
+        } catch (Exception e) {
+            LOG.error("Error while initializing elasticsearch", e);
         }
     }
 
@@ -123,8 +130,8 @@ public class ElasticsearchClientFactory implements DisposableBean {
         return client;
     }
 
-    protected Settings buildNodeSettings() {
-        try {
+    protected Settings buildNodeSettings() throws IOException {
+       
         // Build settings
         ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder()
             .put("node.name", "elasticsearch-" + NetworkUtils.getLocalAddress().getHostName())
@@ -149,10 +156,6 @@ public class ElasticsearchClientFactory implements DisposableBean {
             }
         }
         return builder.build();
-        } catch (IOException e) {
-            LOG.error("Error setting up ES-Client-Factory", e);
-        }
-        return null;
     }
 
     /**

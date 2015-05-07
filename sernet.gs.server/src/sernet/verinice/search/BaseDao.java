@@ -46,11 +46,13 @@ import org.elasticsearch.index.query.BaseFilterBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermFilterBuilder;
 import org.elasticsearch.index.query.TermsFilterBuilder;
 import org.elasticsearch.indices.IndexMissingException;
 
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.ApplicationRoles;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.iso27k.Asset;
@@ -66,6 +68,7 @@ public abstract class BaseDao implements ISearchDao {
     private ElasticsearchClientFactory clientFactory;
     
     private IConfigurationService configurationService;
+    private IAuthService authService;
     
     private final String preGroupPattern = ".*(";
     private final String postGroupPattern = "#r{1}w?#).*";
@@ -238,18 +241,18 @@ public abstract class BaseDao implements ISearchDao {
             } else {
                 searchBuilder = searchBuilder.setQuery(QueryBuilders.matchAllQuery());
             }
-            BaseFilterBuilder permissionBuilder = createPermissionFilter(username);
-            
+                   
             searchBuilder = HighlightFieldAdder.add(typeId, searchBuilder);
             TermsFilterBuilder typeBuilder = FilterBuilders.inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[]{typeId});
             AndFilterBuilder andBuilder = FilterBuilders.andFilter(typeBuilder);
             
-            if(permissionBuilder != null){
-                andBuilder = andBuilder.add(permissionBuilder);
-            } else {
-                // should only happen if superadmin is logged in
-                this.hashCode();
+            if(isPermissionHandlingNeeded()) {
+                andBuilder = andBuilder.add(createPermissionFilter(username));              
             }
+            if(getAuthService().isScopeOnly()) {
+                andBuilder = andBuilder.add(createScopeOnlyFilter(username));
+            }
+            
             searchBuilder = searchBuilder.setPostFilter(andBuilder);
             
             searchBuilder = searchBuilder.setFrom(0);
@@ -257,6 +260,26 @@ public abstract class BaseDao implements ISearchDao {
             requestBuilder = requestBuilder.add(searchBuilder);
         }
         return requestBuilder;
+    }
+
+    private boolean isPermissionHandlingNeeded() {
+        return getAuthService()!=null 
+                && getAuthService().isPermissionHandlingNeeded() 
+                && !hasAdminRole(getAuthService().getRoles());
+    }
+    
+    private boolean hasAdminRole(String[] roles) {
+        if(roles!=null) {
+            for (String r : roles) {
+                if (ApplicationRoles.ROLE_ADMIN.equals(r))
+                    return true;
+            }   
+        }
+        return false;
+    }
+    
+    private TermFilterBuilder createScopeOnlyFilter(String username) {
+        return FilterBuilders.termFilter(ISearchService.ES_FIELD_SCOPE_ID, getConfigurationService().getScopeId(username));
     }
 
     private TermsFilterBuilder createPermissionFilter(String username) {
@@ -392,6 +415,14 @@ public abstract class BaseDao implements ISearchDao {
         this.configurationService = confService;
     }
     
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    public void setAuthService(IAuthService authService) {
+        this.authService = authService;
+    }
+
     private String getGroupPattern (String groupname){
         StringBuilder sb = new StringBuilder();
         return sb.append(preGroupPattern).append(groupname).append(postGroupPattern).toString();
