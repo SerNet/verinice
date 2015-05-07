@@ -44,12 +44,17 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
     private Integer auditDbId = null;
     private Double totalSecurityFigure;
     private int controlCount = 0;
+    private Double targetMaturity;
+    private Double averageTargetMaturity;
 
     /**
      * @param samtGroup
      */
     public TotalSecurityFigureISA2Command(Integer samtGroup) {
         this.auditDbId = samtGroup;
+        targetMaturity = 0.0;
+        averageTargetMaturity = 0.0;
+        
     }
     
     @Override
@@ -62,8 +67,12 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
                 int matSum = getMaturitySum(controlGroup);
                 if(controlCount != 0){
                     totalSecurityFigure = (double) matSum / (double) controlCount;
+                    targetMaturity = (double) targetMaturity / (double) controlCount;
+                    averageTargetMaturity = (double) averageTargetMaturity / (double) controlCount;
                 } else {
                     totalSecurityFigure = Double.valueOf(0.0);
+                    targetMaturity = Double.valueOf(0.0);
+                    averageTargetMaturity = Double.valueOf(0.0);
                 }
             }
 
@@ -82,6 +91,8 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
                 // if maturity is not edited yet, add 0 (do nothing but count the control for average value)
                 if(maturity > 0){
                     maturitySum += maturity;
+                    targetMaturity += Double.valueOf(String.valueOf(reduceToTargetMaturity(control)));
+                    averageTargetMaturity += getTargetMaturity(control);
                 }
                 if(IControl.IMPLEMENTED_NA_NUMERIC != maturity){
                     controlCount += 1;
@@ -98,6 +109,17 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
             }
         }
         return maturitySum;
+    }
+    
+    private int reduceToTargetMaturity(IControl control){
+        int target = getTargetMaturity(control);
+        if(control.getMaturity() > target){
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Reducing " + control.getTitle()+ "(" + control.getMaturity() + ") to" + control.getThreshold2());
+            }
+            return target;
+        }
+        return control.getMaturity();
     }
     
     public Double getResult() {
@@ -120,8 +142,13 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
      */
     @Override
     public void injectCacheResult(Object result) {
-        this.totalSecurityFigure = (Double)result;
-        this.resultInjectedFromCache = true;
+        if(result instanceof Object[]){
+            Object[] arr = (Object[])result;
+            this.totalSecurityFigure = (Double)arr[0];
+            this.targetMaturity = (Double)arr[1];
+            this.averageTargetMaturity = (Double)arr[2];
+            this.resultInjectedFromCache = true;
+        }
     }
 
     /* (non-Javadoc)
@@ -129,7 +156,24 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
      */
     @Override
     public Object getCacheableResult() {
-        return totalSecurityFigure.doubleValue();
+        return new Object[]{this.totalSecurityFigure.doubleValue(), this.targetMaturity.doubleValue(), this.averageTargetMaturity.doubleValue()};
     }
+
+    /**
+     * @return the targetMaturity
+     */
+    public Double getTargetMaturity() {
+        return targetMaturity.doubleValue();
+    }
+    
+    public Double getAverageMaturity(){
+        return averageTargetMaturity.doubleValue();
+    }
+    
+    // target maturity is threshold2
+    private int getTargetMaturity(IControl control){
+        return control.getThreshold2();
+    }
+
 
 }
