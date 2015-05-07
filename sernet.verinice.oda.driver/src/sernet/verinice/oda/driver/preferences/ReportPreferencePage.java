@@ -29,6 +29,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.oda.driver.Activator;
 
 /**
@@ -44,7 +45,6 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
             new String[]{Messages.getString("ReportLogLevel.4"), Level.ALL.toString()}
     };
     private DirectoryFieldEditor localTemplateEditor;
-            
     
     public ReportPreferencePage(){
         super(GRID);
@@ -58,6 +58,8 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
     @Override
     public void init(IWorkbench arg0) {
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
+        
+        Activator.getDefault().getPreferenceStore().setDefault(PreferenceConstants.REPORT_USE_CACHE,true);
     }
 
     /* (non-Javadoc)
