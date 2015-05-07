@@ -657,7 +657,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             sb.append("_").append(scopeName);
         }
         if (useDate) {
-            String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+            String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
             sb.append("_").append(date);
         }
         if (chosenOutputFormat != null) {
