@@ -58,8 +58,6 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
     @Override
     public void init(IWorkbench arg0) {
         setPreferenceStore(Activator.getDefault().getPreferenceStore());
-        
-        Activator.getDefault().getPreferenceStore().setDefault(PreferenceConstants.REPORT_USE_CACHE,true);
     }
 
     /* (non-Javadoc)
