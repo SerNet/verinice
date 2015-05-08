@@ -42,7 +42,6 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.index.engine.DocumentMissingException;
 import org.elasticsearch.index.query.AndFilterBuilder;
-import org.elasticsearch.index.query.BaseFilterBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -104,7 +103,7 @@ public abstract class BaseDao implements ISearchDao {
             UpdateResponse response = getClient().prepareUpdate(getIndex(),getType(),id).setRefresh(true)             
                     .setDoc(json).execute().actionGet();
             if (LOG.isDebugEnabled()) {
-//                LOG.debug("Index updated, uuid: " + response.getId() + ", version: " + response.getVersion());
+                LOG.debug("Index updated, uuid: " + response.getId() + ", version: " + response.getVersion());
             }
             return response;
         } catch (DocumentMissingException e) {          
