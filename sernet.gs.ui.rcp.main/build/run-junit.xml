@@ -22,6 +22,7 @@
 	<path id="classpath.testlibs">
 		<fileset dir="${testlib}" includes="**/*.jar" />
 		<pathelement location="${basedir}/../sernet.gs.service/bin/" />
+		<pathelement location="${basedir}/../sernet.hui.common/bin/" />
 		<pathelement location="${basedir}/bin" />
 	</path>
 
