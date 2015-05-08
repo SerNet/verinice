@@ -151,7 +151,7 @@ public class CsvExportTest {
         assertTrue("Wrong number of columns in CSV line: " + nextLine.length, nextLine.length==1 || columns.size()==nextLine.length);
         int i=0;
         for (IColumn col : columns ) {
-            String searchResultValue = row.getValueFromResultString(col.getTitle());
+            String searchResultValue = row.getValueFromResultString(col.getId());
             String csvValue = nextLine[i];
             while(!searchResultValue.isEmpty() && csvValue.isEmpty()) {
                 i++;

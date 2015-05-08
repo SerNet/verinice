@@ -23,7 +23,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,6 +39,7 @@ import sernet.verinice.rcp.search.column.ColumnStore;
 import sernet.verinice.rcp.search.column.IColumn;
 import sernet.verinice.rcp.search.column.IColumnFactory;
 import sernet.verinice.rcp.search.column.IColumnStore;
+import sernet.verinice.rcp.search.column.IconColumn;
 
 import com.opencsv.CSVWriter;
 
@@ -53,6 +57,12 @@ public class CsvExport implements ICsvExport {
     private static final String ERROR_MESSAGE = "Error while exporting search result to CSV";
     
     private String filePath = FILE_PATH_DEFAULT;
+    
+    private static List<String> COLUMN_BLACKLIST;
+    static {
+        COLUMN_BLACKLIST = new LinkedList<String>();
+        COLUMN_BLACKLIST.add(IconColumn.ICON_PROPERTY_NAME);
+    }
     
     /* (non-Javadoc)
      * @see sernet.verinice.rcp.search.ICsvExport#exportToFile(sernet.verinice.model.search.VeriniceSearchResultObject, sernet.verinice.rcp.search.ColumnStore)
@@ -96,15 +106,26 @@ public class CsvExport implements ICsvExport {
 
     private CSVWriter doExport(VeriniceSearchResultObject result, IColumnStore columnStore, Writer writer ) {      
         CSVWriter csvWriter = new CSVWriter(writer);
+        disableBlacklistedColumns(columnStore);
         Set<VeriniceSearchResultRow> rows = result.getAllResults();
         exportHeader(columnStore, csvWriter);
         if(rows==null || rows.isEmpty()) {
             return csvWriter;
-        }     
+        }
         for (VeriniceSearchResultRow row : rows) {
             exportRow(row, columnStore, csvWriter);                         
         }
         return csvWriter;
+    }
+
+ 
+    private void disableBlacklistedColumns(IColumnStore columnStore) {
+        Set<IColumn> visibleColumns = new HashSet<IColumn>(columnStore.getColumns());
+        for (IColumn column : visibleColumns) {
+            if(COLUMN_BLACKLIST.contains(column.getId())) {
+                columnStore.setVisible(column, false);
+            }
+        }
     }
 
     private void exportHeader(IColumnStore columnStore, CSVWriter csvWriter) {
