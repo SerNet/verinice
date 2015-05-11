@@ -94,3 +94,6 @@
 # veriniceserver.notification.email.linkto=http://verinice.local.example/veriniceserver/todo/task.jsf
 
 # For AD / LDAP configuration use file verinice-ldap.properties
+
+# Elasticsearch index directory
+# veriniceserver.search.index.directory=/WEB-INF/elasticsearch/

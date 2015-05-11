@@ -4,10 +4,10 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
 	<bean id="clientFactory" class="sernet.verinice.search.ElasticsearchClientFactory" init-method="init" >
-		<property name="indexLocation" value="/WEB-INF/elasticsearch/"/>
+		<property name="indexLocation" value="${veriniceserver.search.index.directory}"/>
 	</bean>
 
-	<bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer" init-method="init">
+	<bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer">
 		<property name="scheduler" ref="quartzSchedulerFactoryBean" />
 		<property name="indexJobFactory">
 			<bean
