@@ -76,6 +76,7 @@ public abstract class BaseDao implements ISearchDao {
      * {@link ISearchService.ES_FIELD_UUID} and {@link ISearchService.ES_FIELD_PERMISSION_ROLES} missing here, since they should not be searchable 
      */
     private final List<String> EXTRA_FIELDS = Arrays.asList(new String[]{
+            ISearchService.ES_FIELD_UUID,
             ISearchService.ES_FIELD_TITLE,
             ISearchService.ES_FIELD_ELEMENT_TYPE,
             ISearchService.ES_FIELD_ICON_PATH,

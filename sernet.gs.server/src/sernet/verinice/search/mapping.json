@@ -15,6 +15,34 @@
                         "type":"long"
                     }
                 }
+            },
+            "element-type":{
+	            "type":"string",
+	            "index":"not_analyzed"
+            },
+            "ext-id":{
+	            "type":"string",
+	            "index":"not_analyzed"
+            },
+            "source-id":{
+	            "type":"string",
+	            "index":"not_analyzed"
+            },
+            "uuid":{
+	            "type":"string",
+	            "index":"not_analyzed"
+            },
+            "dbid":{
+	            "type":"long",
+	            "index":"not_analyzed"
+            },
+            "scope-id":{
+	            "type":"long",
+	            "index":"not_analyzed"
+            },
+            "parent-id":{
+	            "type":"long",
+	            "index":"not_analyzed"
             }
         }
     }
