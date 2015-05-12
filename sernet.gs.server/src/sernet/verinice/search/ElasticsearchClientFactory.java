@@ -1,15 +1,9 @@
 package sernet.verinice.search;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map.Entry;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.elasticsearch.client.Client;
@@ -21,7 +15,8 @@ import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.node.NodeBuilder;
 import org.springframework.beans.factory.DisposableBean;
-import org.springframework.core.io.Resource;
+
+import sernet.verinice.interfaces.IDirectoryCreator;
 
 /*******************************************************************************
  * Copyright (c) 2015 Daniel Murygin.
@@ -48,17 +43,13 @@ import org.springframework.core.io.Resource;
  */
 public class ElasticsearchClientFactory implements DisposableBean {
 
+    private final static Logger LOG = Logger.getLogger(ElasticsearchClientFactory.class);
+    
     private Node node = null;
     private Client client = null;
     private Settings settings = null;
-    
-    /*
-     * location of ES-working directory, injected by spring, different in Tier2 and Tier3
-     */
-    private Resource indexLocation;
-    
-    private final static Logger LOG = Logger.getLogger(ElasticsearchClientFactory.class);
-
+    private IDirectoryCreator directoryCreator;
+   
     public void init() {
         try {
             if (node == null || node.isClosed()) {
@@ -133,7 +124,6 @@ public class ElasticsearchClientFactory implements DisposableBean {
     }
 
     protected Settings buildNodeSettings() {
-
         // Build settings
         ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder()
             .put("node.name", "elasticsearch-" + NetworkUtils.getLocalAddress().getHostName())
@@ -142,9 +132,9 @@ public class ElasticsearchClientFactory implements DisposableBean {
             .put("index.store.type", "niofs")
             //.put("index.store.fs.memory.enabled", "true")
             .put("gateway.type", "local")
-            .put("path.data", getESFolder("data"))
-            .put("path.work", getESFolder("work"))
-            .put("path.logs", getESFolder("logs"))
+            .put("path.data", getDirectoryCreator().create("data"))
+            .put("path.work", getDirectoryCreator().create("work"))
+            .put("path.logs", getDirectoryCreator().create("logs"))
             .put("node.local", true)
             .put("index.number_of_shards", 1);
         if (settings != null && builder == null) {
@@ -161,75 +151,12 @@ public class ElasticsearchClientFactory implements DisposableBean {
         return (builder != null) ? builder.build() : null;
     }
     
-    private String getESFolder(String extension){
-        String location = FilenameUtils.concat(getTierDependentIndexLocation(), extension);
-        ensureFileExists(location);
-        return location;
+    public IDirectoryCreator getDirectoryCreator() {
+        return directoryCreator;
     }
 
-    /**
-     * @param location
-     */
-    private void ensureFileExists(String location) {
-        File f = new File(location);
-        File root = new File("./");
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Current working directory:\t" + root.getAbsolutePath());
-        }
-        if(!f.exists()){
-            try {
-                boolean fileCreated = f.createNewFile();
-                if(LOG.isDebugEnabled()){
-                    LOG.debug("File:\t" + location + "\tcreated:\t" + String.valueOf(fileCreated));
-                }
-            } catch (IOException e) {
-                LOG.error("Error creating:\t" + location);
-            }
-        }
-    }
-    
-    private String getTierDependentIndexLocation(){
-        String location = null;
-        try{
-            // should be the case for tier3 mode, store index in <servlet>/WEB-INF/elasticsearch
-            location = getIndexLocation().getFile().getAbsoluteFile().getAbsolutePath();
-        } catch (FileNotFoundException e){
-            // should be the case for tier2 mode, store index in <userhome>/elasticsearch
-            location = getInstanceAreaIndexLocation();
-        } catch (NullPointerException e){
-            // should be the case for tier2 mode, store index in <userhome>/elasticsearch
-            location =  getInstanceAreaIndexLocation();
-        } catch (Exception e){
-            LOG.error("E", e);
-        }
-        
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Storing ES-Index in:\t" + location);
-        }
-        return location;
-    }
-    
-    private String getInstanceAreaIndexLocation(){
-        try {
-            return FileUtils.toFile(new URL(FilenameUtils.concat(System.getProperty("osgi.instance.area"), "elasticsearch/"))).getAbsolutePath();
-        } catch (MalformedURLException e) {
-            LOG.error("URL ist not formed well", e);
-        }
-        return "";
-    }
-
-    /**
-     * @return the indexLocation
-     */
-    public Resource getIndexLocation() {
-        return indexLocation;
-    }
-
-    /**
-     * @param indexLocation the indexLocation to set
-     */
-    public void setIndexLocation(Resource indexLocation) {
-        this.indexLocation = indexLocation;
+    public void setDirectoryCreator(IDirectoryCreator directoryCreator) {
+        this.directoryCreator = directoryCreator;
     }
 
 }

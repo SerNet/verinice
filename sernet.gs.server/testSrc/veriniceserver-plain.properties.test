@@ -100,4 +100,5 @@ veriniceserver.notification.email.linkto=http://verinice.local.example/verinices
 veriniceserver.filesize.max=100
 
 # Elasticsearch index directory
-veriniceserver.search.index.directory=./elasticsearch/
+# When running JUnit-Tests "file:./elasticsearch/" is created in directory sernet.gs.server
+veriniceserver.search.index.directory=file:./elasticsearch/

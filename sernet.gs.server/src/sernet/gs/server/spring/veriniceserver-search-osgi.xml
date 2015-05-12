@@ -2,31 +2,29 @@
 <!-- Spring configuration for business process engine JBoss jBPM (https://www.jboss.org/jbpm) -->
 <!-- See jBPM developer guide - Chapter 17. Spring Integration -->
 <!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean id="clientFactory" class="sernet.verinice.search.ElasticsearchClientFactory"
-		init-method="init" >
-		<property name="indexLocation" value="./elasticsearch/"/>
-	</bean>
+  <bean id="directoryCreator" class="sernet.verinice.search.ESOsgiDirectoryCreator">
+    <!-- Elasticsearch index directory, relative to workspace -->
+    <property name="indexLocation" value="./elasticsearch/" />
+  </bean>
 
-	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-    	<property name="corePoolSize" value="5" />
-    	<property name="maxPoolSize" value="10" />
-    	<property name="queueCapacity" value="25" />
-	</bean>
+  <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <property name="corePoolSize" value="5" />
+    <property name="maxPoolSize" value="10" />
+    <property name="queueCapacity" value="25" />
+  </bean>
 
-	<bean id="OSGIIndexer" class="sernet.verinice.search.OSGIIndexer" init-method="run">
-		<constructor-arg ref="taskExecutor"/>
-		<property name="indexer" ref="searchIndexer"/>
-	</bean>
+  <bean id="OSGIIndexer" class="sernet.verinice.search.OSGIIndexer" init-method="run">
+    <constructor-arg ref="taskExecutor" />
+    <property name="indexer" ref="searchIndexer" />
+  </bean>
 
-	<bean id="indexThread" class="sernet.verinice.search.IndexThread"
-		scope="prototype">
-		<property name="searchDao" ref="searchElementDao" />
-	</bean>
-	
+  <bean id="indexThread" class="sernet.verinice.search.IndexThread" scope="prototype">
+    <property name="searchDao" ref="searchElementDao" />
+  </bean>
+
 
 
 </beans>

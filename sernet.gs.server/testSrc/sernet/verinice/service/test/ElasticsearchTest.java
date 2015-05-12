@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -38,8 +39,13 @@ import org.junit.Test;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.search.VeriniceQuery;
+import sernet.verinice.model.search.VeriniceSearchResult;
+import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.search.IElementSearchDao;
 import sernet.verinice.search.Indexer;
 import sernet.verinice.search.JsonBuilder;
@@ -62,6 +68,9 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     @Resource(name="searchElementDao")
     protected IElementSearchDao searchDao;
     
+    @Resource(name="searchService")
+    protected ISearchService searchService;
+    
     
     @Test
     public void testIndex()  {
@@ -77,44 +86,40 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     public void testUpdate()  {
         searchIndexer.index();
         String name = "SerNet";
-        SearchHits result = searchDao.find(name).getHits();
-        assertTrue("Element found with string: " + name, result.getTotalHits()==0);
-        result = searchDao.find("title", "Cryptography").getHits();
-        assertTrue("No element found with 'Cryptography' in title", result.getTotalHits()>0);
-        SearchHit hit = result.getHits()[0];
-        CnATreeElement element = elementDao.findByUuid(hit.getId(), RetrieveInfo.getPropertyInstance().setPermissions(true));
-        assertNotNull("No element found with uuid: " + hit.getId(), element);
+        VeriniceSearchResult result = findByTitle(name);
+        assertTrue("Element found with string: " + name, result.getHits()==0);
+        result = findByTitle("Cryptogr");
+        assertTrue("No element found with 'Cryptogr' in title", result.getHits()>0);
+        VeriniceSearchResultRow row = result.getAllVeriniceSearchObjects().iterator().next().getRows().iterator().next();
+        String uuid = getUuid(row);
+        CnATreeElement element = elementDao.findByUuid(uuid, RetrieveInfo.getPropertyInstance().setPermissions(true));
+        assertNotNull("No element found with uuid: " + uuid, element);
         element.setTitel(name);
         String json = JsonBuilder.getJson(element);
         assertTrue("JSON does not contain " + name + ": " + json, json.contains(name));
-        ActionResponse response = searchDao.update(hit.getId(), json);
-        result = searchDao.find("title", name).getHits();
-        assertTrue("No element found with string: " + name, result.getTotalHits()>0);
+        ActionResponse response = searchDao.update(uuid, json);
+        result = findByTitle("Cryptogr");
+        assertTrue("No element found with string: " + name, result.getHits()>0);
     }
     
     @Test
     public void testDelete()  {
         searchIndexer.index();
-        SearchHits result = searchDao.find("title", "Cryptography").getHits();
-        assertTrue("No element found with 'Cryptography' in title", result.getTotalHits()>0);
-        delete(0);
-        result = searchDao.find("title", "Cryptography").getHits();
-        assertTrue("Element found with 'Cryptography' in title", result.getTotalHits()==0);
+        VeriniceSearchResult result = findByTitle("Cryptogr");
+        assertTrue("No element found with 'Cryptogr' in title", result.getHits()>0);
+        delete(result);
+        result = findByTitle("Cryptogr");
+        assertTrue("Element found with 'Cryptogr' in title", result.getHits()==0);
     }
 
-    private void delete(int n) {
-        SearchHits result = searchDao.find("title", "Cryptography").getHits();
-        SearchHit[] hits = result.getHits();
-        if(hits.length==0) {
-            return;
+    private void delete(VeriniceSearchResult result ) {
+        Set<VeriniceSearchResultObject> resultList = result.getAllVeriniceSearchObjects();
+        for (VeriniceSearchResultObject resultObject : resultList) {
+            Set<VeriniceSearchResultRow> rows = resultObject.getAllResults();
+            for (VeriniceSearchResultRow row : rows) {
+                searchDao.delete(getUuid(row));
+            }
         }
-        LOG.debug( n + ". results: " + hits.length);
-        for (SearchHit hit : hits) {
-            searchDao.delete(hit.getId());
-        }
-        assertTrue("More than 10 calls of delete.", n<10);
-        n++;
-        delete(n);
     }
     
     @Test
@@ -184,16 +189,37 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     }
     
     private void testFindByTitle(CnATreeElement element) {
-        SearchHits hits = searchDao.findByPhrase(element.getTitle()).getHits();
+        String title = element.getTitle();
+        String type = element.getTypeId();
+        VeriniceSearchResultObject typeResult = findByTitle(type, title);
         boolean found = false;
-        for (SearchHit hit : hits) {
-            Map<String, Object> source = hit.getSource();
-            if(element.getUuid().equals((String) source.get("uuid"))) {
+        for (VeriniceSearchResultRow row : typeResult.getRows()) {
+            
+            if(element.getUuid().equals(getUuid(row))) {
                 found = true;
                 break;
             }
         }
-        assertTrue("Element not found, title: " + element.getTitle() + " hits: " + hits.getTotalHits(), found);
+        assertTrue("Element not found, title: " + element.getTitle() + " hits: " + typeResult.getHits(), found);
+    }
+
+    private String getUuid(VeriniceSearchResultRow row) {
+        return (String) row.getValueFromResultString(ISearchService.ES_FIELD_UUID);
+    }
+
+    private VeriniceSearchResultObject findByTitle(String type, String title) {
+        if(title.length()>7) {
+            title = title.substring(0, 7);
+        }
+        VeriniceSearchResult result = findByTitle(title);
+        VeriniceSearchResultObject typeResult = result.getVeriniceSearchObject(type);
+        return typeResult;
+    }
+
+    private VeriniceSearchResult findByTitle(String title) {
+        VeriniceQuery veriniceQuery = new VeriniceQuery(title, 200);
+        VeriniceSearchResult result = searchService.query(veriniceQuery);
+        return result;
     }
 
     @Override
