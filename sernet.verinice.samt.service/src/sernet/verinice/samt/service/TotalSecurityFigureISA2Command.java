@@ -31,7 +31,10 @@ import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
 
 /**
- *
+ * computes key figures for isa report templates
+ * - samt-report-compliance.rptdesign
+ * - samt-report.rptdesign
+ * - ISA-ActionReport.rptdesign
  */
 public class TotalSecurityFigureISA2Command extends GenericCommand implements ICachedCommand {
     
