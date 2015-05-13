@@ -7,6 +7,12 @@
         <value>samt-report-compliance</value>
     </simple-property-list>
     <property name="units">in</property>
+    <list-property name="propertyBindings">
+        <structure>
+            <property name="name">queryText</property>
+            <property name="id">61</property>
+        </structure>
+    </list-property>
     <method name="initialize"><![CDATA[importPackage(Packages.java.lang);]]></method>
     <property name="iconFile">/templates/blank_report.gif</property>
     <property name="bidiLayoutOrientation">ltr</property>
@@ -40,12 +46,23 @@
     </data-sources>
     <data-sets>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="totalSecurityFigure" id="61">
+            <property name="nullsOrdering">nulls lowest</property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">totalSecurityFigure</property>
                     <property name="analysis">attribute</property>
                     <text-property name="displayName">totalSecurityFigure</text-property>
                     <text-property name="heading">totalSecurityFigure</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">reducedTargetMaturity</property>
+                    <text-property name="displayName">reducedTargetMaturity</text-property>
+                    <text-property name="heading">reducedTargetMaturity</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">maxMaturity</property>
+                    <text-property name="displayName">maxMaturity</text-property>
+                    <text-property name="heading">maxMaturity</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -67,7 +84,17 @@
                     <structure>
                         <property name="position">1</property>
                         <property name="name">totalSecurityFigure</property>
-                        <property name="dataType">string</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">reducedTargetMaturity</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">maxMaturity</property>
+                        <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
             </structure>
@@ -77,7 +104,21 @@
                     <property name="position">1</property>
                     <property name="name">totalSecurityFigure</property>
                     <property name="nativeName">totalSecurityFigure</property>
-                    <property name="dataType">string</property>
+                    <property name="dataType">float</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">reducedTargetMaturity</property>
+                    <property name="nativeName">reducedTargetMaturity</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">maxMaturity</property>
+                    <property name="nativeName">maxMaturity</property>
+                    <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
             </list-property>
@@ -86,6 +127,7 @@ import sernet.verinice.samt.service.TotalSecurityFigureISA2Command;
 import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.report.service.impl.TocHelper2;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -95,11 +137,13 @@ if (myroot != null &amp;&amp; myroot != -1) {
 	root = myroot;
 }
 
-c = new TotalSecurityFigureISA2Command(root);
-secfig = helper.execute(c).getResult();
+c = helper.execute(new TotalSecurityFigureISA2Command(root));
+secfig = c.getResult();
 results = new ArrayList(0);
 result = new ArrayList(0);
 result.add(String.valueOf(secfig));
+result.add(String.valueOf(c.getTargetMaturity()));
+result.add(String.valueOf(c.getAverageMaturity()));
 results.add(result);
 return results;]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
@@ -161,7 +205,7 @@ return results;]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
-                    <value>columns(new String[] { "totalSecurityFigure" });
+                    <value>columns(new String[] { "totalSecurityFigure", "reducedTargetMaturity", "maxMaturity" });
 inParameters(new String[] { "root_object" });</value>
                 </ex-property>
             </list-property>
@@ -2464,533 +2508,6 @@ columns(cols);</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
-        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="radarChartData" id="2147">
-            <list-property name="columnHints">
-                <structure>
-                    <property name="columnName">CATEGORIES</property>
-                    <text-property name="displayName">CATEGORIES</text-property>
-                    <text-property name="heading">CATEGORIES</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">MATURITYDATA</property>
-                    <text-property name="displayName">MATURITYDATA</text-property>
-                    <text-property name="heading">MATURITYDATA</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">THRESHOLDRED</property>
-                    <text-property name="displayName">THRESHOLDRED</text-property>
-                    <text-property name="heading">THRESHOLDRED</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">THRESHOLDYELLOW</property>
-                    <text-property name="displayName">THRESHOLDYELLOW</text-property>
-                    <text-property name="heading">THRESHOLDYELLOW</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">THRESHOLDGREEN</property>
-                    <text-property name="displayName">THRESHOLDGREEN</text-property>
-                    <text-property name="heading">THRESHOLDGREEN</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">POSITION</property>
-                    <text-property name="displayName">POSITION</text-property>
-                    <text-property name="heading">POSITION</text-property>
-                </structure>
-            </list-property>
-            <list-property name="parameters">
-                <structure>
-                    <property name="name">root</property>
-                    <property name="nativeName">root</property>
-                    <property name="dataType">string</property>
-                    <property name="nativeDataType">12</property>
-                    <property name="position">1</property>
-                    <expression name="defaultValue" type="constant">dummy default value</expression>
-                    <property name="isOptional">false</property>
-                    <property name="isInput">true</property>
-                </structure>
-            </list-property>
-            <structure name="cachedMetaData">
-                <list-property name="resultSet">
-                    <structure>
-                        <property name="position">1</property>
-                        <property name="name">CATEGORIES</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">2</property>
-                        <property name="name">MATURITYDATA</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">3</property>
-                        <property name="name">THRESHOLDRED</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">4</property>
-                        <property name="name">THRESHOLDYELLOW</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">5</property>
-                        <property name="name">THRESHOLDGREEN</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">6</property>
-                        <property name="name">POSITION</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                </list-property>
-            </structure>
-            <property name="dataSource">verinice</property>
-            <list-property name="resultSet">
-                <structure>
-                    <property name="position">1</property>
-                    <property name="name">CATEGORIES</property>
-                    <property name="nativeName">CATEGORIES</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">2</property>
-                    <property name="name">MATURITYDATA</property>
-                    <property name="nativeName">MATURITYDATA</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">3</property>
-                    <property name="name">THRESHOLDRED</property>
-                    <property name="nativeName">THRESHOLDRED</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">4</property>
-                    <property name="name">THRESHOLDYELLOW</property>
-                    <property name="nativeName">THRESHOLDYELLOW</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">5</property>
-                    <property name="name">THRESHOLDGREEN</property>
-                    <property name="nativeName">THRESHOLDGREEN</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">6</property>
-                    <property name="name">POSITION</property>
-                    <property name="nativeName">POSITION</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-            </list-property>
-            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
-import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.IControl;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.gs.service.NumericStringComparator;
-import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Map.Entry;
-import java.util.Collections;
-import java.util.Comparator;
-
-
-THRESHHOLDRED = 2;
-THRESHHOLDYELLOW = 3;
-THRESHHOLDGREEN = 5;
-
-maturity = new HashMap(0);
-typedChildrenMap = new HashMap(0);
-childrenMap = new HashMap(0);
-elementMap = new HashMap(0);
-propMap = new HashMap(0);
-itemMap = new HashMap(0);
-overviewMap = new HashMap(0);
-summaryMap = new HashMap(0);
-mbwMap = new HashMap(0);
-weightMap = new HashMap(0);
-matMap = new HashMap(0);
-wMatMap = new HashMap(0);
-
-List getChildren(int id, String type){
-	hql = "from CnATreeElement elmt " +
-                	"left join fetch elmt.entity as entity " + 
-	                "left join fetch entity.typedPropertyLists as propertyList " + 
-        	        "left join fetch propertyList.properties as props " + 
-			"where elmt.parentId = ? and elmt.typeId = ?";
-	params = new Object[]{id, type};
-	if(!(typedChildrenMap.containsKey(params))){
-		loader = new ExecuteHQLInReportCommand(hql, params, CnATreeElement.class);
-		result = helper.execute(loader).getResult();	
-		typedChildrenMap.put(params, result);
-		return result;
-	} else {
-		return typedChildrenMap.get(params);
-	}
-}
-
-List getChildren(int id){
-	if(!(childrenMap.containsKey(id))){
-		hql = "from CnATreeElement elmt " +
-        	        	"left join fetch elmt.entity as entity " + 
-	        	        "left join fetch entity.typedPropertyLists as propertyList " + 
-        	        	"left join fetch propertyList.properties as props " + 
-				"where elmt.parentId = ? ";
-		params = new Object[]{id};
-		loader = new ExecuteHQLInReportCommand(hql, params, CnATreeElement.class);
-		result = helper.execute(loader).getResult();	
-		childrenMap.put(id, result);
-		return result;
-	} else {
-		return childrenMap.get(id);
-	}
-}
-
-CnATreeElement getElmtByHql(int dbid){
-	if(!(elementMap.containsKey(dbid))){
-		elementHql = "from CnATreeElement elmt " + 
-        	        	"inner join elmt.entity as entity " + 
-	        	        "inner join entity.typedPropertyLists as propertyList " + 
-        	        	"inner join propertyList.properties as props " + 
-                		"where elmt.dbId = ? ";
-		params = new Object[]{dbid};
-		c2 = new ExecuteHQLInReportCommand(hql, params, CnATreeElement.class);
-		result2 = helper.execute(c2).getResult();
-		for(Object r : result2){
-			if(r instanceof Object[]){
-				oArr = (Object[])r;
-				for(Object o : oArr){
-					if(o instanceof CnATreeElement){
-						elementMap.put(dbid, (CnATreeElement)o);
-						return (CnATreeElement)o;
-					}
-				}
-			}
-		}
-		elementMap.put(dbid, null);
-		return null;
-	} else {
-		return elementMap.get(dbid);
-	}
-}
-
-String getElmtPropByHql(int dbid, String propType){
-	elementHql = "select props.propertyValue from CnATreeElement elmt " +
-                	"inner join elmt.entity as entity " + 
-	                "inner join entity.typedPropertyLists as propertyList " + 
-        	        "inner join propertyList.properties as props " +
-			"where  elmt.dbId = ? AND props.propertyType = ?";
-	params = new Object[]{dbid, propType};
-	if(!(propMap.containsKey(params))){
-		c2 = new ExecuteHQLInReportCommand(elementHql, params, CnATreeElement.class);
-		result3 = helper.execute(c2).getResult();
-		if(result3 instanceof ArrayList){
-			if(result3.size() > 1){
-				// remove duplicates
-				s = new LinkedHashSet(result);
-				result3.clear();
-				// remove empty entries
-				s.remove("");
-				s.remove(null);
-				tmpSet = new LinkedHashSet();
-				for(Object entry : s){
-					tmpSet.add(String.valueOf(entry).trim());
-				}
-				result3.addAll(tmpSet);
-				if(result3.size() > 1){
-					propMap.put(params, "");
-					return "";
-				}  else if (result3.size() == 1){
-					propMap.put(params, result3.get(0));
-					return result3.get(0);
-				} else {
-					propMap.put(params, "");
-					return "";
-				}
-			} else {
-				if(result3.size() > 0 &amp;&amp; (result3.get(0) instanceof String)){
-					propMap.put(params, (String)result3.get(0));
-					return (String)result3.get(0);
-				}
-			}
-			if(result3.size() == 1 &amp;&amp; result3.get(0) instanceof String){
-				propMap.put(params, (String)result3.get(0));
-				return (String)result3.get(0);
-			}
-		}
-		propMap.put(params, "");
-		return "";
-	} else {
-		return propMap.get(params);
-	}
-}
-
-HashMap getItems(Integer topGroupId) {
-	map = new HashMap();	
-	groups = getChildren(topGroupId);
-	summaryMap = new HashMap(0);
-	for (CnATreeElement group : groups) {
-		if(!(summaryMap.containsKey(group.getDbId()))){
-			if (group instanceof ControlGroup &amp;&amp; isOverviewGroup((ControlGroup)group)){
-				summary = getSummary((ControlGroup)group);
-				summaryMap.put(group.getDbId(), summary);
-				map.put(group.getTitle(), summary);
-			}
-		} else {
-			map.put(group.getTitle(), summaryMap.get(group.getDbId()));		
-		}
-	}
-	return map;
-}
-
-boolean isOverviewGroup(ControlGroup g){
-	if(!(overviewMap.containsKey(g.getDbId()))){
-		isOverviewElementString = getElmtPropByHql(g.getDbId(), "controlgroup_is_NoIso_group");
-		if(isOverviewElementString != null &amp;&amp; ("0".equals(isOverviewElementString) || "".equals(isOverviewElementString))){
-			overviewMap.put(g.getDbId(), Boolean.TRUE);
-			return Boolean.TRUE;
-		} else {
-			overviewMap.put(g.getDbId(), Boolean.FALSE);
-			return Boolean.FALSE;
-		}
-	} else {
-		return overviewMap.get(g.getDbId());
-	}
-}
-
-Double getSummary(ControlGroup group) {
-	if(!(summaryMap.containsKey(group.getDbId()))){
-		mw = getMaturityByWeight(group);
-		//map.put(group.getTitle(), mw);
-		summaryMap.put(group.getDbId(), mw);
-		return mw;
-	} else {
-		return summaryMap.get(group.getDbId());	
-	}
-}
-
-Double getMaturityByWeight(ControlGroup cg) {
-	if(!(mbwMap.containsKey(cg.getDbId()))){
-		result =0.0;
-		if (getWeights(cg.getDbId()) != 0){
-			wm = getWeightedMaturity(cg.getDbId());
-			weight = getWeights(cg.getDbId());
-			result = ((double) wm) / ((double) weight);
-		}
-		mbwMap.put(cg.getDbId(), result);
-		return result;
-	} else {
-		return mbwMap.get(cg.getDbId());
-	}
-}
-
-int getWeights(int cgId) {
-	if(!(weightMap.containsKey(cgId))){
-		weight = 0;
-	        for (CnATreeElement child : getChildren(cgId)) {
-	            if (child instanceof IControl) {
-	                weight += Integer.valueOf(getElmtPropByHql(child.getDbId(), getWeight2Prop(child)));
-	            }
-	            if (child instanceof ControlGroup) {
-	                controlgroup = (ControlGroup) child;
-	                weight += getWeights(controlgroup.getDbId());
-	            }
-	        }
-		weightMap.put(cgId, weight);
-	        return weight;
-	} else {
-		return weightMap.get(cgId);
-	}
-}
-
-String getWeight2Prop(IControl control){
-	if(control instanceof Control){
-		return Control.PROP_WEIGHT2;
-	} else if(control instanceof SamtTopic){
-		return SamtTopic.PROP_WEIGHT2;
-	}
-	return "";
-}
-
-int getWeightedMaturity(int cgId) {
-	if(!(wMatMap.containsKey(cgId))){
-		maturity = 0;	
-		for (CnATreeElement child : getChildren(cgId)) {
-			if (child instanceof IControl) {
-				control = (IControl) child;
-				maturity += getWeightedMaturity(control);
-	            	}
-			if (child instanceof ControlGroup) {
-				controlgroup = (ControlGroup) child;
-				maturity += getWeightedMaturity(controlgroup.getDbId());
-			}
-        	}
-		wMatMap.put(cgId, maturity);
-        	return maturity;
-	} else {
-		return wMatMap.get(cgId);
-	}
-}
-
-int getWeightedMaturity(IControl contr) {
-	return getMaturity(contr) * Integer.valueOf(getElmtPropByHql(contr.getDbId(), getWeight2Prop(contr)));
-}
-
-int getMaturity(IControl contr){
-	if(!(matMap.containsKey(contr.getDbId()))){
-		mat = 0;
-		if(contr instanceof Control){
-			mat = Integer.valueOf(getElmtPropByHql(contr.getDbId(), Control.PROP_MATURITY));
-		} else if(contr instanceof SamtTopic){
-			mat = Integer.valueOf(getElmtPropByHql(contr.getDbId(), SamtTopic.PROP_MATURITY));
-		}
-		matMap.put(contr.getDbId(), mat);
-		return mat;
-	} else {
-		return matMap.get(contr.getDbId());
-	}
-}
-
-List sort(Set entrySet) {
-	list = new ArrayList();
-	list.addAll(entrySet);
-	Collections.sort(list, new Comparator() {
-		public int compare(Entry o1, Entry o2) {
-			NumericStringComparator comparator = new NumericStringComparator();
-			return comparator.compare(o1.getKey(), o2.getKey());
-		}
-	});
-	return list;
-}
-
-// set top level element for report:
-root = helper.getRoot();
-// try to get manual parameter if set:
-myroot = _inpv.get("root_object");
-if (myroot != null &amp;&amp; myroot != -1) {
-	root = myroot;
-}
-
-controlgroupHQL = "select elmt.dbId from CnATreeElement elmt " + 
-                	"inner join elmt.entity as entity " + 
-	                "inner join entity.typedPropertyLists as propertyList " + 
-        	        "inner join propertyList.properties as props " + 
-                	"where elmt.parentId = ? and elmt.objectType = ? ";
-	params = new Object[]{root, ControlGroup.TYPE_ID};
-	idLoader = new ExecuteHQLInReportCommand(controlgroupHQL, params, CnATreeElement.class);
-	result2 = helper.execute(idLoader).getResult();
-	
-	samtGroupId = null;
-	for(Object r : result2){
-		if(r instanceof Integer){
-			samtGroupId = r;
-		}
-	}
-	maturity = getItems(samtGroupId);
-	entrySet = maturity.entrySet();
-	
-	result = new ArrayList(0);
-	for(Entry entry : sort(entrySet)){
-		row = new ArrayList(0);
-		row.add(entry.getKey());
-		row.add(String.valueOf(entry.getValue()));
-		row.add(String.valueOf(THRESHHOLDRED));
-		row.add(String.valueOf(THRESHHOLDYELLOW));
-		row.add(String.valueOf(THRESHHOLDGREEN));
-		row.trimToSize();
-		result.add(row);
-	}
-
-for(List list : result){
-	list.add(String.valueOf(result.indexOf(list)));
-}
-
-return result;]]></xml-property>
-            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
-<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>2.0</Version>
-  <DataSetParameters>
-    <parameter>
-      <design:ParameterDefinition>
-        <design:inOutMode>In</design:inOutMode>
-        <design:attributes>
-          <design:identifier>
-            <design:name>root</design:name>
-            <design:position>1</design:position>
-          </design:identifier>
-          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-          <design:precision>-1</design:precision>
-          <design:scale>-1</design:scale>
-          <design:nullability>Unknown</design:nullability>
-        </design:attributes>
-        <design:inputAttributes>
-          <design:elementAttributes>
-            <design:defaultValues>
-              <design:values>dummy default value</design:values>
-            </design:defaultValues>
-          </design:elementAttributes>
-        </design:inputAttributes>
-      </design:ParameterDefinition>
-    </parameter>
-  </DataSetParameters>
-  <design:ResultSets derivedMetaData="true">
-    <design:resultSetDefinitions>
-      <design:resultSetColumns>
-        <design:resultColumnDefinitions>
-          <design:attributes>
-            <design:identifier>
-              <design:name>image</design:name>
-              <design:position>1</design:position>
-            </design:identifier>
-            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
-            <design:precision>-1</design:precision>
-            <design:scale>-1</design:scale>
-            <design:nullability>Unknown</design:nullability>
-            <design:uiHints>
-              <design:displayName>image</design:displayName>
-            </design:uiHints>
-          </design:attributes>
-          <design:usageHints>
-            <design:label>image</design:label>
-            <design:formattingHints>
-              <design:displaySize>8</design:displaySize>
-            </design:formattingHints>
-          </design:usageHints>
-        </design:resultColumnDefinitions>
-      </design:resultSetColumns>
-      <design:criteria/>
-    </design:resultSetDefinitions>
-  </design:ResultSets>
-</model:DesignValues>]]></xml-property>
-            <list-property name="privateDriverProperties">
-                <ex-property>
-                    <name>setupQueryText</name>
-                    <value>import sernet.hui.common.*;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadSamtComplianceRadarChartData;
-
-cols = new String[] { 
-        "CATEGORIES",
-        "MATURITYDATA",
-        "THRESHOLDRED",
-        "THRESHOLDYELLOW",
-        "THRESHOLDGREEN",
-	"POSITION"
-        };
-columns(cols);
-//columns(LoadSamtComplianceRadarChartData.COLUMNS);
-inParameters(new String[] { "root"});</value>
-                </ex-property>
-            </list-property>
-        </oda-data-set>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="sg1" id="2301">
             <list-property name="computedColumns">
                 <structure>
@@ -3923,6 +3440,506 @@ return result;]]></xml-property>
 cols = helper.getAllPropertyTypes("samt_topic");
 inParameters(new String[] { "root_object" });
 columns(cols);</value>
+                </ex-property>
+            </list-property>
+        </oda-data-set>
+        <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="radarChartData1" id="2328">
+            <list-property name="columnHints">
+                <structure>
+                    <property name="columnName">CATEGORIES</property>
+                    <text-property name="displayName">CATEGORIES</text-property>
+                    <text-property name="heading">CATEGORIES</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">MATURITY</property>
+                    <text-property name="displayName">MATURITY</text-property>
+                    <text-property name="heading">MATURITY</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">THRESHOLD</property>
+                    <text-property name="displayName">THRESHOLD</text-property>
+                    <text-property name="heading">THRESHOLD</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">POSITION</property>
+                    <text-property name="displayName">POSITION</text-property>
+                    <text-property name="heading">POSITION</text-property>
+                </structure>
+            </list-property>
+            <list-property name="parameters">
+                <structure>
+                    <property name="name">root</property>
+                    <property name="nativeName">root</property>
+                    <property name="dataType">string</property>
+                    <property name="nativeDataType">12</property>
+                    <property name="position">1</property>
+                    <expression name="defaultValue" type="constant">dummy default value</expression>
+                    <property name="isOptional">false</property>
+                    <property name="isInput">true</property>
+                </structure>
+            </list-property>
+            <structure name="cachedMetaData">
+                <list-property name="resultSet">
+                    <structure>
+                        <property name="position">1</property>
+                        <property name="name">CATEGORIES</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">2</property>
+                        <property name="name">MATURITY</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">3</property>
+                        <property name="name">THRESHOLD</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">4</property>
+                        <property name="name">POSITION</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                </list-property>
+            </structure>
+            <property name="dataSource">verinice</property>
+            <list-property name="resultSet">
+                <structure>
+                    <property name="position">1</property>
+                    <property name="name">CATEGORIES</property>
+                    <property name="nativeName">CATEGORIES</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">2</property>
+                    <property name="name">MATURITY</property>
+                    <property name="nativeName">MATURITY</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">3</property>
+                    <property name="name">THRESHOLD</property>
+                    <property name="nativeName">THRESHOLD</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">4</property>
+                    <property name="name">POSITION</property>
+                    <property name="nativeName">POSITION</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+            </list-property>
+            <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.gs.service.NumericStringComparator;
+import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Map.Entry;
+import java.util.Collections;
+import java.util.Comparator;
+import sernet.verinice.report.service.impl.TocHelper2;
+
+
+maturity = new HashMap(0);
+typedChildrenMap = new HashMap(0);
+childrenMap = new HashMap(0);
+elementMap = new HashMap(0);
+propMap = new HashMap(0);
+itemMap = new HashMap(0);
+overviewMap = new HashMap(0);
+summaryMap = new HashMap(0);
+mbwMap = new HashMap(0);
+weightMap = new HashMap(0);
+matMap = new HashMap(0);
+wMatMap = new HashMap(0);
+wMatMap1 = new HashMap(0);
+mbwMap1 = new HashMap(0);
+
+controlCount = 0;
+
+// gets all children of element with dbid <id> of entitytype <type>
+List getChildren(int id, String type){
+	hql = "from CnATreeElement elmt " +
+                	"left join fetch elmt.entity as entity " + 
+	                "left join fetch entity.typedPropertyLists as propertyList " + 
+        	        "left join fetch propertyList.properties as props " + 
+			"where elmt.parentId = ? and elmt.typeId = ?";
+	params = new Object[]{id, type};
+	if(!(typedChildrenMap.containsKey(params))){
+		loader = new ExecuteHQLInReportCommand(hql, params, CnATreeElement.class);
+		result = helper.execute(loader).getResult();	
+		typedChildrenMap.put(params, result);
+		return result;
+	} else {
+		return typedChildrenMap.get(params);
+	}
+}
+
+// gets all children of element with dbid <id> of all entities
+List getChildren(int id){
+	if(!(childrenMap.containsKey(id))){
+		hql = "from CnATreeElement elmt " +
+        	        	"left join fetch elmt.entity as entity " + 
+	        	        "left join fetch entity.typedPropertyLists as propertyList " + 
+        	        	"left join fetch propertyList.properties as props " + 
+				"where elmt.parentId = ? ";
+		params = new Object[]{id};
+		loader = new ExecuteHQLInReportCommand(hql, params, CnATreeElement.class);
+		result = helper.execute(loader).getResult();	
+		childrenMap.put(id, result);
+		return result;
+	} else {
+		return childrenMap.get(id);
+	}
+}
+
+
+// gets a property of an element (using hql), given by propertyType and dbid of cnatreelement
+String getElmtPropByHql(int dbid, String propType){
+	elementHql = "select props.propertyValue from CnATreeElement elmt " +
+                	"inner join elmt.entity as entity " + 
+	                "inner join entity.typedPropertyLists as propertyList " + 
+        	        "inner join propertyList.properties as props " +
+			"where  elmt.dbId = ? AND props.propertyType = ?";
+	params = new Object[]{dbid, propType};
+	if(!(propMap.containsKey(params))){
+		c2 = new ExecuteHQLInReportCommand(elementHql, params, CnATreeElement.class);
+		result3 = helper.execute(c2).getResult();
+		if(result3 instanceof ArrayList){
+			if(result3.size() > 1){
+				// remove duplicates
+				s = new LinkedHashSet(result);
+				result3.clear();
+				// remove empty entries
+				s.remove("");
+				s.remove(null);
+				tmpSet = new LinkedHashSet();
+				for(Object entry : s){
+					tmpSet.add(String.valueOf(entry).trim());
+				}
+				result3.addAll(tmpSet);
+				if(result3.size() > 1){
+					propMap.put(params, "");
+					return "";
+				}  else if (result3.size() == 1){
+					propMap.put(params, result3.get(0));
+					return result3.get(0);
+				} else {
+					propMap.put(params, "");
+					return "";
+				}
+			} else {
+				if(result3.size() > 0 &amp;&amp; (result3.get(0) instanceof String)){
+					propMap.put(params, (String)result3.get(0));
+					return (String)result3.get(0);
+				}
+			}
+			if(result3.size() == 1 &amp;&amp; result3.get(0) instanceof String){
+				propMap.put(params, (String)result3.get(0));
+				return (String)result3.get(0);
+			}
+		}
+		propMap.put(params, "");
+		return "";
+	} else {
+		return propMap.get(params);
+	}
+}
+
+// computes average of the so called "target maturity" of a given (by dbid) controlgroup
+HashMap getAverageTargetMaturity(Integer topGroupId){
+	map = new HashMap();
+	groups = getChildren(topGroupId);
+	for (CnATreeElement group : groups) {
+		if(!(map.containsKey(group.getDbId()))){
+			if (group instanceof ControlGroup &amp;&amp; isOverviewGroup((ControlGroup)group)){
+				map.put(group.getTitle(), getAverageTargetMaturity((ControlGroup)group));
+			}
+		}
+	}
+
+	return map;
+}
+
+// elements with maturity = NA are not considered for computation of average of target maturity 
+// target maturity in isa 2.0 catalogue equals samt topic property "threshold 2"
+double getAverageTargetMaturity(ControlGroup group){
+	children = getChildren(group.getDbId());
+	targetMatCount = 0.0;
+	topicCount = 0.0;
+	tmpSet = new HashSet();
+	tmpSet.addAll(children);
+	children.clear();
+	children.addAll(tmpSet);
+	for(CnATreeElement child : children){
+		if(child instanceof SamtTopic &amp;&amp; (IControl.IMPLEMENTED_NA_NUMERIC != getMaturity(child))){
+				try{
+					targetMatCount +=  (double)Integer.valueOf(child.getThreshold2());
+					topicCount += Double.valueOf(1.0);
+				} catch (e){
+					TocHelper2.log("Error occured computing infos for:\t" + child.getTitle());
+				}
+		}
+	}
+	if(topicCount != 0.0){
+		
+		try{
+			atMat = (double) targetMatCount / (double) topicCount;
+			if(atMat >= 0.0){
+				return atMat;
+			}
+		} catch (e) {
+			// do nothing		
+		}
+	}
+	return Double.valueOf(0.0);
+}
+
+// returns a map with average maturity values for each controlgroup of an isa
+HashMap getItems(Integer topGroupId) {
+	map = new HashMap();	
+	groups = getChildren(topGroupId);
+	summaryMap = new HashMap(0);
+	for (CnATreeElement group : groups) {
+		if(!(summaryMap.containsKey(group.getDbId()))){
+			if (group instanceof ControlGroup &amp;&amp; isOverviewGroup((ControlGroup)group)){
+				summary = getSummary((ControlGroup)group);
+				if(summary < 0.0){
+					summary = Double.valueOf(0.0);
+				}
+				summaryMap.put(group.getDbId(), summary);
+				map.put(group.getTitle(), summary);
+			}
+		} else {
+			map.put(group.getTitle(), summaryMap.get(group.getDbId()));		
+		}
+	}
+	return map;
+}
+
+// consider only controlgroups that does not have property "controlgroup_is_NoIso_group" set
+boolean isOverviewGroup(ControlGroup g){
+	if(!(overviewMap.containsKey(g.getDbId()))){
+		isOverviewElementString = getElmtPropByHql(g.getDbId(), "controlgroup_is_NoIso_group");
+		if(isOverviewElementString != null &amp;&amp; ("0".equals(isOverviewElementString) || "".equals(isOverviewElementString))){
+			overviewMap.put(g.getDbId(), Boolean.TRUE);
+			return Boolean.TRUE;
+		} else {
+			overviewMap.put(g.getDbId(), Boolean.FALSE);
+			return Boolean.FALSE;
+		}
+	} else {
+		return overviewMap.get(g.getDbId());
+	}
+}
+
+Double getSummary(ControlGroup group) {
+	if(!(summaryMap.containsKey(group.getDbId()))){
+		mw = getMaturity(group);
+		//map.put(group.getTitle(), mw);
+		summaryMap.put(group.getDbId(), mw);
+		return mw;
+	} else {
+		return summaryMap.get(group.getDbId());	
+	}
+}
+
+// returns avg maturity of a controlgroup
+Double getMaturity(ControlGroup cg) {
+	if(!(mbwMap1.containsKey(cg.getDbId()))){
+		result =0.0;
+		result = getMaturity(cg.getDbId());
+		mbwMap1.put(cg.getDbId(), result);
+		return result;
+	} else {
+		return mbwMap1.get(cg.getDbId());
+	}
+}
+
+
+double getMaturity(int cgId) {
+	if(!(wMatMap1.containsKey(cgId))){
+		maturity1 = 0;	
+		topicCount1 = 0;
+		for (CnATreeElement child : getChildren(cgId)) {
+			if (child instanceof IControl) {
+				control = (IControl) child;
+				if(IControl.IMPLEMENTED_NA_NUMERIC != getMaturity(control)){
+					maturity1 += getMaturity(control);
+					topicCount1++;
+				}
+	            	}
+			if (child instanceof ControlGroup) {
+				controlgroup = (ControlGroup) child;
+				maturity1 += getMaturity(controlgroup.getDbId());
+			}
+        	}
+		quotient = Double.valueOf(0.0);
+		if(topicCount1 > 0) {
+			quotient = (double)maturity1 / (double) topicCount1;
+		}
+		wMatMap1.put(cgId, quotient);
+        	return quotient;
+	} else {
+		return wMatMap1.get(cgId);
+	}
+}
+
+
+
+// returns maturity for a given control or samttopic
+int getMaturity(IControl contr){
+	if(!(matMap.containsKey(contr.getDbId()))){
+		mat = 0;
+		if(contr instanceof Control){
+			mat = Integer.valueOf(getElmtPropByHql(contr.getDbId(), Control.PROP_MATURITY));
+		} else if(contr instanceof SamtTopic){
+			mat = Integer.valueOf(getElmtPropByHql(contr.getDbId(), SamtTopic.PROP_MATURITY));
+		}
+		matMap.put(contr.getDbId(), mat);
+		return mat;
+	} else {
+		return matMap.get(contr.getDbId());
+	}
+}
+
+List sort(Set entrySet) {
+	list = new ArrayList();
+	list.addAll(entrySet);
+	Collections.sort(list, new Comparator() {
+		public int compare(Entry o1, Entry o2) {
+			NumericStringComparator comparator = new NumericStringComparator();
+			return comparator.compare(o1.getKey(), o2.getKey());
+		}
+	});
+	return list;
+}
+
+// set top level element for report:
+root = helper.getRoot();
+// try to get manual parameter if set:
+myroot = _inpv.get("root_object");
+if (myroot != null &amp;&amp; myroot != -1) {
+	root = myroot;
+}
+
+controlgroupHQL = "select elmt.dbId from CnATreeElement elmt " + 
+                	"inner join elmt.entity as entity " + 
+	                "inner join entity.typedPropertyLists as propertyList " + 
+        	        "inner join propertyList.properties as props " + 
+                	"where elmt.parentId = ? and elmt.objectType = ? ";
+	params = new Object[]{root, ControlGroup.TYPE_ID};
+	idLoader = new ExecuteHQLInReportCommand(controlgroupHQL, params, CnATreeElement.class);
+	result2 = helper.execute(idLoader).getResult();
+	
+	samtGroupId = null;
+	for(Object r : result2){
+		if(r instanceof Integer){
+			samtGroupId = r;
+		}
+	}
+	maturity = getItems(samtGroupId);
+	entrySet = maturity.entrySet();
+
+	avgMat = getAverageTargetMaturity(samtGroupId);
+	
+	result = new ArrayList(0);
+	for(Entry entry : sort(entrySet)){
+		row = new ArrayList(0);
+		row.add(entry.getKey());
+		row.add(String.valueOf(entry.getValue()));
+		row.add(String.valueOf(avgMat.get(entry.getKey())));
+		row.trimToSize();
+		result.add(row);
+	}
+
+// adding index as value to list is needed for correct placement of topics in spider chart
+for(List list : result){
+	list.add(String.valueOf(result.indexOf(list)));
+}
+
+return result;]]></xml-property>
+            <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>root</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
+  <design:ResultSets derivedMetaData="true">
+    <design:resultSetDefinitions>
+      <design:resultSetColumns>
+        <design:resultColumnDefinitions>
+          <design:attributes>
+            <design:identifier>
+              <design:name>image</design:name>
+              <design:position>1</design:position>
+            </design:identifier>
+            <design:nativeDataTypeCode>2000</design:nativeDataTypeCode>
+            <design:precision>-1</design:precision>
+            <design:scale>-1</design:scale>
+            <design:nullability>Unknown</design:nullability>
+            <design:uiHints>
+              <design:displayName>image</design:displayName>
+            </design:uiHints>
+          </design:attributes>
+          <design:usageHints>
+            <design:label>image</design:label>
+            <design:formattingHints>
+              <design:displaySize>8</design:displaySize>
+            </design:formattingHints>
+          </design:usageHints>
+        </design:resultColumnDefinitions>
+      </design:resultSetColumns>
+      <design:criteria/>
+    </design:resultSetDefinitions>
+  </design:ResultSets>
+</model:DesignValues>]]></xml-property>
+            <list-property name="privateDriverProperties">
+                <ex-property>
+                    <name>setupQueryText</name>
+                    <value>import sernet.hui.common.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadSamtComplianceRadarChartData;
+
+cols = new String[] { 
+        "CATEGORIES",
+        "MATURITY",
+	"THRESHOLD",
+	"POSITION"
+        };
+columns(cols);
+//columns(LoadSamtComplianceRadarChartData.COLUMNS);
+inParameters(new String[] { "root"});</value>
                 </ex-property>
             </list-property>
         </oda-data-set>
@@ -4963,8 +4980,8 @@ this.text = result;]]></method>
         </grid>
         <grid id="927">
             <property name="marginTop">20pt</property>
-            <property name="height">3.8229166666666665in</property>
-            <property name="width">100%</property>
+            <property name="height">100%</property>
+            <property name="width">97%</property>
             <property name="dataSet">totalSecurityFigure</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -4973,22 +4990,35 @@ this.text = result;]]></method>
                     <expression name="expression" type="javascript">dataSetRow["totalSecurityFigure"]</expression>
                     <property name="dataType">string</property>
                 </structure>
+                <structure>
+                    <property name="name">reducedTargetMaturity</property>
+                    <text-property name="displayName">reducedTargetMaturity</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["reducedTargetMaturity"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">maxMaturity</property>
+                    <text-property name="displayName">maxMaturity</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["maxMaturity"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
             </list-property>
             <column id="928">
-                <property name="width">1.3958333333333333in</property>
+                <property name="width">24%</property>
             </column>
             <column id="929">
-                <property name="width">1.6458333333333333in</property>
+                <property name="width">24%</property>
             </column>
             <column id="930">
-                <property name="width">1.78125in</property>
+                <property name="width">24%</property>
             </column>
             <column id="931">
-                <property name="width">2.2708333333333335in</property>
+                <property name="width">28%</property>
             </column>
-            <row id="16">
+            <row id="2302">
+                <property name="height">0.5416666666666666in</property>
                 <property name="verticalAlign">middle</property>
-                <cell id="17">
+                <cell id="2303">
                     <property name="backgroundColor">#BDBDBD</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -5006,13 +5036,11 @@ this.text = result;]]></method>
                     <property name="paddingLeft">2pt</property>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
-                    <text id="25">
-                        <property name="fontWeight">bold</property>
-                        <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Total Security Figure:]]></text-property>
-                    </text>
+                    <label id="2307">
+                        <text-property name="text">Ergebniss mit Kürzung auf Zielreifegrad:</text-property>
+                    </label>
                 </cell>
-                <cell id="18">
+                <cell id="2304">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -5059,18 +5087,22 @@ this.text = result;]]></method>
                             <property name="style">bg_green</property>
                         </structure>
                     </list-property>
-                    <data id="95">
+                    <data id="2316">
                         <property name="fontWeight">bold</property>
-                        <property name="paddingTop">0pt</property>
-                        <property name="paddingLeft">0pt</property>
-                        <property name="paddingBottom">0pt</property>
-                        <property name="paddingRight">0pt</property>
                         <structure name="numberFormat">
                             <property name="category">General Number</property>
                             <property name="pattern">General Number</property>
                         </structure>
                         <property name="textAlign">center</property>
                         <property name="dataSet">totalSecurityFigure</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">root_object</property>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">-1</value>
+                                </simple-property-list>
+                            </structure>
+                        </list-property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">totalSecurityFigure</property>
@@ -5078,11 +5110,17 @@ this.text = result;]]></method>
                                 <expression name="expression" type="javascript">dataSetRow["totalSecurityFigure"]</expression>
                                 <property name="dataType">float</property>
                             </structure>
+                            <structure>
+                                <property name="name">reducedTargetMaturity</property>
+                                <text-property name="displayName">reducedTargetMaturity</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["reducedTargetMaturity"]</expression>
+                                <property name="dataType">float</property>
+                            </structure>
                         </list-property>
-                        <property name="resultSetColumn">totalSecurityFigure</property>
+                        <property name="resultSetColumn">reducedTargetMaturity</property>
                     </data>
                 </cell>
-                <cell id="38">
+                <cell id="2305">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
@@ -5096,14 +5134,157 @@ this.text = result;]]></method>
                     <property name="paddingLeft">2pt</property>
                     <property name="paddingBottom">2pt</property>
                     <property name="paddingRight">2pt</property>
+                    <label id="2308">
+                        <text-property name="text">Maximal Erreichbar:</text-property>
+                    </label>
                 </cell>
-                <cell id="32">
+                <cell id="2306">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
                     <property name="borderBottomWidth">thin</property>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
+                    <data id="2327">
+                        <property name="fontWeight">bold</property>
+                        <structure name="numberFormat">
+                            <property name="category">General Number</property>
+                            <property name="pattern">General Number</property>
+                        </structure>
+                        <property name="textAlign">center</property>
+                        <property name="resultSetColumn">maxMaturity</property>
+                    </data>
+                </cell>
+            </row>
+            <row id="2309">
+                <property name="height">0.6458333333333334in</property>
+                <property name="verticalAlign">middle</property>
+                <cell id="2310">
+                    <property name="backgroundColor">#BDBDBD</property>
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
+                    <label id="2314">
+                        <text-property name="text">Ergebniss ohne Kürzung auf Zielreifegrad:</text-property>
+                    </label>
+                </cell>
+                <cell id="2311">
+                    <property name="borderBottomColor">#000000</property>
+                    <property name="borderBottomStyle">solid</property>
+                    <property name="borderBottomWidth">thin</property>
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderRightColor">#000000</property>
+                    <property name="borderRightStyle">solid</property>
+                    <property name="borderRightWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">0pt</property>
+                    <property name="paddingLeft">0pt</property>
+                    <property name="paddingBottom">0pt</property>
+                    <property name="paddingRight">0pt</property>
+                    <property name="verticalAlign">middle</property>
+                    <list-property name="highlightRules">
+                        <structure>
+                            <property name="operator">between</property>
+                            <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
+                            <simple-property-list name="value1">
+                                <value type="javascript">0</value>
+                            </simple-property-list>
+                            <expression name="value2" type="javascript">0.7</expression>
+                            <property name="style">bg_red</property>
+                        </structure>
+                        <structure>
+                            <property name="operator">between</property>
+                            <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
+                            <simple-property-list name="value1">
+                                <value type="javascript">0.7</value>
+                            </simple-property-list>
+                            <expression name="value2" type="javascript">0.9</expression>
+                            <property name="style">bg_yellow</property>
+                        </structure>
+                        <structure>
+                            <property name="operator">between</property>
+                            <expression name="testExpr" type="javascript">row["totalSecurityFigure"]</expression>
+                            <simple-property-list name="value1">
+                                <value type="javascript">0.9</value>
+                            </simple-property-list>
+                            <expression name="value2" type="javascript">1.0</expression>
+                            <property name="style">bg_green</property>
+                        </structure>
+                    </list-property>
+                    <data id="2315">
+                        <property name="fontWeight">bold</property>
+                        <property name="paddingTop">0pt</property>
+                        <property name="paddingLeft">0pt</property>
+                        <property name="paddingBottom">0pt</property>
+                        <property name="paddingRight">0pt</property>
+                        <structure name="numberFormat">
+                            <property name="category">General Number</property>
+                            <property name="pattern">General Number</property>
+                        </structure>
+                        <property name="textAlign">center</property>
+                        <property name="dataSet">totalSecurityFigure</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">root_object</property>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">-1</value>
+                                </simple-property-list>
+                            </structure>
+                        </list-property>
+                        <list-property name="boundDataColumns">
+                            <structure>
+                                <property name="name">totalSecurityFigure</property>
+                                <text-property name="displayName">totalSecurityFigure</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["totalSecurityFigure"]</expression>
+                                <property name="dataType">string</property>
+                            </structure>
+                            <structure>
+                                <property name="name">reducedTargetMaturity</property>
+                                <text-property name="displayName">reducedTargetMaturity</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["reducedTargetMaturity"]</expression>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                        </list-property>
+                        <property name="resultSetColumn">totalSecurityFigure</property>
+                    </data>
+                </cell>
+                <cell id="2312">
+                    <property name="borderLeftColor">#000000</property>
+                    <property name="borderLeftStyle">solid</property>
+                    <property name="borderLeftWidth">thin</property>
+                    <property name="borderTopColor">#000000</property>
+                    <property name="borderTopStyle">solid</property>
+                    <property name="borderTopWidth">thin</property>
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
+                </cell>
+                <cell id="2313">
                     <property name="borderTopColor">#000000</property>
                     <property name="borderTopStyle">solid</property>
                     <property name="borderTopWidth">thin</property>
@@ -5116,48 +5297,7 @@ this.text = result;]]></method>
             <row id="19">
                 <property name="height">350px</property>
                 <cell id="20">
-                    <property name="borderBottomColor">#000000</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <property name="paddingTop">3pt</property>
-                    <property name="paddingLeft">3pt</property>
-                    <property name="paddingBottom">3pt</property>
-                    <property name="paddingRight">3pt</property>
-                    <text id="42">
-                        <property name="fontWeight">bold</property>
-                        <property name="contentType">auto</property>
-                        <text-property name="content"><![CDATA[Results:]]></text-property>
-                    </text>
-                    <data id="2146">
-                        <property name="dataSet">rootValue</property>
-                        <list-property name="visibility">
-                            <structure>
-                                <property name="format">all</property>
-                                <expression name="valueExpr" type="javascript">true</expression>
-                            </structure>
-                        </list-property>
-                        <list-property name="boundDataColumns">
-                            <structure>
-                                <property name="name">root</property>
-                                <text-property name="displayName">root</text-property>
-                                <expression name="expression" type="javascript">dataSetRow["root"]</expression>
-                                <property name="dataType">javaObject</property>
-                            </structure>
-                        </list-property>
-                        <property name="resultSetColumn">root</property>
-                    </data>
-                </cell>
-                <cell id="21">
-                    <property name="colSpan">3</property>
+                    <property name="colSpan">4</property>
                     <property name="rowSpan">1</property>
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -5168,16 +5308,11 @@ this.text = result;]]></method>
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
                     <property name="borderRightWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <property name="paddingTop">2pt</property>
-                    <property name="paddingLeft">2pt</property>
-                    <property name="paddingBottom">2pt</property>
-                    <property name="paddingRight">2pt</property>
-                    <property name="textAlign">center</property>
-                    <property name="verticalAlign">middle</property>
-                    <extended-item extensionName="Chart" id="2149">
+                    <property name="paddingTop">3pt</property>
+                    <property name="paddingLeft">3pt</property>
+                    <property name="paddingBottom">3pt</property>
+                    <property name="paddingRight">3pt</property>
+                    <extended-item extensionName="Chart" id="2397">
                         <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithoutAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/RadarChartModelType">
   <Version>2.5.1</Version>
   <Type>Radar Chart</Type>
@@ -5402,6 +5537,7 @@ this.text = result;]]></method>
         <Visible>false</Visible>
       </Title>
       <TitlePosition>Above</TitlePosition>
+      <ShowValue>false</ShowValue>
     </Children>
     <Bounds>
       <Left>0.0</Left>
@@ -5452,18 +5588,10 @@ this.text = result;]]></method>
       <DataSetRepresentation>12.0,8.0,24.0,16.0,20.0</DataSetRepresentation>
       <SeriesDefinitionIndex>1</SeriesDefinitionIndex>
     </OrthogonalSampleData>
-    <OrthogonalSampleData>
-      <DataSetRepresentation>18.0,12.0,36.0,24.0,30.0</DataSetRepresentation>
-      <SeriesDefinitionIndex>2</SeriesDefinitionIndex>
-    </OrthogonalSampleData>
-    <OrthogonalSampleData>
-      <DataSetRepresentation>24.0,16.0,48.0,32.0,40.0</DataSetRepresentation>
-      <SeriesDefinitionIndex>3</SeriesDefinitionIndex>
-    </OrthogonalSampleData>
   </SampleData>
   <Interactivity>
     <Enable>true</Enable>
-    <LegendBehavior>None</LegendBehavior>
+    <LegendBehavior>ToggleSerieVisibility</LegendBehavior>
   </Interactivity>
   <EmptyMessage>
     <Caption>
@@ -5505,27 +5633,15 @@ this.text = result;]]></method>
     <SeriesPalette>
       <Entries xsi:type="attribute:ColorDefinition">
         <Transparency>255</Transparency>
-        <Red>102</Red>
+        <Red>153</Red>
         <Green>204</Green>
-        <Blue>0</Blue>
+        <Blue>255</Blue>
       </Entries>
       <Entries xsi:type="attribute:ColorDefinition">
         <Transparency>255</Transparency>
-        <Red>255</Red>
-        <Green>228</Green>
-        <Blue>122</Blue>
-      </Entries>
-      <Entries xsi:type="attribute:ColorDefinition">
-        <Transparency>255</Transparency>
-        <Red>255</Red>
-        <Green>71</Green>
-        <Blue>71</Blue>
-      </Entries>
-      <Entries xsi:type="attribute:ColorDefinition">
-        <Transparency>255</Transparency>
-        <Red>0</Red>
-        <Green>0</Green>
-        <Blue>0</Blue>
+        <Red>51</Red>
+        <Green>153</Green>
+        <Blue>102</Blue>
       </Entries>
     </SeriesPalette>
     <SeriesDefinitions>
@@ -5535,27 +5651,15 @@ this.text = result;]]></method>
       <SeriesPalette>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>102</Red>
+          <Red>153</Red>
           <Green>204</Green>
-          <Blue>0</Blue>
+          <Blue>255</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>228</Green>
-          <Blue>122</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>71</Green>
-          <Blue>71</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
+          <Red>51</Red>
+          <Green>153</Green>
+          <Blue>102</Blue>
         </Entries>
       </SeriesPalette>
       <Series xsi:type="type:RadarSeries">
@@ -5593,13 +5697,13 @@ this.text = result;]]></method>
           <Visible>false</Visible>
         </Label>
         <DataDefinition>
-          <Definition>row[&quot;THRESHOLDGREEN&quot;]</Definition>
+          <Definition>row[&quot;MATURITY&quot;]</Definition>
           <Grouping>
             <GroupType>Text</GroupType>
             <AggregateExpression>Sum</AggregateExpression>
           </Grouping>
         </DataDefinition>
-        <SeriesIdentifier>THRESHOLDGREEN</SeriesIdentifier>
+        <SeriesIdentifier>Ergebnis</SeriesIdentifier>
         <DataPoint>
           <Components>
             <Type>Orthogonal_Value</Type>
@@ -5610,24 +5714,38 @@ this.text = result;]]></method>
         <Stacked>false</Stacked>
         <Translucent>false</Translucent>
         <Marker>
-          <Type>Box</Type>
+          <Type>Rectangle</Type>
           <Size>0</Size>
-          <Visible>true</Visible>
+          <Visible>false</Visible>
           <Outline>
-            <Visible>false</Visible>
+            <Visible>true</Visible>
           </Outline>
         </Marker>
         <LineAttributes>
           <Style>Solid</Style>
           <Thickness>1</Thickness>
-          <Visible>false</Visible>
+          <Color>
+            <Transparency>0</Transparency>
+            <Red>255</Red>
+            <Green>255</Green>
+            <Blue>255</Blue>
+          </Color>
+          <Visible>true</Visible>
         </LineAttributes>
         <PaletteLineColor>true</PaletteLineColor>
         <WebLineAttributes>
           <Style>Solid</Style>
           <Thickness>1</Thickness>
+          <Color>
+            <Transparency>255</Transparency>
+            <Red>0</Red>
+            <Green>0</Green>
+            <Blue>0</Blue>
+          </Color>
           <Visible>true</Visible>
         </WebLineAttributes>
+        <ShowWebLabels>false</ShowWebLabels>
+        <ShowCatLabels>true</ShowCatLabels>
         <RadarAutoScale>false</RadarAutoScale>
         <WebLabelMax>5.0</WebLabelMax>
         <WebLabelMin>0.0</WebLabelMin>
@@ -5668,7 +5786,6 @@ this.text = result;]]></method>
           <Caption>
             <Value></Value>
             <Font>
-              <Size>5.0</Size>
               <Alignment/>
             </Font>
           </Caption>
@@ -5709,27 +5826,15 @@ this.text = result;]]></method>
       <SeriesPalette>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>228</Green>
-          <Blue>122</Blue>
+          <Red>51</Red>
+          <Green>153</Green>
+          <Blue>102</Blue>
         </Entries>
         <Entries xsi:type="attribute:ColorDefinition">
           <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>71</Green>
-          <Blue>71</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>102</Red>
+          <Red>153</Red>
           <Green>204</Green>
-          <Blue>0</Blue>
+          <Blue>255</Blue>
         </Entries>
       </SeriesPalette>
       <Series xsi:type="type:RadarSeries">
@@ -5767,14 +5872,14 @@ this.text = result;]]></method>
           <Visible>false</Visible>
         </Label>
         <DataDefinition>
-          <Definition>row[&quot;THRESHOLDYELLOW&quot;]</Definition>
+          <Definition>row[&quot;THRESHOLD&quot;]</Definition>
           <Grouping>
             <Enabled>false</Enabled>
             <GroupType>Text</GroupType>
             <AggregateExpression>Sum</AggregateExpression>
           </Grouping>
         </DataDefinition>
-        <SeriesIdentifier>THRESHOLDYELLOW</SeriesIdentifier>
+        <SeriesIdentifier>Zielreifegrad</SeriesIdentifier>
         <DataPoint>
           <Components>
             <Type>Orthogonal_Value</Type>
@@ -5783,372 +5888,17 @@ this.text = result;]]></method>
         </DataPoint>
         <LabelPosition>Outside</LabelPosition>
         <Stacked>false</Stacked>
-        <Translucent>false</Translucent>
         <Marker>
           <Type>Box</Type>
-          <Size>0</Size>
-          <Visible>true</Visible>
+          <Size>4</Size>
+          <Visible>false</Visible>
           <Outline>
             <Visible>false</Visible>
-          </Outline>
-        </Marker>
-        <LineAttributes>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Visible>false</Visible>
-        </LineAttributes>
-        <PaletteLineColor>true</PaletteLineColor>
-        <WebLineAttributes>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Visible>true</Visible>
-        </WebLineAttributes>
-        <FillPolys>true</FillPolys>
-        <ConnectEndpoints>true</ConnectEndpoints>
-        <WebLabel>
-          <Caption>
-            <Value></Value>
-            <Font>
-              <Alignment/>
-            </Font>
-          </Caption>
-          <Background xsi:type="attribute:ColorDefinition">
-            <Transparency>0</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Background>
-          <Outline>
-            <Style>Solid</Style>
-            <Thickness>1</Thickness>
-            <Color>
-              <Transparency>255</Transparency>
-              <Red>0</Red>
-              <Green>0</Green>
-              <Blue>0</Blue>
-            </Color>
-          </Outline>
-          <Insets>
-            <Top>0.0</Top>
-            <Left>2.0</Left>
-            <Bottom>0.0</Bottom>
-            <Right>3.0</Right>
-          </Insets>
-          <Visible>true</Visible>
-        </WebLabel>
-        <CatLabel>
-          <Caption>
-            <Value></Value>
-            <Font>
-              <Alignment/>
-            </Font>
-          </Caption>
-          <Background xsi:type="attribute:ColorDefinition">
-            <Transparency>0</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Background>
-          <Outline>
-            <Style>Solid</Style>
-            <Thickness>1</Thickness>
-            <Color>
-              <Transparency>255</Transparency>
-              <Red>0</Red>
-              <Green>0</Green>
-              <Blue>0</Blue>
-            </Color>
-          </Outline>
-          <Insets>
-            <Top>0.0</Top>
-            <Left>2.0</Left>
-            <Bottom>0.0</Bottom>
-            <Right>3.0</Right>
-          </Insets>
-          <Visible>true</Visible>
-        </CatLabel>
-      </Series>
-      <Grouping>
-        <GroupType>Text</GroupType>
-        <AggregateExpression>Sum</AggregateExpression>
-      </Grouping>
-    </SeriesDefinitions>
-    <SeriesDefinitions>
-      <Query>
-        <Definition></Definition>
-      </Query>
-      <SeriesPalette>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>71</Green>
-          <Blue>71</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>102</Red>
-          <Green>204</Green>
-          <Blue>0</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>228</Green>
-          <Blue>122</Blue>
-        </Entries>
-      </SeriesPalette>
-      <Series xsi:type="type:RadarSeries">
-        <Visible>true</Visible>
-        <Label>
-          <Caption>
-            <Value></Value>
-            <Font>
-              <Alignment/>
-            </Font>
-          </Caption>
-          <Background xsi:type="attribute:ColorDefinition">
-            <Transparency>0</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Background>
-          <Outline>
-            <Style>Solid</Style>
-            <Thickness>1</Thickness>
-            <Color>
-              <Transparency>255</Transparency>
-              <Red>0</Red>
-              <Green>0</Green>
-              <Blue>0</Blue>
-            </Color>
-            <Visible>false</Visible>
-          </Outline>
-          <Insets>
-            <Top>0.0</Top>
-            <Left>2.0</Left>
-            <Bottom>0.0</Bottom>
-            <Right>3.0</Right>
-          </Insets>
-          <Visible>false</Visible>
-        </Label>
-        <DataDefinition>
-          <Definition>row[&quot;THRESHOLDRED&quot;]</Definition>
-          <Grouping>
-            <Enabled>false</Enabled>
-            <GroupType>Text</GroupType>
-            <AggregateExpression>Sum</AggregateExpression>
-          </Grouping>
-        </DataDefinition>
-        <SeriesIdentifier>THRESHOLDRED</SeriesIdentifier>
-        <DataPoint>
-          <Components>
-            <Type>Orthogonal_Value</Type>
-          </Components>
-          <Separator>, </Separator>
-        </DataPoint>
-        <LabelPosition>Outside</LabelPosition>
-        <Stacked>false</Stacked>
-        <Translucent>false</Translucent>
-        <Marker>
-          <Type>Box</Type>
-          <Size>0</Size>
-          <Visible>true</Visible>
-          <Outline>
-            <Visible>true</Visible>
-          </Outline>
-        </Marker>
-        <LineAttributes>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Visible>false</Visible>
-        </LineAttributes>
-        <PaletteLineColor>true</PaletteLineColor>
-        <WebLineAttributes>
-          <Style>Solid</Style>
-          <Thickness>1</Thickness>
-          <Visible>true</Visible>
-        </WebLineAttributes>
-        <FillPolys>true</FillPolys>
-        <ConnectEndpoints>true</ConnectEndpoints>
-        <WebLabel>
-          <Caption>
-            <Value></Value>
-            <Font>
-              <Alignment/>
-            </Font>
-          </Caption>
-          <Background xsi:type="attribute:ColorDefinition">
-            <Transparency>0</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Background>
-          <Outline>
-            <Style>Solid</Style>
-            <Thickness>1</Thickness>
-            <Color>
-              <Transparency>255</Transparency>
-              <Red>0</Red>
-              <Green>0</Green>
-              <Blue>0</Blue>
-            </Color>
-          </Outline>
-          <Insets>
-            <Top>0.0</Top>
-            <Left>2.0</Left>
-            <Bottom>0.0</Bottom>
-            <Right>3.0</Right>
-          </Insets>
-          <Visible>true</Visible>
-        </WebLabel>
-        <CatLabel>
-          <Caption>
-            <Value></Value>
-            <Font>
-              <Alignment/>
-            </Font>
-          </Caption>
-          <Background xsi:type="attribute:ColorDefinition">
-            <Transparency>0</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Background>
-          <Outline>
-            <Style>Solid</Style>
-            <Thickness>1</Thickness>
-            <Color>
-              <Transparency>255</Transparency>
-              <Red>0</Red>
-              <Green>0</Green>
-              <Blue>0</Blue>
-            </Color>
-          </Outline>
-          <Insets>
-            <Top>0.0</Top>
-            <Left>2.0</Left>
-            <Bottom>0.0</Bottom>
-            <Right>3.0</Right>
-          </Insets>
-          <Visible>true</Visible>
-        </CatLabel>
-      </Series>
-      <Grouping>
-        <GroupType>Text</GroupType>
-        <AggregateExpression>Sum</AggregateExpression>
-      </Grouping>
-    </SeriesDefinitions>
-    <SeriesDefinitions>
-      <Query>
-        <Definition></Definition>
-      </Query>
-      <SeriesPalette>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>0</Red>
-          <Green>0</Green>
-          <Blue>0</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>102</Red>
-          <Green>204</Green>
-          <Blue>0</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>228</Green>
-          <Blue>122</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>71</Green>
-          <Blue>71</Blue>
-        </Entries>
-        <Entries xsi:type="attribute:ColorDefinition">
-          <Transparency>255</Transparency>
-          <Red>255</Red>
-          <Green>255</Green>
-          <Blue>0</Blue>
-        </Entries>
-      </SeriesPalette>
-      <Series xsi:type="type:RadarSeries">
-        <Visible>true</Visible>
-        <Label>
-          <Caption>
-            <Value></Value>
-            <Font>
-              <Alignment/>
-            </Font>
-          </Caption>
-          <Background xsi:type="attribute:ColorDefinition">
-            <Transparency>0</Transparency>
-            <Red>255</Red>
-            <Green>255</Green>
-            <Blue>255</Blue>
-          </Background>
-          <Outline>
-            <Style>Solid</Style>
-            <Thickness>1</Thickness>
-            <Color>
-              <Transparency>255</Transparency>
-              <Red>0</Red>
-              <Green>0</Green>
-              <Blue>0</Blue>
-            </Color>
-            <Visible>false</Visible>
-          </Outline>
-          <Insets>
-            <Top>0.0</Top>
-            <Left>2.0</Left>
-            <Bottom>0.0</Bottom>
-            <Right>3.0</Right>
-          </Insets>
-          <Visible>false</Visible>
-        </Label>
-        <DataDefinition>
-          <Definition>row[&quot;MATURITYDATA&quot;]</Definition>
-          <Grouping>
-            <Enabled>false</Enabled>
-            <GroupType>Text</GroupType>
-            <AggregateExpression>Sum</AggregateExpression>
-          </Grouping>
-        </DataDefinition>
-        <SeriesIdentifier>MATURITYDATA</SeriesIdentifier>
-        <DataPoint>
-          <Components>
-            <Type>Orthogonal_Value</Type>
-          </Components>
-          <Separator>, </Separator>
-        </DataPoint>
-        <LabelPosition>Outside</LabelPosition>
-        <Stacked>false</Stacked>
-        <Translucent>true</Translucent>
-        <Marker>
-          <Type>Circle</Type>
-          <Size>2</Size>
-          <Visible>true</Visible>
-          <Outline>
-            <Visible>true</Visible>
           </Outline>
         </Marker>
         <LineAttributes>
           <Style>Solid</Style>
           <Thickness>2</Thickness>
-          <Color>
-            <Transparency>255</Transparency>
-            <Red>0</Red>
-            <Green>0</Green>
-            <Blue>0</Blue>
-          </Color>
           <Visible>true</Visible>
         </LineAttributes>
         <PaletteLineColor>true</PaletteLineColor>
@@ -6157,7 +5907,7 @@ this.text = result;]]></method>
           <Thickness>1</Thickness>
           <Visible>true</Visible>
         </WebLineAttributes>
-        <FillPolys>true</FillPolys>
+        <FillPolys>false</FillPolys>
         <ConnectEndpoints>true</ConnectEndpoints>
         <WebLabel>
           <Caption>
@@ -6290,9 +6040,17 @@ Integer.parseInt(row[&quot;POSITION&quot;]);</Definition>
 ]]></xml-property>
                         <property name="outputFormat">SVG</property>
                         <property name="inheritColumns">false</property>
-                        <property name="dataSet">radarChartData</property>
-                        <property name="height">3.5625in</property>
-                        <property name="width">6.03125in</property>
+                        <property name="dataSet">radarChartData1</property>
+                        <property name="height">3.5in</property>
+                        <property name="width">7.395833333333333in</property>
+                        <list-property name="paramBindings">
+                            <structure>
+                                <property name="paramName">root</property>
+                                <simple-property-list name="expression">
+                                    <value type="javascript">-1</value>
+                                </simple-property-list>
+                            </structure>
+                        </list-property>
                         <list-property name="boundDataColumns">
                             <structure>
                                 <property name="name">CATEGORIES</property>
@@ -6300,28 +6058,17 @@ Integer.parseInt(row[&quot;POSITION&quot;]);</Definition>
                                 <property name="dataType">javaObject</property>
                             </structure>
                             <structure>
-                                <property name="name">MATURITYDATA</property>
-                                <expression name="expression" type="javascript">dataSetRow["MATURITYDATA"]</expression>
+                                <property name="name">MATURITY</property>
+                                <expression name="expression" type="javascript">dataSetRow["MATURITY"]</expression>
                                 <property name="dataType">javaObject</property>
                             </structure>
                             <structure>
-                                <property name="name">THRESHOLDRED</property>
-                                <expression name="expression" type="javascript">dataSetRow["THRESHOLDRED"]</expression>
-                                <property name="dataType">javaObject</property>
-                            </structure>
-                            <structure>
-                                <property name="name">THRESHOLDYELLOW</property>
-                                <expression name="expression" type="javascript">dataSetRow["THRESHOLDYELLOW"]</expression>
-                                <property name="dataType">javaObject</property>
-                            </structure>
-                            <structure>
-                                <property name="name">THRESHOLDGREEN</property>
-                                <expression name="expression" type="javascript">dataSetRow["THRESHOLDGREEN"]</expression>
+                                <property name="name">THRESHOLD</property>
+                                <expression name="expression" type="javascript">dataSetRow["THRESHOLD"]</expression>
                                 <property name="dataType">javaObject</property>
                             </structure>
                             <structure>
                                 <property name="name">POSITION</property>
-                                <text-property name="displayName">POSITION</text-property>
                                 <expression name="expression" type="javascript">dataSetRow["POSITION"]</expression>
                                 <property name="dataType">javaObject</property>
                             </structure>

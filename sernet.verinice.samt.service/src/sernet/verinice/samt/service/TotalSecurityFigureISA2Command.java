@@ -17,6 +17,9 @@
  ******************************************************************************/
 package sernet.verinice.samt.service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RuntimeCommandException;
@@ -61,7 +64,7 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
     public void execute() {
         try {
             if(!resultInjectedFromCache){
-                FindSamtGroup command = new sernet.verinice.samt.service.FindSamtGroup(true, auditDbId);
+                FindSamtGroup command = new FindSamtGroup(true, auditDbId);
                 command = getCommandService().executeCommand(command);
                 ControlGroup controlGroup = command.getSelfAssessmentGroup();
                 int matSum = getMaturitySum(controlGroup);
@@ -89,13 +92,11 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
                 IControl control = (IControl) child;
                 int maturity = control.getMaturity();
                 // if maturity is not edited yet, add 0 (do nothing but count the control for average value)
-                if(maturity > 0){
+                if(maturity > -1 && getTargetMaturity(control) > 0){
                     maturitySum += maturity;
                     targetMaturity += Double.valueOf(String.valueOf(reduceToTargetMaturity(control)));
-                    averageTargetMaturity += getTargetMaturity(control);
-                }
-                if(IControl.IMPLEMENTED_NA_NUMERIC != maturity){
                     controlCount += 1;
+                    averageTargetMaturity += getTargetMaturity(control);
                 }
                 if(IControl.IMPLEMENTED_NOTEDITED_NUMERIC!=maturity){
                     if(LOG.isDebugEnabled()){
@@ -123,7 +124,7 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
     }
     
     public Double getResult() {
-        return totalSecurityFigure.doubleValue();
+        return getRoundedValue(totalSecurityFigure);
     }
 
     /* (non-Javadoc)
@@ -163,16 +164,22 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
      * @return the targetMaturity
      */
     public Double getTargetMaturity() {
-        return targetMaturity.doubleValue();
+        return getRoundedValue(targetMaturity);
     }
     
     public Double getAverageMaturity(){
-        return averageTargetMaturity.doubleValue();
+        return getRoundedValue(averageTargetMaturity);
     }
     
     // target maturity is threshold2
     private int getTargetMaturity(IControl control){
         return control.getThreshold2();
+    }
+    
+    private double getRoundedValue(double d){
+        BigDecimal bd = new BigDecimal(d);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
 
