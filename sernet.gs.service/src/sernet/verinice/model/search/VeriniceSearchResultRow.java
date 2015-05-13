@@ -40,22 +40,16 @@ public class VeriniceSearchResultRow implements Serializable{
      */
     private String identifier;
 
-    /**
-     * represents the occurence of the searchphrase highlighted with an html-tag :
-     * e.g.: 
-     * [asset_description]\t lorem ipsum <em>occurence</em> ipsum lorem 
-     */
-    private String occurence;
+    private Occurence occurence;
 
-
-    public VeriniceSearchResultRow(String identifier, String occurence){
+    public VeriniceSearchResultRow(String identifier, Occurence occurence){
         this.properties = new HashMap<String, String>(0);
         this.identifier = identifier;
         this.occurence = occurence;
-        this.properties.put(OCCURENCE_PROPERTY_NAME, occurence);
+        this.properties.put(OCCURENCE_PROPERTY_NAME, occurence.toString());
     }
 
-    public VeriniceSearchResultRow(VeriniceSearchResultObject parent, String identifier, String occurence){
+    public VeriniceSearchResultRow(VeriniceSearchResultObject parent, String identifier, Occurence occurence){
         this(identifier, occurence);
         this.parent = parent;
     }
@@ -85,7 +79,7 @@ public class VeriniceSearchResultRow implements Serializable{
     }
 
     public String getFieldOfOccurence(){
-        return occurence;
+        return occurence.toString();
     }
 
     @Override
@@ -120,6 +114,10 @@ public class VeriniceSearchResultRow implements Serializable{
 
     public VeriniceSearchResultObject getParent() {
         return parent;
+    }
+
+    public Occurence getOccurence() {
+        return occurence;
     }
 
 

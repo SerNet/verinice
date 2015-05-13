@@ -32,6 +32,7 @@ import org.apache.log4j.Logger;
 import org.elasticsearch.action.search.MultiSearchRequest;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.MultiSearchResponse;
+import org.elasticsearch.common.text.Text;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.highlight.HighlightField;
@@ -44,6 +45,7 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.search.Occurence;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
@@ -52,9 +54,6 @@ import sernet.verinice.search.IElementSearchDao;
 import sernet.verinice.search.Indexer;
 import sernet.verinice.search.JsonBuilder;
 
-/**
- *
- */
 public class SearchService implements ISearchService {
 
     private static final Logger LOG = Logger.getLogger(SearchService.class);
@@ -64,10 +63,10 @@ public class SearchService implements ISearchService {
 
     @Resource(name = "searchElementDao")
     protected IElementSearchDao searchDao;
-    
-    @Resource(name ="configurationService")
+
+    @Resource(name = "configurationService")
     protected IConfigurationService configurationService;
-    
+
     @Resource(name = "authService")
     protected IAuthService authenticationService;
 
@@ -79,9 +78,8 @@ public class SearchService implements ISearchService {
      * .model.search.VeriniceQuery)
      */
     /**
-     * should be used by client to pass a query to the service
-     * in future releases the method should decide which kind of query must be send to 
-     * es. 
+     * should be used by client to pass a query to the service in future
+     * releases the method should decide which kind of query must be send to es.
      */
     @Override
     public VeriniceSearchResult query(VeriniceQuery veriniceQuery) {
@@ -112,27 +110,33 @@ public class SearchService implements ISearchService {
 
             if (result.getHits() > 0) {
                 veriniceSearchResult.addVeriniceSearchObject(result);
+                result.setParent(veriniceSearchResult);
             }
         }
 
         return veriniceSearchResult;
     }
-    
+
     /**
      * gets value shown in ui for a given id
+     *
      * @param id
      * @return translated id
      */
-    private String getTypeIDTranslation(String id){
+    private String getTypeIDTranslation(String id) {
         return HUITypeFactory.getInstance().getMessage(id);
     }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.search.ISearchService#getSearchResults(java.lang.String, java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.interfaces.search.ISearchService#getSearchResults(java
+     * .lang.String, java.lang.String)
      */
     /**
-     * executes a simple query with uses "_all" to search over all fields defined 
-     * within the es index
+     * executes a simple query with uses "_all" to search over all fields
+     * defined within the elastic search index
      */
     @Override
     public VeriniceSearchResultObject getSearchResults(String query, String typeID) {
@@ -140,20 +144,21 @@ public class SearchService implements ISearchService {
         SearchHits hits = searchDao.findByPhrase(query, typeID).getHits();
         String identifier = "";
         VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID, getEntityName(typeID), getPropertyIds(typeID));
-        for (SearchHit hit : hits.getHits() ){
+        for (SearchHit hit : hits.getHits()) {
             identifier = hit.getId();
-            StringBuilder occurence = new StringBuilder();
-            Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
-            while (iter.hasNext()) {
-                Entry<String, HighlightField> entry = iter.next();
-                occurence.append("[" + entry.getKey() + "]");
-                occurence.append("\t").append(entry.getValue().fragments()[0]);
-                if (iter.hasNext()) {
-                    occurence.append("\n\n\n");
+
+            Iterator<Entry<String, HighlightField>> iterateHighlightedFields = hit.getHighlightFields().entrySet().iterator();
+
+            Occurence occurence = new Occurence();
+
+            while (iterateHighlightedFields.hasNext()) {
+                Entry<String, HighlightField> entry = iterateHighlightedFields.next();
+                for (Text textFragment : entry.getValue().fragments()){
+                    occurence.addFragment(entry.getKey(), getTypeIDTranslation(entry.getKey()),  textFragment.string());
                 }
             }
 
-            VeriniceSearchResultRow result = new VeriniceSearchResultRow(results, identifier, occurence.toString());
+            VeriniceSearchResultRow result = new VeriniceSearchResultRow(results, identifier, occurence);
             for (String key : hit.getSource().keySet()) {
                 if (hit.getSource().get(key) != null) {
                     if (LOG.isDebugEnabled()) {
@@ -168,20 +173,19 @@ public class SearchService implements ISearchService {
         return results;
     }
 
-
     private String getEntityName(String typeID) {
         ServerInitializer.inheritVeriniceContextState();
         return HUITypeFactory.getInstance().getEntityType(typeID).getName();
     }
 
-
     /**
-     * uses the es querybuilder api to build a query that could be paramterized to
-     * search on given fields only, and adding filters for rightmanagement and 
-     * type-filtered results.
+     * uses the es querybuilder api to build a query that could be paramterized
+     * to search on given fields only, and adding filters for rightmanagement
+     * and type-filtered results.
      */
     @Override
     public VeriniceSearchResult getSearchResultsByQueryBuilder(VeriniceQuery query, String typeID) {
+        ServerInitializer.inheritVeriniceContextState();
         VeriniceSearchResult results = new VeriniceSearchResult();
         if (StringUtils.isNotEmpty(typeID)) {
             addVeriniceSearchResultObject(query, typeID, results);
@@ -197,22 +201,24 @@ public class SearchService implements ISearchService {
         VeriniceSearchResultObject veriniceSearchResultObject = processMultiSearchRequest(typeID, searchDao.prepareQueryWithAllFields(typeID, query, getAuthenticationService().getUsername()));
         if (veriniceSearchResultObject.getHits() > 0) {
             results.addVeriniceSearchObject(veriniceSearchResultObject);
+            veriniceSearchResultObject.setParent(results);
         }
     }
 
     /**
-     * executess and processes a {@link MultiSearchRequest}, transforms search hits 
-     * into {@link VeriniceSearchResultObject} including occurences
+     * executess and processes a {@link MultiSearchRequest}, transforms search
+     * hits into {@link VeriniceSearchResultObject} including occurences
+     *
      * @param typeID
      * @param msrb
      * @return {@link VeriniceSearchResultObject}
      */
     private VeriniceSearchResultObject processMultiSearchRequest(String typeID, MultiSearchRequestBuilder msrb) {
         List<SearchHit> hitList = new ArrayList<SearchHit>(0);
-        
+
         MultiSearchResponse msr = searchDao.executeMultiSearch(msrb);
         for (MultiSearchResponse.Item i : msr.getResponses()) {
-            if(i!=null && i.getResponse()!=null && i.getResponse().getHits()!=null) {
+            if (i != null && i.getResponse() != null && i.getResponse().getHits() != null) {
                 for (SearchHit hit : i.getResponse().getHits().getHits()) {
                     hitList.add(hit);
                 }
@@ -222,18 +228,19 @@ public class SearchService implements ISearchService {
         VeriniceSearchResultObject results = new VeriniceSearchResultObject(typeID, getEntityName(typeID), getPropertyIds(typeID));
         for (SearchHit hit : hitList) {
             identifier = hit.getId();
-            StringBuilder occurence = new StringBuilder();
+
             Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
+
+            Occurence occurence = new Occurence();
+
             while (iter.hasNext()) {
                 Entry<String, HighlightField> entry = iter.next();
-                occurence.append("[" + getHuiTranslation(entry.getKey(), typeID) + "]");
-                occurence.append("\t").append(entry.getValue().fragments()[0]);
-                if (iter.hasNext()) {
-                    occurence.append("\n\n\n");
+                for (Text textFragment : entry.getValue().fragments()){
+                    occurence.addFragment(entry.getKey(), getHuiTranslation(entry.getKey(), typeID), textFragment.toString());
                 }
             }
 
-            VeriniceSearchResultRow result = new VeriniceSearchResultRow(results, identifier, occurence.toString());
+            VeriniceSearchResultRow result = new VeriniceSearchResultRow(results, identifier, occurence);
 
             for (String key : hit.getSource().keySet()) {
                 if (hit.getSource().get(key) != null) {
@@ -245,10 +252,10 @@ public class SearchService implements ISearchService {
         }
         return results;
     }
-    
-    private String getHuiTranslation(String id, String entityType){
-        for(PropertyType type : HUITypeFactory.getInstance().getEntityType(entityType).getAllPropertyTypes()){
-            if(type.getId().equals(id)){
+
+    private String getHuiTranslation(String id, String entityType) {
+        for (PropertyType type : HUITypeFactory.getInstance().getEntityType(entityType).getAllPropertyTypes()) {
+            if (type.getId().equals(id)) {
                 return type.getName();
             }
         }
@@ -428,7 +435,8 @@ public class SearchService implements ISearchService {
     }
 
     /**
-     * @param authenticationService the authenticationService to set
+     * @param authenticationService
+     *            the authenticationService to set
      */
     public void setAuthenticationService(IAuthService authenticationService) {
         this.authenticationService = authenticationService;

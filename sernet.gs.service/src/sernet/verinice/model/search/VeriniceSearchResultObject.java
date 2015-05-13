@@ -19,13 +19,10 @@
 package sernet.verinice.model.search;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import sernet.hui.common.connect.EntityType;
-
 
 /**
  * Represents a table for the search view.
@@ -44,6 +41,12 @@ public class VeriniceSearchResultObject implements Serializable {
     private int hits = 0;
 
     private String[] propertyTypeIds;
+
+    /**
+     * Holds the parent wrapper object, with references to elements with
+     * matches.
+     */
+    private VeriniceSearchResult parent;
 
     /**
      * Represents a pojo for the searchview.
@@ -133,6 +136,14 @@ public class VeriniceSearchResultObject implements Serializable {
         } else if (!id.equals(other.id))
             return false;
         return true;
+    }
+
+    public VeriniceSearchResult getParent() {
+        return parent;
+    }
+
+    public void setParent(VeriniceSearchResult parent) {
+        this.parent = parent;
     }
 
 }

@@ -34,6 +34,8 @@ import java.util.Set;
 @SuppressWarnings("serial")
 public class VeriniceSearchResult implements Serializable {
 
+    private VeriniceQuery veriniceQuery;
+
     private Map<String, VeriniceSearchResultObject> entityTypeIdToSearchResult;
     
     private int hits;
@@ -57,5 +59,13 @@ public class VeriniceSearchResult implements Serializable {
     
     public int getHits(){
         return hits;
+    }
+
+    public VeriniceQuery getVeriniceQuery() {
+        return veriniceQuery;
+    }
+
+    public void setVeriniceQuery(VeriniceQuery veriniceQuery) {
+        this.veriniceQuery = veriniceQuery;
     }
 }

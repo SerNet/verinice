@@ -64,6 +64,7 @@ public class SearchJob extends WorkspaceJob {
             Activator.inheritVeriniceContextState();
 
             final VeriniceSearchResult result = ServiceFactory.lookupSearchService().query(query);
+            result.setVeriniceQuery(query);
 
             Display.getDefault().asyncExec(new Runnable() {
                 @Override

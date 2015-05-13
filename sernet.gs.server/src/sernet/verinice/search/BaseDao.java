@@ -55,6 +55,7 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.search.Occurence;
 import sernet.verinice.model.search.VeriniceQuery;
 
 /**
@@ -185,7 +186,9 @@ public abstract class BaseDao implements ISearchDao {
     public SearchResponse findByPhrase(String title) {
         SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex()).setTypes(getType())
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setQuery(QueryBuilders.matchPhraseQuery("_all", title));
+                .setQuery(QueryBuilders.matchPhraseQuery("_all", title))
+                .setHighlighterPostTags(Occurence.HTML_CLOSING_TAG)
+                .setHighlighterPreTags(Occurence.HTML_OPEN_TAG);
 
         requestBuilder = HighlightFieldAdder.addAll(requestBuilder);       
         return requestBuilder.execute().actionGet();
@@ -235,7 +238,12 @@ public abstract class BaseDao implements ISearchDao {
         MultiSearchRequestBuilder requestBuilder = getClient().prepareMultiSearch();
         for(String field : map.keySet()){
             String value = map.get(field);
-            SearchRequestBuilder searchBuilder = getClient().prepareSearch(getIndex()).setTypes(getType()).setSearchType(SearchType.DFS_QUERY_THEN_FETCH);           
+            SearchRequestBuilder searchBuilder = getClient().prepareSearch(getIndex())
+                    .setTypes(getType())
+                    .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
+                    .setHighlighterPostTags(Occurence.HTML_CLOSING_TAG)
+                    .setHighlighterPreTags(Occurence.HTML_OPEN_TAG);
+
             if(value != null && !value.isEmpty()){
                 searchBuilder = searchBuilder.setQuery(QueryBuilders.matchPhraseQuery(field, value));
             } else {
@@ -320,7 +328,9 @@ public abstract class BaseDao implements ISearchDao {
     public SearchResponse findByPhrase(String phrase, String entityType){
         SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex()).setTypes(getType())
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setQuery(QueryBuilders.matchPhraseQuery("_all", phrase));
+                .setQuery(QueryBuilders.matchPhraseQuery("_all", phrase))
+                .setHighlighterPostTags(Occurence.HTML_CLOSING_TAG)
+                .setHighlighterPreTags(Occurence.HTML_OPEN_TAG);
 
         requestBuilder = HighlightFieldAdder.addAll(requestBuilder);
         return requestBuilder.execute().actionGet();
@@ -340,9 +350,14 @@ public abstract class BaseDao implements ISearchDao {
      */
     @Override
     public SearchResponse find(String property, String title, Operator operator) {
-        SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex()).setTypes(getType())
-                .setQuery(QueryBuilders.matchQuery(property, title).operator(operator))
-                .setSize(20);              
+        SearchRequestBuilder requestBuilder = getClient().prepareSearch(getIndex())
+                .setTypes(getType())
+                .setQuery(QueryBuilders.matchQuery(property, title)
+                .operator(operator))
+                .setSize(20)
+                .setHighlighterPostTags(Occurence.HTML_CLOSING_TAG)
+                .setHighlighterPreTags(Occurence.HTML_OPEN_TAG);
+
         if("_all".equals(property)){
             requestBuilder = HighlightFieldAdder.addAll(requestBuilder);
          } else {

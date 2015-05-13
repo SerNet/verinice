@@ -28,7 +28,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
@@ -44,7 +43,6 @@ import sernet.verinice.rcp.search.column.IconColumn;
  *
  */
 public class SearchResultsTableViewer extends TableViewer implements IStructuredContentProvider {
-
 
     private static final int STANDAR_COLUMN_WITH_200 = 200;
 
