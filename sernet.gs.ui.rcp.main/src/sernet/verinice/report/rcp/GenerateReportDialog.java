@@ -312,21 +312,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
 
         });
-
-        useDateCheckbox = new Button(groupFile, SWT.CHECK);
-        useDateCheckbox.setText(Messages.GenerateReportDialog_33);
-        useDateCheckbox.setSelection(true);
-        GridData useDateCheckboxGridData = new GridData();
-        useDateCheckboxGridData.horizontalSpan = 3;
-        useDateCheckboxGridData.grabExcessHorizontalSpace = true;
-        useDateCheckboxGridData.horizontalAlignment = SWT.RIGHT;
-        useDateCheckbox.setLayoutData(useDateCheckboxGridData);
-        useDateCheckbox.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                useDate = ((Button) e.getSource()).getSelection();
-            }
-        });
                 
         Label labelFile = new Label(groupFile, SWT.NONE);
         labelFile.setText(Messages.GenerateReportDialog_10);
@@ -357,6 +342,21 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
         });
 
+        useDateCheckbox = new Button(groupFile, SWT.CHECK);
+        useDateCheckbox.setText(Messages.GenerateReportDialog_33);
+        useDateCheckbox.setSelection(true);
+        GridData useDateCheckboxGridData = new GridData();
+        useDateCheckboxGridData.horizontalSpan = 3;
+        useDateCheckboxGridData.grabExcessHorizontalSpace = true;
+        useDateCheckboxGridData.horizontalAlignment = SWT.RIGHT;
+        useDateCheckbox.setLayoutData(useDateCheckboxGridData);
+        useDateCheckbox.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                useDate = ((Button) e.getSource()).getSelection();
+            }
+        });
+        
         useDefaultFolderButton = new Button(groupFile, SWT.CHECK);
         useDefaultFolderButton.setText(Messages.GenerateReportDialog_26);
         useDefaultFolderButton.setSelection(true);
