@@ -32,8 +32,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:8088/veriniceserver-1.9/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:8088/veriniceserver-1.9</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
