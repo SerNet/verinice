@@ -33,9 +33,13 @@ import sernet.verinice.model.iso27k.IControl;
 /**
  * computes key figures for isa report templates
  * - samt-report-compliance.rptdesign
- * - samt-report.rptdesign
  * - ISA-ActionReport.rptdesign
  */
+
+/**
+ * Computes ISA 2.0 key figures by summing up (and building the average of) maturity and targetmaturiy (threshold2) of samttopic children
+ * of a controlgroup. root element should be an audit. 
+ **/
 public class TotalSecurityFigureISA2Command extends GenericCommand implements ICachedCommand {
     
     private final static Logger LOG = Logger.getLogger(TotalSecurityFigureISA2Command.class);
