@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.UUID;
 
 import net._01001111.text.LoremIpsum;
+import sernet.verinice.model.search.Occurence;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 
@@ -79,10 +80,12 @@ public final class SearchResultGenerator {
      * @param phrase
      * @return [property]: lorem ipsum <em>phrase</em> lorem ipsum
      */
-    private static String createOccurence(String property, String text) {
+    private static Occurence createOccurence(String property, String text) {
         StringBuilder sb = new StringBuilder();
-        sb.append("[").append(property).append("]: ").append(text);      
-        return sb.toString();
+        sb.append("[").append(property).append("]: ").append(text); 
+        Occurence occurence = new Occurence();
+        occurence.addFragment(property, LOREM.randomWord(), text);
+        return occurence;
     }
     
     /**
