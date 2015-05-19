@@ -540,9 +540,13 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             public void doRun() {
                 FileDialog fd = new FileDialog(FileView.this.getSite().getShell());
                 fd.setText(Messages.FileView_14);
-                //fd.setFilterPath(System.getProperty("user.home")); //$NON-NLS-1$
-                fd.setFilterPath(Activator.getDefault().getPreferenceStore()
-                        .getString(PreferenceConstants.DEFAULT_FOLDER_ADDFILE));
+                String dir = Activator.getDefault().getPreferenceStore()
+                        .getString(PreferenceConstants.DEFAULT_FOLDER_ADDFILE);
+                if (dir != null && !dir.isEmpty()) {
+                    fd.setFilterPath(dir);
+                } else {
+                    fd.setFilterPath(System.getProperty("user.home")); //$NON-NLS-1$
+                }     
                 String selected = fd.open();
                 if (selected != null && selected.length() > 0 && !createAndOpenAttachment(selected)){
                     return;
