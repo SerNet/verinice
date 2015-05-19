@@ -3982,13 +3982,13 @@ inParameters(new String[] { "root"});</value>
             <property name="fontWeight">bold</property>
         </style>
         <style name="bg_green" id="1847">
-            <property name="backgroundColor">#66CC00</property>
+            <property name="color">#339966</property>
         </style>
         <style name="bg_red" id="1845">
-            <property name="backgroundColor">#FF4747</property>
+            <property name="color">#FF0000</property>
         </style>
         <style name="bg_yellow" id="1846">
-            <property name="backgroundColor">#FFE47A</property>
+            <property name="color">#FF9900</property>
         </style>
         <style name="bg_black" id="2161">
             <property name="backgroundColor">#000000</property>
@@ -4819,18 +4819,6 @@ this.text = result;]]></method>
             </row>
         </grid>
         <grid id="947">
-            <property name="borderBottomColor">#000000</property>
-            <property name="borderBottomStyle">solid</property>
-            <property name="borderBottomWidth">thin</property>
-            <property name="borderLeftColor">#000000</property>
-            <property name="borderLeftStyle">solid</property>
-            <property name="borderLeftWidth">thin</property>
-            <property name="borderRightColor">#000000</property>
-            <property name="borderRightStyle">solid</property>
-            <property name="borderRightWidth">thin</property>
-            <property name="borderTopColor">#000000</property>
-            <property name="borderTopStyle">solid</property>
-            <property name="borderTopWidth">thin</property>
             <property name="marginBottom">10pt</property>
             <property name="pageBreakAfter">auto</property>
             <property name="width">100%</property>
@@ -4897,6 +4885,15 @@ this.text = result;]]></method>
                 <property name="borderBottomColor">#000000</property>
                 <property name="borderBottomStyle">solid</property>
                 <property name="borderBottomWidth">thin</property>
+                <property name="borderLeftColor">#000000</property>
+                <property name="borderLeftStyle">solid</property>
+                <property name="borderLeftWidth">thin</property>
+                <property name="borderRightColor">#000000</property>
+                <property name="borderRightStyle">solid</property>
+                <property name="borderRightWidth">thin</property>
+                <property name="borderTopColor">#000000</property>
+                <property name="borderTopStyle">solid</property>
+                <property name="borderTopWidth">thin</property>
                 <cell id="951">
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
@@ -4921,6 +4918,18 @@ this.text = result;]]></method>
                 </cell>
             </row>
             <row id="953">
+                <property name="borderBottomColor">#000000</property>
+                <property name="borderBottomStyle">solid</property>
+                <property name="borderBottomWidth">thin</property>
+                <property name="borderLeftColor">#000000</property>
+                <property name="borderLeftStyle">solid</property>
+                <property name="borderLeftWidth">thin</property>
+                <property name="borderRightColor">#000000</property>
+                <property name="borderRightStyle">solid</property>
+                <property name="borderRightWidth">thin</property>
+                <property name="borderTopColor">#000000</property>
+                <property name="borderTopStyle">solid</property>
+                <property name="borderTopWidth">thin</property>
                 <cell id="954">
                     <property name="borderBottomColor">#000000</property>
                     <property name="borderBottomStyle">solid</property>
@@ -4955,6 +4964,18 @@ this.text = result;]]></method>
                 </cell>
             </row>
             <row id="956">
+                <property name="borderBottomColor">#000000</property>
+                <property name="borderBottomStyle">solid</property>
+                <property name="borderBottomWidth">thin</property>
+                <property name="borderLeftColor">#000000</property>
+                <property name="borderLeftStyle">solid</property>
+                <property name="borderLeftWidth">thin</property>
+                <property name="borderRightColor">#000000</property>
+                <property name="borderRightStyle">solid</property>
+                <property name="borderRightWidth">thin</property>
+                <property name="borderTopColor">#000000</property>
+                <property name="borderTopStyle">solid</property>
+                <property name="borderTopWidth">thin</property>
                 <cell id="957">
                     <property name="borderRightColor">#000000</property>
                     <property name="borderRightStyle">solid</property>
@@ -4975,6 +4996,38 @@ this.text = result;]]></method>
                     <data id="968">
                         <property name="resultSetColumn">audit_isa_creatmail</property>
                     </data>
+                </cell>
+            </row>
+            <row id="2403">
+                <cell id="2404">
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
+                </cell>
+                <cell id="2405">
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                </cell>
+            </row>
+            <row id="2406">
+                <cell id="2407">
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <property name="paddingRight">2pt</property>
+                    <label id="2409">
+                        <text-property name="text">Version:</text-property>
+                    </label>
+                </cell>
+                <cell id="2408">
+                    <property name="paddingTop">2pt</property>
+                    <property name="paddingLeft">2pt</property>
+                    <property name="paddingBottom">2pt</property>
+                    <label id="2411">
+                        <text-property name="text">Version: 2.1.3 / 2015-05-11</text-property>
+                    </label>
                 </cell>
             </row>
         </grid>
@@ -5088,12 +5141,43 @@ this.text = result;]]></method>
                         </structure>
                     </list-property>
                     <data id="2316">
-                        <property name="fontWeight">bold</property>
+                        <property name="fontWeight">normal</property>
+                        <property name="color">#339966</property>
                         <structure name="numberFormat">
                             <property name="category">General Number</property>
                             <property name="pattern">General Number</property>
                         </structure>
                         <property name="textAlign">center</property>
+                        <list-property name="highlightRules">
+                            <structure>
+                                <property name="operator">le</property>
+                                <property name="fontWeight">normal</property>
+                                <property name="color">#FF0000</property>
+                                <expression name="testExpr" type="javascript">row["reducedTargetMaturity"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">row["maxMaturity"]*0.7</value>
+                                </simple-property-list>
+                            </structure>
+                            <structure>
+                                <property name="operator">between</property>
+                                <property name="fontWeight">normal</property>
+                                <property name="color">#FF9900</property>
+                                <expression name="testExpr" type="javascript">row["reducedTargetMaturity"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">row["maxMaturity"]*0.7</value>
+                                </simple-property-list>
+                                <expression name="value2" type="javascript">row["maxMaturity"]*0.9</expression>
+                            </structure>
+                            <structure>
+                                <property name="operator">ge</property>
+                                <property name="fontWeight">normal</property>
+                                <property name="color">#339966</property>
+                                <expression name="testExpr" type="javascript">row["reducedTargetMaturity"]</expression>
+                                <simple-property-list name="value1">
+                                    <value type="javascript">row["maxMaturity"]*0.9</value>
+                                </simple-property-list>
+                            </structure>
+                        </list-property>
                         <property name="dataSet">totalSecurityFigure</property>
                         <list-property name="paramBindings">
                             <structure>
@@ -5114,7 +5198,13 @@ this.text = result;]]></method>
                                 <property name="name">reducedTargetMaturity</property>
                                 <text-property name="displayName">reducedTargetMaturity</text-property>
                                 <expression name="expression" type="javascript">dataSetRow["reducedTargetMaturity"]</expression>
-                                <property name="dataType">float</property>
+                                <property name="dataType">javaObject</property>
+                            </structure>
+                            <structure>
+                                <property name="name">maxMaturity</property>
+                                <text-property name="displayName">maxMaturity</text-property>
+                                <expression name="expression" type="javascript">dataSetRow["maxMaturity"]</expression>
+                                <property name="dataType">javaObject</property>
                             </structure>
                         </list-property>
                         <property name="resultSetColumn">reducedTargetMaturity</property>
@@ -6223,6 +6313,9 @@ Integer.parseInt(row[&quot;POSITION&quot;]);</Definition>
             <column id="904">
                 <property name="width">2.322in</property>
             </column>
+            <column id="2400">
+                <property name="width">2.322in</property>
+            </column>
             <column id="905">
                 <property name="width">1.1458333333333333in</property>
             </column>
@@ -6253,6 +6346,24 @@ Integer.parseInt(row[&quot;POSITION&quot;]);</Definition>
                             <text-property name="text" key="isa21"></text-property>
                         </label>
                     </cell>
+                    <cell id="2398">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="verticalAlign">middle</property>
+                        <label id="2401">
+                            <text-property name="text" key="isa22">Zielreifegrad</text-property>
+                        </label>
+                    </cell>
                     <cell id="894">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -6268,7 +6379,7 @@ Integer.parseInt(row[&quot;POSITION&quot;]);</Definition>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
                         <label id="913">
-                            <text-property name="text" key="isa22"></text-property>
+                            <text-property name="text" key="isa22">Ergebniss</text-property>
                         </label>
                     </cell>
                     <cell id="915">
@@ -6338,6 +6449,25 @@ this.text = text;]]></method>
                             <property name="contentType">html</property>
                         </text-data>
                     </cell>
+                    <cell id="2399">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <property name="textAlign">center</property>
+                        <property name="verticalAlign">middle</property>
+                        <data id="2402">
+                            <property name="resultSetColumn">samt_topic_min2</property>
+                        </data>
+                    </cell>
                     <cell id="898">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -6352,66 +6482,49 @@ this.text = text;]]></method>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <property name="verticalAlign">middle</property>
-                        <list-property name="highlightRules">
-                            <structure>
-                                <property name="operator">eq</property>
-                                <property name="backgroundColor">#BDBDBD</property>
-                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
-                                <simple-property-list name="value1">
-                                    <value type="javascript">"NA"</value>
-                                </simple-property-list>
-                            </structure>
-                            <structure>
-                                <property name="operator">eq</property>
-                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
-                                <simple-property-list name="value1">
-                                    <value type="javascript">"0"</value>
-                                </simple-property-list>
-                                <property name="style">bg_red</property>
-                            </structure>
-                            <structure>
-                                <property name="operator">eq</property>
-                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
-                                <simple-property-list name="value1">
-                                    <value type="javascript">"1"</value>
-                                </simple-property-list>
-                                <property name="style">bg_red</property>
-                            </structure>
-                            <structure>
-                                <property name="operator">eq</property>
-                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
-                                <simple-property-list name="value1">
-                                    <value type="javascript">"2"</value>
-                                </simple-property-list>
-                                <property name="style">bg_yellow</property>
-                            </structure>
-                            <structure>
-                                <property name="operator">eq</property>
-                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
-                                <simple-property-list name="value1">
-                                    <value type="javascript">"3"</value>
-                                </simple-property-list>
-                                <property name="style">bg_green</property>
-                            </structure>
-                            <structure>
-                                <property name="operator">eq</property>
-                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
-                                <simple-property-list name="value1">
-                                    <value type="javascript">"4"</value>
-                                </simple-property-list>
-                                <property name="style">bg_green</property>
-                            </structure>
-                            <structure>
-                                <property name="operator">eq</property>
-                                <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
-                                <simple-property-list name="value1">
-                                    <value type="javascript">"5"</value>
-                                </simple-property-list>
-                                <property name="style">bg_green</property>
-                            </structure>
-                        </list-property>
                         <data id="914">
+                            <property name="fontWeight">normal</property>
                             <property name="textAlign">center</property>
+                            <list-property name="highlightRules">
+                                <structure>
+                                    <property name="operator">eq</property>
+                                    <property name="fontSize">10pt</property>
+                                    <property name="color">#BDBDBD</property>
+                                    <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">"NA"</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">le</property>
+                                    <property name="fontSize">10pt</property>
+                                    <property name="color">#FF0000</property>
+                                    <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["samt_topic_min2"]</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">eq</property>
+                                    <property name="fontSize">10pt</property>
+                                    <property name="fontWeight">normal</property>
+                                    <property name="color">#FF9900</property>
+                                    <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["samt_topic_min2"]-1</value>
+                                    </simple-property-list>
+                                </structure>
+                                <structure>
+                                    <property name="operator">ge</property>
+                                    <property name="fontSize">10pt</property>
+                                    <property name="fontWeight">normal</property>
+                                    <property name="color">#339966</property>
+                                    <expression name="testExpr" type="javascript">row["maturitytext"]</expression>
+                                    <simple-property-list name="value1">
+                                        <value type="javascript">row["samt_topic_min2"]</value>
+                                    </simple-property-list>
+                                </structure>
+                            </list-property>
                             <property name="resultSetColumn">maturitytext</property>
                         </data>
                     </cell>
@@ -6451,6 +6564,45 @@ this.text = text;]]></method>
                     </cell>
                 </row>
             </detail>
+            <footer>
+                <row id="2412">
+                    <cell id="2413">
+                        <label id="2418">
+                            <property name="fontWeight">bold</property>
+                            <text-property name="text">Methode:</text-property>
+                        </label>
+                    </cell>
+                    <cell id="2414">
+                        <grid id="2419">
+                            <column id="2420"/>
+                            <row id="2421">
+                                <cell id="2422">
+                                    <label id="2427">
+                                        <text-property name="text">- Vergleich der Top-47-Security-Themen</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="2423">
+                                <cell id="2424">
+                                    <label id="2428">
+                                        <text-property name="text">- basierend auf ISO 27002 Controls</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                            <row id="2425">
+                                <cell id="2426">
+                                    <label id="2429">
+                                        <text-property name="text">- bewertet mit SPICE ISO 15504</text-property>
+                                    </label>
+                                </cell>
+                            </row>
+                        </grid>
+                    </cell>
+                    <cell id="2415"/>
+                    <cell id="2416"/>
+                    <cell id="2417"/>
+                </row>
+            </footer>
         </table>
     </body>
     <list-property name="images">
