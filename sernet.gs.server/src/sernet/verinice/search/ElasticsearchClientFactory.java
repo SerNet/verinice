@@ -136,7 +136,7 @@ public class ElasticsearchClientFactory implements DisposableBean {
             .put("path.work", getDirectoryCreator().create("work"))
             .put("path.logs", getDirectoryCreator().create("logs"))
             .put("node.local", true)
-            .put("index.number_of_shards", 1);
+            .put("index.number_of_shards", 2);
         if (settings != null && builder == null) {
             builder.put(settings);
             if(LOG.isDebugEnabled()){
