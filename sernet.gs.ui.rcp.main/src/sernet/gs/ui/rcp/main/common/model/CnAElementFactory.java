@@ -966,7 +966,6 @@ public final class CnAElementFactory {
 
 		if(inheritIcon){
 		    child = inheritIcon(container.getIconPath(), container.getTypeId(), inheritIcon, child);
-		    CnAElementFactory.getModel(container).childChanged(child);
 		}
 
 		// notify all listeners:
