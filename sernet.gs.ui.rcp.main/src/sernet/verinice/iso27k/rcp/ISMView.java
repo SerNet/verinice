@@ -583,8 +583,11 @@ public class ISMView extends RightsEnabledView implements IAttachedToPerspective
             LOG.debug("Element in editor: " + element.getUuid()); //$NON-NLS-1$
             LOG.debug("Expanding tree now to show element..."); //$NON-NLS-1$
         }
-   
-        viewer.setSelection(new StructuredSelection(element),true);
+        if(element != null){
+            viewer.setSelection(new StructuredSelection(element),true);
+        } else {
+            return;
+        }
         
         if (LOG.isDebugEnabled()) {
             LOG.debug("Tree is expanded."); //$NON-NLS-1$

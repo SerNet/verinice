@@ -87,26 +87,29 @@ public class AttachmentEditorInput implements IEditorInput {
 	 * retrieves {@link CnATreeElement} that is referenced by {@link Attachment} via hql (fully initialized)
 	 * method is used by (ism/itgs)-modelviews, if linking is active, selection will change to referenced {@link CnATreeElement}
 	 * when attachment, via {@link FileView} is opened.
+	 * only do this, if editor is {@link AttachmentEditor}
 	 * @param editor - {@link IEditorPart}
 	 * @return {@link CnATreeElement}
 	 */
 	public static CnATreeElement extractCnaTreeElement(IEditorPart editor){
-        CnATreeElement element = null;
-        Attachment a = ((AttachmentEditorInput)editor.getEditorInput()).getInput();
-        String hql = "from CnATreeElement elmt " +
-                "left join fetch elmt.entity as entity " + 
-                "left join fetch entity.typedPropertyLists as propertyList " + 
-                    "left join fetch propertyList.properties as props " +
-                "where elmt.dbId = ?";
-        Object[] params = new Object[]{a.getCnATreeElementId()};
-        ExecuteHQLInReportCommand hqlCommand = new ExecuteHQLInReportCommand(hql, params, CnATreeElement.class);
-        try {
-            hqlCommand = ServiceFactory.lookupCommandService().executeCommand(hqlCommand);
-            element = (CnATreeElement)((ArrayList)hqlCommand.getResult()).get(0);
-            element = Retriever.retrieveElement(element, RetrieveInfo.getPropertyInstance());
-        } catch (CommandException e) {
-            Logger.getLogger(AttachmentEditorInput.class).error("Error loading attachment containing cnatreeelement", e);
-        }
+	    CnATreeElement element = null;
+	    if(editor.getEditorInput() instanceof AttachmentEditorInput){
+	        Attachment a = ((AttachmentEditorInput)editor.getEditorInput()).getInput();
+	        String hql = "from CnATreeElement elmt " +
+	                "left join fetch elmt.entity as entity " + 
+	                "left join fetch entity.typedPropertyLists as propertyList " + 
+	                "left join fetch propertyList.properties as props " +
+	                "where elmt.dbId = ?";
+	        Object[] params = new Object[]{a.getCnATreeElementId()};
+	        ExecuteHQLInReportCommand hqlCommand = new ExecuteHQLInReportCommand(hql, params, CnATreeElement.class);
+	        try {
+	            hqlCommand = ServiceFactory.lookupCommandService().executeCommand(hqlCommand);
+	            element = (CnATreeElement)((ArrayList)hqlCommand.getResult()).get(0);
+	            element = Retriever.retrieveElement(element, RetrieveInfo.getPropertyInstance());
+	        } catch (CommandException e) {
+	            Logger.getLogger(AttachmentEditorInput.class).error("Error loading attachment containing cnatreeelement", e);
+	        }
+	    }
         return element;
 	}
 }
