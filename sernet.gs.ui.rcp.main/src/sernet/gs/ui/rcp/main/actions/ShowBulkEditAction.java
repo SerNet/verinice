@@ -68,6 +68,7 @@ import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.commands.CreateConfiguration;
 import sernet.verinice.service.commands.LoadConfiguration;
+import sernet.verinice.service.commands.UpdateMultipleElementEntities;
 
 /**
  * Erlaubt das gemeinsame Editieren der Eigenschaften von gleichen,
@@ -80,10 +81,15 @@ import sernet.verinice.service.commands.LoadConfiguration;
  */
 public class ShowBulkEditAction extends RightsEnabledAction implements ISelectionListener {
 
-    // FIXME server: bulk edit does not notify changes on self
-
     private static final transient Logger LOG = Logger.getLogger(ShowBulkEditAction.class);
 
+    private List<Integer> dbIDs;
+    private ArrayList<CnATreeElement> selectedElements;
+    private EntityType entType = null;
+    private Class clazz;
+    private Dialog chosenDialog;
+    
+    
     public static final String ID = "sernet.gs.ui.rcp.main.actions.showbulkeditaction"; //$NON-NLS-1$
     private final IWorkbenchWindow window;
 
@@ -115,38 +121,108 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     /* (non-Javadoc)
      * @see sernet.gs.ui.rcp.main.actions.RightsEnabledAction#doRun()
      */
-    @SuppressWarnings("restriction")
     @Override
     public void doRun() {
         Activator.inheritVeriniceContextState();
-
         IStructuredSelection selection = (IStructuredSelection) window.getSelectionService().getSelection();
         if (selection == null) {
             return;
         }
-
-        // Realizes that the action to delete an element is greyed out,
-        // when there is no right to do so.
-        Iterator iterator = (selection).iterator();
-        while (iterator.hasNext()) {
-            Object next = iterator.next();
-            if (next instanceof CnATreeElement) {
-                boolean writeallowed = CnAElementHome.getInstance().isWriteAllowed((CnATreeElement) next);
-                if (!writeallowed) {
-                    MessageDialog.openWarning(window.getShell(), 
-                            Messages.ShowBulkEditAction_2, 
-                            NLS.bind(Messages.ShowBulkEditAction_3, ((CnATreeElement) next).getTitle()));
-                    setEnabled(false);
-                    return;
-                }
-            }
+        if(!isAllowed(selection)) {
+            return;
         }
 
-        final List<Integer> dbIDs = new ArrayList<Integer>(selection.size());
-        final ArrayList<CnATreeElement> selectedElements = new ArrayList<CnATreeElement>();
-        EntityType entType = null;
-        final Class clazz;
+        dbIDs = new ArrayList<Integer>(selection.size());
+        selectedElements = new ArrayList<CnATreeElement>();
+        entType = null;
+        readSelection(selection);
+        Dialog dialog = null;
+        
+        if(entType != null && !(entType.getId().equals(Person.TYPE_ID) || entType.getId().equals(PersonIso.TYPE_ID))){
+            dialog = new BulkEditDialog(window.getShell(), entType);
+        } else {
+            dialog = new PersonBulkEditDialog(window.getShell(), Messages.ShowBulkEditAction_14);
+        }
+        if (dialog.open() != Window.OK) {
+            return;
+        }        
+        Entity tmpEntity = null;
+        if(dialog instanceof BulkEditDialog){
+            tmpEntity = ((BulkEditDialog)dialog).getEntity();
+        }
+        if(dialog instanceof PersonBulkEditDialog){
+            tmpEntity = ((PersonBulkEditDialog)dialog).getEntity();
+        }
+        final Entity dialogEntity = tmpEntity;
+        chosenDialog = dialog;
+        
+        try {
+            // close editors first:
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
 
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                @Override
+                @SuppressWarnings("restriction")
+                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                    doEdit(dialogEntity, monitor);
+                }
+            });
+        } catch (InterruptedException e) {
+            ExceptionUtil.log(e, Messages.ShowBulkEditAction_5);
+        } catch (Exception e) {
+            LOG.error("Error on bulk edit", e);
+            ExceptionUtil.log(e, Messages.ShowBulkEditAction_6);
+        }
+    }
+    
+    private void doEdit(final Entity dialogEntity, IProgressMonitor monitor) throws InterruptedException {
+        Activator.inheritVeriniceContextState();
+
+        // the selected items are of type CnaTreeelement and can be
+        // edited right here:
+        if (selectedElements.size() > 0){
+            if(!(selectedElements.get(0) instanceof Person || selectedElements.get(0) instanceof PersonIso)) {
+                editElements(selectedElements, dialogEntity, monitor);
+            }
+        }  else {
+            // the selected elements are of type TodoView or other
+            // light weight items,
+            // editing has to be deferred to server (lookup of real
+            // items needed)
+            try {
+                String pw1 = null;
+                String pw2 = null;
+                if(chosenDialog instanceof PersonBulkEditDialog){
+                    pw1 = ((PersonBulkEditDialog)chosenDialog).getPassword();
+                    pw2 = ((PersonBulkEditDialog)chosenDialog).getPassword2();
+                }
+                editPersons(clazz, dbIDs, dialogEntity, monitor, pw1, pw2);
+            } catch (CommandException e) {
+                throw new InterruptedException(e.getLocalizedMessage());
+            }
+        }
+        monitor.done();
+        refreshListeners();
+    }
+
+    private void refreshListeners() {
+        boolean isIsoElement = false;
+        for (CnATreeElement cnATreeElement : selectedElements) {
+            isIsoElement = (cnATreeElement instanceof IISO27kElement);
+            if (isIsoElement) {
+                break;
+            }
+        }
+        // update once when finished:
+        if (CnAElementFactory.getLoadedModel() != null) {
+            CnAElementFactory.getLoadedModel().refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
+        }
+        if (isIsoElement) {
+            CnAElementFactory.getInstance().getISO27kModel().refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
+        }
+    }
+
+    private void readSelection(IStructuredSelection selection) {
         if (selection.getFirstElement() instanceof TodoViewItem) {
             // prepare list according to selected lightweight todo items:
             for (Iterator iter = selection.iterator(); iter.hasNext();) {
@@ -199,88 +275,29 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
             }
             clazz = null;
         }
-
-        Dialog dialog = null;
-        
-        if(entType != null && !(entType.getId().equals(Person.TYPE_ID) || entType.getId().equals(PersonIso.TYPE_ID))){
-            dialog = new BulkEditDialog(window.getShell(), entType);
-        } else {
-            dialog = new PersonBulkEditDialog(window.getShell(), Messages.ShowBulkEditAction_14);
-        }
-        if (dialog.open() != Window.OK) {
-            return;
-        }
-        
-        Entity tmpEntity = null;
-        if(dialog instanceof BulkEditDialog){
-            tmpEntity = ((BulkEditDialog)dialog).getEntity();
-        }
-        if(dialog instanceof PersonBulkEditDialog){
-            tmpEntity = ((PersonBulkEditDialog)dialog).getEntity();
-        }
-        final Entity dialogEntity = tmpEntity;
-        final Dialog chosenDialog = dialog;
-        
-        try {
-            // close editors first:
-            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true);
-
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                @Override
-                @SuppressWarnings("restriction")
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    Activator.inheritVeriniceContextState();
-
-                    // the selected items are of type CnaTreeelement and can be
-                    // edited right here:
-                    if (selectedElements.size() > 0){
-                        if(!(selectedElements.get(0) instanceof Person || selectedElements.get(0) instanceof PersonIso)) {
-                            editLocally(selectedElements, dialogEntity, monitor);
-                        }
-                    }  else {
-                        // the selected elements are of type TodoView or other
-                        // light weight items,
-                        // editing has to be deferred to server (lookup of real
-                        // items needed)
-                        try {
-                            String pw1 = null;
-                            String pw2 = null;
-                            if(chosenDialog instanceof PersonBulkEditDialog){
-                                pw1 = ((PersonBulkEditDialog)chosenDialog).getPassword();
-                                pw2 = ((PersonBulkEditDialog)chosenDialog).getPassword2();
-                            }
-                            editOnServer(clazz, dbIDs, dialogEntity, monitor, pw1, pw2);
-                        } catch (CommandException e) {
-                            throw new InterruptedException(e.getLocalizedMessage());
-                        }
-                    }
-
-                    monitor.done();
-
-                    boolean isIsoElement = false;
-                    for (CnATreeElement cnATreeElement : selectedElements) {
-                        isIsoElement = (cnATreeElement instanceof IISO27kElement);
-                        if (isIsoElement) {
-                            break;
-                        }
-                    }
-                    // update once when finished:
-                    if (CnAElementFactory.getLoadedModel() != null) {
-                        CnAElementFactory.getLoadedModel().refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
-                    }
-                    if (isIsoElement) {
-                        CnAElementFactory.getInstance().getISO27kModel().refreshAllListeners(IBSIModelListener.SOURCE_BULK_EDIT);
-                    }
-                }
-            });
-        } catch (InterruptedException e) {
-            ExceptionUtil.log(e, Messages.ShowBulkEditAction_5);
-        } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.ShowBulkEditAction_6);
-        }
     }
 
-    private void editOnServer(Class<? extends CnATreeElement> clazz, List<Integer> dbIDs, Entity dialogEntity, IProgressMonitor monitor, String newPassword, String newPassword2) throws CommandException {
+    private boolean isAllowed(IStructuredSelection selection) {
+        // Realizes that the action to delete an element is greyed out,
+        // when there is no right to do so.
+        Iterator iterator = (selection).iterator();
+        while (iterator.hasNext()) {
+            Object next = iterator.next();
+            if (next instanceof CnATreeElement) {
+                boolean writeallowed = CnAElementHome.getInstance().isWriteAllowed((CnATreeElement) next);
+                if (!writeallowed) {
+                    MessageDialog.openWarning(window.getShell(), 
+                            Messages.ShowBulkEditAction_2, 
+                            NLS.bind(Messages.ShowBulkEditAction_3, ((CnATreeElement) next).getTitle()));
+                    setEnabled(false);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    private void editPersons(Class<? extends CnATreeElement> clazz, List<Integer> dbIDs, Entity dialogEntity, IProgressMonitor monitor, String newPassword, String newPassword2) throws CommandException {
         monitor.setTaskName(Messages.ShowBulkEditAction_7);
         monitor.beginTask(Messages.ShowBulkEditAction_8, IProgressMonitor.UNKNOWN);
         GenericCommand command = null;
@@ -373,7 +390,7 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
     }
 
 
-    private void editLocally(List<CnATreeElement> selectedElements, Entity dialogEntity, IProgressMonitor monitor) {
+    private void editElements(List<CnATreeElement> selectedElements, Entity dialogEntity, IProgressMonitor monitor) {
         monitor.setTaskName(Messages.ShowBulkEditAction_9);
         monitor.beginTask(Messages.ShowBulkEditAction_10, selectedElements.size() + 1);
 
@@ -387,8 +404,11 @@ public class ShowBulkEditAction extends RightsEnabledAction implements ISelectio
         try {
             monitor.setTaskName(Messages.ShowBulkEditAction_11);
             monitor.beginTask(Messages.ShowBulkEditAction_12, IProgressMonitor.UNKNOWN);
-            CnAElementHome.getInstance().update(selectedElements);
+            //CnAElementHome.getInstance().update(selectedElements);
+            UpdateMultipleElementEntities command = new UpdateMultipleElementEntities(selectedElements);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
         } catch (Exception e) {
+            LOG.error("Error while bulk update", e);
             ExceptionUtil.log(e, Messages.ShowBulkEditAction_13);
         }
 

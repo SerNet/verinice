@@ -42,7 +42,6 @@ import org.springframework.transaction.annotation.Transactional;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor;
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -65,6 +64,7 @@ import sernet.verinice.service.commands.LoadTreeItem;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
+import sernet.verinice.service.commands.UpdateElementEntity;
 
 /**
  * Tests executing several commands.

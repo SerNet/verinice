@@ -35,7 +35,6 @@ import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -82,6 +81,7 @@ import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadCnAElementByExternalID;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
+import sernet.verinice.service.commands.UpdateElementEntity;
 import sernet.verinice.service.iso27k.LoadModel;
 
 /**

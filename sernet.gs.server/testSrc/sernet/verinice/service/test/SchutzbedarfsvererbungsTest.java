@@ -28,7 +28,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.Gebaeude;
@@ -45,6 +44,7 @@ import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
+import sernet.verinice.service.commands.UpdateElementEntity;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**

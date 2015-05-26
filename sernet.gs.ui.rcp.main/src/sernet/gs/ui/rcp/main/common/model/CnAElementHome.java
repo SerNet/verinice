@@ -42,7 +42,6 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadBSIModelForTreeView;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementById;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RefreshElement;
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.gs.ui.rcp.main.service.crudcommands.UpdateMultipleElements;
 import sernet.gs.ui.rcp.main.service.taskcommands.CreateScenario;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllTags;
@@ -78,6 +77,7 @@ import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.commands.RemoveLink;
 import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.commands.UpdateElement;
+import sernet.verinice.service.commands.UpdateElementEntity;
 
 /**
  * DAO class for model objects. Uses Hibernate as persistence framework.

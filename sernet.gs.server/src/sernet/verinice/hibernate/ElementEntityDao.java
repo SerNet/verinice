@@ -19,13 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.hibernate;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.IElementEntityDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.InheritLogger;
-import sernet.verinice.search.IElementSearchDao;
-import sernet.verinice.search.JsonBuilder;
+import sernet.verinice.service.commands.UpdateElementEntity;
 
 /**
  * Special dao for saving the entity of a CnaTreeElement but not the

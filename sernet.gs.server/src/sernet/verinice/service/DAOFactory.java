@@ -24,7 +24,6 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.service.crudcommands.UpdateElementEntity;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.Property;
@@ -116,6 +115,7 @@ import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.UpdateElementEntity;
 
 /**
  * Registry for DAOs for different types of objects. DAOs are managed by and injected by the Spring framework. 
