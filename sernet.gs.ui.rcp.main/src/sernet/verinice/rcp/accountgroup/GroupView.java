@@ -46,6 +46,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
@@ -244,7 +246,8 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         
         tableAccounts.setContentProvider(new AccountContentProvider(tableAccounts));
         tableAccounts.setLabelProvider(accountLabelProvider = new AccountLabelProvider());
-        
+        tableAccounts.setComparator(new AccountComparator()); 
+
         tableAccounts.refresh(true);
     }
 
@@ -262,6 +265,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         
         tableGroupToAccounts.setContentProvider(new AccountContentProvider(tableGroupToAccounts));
         tableGroupToAccounts.setLabelProvider(groupLabelProvider = new AccountLabelProvider());
+        tableGroupToAccounts.setComparator(new AccountComparator());
         
         tableGroupToAccounts.refresh(true);
         
@@ -817,4 +821,18 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         updateAllLists();
     }
     
+    
+    private class AccountComparator extends ViewerComparator {
+        
+        public int compare(Viewer viewer, Object e1, Object e2) {
+          String t1 =  accountGroupDataService.getPrettyPrintAccountName((String) e1);
+          String t2 =  accountGroupDataService.getPrettyPrintAccountName((String) e2);
+          if(t1!=null && t2!=null) {
+              t1 = t1.toLowerCase();
+              t2 = t2.toLowerCase();
+              return t1.compareTo(t2);
+          }
+          return 0;
+        }
+   }    
 }
