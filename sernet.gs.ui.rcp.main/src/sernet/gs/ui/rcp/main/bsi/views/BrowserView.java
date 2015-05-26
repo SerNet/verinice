@@ -38,12 +38,18 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.StatusLine;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
+import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Control;
+import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.RightsEnabledView;
 
 public class BrowserView extends RightsEnabledView implements ILinkedWithEditorView {
@@ -61,6 +67,8 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     private boolean linkingActive = true;
     
     private SerialiseBrowserLoadingListener serialiseListener;
+    
+    private CnATreeElement selectedInISMView;
 
 	@Override
     public void createPartControl(Composite parent) {
@@ -126,8 +134,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
 	private void hookPageSelection() {
 		selectionListener = new ISelectionListener() {
 			@Override
-            public void selectionChanged(IWorkbenchPart part,
-					ISelection selection) {
+            public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 				pageSelectionChanged(part, selection);
 			}
 		};
@@ -135,19 +142,54 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
 		getSite().getPage().addPartListener(linkWithEditorPartListener);
 	}
 
-	protected void pageSelectionChanged(IWorkbenchPart part,
-			ISelection selection) {
-		if (part == this){
-			return;
-		}
-		if (!(selection instanceof IStructuredSelection)){
-			return;
-		}
-		Object element = ((IStructuredSelection) selection).getFirstElement();
-		elementSelected(element);
+	protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
+	    if (part != this && selection instanceof IStructuredSelection) {
+	        Object element = ((IStructuredSelection) selection).getFirstElement();	        
+	        if (part instanceof ISMView) {
+	            setSelectedInISMView(element);
+	        } else if (part instanceof RelationView) {
+	            if (element instanceof CnALink) {
+	                element = determineLinkedElement((CnALink) element);
+	            }
+	        } else if (part instanceof BSIElementEditor && isLinkingActive()) {
+	            if (element instanceof CnALink) {
+	                element = determineLinkedElement((CnALink) element);
+	            }
+	        }
+	        elementSelected(element);
+	    }
 	}
 	
-	protected void elementSelected(Object element) {
+	private void setSelectedInISMView(Object element) {
+	    if(element instanceof CnATreeElement){
+	        selectedInISMView = (CnATreeElement) element;
+	    }
+	}
+
+	private Object determineLinkedElement(CnALink link) {
+	    IControl linkedElement = null;
+	    IControl dependant = (IControl) link.getDependant();
+	    IControl dependency = (IControl) link.getDependency();
+	    
+	    if (!dependant.equals(selectedInISMView)) {
+	        linkedElement = castToCorrectControlType(dependant);
+	    } else if (!dependency.equals(selectedInISMView) || dependant.equals(dependency)) {
+	        linkedElement = castToCorrectControlType(dependency);
+	    }	        
+	    return linkedElement;
+	}
+	
+	private IControl castToCorrectControlType(IControl element) {
+	    IControl linkedElement = null;
+        if (element instanceof Control) {
+            linkedElement = (Control) element;
+        } else if (element instanceof SamtTopic) {
+            linkedElement = (SamtTopic) element;
+        }
+        return linkedElement;
+    }
+
+    protected void elementSelected(Object element) {
 	    try {
             StatusLine.setErrorMessage(""); //$NON-NLS-1$
             setText(HtmlWriter.getHtml(element));
@@ -188,10 +230,11 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
      */
     @Override
     public void editorActivated(IEditorPart activeEditor) {
+        CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
+        selectedInISMView = element;
         if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {
             return;
         }
-        CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
         if(element==null) {
             return;
         } 

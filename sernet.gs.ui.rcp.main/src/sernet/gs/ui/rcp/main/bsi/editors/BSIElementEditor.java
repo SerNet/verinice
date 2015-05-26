@@ -345,7 +345,7 @@ public class BSIElementEditor extends EditorPart {
         SashForm sashForm = new SashForm(parent, SWT.VERTICAL);
         huiComposite = new HitroUIComposite(sashForm, false);
         if (showLinkMaker()) {
-            linkMaker = new LinkMaker(sashForm);
+            linkMaker = new LinkMaker(sashForm, this);
             sashForm.setWeights(new int[] { sashWeight1, sashWeight2});
             sashForm.setSashWidth(sashWidth);
             sashForm.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));

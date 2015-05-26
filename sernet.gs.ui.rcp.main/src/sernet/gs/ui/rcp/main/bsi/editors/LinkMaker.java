@@ -52,6 +52,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.part.WorkbenchPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -107,16 +108,15 @@ public class LinkMaker extends Composite implements IRelationTable {
 
     private int oldSelection = -1;
 
-    /**
-     * @param parent
-     * @param style
-     */
-    public LinkMaker(Composite parent) {
+    private WorkbenchPart part;
+
+    public LinkMaker(Composite parent, WorkbenchPart part) {
         super(parent, SWT.BORDER);
         FormLayout formLayout = new FormLayout();
         this.setLayout(formLayout);
+        this.part = part;
     }
-
+    
     /**
      * @param cnAElement
      * @param isWriteAllowed
@@ -163,6 +163,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         buttonUnlink.setToolTipText(Messages.LinkMaker_4);
 
         viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
+        part.getSite().setSelectionProvider(viewer);
         FormData formData6 = new FormData();
         formData6.top = new FormAttachment(buttonLink, 2);
         formData6.left = new FormAttachment(0, 1);
