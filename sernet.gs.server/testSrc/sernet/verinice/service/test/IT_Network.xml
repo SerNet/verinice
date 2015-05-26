@@ -1,0 +1,2893 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns3:syncRequest xmlns="http://www.sernet.de/sync/data" xmlns:ns2="http://www.sernet.de/sync/mapping" xmlns:ns3="http://www.sernet.de/sync/sync" sourceId="3">
+    <syncData>
+        <syncObject>
+            <syncAttribute>
+                <name>itverbund_normal_aufgaben</name>
+                <value>The effect would be evaluated by those affected as tolerable.  The maximum tolerable downtime of the IT system is larger than?? Hours.  </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_aufgaben</name>
+                <value>The effect would be perceived by at least some individuals as intolerable. An IT system failure is only tolerable between ??? und ??? hours.  </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_datenschutz</name>
+                <value>A significant effect of informational self-determination of the individual seems possible.  A possible abuse of personal data has significant impact on the social position or economic status of the person concerned. </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_leib</name>
+                <value>An adverse effect appears impossible. </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_leib</name>
+                <value>Serious breaches of personal integrity are possible. Danger to life and limb. </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_wirkung</name>
+                <value>A far-reaching reputation or confidence impairment, possibly even endangering the existence of the organization is conceivable.  </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_aufgaben</name>
+                <value>The effect would be evaluated by all concerned as intolerable. An IT system failure is tolerable only up to ??? hours.  </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_gesetze</name>
+                <value>Violations of rules and laws with minor consequences. Minor infringements with low maximum penalties</value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_name</name>
+                <value>IT Network</value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_gesetze</name>
+                <value>Fundamental breach of rules and laws of contract, their liability damages being ruinous </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_wirkung</name>
+                <value>A low or only internal loss of reputation or trust is expected.  </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_wirkung</name>
+                <value>A wide loss of reputation or trust is expected. </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_finanzen</name>
+                <value>The financial damage is less than EUR ???,-. </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_finanzen</name>
+                <value>The financial loss is between EUR ???,- and EUR ???,-. </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_datenschutz</name>
+                <value>A particularly significant impairment of informational self-determination of the individual seems possible.  A possible abuse of personal data would mean social or economic ruin for the affected person.  </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_gesetze</name>
+                <value>Violations of regulations and laws with serious consequences with high penalties for infringements </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_normal_datenschutz</name>
+                <value>An effect of informational self-determination would be assessed by the individual as tolerable.  A possible abuse of personal data has a negligible impact on the social position or economic status of the person concerned.</value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_hoch_leib</name>
+                <value>An effect on the personal integrity of an individual can not be excluded completely.  </value>
+            </syncAttribute>
+            <syncAttribute>
+                <name>itverbund_sehrhoch_finanzen</name>
+                <value>The financial loss is greater than ???,- EUR. </value>
+            </syncAttribute>
+            <extId>ENTITY_69</extId>
+            <extObjectType>itverbund</extObjectType>
+            <children>
+                <extId>ENTITY_9c3f6e55-7742-403d-a329-aa91189ea488</extId>
+                <extObjectType>serverkategorie</extObjectType>
+                <children>
+                    <syncAttribute>
+                        <name>server_anzahl</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_risikoanalyse_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_aufstellungsort</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_integritaet_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_verfuegbarkeit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_vertraulichkeit_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_risikoanalyse</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_verfuegbarkeit_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_kuerzel</name>
+                        <value>S-1</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_plattform</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_erlaeuterung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_name</name>
+                        <value>Server</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_netadr</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_vertraulichkeit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_ergaenzendeanalyse</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_dokument</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_integritaet</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_tag</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>server_status</name>
+                        <value></value>
+                    </syncAttribute>
+                    <extId>ENTITY_1521</extId>
+                    <extObjectType>server</extObjectType>
+                </children>
+            </children>
+            <children>
+                <extId>ENTITY_a3993be1-4f75-4249-b3ec-7b8f8e2a479b</extId>
+                <extObjectType>raeumekategorie</extObjectType>
+            </children>
+            <children>
+                <extId>ENTITY_40db69cd-d375-4b3a-ad58-ff18be2e6c60</extId>
+                <extObjectType>netzkategorie</extObjectType>
+            </children>
+            <children>
+                <extId>ENTITY_6af372ab-d450-4025-8460-7ad353bbe520</extId>
+                <extObjectType>anwendungenkategorie</extObjectType>
+                <children>
+                    <syncAttribute>
+                        <name>anwendung_ergaenzendeanalyse</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_prozess</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_tag</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_persbez</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_status</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_vertraulichkeit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_name</name>
+                        <value>Application</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_vertraulichkeit_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_verfuegbarkeit_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_verfuegbarkeit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_erlaeuterung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_integritaet</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_prozessbezug</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_kuerzel</name>
+                        <value>A1</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_dokument</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_prozess_informationen</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_risikoanalyse_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_prozessbezug_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_integritaet_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>anwendung_risikoanalyse</name>
+                        <value></value>
+                    </syncAttribute>
+                    <extId>ENTITY_863</extId>
+                    <extObjectType>anwendung</extObjectType>
+                    <children>
+                        <extId>ENTITY_874</extId>
+                        <extObjectType>datenverarbeitung</extObjectType>
+                    </children>
+                    <children>
+                        <extId>ENTITY_870</extId>
+                        <extObjectType>verantwortlichestelle</extObjectType>
+                    </children>
+                    <children>
+                        <syncAttribute>
+                            <name>bstumsetzung_stand</name>
+                            <value>2013</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_url</name>
+                            <value>b05010</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_name</name>
+                            <value>Internet Information Server</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_erfasstam</name>
+                            <value>1403796201152</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_nr</name>
+                            <value>B 5.10</value>
+                        </syncAttribute>
+                        <extId>ENTITY_917</extId>
+                        <extObjectType>bstumsetzung</extObjectType>
+                    </children>
+                    <children>
+                        <extId>ENTITY_878</extId>
+                        <extObjectType>personengruppen</extObjectType>
+                    </children>
+                    <children>
+                        <extId>ENTITY_872</extId>
+                        <extObjectType>verarbeitungsangaben</extObjectType>
+                    </children>
+                    <children>
+                        <syncAttribute>
+                            <name>bstumsetzung_stand</name>
+                            <value>2013</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_url</name>
+                            <value>b05011</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_name</name>
+                            <value>Apache Webserver</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_erfasstam</name>
+                            <value>1403796213149</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_nr</name>
+                            <value>B 5.11</value>
+                        </syncAttribute>
+                        <extId>ENTITY_926</extId>
+                        <extObjectType>bstumsetzung</extObjectType>
+                    </children>
+                    <children>
+                        <extId>ENTITY_876</extId>
+                        <extObjectType>stellungnahmedsb</extObjectType>
+                    </children>
+                    <children>
+                        <syncAttribute>
+                            <name>bstumsetzung_stand</name>
+                            <value>2013</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_url</name>
+                            <value>b05007</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_name</name>
+                            <value>Datenbanken</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_erfasstam</name>
+                            <value>1403796232451</value>
+                        </syncAttribute>
+                        <syncAttribute>
+                            <name>bstumsetzung_nr</name>
+                            <value>B 5.7</value>
+                        </syncAttribute>
+                        <extId>ENTITY_935</extId>
+                        <extObjectType>bstumsetzung</extObjectType>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632460</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632460</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232460</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m04071</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Restriktive Handhabung von Datenbank-Links</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232460</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 4.71</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232460</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Umsetzung</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>C</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1404</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632456</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632456</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232455</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02134</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Richtlinien für Datenbank-Anfragen</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232456</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.134</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232455</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Planung und Konzeption</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>B</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1081</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632461</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632460</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232460</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m04073</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Festlegung von Obergrenzen für selektierbare Datensätze</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232461</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 4.73</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232460</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Umsetzung</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>C</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1200</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632467</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632467</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232467</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m03018</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Verpflichtung der Benutzer zum Abmelden nach Aufgabenerfüllung</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232467</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 3.18</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232467</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1319</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632466</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632466</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232466</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02131</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Aufteilung von Administrationstätigkeiten bei Datenbanksystemen</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232466</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.131</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232466</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>C</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1302</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632454</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632454</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232454</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02126</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Erstellung eines Datenbanksicherheitskonzeptes</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232454</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.126</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232454</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Planung und Konzeption</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1030</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_beschreibung</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_bemerkungen</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_sachperiod</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Dokumentation der Veränderungen an einem bestehenden System</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachb</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.34</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_dokument</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_beobachtung</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232462</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_ptvar</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzung</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632462</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632462</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_votum</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_sachvar</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232462</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02034</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_sachfix</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_fragen</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_befragt</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditor</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_ptperiod</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_ptfix</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232462</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_bericht</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_erlaeuterung</name>
+<value></value>
+                            </syncAttribute>
+                            <extId>ENTITY_1166</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632465</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632465</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232464</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02129</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Zugriffskontrolle einer Datenbank</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232465</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.129</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232464</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1268</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632456</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632456</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232456</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02363</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Schutz gegen SQL-Injection</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232456</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.363</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232456</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Planung und Konzeption</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>B</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1115</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632469</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632469</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232469</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m04068</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Sicherstellung einer konsistenten Datenbankverwaltung</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232469</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 4.68</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232469</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1472</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_beschreibung</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_bemerkungen</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_sachperiod</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Dokumentation der zugelassenen Benutzer und Rechteprofile</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachb</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.31</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_dokument</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_beobachtung</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232461</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_ptvar</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzung</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632461</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632461</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_votum</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_sachvar</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232461</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02031</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_sachfix</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_fragen</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_befragt</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditor</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_ptperiod</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_kosten_ptfix</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232461</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_bericht</name>
+<value></value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_erlaeuterung</name>
+<value></value>
+                            </syncAttribute>
+                            <extId>ENTITY_1387</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632466</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632465</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232465</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02130</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Gewährleistung der Datenbankintegrität</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232465</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.130</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232465</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1064</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632454</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632453</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232453</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02080</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Erstellung eines Anforderungskatalogs für Standardsoftware</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232454</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.80</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232453</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Planung und Konzeption</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1421</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632474</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632473</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232473</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m06050</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Archivierung von Datenbeständen</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232474</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 6.50</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232473</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Notfallvorsorge</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>Z</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1370</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632468</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632468</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232468</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m04067</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Sperren und Löschen nicht benötigter Datenbank-Accounts</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232468</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 4.67</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232468</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>B</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_996</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632463</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632463</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232463</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02127</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Inferenzprävention</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232463</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.127</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232463</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>B</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1047</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632467</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632467</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232467</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02133</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Kontrolle der Protokolldateien eines Datenbanksystems</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232467</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.133</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232466</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_945</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632474</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632474</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232474</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m06051</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Wiederherstellung einer Datenbank</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232474</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 6.51</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232474</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Notfallvorsorge</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>B</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1251</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632455</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632455</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232455</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02132</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Regelung für die Einrichtung von Datenbankbenutzern/-benutzergruppen</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232455</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.132</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232455</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Planung und Konzeption</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1234</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632470</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632470</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232470</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m04070</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Durchführung einer Datenbanküberwachung</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232470</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 4.70</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232470</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>C</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1353</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632458</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632457</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232457</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02124</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Geeignete Auswahl einer Datenbank-Software</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232458</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.124</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232457</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Beschaffung</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>B</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1013</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632472</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632472</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232472</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m06048</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Verhaltensregeln nach Verlust der Datenbankintegrität</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232472</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 6.48</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232472</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Notfallvorsorge</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1438</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632473</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632473</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232473</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m06049</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Datensicherung einer Datenbank</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232473</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 6.49</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232473</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Notfallvorsorge</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1217</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632470</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632469</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232469</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m04069</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Regelmäßiger Sicherheitscheck der Datenbank</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232470</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 4.69</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232469</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>B</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1455</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632458</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632458</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232458</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02125</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Installation und Konfiguration einer Datenbank</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232458</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.125</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232458</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Umsetzung</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_979</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632471</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632471</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232471</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m04072</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Datenbank-Verschlüsselung</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232471</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 4.72</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232471</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>Z</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1098</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632459</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632459</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232459</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02135</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Gesicherte Datenübernahme in eine Datenbank</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232459</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.135</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232458</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Umsetzung</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>C</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1132</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632464</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632464</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232464</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02128</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Zugangskontrolle einer Datenbank</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232464</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.128</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232464</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1285</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632472</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632472</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232471</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m05117</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Integration eines Datenbank-Servers in ein Sicherheitsgateway</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232472</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 5.117</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232471</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>Z</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1336</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632459</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632459</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232459</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m04007</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Änderung voreingestellter Passwörter</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232459</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 4.7</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232459</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Umsetzung</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>A</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_962</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632463</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632462</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232462</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m02065</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Kontrolle der Wirksamkeit der Benutzer-Trennung am IT-System</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232463</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 2.65</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232462</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Betrieb</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>C</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1183</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                        <children>
+                            <syncAttribute>
+<name>mnums_naechsterevisionam</name>
+<value>1466954632457</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_umsetzungbis</name>
+<value>1409066632457</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_nachberfolgt</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_frist</name>
+<value>1403796232457</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_url</name>
+<value>m05058</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_status</name>
+<value>0</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_name</name>
+<value>Auswahl und Installation von Datenbankschnittstellen-Treibern</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_stand</name>
+<value>2013</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_letzterevisionam</name>
+<value>1403796232457</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_id</name>
+<value>M 5.58</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_auditam</name>
+<value>1403796232457</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_lebenszyklus</name>
+<value>Planung und Konzeption</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_siegel</name>
+<value>B</value>
+                            </syncAttribute>
+                            <syncAttribute>
+<name>mnums_gsaudit_abweichung</name>
+<value>0</value>
+                            </syncAttribute>
+                            <extId>ENTITY_1149</extId>
+                            <extObjectType>mnums</extObjectType>
+                        </children>
+                    </children>
+                </children>
+            </children>
+            <children>
+                <extId>ENTITY_9f96a996-5106-4218-8e2e-dea1633bd97f</extId>
+                <extObjectType>tkkategorie</extObjectType>
+            </children>
+            <children>
+                <extId>ENTITY_f4aaab0d-243b-456c-bc6f-b1102e46492c</extId>
+                <extObjectType>clientskategorie</extObjectType>
+            </children>
+            <children>
+                <extId>ENTITY_2c917802-cea0-4893-aaaf-d6e428273135</extId>
+                <extObjectType>gebaeudekategorie</extObjectType>
+                <children>
+                    <syncAttribute>
+                        <name>gebaeude_tag</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_erlaeuterung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_anzahl</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_integritaet_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_vertraulichkeit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_risikoanalyse_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_name</name>
+                        <value>Gebäude4</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_kuerzel</name>
+                        <value>G-4</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_verfuegbarkeit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_verfuegbarkeit_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_vertraulichkeit_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_risikoanalyse</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_dokument</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_ergaenzendeanalyse</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_integritaet</name>
+                        <value></value>
+                    </syncAttribute>
+                    <extId>ENTITY_4615</extId>
+                    <extObjectType>gebaeude</extObjectType>
+                </children>
+                <children>
+                    <syncAttribute>
+                        <name>gebaeude_erlaeuterung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_tag</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_anzahl</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_integritaet_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_vertraulichkeit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_risikoanalyse_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_name</name>
+                        <value>Gebäude3</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_kuerzel</name>
+                        <value>G-3</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_verfuegbarkeit_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_verfuegbarkeit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_vertraulichkeit_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_risikoanalyse</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_dokument</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_ergaenzendeanalyse</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_integritaet</name>
+                        <value></value>
+                    </syncAttribute>
+                    <extId>ENTITY_4498</extId>
+                    <extObjectType>gebaeude</extObjectType>
+                </children>
+                <children>
+                    <syncAttribute>
+                        <name>gebaeude_erlaeuterung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_tag</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_anzahl</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_integritaet_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_vertraulichkeit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_risikoanalyse_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_name</name>
+                        <value>Gebäude1</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_kuerzel</name>
+                        <value>G-1</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_verfuegbarkeit_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_verfuegbarkeit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_vertraulichkeit_begruendung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_risikoanalyse</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_dokument</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_ergaenzendeanalyse</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>gebaeude_integritaet</name>
+                        <value></value>
+                    </syncAttribute>
+                    <extId>ENTITY_843</extId>
+                    <extObjectType>gebaeude</extObjectType>
+                </children>
+            </children>
+            <children>
+                <extId>ENTITY_cd96e9b6-0201-4755-b5f9-2ba6b43e453a</extId>
+                <extObjectType>personkategorie</extObjectType>
+                <children>
+                    <syncAttribute>
+                        <name>person_telefon</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>nachname</name>
+                        <value>Koderman</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_orgeinheit</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_email</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>vorname</name>
+                        <value>Alex</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_tag</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_anzahl</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_dokument</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_anrede</name>
+                        <value>person_anrede_none</value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_erlaeuterung</name>
+                        <value></value>
+                    </syncAttribute>
+                    <syncAttribute>
+                        <name>person_kuerzel</name>
+                        <value>ak</value>
+                    </syncAttribute>
+                    <extId>ENTITY_786</extId>
+                    <extObjectType>person</extObjectType>
+                </children>
+            </children>
+            <children>
+                <extId>ENTITY_5d2e48f5-6db5-4d81-a48e-3147d95fb7a0</extId>
+                <extObjectType>sonstitkategorie</extObjectType>
+            </children>
+        </syncObject>
+    </syncData>
+    <ns2:syncMapping>
+        <ns2:mapObjectType extId="personengruppen" intId="personengruppen">
+            <ns2:mapAttributeType extId="pg_betroffene" intId="pg_betroffene"/>
+            <ns2:mapAttributeType extId="pg_sonstbetr" intId="pg_sonstbetr"/>
+            <ns2:mapAttributeType extId="pg_empfaenger" intId="pg_empfaenger"/>
+            <ns2:mapAttributeType extId="pg_ausserhalbeu" intId="pg_ausserhalbeu"/>
+            <ns2:mapAttributeType extId="pg_sonstempf" intId="pg_sonstempf"/>
+            <ns2:mapAttributeType extId="pg_anmerkungempfaenger" intId="pg_anmerkungempfaenger"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="verantwortlichestelle" intId="verantwortlichestelle">
+            <ns2:mapAttributeType extId="vs_it_link" intId="vs_it_link"/>
+            <ns2:mapAttributeType extId="vs_fachl_link" intId="vs_fachl_link"/>
+            <ns2:mapAttributeType extId="vs_abteilung_link" intId="vs_abteilung_link"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="person" intId="person">
+            <ns2:mapAttributeType extId="person_telefon" intId="person_telefon"/>
+            <ns2:mapAttributeType extId="nachname" intId="nachname"/>
+            <ns2:mapAttributeType extId="person_orgeinheit" intId="person_orgeinheit"/>
+            <ns2:mapAttributeType extId="person_email" intId="person_email"/>
+            <ns2:mapAttributeType extId="person_tag" intId="person_tag"/>
+            <ns2:mapAttributeType extId="vorname" intId="vorname"/>
+            <ns2:mapAttributeType extId="person_anzahl" intId="person_anzahl"/>
+            <ns2:mapAttributeType extId="person_rollen" intId="person_rollen"/>
+            <ns2:mapAttributeType extId="person_dokument" intId="person_dokument"/>
+            <ns2:mapAttributeType extId="person_anrede" intId="person_anrede"/>
+            <ns2:mapAttributeType extId="person_erlaeuterung" intId="person_erlaeuterung"/>
+            <ns2:mapAttributeType extId="person_kuerzel" intId="person_kuerzel"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="server" intId="server">
+            <ns2:mapAttributeType extId="server_anzahl" intId="server_anzahl"/>
+            <ns2:mapAttributeType extId="server_name" intId="server_name"/>
+            <ns2:mapAttributeType extId="server_netadr" intId="server_netadr"/>
+            <ns2:mapAttributeType extId="server_aufstellungsort" intId="server_aufstellungsort"/>
+            <ns2:mapAttributeType extId="server_dokument" intId="server_dokument"/>
+            <ns2:mapAttributeType extId="server_admin_link" intId="server_admin_link"/>
+            <ns2:mapAttributeType extId="server_plattform" intId="server_plattform"/>
+            <ns2:mapAttributeType extId="server_kuerzel" intId="server_kuerzel"/>
+            <ns2:mapAttributeType extId="server_tag" intId="server_tag"/>
+            <ns2:mapAttributeType extId="server_anwender_link" intId="server_anwender_link"/>
+            <ns2:mapAttributeType extId="server_status" intId="server_status"/>
+            <ns2:mapAttributeType extId="server_erlaeuterung" intId="server_erlaeuterung"/>
+            <ns2:mapAttributeType extId="server_vertraulichkeit" intId="server_vertraulichkeit"/>
+            <ns2:mapAttributeType extId="server_verfuegbarkeit" intId="server_verfuegbarkeit"/>
+            <ns2:mapAttributeType extId="server_integritaet" intId="server_integritaet"/>
+            <ns2:mapAttributeType extId="server_vertraulichkeit_begruendung" intId="server_vertraulichkeit_begruendung"/>
+            <ns2:mapAttributeType extId="server_verfuegbarkeit_begruendung" intId="server_verfuegbarkeit_begruendung"/>
+            <ns2:mapAttributeType extId="server_integritaet_begruendung" intId="server_integritaet_begruendung"/>
+            <ns2:mapAttributeType extId="server_ergaenzendeanalyse" intId="server_ergaenzendeanalyse"/>
+            <ns2:mapAttributeType extId="server_risikoanalyse" intId="server_risikoanalyse"/>
+            <ns2:mapAttributeType extId="server_risikoanalyse_begruendung" intId="server_risikoanalyse_begruendung"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="datenverarbeitung" intId="datenverarbeitung">
+            <ns2:mapAttributeType extId="dv_kategorie" intId="dv_kategorie"/>
+            <ns2:mapAttributeType extId="dv_kategorie_sonst" intId="dv_kategorie_sonst"/>
+            <ns2:mapAttributeType extId="dv_herkunft" intId="dv_herkunft"/>
+            <ns2:mapAttributeType extId="dv_herkunft_sonst" intId="dv_herkunft_sonst"/>
+            <ns2:mapAttributeType extId="dv_rechtsgrundlage" intId="dv_rechtsgrundlage"/>
+            <ns2:mapAttributeType extId="dv_rechtsgrundlage_sonst" intId="dv_rechtsgrundlage_sonst"/>
+            <ns2:mapAttributeType extId="dv_rechtsgrundlage_erl" intId="dv_rechtsgrundlage_erl"/>
+            <ns2:mapAttributeType extId="dv_loeschfrist" intId="dv_loeschfrist"/>
+            <ns2:mapAttributeType extId="dv_loeschfrist_sonst" intId="dv_loeschfrist_sonst"/>
+            <ns2:mapAttributeType extId="dv_loeschfrist_erl" intId="dv_loeschfrist_erl"/>
+            <ns2:mapAttributeType extId="dv_loeschfrist_verfahren" intId="dv_loeschfrist_verfahren"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="anwendung" intId="anwendung">
+            <ns2:mapAttributeType extId="anwendung_erlaeuterung" intId="anwendung_erlaeuterung"/>
+            <ns2:mapAttributeType extId="anwendung_tag" intId="anwendung_tag"/>
+            <ns2:mapAttributeType extId="anwendung_kuerzel" intId="anwendung_kuerzel"/>
+            <ns2:mapAttributeType extId="anwendung_dokument" intId="anwendung_dokument"/>
+            <ns2:mapAttributeType extId="anwendung_persbez" intId="anwendung_persbez"/>
+            <ns2:mapAttributeType extId="anwendung_status" intId="anwendung_status"/>
+            <ns2:mapAttributeType extId="anwendung_name" intId="anwendung_name"/>
+            <ns2:mapAttributeType extId="anwendung_benutzer_link" intId="anwendung_benutzer_link"/>
+            <ns2:mapAttributeType extId="anwendung_vertraulichkeit" intId="anwendung_vertraulichkeit"/>
+            <ns2:mapAttributeType extId="anwendung_verfuegbarkeit" intId="anwendung_verfuegbarkeit"/>
+            <ns2:mapAttributeType extId="anwendung_integritaet" intId="anwendung_integritaet"/>
+            <ns2:mapAttributeType extId="anwendung_vertraulichkeit_begruendung" intId="anwendung_vertraulichkeit_begruendung"/>
+            <ns2:mapAttributeType extId="anwendung_verfuegbarkeit_begruendung" intId="anwendung_verfuegbarkeit_begruendung"/>
+            <ns2:mapAttributeType extId="anwendung_integritaet_begruendung" intId="anwendung_integritaet_begruendung"/>
+            <ns2:mapAttributeType extId="anwendung_prozess" intId="anwendung_prozess"/>
+            <ns2:mapAttributeType extId="anwendung_prozess_informationen" intId="anwendung_prozess_informationen"/>
+            <ns2:mapAttributeType extId="anwendung_eigentümer_link" intId="anwendung_eigentümer_link"/>
+            <ns2:mapAttributeType extId="anwendung_prozessbezug" intId="anwendung_prozessbezug"/>
+            <ns2:mapAttributeType extId="anwendung_prozessbezug_begruendung" intId="anwendung_prozessbezug_begruendung"/>
+            <ns2:mapAttributeType extId="anwendung_ergaenzendeanalyse" intId="anwendung_ergaenzendeanalyse"/>
+            <ns2:mapAttributeType extId="anwendung_risikoanalyse" intId="anwendung_risikoanalyse"/>
+            <ns2:mapAttributeType extId="anwendung_risikoanalyse_begruendung" intId="anwendung_risikoanalyse_begruendung"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="bstumsetzung" intId="bstumsetzung">
+            <ns2:mapAttributeType extId="bstumsetzung_stand" intId="bstumsetzung_stand"/>
+            <ns2:mapAttributeType extId="bstumsetzung_erfasstam" intId="bstumsetzung_erfasstam"/>
+            <ns2:mapAttributeType extId="bstumsetzung_url" intId="bstumsetzung_url"/>
+            <ns2:mapAttributeType extId="bstumsetzung_name" intId="bstumsetzung_name"/>
+            <ns2:mapAttributeType extId="eigene_bstumsetzung_beschreibung" intId="eigene_bstumsetzung_beschreibung"/>
+            <ns2:mapAttributeType extId="bstumsetzung_dokument" intId="bstumsetzung_dokument"/>
+            <ns2:mapAttributeType extId="bstumsetzung_erfasstdurch_link" intId="bstumsetzung_erfasstdurch_link"/>
+            <ns2:mapAttributeType extId="bstumsetzung_erlaeuterung" intId="bstumsetzung_erlaeuterung"/>
+            <ns2:mapAttributeType extId="bstumsetzung_encoding" intId="bstumsetzung_encoding"/>
+            <ns2:mapAttributeType extId="bstumsetzung_gespraechspartner_link" intId="bstumsetzung_gespraechspartner_link"/>
+            <ns2:mapAttributeType extId="bstumsetzung_nr" intId="bstumsetzung_nr"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="itverbund" intId="itverbund">
+            <ns2:mapAttributeType extId="itverbund_mitarbeiter" intId="itverbund_mitarbeiter"/>
+            <ns2:mapAttributeType extId="itverbund_tag" intId="itverbund_tag"/>
+            <ns2:mapAttributeType extId="itverbund_name" intId="itverbund_name"/>
+            <ns2:mapAttributeType extId="itverbund_dokument" intId="itverbund_dokument"/>
+            <ns2:mapAttributeType extId="itverbund_organisation" intId="itverbund_organisation"/>
+            <ns2:mapAttributeType extId="itverbund_geltungsbereich" intId="itverbund_geltungsbereich"/>
+            <ns2:mapAttributeType extId="itverbund_autor" intId="itverbund_autor"/>
+            <ns2:mapAttributeType extId="itverbund_version" intId="itverbund_version"/>
+            <ns2:mapAttributeType extId="itverbund_freigabe" intId="itverbund_freigabe"/>
+            <ns2:mapAttributeType extId="itverbund_normal_gesetze" intId="itverbund_normal_gesetze"/>
+            <ns2:mapAttributeType extId="itverbund_normal_datenschutz" intId="itverbund_normal_datenschutz"/>
+            <ns2:mapAttributeType extId="itverbund_normal_leib" intId="itverbund_normal_leib"/>
+            <ns2:mapAttributeType extId="itverbund_normal_aufgaben" intId="itverbund_normal_aufgaben"/>
+            <ns2:mapAttributeType extId="itverbund_normal_wirkung" intId="itverbund_normal_wirkung"/>
+            <ns2:mapAttributeType extId="itverbund_normal_finanzen" intId="itverbund_normal_finanzen"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_gesetze" intId="itverbund_hoch_gesetze"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_datenschutz" intId="itverbund_hoch_datenschutz"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_leib" intId="itverbund_hoch_leib"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_aufgaben" intId="itverbund_hoch_aufgaben"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_wirkung" intId="itverbund_hoch_wirkung"/>
+            <ns2:mapAttributeType extId="itverbund_hoch_finanzen" intId="itverbund_hoch_finanzen"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_gesetze" intId="itverbund_sehrhoch_gesetze"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_datenschutz" intId="itverbund_sehrhoch_datenschutz"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_leib" intId="itverbund_sehrhoch_leib"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_aufgaben" intId="itverbund_sehrhoch_aufgaben"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_wirkung" intId="itverbund_sehrhoch_wirkung"/>
+            <ns2:mapAttributeType extId="itverbund_sehrhoch_finanzen" intId="itverbund_sehrhoch_finanzen"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="gebaeude" intId="gebaeude">
+            <ns2:mapAttributeType extId="gebaeude_erlaeuterung" intId="gebaeude_erlaeuterung"/>
+            <ns2:mapAttributeType extId="gebaeude_tag" intId="gebaeude_tag"/>
+            <ns2:mapAttributeType extId="gebaeude_anzahl" intId="gebaeude_anzahl"/>
+            <ns2:mapAttributeType extId="gebaeude_name" intId="gebaeude_name"/>
+            <ns2:mapAttributeType extId="gebaeude_kuerzel" intId="gebaeude_kuerzel"/>
+            <ns2:mapAttributeType extId="gebaeude_dokument" intId="gebaeude_dokument"/>
+            <ns2:mapAttributeType extId="gebaeude_vertraulichkeit" intId="gebaeude_vertraulichkeit"/>
+            <ns2:mapAttributeType extId="gebaeude_verfuegbarkeit" intId="gebaeude_verfuegbarkeit"/>
+            <ns2:mapAttributeType extId="gebaeude_integritaet" intId="gebaeude_integritaet"/>
+            <ns2:mapAttributeType extId="gebaeude_vertraulichkeit_begruendung" intId="gebaeude_vertraulichkeit_begruendung"/>
+            <ns2:mapAttributeType extId="gebaeude_verfuegbarkeit_begruendung" intId="gebaeude_verfuegbarkeit_begruendung"/>
+            <ns2:mapAttributeType extId="gebaeude_integritaet_begruendung" intId="gebaeude_integritaet_begruendung"/>
+            <ns2:mapAttributeType extId="gebaeude_ergaenzendeanalyse" intId="gebaeude_ergaenzendeanalyse"/>
+            <ns2:mapAttributeType extId="gebaeude_risikoanalyse" intId="gebaeude_risikoanalyse"/>
+            <ns2:mapAttributeType extId="gebaeude_risikoanalyse_begruendung" intId="gebaeude_risikoanalyse_begruendung"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="verarbeitungsangaben" intId="verarbeitungsangaben">
+            <ns2:mapAttributeType extId="va_zweck" intId="va_zweck"/>
+            <ns2:mapAttributeType extId="va_status" intId="va_status"/>
+            <ns2:mapAttributeType extId="va_hwsw" intId="va_hwsw"/>
+            <ns2:mapAttributeType extId="va_art" intId="va_art"/>
+            <ns2:mapAttributeType extId="va_beschreibung" intId="va_beschreibung"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="mnums" intId="mnums">
+            <ns2:mapAttributeType extId="mnums_verantwortlichinit" intId="mnums_verantwortlichinit"/>
+            <ns2:mapAttributeType extId="mnums_beschreibung" intId="mnums_beschreibung"/>
+            <ns2:mapAttributeType extId="mnums_verantwortlichums" intId="mnums_verantwortlichums"/>
+            <ns2:mapAttributeType extId="mnums_id" intId="mnums_id"/>
+            <ns2:mapAttributeType extId="mnums_dokument" intId="mnums_dokument"/>
+            <ns2:mapAttributeType extId="mnums_lebenszyklus" intId="mnums_lebenszyklus"/>
+            <ns2:mapAttributeType extId="mnums_url" intId="mnums_url"/>
+            <ns2:mapAttributeType extId="mnums_siegel" intId="mnums_siegel"/>
+            <ns2:mapAttributeType extId="mnums_name" intId="mnums_name"/>
+            <ns2:mapAttributeType extId="mnums_stand" intId="mnums_stand"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_auditor" intId="mnums_gsaudit_auditor"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_befragt" intId="mnums_gsaudit_befragt"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_methode" intId="mnums_gsaudit_methode"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_fragen" intId="mnums_gsaudit_fragen"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_beobachtung" intId="mnums_gsaudit_beobachtung"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_bericht" intId="mnums_gsaudit_bericht"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_auditam" intId="mnums_gsaudit_auditam"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_status" intId="mnums_gsaudit_status"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_abweichung" intId="mnums_gsaudit_abweichung"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_frist" intId="mnums_gsaudit_frist"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_nachberfolgt" intId="mnums_gsaudit_nachberfolgt"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_nachb" intId="mnums_gsaudit_nachb"/>
+            <ns2:mapAttributeType extId="mnums_gsaudit_votum" intId="mnums_gsaudit_votum"/>
+            <ns2:mapAttributeType extId="mnums_erlaeuterung" intId="mnums_erlaeuterung"/>
+            <ns2:mapAttributeType extId="mnums_umsetzung" intId="mnums_umsetzung"/>
+            <ns2:mapAttributeType extId="mnums_umsetzungbis" intId="mnums_umsetzungbis"/>
+            <ns2:mapAttributeType extId="mnums_umsetzungdurch_link" intId="mnums_umsetzungdurch_link"/>
+            <ns2:mapAttributeType extId="mnums_initdurch_link" intId="mnums_initdurch_link"/>
+            <ns2:mapAttributeType extId="mnums_kosten_ptfix" intId="mnums_kosten_ptfix"/>
+            <ns2:mapAttributeType extId="mnums_kosten_ptvar" intId="mnums_kosten_ptvar"/>
+            <ns2:mapAttributeType extId="mnums_kosten_ptperiod" intId="mnums_kosten_ptperiod"/>
+            <ns2:mapAttributeType extId="mnums_kosten_sachfix" intId="mnums_kosten_sachfix"/>
+            <ns2:mapAttributeType extId="mnums_kosten_sachvar" intId="mnums_kosten_sachvar"/>
+            <ns2:mapAttributeType extId="mnums_kosten_sachperiod" intId="mnums_kosten_sachperiod"/>
+            <ns2:mapAttributeType extId="mnums_letzterevisiondurch_link" intId="mnums_letzterevisiondurch_link"/>
+            <ns2:mapAttributeType extId="mnums_letzterevisionam" intId="mnums_letzterevisionam"/>
+            <ns2:mapAttributeType extId="mnums_bemerkungen" intId="mnums_bemerkungen"/>
+            <ns2:mapAttributeType extId="mnums_naechsterevisiondurch_link" intId="mnums_naechsterevisiondurch_link"/>
+            <ns2:mapAttributeType extId="mnums_naechsterevisionam" intId="mnums_naechsterevisionam"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="stellungnahmedsb" intId="stellungnahmedsb">
+            <ns2:mapAttributeType extId="stellungnahmedsb_vorpruefung" intId="stellungnahmedsb_vorpruefung"/>
+            <ns2:mapAttributeType extId="stellungnahmedsb_auflagen" intId="stellungnahmedsb_auflagen"/>
+            <ns2:mapAttributeType extId="stellungnahmedsb_pbdaten" intId="stellungnahmedsb_pbdaten"/>
+            <ns2:mapAttributeType extId="stellungnahmedsb_pruefungfreigabe" intId="stellungnahmedsb_pruefungfreigabe"/>
+            <ns2:mapAttributeType extId="stellungnahmedsb_hinweise" intId="stellungnahmedsb_hinweise"/>
+        </ns2:mapObjectType>
+        <ns2:mapObjectType extId="anwendungenkategorie" intId="anwendungenkategorie"/>
+        <ns2:mapObjectType extId="tkkategorie" intId="tkkategorie"/>
+        <ns2:mapObjectType extId="netzkategorie" intId="netzkategorie"/>
+        <ns2:mapObjectType extId="raeumekategorie" intId="raeumekategorie"/>
+        <ns2:mapObjectType extId="sonstitkategorie" intId="sonstitkategorie"/>
+        <ns2:mapObjectType extId="clientskategorie" intId="clientskategorie"/>
+        <ns2:mapObjectType extId="serverkategorie" intId="serverkategorie"/>
+        <ns2:mapObjectType extId="personkategorie" intId="personkategorie"/>
+        <ns2:mapObjectType extId="gebaeudekategorie" intId="gebaeudekategorie"/>
+    </ns2:syncMapping>
+</ns3:syncRequest>

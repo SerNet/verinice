@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<cheatsheet title="GSTOOL: getrennte Datenbank (.MDF)">
+
+  <intro>
+    <description>
+      In diesem Tutorial wird beschrieben, wie Sie eine aus dem GSTOOL gesicherte Datenbank-Datei,
+      die im MDF-Dateiformat vorliegt, in verinice importieren können. Dieser Prozess funktioniert
+      analog zum Importieren von Daten aus einer BAK-Datei, nur dass in diesem Fall bereits eine
+      MDF-Datei vorliegt.
+    </description>
+  </intro>
+  
+  <item title="Einstellungen für den MDF-Datei-Import zum Anhängen einer Datenbank">
+    <description>
+      Zuerst müssen Sie die Einstellungen für die anzuhängende Datenbankdatei vornehmen. Wählen Sie
+      dafür in der Menüleiste <b>Bearbeiten > Einstellungen...</b> und dort <b>GSTOOL Import >
+      Datenbank verbinden</b>.
+      <br /><br />
+      Jetzt können Sie auf der rechten Seite des Menüfensters die Einstellungen vornehmen. Sollten Sie
+      das Feld <b>GSTOOL-Datei anhängen</b>nicht ausfüllen, wird die Datenbank des GSTOOLs angehängt,
+      deren Konnektivität Sie über den Menüpunkt <b>GSTOOL Import</b> einstellen. Wenn Sie das Feld
+      dagegen mit dem Dateinamen der anzuhängenden Datenbank füllen, werden die Daten aus dieser
+      Datenbankdatei angehängt. Diese muss dann im MDF-Format vorliegen. Sie können dazu auch den
+      <b>Durchsuchen...</b>-Button verwenden. Im zweiten Feld <b>Datenbank anhängen als Name</b>
+      müssen Sie den Namen der anzuhängenden Datenbank angeben.
+      <br /><br />
+      Nun können Sie die Datenbank mit Klick auf den Button <b>Datenbank anhängen</b> anhängen. :)
+    </description>
+  </item>
+  
+  <item title="Einstellungen vervollständigen, Konnektivität prüfen">
+    <description>
+      Jetzt müssen Sie im Menüpunkt <b>GSTOOL Import</b> den neuen Dateinamen Ihrer angehängten Datenbank
+      angeben. Im ersten Feld ersetzen Sie den vorherigen Datenbanknamen gegen den neuen (nach dem letzten
+      Slash). Prüfen Sie die Konnektivität mit Hilfe des Buttons <b>Teste Verbindung</b>.
+      Der letzte Schritt ist der eigentliche Import-Prozess, der bereits im Tutorial
+      <b>Direkter Import</b> erklärt wird.
+    </description>
+  </item>
+  
+</cheatsheet> 

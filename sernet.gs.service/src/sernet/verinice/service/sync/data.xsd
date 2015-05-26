@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:data="http://www.sernet.de/sync/data"
+    targetNamespace="http://www.sernet.de/sync/data"
+    elementFormDefault="qualified">
+
+    <xsd:element
+        name="syncData">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element
+                    name="syncObject"
+                    type="data:syncObject"
+                    maxOccurs="unbounded" />
+                <xsd:element
+                    name="syncLink"
+                    type="data:syncLink"
+                    minOccurs="0"
+                    maxOccurs="unbounded" />
+            </xsd:sequence>
+
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:complexType
+        name="syncObject">
+        <xsd:sequence>
+            <xsd:element
+                name="syncAttribute"
+                maxOccurs="unbounded"
+                type="data:syncAttribute" />
+            <xsd:element
+                name="extId"
+                type="xsd:string"
+                minOccurs="1"
+                nillable="false" />
+            <xsd:element
+                name="extObjectType"
+                type="xsd:string"
+                minOccurs="1"
+                nillable="false" />
+            <xsd:element
+                name="icon"
+                type="xsd:string"
+                minOccurs="0"
+                maxOccurs="1"
+                nillable="false" />
+            <xsd:element
+                name="children"
+                minOccurs="0"
+                maxOccurs="unbounded"
+                type="data:syncObject" />
+            <xsd:element
+                name="file"
+                minOccurs="0"
+                maxOccurs="unbounded"
+                type="data:syncFile" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType
+        name="syncFile">
+        <xsd:sequence>
+            <xsd:element
+                name="syncAttribute"
+                maxOccurs="unbounded"
+                type="data:syncAttribute" />
+            <xsd:element
+                name="extId"
+                type="xsd:string"
+                minOccurs="1"
+                nillable="false"/>
+            <xsd:element
+                name="file"
+                type="xsd:string"
+                minOccurs="1"
+                nillable="false" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType
+        name="syncAttribute">
+        <xsd:sequence>
+            <xsd:element
+                name="name"
+                type="xsd:string"
+                minOccurs="1"
+                maxOccurs="1" />
+            <!-- The verinice object system consistently treats property values as lists. This
+            is hereby reflected. One valued properties simply use only one entry in the
+            value list. 
+            -->
+            <xsd:element
+                name="value"
+                type="xsd:string"
+                minOccurs="0"
+                maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType
+        name="syncLink">
+        <xsd:sequence>
+            <xsd:element
+                name="dependant"
+                type="xsd:string"
+                minOccurs="1"
+                maxOccurs="1"
+                nillable="false" />
+            <xsd:element
+                name="dependency"
+                type="xsd:string"
+                minOccurs="1"
+                maxOccurs="1"
+                nillable="false" />
+            <xsd:element
+                name="relationId"
+                type="xsd:string"
+                minOccurs="1"
+                maxOccurs="1"
+                nillable="false" />
+            <xsd:element
+                name="comment"
+                type="xsd:string"
+                minOccurs="0"
+                maxOccurs="1"
+                nillable="false" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+</xsd:schema>

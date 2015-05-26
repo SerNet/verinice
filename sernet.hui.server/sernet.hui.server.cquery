@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cq:componentQuery xmlns:cq="http://www.eclipse.org/buckminster/CQuery-1.0" 
+	resourceMap="http://svn.verinice.org/svnroot/BRANCHES/1.4/sernet.hui.server/verinice.rmap" >
+	<cq:rootRequest name="sernet.hui.server" 
+    	componentType="osgi.bundle" />
+</cq:componentQuery>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="gsm-ism-execute" name="Greenbone ISM Execute Task" version="3" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jbpm.org/4.4/jpdl jpdl.xsd">
+   <description>Workflow to manage Greenbone vulnerabilities resolutions.</description>
+   
+   <variable init-expr="TASK_UNREAD" name="TASK_READ_STATUS" type="string"/> 
+   
+   <start g="452,43,80,40" name="start">
+      <transition to="gsm.ism.execute.task.execute"/>
+   </start>
+
+       <!--   Use this for production -->
+  <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="7 days" g="362,161,227,52" name="gsm.ism.execute.task.execute">
+      <on event="timeout" >
+         <!-- 170 hours: 7 days + 1 hour -->
+         <timer duedate="7 days" repeat="170 hours"/>
+         <event-listener class="sernet.verinice.bpm.Reminder">
+            <field name="taskType">
+               <string value="gsm.ism.execute.task.execute"/>
+            </field>
+         </event-listener>
+      </on>
+      <transition g="5,-4" name="gsm.ism.execute.trans.complete" to="java.deleteAssetScenarioLinks"/>
+      <transition g="402,232;402,284:-259,-5" name="gsm.ism.execute.trans.autocomplete" to="java.deleteAssetScenarioLinks">
+         <timer duedate="21 days"/>
+      </transition>
+   </task>
+
+   <!-- Use this for DEBUGGING only -->
+<!--    <task assignee="#{ISA_ASSIGNEE_NAME}" duedate="2 minutes" g="362,161,227,52" name="gsm.ism.execute.task.execute"> -->
+<!--       <on event="timeout" > -->
+<!--          <timer duedate="2 minutes" repeat="3 hour"/> -->
+<!--          <event-listener class="sernet.verinice.bpm.Reminder"> -->
+<!--             <field name="taskType"> -->
+<!--                <string value="gsm.ism.execute.task.execute"/> -->
+<!--             </field> -->
+<!--          </event-listener> -->
+<!--       </on> -->
+<!--       <transition g="5,-4" name="gsm.ism.execute.trans.complete" to="java.deleteAssetScenarioLinks"/> -->
+<!--       <transition g="402,232;402,284:-259,-5" name="gsm.ism.execute.trans.autocomplete" to="java.deleteAssetScenarioLinks"> -->
+<!--          <timer duedate="6 minutes"/> -->
+<!--       </transition> -->
+<!--    </task> -->
+   
+   <java class="sernet.verinice.bpm.gsm.JavaProcessTasks" g="349,302,253,37" method="deleteAssetScenarioLinks" name="java.deleteAssetScenarioLinks">
+      <arg><object expr="#{execution.id}"/></arg>
+      <transition to="end"/>
+   </java>
+   
+   <end g="452,393,80,40" name="end"/>
+
+</process>

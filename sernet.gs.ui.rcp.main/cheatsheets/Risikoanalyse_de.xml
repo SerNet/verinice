@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?> 
+
+<cheatsheet title="IT-Grundschutz: Risikoanalyse">
+
+  <intro>
+    <description>
+      In diesem Tutorial lernen Sie, wie Sie Risikoanalysen in verinice durchführen.
+    </description>
+  </intro>
+
+  <item title="Neue Risikoanalyse">
+    <description>
+      Für jedes Zielobjekt, bei dem als Ergebnis der ergänzenden Sicherheitsanalyse "nötig"
+      eingetragen wurde, ist nun die Risikoanalyse durchzuführen.
+      <br /><br />
+      Klicken Sie mit der rechten Maustaste auf das zuvor angelegte Buchhaltungssystem. Wählen Sie
+      den Menüpunkt <b>Risikoanalyse ...</b>. Nun erhalten Sie im angezeigten Fenster einen
+      Wizard, welcher Sie bei der Durchführung der Risikoanalyse unterstützt.
+    </description>
+  </item>
+
+  <item title="Gefährdungsübersicht">
+    <description>
+      Zunächst ist auszuwählen, welche Gefährdungen betrachtet werden müssen. Aus der Liste aller
+      Gefährdungen aus den Grundschutzkatalogen sind bereits alle ausgewählt, die über die
+      Bausteinzuordnung mit dem Zielobjekt verbunden sind.
+      <br /><br />
+      Wählen Sie einige zusätzliche Gefährdungen für den Buchhaltungsserver aus. Dabei hilft Ihnen
+      die Suchfunktion, um zu Stichworten geeignete vorhandene Gefährdungen anzuzeigen.
+    </description>
+  </item>
+
+
+  <item title="Eigene Gefährdungen">
+    <description>
+      Ein wichtiger Aspekt bei der Risikoanalyse ist das Erarbeiten von individuellen,
+      organisationsspezifischen Gefährdungen.
+      <br /><br />
+      Zur besseren Übersichtlichkeit der eigenen Gefährdungen wählen Sie zunächst die Checkbox <b>nur
+      eigene Gefährdungen anzeigen</b>. Eine eigene Gefährdung legen Sie an, indem Sie auf den Button
+      <b>neu</b> im Bereich "Eigene Gefährdungen" klicken.
+    </description>
+  </item>
+
+  <item title="Gefährdung anlegen">
+    <description>
+      Geben Sie der Gefährdung z.&#160;B. die Nummer "G-Z1" und den Namen "Gesetzeswidrige
+      Veränderung von rechnungslegungsrelevanten Daten".
+      <br /><br />
+      Kopieren Sie den folgenden Text als Beschreibung: "Auf dem Buchhaltungsserver befinden sich
+      rechnungslegungsrelevante Daten. Daher müssen die Anforderungen aus dem HGB bezüglich der
+      Vollständigkeit, Richtigkeit, Zeitgerechtheit, Ordnung, Nachvollziehbarkeit und
+      Unveränderlichkeit sichergestellt sein. Ein nicht korrekt durchgeführtes Verändern von Daten
+      kann einen Gesetzesverstoß zur Folge haben und zur Einschränkung oder zum Versagen des
+      Bestätigungsvermerks durch den Wirtschaftsprüfer bei der Jahresabschlussprüfung führen
+      (siehe IDW PS 330, IDW RS FAIT 1, IDW PH 9.330.1 und andere)."
+      <br /><br />
+      Drücken Sie auf den Button <b>OK</b>, um das Anlegen dieser eigenen Gefährdung abzuschließen.
+      Die angelegte Gefährdung erscheint jetzt in der Gefährdungsübersicht.
+      <br /><br />
+      Nachdem Sie alle notwendigen Gefährdungen erzeugt und auch ausgewählt haben, drücken Sie den
+      Button "Weiter".
+    </description>
+  </item>
+
+  <item title="Zu betrachtende Gefährdungen auswählen">
+    <description>
+      Nun bekommen Sie im Wizard alle relevanten Gefährdungen angezeigt und müssen
+      diejenigen auswählen (Häkchen rechts), denen <b>nicht</b> ausreichend Rechnung getragen wurde.
+      Diese werden dann weiter betrachtet. Klicken Sie den Button <b>Weiter</b>.
+    </description>
+  </item>
+
+  <item title="Risikobehandlung">
+    <description>
+      Jetzt werden die bisher nicht ausreichend betrachteten Risiken bearbeitet. Klicken Sie
+      in der Spalte "Risikoalternative" auf das jeweilige Feld ihrer Gefährdung. Sie
+      bekommen die vier möglichen Alternativen zur Risikobehandlung zur Auswahl. Wenn Sie
+      ausschließlich die Alternativen B, C und/oder D auswählen, sind Sie fertig.
+      Beenden Sie den Wizard mit dem Button <b>Fertigstellen</b>.
+      <br /><br />
+      Haben Sie dagegen für mindestens ein Risiko die Alternative A ausgewählt, müssen
+      Sie im nächsten Schritt noch die passenden Maßnahmen bearbeiten. Klicken Sie in
+      diesem Fall auf <b>Weiter ></b>.
+    </description>
+  </item>
+
+  <item title="Zusätzliche Maßnahmen">
+    <description>
+      Sie bekommen nun alle Maßnahmen der Grundschutzkataloge angezeigt. Klicken Sie auf
+      <b>neu</b>, um eigene Maßnahmen zu erstellen. Das Erstellen eigener Maßnahmen
+      funktioniert analog zum Erstellen eigener Gefährdungen.
+      <br /><br />
+      Per Drag and Drop können Sie passende Maßnahmen den einzelnen Gefährdungen
+      zuordnen. Klicken Sie zum Schluß auf <b>Fertigstellen</b>. Jetzt schließt sich das
+      Wizard-Fenster und im Grundschutz Modell wird unterhalb des betrachteten Objekts
+      ein neues Risikoanalyse-Objekt in der Baumstruktur angezeigt. Dort können Sie die
+      Maßnahmen wie gewohnt bearbeiten.
+    </description>
+  </item>
+
+</cheatsheet>

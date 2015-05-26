@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:security="http://www.springframework.org/schema/security" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd 
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+
+    <!--
+    The complex security configuration is only needed for the plain server that runs in a servlet container.
+    The bundled server does not need this!  
+    -->
+    
+    <bean id="ldapAuthenticationProvider" class="sernet.gs.server.security.LdapAuthenticationProvider">
+        <security:custom-authentication-provider />
+        <property name="authenticator" ref="ldapAuthenticator" />
+    </bean>
+
+    <!-- LDAP authenticator, transmits passwords in clear text when not using HTTPS -->
+    
+    <bean id="ldapAuthenticator" class="sernet.gs.server.security.LdapAuthenticatorImpl">
+        <property name="contextFactory" ref="contextSource" />
+        <property name="principalPrefix" value="${ldap.prefix}" />
+        <property name="principalSuffix" value="${ldap.suffix}" />
+        <property name="guestUser" value="${ldap.guestuser}" />
+        <property name="entityDao" ref="entityDao" />
+
+        <!-- The following three values are used to hash the password of the fallback admin. -->
+        <property name="adminuser" value="${admin.username}" />
+        <property name="adminpass" value="${admin.password}" />
+        <property name="passwordRealm" value="${veriniceserver.realm}" />
+    </bean>
+    
+    <bean id="contextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
+        <constructor-arg value="${ldap.protocol}://${ldap.server}:${ldap.port}/${ldap.base}" />
+    </bean>
+
+    <!-- Default authentication manager -->
+	<security:authentication-manager alias="authenticationManager" />
+
+    <!-- A programmatic way to access authenticated roles. Its methods are protected against unauthorized access: -->
+    <bean id="authService" class="sernet.gs.server.security.BasicAuthenticationService">
+        <property name="entryPoint" ref="basicProcessingFilterEntryPoint" />
+        <property name="guestUser" value="${ldap.guestuser}" />
+        <property name="adminUsername" value="${admin.username}" />
+        <property name="configurationDao" ref="configurationDao" />
+        <property name="handlingPasswords" value="false" />   
+        <security:intercept-methods>
+            <security:protect method="sernet.gs.server.security.BasicAuthenticationService.getRoles" access="ROLE_USER,ROLE_WEB" />
+            <security:protect method="sernet.gs.server.security.BasicAuthenticationService.hashPassword" access="ROLE_USER,ROLE_WEB" />
+        </security:intercept-methods>
+    </bean>
+    
+    
+    <!-- The filter chain that all HTTP requests go through: -->
+	<bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
+		<security:filter-chain-map path-type="ant">
+			<security:filter-chain pattern="/auth/**" filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
+            <security:filter-chain pattern="/edit/**" filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
+            <security:filter-chain pattern="/todo/**" filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />       
+            <security:filter-chain pattern="/sync/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" /> 
+			<security:filter-chain pattern="/service/**" filters="httpSessionContextIntegrationFilter,basicProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
+		</security:filter-chain-map>
+	</bean>
+    
+    <bean id="httpSessionContextIntegrationFilter" class="org.springframework.security.context.HttpSessionContextIntegrationFilter" />
+
+    <bean id="anonymousAuthFilter" class="org.springframework.security.providers.anonymous.AnonymousProcessingFilter">
+        <property name="key" value="foobar" />
+        <property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS" />
+    </bean>
+
+    <bean id="anonymousAuthenticationProvider" class="org.springframework.security.providers.anonymous.AnonymousAuthenticationProvider">
+        <property name="key" value="foobar" />
+    </bean>
+    
+    <bean id="authenticationProcessingFilter" class="org.springframework.security.ui.webapp.AuthenticationProcessingFilter">
+        <property name="authenticationManager" ref="authenticationManager" />
+        <property name="filterProcessesUrl" value="/auth/j_verinice_security_check" />
+        <property name="defaultTargetUrl" value="/todo/task.jsf" />
+        <property name="authenticationFailureUrl" value="/auth/login-error.jsf" />
+    </bean>
+
+    <!-- HTTP basic auth: -->
+    <bean id="basicProcessingFilter" class="org.springframework.security.ui.basicauth.BasicProcessingFilter">
+        <property name="authenticationManager">
+            <ref bean="authenticationManager" />
+        </property>
+        <property name="authenticationEntryPoint">
+            <ref bean="basicProcessingFilterEntryPoint" />
+        </property>
+    </bean>
+
+    <!-- The basic auth entry point that stores credentials, defines the real etc.: -->
+    <bean id="basicProcessingFilterEntryPoint" class="org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint">
+        <property name="realmName">
+            <value>${veriniceserver.realm}</value>
+        </property>
+    </bean>
+    
+    <bean id="exceptionTranslationFilter" class="org.springframework.security.ui.ExceptionTranslationFilter">
+        <property name="authenticationEntryPoint" ref="basicProcessingFilterEntryPoint" />
+    </bean>
+
+    <bean id="exceptionTranslationFilterWeb" class="org.springframework.security.ui.ExceptionTranslationFilter">
+        <property name="authenticationEntryPoint" ref="authenticationEntryPoint" />
+        <property name="accessDeniedHandler" ref="accessDeniedHandler" />
+    </bean>
+	
+    <bean id="authenticationEntryPoint" class="org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint">
+        <property name="loginFormUrl" value="/auth/login.jsf" />
+        <property name="forceHttps" value="false" />
+    </bean>
+
+    <bean id="accessDeniedHandler" class="org.springframework.security.ui.AccessDeniedHandlerImpl">
+        <property name="errorPage" value="/auth/login-error.jsf" />
+    </bean>
+    
+    <bean id="logoutFilter" class="org.springframework.security.ui.logout.LogoutFilter">
+        <constructor-arg value="/auth/login.jsf" />
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.ui.logout.SecurityContextLogoutHandler" />
+            </list>
+        </constructor-arg>
+        <property name="filterProcessesUrl" value="/auth/j_verinice_logout" />
+    </bean>
+    
+    <bean id="timeoutFilter" class="org.springframework.security.ui.logout.LogoutFilter">
+        <constructor-arg value="/auth/login-timeout.jsf" />
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.ui.logout.SecurityContextLogoutHandler" />
+            </list>
+        </constructor-arg>
+        <property name="filterProcessesUrl" value="/auth/j_verinice_timeout" />
+    </bean>
+    
+    <!-- Protect HTTP access to these paths: -->
+	<bean id="securityInterceptorFilter" class="org.springframework.security.intercept.web.FilterSecurityInterceptor">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="accessDecisionManager" ref="accessDecisionManager" />
+		<property name="objectDefinitionSource">
+			<security:filter-invocation-definition-source>
+				<security:intercept-url pattern="/edit/**" access="ROLE_WEB" />
+				<security:intercept-url pattern="/todo/**" access="ROLE_WEB" />
+                <security:intercept-url pattern="/service/**" access="ROLE_USER" />
+				<security:intercept-url pattern="/sync/**" access="ROLE_USER" />
+			</security:filter-invocation-definition-source>
+		</property>
+	</bean>
+
+	<bean id="accessDecisionManager" class="org.springframework.security.vote.AffirmativeBased">
+		<property name="allowIfAllAbstainDecisions" value="false" />
+		<property name="decisionVoters">
+			<list>
+				<bean class="org.springframework.security.vote.RoleVoter" />
+			</list>
+		</property>
+	</bean>
+
+</beans>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<!-- Runtime-Logger with the around advice: method logRuntime -->
+	<bean id="runtimeLogger" class="sernet.gs.server.RuntimeLogger" />
+
+	<aop:config>
+		<!-- Methods runtime being logged  -->
+		<aop:pointcut id="commandServiceMethods"
+			expression="execution(* sernet.verinice.service.HibernateCommandService.*(..))" />
+		<aop:pointcut id="daoMethods"
+			expression="execution(* sernet.verinice.interfaces.IBaseDao.*(..))" />
+
+		<!-- Connect methods and runtimeLogger -->
+		<aop:aspect id="profilingAspect" ref="runtimeLogger">
+			<aop:around method="logRuntime" pointcut-ref="commandServiceMethods" />
+			<aop:around method="logRuntime" pointcut-ref="daoMethods" />
+		</aop:aspect>
+
+	</aop:config>
+</beans>
