@@ -168,13 +168,16 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
 
 	private Object determineLinkedElement(CnALink link) {
 	    IControl linkedElement = null;
-	    IControl dependant = (IControl) link.getDependant();
-	    IControl dependency = (IControl) link.getDependency();
+	    Object dependant = link.getDependant();
+	    Object dependency = link.getDependency();
 	    
-	    if (!dependant.equals(selectedInISMView)) {
-	        linkedElement = castToCorrectControlType(dependant);
-	    } else if (!dependency.equals(selectedInISMView) || dependant.equals(dependency)) {
-	        linkedElement = castToCorrectControlType(dependency);
+	    if (dependant instanceof IControl 
+	            && !dependant.equals(selectedInISMView)) {
+	        linkedElement = castToCorrectControlType((IControl) dependant);
+	    } else if (dependency instanceof IControl
+	            && !dependency.equals(selectedInISMView)
+	            || dependant.equals(dependency)) {
+	        linkedElement = castToCorrectControlType((IControl) dependency);
 	    }	        
 	    return linkedElement;
 	}
