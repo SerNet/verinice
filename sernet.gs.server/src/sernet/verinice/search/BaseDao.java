@@ -195,6 +195,12 @@ public abstract class BaseDao implements ISearchDao {
     }
     
     @Override
+    public MultiSearchResponse find(String typeId, VeriniceQuery query) {
+        MultiSearchRequestBuilder request = prepareQueryWithAllFields(typeId, query, getAuthService().getUsername());
+        return executeMultiSearch(request);
+    }
+    
+    @Override
     public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query, String username){
         Map<String, String> map = new ConcurrentHashMap<String, String>();
         for(String property : HUITypeFactory.getInstance().getEntityType(typeId).getAllPropertyTypeIds()){

@@ -76,4 +76,11 @@ public interface ISearchDao {
     public MultiSearchRequestBuilder prepareQueryWithSpecializedFields(Map<String, String> fieldmap, String typeId, String username);
     
     public MultiSearchResponse executeMultiSearch(MultiSearchRequestBuilder srb);
+
+    /**
+     * @param typeId
+     * @param query
+     * @return
+     */
+    MultiSearchResponse find(String typeId, VeriniceQuery query);
 }

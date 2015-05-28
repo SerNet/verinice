@@ -45,8 +45,11 @@ public class VeriniceSearchResult implements Serializable {
     }
     
     public void addVeriniceSearchObject(VeriniceSearchResultObject veriniceSearchResultObject){
-        entityTypeIdToSearchResult.put(veriniceSearchResultObject.getEntityTypeId(), veriniceSearchResultObject);
-        hits += veriniceSearchResultObject.getHits();
+        if (veriniceSearchResultObject.getHits() > 0) {
+            veriniceSearchResultObject.setParent(this);
+            entityTypeIdToSearchResult.put(veriniceSearchResultObject.getEntityTypeId(), veriniceSearchResultObject);
+            hits += veriniceSearchResultObject.getHits();
+        }
     }
     
     public VeriniceSearchResultObject getVeriniceSearchObject(String entityTypeId){
