@@ -24,6 +24,7 @@ import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.samt.SamtTopic;
@@ -37,7 +38,7 @@ import sernet.verinice.rcp.search.column.IconColumn;
  */
 public class TableImageProvider {
 
-    private final static Logger LOG = Logger.getLogger(TableImageProvider.class);
+    private static final Logger LOG = Logger.getLogger(TableImageProvider.class);
 
     public static Image getImagePath(VeriniceSearchResultRow row) {
 
@@ -53,19 +54,23 @@ public class TableImageProvider {
         LOG.debug("seach image for type id: " + typeId);
 
         if (SamtTopic.TYPE_ID.equals(typeId)) {
-            return imgCache.getControlImplementationImage(getSamtTopiOptionStatus(row.getValueFromResultString(SamtTopic.PROP_MATURITY)));
+            return imgCache.getControlImplementationImage(getSamtTopicOptionStatus(row.getValueFromResultString(SamtTopic.PROP_MATURITY)));
         }
 
-        if (Control.TYPE_ID.equals(typeId)) {
+        else if (Control.TYPE_ID.equals(typeId)) {
             return imgCache.getControlImplementationImage(retrieveOptionStatus(row.getValueFromResultString(IControl.PROP_IMPL)));
         }
 
+        else if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
+            return imgCache.getImage(getMassnahmenUmsetzungsOptionStatus(row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG)));
+        }
+
         // retrieve default images
-        if (imgCache.isBSITypeElement(typeId)) {
+        else if (imgCache.isBSITypeElement(typeId)) {
             return imgCache.getBSITypeImage(typeId);
         }
 
-        if (imgCache.isISO27kTypeElement(typeId)) {
+        else if (imgCache.isISO27kTypeElement(typeId)) {
             return imgCache.getISO27kTypeImage(typeId);
         }
 
@@ -87,14 +92,54 @@ public class TableImageProvider {
      *
      * @param status
      *            is the translated message from a messages.properties file.
-     * @return A status from IControl.IMP*
+     * @return the reverse translated message, so id (key) of the translated
+     *         message.
      */
-    private static String getSamtTopiOptionStatus(String status) {
+    private static String getSamtTopicOptionStatus(String status) {
         if (getTypeIDTranslation("samt_topic_maturity_null").equals(status)) {
             return IControl.IMPLEMENTED_NOTEDITED;
         }
 
         return IControl.IMPLEMENTED_YES;
+    }
+
+    /**
+     * Detects the status of a {@link MassnahmenUmsetzung}, so a matching status
+     * icon can be displayed in the search table.
+     *
+     * The value checks the human readable and translated message from a
+     * message.properties file.
+     *
+     * Since the index also stores the status message in the language the server
+     * is running, this will only work if the client is configured with the same
+     * language when the search index was created. Otherwise no status will be
+     * found.
+     *
+     * @param status
+     *            is the translated message from a messages.properties file.
+     * @return the reverse translated message, so id (key) of the translated
+     *         message.
+     */
+    private static String getMassnahmenUmsetzungsOptionStatus(String status) {
+
+        if (getTypeIDTranslation(MassnahmenUmsetzung.P_UMSETZUNG_NEIN).equals(status)) {
+            return ImageCache.MASSNAHMEN_UMSETZUNG_NEIN;
+        }
+
+        if (getTypeIDTranslation(MassnahmenUmsetzung.P_UMSETZUNG_JA).equals(status)) {
+            return ImageCache.MASSNAHMEN_UMSETZUNG_JA;
+        }
+
+        if (getTypeIDTranslation(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE).equals(status)) {
+            return ImageCache.MASSNAHMEN_UMSETZUNG_TEILWEISE;
+        }
+
+        if (getTypeIDTranslation(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH).equals(status)) {
+            return ImageCache.MASSNAHMEN_UMSETZUNG_ENTBEHRLICH;
+        }
+
+        // else:
+        return ImageCache.MASSNAHMEN_UMSETZUNG_UNBEARBEITET;
     }
 
     /**
@@ -112,7 +157,8 @@ public class TableImageProvider {
      *
      * @param status
      *            is the translated message from a messages.properties file.
-     * @return A status from IControl.IMP*
+     * @return the reverse translated message, so id (key) of the translated
+     *         message.
      */
     private static String retrieveOptionStatus(String status) {
         if (getTypeIDTranslation(IControl.IMPLEMENTED_NO).equals(status)) {
