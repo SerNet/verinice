@@ -306,23 +306,7 @@ public class SearchView extends RightsEnabledView {
         gridData.minimumWidth = 30;
         gridData.horizontalSpan = 2;
         queryText.setLayoutData(gridData);
-        queryText.addKeyListener(new KeyListener() {
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if (e.character == SWT.CR) {
-                    searchButton.setEnabled(false);
-                    enableExport2CSVAction(false);
-                    search();
-                    searchButton.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-
-            }
-        });
+        queryText.addKeyListener(new InputFieldsListener());
     }
 
     private void createLimitInputField(Composite searchComposite) {
@@ -330,20 +314,21 @@ public class SearchView extends RightsEnabledView {
         GridData gridLimitData = new GridData(SWT.FILL, SWT.NONE, true, false);
         limitText.setLayoutData(gridLimitData);
         limitText.setText(String.valueOf(VeriniceQuery.DEFAULT_LIMIT));
+
+        limitText.addKeyListener(new InputFieldsListener());
+
         limitText.addVerifyListener(new VerifyListener() {
-            
             @Override
             public void verifyText(VerifyEvent e) {
                 e.doit = true;
                 char input[] = e.text.toCharArray();
-                
-                for(int i = 0; i < input.length; i++){
-                    if(!Character.isDigit(input[i])){
+
+                for (int i = 0; i < input.length; i++) {
+                    if (!Character.isDigit(input[i])) {
                         e.doit = false;
                         break;
                     }
                 }
-                
             }
         });
     }
@@ -488,5 +473,28 @@ public class SearchView extends RightsEnabledView {
         limitText.setEnabled(true);
         queryText.setEnabled(true);
         searchButton.setEnabled(true);
+    }
+
+    /**
+     * Executes search, if the focus is on one of the search input fields and
+     * the return key is pressed.
+     *
+     * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+     */
+    private final class InputFieldsListener implements KeyListener {
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if (e.character == SWT.CR) {
+                searchButton.setEnabled(false);
+                enableExport2CSVAction(false);
+                search();
+                searchButton.setEnabled(true);
+            }
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+
+        }
     }
 }
