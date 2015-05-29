@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,13 +32,11 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.MultiSearchRequestBuilder;
 import org.elasticsearch.action.search.MultiSearchResponse;
-import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.common.xcontent.XContentHelper;
 import org.elasticsearch.index.engine.DocumentMissingException;
 import org.elasticsearch.index.query.AndFilterBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
@@ -270,7 +267,12 @@ public abstract class BaseDao implements ISearchDao {
             searchBuilder = searchBuilder.setPostFilter(andBuilder);
             
             searchBuilder = searchBuilder.setFrom(0);
-            searchBuilder = searchBuilder.setSize(query.getLimit());
+            int limit = query.getLimit();
+            if(limit < 1){
+                searchBuilder = searchBuilder.setSize(Integer.MAX_VALUE);
+            } else {
+                searchBuilder = searchBuilder.setSize(query.getLimit());
+            }
             requestBuilder = requestBuilder.add(searchBuilder);
         }
         return requestBuilder;
@@ -304,20 +306,6 @@ public abstract class BaseDao implements ISearchDao {
     
     @Override
     public MultiSearchResponse executeMultiSearch (MultiSearchRequestBuilder srb){
-        if(LOG.isDebugEnabled()){
-            for(SearchRequest r : srb.request().requests()){
-                try {
-                    String source = XContentHelper.convertToJson(r.source(), true);
-                    if(source.contains("asset_name")){
-                        this.hashCode();
-                        LOG.debug("Request:\t" + source);
-                    }
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-        }
         try{
             
             return srb.execute().actionGet();
