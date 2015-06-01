@@ -278,7 +278,7 @@ public final class ImageCache {
 	public static final String ISO27K_IMPORT            = "import.gif";
 
 	public static final String ISO27K_CONTROL			= "stufe_none.png";
-	public static final String ISO27K_CONTROLGROUP      = "controlgroup.png";
+	public static final String ISO27K_CONTROLGROUP      = "sweetie-verinice/png/controlgroup.png";
     public static final String ISO27K_CONTROL_NO		= "16-em-cross.png";
 	public static final String ISO27K_CONTROL_YES		= "16-em-check.png";
 	public static final String ISO27K_SAMTTOPIC          = "isa-topic.png";
