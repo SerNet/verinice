@@ -157,6 +157,12 @@ public class PreferenceConstants {
     
     public static final String INHERIT_SPECIAL_GROUP_ICON = "inherit_special_group_icon";
 
+    /**
+     * {@link SearchView} contains a table with many columns. Sometimes it is
+     * better to sort them alphabetically, but following the snca.xml
+     */
+    public static final String SEARCH_SORT_COLUMN_BY_SNCA = "sort_column_by_snca";
+
 	/**
 	 * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view class.
 	 * 

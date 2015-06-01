@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -26,6 +28,8 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.IEntityElement;
+import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 
 /**
@@ -40,7 +44,7 @@ public class PersistedSortedColumnStore extends ColumnStore {
      */
     private static final String DEFAULT_TAG_BASIC = "basic";
 
-    IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
+    private IPreferenceStore preferenceStore = Activator.getDefault().getPreferenceStore();
 
     private String entityTypeId;
 
@@ -73,8 +77,9 @@ public class PersistedSortedColumnStore extends ColumnStore {
         addColumn(scopeColumn);
         addColumn(occurenceColumn);
 
+        int order = 0;
         for (PropertyType propertyType : getAllPropertyTypes()) {
-            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this);
+            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this, order++);
             if (isDefaultColumn(col)) {
                 addColumn(col);
             } else {
@@ -97,8 +102,9 @@ public class PersistedSortedColumnStore extends ColumnStore {
         setVisible(scopeColumn, isColumnVisible(scopeColumn));
         addColumn(occurenceColumn);
 
+        int order = 0;
         for (PropertyType propertyType : getAllPropertyTypes()) {
-            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this);
+            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this, order++);
             if (isColumnVisible(col)) {
                 addColumn(col);
             } else {
@@ -132,9 +138,18 @@ public class PersistedSortedColumnStore extends ColumnStore {
     }
 
     public List<PropertyType> getAllPropertyTypes() {
+
         HUITypeFactory huiTypeFactory = HUITypeFactory.getInstance();
         EntityType entityType = huiTypeFactory.getEntityType(entityTypeId);
-        List<PropertyType> propertyTypes = entityType.getAllPropertyTypes();
+
+        List<IEntityElement> allElements = entityType.getElements();
+        List<PropertyType> propertyTypes = new ArrayList<PropertyType>(0);
+        for (Iterator<IEntityElement> iter = allElements.iterator(); iter.hasNext();) {
+            Object obj = iter.next();
+            if (obj instanceof PropertyType) {
+                propertyTypes.add((PropertyType) obj);
+            }
+        }
         return propertyTypes;
     }
 

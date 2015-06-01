@@ -32,9 +32,16 @@ public class PropertyTypeColumn extends AbstractColumn {
 
     private PropertyType propertyType;
 
+    private int rank;
+
     public PropertyTypeColumn(IColumnStore columnstore, PropertyType propertyType) {
         super(columnstore);
         this.propertyType = propertyType;
+    }
+
+    public PropertyTypeColumn(IColumnStore columnstore, PropertyType propertyType, int order) {
+        this(columnstore, propertyType);
+        this.rank = order;
     }
 
     /*
@@ -147,6 +154,6 @@ public class PropertyTypeColumn extends AbstractColumn {
 
     @Override
     public int getRank(){
-        return 0;
+        return rank;
     }
 }

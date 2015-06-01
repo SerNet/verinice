@@ -94,6 +94,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON, true);
 		
 		store.setDefault(PreferenceConstants.CUT_INHERIT_PERMISSIONS, false);
+
+		store.setDefault(PreferenceConstants.SEARCH_SORT_COLUMN_BY_SNCA, true);
 	}
 
 }

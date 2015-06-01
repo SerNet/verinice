@@ -1290,6 +1290,11 @@ Artwork:&#x0A;Blackbit http://www.blackbit.de - Icons by Axialis Team http://www
             id="sernet.gs.ui.rcp.main.preferences.folderpreferencepage"
             name="%page.name.10">
       </page>
+            <page
+            class="sernet.gs.ui.rcp.main.preferences.SearchPreferencePage"
+            id="sernet.gs.ui.rcp.main.preferences.searchpreferencepage"
+            name="%page.name.11">
+      </page>
    </extension>
    <extension
          point="org.eclipse.core.runtime.preferences">

@@ -17,37 +17,34 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.search.column;
+package sernet.gs.ui.rcp.main.preferences;
 
-import sernet.hui.common.connect.PropertyType;
+import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.ui.IWorkbench;
+import org.eclipse.ui.IWorkbenchPreferencePage;
+
+import sernet.gs.ui.rcp.main.Activator;
 
 /**
+ * Configures Parameter for verinice built in search engine.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class IColumnFactory {
+public class SearchPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
-    public static IColumn getTitleColumn(ColumnStore columnStore) {
-        return new TitleColumn(columnStore);
+    private BooleanFieldEditor sortColumns;
+
+    @Override
+    public void init(IWorkbench arg0) {
+        setPreferenceStore(Activator.getDefault().getPreferenceStore());
+        setDescription(Messages.getString("SearchPreferencePage.0"));
     }
 
-    public static IColumn getIconColumn(ColumnStore columnStore) {
-        return new IconColumn(columnStore);
+    @Override
+    protected void createFieldEditors() {
+        sortColumns = new BooleanFieldEditor(PreferenceConstants.SEARCH_SORT_COLUMN_BY_SNCA, Messages.getString("SearchPreferencePage.1"), getFieldEditorParent());
+        addField(sortColumns);
     }
 
-    public static IColumn getScopeColumn(ColumnStore columnStore) {
-        return new ScopeColumn(columnStore);
-    }
-
-    public static IColumn getPropertyTypeColumn(PropertyType propertyType, IColumnStore columnStore) {
-        return new PropertyTypeColumn(columnStore, propertyType);
-    }
-
-    public static IColumn getPropertyTypeColumn(PropertyType propertyType, IColumnStore columnStore, int order) {
-        return new PropertyTypeColumn(columnStore, propertyType, order);
-    }
-
-
-    public static IColumn getOccurenceColumn(IColumnStore columnStore) {
-        return new OccurenceColumn(columnStore);
-    }
 }

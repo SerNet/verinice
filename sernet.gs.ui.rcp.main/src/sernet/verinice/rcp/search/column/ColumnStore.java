@@ -19,11 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
-import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.hui.common.connect.PropertyType;
 
 /**
@@ -37,20 +35,6 @@ import sernet.hui.common.connect.PropertyType;
  */
 
 public class ColumnStore implements IColumnStore {
-
-    /**
-     * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
-     */
-    private final class ColumnComparator implements Comparator<IColumn> {
-        NumericStringComparator stringCompare = new NumericStringComparator();
-
-        @Override
-        public int compare(IColumn o1, IColumn o2) {
-            if (o1 instanceof PropertyTypeColumn && o2 instanceof PropertyTypeColumn)
-                return stringCompare.compare(o1.getTitle(), o2.getTitle());
-            return o1.getRank() - o2.getRank();
-        }
-    }
 
     private SortedSet<IColumn> visibleColumns;
     private SortedSet<IColumn> invisibleColumns;
