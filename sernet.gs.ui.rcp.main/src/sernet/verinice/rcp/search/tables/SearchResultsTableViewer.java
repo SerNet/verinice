@@ -72,6 +72,7 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
         setContentProvider(this);
         setInput(veriniceSearchResultObject);
 
+        sortByFirstColumn(columnStore);
     }
 
     private void createColumns() {
@@ -88,7 +89,6 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     SearchResultsTableViewer.this.searchTableComparator.setColumn(col);
-                    SearchResultsTableViewer.this.getTable().setSortDirection(SWT.UP);
                     SearchResultsTableViewer.this.getTable().setSortColumn(columnViewer.getColumn());
                     SearchResultsTableViewer.this.refresh();
                 }
@@ -101,6 +101,11 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
 
             columnViewer.setLabelProvider(new SearchTableColumnLabelProvider(col));
         }
+    }
+
+    private void sortByFirstColumn(IColumnStore columnStore) {
+        searchTableComparator.setColumn(columnStore.getColumns().first());
+        refresh();
     }
 
     @Override
