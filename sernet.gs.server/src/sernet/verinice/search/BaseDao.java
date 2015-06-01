@@ -51,7 +51,6 @@ import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.search.ISearchService;
-import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.search.Occurence;
 import sernet.verinice.model.search.VeriniceQuery;
 
@@ -235,9 +234,6 @@ public abstract class BaseDao implements ISearchDao {
     }
     
     private MultiSearchRequestBuilder buildQueryIterative(Map<String, String> map, String typeId, String username, VeriniceQuery query){
-        if(Asset.TYPE_ID.equals(typeId)){
-            this.hashCode();
-        }
         MultiSearchRequestBuilder requestBuilder = getClient().prepareMultiSearch();
         for(String field : map.keySet()){
             String value = map.get(field);
@@ -250,6 +246,7 @@ public abstract class BaseDao implements ISearchDao {
             if(value != null && !value.isEmpty()){
                 searchBuilder = searchBuilder.setQuery(QueryBuilders.matchPhraseQuery(field, value));
             } else {
+                // fires if search phrase is empty
                 searchBuilder = searchBuilder.setQuery(QueryBuilders.matchAllQuery());
             }
                    
@@ -267,10 +264,7 @@ public abstract class BaseDao implements ISearchDao {
             searchBuilder = searchBuilder.setPostFilter(andBuilder);
             
             searchBuilder = searchBuilder.setFrom(0);
-            int limit = query.getLimit();
-            if(limit < 1){
-                searchBuilder = searchBuilder.setSize(Integer.MAX_VALUE);
-            } else {
+            if(query.getLimit() > 0){
                 searchBuilder = searchBuilder.setSize(query.getLimit());
             }
             requestBuilder = requestBuilder.add(searchBuilder);
@@ -307,7 +301,6 @@ public abstract class BaseDao implements ISearchDao {
     @Override
     public MultiSearchResponse executeMultiSearch (MultiSearchRequestBuilder srb){
         try{
-            
             return srb.execute().actionGet();
         } catch (ActionRequestValidationException e){
             LOG.error("Request is not valid", e);

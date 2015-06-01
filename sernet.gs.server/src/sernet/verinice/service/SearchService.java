@@ -18,6 +18,7 @@
 package sernet.verinice.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -68,6 +69,8 @@ public class SearchService implements ISearchService {
         return query(veriniceQuery, null);
     }
     
+    
+    
     /**
      * Uses the es querybuilder api to build a query that could be paramterized
      * to search on given fields only, and adding filters for rightmanagement
@@ -80,10 +83,10 @@ public class SearchService implements ISearchService {
         ServerInitializer.inheritVeriniceContextState();
         VeriniceSearchResult results = new VeriniceSearchResult();
         if (StringUtils.isNotEmpty(elementTypeId)) {
-            results.addVeriniceSearchObject(processSearchResponse(elementTypeId, searchDao.find(elementTypeId, query)));
+            results.addVeriniceSearchObject(processSearchResponse(elementTypeId, searchDao.find(elementTypeId, query), query.getLimit()));
         } else {
             for (EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()) {
-                results.addVeriniceSearchObject(processSearchResponse(type.getId(), searchDao.find(type.getId(), query)));
+                results.addVeriniceSearchObject(processSearchResponse(type.getId(), searchDao.find(type.getId(), query), query.getLimit()));
             }
         }
         return results;
@@ -94,8 +97,8 @@ public class SearchService implements ISearchService {
         return HUITypeFactory.getInstance().getEntityType(typeID).getName();
     }
 
-    private VeriniceSearchResultObject processSearchResponse(String elementTypeId, MultiSearchResponse msr) {
-        List<SearchHit> hitList = createHitList(msr);
+    private VeriniceSearchResultObject processSearchResponse(String elementTypeId, MultiSearchResponse msr, int limit) {
+        List<SearchHit> hitList = createHitList(msr, limit);
         String identifier = "";
         VeriniceSearchResultObject results = new VeriniceSearchResultObject(elementTypeId, getEntityName(elementTypeId), getPropertyIds(elementTypeId));
         for (SearchHit hit : hitList) {
@@ -113,7 +116,7 @@ public class SearchService implements ISearchService {
         }
         return results;
     }
-
+    
     private Occurence createOccurence(String elementTypeId, SearchHit hit) {
         Iterator<Entry<String, HighlightField>> iter = hit.getHighlightFields().entrySet().iterator();
         Occurence occurence = new Occurence();
@@ -126,7 +129,7 @@ public class SearchService implements ISearchService {
         return occurence;
     }
 
-    private List<SearchHit> createHitList(MultiSearchResponse msr) {
+    private List<SearchHit> createHitList(MultiSearchResponse msr, int limit) {
         List<SearchHit> hitList = new ArrayList<SearchHit>(0);
         for (MultiSearchResponse.Item i : msr.getResponses()) {
             if (i != null && i.getResponse() != null && i.getResponse().getHits() != null) {
@@ -135,7 +138,26 @@ public class SearchService implements ISearchService {
                 }
             }
         }
+        if(limit > 0 && limit < hitList.size()){
+            return limitList(limit, hitList);
+        }
         return hitList;
+    }
+
+
+
+    /**
+     * reduce size of Hitlist to given limit 
+     * (cuts of all elements after position $limit )
+     * @return
+     */
+    private List<SearchHit> limitList(int limit, List<SearchHit> hitList) {
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Reducing elastic search result list of size:\t" + hitList.size() + " to " + limit + " elements");
+        }
+        SearchHit[] limitedHits = new SearchHit[limit];
+        System.arraycopy(hitList.toArray(new SearchHit[hitList.size()]), 0, limitedHits, 0, limit);
+        return Arrays.asList(limitedHits);
     }
 
     private String getHuiTranslation(String id, String entityType) {
