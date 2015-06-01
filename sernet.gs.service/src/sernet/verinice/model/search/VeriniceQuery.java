@@ -39,9 +39,18 @@ public class VeriniceQuery implements Serializable{
     private int limit = 0;
 
     private String query = EMPTY_QUERY;
-    
-    public VeriniceQuery(String query, int limit){
-        this.query = query;
+
+    /**
+     * Inits a verinice query object.
+     *
+     * @param query
+     *            If query is null the query string is set to "" and if the
+     *            query containes slashes they will be removed.
+     * @param limit
+     *            If limit <= 0 the limit is set to {@link #DEFAULT_LIMIT}.
+     */
+    public VeriniceQuery(String query, int limit) {
+        this.query = query == null ? EMPTY_QUERY : escapeQuery(query);
         this.limit = (limit > 0) ? limit : DEFAULT_LIMIT;
     }
 
@@ -62,8 +71,15 @@ public class VeriniceQuery implements Serializable{
         return escapeQuery(query);
     }
 
-    private String escapeQuery(String query){
+    private String escapeQuery(String query) {
         String escapedQuery = query.replaceAll("/", "");
         return escapedQuery;
+    }
+
+    /**
+     * Tests if a query was set. Empty query means "".
+     */
+    public boolean isQueryEmpty() {
+        return query == null || EMPTY_QUERY.equals(query);
     }
 }

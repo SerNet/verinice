@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.elasticsearch.search.SearchService;
 
 import sernet.verinice.model.search.Occurence;
+import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.column.IColumn;
 import sernet.verinice.rcp.search.column.IconColumn;
@@ -122,17 +123,21 @@ public class SearchTableColumnLabelProvider extends StyledCellLabelProvider {
 
         VeriniceSearchResultRow row = (VeriniceSearchResultRow) cell.getElement();
         Occurence occurences = row.getOccurence();
-        String query = row.getParent().getParent().getVeriniceQuery().getQuery();
+        VeriniceQuery query = row.getParent().getParent().getVeriniceQuery();
         List<StyleRange> styleRanges = new ArrayList<StyleRange>(0);
+
+        if (query.isQueryEmpty()){
+            return;
+        }
 
         if (column instanceof PropertyTypeColumn) {
             for (String fragment : occurences.getFragments(column.getId())) {
-                createStyleRanges(cell, query, styleRanges);
+                createStyleRanges(cell, query.getQuery(), styleRanges);
             }
         }
 
         if (column instanceof TitleColumn) {
-            createStyleRanges(cell, query, styleRanges);
+            createStyleRanges(cell, query.getQuery(), styleRanges);
         }
 
         cell.setStyleRanges(styleRanges.toArray(new StyleRange[styleRanges.size()]));
