@@ -47,12 +47,25 @@ public class SearchTableComparator extends ViewerComparator {
     }
 
     public void setColumn(IColumn currentColumn) {
+        detectSortDirection(currentColumn);
+        this.currentColumn = currentColumn;
+    }
 
+    /**
+     * If column has been already set by the selection listener the sorting
+     * direction is inverted. In the other case the direction is always set to
+     * up.
+     *
+     * @param currentColumn
+     *            column which the selection listener provides == the column
+     *            header the use has clicked on.
+     */
+    private void detectSortDirection(IColumn currentColumn) {
         if (this.currentColumn == currentColumn) {
             inverseDirection();
+        } else {
+            direction = SWT.UP;
         }
-
-        this.currentColumn = currentColumn;
     }
 
     private void inverseDirection() {
