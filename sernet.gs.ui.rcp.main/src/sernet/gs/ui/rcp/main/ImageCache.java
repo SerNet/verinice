@@ -405,6 +405,20 @@ public final class ImageCache {
 		return image;
 	}
 
+    public String getBSITypeImageURL(String typeId) {
+        if (typeId != null && BSI_ICON_MAP.get(typeId) != null) {
+            return BSI_ICON_MAP.get(typeId);
+        }
+        return ImageCache.UNKNOWN;
+    }
+
+    public String getISO27kTypeImageURL(String typeId) {
+        if (typeId != null && ISO27K_ICON_MAP.get(typeId) != null) {
+            return ISO27K_ICON_MAP.get(typeId);
+        }
+        return ImageCache.UNKNOWN;
+    }
+
 	public Image getObjectTypeImage(String typeId) {
 		Image image = getISO27kTypeImage(typeId);
 		if (image == getImage(ImageCache.UNKNOWN)){

@@ -22,10 +22,12 @@ package sernet.verinice.rcp.search.tables;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.column.IColumn;
+import sernet.verinice.rcp.search.column.IconColumn;
 import sernet.verinice.rcp.search.column.ScopeColumn;
 import sernet.verinice.rcp.search.column.TitleColumn;
 
@@ -78,6 +80,9 @@ public class SearchTableComparator extends ViewerComparator {
         } else if (currentColumn instanceof ScopeColumn) {
             v1 = row1.getValueFromResultString(ScopeColumn.SCOPE_PROPERTY_NAME);
             v2 = row2.getValueFromResultString(ScopeColumn.SCOPE_PROPERTY_NAME);
+        } else if (currentColumn instanceof IconColumn) {
+            v1 = TableImageProvider.getImagePath(row1);
+            v2 = TableImageProvider.getImagePath(row2);
         } else {
             v1 = row1.getValueFromResultString(currentColumn.getId());
             v2 = row2.getValueFromResultString(currentColumn.getId());

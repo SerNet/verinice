@@ -40,7 +40,7 @@ public class TableImageProvider {
 
     private static final Logger LOG = Logger.getLogger(TableImageProvider.class);
 
-    public static Image getImagePath(VeriniceSearchResultRow row) {
+    public static Image getImage(VeriniceSearchResultRow row) {
 
         ImageCache imgCache = ImageCache.getInstance();
 
@@ -75,6 +75,42 @@ public class TableImageProvider {
         }
 
         return null;
+    }
+
+    public static String getImagePath(VeriniceSearchResultRow row){
+        ImageCache imgCache = ImageCache.getInstance();
+
+        // check if custom image is set
+        String imagePath = row.getValueFromResultString(IconColumn.ICON_PROPERTY_NAME);
+        if (!imagePath.isEmpty()) {
+             return imagePath;
+        }
+
+        String typeId = row.getParent().getEntityTypeId();
+        LOG.debug("seach image for type id: " + typeId);
+
+        if (SamtTopic.TYPE_ID.equals(typeId)) {
+            return getSamtTopicOptionStatus(row.getValueFromResultString(SamtTopic.PROP_MATURITY));
+        }
+
+        else if (Control.TYPE_ID.equals(typeId)) {
+            return retrieveOptionStatus(row.getValueFromResultString(IControl.PROP_IMPL));
+        }
+
+        else if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
+            return getMassnahmenUmsetzungsOptionStatus(row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG));
+        }
+
+        // retrieve default images
+        else if (imgCache.isBSITypeElement(typeId)) {
+            return imgCache.getBSITypeImageURL(typeId);
+        }
+
+        else if (imgCache.isISO27kTypeElement(typeId)) {
+            return imgCache.getISO27kTypeImageURL(typeId);
+        }
+
+        return "";
     }
 
     /**

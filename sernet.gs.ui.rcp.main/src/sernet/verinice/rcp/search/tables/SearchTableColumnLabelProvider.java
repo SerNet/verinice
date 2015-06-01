@@ -116,7 +116,7 @@ public class SearchTableColumnLabelProvider extends StyledCellLabelProvider {
     }
 
     private Image getImage(VeriniceSearchResultRow row) {
-        return TableImageProvider.getImagePath(row);
+        return TableImageProvider.getImage(row);
     }
 
     private void markMatches(ViewerCell cell) {
