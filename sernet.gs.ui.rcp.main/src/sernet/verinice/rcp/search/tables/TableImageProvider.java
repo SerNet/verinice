@@ -74,16 +74,16 @@ public class TableImageProvider {
             return imgCache.getISO27kTypeImage(typeId);
         }
 
-        return null;
+        return imgCache.getImage(ImageCache.UNKNOWN);
     }
 
-    public static String getImagePath(VeriniceSearchResultRow row){
+    public static String getImagePath(VeriniceSearchResultRow row) {
         ImageCache imgCache = ImageCache.getInstance();
 
         // check if custom image is set
         String imagePath = row.getValueFromResultString(IconColumn.ICON_PROPERTY_NAME);
         if (!imagePath.isEmpty()) {
-             return imagePath;
+            return imagePath;
         }
 
         String typeId = row.getParent().getEntityTypeId();
@@ -110,7 +110,7 @@ public class TableImageProvider {
             return imgCache.getISO27kTypeImageURL(typeId);
         }
 
-        return "";
+        return ImageCache.UNKNOWN;
     }
 
     /**
