@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.osgi.util.NLS;
 
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
@@ -115,17 +116,15 @@ public class CsvExport implements ICsvExport {
         for (VeriniceSearchResultRow row : rows) {
             exportRow(row, columnStore, csvWriter);                         
         }
+        if(result.getHits()>=result.getLimit()) {
+            addLimitHint(result.getLimit(),csvWriter);
+        }
         return csvWriter;
     }
 
- 
-    private void disableBlacklistedColumns(IColumnStore columnStore) {
-        Set<IColumn> visibleColumns = new HashSet<IColumn>(columnStore.getColumns());
-        for (IColumn column : visibleColumns) {
-            if(COLUMN_BLACKLIST.contains(column.getId())) {
-                columnStore.setVisible(column, false);
-            }
-        }
+    private void addLimitHint(int limit, CSVWriter csvWriter) {
+        csvWriter.writeNext(new String[]{NLS.bind(Messages.SearchView_11, limit)});
+        
     }
 
     private void exportHeader(IColumnStore columnStore, CSVWriter csvWriter) {
@@ -147,6 +146,15 @@ public class CsvExport implements ICsvExport {
             i++;                         
         }
         csvWriter.writeNext(rowArray);
+    }
+    
+    private void disableBlacklistedColumns(IColumnStore columnStore) {
+        Set<IColumn> visibleColumns = new HashSet<IColumn>(columnStore.getColumns());
+        for (IColumn column : visibleColumns) {
+            if(COLUMN_BLACKLIST.contains(column.getId())) {
+                columnStore.setVisible(column, false);
+            }
+        }
     }
     
     public static IColumnStore createColumnStore(VeriniceSearchResultObject result) {
