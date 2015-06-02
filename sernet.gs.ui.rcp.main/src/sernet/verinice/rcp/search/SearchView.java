@@ -29,13 +29,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -46,6 +48,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 
@@ -314,23 +317,40 @@ public class SearchView extends RightsEnabledView {
         GridData gridLimitData = new GridData(SWT.FILL, SWT.NONE, true, false);
         limitText.setLayoutData(gridLimitData);
         limitText.setText(String.valueOf(VeriniceQuery.DEFAULT_LIMIT));
-
         limitText.addKeyListener(new InputFieldsListener());
+        limitText.addFocusListener(new FocusListener() {
 
-        limitText.addVerifyListener(new VerifyListener() {
             @Override
-            public void verifyText(VerifyEvent e) {
-                e.doit = true;
-                char input[] = e.text.toCharArray();
+            public void focusLost(FocusEvent e) {
+                validateLimit();
+            }
+            @Override
+            public void focusGained(FocusEvent e) {
 
-                for (int i = 0; i < input.length; i++) {
-                    if (!Character.isDigit(input[i])) {
-                        e.doit = false;
-                        break;
-                    }
-                }
             }
         });
+    }
+
+    private boolean validateLimit() {
+        try {
+            int limit = Integer.parseInt(limitText.getText());
+            if(limit<0) {
+                limitInputError();
+                return false;
+            }
+        } catch (NumberFormatException nfe) {
+            limitInputError();
+            return false;
+        }
+        return true;
+    }
+    
+    private void limitInputError() {
+        limitText.setText(String.valueOf(VeriniceQuery.DEFAULT_LIMIT));
+        limitText.setFocus();
+        limitText.selectAll();     
+        MessageDialog.openError(getShell(), Messages.SearchView_12, NLS.bind(Messages.SearchView_13, Messages.SearchView_10));
+        
     }
 
     private void createTableComposite() {
@@ -423,6 +443,7 @@ public class SearchView extends RightsEnabledView {
     }
 
     private void search() {
+        validateLimit();
         VeriniceQuery veriniceQuery = new VeriniceQuery(queryText.getText(), Integer.valueOf(limitText.getText()));
         WorkspaceJob job = new SearchJob(veriniceQuery, this);
         job.schedule();
@@ -485,6 +506,7 @@ public class SearchView extends RightsEnabledView {
         @Override
         public void keyReleased(KeyEvent e) {
             if (e.character == SWT.CR) {
+                validateLimit();
                 searchButton.setEnabled(false);
                 enableExport2CSVAction(false);
                 search();
