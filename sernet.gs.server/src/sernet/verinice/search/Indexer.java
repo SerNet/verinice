@@ -41,7 +41,10 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IElementTitleCache;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -54,6 +57,7 @@ public class Indexer {
     private static final int SHUTDOWN_TIMEOUT_IN_SECONDS = 60;
     
     private IBaseDao<CnATreeElement, Integer> elementDao;
+    private IElementTitleCache titleCache;
 
     private ExecutorService taskExecutor;
     private CompletionService<ActionResponse> completionService;
@@ -84,9 +88,9 @@ public class Indexer {
             ServerInitializer.inheritVeriniceContextState();
             
             doIndex(start);
-            if (LOG.isInfoEnabled()) {
+            if (LOG.isDebugEnabled()) {
                 long ms = System.currentTimeMillis() - start;
-                LOG.info("All threads created, runtime: " + TimeFormatter.getHumanRedableTime(ms));
+                LOG.debug("All threads created, runtime: " + TimeFormatter.getHumanRedableTime(ms));
             }
         } catch (Exception e) {
             LOG.error("Error while indexing elements.", e);           
@@ -104,6 +108,7 @@ public class Indexer {
         if (LOG.isInfoEnabled()) {
             LOG.info("Elements: " + elementList.size() + ", start indexing...");
         }
+        getTitleCache().load(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
         LastThread lastThread = new LastThread(startTime);
         int n = 0;
         for (CnATreeElement element : elementList) {
@@ -146,6 +151,14 @@ public class Indexer {
 
     public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
         this.elementDao = elementDao;
+    }
+    
+    public IElementTitleCache getTitleCache() {
+        return titleCache;
+    }
+
+    public void setTitleCache(IElementTitleCache titleCache) {
+        this.titleCache = titleCache;
     }
     
     class LastThread implements Callable<ActionResponse> {

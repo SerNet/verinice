@@ -25,6 +25,7 @@
         </property>
       </bean>
     </property>
+    <property name="titleCache" ref="titleCache" />
   </bean>
 
 

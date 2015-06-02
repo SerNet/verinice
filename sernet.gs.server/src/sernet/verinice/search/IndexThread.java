@@ -61,18 +61,21 @@ public class IndexThread implements Callable<ActionResponse> {
      */
     @Override
     public ActionResponse call() throws Exception {
+        String json = null;
         try { 
             ServerInitializer.inheritVeriniceContextState();
-            String json = getJsonBuilder().getJson(element);
-                   
-            ActionResponse response = getSearchDao().updateOrIndex(element.getUuid(), json);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Element indexed: " + element.getUuid());
-            } 
+            json = getJsonBuilder().getJson(element);
+            ActionResponse response = null;
+            if(json!=null) {          
+                response = getSearchDao().updateOrIndex(element.getUuid(), json);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Element indexed: " + element.getUuid());
+                } 
+            }
             return response;
         } catch(Exception e ) {
             String uuid = (element!=null) ? element.getUuid() : null;
-            LOG.error("Error while indexing element: " + uuid, e);
+            LOG.error("Error while indexing element: " + uuid + ", JSON: " + json, e);
             return null;
         } 
      }

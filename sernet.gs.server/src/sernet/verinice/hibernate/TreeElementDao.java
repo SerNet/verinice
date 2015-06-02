@@ -262,7 +262,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     }
 
     protected void index(CnATreeElement element) {
-        if(getSearchDao()!=null) {
+        if(getSearchDao()!=null && getJsonBuilder()!=null) {
             getSearchDao().updateOrIndex(element.getUuid(), getJsonBuilder().getJson(element));
         }
     }

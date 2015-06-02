@@ -54,8 +54,10 @@ public class JsonBuilder implements IJsonBuilder {
     private IElementTitleCache titleCache;
     
     public String getJson(CnATreeElement element) {
-        String title = null;
-       
+        if(!isIndexableElement(element)){
+            return null;
+        }
+        String title = null;    
         if(getTitleCache()!=null && element.getScopeId()!=null) {
             title = getScopeTitle(element);
         }
@@ -66,7 +68,12 @@ public class JsonBuilder implements IJsonBuilder {
     }
 
     private String getScopeTitle(CnATreeElement element) {
-        String title = getTitleCache().get(element.getScopeId());
+        String title = null;
+        if(isScope(element)) {
+            title = element.getTitle();
+        } else {
+            title = getTitleCache().get(element.getScopeId());
+        }
         if(title==null) {
             LOG.warn("Scope title not found in cache for element: " + element.getUuid() + ", type: " + element.getTypeId() + ". Loading all scope titles now...");
             getTitleCache().load(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
@@ -74,14 +81,16 @@ public class JsonBuilder implements IJsonBuilder {
         }
         return title;
     }
+
+    private boolean isScope(CnATreeElement element) {
+        return element instanceof ITVerbund || element instanceof Organization;
+    }
     
     public static final String getJson(CnATreeElement element, String scopeTitle) {       
         try {
             String json = null;
             if(isIndexableElement(element)){
                 json = doGetJson(element, scopeTitle);
-            } else {
-                json = "";
             }
             if (LOG.isDebugEnabled()) {
                 LOG.debug(json);

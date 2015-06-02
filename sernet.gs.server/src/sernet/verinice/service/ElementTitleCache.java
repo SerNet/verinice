@@ -42,11 +42,8 @@ public class ElementTitleCache implements IElementTitleCache {
     private static final Logger LOG = Logger.getLogger(ElementTitleCache.class);
     
     private HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
-    
+    private LoadElementTitles loadScopeTitlesCommand;
     private ICommandService commandService;
-    
-
-    private DummyAuthentication authentication = new DummyAuthentication(); 
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IElementTitleCache#get(java.lang.Integer)
@@ -61,24 +58,20 @@ public class ElementTitleCache implements IElementTitleCache {
      */
     @Override
     public void load(String... typeIds) {
-        boolean dummyAuthAdded = false;
-        SecurityContext ctx = SecurityContextHolder.getContext();
-        try {
-            if(ctx.getAuthentication()==null) {
-                ctx.setAuthentication(authentication);
-                dummyAuthAdded = true;
-            }
-            LoadElementTitles command = new LoadElementTitles(typeIds);     
-            command = getCommandService().executeCommand(command);
-            titleMap.putAll(command.getElements());
+        try {    
+            loadScopeTitlesCommand = getCommandService().executeCommand(loadScopeTitlesCommand);
+            titleMap.putAll(loadScopeTitlesCommand.getElements());
         } catch (CommandException e) {
             LOG.error("Error while loading titles", e);
-        } finally {
-            if(dummyAuthAdded) {
-                ctx.setAuthentication(null);
-                dummyAuthAdded = false;
-            }         
-        }         
+        }     
+    }
+
+    public LoadElementTitles getLoadScopeTitlesCommand() {
+        return loadScopeTitlesCommand;
+    }
+
+    public void setLoadScopeTitlesCommand(LoadElementTitles loadScopeTitlesCommand) {
+        this.loadScopeTitlesCommand = loadScopeTitlesCommand;
     }
 
     protected ICommandService getCommandService() {
@@ -86,6 +79,10 @@ public class ElementTitleCache implements IElementTitleCache {
             commandService = (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
         }
         return commandService;
+    }
+
+    public void setCommandService(ICommandService commandService) {
+        this.commandService = commandService;
     }
 
 }

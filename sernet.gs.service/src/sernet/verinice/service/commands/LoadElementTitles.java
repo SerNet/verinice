@@ -91,4 +91,12 @@ public class LoadElementTitles extends GenericCommand {
     public HashMap<Integer, String> getElements() {
         return selectedElements;
     }
+
+    public String[] getTypeIds() {
+        return typeIds;
+    }
+
+    public void setTypeIds(String[] typeIds) {
+        this.typeIds = typeIds;
+    }
 }

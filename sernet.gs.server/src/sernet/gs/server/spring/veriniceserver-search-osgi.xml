@@ -23,6 +23,8 @@
 
   <bean id="indexThread" class="sernet.verinice.search.IndexThread" scope="prototype">
     <property name="searchDao" ref="searchElementDao" />
+    <property name="searchService" ref="searchService" />
+    <property name="jsonBuilder" ref="jsonBuilder" />
   </bean>
 
 

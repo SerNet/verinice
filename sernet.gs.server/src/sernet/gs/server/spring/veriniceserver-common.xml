@@ -321,8 +321,14 @@ This variant:
      	<property name="searchIndexer" ref="searchIndexer" />
      </bean>
      
-     <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache"/>
-    
+     <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
+        <property name="loadScopeTitlesCommand" ref="loadScopeTitlesCommand" />
+     </bean>
+     
+     <bean name="loadScopeTitlesCommand" class="sernet.verinice.service.commands.LoadElementTitles">
+        <property name="typeIds" value="it-verbund,org"/>
+     </bean>
+   
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
 	<!--<import resource="veriniceserver-debug.xml"/> -->
 
