@@ -26,4 +26,5 @@ public interface IElementTitleCache {
 
     void load(String...typeIds);
     String get(Integer dbId);
+    String update(Integer dbId, String title);
 }

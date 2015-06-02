@@ -50,6 +50,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IConfigurationService;
+import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.search.Occurence;
 import sernet.verinice.model.search.VeriniceQuery;
@@ -65,9 +66,6 @@ public abstract class BaseDao implements ISearchDao {
     
     private IConfigurationService configurationService;
     private IAuthService authService;
-    
-    private final String preGroupPattern = ".*(";
-    private final String postGroupPattern = "#r{1}w?#).*";
     
     /**
      * {@link ISearchService.ES_FIELD_UUID} and {@link ISearchService.ES_FIELD_PERMISSION_ROLES} missing here, since they should not be searchable 
@@ -423,11 +421,6 @@ public abstract class BaseDao implements ISearchDao {
 
     public void setAuthService(IAuthService authService) {
         this.authService = authService;
-    }
-
-    private String getGroupPattern (String groupname){
-        StringBuilder sb = new StringBuilder();
-        return sb.append(preGroupPattern).append(groupname).append(postGroupPattern).toString();
     }
     
 }

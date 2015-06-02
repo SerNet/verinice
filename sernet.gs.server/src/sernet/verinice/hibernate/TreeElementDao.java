@@ -28,12 +28,15 @@ import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.interfaces.IRetrieveInfo;
 import sernet.verinice.interfaces.search.IJsonBuilder;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.InheritLogger;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.search.IElementSearchDao;
 import sernet.verinice.search.JsonBuilder;
 
@@ -43,6 +46,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(TreeElementDao.class);
     private IElementSearchDao searchDao;
     private IJsonBuilder jsonBuilder;
+    private IElementTitleCache titleCache;
     
     public TreeElementDao(Class<T> type) {
         super(type);
@@ -262,11 +266,20 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     }
 
     protected void index(CnATreeElement element) {
+        if(getTitleCache()!=null) {
+            if(isScope(element)) {
+                getTitleCache().update(element.getDbId(), element.getTitle());
+            }
+        }
         if(getSearchDao()!=null && getJsonBuilder()!=null) {
             getSearchDao().updateOrIndex(element.getUuid(), getJsonBuilder().getJson(element));
         }
     }
     
+    private boolean isScope(CnATreeElement element) {
+        return element instanceof ITVerbund || element instanceof Organization;
+    }
+
     protected void indexDelete(CnATreeElement element) {
         if(getSearchDao()!=null) {
             getSearchDao().delete(element.getUuid());
@@ -323,6 +336,14 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
     public void setJsonBuilder(IJsonBuilder jsonBuilder) {
         this.jsonBuilder = jsonBuilder;
+    }
+
+    public IElementTitleCache getTitleCache() {
+        return titleCache;
+    }
+
+    public void setTitleCache(IElementTitleCache titleCache) {
+        this.titleCache = titleCache;
     }
 
 }

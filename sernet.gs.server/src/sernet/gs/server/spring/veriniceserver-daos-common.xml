@@ -17,12 +17,14 @@
         <property name="configurationService" ref="configurationService" />
         <property name="searchDao" ref="searchElementDao" />
         <property name="jsonBuilder" ref="jsonBuilder" />
+        <property name="titleCache" ref="titleCache" />
     </bean>
     
     <bean id="treeElementDao" abstract="true" class="sernet.verinice.hibernate.TreeElementDao">
         <property name="sessionFactory" ref="sessionFactory" />
         <property name="searchDao" ref="searchElementDao" />
         <property name="jsonBuilder" ref="jsonBuilder" />
+        <property name="titleCache" ref="titleCache" />
     </bean>
     
     <aop:config>
@@ -590,6 +592,7 @@
 		<property name="sessionFactory" ref="sessionFactory" />
         <property name="searchDao" ref="searchElementDao" />
         <property name="jsonBuilder" ref="jsonBuilder" />
+        <property name="titleCache" ref="titleCache" />
 	</bean>
 	
 	<bean id="cnaValidationDAO" class="sernet.verinice.hibernate.HibernateDao">

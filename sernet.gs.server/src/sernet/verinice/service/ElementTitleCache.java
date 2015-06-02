@@ -65,6 +65,14 @@ public class ElementTitleCache implements IElementTitleCache {
             LOG.error("Error while loading titles", e);
         }     
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IElementTitleCache#update(java.lang.Integer, java.lang.String)
+     */
+    @Override
+    public String update(Integer dbId, String title) {
+        return titleMap.put(dbId, title);
+    }
 
     public LoadElementTitles getLoadScopeTitlesCommand() {
         return loadScopeTitlesCommand;
