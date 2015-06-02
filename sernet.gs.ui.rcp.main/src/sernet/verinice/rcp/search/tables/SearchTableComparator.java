@@ -25,6 +25,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.service.NumericStringComparator;
+import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.column.IColumn;
 import sernet.verinice.rcp.search.column.IconColumn;
@@ -91,8 +92,8 @@ public class SearchTableComparator extends ViewerComparator {
             v1 = row1.getValueFromResultString(TitleColumn.TITLE_PROPERTY_NAME);
             v2 = row2.getValueFromResultString(TitleColumn.TITLE_PROPERTY_NAME);
         } else if (currentColumn instanceof ScopeColumn) {
-            v1 = row1.getValueFromResultString(ScopeColumn.SCOPE_PROPERTY_NAME);
-            v2 = row2.getValueFromResultString(ScopeColumn.SCOPE_PROPERTY_NAME);
+            v1 = row1.getValueFromResultString(ISearchService.ES_FIELD_SCOPE_TITLE);
+            v2 = row2.getValueFromResultString(ISearchService.ES_FIELD_SCOPE_TITLE);
         } else if (currentColumn instanceof IconColumn) {
             v1 = TableImageProvider.getImagePath(row1);
             v2 = TableImageProvider.getImagePath(row2);

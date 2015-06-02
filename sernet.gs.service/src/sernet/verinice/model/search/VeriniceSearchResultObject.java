@@ -39,6 +39,8 @@ public class VeriniceSearchResultObject implements Serializable {
     private String name;
 
     private int hits = 0;
+    
+    private int limit = 0;
 
     private String[] propertyTypeIds;
 
@@ -144,6 +146,14 @@ public class VeriniceSearchResultObject implements Serializable {
 
     public void setParent(VeriniceSearchResult parent) {
         this.parent = parent;
+    }
+    
+    public int getLimit() {
+        return limit;
+    }
+
+    public void setLimit(int limit) {
+        this.limit = limit;
     }
 
 }

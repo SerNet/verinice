@@ -36,6 +36,7 @@ import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.search.Occurence;
@@ -56,6 +57,9 @@ public class SearchService implements ISearchService {
 
     @Resource(name = "searchElementDao")
     protected IElementSearchDao searchDao;
+    
+    @Resource(name = "jsonBuilder")
+    protected IJsonBuilder jsonBuilder;
 
     /**
      * Should be used by client to pass a query to the service in future
@@ -217,7 +221,7 @@ public class SearchService implements ISearchService {
      */
     @Override
     public void add(CnATreeElement element) {
-        searchDao.index(element.getUuid(), JsonBuilder.getJson(element));
+        searchDao.index(element.getUuid(), getJsonBuilder().getJson(element));
     }
 
     /*
@@ -229,7 +233,7 @@ public class SearchService implements ISearchService {
      */
     @Override
     public void update(CnATreeElement element) {
-        searchDao.update(element.getUuid(), JsonBuilder.getJson(element));
+        searchDao.update(element.getUuid(), getJsonBuilder().getJson(element));
     }
 
     /**
@@ -260,6 +264,14 @@ public class SearchService implements ISearchService {
      */
     public void setSearchDao(IElementSearchDao searchDao) {
         this.searchDao = searchDao;
+    }
+
+    public IJsonBuilder getJsonBuilder() {
+        return jsonBuilder;
+    }
+
+    public void setJsonBuilder(IJsonBuilder jsonBuilder) {
+        this.jsonBuilder = jsonBuilder;
     }
 
 

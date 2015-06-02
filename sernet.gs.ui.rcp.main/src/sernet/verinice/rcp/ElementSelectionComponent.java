@@ -68,7 +68,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
-import sernet.verinice.service.commands.LoadAllScopesTitles;
+import sernet.verinice.service.commands.LoadElementTitles;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 
 /**
@@ -440,8 +440,8 @@ public class ElementSelectionComponent {
     }
            
     private String loadElementsTitles(CnATreeElement elmt) throws CommandException {
-        LoadAllScopesTitles scopeCommand;
-        scopeCommand = new LoadAllScopesTitles();
+        LoadElementTitles scopeCommand;
+        scopeCommand = new LoadElementTitles();
         scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
         titleMap = scopeCommand.getElements();
         return titleMap.get(elmt.getScopeId());

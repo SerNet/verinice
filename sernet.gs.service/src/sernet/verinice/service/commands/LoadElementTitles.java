@@ -36,12 +36,12 @@ import sernet.verinice.model.iso27k.Organization;
  * 
  */
 @SuppressWarnings("serial")
-public class LoadAllScopesTitles extends GenericCommand {
+public class LoadElementTitles extends GenericCommand {
    
-    private transient Logger log = Logger.getLogger(LoadAllScopesTitles.class);
+    private transient Logger log = Logger.getLogger(LoadElementTitles.class);
     public Logger getLog() {
         if (log == null) {
-            log = Logger.getLogger(LoadAllScopesTitles.class);
+            log = Logger.getLogger(LoadElementTitles.class);
         }
         return log;
     }
@@ -57,11 +57,11 @@ public class LoadAllScopesTitles extends GenericCommand {
     
     private HashMap<Integer, String> selectedElements = new HashMap<Integer, String>();
 
-    public LoadAllScopesTitles() {
+    public LoadElementTitles() {
         this(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
     }       
      
-    public LoadAllScopesTitles(String[] typeIds) {
+    public LoadElementTitles(String[] typeIds) {
         super();
         this.typeIds = (typeIds!=null) ? typeIds.clone() : null;
     }

@@ -29,6 +29,7 @@ import org.hibernate.criterion.Restrictions;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IRetrieveInfo;
+import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.model.common.CascadingTransaction;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -41,6 +42,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     private static final Logger LOG = Logger.getLogger(TreeElementDao.class);
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(TreeElementDao.class);
     private IElementSearchDao searchDao;
+    private IJsonBuilder jsonBuilder;
     
     public TreeElementDao(Class<T> type) {
         super(type);
@@ -261,7 +263,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
     protected void index(CnATreeElement element) {
         if(getSearchDao()!=null) {
-            getSearchDao().updateOrIndex(element.getUuid(), JsonBuilder.getJson(element));
+            getSearchDao().updateOrIndex(element.getUuid(), getJsonBuilder().getJson(element));
         }
     }
     
@@ -313,6 +315,14 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
 
     public void setSearchDao(IElementSearchDao searchDao) {
         this.searchDao = searchDao;
+    }
+
+    public IJsonBuilder getJsonBuilder() {
+        return jsonBuilder;
+    }
+
+    public void setJsonBuilder(IJsonBuilder jsonBuilder) {
+        this.jsonBuilder = jsonBuilder;
     }
 
 }

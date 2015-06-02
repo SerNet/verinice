@@ -37,7 +37,7 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.service.commands.LoadAllScopesTitles;
+import sernet.verinice.service.commands.LoadElementTitles;
 
 /**
  * @author koderman[at]sernet[dot]de
@@ -196,8 +196,8 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	}
 	
 	private String loadElementsTitles(CnATreeElement elmt ) throws CommandException {
-	    LoadAllScopesTitles  scopeCommand;
-	    scopeCommand = new LoadAllScopesTitles();
+	    LoadElementTitles  scopeCommand;
+	    scopeCommand = new LoadElementTitles();
 	    scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
 	    titleMap = scopeCommand.getElements();
 	    return titleMap.get(elmt.getScopeId());

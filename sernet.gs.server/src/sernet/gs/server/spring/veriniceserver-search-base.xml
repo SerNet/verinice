@@ -11,9 +11,11 @@
 
   <bean id="indexThread" class="sernet.verinice.search.IndexThread" scope="prototype">
     <property name="searchDao" ref="searchElementDao" />
+    <property name="searchService" ref="searchService" />
+    <property name="jsonBuilder" ref="jsonBuilder" />
   </bean>
 
-  <bean id="searchIndexer" class="sernet.verinice.search.Indexer">
+  <bean id="searchIndexer" class="sernet.verinice.search.Indexer" init-method="init">
     <!-- <bean id="searchIndexer" class="sernet.verinice.search.Indexer" init-method="init"> -->
     <property name="elementDao" ref="cnaTreeElementDao" />
     <property name="indexThreadFactory">
@@ -30,6 +32,10 @@
     <property name="authService" ref="authService" />
     <property name="clientFactory" ref="clientFactory" />
     <property name="configurationService" ref="configurationService" />
+  </bean>
+  
+  <bean id="jsonBuilder" class="sernet.verinice.search.JsonBuilder">
+    <property name="titleCache" ref="titleCache" />
   </bean>
 
 </beans>

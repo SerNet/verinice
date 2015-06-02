@@ -34,24 +34,52 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.IElementTitleCache;
+import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
+import sernet.verinice.model.iso27k.Organization;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class JsonBuilder {
+public class JsonBuilder implements IJsonBuilder {
     
     private static final Logger LOG = Logger.getLogger(JsonBuilder.class);
     
-    public static final String getJson(CnATreeElement element) {       
+    private IElementTitleCache titleCache;
+    
+    public String getJson(CnATreeElement element) {
+        String title = null;
+       
+        if(getTitleCache()!=null && element.getScopeId()!=null) {
+            title = getScopeTitle(element);
+        }
+        if(title==null && element.getScopeId()!=null) {
+            title = element.getScopeId().toString();
+        }
+        return getJson(element, title);
+    }
+
+    private String getScopeTitle(CnATreeElement element) {
+        String title = getTitleCache().get(element.getScopeId());
+        if(title==null) {
+            LOG.warn("Scope title not found in cache for element: " + element.getUuid() + ", type: " + element.getTypeId() + ". Loading all scope titles now...");
+            getTitleCache().load(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
+            title = getTitleCache().get(element.getScopeId());
+        }
+        return title;
+    }
+    
+    public static final String getJson(CnATreeElement element, String scopeTitle) {       
         try {
             String json = null;
             if(isIndexableElement(element)){
-                json = doGetJson(element);
+                json = doGetJson(element, scopeTitle);
             } else {
                 json = "";
             }
@@ -66,7 +94,7 @@ public class JsonBuilder {
         }  
     }
 
-    private static String doGetJson(CnATreeElement element) throws IOException {
+    private static String doGetJson(CnATreeElement element, String scopeTitle) throws IOException {
         XContentBuilder builder;
         builder = XContentFactory.jsonBuilder().startObject();      
         builder.field(ISearchService.ES_FIELD_UUID, element.getUuid());
@@ -76,12 +104,15 @@ public class JsonBuilder {
         builder.field(ISearchService.ES_FIELD_EXT_ID, element.getExtId());
         builder.field(ISearchService.ES_FIELD_SOURCE_ID, element.getSourceId());
         builder.field(ISearchService.ES_FIELD_SCOPE_ID, element.getScopeId());
+        if(scopeTitle!=null) {
+            builder.field(ISearchService.ES_FIELD_SCOPE_TITLE, scopeTitle);
+        }
         builder.field(ISearchService.ES_FIELD_PARENT_ID, element.getParentId());
         builder.field(ISearchService.ES_FIELD_ICON_PATH, element.getIconPath());
        
         addPermissions(builder, element);
         
-        if(element.getEntity()!=null && element.getEntity().getTypedPropertyLists()!=null) {
+        if(element.getEntity()!=null && element.getEntityType()!=null && element.getEntityType().getAllPropertyTypeIds()!=null) {
             builder = addProperties(builder, element.getEntityType().getAllPropertyTypeIds(), element.getEntity());
         }
         return builder.endObject().string();
@@ -226,5 +257,13 @@ public class JsonBuilder {
         } else {
             return true;
         }
+    }
+
+    public IElementTitleCache getTitleCache() {
+        return titleCache;
+    }
+
+    public void setTitleCache(IElementTitleCache titleCache) {
+        this.titleCache = titleCache;
     }
 }

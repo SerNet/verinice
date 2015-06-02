@@ -31,6 +31,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.elasticsearch.search.SearchService;
 
+import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.search.Occurence;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
@@ -88,7 +89,7 @@ public class SearchTableColumnLabelProvider extends StyledCellLabelProvider {
             }
 
             else if (column instanceof ScopeColumn) {
-                cell.setText(row.getValueFromResultString(ScopeColumn.SCOPE_PROPERTY_NAME));
+                cell.setText(row.getValueFromResultString(ISearchService.ES_FIELD_SCOPE_TITLE));
             }
 
             else if (column instanceof OccurenceColumn) {

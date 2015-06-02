@@ -23,7 +23,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27KModelListener;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.validation.CnAValidation;
-import sernet.verinice.service.commands.LoadAllScopesTitles;
+import sernet.verinice.service.commands.LoadElementTitles;
 
 public class ElementTitleCache implements IBSIModelListener, IISO27KModelListener {
 
@@ -57,8 +57,8 @@ public class ElementTitleCache implements IBSIModelListener, IISO27KModelListene
         try {
             Activator.inheritVeriniceContextState();
             init();
-            LoadAllScopesTitles  scopeCommand;
-            scopeCommand = new LoadAllScopesTitles(typeIds);      
+            LoadElementTitles  scopeCommand;
+            scopeCommand = new LoadElementTitles(typeIds);      
             scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
             titleMap = scopeCommand.getElements();
             typeIdSet.addAll(Arrays.asList(typeIds));

@@ -320,6 +320,8 @@ This variant:
      	<property name="searchDao" ref="searchElementDao" />
      	<property name="searchIndexer" ref="searchIndexer" />
      </bean>
+     
+     <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache"/>
     
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
 	<!--<import resource="veriniceserver-debug.xml"/> -->

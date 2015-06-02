@@ -39,6 +39,7 @@ import org.junit.Test;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
@@ -71,6 +72,9 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     @Resource(name="searchService")
     protected ISearchService searchService;
     
+    @Resource(name="jsonBuilder")
+    protected IJsonBuilder jsonBuilder;
+    
     
     @Test
     public void testIndex()  {
@@ -95,7 +99,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         CnATreeElement element = elementDao.findByUuid(uuid, RetrieveInfo.getPropertyInstance().setPermissions(true));
         assertNotNull("No element found with uuid: " + uuid, element);
         element.setTitel(name);
-        String json = JsonBuilder.getJson(element);
+        String json = jsonBuilder.getJson(element);
         assertTrue("JSON does not contain " + name + ": " + json, json.contains(name));
         ActionResponse response = searchDao.update(uuid, json);
         result = findByTitle("Cryptogr");

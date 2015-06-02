@@ -38,6 +38,7 @@ public interface ISearchService {
     public static final String ES_FIELD_EXT_ID = "ext-id";
     public static final String ES_FIELD_SOURCE_ID = "source-id";
     public static final String ES_FIELD_SCOPE_ID = "scope-id";
+    public static final String ES_FIELD_SCOPE_TITLE = "scope-title";
     public static final String ES_FIELD_PARENT_ID = "parent-id";
     public static final String ES_FIELD_ICON_PATH = "icon-path";
     public static final String ES_FIELD_PERMISSION_ROLES = "permission-roles";

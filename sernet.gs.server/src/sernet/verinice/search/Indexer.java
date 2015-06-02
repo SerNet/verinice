@@ -20,6 +20,7 @@
 package sernet.verinice.search;
 
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -82,10 +83,10 @@ public class Indexer {
             }
             ServerInitializer.inheritVeriniceContextState();
             
-            doIndex();
+            doIndex(start);
             if (LOG.isInfoEnabled()) {
                 long ms = System.currentTimeMillis() - start;
-                LOG.info("Import finished, runtime: " + TimeFormatter.getHumanRedableTime(ms));
+                LOG.info("All threads created, runtime: " + TimeFormatter.getHumanRedableTime(ms));
             }
         } catch (Exception e) {
             LOG.error("Error while indexing elements.", e);           
@@ -94,19 +95,16 @@ public class Indexer {
                 ctx.setAuthentication(null);
                 dummyAuthAdded = false;
             }
-            shutdownAndAwaitTermination(taskExecutor);
-            if (LOG.isInfoEnabled()) {
-                long ms = System.currentTimeMillis() - start;
-                LOG.info("Import finished, runtime: " + TimeFormatter.getHumanRedableTime(ms));
-            }
+            taskExecutor.shutdown();
         } 
     }
 
-    private void doIndex() throws InterruptedException, ExecutionException {
+    private void doIndex(Long startTime) throws InterruptedException, ExecutionException {
         List<CnATreeElement> elementList = getElementDao().findAll(RetrieveInfo.getPropertyInstance().setPermissions(true));
         if (LOG.isInfoEnabled()) {
             LOG.info("Elements: " + elementList.size() + ", start indexing...");
         }
+        LastThread lastThread = new LastThread(startTime);
         int n = 0;
         for (CnATreeElement element : elementList) {
             if(element!=null) {
@@ -115,63 +113,15 @@ public class Indexer {
                 completionService.submit(thread);
                 n++;
             }
-        }
-        waitForObjectResults(n);
-    }
-    
-    private void waitForObjectResults(int n) throws InterruptedException, ExecutionException {
-        for (int i = 0; i < n; ++i) {
-            if (LOG.isDebugEnabled()) {
-                logVersion();
-            }
-            
-        }
+        } 
+        completionService.submit(lastThread);
     }
 
-    private void logVersion() throws InterruptedException, ExecutionException {
-        if(completionService != null &&
-                completionService.take() != null &&
-                completionService.take().get() != null){
-            ActionResponse response = completionService.take().get();
-            long version = 0;
-            String id = "unknown";
-            if(response instanceof IndexResponse) {
-                version = ((IndexResponse)response).getVersion();
-                id = ((IndexResponse)response).getId();
-            }
-            if(response instanceof UpdateResponse) {
-                version = ((UpdateResponse)response).getVersion();
-                id = ((UpdateResponse)response).getId();
-            }
-            if(version>1) {
-                LOG.debug("Version " + version + " for id: " + id);
-            }
-        }
-    }
-    
     private ExecutorService createExecutor() {
         if (LOG.isInfoEnabled()) {
             LOG.info("Number of threads: " + getMaxNumberOfThreads());
         }
         return Executors.newFixedThreadPool(getMaxNumberOfThreads());
-    }
-
-    private void shutdownAndAwaitTermination(ExecutorService pool) {
-        pool.shutdown(); // Disable new tasks from being submitted
-        try {
-            // Wait a while for existing tasks to terminate
-            if (!pool.awaitTermination(getShutdownTimeoutInSeconds(), TimeUnit.SECONDS)) {
-                pool.shutdownNow(); // Cancel currently executing tasks
-                // Wait a while for tasks to respond to being cancelled
-                if (!pool.awaitTermination(getShutdownTimeoutInSeconds(), TimeUnit.SECONDS))
-                    LOG.error("Thread pool did not terminate");
-            }
-        } catch (InterruptedException ie) {
-            // (Re-)Cancel if current thread also interrupted
-            pool.shutdownNow();
-            // Preserve interrupt status
-            Thread.currentThread().interrupt();
-        }
     }
 
     private int getMaxNumberOfThreads() {
@@ -198,6 +148,28 @@ public class Indexer {
         this.elementDao = elementDao;
     }
     
-    
+    class LastThread implements Callable<ActionResponse> {
+
+        long startTime;
+
+        private LastThread(long startTime) {
+            super();
+            this.startTime = startTime;
+        }
+
+        /* (non-Javadoc)
+         * @see java.util.concurrent.Callable#call()
+         */
+        @Override
+        public ActionResponse call() throws Exception {            
+            if (LOG.isInfoEnabled()) {
+                long ms = System.currentTimeMillis() - startTime;
+                String message = "Indexing finished, runtime: " + TimeFormatter.getHumanRedableTime(ms);
+                LOG.info(message);
+            }
+            return null;
+        }
+        
+    }
     
 }

@@ -19,13 +19,26 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.ActionResponse;
+import org.springframework.security.context.SecurityContext;
+import org.springframework.security.context.SecurityContextHolder;
 
+import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.ServerInitializer;
+import sernet.gs.service.TimeFormatter;
+import sernet.verinice.interfaces.search.IJsonBuilder;
+import sernet.verinice.interfaces.search.ISearchService;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.model.search.VeriniceQuery;
+import sernet.verinice.model.search.VeriniceSearchResult;
+import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -34,9 +47,10 @@ public class IndexThread implements Callable<ActionResponse> {
 
     private static final Logger LOG = Logger.getLogger(IndexThread.class);
     
-    private ISearchDao searchDao;
-
-    private CnATreeElement element;
+    private ISearchDao searchDao;  
+    private ISearchService searchService;
+    private CnATreeElement element;  
+    private IJsonBuilder jsonBuilder;
    
     public IndexThread() {
         super();
@@ -47,13 +61,21 @@ public class IndexThread implements Callable<ActionResponse> {
      */
     @Override
     public ActionResponse call() throws Exception {
-        ServerInitializer.inheritVeriniceContextState();
-        String json = JsonBuilder.getJson(element);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("JSON: " + json);
-        }
-        return getSearchDao().updateOrIndex(element.getUuid(), json);
-    }
+        try { 
+            ServerInitializer.inheritVeriniceContextState();
+            String json = getJsonBuilder().getJson(element);
+                   
+            ActionResponse response = getSearchDao().updateOrIndex(element.getUuid(), json);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Element indexed: " + element.getUuid());
+            } 
+            return response;
+        } catch(Exception e ) {
+            String uuid = (element!=null) ? element.getUuid() : null;
+            LOG.error("Error while indexing element: " + uuid, e);
+            return null;
+        } 
+     }
     
     public CnATreeElement getElement() {
         return element;
@@ -69,6 +91,22 @@ public class IndexThread implements Callable<ActionResponse> {
 
     public void setSearchDao(ISearchDao searchDao) {
         this.searchDao = searchDao;
+    }
+
+    public ISearchService getSearchService() {
+        return searchService;
+    }
+
+    public void setSearchService(ISearchService searchService) {
+        this.searchService = searchService;
+    }
+
+    public IJsonBuilder getJsonBuilder() {
+        return jsonBuilder;
+    }
+
+    public void setJsonBuilder(IJsonBuilder jsonBuilder) {
+        this.jsonBuilder = jsonBuilder;
     }
 
 

@@ -37,6 +37,7 @@ public final class DummyAuthentication extends UsernamePasswordAuthenticationTok
                         new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER), 
                         new GrantedAuthorityImpl(ApplicationRoles.ROLE_WEB),
                         new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN)});
+        setAuthenticated(true);
     }
     
     public DummyAuthentication() {
@@ -47,6 +48,7 @@ public final class DummyAuthentication extends UsernamePasswordAuthenticationTok
                         new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER), 
                         new GrantedAuthorityImpl(ApplicationRoles.ROLE_WEB),
                         new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN)});
+        setAuthenticated(true);
     }
 
     @Override
