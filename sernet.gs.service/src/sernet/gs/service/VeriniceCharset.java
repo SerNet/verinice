@@ -30,6 +30,7 @@ public final class VeriniceCharset {
     private VeriniceCharset() {
         super();
     }
+    public static final Charset CHARSET_WINDOWS_1250 = Charset.forName("windows-1250");
     public static final Charset CHARSET_WINDOWS_1252 = Charset.forName("windows-1252");
     public static final Charset CHARSET_ISO_8859_15 = Charset.forName("ISO-8859-15");
     public static final Charset CHARSET_UTF_8 = Charset.forName("UTF-8");

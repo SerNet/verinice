@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -33,6 +34,9 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.osgi.util.NLS;
 
+import sernet.gs.service.VeriniceCharset;
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
@@ -54,7 +58,7 @@ import com.opencsv.CSVWriter;
  */
 public class CsvExport implements ICsvExport {
  
-    private static final String UTF_8 = "UTF-8";
+
     private static final String ERROR_MESSAGE = "Error while exporting search result to CSV";
     
     private String filePath = FILE_PATH_DEFAULT;
@@ -89,7 +93,7 @@ public class CsvExport implements ICsvExport {
             }
             StringWriter stringWriter = new StringWriter();
             writer = doExport(result, columnStore, stringWriter);
-            return stringWriter.toString().getBytes(UTF_8);
+            return stringWriter.toString().getBytes(getCharsetName());
         } catch (RuntimeException e) {
             throw new CsvExportException(ERROR_MESSAGE, e);
         } catch (Exception e) {
@@ -106,7 +110,7 @@ public class CsvExport implements ICsvExport {
     }
 
     private CSVWriter doExport(VeriniceSearchResultObject result, IColumnStore columnStore, Writer writer ) {      
-        CSVWriter csvWriter = new CSVWriter(writer);
+        CSVWriter csvWriter = new CSVWriter(writer, getSeperator());
         disableBlacklistedColumns(columnStore);
         Set<VeriniceSearchResultRow> rows = result.getAllResults();
         exportHeader(columnStore, csvWriter);
@@ -170,6 +174,21 @@ public class CsvExport implements ICsvExport {
         }
         return columnStore;
     }
+    
+    private Charset getCharset() {
+        // read the charset from preference store
+        // charset value is set in CharsetHandler
+        String charsetName = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.SEARCH_CSV_EXPORT_ENCODING);
+        Charset charset = VeriniceCharset.CHARSET_DEFAULT;
+        if(charsetName!=null && !charsetName.isEmpty()) {
+            charset = Charset.forName(charsetName);
+        }
+        return charset;
+    }
+    
+    public String getCharsetName() {
+        return getCharset().name();
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.rcp.search.ICsvExport#setFilePath(java.lang.String)
@@ -177,6 +196,14 @@ public class CsvExport implements ICsvExport {
     @Override
     public void setFilePath(String path) {
         this.filePath = path;
+    }
+
+
+    public char getSeperator() {
+        // read the charset from preference store
+        // charset value is set in CharsetHandler
+        String seperatorString = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.SEARCH_CSV_EXPORT_SEPERATOR);       
+        return seperatorString.charAt(0);
     }
 
 }

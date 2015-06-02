@@ -22,6 +22,7 @@ import java.io.File;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.verinice.interfaces.report.IReportService;
@@ -96,6 +97,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.CUT_INHERIT_PERMISSIONS, false);
 
 		store.setDefault(PreferenceConstants.SEARCH_SORT_COLUMN_BY_SNCA, true);
+
+        store.setDefault(PreferenceConstants.SEARCH_CSV_EXPORT_SEPERATOR, SearchPreferencePage.SEMICOLON);
+        
+        store.setDefault(PreferenceConstants.SEARCH_CSV_EXPORT_ENCODING, VeriniceCharset.CHARSET_WINDOWS_1250.name());
 	}
 
 }

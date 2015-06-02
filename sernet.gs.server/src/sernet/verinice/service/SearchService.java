@@ -105,6 +105,7 @@ public class SearchService implements ISearchService {
         List<SearchHit> hitList = createHitList(msr, limit);
         String identifier = "";
         VeriniceSearchResultObject results = new VeriniceSearchResultObject(elementTypeId, getEntityName(elementTypeId), getPropertyIds(elementTypeId));
+        results.setLimit(limit);
         for (SearchHit hit : hitList) {
             identifier = hit.getId();
             Occurence occurence = createOccurence(elementTypeId, hit);
