@@ -541,6 +541,10 @@ public class GenerateReportDialog extends TitleAreaDialog {
      * Load list of scopes for user selection of top level element for report.
      */
     private void setupComboScopes() {
+        scopes = new ArrayList<CnATreeElement>();
+        scopes.addAll(loadScopes());
+        scopes.addAll(loadITVerbuende());
+
         // check if audit was selected by context menu:
         if (this.auditId != null && isContextMenuCall()) {
             scopeCombo.removeAll();
@@ -570,12 +574,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
         }
 
-        scopes = new ArrayList<CnATreeElement>();
-
         List<String> scopeTitles = new ArrayList<String>();
-
-        scopes.addAll(loadScopes());
-        scopes.addAll(loadITVerbuende());
 
         Collections.sort(scopes, new Comparator<CnATreeElement>() {
             @Override
