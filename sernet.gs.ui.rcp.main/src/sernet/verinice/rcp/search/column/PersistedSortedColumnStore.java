@@ -29,7 +29,6 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.IEntityElement;
-import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 
 /**

@@ -31,7 +31,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
@@ -48,7 +47,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 
@@ -88,6 +86,7 @@ import sernet.verinice.rcp.search.tables.TableMenuListener;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * @author Sebastian Hagedorn <sh@sernet.de>
  */
+@SuppressWarnings("restriction")
 public class SearchView extends RightsEnabledView {
 
     static final Logger LOG = Logger.getLogger(SearchView.class);

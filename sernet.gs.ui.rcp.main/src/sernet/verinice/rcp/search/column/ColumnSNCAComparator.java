@@ -19,13 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
-import java.util.Comparator;
-
 import org.eclipse.jface.preference.IPreferenceStore;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.views.SerialiseBrowserLoadingListener;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**

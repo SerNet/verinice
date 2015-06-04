@@ -34,13 +34,10 @@ import java.util.Set;
 
 import net._01001111.text.LoremIpsum;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import sernet.gs.service.VeriniceCharset;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.SearchPreferencePage;
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.CsvExport;
@@ -56,8 +53,6 @@ import com.opencsv.CSVReader;
  */
 public class CsvExportTest {
 
-    private static final Logger LOG = Logger.getLogger(CsvExportTest.class);
-    
     private static final LoremIpsum LOREM = new LoremIpsum();
     private static final Object FILE_SUFFIX = "csv";
     public static double visabilityFactor = 0.2;

@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -34,9 +33,6 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.eclipse.osgi.util.NLS;
 
-import sernet.gs.service.VeriniceCharset;
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
@@ -57,6 +53,7 @@ import com.opencsv.CSVWriter;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class CsvExport implements ICsvExport {
  
 

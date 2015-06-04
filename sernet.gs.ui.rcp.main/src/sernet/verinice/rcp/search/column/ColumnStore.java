@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
-import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 

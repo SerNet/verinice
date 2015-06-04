@@ -171,7 +171,7 @@ public class PreferenceConstants {
 	 * @param clazz a view class
 	 * @return DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name
 	 */
-	public static String getDontAskBeforeSwitch(Class clazz) {
+	public static String getDontAskBeforeSwitch(@SuppressWarnings("rawtypes") Class clazz) {
 		return new StringBuilder(clazz.getName()).append("_").append(PreferenceConstants.DONT_ASK_BEFORE_SWITCH_PERSPECTIVE).toString();		
 	}
 	
@@ -181,7 +181,8 @@ public class PreferenceConstants {
 	 * @param clazz a view class
 	 * @return DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name
 	 */
-	public static String getSwitch(Class clazz) {
+	@SuppressWarnings("rawtypes")
+    public static String getSwitch(Class clazz) {
 		return new StringBuilder(clazz.getName()).append("_").append(PreferenceConstants.SWITCH_PERSPECTIVE).toString();		
 	}
 	
