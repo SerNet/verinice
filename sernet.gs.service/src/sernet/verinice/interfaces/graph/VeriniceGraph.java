@@ -39,7 +39,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class VeriniceGraph implements Serializable{
     
-    private static final long serialVersionUID = -3415630205719759141L;
+    private static final long serialVersionUID = 4518569408986129815L;
     
     private transient Logger log = Logger.getLogger(VeriniceGraph.class);
 
@@ -234,27 +234,56 @@ public class VeriniceGraph implements Serializable{
     
     /**
      * Returns link targets of an source element.
-     * Returned links are of type "typeId".
+     * Returned links are of type "linkTypeId".
      * If there are no link targets of this type, an empty list is returned.
      * 
      * @param source Source element
-     * @param typeId Type of returned links
+     * @param linkTypeId Type of returned links
      * @return A set of target elements
      */
-    public Set<CnATreeElement> getLinkTargets(CnATreeElement source, String typeId) {
+    public Set<CnATreeElement> getLinkTargets(CnATreeElement source, String linkTypeId) {
         if (getLog().isDebugEnabled()) {
-            getLog().debug("Returning link targets of elment: " + source.getTitle() + ", link type is: " + typeId + "...");
+            getLog().debug("Returning link targets of element: " + source.getTitle() + ", link type is: " + linkTypeId + "...");
         }
         Set<Edge> edgeList = getGraph().edgesOf(source);
         Set<CnATreeElement> linkTargets = new HashSet<CnATreeElement>();       
         for (Edge edge : edgeList) {
-            if(typeId==null || typeId.equals(edge.getType())) {
+            if(linkTypeId==null || linkTypeId.equals(edge.getType())) {
                 CnATreeElement edgeSource = edge.getSource();
                 CnATreeElement edgeTarget = edge.getTarget();
                 CnATreeElement target = (edgeSource.equals(source)) ? edgeTarget : edgeSource;
                 linkTargets.add(target);
                 if (getLog().isDebugEnabled()) {
-                    getLog().debug("Link found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", link type: " + typeId);
+                    getLog().debug("Link found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", link type: " + linkTypeId);
+                }
+            }
+        }
+        return linkTargets;
+    }
+    
+    /**
+     * Returns link targets of an source element.
+     * Returned targets are of type "elementTypeId".
+     * If there are no link targets of this type, an empty list is returned.
+     * 
+     * @param source Source element
+     * @param elementTypeId Type of returned targets
+     * @return A set of target elements
+     */
+    public Set<CnATreeElement> (CnATreeElement source, String elementTypeId) {
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Returning link targets of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
+        }
+        Set<Edge> edgeList = getGraph().edgesOf(source);
+        Set<CnATreeElement> linkTargets = new HashSet<CnATreeElement>();       
+        for (Edge edge : edgeList) {        
+            CnATreeElement edgeSource = edge.getSource();
+            CnATreeElement edgeTarget = edge.getTarget();
+            CnATreeElement target = (edgeSource.equals(source)) ? edgeTarget : edgeSource;
+            if(elementTypeId==null || elementTypeId.equals(target.getTypeId())) {
+                linkTargets.add(target);
+                if (getLog().isDebugEnabled()) {
+                    getLog().debug("Link found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", target type: " + elementTypeId);
                 }
             }
         }
@@ -272,8 +301,8 @@ public class VeriniceGraph implements Serializable{
     
     private void logStatistics() {
         if(getGraph()!=null) {
-            getLog().debug("Number vertices: " + getGraph().vertexSet().size());
-            getLog().debug("Number edges: " + getGraph().edgeSet().size());
+            getLog().info("Number vertices: " + getGraph().vertexSet().size());
+            getLog().info("Number edges: " + getGraph().edgeSet().size());
         }
 
     }
@@ -293,8 +322,6 @@ public class VeriniceGraph implements Serializable{
             }
         }
     }
-    
-
 
     public Graph<CnATreeElement, Edge> getGraph() {
         return graph;

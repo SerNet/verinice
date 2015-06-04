@@ -50,8 +50,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * To configure link types use method: setRelationIds(String[] relationIds).
  *  
- *  You have to call "create()" to initialize the service.
- *  After that you can start to use the service.
+ * You have to call "create()" to initialize the service.
+ * After that you can start to use the service.
  * 
  * @see http://jgrapht.org/
  * @author Daniel Murygin <dm[at]sernet[dot]de>

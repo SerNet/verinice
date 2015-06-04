@@ -30,7 +30,7 @@ package sernet.verinice.interfaces.graph;
  *  setScopeId(Integer scopeId)
  *  setTypeIds(String[] typeIds)
  *  setRelationIds(String[] relationIds)
- *  setElementFilter(IElementFilter elementFilter)
+ *  IGraphElementLoader.setElementFilter(IElementFilter elementFilter)
  *  
  *  You have to call "create()" to initialize the service.
  *  After creation get the result by calling getGraph()
