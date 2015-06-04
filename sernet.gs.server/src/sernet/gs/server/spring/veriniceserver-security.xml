@@ -44,6 +44,7 @@
         <property name="allowedInstances">
             <set>
                 <ref bean="pniCommand" />
+                <ref bean="loadScopeTitlesCommand" />            
             </set>
         </property>
     </bean>
