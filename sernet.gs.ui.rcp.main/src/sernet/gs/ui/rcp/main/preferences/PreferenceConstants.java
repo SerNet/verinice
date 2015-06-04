@@ -49,6 +49,7 @@ public class PreferenceConstants {
     public static final String INFO_SEARCH_ELEMENT_NOT_FOUND = "search_element_not_found"; //$NON-NLS-1$
     public static final String SHOW_ALIEN_DECORATOR = "show_alien_decorator"; //$NON-NLS-1$
     public static final String SHOW_DBID_DECORATOR = "show_dbid_decorator"; //$NON-NLS-1$
+    public static final String SHOW_GSMISM_DECORATOR = "show_gsmism_decorator"; //$NON-NLS-1$
     public static final String USE_AUTOMATIC_VALIDATION = "use_automatic_validation"; //$NON-NLS-1$
     public static final String SHOW_REPORT_VALIDATION_WARNING = "show_report_validation_warning"; //$NON-NLS-1$
     public static final String USE_VALIDATION_GUI_HINTS = "use_validation_gui_hints"; //$NON-NLS-1$

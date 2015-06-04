@@ -89,6 +89,12 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		BooleanFieldEditor showDBIDDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_DBID_DECORATOR, Messages.getString("GeneralSettingsPage.ShowDBIDDecorator"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(showDBIDDecorator);
 		
+        BooleanFieldEditor showGsmIsmDecorator = new BooleanFieldEditor(
+                PreferenceConstants.SHOW_GSMISM_DECORATOR,
+                Messages.getString("GeneralSettingsPage.ShowGsmIsmDecorator"),
+                getFieldEditorParent()); //$NON-NLS-1$
+        addField(showGsmIsmDecorator);
+		
 		BooleanFieldEditor useValidationGuiHints = new BooleanFieldEditor(PreferenceConstants.USE_VALIDATION_GUI_HINTS, Messages.getString("GeneralSettingsPage.UseValidationGuiHints"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(useValidationGuiHints);
 		

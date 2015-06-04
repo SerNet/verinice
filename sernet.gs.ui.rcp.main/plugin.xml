@@ -1884,6 +1884,25 @@ Artwork:&#x0A;Blackbit http://www.blackbit.de - Icons by Axialis Team http://www
 	      			<objectClass name="sernet.verinice.model.common.CnATreeElement"/>
 	      		</enablement>
 	      </decorator>
+       <decorator
+             adaptable="true"
+             class="sernet.verinice.rcp.GsmIsmDecorator"
+             id="sernet.verinice.rcp.GsmIsmDecorator"
+             label="gsmIsmDecorator"
+             lightweight="true"
+             location="TOP_LEFT"
+             state="true">
+          <enablement>
+             <and>
+                <objectClass
+                      name="sernet.verinice.model.iso27k.IncidentScenario">
+                </objectClass>
+                <objectClass
+                      name="sernet.verinice.model.iso27k.Vulnerability">
+                </objectClass>
+             </and>
+          </enablement>
+       </decorator>
    </extension>
    <extension point="org.eclipse.core.net.authenticator">
      <authenticator class="sernet.gs.ui.rcp.main.security.VeriniceAuthenticator">
