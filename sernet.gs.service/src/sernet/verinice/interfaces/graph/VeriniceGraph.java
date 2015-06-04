@@ -270,7 +270,7 @@ public class VeriniceGraph implements Serializable{
      * @param elementTypeId Type of returned targets
      * @return A set of target elements
      */
-    public Set<CnATreeElement> (CnATreeElement source, String elementTypeId) {
+    public Set<CnATreeElement> getLinkTargetsByElementType(CnATreeElement source, String elementTypeId) {
         if (getLog().isDebugEnabled()) {
             getLog().debug("Returning link targets of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
         }
