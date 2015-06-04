@@ -376,6 +376,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     }
 
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
+        //viewer.setInput(new PlaceHolder(Messages.FileView_0));
         Object element = ((IStructuredSelection) selection).getFirstElement();
         if (part == this) {
             openAction.setEnabled(element != null);
@@ -451,7 +452,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             LoadAttachmentsUserFiltered command = new LoadAttachmentsUserFiltered(id);
             command = getCommandService().executeCommand(command);
             attachmentList = command.getResult();
-            if (attachmentList != null) {
+            if (attachmentList != null && !attachmentList.isEmpty()) {
                 Display defaultDisplay = Display.getDefault();
                 Display currentDisplay = Display.getCurrent();
                 Display.getDefault().syncExec(new Runnable() {
@@ -472,6 +473,8 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                         }
                     });
                 }
+            } else {
+                viewer.setInput(new PlaceHolder(Messages.FileView_0));
             }
 
         } catch (Exception e) {
