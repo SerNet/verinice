@@ -37,6 +37,9 @@ import net._01001111.text.LoremIpsum;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import sernet.gs.service.VeriniceCharset;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.preferences.SearchPreferencePage;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
@@ -77,7 +80,9 @@ public class CsvExportTest {
             //assertTrue("No visible column", columnStore.getColumns().size()>0);
             ICsvExport exporter = new CsvExport();
             exporter.setFilePath(getFilePath());
-            exporter.exportToFile(result, columnStore);    
+            exporter.setSeperator(SearchPreferencePage.SEMICOLON.charAt(0));
+            exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
+            exporter.exportToFile(result, columnStore);
             checkExportFile(result, columnStore);
         }
     }
@@ -89,6 +94,8 @@ public class CsvExportTest {
         String phrase = LOREM.randomWord();
         VeriniceSearchResultObject result = SearchResultGenerator.createResult(phrase);
         IColumnStore columnStore = CsvExport.createColumnStore(result);
+        exporter.setSeperator(SearchPreferencePage.SEMICOLON.charAt(0));
+        exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
         exporter.exportToFile(result, columnStore);      
     }
     
@@ -99,6 +106,8 @@ public class CsvExportTest {
         String phrase = LOREM.randomWord();
         VeriniceSearchResultObject result = new VeriniceSearchResultObject(phrase, phrase, new String[]{});
         IColumnStore columnStore = CsvExport.createColumnStore(result);
+        exporter.setSeperator(SearchPreferencePage.SEMICOLON.charAt(0));
+        exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
         exporter.exportToFile(result, columnStore);  
         checkExportFile(result, columnStore);
     }
@@ -131,11 +140,10 @@ public class CsvExportTest {
         assertTrue("Export file does not exists", exportFile.exists());
         CSVReader reader = null;
         try {
-            reader = new CSVReader(new FileReader(exportFile), ',', '"', 1);
+            reader = new CSVReader(new FileReader(exportFile), SearchPreferencePage.SEMICOLON.charAt(0), '"', 1);
             String[] nextLine;
             Iterator<VeriniceSearchResultRow> rows = result.getAllResults().iterator();
-            while ((nextLine = reader.readNext()) != null) {          
-                assertTrue("To many lines in CSV file", rows.hasNext());
+            while ((nextLine = reader.readNext()) != null && rows.hasNext()) {
                 VeriniceSearchResultRow row = rows.next(); 
                 checkLine(nextLine, row, columnStore);
             }

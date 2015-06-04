@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search;
 
+import java.nio.charset.Charset;
+
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.rcp.search.column.IColumnStore;
 
@@ -60,4 +62,16 @@ public interface ICsvExport {
      * @param File path for exported CSV table
      */
     void setFilePath(String path);
+
+    /**
+     * Sets the seperator for the values (typically on of those ",", ;, \t)
+     *
+     */
+    void setSeperator(char seperator);
+
+    /**
+     * Sets the charset for this export.
+     *
+     */
+    void setCharset(Charset charset);
 }

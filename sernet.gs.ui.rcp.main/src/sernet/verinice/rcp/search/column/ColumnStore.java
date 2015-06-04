@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
+import java.util.Comparator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -40,13 +41,12 @@ public class ColumnStore implements IColumnStore {
     private SortedSet<IColumn> invisibleColumns;
 
     public ColumnStore() {
-        super();
-        visibleColumns = new TreeSet<IColumn>(new ColumnComparator());
-        invisibleColumns = new TreeSet<IColumn>(new ColumnComparator());
+        this(new ColumnSNCAComparator());
     }
 
-    public ColumnStore(String entityTypeid) {
-        this();
+    public ColumnStore(IColumnComparator comparator) {
+        visibleColumns = new TreeSet<IColumn>(comparator);
+        invisibleColumns = new TreeSet<IColumn>(comparator);
     }
 
     /*
@@ -119,8 +119,12 @@ public class ColumnStore implements IColumnStore {
         return allColumns;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.column.IColumnStore#isColumnVisible(sernet.verinice.rcp.search.column.IColumn)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * sernet.verinice.rcp.search.column.IColumnStore#isColumnVisible(sernet
+     * .verinice.rcp.search.column.IColumn)
      */
     @Override
     public boolean isColumnVisible(IColumn iColumn) {

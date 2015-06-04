@@ -40,6 +40,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.rcp.search.column.ColumnComparator;
 import sernet.verinice.rcp.search.column.ColumnStore;
 import sernet.verinice.rcp.search.column.IColumn;
 import sernet.verinice.rcp.search.column.IColumnFactory;
@@ -62,6 +63,10 @@ public class CsvExport implements ICsvExport {
     private static final String ERROR_MESSAGE = "Error while exporting search result to CSV";
     
     private String filePath = FILE_PATH_DEFAULT;
+
+    private char seperator;
+
+    private Charset charset;
     
     private static List<String> COLUMN_BLACKLIST;
     static {
@@ -161,8 +166,9 @@ public class CsvExport implements ICsvExport {
         }
     }
     
+
     public static IColumnStore createColumnStore(VeriniceSearchResultObject result) {
-        IColumnStore columnStore = new ColumnStore();
+        IColumnStore columnStore = new ColumnStore(new ColumnComparator());
         Set<VeriniceSearchResultRow> rows = result.getAllResults();
         for (VeriniceSearchResultRow row : rows) {
             Set<String> types = row.getPropertyTypes();
@@ -176,14 +182,7 @@ public class CsvExport implements ICsvExport {
     }
     
     private Charset getCharset() {
-        // read the charset from preference store
-        // charset value is set in CharsetHandler
-        String charsetName = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.SEARCH_CSV_EXPORT_ENCODING);
-        Charset charset = VeriniceCharset.CHARSET_DEFAULT;
-        if(charsetName!=null && !charsetName.isEmpty()) {
-            charset = Charset.forName(charsetName);
-        }
-        return charset;
+        return this.charset;
     }
     
     public String getCharsetName() {
@@ -199,11 +198,19 @@ public class CsvExport implements ICsvExport {
     }
 
 
-    public char getSeperator() {
-        // read the charset from preference store
-        // charset value is set in CharsetHandler
-        String seperatorString = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.SEARCH_CSV_EXPORT_SEPERATOR);       
-        return seperatorString.charAt(0);
+    public void setSeperator(char seperator)    {
+        this.seperator = seperator;
     }
 
+    public char getSeperator() {
+       return seperator;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.search.ICsvExport#setCharset(org.apache.commons.lang.CharSet)
+     */
+    @Override
+    public void setCharset(Charset charset) {
+       this.charset = charset;
+    }
 }

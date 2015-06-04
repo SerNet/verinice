@@ -20,7 +20,9 @@
 package sernet.verinice.rcp.search;
 
 import java.io.File;
+import java.nio.charset.Charset;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -29,9 +31,11 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.service.FileUtil;
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.preferences.SearchPreferencePage;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.rcp.search.column.ColumnStoreFactory;
 import sernet.verinice.rcp.search.column.IColumnStore;
@@ -76,9 +80,35 @@ public class CsvExportHandler {
         // IColumnStore columnStore = CsvExport.createColumnStore(result);
         ICsvExport exporter = new CsvExport();
         exporter.setFilePath(filePath);
+        exporter.setSeperator(getSeperator());
+        exporter.setCharset(getCharset());
         exporter.exportToFile(result, columnStore);
     }
     
+    private Charset getCharset() {
+        // read the charset from preference store
+        // charset value is set in CharsetHandler
+        String charsetName = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.SEARCH_CSV_EXPORT_ENCODING);
+        Charset charset = VeriniceCharset.CHARSET_DEFAULT;
+        if (charsetName != null && !charsetName.isEmpty()) {
+            charset = Charset.forName(charsetName);
+        }
+        return charset;
+    }
+
+    /**
+     * If no seperator is set, this getter will always return the default
+     * seperatore {@link SearchPreferencePage#SEMICOLON}
+     *
+     */
+    private char getSeperator() {
+        String seperator = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.SEARCH_CSV_EXPORT_SEPERATOR);
+        if (StringUtils.isEmpty(seperator)) {
+            return SearchPreferencePage.SEMICOLON.charAt(0);
+        }
+        return seperator.charAt(0);
+    }
+
     private String createFilePath() {
         FileDialog dialog = new FileDialog(shell, SWT.SAVE);
         dialog.setText("Export to CSV file");

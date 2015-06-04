@@ -19,57 +19,25 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
-import java.util.Comparator;
-
-import org.eclipse.jface.preference.IPreferenceStore;
-
 import sernet.gs.service.NumericStringComparator;
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.views.SerialiseBrowserLoadingListener;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
- * Used for sorting columns in {@link ColumnStore}
- *
- * The default columns {@link IconColumn}, {@link TitleColumn} and
- * {@link OccurenceColumn} are always the first columns, since the rank value is
- * hardcoded. The {@link PropertyTypeColumn} is either sort by the
- * {@link NumericStringComparator} or by the order defined in the SNCA.xml
- *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-final class ColumnComparator implements Comparator<IColumn> {
+public class ColumnComparator implements IColumnComparator {
 
     private static NumericStringComparator stringCompare = new NumericStringComparator();
 
     @Override
     public int compare(IColumn o1, IColumn o2) {
         if (arePropertyColumns(o1, o2)) {
-            if (shouldDoSortingByNumericStringCompare(o1, o2)) {
-                return stringCompare.compare(o1.getTitle(), o2.getTitle());
-            }
+            return stringCompare.compare(o1.getTitle(), o2.getTitle());
+        } else {
+            return o1.getRank() - o2.getRank();
         }
-
-        return o1.getRank() - o2.getRank();
     }
 
-    private boolean shouldDoSortingByNumericStringCompare(IColumn o1, IColumn o2) {
-        return sortAlphabetically() || rankIsEqual(o1, o2);
-    }
-
-    private boolean rankIsEqual(IColumn o1, IColumn o2) {
-        return o1.getRank() == o2.getRank();
-    }
-
-    private boolean arePropertyColumns(IColumn o1, IColumn o2) {
+    protected boolean arePropertyColumns(IColumn o1, IColumn o2) {
         return o1 instanceof PropertyTypeColumn && o2 instanceof PropertyTypeColumn;
-    }
-
-    private boolean sortAlphabetically() {
-        return !getPreferenceStore().getBoolean(PreferenceConstants.SEARCH_SORT_COLUMN_BY_SNCA);
-    }
-
-    private IPreferenceStore getPreferenceStore() {
-        return Activator.getDefault().getPreferenceStore();
     }
 }
