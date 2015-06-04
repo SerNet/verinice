@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: opencsv-3.3
 Bundle-SymbolicName: opencsv-3.3
 Bundle-Version: 3.3
-Bundle-ClassPath: opencsv-3.3.jar
+Bundle-ClassPath: opencsv-3.3.jar,commons-lang3-3.3.2.jar
 Export-Package: com.opencsv,com.opencsv.bean,com.opencsv.stream
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 
