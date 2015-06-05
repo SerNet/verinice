@@ -72,12 +72,10 @@ public class Occurence implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, SortedSet<String>> entry : entries.entrySet()) {
-            sb.append("[" + entry.getKey() + "]");
+            sb.append("[").append(getNameOfPropertyId(entry.getKey())).append("]");
             for (String text : entry.getValue()) {
-                sb.append(" ");
-                sb.append(text);
+                sb.append(" ").append(text);
             }
-
             sb.append("\n");
         }
 
