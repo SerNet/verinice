@@ -42,7 +42,7 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 
     public static final String REL_INCSCEN_ASSET = "rel_incscen_asset"; //$NON-NLS-1$
     public static final String REL_INCSCEN_VULNERABILITY = "rel_incscen_vulnerability"; //$NON-NLS-1$
-	
+    public static final String REL_INCSCEN_THREAT = "rel_incscen_threat"; //$NON-NLS-1$
 	
 	/**
 	 * Creates an empty scenario
