@@ -1,0 +1,338 @@
+
+HTML, BODY, DIV, P, UL, OL, TABLE, img { PADDING: 0px; MARGIN: 0px; }
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size:100.01%;
+	background-color:#ffffff;
+	margin-left: 12px;}
+.externlink {background:  url(img/extern.gif) no-repeat right center;
+        padding-right: 16px;}
+
+/*Sprungmarke f�r Sprachbrowser um direkt zu den einzelnen Bereichen zu gelangen*/
+.sprungmarke {	position: absolute; left: -2000px;  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em;}
+
+a:link, a:visited, a:hover {
+  color: black; 
+  background: white;
+  text-decoration: none; 
+  cursor: default;
+}
+
+
+a.sprungmarke:focus, a.sprungmarke:hover {
+  position: absolute;
+  top: 4px;
+  left: 20px;
+  display: block;
+  height: auto;
+  width: auto;
+  font-size: 0.7em;
+  text-decoration: underline;
+  white-space: nowrap;
+  background-color:#CCCCCC; color:#000000
+}
+
+/* wo befinde ich mich in der Navigation*/
+.standort {	left: -2600px; position: absolute; 	font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em;}
+.trenner {	left: -2400px; position: absolute; 	font-family: Verdana, Arial, Helvetica, sans-serif; }
+/* der Contentbereich f�r die Startseite */
+
+#indexmeldunglinks {
+	float: left;
+	PADDING-BOTTOM: 20px;
+	width: 30.3em;
+	margin-top: 5px;
+	margin-right: 6px;
+	background-color: #FFFFFF;
+}
+html *>b\ody #indexmeldunglinks { margin-left: 20px; } /* f�r Opera 6 */
+
+#indexmeldunglinks h1 { font-weight: bold; 
+ margin-bottom: -0.80em; margin-top: -0.1em; font-size:0.9em; display: block; padding: 2px 4px 8px 0px}
+#indexmeldunglinks .allgemein { color: #336699; }
+#indexmeldunglinks a.allgemein:link { color: #336699; }
+#indexmeldunglinks a.allgemein:visited { color: #336699; }
+#indexmeldunglinks a.allgemein:hover { color: #336699;}
+#indexmeldunglinks .bsi {color: #669966; }
+#indexmeldunglinks a.bsi:link {color: #669966; }
+#indexmeldunglinks a.bsi:visited {color: #669966; }
+#indexmeldunglinks a.bsi:hover { color: #669966;}
+#indexmeldunglinks .themen { color: #CC9933; }
+#indexmeldunglinks a.themen:link { color: #CC9933; }
+#indexmeldunglinks a.themen:visited { color: #CC9933; }
+#indexmeldunglinks a.themen:hover { color: #CC9933;}
+#indexmeldunglinks .aktuelles {color: #CC6699; }
+#indexmeldunglinks a.aktuelles:link {color: #CC6699; }
+#indexmeldunglinks a.aktuelles:visited {color: #CC6699; }
+#indexmeldunglinks a.aktuelles:hover { color: #CC6699;}
+#indexmeldunglinks .presse {color: #CC6666;}
+#indexmeldunglinks a.presse:link {color: #CC6666;}
+#indexmeldunglinks a.presse:visited {color: #CC6666;}
+#indexmeldunglinks a.presse:hover {color: #CC6666;}
+#indexmeldunglinks .publikationen { color: #505050; }
+#indexmeldunglinks a.publikationen:link { color: #505050; }
+#indexmeldunglinks a.publikationen:visited { color: #505050; }
+#indexmeldunglinks a.publikationen:hover { color: #505050;}
+#indexmeldunglinks p { font-size: 0.7em;}
+#indexmeldunglinks p.weiter { text-align: right; margin-top: 0px; }
+#indexmeldunglinks p.weiter a:link { text-decoration: none; }
+#indexmeldunglinks p.weiter a:visited {text-decoration: none;}
+#indexmeldunglinks p.weiter a:hover {text-decoration: underline; background-color:#FFFFFF; font-weight:bold }
+#indexmeldunglinks p.weiter a:active {text-decoration: underline;}
+
+
+#indexmeldungrechts {margin-top: 5px; margin-left: 20px; padding: 5px; background-color: #fff; float: left; width: 12.0em; border: 1px solid #003366;}
+
+#indexmeldungrechts h1 { font-weight: bold; font-size: 0.8em; display: inline; color: #000}
+#indexmeldungrechts p { font-size: 0.7em; padding-bottom: 1.0em}
+#indexmeldungrechts a:link { text-decoration: none; color: #003366;}
+#indexmeldungrechts a:visited {text-decoration: none; color: #003366;}
+#indexmeldungrechts a:hover {text-decoration: underline; color: #003366;}
+#indexmeldungrechts a:active {text-decoration: underline; color: #003366;}
+.meldungstrenner {border-top: 1px dashed #cccccc; margin-top: -0px; margin-bottom: 8px; margin-right: 200px}
+/* Ende Contentbereich f�r die Startseite */
+
+/* hier beginnt der Inhaltsbereich */
+#content {
+	margin-left: 1em;
+	margin-top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #333333;
+	text-align: left;
+	background-color: #FFFFFF;
+}
+* html body #content {width: 86%}
+@media print
+{ #content { margin-left: 1.0cm }}
+/* die vorhergehende Angabe ist f�r die IE erforderlich, da er aus verschiedenen Dateien die Druckinformationen bezieht */
+
+
+/* die Elemente aus dem Contentbereich */
+acronym, abbr { BORDER-BOTTOM: 1px dotted #999999; cursor: help;}
+address { font-family: Verdana, Arial, Helvetica, sans-serif; 
+font-size: 0.7em; font-style: normal; font-weight: normal; color: #333333; margin: 1.0em 0 1.0em 0;}
+table address {font-size:1.0em;}
+b, strong { font-family: Verdana, Arial, Helvetica, sans-serif; color: #333333; font-style: normal; font-weight: bold;}
+blockquote { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em; color: #333333; font-style: normal; font-weight: normal; line-height: 1.25em;}
+br { font-family: Verdana, Arial, Helvetica, sans-serif; 
+font-size: 0.7em; font-style: normal; font-weight: normal; color: #333333;}
+code { font-family: "Courier New", Courier, Tahoma, mono; font-size: 0.72em; font-style: normal; font-weight: normal; letter-spacing: 0.05em;}
+	li code { font-size: 100%; }
+	p code {font-size: 1.0em;}
+tt { font-family: "Courier New", Courier, Tahoma, mono; font-size: 0.72em; font-style: normal; font-weight: normal; letter-spacing: 3px;}
+	p tt {font-size: 1.0em;}
+	li tt {font-size: 1.0em;}
+#content dl { font-family: Verdana, Arial, Helvetica, sans-serif; }
+#content dt {  margin-top: 0.60em; font-size: 0.7em; color: #333333; font-style: normal; font-weight: normal; }
+#content dt dd {padding-bottom: 1.4em}
+#content dd {  margin-top: 0.35em; margin-left: 2.0em; font-size: 0.7em; color: #333333; font-style: normal; font-weight: normal; }
+#content dd li {font-size: 1.46em; color: #333333}
+#content dd li li{font-size: 100%; color: #333333}
+
+h1, h2, h3, h4 { margin: 0px; padding: 0px; text-align: left; font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold; 
+color:#003366; }
+h1 { font-size:0.8em; margin-top: 1.8em;}
+h2 { font-size:0.90em; margin-top: 1.6em}
+h3 { font-size:0.75em; margin-top: 1.4em}
+h3 > sup { font-size: 0.65em; font-style: normal; font-weight: normal; color: #003366;}
+h4 { font-size:0.70em; margin-top: 1.2em}
+h1 + h2 {margin-top: 0.8em}
+h1 + ul {margin-top: 0.8em}
+h2 + ul {margin-top: 0.8em}
+h2 + h3 {margin-top: 0.6em}
+h3 + h4 {margin-top: 0.4em}
+h1 acronym { BORDER-BOTTOM: 0px}
+h2 acronym { BORDER-BOTTOM: 0px}
+h3 acronym { BORDER-BOTTOM: 0px}
+h4 acronym { BORDER-BOTTOM: 0px}
+h1.meldungheadline {color: #000000; font-size: 0.85em;}
+
+HR { background-color: #999999; color: #999999; border: #999999; height: 1px}
+.hrstartrechts {background-color: #003366; clear: both; color: #003366; border: #003366; height: 1px; margin:0px 0px 10px 0px}
+/*HR vor Copyright siehe dort*/
+/*Listenelemente*/
+#content ol {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em; margin-left: 2.4em}
+	/*Listenelemente f�r nummerierte Liste in einer nummerierten Liste um die Vererbung auszuschlie�en*/
+	#content ol ol { font-size: 1.0em;}
+	/*Listenelemente f�r unnummerierte Liste in einer nummerierten Liste um die Vererbung auszuschlie�en*/
+	#content ol ul { font-size: 1.0em;}
+	#content ol li { padding-top: 5px;}
+	#content ol.olohne {list-style-type: none}
+#content ul { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em; margin-left: 2.2em}
+	/*Listenelemente f�r unnnummerierte Liste in einer unnnummerierten Liste um die Vererbung auszuschlie�en*/
+	#content ul ul { font-size: 1.0em;}
+	#content ul li {padding-top: 2px;}
+	/*Listenelemente f�r nummerierte Liste in einer unnnummerierten Liste um die Vererbung auszuschlie�en*/
+	#content ul ol { font-size: 1.0em;}
+	#content ul.ulohne {list-style-type: none}
+#content LI.ligruen { list-style-image: url(img/pfeilrg.gif);}
+#content LI.lirot { list-style-image:   url(img/pfeilrot.gif);}
+
+P { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.7em; color: #333333; font-style: normal; font-weight: normal; line-height: 1.25em; margin-top: 0.8em; }
+	#content p + ul {margin-top: 0.5em;}
+	#content p + ol {margin-top: 0.5em;}
+p.textindent { font-family: Verdana, Arial, Helvetica, sans-serif; text-indent: 1.5em; }
+pre { font-family: "Courier New", Courier, Tahoma, mono; font-size: 0.7em; font-style: normal; 
+font-weight: normal; color: #333333;}
+sub { font-family: Verdana, Arial, Helvetica, sans-serif; color: #333333;} 
+sup { font-family: Verdana, Arial, Helvetica, sans-serif; color: #333333;} 
+sup >a:link { text-decoration: none; border-style: none;}
+/*Link in einem hochgestellten Text (z.&nbsp;BAnmerkung) ohne Unterstreichung*/
+sup >a:visited { text-decoration: none; border-style: none; }
+
+/* die Tabellen */
+#content p  + table {margin-top: 1.0em}
+#content h1 + table {margin-top: 1.0em}
+#content h2 + table {margin-top: 1.0em}
+#content h3 + table {margin-top: 1.0em}
+#content h4 + table {margin-top: 1.0em}
+#content ol + table {margin-top: 1.0em}
+#content ul + table {margin-top: 1.0em}
+#content address + table {margin-top: 1.0em}
+#content table + ul {margin-top: 1.0em}
+#content table + ol {margin-top: 1.0em}
+#content table + table {margin-top: 1.0em}
+#content table { font-family: Verdana, Arial, Helvetica, sans-serif;}
+#content caption { caption-side: top; padding-bottom: 5px; text-align: left; font-size: 0.80em; font-style: 
+normal; font-weight: bold; color: #003366; padding-top: 1.0em; }
+#content th { font-size: 0.75em; font-style: normal; line-height: 1.6em; font-weight: bold; color: #003366; text-align: left; padding: 2px 2px 2px 4px; border: 1px solid #333333;}
+#content table tr td { font-size: 0.7em; font-style: normal; font-weight: normal; vertical-align:top}
+#content td {  padding: 2px 2px 2px 4px; border: 1px solid #999999; }
+#content table tr td ol {font-family: Verdana, Arial, Helvetica, sans-serif;  font-size: 1.0em ! important;}
+#content table tr td ul {font-family: Verdana, Arial, Helvetica, sans-serif;  font-size: 1.0em ! important;}
+#content td p { font-size: 0.9em; font-style: normal; font-weight: normal; }
+#content table tr td table tr td { font-size: 0.7em ! important; font-style: normal; font-weight: normal;}
+#content table.tabletextdecorationnone a:link{  text-decoration: none;}
+#content table.tabletextdecorationnone a:visited { text-decoration: none;} 
+#content table.tabletextdecorationnone a:active { text-decoration: none;} 
+#content table.tabletextdecorationnone a:hover { text-decoration: none; background-color: #cccccc}
+#content table.tableohnerahmen {border:0px}
+#content table.tableohnerahmen td {border:0px; padding: 8px 2px 8px 4px;}
+
+/*Hyperlinks*/
+#content a:link { color: #003366;}
+#content a:visited { color: #336600;}
+#content a:hover { color: #003366;  background-color: #CCCCCC}
+#content a:focus { color: #003366;  background-color: #CCCCCC}
+#content a:active { color: #003366;}
+#content a:link strong { font-family: Verdana, Arial, Helvetica, sans-serif; color: #003366;}
+#content a:visited strong { color: #336600;}
+#content a:hover strong { color: #003366; background-color: #CCCCCC}
+#content a:active strong { color: #003366;} 
+
+/*Ein Index A-Z*/
+#content .az {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 0.84em; color: #003366; letter-spacing: 3px; background-color: #F3F3F3;
+	padding: 0px 4px 2px 4px;} 
+
+/*Bilder, deren Abst�nde und einiges zu float*/
+.bildunterschrift {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 0.8em;
+	font-style: normal;
+	font-weight: normal;
+	color: #333333;}
+#content .imgabstandru { margin-right: 16px; margin-bottom: 12px;}
+#content .imgabstandoru { margin-top: 12px; margin-right: 16px; margin-bottom: 12px;}
+#content .imgfloat { float: left; margin-top: 12px;}
+#content .contentfloat {float: left; margin-top: -10px;}
+#content .clearleft {clear: left;}
+#content .clearright {clear: right;}
+#content .clearboth {clear: both;}
+
+#content .formel {font-family:"Times New Roman", Times, serif; font-size: 110%; letter-spacing: 0.16em; padding:0 8px 0 8px;}
+
+/* der Dokumententitel der Seite */
+.doctitle {font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: normal; 
+color:#333;}
+
+/*besondere Schriftfarben, Gr��en und Abst�nde*/
+.blaukursiv {  font-family: Verdana, Arial, Helvetica, sans-serif; font-style: italic; color: #0066CC; font-weight: bold}
+.hinweisrot { color:#FF0000 }
+.hinweisrot b { color:#FF0000 }
+.hinweisrot strong{ color:#FF0000 } 
+.marker { background-color: #FFFFCC;}
+.markergrau { background-color: #CCCCCC;}
+.klein { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 80%; color: #333333; font-style: normal; font-weight: normal;}
+/* Abstand zun linken Rand*/
+.marginleft10 { font-family: Verdana, Arial, Helvetica, sans-serif; margin-left: 1.5em; } 
+.marginleft15 { font-family: Verdana, Arial, Helvetica, sans-serif; margin-left: 3.5em; }
+.marginleft20 { font-family: Verdana, Arial, Helvetica, sans-serif; margin-left: 5.5em; }
+.telausland {margin-left:4.5em}
+.fussnote {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 90%; 
+	background-color: #CCCCCC;
+	cursor: pointer;
+	text-decoration: none;
+}
+.quellenhinweis {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	background-color: #FFFFCC;
+	font-size: 0.76em;
+	font-weight: bold; 
+	cursor: pointer;
+	text-decoration: none;
+}
+.umbruchverhindern { white-space: nowrap}
+
+/*Formularfelder*/
+input {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1em;}
+select {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 1em;}
+
+/* f�r die Navigation von Seite vor, zur�ck, nach oben, Kapitelanfang*/
+#content a.seitevorzurueck:link {font-family: Verdana, Arial, Helvetica, sans-serif;  text-decoration: none;} 
+#content a.seitevorzurueck:visited {font-family: Verdana, Arial, Helvetica, sans-serif;  text-decoration: none;} 
+#content a.seitevorzurueck:active {font-family: Verdana, Arial, Helvetica, sans-serif; text-decoration: none;} 
+#content a.seitevorzurueck:hover {font-family: Verdana, Arial, Helvetica, sans-serif; background-color: #cccccc} 
+#content a.seitevorzurueck:focus {font-family: Verdana, Arial, Helvetica, sans-serif; background-color: #cccccc} 
+
+/*f�r die Beschreibungen von Computer-Viren unter Verbreitungsart E-Mail */
+#avmail {padding: 10px 4px 4px 4px; border: solid 1px; border-color: #ccc #333 #333 #ccc; background-color: #fff; width: 100%}
+.avmailteile {padding: 1px; border: solid 1px; border-color: #ccc #333 #333 #ccc; background-color: #ccc}
+/*Ende CV*/
+
+.copyright { margin-left: 220px; color: #333333; text-align: left; font-size: 0.7em; margin-top: 10px; 	font-family: Verdana, Arial, Helvetica, sans-serif;}
+@media print
+{ .copyright { margin-left: 1.0cm }}
+/* die vorhergehende Angabe ist f�r die IE erforderlich, da er aus verschiedenen Dateien die Druckinformationen bezieht */
+.linievorcopy { margin-left: 220px; margin-top: 10px; text-align: left;background-color: #999999; clear: both; color: #999999; border: #999999; height: 1px}
+@media print
+{ .linievorcopy { margin-left: 1.0cm }}
+/* die vorhergehende Angabe ist f�r die IE erforderlich, da er aus verschiedenen Dateien die Druckinformationen bezieht */
+
+/*nur fuer den Newsletter*/
+.newsletterliste { font-family: Verdana, Arial, Helvetica, sans-serif; list-style-image:  url(img/kreuz.gif); left: 
+5px; }
+.newsletterueberschrift { font-family: Verdana,  Arial, Helvetica, sans-serif; font-size: 0.9em; font-weight: bold; color: #003366}
+.newsletterthema { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.9em; font-weight: bold; color: #333333}
+.newslettersubthema { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 0.75em; font-weight: bold; color: #333333}
+A.newslink:link { font-family: Verdana, Arial, Helvetica, sans-serif; color: #333333; padding : 0px; text-decoration: 
+none; }
+A.newslink:visited { font-family: Verdana, Arial, Helvetica, sans-serif; color : #336600; padding : 0px; text-decoration: none; }
+A.newslink:hover, A.newslink:focus { font-family: Verdana, Arial, Helvetica, sans-serif; color: #333333; background-color : #E6E6E6; padding 
+: 0px; text-decoration: none; }
+A.newslink:active { font-family: Verdana, Arial, Helvetica, sans-serif; color: #333333; background-color : #E6E6E6; padding : 0px; text-decoration: 
+none; }
+
+/*Extra f�r GSHB Massnahme*/
+p.gshbmassverantwortlich {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 0.70em;
+	font-weight: bold;
+	color: #333333;}
+.gshbmassverantwortlichist {font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: normal; color: #333333; padding-left: 1.0em; }
+p.gshbmassverantwortlich + p.gshbmassverantwortlich {margin-top: 0.1em}
+p.gshbmassverantwortlich + p.gshbmassverantwortlich > .gshbmassverantwortlichist {font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: normal; color: #333333; padding-left: 0.64em}
+
+/* BEGINN: Weitere Tags, �ber deren Einsatz nachzudenken w�re */
+samp {font-size: 0.8em;  margin-bottom: 2.0em;}	 /* zeichnet einen Text aus mit der Bedeutung "Dies ist ein Beispiel" */
+kbd {font-size: 1em;   font-family: "Courier New", Courier, Tahoma, mono; color: #000000;}
+p kbd {font-size: 1.2em;  font-family: "Courier New", Courier, Tahoma, mono; color: #000000;}    /* zeichnet einen Text aus mit der Bedeutung "dies stellt eine Tastatureingabe dar" */
+dfn {font-size: 0.74em;	margin-bottom: 2.0em; font-style: italic; font-family:  Verdana, Arial, Helvetica, sans-serif;}
+dfn > strong {font-style: italic;}	/* zeichnet einen Text aus mit der Bedeutung "dies ist eine Definition" */
+var {font-size: 1em;   font-family: "Courier New", Courier, Tahoma, mono; color: #000000;font-weight: bold;} /*zeichnet einen Text aus als "Variable" */
+/* ENDE: Weitere Tags, �ber deren Einsatz nachzudenken w�re */
+
+

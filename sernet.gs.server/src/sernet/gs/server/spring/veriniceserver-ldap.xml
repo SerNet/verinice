@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+<!--
+	Spring LDAP / ActiveDirectory configuration
+	
+	This file is referenced in the web.xml. 
+ -->
+   <bean id="contextSourceImport" class="org.springframework.ldap.core.support.LdapContextSource">
+      <property name="url" value="${ldap.protocol}://${ldap.server}:${ldap.port}/" />
+      <property name="userDn" value="${ldap.import.user}" />
+      <property name="password" value="${ldap.import.password}" />
+   </bean>
+
+   <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+      <constructor-arg ref="contextSourceImport" />
+	  <property name="ignorePartialResultException" value="true"/>
+   </bean>
+
+   <bean id="personLdapDao" class="sernet.verinice.server.ldap.PersonDaoImpl">
+      <property name="ldapTemplate" ref="ldapTemplate" />
+      <property name="base" value="${ldap.import.base}" />
+      <property name="filter" value="${ldap.import.filter}" />
+   </bean>
+   
+   <bean id="personLdapMock" class="sernet.verinice.server.ldap.PersonDaoMock">
+   </bean>
+   
+   <bean id="ldapService" class="sernet.verinice.server.ldap.LdapService">
+      <property name="personDao" ref="personLdapDao" />
+   </bean>
+
+</beans>

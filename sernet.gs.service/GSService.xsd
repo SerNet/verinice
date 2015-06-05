@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+targetNamespace="http://www.example.org/GSTypes"
+xmlns:tns="http://www.example.org/GSTypes">
+
+
+            <complexType name="Kapitel">
+            	<sequence minOccurs="0" maxOccurs="unbounded">
+            		<element name="baustein" type="tns:Baustein" 
+            		minOccurs="0" maxOccurs="unbounded"></element>
+            	</sequence>
+            </complexType>
+
+            <complexType name="Baustein">
+            	<attribute name="id" type="string"></attribute>
+            	<attribute name="name" type="string"></attribute>
+            </complexType>
+            <element name="uebersicht" type="tns:Uebersicht"></element>
+            
+            <complexType name="Uebersicht">
+            	<sequence minOccurs="0" maxOccurs="unbounded">
+            		<element name="massnahme"
+            			type="tns:Massnahme" minOccurs="0" maxOccurs="unbounded">
+            		</element>
+            		<element name="gefaehrdung" type="tns:Gefaehrdung" 
+            		minOccurs="0" maxOccurs="unbounded"></element>
+            	</sequence>
+            </complexType>
+
+            <complexType name="Massnahme">
+            	<attribute name="id" type="string"></attribute>
+            	<attribute name="name" type="string"></attribute>
+            </complexType>
+
+            <complexType name="Gefaehrdung">
+            	<attribute name="id" type="string"></attribute>
+            	<attribute name="name" type="string"></attribute>
+            </complexType>
+
+
+            <element name="kapitel" type="tns:Kapitel"></element>
+</schema>
