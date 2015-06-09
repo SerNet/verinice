@@ -1888,19 +1888,24 @@ Artwork:&#x0A;Blackbit http://www.blackbit.de - Icons by Axialis Team http://www
              adaptable="true"
              class="sernet.verinice.rcp.GsmIsmDecorator"
              id="sernet.verinice.rcp.GsmIsmDecorator"
-             label="gsmIsmDecorator"
+             label="GsmIsmDecorator"
              lightweight="true"
              location="TOP_LEFT"
              state="true">
           <enablement>
-             <and>
-                <objectClass
-                      name="sernet.verinice.model.iso27k.IncidentScenario">
-                </objectClass>
-                <objectClass
-                      name="sernet.verinice.model.iso27k.Vulnerability">
-                </objectClass>
-             </and>
+            <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
+          </enablement>
+       </decorator>
+       <decorator
+             adaptable="true"
+             class="sernet.verinice.rcp.RiskAnalysisDecorator"
+             id="sernet.verinice.rcp.RiskAnalysisDecorator"
+             label="RiskAnalysisDecorator"
+             lightweight="true"
+             location="BOTTOM_RIGHT"
+             state="true">
+          <enablement>
+            <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
           </enablement>
        </decorator>
    </extension>

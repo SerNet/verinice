@@ -31,6 +31,10 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Vulnerability;
 
 /**
+ * Creates an overlay Decorator (blue, yellow or red dot) for Vulnerabilities and Scenarios
+ * based on values coming from the Greenbone OMM API (see
+ * http://greenbone.net/technology/omp.html#type_threat).
+ * 
  * @author Moritz Reiter <mr[at]sernet[dot]de>
  */
 public class GsmIsmDecorator extends LabelProvider implements ILightweightLabelDecorator {
@@ -49,18 +53,25 @@ public class GsmIsmDecorator extends LabelProvider implements ILightweightLabelD
     
     @Override
     public void decorate(Object element, IDecoration decoration) {
-        if (prefEnabled()) {
-            this.treeElement = (CnATreeElement) element;
-            Activator.inheritVeriniceContextState();
+        Activator.inheritVeriniceContextState();
+        treeElement = (CnATreeElement) element;
+        if (prefEnabled() && isApplicable()) {
             setGsmIsmLevel();
             setImagePath();
             decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(imagePath));
-        } 
+        }
     }    
 
     private boolean prefEnabled() {
         return Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.SHOW_GSMISM_DECORATOR);
+    }
+    
+    private boolean isApplicable() {
+        if (treeElement instanceof IncidentScenario || treeElement instanceof Vulnerability) {
+            return true;
+        }
+        return false;
     }
     
     private void setGsmIsmLevel() {
