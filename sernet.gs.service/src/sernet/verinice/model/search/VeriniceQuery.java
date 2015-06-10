@@ -33,6 +33,7 @@ import java.io.Serializable;
 public class VeriniceQuery implements Serializable{
 
     public final static int DEFAULT_LIMIT = 200;
+    public final static int MAX_LIMIT = 200000;
 
     private final static String EMPTY_QUERY = "";
 
@@ -51,7 +52,11 @@ public class VeriniceQuery implements Serializable{
      */
     public VeriniceQuery(String query, int limit) {
         this.query = query == null ? EMPTY_QUERY : escapeQuery(query);
-        this.limit = (limit > 0) ? limit : DEFAULT_LIMIT;
+        if(limit==0) {
+            this.limit = MAX_LIMIT;
+        } else {
+            this.limit = (limit >= 0) ? limit : DEFAULT_LIMIT;
+        }
     }
 
     /**
