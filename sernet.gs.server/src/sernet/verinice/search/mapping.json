@@ -1,7 +1,7 @@
 {
     "element":{
-        "index_analyzer":"index_ngram",
-        "search_analyzer":"search_ngram",
+        "index_analyzer":"ngram-analyzer",
+        "search_analyzer":"ngram-analyzer",
         "properties":{
             "permission-roles":{
                 "type":"nested",

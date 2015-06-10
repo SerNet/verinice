@@ -1,25 +1,20 @@
 {
     "analysis":{
         "filter":{
-            "desc_ngram":{
+            "ngram-filter":{
                 "type":"ngram",
                 "min_gram":3,
-                "max_gram":10
+                "max_gram":3
             }
         },
         "analyzer":{
-            "index_ngram":{
+            "ngram-analyzer":{
                 "type":"custom",
-                "tokenizer":"keyword",
+                "tokenizer":"standard",
                 "filter":[
-                    "desc_ngram",
+                    "ngram-filter",
                     "lowercase"
                 ]
-            },
-            "search_ngram":{
-                "type":"custom",
-                "tokenizer":"keyword",
-                "filter":"lowercase"
             }
         }
     }

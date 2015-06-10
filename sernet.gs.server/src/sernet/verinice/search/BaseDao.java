@@ -242,7 +242,7 @@ public abstract class BaseDao implements ISearchDao {
                     .setHighlighterPreTags(Occurence.HTML_OPEN_TAG);
 
             if(value != null && !value.isEmpty()){
-                searchBuilder = searchBuilder.setQuery(QueryBuilders.matchPhraseQuery(field, value));
+                searchBuilder = searchBuilder.setQuery(QueryBuilders.matchPhraseQuery(field, value).minimumShouldMatch("100%"));
             } else {
                 // fires if search phrase is empty
                 searchBuilder = searchBuilder.setQuery(QueryBuilders.matchAllQuery());
