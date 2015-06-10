@@ -38,6 +38,43 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * This command should simplifies the user request to implement a report template that
+ * displays a table over all elements of type $a, and all to that element linked elements of 
+ * type $b. 
+ * The command should be used in verinice reports only, usage (in a dataset) should look like this:
+ * ============================================================================================
+ * command = new GraphCommand();
+ * loader = new GraphElementLoader();
+ * loader.setScopeId(root);
+ * loader.setTypeIds(new String[]{ Asset.TYPE_ID, IncidentScenario.TYPE_ID});
+ * command.addLoader(loader);
+ * command.addRelationId(IncidentScenario.REL_INCSCEN_ASSET);
+ * command.addRelationId("rel_person_incscen_modl");
+ * command = helper.execute(command);          
+ * graph = command.getGraph();
+
+ * c2 = new CreateReportTableFromGraphCommand(graph, new String[]{"asset/asset_name", "asset/incident_scenario/incident_scenario_name"});
+ * return helper.execute(c2).getResults(); 
+ * ============================================================================================
+ * 
+ * it returns a {@link List<List<String>}, so that a standard report table could be filled with that data
+ * 
+ * Syntax for Strings passed to constructor:
+ * Strings are always constructed as a kind of path over different entitytypes and ending 
+ * with a property type. Entitytypes could be separated with 4 different operators:
+ *  - LINK_TYPE_DELIMITER = '/'
+ *      this separates two entitytypes that are linked to each other AND a entitytype and the
+ *      property which should be put into the table
+ *      e.g.: asset/asset_name, asset/incident_scenario/incident_scenario_name
+ *  - CHILD_TYPE_DELIMITER = '>'
+ *      this separates two entitytypes that are in a parent>child relation
+ *       e.g.: baustein-umsetzung>massnahmen-umsetzung/mnums_name
+ *  - PARENT_TYPE_DELIMITER = '<'
+ *      this separates two entitytypes that are in a child<parent relation
+ *      e.g.: massnahmen-umsetzung<baustein-umsetzung/bstumsetzung_name
+ *  - END_OF_PATH_DELIMITER = '#'
+ *      this is for internal use only, to mark the end of a propertypath, please do not use this manually
+ *      
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
 public class CreateReportTableFromGraphCommand extends GenericCommand implements ICachedCommand {
@@ -59,11 +96,17 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     private static final char PARENT_TYPE_DELIMITER = '<';
     private static final char END_OF_PATH_DELIMITER = '#';
 
+    /**
+     * user generated input string are beeing parsed into two categories, operators and operands,
+     * and beeing stored on stacks (in reverse order)
+     */
     private Stack<String> operandStack = new Stack<String>();
     private Stack<String> operatorStack = new Stack<String>();
 
+    // used for storing temporary results and final result generation
     private HashMap<String, TableRow> resultMap;
 
+    // graph must be created within report template as shown above in class comment
     public CreateReportTableFromGraphCommand(VeriniceGraph graph, String[] columns) {
         this.graph = graph;
         this.userColumnStrings = columns;
@@ -80,25 +123,38 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     public void execute() {
 
         if (!resultInjectedFromCache) {
-         // i= 1 to skip he first, already handled,  entry
+            // iterate over all userStrings
             for (int i = 0; i < userColumnStrings.length; i++) { 
                 String propertyPath = userColumnStrings[i];
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Inspecting user propertyPath:\t" + propertyPath);
                 }
+                // clear stack for new string
                 operandStack.clear();
                 operatorStack.clear();
+                // fill stacks with new input
                 fillStacks(reversePropertyPath(propertyPath));
                 if (operatorStack.size() != operandStack.size()) {
                     LOG.warn("wrong stacksizes detected. " + operandStack.size() + " operands and " + operatorStack.size() + " operators. Should always be equal (including termination operator, added automatically)");
                 }
+                // first input here is an empty, since we have not parsed/loaded any strings/elements now
                 doOneStep(Collections.EMPTY_SET, operandStack.pop(), operatorStack.pop(), "", i, null);
 
             }
         }
 
     }
-
+    
+    /**
+     * iterate over a set of elements which are loaded from the {@link VeriniceGraph}, which is initialized within a report dataset. method iterates a single propertyPath at first
+     * and linked elements at second to navigate to a given property and add that to a list, that represent a row in the report table 
+     * @param set - list of elements beeing inspected
+     * @param nextTypeId - next element type that needs to be loaded
+     * @param currentOperator - next operator that defines if children/parent/linked elements are loaded in current iteration
+     * @param currentIdentifier - identifier of root element for next row, used for storing row in hashmap
+     * @param propertyPosition - position of property in result row  
+     * @param rootElement - root element to linked/parent/child elements, that are beeing inspected in current iteration
+     */
     private void doOneStep(Set<CnATreeElement> set, String nextTypeId, String currentOperator, String currentIdentifier, int propertyPosition, CnATreeElement rootElement){
         set = initFirstRound(set, nextTypeId);
         for(CnATreeElement element : set){ // handle every element of current set (data loaded from graph)
@@ -119,6 +175,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
+     * load childs or parent element(s) (depends on operator) of type nextEntityType and passes them to back to doOneStep()
      * @param currentIdentifier
      * @param propertyPosition
      * @param element
@@ -130,6 +187,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
+     * load linked elements of type nextEntityType and passes them to back to doOneStep()
      * @param nextTypeId
      * @param currentIdentifier
      * @param propertyPosition
@@ -148,6 +206,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
+     * reads a property of a given element, computes the row identifier, loads (if existant) row from result hashmap, and adds property to row (which is instantiated if non-existant)
      * @param currentIdentifier
      * @param propertyPosition
      * @param rootElement
@@ -165,6 +224,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
+     * creates a new table row for a given {@link CnATreeElement} rootElement
      * @param currentIdentifier
      * @param rootElement
      * @param element
@@ -181,6 +241,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
+     * creates a new {@link TableRow} with a given rootElement and a subelement element
      * Creates a row to an element which is a sub(linked) element to a given one
      * @param currentIdentifier
      * @param propertyPosition
@@ -200,6 +261,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
+     * computes new identifier for a row that should holds properties to element and is dependent (operator describes in which way) to rootElement
      * @param rootElement
      * @param element
      * @return
@@ -215,6 +277,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
+     * adds additional identifier to a row that should holds properties to element and is dependent (operator describes in which way) to rootElement
      * @param currentIdentifier
      * @param rootElement
      * @param element
@@ -237,6 +300,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
+     * in case of iterating first propertyPath the set needs to be initialized with elements, this is done by this method
      * @param set
      * @param nextTypeId
      * @return
@@ -251,6 +315,14 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         return set;
     }
 
+    /**
+     * reverses a string, based on operators.
+     * e.g:
+     * input: entityType1/entityType2>entityType3/property
+     * output: property/entityType3>entityType2/entityType1
+     * @param path
+     * @return
+     */
     private String reversePropertyPath(String path) {
         StringBuilder revStr = new StringBuilder("");
         int end = path.length(); // substring takes the end index -1
@@ -270,6 +342,12 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         return revStr.toString();
     }
 
+    /**
+     * returns if propertyId is an existing property Id of the entity referenced by typeId
+     * @param propertyId
+     * @param typeId
+     * @return
+     */
     private boolean isPropertyIdOfTypeId(String propertyId, String typeId) {
         if (propertyId != null && typeId != null) {
             if (LOG.isDebugEnabled()) {
@@ -280,6 +358,13 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         return false;
     }
 
+    /**
+     * loads elements of a given type, relation and element using an instance of {@link VeriniceGraph}
+     * @param element
+     * @param operator
+     * @param typeId
+     * @return
+     */
     private Set<CnATreeElement> getElementsFromGraph(CnATreeElement element, char operator, String typeId) {
         Set<CnATreeElement> resultSet = new HashSet<CnATreeElement>(0);
         switch (operator) {
@@ -298,14 +383,29 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
 
     }
 
+    /**
+     * returns all children of parent using a given {@link VeriniceGraph}
+     * @param parent
+     * @return
+     */
     private Set<CnATreeElement> getChildrenOf(CnATreeElement parent) {
         return graph.getChildren(parent);
     }
 
+    /**
+     * returns parent element of a given {@link CnATreeElement} using a given {@link VeriniceGraph} 
+     * @param child
+     * @return
+     */
     private CnATreeElement getParentOf(CnATreeElement child) {
         return graph.getParent(child);
     }
 
+    /**
+     * checks if given string is a (in SNCA.xml) defined entity type
+     * @param entityTypeId
+     * @return
+     */
     private boolean isEntityType(String entityTypeId) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Checking if " + entityTypeId + " is a valid entityTypeId");
@@ -324,10 +424,19 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         return false;
     }
 
+    /**
+     * checks if a given string is an operator
+     * @param term
+     * @return
+     */
     private boolean isOperator(String term) {
         return Arrays.asList(new String[] { String.valueOf(LINK_TYPE_DELIMITER), String.valueOf(CHILD_TYPE_DELIMITER), String.valueOf(PARENT_TYPE_DELIMITER), String.valueOf(END_OF_PATH_DELIMITER) }).contains(term);
     }
 
+    /**
+     * main method to parse user given strings (propertypaths). elements/tokens are separated onto two stacks, operatorStack and operandStack
+     * @param propertyPath
+     */
     private void fillStacks(String propertyPath) {
         if (!propertyPath.startsWith(String.valueOf(END_OF_PATH_DELIMITER))) {
             operatorStack.push(String.valueOf(END_OF_PATH_DELIMITER));
@@ -358,6 +467,11 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
 
     }
 
+    /**
+     * used for parsing a propertypath, returns next delimiter in a given string
+     * @param propertyPath
+     * @return
+     */
     private char getNextDelimiter(String propertyPath) {
         for (char c : propertyPath.toCharArray()) {
             switch (c) {
@@ -401,7 +515,6 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     public void injectCacheResult(Object result) {
         this.table = (List<List<String>>) result;
         resultInjectedFromCache = true;
-
     }
 
     /*
@@ -415,7 +528,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
-     * @return the results
+     * @return the results (the dataSet data)
      */
     public List<List<String>> getResults() {
         for (String key : resultMap.keySet()) {
