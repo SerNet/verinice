@@ -95,5 +95,7 @@
 
 # For AD / LDAP configuration use file verinice-ldap.properties
 
-# Elasticsearch index directory
+# Search properties
 # veriniceserver.search.index.directory=/WEB-INF/elasticsearch/
+# Reindex all elements in database on server startup, default: false
+# veriniceserver.search.indexingOnStartup=false

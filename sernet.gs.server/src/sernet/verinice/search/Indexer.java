@@ -56,6 +56,8 @@ public class Indexer {
     private static final int DEFAULT_NUMBER_OF_THREADS = 8;
     private static final int SHUTDOWN_TIMEOUT_IN_SECONDS = 60;
     
+    private String indexOnStartup = Boolean.FALSE.toString();
+    
     private IBaseDao<CnATreeElement, Integer> elementDao;
     private IElementTitleCache titleCache;
 
@@ -70,8 +72,13 @@ public class Indexer {
      */
     private ObjectFactory indexThreadFactory;
     
-    public void init() {
-        index();
+    public void init() {        
+        if(Boolean.parseBoolean(getIndexOnStartup())) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Indexing on startup is enabled.");
+            }
+            index();
+        }
     }
     
     public void index() {
@@ -123,8 +130,8 @@ public class Indexer {
     }
 
     private ExecutorService createExecutor() {
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Number of threads: " + getMaxNumberOfThreads());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Number of threads: " + getMaxNumberOfThreads());
         }
         return Executors.newFixedThreadPool(getMaxNumberOfThreads());
     }
@@ -161,6 +168,16 @@ public class Indexer {
         this.titleCache = titleCache;
     }
     
+
+    public String getIndexOnStartup() {
+        return indexOnStartup;
+    }
+
+    public void setIndexOnStartup(String indexOnStartup) {
+        this.indexOnStartup = indexOnStartup;
+    }
+
+
     class LastThread implements Callable<ActionResponse> {
 
         long startTime;
