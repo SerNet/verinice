@@ -266,13 +266,31 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
     }
 
     protected void index(CnATreeElement element) {
-        if(getTitleCache()!=null) {
-            if(isScope(element)) {
-                getTitleCache().update(element.getDbId(), element.getTitle());
+        updateTitleCache(element);
+        updateIndex(element);
+    }
+
+    private void updateIndex(CnATreeElement element) {
+        try {
+            if(getSearchDao()!=null && getJsonBuilder()!=null) {
+                getSearchDao().updateOrIndex(element.getUuid(), getJsonBuilder().getJson(element));
             }
+        } catch (Exception e) {
+            String uuid = (element!=null) ? element.getUuid() : null;
+            LOG.error("Error while updating index, element: " + uuid , e);
         }
-        if(getSearchDao()!=null && getJsonBuilder()!=null) {
-            getSearchDao().updateOrIndex(element.getUuid(), getJsonBuilder().getJson(element));
+    }
+
+    private void updateTitleCache(CnATreeElement element) {
+        try {
+            if(getTitleCache()!=null) {
+                if(isScope(element)) {
+                    getTitleCache().update(element.getDbId(), element.getTitle());
+                }
+            }
+        } catch (Exception e) {
+            String uuid = (element!=null) ? element.getUuid() : null;
+            LOG.error("Error while updating title cache, element: " + uuid , e);
         }
     }
     
