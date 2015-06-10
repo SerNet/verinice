@@ -145,6 +145,14 @@ public class TableRow implements Serializable {
         return result;
     }
     
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("[").append(getIdentifier()).append("]");
+        sb.append("\t").append("[root:").append(rootElement).append("]");
+        sb.append("\t").append(Arrays.toString(columns));
+        return sb.toString();
+    }
     
 
 }

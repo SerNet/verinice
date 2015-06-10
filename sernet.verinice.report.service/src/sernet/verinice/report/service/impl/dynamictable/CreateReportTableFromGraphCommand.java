@@ -97,11 +97,11 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     private static final char END_OF_PATH_DELIMITER = '#';
 
     /**
-     * user generated input string are beeing parsed into two categories, operators and operands,
+     * user generated input string are being parsed into two categories, operators and operands,
      * and beeing stored on stacks (in reverse order)
      */
-    private Stack<String> operandStack = new Stack<String>();
-    private Stack<String> operatorStack = new Stack<String>();
+    private Stack<String> operandStack;
+    private Stack<String> operatorStack;
 
     // used for storing temporary results and final result generation
     private HashMap<String, TableRow> resultMap;
@@ -110,8 +110,9 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     public CreateReportTableFromGraphCommand(VeriniceGraph graph, String[] columns) {
         this.graph = graph;
         this.userColumnStrings = columns;
-        this.table = new ArrayList<List<String>>();
         this.resultMap = new HashMap<String, TableRow>();
+        this.operandStack = new Stack<String>();
+        this.operatorStack = new Stack<String>();
     }
 
     /*
@@ -154,20 +155,26 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
      * @param currentIdentifier - identifier of root element for next row, used for storing row in hashmap
      * @param propertyPosition - position of property in result row  
      * @param rootElement - root element to linked/parent/child elements, that are beeing inspected in current iteration
+     * TODO: find cool name here!
      */
     private void doOneStep(Set<CnATreeElement> set, String nextTypeId, String currentOperator, String currentIdentifier, int propertyPosition, CnATreeElement rootElement){
         set = initFirstRound(set, nextTypeId);
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Now iterating " + set.size() + " elements of type " + set.toArray(new CnATreeElement[set.size()])[0].getTypeId());
+        }
         for(CnATreeElement element : set){ // handle every element of current set (data loaded from graph)
-            currentIdentifier = getNewIdentifier(currentIdentifier, rootElement, element);
+            String newIdentifier = new StringBuilder().append(currentIdentifier).append("#").append(element.getDbId()).toString();
             char operator = currentOperator.toCharArray()[0];
             if(LOG.isDebugEnabled()){
-                LOG.debug("New Identifier:\t" + currentIdentifier);
+                LOG.debug("Handling " + element.getTypeId() +  " " + (Arrays.asList(set.toArray(new CnATreeElement[set.size()])).indexOf(element) + 1) + "/" + set.size());
+                LOG.debug("CurrentIdentifier:\t" + currentIdentifier);
+                LOG.debug("NewIdentifier:\t" + newIdentifier);
                 LOG.debug("CurrentOperator:\t" + currentOperator);
             }
             if(LINK_TYPE_DELIMITER == operator){
-                rootElement = handleLinkOperator(nextTypeId, currentIdentifier, propertyPosition, rootElement, element);
+                rootElement = handleLinkOperator(nextTypeId, newIdentifier, propertyPosition, rootElement, element);
             } else if(CHILD_TYPE_DELIMITER == operator || PARENT_TYPE_DELIMITER == operator){
-                handleParentChildOperator(currentIdentifier, propertyPosition, element, operator);
+                handleParentChildOperator(newIdentifier, propertyPosition, element, operator);
             } else if(END_OF_PATH_DELIMITER == operator){
                 LOG.error("something went wrong here, point should not be reached");
             }
@@ -175,7 +182,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
-     * load childs or parent element(s) (depends on operator) of type nextEntityType and passes them to back to doOneStep()
+     * load children or parent element(s) (depends on operator) of type nextEntityType and passes them to back to doOneStep()
      * @param currentIdentifier
      * @param propertyPosition
      * @param element
@@ -214,9 +221,12 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
      * @return
      */
     private CnATreeElement handlePropertyOperand(String currentIdentifier, int propertyPosition, CnATreeElement rootElement, CnATreeElement element) {
-        String rootIdentifier = initRootIdentifier(rootElement, element);
-        if(resultMap.containsKey(rootIdentifier)){
-            createSubRow(currentIdentifier, propertyPosition, element, rootIdentifier);
+        String existingPath = currentIdentifier.substring(0, currentIdentifier.lastIndexOf("#"));
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Searching for " + existingPath + " on map");
+        }
+        if(resultMap.containsKey(existingPath)){
+            createSubRow(currentIdentifier, propertyPosition, element, existingPath);
         } else {
             rootElement = createNewRootRow(currentIdentifier, rootElement, element);
         }
@@ -236,6 +246,9 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         }
         TableRow row = new TableRow(rootElement.getDbId(), userColumnStrings.length, currentIdentifier);
         row.addProperty(element.getEntity().getSimpleValue(operandStack.pop()));
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Added following row to map:\t" + row.toString());
+        }
         resultMap.put(currentIdentifier, row);
         return rootElement;
     }
@@ -257,47 +270,12 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         } else {
             newRow.addProperty(element.getEntity().getSimpleValue(operandStack.peek()));
         }
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Added following row to map:\t" + newRow.toString());
+        }
         resultMap.put(currentIdentifier, newRow);
     }
 
-    /**
-     * computes new identifier for a row that should holds properties to element and is dependent (operator describes in which way) to rootElement
-     * @param rootElement
-     * @param element
-     * @return
-     */
-    private String initRootIdentifier(CnATreeElement rootElement, CnATreeElement element) {
-        String rootIdentifier = "";
-        if(rootElement == null){
-            rootIdentifier = "#" + String.valueOf(element.getDbId());
-        } else {
-            rootIdentifier = "#" + String.valueOf(rootElement.getDbId());
-        }
-        return rootIdentifier;
-    }
-
-    /**
-     * adds additional identifier to a row that should holds properties to element and is dependent (operator describes in which way) to rootElement
-     * @param currentIdentifier
-     * @param rootElement
-     * @param element
-     * @return
-     */
-    private String getNewIdentifier(String currentIdentifier, CnATreeElement rootElement, CnATreeElement element) {
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Old Identifier:\t" + currentIdentifier);
-        }
-        if(rootElement == null){
-            currentIdentifier = currentIdentifier + "#" + String.valueOf(element.getDbId());
-        } else {
-            if(!currentIdentifier.startsWith("#" + String.valueOf(rootElement.getDbId()))){
-                currentIdentifier = "#" +  String.valueOf(rootElement.getDbId());
-            } else {
-                currentIdentifier = currentIdentifier + "#" + element.getDbId();
-            }
-        }
-        return currentIdentifier;
-    }
 
     /**
      * in case of iterating first propertyPath the set needs to be initialized with elements, this is done by this method
@@ -378,7 +356,9 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
             resultSet = graph.getLinkTargetsByElementType(element, typeId);
             break;
         }
-
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Returning " + resultSet.size() + " elements from graph, determined by operator " + String.valueOf(operator) + " and root:" + element.getDbId());
+        }
         return resultSet;
 
     }
@@ -425,15 +405,6 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     }
 
     /**
-     * checks if a given string is an operator
-     * @param term
-     * @return
-     */
-    private boolean isOperator(String term) {
-        return Arrays.asList(new String[] { String.valueOf(LINK_TYPE_DELIMITER), String.valueOf(CHILD_TYPE_DELIMITER), String.valueOf(PARENT_TYPE_DELIMITER), String.valueOf(END_OF_PATH_DELIMITER) }).contains(term);
-    }
-
-    /**
      * main method to parse user given strings (propertypaths). elements/tokens are separated onto two stacks, operatorStack and operandStack
      * @param propertyPath
      */
@@ -463,6 +434,11 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
                 propertyPath = "";
             }
             nextDelimiter = getNextDelimiter(propertyPath);
+        }
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Parsing finished, stacks filled, looking like this:");
+            LOG.debug("OperandStack:\t" + operandStack.toString());
+            LOG.debug("OperatorStack:\t" + operatorStack.toString());
         }
 
     }
@@ -531,8 +507,16 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
      * @return the results (the dataSet data)
      */
     public List<List<String>> getResults() {
+        Set<List<String>> tmpSet = new HashSet<List<String>>();
         for (String key : resultMap.keySet()) {
-            table.add(resultMap.get(key).getPropertyList());
+            List<String> list = resultMap.get(key).getPropertyList();
+            Collections.replaceAll(list, null, "");
+            tmpSet.add(list);
+        }
+        this.table = new ArrayList<List<String>>();
+        table.addAll(tmpSet);
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Result looks like:\t" + table.toString());
         }
         return table;
     }
