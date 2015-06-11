@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.CellLabelProvider;
@@ -541,14 +542,15 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         addFileAction = new RightsEnabledAction(ActionRightIDs.ADDFILE) {
             @Override
             public void doRun() {
+                IPreferenceStore prefStore = Activator.getDefault().getPreferenceStore();
                 FileDialog fd = new FileDialog(FileView.this.getSite().getShell());
                 fd.setText(Messages.FileView_14);
-                String dir = Activator.getDefault().getPreferenceStore()
-                        .getString(PreferenceConstants.DEFAULT_FOLDER_ADDFILE);
+                String dir = prefStore.getString(PreferenceConstants.DEFAULT_FOLDER_ADDFILE);
                 if (dir != null && !dir.isEmpty()) {
                     fd.setFilterPath(dir);
                 } else {
-                    fd.setFilterPath(System.getProperty("user.home")); //$NON-NLS-1$
+                    dir = prefStore.getDefaultString(PreferenceConstants.DEFAULT_FOLDER_ADDFILE);
+                    fd.setFilterPath(dir);
                 }     
                 String selected = fd.open();
                 if (selected != null && selected.length() > 0 && !createAndOpenAttachment(selected)){
