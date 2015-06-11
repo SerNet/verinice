@@ -29,6 +29,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.IEntityElement;
+import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyType;
 
 /**
@@ -147,6 +148,12 @@ public class PersistedSortedColumnStore extends ColumnStore {
             Object obj = iter.next();
             if (obj instanceof PropertyType) {
                 propertyTypes.add((PropertyType) obj);
+            }
+            
+            if (obj instanceof PropertyGroup){
+                for(PropertyType propertyType : ((PropertyGroup) obj).getPropertyTypes()){
+                    propertyTypes.add(propertyType);
+                }
             }
         }
         return propertyTypes;
