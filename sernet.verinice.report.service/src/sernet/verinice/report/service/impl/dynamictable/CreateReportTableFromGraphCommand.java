@@ -25,9 +25,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.EntityType;
@@ -38,7 +40,7 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * This command should simplifies the user request to implement a report template that
+ * This command simplifies the user request to implement a report template that
  * displays a table over all elements of type $a, and all to that element linked elements of 
  * type $b. 
  * The command should be used in verinice reports only, usage (in a dataset) should look like this:
@@ -95,6 +97,8 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     private static final char CHILD_TYPE_DELIMITER = '>';
     private static final char PARENT_TYPE_DELIMITER = '<';
     private static final char END_OF_PATH_DELIMITER = '#';
+    
+    private static final String EMPTY_PROPERTY = "empty_property";
 
     /**
      * user generated input string are being parsed into two categories, operators and operands,
@@ -104,12 +108,12 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     private Stack<String> operatorStack;
 
     // used for storing temporary results and final result generation
-    private HashMap<String, TableRow> resultMap;
+    private Map<String, TableRow> resultMap;
 
     // graph must be created within report template as shown above in class comment
     public CreateReportTableFromGraphCommand(VeriniceGraph graph, String[] columns) {
         this.graph = graph;
-        this.userColumnStrings = columns;
+        this.userColumnStrings = (columns != null) ? columns.clone() : null;
         this.resultMap = new HashMap<String, TableRow>();
         this.operandStack = new Stack<String>();
         this.operatorStack = new Stack<String>();
@@ -179,6 +183,16 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
                 LOG.error("something went wrong here, point should not be reached");
             }
         }
+        if(set.size() == 0 && rootElement != null){
+            handleNoLinkedElement(rootElement, propertyPosition, (new StringBuilder().append(currentIdentifier).append("#").append(rootElement.getDbId()).toString()));
+        }
+        // if all elements of type are iterated, pop (remove) type & operator from stack
+        if(!(operandStack.isEmpty())){
+            operandStack.pop();
+        }
+        if(!(operatorStack.isEmpty())){
+            operatorStack.pop();
+        }
     }
 
     /**
@@ -189,8 +203,8 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
      * @param operator
      */
     private void handleParentChildOperator(String currentIdentifier, int propertyPosition, CnATreeElement element, char operator) {
-        String nextEntityType = operandStack.pop();
-        doOneStep(getElementsFromGraph(element, operator, nextEntityType), nextEntityType, operatorStack.pop(), currentIdentifier, propertyPosition, element);
+        String nextEntityType = operandStack.peek();
+        doOneStep(getElementsFromGraph(element, operator, nextEntityType), nextEntityType, operatorStack.peek(), currentIdentifier, propertyPosition, element);
     }
 
     /**
@@ -221,16 +235,40 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
      * @return
      */
     private CnATreeElement handlePropertyOperand(String currentIdentifier, int propertyPosition, CnATreeElement rootElement, CnATreeElement element) {
-        String existingPath = currentIdentifier.substring(0, currentIdentifier.lastIndexOf("#"));
+        String existingPath = "";
+        // check recursive upwards if id is already existant on map
+        if(StringUtils.countMatches(currentIdentifier, "#") != 1 && currentIdentifier.startsWith("#")){
+            existingPath = currentIdentifier.substring(0, currentIdentifier.lastIndexOf('#'));
+        } else {
+            existingPath = currentIdentifier;
+        }
         if(LOG.isDebugEnabled()){
             LOG.debug("Searching for " + existingPath + " on map");
         }
         if(resultMap.containsKey(existingPath)){
             createSubRow(currentIdentifier, propertyPosition, element, existingPath);
         } else {
-            rootElement = createNewRootRow(currentIdentifier, rootElement, element);
+            rootElement = createNewRootRow(currentIdentifier, rootElement, element, operandStack.peek());
         }
         return rootElement;
+    }
+    
+    /**
+     * if no element is found for current operator and root, we have to insert an empty string ("")
+     * @param element
+     * @param propertyPosition
+     * @param identifier
+     */
+    private void handleNoLinkedElement(CnATreeElement element, int propertyPosition, String identifier){
+        if(identifier == null || identifier.isEmpty()){
+            identifier = "#" + element.getDbId();
+        }
+        if(resultMap.containsKey(identifier)){
+            createSubRow(EMPTY_PROPERTY, propertyPosition, element, identifier);
+        } else {
+            createNewRootRow(identifier, null, element, EMPTY_PROPERTY);
+        }
+        
     }
 
     /**
@@ -240,12 +278,21 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
      * @param element
      * @return
      */
-    private CnATreeElement createNewRootRow(String currentIdentifier, CnATreeElement rootElement, CnATreeElement element) {
+    private CnATreeElement createNewRootRow(String currentIdentifier, CnATreeElement rootElement, CnATreeElement element, String propertyId) {
         if(rootElement == null){
             rootElement = element;
         }
         TableRow row = new TableRow(rootElement.getDbId(), userColumnStrings.length, currentIdentifier);
-        row.addProperty(element.getEntity().getSimpleValue(operandStack.pop()));
+        String value = "";
+        if(!(propertyId.equals(EMPTY_PROPERTY))){
+            value = element.getEntity().getSimpleValue(propertyId);
+        } else {
+            value = "";
+        }
+        if(value == null){
+            value = "";
+        }
+        row.addProperty(value);
         if(LOG.isDebugEnabled()){
             LOG.debug("Added following row to map:\t" + row.toString());
         }
@@ -329,7 +376,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
     private boolean isPropertyIdOfTypeId(String propertyId, String typeId) {
         if (propertyId != null && typeId != null) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Checking if <" + propertyId + "> is property of:\t " + typeId);
+                LOG.debug("Checking if <" + propertyId + "> is property of: " + typeId);
             }
             return Arrays.asList(HUITypeFactory.getInstance().getEntityType(typeId).getAllPropertyTypeIds()).contains(propertyId);
         }
@@ -357,7 +404,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
             break;
         }
         if(LOG.isDebugEnabled()){
-            LOG.debug("Returning " + resultSet.size() + " elements from graph, determined by operator " + String.valueOf(operator) + " and root:" + element.getDbId());
+            LOG.debug("Returning " + resultSet.size() + " elements from graph, determined by operator " + operator + " and root:" + element.getDbId());
         }
         return resultSet;
 
