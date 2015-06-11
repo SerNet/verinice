@@ -26,7 +26,7 @@ public interface IInternalServer {
 	void setDSCatalogURL(URL url);
 	
 	void configure(String url, String user, String pass,
-			String driver, String dialect);
+			String driver, String dialect, boolean b);
 
 	void start() throws IllegalStateException;
 	

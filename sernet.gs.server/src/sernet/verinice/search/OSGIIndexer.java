@@ -20,6 +20,9 @@ package sernet.verinice.search;
 import org.apache.log4j.Logger;
 import org.springframework.core.task.TaskExecutor;
 
+import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+
 /**
  * Handles elastic search indexing for tier2-mode, starts {@link Indexer}
  * asynchroneously
@@ -28,6 +31,8 @@ public class OSGIIndexer {
 
     private static final Logger LOG = Logger.getLogger(OSGIIndexer.class);
 
+    private String indexOnStartup = Boolean.FALSE.toString();
+    
     private TaskExecutor taskExecutor;
 
     private Indexer indexer;
@@ -37,12 +42,17 @@ public class OSGIIndexer {
     }
 
     public void run() {
-        taskExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                indexer.index();
-            }
-        });
+        if(Boolean.parseBoolean(getIndexOnStartup())) {
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Indexing on startup is enabled.");
+            }     
+            taskExecutor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    indexer.index();
+                }
+            });
+        }
     }
 
     /**
@@ -73,6 +83,14 @@ public class OSGIIndexer {
      */
     public void setTaskExecutor(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
+    }
+    
+    public String getIndexOnStartup() {
+        return indexOnStartup;
+    }
+
+    public void setIndexOnStartup(String indexOnStartup) {
+        this.indexOnStartup = indexOnStartup;
     }
 
 }

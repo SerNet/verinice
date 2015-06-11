@@ -48,8 +48,6 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         new String[]{Messages.getString("SearchPreferencePage.2"),SEMICOLON}, //$NON-NLS-1$
         new String[]{Messages.getString("SearchPreferencePage.5"),COMMA}        //$NON-NLS-1$
     };
-    
-    private BooleanFieldEditor sortColumns;
 
     @Override
     public void init(IWorkbench arg0) {
@@ -59,7 +57,12 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
 
     @Override
     protected void createFieldEditors() {
-        sortColumns = new BooleanFieldEditor(PreferenceConstants.SEARCH_SORT_COLUMN_BY_SNCA, Messages.getString("SearchPreferencePage.1"), getFieldEditorParent()); //$NON-NLS-1$
+        boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        if(standalone) {
+            BooleanFieldEditor startField = new BooleanFieldEditor(PreferenceConstants.SEARCH_INDEX_ON_STARTUP, "Update index on startup", getFieldEditorParent()); //$NON-NLS-1$
+            addField(startField);
+        }
+        BooleanFieldEditor sortColumns = new BooleanFieldEditor(PreferenceConstants.SEARCH_SORT_COLUMN_BY_SNCA, Messages.getString("SearchPreferencePage.1"), getFieldEditorParent()); //$NON-NLS-1$
         addField(sortColumns);
         ComboFieldEditor seperatorFieldEditor = new ComboFieldEditor(PreferenceConstants.SEARCH_CSV_EXPORT_SEPERATOR, 
                 Messages.getString("SearchPreferencePage.8"),  //$NON-NLS-1$

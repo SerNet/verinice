@@ -162,6 +162,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         templateDirTracker = new ServiceTracker(context, IReportLocalTemplateDirectoryService.class.getName(), null);
         templateDirTracker.open();
+        
     }
 
     /**
@@ -215,7 +216,13 @@ public class Activator extends AbstractUIPlugin implements IMain {
         System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty("user.home") + File.separatorChar + DERBY_LOG_FILE); //$NON-NLS-1$
 
         // Provide initial DB connection details to server.
-        internalServer.configure(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT));
+        internalServer.configure(
+                prefs.getString(PreferenceConstants.DB_URL), 
+                prefs.getString(PreferenceConstants.DB_USER), 
+                prefs.getString(PreferenceConstants.DB_PASS), 
+                prefs.getString(PreferenceConstants.DB_DRIVER), 
+                prefs.getString(PreferenceConstants.DB_DIALECT), 
+                prefs.getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
 
         // prepare client's workspace:
         CnAWorkspace.getInstance().prepare();
@@ -731,7 +738,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     private static class ServerDummy implements IInternalServer {
 
         @Override
-        public void configure(String url, String user, String pass, String driver, String dialect) {
+        public void configure(String url, String user, String pass, String driver, String dialect, boolean indexOnStartup) {
             // Intentionally do nothing.
         }
 

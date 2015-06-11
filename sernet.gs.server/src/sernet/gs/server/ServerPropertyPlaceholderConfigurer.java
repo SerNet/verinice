@@ -88,6 +88,10 @@ public class ServerPropertyPlaceholderConfigurer extends
 			}
 		}
 	}
+	
+	public static void setSearchProperties(boolean indexOnStartUp) {
+	    overrideProperties.put("veriniceserver.search.indexingOnStartup", Boolean.valueOf(indexOnStartUp).toString());
+	}
 
 	public static void setGSCatalogURL(URL url) {
 		overrideProperties.put("veriniceserver.grundschutzKataloge", url.toString());

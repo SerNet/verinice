@@ -17,6 +17,7 @@
   </bean>
 
   <bean id="OSGIIndexer" class="sernet.verinice.search.OSGIIndexer" init-method="run">
+    <property name="indexOnStartup" value="${veriniceserver.search.indexingOnStartup}" />
     <constructor-arg ref="taskExecutor" />
     <property name="indexer" ref="searchIndexer" />
   </bean>

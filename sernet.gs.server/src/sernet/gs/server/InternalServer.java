@@ -90,7 +90,7 @@ public class InternalServer implements IInternalServer {
 	 * The credentials will be used when the server is started next time.
 	 * </p>
 	 */
-	public void configure(String url, String user, String pass, String driver, String dialect) {
+	public void configure(String url, String user, String pass, String driver, String dialect, boolean indexOnStartup) {
 
 		boolean fail = false;
 		Connection c = null;
@@ -115,10 +115,11 @@ public class InternalServer implements IInternalServer {
 		}
 
 		if (fail) {
-		    ServerPropertyPlaceholderConfigurer.setDatabaseProperties(INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE);
-
+		    ServerPropertyPlaceholderConfigurer.setDatabaseProperties(INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE);	    
+		    ServerPropertyPlaceholderConfigurer.setSearchProperties(false);	        
 		} else {
 			ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user, pass, driver, dialect);
+			ServerPropertyPlaceholderConfigurer.setSearchProperties(indexOnStartup);    
 		}
 	}
 
@@ -129,7 +130,7 @@ public class InternalServer implements IInternalServer {
 	public void setDSCatalogURL(URL url) {
 		ServerPropertyPlaceholderConfigurer.setDSCatalogURL(url);
 	}
-
+	
 	/**
 	 * Starts the verinice server.
 	 * 
@@ -212,7 +213,7 @@ public class InternalServer implements IInternalServer {
 	 * @throws NamespaceException
 	 */
 	private void initialSetup() throws ServletException {
-		wc = Activator.getDefault().getWebContainer();
+	    wc = Activator.getDefault().getWebContainer();
 
 		ctx = wc.createDefaultHttpContext();	
 		

@@ -304,7 +304,7 @@ public class DocumentContentProvider implements ITreeContentProvider, IBSIModelL
     
     private boolean isLinkContainedInRoot(DocumentLinkRoot root, DocumentLink link){
         for(DocumentLink child : root.getChildren()){
-            if(child.equals(link)){
+            if(child!=null && child.equals(link)){
                 return true;
             }
             
