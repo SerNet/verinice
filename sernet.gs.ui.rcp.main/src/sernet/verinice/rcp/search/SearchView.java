@@ -433,11 +433,9 @@ public class SearchView extends RightsEnabledView {
     private void addTableColumnContextMenu(VeriniceSearchResultObject veriniceSearchResultObject) {
         MenuManager menuMgr = new MenuManager("#ContextMenu");
         Menu menu = menuMgr.createContextMenu(currentViewer.getControl());
-
         menuMgr.addMenuListener(new TableMenuListener(this, veriniceSearchResultObject));
 
         currentViewer.getControl().setMenu(menu);
-
         getSite().registerContextMenu(menuMgr, currentViewer);
     }
 
