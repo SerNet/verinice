@@ -21,29 +21,26 @@ import org.apache.log4j.Logger;
 import org.springframework.core.task.TaskExecutor;
 
 /**
- * handles elastic search indexing for tier2-mode, starts {@link Indexer} asynchroneously
+ * Handles elastic search indexing for tier2-mode, starts {@link Indexer}
+ * asynchroneously
  */
 public class OSGIIndexer {
-    
+
     private static final Logger LOG = Logger.getLogger(OSGIIndexer.class);
-    
+
     private TaskExecutor taskExecutor;
-    
+
     private Indexer indexer;
-    
-    public OSGIIndexer(TaskExecutor taskExecutor){
+
+    public OSGIIndexer(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;
     }
-    
-    public void run(){
+
+    public void run() {
         taskExecutor.execute(new Runnable() {
-            
             @Override
             public void run() {
-                indexer.init();
-                if(LOG.isInfoEnabled()){
-                    LOG.info("Standalone Indexing finished");
-                }
+                indexer.index();
             }
         });
     }
@@ -56,7 +53,8 @@ public class OSGIIndexer {
     }
 
     /**
-     * @param indexer the indexer to set
+     * @param indexer
+     *            the indexer to set
      */
     public void setIndexer(Indexer indexer) {
         this.indexer = indexer;
@@ -70,7 +68,8 @@ public class OSGIIndexer {
     }
 
     /**
-     * @param taskExecutor the taskExecutor to set
+     * @param taskExecutor
+     *            the taskExecutor to set
      */
     public void setTaskExecutor(TaskExecutor taskExecutor) {
         this.taskExecutor = taskExecutor;

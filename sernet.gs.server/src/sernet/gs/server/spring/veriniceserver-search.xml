@@ -5,6 +5,11 @@
   <bean id="directoryCreator" class="sernet.verinice.search.ESServerDirectoryCreator">
     <property name="indexLocation" value="${veriniceserver.search.index.directory}" />
   </bean>
+  
+  <bean id="serverIndexer" class="sernet.verinice.search.ServerIndexer" init-method="init">
+    <property name="indexOnStartup" value="${veriniceserver.search.indexingOnStartup}" />
+    <property name="indexer" ref="searchIndexer" />
+  </bean>
 
   <bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer">
     <property name="scheduler" ref="quartzSchedulerFactoryBean" />

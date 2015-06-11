@@ -56,8 +56,6 @@ public class Indexer {
     private static final int DEFAULT_NUMBER_OF_THREADS = 8;
     private static final int SHUTDOWN_TIMEOUT_IN_SECONDS = 60;
     
-    private String indexOnStartup = Boolean.FALSE.toString();
-    
     private IBaseDao<CnATreeElement, Integer> elementDao;
     private IElementTitleCache titleCache;
 
@@ -71,16 +69,7 @@ public class Indexer {
      * configured in veriniceserver-search.xml
      */
     private ObjectFactory indexThreadFactory;
-    
-    public void init() {        
-        if(Boolean.parseBoolean(getIndexOnStartup())) {
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Indexing on startup is enabled.");
-            }
-            index();
-        }
-    }
-    
+
     public void index() {
         long start = System.currentTimeMillis();
         taskExecutor = createExecutor();
@@ -166,15 +155,6 @@ public class Indexer {
 
     public void setTitleCache(IElementTitleCache titleCache) {
         this.titleCache = titleCache;
-    }
-    
-
-    public String getIndexOnStartup() {
-        return indexOnStartup;
-    }
-
-    public void setIndexOnStartup(String indexOnStartup) {
-        this.indexOnStartup = indexOnStartup;
     }
 
 

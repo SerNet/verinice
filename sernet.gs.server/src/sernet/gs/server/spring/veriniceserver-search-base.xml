@@ -15,8 +15,7 @@
     <property name="jsonBuilder" ref="jsonBuilder" />
   </bean>
 
-  <bean id="searchIndexer" class="sernet.verinice.search.Indexer" init-method="init">
-    <property name="indexOnStartup" value="${veriniceserver.search.indexingOnStartup}" />
+  <bean id="searchIndexer" class="sernet.verinice.search.Indexer">
     <property name="elementDao" ref="cnaTreeElementDao" />
     <property name="indexThreadFactory">
       <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">

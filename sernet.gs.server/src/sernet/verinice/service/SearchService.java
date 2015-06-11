@@ -187,7 +187,7 @@ public class SearchService implements ISearchService {
      */
     @Override
     public void index() {
-        searchIndexer.init();
+        searchIndexer.index();
     }
 
     /*
