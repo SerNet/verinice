@@ -42,8 +42,9 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * This command simplifies the user request to implement a report template that
  * displays a table over all elements of type $a, and all to that element linked elements of 
- * type $b. 
+ * type $b. <br>
  * The command should be used in verinice reports only, usage (in a dataset) should look like this:
+ * <pre>
  * ============================================================================================
  * command = new GraphCommand();
  * loader = new GraphElementLoader();
@@ -58,12 +59,14 @@ import sernet.verinice.model.common.CnATreeElement;
  * c2 = new CreateReportTableFromGraphCommand(graph, new String[]{"asset/asset_name", "asset/incident_scenario/incident_scenario_name"});
  * return helper.execute(c2).getResults(); 
  * ============================================================================================
+ * </pre>
  * 
  * it returns a {@link List<List<String>}, so that a standard report table could be filled with that data
  * 
- * Syntax for Strings passed to constructor:
+ * Syntax for Strings passed to constructor:<br>
  * Strings are always constructed as a kind of path over different entitytypes and ending 
  * with a property type. Entitytypes could be separated with 4 different operators:
+ * <pre>
  *  - LINK_TYPE_DELIMITER = '/'
  *      this separates two entitytypes that are linked to each other AND a entitytype and the
  *      property which should be put into the table
@@ -76,7 +79,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *      e.g.: massnahmen-umsetzung<baustein-umsetzung/bstumsetzung_name
  *  - END_OF_PATH_DELIMITER = '#'
  *      this is for internal use only, to mark the end of a propertypath, please do not use this manually
- *      
+ * </pre>
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
 public class CreateReportTableFromGraphCommand extends GenericCommand implements ICachedCommand {
