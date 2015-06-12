@@ -478,7 +478,9 @@ public class SearchView extends RightsEnabledView {
     }
 
     public void enableExport2CSVAction(boolean enable) {
-        export2CSV.setEnabled(enable);
+        if (export2CSV.checkRights()) {
+            export2CSV.setEnabled(enable);
+        }
     }
 
     void disableSearch() {
