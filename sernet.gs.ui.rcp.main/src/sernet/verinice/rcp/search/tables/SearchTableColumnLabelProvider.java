@@ -22,6 +22,7 @@ package sernet.verinice.rcp.search.tables;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.swt.SWT;
@@ -107,13 +108,7 @@ public class SearchTableColumnLabelProvider extends StyledCellLabelProvider {
     }
 
     private String formatOccurences(VeriniceSearchResultRow row) {
-
-        StringBuilder sb = new StringBuilder();
-        for (String columnName : row.getOccurence().getColumnNames()) {
-            sb.append(columnName).append("\n");
-        }
-
-        return sb.toString();
+        return StringUtils.join(row.getOccurence().getColumnNames(), "\n");
     }
 
     private Image getImage(VeriniceSearchResultRow row) {
