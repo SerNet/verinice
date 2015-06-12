@@ -25,6 +25,7 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.samt.SamtTopic;
@@ -63,6 +64,10 @@ public class TableImageProvider {
 
         else if (MassnahmenUmsetzung.TYPE_ID.equals(typeId)) {
             return imgCache.getImage(getMassnahmenUmsetzungsOptionStatus(row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG)));
+        }
+
+        else if (GefaehrdungsUmsetzung.TYPE_ID.equals(typeId)){
+            return imgCache.getImage(ImageCache.GEFAEHRDUNG);
         }
 
         // retrieve default images
