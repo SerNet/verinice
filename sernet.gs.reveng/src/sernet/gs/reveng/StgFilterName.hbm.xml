@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgFilterName" table="STG_FILTER_NAME" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgFilterNameId">
+            <key-property name="fltId" type="java.lang.Integer">
+                <column name="FLT_ID" />
+            </key-property>
+            <key-property name="impId" type="java.lang.Integer">
+                <column name="IMP_ID" />
+            </key-property>
+            <key-property name="sucheId" type="string">
+                <column name="SUCHE_ID" length="3" />
+            </key-property>
+            <key-property name="uid" type="java.lang.Short">
+                <column name="UID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" />
+            </key-property>
+            <key-property name="nameSame" type="java.lang.Integer">
+                <column name="NAME_SAME" />
+            </key-property>
+            <key-property name="nameOrg" type="string">
+                <column name="NAME_ORG" />
+            </key-property>
+            <key-property name="searchId" type="java.lang.Integer">
+                <column name="SEARCH_ID" />
+            </key-property>
+            <key-property name="common" type="java.lang.Boolean">
+                <column name="COMMON" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="fltZobIdFk" type="java.lang.Integer">
+                <column name="FLT_ZOB_ID_FK" />
+            </key-property>
+            <key-property name="fltGruIdFk" type="java.lang.Integer">
+                <column name="FLT_GRU_ID_FK" />
+            </key-property>
+            <key-property name="fltUstIdFk" type="java.lang.Integer">
+                <column name="FLT_UST_ID_FK" />
+            </key-property>
+            <key-property name="fltSbkIdGesamtFk" type="java.lang.Byte">
+                <column name="FLT_SBK_ID_GESAMT_FK" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

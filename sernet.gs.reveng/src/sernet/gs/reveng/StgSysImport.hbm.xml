@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgSysImport" table="STG_SYS_IMPORT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgSysImportId">
+            <key-property name="impId" type="java.lang.Integer">
+                <column name="IMP_ID" />
+            </key-property>
+            <key-property name="metaImpId" type="java.lang.Integer">
+                <column name="META_IMP_ID" />
+            </key-property>
+            <key-property name="trgImpId" type="java.lang.Integer">
+                <column name="TRG_IMP_ID" />
+            </key-property>
+            <key-property name="srcImpId" type="java.lang.Integer">
+                <column name="SRC_IMP_ID" />
+            </key-property>
+            <key-property name="impTyp" type="string">
+                <column name="IMP_TYP" length="2" />
+            </key-property>
+            <key-property name="impStatus" type="string">
+                <column name="IMP_STATUS" length="3" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="50" />
+            </key-property>
+            <key-property name="beschreibung" type="string">
+                <column name="BESCHREIBUNG" length="1000" />
+            </key-property>
+            <key-property name="impDatumAnlage" type="timestamp">
+                <column name="IMP_DATUM_ANLAGE" length="23" />
+            </key-property>
+            <key-property name="impExpTyp" type="string">
+                <column name="IMP_EXP_TYP" length="2" />
+            </key-property>
+            <key-property name="impExpName" type="string">
+                <column name="IMP_EXP_NAME" />
+            </key-property>
+            <key-property name="impExpBeschreibung" type="string">
+                <column name="IMP_EXP_BESCHREIBUNG" length="1000" />
+            </key-property>
+            <key-property name="impExpSignaturQuelle" type="string">
+                <column name="IMP_EXP_SIGNATUR_QUELLE" length="36" />
+            </key-property>
+            <key-property name="impExpSignaturZiel" type="string">
+                <column name="IMP_EXP_SIGNATUR_ZIEL" length="36" />
+            </key-property>
+            <key-property name="impExpDatumFrist" type="timestamp">
+                <column name="IMP_EXP_DATUM_FRIST" length="23" />
+            </key-property>
+            <key-property name="impUsnBaseline" type="java.lang.Integer">
+                <column name="IMP_USN_BASELINE" />
+            </key-property>
+            <key-property name="impUsnCurrent" type="java.lang.Integer">
+                <column name="IMP_USN_CURRENT" />
+            </key-property>
+            <key-property name="impLoeschen" type="java.lang.Boolean">
+                <column name="IMP_LOESCHEN" />
+            </key-property>
+            <key-property name="impKonkret" type="java.lang.Byte">
+                <column name="IMP_KONKRET" />
+            </key-property>
+            <key-property name="impModell" type="java.lang.Boolean">
+                <column name="IMP_MODELL" />
+            </key-property>
+            <key-property name="impMapuserdef" type="java.lang.Byte">
+                <column name="IMP_MAPUSERDEF" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="cmLevel" type="java.lang.Byte">
+                <column name="CM_LEVEL" />
+            </key-property>
+            <key-property name="editImpId" type="java.lang.Integer">
+                <column name="EDIT_IMP_ID" />
+            </key-property>
+            <key-property name="loeschDatum" type="timestamp">
+                <column name="LOESCH_DATUM" length="23" />
+            </key-property>
+            <key-property name="geloeschtDurch" type="string">
+                <column name="GELOESCHT_DURCH" length="128" />
+            </key-property>
+            <key-property name="metaVers" type="java.lang.Integer">
+                <column name="META_VERS" />
+            </key-property>
+            <key-property name="impDatumImport" type="timestamp">
+                <column name="IMP_DATUM_IMPORT" length="23" />
+            </key-property>
+            <key-property name="impMapGuid" type="java.lang.Byte">
+                <column name="IMP_MAP_GUID" />
+            </key-property>
+            <key-property name="impMapNur" type="java.lang.Byte">
+                <column name="IMP_MAP_NUR" />
+            </key-property>
+            <key-property name="impNurMeta" type="java.lang.Byte">
+                <column name="IMP_NUR_META" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

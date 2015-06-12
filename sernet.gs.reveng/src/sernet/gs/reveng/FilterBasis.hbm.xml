@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.FilterBasis" table="FILTER_BASIS" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.FilterBasisId">
+            <key-property name="sucheId" type="string">
+                <column name="SUCHE_ID" length="3" />
+            </key-property>
+            <key-property name="fflId" type="int">
+                <column name="FFL_ID" />
+            </key-property>
+            <key-property name="fltId" type="int">
+                <column name="FLT_ID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="filterName" class="sernet.gs.reveng.FilterName" update="false" insert="false" fetch="select">
+            <column name="FLT_ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="filterSuchenFelder" class="sernet.gs.reveng.FilterSuchenFelder" update="false" insert="false" fetch="select">
+            <column name="FFL_ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="filterSuchenSeite1" class="sernet.gs.reveng.FilterSuchenSeite1" update="false" insert="false" fetch="select">
+            <column name="SUCHE_ID" length="3" not-null="true" />
+            <column name="FFL_ID" not-null="true" />
+        </many-to-one>
+        <property name="fsrNumVal1" type="java.lang.Integer">
+            <column name="FSR_NUM_VAL_1" />
+        </property>
+        <property name="fsrNumVal2" type="java.lang.Integer">
+            <column name="FSR_NUM_VAL_2" />
+        </property>
+        <property name="fsrNumVal3" type="java.lang.Integer">
+            <column name="FSR_NUM_VAL_3" />
+        </property>
+        <property name="fsrTxtValue" type="string">
+            <column name="FSR_TXT_VALUE" length="50" />
+        </property>
+    </class>
+</hibernate-mapping>

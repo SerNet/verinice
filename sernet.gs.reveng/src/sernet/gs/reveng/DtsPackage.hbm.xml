@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.DtsPackage" table="DTS_PACKAGE" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="dtsId" type="string">
+            <column name="DTS_ID" length="10" />
+            <generator class="assigned" />
+        </id>
+        <property name="name" type="string">
+            <column name="NAME" length="100" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="DESCRIPTION" length="1000" />
+        </property>
+        <property name="writecompletionstatustonteventlog" type="boolean">
+            <column name="WRITECOMPLETIONSTATUSTONTEVENTLOG" not-null="true" />
+        </property>
+        <property name="failonerror" type="boolean">
+            <column name="FAILONERROR" not-null="true" />
+        </property>
+        <property name="packagepriorityclass" type="int">
+            <column name="PACKAGEPRIORITYCLASS" not-null="true" />
+        </property>
+        <property name="maxconcurrentsteps" type="int">
+            <column name="MAXCONCURRENTSTEPS" not-null="true" />
+        </property>
+        <property name="lineageoptions" type="int">
+            <column name="LINEAGEOPTIONS" not-null="true" />
+        </property>
+        <property name="usetransaction" type="boolean">
+            <column name="USETRANSACTION" not-null="true" />
+        </property>
+        <property name="transactionisolationlevel" type="int">
+            <column name="TRANSACTIONISOLATIONLEVEL" not-null="true" />
+        </property>
+        <property name="autocommittransaction" type="boolean">
+            <column name="AUTOCOMMITTRANSACTION" not-null="true" />
+        </property>
+        <property name="repositorymetadataoptions" type="int">
+            <column name="REPOSITORYMETADATAOPTIONS" not-null="true" />
+        </property>
+        <property name="useoledbservicecomponents" type="boolean">
+            <column name="USEOLEDBSERVICECOMPONENTS" not-null="true" />
+        </property>
+        <property name="logtosqlserver" type="boolean">
+            <column name="LOGTOSQLSERVER" not-null="true" />
+        </property>
+        <property name="logserverflags" type="int">
+            <column name="LOGSERVERFLAGS" not-null="true" />
+        </property>
+        <property name="failpackageonlogfailure" type="boolean">
+            <column name="FAILPACKAGEONLOGFAILURE" not-null="true" />
+        </property>
+        <property name="explicitglobalvariables" type="boolean">
+            <column name="EXPLICITGLOBALVARIABLES" not-null="true" />
+        </property>
+        <property name="packagetype" type="int">
+            <column name="PACKAGETYPE" not-null="true" />
+        </property>
+        <set name="dtsSteps" table="DTS_STEP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DTS_ID" length="10" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.DtsStep" />
+        </set>
+        <set name="dtsVariables" table="DTS_VARIABLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DTS_ID" length="10" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.DtsVariable" />
+        </set>
+    </class>
+</hibernate-mapping>

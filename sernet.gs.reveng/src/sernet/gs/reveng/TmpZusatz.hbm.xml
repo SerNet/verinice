@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.TmpZusatz" table="TMP_ZUSATZ" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.TmpZusatzId">
+            <key-property name="spid" type="short">
+                <column name="SPID" />
+            </key-property>
+            <key-property name="attId" type="int">
+                <column name="ATT_ID" />
+            </key-property>
+            <key-property name="zusId" type="int">
+                <column name="ZUS_ID" />
+            </key-property>
+            <key-property name="zosZusId" type="int">
+                <column name="ZOS_ZUS_ID" />
+            </key-property>
+        </composite-id>
+        <property name="name" type="string">
+            <column name="NAME" length="50" />
+        </property>
+        <property name="dtyId" type="java.lang.Integer">
+            <column name="DTY_ID" />
+        </property>
+        <property name="prec" type="java.lang.Short">
+            <column name="PREC" />
+        </property>
+        <property name="scale" type="java.lang.Short">
+            <column name="SCALE" />
+        </property>
+        <property name="length" type="java.lang.Short">
+            <column name="LENGTH" />
+        </property>
+        <property name="muss" type="java.lang.Boolean">
+            <column name="MUSS" />
+        </property>
+        <property name="wertZeichen" type="string">
+            <column name="WERT_ZEICHEN" length="7000" />
+        </property>
+        <property name="wertWaehrung" type="big_decimal">
+            <column name="WERT_WAEHRUNG" precision="15" />
+        </property>
+        <property name="wertDatum" type="timestamp">
+            <column name="WERT_DATUM" length="23" />
+        </property>
+        <property name="wertDezimal" type="big_decimal">
+            <column name="WERT_DEZIMAL" precision="28" scale="5" />
+        </property>
+        <property name="wertGanzzahl" type="java.lang.Integer">
+            <column name="WERT_GANZZAHL" />
+        </property>
+        <property name="waeId" type="java.lang.Integer">
+            <column name="WAE_ID" />
+        </property>
+        <property name="waeImpId" type="java.lang.Integer">
+            <column name="WAE_IMP_ID" />
+        </property>
+        <property name="altZusId" type="java.lang.Integer">
+            <column name="ALT_ZUS_ID" />
+        </property>
+        <property name="loeschen" type="java.lang.Byte">
+            <column name="LOESCHEN" />
+        </property>
+        <property name="altZosZusId" type="java.lang.Integer">
+            <column name="ALT_ZOS_ZUS_ID" />
+        </property>
+    </class>
+</hibernate-mapping>

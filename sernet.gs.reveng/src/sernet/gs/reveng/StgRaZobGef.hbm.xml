@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgRaZobGef" table="STG_RA_ZOB_GEF" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgRaZobGefId">
+            <key-property name="zobImpId" type="java.lang.Integer">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="zobId" type="java.lang.Integer">
+                <column name="ZOB_ID" />
+            </key-property>
+            <key-property name="gefImpId" type="java.lang.Integer">
+                <column name="GEF_IMP_ID" />
+            </key-property>
+            <key-property name="gefId" type="java.lang.Integer">
+                <column name="GEF_ID" />
+            </key-property>
+            <key-property name="orgImpId" type="java.lang.Integer">
+                <column name="ORG_IMP_ID" />
+            </key-property>
+            <key-property name="zgOkUnjId" type="java.lang.Byte">
+                <column name="ZG_OK_UNJ_ID" />
+            </key-property>
+            <key-property name="zgMasYesId" type="java.lang.Byte">
+                <column name="ZG_MAS_YES_ID" />
+            </key-property>
+            <key-property name="zgRabId" type="java.lang.Byte">
+                <column name="ZG_RAB_ID" />
+            </key-property>
+            <key-property name="zgRabBegr" type="string">
+                <column name="ZG_RAB_BEGR" length="2000" />
+            </key-property>
+            <key-property name="zgUnterUnjId" type="java.lang.Byte">
+                <column name="ZG_UNTER_UNJ_ID" />
+            </key-property>
+            <key-property name="zgIndivYesId" type="java.lang.Byte">
+                <column name="ZG_INDIV_YES_ID" />
+            </key-property>
+            <key-property name="zgVerweis" type="string">
+                <column name="ZG_VERWEIS" length="1000" />
+            </key-property>
+            <key-property name="zgDatumVon" type="timestamp">
+                <column name="ZG_DATUM_VON" length="23" />
+            </key-property>
+            <key-property name="zgDatumBis" type="timestamp">
+                <column name="ZG_DATUM_BIS" length="23" />
+            </key-property>
+            <key-property name="zgVollstaUnjId" type="java.lang.Byte">
+                <column name="ZG_VOLLSTA_UNJ_ID" />
+            </key-property>
+            <key-property name="zgVollstaBegr" type="string">
+                <column name="ZG_VOLLSTA_BEGR" length="1000" />
+            </key-property>
+            <key-property name="zgStaerkeUnjId" type="java.lang.Byte">
+                <column name="ZG_STAERKE_UNJ_ID" />
+            </key-property>
+            <key-property name="zgStaerkeBegr" type="string">
+                <column name="ZG_STAERKE_BEGR" length="1000" />
+            </key-property>
+            <key-property name="zgZuverlaUnjId" type="java.lang.Byte">
+                <column name="ZG_ZUVERLA_UNJ_ID" />
+            </key-property>
+            <key-property name="zgZuverlaBegr" type="string">
+                <column name="ZG_ZUVERLA_BEGR" length="1000" />
+            </key-property>
+            <key-property name="zgFarbe" type="java.lang.Byte">
+                <column name="ZG_FARBE" />
+            </key-property>
+            <key-property name="zgEntStd" type="java.lang.Byte">
+                <column name="ZG_ENT_STD" />
+            </key-property>
+            <key-property name="notizId" type="java.lang.Integer">
+                <column name="NOTIZ_ID" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="impNeu" type="java.lang.Byte">
+                <column name="IMP_NEU" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+            <key-property name="erstelltAm" type="timestamp">
+                <column name="ERSTELLT_AM" length="23" />
+            </key-property>
+            <key-property name="erstelltDurch" type="string">
+                <column name="ERSTELLT_DURCH" length="128" />
+            </key-property>
+            <key-property name="geaendertAm" type="timestamp">
+                <column name="GEAENDERT_AM" length="23" />
+            </key-property>
+            <key-property name="geaendertDurch" type="string">
+                <column name="GEAENDERT_DURCH" length="128" />
+            </key-property>
+            <key-property name="geloeschtAm" type="timestamp">
+                <column name="GELOESCHT_AM" length="23" />
+            </key-property>
+            <key-property name="geloeschtDurch" type="string">
+                <column name="GELOESCHT_DURCH" length="128" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

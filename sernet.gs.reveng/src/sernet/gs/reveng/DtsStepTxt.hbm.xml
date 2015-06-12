@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.DtsStepTxt" table="DTS_STEP_TXT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.DtsStepTxtId">
+            <key-property name="dtsId" type="string">
+                <column name="DTS_ID" length="10" />
+            </key-property>
+            <key-property name="dtsStep" type="int">
+                <column name="DTS_STEP" />
+            </key-property>
+            <key-property name="sprId" type="short">
+                <column name="SPR_ID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="dtsStep" class="sernet.gs.reveng.DtsStep" update="false" insert="false" fetch="select">
+            <column name="DTS_ID" length="10" not-null="true" />
+            <column name="DTS_STEP" not-null="true" />
+        </many-to-one>
+        <property name="beschreibung" type="string">
+            <column name="BESCHREIBUNG" length="2000" />
+        </property>
+        <property name="fehler" type="string">
+            <column name="FEHLER" length="2000" />
+        </property>
+    </class>
+</hibernate-mapping>

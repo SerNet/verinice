@@ -1,0 +1,138 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.MbGefaehr" table="MB_GEFAEHR" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.MbGefaehrId">
+            <key-property name="gefImpId" type="int">
+                <column name="GEF_IMP_ID" />
+            </key-property>
+            <key-property name="gefId" type="int">
+                <column name="GEF_ID" />
+            </key-property>
+        </composite-id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="nmbNotiz" class="sernet.gs.reveng.NmbNotiz" update="false" insert="false" fetch="select">
+            <column name="GEF_IMP_ID" not-null="true" />
+            <column name="NOTIZ_ID" />
+        </many-to-one>
+        <many-to-one name="mbGefaehr" class="sernet.gs.reveng.MbGefaehr" fetch="select">
+            <column name="KONKR_IMP_ID" />
+            <column name="KONKR_ID" />
+        </many-to-one>
+        <many-to-one name="sysImport" class="sernet.gs.reveng.SysImport" update="false" insert="false" fetch="select">
+            <column name="GEF_IMP_ID" not-null="true" />
+        </many-to-one>
+      
+       
+        <property name="nr" type="int">
+            <column name="NR" not-null="true" />
+        </property>
+          <property name="gfkId" type="int">
+            <column name="GFK_ID" not-null="true" />
+        </property>
+        <property name="link" type="string">
+            <column name="LINK" />
+        </property>
+        <property name="metaVers" type="int">
+            <column name="META_VERS" not-null="true" />
+        </property>
+        <property name="obsoletVers" type="java.lang.Integer">
+            <column name="OBSOLET_VERS" />
+        </property>
+        <property name="loeschDatum" type="timestamp">
+            <column name="LOESCH_DATUM" length="23" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="usn" type="int">
+            <column name="USN" not-null="true" />
+        </property>
+        <property name="erfasstDurch" type="string">
+            <column name="ERFASST_DURCH" length="128" />
+        </property>
+        <property name="geloeschtDurch" type="string">
+            <column name="GELOESCHT_DURCH" length="128" />
+        </property>
+        <property name="impNeu" type="java.lang.Byte">
+            <column name="IMP_NEU" />
+        </property>
+        <property name="guidOrg" type="string">
+            <column name="GUID_ORG" length="36" />
+        </property>
+        <property name="changedOn" type="timestamp">
+            <column name="CHANGED_ON" length="23" />
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="128" />
+        </property>
+        <property name="cmTimestamp" type="timestamp">
+            <column name="CM_TIMESTAMP" length="23" />
+        </property>
+        <property name="cmUsername" type="string">
+            <column name="CM_USERNAME" length="128" />
+        </property>
+        
+     
+        
+        <property name="userdef" type="java.lang.Integer">
+            <column name="USERDEF" />
+        </property>
+        
+        <property name="cmImpId" type="java.lang.Integer">
+            <column name="CM_IMP_ID" />
+        </property>
+        <property name="cmVerId1" type="java.lang.Integer">
+            <column name="CM_VER_ID_1" />
+        </property>
+        <property name="cmVerId2" type="java.lang.Short">
+            <column name="CM_VER_ID_2" />
+        </property>
+        <set name="mbBauMasGefs" table="MB_BAU_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GEF_IMP_ID" not-null="true" />
+                <column name="GEF_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbBauMasGef" />
+        </set>
+        <set name="mbGefaehrs" table="MB_GEFAEHR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="KONKR_IMP_ID" />
+                <column name="KONKR_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbGefaehr" />
+        </set>
+        <set name="mbBaustGefaehrs" table="MB_BAUST_GEFAEHR" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GEF_IMP_ID" not-null="true" />
+                <column name="GEF_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbBaustGefaehr" />
+        </set>
+        <set name="mbMasGefs" table="MB_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GEF_IMP_ID" not-null="true" />
+                <column name="GEF_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasGef" />
+        </set>
+       
+       
+        <set name="raZobGefs" table="RA_ZOB_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GEF_IMP_ID" not-null="true" />
+                <column name="GEF_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RaZobGef" />
+        </set>
+        <set name="mbGefaehrTxts" table="MB_GEFAEHR_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="GEF_IMP_ID" not-null="true" />
+                <column name="GEF_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbGefaehrTxt" />
+        </set>
+    </class>
+</hibernate-mapping>

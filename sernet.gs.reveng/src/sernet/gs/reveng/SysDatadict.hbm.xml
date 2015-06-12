@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.SysDatadict" table="SYS_DATADICT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.SysDatadictId">
+            <key-property name="objName" type="string">
+                <column name="OBJ_NAME" length="128" />
+            </key-property>
+            <key-property name="fldName" type="string">
+                <column name="FLD_NAME" length="128" />
+            </key-property>
+            <key-property name="bemerkung" type="string">
+                <column name="BEMERKUNG" length="1000" />
+            </key-property>
+            <key-property name="objNameRef" type="string">
+                <column name="OBJ_NAME_REF" length="128" />
+            </key-property>
+            <key-property name="fldNameRef" type="string">
+                <column name="FLD_NAME_REF" length="128" />
+            </key-property>
+            <key-property name="datentyp" type="string">
+                <column name="DATENTYP" length="128" />
+            </key-property>
+            <key-property name="domaene" type="string">
+                <column name="DOMAENE" length="128" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

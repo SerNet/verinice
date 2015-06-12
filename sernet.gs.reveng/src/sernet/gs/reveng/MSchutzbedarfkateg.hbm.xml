@@ -1,0 +1,260 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.MSchutzbedarfkateg" table="M_SCHUTZBEDARFKATEG" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="sbkId" type="byte">
+            <column name="SBK_ID" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <property name="link" type="string">
+            <column name="LINK" />
+        </property>
+        <property name="metaNeu" type="byte">
+            <column name="META_NEU" not-null="true" />
+        </property>
+        <property name="metaVers" type="int">
+            <column name="META_VERS" not-null="true" />
+        </property>
+        <property name="obsoletVers" type="java.lang.Integer">
+            <column name="OBSOLET_VERS" />
+        </property>
+        <property name="notizId" type="java.lang.Integer">
+            <column name="NOTIZ_ID" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" unique="true" />
+        </property>
+        <property name="impNeu" type="java.lang.Byte">
+            <column name="IMP_NEU" />
+        </property>
+        <property name="changedOn" type="timestamp">
+            <column name="CHANGED_ON" length="23" />
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="128" />
+        </property>
+   
+      
+        <set name="mbMasQriesForMqAutenSbkId" table="MB_MAS_QRY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MQ_AUTEN_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasQry" />
+        </set>
+        <set name="mbMasQriesForMqTransSbkId" table="MB_MAS_QRY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MQ_TRANS_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasQry" />
+        </set>
+        <set name="mbMasQriesForMqRevisSbkId" table="MB_MAS_QRY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="MQ_REVIS_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasQry" />
+        </set>
+        
+        
+        <set name="mbMasGefsForSbkIdGesamt" table="MB_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_GESAMT" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasGef" />
+        </set>
+        <set name="mbMasGefsForSbkIdPers" table="MB_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_PERS" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasGef" />
+        </set>
+        <set name="mbMasGefsForG2mRevisSbkId" table="MB_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="G2M_REVIS_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasGef" />
+        </set>
+        <set name="mbMasGefsForG2mTransSbkId" table="MB_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="G2M_TRANS_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasGef" />
+        </set>
+        <set name="mbMasGefsForG2mAutenSbkId" table="MB_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="G2M_AUTEN_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasGef" />
+        </set>
+        <set name="mbBauMasGefsForBgmRevisSbkId" table="MB_BAU_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="BGM_REVIS_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbBauMasGef" />
+        </set>
+        <set name="mbMasGefsForSbkIdInteg" table="MB_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_INTEG" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasGef" />
+        </set>
+        <set name="mbBauMasGefsForBgmTransSbkId" table="MB_BAU_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="BGM_TRANS_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbBauMasGef" />
+        </set>
+        <set name="mbBauMasGefsForSbkIdInteg" table="MB_BAU_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_INTEG" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbBauMasGef" />
+        </set>
+        <set name="mbMasGefsForSbkIdVerf" table="MB_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_VERF" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasGef" />
+        </set>
+        <set name="mbMasQriesForSbkIdInteg" table="MB_MAS_QRY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_INTEG" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasQry" />
+        </set>
+        <set name="mbBauMasGefsForBgmAutenSbkId" table="MB_BAU_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="BGM_AUTEN_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbBauMasGef" />
+        </set>
+        <set name="mbMasGefsForSbkIdVertr" table="MB_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_VERTR" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasGef" />
+        </set>
+        <set name="mbMasQriesForSbkIdVertr" table="MB_MAS_QRY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_VERTR" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasQry" />
+        </set>
+        <set name="mbMasQriesForSbkIdPers" table="MB_MAS_QRY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_PERS" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasQry" />
+        </set>
+        <set name="mbMasQriesForSbkIdGesamt" table="MB_MAS_QRY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_GESAMT" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasQry" />
+        </set>
+        <set name="mbBauMasGefsForSbkIdVert" table="MB_BAU_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_VERT" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbBauMasGef" />
+        </set>
+        <set name="mbBauMasGefsForSbkIdVerf" table="MB_BAU_MAS_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_VERF" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbBauMasGef" />
+        </set>
+        <set name="mbMasQriesForSbkIdVerf" table="MB_MAS_QRY" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SBK_ID_VERF" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMasQry" />
+        </set>
+        <set name="NZobSbsForZsbIntegSbkIdErm" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_INTEG_SBK_ID_ERM" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbIntegSbkId" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_INTEG_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbPersSbkId" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_PERS_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbGesamtSbkId" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_GESAMT_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbVerfuSbkId" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_VERFU_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbAutenSbkId" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_AUTEN_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbRevisSbkIdErm" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_REVIS_SBK_ID_ERM" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbAutenSbkIdErm" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_AUTEN_SBK_ID_ERM" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbTransSbkId" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_TRANS_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbVertrSbkIdErm" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_VERTR_SBK_ID_ERM" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbRevisSbkId" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_REVIS_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbTransSbkIdErm" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_TRANS_SBK_ID_ERM" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbVertrSbkId" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_VERTR_SBK_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+        <set name="NZobSbsForZsbVerfuSbkIdErm" table="N_ZOB_SB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZSB_VERFU_SBK_ID_ERM" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobSb" />
+        </set>
+    </class>
+</hibernate-mapping>

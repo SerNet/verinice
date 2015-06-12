@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgFilterCol" table="STG_FILTER_COL" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgFilterColId">
+            <key-property name="fltId" type="java.lang.Integer">
+                <column name="FLT_ID" />
+            </key-property>
+            <key-property name="rowId" type="java.lang.Byte">
+                <column name="ROW_ID" />
+            </key-property>
+            <key-property name="colId" type="java.lang.Byte">
+                <column name="COL_ID" />
+            </key-property>
+            <key-property name="fsrNumVal1" type="java.lang.Integer">
+                <column name="FSR_NUM_VAL_1" />
+            </key-property>
+            <key-property name="fsrNumVal2" type="java.lang.Integer">
+                <column name="FSR_NUM_VAL_2" />
+            </key-property>
+            <key-property name="fsrNumVal3" type="java.lang.Integer">
+                <column name="FSR_NUM_VAL_3" />
+            </key-property>
+            <key-property name="fsrTxtValue" type="string">
+                <column name="FSR_TXT_VALUE" length="50" />
+            </key-property>
+            <key-property name="fsrDateValue" type="timestamp">
+                <column name="FSR_DATE_VALUE" length="23" />
+            </key-property>
+            <key-property name="fsrDecValue" type="big_decimal">
+                <column name="FSR_DEC_VALUE" precision="15" />
+            </key-property>
+            <key-property name="fsrOperator" type="java.lang.Byte">
+                <column name="FSR_OPERATOR" />
+            </key-property>
+            <key-property name="fsrOrder" type="string">
+                <column name="FSR_ORDER" length="3" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

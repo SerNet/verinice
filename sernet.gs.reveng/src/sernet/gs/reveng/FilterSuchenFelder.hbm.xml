@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.FilterSuchenFelder" table="FILTER_SUCHEN_FELDER" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="fflId" type="int">
+            <column name="FFL_ID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="filterInnerjoin" class="sernet.gs.reveng.FilterInnerjoin" fetch="select">
+            <column name="FTR_ID" />
+        </many-to-one>
+        <many-to-one name="filterVorschlag" class="sernet.gs.reveng.FilterVorschlag" fetch="select">
+            <column name="FRS_ID" />
+        </many-to-one>
+        <property name="sucheId" type="string">
+            <column name="SUCHE_ID" length="3" not-null="true" />
+        </property>
+        <property name="fflLevel" type="byte">
+            <column name="FFL_LEVEL" not-null="true" />
+        </property>
+        <property name="fflTable" type="string">
+            <column name="FFL_TABLE" length="128" not-null="true" />
+        </property>
+        <property name="fflField1" type="string">
+            <column name="FFL_FIELD_1" length="128" not-null="true" />
+        </property>
+        <property name="fflField2" type="string">
+            <column name="FFL_FIELD_2" length="128" />
+        </property>
+        <property name="fflField3" type="string">
+            <column name="FFL_FIELD_3" length="128" />
+        </property>
+        <property name="fflType" type="string">
+            <column name="FFL_TYPE" length="3" not-null="true" />
+        </property>
+        <property name="fflWhere" type="string">
+            <column name="FFL_WHERE" />
+        </property>
+        <property name="fflCompare" type="string">
+            <column name="FFL_COMPARE" length="3" />
+        </property>
+        <property name="fflOrderby" type="java.lang.Boolean">
+            <column name="FFL_ORDERBY" />
+        </property>
+        <property name="anzeigen" type="boolean">
+            <column name="ANZEIGEN" not-null="true" />
+        </property>
+        <set name="filterRows" table="FILTER_ROW" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FFL_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.FilterRow" />
+        </set>
+        <set name="filterBasises" table="FILTER_BASIS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FFL_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.FilterBasis" />
+        </set>
+        <set name="filterSuchenFelderTxts" table="FILTER_SUCHEN_FELDER_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FFL_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.FilterSuchenFelderTxt" />
+        </set>
+        <set name="filterSuchenSeite1s" table="FILTER_SUCHEN_SEITE1" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FFL_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.FilterSuchenSeite1" />
+        </set>
+    </class>
+</hibernate-mapping>

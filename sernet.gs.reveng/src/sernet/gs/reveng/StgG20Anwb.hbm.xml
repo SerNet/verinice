@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgG20Anwb" table="STG_G20_ANWB" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgG20AnwbId">
+            <key-property name="snr" type="int">
+                <column name="SNR" />
+            </key-property>
+            <key-property name="sysSnr" type="java.lang.Integer">
+                <column name="SYS_SNR" />
+            </key-property>
+            <key-property name="anwSnr" type="java.lang.Integer">
+                <column name="ANW_SNR" />
+            </key-property>
+            <key-property name="klasse" type="string">
+                <column name="KLASSE" length="50" />
+            </key-property>
+            <key-property name="besanw" type="clob">
+                <column name="BESANW" />
+            </key-property>
+            <key-property name="besfg" type="clob">
+                <column name="BESFG" />
+            </key-property>
+            <key-property name="besvi" type="clob">
+                <column name="BESVI" />
+            </key-property>
+            <key-property name="abh" type="clob">
+                <column name="ABH" />
+            </key-property>
+            <key-property name="abhdest" type="clob">
+                <column name="ABHDEST" />
+            </key-property>
+            <key-property name="abhsrc" type="clob">
+                <column name="ABHSRC" />
+            </key-property>
+            <key-property name="lock" type="string">
+                <column name="LOCK" length="1" />
+            </key-property>
+            <key-property name="bewvert" type="java.lang.Integer">
+                <column name="BEWVERT" />
+            </key-property>
+            <key-property name="begrvert" type="clob">
+                <column name="BEGRVERT" />
+            </key-property>
+            <key-property name="bewintegr" type="java.lang.Integer">
+                <column name="BEWINTEGR" />
+            </key-property>
+            <key-property name="begrintegr" type="clob">
+                <column name="BEGRINTEGR" />
+            </key-property>
+            <key-property name="bewverfu" type="java.lang.Integer">
+                <column name="BEWVERFU" />
+            </key-property>
+            <key-property name="begrverfu" type="clob">
+                <column name="BEGRVERFU" />
+            </key-property>
+            <key-property name="expSnr" type="java.lang.Integer">
+                <column name="EXP_SNR" />
+            </key-property>
+            <key-property name="stat" type="java.lang.Integer">
+                <column name="STAT" />
+            </key-property>
+            <key-property name="benSnr" type="java.lang.Integer">
+                <column name="BEN_SNR" />
+            </key-property>
+            <key-property name="memoSnr" type="java.lang.Integer">
+                <column name="MEMO_SNR" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

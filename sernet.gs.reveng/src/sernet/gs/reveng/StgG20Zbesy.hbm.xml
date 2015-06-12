@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgG20Zbesy" table="STG_G20_ZBESY" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgG20ZbesyId">
+            <key-property name="benSnr" type="int">
+                <column name="BEN_SNR" />
+            </key-property>
+            <key-property name="sysSnr" type="int">
+                <column name="SYS_SNR" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

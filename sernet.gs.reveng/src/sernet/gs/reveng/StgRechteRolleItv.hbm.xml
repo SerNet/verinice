@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgRechteRolleItv" table="STG_RECHTE_ROLLE_ITV" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgRechteRolleItvId">
+            <key-property name="rerId" type="java.lang.Integer">
+                <column name="RER_ID" />
+            </key-property>
+            <key-property name="itvId" type="java.lang.Integer">
+                <column name="ITV_ID" />
+            </key-property>
+            <key-property name="itvImpId" type="java.lang.Integer">
+                <column name="ITV_IMP_ID" />
+            </key-property>
+            <key-property name="rechtItv" type="java.lang.Byte">
+                <column name="RECHT_ITV" />
+            </key-property>
+            <key-property name="rechtZob" type="java.lang.Byte">
+                <column name="RECHT_ZOB" />
+            </key-property>
+            <key-property name="rechtItvBau" type="java.lang.Byte">
+                <column name="RECHT_ITV_BAU" />
+            </key-property>
+            <key-property name="rechtZobBau" type="java.lang.Byte">
+                <column name="RECHT_ZOB_BAU" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

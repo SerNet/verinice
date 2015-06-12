@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.MbDelWaehrungen" table="MB_DEL_WAEHRUNGEN" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.MbDelWaehrungenId">
+            <key-property name="impId" type="int">
+                <column name="IMP_ID" />
+            </key-property>
+            <key-property name="waeImpId" type="int">
+                <column name="WAE_IMP_ID" />
+            </key-property>
+            <key-property name="waeId" type="int">
+                <column name="WAE_ID" />
+            </key-property>
+        </composite-id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="sysImport" class="sernet.gs.reveng.SysImport" update="false" insert="false" fetch="select">
+            <column name="IMP_ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="mbWaehrungen" class="sernet.gs.reveng.MbWaehrungen" update="false" insert="false" fetch="select">
+            <column name="WAE_IMP_ID" not-null="true" />
+            <column name="WAE_ID" not-null="true" />
+        </many-to-one>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="impNeu" type="java.lang.Byte">
+            <column name="IMP_NEU" />
+        </property>
+        <property name="geloeschtDurch" type="string">
+            <column name="GELOESCHT_DURCH" length="128" />
+        </property>
+    </class>
+</hibernate-mapping>

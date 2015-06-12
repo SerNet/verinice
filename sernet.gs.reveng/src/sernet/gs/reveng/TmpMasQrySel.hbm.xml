@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.TmpMasQrySel" table="TMP_MAS_QRY_SEL" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.TmpMasQrySelId">
+            <key-property name="spid" type="short">
+                <column name="SPID" />
+            </key-property>
+            <key-property name="qryId" type="int">
+                <column name="QRY_ID" />
+            </key-property>
+        </composite-id>
+        <property name="query" type="string">
+            <column name="QUERY" length="3000" />
+        </property>
+        <property name="link" type="string">
+            <column name="LINK" />
+        </property>
+        <property name="qryTypeId" type="java.lang.Integer">
+            <column name="QRY_TYPE_ID" />
+        </property>
+        <property name="type" type="java.lang.Integer">
+            <column name="TYPE" />
+        </property>
+        <property name="sbkIdVertr" type="java.lang.Byte">
+            <column name="SBK_ID_VERTR" />
+        </property>
+        <property name="sbkIdInteg" type="java.lang.Byte">
+            <column name="SBK_ID_INTEG" />
+        </property>
+        <property name="sbkIdVerf" type="java.lang.Byte">
+            <column name="SBK_ID_VERF" />
+        </property>
+        <property name="sbkIdGesamt" type="java.lang.Byte">
+            <column name="SBK_ID_GESAMT" />
+        </property>
+        <property name="sbkIdPers" type="java.lang.Byte">
+            <column name="SBK_ID_PERS" />
+        </property>
+        <property name="persDaten" type="java.lang.Integer">
+            <column name="PERS_DATEN" />
+        </property>
+    </class>
+</hibernate-mapping>

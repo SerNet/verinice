@@ -1,0 +1,142 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgRechteRolle" table="STG_RECHTE_ROLLE" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgRechteRolleId">
+            <key-property name="rerId" type="java.lang.Integer">
+                <column name="RER_ID" />
+            </key-property>
+            <key-property name="uid" type="java.lang.Integer">
+                <column name="UID" />
+            </key-property>
+            <key-property name="uid_1" type="java.lang.Integer">
+                <column name="UID_" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" />
+            </key-property>
+            <key-property name="nameOrg" type="string">
+                <column name="NAME_ORG" />
+            </key-property>
+            <key-property name="nameSame" type="java.lang.Integer">
+                <column name="NAME_SAME" />
+            </key-property>
+            <key-property name="beschreibung" type="string">
+                <column name="BESCHREIBUNG" length="2000" />
+            </key-property>
+            <key-property name="rechtMetaAnl" type="java.lang.Byte">
+                <column name="RECHT_META_ANL" />
+            </key-property>
+            <key-property name="rechtMetaLoe" type="java.lang.Byte">
+                <column name="RECHT_META_LOE" />
+            </key-property>
+            <key-property name="metadata" type="java.lang.Byte">
+                <column name="METADATA" />
+            </key-property>
+            <key-property name="anwender" type="java.lang.Byte">
+                <column name="ANWENDER" />
+            </key-property>
+            <key-property name="verbund" type="java.lang.Byte">
+                <column name="VERBUND" />
+            </key-property>
+            <key-property name="zielobjekte" type="java.lang.Byte">
+                <column name="ZIELOBJEKTE" />
+            </key-property>
+            <key-property name="auditor" type="java.lang.Byte">
+                <column name="AUDITOR" />
+            </key-property>
+            <key-property name="historie" type="java.lang.Byte">
+                <column name="HISTORIE" />
+            </key-property>
+            <key-property name="exportZusammen" type="java.lang.Byte">
+                <column name="EXPORT_ZUSAMMEN" />
+            </key-property>
+            <key-property name="importZusammen" type="java.lang.Byte">
+                <column name="IMPORT_ZUSAMMEN" />
+            </key-property>
+            <key-property name="exportAenderung" type="java.lang.Byte">
+                <column name="EXPORT_AENDERUNG" />
+            </key-property>
+            <key-property name="importWeiter" type="java.lang.Byte">
+                <column name="IMPORT_WEITER" />
+            </key-property>
+            <key-property name="exportWeiter" type="java.lang.Byte">
+                <column name="EXPORT_WEITER" />
+            </key-property>
+            <key-property name="importAbgleich" type="java.lang.Byte">
+                <column name="IMPORT_ABGLEICH" />
+            </key-property>
+            <key-property name="dbsBackup" type="java.lang.Byte">
+                <column name="DBS_BACKUP" />
+            </key-property>
+            <key-property name="dbsRestore" type="java.lang.Byte">
+                <column name="DBS_RESTORE" />
+            </key-property>
+            <key-property name="gstoolAdmin" type="java.lang.Byte">
+                <column name="GSTOOL_ADMIN" />
+            </key-property>
+            <key-property name="mig30" type="java.lang.Byte">
+                <column name="MIG_30" />
+            </key-property>
+            <key-property name="srvSysadmin" type="java.lang.Byte">
+                <column name="SRV_SYSADMIN" />
+            </key-property>
+            <key-property name="srvSecurityadmin" type="java.lang.Byte">
+                <column name="SRV_SECURITYADMIN" />
+            </key-property>
+            <key-property name="srvServeradmin" type="java.lang.Byte">
+                <column name="SRV_SERVERADMIN" />
+            </key-property>
+            <key-property name="srvSetupadmin" type="java.lang.Byte">
+                <column name="SRV_SETUPADMIN" />
+            </key-property>
+            <key-property name="srvProcessadmin" type="java.lang.Byte">
+                <column name="SRV_PROCESSADMIN" />
+            </key-property>
+            <key-property name="srvDiskadmin" type="java.lang.Byte">
+                <column name="SRV_DISKADMIN" />
+            </key-property>
+            <key-property name="srvDbcreator" type="java.lang.Byte">
+                <column name="SRV_DBCREATOR" />
+            </key-property>
+            <key-property name="srvBulkadmin" type="java.lang.Byte">
+                <column name="SRV_BULKADMIN" />
+            </key-property>
+            <key-property name="dbOwner" type="java.lang.Byte">
+                <column name="DB_OWNER" />
+            </key-property>
+            <key-property name="dbAccessadmin" type="java.lang.Byte">
+                <column name="DB_ACCESSADMIN" />
+            </key-property>
+            <key-property name="dbSecurityadmin" type="java.lang.Byte">
+                <column name="DB_SECURITYADMIN" />
+            </key-property>
+            <key-property name="dbDdladmin" type="java.lang.Byte">
+                <column name="DB_DDLADMIN" />
+            </key-property>
+            <key-property name="dbBackupoperator" type="java.lang.Byte">
+                <column name="DB_BACKUPOPERATOR" />
+            </key-property>
+            <key-property name="dbDatareader" type="java.lang.Byte">
+                <column name="DB_DATAREADER" />
+            </key-property>
+            <key-property name="dbDatawriter" type="java.lang.Byte">
+                <column name="DB_DATAWRITER" />
+            </key-property>
+            <key-property name="dbDenydatareader" type="java.lang.Byte">
+                <column name="DB_DENYDATAREADER" />
+            </key-property>
+            <key-property name="dbDenydatawriter" type="java.lang.Byte">
+                <column name="DB_DENYDATAWRITER" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="impRo" type="java.lang.Byte">
+                <column name="IMP_RO" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

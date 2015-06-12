@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgMbZosZusatz" table="STG_MB_ZOS_ZUSATZ" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgMbZosZusatzId">
+            <key-property name="zosImpId" type="java.lang.Integer">
+                <column name="ZOS_IMP_ID" />
+            </key-property>
+            <key-property name="zotId" type="java.lang.Integer">
+                <column name="ZOT_ID" />
+            </key-property>
+            <key-property name="zosId" type="java.lang.Integer">
+                <column name="ZOS_ID" />
+            </key-property>
+            <key-property name="zosZusId" type="java.lang.Integer">
+                <column name="ZOS_ZUS_ID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="50" />
+            </key-property>
+            <key-property name="dtyId" type="java.lang.Integer">
+                <column name="DTY_ID" />
+            </key-property>
+            <key-property name="prec" type="java.lang.Short">
+                <column name="PREC" />
+            </key-property>
+            <key-property name="scale" type="java.lang.Short">
+                <column name="SCALE" />
+            </key-property>
+            <key-property name="length" type="java.lang.Short">
+                <column name="LENGTH" />
+            </key-property>
+            <key-property name="muss" type="java.lang.Boolean">
+                <column name="MUSS" />
+            </key-property>
+            <key-property name="wertZeichen" type="string">
+                <column name="WERT_ZEICHEN" length="7000" />
+            </key-property>
+            <key-property name="wertWaehrung" type="big_decimal">
+                <column name="WERT_WAEHRUNG" precision="15" />
+            </key-property>
+            <key-property name="wertDatum" type="timestamp">
+                <column name="WERT_DATUM" length="23" />
+            </key-property>
+            <key-property name="wertDezimal" type="big_decimal">
+                <column name="WERT_DEZIMAL" precision="28" scale="5" />
+            </key-property>
+            <key-property name="wertGanzzahl" type="java.lang.Integer">
+                <column name="WERT_GANZZAHL" />
+            </key-property>
+            <key-property name="waeId" type="java.lang.Integer">
+                <column name="WAE_ID" />
+            </key-property>
+            <key-property name="waeImpId" type="java.lang.Integer">
+                <column name="WAE_IMP_ID" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="impNeu" type="java.lang.Byte">
+                <column name="IMP_NEU" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+            <key-property name="erstelltAm" type="timestamp">
+                <column name="ERSTELLT_AM" length="23" />
+            </key-property>
+            <key-property name="erstelltDurch" type="string">
+                <column name="ERSTELLT_DURCH" length="128" />
+            </key-property>
+            <key-property name="geaendertAm" type="timestamp">
+                <column name="GEAENDERT_AM" length="23" />
+            </key-property>
+            <key-property name="geaendertDurch" type="string">
+                <column name="GEAENDERT_DURCH" length="128" />
+            </key-property>
+            <key-property name="geloeschtAm" type="timestamp">
+                <column name="GELOESCHT_AM" length="23" />
+            </key-property>
+            <key-property name="geloeschtDurch" type="string">
+                <column name="GELOESCHT_DURCH" length="128" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.SysHistorie" table="SYS_HISTORIE" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="hisId" type="int">
+            <column name="HIS_ID" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <property name="hisUsn" type="int">
+            <column name="HIS_USN" not-null="true" />
+        </property>
+        <property name="hisUser" type="string">
+            <column name="HIS_USER" length="128" not-null="true" />
+        </property>
+        <property name="hisLogin" type="string">
+            <column name="HIS_LOGIN" length="128" />
+        </property>
+        <property name="hisGuid" type="string">
+            <column name="HIS_GUID" length="36" not-null="true" />
+        </property>
+        <property name="hisSpalte" type="string">
+            <column name="HIS_SPALTE" length="128" not-null="true" />
+        </property>
+        <property name="hisSpalteImp" type="string">
+            <column name="HIS_SPALTE_IMP" length="128" />
+        </property>
+        <property name="hisSpalte2" type="string">
+            <column name="HIS_SPALTE_2" length="128" />
+        </property>
+        <property name="hisAltWert" type="string">
+            <column name="HIS_ALT_WERT" length="6500" />
+        </property>
+        <property name="hisAltDatum" type="timestamp">
+            <column name="HIS_ALT_DATUM" length="23" />
+        </property>
+        <property name="hisAltDecimal" type="big_decimal">
+            <column name="HIS_ALT_DECIMAL" precision="28" scale="5" />
+        </property>
+        <property name="hisAltId" type="java.lang.Integer">
+            <column name="HIS_ALT_ID" />
+        </property>
+        <property name="hisAltImpId" type="java.lang.Integer">
+            <column name="HIS_ALT_IMP_ID" />
+        </property>
+        <property name="hisNr" type="java.lang.Integer">
+            <column name="HIS_NR" />
+        </property>
+        <property name="dtyId" type="java.lang.Integer">
+            <column name="DTY_ID" />
+        </property>
+        <property name="firstEntry" type="boolean">
+            <column name="FIRST_ENTRY" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

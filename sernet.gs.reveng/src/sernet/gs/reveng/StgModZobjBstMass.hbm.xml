@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgModZobjBstMass" table="STG_MOD_ZOBJ_BST_MASS" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgModZobjBstMassId">
+            <key-property name="id" type="java.lang.Integer">
+                <column name="ID" />
+            </key-property>
+            <key-property name="bauId" type="java.lang.Integer">
+                <column name="BAU_ID" />
+            </key-property>
+            <key-property name="bauImpId" type="java.lang.Integer">
+                <column name="BAU_IMP_ID" />
+            </key-property>
+            <key-property name="masId" type="java.lang.Integer">
+                <column name="MAS_ID" />
+            </key-property>
+            <key-property name="masImpId" type="java.lang.Integer">
+                <column name="MAS_IMP_ID" />
+            </key-property>
+            <key-property name="zobId" type="java.lang.Integer">
+                <column name="ZOB_ID" />
+            </key-property>
+            <key-property name="zobImpId" type="java.lang.Integer">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="orgImpId" type="java.lang.Integer">
+                <column name="ORG_IMP_ID" />
+            </key-property>
+            <key-property name="ustId" type="java.lang.Byte">
+                <column name="UST_ID" />
+            </key-property>
+            <key-property name="waeId" type="java.lang.Integer">
+                <column name="WAE_ID" />
+            </key-property>
+            <key-property name="waeImpId" type="java.lang.Integer">
+                <column name="WAE_IMP_ID" />
+            </key-property>
+            <key-property name="notizId" type="java.lang.Integer">
+                <column name="NOTIZ_ID" />
+            </key-property>
+            <key-property name="dateiKosten" type="string">
+                <column name="DATEI_KOSTEN" />
+            </key-property>
+            <key-property name="dateiProzess" type="string">
+                <column name="DATEI_PROZESS" />
+            </key-property>
+            <key-property name="umsDatVon" type="timestamp">
+                <column name="UMS_DAT_VON" length="23" />
+            </key-property>
+            <key-property name="umsDatBis" type="timestamp">
+                <column name="UMS_DAT_BIS" length="23" />
+            </key-property>
+            <key-property name="umsBeschr" type="string">
+                <column name="UMS_BESCHR" length="3000" />
+            </key-property>
+            <key-property name="kostPersFix" type="big_decimal">
+                <column name="KOST_PERS_FIX" precision="15" />
+            </key-property>
+            <key-property name="kostPersVar" type="big_decimal">
+                <column name="KOST_PERS_VAR" precision="15" />
+            </key-property>
+            <key-property name="kostPersZeiId" type="java.lang.Integer">
+                <column name="KOST_PERS_ZEI_ID" />
+            </key-property>
+            <key-property name="kostPersZeiImpId" type="java.lang.Integer">
+                <column name="KOST_PERS_ZEI_IMP_ID" />
+            </key-property>
+            <key-property name="kostSachFix" type="big_decimal">
+                <column name="KOST_SACH_FIX" precision="15" />
+            </key-property>
+            <key-property name="kostSachVar" type="big_decimal">
+                <column name="KOST_SACH_VAR" precision="15" />
+            </key-property>
+            <key-property name="kostSachZeiId" type="java.lang.Integer">
+                <column name="KOST_SACH_ZEI_ID" />
+            </key-property>
+            <key-property name="kostSachZeiImpId" type="java.lang.Integer">
+                <column name="KOST_SACH_ZEI_IMP_ID" />
+            </key-property>
+            <key-property name="revBeschr" type="string">
+                <column name="REV_BESCHR" length="3000" />
+            </key-property>
+            <key-property name="revDat" type="timestamp">
+                <column name="REV_DAT" length="23" />
+            </key-property>
+            <key-property name="revZobIdMit" type="java.lang.Integer">
+                <column name="REV_ZOB_ID_MIT" />
+            </key-property>
+            <key-property name="revDatNext" type="timestamp">
+                <column name="REV_DAT_NEXT" length="23" />
+            </key-property>
+            <key-property name="revZobIdMitNext" type="java.lang.Integer">
+                <column name="REV_ZOB_ID_MIT_NEXT" />
+            </key-property>
+            <key-property name="stgNeu" type="java.lang.Integer">
+                <column name="STG_NEU" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="loeschDatum" type="timestamp">
+                <column name="LOESCH_DATUM" length="23" />
+            </key-property>
+            <key-property name="impNeu" type="java.lang.Byte">
+                <column name="IMP_NEU" />
+            </key-property>
+            <key-property name="erfasstDurch" type="string">
+                <column name="ERFASST_DURCH" length="128" />
+            </key-property>
+            <key-property name="geloeschtDurch" type="string">
+                <column name="GELOESCHT_DURCH" length="128" />
+            </key-property>
+            <key-property name="cmTimestamp" type="timestamp">
+                <column name="CM_TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="cmUsername" type="string">
+                <column name="CM_USERNAME" length="128" />
+            </key-property>
+            <key-property name="cmVerId2" type="java.lang.Short">
+                <column name="CM_VER_ID_2" />
+            </key-property>
+            <key-property name="cmStaId" type="java.lang.Byte">
+                <column name="CM_STA_ID" />
+            </key-property>
+            <key-property name="changedBy" type="string">
+                <column name="CHANGED_BY" length="128" />
+            </key-property>
+            <key-property name="changedOn" type="timestamp">
+                <column name="CHANGED_ON" length="23" />
+            </key-property>
+            <key-property name="zykId" type="java.lang.Byte">
+                <column name="ZYK_ID" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

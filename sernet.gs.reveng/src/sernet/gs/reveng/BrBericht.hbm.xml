@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.BrBericht" table="BR_BERICHT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.BrBerichtId">
+            <key-property name="repId" type="int">
+                <column name="REP_ID" />
+            </key-property>
+            <key-property name="sprId" type="short">
+                <column name="SPR_ID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="MSprache" class="sernet.gs.reveng.MSprache" update="false" insert="false" fetch="select">
+            <column name="SPR_ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="MMetatyp" class="sernet.gs.reveng.MMetatyp" fetch="select">
+            <column name="MTY_ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="sysImport" class="sernet.gs.reveng.SysImport" fetch="select">
+            <column name="IMP_ID" not-null="true" />
+        </many-to-one>
+        <property name="styId" type="java.lang.Integer">
+            <column name="STY_ID" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" length="100" not-null="true" />
+        </property>
+        <property name="dialog" type="string">
+            <column name="DIALOG" length="50" not-null="true" />
+        </property>
+        <property name="option1" type="int">
+            <column name="OPTION_1" not-null="true" />
+        </property>
+        <property name="option2" type="int">
+            <column name="OPTION_2" not-null="true" />
+        </property>
+        <property name="option3" type="int">
+            <column name="OPTION_3" not-null="true" />
+        </property>
+        <property name="option4" type="int">
+            <column name="OPTION_4" not-null="true" />
+        </property>
+        <property name="option5" type="int">
+            <column name="OPTION_5" not-null="true" />
+        </property>
+        <property name="option6" type="int">
+            <column name="OPTION_6" not-null="true" />
+        </property>
+        <property name="autoRecht" type="boolean">
+            <column name="AUTO_RECHT" not-null="true" />
+        </property>
+        <property name="anwendung" type="string">
+            <column name="ANWENDUNG" length="1000" not-null="true" />
+        </property>
+        <property name="parameter" type="string">
+            <column name="PARAMETER" length="1000" not-null="true" />
+        </property>
+        <property name="sortMas" type="string">
+            <column name="SORT_MAS" length="1000" not-null="true" />
+        </property>
+        <property name="sortBau" type="string">
+            <column name="SORT_BAU" length="1000" not-null="true" />
+        </property>
+        <property name="extension" type="string">
+            <column name="EXTENSION" length="100" not-null="true" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="erstelltAm" type="timestamp">
+            <column name="ERSTELLT_AM" length="23" not-null="true" />
+        </property>
+        <property name="erstelltDurch" type="string">
+            <column name="ERSTELLT_DURCH" length="128" not-null="true" />
+        </property>
+        <property name="geaendertAm" type="timestamp">
+            <column name="GEAENDERT_AM" length="23" />
+        </property>
+        <property name="geaendertDurch" type="string">
+            <column name="GEAENDERT_DURCH" length="128" />
+        </property>
+        <set name="rechteRolleBerichts" table="RECHTE_ROLLE_BERICHT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REP_ID" not-null="true" />
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RechteRolleBericht" />
+        </set>
+        <set name="rechteAnwenders" table="RECHTE_BERICHT_TMP" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REP_ID" not-null="true" />
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <many-to-many entity-name="sernet.gs.reveng.RechteAnwender">
+                <column name="UID" not-null="true" />
+            </many-to-many>
+        </set>
+        <set name="brFilters" table="BR_FILTER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REP_ID" not-null="true" />
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.BrFilter" />
+        </set>
+        <set name="brAttributs" table="BR_ATTRIBUT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="REP_ID" not-null="true" />
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.BrAttribut" />
+        </set>
+    </class>
+</hibernate-mapping>

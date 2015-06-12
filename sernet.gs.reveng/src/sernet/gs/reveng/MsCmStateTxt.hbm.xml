@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.MsCmStateTxt" table="MS_CM_STATE_TXT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.MsCmStateTxtId">
+            <key-property name="cmStaId" type="byte">
+                <column name="CM_STA_ID" />
+            </key-property>
+            <key-property name="sprId" type="short">
+                <column name="SPR_ID" />
+            </key-property>
+        </composite-id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="msCmState" class="sernet.gs.reveng.MsCmState" update="false" insert="false" fetch="select">
+            <column name="CM_STA_ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="MSprache" class="sernet.gs.reveng.MSprache" update="false" insert="false" fetch="select">
+            <column name="SPR_ID" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" unique="true" />
+        </property>
+    </class>
+</hibernate-mapping>

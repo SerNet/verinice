@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.FilterName" table="FILTER_NAME" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="fltId" type="int">
+            <column name="FLT_ID" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="filterSuchen" class="sernet.gs.reveng.FilterSuchen" fetch="select">
+            <column name="SUCHE_ID" length="3" not-null="true" />
+        </many-to-one>
+        <property name="impId" type="java.lang.Integer">
+            <column name="IMP_ID" />
+        </property>
+        <property name="uid" type="short">
+            <column name="UID" not-null="true" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" not-null="true" />
+        </property>
+        <property name="nameSame" type="java.lang.Integer">
+            <column name="NAME_SAME" />
+        </property>
+        <property name="nameOrg" type="string">
+            <column name="NAME_ORG" />
+        </property>
+        <property name="searchId" type="java.lang.Integer">
+            <column name="SEARCH_ID" />
+        </property>
+        <property name="common" type="boolean">
+            <column name="COMMON" not-null="true" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <set name="filterRows" table="FILTER_ROW" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FLT_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.FilterRow" />
+        </set>
+        <set name="filterBasises" table="FILTER_BASIS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FLT_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.FilterBasis" />
+        </set>
+    </class>
+</hibernate-mapping>

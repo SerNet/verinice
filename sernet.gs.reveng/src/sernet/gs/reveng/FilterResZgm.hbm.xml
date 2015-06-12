@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.FilterResZgm" table="FILTER_RES_ZGM" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.FilterResZgmId">
+            <key-property name="searchId" type="int">
+                <column name="SEARCH_ID" />
+            </key-property>
+            <key-property name="zobImpId" type="int">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="zobId" type="int">
+                <column name="ZOB_ID" />
+            </key-property>
+            <key-property name="gefImpId" type="int">
+                <column name="GEF_IMP_ID" />
+            </key-property>
+            <key-property name="gefId" type="int">
+                <column name="GEF_ID" />
+            </key-property>
+            <key-property name="masImpId" type="int">
+                <column name="MAS_IMP_ID" />
+            </key-property>
+            <key-property name="masId" type="int">
+                <column name="MAS_ID" />
+            </key-property>
+            <key-property name="col" type="int">
+                <column name="COL" />
+            </key-property>
+        </composite-id>
+        <property name="spid" type="byte">
+            <column name="SPID" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

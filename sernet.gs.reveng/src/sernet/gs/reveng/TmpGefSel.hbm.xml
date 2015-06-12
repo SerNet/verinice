@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.TmpGefSel" table="TMP_GEF_SEL" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.TmpGefSelId">
+            <key-property name="spid" type="short">
+                <column name="SPID" />
+            </key-property>
+            <key-property name="gefImpId" type="int">
+                <column name="GEF_IMP_ID" />
+            </key-property>
+            <key-property name="gefId" type="int">
+                <column name="GEF_ID" />
+            </key-property>
+        </composite-id>
+        <property name="altId" type="java.lang.Integer">
+            <column name="ALT_ID" />
+        </property>
+        <property name="altImpId" type="java.lang.Integer">
+            <column name="ALT_IMP_ID" />
+        </property>
+        <property name="sbkIdVerf" type="java.lang.Byte">
+            <column name="SBK_ID_VERF" />
+        </property>
+        <property name="sbkIdVertr" type="java.lang.Byte">
+            <column name="SBK_ID_VERTR" />
+        </property>
+        <property name="sbkIdInteg" type="java.lang.Byte">
+            <column name="SBK_ID_INTEG" />
+        </property>
+        <property name="sbkIdGesamt" type="java.lang.Byte">
+            <column name="SBK_ID_GESAMT" />
+        </property>
+        <property name="sbkIdPers" type="java.lang.Byte">
+            <column name="SBK_ID_PERS" />
+        </property>
+        <property name="persDaten" type="java.lang.Integer">
+            <column name="PERS_DATEN" />
+        </property>
+        <property name="type" type="java.lang.Integer">
+            <column name="TYPE" />
+        </property>
+        <property name="existing" type="java.lang.Boolean">
+            <column name="EXISTING" />
+        </property>
+        <property name="recoverable" type="java.lang.Boolean">
+            <column name="RECOVERABLE" />
+        </property>
+        <property name="recover" type="java.lang.Boolean">
+            <column name="RECOVER" />
+        </property>
+        <property name="createok" type="java.lang.Boolean">
+            <column name="CREATEOK" />
+        </property>
+        <property name="deleted" type="java.lang.Boolean">
+            <column name="DELETED" />
+        </property>
+        <property name="typ" type="java.lang.Character">
+            <column name="TYP" length="1" />
+        </property>
+        <property name="ignore" type="java.lang.Boolean">
+            <column name="IGNORE" />
+        </property>
+    </class>
+</hibernate-mapping>

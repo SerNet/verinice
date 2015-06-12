@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgRechteAnwender" table="STG_RECHTE_ANWENDER" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgRechteAnwenderId">
+            <key-property name="uid" type="java.lang.Short">
+                <column name="UID" />
+            </key-property>
+            <key-property name="rerId" type="java.lang.Integer">
+                <column name="RER_ID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="128" />
+            </key-property>
+            <key-property name="telefon" type="string">
+                <column name="TELEFON" length="20" />
+            </key-property>
+            <key-property name="abteilung" type="string">
+                <column name="ABTEILUNG" length="100" />
+            </key-property>
+            <key-property name="beschreibung" type="string">
+                <column name="BESCHREIBUNG" length="2000" />
+            </key-property>
+            <key-property name="notizId" type="java.lang.Integer">
+                <column name="NOTIZ_ID" />
+            </key-property>
+            <key-property name="funktion" type="string">
+                <column name="FUNKTION" length="100" />
+            </key-property>
+            <key-property name="loginname" type="string">
+                <column name="LOGINNAME" length="128" />
+            </key-property>
+            <key-property name="aktiv" type="java.lang.Boolean">
+                <column name="AKTIV" />
+            </key-property>
+            <key-property name="hatLogin" type="java.lang.Boolean">
+                <column name="HAT_LOGIN" />
+            </key-property>
+            <key-property name="hatDbzugriff" type="java.lang.Boolean">
+                <column name="HAT_DBZUGRIFF" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

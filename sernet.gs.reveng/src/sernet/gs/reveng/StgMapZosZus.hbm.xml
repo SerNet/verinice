@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgMapZosZus" table="STG_MAP_ZOS_ZUS" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgMapZosZusId">
+            <key-property name="altImpId" type="java.lang.Integer">
+                <column name="ALT_IMP_ID" />
+            </key-property>
+            <key-property name="altZotId" type="java.lang.Integer">
+                <column name="ALT_ZOT_ID" />
+            </key-property>
+            <key-property name="altZosId" type="java.lang.Integer">
+                <column name="ALT_ZOS_ID" />
+            </key-property>
+            <key-property name="altZusId" type="java.lang.Integer">
+                <column name="ALT_ZUS_ID" />
+            </key-property>
+            <key-property name="neuImpId" type="java.lang.Integer">
+                <column name="NEU_IMP_ID" />
+            </key-property>
+            <key-property name="neuZotId" type="java.lang.Integer">
+                <column name="NEU_ZOT_ID" />
+            </key-property>
+            <key-property name="neuZosId" type="java.lang.Integer">
+                <column name="NEU_ZOS_ID" />
+            </key-property>
+            <key-property name="neuZusId" type="java.lang.Integer">
+                <column name="NEU_ZUS_ID" />
+            </key-property>
+            <key-property name="dtyId" type="java.lang.Integer">
+                <column name="DTY_ID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="50" />
+            </key-property>
+            <key-property name="length" type="java.lang.Short">
+                <column name="LENGTH" />
+            </key-property>
+            <key-property name="prec" type="java.lang.Short">
+                <column name="PREC" />
+            </key-property>
+            <key-property name="scale" type="java.lang.Short">
+                <column name="SCALE" />
+            </key-property>
+            <key-property name="waeId" type="java.lang.Integer">
+                <column name="WAE_ID" />
+            </key-property>
+            <key-property name="waeImpId" type="java.lang.Integer">
+                <column name="WAE_IMP_ID" />
+            </key-property>
+            <key-property name="inserted" type="java.lang.Boolean">
+                <column name="INSERTED" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

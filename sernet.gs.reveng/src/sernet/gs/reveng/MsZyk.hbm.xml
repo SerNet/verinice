@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.MsZyk" table="MS_ZYK" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="zykId" type="byte">
+            <column name="ZYK_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="erstelltAm" type="timestamp">
+            <column name="ERSTELLT_AM" length="23" not-null="true" />
+        </property>
+        <property name="erstelltDurch" type="string">
+            <column name="ERSTELLT_DURCH" length="128" />
+        </property>
+        <set name="modZobjBstMasses" table="MOD_ZOBJ_BST_MASS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZYK_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.ModZobjBstMass" />
+        </set>
+        <set name="msZykTxts" table="MS_ZYK_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZYK_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MsZykTxt" />
+        </set>
+        <set name="mbBaustMassnGsiegels" table="MB_BAUST_MASSN_GSIEGEL" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZYK_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbBaustMassnGsiegel" />
+        </set>
+    </class>
+</hibernate-mapping>

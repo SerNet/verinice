@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgSysSystem" table="STG_SYS_SYSTEM" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgSysSystemId">
+            <key-property name="sysId" type="java.lang.Integer">
+                <column name="SYS_ID" />
+            </key-property>
+            <key-property name="sysDbmodellVers" type="java.lang.Integer">
+                <column name="SYS_DBMODELL_VERS" />
+            </key-property>
+            <key-property name="sysToolVers" type="java.lang.Integer">
+                <column name="SYS_TOOL_VERS" />
+            </key-property>
+            <key-property name="sysMetaVers" type="java.lang.Integer">
+                <column name="SYS_META_VERS" />
+            </key-property>
+            <key-property name="sysMaxHistSteps" type="java.lang.Integer">
+                <column name="SYS_MAX_HIST_STEPS" />
+            </key-property>
+            <key-property name="sysToolpwd" type="string">
+                <column name="SYS_TOOLPWD" length="512" />
+            </key-property>
+            <key-property name="sysScriptversion" type="big_decimal">
+                <column name="SYS_SCRIPTVERSION" precision="4" />
+            </key-property>
+            <key-property name="sysInitdone" type="java.lang.Boolean">
+                <column name="SYS_INITDONE" />
+            </key-property>
+            <key-property name="sysToolversMajor" type="java.lang.Integer">
+                <column name="SYS_TOOLVERS_MAJOR" />
+            </key-property>
+            <key-property name="sysToolversMinor" type="java.lang.Integer">
+                <column name="SYS_TOOLVERS_MINOR" />
+            </key-property>
+            <key-property name="komplett" type="java.lang.Integer">
+                <column name="KOMPLETT" />
+            </key-property>
+            <key-property name="nursprache" type="java.lang.Integer">
+                <column name="NURSPRACHE" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

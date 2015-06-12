@@ -32,7 +32,10 @@ import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.MbDringlichkeitDAO;
 import sernet.gs.reveng.MbDringlichkeitTxt;
 import sernet.gs.reveng.MbDringlichkeitTxtDAO;
+import sernet.gs.reveng.MbGefaehr;
+import sernet.gs.reveng.MbGefaehrTxt;
 import sernet.gs.reveng.MbMassn;
+import sernet.gs.reveng.MbMassnTxt;
 import sernet.gs.reveng.MbRolleTxt;
 import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.MbZeiteinheitenTxtDAO;
@@ -43,6 +46,8 @@ import sernet.gs.reveng.ModZobjBstMassId;
 import sernet.gs.reveng.ModZobjBstMassMitarb;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.NZielobjektDAO;
+import sernet.gs.reveng.NZobEsa;
+import sernet.gs.reveng.NZobEsaHome;
 import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.NZobSbDAO;
 import sernet.gs.reveng.NmbNotiz;
@@ -154,6 +159,18 @@ public class GSVampire {
 
 	private static final String QUERY_SCHUTZBEDARF_FOR_ZIELOBJEKT = "select zsb "
 			+ "from NZobSb zsb where zsb.id.zobId = :zobId";
+	
+	private static final String QUERY_ESA_FOR_ZIELOBJEKT = "select "
+			+ " new sernet.gs.reveng.importData.ESAResult(esa.esaBegruendung, esa.esaEinsatz, "
+			+ " esa.esaModellierung, esa.esaSzenario, esa.msUnj.unjId, esa.esaEntscheidDurch, zmi.name)"
+			+ " from NZobEsa esa, NZielobjekt zmi"
+			+ " where zmi.id.zobId = esa.esaZobIdMit"
+			+ "	and esa.NZielobjekt.id.zobId = :zobId";
+	
+	
+		
+		
+	
 
 	// private static final String QUERY_ZEITEINHEITEN_TXT_ALL = "select zeittxt
 	// " +
@@ -171,6 +188,46 @@ public class GSVampire {
 			+ "	where link.id.zobId1 = :zobId "
 			+ "	and link.id.zobId2 = dependant.id.zobId "
 			+ "	and link.loeschDatum = null";
+
+	private static final String QUERY_RA_GEFS_FOR_ZIELOBJEKT = ""
+			+ "select new sernet.gs.reveng.importData.RAGefaehrdungenResult(z, g, gtxt, rabtxt.kurz) "
+			+ "from " 
+			+ "	MbGefaehr g, MbGefaehrTxt gtxt,"
+			+ "	RaZobGef rzg, MsRaBehandTxt rabtxt, NZielobjekt z"
+			+ " where  rzg.id.zobId = z.id.zobId"
+			+ "	and rzg.id.gefId = g.id.gefId"
+			+ "	and gtxt.id.gefId = g.id.gefId"
+			+ "	and rabtxt.id.rabId = rzg.msRaBehand.rabId"
+			+ "	and z.id.zobId = :zobId"
+			+ "	and (gtxt.id.sprId = 1 or gtxt.id.sprId = 0)"
+			+ "	and rabtxt.id.sprId=1";
+
+	
+	private static final String QUERY_RA_GEF_MNS_FOR_ZIELOBJEKT =  
+			"select new sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult("
+			+ "z, g, gtxt, rabtxt.kurz, m, mtxt)" +
+			" from RaZobGef rzg, " + 
+			"	RaZobGefMas rzgma," + 
+			"	MbGefaehr g," + 
+			"	MbGefaehrTxt gtxt," + 
+			"	MsRaBehandTxt rabtxt," + 
+			"	NZielobjekt z," + 
+			"	MbMassn m," + 
+			"	MbMassnTxt mtxt" + 
+			" where rzg.id.zobId = z.id.zobId" + 
+			"	and rzg.id.gefId = g.id.gefId" + 
+			"	and gtxt.id.gefId = g.id.gefId" + 
+			"	and rabtxt.id.rabId = rzg.msRaBehand.rabId" + 
+			"	and m.id.masId = rzgma.id.masId" + 
+			"	and rzgma.id.gefId = g.id.gefId" + 
+			"	and rzgma.id.zobId = z.id.zobId" + 
+			"	and mtxt.id.masId = m.id.masId" + 
+			"	and z.id.zobId = :zobId" + 
+			"	and g.id.gefId = :gefId" + 
+			"	and (gtxt.id.sprId = 1 or gtxt.id.sprId = 0)" + 
+			"	and rabtxt.id.sprId=1" + 
+			"	and (mtxt.id.sprId = 1 or mtxt.id.sprId = 0)";
+	
 
 	public GSVampire(String configFile) {
 		HibernateSessionFactory.setConfigFile(configFile);
@@ -411,11 +468,11 @@ public class GSVampire {
 					(MbMassn) next[1], (MUmsetzStatTxt) next[2],
 					(ModZobjBst) next[3], (ModZobjBstMass) next[4]));
 			
-//			ModZobjBst zobst = (ModZobjBst) next[3];
-//			if (LOG.isDebugEnabled()) {
-//			    if (zobst.getRefZobId() != null)
-//			        LOG.debug("Baustein Referenz: " + zobst.getRefZobId());
-//            }
+			ModZobjBst zobst = (ModZobjBst) next[3];
+			if (LOG.isDebugEnabled()) {
+			    if (zobst.getRefZobId() != null)
+			        LOG.debug("Baustein Referenz: " + zobst.getRefZobId());
+            }
 			
 		}
 		
@@ -493,6 +550,63 @@ public class GSVampire {
 			Object[] next = (Object[]) iterate.next();
 			result.add(new String[] { (String) next[0], (String) next[1] });
 		}
+		transaction.commit();
+		dao.getSession().close();
+		return result;
+	}
+
+	/** 
+	 * Joins ESA table to get values for "Ergänzende Sicherheitsanalyse" for a "Zielobjekt"
+	 * 
+	 * @param zielobjekt
+	 * @return
+	 */
+	public List<ESAResult> findESAByZielobjekt(NZielobjekt zielobjekt) {
+		List result = new ArrayList();
+		NZielobjektDAO dao = new NZielobjektDAO();
+		Transaction transaction = dao.getSession().beginTransaction();
+		Query query = dao.getSession().createQuery(
+				QUERY_ESA_FOR_ZIELOBJEKT);
+		query.setProperties(zielobjekt.getId());
+		Iterator iterate = query.iterate();
+		while (iterate.hasNext()) {
+			result.add((ESAResult) iterate.next());
+		}
+		transaction.commit();
+		dao.getSession().close();
+		return result;
+	}
+
+	/**
+	 * Finds "Gefährdungen" of "Risikoanalyse" for a "Zielobjekt"
+	 * @param zielobjekt
+	 * @return
+	 */
+	public List<RAGefaehrdungenResult> findRAGefaehrdungenForZielobjekt(NZielobjekt zielobjekt) {
+		List result = new ArrayList();
+		NZielobjektDAO dao = new NZielobjektDAO();
+		Transaction transaction = dao.getSession().beginTransaction();
+		Query query = dao.getSession().createQuery(
+				QUERY_RA_GEFS_FOR_ZIELOBJEKT);
+		query.setProperties(zielobjekt.getId());
+		result.addAll(query.list());
+		transaction.commit();
+		dao.getSession().close();
+		return result;
+	
+	}
+
+	public List<RAGefaehrdungsMassnahmenResult> findRAGefaehrdungsMassnahmenForZielobjekt(
+			NZielobjekt zielobjekt, MbGefaehr gefaehrdung) {
+		List result = new ArrayList();
+		NZielobjektDAO dao = new NZielobjektDAO();
+		Transaction transaction = dao.getSession().beginTransaction();
+		Query query = dao.getSession().createQuery(
+				QUERY_RA_GEF_MNS_FOR_ZIELOBJEKT);
+		query.setProperties(zielobjekt.getId());
+		query.setParameter("zobId",zielobjekt.getId().getZobId());
+		query.setParameter("gefId", gefaehrdung.getId().getGefId());
+		result.addAll(query.list());
 		transaction.commit();
 		dao.getSession().close();
 		return result;

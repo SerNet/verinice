@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgSysUsertbs" table="STG_SYS_USERTBS" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgSysUsertbsId">
+            <key-property name="tbsId" type="java.lang.Integer">
+                <column name="TBS_ID" />
+            </key-property>
+            <key-property name="tbsUid" type="java.lang.Short">
+                <column name="TBS_UID" />
+            </key-property>
+            <key-property name="tbsText" type="string">
+                <column name="TBS_TEXT" length="7000" />
+            </key-property>
+            <key-property name="tbsKeycode1" type="java.lang.Short">
+                <column name="TBS_KEYCODE_1" />
+            </key-property>
+            <key-property name="tbsKeycode2" type="java.lang.Short">
+                <column name="TBS_KEYCODE_2" />
+            </key-property>
+            <key-property name="tbsShift" type="java.lang.Short">
+                <column name="TBS_SHIFT" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

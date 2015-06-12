@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.MsUnj" table="MS_UNJ" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="unjId" type="byte">
+            <column name="UNJ_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="erstelltAm" type="timestamp">
+            <column name="ERSTELLT_AM" length="23" not-null="true" />
+        </property>
+        <property name="erstelltDurch" type="string">
+            <column name="ERSTELLT_DURCH" length="128" not-null="true" />
+        </property>
+        <set name="raZobGefMits" table="RA_ZOB_GEF_MIT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZGMA_UNJ_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RaZobGefMit" />
+        </set>
+        <set name="NZobEsas" table="N_ZOB_ESA" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ESA_UNJ_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZobEsa" />
+        </set>
+        <set name="raZobGefsForZgVollstaUnjId" table="RA_ZOB_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZG_VOLLSTA_UNJ_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RaZobGef" />
+        </set>
+        <set name="raZobGefsForZgStaerkeUnjId" table="RA_ZOB_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZG_STAERKE_UNJ_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RaZobGef" />
+        </set>
+        <set name="raZobGefsForZgZuverlaUnjId" table="RA_ZOB_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZG_ZUVERLA_UNJ_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RaZobGef" />
+        </set>
+        <set name="raZobGefsForZgUnterUnjId" table="RA_ZOB_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZG_UNTER_UNJ_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RaZobGef" />
+        </set>
+        <set name="raZobGefsForZgOkUnjId" table="RA_ZOB_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="ZG_OK_UNJ_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RaZobGef" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.RechteRolle" table="RECHTE_ROLLE" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="rerId" type="int">
+            <column name="RER_ID" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <property name="uid" type="java.lang.Short">
+            <column name="UID" />
+        </property>
+        <property name="uid_1" type="java.lang.Short">
+            <column name="UID_" />
+        </property>
+        <property name="gid" type="java.lang.Short">
+            <column name="GID" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" not-null="true" />
+        </property>
+        <property name="nameOrg" type="string">
+            <column name="NAME_ORG" />
+        </property>
+        <property name="nameSame" type="java.lang.Integer">
+            <column name="NAME_SAME" />
+        </property>
+        <property name="beschreibung" type="string">
+            <column name="BESCHREIBUNG" length="2000" />
+        </property>
+        <property name="rechtMetaAnl" type="byte">
+            <column name="RECHT_META_ANL" not-null="true" />
+        </property>
+        <property name="rechtMetaLoe" type="byte">
+            <column name="RECHT_META_LOE" not-null="true" />
+        </property>
+        <property name="metadata" type="byte">
+            <column name="METADATA" not-null="true" />
+        </property>
+        <property name="anwender" type="byte">
+            <column name="ANWENDER" not-null="true" />
+        </property>
+        <property name="verbund" type="byte">
+            <column name="VERBUND" not-null="true" />
+        </property>
+        <property name="zielobjekte" type="byte">
+            <column name="ZIELOBJEKTE" not-null="true" />
+        </property>
+        <property name="auditor" type="byte">
+            <column name="AUDITOR" not-null="true" />
+        </property>
+        <property name="historie" type="byte">
+            <column name="HISTORIE" not-null="true" />
+        </property>
+        <property name="exportZusammen" type="byte">
+            <column name="EXPORT_ZUSAMMEN" not-null="true" />
+        </property>
+        <property name="importZusammen" type="byte">
+            <column name="IMPORT_ZUSAMMEN" not-null="true" />
+        </property>
+        <property name="exportAenderung" type="byte">
+            <column name="EXPORT_AENDERUNG" not-null="true" />
+        </property>
+        <property name="importWeiter" type="byte">
+            <column name="IMPORT_WEITER" not-null="true" />
+        </property>
+        <property name="exportWeiter" type="byte">
+            <column name="EXPORT_WEITER" not-null="true" />
+        </property>
+        <property name="importAbgleich" type="byte">
+            <column name="IMPORT_ABGLEICH" not-null="true" />
+        </property>
+        <property name="importBasis" type="byte">
+            <column name="IMPORT_BASIS" not-null="true" />
+        </property>
+        <property name="exportBasis" type="byte">
+            <column name="EXPORT_BASIS" not-null="true" />
+        </property>
+        <property name="dbsBackup" type="byte">
+            <column name="DBS_BACKUP" not-null="true" />
+        </property>
+        <property name="dbsRestore" type="byte">
+            <column name="DBS_RESTORE" not-null="true" />
+        </property>
+        <property name="gstoolAdmin" type="byte">
+            <column name="GSTOOL_ADMIN" not-null="true" />
+        </property>
+        <property name="mig30" type="byte">
+            <column name="MIG_30" not-null="true" />
+        </property>
+        <property name="srvSysadmin" type="byte">
+            <column name="SRV_SYSADMIN" not-null="true" />
+        </property>
+        <property name="srvSecurityadmin" type="byte">
+            <column name="SRV_SECURITYADMIN" not-null="true" />
+        </property>
+        <property name="srvServeradmin" type="byte">
+            <column name="SRV_SERVERADMIN" not-null="true" />
+        </property>
+        <property name="srvSetupadmin" type="byte">
+            <column name="SRV_SETUPADMIN" not-null="true" />
+        </property>
+        <property name="srvProcessadmin" type="byte">
+            <column name="SRV_PROCESSADMIN" not-null="true" />
+        </property>
+        <property name="srvDiskadmin" type="byte">
+            <column name="SRV_DISKADMIN" not-null="true" />
+        </property>
+        <property name="srvDbcreator" type="byte">
+            <column name="SRV_DBCREATOR" not-null="true" />
+        </property>
+        <property name="srvBulkadmin" type="byte">
+            <column name="SRV_BULKADMIN" not-null="true" />
+        </property>
+        <property name="dbOwner" type="byte">
+            <column name="DB_OWNER" not-null="true" />
+        </property>
+        <property name="dbAccessadmin" type="byte">
+            <column name="DB_ACCESSADMIN" not-null="true" />
+        </property>
+        <property name="dbSecurityadmin" type="byte">
+            <column name="DB_SECURITYADMIN" not-null="true" />
+        </property>
+        <property name="dbDdladmin" type="byte">
+            <column name="DB_DDLADMIN" not-null="true" />
+        </property>
+        <property name="dbBackupoperator" type="byte">
+            <column name="DB_BACKUPOPERATOR" not-null="true" />
+        </property>
+        <property name="dbDatareader" type="byte">
+            <column name="DB_DATAREADER" not-null="true" />
+        </property>
+        <property name="dbDatawriter" type="byte">
+            <column name="DB_DATAWRITER" not-null="true" />
+        </property>
+        <property name="dbDenydatareader" type="byte">
+            <column name="DB_DENYDATAREADER" not-null="true" />
+        </property>
+        <property name="dbDenydatawriter" type="byte">
+            <column name="DB_DENYDATAWRITER" not-null="true" />
+        </property>
+        <property name="cmFreigabe" type="java.lang.Byte">
+            <column name="CM_FREIGABE" />
+        </property>
+        <property name="impRo" type="byte">
+            <column name="IMP_RO" not-null="true" />
+        </property>
+        <set name="rechteRolleItvs" table="RECHTE_ROLLE_ITV" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="RER_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RechteRolleItv" />
+        </set>
+        <set name="rechteRolleZoses" table="RECHTE_ROLLE_ZOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="RER_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RechteRolleZos" />
+        </set>
+        <set name="rechteRolleZots" table="RECHTE_ROLLE_ZOT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="RER_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RechteRolleZot" />
+        </set>
+        <set name="rechteRolleBerichts" table="RECHTE_ROLLE_BERICHT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="RER_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RechteRolleBericht" />
+        </set>
+        <set name="rechteRolleZielobjs" table="RECHTE_ROLLE_ZIELOBJ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="RER_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RechteRolleZielobj" />
+        </set>
+    </class>
+</hibernate-mapping>

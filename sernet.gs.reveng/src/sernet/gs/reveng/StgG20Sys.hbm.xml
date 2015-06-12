@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgG20Sys" table="STG_G20_SYS" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgG20SysId">
+            <key-property name="snr" type="int">
+                <column name="SNR" />
+            </key-property>
+            <key-property name="konzSnr" type="java.lang.Integer">
+                <column name="KONZ_SNR" />
+            </key-property>
+            <key-property name="sclSnr" type="java.lang.Integer">
+                <column name="SCL_SNR" />
+            </key-property>
+            <key-property name="bez" type="string">
+                <column name="BEZ" length="50" />
+            </key-property>
+            <key-property name="standort" type="string">
+                <column name="STANDORT" length="100" />
+            </key-property>
+            <key-property name="status" type="string">
+                <column name="STATUS" length="20" />
+            </key-property>
+            <key-property name="bew" type="java.lang.Integer">
+                <column name="BEW" />
+            </key-property>
+            <key-property name="begr" type="clob">
+                <column name="BEGR" />
+            </key-property>
+            <key-property name="notiz" type="clob">
+                <column name="NOTIZ" />
+            </key-property>
+            <key-property name="lock" type="string">
+                <column name="LOCK" length="1" />
+            </key-property>
+            <key-property name="expSnr" type="java.lang.Integer">
+                <column name="EXP_SNR" />
+            </key-property>
+            <key-property name="stat" type="java.lang.Integer">
+                <column name="STAT" />
+            </key-property>
+            <key-property name="netz" type="string">
+                <column name="NETZ" length="100" />
+            </key-property>
+            <key-property name="pmdatei" type="string">
+                <column name="PMDATEI" length="128" />
+            </key-property>
+            <key-property name="kmdatei" type="string">
+                <column name="KMDATEI" length="128" />
+            </key-property>
+            <key-property name="sbd" type="java.lang.Integer">
+                <column name="SBD" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

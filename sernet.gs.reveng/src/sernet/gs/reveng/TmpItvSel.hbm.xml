@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.TmpItvSel" table="TMP_ITV_SEL" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.TmpItvSelId">
+            <key-property name="spid" type="short">
+                <column name="SPID" />
+            </key-property>
+            <key-property name="itvImpId" type="int">
+                <column name="ITV_IMP_ID" />
+            </key-property>
+            <key-property name="itvId" type="int">
+                <column name="ITV_ID" />
+            </key-property>
+        </composite-id>
+        <property name="rechtZ" type="byte">
+            <column name="RECHT_Z" not-null="true" />
+        </property>
+        <property name="rechtZb" type="byte">
+            <column name="RECHT_ZB" not-null="true" />
+        </property>
+        <property name="rechtItvZ" type="byte">
+            <column name="RECHT_ITV_Z" not-null="true" />
+        </property>
+        <property name="rechtItvZb" type="byte">
+            <column name="RECHT_ITV_ZB" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

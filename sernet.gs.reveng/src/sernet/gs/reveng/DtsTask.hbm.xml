@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.DtsTask" table="DTS_TASK" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.DtsTaskId">
+            <key-property name="dtsId" type="string">
+                <column name="DTS_ID" length="10" />
+            </key-property>
+            <key-property name="dtsStep" type="int">
+                <column name="DTS_STEP" />
+            </key-property>
+        </composite-id>
+        <one-to-one name="dtsStep" class="sernet.gs.reveng.DtsStep" constrained="true"></one-to-one>
+        <property name="sourceconnectionid" type="java.lang.Integer">
+            <column name="SOURCECONNECTIONID" />
+        </property>
+        <property name="sourceobjectname" type="string">
+            <column name="SOURCEOBJECTNAME" />
+        </property>
+        <property name="sourcesqlstatement" type="string">
+            <column name="SOURCESQLSTATEMENT" length="6000" />
+        </property>
+        <property name="destinationconnectionid" type="java.lang.Integer">
+            <column name="DESTINATIONCONNECTIONID" />
+        </property>
+        <property name="destinationobjectname" type="string">
+            <column name="DESTINATIONOBJECTNAME" length="500" />
+        </property>
+        <property name="progressrowcount" type="java.lang.Integer">
+            <column name="PROGRESSROWCOUNT" />
+        </property>
+        <property name="maximumerrorcount" type="java.lang.Integer">
+            <column name="MAXIMUMERRORCOUNT" />
+        </property>
+        <property name="fetchbuffersize" type="java.lang.Integer">
+            <column name="FETCHBUFFERSIZE" />
+        </property>
+        <property name="usefastload" type="boolean">
+            <column name="USEFASTLOAD" not-null="true" />
+        </property>
+        <property name="insertcommitsize" type="int">
+            <column name="INSERTCOMMITSIZE" not-null="true" />
+        </property>
+        <property name="exceptionfilecolumndelimiter" type="java.lang.Character">
+            <column name="EXCEPTIONFILECOLUMNDELIMITER" length="1" />
+        </property>
+        <property name="exceptionfilerowdelimiter" type="string">
+            <column name="EXCEPTIONFILEROWDELIMITER" length="2" />
+        </property>
+        <property name="allowidentityinserts" type="java.lang.Boolean">
+            <column name="ALLOWIDENTITYINSERTS" />
+        </property>
+        <property name="firstrow" type="java.lang.Integer">
+            <column name="FIRSTROW" />
+        </property>
+        <property name="lastrow" type="java.lang.Integer">
+            <column name="LASTROW" />
+        </property>
+        <property name="fastloadoptions" type="java.lang.Integer">
+            <column name="FASTLOADOPTIONS" />
+        </property>
+        <property name="exceptionfileoptions" type="java.lang.Integer">
+            <column name="EXCEPTIONFILEOPTIONS" />
+        </property>
+        <property name="datapumpoptions" type="java.lang.Integer">
+            <column name="DATAPUMPOPTIONS" />
+        </property>
+        <property name="inputglobalvariablenames" type="string">
+            <column name="INPUTGLOBALVARIABLENAMES" length="500" />
+        </property>
+        <property name="outputasrecordset" type="java.lang.Boolean">
+            <column name="OUTPUTASRECORDSET" />
+        </property>
+        <property name="outputglobalvariablenames" type="string">
+            <column name="OUTPUTGLOBALVARIABLENAMES" length="200" />
+        </property>
+    </class>
+</hibernate-mapping>

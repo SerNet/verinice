@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgMbMassn" table="STG_MB_MASSN" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgMbMassnId">
+            <key-property name="masId" type="java.lang.Integer">
+                <column name="MAS_ID" />
+            </key-property>
+            <key-property name="masImpId" type="java.lang.Integer">
+                <column name="MAS_IMP_ID" />
+            </key-property>
+            <key-property name="mskId" type="java.lang.Integer">
+                <column name="MSK_ID" />
+            </key-property>
+            <key-property name="mskImpId" type="java.lang.Integer">
+                <column name="MSK_IMP_ID" />
+            </key-property>
+            <key-property name="nr" type="java.lang.Integer">
+                <column name="NR" />
+            </key-property>
+            <key-property name="nrAlt" type="string">
+                <column name="NR_ALT" length="10" />
+            </key-property>
+            <key-property name="notizId" type="java.lang.Integer">
+                <column name="NOTIZ_ID" />
+            </key-property>
+            <key-property name="link" type="string">
+                <column name="LINK" />
+            </key-property>
+            <key-property name="konkrId" type="java.lang.Integer">
+                <column name="KONKR_ID" />
+            </key-property>
+            <key-property name="konkrImpId" type="java.lang.Integer">
+                <column name="KONKR_IMP_ID" />
+            </key-property>
+            <key-property name="metaNeu" type="java.lang.Byte">
+                <column name="META_NEU" />
+            </key-property>
+            <key-property name="metaVers" type="java.lang.Integer">
+                <column name="META_VERS" />
+            </key-property>
+            <key-property name="obsoletVers" type="java.lang.Integer">
+                <column name="OBSOLET_VERS" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="loeschDatum" type="timestamp">
+                <column name="LOESCH_DATUM" length="23" />
+            </key-property>
+            <key-property name="userdef" type="java.lang.Byte">
+                <column name="USERDEF" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+            <key-property name="erfasstDurch" type="string">
+                <column name="ERFASST_DURCH" length="128" />
+            </key-property>
+            <key-property name="geloeschtDurch" type="string">
+                <column name="GELOESCHT_DURCH" length="128" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="cmTimestamp" type="timestamp">
+                <column name="CM_TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="cmUsername" type="string">
+                <column name="CM_USERNAME" length="128" />
+            </key-property>
+            <key-property name="cmVerId2" type="java.lang.Short">
+                <column name="CM_VER_ID_2" />
+            </key-property>
+            <key-property name="cmStaId" type="java.lang.Byte">
+                <column name="CM_STA_ID" />
+            </key-property>
+            <key-property name="changedBy" type="string">
+                <column name="CHANGED_BY" length="128" />
+            </key-property>
+            <key-property name="changedOn" type="timestamp">
+                <column name="CHANGED_ON" length="23" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

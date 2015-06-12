@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgFilterRow" table="STG_FILTER_ROW" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgFilterRowId">
+            <key-property name="fltId" type="java.lang.Integer">
+                <column name="FLT_ID" />
+            </key-property>
+            <key-property name="rowId" type="java.lang.Byte">
+                <column name="ROW_ID" />
+            </key-property>
+            <key-property name="sucheId" type="string">
+                <column name="SUCHE_ID" length="3" />
+            </key-property>
+            <key-property name="fflId" type="java.lang.Integer">
+                <column name="FFL_ID" />
+            </key-property>
+            <key-property name="orderBy" type="string">
+                <column name="ORDER_BY" length="4" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgSysExport" table="STG_SYS_EXPORT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgSysExportId">
+            <key-property name="expId" type="java.lang.Integer">
+                <column name="EXP_ID" />
+            </key-property>
+            <key-property name="expImpId" type="java.lang.Integer">
+                <column name="EXP_IMP_ID" />
+            </key-property>
+            <key-property name="expUid" type="java.lang.Short">
+                <column name="EXP_UID" />
+            </key-property>
+            <key-property name="expTyp" type="string">
+                <column name="EXP_TYP" length="2" />
+            </key-property>
+            <key-property name="expStatus" type="string">
+                <column name="EXP_STATUS" length="3" />
+            </key-property>
+            <key-property name="metaImpId" type="java.lang.Integer">
+                <column name="META_IMP_ID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="50" />
+            </key-property>
+            <key-property name="beschreibung" type="string">
+                <column name="BESCHREIBUNG" length="1000" />
+            </key-property>
+            <key-property name="expTiefeMax" type="java.lang.Integer">
+                <column name="EXP_TIEFE_MAX" />
+            </key-property>
+            <key-property name="expSignaturQuelle" type="string">
+                <column name="EXP_SIGNATUR_QUELLE" length="36" />
+            </key-property>
+            <key-property name="expSignaturZiel" type="string">
+                <column name="EXP_SIGNATUR_ZIEL" length="36" />
+            </key-property>
+            <key-property name="expDatumAnlage" type="timestamp">
+                <column name="EXP_DATUM_ANLAGE" length="23" />
+            </key-property>
+            <key-property name="expDatumExport" type="timestamp">
+                <column name="EXP_DATUM_EXPORT" length="23" />
+            </key-property>
+            <key-property name="expDatumFrist" type="timestamp">
+                <column name="EXP_DATUM_FRIST" length="23" />
+            </key-property>
+            <key-property name="expKomplett" type="java.lang.Boolean">
+                <column name="EXP_KOMPLETT" />
+            </key-property>
+            <key-property name="loeschDatum" type="timestamp">
+                <column name="LOESCH_DATUM" length="23" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="expOption" type="java.lang.Integer">
+                <column name="EXP_OPTION" />
+            </key-property>
+            <key-property name="geloeschtDurch" type="string">
+                <column name="GELOESCHT_DURCH" length="128" />
+            </key-property>
+            <key-property name="erstelltDurch" type="string">
+                <column name="ERSTELLT_DURCH" length="128" />
+            </key-property>
+            <key-property name="expTexttype" type="java.lang.Integer">
+                <column name="EXP_TEXTTYPE" />
+            </key-property>
+            <key-property name="expGuid" type="java.lang.Boolean">
+                <column name="EXP_GUID" />
+            </key-property>
+            <key-property name="expRol" type="java.lang.Boolean">
+                <column name="EXP_ROL" />
+            </key-property>
+            <key-property name="expZa" type="java.lang.Boolean">
+                <column name="EXP_ZA" />
+            </key-property>
+            <key-property name="expZ2z" type="java.lang.Boolean">
+                <column name="EXP_Z2Z" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

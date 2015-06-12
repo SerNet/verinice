@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgSysExportAuswahl" table="STG_SYS_EXPORT_AUSWAHL" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgSysExportAuswahlId">
+            <key-property name="expId" type="java.lang.Integer">
+                <column name="EXP_ID" />
+            </key-property>
+            <key-property name="zobId" type="java.lang.Integer">
+                <column name="ZOB_ID" />
+            </key-property>
+            <key-property name="zobImpId" type="java.lang.Integer">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

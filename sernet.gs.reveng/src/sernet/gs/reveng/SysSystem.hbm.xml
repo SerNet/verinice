@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.SysSystem" table="SYS_SYSTEM" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="sysId" type="int">
+            <column name="SYS_ID" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <property name="sysDbmodellVers" type="int">
+            <column name="SYS_DBMODELL_VERS" not-null="true" />
+        </property>
+        <property name="sysToolVers" type="int">
+            <column name="SYS_TOOL_VERS" not-null="true" />
+        </property>
+        <property name="sysMetaVers" type="int">
+            <column name="SYS_META_VERS" not-null="true" />
+        </property>
+        <property name="sysMaxHistSteps" type="int">
+            <column name="SYS_MAX_HIST_STEPS" not-null="true" />
+        </property>
+        <property name="sysToolpwd" type="string">
+            <column name="SYS_TOOLPWD" length="512" />
+        </property>
+        <property name="sysScriptversion" type="big_decimal">
+            <column name="SYS_SCRIPTVERSION" precision="15" not-null="true" />
+        </property>
+        <property name="sysInitdone" type="boolean">
+            <column name="SYS_INITDONE" not-null="true" />
+        </property>
+        <property name="sysToolversMajor" type="java.lang.Integer">
+            <column name="SYS_TOOLVERS_MAJOR" />
+        </property>
+        <property name="sysToolversMinor" type="java.lang.Integer">
+            <column name="SYS_TOOLVERS_MINOR" />
+        </property>
+        <property name="sysImexuser" type="string">
+            <column name="SYS_IMEXUSER" length="128" />
+        </property>
+        <property name="sysImexpwd" type="string">
+            <column name="SYS_IMEXPWD" length="512" />
+        </property>
+    </class>
+</hibernate-mapping>

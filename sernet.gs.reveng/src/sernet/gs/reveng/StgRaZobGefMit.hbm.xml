@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgRaZobGefMit" table="STG_RA_ZOB_GEF_MIT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgRaZobGefMitId">
+            <key-property name="zobImpId" type="java.lang.Integer">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="zobId" type="java.lang.Integer">
+                <column name="ZOB_ID" />
+            </key-property>
+            <key-property name="gefImpId" type="java.lang.Integer">
+                <column name="GEF_IMP_ID" />
+            </key-property>
+            <key-property name="gefId" type="java.lang.Integer">
+                <column name="GEF_ID" />
+            </key-property>
+            <key-property name="zobIdMit" type="java.lang.Integer">
+                <column name="ZOB_ID_MIT" />
+            </key-property>
+            <key-property name="zgmaUnjId" type="java.lang.Byte">
+                <column name="ZGMA_UNJ_ID" />
+            </key-property>
+            <key-property name="zgmaDatum" type="timestamp">
+                <column name="ZGMA_DATUM" length="23" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="impNeu" type="java.lang.Byte">
+                <column name="IMP_NEU" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+            <key-property name="erstelltAm" type="timestamp">
+                <column name="ERSTELLT_AM" length="23" />
+            </key-property>
+            <key-property name="erstelltDurch" type="string">
+                <column name="ERSTELLT_DURCH" length="128" />
+            </key-property>
+            <key-property name="geaendertAm" type="timestamp">
+                <column name="GEAENDERT_AM" length="23" />
+            </key-property>
+            <key-property name="geaendertDurch" type="string">
+                <column name="GEAENDERT_DURCH" length="128" />
+            </key-property>
+            <key-property name="geloeschtAm" type="timestamp">
+                <column name="GELOESCHT_AM" length="23" />
+            </key-property>
+            <key-property name="geloeschtDurch" type="string">
+                <column name="GELOESCHT_DURCH" length="128" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

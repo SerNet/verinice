@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgSysHistorie" table="STG_SYS_HISTORIE" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgSysHistorieId">
+            <key-property name="hisId" type="java.lang.Integer">
+                <column name="HIS_ID" />
+            </key-property>
+            <key-property name="hisUsn" type="java.lang.Integer">
+                <column name="HIS_USN" />
+            </key-property>
+            <key-property name="hisUser" type="string">
+                <column name="HIS_USER" length="128" />
+            </key-property>
+            <key-property name="hisLogin" type="string">
+                <column name="HIS_LOGIN" length="128" />
+            </key-property>
+            <key-property name="hisGuid" type="string">
+                <column name="HIS_GUID" length="36" />
+            </key-property>
+            <key-property name="hisSpalte" type="string">
+                <column name="HIS_SPALTE" length="128" />
+            </key-property>
+            <key-property name="hisSpalteImp" type="string">
+                <column name="HIS_SPALTE_IMP" length="128" />
+            </key-property>
+            <key-property name="hisSpalte2" type="string">
+                <column name="HIS_SPALTE_2" length="128" />
+            </key-property>
+            <key-property name="hisAltWert" type="string">
+                <column name="HIS_ALT_WERT" length="6500" />
+            </key-property>
+            <key-property name="hisAltDatum" type="timestamp">
+                <column name="HIS_ALT_DATUM" length="23" />
+            </key-property>
+            <key-property name="hisAltDecimal" type="big_decimal">
+                <column name="HIS_ALT_DECIMAL" precision="15" />
+            </key-property>
+            <key-property name="hisAltId" type="java.lang.Integer">
+                <column name="HIS_ALT_ID" />
+            </key-property>
+            <key-property name="hisAltImpId" type="java.lang.Integer">
+                <column name="HIS_ALT_IMP_ID" />
+            </key-property>
+            <key-property name="hisNr" type="java.lang.Integer">
+                <column name="HIS_NR" />
+            </key-property>
+            <key-property name="hisUid" type="java.lang.Short">
+                <column name="HIS_UID" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="dtyId" type="java.lang.Integer">
+                <column name="DTY_ID" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

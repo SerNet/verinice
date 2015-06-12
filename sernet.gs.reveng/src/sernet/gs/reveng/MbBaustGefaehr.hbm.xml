@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+ <class catalog="BSIDB_V45_Produktion_db_201504290200"
+  name="sernet.gs.reveng.MbBaustGefaehr" schema="dbo" table="MB_BAUST_GEFAEHR">
+  <composite-id class="sernet.gs.reveng.MbBaustGefaehrId" mapped="false"
+   name="id" unsaved-value="undefined">
+   <key-property name="bauImpId" type="int">
+    <column name="BAU_IMP_ID"/>
+   </key-property>
+   <key-property name="bauId" type="int">
+    <column name="BAU_ID"/>
+   </key-property>
+   <key-property name="gefImpId" type="int">
+    <column name="GEF_IMP_ID"/>
+   </key-property>
+   <key-property name="gefId" type="int">
+    <column name="GEF_ID"/>
+   </key-property>
+  </composite-id>
+  <timestamp column="TIMESTAMP" generated="never" name="timestamp"
+   source="vm" unsaved-value="null"/>
+  <many-to-one class="sernet.gs.reveng.MbBaust" fetch="select"
+   insert="false" name="mbBaust" update="false">
+   <column name="BAU_IMP_ID" not-null="true"/>
+   <column name="BAU_ID" not-null="true"/>
+  </many-to-one>
+  <many-to-one class="sernet.gs.reveng.MbGefaehr" fetch="select"
+   insert="false" name="mbGefaehr" update="false">
+   <column name="GEF_IMP_ID" not-null="true"/>
+   <column name="GEF_ID" not-null="true"/>
+  </many-to-one>
+  <property generated="never" lazy="false" name="metaNeu" type="byte">
+   <column name="META_NEU" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="metaVers" type="int">
+   <column name="META_VERS" not-null="true"/>
+  </property>
+  <property generated="never" lazy="false" name="obsoletVers" type="java.lang.Integer">
+   <column name="OBSOLET_VERS"/>
+  </property>
+  <property generated="never" lazy="false" name="guid" type="string">
+   <column length="36" name="GUID" not-null="true" unique="true"/>
+  </property>
+  <property generated="never" lazy="false" name="loeschDatum" type="timestamp">
+   <column length="23" name="LOESCH_DATUM"/>
+  </property>
+  <property generated="never" lazy="false" name="impNeu" type="java.lang.Byte">
+   <column name="IMP_NEU"/>
+  </property>
+  <property generated="never" lazy="false" name="erfasstDurch" type="string">
+   <column length="128" name="ERFASST_DURCH"/>
+  </property>
+  <property generated="never" lazy="false" name="geloeschtDurch" type="string">
+   <column length="128" name="GELOESCHT_DURCH"/>
+  </property>
+  <property generated="never" lazy="false" name="usn" type="java.lang.Integer">
+   <column name="USN"/>
+  </property>
+  <property generated="never" lazy="false" name="guidOrg" type="string">
+   <column length="36" name="GUID_ORG"/>
+  </property>
+ </class>
+</hibernate-mapping>

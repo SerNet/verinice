@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.MSprache" table="M_SPRACHE" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="sprId" type="short">
+            <column name="SPR_ID" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <property name="code" type="string">
+            <column name="CODE" length="3" not-null="true" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" length="50" not-null="true" />
+        </property>
+        <set name="mbBaustTxts" table="MB_BAUST_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbBaustTxt" />
+        </set>
+        <set name="mbMassPhaseTxts" table="MB_MASS_PHASE_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMassPhaseTxt" />
+        </set>
+        <set name="mbGefaehrTxts" table="MB_GEFAEHR_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbGefaehrTxt" />
+        </set>
+        <set name="MBstnStatusTxts" table="M_BSTN_STATUS_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MBstnStatusTxt" />
+        </set>
+        <set name="mbDringlichkeitTxts" table="MB_DRINGLICHKEIT_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbDringlichkeitTxt" />
+        </set>
+       
+        <set name="MSchutzbedarfkategTxts" table="M_SCHUTZBEDARFKATEG_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MSchutzbedarfkategTxt" />
+        </set>
+      
+        <set name="MGsiegelTxts" table="M_GSIEGEL_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MGsiegelTxt" />
+        </set>
+      
+      
+        <set name="mbMassnnkatTxts" table="MB_MASSNNKAT_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMassnnkatTxt" />
+        </set>
+       
+      
+      
+       
+      
+        <set name="MYesnoTxts" table="M_YESNO_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MYesnoTxt" />
+        </set>
+        <set name="MSchutzbedarfkategTxts_1" table="M_SCHUTZBEDARFKATEG_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MSchutzbedarfkategTxt" />
+        </set>
+        <set name="MPersbezTxts" table="M_PERSBEZ_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MPersbezTxt" />
+        </set>
+        <set name="mbRolleTxts" table="MB_ROLLE_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbRolleTxt" />
+        </set>
+        <set name="mbZielobjTypTxts" table="MB_ZIELOBJ_TYP_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbZielobjTypTxt" />
+        </set>
+        <set name="mbSchichtTxts" table="MB_SCHICHT_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbSchichtTxt" />
+        </set>
+        <set name="mbGefaehrskatTxts" table="MB_GEFAEHRSKAT_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbGefaehrskatTxt" />
+        </set>
+        <set name="mbStatusTxts" table="MB_STATUS_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbStatusTxt" />
+        </set>
+        <set name="MUmsetzStatTxts" table="M_UMSETZ_STAT_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MUmsetzStatTxt" />
+        </set>
+        <set name="mbMassnTxts" table="MB_MASSN_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbMassnTxt" />
+        </set>
+        <set name="msMasmatypTxts" table="MS_MASMATYP_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MsMasmatypTxt" />
+        </set>
+        <set name="msZykTxts" table="MS_ZYK_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MsZykTxt" />
+        </set>
+        <set name="mbZielobjSubtypTxts" table="MB_ZIELOBJ_SUBTYP_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SPR_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbZielobjSubtypTxt" />
+        </set>
+    </class>
+</hibernate-mapping>

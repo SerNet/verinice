@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.BrVorlage" table="BR_VORLAGE" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="styId" type="int">
+            <column name="STY_ID" />
+            <generator class="foreign">
+                <param name="property">brVorlage</param>
+            </generator>
+        </id>
+        <one-to-one name="brVorlage" class="sernet.gs.reveng.BrVorlage" constrained="true"></one-to-one>
+        <many-to-one name="MMetatyp" class="sernet.gs.reveng.MMetatyp" fetch="select">
+            <column name="MTY_ID" not-null="true" />
+        </many-to-one>
+        <property name="styType" type="byte">
+            <column name="STY_TYPE" not-null="true" />
+        </property>
+        <property name="styName" type="string">
+            <column name="STY_NAME" not-null="true" />
+        </property>
+        <property name="styHost" type="string">
+            <column name="STY_HOST" not-null="true" />
+        </property>
+        <property name="styPfad" type="string">
+            <column name="STY_PFAD" length="1000" />
+        </property>
+        <property name="styAenderung" type="timestamp">
+            <column name="STY_AENDERUNG" length="23" />
+        </property>
+        <property name="styStyle" type="clob">
+            <column name="STY_STYLE" not-null="true" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="erstelltAm" type="timestamp">
+            <column name="ERSTELLT_AM" length="23" not-null="true" />
+        </property>
+        <property name="erstelltDurch" type="string">
+            <column name="ERSTELLT_DURCH" length="128" not-null="true" />
+        </property>
+        <set name="brVorlagesForStyId2" table="BR_VOR2VOR" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="STY_ID_1" not-null="true" />
+            </key>
+            <many-to-many entity-name="sernet.gs.reveng.BrVorlage">
+                <column name="STY_ID_2" not-null="true" />
+            </many-to-many>
+        </set>
+        <one-to-one name="brVorlage" class="sernet.gs.reveng.BrVorlage"></one-to-one>
+        <set name="brVorlagesForStyId1" table="BR_VOR2VOR" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="STY_ID_2" not-null="true" />
+            </key>
+            <many-to-many entity-name="sernet.gs.reveng.BrVorlage">
+                <column name="STY_ID_1" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

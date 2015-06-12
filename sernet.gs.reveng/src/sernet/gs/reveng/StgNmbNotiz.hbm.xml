@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgNmbNotiz" table="STG_NMB_NOTIZ" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgNmbNotizId">
+            <key-property name="notizId" type="java.lang.Integer">
+                <column name="NOTIZ_ID" />
+            </key-property>
+            <key-property name="notizImpId" type="java.lang.Integer">
+                <column name="NOTIZ_IMP_ID" />
+            </key-property>
+            <key-property name="notizText" type="clob">
+                <column name="NOTIZ_TEXT" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="url" type="string">
+                <column name="URL" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="loeschDatum" type="timestamp">
+                <column name="LOESCH_DATUM" length="23" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="128" />
+            </key-property>
+            <key-property name="changedBy" type="string">
+                <column name="CHANGED_BY" length="128" />
+            </key-property>
+            <key-property name="changedOn" type="timestamp">
+                <column name="CHANGED_ON" length="23" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

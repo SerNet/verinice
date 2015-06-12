@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.MbWaehrungen" table="MB_WAEHRUNGEN" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.MbWaehrungenId">
+            <key-property name="waeImpId" type="int">
+                <column name="WAE_IMP_ID" />
+            </key-property>
+            <key-property name="waeId" type="int">
+                <column name="WAE_ID" />
+            </key-property>
+        </composite-id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="sysImport" class="sernet.gs.reveng.SysImport" update="false" insert="false" fetch="select">
+            <column name="WAE_IMP_ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="MMetatyp" class="sernet.gs.reveng.MMetatyp" fetch="select">
+            <column name="MTY_ID" />
+        </many-to-one>
+        <many-to-one name="MMetastatus" class="sernet.gs.reveng.MMetastatus" fetch="select">
+            <column name="META_NEU" not-null="true" />
+        </many-to-one>
+        <property name="code" type="string">
+            <column name="CODE" length="3" />
+        </property>
+        <property name="metaVers" type="int">
+            <column name="META_VERS" not-null="true" />
+        </property>
+        <property name="obsoletVers" type="java.lang.Integer">
+            <column name="OBSOLET_VERS" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="loeschDatum" type="timestamp">
+            <column name="LOESCH_DATUM" length="23" />
+        </property>
+        <property name="erfasstDurch" type="string">
+            <column name="ERFASST_DURCH" length="128" />
+        </property>
+        <property name="geloeschtDurch" type="string">
+            <column name="GELOESCHT_DURCH" length="128" />
+        </property>
+        <property name="impNeu" type="java.lang.Byte">
+            <column name="IMP_NEU" />
+        </property>
+        <property name="guidOrg" type="string">
+            <column name="GUID_ORG" length="36" />
+        </property>
+        <set name="nmbZusatzs" table="NMB_ZUSATZ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WAE_IMP_ID" />
+                <column name="WAE_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NmbZusatz" />
+        </set>
+        <set name="modZobjBstMasses" table="MOD_ZOBJ_BST_MASS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WAE_IMP_ID" />
+                <column name="WAE_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.ModZobjBstMass" />
+        </set>
+        <set name="mbZosZusatzs" table="MB_ZOS_ZUSATZ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WAE_IMP_ID" />
+                <column name="WAE_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbZosZusatz" />
+        </set>
+        <set name="NZielobjektZusatzs" table="N_ZIELOBJEKT_ZUSATZ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WAE_IMP_ID" />
+                <column name="WAE_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NZielobjektZusatz" />
+        </set>
+        <set name="mbDelWaehrungens" table="MB_DEL_WAEHRUNGEN" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WAE_IMP_ID" not-null="true" />
+                <column name="WAE_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbDelWaehrungen" />
+        </set>
+        <set name="mbZielobjZusatzs" table="MB_ZIELOBJ_ZUSATZ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="WAE_IMP_ID" />
+                <column name="WAE_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbZielobjZusatz" />
+        </set>
+    </class>
+</hibernate-mapping>

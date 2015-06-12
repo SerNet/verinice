@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.MbBaustTxt" table="MB_BAUST_TXT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.MbBaustTxtId">
+            <key-property name="bauImpId" type="int">
+                <column name="BAU_IMP_ID" />
+            </key-property>
+            <key-property name="bauId" type="int">
+                <column name="BAU_ID" />
+            </key-property>
+            <key-property name="sprId" type="short">
+                <column name="SPR_ID" />
+            </key-property>
+        </composite-id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="mbBaust" class="sernet.gs.reveng.MbBaust" update="false" insert="false" fetch="select">
+            <column name="BAU_IMP_ID" not-null="true" />
+            <column name="BAU_ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="MSprache" class="sernet.gs.reveng.MSprache" update="false" insert="false" fetch="select">
+            <column name="SPR_ID" not-null="true" />
+        </many-to-one>
+        <property name="name" type="string">
+            <column name="NAME" not-null="true" />
+        </property>
+        <property name="beschreibung" type="clob">
+            <column name="BESCHREIBUNG" />
+        </property>
+        <property name="htmltext" type="clob">
+            <column name="HTMLTEXT" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="impNeu" type="java.lang.Byte">
+            <column name="IMP_NEU" />
+        </property>
+        <property name="guidOrg" type="string">
+            <column name="GUID_ORG" length="36" />
+        </property>
+        <property name="abstract_" type="string">
+            <column name="ABSTRACT" length="2000" />
+        </property>
+        <property name="changedOn" type="timestamp">
+            <column name="CHANGED_ON" length="23" />
+        </property>
+        <property name="changedBy" type="string">
+            <column name="CHANGED_BY" length="128" />
+        </property>
+    </class>
+</hibernate-mapping>

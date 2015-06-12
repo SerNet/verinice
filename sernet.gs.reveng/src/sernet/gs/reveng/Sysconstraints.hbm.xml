@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.Sysconstraints" table="sysconstraints" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.SysconstraintsId">
+            <key-property name="constid" type="java.lang.Integer">
+                <column name="constid" />
+            </key-property>
+            <key-property name="id" type="java.lang.Integer">
+                <column name="id" />
+            </key-property>
+            <key-property name="colid" type="java.lang.Short">
+                <column name="colid" />
+            </key-property>
+            <key-property name="spare1" type="java.lang.Byte">
+                <column name="spare1" />
+            </key-property>
+            <key-property name="status" type="java.lang.Integer">
+                <column name="status" />
+            </key-property>
+            <key-property name="actions" type="java.lang.Integer">
+                <column name="actions" />
+            </key-property>
+            <key-property name="error" type="java.lang.Integer">
+                <column name="error" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

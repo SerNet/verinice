@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.FilterSuchenSeite1" table="FILTER_SUCHEN_SEITE1" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.FilterSuchenSeite1Id">
+            <key-property name="sucheId" type="string">
+                <column name="SUCHE_ID" length="3" />
+            </key-property>
+            <key-property name="fflId" type="int">
+                <column name="FFL_ID" />
+            </key-property>
+        </composite-id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="filterSuchenFelder" class="sernet.gs.reveng.FilterSuchenFelder" update="false" insert="false" fetch="select">
+            <column name="FFL_ID" not-null="true" />
+        </many-to-one>
+        <property name="reihenfolge" type="byte">
+            <column name="REIHENFOLGE" not-null="true" />
+        </property>
+        <property name="anzeigen" type="boolean">
+            <column name="ANZEIGEN" not-null="true" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" unique="true" />
+        </property>
+        <set name="filterBasises" table="FILTER_BASIS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="SUCHE_ID" length="3" not-null="true" />
+                <column name="FFL_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.FilterBasis" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.RechteAnwenderImport" table="RECHTE_ANWENDER_IMPORT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.RechteAnwenderImportId">
+            <key-property name="uid" type="short">
+                <column name="UID" />
+            </key-property>
+            <key-property name="impId" type="int">
+                <column name="IMP_ID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="rechteAnwender" class="sernet.gs.reveng.RechteAnwender" update="false" insert="false" fetch="select">
+            <column name="UID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="sysImport" class="sernet.gs.reveng.SysImport" update="false" insert="false" fetch="select">
+            <column name="IMP_ID" not-null="true" />
+        </many-to-one>
+        <property name="globalJn" type="boolean">
+            <column name="GLOBAL_JN" not-null="true" />
+        </property>
+        <property name="recht" type="short">
+            <column name="RECHT" not-null="true" />
+        </property>
+        <property name="rechtBau" type="short">
+            <column name="RECHT_BAU" not-null="true" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="erstelltAm" type="timestamp">
+            <column name="ERSTELLT_AM" length="23" />
+        </property>
+        <property name="erstelltDurch" type="string">
+            <column name="ERSTELLT_DURCH" length="128" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

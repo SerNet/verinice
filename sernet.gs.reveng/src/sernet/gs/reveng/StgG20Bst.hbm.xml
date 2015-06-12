@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgG20Bst" table="STG_G20_BST" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgG20BstId">
+            <key-property name="nr" type="string">
+                <column name="NR" length="10" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="50" />
+            </key-property>
+            <key-property name="htxt" type="string">
+                <column name="HTXT" length="50" />
+            </key-property>
+            <key-property name="typ" type="string">
+                <column name="TYP" length="1" />
+            </key-property>
+            <key-property name="sortnr" type="java.lang.Integer">
+                <column name="SORTNR" />
+            </key-property>
+            <key-property name="importflag" type="java.lang.Integer">
+                <column name="IMPORTFLAG" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

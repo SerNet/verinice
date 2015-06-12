@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.DtsTicket" table="DTS_TICKET" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="ticket" type="string">
+            <column name="TICKET" length="36" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="sysExport" class="sernet.gs.reveng.SysExport" fetch="select">
+            <column name="EXP_ID" />
+        </many-to-one>
+        <property name="uid" type="short">
+            <column name="UID" not-null="true" />
+        </property>
+        <property name="spid" type="short">
+            <column name="SPID" not-null="true" />
+        </property>
+        <property name="valid" type="int">
+            <column name="VALID" not-null="true" />
+        </property>
+        <property name="sysImpId" type="java.lang.Integer">
+            <column name="SYS_IMP_ID" />
+        </property>
+        <property name="trgImpId" type="java.lang.Integer">
+            <column name="TRG_IMP_ID" />
+        </property>
+        <property name="srcImpId" type="java.lang.Integer">
+            <column name="SRC_IMP_ID" />
+        </property>
+        <property name="mig" type="java.lang.Boolean">
+            <column name="MIG" />
+        </property>
+        <property name="kon" type="java.lang.Boolean">
+            <column name="KON" />
+        </property>
+        <property name="mod" type="java.lang.Boolean">
+            <column name="MOD" />
+        </property>
+        <property name="del" type="java.lang.Boolean">
+            <column name="DEL" />
+        </property>
+        <property name="map" type="java.lang.Boolean">
+            <column name="MAP" />
+        </property>
+        <property name="pwd" type="string">
+            <column name="PWD" length="128" />
+        </property>
+        <property name="sprId" type="java.lang.Short">
+            <column name="SPR_ID" />
+        </property>
+    </class>
+</hibernate-mapping>

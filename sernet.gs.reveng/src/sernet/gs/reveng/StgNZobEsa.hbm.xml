@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgNZobEsa" table="STG_N_ZOB_ESA" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgNZobEsaId">
+            <key-property name="zobImpId" type="java.lang.Integer">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="zobId" type="java.lang.Integer">
+                <column name="ZOB_ID" />
+            </key-property>
+            <key-property name="esaVorschlag" type="java.lang.Byte">
+                <column name="ESA_VORSCHLAG" />
+            </key-property>
+            <key-property name="esaUnjId" type="java.lang.Byte">
+                <column name="ESA_UNJ_ID" />
+            </key-property>
+            <key-property name="esaEinsatz" type="java.lang.Byte">
+                <column name="ESA_EINSATZ" />
+            </key-property>
+            <key-property name="esaModellierung" type="java.lang.Byte">
+                <column name="ESA_MODELLIERUNG" />
+            </key-property>
+            <key-property name="esaSzenario" type="string">
+                <column name="ESA_SZENARIO" length="2000" />
+            </key-property>
+            <key-property name="esaDatumErfasst" type="timestamp">
+                <column name="ESA_DATUM_ERFASST" length="23" />
+            </key-property>
+            <key-property name="esaZobIdMit" type="java.lang.Integer">
+                <column name="ESA_ZOB_ID_MIT" />
+            </key-property>
+            <key-property name="esaEntscheidDurch" type="string">
+                <column name="ESA_ENTSCHEID_DURCH" length="120" />
+            </key-property>
+            <key-property name="esaEntscheidEingetragen" type="string">
+                <column name="ESA_ENTSCHEID_EINGETRAGEN" length="128" />
+            </key-property>
+            <key-property name="esaEntscheidDatum" type="timestamp">
+                <column name="ESA_ENTSCHEID_DATUM" length="23" />
+            </key-property>
+            <key-property name="esaRaDatumBis" type="timestamp">
+                <column name="ESA_RA_DATUM_BIS" length="23" />
+            </key-property>
+            <key-property name="esaBegruendung" type="string">
+                <column name="ESA_BEGRUENDUNG" length="2000" />
+            </key-property>
+            <key-property name="esaLink" type="string">
+                <column name="ESA_LINK" length="1000" />
+            </key-property>
+            <key-property name="impNeu" type="java.lang.Byte">
+                <column name="IMP_NEU" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

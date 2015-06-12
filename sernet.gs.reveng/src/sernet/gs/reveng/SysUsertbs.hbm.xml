@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.SysUsertbs" table="SYS_USERTBS" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="tbsId" type="int">
+            <column name="TBS_ID" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="rechteAnwender" class="sernet.gs.reveng.RechteAnwender" fetch="select">
+            <column name="TBS_UID" not-null="true" />
+        </many-to-one>
+        <property name="tbsText" type="string">
+            <column name="TBS_TEXT" length="7000" not-null="true" />
+        </property>
+        <property name="tbsKeycode1" type="short">
+            <column name="TBS_KEYCODE_1" not-null="true" />
+        </property>
+        <property name="tbsKeycode2" type="java.lang.Short">
+            <column name="TBS_KEYCODE_2" />
+        </property>
+        <property name="tbsShift" type="short">
+            <column name="TBS_SHIFT" not-null="true" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+    </class>
+</hibernate-mapping>

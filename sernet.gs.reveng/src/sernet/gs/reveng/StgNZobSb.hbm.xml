@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgNZobSb" table="STG_N_ZOB_SB" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgNZobSbId">
+            <key-property name="zobImpId" type="java.lang.Integer">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="zobId" type="java.lang.Integer">
+                <column name="ZOB_ID" />
+            </key-property>
+            <key-property name="zsbUebertragung" type="java.lang.Boolean">
+                <column name="ZSB_UEBERTRAGUNG" />
+            </key-property>
+            <key-property name="zsbAngebunden" type="java.lang.Boolean">
+                <column name="ZSB_ANGEBUNDEN" />
+            </key-property>
+            <key-property name="zsbVertraulich" type="java.lang.Boolean">
+                <column name="ZSB_VERTRAULICH" />
+            </key-property>
+            <key-property name="zsbIntegritaet" type="java.lang.Boolean">
+                <column name="ZSB_INTEGRITAET" />
+            </key-property>
+            <key-property name="zsbVerfuegbar" type="java.lang.Boolean">
+                <column name="ZSB_VERFUEGBAR" />
+            </key-property>
+            <key-property name="zsbVertrSbkIdErm" type="java.lang.Byte">
+                <column name="ZSB_VERTR_SBK_ID_ERM" />
+            </key-property>
+            <key-property name="zsbVertrSbkId" type="java.lang.Byte">
+                <column name="ZSB_VERTR_SBK_ID" />
+            </key-property>
+            <key-property name="zsbVertrBegr" type="string">
+                <column name="ZSB_VERTR_BEGR" length="1000" />
+            </key-property>
+            <key-property name="zsbVerfuSbkIdErm" type="java.lang.Byte">
+                <column name="ZSB_VERFU_SBK_ID_ERM" />
+            </key-property>
+            <key-property name="zsbVerfuSbkId" type="java.lang.Byte">
+                <column name="ZSB_VERFU_SBK_ID" />
+            </key-property>
+            <key-property name="zsbVerfuBegr" type="string">
+                <column name="ZSB_VERFU_BEGR" length="1000" />
+            </key-property>
+            <key-property name="zsbIntegSbkIdErm" type="java.lang.Byte">
+                <column name="ZSB_INTEG_SBK_ID_ERM" />
+            </key-property>
+            <key-property name="zsbIntegSbkId" type="java.lang.Byte">
+                <column name="ZSB_INTEG_SBK_ID" />
+            </key-property>
+            <key-property name="zsbIntegBegr" type="string">
+                <column name="ZSB_INTEG_BEGR" length="1000" />
+            </key-property>
+            <key-property name="zsbAutenSbkIdErm" type="java.lang.Byte">
+                <column name="ZSB_AUTEN_SBK_ID_ERM" />
+            </key-property>
+            <key-property name="zsbAutenSbkId" type="java.lang.Byte">
+                <column name="ZSB_AUTEN_SBK_ID" />
+            </key-property>
+            <key-property name="zsbAutenBegr" type="string">
+                <column name="ZSB_AUTEN_BEGR" length="1000" />
+            </key-property>
+            <key-property name="zsbRevisSbkIdErm" type="java.lang.Byte">
+                <column name="ZSB_REVIS_SBK_ID_ERM" />
+            </key-property>
+            <key-property name="zsbRevisSbkId" type="java.lang.Byte">
+                <column name="ZSB_REVIS_SBK_ID" />
+            </key-property>
+            <key-property name="zsbRevisBegr" type="string">
+                <column name="ZSB_REVIS_BEGR" length="1000" />
+            </key-property>
+            <key-property name="zsbTransSbkIdErm" type="java.lang.Byte">
+                <column name="ZSB_TRANS_SBK_ID_ERM" />
+            </key-property>
+            <key-property name="zsbTransSbkId" type="java.lang.Byte">
+                <column name="ZSB_TRANS_SBK_ID" />
+            </key-property>
+            <key-property name="zsbTransBegr" type="string">
+                <column name="ZSB_TRANS_BEGR" length="1000" />
+            </key-property>
+            <key-property name="zsbPersSbkId" type="java.lang.Byte">
+                <column name="ZSB_PERS_SBK_ID" />
+            </key-property>
+            <key-property name="zsbPersBegr" type="string">
+                <column name="ZSB_PERS_BEGR" length="1000" />
+            </key-property>
+            <key-property name="zsbGesamtSbkId" type="java.lang.Integer">
+                <column name="ZSB_GESAMT_SBK_ID" />
+            </key-property>
+            <key-property name="zsbPersDatenErm" type="java.lang.Byte">
+                <column name="ZSB_PERS_DATEN_ERM" />
+            </key-property>
+            <key-property name="zsbPersDaten" type="java.lang.Byte">
+                <column name="ZSB_PERS_DATEN" />
+            </key-property>
+            <key-property name="impNeu" type="java.lang.Byte">
+                <column name="IMP_NEU" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

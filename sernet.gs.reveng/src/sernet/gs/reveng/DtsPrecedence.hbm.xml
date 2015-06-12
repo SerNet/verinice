@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.DtsPrecedence" table="DTS_PRECEDENCE" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.DtsPrecedenceId">
+            <key-property name="dtsId" type="string">
+                <column name="DTS_ID" length="10" />
+            </key-property>
+            <key-property name="dtsStep" type="int">
+                <column name="DTS_STEP" />
+            </key-property>
+            <key-property name="precedence" type="int">
+                <column name="PRECEDENCE" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="dtsStepByFkDtsPrecedenceDtsStep2" class="sernet.gs.reveng.DtsStep" update="false" insert="false" fetch="select">
+            <column name="DTS_ID" length="10" not-null="true" />
+            <column name="PRECEDENCE" not-null="true" />
+        </many-to-one>
+        <many-to-one name="dtsStepByFkDtsPrecedenceDtsStep" class="sernet.gs.reveng.DtsStep" update="false" insert="false" fetch="select">
+            <column name="DTS_ID" length="10" not-null="true" />
+            <column name="DTS_STEP" not-null="true" />
+        </many-to-one>
+        <property name="basis" type="byte">
+            <column name="BASIS" not-null="true" />
+        </property>
+        <property name="value" type="byte">
+            <column name="VALUE" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

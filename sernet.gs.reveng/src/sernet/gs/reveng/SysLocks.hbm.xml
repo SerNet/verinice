@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.SysLocks" table="SYS_LOCKS" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.SysLocksId">
+            <key-property name="spid" type="int">
+                <column name="SPID" />
+            </key-property>
+            <key-property name="uid" type="int">
+                <column name="UID" />
+            </key-property>
+            <key-property name="username" type="string">
+                <column name="USERNAME" length="128" />
+            </key-property>
+            <key-property name="tablename" type="string">
+                <column name="TABLENAME" length="128" />
+            </key-property>
+            <key-property name="action" type="string">
+                <column name="ACTION" length="50" />
+            </key-property>
+            <key-property name="tabId" type="int">
+                <column name="TAB_ID" />
+            </key-property>
+            <key-property name="tabImpId" type="int">
+                <column name="TAB_IMP_ID" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

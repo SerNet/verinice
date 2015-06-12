@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.SysExport" table="SYS_EXPORT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="expId" type="int">
+            <column name="EXP_ID" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="sysImport" class="sernet.gs.reveng.SysImport" fetch="select">
+            <column name="EXP_IMP_ID" />
+        </many-to-one>
+        <property name="expUid" type="short">
+            <column name="EXP_UID" not-null="true" />
+        </property>
+        <property name="expTyp" type="string">
+            <column name="EXP_TYP" length="2" not-null="true" />
+        </property>
+        <property name="expStatus" type="string">
+            <column name="EXP_STATUS" length="3" not-null="true" />
+        </property>
+        <property name="metaImpId" type="int">
+            <column name="META_IMP_ID" not-null="true" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" length="50" not-null="true" />
+        </property>
+        <property name="beschreibung" type="string">
+            <column name="BESCHREIBUNG" length="1000" />
+        </property>
+        <property name="expTiefeMax" type="java.lang.Integer">
+            <column name="EXP_TIEFE_MAX" />
+        </property>
+        <property name="expSignaturQuelle" type="string">
+            <column name="EXP_SIGNATUR_QUELLE" length="36" not-null="true" />
+        </property>
+        <property name="expSignaturZiel" type="string">
+            <column name="EXP_SIGNATUR_ZIEL" length="36" />
+        </property>
+        <property name="expDatumAnlage" type="timestamp">
+            <column name="EXP_DATUM_ANLAGE" length="23" not-null="true" />
+        </property>
+        <property name="expDatumExport" type="timestamp">
+            <column name="EXP_DATUM_EXPORT" length="23" />
+        </property>
+        <property name="expDatumFrist" type="timestamp">
+            <column name="EXP_DATUM_FRIST" length="23" />
+        </property>
+        <property name="expKomplett" type="java.lang.Boolean">
+            <column name="EXP_KOMPLETT" />
+        </property>
+        <property name="loeschDatum" type="timestamp">
+            <column name="LOESCH_DATUM" length="23" />
+        </property>
+        <property name="geloeschtDurch" type="string">
+            <column name="GELOESCHT_DURCH" length="128" />
+        </property>
+        <property name="erstelltDurch" type="string">
+            <column name="ERSTELLT_DURCH" length="128" />
+        </property>
+        <property name="expOption" type="java.lang.Integer">
+            <column name="EXP_OPTION" />
+        </property>
+        <property name="expTexttype" type="java.lang.Integer">
+            <column name="EXP_TEXTTYPE" />
+        </property>
+        <property name="expGuid" type="boolean">
+            <column name="EXP_GUID" not-null="true" />
+        </property>
+        <property name="expRol" type="boolean">
+            <column name="EXP_ROL" not-null="true" />
+        </property>
+        <property name="expZa" type="boolean">
+            <column name="EXP_ZA" not-null="true" />
+        </property>
+        <property name="expZ2z" type="boolean">
+            <column name="EXP_Z2Z" not-null="true" />
+        </property>
+        <set name="sysExportMases" table="SYS_EXPORT_MAS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.SysExportMas" />
+        </set>
+        <set name="sysExportItvs" table="SYS_EXPORT_ITV" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.SysExportItv" />
+        </set>
+        <set name="sysExportBaus" table="SYS_EXPORT_BAU" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.SysExportBau" />
+        </set>
+        <set name="sysExportNotizs" table="SYS_EXPORT_NOTIZ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.SysExportNotiz" />
+        </set>
+        <set name="sysExportGefs" table="SYS_EXPORT_GEF" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.SysExportGef" />
+        </set>
+        <set name="sysExportZobs" table="SYS_EXPORT_ZOB" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.SysExportZob" />
+        </set>
+        <set name="dtsTickets" table="DTS_TICKET" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.DtsTicket" />
+        </set>
+        <set name="sysExportZoses" table="SYS_EXPORT_ZOS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.SysExportZos" />
+        </set>
+        <set name="sysExportZots" table="SYS_EXPORT_ZOT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="EXP_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.SysExportZot" />
+        </set>
+    </class>
+</hibernate-mapping>

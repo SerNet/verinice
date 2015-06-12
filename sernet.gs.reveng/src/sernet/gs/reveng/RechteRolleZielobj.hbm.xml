@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.RechteRolleZielobj" table="RECHTE_ROLLE_ZIELOBJ" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.RechteRolleZielobjId">
+            <key-property name="rerId" type="int">
+                <column name="RER_ID" />
+            </key-property>
+            <key-property name="zobImpId" type="int">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="zobId" type="int">
+                <column name="ZOB_ID" />
+            </key-property>
+        </composite-id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <many-to-one name="NZielobjekt" class="sernet.gs.reveng.NZielobjekt" update="false" insert="false" fetch="select">
+            <column name="ZOB_IMP_ID" not-null="true" />
+            <column name="ZOB_ID" not-null="true" />
+        </many-to-one>
+        <many-to-one name="rechteRolle" class="sernet.gs.reveng.RechteRolle" update="false" insert="false" fetch="select">
+            <column name="RER_ID" not-null="true" />
+        </many-to-one>
+        <property name="recht" type="java.lang.Byte">
+            <column name="RECHT" />
+        </property>
+        <property name="rechtBau" type="java.lang.Byte">
+            <column name="RECHT_BAU" />
+        </property>
+    </class>
+</hibernate-mapping>

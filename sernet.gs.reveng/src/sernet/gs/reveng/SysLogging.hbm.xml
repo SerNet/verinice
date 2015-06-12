@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.SysLogging" table="SYS_LOGGING" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.SysLoggingId">
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="uid" type="short">
+                <column name="UID" />
+            </key-property>
+            <key-property name="msgId" type="java.lang.Integer">
+                <column name="MSG_ID" />
+            </key-property>
+            <key-property name="msgText" type="string">
+                <column name="MSG_TEXT" length="1000" />
+            </key-property>
+            <key-property name="msgSource" type="string">
+                <column name="MSG_SOURCE" length="1000" />
+            </key-property>
+            <key-property name="errId" type="java.lang.Integer">
+                <column name="ERR_ID" />
+            </key-property>
+            <key-property name="errText" type="string">
+                <column name="ERR_TEXT" length="1000" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

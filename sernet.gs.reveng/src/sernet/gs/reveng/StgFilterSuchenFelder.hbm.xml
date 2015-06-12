@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgFilterSuchenFelder" table="STG_FILTER_SUCHEN_FELDER" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgFilterSuchenFelderId">
+            <key-property name="fflId" type="java.lang.Integer">
+                <column name="FFL_ID" />
+            </key-property>
+            <key-property name="sucheId" type="string">
+                <column name="SUCHE_ID" length="3" />
+            </key-property>
+            <key-property name="frsId" type="java.lang.Integer">
+                <column name="FRS_ID" />
+            </key-property>
+            <key-property name="ftrId" type="java.lang.Integer">
+                <column name="FTR_ID" />
+            </key-property>
+            <key-property name="fflLevel" type="java.lang.Byte">
+                <column name="FFL_LEVEL" />
+            </key-property>
+            <key-property name="fflTable" type="string">
+                <column name="FFL_TABLE" length="128" />
+            </key-property>
+            <key-property name="fflField1" type="string">
+                <column name="FFL_FIELD_1" length="128" />
+            </key-property>
+            <key-property name="fflField2" type="string">
+                <column name="FFL_FIELD_2" length="128" />
+            </key-property>
+            <key-property name="fflField3" type="string">
+                <column name="FFL_FIELD_3" length="128" />
+            </key-property>
+            <key-property name="fflType" type="string">
+                <column name="FFL_TYPE" length="3" />
+            </key-property>
+            <key-property name="fflWhere" type="string">
+                <column name="FFL_WHERE" />
+            </key-property>
+            <key-property name="fflCompare" type="string">
+                <column name="FFL_COMPARE" length="3" />
+            </key-property>
+            <key-property name="fflOrderby" type="java.lang.Boolean">
+                <column name="FFL_ORDERBY" />
+            </key-property>
+            <key-property name="anzeigen" type="java.lang.Boolean">
+                <column name="ANZEIGEN" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

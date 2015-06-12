@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.SysProperties" table="SYS_PROPERTIES" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.SysPropertiesId">
+            <key-property name="impId" type="int">
+                <column name="IMP_ID" />
+            </key-property>
+            <key-property name="propName" type="string">
+                <column name="PROP_NAME" length="128" />
+            </key-property>
+            <key-property name="host" type="string">
+                <column name="HOST" />
+            </key-property>
+        </composite-id>
+        <property name="propLong" type="java.lang.Integer">
+            <column name="PROP_LONG" />
+        </property>
+        <property name="propVarc" type="string">
+            <column name="PROP_VARC" length="7000" />
+        </property>
+        <property name="defaultLong" type="java.lang.Integer">
+            <column name="DEFAULT_LONG" />
+        </property>
+        <property name="defaultVarc" type="string">
+            <column name="DEFAULT_VARC" length="7000" />
+        </property>
+        <property name="propComment" type="string">
+            <column name="PROP_COMMENT" length="500" />
+        </property>
+        <property name="versionMajor" type="short">
+            <column name="VERSION_MAJOR" not-null="true" />
+        </property>
+        <property name="versionMinor" type="short">
+            <column name="VERSION_MINOR" not-null="true" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" unique="true" />
+        </property>
+        <property name="erstelltAm" type="timestamp">
+            <column name="ERSTELLT_AM" length="23" not-null="true" />
+        </property>
+        <property name="erstelltDurch" type="string">
+            <column name="ERSTELLT_DURCH" length="128" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

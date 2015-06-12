@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgNZielobjekt" table="STG_N_ZIELOBJEKT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgNZielobjektId">
+            <key-property name="zobId" type="java.lang.Integer">
+                <column name="ZOB_ID" />
+            </key-property>
+            <key-property name="zobImpId" type="java.lang.Integer">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="zotId" type="java.lang.Integer">
+                <column name="ZOT_ID" />
+            </key-property>
+            <key-property name="zosId" type="java.lang.Integer">
+                <column name="ZOS_ID" />
+            </key-property>
+            <key-property name="orgImpId" type="java.lang.Integer">
+                <column name="ORG_IMP_ID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="100" />
+            </key-property>
+            <key-property name="nameOrg" type="string">
+                <column name="NAME_ORG" length="100" />
+            </key-property>
+            <key-property name="nameSame" type="java.lang.Integer">
+                <column name="NAME_SAME" />
+            </key-property>
+            <key-property name="kuerzel" type="string">
+                <column name="KUERZEL" length="20" />
+            </key-property>
+            <key-property name="beschreibung" type="string">
+                <column name="BESCHREIBUNG" length="1000" />
+            </key-property>
+            <key-property name="anwBeschrInf" type="string">
+                <column name="ANW_BESCHR_INF" length="500" />
+            </key-property>
+            <key-property name="anwInf1Beschr" type="string">
+                <column name="ANW_INF_1_BESCHR" length="500" />
+            </key-property>
+            <key-property name="anwInf2Beschr" type="string">
+                <column name="ANW_INF_2_BESCHR" length="500" />
+            </key-property>
+            <key-property name="itvAuditor" type="string">
+                <column name="ITV_AUDITOR" length="250" />
+            </key-property>
+            <key-property name="vertragsgr" type="string">
+                <column name="VERTRAGSGR" length="250" />
+            </key-property>
+            <key-property name="untersuchungsg" type="string">
+                <column name="UNTERSUCHUNGSG" length="250" />
+            </key-property>
+            <key-property name="projektierung" type="string">
+                <column name="PROJEKTIERUNG" length="250" />
+            </key-property>
+            <key-property name="verteiler" type="string">
+                <column name="VERTEILER" length="250" />
+            </key-property>
+            <key-property name="sichtung" type="string">
+                <column name="SICHTUNG" length="250" />
+            </key-property>
+            <key-property name="telefon" type="string">
+                <column name="TELEFON" length="40" />
+            </key-property>
+            <key-property name="email" type="string">
+                <column name="EMAIL" length="40" />
+            </key-property>
+            <key-property name="abteilung" type="string">
+                <column name="ABTEILUNG" length="40" />
+            </key-property>
+            <key-property name="anzahl" type="java.lang.Integer">
+                <column name="ANZAHL" />
+            </key-property>
+            <key-property name="staId" type="java.lang.Integer">
+                <column name="STA_ID" />
+            </key-property>
+            <key-property name="staImpId" type="java.lang.Integer">
+                <column name="STA_IMP_ID" />
+            </key-property>
+            <key-property name="drgId" type="java.lang.Integer">
+                <column name="DRG_ID" />
+            </key-property>
+            <key-property name="drgImpId" type="java.lang.Integer">
+                <column name="DRG_IMP_ID" />
+            </key-property>
+            <key-property name="notizId" type="java.lang.Integer">
+                <column name="NOTIZ_ID" />
+            </key-property>
+            <key-property name="erteiltAm" type="timestamp">
+                <column name="ERTEILT_AM" length="23" />
+            </key-property>
+            <key-property name="gueltigBis" type="timestamp">
+                <column name="GUELTIG_BIS" length="23" />
+            </key-property>
+            <key-property name="ustId" type="java.lang.Byte">
+                <column name="UST_ID" />
+            </key-property>
+            <key-property name="ustIdItv" type="java.lang.Byte">
+                <column name="UST_ID_ITV" />
+            </key-property>
+            <key-property name="siegel" type="java.lang.Short">
+                <column name="SIEGEL" />
+            </key-property>
+            <key-property name="siegelItv" type="java.lang.Short">
+                <column name="SIEGEL_ITV" />
+            </key-property>
+            <key-property name="stgNeu" type="java.lang.Integer">
+                <column name="STG_NEU" />
+            </key-property>
+            <key-property name="erfasstAm" type="timestamp">
+                <column name="ERFASST_AM" length="23" />
+            </key-property>
+            <key-property name="erfasstDurch" type="string">
+                <column name="ERFASST_DURCH" length="128" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="loeschDatum" type="timestamp">
+                <column name="LOESCH_DATUM" length="23" />
+            </key-property>
+            <key-property name="impNeu" type="java.lang.Byte">
+                <column name="IMP_NEU" />
+            </key-property>
+            <key-property name="exportiert" type="java.lang.Boolean">
+                <column name="EXPORTIERT" />
+            </key-property>
+            <key-property name="geloeschtDurch" type="string">
+                <column name="GELOESCHT_DURCH" length="128" />
+            </key-property>
+            <key-property name="cmTimestamp" type="timestamp">
+                <column name="CM_TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="cmUsername" type="string">
+                <column name="CM_USERNAME" length="128" />
+            </key-property>
+            <key-property name="cmVerId2" type="java.lang.Short">
+                <column name="CM_VER_ID_2" />
+            </key-property>
+            <key-property name="cmStaId" type="java.lang.Byte">
+                <column name="CM_STA_ID" />
+            </key-property>
+            <key-property name="raFarbe" type="java.lang.Byte">
+                <column name="RA_FARBE" />
+            </key-property>
+            <key-property name="raFarbeItv" type="java.lang.Byte">
+                <column name="RA_FARBE_ITV" />
+            </key-property>
+            <key-property name="kuerzelOrg" type="string">
+                <column name="KUERZEL_ORG" length="20" />
+            </key-property>
+            <key-property name="kuerzelSame" type="java.lang.Integer">
+                <column name="KUERZEL_SAME" />
+            </key-property>
+            <key-property name="gefOk" type="java.lang.Byte">
+                <column name="GEF_OK" />
+            </key-property>
+            <key-property name="gefOkItv" type="java.lang.Byte">
+                <column name="GEF_OK_ITV" />
+            </key-property>
+            <key-property name="changedBy" type="string">
+                <column name="CHANGED_BY" length="128" />
+            </key-property>
+            <key-property name="changedOn" type="timestamp">
+                <column name="CHANGED_ON" length="23" />
+            </key-property>
+            <key-property name="setDefault" type="java.lang.Byte">
+                <column name="SET_DEFAULT" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

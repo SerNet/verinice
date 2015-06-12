@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgG20Ben" table="STG_G20_BEN" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgG20BenId">
+            <key-property name="snr" type="int">
+                <column name="SNR" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="240" />
+            </key-property>
+            <key-property name="funktion" type="string">
+                <column name="FUNKTION" length="50" />
+            </key-property>
+            <key-property name="gruppe" type="string">
+                <column name="GRUPPE" length="50" />
+            </key-property>
+            <key-property name="telefon" type="string">
+                <column name="TELEFON" length="50" />
+            </key-property>
+            <key-property name="notiz" type="clob">
+                <column name="NOTIZ" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

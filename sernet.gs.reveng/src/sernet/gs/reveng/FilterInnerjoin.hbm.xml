@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.FilterInnerjoin" table="FILTER_INNERJOIN" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="ftrId" type="int">
+            <column name="FTR_ID" />
+            <generator class="assigned" />
+        </id>
+        <property name="ftrTarget" type="string">
+            <column name="FTR_TARGET" length="128" />
+        </property>
+        <property name="ftrJoin" type="string">
+            <column name="FTR_JOIN" length="1000" />
+        </property>
+        <property name="kommentar" type="string">
+            <column name="KOMMENTAR" length="1000" />
+        </property>
+        <set name="filterSuchenFelders" table="FILTER_SUCHEN_FELDER" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="FTR_ID" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.FilterSuchenFelder" />
+        </set>
+    </class>
+</hibernate-mapping>

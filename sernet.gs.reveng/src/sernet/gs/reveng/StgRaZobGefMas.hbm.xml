@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgRaZobGefMas" table="STG_RA_ZOB_GEF_MAS" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgRaZobGefMasId">
+            <key-property name="zobImpId" type="java.lang.Integer">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="zobId" type="java.lang.Integer">
+                <column name="ZOB_ID" />
+            </key-property>
+            <key-property name="gefImpId" type="java.lang.Integer">
+                <column name="GEF_IMP_ID" />
+            </key-property>
+            <key-property name="gefId" type="java.lang.Integer">
+                <column name="GEF_ID" />
+            </key-property>
+            <key-property name="masImpId" type="java.lang.Integer">
+                <column name="MAS_IMP_ID" />
+            </key-property>
+            <key-property name="masId" type="java.lang.Integer">
+                <column name="MAS_ID" />
+            </key-property>
+            <key-property name="orgImpId" type="java.lang.Integer">
+                <column name="ORG_IMP_ID" />
+            </key-property>
+            <key-property name="zgmVertr" type="java.lang.Boolean">
+                <column name="ZGM_VERTR" />
+            </key-property>
+            <key-property name="zgmVerfu" type="java.lang.Boolean">
+                <column name="ZGM_VERFU" />
+            </key-property>
+            <key-property name="zgmInteg" type="java.lang.Boolean">
+                <column name="ZGM_INTEG" />
+            </key-property>
+            <key-property name="zgmAuten" type="java.lang.Boolean">
+                <column name="ZGM_AUTEN" />
+            </key-property>
+            <key-property name="zgmRevis" type="java.lang.Boolean">
+                <column name="ZGM_REVIS" />
+            </key-property>
+            <key-property name="zgmTrans" type="java.lang.Boolean">
+                <column name="ZGM_TRANS" />
+            </key-property>
+            <key-property name="zgmErlaeuterung" type="string">
+                <column name="ZGM_ERLAEUTERUNG" length="2000" />
+            </key-property>
+            <key-property name="notizId" type="java.lang.Integer">
+                <column name="NOTIZ_ID" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="impNeu" type="java.lang.Byte">
+                <column name="IMP_NEU" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+            <key-property name="erstelltAm" type="timestamp">
+                <column name="ERSTELLT_AM" length="23" />
+            </key-property>
+            <key-property name="erstelltDurch" type="string">
+                <column name="ERSTELLT_DURCH" length="128" />
+            </key-property>
+            <key-property name="geaendertAm" type="timestamp">
+                <column name="GEAENDERT_AM" length="23" />
+            </key-property>
+            <key-property name="geaendertDurch" type="string">
+                <column name="GEAENDERT_DURCH" length="128" />
+            </key-property>
+            <key-property name="geloeschtAm" type="timestamp">
+                <column name="GELOESCHT_AM" length="23" />
+            </key-property>
+            <key-property name="geloeschtDurch" type="string">
+                <column name="GELOESCHT_DURCH" length="128" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

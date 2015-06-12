@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.BrAttribut" table="BR_ATTRIBUT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.BrAttributId">
+            <key-property name="repId" type="int">
+                <column name="REP_ID" />
+            </key-property>
+            <key-property name="sprId" type="short">
+                <column name="SPR_ID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" length="100" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="brBericht" class="sernet.gs.reveng.BrBericht" update="false" insert="false" fetch="select">
+            <column name="REP_ID" not-null="true" />
+            <column name="SPR_ID" not-null="true" />
+        </many-to-one>
+        <property name="wert" type="string">
+            <column name="WERT" length="100" not-null="true" />
+        </property>
+        <property name="prozedur" type="string">
+            <column name="PROZEDUR" length="128" not-null="true" />
+        </property>
+        <property name="spalteAnzeige" type="string">
+            <column name="SPALTE_ANZEIGE" length="128" not-null="true" />
+        </property>
+        <property name="spalteParam1" type="string">
+            <column name="SPALTE_PARAM_1" length="128" not-null="true" />
+        </property>
+        <property name="spalteParam2" type="string">
+            <column name="SPALTE_PARAM_2" length="128" not-null="true" />
+        </property>
+        <property name="spalteParam3" type="string">
+            <column name="SPALTE_PARAM_3" length="128" not-null="true" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="erstelltAm" type="timestamp">
+            <column name="ERSTELLT_AM" length="23" not-null="true" />
+        </property>
+        <property name="erstelltDurch" type="string">
+            <column name="ERSTELLT_DURCH" length="128" not-null="true" />
+        </property>
+        <property name="geaendertAm" type="timestamp">
+            <column name="GEAENDERT_AM" length="23" />
+        </property>
+        <property name="geaendertDurch" type="string">
+            <column name="GEAENDERT_DURCH" length="128" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgMbMassnnkatTxt" table="STG_MB_MASSNNKAT_TXT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgMbMassnnkatTxtId">
+            <key-property name="mskId" type="java.lang.Integer">
+                <column name="MSK_ID" />
+            </key-property>
+            <key-property name="mskImpId" type="java.lang.Integer">
+                <column name="MSK_IMP_ID" />
+            </key-property>
+            <key-property name="sprId" type="java.lang.Short">
+                <column name="SPR_ID" />
+            </key-property>
+            <key-property name="name" type="string">
+                <column name="NAME" />
+            </key-property>
+            <key-property name="beschreibung" type="string">
+                <column name="BESCHREIBUNG" length="6500" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

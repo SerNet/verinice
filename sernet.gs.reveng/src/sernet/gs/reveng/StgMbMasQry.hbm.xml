@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgMbMasQry" table="STG_MB_MAS_QRY" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.StgMbMasQryId">
+            <key-property name="masId" type="java.lang.Integer">
+                <column name="MAS_ID" />
+            </key-property>
+            <key-property name="masImpId" type="java.lang.Integer">
+                <column name="MAS_IMP_ID" />
+            </key-property>
+            <key-property name="qryId" type="java.lang.Integer">
+                <column name="QRY_ID" />
+            </key-property>
+            <key-property name="qryTypeId" type="java.lang.Integer">
+                <column name="QRY_TYPE_ID" />
+            </key-property>
+            <key-property name="link" type="string">
+                <column name="LINK" />
+            </key-property>
+            <key-property name="metaVers" type="java.lang.Integer">
+                <column name="META_VERS" />
+            </key-property>
+            <key-property name="obsoletVers" type="java.lang.Integer">
+                <column name="OBSOLET_VERS" />
+            </key-property>
+            <key-property name="sbkIdVertr" type="java.lang.Byte">
+                <column name="SBK_ID_VERTR" />
+            </key-property>
+            <key-property name="sbkIdInteg" type="java.lang.Byte">
+                <column name="SBK_ID_INTEG" />
+            </key-property>
+            <key-property name="sbkIdVerf" type="java.lang.Byte">
+                <column name="SBK_ID_VERF" />
+            </key-property>
+            <key-property name="sbkIdGesamt" type="java.lang.Byte">
+                <column name="SBK_ID_GESAMT" />
+            </key-property>
+            <key-property name="sbkIdPers" type="java.lang.Byte">
+                <column name="SBK_ID_PERS" />
+            </key-property>
+            <key-property name="persDaten" type="java.lang.Integer">
+                <column name="PERS_DATEN" />
+            </key-property>
+            <key-property name="type" type="java.lang.Integer">
+                <column name="TYPE" />
+            </key-property>
+            <key-property name="usn" type="java.lang.Integer">
+                <column name="USN" />
+            </key-property>
+            <key-property name="mstId" type="java.lang.Byte">
+                <column name="MST_ID" />
+            </key-property>
+            <key-property name="impNeu" type="java.lang.Byte">
+                <column name="IMP_NEU" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+            <key-property name="createdOn" type="timestamp">
+                <column name="CREATED_ON" length="23" />
+            </key-property>
+            <key-property name="createdBy" type="string">
+                <column name="CREATED_BY" length="128" />
+            </key-property>
+            <key-property name="changedOn" type="timestamp">
+                <column name="CHANGED_ON" length="23" />
+            </key-property>
+            <key-property name="changedBy" type="string">
+                <column name="CHANGED_BY" length="128" />
+            </key-property>
+            <key-property name="deletedOn" type="timestamp">
+                <column name="DELETED_ON" length="23" />
+            </key-property>
+            <key-property name="deletedBy" type="string">
+                <column name="DELETED_BY" length="128" />
+            </key-property>
+            <key-property name="mqAutenSbkId" type="java.lang.Byte">
+                <column name="MQ_AUTEN_SBK_ID" />
+            </key-property>
+            <key-property name="mqRevisSbkId" type="java.lang.Byte">
+                <column name="MQ_REVIS_SBK_ID" />
+            </key-property>
+            <key-property name="mqTransSbkId" type="java.lang.Byte">
+                <column name="MQ_TRANS_SBK_ID" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

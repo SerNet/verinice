@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.FilterInit" table="FILTER_INIT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <composite-id name="id" class="sernet.gs.reveng.FilterInitId">
+            <key-property name="sucheId" type="string">
+                <column name="SUCHE_ID" length="3" />
+            </key-property>
+            <key-property name="levelId" type="byte">
+                <column name="LEVEL_ID" />
+            </key-property>
+        </composite-id>
+        <many-to-one name="filterSuchen" class="sernet.gs.reveng.FilterSuchen" update="false" insert="false" fetch="select">
+            <column name="SUCHE_ID" length="3" not-null="true" />
+        </many-to-one>
+        <property name="workspace" type="string">
+            <column name="WORKSPACE" length="500" not-null="true" />
+        </property>
+        <property name="stmtInsert" type="string">
+            <column name="STMT_INSERT" length="500" not-null="true" />
+        </property>
+        <property name="stmtSelect" type="string">
+            <column name="STMT_SELECT" length="500" not-null="true" />
+        </property>
+        <property name="stmtPrevious" type="string">
+            <column name="STMT_PREVIOUS" length="500" not-null="true" />
+        </property>
+        <property name="stmtAvoid" type="string">
+            <column name="STMT_AVOID" length="500" not-null="true" />
+        </property>
+        <property name="stmtAfterinsert" type="string">
+            <column name="STMT_AFTERINSERT" length="1000" not-null="true" />
+        </property>
+        <property name="stmtAfterdelete" type="string">
+            <column name="STMT_AFTERDELETE" length="1000" not-null="true" />
+        </property>
+        <property name="optNext" type="byte">
+            <column name="OPT_NEXT" not-null="true" />
+        </property>
+        <property name="optDelete" type="byte">
+            <column name="OPT_DELETE" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

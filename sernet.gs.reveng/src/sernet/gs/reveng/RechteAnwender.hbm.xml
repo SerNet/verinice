@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.RechteAnwender" table="RECHTE_ANWENDER" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="uid" type="short">
+            <column name="UID" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <property name="rerId" type="java.lang.Integer">
+            <column name="RER_ID" />
+        </property>
+        <property name="name" type="string">
+            <column name="NAME" length="128" not-null="true" />
+        </property>
+        <property name="telefon" type="string">
+            <column name="TELEFON" length="20" />
+        </property>
+        <property name="abteilung" type="string">
+            <column name="ABTEILUNG" length="100" />
+        </property>
+        <property name="beschreibung" type="string">
+            <column name="BESCHREIBUNG" length="2000" />
+        </property>
+        <property name="notizId" type="java.lang.Integer">
+            <column name="NOTIZ_ID" />
+        </property>
+        <property name="funktion" type="string">
+            <column name="FUNKTION" length="100" />
+        </property>
+        <property name="loginname" type="string">
+            <column name="LOGINNAME" length="128" />
+        </property>
+        <property name="aktiv" type="boolean">
+            <column name="AKTIV" not-null="true" />
+        </property>
+        <property name="hatLogin" type="boolean">
+            <column name="HAT_LOGIN" not-null="true" />
+        </property>
+        <property name="hatDbzugriff" type="boolean">
+            <column name="HAT_DBZUGRIFF" not-null="true" />
+        </property>
+        <property name="kennwortNeuJn" type="boolean">
+            <column name="KENNWORT_NEU_JN" not-null="true" />
+        </property>
+        <set name="rechteAnwenderImports" table="RECHTE_ANWENDER_IMPORT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RechteAnwenderImport" />
+        </set>
+        <set name="rechteAnwenderRolles" table="RECHTE_ANWENDER_ROLLE" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.RechteAnwenderRolle" />
+        </set>
+        <set name="sysUsertbses" table="SYS_USERTBS" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="TBS_UID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.SysUsertbs" />
+        </set>
+        <set name="sysUserpropertieses" table="SYS_USERPROPERTIES" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="UID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.SysUserproperties" />
+        </set>
+        <set name="brBerichts" table="RECHTE_BERICHT_TMP" inverse="false" lazy="true" fetch="select">
+            <key>
+                <column name="UID" not-null="true" />
+            </key>
+            <many-to-many entity-name="sernet.gs.reveng.BrBericht">
+                <column name="REP_ID" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

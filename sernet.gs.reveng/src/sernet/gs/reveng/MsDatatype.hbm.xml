@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.MsDatatype" table="MS_DATATYPE" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+        <id name="dtyId" type="int">
+            <column name="DTY_ID" />
+            <generator class="assigned" />
+        </id>
+        <timestamp name="timestamp" column="TIMESTAMP" />
+        <property name="link" type="string">
+            <column name="LINK" />
+        </property>
+        <property name="guid" type="string">
+            <column name="GUID" length="36" not-null="true" unique="true" />
+        </property>
+        <property name="impNeu" type="java.lang.Byte">
+            <column name="IMP_NEU" />
+        </property>
+        <set name="mbZielobjZusatzs" table="MB_ZIELOBJ_ZUSATZ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DTY_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbZielobjZusatz" />
+        </set>
+        <set name="nmbZusatzs" table="NMB_ZUSATZ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DTY_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.NmbZusatz" />
+        </set>
+        <set name="mbZosZusatzs" table="MB_ZOS_ZUSATZ" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DTY_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MbZosZusatz" />
+        </set>
+        <set name="msDatatypeTxts" table="MS_DATATYPE_TXT" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="DTY_ID" not-null="true" />
+            </key>
+            <one-to-many class="sernet.gs.reveng.MsDatatypeTxt" />
+        </set>
+    </class>
+</hibernate-mapping>
