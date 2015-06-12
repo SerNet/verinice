@@ -72,7 +72,7 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
         setContentProvider(this);
         setInput(veriniceSearchResultObject);
 
-        sortByFirstColumn(columnStore);
+        defaultSort(columnStore);
     }
 
     private void createColumns() {
@@ -103,9 +103,18 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
         }
     }
 
-    private void sortByFirstColumn(IColumnStore columnStore) {
-        searchTableComparator.setColumn(columnStore.getColumns().first());
-        refresh();
+    /**
+     * Default sort by the first column which is not an icon column.
+     *
+     */
+    private void defaultSort(IColumnStore columnStore) {
+        for (IColumn column : columnStore.getAllColumns()) {
+            if (!(column instanceof IconColumn)) {
+                searchTableComparator.setColumn(column);
+                refresh();
+                return;
+            }
+        }
     }
 
     @Override
