@@ -226,6 +226,14 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         } else if(!(operandStack.isEmpty()) && isEntityType(operandStack.peek())){
             String nextEntityType = operandStack.pop();
             doOneStep(getElementsFromGraph(element, operatorStack.peek().toCharArray()[0], nextEntityType), nextEntityType, operatorStack.pop(), currentIdentifier, propertyPosition, element);
+        } if(operandStack.isEmpty()){
+            // in case of no linked element / no property for given positon and element just add "" instead of null
+            if(resultMap.containsKey(currentIdentifier)){
+                TableRow row = resultMap.get(currentIdentifier); 
+                if(row.getProperty(propertyPosition) == null){
+                    row.addProperty("", propertyPosition);
+                } 
+            }
         }
         return rootElement;
     }
@@ -320,7 +328,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
             LOG.debug("used \"Oldrow\":\t" + oldRow.toString());
             LOG.debug("Row before insert:\t" + newRow.toString());
         }
-        if(newRow.getProperty(propertyPosition) == null){
+        if(newRow.getProperty(propertyPosition).equals("")){
             if(LOG.isDebugEnabled()){
                 LOG.debug("Inserting property at position " + propertyPosition);
             }
