@@ -173,7 +173,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
                 LOG.debug("Handling " + element.getTypeId() +  " " + (Arrays.asList(set.toArray(new CnATreeElement[set.size()])).indexOf(element) + 1) + "/" + set.size());
                 LOG.debug("CurrentIdentifier:\t" + currentIdentifier);
                 LOG.debug("NewIdentifier:\t" + newIdentifier);
-                LOG.debug("CurrentOperator:\t" + currentOperator);
+                LOG.debug("CurrentOperator:\t" + operator);
             }
             if(LINK_TYPE_DELIMITER == operator){
                 rootElement = handleLinkOperator(nextTypeId, newIdentifier, propertyPosition, rootElement, element);
@@ -181,6 +181,10 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
                 handleParentChildOperator(newIdentifier, propertyPosition, element, operator);
             } else if(END_OF_PATH_DELIMITER == operator){
                 LOG.error("something went wrong here, point should not be reached");
+            } else {
+                if(LOG.isDebugEnabled()){
+                    LOG.debug("used operator is not support, please contact your support or read the api - documenation");
+                }
             }
         }
         if(set.size() == 0 && rootElement != null){
@@ -248,7 +252,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         if(resultMap.containsKey(existingPath)){
             createSubRow(currentIdentifier, propertyPosition, element, existingPath);
         } else {
-            rootElement = createNewRootRow(currentIdentifier, rootElement, element, operandStack.peek());
+            rootElement = createNewRootRow(currentIdentifier, rootElement, element, operandStack.peek(), propertyPosition);
         }
         return rootElement;
     }
@@ -266,7 +270,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         if(resultMap.containsKey(identifier)){
             createSubRow(EMPTY_PROPERTY, propertyPosition, element, identifier);
         } else {
-            createNewRootRow(identifier, null, element, EMPTY_PROPERTY);
+            createNewRootRow(identifier, null, element, EMPTY_PROPERTY, propertyPosition);
         }
         
     }
@@ -278,7 +282,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
      * @param element
      * @return
      */
-    private CnATreeElement createNewRootRow(String currentIdentifier, CnATreeElement rootElement, CnATreeElement element, String propertyId) {
+    private CnATreeElement createNewRootRow(String currentIdentifier, CnATreeElement rootElement, CnATreeElement element, String propertyId, int propertyPosition) {
         if(rootElement == null){
             rootElement = element;
         }
@@ -292,7 +296,7 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         if(value == null){
             value = "";
         }
-        row.addProperty(value);
+        row.addProperty(value, propertyPosition);
         if(LOG.isDebugEnabled()){
             LOG.debug("Added following row to map:\t" + row.toString());
         }
@@ -312,9 +316,19 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
         TableRow oldRow = resultMap.get(rootIdentifier);
         TableRow newRow = new TableRow(element.getDbId(), userColumnStrings.length, currentIdentifier);
         newRow.setProperties(oldRow.getPropertyList().toArray(new String[oldRow.getPropertyList().size()]));
+        if(LOG.isDebugEnabled()){
+            LOG.debug("used \"Oldrow\":\t" + oldRow.toString());
+            LOG.debug("Row before insert:\t" + newRow.toString());
+        }
         if(newRow.getProperty(propertyPosition) == null){
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Inserting property at position " + propertyPosition);
+            }
             newRow.addProperty(element.getEntity().getSimpleValue(operandStack.peek()), propertyPosition);
         } else {
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Appending Property");
+            }            
             newRow.addProperty(element.getEntity().getSimpleValue(operandStack.peek()));
         }
         if(LOG.isDebugEnabled()){
@@ -404,7 +418,10 @@ public class CreateReportTableFromGraphCommand extends GenericCommand implements
             break;
         }
         if(LOG.isDebugEnabled()){
-            LOG.debug("Returning " + resultSet.size() + " elements from graph, determined by operator " + operator + " and root:" + element.getDbId());
+            LOG.debug("returning " + resultSet.size() + " from graph, loaded for element " + element.getTitle() + "<" + element.getDbId() + "> and operator <" + operator + "> and typeId <" + typeId + ">" );
+        }
+        if(resultSet.size() == 0){
+           resultSet.hashCode(); 
         }
         return resultSet;
 
