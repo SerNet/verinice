@@ -42,6 +42,7 @@ public class Messages extends NLS {
     public static String SearchView_11;
     public static String SearchView_12;
     public static String SearchView_13;
+    public static String SearchView_14;
     public static String IconColumn_0;
     public static String TitleColumn_0;
     public static String ScopeColumn_0;

@@ -20,6 +20,7 @@ package sernet.verinice.rcp.search;
 
 import java.util.Arrays;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.jface.action.Action;
@@ -35,6 +36,8 @@ import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -316,40 +319,63 @@ public class SearchView extends RightsEnabledView {
         GridData gridLimitData = new GridData(SWT.FILL, SWT.NONE, true, false);
         limitText.setLayoutData(gridLimitData);
         limitText.setText(String.valueOf(VeriniceQuery.DEFAULT_LIMIT));
+
         limitText.addKeyListener(new InputFieldsListener());
-        limitText.addFocusListener(new FocusListener() {
+        limitText.addModifyListener(new ModifyListener() {
 
             @Override
-            public void focusLost(FocusEvent e) {
-                validateLimit();
+            public void modifyText(ModifyEvent e) {
+                if (checkLimitFieldConditions(e)) {
+                    ((Text) e.getSource()).setToolTipText("");
+                    ((Text) e.getSource()).setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+                } else {
+                    ((Text) e.getSource()).setToolTipText(Messages.SearchView_14);
+                    ((Text) e.getSource()).setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
+                }
             }
-            @Override
-            public void focusGained(FocusEvent e) {
 
+            private boolean checkLimitFieldConditions(ModifyEvent e) {
+                try {
+                    int limit = Integer.parseInt(((Text) e.getSource()).getText());
+
+                    if (limit < 0) {
+                        return false;
+                    }
+                } catch (NumberFormatException nfe) {
+                    return false;
+                }
+
+                return true;
             }
         });
+
     }
 
     private boolean validateLimit() {
         try {
             int limit = Integer.parseInt(limitText.getText());
-            if(limit<0) {
+
+            if (limit == 0) {
+                limitText.setText(String.valueOf(VeriniceQuery.MAX_LIMIT));
+            }
+
+            if (limit < 0) {
                 limitInputError();
                 return false;
-            }
+            }            
+            return true;
+            
         } catch (NumberFormatException nfe) {
             limitInputError();
             return false;
         }
-        return true;
     }
-    
+
     private void limitInputError() {
-        limitText.setText(String.valueOf(VeriniceQuery.DEFAULT_LIMIT));
         limitText.setFocus();
-        limitText.selectAll();     
+        limitText.selectAll();
         MessageDialog.openError(getShell(), Messages.SearchView_12, NLS.bind(Messages.SearchView_13, Messages.SearchView_10));
-        
+
     }
 
     private void createTableComposite() {
@@ -440,10 +466,11 @@ public class SearchView extends RightsEnabledView {
     }
 
     private void search() {
-        validateLimit();
-        VeriniceQuery veriniceQuery = new VeriniceQuery(queryText.getText(), Integer.valueOf(limitText.getText()));
-        WorkspaceJob job = new SearchJob(veriniceQuery, this);
-        job.schedule();
+        if (validateLimit()) {
+            VeriniceQuery veriniceQuery = new VeriniceQuery(queryText.getText(), Integer.valueOf(limitText.getText()));
+            WorkspaceJob job = new SearchJob(veriniceQuery, this);
+            job.schedule();
+        }
     }
 
     private void reindex() {
@@ -505,7 +532,6 @@ public class SearchView extends RightsEnabledView {
         @Override
         public void keyReleased(KeyEvent e) {
             if (e.character == SWT.CR) {
-                validateLimit();
                 searchButton.setEnabled(false);
                 enableExport2CSVAction(false);
                 search();
