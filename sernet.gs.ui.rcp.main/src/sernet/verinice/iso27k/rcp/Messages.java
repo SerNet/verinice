@@ -109,6 +109,8 @@ public class Messages extends NLS {
     public static String SamtExportDialog_15;
     public static String SamtExportDialog_16;
     public static String SamtExportDialog_17;
+    public static String JobScheduler_0;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);

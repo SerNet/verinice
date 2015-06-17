@@ -34,7 +34,13 @@ public final class JobScheduler {
 	
 	private static final Mutex INIT_MUTEX = new Mutex();
 	
-	private static final IProgressMonitor INIT_PROGRESS_MONITOR = Job.getJobManager().createProgressGroup();
+    private static final IProgressMonitor INIT_PROGRESS_MONITOR;
+
+    static {
+        INIT_PROGRESS_MONITOR = Job.getJobManager().createProgressGroup();
+        INIT_PROGRESS_MONITOR.setTaskName(Messages.JobScheduler_0);
+    }
+
 	
 	private JobScheduler(){}
 	
