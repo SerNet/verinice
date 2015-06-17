@@ -33,7 +33,7 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.hui.common.connect.HuiUrl;
-import sernet.hui.swt.widgets.URL.URLUtil;
+import sernet.hui.common.connect.URLUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BSIModel;

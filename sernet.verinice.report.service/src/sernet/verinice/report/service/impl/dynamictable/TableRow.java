@@ -26,7 +26,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
- * this class wraps information used within the command {@link CreateReportTableFromGraphCommand} to flatten a treestructure into a table, that can be
+ * this class wraps information used within the command {@link GraphReportDataModel} to flatten a treestructure into a table, that can be
  * used within a verinice report template dataset
  * 
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>

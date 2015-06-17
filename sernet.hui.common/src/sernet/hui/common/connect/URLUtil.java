@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.hui.swt.widgets.URL;
+package sernet.hui.common.connect;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

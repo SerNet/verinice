@@ -40,7 +40,7 @@ import sernet.gs.ui.rcp.main.bsi.model.DocumentReference;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.Entity;
-import sernet.hui.swt.widgets.URL.URLUtil;
+import sernet.hui.common.connect.URLUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;

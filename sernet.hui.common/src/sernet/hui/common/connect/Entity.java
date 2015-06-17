@@ -245,7 +245,11 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 				result.append(", ");
 			}
 		}
-		return result.toString();
+		String resultString = result.toString();
+		if(resultString!=null && resultString.startsWith(", ")) {
+		    resultString = resultString.substring(2); 
+		}		
+		return resultString.toString();
 	}
 	
 	/**
