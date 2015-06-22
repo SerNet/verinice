@@ -177,7 +177,7 @@ public class TaskViewDataLoader {
             command = new LoadCnAElementByEntityTypeId(ITVerbund.TYPE_ID_HIBERNATE);      
             command = taskView.getCommandService().executeCommand(command); 
             taskView.comboModelScope.addAll(command.getElements());  
-            taskView.comboModelScope.sort(TaskView.NSC);
+            taskView.comboModelScope.sort(TaskView.COMPARATOR_CNA_TREE_ELEMENT);
             taskView.comboModelScope.addNoSelectionObject(Messages.TaskView_21);
             TaskView.getDisplay().syncExec(new Runnable(){
                 @Override
@@ -201,7 +201,7 @@ public class TaskViewDataLoader {
             auditList = command.getElements();    
             filteredAuditList = filterAudits();
             taskView.comboModelAudit.addAll(filteredAuditList);
-            taskView.comboModelAudit.sort(TaskView.NSC);
+            taskView.comboModelAudit.sort(TaskView.COMPARATOR_CNA_TREE_ELEMENT);
             if(filteredAuditList!=null && !filteredAuditList.isEmpty()) {
                 taskView.comboModelAudit.addNoSelectionObject(Messages.TaskView_21);
             } else {
@@ -265,7 +265,7 @@ public class TaskViewDataLoader {
     void loadAssignees() {
         taskView.comboModelAccount.clear();     
         taskView.comboModelAccount.addAll(loadAccounts());
-        taskView.comboModelAccount.sort(TaskView.NSC);
+        taskView.comboModelAccount.sort(TaskView.COMPARATOR_CONFIGURATION);
         taskView.comboModelAccount.addNoSelectionObject(Messages.TaskView_20);
         TaskView.getDisplay().syncExec(new Runnable(){
             @Override
@@ -307,7 +307,7 @@ public class TaskViewDataLoader {
         // you can use an arbitrary process service here
         Set<KeyMessage> processDefinitionSet =  ServiceFactory.lookupIndividualService().findAllProcessDefinitions();
         taskView.comboModelProcessType.addAll(processDefinitionSet);
-        taskView.comboModelProcessType.sort(TaskView.NSC);
+        taskView.comboModelProcessType.sort(TaskView.COMPARATOR_KEY_MESSAGE);
         taskView.comboModelProcessType.addNoSelectionObject(Messages.TaskView_23);
         TaskView.getDisplay().syncExec(new Runnable(){
             @Override

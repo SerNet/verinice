@@ -101,8 +101,7 @@ public class ComboModel<T> {
 	    Collections.sort(objectList);
 	}
 	
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void sort(Comparator comparator) {
+    public void sort(Comparator<ComboModelObject<T>> comparator) {
         Collections.sort(objectList, comparator);
     }
 	
@@ -159,7 +158,7 @@ public class ComboModel<T> {
 	public String[] getLabelArray() {
 		List<String> labelList = new LinkedList<String>();
 		for (ComboModelObject<T> object : getComboModelObjectListFiltered()) {
-		    labelList.add(object.getLabel());;
+		    labelList.add(object.getLabel());
 		}
 		return labelList.toArray(new String[labelList.size()]);
 	}
@@ -198,7 +197,6 @@ public class ComboModel<T> {
 	
 	public List<T> getObjectList() {
         List<T> list = new LinkedList<T>();
-        int i = 0;
         for (ComboModelObject<T> object : objectList) {
             list.add(object.getObject());
         }

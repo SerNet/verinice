@@ -17,8 +17,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
@@ -69,11 +72,14 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.iso27k.rcp.ComboModel;
+import sernet.verinice.iso27k.rcp.ComboModelObject;
+import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -89,26 +95,41 @@ import sernet.verinice.model.common.CnATreeElement;
 public class LinkMaker extends Composite implements IRelationTable {
 
     private static final Logger LOG = Logger.getLogger(LinkMaker.class);
+    
+    private static final int COMBO_RELATION_TYPE_WIDTH = 200;
+    
+    private final int formAttachmentNumeratorDefault = 100;
+    private final int formAttachmentOffsetDefault = 5;
 
-    private CnATreeElement inputElmt;
-    private boolean writeable;
-    private List<HuiRelation> allPossibleRelations;
-    private RelationTableViewer viewer;
-    private Combo combo;
-    private Action doubleClickAction;
-    private RelationViewContentProvider contentProvider;
-    private Button buttonLink;
-    private Button buttonUnlink;
-    private SelectionListener linkAction;
-    private String[] names;
-    private SortedMap<String, String> namesAndIds;
-    private EntityTypeFilter elementTypeFilter;
-    private SelectionListener unlinkAction;
-    private LinkRemover linkRemover;
-
-    private int oldSelection = -1;
-
+    // SWT
     private WorkbenchPart part;
+    private RelationTableViewer viewer;
+    private SelectionListener linkAction;
+    private SelectionListener unlinkAction;
+    private Action doubleClickAction;
+    
+    // SWT widgets
+    private Label label;
+    private Combo comboElementType;
+    private Combo comboLinkType;
+    private Button buttonAddLink;
+    private Button buttonRemoveLink;
+    
+    // Utilities 
+    private static HUITypeFactory huiTypeFactory = HitroUtil.getInstance().getTypeFactory();
+    private EntityTypeFilter elementTypeFilter;
+    private LinkRemover linkRemover;
+    private RelationViewContentProvider relationViewcontentProvider;
+    private RelationViewLabelProvider relationViewLabelProvider;
+    private ComboModel<HuiRelation> comboModelLinkType;
+   
+    private CnATreeElement inputElmt;
+    private List<HuiRelation> allPossibleRelations;    
+    private SortedMap<String, String> elementTypeNamesAndIds;
+    private String[] elementTypeNames;
+    private String selectedInComboElementTypeId;  
+    private int oldSelection = -1;  
+    private boolean writeable;
 
     public LinkMaker(Composite parent, WorkbenchPart part) {
         super(parent, SWT.BORDER);
@@ -117,148 +138,220 @@ public class LinkMaker extends Composite implements IRelationTable {
         this.part = part;
     }
     
-    /**
-     * @param cnAElement
-     * @param isWriteAllowed
-     */
     public void createPartControl(Boolean isWriteAllowed) {
-
-        final int defaultFormAttachmentNumerator = 100;
-
+        
         this.writeable = isWriteAllowed;
-
-        final int formAttachmentOffsetDefault = 5;
-
-        Label label1 = new Label(this, SWT.NULL);
-        label1.setText(Messages.LinkMaker_0);
-
-        FormData formData = new FormData();
-        formData.top = new FormAttachment(0, formAttachmentOffsetDefault);
-        formData.left = new FormAttachment(0, formAttachmentOffsetDefault);
-        label1.setLayoutData(formData);
-        label1.pack();
-
-        combo = new Combo(this, SWT.READ_ONLY);
-        FormData formData2 = new FormData();
-        formData2.top = new FormAttachment(0, formAttachmentOffsetDefault);
-        formData2.left = new FormAttachment(label1, formAttachmentOffsetDefault);
-        combo.setLayoutData(formData2);
-
-        buttonLink = new Button(this, SWT.PUSH);
-        FormData formData3 = new FormData();
-        formData3.top = new FormAttachment(combo, 0, SWT.CENTER);
-        formData3.left = new FormAttachment(combo, formAttachmentOffsetDefault);
-        buttonLink.setLayoutData(formData3);
-        buttonLink.setText(Messages.LinkMaker_1);
-        buttonLink.setToolTipText(Messages.LinkMaker_2);
-        buttonLink.setEnabled(false);
-
-        buttonUnlink = new Button(this, SWT.PUSH);
-        FormData formData5 = new FormData();
-        formData5.top = new FormAttachment(combo, 0, SWT.CENTER);
-        formData5.left = new FormAttachment(buttonLink, formAttachmentOffsetDefault);
-        buttonUnlink.setLayoutData(formData5);
-        buttonUnlink.setText(Messages.LinkMaker_3);
-        buttonUnlink.setEnabled(writeable && checkRights());
-        buttonUnlink.setToolTipText(Messages.LinkMaker_4);
-
-        viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
-        part.getSite().setSelectionProvider(viewer);
-        FormData formData6 = new FormData();
-        formData6.top = new FormAttachment(buttonLink, 2);
-        formData6.left = new FormAttachment(0, 1);
-        formData6.right = new FormAttachment(defaultFormAttachmentNumerator, -1);
-        formData6.bottom = new FormAttachment(defaultFormAttachmentNumerator, -1);
-        viewer.getTable().setLayoutData(formData6);
-        viewer.getTable().setEnabled(writeable);
-
-        contentProvider = new RelationViewContentProvider(this, viewer);
-        viewer.setContentProvider(contentProvider);
-        RelationViewLabelProvider relationViewLabelProvider = new RelationViewLabelProvider(this);
-        viewer.setLabelProvider(relationViewLabelProvider);
-        viewer.setSorter(new RelationByNameSorter(this, IRelationTable.COLUMN_TITLE, IRelationTable.COLUMN_TYPE_IMG));
+        
+        createLabel();
+        createComboElementType();    
+        createComboLinkType();
+        createButtonAddLink();
+        createButtonRemoveLink();
+        initLinkTableViewer();
 
         // listeners to reload view:
-        CnAElementFactory.getLoadedModel().addBSIModelListener(contentProvider);
-        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(contentProvider);
-
-        // listeners to remove stale links from currently open object in editor
-        // to prevent conflicts when saving:
+        CnAElementFactory.getLoadedModel().addBSIModelListener(relationViewcontentProvider);
+        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(relationViewcontentProvider);
+        // listeners to remove stale links from currently open object in editor to prevent conflicts when saving:
         linkRemover = new LinkRemover(this);
         CnAElementFactory.getLoadedModel().addBSIModelListener(linkRemover);
         CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(linkRemover);
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
-        List<RelationTableCellLabelProvider> cellLabelProviders = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, this);
-
+        List<RelationTableCellLabelProvider> cellLabelProviders = viewer.initToolTips(relationViewLabelProvider, this);
         // register resize listener for cutting the tooltips
         addResizeListener(cellLabelProviders);
 
-        createDoubleClickAction();
-        hookDoubleClickAction();
-
         createButtonListeners();
         hookButtonListeners();
-
-        createFilter();
+  
+        createFilter();    
+        
+        addComboLinkTypeListener();
+        
+        createDoubleClickAction();
+        hookDoubleClickAction();
     }
 
+    private void createLabel() {
+        label = new Label(this, SWT.NULL);
+        label.setText(Messages.LinkMaker_0);
+        FormData formData = new FormData();
+        formData.top = new FormAttachment(0, formAttachmentOffsetDefault);
+        formData.left = new FormAttachment(0, formAttachmentOffsetDefault);
+        label.setLayoutData(formData);
+        label.pack();
+    }
+
+    private void createComboElementType() {
+        comboElementType = new Combo(this, SWT.READ_ONLY);
+        FormData formData = new FormData();
+        formData.top = new FormAttachment(0, formAttachmentOffsetDefault);
+        formData.left = new FormAttachment(label, formAttachmentOffsetDefault);
+        comboElementType.setLayoutData(formData);
+    }
+    
+    private void createComboLinkType() {
+        comboLinkType = new Combo(this, SWT.READ_ONLY);
+        FormData formData = new FormData();
+        formData.top = new FormAttachment(0, formAttachmentOffsetDefault);
+        formData.left = new FormAttachment(comboElementType, formAttachmentOffsetDefault);
+        formData.width = COMBO_RELATION_TYPE_WIDTH;
+        comboLinkType.setLayoutData(formData);
+    }
+    
+    private void createButtonAddLink() {
+        buttonAddLink = new Button(this, SWT.PUSH);
+        FormData formData = new FormData();
+        formData.top = new FormAttachment(comboElementType, 0, SWT.CENTER);
+        formData.left = new FormAttachment(comboLinkType, formAttachmentOffsetDefault);
+        buttonAddLink.setLayoutData(formData);
+        buttonAddLink.setText(Messages.LinkMaker_1);
+        buttonAddLink.setToolTipText(Messages.LinkMaker_2);
+        buttonAddLink.setEnabled(false);
+    }
+    
+    private void createButtonRemoveLink() {
+        buttonRemoveLink = new Button(this, SWT.PUSH);
+        FormData formData = new FormData();
+        formData.top = new FormAttachment(comboElementType, 0, SWT.CENTER);
+        formData.left = new FormAttachment(buttonAddLink, formAttachmentOffsetDefault);
+        buttonRemoveLink.setLayoutData(formData);
+        buttonRemoveLink.setText(Messages.LinkMaker_3);
+        buttonRemoveLink.setEnabled(writeable && checkRights());
+        buttonRemoveLink.setToolTipText(Messages.LinkMaker_4);
+    }
+    
+    private void initLinkTableViewer() {
+        viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
+        FormData formData = new FormData();
+        formData.top = new FormAttachment(buttonAddLink, 2);
+        formData.left = new FormAttachment(0, 1);
+        formData.right = new FormAttachment(formAttachmentNumeratorDefault, -1);
+        formData.bottom = new FormAttachment(formAttachmentNumeratorDefault, -1);
+        viewer.getTable().setLayoutData(formData);
+        viewer.getTable().setEnabled(writeable);
+        relationViewcontentProvider = new RelationViewContentProvider(this, viewer);
+        viewer.setContentProvider(relationViewcontentProvider);
+        
+        relationViewLabelProvider = new RelationViewLabelProvider(this);
+        viewer.setLabelProvider(relationViewLabelProvider);
+        viewer.setSorter(new RelationByNameSorter(this, IRelationTable.COLUMN_TITLE, IRelationTable.COLUMN_TYPE_IMG));
+        
+        part.getSite().setSelectionProvider(viewer);
+    }
+    
     /**
-     * Tracks changes of viewpart size and delegates them to the tooltip
-     * provider.
+     * Tracks changes of viewpart size and delegates them to the tooltip provider.
      */
     private void addResizeListener(final List<RelationTableCellLabelProvider> cellLabelProviders) {
-
         addControlListener(new ControlAdapter() {
-
+        
             @Override
             public void controlResized(ControlEvent e) {
                 for (RelationTableCellLabelProvider c : cellLabelProviders) {
                     c.updateShellWidthAndX(getShell().getBounds().width, getShell().getBounds().x);
                 }
             }
-
         });
     }
 
-    private void createFilter() {
-        elementTypeFilter = new EntityTypeFilter(this.viewer);
-        combo.addSelectionListener(new SelectionListener() {
+    private void createFilter() {      
+        elementTypeFilter = new EntityTypeFilter(viewer);
+        comboElementType.addSelectionListener(new SelectionListener() {    
+             
             @Override
             public void widgetSelected(SelectionEvent e) {
-                oldSelection = combo.getSelectionIndex();
-                setFilter(combo.getSelectionIndex());
+                oldSelection = comboElementType.getSelectionIndex();
+                setFilter(comboElementType.getSelectionIndex());
             }
-
+       
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
-
         });
     }
 
-    /**
-     * @param selectionIndex
-     */
     protected void setFilter(int selectionIndex) {
         if (selectionIndex == 0) {
             elementTypeFilter.setEntityType(null);
-            buttonLink.setEnabled(false);
+            buttonAddLink.setEnabled(false);
+            comboLinkType.setEnabled(false);
             return;
         }
-        Object[] array = namesAndIds.entrySet().toArray();
-        String entType = ((Entry<String, String>) array[selectionIndex]).getValue();
-        elementTypeFilter.setEntityType(entType);
+        
+        Object[] array = elementTypeNamesAndIds.entrySet().toArray();
+        
+        @SuppressWarnings("unchecked")
+        Entry<String, String> entry = (Entry<String, String>) array[selectionIndex];
+        selectedInComboElementTypeId = entry.getValue();
+        elementTypeFilter.setEntityType(selectedInComboElementTypeId);
 
         // enable link button if we have write permissions:
-        buttonLink.setEnabled(writeable && checkRights());
+        buttonAddLink.setEnabled(writeable && checkRights());
+        
+        fillComboLinkType();
     }
 
-    private void hookButtonListeners() {
-        this.buttonLink.addSelectionListener(linkAction);
-        this.buttonUnlink.addSelectionListener(unlinkAction);
+    private void fillComboLinkType() {
+        comboModelLinkType = getComboModelLinkType();
+        Comparator<ComboModelObject<HuiRelation>> huiRelationComparator = getHuiRelationComparator();        
+        
+        String elementTypeInEditor = inputElmt.getEntityType().getId();
+        comboModelLinkType.addAll(huiTypeFactory.getPossibleRelations(elementTypeInEditor,
+                            selectedInComboElementTypeId));
+        comboModelLinkType.addAll(huiTypeFactory.getPossibleRelations(selectedInComboElementTypeId,
+                        elementTypeInEditor));
+        comboModelLinkType.sort(huiRelationComparator);
+        
+        comboLinkType.setItems(comboModelLinkType.getLabelArray());
+        comboLinkType.select(0);
+        comboModelLinkType.setSelectedIndex(0);
+        if (comboModelLinkType.size() > 1) {
+            comboLinkType.setEnabled(true);
+        } else {
+            comboLinkType.setEnabled(false);
+        }
+    }
+
+    private ComboModel<HuiRelation> getComboModelLinkType() {
+        return new ComboModel<HuiRelation>(new IComboModelLabelProvider<HuiRelation>() {
+            @Override
+            public String getLabel(HuiRelation element) {
+                return element.getName();
+            }
+        });
+    }
+
+    private Comparator<ComboModelObject<HuiRelation>> getHuiRelationComparator() {
+        return new Comparator<ComboModelObject<HuiRelation>>() {
+            Collator collator = Collator.getInstance(Locale.getDefault());
+            
+            @Override
+            public int compare(
+                            ComboModelObject<HuiRelation> comboModelObject1,
+                            ComboModelObject<HuiRelation> comboModelObject2) {
+                String comboModelObject1Name = comboModelObject1.getObject().getName();
+                String comboModelObject2Name = comboModelObject2.getObject().getName();
+                return collator.compare(comboModelObject1Name, comboModelObject2Name);
+            }
+        };
+    }
+    
+    private void addComboLinkTypeListener() {
+        comboLinkType.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                comboModelLinkType.setSelectedIndex(comboLinkType.getSelectionIndex());
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
     }
 
     private void createButtonListeners() {
@@ -271,15 +364,20 @@ public class LinkMaker extends Composite implements IRelationTable {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 // create new link to object
-                Object[] array = namesAndIds.entrySet().toArray();
-                String selectedType = ((Entry<String, String>) array[combo.getSelectionIndex()]).getValue();
-                CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(viewer.getControl().getShell(), selectedType, inputElmt);
+                Object[] array = elementTypeNamesAndIds.entrySet().toArray();
+                @SuppressWarnings("unchecked")
+                String selectedType = ((Entry<String, String>) array[comboElementType.getSelectionIndex()]).getValue();
+                CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(
+                                viewer.getControl().getShell(), selectedType, inputElmt);
                 if (dialog.open() != Window.OK) {
                     return;
                 }
                 List<CnATreeElement> linkTargets = dialog.getSelectedElements();
+                
+                String selectedLinkType = comboModelLinkType.getSelectedObject().getId();
                 // this method also fires events for added links:
-                CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(getInputElmt(), linkTargets);
+                CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(
+                                getInputElmt(), linkTargets, selectedLinkType);
                 // refresh viewer because it doesn't listen to events:
                 reloadLinks();
             }
@@ -297,8 +395,9 @@ public class LinkMaker extends Composite implements IRelationTable {
                 if (viewer.getSelection().isEmpty()) {
                     return;
                 }
-                List selection = ((IStructuredSelection) viewer.getSelection()).toList();
-                boolean confirm = MessageDialog.openConfirm(viewer.getControl().getShell(), Messages.LinkMaker_5, NLS.bind(Messages.LinkMaker_6, selection.size()));
+                List<?> selection = ((IStructuredSelection) viewer.getSelection()).toList();
+                String msg = NLS.bind(Messages.LinkMaker_6, selection.size());
+                boolean confirm = MessageDialog.openConfirm(getShell(), Messages.LinkMaker_5, msg);
                 if (!confirm) {
                     return;
                 }
@@ -324,34 +423,56 @@ public class LinkMaker extends Composite implements IRelationTable {
             }
         };
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.swt.widgets.Widget#dispose()
-     */
-    @Override
-    public void dispose() {
-        CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(contentProvider);
-        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(contentProvider);
-
-        CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(linkRemover);
-        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(linkRemover);
-
-        super.dispose();
+    
+    private void hookButtonListeners() {
+        this.buttonAddLink.addSelectionListener(linkAction);
+        this.buttonRemoveLink.addSelectionListener(unlinkAction);
     }
 
-    /**
-	 * 
-	 */
+    private void initNamesForComboElementType() {
+        elementTypeNamesAndIds = new TreeMap<String, String>();
+
+        if (allPossibleRelations == null) {
+            elementTypeNames = new String[0];
+        } else {
+            for (HuiRelation huiRelation : allPossibleRelations) {
+                // from or to element, show other side respectively:
+                String targetEntityTypeID = huiRelation.getTo();
+                String sourceEntityTypeID = huiRelation.getFrom();
+                String targetEntityTypeName = huiTypeFactory.getEntityType(targetEntityTypeID).getName();
+                String sourceEntityTypeName = huiTypeFactory.getEntityType(sourceEntityTypeID).getName();
+                if (sourceEntityTypeID.equals(inputElmt.getEntity().getEntityType())) {
+                    elementTypeNamesAndIds.put(targetEntityTypeName, targetEntityTypeID);
+                } else {
+                    elementTypeNamesAndIds.put(sourceEntityTypeName, sourceEntityTypeID);
+                }
+            }
+        }
+
+        elementTypeNamesAndIds.put(Messages.LinkMaker_8, null);
+
+        Set<String> namesSet = elementTypeNamesAndIds.keySet();
+        elementTypeNames = new String[namesSet.size()];
+        elementTypeNames = namesSet.toArray(new String[namesSet.size()]);
+    }
+
+    private void fillPossibleLinkLists() {
+        allPossibleRelations = new ArrayList<HuiRelation>();
+        String entityTypeID = inputElmt.getEntity().getEntityType();
+        
+        allPossibleRelations.addAll(huiTypeFactory.getPossibleRelationsFrom(entityTypeID));
+        allPossibleRelations.addAll(huiTypeFactory.getPossibleRelationsTo(entityTypeID));
+    }
+    
     private void createDoubleClickAction() {
         doubleClickAction = new Action() {
+        
             @Override
             public void run() {
                 ISelection selection = viewer.getSelection();
                 Object obj = ((IStructuredSelection) selection).getFirstElement();
                 CnALink link = (CnALink) obj;
-
+                
                 // open the object on the other side of the link:
                 if (CnALink.isDownwardLink(getInputElmt(), link)) {
                     EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
@@ -360,11 +481,11 @@ public class LinkMaker extends Composite implements IRelationTable {
                 }
             }
         };
-
     }
-
+    
     private void hookDoubleClickAction() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
+        
             @Override
             public void doubleClick(DoubleClickEvent event) {
                 doubleClickAction.run();
@@ -372,61 +493,11 @@ public class LinkMaker extends Composite implements IRelationTable {
         });
     }
 
-    private void initNamesForCombo() {
-        namesAndIds = new TreeMap<String, String>();
-
-        if (allPossibleRelations == null) {
-            names = new String[0];
-        } else {
-            for (HuiRelation huiRelation : allPossibleRelations) {
-                // from or to element, show other side respectively:
-                String targetEntityTypeID = huiRelation.getTo();
-                String sourceEntityTypeID = huiRelation.getFrom();
-
-                if (sourceEntityTypeID.equals(this.inputElmt.getEntity().getEntityType())) {
-                    namesAndIds.put(HitroUtil.getInstance().getTypeFactory().getEntityType(targetEntityTypeID).getName(), targetEntityTypeID);
-                } else {
-                    namesAndIds.put(HitroUtil.getInstance().getTypeFactory().getEntityType(sourceEntityTypeID).getName(), sourceEntityTypeID);
-                }
-            }
-        }
-
-        namesAndIds.put(Messages.LinkMaker_8, null);
-
-        Set<String> namesSet = namesAndIds.keySet();
-        this.names = new String[namesSet.size()];
-        this.names = namesSet.toArray(new String[namesSet.size()]);
-    }
-
-    /**
-     * @return
-     */
-    private void fillPossibleLinkLists() {
-        // get relations from here to other elements:
-        allPossibleRelations = new ArrayList<HuiRelation>();
-        EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(inputElmt.getEntity().getEntityType());
-        allPossibleRelations.addAll(entityType.getPossibleRelations());
-
-        // get relations from other elements to this one:
-        allPossibleRelations.addAll(HitroUtil.getInstance().getTypeFactory().getPossibleRelationsTo(inputElmt.getEntity().getEntityType()));
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#getInputElmt()
-     */
     @Override
     public CnATreeElement getInputElmt() {
         return inputElmt;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reload()
-     */
     @Override
     public void reload(CnALink oldLink, CnALink newLink) {
         if (newLink != null) {
@@ -444,37 +515,25 @@ public class LinkMaker extends Composite implements IRelationTable {
         viewer.refresh();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.gs.ui.rcp.main.bsi.views.IRelationTable#setInputElmt(sernet.gs
-     * .ui.rcp.main.common.model.CnATreeElement)
-     */
     @Override
     public void setInputElmt(CnATreeElement inputElmt) {
         if (inputElmt == null || this.inputElmt == inputElmt) {
             return;
         }
         if (oldSelection == -1) {
-            oldSelection = combo.getSelectionIndex();
+            oldSelection = comboElementType.getSelectionIndex();
         }
         this.inputElmt = inputElmt;
         fillPossibleLinkLists();
-        initNamesForCombo();
-        combo.setItems(names);
-        if (oldSelection != -1 && oldSelection < combo.getItemCount()) {
-            combo.select(oldSelection);
-            setFilter(combo.getSelectionIndex());
+        initNamesForComboElementType();
+        comboElementType.setItems(elementTypeNames);
+        if (oldSelection != -1 && oldSelection < comboElementType.getItemCount()) {
+            comboElementType.select(oldSelection);
+            setFilter(comboElementType.getSelectionIndex());
         }
         viewer.setInput(inputElmt);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.bsi.views.IRelationTable#reloadAll()
-     */
     @Override
     public void reloadAll() {
         reloadLinks();
@@ -526,27 +585,32 @@ public class LinkMaker extends Composite implements IRelationTable {
         job.schedule();
 
     }
-
+    
+    @SuppressWarnings("static-access")
+    @Override
+    public void dispose() {
+        CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(relationViewcontentProvider);
+        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(relationViewcontentProvider);
+        
+        CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(linkRemover);
+        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(linkRemover);
+                
+        super.dispose();
+    }
+    
     private String getRightID() {
         return ActionRightIDs.EDITLINKS;
     }
-
+    
     private boolean checkRights() {
-        /**
-         * no right management should be used
-         */
+        // no right management should be used
         if (getRightID() == null) {
             return true;
         }
-        /**
-         * id set but empty, right not granted, action disabled
-         */
+        // id set but empty, right not granted, action disabled
         else if (getRightID().equals("")) {
             return false;
-            /**
-             * right management enabled, check rights and return true if right
-             * enabled / false if not
-             */
+            // right management enabled, check rights and return true if right enabled / false if not
         } else {
             Activator.inheritVeriniceContextState();
             RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);

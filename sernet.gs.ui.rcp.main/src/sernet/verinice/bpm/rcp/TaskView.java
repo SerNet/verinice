@@ -74,6 +74,7 @@ import org.eclipse.ui.progress.IProgressService;
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ComboModelNumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
@@ -93,7 +94,6 @@ import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.bpm.KeyMessage;
 import sernet.verinice.interfaces.bpm.KeyValue;
 import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.ComboModelFilter;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.iso27k.rcp.RegexComboModelFilter;
@@ -123,6 +123,13 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
 
     private static final Logger LOG = Logger.getLogger(TaskView.class);
     static final NumericStringComparator NSC = new NumericStringComparator();
+
+    static final ComboModelNumericStringComparator<CnATreeElement> COMPARATOR_CNA_TREE_ELEMENT =
+                    new ComboModelNumericStringComparator<CnATreeElement>();
+    static final ComboModelNumericStringComparator<Configuration> COMPARATOR_CONFIGURATION =
+                    new ComboModelNumericStringComparator<Configuration>();
+    static final ComboModelNumericStringComparator<KeyMessage> COMPARATOR_KEY_MESSAGE =
+                    new ComboModelNumericStringComparator<KeyMessage>();
 
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView"; //$NON-NLS-1$
 
