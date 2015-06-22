@@ -42,7 +42,7 @@ public class IndexJob extends QuartzJobBean implements StatefulJob {
         if (LOG.isInfoEnabled()) {
             LOG.info("Start executing...");
         }
-        getIndexer().index();
+        getIndexer().nonBlockingIndexing();
     }
 
     public Indexer getIndexer() {

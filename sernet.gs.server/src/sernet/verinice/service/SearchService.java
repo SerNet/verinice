@@ -187,7 +187,7 @@ public class SearchService implements ISearchService {
      */
     @Override
     public void index() {
-        searchIndexer.index();
+        searchIndexer.nonBlockingIndexing();
     }
 
     /*
@@ -198,7 +198,7 @@ public class SearchService implements ISearchService {
     @Override
     public void reindex() {
         searchDao.clear();
-        searchIndexer.index();
+        searchIndexer.nonBlockingIndexing();
     }
 
     /*

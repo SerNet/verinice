@@ -49,7 +49,7 @@ public class OSGIIndexer {
             taskExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    indexer.index();
+                    indexer.nonBlockingIndexing();
                 }
             });
         }

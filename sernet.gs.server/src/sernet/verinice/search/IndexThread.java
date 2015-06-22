@@ -19,31 +19,20 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
-import java.util.Set;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.ActionResponse;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
 
-import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.ServerInitializer;
-import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
-import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.search.VeriniceQuery;
-import sernet.verinice.model.search.VeriniceSearchResult;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
-import sernet.verinice.model.search.VeriniceSearchResultRow;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IndexThread implements Callable<ActionResponse> {
+public class IndexThread implements Callable<CnATreeElement> {
 
     private static final Logger LOG = Logger.getLogger(IndexThread.class);
     
@@ -56,29 +45,24 @@ public class IndexThread implements Callable<ActionResponse> {
         super();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.util.concurrent.Callable#call()
      */
     @Override
-    public ActionResponse call() throws Exception {
+    public CnATreeElement call() throws Exception {
         String json = null;
-        try { 
-            ServerInitializer.inheritVeriniceContextState();
-            json = getJsonBuilder().getJson(element);
-            ActionResponse response = null;
-            if(json!=null) {          
-                response = getSearchDao().updateOrIndex(element.getUuid(), json);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Element indexed: " + element.getUuid());
-                } 
-            }
-            return response;
-        } catch(Exception e ) {
-            String uuid = (element!=null) ? element.getUuid() : null;
-            LOG.error("Error while indexing element: " + uuid + ", JSON: " + json, e);
-            return null;
-        } 
-     }
+
+        ServerInitializer.inheritVeriniceContextState();
+        json = getJsonBuilder().getJson(element);
+        ActionResponse response = null;
+        if (json != null) {
+            response = getSearchDao().updateOrIndex(element.getUuid(), json);
+        }
+        return element;
+
+    }
     
     public CnATreeElement getElement() {
         return element;

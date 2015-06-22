@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -26,12 +28,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
 import org.elasticsearch.action.ActionResponse;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.update.UpdateResponse;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
@@ -52,70 +52,183 @@ import sernet.verinice.model.iso27k.Organization;
 public class Indexer {
 
     private static final Logger LOG = Logger.getLogger(Indexer.class);
-    
+
     private static final int DEFAULT_NUMBER_OF_THREADS = 8;
-    private static final int SHUTDOWN_TIMEOUT_IN_SECONDS = 60;
-    
+
     private IBaseDao<CnATreeElement, Integer> elementDao;
+
     private IElementTitleCache titleCache;
 
-    private ExecutorService taskExecutor;
-    private CompletionService<ActionResponse> completionService;
-    
-    private DummyAuthentication authentication = new DummyAuthentication(); 
-    
+    private long indexingStart;
+
+    private DummyAuthentication authentication = new DummyAuthentication();
+
     /**
-     * Factory to create {@link IndexThread} instances
-     * configured in veriniceserver-search.xml
+     * Factory to create {@link IndexThread} instances configured in
+     * veriniceserver-search.xml
      */
     private ObjectFactory indexThreadFactory;
 
-    public void index() {
-        long start = System.currentTimeMillis();
-        taskExecutor = createExecutor();
-        completionService = new ExecutorCompletionService<ActionResponse>(taskExecutor);
-        boolean dummyAuthAdded = false;
-        SecurityContext ctx = SecurityContextHolder.getContext(); 
+    private int amountOfIndexThreads;
+
+    private SecurityContext ctx;
+
+    private boolean dummyAuthAdded;
+
+    /**
+     * Creates an index in an non blocking way, means this method creates all
+     * necessary index threads and returns immediately. It gives no guarantee
+     * that an index is available after this method is finished. The index will
+     * be available after an arbitrary amount of time.
+     *
+     * <p>
+     * If you are using log4j in debug method the time consumption of the index
+     * process is logged, but the non blocking behavior will stay the same.
+     * </p>
+     *
+     *
+     * <p>
+     * If you need to know, when indexing is finished take a look at
+     * {@link #blockingIndexing()}
+     * </p>
+     *
+     */
+    public void nonBlockingIndexing() {
+
         try {
-            if(ctx.getAuthentication()==null) {
-                ctx.setAuthentication(authentication);
-                dummyAuthAdded = true;
-            }
             ServerInitializer.inheritVeriniceContextState();
-            
-            doIndex(start);
-            if (LOG.isDebugEnabled()) {
-                long ms = System.currentTimeMillis() - start;
-                LOG.debug("All threads created, runtime: " + TimeFormatter.getHumanRedableTime(ms));
-            }
+            initializeSecurityIndex();
+
+            CompletionService<CnATreeElement> completionService = doIndex();
+            logNonBlockingIndexingTermination(completionService);
         } catch (Exception e) {
-            LOG.error("Error while indexing elements.", e);           
+            LOG.error("Error while indexing elements.", e);
         } finally {
-            if(dummyAuthAdded) {
-                ctx.setAuthentication(null);
-                dummyAuthAdded = false;
-            }
-            taskExecutor.shutdown();
-        } 
+            removeDummyAuthentication();
+        }
     }
 
-    private void doIndex(Long startTime) throws InterruptedException, ExecutionException {
-        List<CnATreeElement> elementList = getElementDao().findAll(RetrieveInfo.getPropertyInstance().setPermissions(true));
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Elements: " + elementList.size() + ", start indexing...");
+    private void initializeSecurityIndex() {
+        dummyAuthAdded = false;
+        ctx = SecurityContextHolder.getContext();
+
+        if (ctx.getAuthentication() == null) {
+            ctx.setAuthentication(authentication);
+            dummyAuthAdded = true;
         }
-        getTitleCache().load(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
-        LastThread lastThread = new LastThread(startTime);
-        int n = 0;
-        for (CnATreeElement element : elementList) {
-            if(element!=null) {
-                IndexThread thread = (IndexThread) indexThreadFactory.getObject();
-                thread.setElement(element);
-                completionService.submit(thread);
-                n++;
+    }
+
+    @SuppressWarnings("unchecked")
+    private CompletionService<CnATreeElement> doIndex() throws InterruptedException, ExecutionException {
+
+        indexingStart = System.currentTimeMillis();
+
+        ExecutorService executorService = createExecutor();
+        CompletionService<CnATreeElement> completionService = new ExecutorCompletionService<CnATreeElement>(executorService);
+
+        List<CnATreeElement> elementList = getElementDao().findAll(RetrieveInfo.getPropertyInstance().setPermissions(true));
+
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Elements: " + elementList.size() + ", indexingStart indexing...");
+        }
+
+        getTitleCache().load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID });
+        Collection<IndexThread> indexThreads = createIndexThreads(elementList);
+        amountOfIndexThreads = indexThreads.size();
+
+        for (IndexThread indexThread : indexThreads) {
+            completionService.submit(indexThread);
+        }
+
+        return completionService;
+    }
+
+    private void logNonBlockingIndexingTermination(final CompletionService<CnATreeElement> completionService) {
+        if (LOG.isDebugEnabled()) {
+            Executors.newFixedThreadPool(1).execute(new Runnable() {
+                @Override
+                public void run() {
+                    ServerInitializer.inheritVeriniceContextState();
+                    awaitIndexingTermination(completionService);
+                    printIndexingTimeConsumption();
+                }
+            });
+        }
+    }
+
+    private void removeDummyAuthentication() {
+        if (dummyAuthAdded) {
+            ctx.setAuthentication(null);
+            dummyAuthAdded = false;
+        }
+    }
+
+    private void printIndexingTimeConsumption() {
+        long end = System.currentTimeMillis();
+        long ms = end - indexingStart;
+        LOG.debug("All threads created, runtime: " + ms + " ms, readable time: " + TimeFormatter.getHumanRedableTime(ms));
+    }
+
+    /**
+     * Creates an elastic search in a blocking manner. After this method is
+     * finished the index will be available.
+     *
+     * <p>
+     * *Note*: The indexing is done concurrently, so it is still fast. The only
+     * restriction of this blocking method is, that is waiting until the last
+     * {@link IndexThread} is completed.
+     * </p>
+     *
+     * <p>If you want to test indexing with junit, this is method to go.</p>
+     *
+     */
+    public void blockingIndexing() {
+        try {
+            doBlockingIndexing();
+        } catch (InterruptedException e) {
+            LOG.error("blocking indexing failed: " + e.getLocalizedMessage(), e);
+        } catch (ExecutionException e) {
+            LOG.error("blocking indexing failed: " + e.getLocalizedMessage(), e);
+        }
+    }
+
+    private void doBlockingIndexing() throws InterruptedException, ExecutionException {
+
+        ServerInitializer.inheritVeriniceContextState();
+        CompletionService<CnATreeElement> completionService = doIndex();
+
+        // This call causes the blocking since it takes every completed task
+        // from the executor queue.
+        awaitIndexingTermination(completionService);
+
+        printIndexingTimeConsumption();
+    }
+
+    private void awaitIndexingTermination(CompletionService<CnATreeElement> completionService) {
+        while (Indexer.this.amountOfIndexThreads > 0) {
+            try {
+                Future<CnATreeElement> future = completionService.take();
+                CnATreeElement element = future.get();
+                Indexer.this.amountOfIndexThreads--;
+                LOG.debug("element was indexed " + element.getTitle() + " - uuid " + element.getUuid());
+            } catch (InterruptedException e) {
+                LOG.error("indexing tracking failed", e);
+            } catch (ExecutionException ex) {
+                LOG.error("future task execution failed: " + ex.getLocalizedMessage(), ex);
             }
-        } 
-        completionService.submit(lastThread);
+        }
+    }
+
+    private Collection<IndexThread> createIndexThreads(List<CnATreeElement> elementList) {
+        Collection<IndexThread> indexThreads = new ArrayList<IndexThread>(0);
+
+        for (CnATreeElement element : elementList) {
+            IndexThread indexThread = (IndexThread) indexThreadFactory.getObject();
+            indexThread.setElement(element);
+            indexThreads.add(indexThread);
+        }
+
+        return indexThreads;
     }
 
     private ExecutorService createExecutor() {
@@ -128,11 +241,7 @@ public class Indexer {
     private int getMaxNumberOfThreads() {
         return DEFAULT_NUMBER_OF_THREADS;
     }
-    
-    private int getShutdownTimeoutInSeconds() {
-        return SHUTDOWN_TIMEOUT_IN_SECONDS;
-    }
-    
+
     public ObjectFactory getIndexThreadFactory() {
         return indexThreadFactory;
     }
@@ -148,7 +257,7 @@ public class Indexer {
     public void setElementDao(IBaseDao<CnATreeElement, Integer> elementDao) {
         this.elementDao = elementDao;
     }
-    
+
     public IElementTitleCache getTitleCache() {
         return titleCache;
     }
@@ -156,7 +265,6 @@ public class Indexer {
     public void setTitleCache(IElementTitleCache titleCache) {
         this.titleCache = titleCache;
     }
-
 
     class LastThread implements Callable<ActionResponse> {
 
@@ -167,11 +275,13 @@ public class Indexer {
             this.startTime = startTime;
         }
 
-        /* (non-Javadoc)
+        /*
+         * (non-Javadoc)
+         *
          * @see java.util.concurrent.Callable#call()
          */
         @Override
-        public ActionResponse call() throws Exception {            
+        public ActionResponse call() throws Exception {
             if (LOG.isInfoEnabled()) {
                 long ms = System.currentTimeMillis() - startTime;
                 String message = "Indexing finished, runtime: " + TimeFormatter.getHumanRedableTime(ms);
@@ -179,7 +289,7 @@ public class Indexer {
             }
             return null;
         }
-        
+
     }
-    
+
 }

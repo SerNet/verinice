@@ -37,7 +37,7 @@ public class ServerIndexer {
             if (LOG.isInfoEnabled()) {
                 LOG.info("Indexing on startup is enabled.");
             }
-            getIndexer().index();
+            getIndexer().nonBlockingIndexing();
         }
     }
     
