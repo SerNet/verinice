@@ -127,6 +127,11 @@ public class CsvExportHandler {
     }
 
     private boolean check(String filePath) {
+        
+        if (filePath == null) {
+            return false;
+        }
+        
         File file = new File(filePath);
         if (file.exists()) {
           MessageBox mb = new MessageBox(shell, SWT.ICON_WARNING| SWT.YES | SWT.NO);
