@@ -110,11 +110,6 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
      */
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-//        if (newInput instanceof VeriniceSearchResult) {
-//            Set<VeriniceSearchResultObject> input = ((VeriniceSearchResult) newInput).getAllVeriniceSearchObjects();
-//            if (!input.isEmpty())
-//                 viewer.setSelection(new StructuredSelection(getElements(newInput)[0]), true);
-//         }
     }
 
     /*
