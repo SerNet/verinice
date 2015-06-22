@@ -23,29 +23,43 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * Path element in a column path definition which loads the children of an element.
+ * Delimiter for this path element is: IPathElement.DELIMITER_CHILD
+ * See GenericDataModel for a description of column path definitions.
+ * 
+ * @see GenericDataModel
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ChildElement extends BaseElement {
 
+    private static final Logger LOG = Logger.getLogger(ChildElement.class);
 
     /* (non-Javadoc)
      * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#load(sernet.verinice.model.common.CnATreeElement, sernet.verinice.interfaces.graph.VeriniceGraph)
      */
     @Override
     public void load(CnATreeElement parent, VeriniceGraph graph) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Loading children of " + parent.getTitle() + "...");
+        }
         String parentId = String.valueOf(parent.getDbId());
         Map<String, Object> result = new HashMap<String, Object>();
         Set<CnATreeElement> elements = graph.getChildren(parent);
         for (CnATreeElement element : elements) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(element.getTitle() + "  loaded");
+            }
             getChild().load(element,graph);
             String id = String.valueOf(element.getDbId());
             result.put(id, getChild().getResult());
         }
-        result.put(parentId, result);
+        getResult().put(parentId, result);
         
     }
 

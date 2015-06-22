@@ -23,23 +23,27 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
 
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 
 /**
+ * A ColumnPath is a description for a report column in 
+ * GenericDataModel. See GenericDataModel for a description of column path definitions.
+ * 
+ * @see GenericDataModel
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ColumnPath {
     
     private String columnString;
+    private int number;
     
     private List<IPathElement> pathElements;
 
-    public ColumnPath(String columnString) {
+    public ColumnPath(int n, String columnString) {
         super();
+        number = n;
         this.columnString = columnString;
         pathElements = new LinkedList<IPathElement>();
         parseColumnString();
@@ -88,7 +92,16 @@ public class ColumnPath {
     }
     
     public Map<String, String> getValueMap() {
-        return pathElements.get(0).createValueMap(new HashMap<String, String>(),null);
+        return pathElements.get(0).createResultMap(new HashMap<String, String>(),null);
+    }
+    
+    public int getNumber() {
+        return number;
+    }
+
+
+    public void setNumber(int number) {
+        this.number = number;
     }
     
     

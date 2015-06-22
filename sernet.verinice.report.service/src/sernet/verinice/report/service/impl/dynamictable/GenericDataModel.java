@@ -19,10 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl.dynamictable;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +30,54 @@ import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 
 /**
+ * This data model simplifies the user request to implement a report template that
+ * displays a table over all elements of type $a, and all to that element linked elements of 
+ * type $b. <br>
+ * The data model should be used in verinice reports only, usage (in a dataset) should look like this:
+ * <pre>
+ * ============================================================================================
+ * command = new GraphCommand();
+ * loader = new GraphElementLoader();
+ * loader.setScopeId(root);
+ * loader.setTypeIds(new String[]{ AssetGroup.TYPE_ID, Asset.TYPE_ID, IncidentScenario.TYPE_ID});
+ * command.addLoader(loader);
+ * command.addRelationId(IncidentScenario.REL_INCSCEN_ASSET);
+ * command.addRelationId("rel_person_incscen_modl");
+ * command = helper.execute(command);          
+ * graph = command.getGraph();
+
+ * dm = new GenericDataModel(graph, new String[]{
+ *   "asset<assetgroup.assetgroup_name",
+ *   "asset/asset_name", 
+ *   "asset/incident_scenario/incident_scenario_name"});
+ * dm.init();
+ * return dm.getResults(); 
+ * ============================================================================================
+ * </pre>
+ * 
+ * It returns a {@link List<List<String>}, so that a standard report table could be filled with that data
+ * 
+ * Syntax for Strings passed to constructor:<br>
+ * Strings are always constructed as a kind of path over different entity types and ending 
+ * with a property type. Entity types could be separated with 4 different operators:
+ * <pre>
+ *  - LINK_TYPE_DELIMITER = '/'
+ *      This separates two entity types that are linked to each other AND a entity type and the
+ *      property which should be put into the table
+ *      e.g.: asset/asset_name, asset/incident_scenario.incident_scenario_name
+ *  - CHILD_TYPE_DELIMITER = '>'
+ *      This separates two entity types that are in a parent>child relation
+ *       e.g.: baustein-umsetzung>massnahmen-umsetzung.mnums_name
+ *  - PARENT_TYPE_DELIMITER = '<'
+ *      This separates two entity types that are in a child<parent relation
+ *      e.g.: massnahmen-umsetzung<baustein-umsetzung.bstumsetzung_name
+ *  - PROPERTY_TYPE_DELIMITER = '.'
+ *      This separates an entity type from a property type of the entity
+ *      e.g.: asset.asset_name
+ * </pre>
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
 public class GenericDataModel {
 
@@ -43,10 +87,8 @@ public class GenericDataModel {
     
     private VeriniceGraph graph;
     private String[] columnStrings;
-    private List<ColumnLoader> columnLoaders;
+    private List<ColumnPath> columnPaths;
     private List<List<String>> resultTable;
-    
-    private Map<String, List<String[]>> rowMap;
     
     public GenericDataModel(VeriniceGraph graph, String[] columnStrings) {
         super();
@@ -63,23 +105,23 @@ public class GenericDataModel {
     }
     
     private void doInit()  {
-        createColumnLoader();
+        createColumnPaths();
         loadData();
         createResultTable();
     }
 
-    private void createColumnLoader() {
-        columnLoaders = new LinkedList<ColumnLoader>();
+    private void createColumnPaths() {
+        columnPaths = new LinkedList<ColumnPath>();
         int n = 0;
         for (String columnString : columnStrings) {
-            columnLoaders.add(new ColumnLoader(n, columnString));
+            columnPaths.add(new ColumnPath(n, columnString));
             n++;
         }       
     }
 
     private void loadData() {
-        for (ColumnLoader columnLoader : columnLoaders) {
-            columnLoader.load(this.graph);
+        for (ColumnPath columnPath : columnPaths) {
+            columnPath.load(this.graph);
         }        
     }
 
@@ -90,13 +132,13 @@ public class GenericDataModel {
 
     private Map<String, String[]> createMapWithAllRows() {
         Map<String, String[]> allRowMap = new HashMap<String, String[]>(); 
-        for (ColumnLoader columnLoader : columnLoaders) {
-            Map<String, String> valueMap = columnLoader.getValueMap();
+        for (ColumnPath columnPath : columnPaths) {
+            Map<String, String> valueMap = columnPath.getValueMap();
             Set<String> keySet = valueMap.keySet();
             for (String key : keySet) {
-                String[] row = new String[columnLoaders.size()];
-                row[columnLoader.getNumber()] = valueMap.get(key);
-                allRowMap.put(key + COLUMN_SEPERATOR + columnLoader.getNumber(), row);
+                String[] row = new String[columnPaths.size()];
+                row[columnPath.getNumber()] = valueMap.get(key);
+                allRowMap.put(key + COLUMN_SEPERATOR + columnPath.getNumber(), row);
             }
                        
         }

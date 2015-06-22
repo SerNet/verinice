@@ -19,12 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl.dynamictable;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 
 import org.apache.log4j.Logger;
 
@@ -36,6 +33,11 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * Path element in a column path definition which loads a property of an element.
+ * Delimiter for this path element is: IPathElement.DELIMITER_PROPERTY
+ * See GenericDataModel for a description of column path definitions.
+ * 
+ * @see GenericDataModel
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class PropertyElement implements IPathElement {
@@ -92,7 +94,7 @@ public class PropertyElement implements IPathElement {
      * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#createValueMap(java.util.Map, java.lang.String)
      */
     @Override
-    public Map<String, String> createValueMap(Map<String, String> map, String key) {
+    public Map<String, String> createResultMap(Map<String, String> map, String key) {
         Set<String> childKeySet = getResult().keySet();
         for (String childKey : childKeySet) {
             if(key.endsWith(childKey)) {
@@ -120,7 +122,7 @@ public class PropertyElement implements IPathElement {
     private String getPropertyValue(CnATreeElement element, String propertyId) {
         String value = element.getEntity().getSimpleValue(propertyId);
         PropertyType propertyType = getPropertyType(element.getTypeId(), propertyId);
-        if(propertyType.isURL()) {
+        if(propertyType!=null && propertyType.isURL()) {
             value = URLUtil.getHref(value);
         }      
         return value;

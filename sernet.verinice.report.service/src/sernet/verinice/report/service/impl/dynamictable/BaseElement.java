@@ -20,20 +20,17 @@
 package sernet.verinice.report.service.impl.dynamictable;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * Base class for path element Link-, Child and ParentElement
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public abstract class BaseElement implements IPathElement {
 
-    private static final String SEPERATOR = ".";
+    private static final String RESULT_KEY_SEPERATOR = ".";
     
     private String elementTypeId;
     private IPathElement child;
@@ -49,14 +46,14 @@ public abstract class BaseElement implements IPathElement {
         this.elementTypeId = elementTypeId;
     }
 
-    public Map<String, String> createValueMap(Map<String, String> map, String key) {
+    public Map<String, String> createResultMap(Map<String, String> map, String key) {
         Set<String> childKeySet = getResult().keySet();
         for (String childKey : childKeySet) {
             if(key==null || key.endsWith(childKey)) {
                 Set<String> resultKeySet = getResult().get(childKey).keySet();
                 for (String resultKey : resultKeySet) {
-                    String newKey = (key==null) ? resultKey : key + SEPERATOR + resultKey;
-                    child.createValueMap(map,  newKey);
+                    String newKey = (key==null) ? resultKey : key + RESULT_KEY_SEPERATOR + resultKey;
+                    child.createResultMap(map,  newKey);
                 }
             }
         }
@@ -91,8 +88,7 @@ public abstract class BaseElement implements IPathElement {
         this.elementTypeId = elementTypeId;
     }
     
-
-    
+   
     /* (non-Javadoc)
      * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#getResult()
      */

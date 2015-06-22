@@ -25,6 +25,11 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * A IPathElement is an element in a ColumnPath. 
+ * A ColumnPath is a description of a report column in GenericDataModel. 
+ * See GenericDataModel for a description of column path definitions.
+ * 
+ * @see GenericDataModel
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public interface IPathElement {
@@ -34,24 +39,55 @@ public interface IPathElement {
     public static final char DELIMITER_PARENT = '<';
     public static final char DELIMITER_PROPERTY = '.';
     
-
+    /**
+     * Loads the data of this path element from the verinice graph
+     * for a given parent element.
+     * 
+     * @param parent The parent element 
+     * @param graph The verinice graph with all relevant elements 
+     */
+    void load(CnATreeElement parent, VeriniceGraph graph);
     
     /**
-     * @param nextToken
+     * Creates the result map for this path element,
+     * adds it to the given map and returns it.
+     * 
+     * @param map A map with the results of the ancestors
+     * @param dbIds Db ids aof all elements in the path linked with dots
+     * @return The result map
      */
-    void setTypeId(String nextToken);
+    Map<String, String> createResultMap(Map<String, String> map, String dbIds);
     
     /**
-     * @param element 
-     * @param graph
+     * Returns the all results for this path in a map.
+     * Key of the map ist the db-id of the parent element.
+     * Value of the map is an inner map.
+     * 
+     * Key of the inner map is the db-id of an element, value
+     * of the inner map are the results for the db-id.
+     * 
+     * @return All results for this path
      */
-    void load(CnATreeElement element, VeriniceGraph graph);
-    
-    IPathElement getChild();
-    void setChild(IPathElement child);
-
     Map<String, Map<String, Object>> getResult();
     
-    Map<String, String> createValueMap(Map<String, String> map, String key);
+    /**
+     * Sets the type-id of this path element.
+     * The type-id is an element or relation type.
+     * 
+     * @param typeId The type-id of this path element
+     */
+    void setTypeId(String typeId);
+    
+    /**
+     * @return The next element in the path
+     */
+    IPathElement getChild();
+    
+    /**
+     * Sets the next element in the path
+     * 
+     * @param nextElement The next path element
+     */
+    void setChild(IPathElement nextElement); 
 
 }

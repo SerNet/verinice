@@ -45,6 +45,9 @@ public class Audit extends CnATreeElement implements IISO27kElement, IISO27kGrou
     public static final String PROP_CREATMAIL = "audit_isa_creatmail";
     public static final String PROP_STARTDATE = "audit_startdate";
     public static final String PROP_ENDDATE = "audit_enddate";
+    
+    public static final String REL_AUDIT_CONTROLGROUP = "rel_audit_controlgroup";
+    public static final String REL_AUDIT_CONTROL = "rel_audit_control";
 	
 	
 	public static final String[] CHILD_TYPES = new String[] {

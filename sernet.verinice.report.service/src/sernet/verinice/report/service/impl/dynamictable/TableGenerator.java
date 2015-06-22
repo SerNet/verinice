@@ -30,6 +30,10 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 /**
+ * Creates a table out of a map. The key of the map is a set of db-ids of
+ * elements linked with dots. Data format for the table is: 
+ * List<List<String>>.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class TableGenerator {
@@ -37,6 +41,8 @@ public class TableGenerator {
     private static final Logger LOG = Logger.getLogger(TableGenerator.class);
     
     public static final List<List<String>> createTable(Map<String, String[]> allRowMap) {
+        log(allRowMap);
+        
         allRowMap = cleanUpRows(allRowMap);  
         
         log(allRowMap);
@@ -79,7 +85,10 @@ public class TableGenerator {
             row2= allRowMap.get(key2);
             merged = checkRows(key1, row1, key2, row2, cleanMap);
         }    
-        cleanMap.put(key1, row1);
+        cleanMap.put(key1, row1);  
+        if(!merged) {
+            cleanMap.put(key2, row2);
+        }
         return cleanMap;
     }
 

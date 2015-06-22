@@ -58,10 +58,6 @@ import sernet.verinice.service.commands.UpdateElementEntity;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**
- * ISO27000 Business Impact Inheritence test.
- * See https://wiki.sernet.private/wiki/Verinice/Business_Impact_Inheritence/de
- * for a description of the test cases. 
- *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class GraphServiceTest extends BeforeEachVNAImportHelper {
