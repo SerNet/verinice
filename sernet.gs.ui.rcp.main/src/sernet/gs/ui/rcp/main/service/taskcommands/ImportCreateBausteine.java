@@ -32,6 +32,7 @@ import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
+import sernet.gs.scraper.GSScraper;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.ImportKostenUtil;
 import sernet.gs.ui.rcp.gsimport.TransferData;
@@ -165,7 +166,8 @@ public class ImportCreateBausteine extends GenericCommand {
 
     private BausteinUmsetzung createBaustein(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws Exception {
         Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
-
+        // TODO AK if none found it ma be ben.def. baustein
+        
         Integer refZobId = null;
         isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
             refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
@@ -175,7 +177,9 @@ public class ImportCreateBausteine extends GenericCommand {
         }
 
         if (baustein != null && refZobId == null) {
-                CreateBaustein command = new CreateBaustein(element, baustein, BSIKatalogInvisibleRoot.getInstance().getLanguage());
+                // BSIKatalogInvisibleRoot.getInstance().getLanguage() caused a classNotFound Exception here, fixed 
+                // but import now only works for German:
+                CreateBaustein command = new CreateBaustein(element, baustein, GSScraper.CATALOG_LANGUAGE_GERMAN);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
 
@@ -186,6 +190,7 @@ public class ImportCreateBausteine extends GenericCommand {
                 }
                 return bausteinUmsetzung;
         }
+        // TODO AK else create ben.def. baustein and transfer content from mbBaust to it instead
         return null;
     }
 

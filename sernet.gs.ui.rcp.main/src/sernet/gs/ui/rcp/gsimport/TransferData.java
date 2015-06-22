@@ -39,8 +39,11 @@ import sernet.gs.reveng.MbDringlichkeitTxt;
 import sernet.gs.reveng.MbRolleTxt;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
+import sernet.gs.reveng.importData.ESAResult;
 import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.NotizenMassnahmeResult;
+import sernet.gs.reveng.importData.RAGefaehrdungenResult;
+import sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.interfaces.CommandException;
@@ -86,6 +89,7 @@ public class TransferData {
 	public void transfer(ITVerbund itverbund, ZielobjektTypeResult result) throws CommandException {
 		NZielobjekt source = result.zielobjekt;
 		itverbund.setTitel(source.getName());
+		itverbund.setExtId(result.zielobjekt.getGuid());
 		CnAElementHome.getInstance().update(itverbund);
 	}
 
@@ -127,7 +131,91 @@ public class TransferData {
 			else if (typeId.equals(Raum.TYPE_ID)) {
 				typedTransfer((Raum)element, result);
 			}
-			
+		
+			// use GSTOOL guid as extId:
+			element.setExtId(result.zielobjekt.getGuid());
+	}
+	
+	/**
+	 * Transfer fields for "Ergänzende Sicherheitsanalyse" from GSTOOL to existing Zielobjekt.
+	 * @param target
+	 * @param esa
+	 */
+	public void transferESA(CnATreeElement target, ESAResult esa) {
+//	    Zielobjekt-erg.sich.analyse    
+//	    risikoanalyse J/N   nZobEsa esamsunj
+//	    begründung bes. einsatz J/N     Esaeinsatz 0 nein, 1 ja
+//	    begründung nicht mit bst. J/N       esamodellierung
+//	    Begründung-text     esabegründung
+//	    entscheidung        entscheiddurch oder 
+	    // TODO
+
+	}
+	
+	/**
+	 * Transfer gefaehrdungen to existing risikoanalyse object from GSTOOL import.
+	 * 
+	 * @param gefaehrdungen
+	 * @param risikoanalyse
+	 */
+	public void transferRAGefaehrdungen(List<RAGefaehrdungenResult> gefaehrdungen, CnATreeElement risikoanalyse) {
+	    // TODO
+//	    gefährdungsbewertung:
+//	        ----------------
+//	    vollständigkeit J/N
+//	    mechanismenstärke J/N
+//	    zuverlässigkeit J/N
+//	    vollst begr
+//	    mechan begr
+//	    zuverl begr
+//	    ausreichender schutz J/N
+//	    risikobehandlung A-D
+//	    Risikobehandlung begründung
+//	    durchf. Von
+//	    durchf. Bis
+//	    entscheider (link person)
+//	    datum der entscheidung
+//	    unterschrift liegt vor J/N
+//
+//	    Ben.def.gs gefährdung
+//	    --------------------
+//	    katalog
+//	    typ (bendef) RaZobGef.MyesnoByZgIndivYesId.yesId
+//	    nr
+//	    bezeichnung
+//	    version
+//	    gef.txt
+
+	}
+	
+	/**
+	 * Transfer all massnahmen from gstool to existing gefaehrdung underneath a risk analysis in vernice.
+	 * @param result
+	 * @param gefaehrdung
+	 */
+	public void transferRAGefaehrdungsMassnahmen(List<RAGefaehrdungsMassnahmenResult> result, CnATreeElement gefaehrdung) {
+//	    Ben.def.gs massnahme    
+//	    -------------------
+//	    katalog
+//	    typ (bendef)
+//	    nr
+//	    bezeichnung
+//	    version
+//	    maßnahmentext
+//
+//	    Massnahme-umsetzung    
+//	    -------------------
+//	    nr
+//	    bezeichnung
+//	    bautein nr (rB 99.10)
+//	    baustein name
+//	    priorität
+//	    erforderlich ab A, b, c...
+//	    Umsetzung J,n,...
+//	    Lebenszyklusphase
+
+
+	    //TODO
 	}
 	
 	
@@ -302,6 +390,7 @@ public class TransferData {
             return "B " + match.group(1) + "."
                     + Integer.parseInt(match.group(2));
         }
+        // TODO AK if none found return ben.def.baustein number
         return "";
     }
 	

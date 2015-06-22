@@ -93,6 +93,10 @@ public class ImportTask {
     private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
     private Map<NZielobjekt, CnATreeElement> alleZielobjekte = new HashMap<NZielobjekt, CnATreeElement>();
     private List<Person> allePersonen = new ArrayList<Person>();
+    
+    // map of zielobjekt-guid to itverbund NZielobjekt:
+    private Map<String, NZielobjekt> itverbundZuordnung = new HashMap<String, NZielobjekt>();
+    
     private boolean importBausteine;
     private boolean massnahmenPersonen;
     private boolean bausteinPersonen;
@@ -151,6 +155,14 @@ public class ImportTask {
             vampire = new GSVampire(conf.getAbsolutePath());
 
             zeiten = vampire.findZeiteinheitenTxtAll();
+            
+            // print all types and subtypes to debug, in case we need to add those to our mapping manually;
+            List<ZielobjektTypeResult> findZielobjektTypAll = vampire.findZielobjektTypAll();
+            LOG.debug("List of all ZO types in GSTOOL DB: ");
+            for (ZielobjektTypeResult zielobjektTypeResult : findZielobjektTypAll) {
+                LOG.debug(zielobjektTypeResult.subtype +"=" + zielobjektTypeResult.type);
+            }
+            
 
             transferData = new TransferData(vampire, importRollen);
             importZielobjekte();
@@ -232,50 +244,77 @@ public class ImportTask {
             monitor.beginTask("Lese Zielobjekte...", zielobjekte.size());
         }
 
+        // create special ITVerbund for elements that are not linked to an ItVerbund in GSTOOL
+        // these can exist and may have links to other objects that ARE linked to en ITVerbund, so we have to put them somewhere 
+
+        ITVerbund itverbundForOrphans =null;
+        
         // create all found ITVerbund first
         List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
-        for (ZielobjektTypeResult result : zielobjekte) {
+        for (ZielobjektTypeResult resultITV : zielobjekte) {
             try{
-                if (ITVerbund.TYPE_ID.equals(ImportZielobjektTypUtil.translateZielobjektType(result.type, result.subtype))) {
+                if (ITVerbund.TYPE_ID.equals(ImportZielobjektTypUtil.translateZielobjektType(resultITV.type, resultITV.subtype))) {
                     ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
                     neueVerbuende.add(itverbund);
                     monitor.worked(1);
 
                     // save element for later:
-                    alleZielobjekte.put(result.zielobjekt, itverbund);
+                    alleZielobjekte.put(resultITV.zielobjekt, itverbund);
 
-                    transferData.transfer(itverbund, result);
-                    createBausteine(sourceId, itverbund, result.zielobjekt);
+                    transferData.transfer(itverbund, resultITV);
+                    createBausteine(sourceId, itverbund, resultITV.zielobjekt);
+                    
+                    //save links from itverbuende to other objects to facilitate creating ZOs in their correct IT-Verbund:
+                    List<NZielobjekt> itvLinks = vampire.findLinksByZielobjekt(resultITV.zielobjekt);
+                    for (NZielobjekt nZielobjekt : itvLinks) {
+                        LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid()
+                                + ") to ITVerbund " + resultITV.zielobjekt.getName());
+                        itverbundZuordnung.put(nZielobjekt.getGuid(), resultITV.zielobjekt);
+                    }
                 }
             } catch (GSImportException e){
                 throw e;
             }
         }
+        
 
-        // create all Zielobjekte in first ITVerbund,
-        // TODO tag them with every ITVerbund the've been in
-        for (ZielobjektTypeResult result : zielobjekte) {
-            String typeId = ImportZielobjektTypUtil.translateZielobjektType(result.type, result.subtype);
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("GSTOOL type id " + result.type + " : " + result.subtype + " was translated to: " + typeId);
+        // create all Zielobjekte in their respective ITVerbund,
+        for (ZielobjektTypeResult resultZO : zielobjekte) {
+            String typeId = ImportZielobjektTypUtil.translateZielobjektType(resultZO.type, resultZO.subtype);
+            LOG.debug("GSTOOL type id " + resultZO.type + " : " + resultZO.subtype + " was translated to: " + typeId);
+            if (typeId.equals(ITVerbund.TYPE_ID)) {
+                continue;
             }
             CnATreeElement element = null;
             if(neueVerbuende.size() > 0){
-                element = CnAElementBuilder.getInstance().buildAndSave(neueVerbuende.get(0), typeId);
+                // find correct itverbund for resultZO
+                NZielobjekt origITVerbundZO = itverbundZuordnung.get(resultZO.zielobjekt.getGuid());
+                ITVerbund itverbund = (ITVerbund) alleZielobjekte.get(origITVerbundZO);
+                if (itverbund == null) {
+                    LOG.error("ITVerbund not found for ZO: " + resultZO.zielobjekt.getName() + ". Created in BSI");
+                    if (itverbundForOrphans==null) {
+                        itverbundForOrphans = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
+                        itverbundForOrphans.setTitel("---Waisenhaus: Zielobjekte ohne IT-Verbund-Zuordnung");
+                        CnAElementHome.getInstance().update(itverbundForOrphans);
+                    }
+                    itverbund = itverbundForOrphans;
+                }
+                LOG.debug("Creating ZO " + resultZO.zielobjekt.getName() + " in ITVerbund " + itverbund.getTitle());
+                element = CnAElementBuilder.getInstance().buildAndSave(itverbund, typeId);
             }
             if (element != null) {
                 // save element for later:
-                alleZielobjekte.put(result.zielobjekt, element);
+                alleZielobjekte.put(resultZO.zielobjekt, element);
 
-                // aditionally save persons:
+                // separately save persons:
                 if (element instanceof Person) {
                     allePersonen.add((Person) element);
                 }
 
-                transferData.transfer(element, result);
+                transferData.transfer(element, resultZO);
 
                 monitor.subTask(element.getTitle());
-                createBausteine(sourceId, element, result.zielobjekt);
+                createBausteine(sourceId, element, resultZO.zielobjekt);
 
                 CnAElementHome.getInstance().update(element);
                 monitor.worked(1);
@@ -284,7 +323,7 @@ public class ImportTask {
 
         monitor.subTask(defaultSubTaskDescription);
 
-        importMassnahmenVerknuepfungen();
+        importMassnahmenVerknuepfungen(); //this causes freezing
         monitor.subTask(defaultSubTaskDescription);
 
         // update this.alleMassnahmen
@@ -293,7 +332,7 @@ public class ImportTask {
         toUpdate.addAll(allMnUms);
         LOG.debug("Saving person links to measures.");
         monitor.subTask("Saving person links to measures.");
-        CnAElementHome.getInstance().update(toUpdate);
+        CnAElementHome.getInstance().update(toUpdate); // this times out
 
         importBausteinPersonVerknuepfungen();
         monitor.subTask(defaultSubTaskDescription);
@@ -406,11 +445,13 @@ public class ImportTask {
                 monitor.subTask(dependant.getTitle());
                 CnATreeElement dependencyElement = findZielobjektFor(dependency);
                 if (dependencyElement == null) {
-                    LOG.debug("Kein Ziel gefunden für Verknüpfung " + dependency.getName());
+                    LOG.debug("Kein Ziel gefunden für Verknüpfung von " + dependant.getTitle() + " zu ZO: " + dependency.getName());
                     continue;
                 }
                 LOG.debug("Neue Verknüpfung von " + dependant.getTitle() + " zu " + dependencyElement.getTitle());
 
+                
+                
                 // verinice models dependencies DOWN, not UP as the gstool.
                 // therefore we need to turn things around, except for persons,
                 // networks and itverbund

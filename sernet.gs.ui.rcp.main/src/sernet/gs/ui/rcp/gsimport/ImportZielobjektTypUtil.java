@@ -185,6 +185,7 @@ public abstract class ImportZielobjektTypUtil {
         
         Properties subProperties = new Properties();
         try {
+            LOG.debug("Using subtypes from subtypes.properties...");
             subProperties.load(ImportZielobjektTypUtil.class.getResourceAsStream("subtypes.properties"));
         } catch (Exception e) {
             LOG.warn("Can not load file subtypes.properties. Using standart subtypes.");
@@ -199,6 +200,7 @@ public abstract class ImportZielobjektTypUtil {
 	}
 
 	public static String translateZielobjektType(String zoTypeName, String zoSubtypeName) throws GSImportException{
+	    LOG.debug("LOG_Type_Subtype: " + zoTypeName + "°" + zoSubtypeName);
 		String type = GS_TYPES.get(zoTypeName);
 		if (type == null){
 			type = GS_ITSYSTEM_SUBTYPES.get(zoSubtypeName);
