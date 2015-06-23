@@ -35,9 +35,12 @@ import sernet.verinice.model.common.CnATreeElement;
 public interface IPathElement {
 
     public static final char DELIMITER_LINK = '/';
+    public static final char DELIMITER_LINK_TYPE = ':';
     public static final char DELIMITER_CHILD = '>';
     public static final char DELIMITER_PARENT = '<';
     public static final char DELIMITER_PROPERTY = '.';
+    
+    public static final String RESULT_KEY_SEPERATOR = ".";
     
     /**
      * Loads the data of this path element from the verinice graph

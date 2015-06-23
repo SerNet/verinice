@@ -52,7 +52,7 @@ public class ColumnPath {
     private void parseColumnString() {
         StringTokenizer st = new StringTokenizer(
                 columnString, 
-                new String(new char[]{IPathElement.DELIMITER_LINK,IPathElement.DELIMITER_CHILD,IPathElement.DELIMITER_PARENT,IPathElement.DELIMITER_PROPERTY}),
+                new String(new char[]{IPathElement.DELIMITER_LINK,IPathElement.DELIMITER_LINK_TYPE,IPathElement.DELIMITER_CHILD,IPathElement.DELIMITER_PARENT,IPathElement.DELIMITER_PROPERTY}),
                 true);
         if(st.hasMoreTokens()) {
             IPathElement  parentPathElement = new RootElement(st.nextToken());

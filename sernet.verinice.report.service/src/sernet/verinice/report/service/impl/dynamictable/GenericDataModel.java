@@ -49,6 +49,8 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
  * dm = new GenericDataModel(graph, new String[]{
  *   "asset<assetgroup.assetgroup_name",
  *   "asset/asset_name", 
+ *   "asset:person_iso", 
+ *   "asset/person_iso.person_iso_name", 
  *   "asset/incident_scenario/incident_scenario_name"});
  * dm.init();
  * return dm.getResults(); 
@@ -61,17 +63,20 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
  * Strings are always constructed as a kind of path over different entity types and ending 
  * with a property type. Entity types could be separated with 4 different operators:
  * <pre>
- *  - LINK_TYPE_DELIMITER = '/'
- *      This separates two entity types that are linked to each other AND a entity type and the
- *      property which should be put into the table
- *      e.g.: asset/asset_name, asset/incident_scenario.incident_scenario_name
- *  - CHILD_TYPE_DELIMITER = '>'
+ *  - LINK_DELIMITER = '/'
+ *      This separates two entity types that are linked to each other. Must be followed
+ *      by a PROPERTY_DELIMITER
+ *      e.g.: asset/person_iso, asset/incident_scenario
+ *  - LINK_TYPE_DELIMITER = ':'
+ *      This separates two entity types that are linked to each other. Outputs the type of the link
+ *      e.g.: asset:person_iso, control:person_iso/
+ *  - CHILD_DELIMITER = '>'
  *      This separates two entity types that are in a parent>child relation
  *       e.g.: baustein-umsetzung>massnahmen-umsetzung.mnums_name
- *  - PARENT_TYPE_DELIMITER = '<'
+ *  - PARENT_DELIMITER = '<'
  *      This separates two entity types that are in a child<parent relation
  *      e.g.: massnahmen-umsetzung<baustein-umsetzung.bstumsetzung_name
- *  - PROPERTY_TYPE_DELIMITER = '.'
+ *  - PROPERTY_DELIMITER = '.'
  *      This separates an entity type from a property type of the entity
  *      e.g.: asset.asset_name
  * </pre>

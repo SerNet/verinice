@@ -167,7 +167,7 @@ public class VeriniceGraph implements Serializable{
         Set<CnATreeElement> relatives = getLinkTargets(element, Edge.RELATIVES);
         for (CnATreeElement parentOrChild : relatives) {
             if(parentId != parentOrChild.getDbId()) {
-                children.add(parentOrChild);;
+                children.add(parentOrChild);
             }
         }
         return children;
@@ -259,6 +259,35 @@ public class VeriniceGraph implements Serializable{
             }
         }
         return linkTargets;
+    }
+    
+    /**
+     * Returns edges of an source element.
+     * Target types of edges are "elementTypeId".
+     * If there are no edges with targets of this type, an empty set is returned.
+     * 
+     * @param source Source element
+     * @param elementTypeId Type of edge targets
+     * @return A set of edges
+     */
+    public Set<Edge> getEdgesByElementType(CnATreeElement source, String elementTypeId) {
+        if (getLog().isDebugEnabled()) {
+            getLog().debug("Returning edges of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
+        }
+        Set<Edge> allEdgeSet = getGraph().edgesOf(source);
+        Set<Edge> edgeSet = new HashSet<Edge>();       
+        for (Edge edge : allEdgeSet) {        
+            CnATreeElement edgeSource = edge.getSource();
+            CnATreeElement edgeTarget = edge.getTarget();
+            CnATreeElement target = (edgeSource.equals(source)) ? edgeTarget : edgeSource;
+            if(elementTypeId==null || elementTypeId.equals(target.getTypeId())) {
+                edgeSet.add(edge);
+                if (getLog().isDebugEnabled()) {
+                    getLog().debug("Edge found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", edge type: " + edge.getType());
+                }
+            }
+        }
+        return edgeSet;
     }
     
     /**

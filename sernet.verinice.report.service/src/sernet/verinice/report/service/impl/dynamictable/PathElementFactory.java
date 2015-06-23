@@ -34,7 +34,9 @@ public final class PathElementFactory {
     public static IPathElement getElement(String delimiter) {
         switch (delimiter.toCharArray()[0]) {
         case IPathElement.DELIMITER_LINK:
-            return new LinkElement();    
+            return new LinkElement();   
+        case IPathElement.DELIMITER_LINK_TYPE:
+            return new LinkTypeElement();
         case IPathElement.DELIMITER_CHILD:
             return new ChildElement();    
         case IPathElement.DELIMITER_PARENT:

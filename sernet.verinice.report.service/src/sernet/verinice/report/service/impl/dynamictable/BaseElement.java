@@ -29,9 +29,7 @@ import java.util.Set;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public abstract class BaseElement implements IPathElement {
-
-    private static final String RESULT_KEY_SEPERATOR = ".";
-    
+ 
     private String elementTypeId;
     private IPathElement child;
     private Map<String,Map<String, Object>> result;
