@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.eclipse.osgi.util.NLS;
 
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
@@ -53,11 +52,10 @@ import com.opencsv.CSVWriter;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 public class CsvExport implements ICsvExport {
  
 
-    private static final String ERROR_MESSAGE = "Error while exporting search result to CSV";
+    private static final String ERROR_MESSAGE = "Error while exporting search result to CSV"; //$NON-NLS-1$
     
     private String filePath = FILE_PATH_DEFAULT;
 
@@ -129,7 +127,7 @@ public class CsvExport implements ICsvExport {
     }
 
     private void addLimitHint(int limit, CSVWriter csvWriter) {
-        csvWriter.writeNext(new String[]{NLS.bind(Messages.SearchView_11, limit)});
+        csvWriter.writeNext(new String[]{MessagesCsvExport.getString("CsvExport_1", limit)}); //$NON-NLS-1$
         
     }
 
