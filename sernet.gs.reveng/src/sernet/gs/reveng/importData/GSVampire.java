@@ -190,7 +190,7 @@ public class GSVampire {
 			+ "	and link.loeschDatum = null";
 
 	private static final String QUERY_RA_GEFS_FOR_ZIELOBJEKT = ""
-			+ "select new sernet.gs.reveng.importData.RAGefaehrdungenResult(z, g, gtxt, rabtxt.kurz) "
+			+ "select new sernet.gs.reveng.importData.RAGefaehrdungenResult(z, g, gtxt, rabtxt.kurz, rzg) "
 			+ "from " 
 			+ "	MbGefaehr g, MbGefaehrTxt gtxt,"
 			+ "	RaZobGef rzg, MsRaBehandTxt rabtxt, NZielobjekt z"
@@ -205,7 +205,7 @@ public class GSVampire {
 	
 	private static final String QUERY_RA_GEF_MNS_FOR_ZIELOBJEKT =  
 			"select new sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult("
-			+ "z, g, gtxt, rabtxt.kurz, m, mtxt)" +
+			+ "z, g, gtxt, rabtxt.kurz, m, mtxt, mzbm, umstxt)" +
 			" from RaZobGef rzg, " + 
 			"	RaZobGefMas rzgma," + 
 			"	MbGefaehr g," + 
@@ -213,14 +213,22 @@ public class GSVampire {
 			"	MsRaBehandTxt rabtxt," + 
 			"	NZielobjekt z," + 
 			"	MbMassn m," + 
-			"	MbMassnTxt mtxt" + 
+			"	MbMassnTxt mtxt, " + 
+			"   ModZobjBstMass mzbm," + 
+			"   MUmsetzStatTxt umsTxt " +
 			" where rzg.id.zobId = z.id.zobId" + 
 			"	and rzg.id.gefId = g.id.gefId" + 
 			"	and gtxt.id.gefId = g.id.gefId" + 
 			"	and rabtxt.id.rabId = rzg.msRaBehand.rabId" + 
 			"	and m.id.masId = rzgma.id.masId" + 
 			"	and rzgma.id.gefId = g.id.gefId" + 
-			"	and rzgma.id.zobId = z.id.zobId" + 
+			"	and rzgma.id.zobId = z.id.zobId" +
+			
+			"   and mzbm.id.masId = rzgma.id.masId" + 
+			"   and mzbm.id.zobId = z.id.zobId" + 
+			"   and umsTxt.id.ustId = mzbm.ustId" + 
+			"   and umsTxt.id.sprId = 1" + 
+			
 			"	and mtxt.id.masId = m.id.masId" + 
 			"	and z.id.zobId = :zobId" + 
 			"	and g.id.gefId = :gefId" + 
@@ -578,7 +586,11 @@ public class GSVampire {
 	}
 
 	/**
-	 * Finds "Gefährdungen" of "Risikoanalyse" for a "Zielobjekt"
+	 * Finds all "Gefährdungen" of "Risikoanalyse" for a "Zielobjekt".
+	 * The risk treatment option can be A,B,C,D. 
+	 * Gefaehrdungen with option "D" may have additional "massnahmen" linked to them. They have to be loaded separately using
+	 * the method <code>findRAGefaehrdungsMassnahmenForZielobjekt()</code> for each gefaehrdung.
+	 * 
 	 * @param zielobjekt
 	 * @return
 	 */
@@ -596,6 +608,14 @@ public class GSVampire {
 	
 	}
 
+	/**
+	 * Loads all "massnahmen" linked to a "gefaehrdung" of a "zielobjekt".
+	 * 
+	 * 
+	 * @param zielobjekt
+	 * @param gefaehrdung
+	 * @return
+	 */
 	public List<RAGefaehrdungsMassnahmenResult> findRAGefaehrdungsMassnahmenForZielobjekt(
 			NZielobjekt zielobjekt, MbGefaehr gefaehrdung) {
 		List result = new ArrayList();

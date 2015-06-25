@@ -39,7 +39,6 @@ import sernet.gs.ui.rcp.gsimport.TransferData;
 import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
-import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
@@ -84,13 +83,7 @@ public class ImportCreateBausteine extends GenericCommand {
 
     private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
 
-    // umsetzungs patterns in verinice
-    // leaving out "unbearbeitet" since this is the default:
-    private static final String[] UMSETZUNG_STATI_VN = new String[] { MassnahmenUmsetzung.P_UMSETZUNG_NEIN, MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, };
-
-    // umsetzungs patterns in gstool:
-    private static final String[] UMSETZUNG_STATI_GST = new String[] { "nein", "ja", "teilweise", "entbehrlich", };
-
+  
     public ImportCreateBausteine(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, List<MbZeiteinheitenTxt> zeiten, boolean kosten, boolean importUmsetzung, IBSIConfig bsiConfig) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
@@ -158,7 +151,7 @@ public class ImportCreateBausteine extends GenericCommand {
             }
 
         } catch (Exception e) {
-            getLog().error("Error while import: ", e);
+            getLog().error("Error while importing: ", e);
             throw new RuntimeCommandException(e);
         }
 
@@ -178,7 +171,8 @@ public class ImportCreateBausteine extends GenericCommand {
 
         if (baustein != null && refZobId == null) {
                 // BSIKatalogInvisibleRoot.getInstance().getLanguage() caused a classNotFound Exception here, fixed 
-                // but import now only works for German:
+                // but import now only works for German.
+                // this should be loaded from BSIMassnahmenModel which is the ITGS main model class
                 CreateBaustein command = new CreateBaustein(element, baustein, GSScraper.CATALOG_LANGUAGE_GERMAN);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
@@ -242,14 +236,7 @@ public class ImportCreateBausteine extends GenericCommand {
         return "";
     }
 
-    private void setUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung, String gstStatus) {
-        for (int i = 0; i < UMSETZUNG_STATI_GST.length; i++) {
-            if (UMSETZUNG_STATI_GST[i].equals(gstStatus)) {
-                massnahmenUmsetzung.setUmsetzung(UMSETZUNG_STATI_VN[i]);
-                return;
-            }
-        }
-    }
+   
 
     private void transferMassnahmen(BausteinUmsetzung bausteinUmsetzung, List<BausteineMassnahmenResult> list) {
         List<MassnahmenUmsetzung> massnahmenUmsetzungen = bausteinUmsetzung.getMassnahmenUmsetzungen();
@@ -257,13 +244,7 @@ public class ImportCreateBausteine extends GenericCommand {
             BausteineMassnahmenResult vorlage = TransferData.findMassnahmenVorlageBaustein(massnahmenUmsetzung, list);
             if (vorlage != null){
                 if (importUmsetzung) {
-                    // copy umsetzung:
-                    Short bearbeitet = vorlage.zoBst.getBearbeitetOrg();
-                    if (bearbeitet == BST_BEARBEITET_ENTBEHRLICH) {
-                        massnahmenUmsetzung.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
-                    } else {
-                        setUmsetzung(massnahmenUmsetzung, vorlage.umstxt.getName());
-                    }
+                    transferMassnahmeUmsetzungsStatus(massnahmenUmsetzung, vorlage);
                 }
 
                 // copy fields:
@@ -281,6 +262,20 @@ public class ImportCreateBausteine extends GenericCommand {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * @param massnahmenUmsetzung
+     * @param vorlage
+     */
+    private void transferMassnahmeUmsetzungsStatus(MassnahmenUmsetzung massnahmenUmsetzung, BausteineMassnahmenResult vorlage) {
+        // copy umsetzung:
+        Short bearbeitet = vorlage.zoBst.getBearbeitetOrg();
+        if (bearbeitet == BST_BEARBEITET_ENTBEHRLICH) {
+            massnahmenUmsetzung.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
+        } else {
+            TransferData.transferUmsetzung(massnahmenUmsetzung, vorlage.umstxt.getName());
         }
     }
 

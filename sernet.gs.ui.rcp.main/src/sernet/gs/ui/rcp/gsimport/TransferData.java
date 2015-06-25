@@ -18,7 +18,11 @@
 package sernet.gs.ui.rcp.gsimport;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.sql.Clob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,16 +34,20 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.rtf.RTFEditorKit;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.MbDringlichkeit;
 import sernet.gs.reveng.MbDringlichkeitId;
 import sernet.gs.reveng.MbDringlichkeitTxt;
+import sernet.gs.reveng.MbGefaehr;
 import sernet.gs.reveng.MbRolleTxt;
+import sernet.gs.reveng.MsUnj;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.reveng.importData.ESAResult;
+import sernet.gs.reveng.importData.GSDBConstants;
 import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.NotizenMassnahmeResult;
 import sernet.gs.reveng.importData.RAGefaehrdungenResult;
@@ -53,14 +61,19 @@ import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.NKKategorie;
 import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.OwnModulDecorator;
 
 /**
  * Utility class to convert result sets (from gstool databases) to verinice-objects.
@@ -72,6 +85,13 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class TransferData {
 	
+    // umsetzungs patterns in verinice
+    // leaving out "unbearbeitet" since this is the default:
+    private static final String[] UMSETZUNG_STATI_VN = new String[] { MassnahmenUmsetzung.P_UMSETZUNG_NEIN, MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, };
+
+    // umsetzungs patterns in gstool:
+    private static final String[] UMSETZUNG_STATI_GST = new String[] { "nein", "ja", "teilweise", "entbehrlich", };
+
 	
 	private GSVampire vampire;
 	private boolean importRollen;
@@ -81,9 +101,6 @@ public class TransferData {
 	  public TransferData(GSVampire vampire, boolean importRollen) {
 	        this.vampire = vampire;
 	        this.importRollen = importRollen ; 
-	        
-	      
-	        
 	    }
 
 	public void transfer(ITVerbund itverbund, ZielobjektTypeResult result) throws CommandException {
@@ -92,6 +109,15 @@ public class TransferData {
 		itverbund.setExtId(result.zielobjekt.getGuid());
 		CnAElementHome.getInstance().update(itverbund);
 	}
+	
+	 public static void transferUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung, String gstStatus) {
+	        for (int i = 0; i < UMSETZUNG_STATI_GST.length; i++) {
+	            if (UMSETZUNG_STATI_GST[i].equals(gstStatus)) {
+	                massnahmenUmsetzung.setUmsetzung(UMSETZUNG_STATI_VN[i]);
+	                return;
+	            }
+	        }
+	    }
 
 	public void transfer(CnATreeElement element, ZielobjektTypeResult result) {
 			String typeId = element.getTypeId();
@@ -148,52 +174,318 @@ public class TransferData {
 //	    begründung nicht mit bst. J/N       esamodellierung
 //	    Begründung-text     esabegründung
 //	    entscheidung        entscheiddurch oder 
-	    // TODO
-
+	    
+	    setEsaTrue(target, esa.getEinsatz(), esa.getModellierung());
+	    setRATrueFalse(target, esa.getUnj());
+	        
+	    String begruendung ="";
+	    if (esa.getEntscheidungDurch() != null && esa.getEntscheidungDurch().length()>0)
+	        begruendung += "Entscheidung durch: " + esa.getEntscheidungDurch() + "\n";
+	    begruendung += esa.getBegruendung();
+	    setEsaBegruendung (target, begruendung);
 	}
 	
 	/**
-	 * Transfer gefaehrdungen to existing risikoanalyse object from GSTOOL import.
+     * @param target
+     * @param begruendung
+     */
+    private void setEsaBegruendung(CnATreeElement target, String begruendung) {
+
+        if (target.getTypeId().equals(Raum.TYPE_ID)) {
+            target.setSimpleProperty("raum_risikoanalyse_begruendung", begruendung);
+        }
+        if (target.getTypeId().equals(Anwendung.TYPE_ID)) {
+            target.setSimpleProperty("anwendung_risikoanalyse_begruendung", begruendung);
+        }
+        if (target.getTypeId().equals(Client.TYPE_ID)) {
+            target.setSimpleProperty("client_risikoanalyse_begruendung",begruendung);
+        }
+        if (target.getTypeId().equals(Gebaeude.TYPE_ID)) {
+            target.setSimpleProperty("gebaeude_risikoanalyse_begruendung", begruendung);
+        }
+        if (target.getTypeId().equals(NetzKomponente.TYPE_ID)) {
+            target.setSimpleProperty("nkkomponente_risikoanalyse_begruendung", begruendung);
+        }
+        if (target.getTypeId().equals(Server.TYPE_ID)) {
+            target.setSimpleProperty("server_risikoanalyse_begruendung",begruendung);
+        }
+        if (target.getTypeId().equals(SonstIT.TYPE_ID)) {
+            target.setSimpleProperty("sonstit_risikoanalyse_begruendung", begruendung);
+        }
+        if (target.getTypeId().equals(TelefonKomponente.TYPE_ID)) {
+            target.setSimpleProperty("tkkomponente_risikoanalyse_begruendung", begruendung);
+        }   
+    
+    }
+
+    private void setRATrueFalse(CnATreeElement target, byte unj) {
+	    if (unj == GSDBConstants.UNJ_UNBEARBEITET)
+	        return;
+	    if (unj == GSDBConstants.UNJ_JA) {
+	        if (target.getTypeId().equals(Raum.TYPE_ID)) {
+	            target.setSimpleProperty("raum_risikoanalyse", "raum_risikoanalyse_noetig");
+	        }
+	        if (target.getTypeId().equals(Anwendung.TYPE_ID)) {
+	            target.setSimpleProperty("anwendung_risikoanalyse", "anwendung_risikoanalyse_noetig");
+	        }
+	        if (target.getTypeId().equals(Client.TYPE_ID)) {
+	            target.setSimpleProperty("client_risikoanalyse", "client_risikoanalyse_noetig");
+	        }
+	        if (target.getTypeId().equals(Gebaeude.TYPE_ID)) {
+	            target.setSimpleProperty("gebaeude_risikoanalyse", "gebaeude_risikoanalyse_noetig");
+	        }
+	        if (target.getTypeId().equals(NetzKomponente.TYPE_ID)) {
+	            target.setSimpleProperty("nkkomponente_risikoanalyse", "nkkomponente_risikoanalyse_noetig");
+	        }
+	        if (target.getTypeId().equals(Server.TYPE_ID)) {
+	            target.setSimpleProperty("server_risikoanalyse", "server_risikoanalyse_noetig");
+	        }
+	        if (target.getTypeId().equals(SonstIT.TYPE_ID)) {
+	            target.setSimpleProperty("sonstit_risikoanalyse", "sonstit_risikoanalyse_noetig");
+	        }
+	        if (target.getTypeId().equals(TelefonKomponente.TYPE_ID)) {
+	            target.setSimpleProperty("tkkomponente_risikoanalyse", "tkkomponente_risikoanalyse_noetig");
+	        }   
+	    }
+	    else if (unj == GSDBConstants.UNJ_NEIN) {
+            if (target.getTypeId().equals(Raum.TYPE_ID)) {
+                target.setSimpleProperty("raum_risikoanalyse", "raum_risikoanalyse_unnoetig");
+            }
+            if (target.getTypeId().equals(Anwendung.TYPE_ID)) {
+                target.setSimpleProperty("anwendung_risikoanalyse", "anwendung_risikoanalyse_unnoetig");
+            }
+            if (target.getTypeId().equals(Client.TYPE_ID)) {
+                target.setSimpleProperty("client_risikoanalyse", "client_risikoanalyse_unnoetig");
+            }
+            if (target.getTypeId().equals(Gebaeude.TYPE_ID)) {
+                target.setSimpleProperty("gebaeude_risikoanalyse", "gebaeude_risikoanalyse_unnoetig");
+            }
+            if (target.getTypeId().equals(NetzKomponente.TYPE_ID)) {
+                target.setSimpleProperty("nkkomponente_risikoanalyse", "nkkomponente_risikoanalyse_unnoetig");
+            }
+            if (target.getTypeId().equals(Server.TYPE_ID)) {
+                target.setSimpleProperty("server_risikoanalyse", "server_risikoanalyse_unnoetig");
+            }
+            if (target.getTypeId().equals(SonstIT.TYPE_ID)) {
+                target.setSimpleProperty("sonstit_risikoanalyse", "sonstit_risikoanalyse_unnoetig");
+            }
+            if (target.getTypeId().equals(TelefonKomponente.TYPE_ID)) {
+                target.setSimpleProperty("tkkomponente_risikoanalyse", "tkkomponente_risikoanalyse_unnoetig");
+            }   
+	    }
+	}
+	
+	private void setEsaTrue(CnATreeElement target, byte besondererEinsatz, byte nichtModellierbar ) {
+	    // one of the reasons has to be given, if not do nothing:
+	    if (besondererEinsatz==0 && nichtModellierbar==0)
+	        return;
+	    if (target.getTypeId().equals(Raum.TYPE_ID)) {
+	        target.setSimpleProperty("raum_ergaenzendeanalyse", "raum_ergaenzendeanalyse_modell");
+	    }
+	    if (target.getTypeId().equals(Anwendung.TYPE_ID)) {
+            target.setSimpleProperty("anwendung_ergaenzendeanalyse", "anwendung_ergaenzendeanalyse_modell");
+        }
+	    if (target.getTypeId().equals(Client.TYPE_ID)) {
+            target.setSimpleProperty("client_ergaenzendeanalyse", "client_ergaenzendeanalyse_modell");
+        }
+	    if (target.getTypeId().equals(Gebaeude.TYPE_ID)) {
+            target.setSimpleProperty("gebaeude_ergaenzendeanalyse", "gebaeude_ergaenzendeanalyse_modell");
+        }
+	    if (target.getTypeId().equals(NetzKomponente.TYPE_ID)) {
+            target.setSimpleProperty("nkkomponente_ergaenzendeanalyse", "nkkomponente_ergaenzendeanalyse_modell");
+        }
+	    if (target.getTypeId().equals(Server.TYPE_ID)) {
+            target.setSimpleProperty("server_ergaenzendeanalyse", "server_ergaenzendeanalyse_modell");
+        }
+	    if (target.getTypeId().equals(SonstIT.TYPE_ID)) {
+            target.setSimpleProperty("sonstit_ergaenzendeanalyse", "sonstit_ergaenzendeanalyse_modell");
+        }
+	    if (target.getTypeId().equals(TelefonKomponente.TYPE_ID)) {
+            target.setSimpleProperty("tkkomponente_ergaenzendeanalyse", "tkkomponente_ergaenzendeanalyse_modell");
+        }
+	}
+	
+	/**
+	 * Transfer "gefaehrdungen" to existing "gefaehrdungsumsetzung" object in a "risikoanalyse" parent.
 	 * 
 	 * @param gefaehrdungen
 	 * @param risikoanalyse
+	 * @throws IOException 
+	 * @throws SQLException 
 	 */
-	public void transferRAGefaehrdungen(List<RAGefaehrdungenResult> gefaehrdungen, CnATreeElement risikoanalyse) {
-	    // TODO
-//	    gefährdungsbewertung:
-//	        ----------------
-//	    vollständigkeit J/N
-//	    mechanismenstärke J/N
-//	    zuverlässigkeit J/N
-//	    vollst begr
-//	    mechan begr
-//	    zuverl begr
-//	    ausreichender schutz J/N
-//	    risikobehandlung A-D
-//	    Risikobehandlung begründung
-//	    durchf. Von
-//	    durchf. Bis
-//	    entscheider (link person)
-//	    datum der entscheidung
-//	    unterschrift liegt vor J/N
-//
-//	    Ben.def.gs gefährdung
-//	    --------------------
-//	    katalog
-//	    typ (bendef) RaZobGef.MyesnoByZgIndivYesId.yesId
-//	    nr
-//	    bezeichnung
-//	    version
-//	    gef.txt
+    public void transferRAGefaehrdungsUmsetzung(GefaehrdungsUmsetzung gefUms, RAGefaehrdungenResult ragResult) throws SQLException, IOException {
+//      gefährdungsbewertung:
+        
+//      vollständigkeit J/N
+//      mechanismenstärke J/N
+//      zuverlässigkeit J/N
+        transferGefaehrdungsBewertung( gefUms,
+            ragResult.getRzg().getMsUnjByZgVollstaUnjId(),
+            ragResult.getRzg().getMsUnjByZgStaerkeUnjId(),
+            ragResult.getRzg().getMsUnjByZgZuverlaUnjId()
+        );
+        
+        transferGefaehrdungsBewertungTxt( gefUms,
+            //      vollst begr
+            //      mechan begr
+            //      zuverl begr
+            ragResult.getRzg().getZgVollstaBegr(),
+            ragResult.getRzg().getZgStaerkeBegr(),
+            ragResult.getRzg().getZgZuverlaBegr(),
+        
+            //      unterschrift liegt vor J/N
+            ragResult.getRzg().getMsUnjByZgUnterUnjId(),
+            //      Risikobehandlung begründung
+            ragResult.getRzg().getZgRabBegr()
+        );
+        
+        // these dates are currently not transferred
+//      durchf. Von
+//        ragResult.getRzg().getZgDatumVon();
+//      durchf. Bis
+//        ragResult.getRzg().getZgDatumBis();
+        
+//      risikobehandlung A-D
+        gefUms.setSimpleProperty("gefaehrdungsumsetzung_alternative",String.valueOf(ragResult.getRisikobehandlungABCD())); 
+        
+//      ausreichender schutz J/N
+        if (ragResult.getRzg().getMsUnjByZgOkUnjId().getUnjId() == GSDBConstants.UNJ_JA)
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_okay", "gefaehrdungsumsetzung_okay_yes");
+        else if (ragResult.getRzg().getMsUnjByZgOkUnjId().getUnjId() == GSDBConstants.UNJ_NEIN)
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_okay", "gefaehrdungsumsetzung_okay_no");
 
-	}
-	
-	/**
-	 * Transfer all massnahmen from gstool to existing gefaehrdung underneath a risk analysis in vernice.
+        // we skip these: (from GSTOOL GUI, columns unknown, could be some of the four listed below:)
+        //      entscheider (link person)
+//      datum der entscheidung
+        
+//
+//      Ben.def.gs gefährdung
+//      --------------------
+//      nr
+//      katalog
+//      typ (bendef) RaZobGef.MyesnoByZgIndivYesId.yesId - wrong it's apparently mbgef.userdef
+//      bezeichnung
+//      version
+//      gef.txt
+        
+        String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
+        gefUms.setSimpleProperty("gefaehrdungsumsetzung_id", gefNr);
+        
+        gefUms.setDescription(convertClobToString(ragResult.getGefaehrdungTxt().getBeschreibung()));
+        
+        gefUms.setTitel(ragResult.getGefaehrdungTxt().getName());
+        gefUms.setUrl(ragResult.getGefaehrdung().getLink());
+    }
+
+    /**
+     * @param gefUms 
+     * @param zgVollstaBegr
+     * @param zgStaerkeBegr
+     * @param zgZuverlaBegr
+     * @param begruendungRisikobehandlung 
+     * @param unterschriftLiegtVor 
+     */
+    private void transferGefaehrdungsBewertungTxt(GefaehrdungsUmsetzung gefUms, String zgVollstaBegr, 
+            String zgStaerkeBegr, String zgZuverlaBegr, MsUnj unterschriftLiegtVor, String begruendungRisikobehandlung) {
+        StringBuilder sb = new StringBuilder();
+        
+        if (zgVollstaBegr != null && zgVollstaBegr.length()>0) {
+            sb.append("Bewertung ver Vollständigkeit:\n");
+            sb.append(zgVollstaBegr);
+        }
+        if (zgStaerkeBegr != null && zgStaerkeBegr.length()>0) {
+            sb.append("\n\nBewertung der Mechanismenstärke:\n");
+            sb.append(zgStaerkeBegr);
+            
+        }
+        if (zgZuverlaBegr != null && zgZuverlaBegr.length()>0) {
+            sb.append("\n\nBewertung der Zuverlässigkeit:\n");
+            sb.append(zgZuverlaBegr);
+        }
+        sb.append("\n\n");
+        
+        if (unterschriftLiegtVor.getUnjId() == GSDBConstants.UNJ_JA)
+            sb.append("Unterschrift liegt vor.\n\n");
+        if (unterschriftLiegtVor.getUnjId() == GSDBConstants.UNJ_NEIN)
+            sb.append("Unterschrift liegt nicht vor.\n\n");
+        
+        if (begruendungRisikobehandlung != null && begruendungRisikobehandlung.length()>0)
+            sb.append("Begründung der Risikobehandlung:\n" + begruendungRisikobehandlung);
+        
+        sb.append("\n\n" + gefUms.getEntity().getSimpleValue("gefaehrdungsumsetzung_erlaeuterung"));
+        
+        gefUms.setSimpleProperty("gefaehrdungsumsetzung_erlaeuterung", sb.toString());
+        
+        
+    }
+
+    /**
+     * @param gefUms
+     * @param msUnjByZgVollstaUnjId
+     * @param msUnjByZgStaerkeUnjId
+     * @param msUnjByZgZuverlaUnjId
+     */
+    private void transferGefaehrdungsBewertung(GefaehrdungsUmsetzung gefUms, MsUnj msUnjByZgVollstaUnjId,
+            MsUnj msUnjByZgStaerkeUnjId, MsUnj msUnjByZgZuverlaUnjId) {
+        if (msUnjByZgStaerkeUnjId.getUnjId() == GSDBConstants.UNJ_JA)
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_mechanismenstaerke", "gefaehrdungsumsetzung_mechanismenstaerke_ja");
+        if (msUnjByZgStaerkeUnjId.getUnjId() == GSDBConstants.UNJ_NEIN)
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_mechanismenstaerke", "gefaehrdungsumsetzung_mechanismenstaerke_nein");
+        
+        if (msUnjByZgVollstaUnjId.getUnjId()   == GSDBConstants.UNJ_JA)
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_vollstaendigkeit", "gefaehrdungsumsetzung_vollstaendigkeit_ja");
+        if (msUnjByZgVollstaUnjId.getUnjId()   == GSDBConstants.UNJ_NEIN)
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_vollstaendigkeit", "gefaehrdungsumsetzung_vollstaendigkeit_nein");
+        
+        if (msUnjByZgZuverlaUnjId.getUnjId()   == GSDBConstants.UNJ_JA)
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_zuverlaessigkeit", "gefaehrdungsumsetzung_zuverlaessigkeit_ja");
+        if (msUnjByZgZuverlaUnjId.getUnjId()   == GSDBConstants.UNJ_NEIN)
+            gefUms.setSimpleProperty("gefaehrdungsumsetzung_zuverlaessigkeit", "gefaehrdungsumsetzung_zuverlaessigkeit_nein");
+    }
+    
+    public boolean isUserDefGefaehrdung(MbGefaehr gefaehrdung) {
+        return gefaehrdung.getUserdef() == GSDBConstants.USERDEF_YES;
+    }
+
+    /**
+     * @param gefaehrdung
+     * @return
+     */
+    private String translateGefaehrdungsNr(MbGefaehr gefaehrdung) {
+     // this is how the displayed "number" has to be determined:
+        if (gefaehrdung.getUserdef() == GSDBConstants.USERDEF_YES) {
+            return "bG " + gefaehrdung.getGfkId() + "." + gefaehrdung.getNr();
+        }
+        else {
+            return  "G " + gefaehrdung.getGfkId() + "." + gefaehrdung.getNr();
+        }
+    }
+    
+    /** 
+     * Some columns are mapped by hibernate-console as CLOBS. This method converts them to strings.
+     * 
+     * @param clob
+     * @return
+     * @throws SQLException
+     * @throws IOException
+     */
+    public static String convertClobToString(Clob clob) throws SQLException, IOException {
+        InputStream in = clob.getAsciiStream();
+        StringWriter w = new StringWriter();
+        IOUtils.copy(in, w);
+        return w.toString();
+    }
+
+    /**
+	 * Transfer all data from one "massnahme" from gstool to existing "gefaehrdung" underneath a risk analysis in verinice.
+	 * 
 	 * @param result
 	 * @param gefaehrdung
+     * @throws IOException 
+     * @throws SQLException 
 	 */
-	public void transferRAGefaehrdungsMassnahmen(List<RAGefaehrdungsMassnahmenResult> result, CnATreeElement gefaehrdung) {
+	public void transferRAGefaehrdungsMassnahmen(RAGefaehrdungsMassnahmenResult ragmResult, GefaehrdungsUmsetzung gefUms,
+	        MassnahmenUmsetzung mnUms) throws SQLException, IOException {
 //	    Ben.def.gs massnahme    
 //	    -------------------
 //	    katalog
@@ -202,7 +494,16 @@ public class TransferData {
 //	    bezeichnung
 //	    version
 //	    maßnahmentext
-//
+	    
+	    String massnahmeNr = translateMassnahmenNr(ragmResult);
+	    mnUms.setSimpleProperty("mnums_id", massnahmeNr);
+	    mnUms.setTitel(ragmResult.getMassnahmeTxt().getName());
+	    mnUms.setErlaeuterung(convertClobToString(ragmResult.getMassnahmeTxt().getBeschreibung()));
+	    mnUms.setUrl(ragmResult.getMassnahme().getLink());
+	    transferUmsetzung(mnUms, ragmResult.getUmsTxt().getName());
+	    
+//      may be necessary for user defined bausteine:
+	    
 //	    Massnahme-umsetzung    
 //	    -------------------
 //	    nr
@@ -213,14 +514,29 @@ public class TransferData {
 //	    erforderlich ab A, b, c...
 //	    Umsetzung J,n,...
 //	    Lebenszyklusphase
-
-
-	    //TODO
+	    
 	}
 	
 	
+	public boolean isUserDefMassnahme(RAGefaehrdungsMassnahmenResult ragmResult) {
+	    return  ragmResult.getMassnahme().getUserdef() == GSDBConstants.USERDEF_YES;
+	}
 
-	private void typedTransfer(Anwendung element, ZielobjektTypeResult result) {
+	/**
+     * @param ragmResult
+     * @return
+     */
+    private String translateMassnahmenNr(RAGefaehrdungsMassnahmenResult ragmResult) {
+        if (ragmResult.getMassnahme().getUserdef() == GSDBConstants.USERDEF_YES) {
+            return "bM " + ragmResult.getMassnahme().getMskId() 
+                    + "." + ragmResult.getMassnahme().getNr();
+        } else {
+            return "M " + ragmResult.getMassnahme().getMskId() 
+                    + "." + ragmResult.getMassnahme().getNr();
+        }
+    }
+
+    private void typedTransfer(Anwendung element, ZielobjektTypeResult result) {
 		element.setTitel(result.zielobjekt.getName());
 		element.setKuerzel(result.zielobjekt.getKuerzel());
 		element.setErlaeuterung(result.zielobjekt.getBeschreibung());
@@ -458,6 +774,19 @@ public class TransferData {
         return resultList;
     
     
+    }
+
+    /**
+     * @param ownGefaehrdung
+     * @param ragResult
+     * @throws IOException 
+     * @throws SQLException 
+     */
+    public void transferOwnGefaehrdung(OwnGefaehrdung ownGefaehrdung, RAGefaehrdungenResult ragResult) throws SQLException, IOException {
+        String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
+        ownGefaehrdung.setId(gefNr);
+        ownGefaehrdung.setTitel(ragResult.getGefaehrdungTxt().getName());
+        ownGefaehrdung.setBeschreibung(  convertClobToString( ragResult.getGefaehrdungTxt().getBeschreibung() )  ) ;
     }
 
 }

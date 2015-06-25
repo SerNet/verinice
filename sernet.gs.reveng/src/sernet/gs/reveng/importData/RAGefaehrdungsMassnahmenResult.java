@@ -1,9 +1,11 @@
 package sernet.gs.reveng.importData;
 
+import sernet.gs.reveng.MUmsetzStatTxt;
 import sernet.gs.reveng.MbGefaehr;
 import sernet.gs.reveng.MbGefaehrTxt;
 import sernet.gs.reveng.MbMassn;
 import sernet.gs.reveng.MbMassnTxt;
+import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.NZielobjekt;
 
 public class RAGefaehrdungsMassnahmenResult {
@@ -22,13 +24,42 @@ public class RAGefaehrdungsMassnahmenResult {
 	private char risikobehandlungABCD;
 	private MbMassn massnahme;
 	private MbMassnTxt massnahmeTxt;
+    private ModZobjBstMass mzbm;
+    /**
+     * @return the mzbm
+     */
+    public ModZobjBstMass getMzbm() {
+        return mzbm;
+    }
+
+    /**
+     * @param mzbm the mzbm to set
+     */
+    public void setMzbm(ModZobjBstMass mzbm) {
+        this.mzbm = mzbm;
+    }
+
+    /**
+     * @return the umsTxt
+     */
+    public MUmsetzStatTxt getUmsTxt() {
+        return umsTxt;
+    }
+
+    /**
+     * @param umsTxt the umsTxt to set
+     */
+    public void setUmsTxt(MUmsetzStatTxt umsTxt) {
+        this.umsTxt = umsTxt;
+    }
+    private MUmsetzStatTxt umsTxt;
 	
 	
 	
 	public RAGefaehrdungsMassnahmenResult(NZielobjekt zielobjekt,
 			MbGefaehr gefaehrdung, MbGefaehrTxt gefaehrdungTxt,
 			char risikobehandlungABCD, MbMassn massnahme,
-			MbMassnTxt massnahmeTxt) {
+			MbMassnTxt massnahmeTxt, ModZobjBstMass mzbm, MUmsetzStatTxt umsTxt) {
 		super();
 		this.zielobjekt = zielobjekt;
 		this.gefaehrdung = gefaehrdung;
@@ -36,6 +67,8 @@ public class RAGefaehrdungsMassnahmenResult {
 		this.risikobehandlungABCD = risikobehandlungABCD;
 		this.massnahme = massnahme;
 		this.massnahmeTxt = massnahmeTxt;
+		this.mzbm = mzbm;
+		this.umsTxt = umsTxt;
 	}
 	
 	public NZielobjekt getZielobjekt() {

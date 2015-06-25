@@ -109,7 +109,18 @@ public class ImportTask {
     private Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
     private Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
 
-    public ImportTask(boolean bausteine, boolean massnahmenPersonen, boolean zielObjekteZielobjekte, boolean schutzbedarf, boolean importRollen, boolean kosten, boolean umsetzung, boolean bausteinPersonen) {
+    private String sourceId;
+
+
+    /**
+     * @return the sourceId
+     */
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public ImportTask(boolean bausteine, boolean massnahmenPersonen, boolean zielObjekteZielobjekte, boolean schutzbedarf, 
+            boolean importRollen, boolean kosten, boolean umsetzung, boolean bausteinPersonen) {
         this.importBausteine = bausteine;
         this.massnahmenPersonen = massnahmenPersonen;
         this.zielObjekteZielobjekte = zielObjekteZielobjekte;
@@ -165,7 +176,7 @@ public class ImportTask {
             
 
             transferData = new TransferData(vampire, importRollen);
-            importZielobjekte();
+            this.sourceId = importZielobjekte();
 
             // Set back the original context class loader.
             Thread.currentThread().setContextClassLoader(cl);
@@ -218,7 +229,14 @@ public class ImportTask {
         return dir.delete();
     }
 
-    private void importZielobjekte() throws Exception {
+    /**
+     * Imports all zielobjekte from GSTOOL with all selected properties.
+     * Returns the sourceID with which all objects have been created.
+     * 
+     * @return
+     * @throws Exception
+     */
+    private String importZielobjekte() throws Exception {
         // generate a sourceId for objects created by this import:
         final int maxUuidLength = 6;
         final String defaultSubTaskDescription = "Schreibe alle Objekte in Verinice-Datenbank...";
@@ -245,7 +263,7 @@ public class ImportTask {
         }
 
         // create special ITVerbund for elements that are not linked to an ItVerbund in GSTOOL
-        // these can exist and may have links to other objects that ARE linked to en ITVerbund, so we have to put them somewhere 
+        // these can exist and may have links to other objects that ARE linked to an ITVerbund, so we have to put them somewhere 
 
         ITVerbund itverbundForOrphans =null;
         
@@ -323,7 +341,7 @@ public class ImportTask {
 
         monitor.subTask(defaultSubTaskDescription);
 
-        importMassnahmenVerknuepfungen(); //this causes freezing
+        importMassnahmenVerknuepfungen(); 
         monitor.subTask(defaultSubTaskDescription);
 
         // update this.alleMassnahmen
@@ -332,7 +350,7 @@ public class ImportTask {
         toUpdate.addAll(allMnUms);
         LOG.debug("Saving person links to measures.");
         monitor.subTask("Saving person links to measures.");
-        CnAElementHome.getInstance().update(toUpdate); // this times out
+        CnAElementHome.getInstance().update(toUpdate); // FIXME this times out / freezes on big GSTOOL databases
 
         importBausteinPersonVerknuepfungen();
         monitor.subTask(defaultSubTaskDescription);
@@ -341,12 +359,12 @@ public class ImportTask {
         toUpdate = new ArrayList<CnATreeElement>();
         toUpdate.addAll(this.alleBausteineToBausteinUmsetzungMap.values());
         LOG.debug("Saving person links to modules.");
-        monitor.subTask("Saving person links to modules.");
+        monitor.subTask("Speichere Personenreferenzen zu Bausteinen.");
         
         CnAElementHome.getInstance().update(toUpdate);
 
         
-        importZielobjektVerknuepfungen();
+        importZielobjektVerknuepfungen(); // FIXME this times out / freezes on big GSTOOL databases
         monitor.subTask(defaultSubTaskDescription);
 
         importSchutzbedarf();
@@ -362,6 +380,8 @@ public class ImportTask {
             monitor.worked(1);
         }
         monitor.done();
+        
+        return sourceId;
     }
 
     /**

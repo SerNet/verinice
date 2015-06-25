@@ -33,7 +33,6 @@ public class GefaehrdungsUmsetzungFactory {
 		gefaehrdungsUmsetzung.setAlternative(GefaehrdungsUmsetzung.GEFAEHRDUNG_ALTERNATIVE_C);
 		gefaehrdungsUmsetzung.setOkay(true);
 		gefaehrdungsUmsetzung.setUrl(source.getUrl());
-
 		
 		gefaehrdungsUmsetzung.setKategorie(source.getKategorieAsString(language));
 		gefaehrdungsUmsetzung.setStand(source.getStand());

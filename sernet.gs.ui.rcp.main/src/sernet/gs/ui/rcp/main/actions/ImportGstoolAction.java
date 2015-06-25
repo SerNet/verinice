@@ -28,6 +28,7 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.gsimport.IProgress;
 import sernet.gs.ui.rcp.gsimport.ImportNotesTask;
+import sernet.gs.ui.rcp.gsimport.ImportRisikoanalysenTask;
 import sernet.gs.ui.rcp.gsimport.ImportTask;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -43,6 +44,8 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 public class ImportGstoolAction extends RightsEnabledAction {
 
 	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolaction";
+
+	private String sourceId;
 
     private IModelLoadListener loadListener = new IModelLoadListener() {
         
@@ -119,6 +122,7 @@ public class ImportGstoolAction extends RightsEnabledAction {
 			}
 			PlatformUI.getWorkbench().getProgressService().
 			busyCursorWhile(new IRunnableWithProgress() {
+
                 @Override
                 public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                     Activator.inheritVeriniceContextState();
@@ -131,7 +135,8 @@ public class ImportGstoolAction extends RightsEnabledAction {
 							dialog.isRollen(),
 							dialog.isKosten(),
 							dialog.isUmsetzung(),
-							dialog.isBausteinPersonen());
+							dialog.isBausteinPersonen()
+							);
                     try {
                         importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
                             @Override
@@ -157,6 +162,7 @@ public class ImportGstoolAction extends RightsEnabledAction {
                     } catch (Exception e) {
                         ExceptionUtil.log(e, Messages.ImportGstoolAction_1);
                     }
+                    sourceId = importTask.getSourceId();
                 }
             });
       	
@@ -193,6 +199,43 @@ public class ImportGstoolAction extends RightsEnabledAction {
 			        }
 			    });
 			}
+			
+			if (dialog.isRisikoanalysen()) {
+
+                PlatformUI.getWorkbench().getProgressService().
+                busyCursorWhile(new IRunnableWithProgress() {
+                    @Override
+                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                        Activator.inheritVeriniceContextState();
+
+                        ImportRisikoanalysenTask importTask = new ImportRisikoanalysenTask(sourceId);
+                        try {
+                            importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
+                                @Override
+                                public void done() {
+                                    monitor.done();
+                                }
+                                @Override
+                                public void worked(int work) {
+                                    monitor.worked(work);
+                                }
+                                @Override
+                                public void beginTask(String name, int totalWork) {
+                                    monitor.beginTask(name, totalWork);
+                                }
+                                @Override
+                                public void subTask(String name) {
+                                    monitor.subTask(name);
+                                }
+                            });
+                        } catch (Exception e) {
+                            ExceptionUtil.log(e.getCause(), Messages.ImportGstoolAction_2);
+                        }
+                    }
+                });
+            
+			}
+			
 		} catch (InvocationTargetException e) {
 			ExceptionUtil.log(e.getCause(), "Import aus dem Gstool fehlgeschlagen.");
 		} catch (InterruptedException e) {

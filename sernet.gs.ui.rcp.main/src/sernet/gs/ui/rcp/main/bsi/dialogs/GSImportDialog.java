@@ -52,6 +52,7 @@ public class GSImportDialog extends Dialog {
     protected boolean umsetzung = true;
     protected boolean bausteinPersonen = true;
     private boolean notizen = true;
+    private boolean risikoanalysen = true;
 
     public GSImportDialog(Shell shell) {
         super(shell);
@@ -190,6 +191,18 @@ public class GSImportDialog extends Dialog {
             }
         });
         button3.pack();
+        
+        final Button buttonRA = new Button(parent, SWT.CHECK);
+        buttonRA.setSelection(true);
+        buttonRA.setText("Erg. Sicherheitsanalysen & Risikoanalysen");
+        buttonRA.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent arg0) {
+                risikoanalysen = buttonRA.getSelection();
+            }
+        });
+        buttonRA.pack();
 
         return container;
 
@@ -238,6 +251,13 @@ public class GSImportDialog extends Dialog {
      */
     public boolean isNotizen() {
         return notizen;
+    }
+
+    /**
+     * @return
+     */
+    public boolean isRisikoanalysen() {
+        return risikoanalysen;
     }
 
 }
