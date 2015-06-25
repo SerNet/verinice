@@ -87,18 +87,22 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
         }
 	}
 
-	/**
-     * @param event
-     * @return
-     */
     private boolean propertyChanged() {       
         return (newServerMode!=null && !newServerMode.equals(oldServerMode))
                || (newUrl!=null &&  !newUrl.equals(oldUrl));
     }
 
     private void createRadioGroup() {
-		operationMode = new RadioGroupFieldEditor(PreferenceConstants.OPERATION_MODE, Messages.getString("ClientServerPreferencePage.4"), 1, new String[][] { { Messages.getString("ClientServerPreferencePage.5"), PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER }, { Messages.getString("ClientServerPreferencePage.6"), PreferenceConstants.OPERATION_MODE_REMOTE_SERVER } }, getFieldEditorParent()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		addField(operationMode);
+        String name = PreferenceConstants.OPERATION_MODE;
+        String labelText = Messages.getString("ClientServerPreferencePage.4"); //$NON-NLS-1$
+        String[][] labelAndValues = new String[][] {
+                        { Messages.getString("ClientServerPreferencePage.5"), //$NON-NLS-1$
+                          PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER},
+                        { Messages.getString("ClientServerPreferencePage.6"), //$NON-NLS-1$
+                          PreferenceConstants.OPERATION_MODE_REMOTE_SERVER }};
+
+        operationMode = new RadioGroupFieldEditor(name, labelText, 1, labelAndValues, getFieldEditorParent());
+        addField(operationMode);
 	}
 
 	/*
