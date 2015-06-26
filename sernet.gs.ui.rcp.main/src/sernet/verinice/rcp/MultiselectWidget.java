@@ -263,7 +263,7 @@ public abstract class MultiselectWidget<T> {
     protected boolean isItemVisible(T item) {
         boolean selected = preSelectedElements.contains(item);
         String itemLabel = getLabel(item);
-        boolean containsFilter = (filterString==null) || itemLabel.contains(filterString);
+        boolean containsFilter = (filterString==null) || itemLabel.toLowerCase().contains(filterString.toLowerCase());
         return (!isShowOnlySelected() || selected) && containsFilter;
     }
 
