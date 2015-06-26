@@ -22,28 +22,36 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.elasticsearch.action.ActionResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.junit.After;
 import org.junit.Test;
+import org.springframework.util.Assert;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
@@ -57,6 +65,7 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("unchecked")
 public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
     private static final Logger LOG = Logger.getLogger(ElasticsearchTest.class);
@@ -98,8 +107,8 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         assertNotNull("No element found with uuid: " + uuid, element);
         element.setTitel(name);
         String json = jsonBuilder.getJson(element);
-        assertTrue("JSON does not contain " + name + ": " + json, json.contains(name));
-        ActionResponse response = searchDao.update(uuid, json);
+        assertTrue("JSON does not contain " + name + ":VNA_FILENAME " + json, json.contains(name));
+        searchDao.update(uuid, json);
         result = findByTitle("Cryptogr");
         assertTrue("No element found with string: " + name, result.getHits() > 0);
     }
@@ -149,6 +158,64 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         assertTrue("Element found with 'Network' after clearing index.", result.getTotalHits() == 0);
         result = searchDao.findAll().getHits();
         assertTrue("Element found after clearing index.", result.getTotalHits() == 0);
+    }
+
+    @Test
+    public void findLongWord() {
+        searchIndexer.blockingIndexing();
+        String longWord = "automatically";
+
+        VeriniceSearchResult result = searchService.query(new VeriniceQuery(longWord, VeriniceQuery.MAX_LIMIT));
+        VeriniceSearchResultObject entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
+        Assert.notNull(entity, "Token \"" + longWord + "\" not found in " + VNA_FILENAME);
+
+        Set<VeriniceSearchResultRow> entities = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows();
+        Assert.isTrue(entities.size() == 1, "Token \"" + longWord + "\" should only match one time in " + VNA_FILENAME);
+
+        VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows().iterator().next();
+        Assert.notNull(element.getValueFromResultString(SamtTopic.PROP_DESC), "Token \"" + longWord + "\" is not in the right column " + SamtTopic.PROP_DESC);
+
+        Assert.isTrue(element.getValueFromResultString(SamtTopic.PROP_DESC).contains(longWord), "Token \"" + longWord + "\" is not in the right column " + SamtTopic.PROP_DESC);
+    }
+
+    @Test
+    public void findPhrases() {
+        searchIndexer.blockingIndexing();
+        String phrase = "ction from malware";
+
+        VeriniceSearchResult result = searchService.query(new VeriniceQuery(phrase, VeriniceQuery.MAX_LIMIT));
+        VeriniceSearchResultObject entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
+        Assert.notNull(entity, "Phrase \"" + phrase + "\" not found in " + VNA_FILENAME);
+
+        Set<VeriniceSearchResultRow> entities = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows();
+        Assert.isTrue(entities.size() == 1, "Phrase \"" + phrase + "\" should only match one time in " + VNA_FILENAME);
+
+        VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows().iterator().next();
+        Assert.notNull(element.getValueFromResultString(SamtTopic.PROP_DESC), "Phrase \"" + phrase + "\" is not in the right column " + SamtTopic.PROP_DESC);
+
+        Assert.isTrue(element.getValueFromResultString(SamtTopic.PROP_DESC).contains(phrase), "Phrase \"" + phrase + "\" is not in the right column " + SamtTopic.PROP_DESC);
+    }
+
+    private int getRandomInt(int limit) {
+        return new SecureRandom().nextInt(limit);
+    }
+
+    @Test
+    public void stressTest() throws InterruptedException {
+        searchIndexer.blockingIndexing();
+         ExecutorService executorService = Executors.newFixedThreadPool(30);
+//        ExecutorService executorService = new ForkJoinPool(java.lang.Runtime.getRuntime().availableProcessors());
+        CompletionService<VeriniceSearchResult> completionService = new ExecutorCompletionService<VeriniceSearchResult>(executorService);
+
+        String[] tokens = new String[] { "ction from malware", "sernet", "automatically", "a", "der", VeriniceQuery.EMPTY_QUERY };
+        final int NUMBER_OF_THREADS = 300;
+        for (int i = 0; i < NUMBER_OF_THREADS; i++) {
+            VeriniceQuery query = new VeriniceQuery(tokens[getRandomInt(tokens.length - 1)], getRandomInt(VeriniceQuery.MAX_LIMIT));
+            completionService.submit(new Task(i, query));
+        }
+
+        executorService.shutdown();
+        executorService.awaitTermination(60, TimeUnit.SECONDS);
     }
 
     @After
@@ -232,5 +299,39 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     @Override
     protected SyncParameter getSyncParameter() throws SyncParameterException {
         return new SyncParameter(true, true, true, false, SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV);
+    }
+
+    private final class Task implements Callable<VeriniceSearchResult> {
+
+        private int id;
+
+        private VeriniceQuery query;
+
+        public Task(int id, VeriniceQuery query) {
+            this.id = id;
+            this.query = query;
+        }
+
+        @Override
+        public VeriniceSearchResult call() throws Exception {
+            try {
+                long startTime = System.currentTimeMillis();
+                VeriniceSearchResult result = searchService.query(query);
+                long endTime = System.currentTimeMillis();
+
+                LOG.debug(this + " executed [" + query + "] in " + (TimeFormatter.getHumanRedableTime(endTime - startTime)) + " with " +  result.getHits() + " hits");
+
+                return result;
+            } catch (Throwable e) {
+                LOG.error(this + " failed with " + e.getLocalizedMessage(), e);
+                throw e;
+            }
+
+        }
+
+        @Override
+        public String toString() {
+            return "Task [id=" + id + "]";
+        }
     }
 }
