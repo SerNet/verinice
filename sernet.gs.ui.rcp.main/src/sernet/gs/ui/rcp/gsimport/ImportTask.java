@@ -23,6 +23,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -64,6 +65,7 @@ import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Link;
 
 import com.heatonresearch.datamover.DataMover;
 import com.heatonresearch.datamover.db.Database;
@@ -86,6 +88,8 @@ public class ImportTask {
     public static final int TYPE_MDB = 2;
 
     private IProgress monitor;
+    int numberOfElements;
+    int numberImported;
     private GSVampire vampire;
     private TransferData transferData;
 
@@ -256,10 +260,12 @@ public class ImportTask {
             ExceptionUtil.log(e, "Fehler beim Laden der Zielobjekte");
             throw e;
         }
+        numberOfElements = zielobjekte.size();
+        numberImported = 0;
         if (this.importBausteine) {
-            monitor.beginTask("Lese Zielobjekte, Bausteine und Massnahmen...", zielobjekte.size());
+            monitor.beginTask("Importiere Zielobjekte, Bausteine und Massnahmen...", numberOfElements);
         } else {
-            monitor.beginTask("Lese Zielobjekte...", zielobjekte.size());
+            monitor.beginTask("Importiere Zielobjekte...", numberOfElements);
         }
 
         // create special ITVerbund for elements that are not linked to an ItVerbund in GSTOOL
@@ -275,7 +281,8 @@ public class ImportTask {
                     ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
                     neueVerbuende.add(itverbund);
                     monitor.worked(1);
-
+                    numberImported++;
+                    
                     // save element for later:
                     alleZielobjekte.put(resultITV.zielobjekt, itverbund);
 
@@ -331,12 +338,14 @@ public class ImportTask {
 
                 transferData.transfer(element, resultZO);
 
-                monitor.subTask(element.getTitle());
+                monitor.subTask(numberImported + "/" + numberOfElements + " - " + element.getTitle());
                 createBausteine(sourceId, element, resultZO.zielobjekt);
 
                 CnAElementHome.getInstance().update(element);
                 monitor.worked(1);
+                numberImported++;
             }
+            
         }
 
         monitor.subTask(defaultSubTaskDescription);
@@ -349,8 +358,9 @@ public class ImportTask {
         ArrayList<CnATreeElement> toUpdate = new ArrayList<CnATreeElement>();
         toUpdate.addAll(allMnUms);
         LOG.debug("Saving person links to measures.");
-        monitor.subTask("Saving person links to measures.");
-        CnAElementHome.getInstance().update(toUpdate); // FIXME this times out / freezes on big GSTOOL databases
+        monitor.beginTask("Speichere Personenreferenzen in Maßnahmen....", toUpdate.size());
+        ElementListUpdater updater = new ElementListUpdater(toUpdate, monitor);
+        updater.execute();
 
         importBausteinPersonVerknuepfungen();
         monitor.subTask(defaultSubTaskDescription);
@@ -450,28 +460,25 @@ public class ImportTask {
 
     }
 
-    private void importZielobjektVerknuepfungen() {
+    private void importZielobjektVerknuepfungen() throws CommandException {
         if (!this.zielObjekteZielobjekte) {
             return;
-        }
-
-        monitor.beginTask("Importiere Verknüpfungen von Zielobjekten...", alleZielobjekte.size());
+        }  
         Set<NZielobjekt> allElements = alleZielobjekte.keySet();
+        List<Link> linkList = new LinkedList<Link>();
         for (NZielobjekt zielobjekt : allElements) {
             monitor.worked(1);
             CnATreeElement dependant = alleZielobjekte.get(zielobjekt);
             List<NZielobjekt> dependencies = vampire.findLinksByZielobjekt(zielobjekt);
+            
             for (NZielobjekt dependency : dependencies) {
-                monitor.subTask(dependant.getTitle());
                 CnATreeElement dependencyElement = findZielobjektFor(dependency);
                 if (dependencyElement == null) {
                     LOG.debug("Kein Ziel gefunden für Verknüpfung von " + dependant.getTitle() + " zu ZO: " + dependency.getName());
                     continue;
                 }
                 LOG.debug("Neue Verknüpfung von " + dependant.getTitle() + " zu " + dependencyElement.getTitle());
-
-                
-                
+               
                 // verinice models dependencies DOWN, not UP as the gstool.
                 // therefore we need to turn things around, except for persons,
                 // networks and itverbund
@@ -485,14 +492,13 @@ public class ImportTask {
                     from = dependencyElement;
                     to = dependant;
                 }
-
-                try {
-                    CnAElementHome.getInstance().createLink(from, to);
-                } catch (Exception e) {
-                    LOG.debug("Saving link failed."); //$NON-NLS-1$
-                }
-            }
+                linkList.add(new Link(from, to));
+            };
         }
+        LinkCreater linkCreater = new LinkCreater(linkList, monitor);
+        int n = linkList.size();
+        monitor.beginTask("Importiere Verknüpfungen von Zielobjekten (" + n + ")...", n);
+        linkCreater.execute();
     }
 
     private CnATreeElement findZielobjektFor(NZielobjekt dependency) {
@@ -510,9 +516,12 @@ public class ImportTask {
         }
 
         monitor.beginTask("Verknüpfe verantwortliche Ansprechpartner mit Massnahmen...", alleMassnahmen.size());
+        int n = alleMassnahmen.keySet().size();
+        int current = 1;
         for (ModZobjBstMass obm : alleMassnahmen.keySet()) {
             monitor.worked(1);
-            monitor.subTask(alleMassnahmen.get(obm).getTitle());
+            monitor.subTask(current + "/" + n + " - " + alleMassnahmen.get(obm).getTitle());
+            current++;
             // transferiere individuell verknüpfte verantowrtliche in massnahmen
             // (TAB "Verantwortlich" im GSTOOL):
             Set<NZielobjekt> personenSrc = vampire.findVerantowrtlicheMitarbeiterForMassnahme(obm.getId());
@@ -591,7 +600,7 @@ public class ImportTask {
 
         Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
 
-        this.monitor.subTask("Erstelle " + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.keySet().size() + " Bausteinen und " + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Massnahmen...");
+        this.monitor.subTask(numberImported + "/" + numberOfElements + " - Erstelle " + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.keySet().size() + " Baust. und " + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Massn..." );
 
         ImportCreateBausteine command;
         ServiceFactory.lookupAuthService();
