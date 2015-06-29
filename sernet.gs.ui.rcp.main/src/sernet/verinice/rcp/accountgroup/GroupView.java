@@ -91,7 +91,6 @@ import sernet.verinice.rcp.account.AccountWizard;
 public class GroupView extends RightsEnabledView implements SelectionListener, KeyListener, MouseListener, IModelLoadListener {
 
     private static final Logger LOG = Logger.getLogger(GroupView.class);  
-    private static final String EMPTY_STRING = "";
     private static final Collator COLLATOR = Collator.getInstance();
     
     public static final String ID = "sernet.verinice.rcp.accountgroup.GroupView";   
@@ -99,29 +98,29 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     IAccountGroupViewDataService accountGroupDataService;
     IAccountService accountService;
     
-    private Action newGroup;
-    private Action deleteGroup;
-    private Action editGroup;
+    private String[] accountGroups;   
+    private String[] accounts;
+    private Set<String> accountsInGroup = new TreeSet<String>(COLLATOR);
     
-    private String[] accountGroupArray;   
-    private String[] accountArray;  
-    private Set<String> accountinGroupSet = new TreeSet<String>(COLLATOR);
+    private IModelLoadListener modelLoadListener;
+    private AccountLabelProvider accountLabelProvider;
+    private AccountLabelProvider groupLabelProvider;
     
+    // SWT & JFace
     Composite parent;
     private Composite groupViewComposite;
+    private Text quickFilter;
     private TableViewer tableAccounts;
-    private TableViewer tableGroupToAccounts;    
-    TableViewer tableGroups;
+    private TableViewer tableGroupToAccounts;
+    TableViewer groupsTable;
     private Button addBtn;
     private Button addAllBtn;
     private Button removeBtn;
     private Button removeAllBtn;
     private Button editAccountBtn;
-    private Text quickFilter;  
-    
-    private IModelLoadListener modelLoadListener;
-    private AccountLabelProvider accountLabelProvider;
-    private AccountLabelProvider groupLabelProvider;
+    private Action newGroup;
+    private Action deleteGroup;
+    private Action editGroup;
     
     public GroupView(){
         super();
@@ -131,7 +130,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             createModelLoadListener();         
         }      
     }
-
     
     private void createModelLoadListener() {
         // model is not loaded yet: add a listener to load data when it's loaded
@@ -155,7 +153,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     @Override
     public void createPartControl(Composite parent) {
-
+        
         super.createPartControl(parent);
         this.parent = parent;
         this.accountService = ServiceFactory.lookupAccountService();
@@ -165,128 +163,66 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     private void setupView() {
-
         initMainComposite();
-
-        initLabelForAccountGroupList();
-
-        initQuickFilter();
-
-        initLists();
+        initLabels();
+        initAccountGroupList();
+        initAccountsInGroupList();
+        initButtons();
+        initAccountsList();
         
         switchButtons(false);
-        
         updateAllLists();
     }
 
-    private void initLabelForAccountGroupList() {
-        final int horizontalLabelSpan = 4;
-        Label groupLabel = new Label(groupViewComposite, SWT.NULL);
-        groupLabel.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        ((GridData) groupLabel.getLayoutData()).horizontalSpan = horizontalLabelSpan;
-        groupLabel.setText(Messages.GroupView_2);
-    }
-
-    private void initQuickFilter() {
-        quickFilter = new Text(groupViewComposite, SWT.SINGLE | SWT.BORDER);
-        GridData fastFilterGridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-        quickFilter.setLayoutData(fastFilterGridData);
-        quickFilter.addKeyListener(this);
-        
-        Label placeholder = new Label(groupViewComposite, SWT.NULL);
-        GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
-        gridData.horizontalSpan = 3;
-        placeholder.setLayoutData(gridData);
-    }
-
     private void initMainComposite() {
-
         final int gridColumns = 4;
-
         groupViewComposite = new Composite(parent, SWT.FILL);
         GridLayout gridLayout = new GridLayout();
         groupViewComposite.setLayout(gridLayout);
         gridLayout.numColumns = gridColumns;
-        groupViewComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        groupViewComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
     }
-
-    private Group initButtonGroupComposite() {
-        final int gridColumns = 1;
-        Group connectGroupsWithAccounts = new Group(groupViewComposite, SWT.NULL);
-        connectGroupsWithAccounts.setLayout(new GridLayout());
-        ((GridLayout) connectGroupsWithAccounts.getLayout()).numColumns = gridColumns;
-        connectGroupsWithAccounts.setLayoutData(new GridData(GridData.FILL_VERTICAL));
-        return connectGroupsWithAccounts;
-    }
-
-    private void initLists() {
+    
+    private void initLabels() {
+        Label groupLabel = new Label(groupViewComposite, SWT.NULL);
+        groupLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        groupLabel.setText(Messages.GroupView_2);
         
-        initGroupList();
-
-        initGroupToAccountList();
-
-        Group buttonGroupComposite = initButtonGroupComposite();
-        initButtons(buttonGroupComposite);
-
-        initAccountList();
+        Label accountsInGroupLabel = new Label(groupViewComposite, SWT.NULL);
+        accountsInGroupLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        accountsInGroupLabel.setText(Messages.GroupView_3);
         
-    }
+        Label placeholder = new Label(groupViewComposite, SWT.NULL);
+        placeholder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-    private void initAccountList() {
-        Composite leftComposite = new Composite(groupViewComposite, SWT.NONE);
+        Label accounts = new Label(groupViewComposite, SWT.NULL);
+        accounts.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        accounts.setText(Messages.GroupView_4);
+    }
+    
+    private void initAccountGroupList() {
+        Group accountGroupGroup = new Group(groupViewComposite, SWT.NULL);
+        accountGroupGroup.setLayout(new GridLayout());
+        accountGroupGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
+        
+        quickFilter = new Text(accountGroupGroup, SWT.SINGLE | SWT.BORDER);
+        GridData quickFilterGridData = new GridData(SWT.FILL, SWT.FILL, true, false);
+        quickFilter.setLayoutData(quickFilterGridData);
+        quickFilter.addKeyListener(this);
+        
+        Composite accountGroupsList = new Composite(accountGroupGroup, SWT.NULL);
         GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         gridData.widthHint = 40;
-        leftComposite.setLayoutData(gridData);
+        accountGroupsList.setLayoutData(gridData);
         GridLayout gridLayout = new GridLayout(1, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
-        leftComposite.setLayout(gridLayout);        
+        accountGroupsList.setLayout(gridLayout);
         
-        tableAccounts = createTable(leftComposite, Messages.GroupView_4);
-        
-        tableAccounts.setContentProvider(new AccountContentProvider(tableAccounts));
-        tableAccounts.setLabelProvider(accountLabelProvider = new AccountLabelProvider());
-        tableAccounts.setComparator(new AccountComparator()); 
-
-        tableAccounts.refresh(true);
-    }
-
-    private void initGroupToAccountList() {
-        Composite leftComposite = new Composite(groupViewComposite, SWT.NONE);
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.widthHint = 40;
-        leftComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(1, false);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        leftComposite.setLayout(gridLayout);        
-        
-        tableGroupToAccounts = createTable(leftComposite, Messages.GroupView_3);
-        
-        tableGroupToAccounts.setContentProvider(new AccountContentProvider(tableGroupToAccounts));
-        tableGroupToAccounts.setLabelProvider(groupLabelProvider = new AccountLabelProvider());
-        tableGroupToAccounts.setComparator(new AccountComparator());
-        
-        tableGroupToAccounts.refresh(true);
-        
-    }
-
-    private void initGroupList() {
-        Composite leftComposite = new Composite(groupViewComposite, SWT.NONE);
-        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        gridData.widthHint = 40;
-        leftComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(1, false);
-        gridLayout.marginHeight = 0;
-        gridLayout.marginWidth = 0;
-        leftComposite.setLayout(gridLayout);        
-        
-        tableGroups = createTable(leftComposite, EMPTY_STRING);
-        
-        tableGroups.setContentProvider(new AccountContentProvider(tableGroups));
-        tableGroups.setLabelProvider(new AccountLabelProvider(null));
-        
-        tableGroups.addSelectionChangedListener(new ISelectionChangedListener() {
+        groupsTable = createTable(accountGroupsList);      
+        groupsTable.setContentProvider(new AccountContentProvider(groupsTable));
+        groupsTable.setLabelProvider(new AccountLabelProvider(null));      
+        groupsTable.addSelectionChangedListener(new ISelectionChangedListener() {
             
             @Override
             public void selectionChanged(SelectionChangedEvent e) {
@@ -294,36 +230,75 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                 h.handleSelection(e);
             }
         });
-        tableGroups.setInput(new PlaceHolder(Messages.GroupView_41));
-        tableGroups.refresh(true);
-        
+        groupsTable.setInput(new PlaceHolder(Messages.GroupView_41));
+        groupsTable.refresh(true);
     }
+    
+    private void initAccountsInGroupList() {
+        Composite leftComposite = new Composite(groupViewComposite, SWT.NULL);
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gridData.widthHint = 40;
+        leftComposite.setLayoutData(gridData);
+        GridLayout gridLayout = new GridLayout(1, false);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        leftComposite.setLayout(gridLayout);        
+        
+        tableGroupToAccounts = createTable(leftComposite);    
+        tableGroupToAccounts.setContentProvider(new AccountContentProvider(tableGroupToAccounts));
+        tableGroupToAccounts.setLabelProvider(groupLabelProvider = new AccountLabelProvider());
+        tableGroupToAccounts.setComparator(new AccountComparator());       
+        tableGroupToAccounts.refresh(true);   
+    }
+    
+    private void initButtons() {
+        Group buttonsGroup = new Group(groupViewComposite, SWT.NULL);
+        buttonsGroup.setLayout(new GridLayout());
+        buttonsGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
 
-    private void initButtons(Group connectGroupsWithAccounts) {
-        addBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
-        addBtn.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+        addBtn = new Button(buttonsGroup, SWT.NULL);
+        addBtn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         addBtn.setText(Messages.GroupView_5);
         addBtn.addSelectionListener(this);
 
-        addAllBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
-        addAllBtn.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+        addAllBtn = new Button(buttonsGroup, SWT.NULL);
+        addAllBtn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         addAllBtn.setText(Messages.GroupView_6);
         addAllBtn.addSelectionListener(this);
 
-        removeBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
-        removeBtn.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+        removeBtn = new Button(buttonsGroup, SWT.NULL);
+        removeBtn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         removeBtn.setText(Messages.GroupView_7);
         removeBtn.addSelectionListener(this);
 
-        removeAllBtn = new Button(connectGroupsWithAccounts, SWT.NULL);
-        removeAllBtn.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL));
+        removeAllBtn = new Button(buttonsGroup, SWT.NULL);
+        removeAllBtn.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         removeAllBtn.setText(Messages.GroupView_8);
         removeAllBtn.addSelectionListener(this);
 
-        editAccountBtn = new Button(connectGroupsWithAccounts, SWT.END);
+        editAccountBtn = new Button(buttonsGroup, SWT.END);
         editAccountBtn.setLayoutData(new GridData(SWT.FILL, SWT.BOTTOM, true, true));
         editAccountBtn.setText(Messages.GroupView_9);
         editAccountBtn.addSelectionListener(this);
+    }
+    
+    private void initAccountsList() {
+        Composite leftComposite = new Composite(groupViewComposite, SWT.NULL);
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
+        gridData.widthHint = 40;
+        leftComposite.setLayoutData(gridData);
+        GridLayout gridLayout = new GridLayout(1, false);
+        gridLayout.marginHeight = 0;
+        gridLayout.marginWidth = 0;
+        leftComposite.setLayout(gridLayout);        
+        
+        tableAccounts = createTable(leftComposite);
+        
+        tableAccounts.setContentProvider(new AccountContentProvider(tableAccounts));
+        tableAccounts.setLabelProvider(accountLabelProvider = new AccountLabelProvider());
+        tableAccounts.setComparator(new AccountComparator()); 
+        
+        tableAccounts.refresh(true);
     }
 
     private void makeActions() {
@@ -379,8 +354,8 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     private void addAccounts(String[] selectedAccounts) {
         String[] accounts = accountGroupDataService.saveAccountGroupData(getSelectedGroup(), selectedAccounts);
         for (String account : accounts) {
-            if(!accountinGroupSet.contains(account)){
-                accountinGroupSet.add(account);
+            if(!accountsInGroup.contains(account)){
+                accountsInGroup.add(account);
             }
         }
     }
@@ -388,7 +363,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     private void removeAccounts(String[] accounts) {
         String[] items = accountGroupDataService.deleteAccountGroupData(getSelectedGroup(), accounts);
         for (String i : items) {
-            accountinGroupSet.remove(i);
+            accountsInGroup.remove(i);
         }
     }
 
@@ -434,10 +409,10 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         private void handleSelection(final EventObject e) {
             if (isGroupSelected()) {
                 switchButtons(true);
-                if (e.getSource() == tableGroups) {
+                if (e.getSource() == groupsTable) {
                     String[] accounts = accountGroupDataService.getAccountNamesForGroup(getSelectedGroup());
-                    accountinGroupSet.clear();
-                    accountinGroupSet.addAll(Arrays.asList(accounts));
+                    accountsInGroup.clear();
+                    accountsInGroup.addAll(Arrays.asList(accounts));
                 }
 
                 else if (e.getSource() == tableGroupToAccounts) {
@@ -454,7 +429,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                 }
 
                 else if (e.getSource() == addAllBtn) {
-                    addAllAccounts(accountArray);
+                    addAllAccounts(accounts);
                 }
 
                 else if (e.getSource() == removeBtn) {
@@ -463,7 +438,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                 }
 
                 else if (e.getSource() == removeAllBtn) {
-                    Set set = (Set)tableGroupToAccounts.getInput();
+                    Set<?> set = (Set<?>)tableGroupToAccounts.getInput();
                     removeAllAccounts(Arrays.copyOf(set.toArray(), set.size(), String[].class));
                 }
                 updateAllLists();
@@ -530,42 +505,34 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                 }
             }
             tableAccounts.refresh(true);
-            tableGroups.refresh(true);
+            groupsTable.refresh(true);
             tableGroupToAccounts.refresh(true);
         } catch(Exception e){
             LOG.error("Error while setting data to ui widgets",e );
         }
     }
 
-
-    /**
-     * 
-     */
     private void updateAccountList() {
         if(accountGroupDataService != null && accountGroupDataService.getAllAccounts() != null){
-            accountArray = accountGroupDataService.getAllAccounts();
+            accounts = accountGroupDataService.getAllAccounts();
             // remove accounts that are enlisted in tableToGroupAccounts
-            for(String account : accountinGroupSet){
-                if(ArrayUtils.contains(accountArray, account)){
-                    accountArray = (String[])ArrayUtils.remove(accountArray, ArrayUtils.indexOf(accountArray, account));
+            for(String account : accountsInGroup){
+                if(ArrayUtils.contains(accounts, account)){
+                    accounts = (String[])ArrayUtils.remove(accounts, ArrayUtils.indexOf(accounts, account));
                 }
             }
-            Arrays.sort(accountArray, COLLATOR);
-            tableAccounts.setInput(accountArray);
+            Arrays.sort(accounts, COLLATOR);
+            tableAccounts.setInput(accounts);
         }
     }
 
-
-    /**
-     * 
-     */
     private void updateGroupToAccountList() {
         if (isGroupSelected()) {
-            accountinGroupSet.clear();
+            accountsInGroup.clear();
             String group = getSelectedGroup();
             String[] names = accountGroupDataService.getAccountNamesForGroup(group);
-            accountinGroupSet.addAll(Arrays.asList(names));                  
-            tableGroupToAccounts.setInput(accountinGroupSet);
+            accountsInGroup.addAll(Arrays.asList(names));                  
+            tableGroupToAccounts.setInput(accountsInGroup);
         }
     }
 
@@ -574,7 +541,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         if(accountGroupDataService != null && accountGroupDataService.getAccountGroups() != null){
             String[] allAccountGroups = accountGroupDataService.getAccountGroups();
             if (text==null || text.isEmpty()) {
-                accountGroupArray= allAccountGroups;
+                accountGroups= allAccountGroups;
             } else {
                 List<String> filteredList = new LinkedList<String>();
                 for (String group : allAccountGroups) {
@@ -582,10 +549,10 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
                         filteredList.add(group);
                     }
                 }
-                accountGroupArray =  filteredList.toArray(new String[filteredList.size()]);
+                accountGroups =  filteredList.toArray(new String[filteredList.size()]);
             }        
-            Arrays.sort(accountGroupArray, COLLATOR);
-            tableGroups.setInput(accountGroupArray);
+            Arrays.sort(accountGroups, COLLATOR);
+            groupsTable.setInput(accountGroups);
         } else {
             if(LOG.isDebugEnabled()){
                 LOG.debug("Dataservice not Initialized, cannot update group list");
@@ -612,19 +579,15 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     }
 
     String getSelectedGroup() {
-        return (String)((StructuredSelection)tableGroups.getSelection()).toList().get(0);
+        return (String)((StructuredSelection)groupsTable.getSelection()).toList().get(0);
     }
 
     boolean isGroupSelected() {
-        return ((StructuredSelection)tableGroups.getSelection()).toList().size() > 0;
-    }
-    
-    private boolean isAccountSelected(){
-        return ((StructuredSelection)tableAccounts.getSelection()).toList().size() > 0;
+        return ((StructuredSelection)groupsTable.getSelection()).toList().size() > 0;
     }
     
     String[] getAllGroupsFromTable(){
-        return (String[]) tableGroups.getInput();
+        return (String[]) groupsTable.getInput();
     }
 
     @Override
@@ -693,19 +656,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         return ArrayUtils.contains(STANDARD_GROUPS, getSelectedGroup());
     }
     
-    
-    @Override
-    public void mouseDoubleClick(MouseEvent e) {
-        if (e.getSource() == tableGroups) {
-            EditGroupDialog dialog = new EditGroupDialog(this, parent.getShell(), Messages.GroupView_19);
-            dialog.open();
-        }
-
-        if (e.getSource() == tableAccounts || e.getSource() == tableGroupToAccounts) {
-            updateConfiguration();
-        }
-    }
-
     private void updateConfiguration() {
         String selectedAccountName = getSelectedAccount();
         if (!"".equals(selectedAccountName)) {
@@ -739,17 +689,29 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         if(tableAccounts.getSelection() != null){
             IStructuredSelection selection = (IStructuredSelection) tableAccounts.getSelection();
-            java.util.List selectionList = selection.toList();
+            List<?> selectionList = selection.toList();
             if(selectionList.size() > 0){
                 return (String)selectionList.get(0);
             }
         } else if (((StructuredSelection)tableGroupToAccounts.getSelection()).toList().size()   > 0) {
-            return accountinGroupSet.toArray(new String[accountinGroupSet.size()])[0];
+            return accountsInGroup.toArray(new String[accountsInGroup.size()])[0];
         }
 
         return "";
     }
 
+    @Override
+    public void mouseDoubleClick(MouseEvent e) {
+        if (e.getSource() == groupsTable) {
+            EditGroupDialog dialog = new EditGroupDialog(this, parent.getShell(), Messages.GroupView_19);
+            dialog.open();
+        }
+        
+        if (e.getSource() == tableAccounts || e.getSource() == tableGroupToAccounts) {
+            updateConfiguration();
+        }
+    }
+    
     @Override
     public void mouseDown(MouseEvent e) {
     }
@@ -771,10 +733,6 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
         }
     }
 
-
-    /**
-     * 
-     */
     void passServiceToLabelProvider() {
         if(accountGroupDataService != null){
             if(accountLabelProvider != null){
@@ -800,10 +758,10 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
     }
     
-    private TableViewer createTable(Composite parent, String title) {
-        Label label = new Label(parent, SWT.WRAP);
-        label.setText(title);
-        label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
+    private TableViewer createTable(Composite parent) {
+//        Label label = new Label(parent, SWT.WRAP);
+//        label.setText(title);
+//        label.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, false));
         
         int style = SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL;
 
