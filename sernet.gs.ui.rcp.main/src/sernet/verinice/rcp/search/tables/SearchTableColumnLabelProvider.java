@@ -127,8 +127,8 @@ public class SearchTableColumnLabelProvider extends StyledCellLabelProvider {
         }
 
         if (column instanceof PropertyTypeColumn) {
-            for (String fragment : occurences.getFragments(column.getId())) {
-                createStyleRanges(cell, query.getQuery(), styleRanges);
+            for (String fragment : occurences.getMatches(column.getId())) {
+                createStyleRanges(cell, fragment, styleRanges);
             }
         }
 

@@ -21,11 +21,16 @@ package sernet.verinice.model.search;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import sernet.gs.service.NumericStringComparator;
+import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.PropertyType;
 
 /**
@@ -41,6 +46,8 @@ public class Occurence implements Serializable {
     public static final String HTML_OPEN_TAG = "<strong>";
 
     public static final String HTML_CLOSING_TAG = "</strong>";
+
+    private final Pattern pattern = Pattern.compile(Occurence.HTML_OPEN_TAG + ".*" + Occurence.HTML_CLOSING_TAG);
 
     /**
      * The property id (@link {@link PropertyType#getId()} of the matching
@@ -59,6 +66,19 @@ public class Occurence implements Serializable {
         propertyId2PropertyName = new HashMap<String, String>();
     }
 
+    /**
+     * Stores an text fragment of elastic search response to an corresponding
+     * field/propertyId. A fragment may contain several matches, which are all
+     * wrapped by {@link #HTML_OPEN_TAG} and {@link #HTML_CLOSING_TAG}.
+     * 
+     * @param propertypeId
+     *            The field/proerytId in which contains the matching string
+     * @param translatedPropertyTypeName
+     *            Human readable name of the property id (@link
+     *            {@link EntityType#getName()}
+     * @param textFragment
+     *            The fragment provided by elastic search.
+     */
     public void addFragment(String propertypeId, String translatedPropertyTypeName, String textFragment) {
         if (!entries.containsKey(propertypeId)) {
             entries.put(propertypeId, new TreeSet<String>(new NumericStringComparator()));
@@ -82,10 +102,53 @@ public class Occurence implements Serializable {
         return sb.toString();
     }
 
+    /**
+     * Returns all oolumn ids which contains marked matches.
+     * 
+     */
     public SortedSet<String> getColumnIds() {
         TreeSet<String> treeSet = new TreeSet<String>(new NumericStringComparator());
         treeSet.addAll(entries.keySet());
         return treeSet;
+    }
+
+    /**
+     * Returns all tokens which are marked as matches by elastic search 
+     * 
+     */
+    public SortedSet<String> getMatches(String columnId) {
+
+        SortedSet<String> fragments = getFragments(columnId);
+        SortedSet<String> matches = new TreeSet<>(new NumericStringComparator());
+
+        for (String fragment : fragments) {
+            Set<String> markedTokens = filterMarkedTokens(fragment);
+            matches.addAll(stripOfMarkingTags(markedTokens));
+        }
+
+        return matches;
+    }
+
+    private Set<String> stripOfMarkingTags(Set<String> fragments) {
+        Set<String> result = new HashSet<String>();
+        for (String fragment : fragments) {
+            result.add(fragment.replace(Occurence.HTML_OPEN_TAG, "").replace(Occurence.HTML_CLOSING_TAG, ""));
+
+        }
+
+        return result;
+    }
+
+    private Set<String> filterMarkedTokens(String fragment) {
+
+        Matcher matcher = pattern.matcher(fragment);
+        Set<String> matches = new HashSet<String>();
+
+        while (matcher.find()) {
+            matches.add(matcher.group());
+        }
+
+        return matches;
     }
 
     /**
@@ -119,7 +182,7 @@ public class Occurence implements Serializable {
     }
 
     /**
-     * Returns a sorted set of human readable and translated column names
+     * Returns a sorted set of human readable and translated column names.
      */
     public SortedSet<String> getColumnNames() {
         TreeSet<String> treeSet = new TreeSet<String>(new NumericStringComparator());
