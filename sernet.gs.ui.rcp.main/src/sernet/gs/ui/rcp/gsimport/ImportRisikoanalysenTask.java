@@ -22,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +33,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
 import org.hibernate.Hibernate;
 
+import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.model.IGSModel;
+import sernet.gs.model.Massnahme;
 import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.importData.ESAResult;
 import sernet.gs.reveng.importData.GSDBConstants;
@@ -44,8 +48,11 @@ import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.scraper.GSScraper;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.bsi.model.MassnahmenFactory;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.Messages;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -62,6 +69,7 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadCnAElementByExternalID;
@@ -86,6 +94,11 @@ public class ImportRisikoanalysenTask {
 	
 	private String sourceID;
     private Map<String, Gefaehrdung> allCreatedOwnGefaehrdungen;
+    private Map<String, RisikoMassnahme> allCreatedOwnMassnahmen;
+    
+    // Map of gefhrdungs-title : gefaehrdungs-object
+    private Map<String,Gefaehrdung> allBsiGefaehrdungen = new HashMap<String,Gefaehrdung>();
+
 	
 	private static final Logger LOG = Logger.getLogger(ImportRisikoanalysenTask.class);
 
@@ -174,13 +187,19 @@ public class ImportRisikoanalysenTask {
                 continue;
             }
             
-            // create risk analysis object and start adding gefährdungen to it:
+            // make sure that list of standard bsi gefaehrdungen and massnahmen as sources for own instances is loaded:
+            if (allBsiGefaehrdungen == null || allBsiGefaehrdungen.size()==0) {
+                loadAllBSIGefaehrdungen();
+            }
+            
+            
+            // create risk analysis object and start adding gefaehrdungen to it:
             StartNewRiskAnalysis command = new StartNewRiskAnalysis(cnaElmt);
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             FinishedRiskAnalysis newRiskAnalysis = command.getFinishedRiskAnalysis();
             FinishedRiskAnalysisLists finishedRiskLists = command.getFinishedRiskLists();
 
-            for (RAGefaehrdungenResult ragResult : gefaehrdungenForZielobjekt) {
+            alleGefaehrdungen: for (RAGefaehrdungenResult ragResult : gefaehrdungenForZielobjekt) {
                 // create new gefaehrdungsumsetzung and save it for this risk analysis:
                 // first, create or find matching "gefaehrdung" as a source for this "gefaehrdungsumsetzung":
                 Gefaehrdung newGef = null;
@@ -198,10 +217,14 @@ public class ImportRisikoanalysenTask {
                         newGef = ownGefaehrdung;
                     }
                 } else {
-                    // FIXME find correct BSI standard gefaehrdung as source:
-                    
+                    newGef = findBsiStandardGefaehrdung(ragResult);
+                    if (newGef == null) {
+                        LOG.error("Keine passende Standard-Gefährdung gefunden in BSI-Katalog für GSTOOL-Gefährdung: " + ragResult.getGefaehrdungTxt().getName());
+                        continue alleGefaehrdungen;
+                    }
                 }
                 
+                // attach "newGef" to this risk analysis:
                 AssociateGefaehrdungsUmsetzung command2 = new AssociateGefaehrdungsUmsetzung(finishedRiskLists.getDbId(),
                         newGef, newRiskAnalysis.getDbId(), GSScraper.CATALOG_LANGUAGE_GERMAN);
                 command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
@@ -221,14 +244,31 @@ public class ImportRisikoanalysenTask {
                                     ragResult.getGefaehrdung());
                     for (RAGefaehrdungsMassnahmenResult ragmResult : ragmResults) {
                         if (transferData.isUserDefMassnahme(ragmResult)) {
-                            // FIXME: create and save "Risikomassnahme", check doubles same as with OwnGefaehrdung above
                             RisikoMassnahmenUmsetzung newMnUms = new RisikoMassnahmenUmsetzung(cnaElmt, newGefUms);
                             transferData.transferRAGefaehrdungsMassnahmen(ragmResult, newGefUms, newMnUms);
                             LOG.debug("Transferred user defined massnahme: " + newMnUms.getTitle());
+
+                            RisikoMassnahme newRisikoMassnahme = new RisikoMassnahme();
+                            newRisikoMassnahme.setNumber(newMnUms.getId());
+                            newRisikoMassnahme.setName(newMnUms.getTitle());
+                            newRisikoMassnahme.setDescription(newMnUms.getDescription());
+                            
+                            if (allCreatedOwnMassnahmen.keySet().contains(createOwnMassnahmeCacheId(newRisikoMassnahme))) {
+                                // do nothing, user-defined massnahme was already saved to DB
+                                // reuse existing massnahme:
+                                //newRisikoMassnahme = allCreatedOwnMassnahmen.get(createOwnMassnahmeCacheId(newRisikoMassnahme));
+                            } else {
+                                // create and save new RisikoMassnahme to database of user defined massnahmen:
+                                LOG.debug("Saving new user defined massnahe to database.");
+                                RisikoMassnahmeHome.getInstance().save(newRisikoMassnahme);
+                                allCreatedOwnMassnahmen.put(createOwnMassnahmeCacheId(newRisikoMassnahme), newRisikoMassnahme);
+                            }
+                            // we do not save newMnUms, it will be saved when saving the riskanalysis parent
                         } else {
                             MassnahmenUmsetzung newMnUms = new MassnahmenUmsetzung(newGefUms);
                             transferData.transferRAGefaehrdungsMassnahmen(ragmResult, newGefUms, newMnUms);
                             LOG.debug("Transferred BSI-standard massnahme: " + newMnUms.getTitle());
+                            // we do not save newGefUms, it will be saved together with riskanalysis parent
                         }
                     }
                 }
@@ -241,10 +281,49 @@ public class ImportRisikoanalysenTask {
         }
 	}
 	
+	/**
+     * @param ragResult
+     * @return
+     */
+    private Gefaehrdung findBsiStandardGefaehrdung(RAGefaehrdungenResult ragResult) {
+        String gefName = ragResult.getGefaehrdungTxt().getName();
+        return allBsiGefaehrdungen.get(gefName);
+    }
+
+
+    private void loadAllBSIGefaehrdungen() {
+	    LOG.debug("Caching all BSI standard Gefaehrdungen from catalog...");
+        List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance().getBausteine();
+        alleBausteine: for (Baustein baustein : bausteine) {
+            if (baustein.getGefaehrdungen() == null) {
+                continue;
+            }
+            alleGefaehrdungen: for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
+                Boolean duplicate = false;
+                alleTitel: for (IGSModel element : allBsiGefaehrdungen.values()) {
+                    if (element.getId().equals(gefaehrdung.getId())) {
+                        duplicate = true;
+                        break alleTitel;
+                    }
+                }
+                if (!duplicate) {
+                    allBsiGefaehrdungen.put(gefaehrdung.getTitel(), gefaehrdung);
+                }
+            }
+        }
+    
+	}
+    
+  
+  
+	
 	private String createOwnGefaehrdungsCacheId(OwnGefaehrdung ownGefaehrdung) {
 	    return ownGefaehrdung.getId() + ownGefaehrdung.getTitel() + ownGefaehrdung.getBeschreibung();
 	}
 
+	private String createOwnMassnahmeCacheId(RisikoMassnahme riskMn) {
+	    return riskMn.getId() + riskMn.getName() + riskMn.getDescription();
+    }
 
     /**
      * @param guid
