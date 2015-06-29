@@ -86,9 +86,12 @@ import sernet.verinice.model.common.CnATreeElement;
  *      this is for internal use only, to mark the end of a propertypath, please do not use this manually
  * </pre>
  * 
+ * class is marked deprecated, please use {@link GenericDataModel} only
+ * 
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@Deprecated
 public class GraphReportDataModel  {
 
     private static final Logger LOG = Logger.getLogger(GraphReportDataModel.class);

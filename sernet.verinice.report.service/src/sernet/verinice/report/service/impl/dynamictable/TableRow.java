@@ -29,8 +29,11 @@ import org.apache.log4j.Logger;
  * this class wraps information used within the command {@link GraphReportDataModel} to flatten a treestructure into a table, that can be
  * used within a verinice report template dataset
  * 
+ * class is marked as deprecated, since {@link GenericDataModel} instead of {@link GraphReportDataModel} is used now
+ * 
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
+@Deprecated
 public class TableRow implements Serializable {
 
     private static final long serialVersionUID = 201506090913L;
