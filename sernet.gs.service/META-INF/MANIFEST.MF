@@ -56,7 +56,7 @@ Export-Package: de.sernet.service.vna,
  sernet.verinice.service.iso27k,
  sernet.verinice.service.ldap,
  sernet.verinice.service.sync
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
 Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
