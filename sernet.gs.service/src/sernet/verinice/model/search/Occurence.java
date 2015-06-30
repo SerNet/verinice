@@ -119,7 +119,7 @@ public class Occurence implements Serializable {
     public SortedSet<String> getMatches(String columnId) {
 
         SortedSet<String> fragments = getFragments(columnId);
-        SortedSet<String> matches = new TreeSet<>(new NumericStringComparator());
+        SortedSet<String> matches = new TreeSet<String>(new NumericStringComparator());
 
         for (String fragment : fragments) {
             Set<String> markedTokens = filterMarkedTokens(fragment);
