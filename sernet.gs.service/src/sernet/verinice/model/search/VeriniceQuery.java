@@ -35,7 +35,7 @@ public class VeriniceQuery implements Serializable{
     public final static int DEFAULT_LIMIT = 200;
     public final static int MAX_LIMIT = 200000;
 
-    public final static String EMPTY_QUERY = "";
+    private final static String EMPTY_QUERY = "";
 
     private int limit = 0;
 
