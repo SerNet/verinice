@@ -257,7 +257,7 @@ public class JsonBuilder implements IJsonBuilder {
     }
     
     private static DateFormat getLocalizedDatePattern(){
-        return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, Locale.getDefault());
+        return SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, Locale.getDefault());
     }
     
     private static boolean isIndexableElement(CnATreeElement element){
