@@ -124,28 +124,44 @@ public class SpiderChartView extends ChartView implements IAttachedToPerspective
      * Method is called if the selection in the GUI is changed.
      * 
      * @param part
-     * @param selection the newly selected GUI element
-     * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#pageSelectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
+     * @param selection
+     *            the newly selected GUI element
+     * @see sernet.gs.ui.rcp.main.bsi.views.chart.ChartView#pageSelectionChanged(org.eclipse.ui.IWorkbenchPart,
+     *      org.eclipse.jface.viewers.ISelection)
      */
     @Override
     protected synchronized void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-        if (!(selection instanceof IStructuredSelection)) {
-            return;
-        }
-        Object firstSelection = ((IStructuredSelection) selection).getFirstElement();
-        CnATreeElement selectedElement = (CnATreeElement) firstSelection;
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Selection changed, selected element: " + selectedElement); //$NON-NLS-1$
-        }
-        
-        ControlGroup group = getChartControlGroup(selectedElement);
-        if(group!=null) {
-            if (this.element != null && selectedElement == this.element) {
-                return;
+
+        if (isCnATreeElement(selection)) {
+
+            CnATreeElement selectedElement = (CnATreeElement) ((IStructuredSelection) selection).getFirstElement();
+
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Selection changed, selected element: " + selectedElement); //$NON-NLS-1$
             }
-            this.element = group;
-            drawChart();
+
+            ControlGroup group = getChartControlGroup(selectedElement);
+            if (group != null) {
+                if (this.element != null && selectedElement == this.element) {
+                    return;
+                }
+                this.element = group;
+                drawChart();
+            }
         }
+    }
+
+    private boolean isCnATreeElement(ISelection selection) {
+        if (!(selection instanceof IStructuredSelection)) {
+            return false;
+        }
+
+        Object firstSelection = ((IStructuredSelection) selection).getFirstElement();
+
+        if (!(firstSelection instanceof CnATreeElement)) {
+            return false;
+        }
+        return true;
     }
     
     private ControlGroup getChartControlGroup(CnATreeElement selection) {
