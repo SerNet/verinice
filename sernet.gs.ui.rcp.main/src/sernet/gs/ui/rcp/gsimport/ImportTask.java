@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -97,10 +96,10 @@ public class ImportTask {
     private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
     private Map<NZielobjekt, CnATreeElement> alleZielobjekte = new HashMap<NZielobjekt, CnATreeElement>();
     private List<Person> allePersonen = new ArrayList<Person>();
-    
+
     // map of zielobjekt-guid to itverbund NZielobjekt:
     private Map<String, NZielobjekt> itverbundZuordnung = new HashMap<String, NZielobjekt>();
-    
+
     private boolean importBausteine;
     private boolean massnahmenPersonen;
     private boolean bausteinPersonen;
@@ -115,7 +114,6 @@ public class ImportTask {
 
     private String sourceId;
 
-
     /**
      * @return the sourceId
      */
@@ -123,8 +121,7 @@ public class ImportTask {
         return sourceId;
     }
 
-    public ImportTask(boolean bausteine, boolean massnahmenPersonen, boolean zielObjekteZielobjekte, boolean schutzbedarf, 
-            boolean importRollen, boolean kosten, boolean umsetzung, boolean bausteinPersonen) {
+    public ImportTask(boolean bausteine, boolean massnahmenPersonen, boolean zielObjekteZielobjekte, boolean schutzbedarf, boolean importRollen, boolean kosten, boolean umsetzung, boolean bausteinPersonen) {
         this.importBausteine = bausteine;
         this.massnahmenPersonen = massnahmenPersonen;
         this.zielObjekteZielobjekte = zielObjekteZielobjekte;
@@ -154,7 +151,7 @@ public class ImportTask {
         // a classloader from a Hibernate class. This classloader is able to
         // resolve
         // Hibernate classes and can be used successfully by Antlr to access.
-        try{ 
+        try {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
             ClassLoader classLoader = Hibernate.class.getClassLoader();
             Thread.currentThread().setContextClassLoader(classLoader);
@@ -170,14 +167,14 @@ public class ImportTask {
             vampire = new GSVampire(conf.getAbsolutePath());
 
             zeiten = vampire.findZeiteinheitenTxtAll();
-            
-            // print all types and subtypes to debug, in case we need to add those to our mapping manually;
+
+            // print all types and subtypes to debug, in case we need to add
+            // those to our mapping manually;
             List<ZielobjektTypeResult> findZielobjektTypAll = vampire.findZielobjektTypAll();
             LOG.debug("List of all ZO types in GSTOOL DB: ");
             for (ZielobjektTypeResult zielobjektTypeResult : findZielobjektTypAll) {
-                LOG.debug(zielobjektTypeResult.subtype +"=" + zielobjektTypeResult.type);
+                LOG.debug(zielobjektTypeResult.subtype + "=" + zielobjektTypeResult.type);
             }
-            
 
             transferData = new TransferData(vampire, importRollen);
             this.sourceId = importZielobjekte();
@@ -186,7 +183,7 @@ public class ImportTask {
             Thread.currentThread().setContextClassLoader(cl);
 
             CnAElementFactory.getInstance().reloadModelFromDatabase();
-        } catch (GSImportException e){
+        } catch (GSImportException e) {
             ExceptionUtil.log(e, e.getMessage());
         }
     }
@@ -234,8 +231,8 @@ public class ImportTask {
     }
 
     /**
-     * Imports all zielobjekte from GSTOOL with all selected properties.
-     * Returns the sourceID with which all objects have been created.
+     * Imports all zielobjekte from GSTOOL with all selected properties. Returns
+     * the sourceID with which all objects have been created.
      * 
      * @return
      * @throws Exception
@@ -255,41 +252,42 @@ public class ImportTask {
             monitor.beginTask("Importiere Zielobjekte...", numberOfElements);
         }
 
-        // create special ITVerbund for elements that are not linked to an ItVerbund in GSTOOL
-        // these can exist and may have links to other objects that ARE linked to an ITVerbund, so we have to put them somewhere 
+        // create special ITVerbund for elements that are not linked to an
+        // ItVerbund in GSTOOL
+        // these can exist and may have links to other objects that ARE linked
+        // to an ITVerbund, so we have to put them somewhere
 
-        ITVerbund itverbundForOrphans =null;
-        
+        ITVerbund itverbundForOrphans = null;
+
         // create all found ITVerbund first
         List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
         for (ZielobjektTypeResult resultITV : zielobjekte) {
-            try{
+            try {
                 if (ITVerbund.TYPE_ID.equals(ImportZielobjektTypUtil.translateZielobjektType(resultITV.type, resultITV.subtype))) {
                     ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
                     itverbund.setSourceId(sourceId);
                     neueVerbuende.add(itverbund);
                     monitor.worked(1);
                     numberImported++;
-                    
+
                     // save element for later:
                     alleZielobjekte.put(resultITV.zielobjekt, itverbund);
 
                     transferData.transfer(itverbund, resultITV);
                     createBausteine(sourceId, itverbund, resultITV.zielobjekt);
-                    
-                    //save links from itverbuende to other objects to facilitate creating ZOs in their correct IT-Verbund:
+
+                    // save links from itverbuende to other objects to
+                    // facilitate creating ZOs in their correct IT-Verbund:
                     List<NZielobjekt> itvLinks = vampire.findLinksByZielobjekt(resultITV.zielobjekt);
                     for (NZielobjekt nZielobjekt : itvLinks) {
-                        LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid()
-                                + ") to ITVerbund " + resultITV.zielobjekt.getName());
+                        LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + resultITV.zielobjekt.getName());
                         itverbundZuordnung.put(nZielobjekt.getGuid(), resultITV.zielobjekt);
                     }
                 }
-            } catch (GSImportException e){
+            } catch (GSImportException e) {
                 throw e;
             }
         }
-        
 
         // create all Zielobjekte in their respective ITVerbund,
         for (ZielobjektTypeResult resultZO : zielobjekte) {
@@ -299,13 +297,13 @@ public class ImportTask {
                 continue;
             }
             CnATreeElement element = null;
-            if(neueVerbuende.size() > 0){
+            if (neueVerbuende.size() > 0) {
                 // find correct itverbund for resultZO
                 NZielobjekt origITVerbundZO = itverbundZuordnung.get(resultZO.zielobjekt.getGuid());
                 ITVerbund itverbund = (ITVerbund) alleZielobjekte.get(origITVerbundZO);
                 if (itverbund == null) {
                     LOG.error("ITVerbund not found for ZO: " + resultZO.zielobjekt.getName() + ". Created in BSI");
-                    if (itverbundForOrphans==null) {
+                    if (itverbundForOrphans == null) {
                         itverbundForOrphans = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
                         itverbundForOrphans.setTitel("---Waisenhaus: Zielobjekte ohne IT-Verbund-Zuordnung");
                         itverbundForOrphans.setSourceId(sourceId);
@@ -335,12 +333,12 @@ public class ImportTask {
                 monitor.worked(1);
                 numberImported++;
             }
-            
+
         }
 
         monitor.subTask(defaultSubTaskDescription);
 
-        importMassnahmenVerknuepfungen(); 
+        importMassnahmenVerknuepfungen();
         monitor.subTask(defaultSubTaskDescription);
 
         // update this.alleMassnahmen
@@ -355,17 +353,18 @@ public class ImportTask {
 
         importBausteinPersonVerknuepfungen();
         monitor.subTask(defaultSubTaskDescription);
-        
+
         // update this. alleBausteineToBausteinUmsetzungMap
         toUpdate = new ArrayList<CnATreeElement>();
         toUpdate.addAll(this.alleBausteineToBausteinUmsetzungMap.values());
         LOG.debug("Saving person links to modules.");
-        monitor.subTask("Speichere Personenreferenzen zu Bausteinen");       
+        monitor.subTask("Speichere Personenreferenzen zu Bausteinen");
         updater = new ElementListUpdater(toUpdate, monitor);
         updater.setMaxNumberPerCommand(500);
-        updater.execute();      
-      
-        importZielobjektVerknuepfungen(); // FIXME this times out / freezes on big GSTOOL databases
+        updater.execute();
+
+        importZielobjektVerknuepfungen(); // FIXME this times out / freezes on
+                                          // big GSTOOL databases
         monitor.subTask(defaultSubTaskDescription);
 
         importSchutzbedarf();
@@ -384,7 +383,7 @@ public class ImportTask {
             i++;
         }
         monitor.done();
-        
+
         return sourceId;
     }
 
@@ -392,8 +391,8 @@ public class ImportTask {
         List<ZielobjektTypeResult> zielobjekte;
         try {
             zielobjekte = vampire.findZielobjektTypAll();
-        } catch(SQLGrammarException e){
-            SQLGrammarException sqlException = (SQLGrammarException) e;
+        } catch (SQLGrammarException e) {
+            SQLGrammarException sqlException = e;
             // wrong db version has columns missing, i.e. "GEF_ID":
             if (sqlException.getSQLException().getMessage().indexOf("GEF_OK") > -1) {
                 ExceptionUtil.log(sqlException.getSQLException(), "Fehler beim Laden der Zielobjekte. Möglicherweise falsche Datenbankversion des GSTOOL? " + "\nEs wird nur der Import der aktuellen Version (4.7) des GSTOOL unterstützt.");
@@ -473,14 +472,14 @@ public class ImportTask {
     private void importZielobjektVerknuepfungen() throws CommandException {
         if (!this.zielObjekteZielobjekte) {
             return;
-        }  
+        }
         Set<NZielobjekt> allElements = alleZielobjekte.keySet();
         List<Link> linkList = new LinkedList<Link>();
         for (NZielobjekt zielobjekt : allElements) {
             monitor.worked(1);
             CnATreeElement dependant = alleZielobjekte.get(zielobjekt);
             List<NZielobjekt> dependencies = vampire.findLinksByZielobjekt(zielobjekt);
-            
+
             for (NZielobjekt dependency : dependencies) {
                 CnATreeElement dependencyElement = findZielobjektFor(dependency);
                 if (dependencyElement == null) {
@@ -488,7 +487,7 @@ public class ImportTask {
                     continue;
                 }
                 LOG.debug("Neue Verknüpfung von " + dependant.getTitle() + " zu " + dependencyElement.getTitle());
-               
+
                 // verinice models dependencies DOWN, not UP as the gstool.
                 // therefore we need to turn things around, except for persons,
                 // networks and itverbund
@@ -503,7 +502,8 @@ public class ImportTask {
                     to = dependant;
                 }
                 linkList.add(new Link(from, to));
-            };
+            }
+            ;
         }
         LinkCreater linkCreater = new LinkCreater(linkList, monitor);
         int n = linkList.size();
@@ -610,7 +610,7 @@ public class ImportTask {
 
         Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
 
-        this.monitor.subTask(numberImported + "/" + numberOfElements + " - Erstelle " + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.keySet().size() + " Baust. und " + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Massn..." );
+        this.monitor.subTask(numberImported + "/" + numberOfElements + " - Erstelle " + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.keySet().size() + " Baust. und " + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Massn...");
 
         ImportCreateBausteine command;
         ServiceFactory.lookupAuthService();

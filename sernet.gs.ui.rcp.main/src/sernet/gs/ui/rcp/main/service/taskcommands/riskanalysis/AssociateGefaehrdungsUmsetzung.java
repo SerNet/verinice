@@ -32,80 +32,81 @@ import sernet.verinice.model.common.Permission;
  * Assign a threat to a risk analysis: create a new threat instance.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 public class AssociateGefaehrdungsUmsetzung extends GenericCommand implements IAuthAwareCommand {
 
-	private Gefaehrdung currentGefaehrdung;
-	private GefaehrdungsUmsetzung gefaehrdungsUmsetzung;
-	private Integer listDbId;
-	private FinishedRiskAnalysisLists finishedRiskLists;
-	private Integer riskAnalysisDbId;
-	
-	private String language;
-	
-	private transient IAuthService authService;
+    private Gefaehrdung currentGefaehrdung;
+    private GefaehrdungsUmsetzung gefaehrdungsUmsetzung;
+    private Integer listDbId;
+    private FinishedRiskAnalysisLists finishedRiskLists;
+    private Integer riskAnalysisDbId;
 
-	
-	public IAuthService getAuthService() {
-		return authService;
-	}
+    private String language;
 
-	public void setAuthService(IAuthService service) {
-		this.authService = service;
-	}
-	
-	/**
-	 * @param finishedRiskLists 
-	 * @param currentGefaehrdung
-	 * @param integer 
-	 * @param finishedRiskAnalysis 
-	 */
-	public AssociateGefaehrdungsUmsetzung(Integer listDbId, Gefaehrdung currentGefaehrdung, Integer riskAnalysisDbId, String language) {
-		this.currentGefaehrdung = currentGefaehrdung;
-		this.listDbId = listDbId;
-		this.riskAnalysisDbId = riskAnalysisDbId;
-		this.language = language;
-	}
-	
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
-	 */
-	public void execute() {
-		FinishedRiskAnalysis riskAnalysis = getDaoFactory().getDAO(FinishedRiskAnalysis.class).findById(riskAnalysisDbId);
-		finishedRiskLists = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class).findById(listDbId);
-		
-		gefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory.build(null, currentGefaehrdung, language);
-		getDaoFactory().getDAO(GefaehrdungsUmsetzung.class).saveOrUpdate(gefaehrdungsUmsetzung);
-		
-		if (authService.isPermissionHandlingNeeded())
-		{
-			gefaehrdungsUmsetzung.setPermissions(
-				Permission.clonePermissionSet(
-						gefaehrdungsUmsetzung,
-						riskAnalysis.getPermissions()));
-		}
-		
-		finishedRiskLists.getAssociatedGefaehrdungen().add(gefaehrdungsUmsetzung);
-	}
+    private transient IAuthService authService;
 
-	public GefaehrdungsUmsetzung getGefaehrdungsUmsetzung() {
-		return gefaehrdungsUmsetzung;
-	}
+    @Override
+    public IAuthService getAuthService() {
+        return authService;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
-	 */
-	@Override
-	public void clear() {
-		// initialize lists properly before returning to client:
-		HydratorUtil.hydrateElement(getDaoFactory().getDAO(FinishedRiskAnalysisLists.class), finishedRiskLists);
-	}
+    @Override
+    public void setAuthService(IAuthService service) {
+        this.authService = service;
+    }
 
-	public FinishedRiskAnalysisLists getFinishedRiskLists() {
-		return finishedRiskLists;
-	}
+    /**
+     * @param finishedRiskLists
+     * @param currentGefaehrdung
+     * @param integer
+     * @param finishedRiskAnalysis
+     */
+    public AssociateGefaehrdungsUmsetzung(Integer listDbId, Gefaehrdung currentGefaehrdung, Integer riskAnalysisDbId, String language) {
+        this.currentGefaehrdung = currentGefaehrdung;
+        this.listDbId = listDbId;
+        this.riskAnalysisDbId = riskAnalysisDbId;
+        this.language = language;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+     */
+    @Override
+    public void execute() {
+        FinishedRiskAnalysis riskAnalysis = getDaoFactory().getDAO(FinishedRiskAnalysis.class).findById(riskAnalysisDbId);
+        finishedRiskLists = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class).findById(listDbId);
+
+        gefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory.build(null, currentGefaehrdung, language);
+        getDaoFactory().getDAO(GefaehrdungsUmsetzung.class).saveOrUpdate(gefaehrdungsUmsetzung);
+
+        if (authService.isPermissionHandlingNeeded()) {
+            gefaehrdungsUmsetzung.setPermissions(Permission.clonePermissionSet(gefaehrdungsUmsetzung, riskAnalysis.getPermissions()));
+        }
+
+        finishedRiskLists.getAssociatedGefaehrdungen().add(gefaehrdungsUmsetzung);
+    }
+
+    public GefaehrdungsUmsetzung getGefaehrdungsUmsetzung() {
+        return gefaehrdungsUmsetzung;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
+     */
+    @Override
+    public void clear() {
+        // initialize lists properly before returning to client:
+        HydratorUtil.hydrateElement(getDaoFactory().getDAO(FinishedRiskAnalysisLists.class), finishedRiskLists);
+    }
+
+    public FinishedRiskAnalysisLists getFinishedRiskLists() {
+        return finishedRiskLists;
+    }
 
 }
