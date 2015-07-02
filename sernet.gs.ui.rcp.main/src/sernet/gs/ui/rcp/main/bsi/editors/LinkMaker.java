@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -92,6 +93,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  * 
  */
+@SuppressWarnings("restriction")
 public class LinkMaker extends Composite implements IRelationTable {
 
     private static final Logger LOG = Logger.getLogger(LinkMaker.class);
@@ -100,6 +102,8 @@ public class LinkMaker extends Composite implements IRelationTable {
     
     private final int formAttachmentNumeratorDefault = 100;
     private final int formAttachmentOffsetDefault = 5;
+    
+    private final static String LAST_SELECTED_LINK_TYPE_PREF_PREFIX = "last_selected_link_type_for_";
 
     // SWT
     private WorkbenchPart part;
@@ -117,9 +121,10 @@ public class LinkMaker extends Composite implements IRelationTable {
     
     // Utilities 
     private static HUITypeFactory huiTypeFactory = HitroUtil.getInstance().getTypeFactory();
+    private static IPreferenceStore prefStore = Activator.getDefault().getPreferenceStore();
     private EntityTypeFilter elementTypeFilter;
     private LinkRemover linkRemover;
-    private RelationViewContentProvider relationViewcontentProvider;
+    private RelationViewContentProvider relationViewContentProvider;
     private RelationViewLabelProvider relationViewLabelProvider;
     private ComboModel<HuiRelation> comboModelLinkType;
    
@@ -150,8 +155,8 @@ public class LinkMaker extends Composite implements IRelationTable {
         initLinkTableViewer();
 
         // listeners to reload view:
-        CnAElementFactory.getLoadedModel().addBSIModelListener(relationViewcontentProvider);
-        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(relationViewcontentProvider);
+        CnAElementFactory.getLoadedModel().addBSIModelListener(relationViewContentProvider);
+        CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(relationViewContentProvider);
         // listeners to remove stale links from currently open object in editor to prevent conflicts when saving:
         linkRemover = new LinkRemover(this);
         CnAElementFactory.getLoadedModel().addBSIModelListener(linkRemover);
@@ -232,8 +237,8 @@ public class LinkMaker extends Composite implements IRelationTable {
         formData.bottom = new FormAttachment(formAttachmentNumeratorDefault, -1);
         viewer.getTable().setLayoutData(formData);
         viewer.getTable().setEnabled(writeable);
-        relationViewcontentProvider = new RelationViewContentProvider(this, viewer);
-        viewer.setContentProvider(relationViewcontentProvider);
+        relationViewContentProvider = new RelationViewContentProvider(this, viewer);
+        viewer.setContentProvider(relationViewContentProvider);
         
         relationViewLabelProvider = new RelationViewLabelProvider(this);
         viewer.setLabelProvider(relationViewLabelProvider);
@@ -305,15 +310,27 @@ public class LinkMaker extends Composite implements IRelationTable {
         comboModelLinkType.addAll(huiTypeFactory.getPossibleRelations(selectedInComboElementTypeId,
                         elementTypeInEditor));
         comboModelLinkType.sort(huiRelationComparator);
-        
+               
         comboLinkType.setItems(comboModelLinkType.getLabelArray());
-        comboLinkType.select(0);
-        comboModelLinkType.setSelectedIndex(0);
+        selectComboLinkTypeItem();
+    
         if (comboModelLinkType.size() > 1) {
             comboLinkType.setEnabled(true);
         } else {
             comboLinkType.setEnabled(false);
         }
+    }
+
+    private void selectComboLinkTypeItem() {
+        String prefStoreKey = LAST_SELECTED_LINK_TYPE_PREF_PREFIX + selectedInComboElementTypeId;
+        if (prefStore.contains(prefStoreKey)) {
+            String relationTypeId = prefStore.getString(prefStoreKey);
+            HuiRelation huiRelation = huiTypeFactory.getRelation(relationTypeId);
+            comboModelLinkType.setSelectedObject(huiRelation);
+        } else {
+            comboModelLinkType.setSelectedIndex(0);
+        }
+        comboLinkType.select(comboModelLinkType.getSelectedIndex());
     }
 
     private ComboModel<HuiRelation> getComboModelLinkType() {
@@ -366,15 +383,17 @@ public class LinkMaker extends Composite implements IRelationTable {
                 // create new link to object
                 Object[] array = elementTypeNamesAndIds.entrySet().toArray();
                 @SuppressWarnings("unchecked")
-                String selectedType = ((Entry<String, String>) array[comboElementType.getSelectionIndex()]).getValue();
+                String selectedElementType = ((Entry<String, String>) array[comboElementType.getSelectionIndex()]).getValue();
                 CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(
-                                viewer.getControl().getShell(), selectedType, inputElmt);
+                                viewer.getControl().getShell(), selectedElementType, inputElmt);
                 if (dialog.open() != Window.OK) {
                     return;
                 }
                 List<CnATreeElement> linkTargets = dialog.getSelectedElements();
                 
-                String selectedLinkType = comboModelLinkType.getSelectedObject().getId();
+                String selectedLinkType = comboModelLinkType.getSelectedObject().getId();                                
+                prefStore.putValue(LAST_SELECTED_LINK_TYPE_PREF_PREFIX + selectedElementType, selectedLinkType);
+                                
                 // this method also fires events for added links:
                 CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(
                                 getInputElmt(), linkTargets, selectedLinkType);
@@ -589,8 +608,8 @@ public class LinkMaker extends Composite implements IRelationTable {
     @SuppressWarnings("static-access")
     @Override
     public void dispose() {
-        CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(relationViewcontentProvider);
-        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(relationViewcontentProvider);
+        CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(relationViewContentProvider);
+        CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(relationViewContentProvider);
         
         CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(linkRemover);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(linkRemover);
