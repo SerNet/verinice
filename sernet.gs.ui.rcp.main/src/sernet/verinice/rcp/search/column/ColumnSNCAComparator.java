@@ -37,13 +37,13 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
  */
 final class ColumnSNCAComparator extends ColumnComparator {
 
-    private static NumericStringComparator stringCompare = new NumericStringComparator();
+    private static final NumericStringComparator NSC = new NumericStringComparator();
 
     @Override
     public int compare(IColumn o1, IColumn o2) {
         if (arePropertyColumns(o1, o2)) {
             if (shouldDoSortingByNumericStringCompare(o1, o2)) {
-                return stringCompare.compare(o1.getTitle(), o2.getTitle());
+                return NSC.compare(o1.getTitle(), o2.getTitle());
             }
         }
 
