@@ -21,6 +21,7 @@ package sernet.verinice.rcp.search;
 
 import java.nio.charset.Charset;
 
+import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.search.VeriniceSearchResultObject;
 import sernet.verinice.rcp.search.column.IColumnStore;
 
@@ -41,7 +42,7 @@ public interface ICsvExport {
      * Exports a {@link VeriniceSearchResultObject} to a CSV table. Table is returned
      * as byte array.
      * 
-     * @param searchResult The result of a search, see ISearchService
+     * @param searchResult The result of a search, see {@link ISearchService}
      * @param columnStore Defines exported columns
      * @return CSV table as byte array
      * @throws CsvExportException In case of errors, RuntimeExpeptions are wrapped in a CsvExportExceptions 
@@ -52,7 +53,7 @@ public interface ICsvExport {
      * Exports a {@link VeriniceSearchResultObject} to a CSV table. Table is saved as a file.
      * Set file path with <code>setFilePath(path)</code>.
      * 
-     * @param searchResult The result of a search, see ISearchService
+     * @param searchResult The result of a search, see {@link ISearchService}
      * @param columnStore Defines exported columns
      * @throws CsvExportException In case of errors, RuntimeExpeptions are wrapped in a CsvExportExceptions
      */
