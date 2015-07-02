@@ -82,16 +82,18 @@ public class ImportNotesTask {
 	 */
 	private void importNotes() throws CommandException {
 		List<ZielobjektTypeResult> allZielobjekte = vampire.findZielobjektTypAll();
-		monitor.beginTask("Importiere alle Notizen für...", allZielobjekte.size());
+		int n = allZielobjekte.size();
+		int i = 0;
+		monitor.beginTask("Importiere Notizen", n);
 		for (ZielobjektTypeResult zielobjekt : allZielobjekte) {
 			String name = zielobjekt.zielobjekt.getName();
 			monitor.worked(1);
-			monitor.subTask(name);
+			i++;
+			monitor.subTask(i + "/" + n + " - Zielobjekt: " + name);
 			List<NotizenMassnahmeResult> notesResults = vampire.findNotizenForZielobjekt(name);
 			Map<MbBaust, List<NotizenMassnahmeResult>> notizenMap = transferData.convertZielobjektNotizenMap(notesResults);
 			ImportNotesForZielobjekt command = new ImportNotesForZielobjekt(name, notizenMap);
-			command = ServiceFactory.lookupCommandService().executeCommand(
-						command);
+			command = ServiceFactory.lookupCommandService().executeCommand(command);
 		}
 	}
 

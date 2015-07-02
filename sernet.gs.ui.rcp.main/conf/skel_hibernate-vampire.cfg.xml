@@ -19,6 +19,22 @@
 			{driver}
 		</property>
 
+        <!-- 2015-06-05 ak@sernet.de added the following tables to import risk analysis -->
+        <mapping resource="sernet/gs/reveng/MsRaBehand.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MsRaBehandTxt.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/RaZobGef.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/RaZobGefMit.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/RaZobGefMas.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MsUnj.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MsUnjTxt.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/NZobEsa.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MbGefaehr.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MbGefaehrTxt.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MbBauMasGef.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MbBaustGefaehr.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MbMasGef.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MbMassnTxt.hbm.xml" />
+
 		<mapping resource="sernet/gs/reveng/NmbNotiz.hbm.xml" />
 		<mapping resource="sernet/gs/reveng/NZielobjekt.hbm.xml" />
 		<mapping resource="sernet/gs/reveng/MbZielobjTyp.hbm.xml" />

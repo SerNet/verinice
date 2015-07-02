@@ -31,6 +31,7 @@ public class UpdateElementsForGstoolImport<T extends ITypedElement> extends Gene
 	private List<T> elements;
 	private transient IBaseDao<T, Serializable> dao;
 
+	private int flushThreshold = 50;
 
 	public UpdateElementsForGstoolImport(List<T> elements) {
 		this.elements = (elements != null) ? elements : new ArrayList<T>(0);
@@ -38,12 +39,26 @@ public class UpdateElementsForGstoolImport<T extends ITypedElement> extends Gene
 	
 	public void execute() {
 		if (elements.size()>0) {
+		    int i = 0;
 			IBaseDao<T, Serializable> dao = getDao();
 			for (T element : elements) {
 				dao.merge(element, true);
+				i++;
+				if(i>flushThreshold) {
+				    i=0;
+				    dao.flush();
+				}
 			}
 		}
 	}
+
+    public int getFlushThreshold() {
+        return flushThreshold;
+    }
+
+    public void setFlushThreshold(int flushThreshold) {
+        this.flushThreshold = flushThreshold;
+    }
 
     private IBaseDao<T, Serializable> getDao() {
         if (dao == null) {

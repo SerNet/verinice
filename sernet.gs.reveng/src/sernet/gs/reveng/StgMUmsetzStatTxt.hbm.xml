@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="sernet.gs.reveng.StgMUmsetzStatTxt" table="STG_M_UMSETZ_STAT_TXT" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+    <class name="sernet.gs.reveng.StgMUmsetzStatTxt" table="STG_M_UMSETZ_STAT_TXT">
         <composite-id name="id" class="sernet.gs.reveng.StgMUmsetzStatTxtId">
             <key-property name="ustId" type="java.lang.Byte">
                 <column name="UST_ID" />

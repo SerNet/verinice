@@ -149,6 +149,7 @@ public class ImportCreateBausteine extends GenericCommand {
             for (MbBaust mbBaust : keySet) {
                 createBaustein(element, mbBaust, bausteineMassnahmenMap.get(mbBaust));
             }
+            dao.flush();
 
         } catch (Exception e) {
             getLog().error("Error while importing: ", e);

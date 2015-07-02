@@ -147,7 +147,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
      * @return - description (String) of the RisikoMassnahmenUmsetzung.
      */
     public String getDescription() {
-        return massnahme.getDescription();
+        return (massnahme!=null) ? massnahme.getDescription() : null;
     }
 
     /**

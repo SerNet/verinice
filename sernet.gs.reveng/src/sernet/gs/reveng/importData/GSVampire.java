@@ -204,8 +204,7 @@ public class GSVampire {
 
 	
 	private static final String QUERY_RA_GEF_MNS_FOR_ZIELOBJEKT =  
-			"select new sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult("
-			+ "z, g, gtxt, rabtxt.kurz, m, mtxt, mzbm, umstxt)" +
+			"select new sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult(z, g, gtxt, rabtxt.kurz, m, mtxt, mzbm, umstxt)" +
 			" from RaZobGef rzg, " + 
 			"	RaZobGefMas rzgma," + 
 			"	MbGefaehr g," + 
@@ -215,7 +214,7 @@ public class GSVampire {
 			"	MbMassn m," + 
 			"	MbMassnTxt mtxt, " + 
 			"   ModZobjBstMass mzbm," + 
-			"   MUmsetzStatTxt umsTxt " +
+			"   MUmsetzStatTxt umstxt " +
 			" where rzg.id.zobId = z.id.zobId" + 
 			"	and rzg.id.gefId = g.id.gefId" + 
 			"	and gtxt.id.gefId = g.id.gefId" + 
@@ -226,8 +225,8 @@ public class GSVampire {
 			
 			"   and mzbm.id.masId = rzgma.id.masId" + 
 			"   and mzbm.id.zobId = z.id.zobId" + 
-			"   and umsTxt.id.ustId = mzbm.ustId" + 
-			"   and umsTxt.id.sprId = 1" + 
+			"   and umstxt.id.ustId = mzbm.ustId" + 
+			"   and umstxt.id.sprId = 1" + 
 			
 			"	and mtxt.id.masId = m.id.masId" + 
 			"	and z.id.zobId = :zobId" + 
@@ -621,10 +620,8 @@ public class GSVampire {
 		List result = new ArrayList();
 		NZielobjektDAO dao = new NZielobjektDAO();
 		Transaction transaction = dao.getSession().beginTransaction();
-		Query query = dao.getSession().createQuery(
-				QUERY_RA_GEF_MNS_FOR_ZIELOBJEKT);
-		query.setProperties(zielobjekt.getId());
-		query.setParameter("zobId",zielobjekt.getId().getZobId());
+		Query query = dao.getSession().createQuery(QUERY_RA_GEF_MNS_FOR_ZIELOBJEKT);
+		query.setParameter("zobId", zielobjekt.getId().getZobId());
 		query.setParameter("gefId", gefaehrdung.getId().getGefId());
 		result.addAll(query.list());
 		transaction.commit();

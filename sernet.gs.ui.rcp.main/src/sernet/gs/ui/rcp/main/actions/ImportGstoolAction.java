@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -43,6 +44,8 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 
 public class ImportGstoolAction extends RightsEnabledAction {
 
+    private static final Logger LOG = Logger.getLogger(ImportGstoolAction.class);
+    
 	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolaction";
 
 	private String sourceId;
@@ -229,6 +232,7 @@ public class ImportGstoolAction extends RightsEnabledAction {
                                 }
                             });
                         } catch (Exception e) {
+                            LOG.error("Error while importing Risikoanalysen", e);
                             ExceptionUtil.log(e.getCause(), Messages.ImportGstoolAction_2);
                         }
                     }

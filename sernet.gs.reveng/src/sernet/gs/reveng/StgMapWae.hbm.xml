@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="sernet.gs.reveng.StgMapWae" table="STG_MAP_WAE" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+    <class name="sernet.gs.reveng.StgMapWae" table="STG_MAP_WAE">
         <composite-id name="id" class="sernet.gs.reveng.StgMapWaeId">
             <key-property name="altId" type="int">
                 <column name="ALT_ID" />

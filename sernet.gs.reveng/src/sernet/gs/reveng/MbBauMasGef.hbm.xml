@@ -3,8 +3,7 @@
                                    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
- <class catalog="BSIDB_V45_Produktion_db_201504290200"
-  name="sernet.gs.reveng.MbBauMasGef" schema="dbo" table="MB_BAU_MAS_GEF">
+ <class name="sernet.gs.reveng.MbBauMasGef" table="MB_BAU_MAS_GEF">
   <composite-id class="sernet.gs.reveng.MbBauMasGefId" mapped="false"
    name="id" unsaved-value="undefined">
    <key-property name="impId" type="int">

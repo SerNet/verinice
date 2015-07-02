@@ -53,12 +53,6 @@ import sernet.verinice.service.commands.LoadCnAElementByExternalID;
 public class ImportCreateBausteinReferences extends GenericCommand {
 
     private transient Logger log = Logger.getLogger(ImportCreateBausteinReferences.class);
-    private CnATreeElement element;
-    private List<Baustein> bausteine;
-    private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
-    private String sourceId;
-    private IBSIConfig bsiConfig;
-    private static final String NO_COMMENT = "";
 
     public Logger getLog() {
         if (log == null) {
@@ -66,6 +60,13 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         }
         return log;
     }
+    
+    private CnATreeElement element;
+    private List<Baustein> bausteine;
+    private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
+    private String sourceId;
+    private IBSIConfig bsiConfig;
+    private static final String NO_COMMENT = "";
 
     public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap) {
         this.element = element;
@@ -137,8 +138,15 @@ public class ImportCreateBausteinReferences extends GenericCommand {
      */
     public void createBausteinReference(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws CommandException {
 
-        Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
+        String bausteinId = TransferData.getId(mbBaust);
+        Baustein baustein = findBausteinForId(bausteinId);
 
+        if(baustein==null) {
+            //throw new RuntimeException("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);       
+            getLog().error("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
+            return;
+        }
+        
         Integer refZobId = null;
         isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
             refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();

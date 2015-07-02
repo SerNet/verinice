@@ -3,7 +3,7 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
-    <class name="sernet.gs.reveng.SysUsertbs" table="SYS_USERTBS" schema="dbo" catalog="BSIDB_V45_Produktion_db_201504290200">
+    <class name="sernet.gs.reveng.SysUsertbs" table="SYS_USERTBS">
         <id name="tbsId" type="int">
             <column name="TBS_ID" />
             <generator class="assigned" />

@@ -113,6 +113,7 @@ public class ImportRisikoanalysenTask {
         super();
         this.sourceID = sourceID;
         this.allCreatedOwnGefaehrdungen = new HashMap<String, Gefaehrdung>();
+        this.allCreatedOwnMassnahmen = new HashMap<String, RisikoMassnahme>();
     }
 
 
