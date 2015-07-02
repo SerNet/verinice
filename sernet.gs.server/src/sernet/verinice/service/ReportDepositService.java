@@ -76,16 +76,24 @@ public class ReportDepositService extends AbstractReportTemplateService implemen
             filename = filename.substring(0, filename.lastIndexOf(IReportDepositService.EXTENSION_SEPARATOR_CHAR));
             filename = filename + locale + IReportDepositService.EXTENSION_SEPARATOR_CHAR + IReportDepositService.PROPERTIES_FILE_EXTENSION;
             File depositDir = getReportDeposit().getFile();
+
             File propFile = new File(depositDir, filename);
-            if (propFile.exists()) {
-                FileUtils.deleteQuietly(propFile);
-            }
+            deleteFile(propFile);
+
             File rptFile = new File(depositDir, metadata.getFilename());
-            if (rptFile.exists()) {
-                FileUtils.deleteQuietly(rptFile);
-            }
+            deleteFile(rptFile);
+
         } catch (IOException ex) {
             throw new ReportDepositException(ex);
+        }
+    }
+
+    private void deleteFile(File rptFile) throws IOException {
+        if (rptFile.exists()) {
+           boolean deleted = rptFile.delete();
+           if (!deleted){
+               throw new IOException("Can not delete " + rptFile.getName());
+           }
         }
     }
 
