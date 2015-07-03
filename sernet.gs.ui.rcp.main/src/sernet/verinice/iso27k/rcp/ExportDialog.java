@@ -22,6 +22,7 @@ package sernet.verinice.iso27k.rcp;
 import java.io.File;
 import java.util.Set;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
@@ -279,7 +280,7 @@ public class ExportDialog extends TitleAreaDialog {
                     if(isFilepath()) {                 
                         try {   
                             dialog.setFilterPath(FileUtil.getFolderFromPath(txtLocation.getText()));
-                            dialog.setFileName(FileUtil.getFileNameFromPath(txtLocation.getText()));                      
+                            dialog.setFileName(FilenameUtils.getName(txtLocation.getText()));                      
                         } catch (Exception e1) {
                             LOG.debug(Messages.ExportDialog_1, e1);
                             dialog.setFileName(""); //$NON-NLS-1$
