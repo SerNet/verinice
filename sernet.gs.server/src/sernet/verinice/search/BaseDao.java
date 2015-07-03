@@ -50,7 +50,6 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IConfigurationService;
-import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.search.Occurence;
 import sernet.verinice.model.search.VeriniceQuery;
@@ -248,7 +247,7 @@ public abstract class BaseDao implements ISearchDao {
                 searchBuilder = searchBuilder.setQuery(QueryBuilders.matchAllQuery());
             }
                    
-            searchBuilder = HighlightFieldAdder.add(typeId, searchBuilder);
+            searchBuilder = HighlightFieldAdder.add(field, searchBuilder);
             TermsFilterBuilder typeBuilder = FilterBuilders.inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[]{typeId});
             AndFilterBuilder andBuilder = FilterBuilders.andFilter(typeBuilder);
             

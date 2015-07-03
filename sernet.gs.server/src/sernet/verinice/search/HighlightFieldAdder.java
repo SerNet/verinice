@@ -40,9 +40,8 @@ public final class HighlightFieldAdder {
         return requestBuilder;
     }
     
-    public static SearchRequestBuilder add(String typeId, SearchRequestBuilder requestBuilder) {
-        EntityType type = HUITypeFactory.getInstance().getEntityType(typeId);
-        return add(type, requestBuilder);
+    public static SearchRequestBuilder add(String highlightedField, SearchRequestBuilder requestBuilder) {
+        return requestBuilder.addHighlightedField(highlightedField);
     }
 
     private static SearchRequestBuilder add(EntityType type, SearchRequestBuilder requestBuilder) {
