@@ -36,6 +36,8 @@ public class RootElement extends BaseElement {
     
     private static final Logger LOG = Logger.getLogger(RootElement.class);
     
+    public static final String RESULT_KEY = "ROOT";
+    
     public RootElement(String typeId) {
         super(typeId);
         
@@ -56,7 +58,7 @@ public class RootElement extends BaseElement {
             String id = String.valueOf(element.getDbId());
             result.put(id, getChild().getResult());
         }
-        getResult().put("ROOT", result);       
+        getResult().put(RESULT_KEY, result);       
     }
 
 }
