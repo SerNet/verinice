@@ -38,7 +38,7 @@ import org.junit.Test;
 
 import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.preferences.SearchPreferencePage;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.CsvExport;
 import sernet.verinice.rcp.search.CsvExportException;
@@ -69,7 +69,7 @@ public class CsvExportTest {
     public void testExport() throws CsvExportException, FileNotFoundException, IOException {
         for (int i = 0; i < 100; i++) {
             String phrase = LOREM.randomWord();
-            VeriniceSearchResultObject result = SearchResultGenerator.createResult(phrase);
+            VeriniceSearchResultTable result = SearchResultGenerator.createResult(phrase);
             IColumnStore columnStore = CsvExport.createColumnStore(result);
             setInvisibleColumns(columnStore);
             //assertTrue("No visible column", columnStore.getColumns().size()>0);
@@ -87,7 +87,7 @@ public class CsvExportTest {
         ICsvExport exporter = new CsvExport();
         exporter.setFilePath("/diesen/ordner/gibt/es/nicht/export.csv");
         String phrase = LOREM.randomWord();
-        VeriniceSearchResultObject result = SearchResultGenerator.createResult(phrase);
+        VeriniceSearchResultTable result = SearchResultGenerator.createResult(phrase);
         IColumnStore columnStore = CsvExport.createColumnStore(result);
         exporter.setSeperator(SearchPreferencePage.SEMICOLON.charAt(0));
         exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
@@ -99,7 +99,7 @@ public class CsvExportTest {
         ICsvExport exporter = new CsvExport();
         exporter.setFilePath(getFilePath());
         String phrase = LOREM.randomWord();
-        VeriniceSearchResultObject result = new VeriniceSearchResultObject(phrase, phrase, new String[]{});
+        VeriniceSearchResultTable result = new VeriniceSearchResultTable(phrase, phrase, new String[]{});
         IColumnStore columnStore = CsvExport.createColumnStore(result);
         exporter.setSeperator(SearchPreferencePage.SEMICOLON.charAt(0));
         exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
@@ -109,7 +109,7 @@ public class CsvExportTest {
     
     private void testSearchResult() {
         String phrase = LOREM.randomWord();
-        VeriniceSearchResultObject result = SearchResultGenerator.createResult(phrase);
+        VeriniceSearchResultTable result = SearchResultGenerator.createResult(phrase);
         assertNotNull("Result is null", result);
         Set<VeriniceSearchResultRow> rows = result.getAllResults();
         assertFalse("Result is empty", rows.isEmpty());
@@ -130,7 +130,7 @@ public class CsvExportTest {
         }
     }
 
-    private void checkExportFile(VeriniceSearchResultObject result, IColumnStore columnStore) throws FileNotFoundException, IOException {
+    private void checkExportFile(VeriniceSearchResultTable result, IColumnStore columnStore) throws FileNotFoundException, IOException {
         File exportFile = new File(getFilePath());
         assertTrue("Export file does not exists", exportFile.exists());
         CSVReader reader = null;

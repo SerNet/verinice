@@ -33,7 +33,7 @@ public class VeriniceSearchResultRow implements Serializable{
     
     private Map<String, String> properties;
 
-    private VeriniceSearchResultObject parent;
+    private VeriniceSearchResultTable parent;
 
     /**
      * Should be uuid of corresponding {@link CnATreeElement}
@@ -49,7 +49,7 @@ public class VeriniceSearchResultRow implements Serializable{
         this.properties.put(OCCURENCE_PROPERTY_NAME, occurence.toString());
     }
 
-    public VeriniceSearchResultRow(VeriniceSearchResultObject parent, String identifier, Occurence occurence){
+    public VeriniceSearchResultRow(VeriniceSearchResultTable parent, String identifier, Occurence occurence){
         this(identifier, occurence);
         this.parent = parent;
     }
@@ -112,7 +112,7 @@ public class VeriniceSearchResultRow implements Serializable{
         return "VeriniceSearchResultRow [properties=" + properties + ", identifier=" + identifier + ", occurence=" + occurence + "]";
     }
 
-    public VeriniceSearchResultObject getParent() {
+    public VeriniceSearchResultTable getParent() {
         return parent;
     }
 

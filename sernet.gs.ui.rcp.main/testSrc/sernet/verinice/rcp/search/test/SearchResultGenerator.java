@@ -25,7 +25,7 @@ import java.util.UUID;
 
 import net._01001111.text.LoremIpsum;
 import sernet.verinice.model.search.Occurence;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 
 /**
@@ -47,11 +47,11 @@ public final class SearchResultGenerator {
     public static long columns = 10;
     public static double fillFactor = 0.5;
     
-    public static VeriniceSearchResultObject createResult(String phrase) {
+    public static VeriniceSearchResultTable createResult(String phrase) {
         String type = LOREM.randomWord();
 
         List<String> propertyList = createPropertyList(type); 
-        VeriniceSearchResultObject result = new VeriniceSearchResultObject(type, type, propertyList.toArray(new String[propertyList.size()]));
+        VeriniceSearchResultTable result = new VeriniceSearchResultTable(type, type, propertyList.toArray(new String[propertyList.size()]));
         long n = Math.round(Math.random()*(getRows()*1.0)) + 1;
         for (int i = 0; i < n; i++) {
             result.addSearchResult(createRow(propertyList, phrase));

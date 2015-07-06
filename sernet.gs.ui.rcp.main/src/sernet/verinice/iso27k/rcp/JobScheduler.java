@@ -53,6 +53,7 @@ public final class JobScheduler {
 	}
 	
 	public static synchronized void scheduleInitJob(WorkspaceJob job) {
+
 		JobScheduler.scheduleJob(job, JobScheduler.getInitMutex(), JobScheduler.getInitProgressMonitor());
 	}
 	

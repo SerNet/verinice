@@ -23,14 +23,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Represents a table for the search view.
+ * Represents a table of properties of several CnATreeElements for the search
+ * view. The table is always bound to an {@link EntityType} via an internal id.
+ * Every row represents an match and a column represents the
+ * {@link PropertyType}.
+ *
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
-public class VeriniceSearchResultObject implements Serializable {
+public class VeriniceSearchResultTable implements Serializable {
 
     private Set<VeriniceSearchResultRow> results;
 
@@ -39,7 +45,7 @@ public class VeriniceSearchResultObject implements Serializable {
     private String name;
 
     private int hits = 0;
-    
+
     private int limit = 0;
 
     private String[] propertyTypeIds;
@@ -61,7 +67,7 @@ public class VeriniceSearchResultObject implements Serializable {
      *            Is the return value of:
      *            {@link EntityType#getAllPropertyTypeIds()}
      */
-    public VeriniceSearchResultObject(String typeId, String name, String[] propertyTypeIds) {
+    public VeriniceSearchResultTable(String typeId, String name, String[] propertyTypeIds) {
         this.id = typeId;
         this.results = new HashSet<VeriniceSearchResultRow>(0);
         this.name = name;
@@ -124,7 +130,7 @@ public class VeriniceSearchResultObject implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        VeriniceSearchResultObject other = (VeriniceSearchResultObject) obj;
+        VeriniceSearchResultTable other = (VeriniceSearchResultTable) obj;
         if (hits != other.hits)
             return false;
         if (results == null) {
@@ -147,7 +153,7 @@ public class VeriniceSearchResultObject implements Serializable {
     public void setParent(VeriniceSearchResult parent) {
         this.parent = parent;
     }
-    
+
     public int getLimit() {
         return limit;
     }

@@ -33,7 +33,7 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.column.ColumnComparator;
 import sernet.verinice.rcp.search.column.ColumnStore;
@@ -45,7 +45,7 @@ import sernet.verinice.rcp.search.column.IconColumn;
 import com.opencsv.CSVWriter;
 
 /**
- * Exports a {@link VeriniceSearchResultObject} to a CSV table.
+ * Exports a {@link VeriniceSearchResultTable} to a CSV table.
  * Exported columns are defined in {@link IColumnStore} parameter.
  * 
  * This implementation uses opencsv to create CSV, see: http://opencsv.sourceforge.net/
@@ -70,10 +70,10 @@ public class CsvExport implements ICsvExport {
     }
     
     /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.ICsvExport#exportToFile(sernet.verinice.model.search.VeriniceSearchResultObject, sernet.verinice.rcp.search.ColumnStore)
+     * @see sernet.verinice.rcp.search.ICsvExport#exportToFile(sernet.verinice.model.search.VeriniceSearchResultTable, sernet.verinice.rcp.search.ColumnStore)
      */
     @Override
-    public void exportToFile(VeriniceSearchResultObject result, IColumnStore columnStore) throws CsvExportException {
+    public void exportToFile(VeriniceSearchResultTable result, IColumnStore columnStore) throws CsvExportException {
         try {
             FileUtils.writeByteArrayToFile(new File(filePath), export(result, columnStore));
         } catch (IOException e) {
@@ -82,10 +82,10 @@ public class CsvExport implements ICsvExport {
     }
     
     /* (non-Javadoc)
-     * @see sernet.verinice.rcp.search.ICsvExport#export(sernet.verinice.model.search.VeriniceSearchResultObject, sernet.verinice.rcp.search.ColumnStore)
+     * @see sernet.verinice.rcp.search.ICsvExport#export(sernet.verinice.model.search.VeriniceSearchResultTable, sernet.verinice.rcp.search.ColumnStore)
      */
     @Override
-    public byte[] export(VeriniceSearchResultObject result, IColumnStore columnStore) throws CsvExportException {       
+    public byte[] export(VeriniceSearchResultTable result, IColumnStore columnStore) throws CsvExportException {
         CSVWriter writer = null;
         try {
             if(columnStore==null) {
@@ -109,7 +109,7 @@ public class CsvExport implements ICsvExport {
         }
     }
 
-    private CSVWriter doExport(VeriniceSearchResultObject result, IColumnStore columnStore, Writer writer ) {      
+    private CSVWriter doExport(VeriniceSearchResultTable result, IColumnStore columnStore, Writer writer ) {
         CSVWriter csvWriter = new CSVWriter(writer, getSeperator());
         disableBlacklistedColumns(columnStore);
         Set<VeriniceSearchResultRow> rows = result.getAllResults();
@@ -162,7 +162,7 @@ public class CsvExport implements ICsvExport {
     }
     
 
-    public static IColumnStore createColumnStore(VeriniceSearchResultObject result) {
+    public static IColumnStore createColumnStore(VeriniceSearchResultTable result) {
         IColumnStore columnStore = new ColumnStore(new ColumnComparator());
         Set<VeriniceSearchResultRow> rows = result.getAllResults();
         for (VeriniceSearchResultRow row : rows) {

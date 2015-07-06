@@ -40,6 +40,8 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.index.engine.DocumentMissingException;
 import org.elasticsearch.index.query.AndFilterBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.MatchAllQueryBuilder;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermFilterBuilder;
@@ -241,10 +243,12 @@ public abstract class BaseDao implements ISearchDao {
                     .setHighlighterPreTags(Occurence.HTML_OPEN_TAG);
 
             if(value != null && !value.isEmpty()){
-                searchBuilder = searchBuilder.setQuery(QueryBuilders.matchPhraseQuery(field, value).minimumShouldMatch("100%"));
+                MatchQueryBuilder matchQueryBuilder = QueryBuilders.matchPhraseQuery(field, value);
+                searchBuilder = searchBuilder.setQuery(matchQueryBuilder);
             } else {
                 // fires if search phrase is empty
-                searchBuilder = searchBuilder.setQuery(QueryBuilders.matchAllQuery());
+                MatchAllQueryBuilder matchQueryBuilder = QueryBuilders.matchAllQuery();
+                searchBuilder = searchBuilder.setQuery(matchQueryBuilder);
             }
                    
             searchBuilder = HighlightFieldAdder.add(field, searchBuilder);
@@ -264,8 +268,13 @@ public abstract class BaseDao implements ISearchDao {
             if(query.getLimit() > 0){
                 searchBuilder = searchBuilder.setSize(query.getLimit());
             }
+
+            searchBuilder.setExplain(true);
+
             requestBuilder = requestBuilder.add(searchBuilder);
         }
+
+
         return requestBuilder;
     }
 

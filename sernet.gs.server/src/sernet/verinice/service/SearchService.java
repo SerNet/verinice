@@ -42,7 +42,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.search.Occurence;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.search.IElementSearchDao;
 import sernet.verinice.search.Indexer;
@@ -101,10 +101,10 @@ public class SearchService implements ISearchService {
         return HUITypeFactory.getInstance().getEntityType(typeID).getName();
     }
 
-    private VeriniceSearchResultObject processSearchResponse(String elementTypeId, MultiSearchResponse msr, int limit) {
+    private VeriniceSearchResultTable processSearchResponse(String elementTypeId, MultiSearchResponse msr, int limit) {
         List<SearchHit> hitList = createHitList(msr, limit);
         String identifier = "";
-        VeriniceSearchResultObject results = new VeriniceSearchResultObject(elementTypeId, getEntityName(elementTypeId), getPropertyIds(elementTypeId));
+        VeriniceSearchResultTable results = new VeriniceSearchResultTable(elementTypeId, getEntityName(elementTypeId), getPropertyIds(elementTypeId));
         results.setLimit(limit);
         for (SearchHit hit : hitList) {
             identifier = hit.getId();

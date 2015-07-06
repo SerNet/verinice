@@ -36,28 +36,28 @@ public class VeriniceSearchResult implements Serializable {
 
     private VeriniceQuery veriniceQuery;
 
-    private Map<String, VeriniceSearchResultObject> entityTypeIdToSearchResult;
+    private Map<String, VeriniceSearchResultTable> entityTypeIdToSearchResult;
     
     private int hits;
     
     public VeriniceSearchResult() {
-        entityTypeIdToSearchResult = new HashMap<String, VeriniceSearchResultObject>();
+        entityTypeIdToSearchResult = new HashMap<String, VeriniceSearchResultTable>();
     }
     
-    public void addVeriniceSearchObject(VeriniceSearchResultObject veriniceSearchResultObject){
-        if (veriniceSearchResultObject.getHits() > 0) {
-            veriniceSearchResultObject.setParent(this);
-            entityTypeIdToSearchResult.put(veriniceSearchResultObject.getEntityTypeId(), veriniceSearchResultObject);
-            hits += veriniceSearchResultObject.getHits();
+    public void addVeriniceSearchObject(VeriniceSearchResultTable veriniceSearchResultTable){
+        if (veriniceSearchResultTable.getHits() > 0) {
+            veriniceSearchResultTable.setParent(this);
+            entityTypeIdToSearchResult.put(veriniceSearchResultTable.getEntityTypeId(), veriniceSearchResultTable);
+            hits += veriniceSearchResultTable.getHits();
         }
     }
     
-    public VeriniceSearchResultObject getVeriniceSearchObject(String entityTypeId){
+    public VeriniceSearchResultTable getVeriniceSearchObject(String entityTypeId){
         return entityTypeIdToSearchResult.get(entityTypeId);
     }
     
-    public Set<VeriniceSearchResultObject> getAllVeriniceSearchObjects(){
-        return new HashSet<VeriniceSearchResultObject>(entityTypeIdToSearchResult.values());
+    public Set<VeriniceSearchResultTable> getAllVeriniceSearchObjects(){
+        return new HashSet<VeriniceSearchResultTable>(entityTypeIdToSearchResult.values());
     }
     
     public int getHits(){

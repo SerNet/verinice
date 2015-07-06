@@ -166,7 +166,7 @@ public class Indexer {
     private void printIndexingTimeConsumption() {
         long end = System.currentTimeMillis();
         long ms = end - indexingStart;
-        LOG.debug("All threads created, runtime: " + ms + " ms, readable time: " + TimeFormatter.getHumanRedableTime(ms));
+        LOG.debug("All indices created, runtime: " + ms + " ms, readable time: " + TimeFormatter.getHumanRedableTime(ms));
     }
 
     /**
@@ -265,31 +265,4 @@ public class Indexer {
     public void setTitleCache(IElementTitleCache titleCache) {
         this.titleCache = titleCache;
     }
-
-    class LastThread implements Callable<ActionResponse> {
-
-        long startTime;
-
-        private LastThread(long startTime) {
-            super();
-            this.startTime = startTime;
-        }
-
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.util.concurrent.Callable#call()
-         */
-        @Override
-        public ActionResponse call() throws Exception {
-            if (LOG.isInfoEnabled()) {
-                long ms = System.currentTimeMillis() - startTime;
-                String message = "Indexing finished, runtime: " + TimeFormatter.getHumanRedableTime(ms);
-                LOG.info(message);
-            }
-            return null;
-        }
-
-    }
-
 }

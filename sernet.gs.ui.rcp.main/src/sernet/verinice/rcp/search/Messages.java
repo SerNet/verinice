@@ -47,6 +47,7 @@ public class Messages extends NLS {
     public static String TitleColumn_0;
     public static String ScopeColumn_0;
     public static String OccurenceColumn_0;
+    public static String UpdateTableJob_0;
 
     static {
         // initialize resource bundle

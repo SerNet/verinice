@@ -54,7 +54,7 @@ import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.search.IElementSearchDao;
 import sernet.verinice.search.Indexer;
@@ -124,8 +124,8 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     }
 
     private void delete(VeriniceSearchResult result) {
-        Set<VeriniceSearchResultObject> resultList = result.getAllVeriniceSearchObjects();
-        for (VeriniceSearchResultObject resultObject : resultList) {
+        Set<VeriniceSearchResultTable> resultList = result.getAllVeriniceSearchObjects();
+        for (VeriniceSearchResultTable resultObject : resultList) {
             Set<VeriniceSearchResultRow> rows = resultObject.getAllResults();
             for (VeriniceSearchResultRow row : rows) {
                 searchDao.delete(getUuid(row));
@@ -166,7 +166,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         String longWord = "automatically";
 
         VeriniceSearchResult result = searchService.query(new VeriniceQuery(longWord, VeriniceQuery.MAX_LIMIT));
-        VeriniceSearchResultObject entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
+        VeriniceSearchResultTable entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
         Assert.notNull(entity, "Token \"" + longWord + "\" not found in " + VNA_FILENAME);
 
         Set<VeriniceSearchResultRow> entities = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows();
@@ -184,7 +184,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         String phrase = "ction from malware";
 
         VeriniceSearchResult result = searchService.query(new VeriniceQuery(phrase, VeriniceQuery.MAX_LIMIT));
-        VeriniceSearchResultObject entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
+        VeriniceSearchResultTable entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
         Assert.notNull(entity, "Phrase \"" + phrase + "\" not found in " + VNA_FILENAME);
 
         Set<VeriniceSearchResultRow> entities = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows();
@@ -260,7 +260,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     private void testFindByTitle(CnATreeElement element) {
         String title = element.getTitle();
         String type = element.getTypeId();
-        VeriniceSearchResultObject typeResult = findByTitle(type, title);
+        VeriniceSearchResultTable typeResult = findByTitle(type, title);
         boolean found = false;
         for (VeriniceSearchResultRow row : typeResult.getRows()) {
 
@@ -276,12 +276,12 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         return (String) row.getValueFromResultString(ISearchService.ES_FIELD_UUID);
     }
 
-    private VeriniceSearchResultObject findByTitle(String type, String title) {
+    private VeriniceSearchResultTable findByTitle(String type, String title) {
         if (title.length() > 7) {
             title = title.substring(0, 7);
         }
         VeriniceSearchResult result = findByTitle(title);
-        VeriniceSearchResultObject typeResult = result.getVeriniceSearchObject(type);
+        VeriniceSearchResultTable typeResult = result.getVeriniceSearchObject(type);
         return typeResult;
     }
 

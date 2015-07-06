@@ -36,7 +36,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.SearchPreferencePage;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.rcp.search.column.ColumnStoreFactory;
 import sernet.verinice.rcp.search.column.IColumnStore;
 
@@ -49,11 +49,11 @@ public class CsvExportHandler {
     private static final String CSV = ".csv";
     
     Shell shell;
-    VeriniceSearchResultObject result;
+    VeriniceSearchResultTable result;
     
-    public CsvExportHandler(VeriniceSearchResultObject veriniceSearchResultObject, Shell shell) {
+    public CsvExportHandler(VeriniceSearchResultTable veriniceSearchResultTable, Shell shell) {
         super();
-        this.result = veriniceSearchResultObject;
+        this.result = veriniceSearchResultTable;
         this.shell = shell;
     }
     
@@ -154,7 +154,7 @@ public class CsvExportHandler {
         return dir;
     }
 
-    public void setVeriniceSearchResultObject(VeriniceSearchResultObject veriniceSearchResultObject) {
-        this.result = veriniceSearchResultObject;
+    public void setVeriniceSearchResultObject(VeriniceSearchResultTable veriniceSearchResultTable) {
+        this.result = veriniceSearchResultTable;
     }
 }

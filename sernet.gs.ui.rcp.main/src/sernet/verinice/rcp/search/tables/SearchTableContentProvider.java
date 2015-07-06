@@ -22,7 +22,7 @@ package sernet.verinice.rcp.search.tables;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -62,8 +62,8 @@ public class SearchTableContentProvider implements IStructuredContentProvider {
      */
     @Override
     public Object[] getElements(Object inputElement) {
-        if (inputElement instanceof VeriniceSearchResultObject) {
-            return ((VeriniceSearchResultObject) inputElement).getRows().toArray(new Object[((VeriniceSearchResultObject) inputElement).getRows().size()]);
+        if (inputElement instanceof VeriniceSearchResultTable) {
+            return ((VeriniceSearchResultTable) inputElement).getRows().toArray(new Object[((VeriniceSearchResultTable) inputElement).getRows().size()]);
         }
 
         return new Object[0];

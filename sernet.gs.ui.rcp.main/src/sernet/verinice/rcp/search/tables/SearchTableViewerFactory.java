@@ -22,7 +22,7 @@ package sernet.verinice.rcp.search.tables;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.rcp.search.SearchView;
 import sernet.verinice.rcp.search.column.ColumnStoreFactory;
 import sernet.verinice.rcp.search.column.IColumnStore;
@@ -42,7 +42,7 @@ import sernet.verinice.rcp.search.column.IColumnStore;
  */
 public class SearchTableViewerFactory {
 
-    public TableViewer getSearchResultTable(VeriniceSearchResultObject vSearchResultObject, Composite parent) {
+    public TableViewer getSearchResultTable(VeriniceSearchResultTable vSearchResultObject, Composite parent) {
         IColumnStore columnStore = ColumnStoreFactory.getColumnStore(vSearchResultObject.getEntityTypeId());
         return new SearchResultsTableViewer(parent, columnStore, vSearchResultObject);
     }

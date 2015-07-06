@@ -66,7 +66,7 @@ public class TableImageProvider {
             return imgCache.getImage(getMassnahmenUmsetzungsOptionStatus(row.getValueFromResultString(MassnahmenUmsetzung.P_UMSETZUNG)));
         }
 
-        else if (GefaehrdungsUmsetzung.TYPE_ID.equals(typeId)){
+        else if (GefaehrdungsUmsetzung.TYPE_ID.equals(typeId)) {
             return imgCache.getImage(ImageCache.GEFAEHRDUNG);
         }
 
@@ -92,7 +92,7 @@ public class TableImageProvider {
         }
 
         String typeId = row.getParent().getEntityTypeId();
-        LOG.debug("seach image for type id: " + typeId);
+        LOG.debug("search image for type id: " + typeId);
 
         if (SamtTopic.TYPE_ID.equals(typeId)) {
             return getSamtTopicOptionStatus(row.getValueFromResultString(SamtTopic.PROP_MATURITY));
@@ -157,9 +157,9 @@ public class TableImageProvider {
      * found.
      *
      * @param status
-     *            is the translated message from a messages.properties file.
-     * @return the reverse translated message, so id (key) of the translated
-     *         message.
+     *            Is the translated message from a messages.properties file.
+     * @return The reverse translated message, which is the id (key) of the
+     *         translated message.
      */
     private static String getMassnahmenUmsetzungsOptionStatus(String status) {
 
@@ -197,9 +197,9 @@ public class TableImageProvider {
      * found.
      *
      * @param status
-     *            is the translated message from a messages.properties file.
-     * @return the reverse translated message, so id (key) of the translated
-     *         message.
+     *            Is the translated message from a messages.properties file.
+     * @return The reverse translated message, which is the id (key) of the
+     *         translated message.
      */
     private static String retrieveOptionStatus(String status) {
         if (getTypeIDTranslation(IControl.IMPLEMENTED_NO).equals(status)) {

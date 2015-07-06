@@ -28,6 +28,6 @@ public class ColumnStoreFactory {
 
 
     public static ColumnStore getColumnStore(String entityTypeId) {
-       return new PersistedSortedColumnStore(entityTypeId);
+       return new PersistentSortedColumnStore(entityTypeId);
     }
 }

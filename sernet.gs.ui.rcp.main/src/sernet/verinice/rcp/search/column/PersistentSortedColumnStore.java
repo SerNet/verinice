@@ -37,10 +37,10 @@ import sernet.hui.common.connect.PropertyType;
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class PersistedSortedColumnStore extends ColumnStore {
+public class PersistentSortedColumnStore extends ColumnStore {
 
     /**
-     * All properties tag width this constant are displayed as default column.
+     * All properties tag with this constant are displayed as default column.
      */
     private static final String DEFAULT_TAG_BASIC = "basic";
 
@@ -52,7 +52,7 @@ public class PersistedSortedColumnStore extends ColumnStore {
 
     private final static String COLUMNS_PERSISTED = "search_table_columns_preferences_";
 
-    public PersistedSortedColumnStore(String entityTypeId) {
+    public PersistentSortedColumnStore(String entityTypeId) {
         super();
 
         this.entityTypeId = entityTypeId;
@@ -149,7 +149,7 @@ public class PersistedSortedColumnStore extends ColumnStore {
             if (obj instanceof PropertyType) {
                 propertyTypes.add((PropertyType) obj);
             }
-            
+
             if (obj instanceof PropertyGroup){
                 for(PropertyType propertyType : ((PropertyGroup) obj).getPropertyTypes()){
                     propertyTypes.add(propertyType);

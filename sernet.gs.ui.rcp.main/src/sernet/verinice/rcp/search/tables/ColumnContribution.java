@@ -26,7 +26,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.rcp.search.SearchView;
 import sernet.verinice.rcp.search.column.IColumn;
 
@@ -36,9 +36,9 @@ public class ColumnContribution extends ContributionItem {
 
     private IColumn column;
 
-    final private VeriniceSearchResultObject vSearchResultObject;
+    final private VeriniceSearchResultTable vSearchResultObject;
 
-    public ColumnContribution(SearchView searchView, IColumn column, VeriniceSearchResultObject vSearchResultObject) {
+    public ColumnContribution(SearchView searchView, IColumn column, VeriniceSearchResultTable vSearchResultObject) {
         super(column.getTitle());
         this.searchView = searchView;
         this.column = column;

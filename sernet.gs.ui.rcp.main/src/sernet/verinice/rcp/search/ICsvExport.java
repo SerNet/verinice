@@ -22,11 +22,11 @@ package sernet.verinice.rcp.search;
 import java.nio.charset.Charset;
 
 import sernet.verinice.interfaces.search.ISearchService;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.rcp.search.column.IColumnStore;
 
 /**
- * Exports a {@link VeriniceSearchResultObject} to a CSV table.
+ * Exports a {@link VeriniceSearchResultTable} to a CSV table.
  * Exported columns are defined in {@link IColumnStore} parameter.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -39,7 +39,7 @@ public interface ICsvExport {
     public static final String FILE_PATH_DEFAULT = "verinice-search-result.csv";
     
     /**
-     * Exports a {@link VeriniceSearchResultObject} to a CSV table. Table is returned
+     * Exports a {@link VeriniceSearchResultTable} to a CSV table. Table is returned
      * as byte array.
      * 
      * @param searchResult The result of a search, see {@link ISearchService}
@@ -47,17 +47,17 @@ public interface ICsvExport {
      * @return CSV table as byte array
      * @throws CsvExportException In case of errors, RuntimeExpeptions are wrapped in a CsvExportExceptions 
      */
-    byte[] export(VeriniceSearchResultObject searchResult, IColumnStore columnStore) throws CsvExportException;
+    byte[] export(VeriniceSearchResultTable searchResult, IColumnStore columnStore) throws CsvExportException;
     
     /**
-     * Exports a {@link VeriniceSearchResultObject} to a CSV table. Table is saved as a file.
+     * Exports a {@link VeriniceSearchResultTable} to a CSV table. Table is saved as a file.
      * Set file path with <code>setFilePath(path)</code>.
      * 
      * @param searchResult The result of a search, see {@link ISearchService}
      * @param columnStore Defines exported columns
      * @throws CsvExportException In case of errors, RuntimeExpeptions are wrapped in a CsvExportExceptions
      */
-    void exportToFile(VeriniceSearchResultObject searchResult, IColumnStore columnStore)  throws CsvExportException;
+    void exportToFile(VeriniceSearchResultTable searchResult, IColumnStore columnStore)  throws CsvExportException;
     
     /**
      * @param File path for exported CSV table

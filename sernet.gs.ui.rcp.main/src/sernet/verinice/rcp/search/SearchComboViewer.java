@@ -15,11 +15,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     benjamin <bw[at]sernet[dot]de> - initial API and implementation
+ *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.rcp.search;
-
-import java.util.Set;
 
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -32,15 +30,14 @@ import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.model.search.VeriniceSearchResult;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 
 /**
  * Viewer for a search result.
  *
- * Shows a set available {@link VeriniceSearchResultObject}. Displays the
- * {@link VeriniceSearchResultObject} with the most hits first.
+ * Shows a set of available {@link VeriniceSearchResultTable}. Displays the
+ * {@link VeriniceSearchResultTable} with the most hits first.
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
@@ -59,13 +56,20 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
         this.setLabelProvider(new LabelProvider() {
             @Override
             public String getText(Object element) {
-                VeriniceSearchResultObject veriniceSearchResult = (VeriniceSearchResultObject) element;
-                return new StringBuilder().append(veriniceSearchResult.getEntityName()).append(" (").append(veriniceSearchResult.getHits()).append(")").toString();
+                VeriniceSearchResultTable veriniceSearchResult = (VeriniceSearchResultTable) element;
+                return getLabelText(veriniceSearchResult);
+            }
+
+            private String getLabelText(VeriniceSearchResultTable veriniceSearchResult) {
+                return new StringBuilder()
+                    .append(veriniceSearchResult.getEntityName())
+                    .append(" (")
+                    .append(veriniceSearchResult.getHits())
+                    .append(")").toString();
             }
         });
 
         this.addSelectionChangedListener(this);
-
         this.setComparator(setSearchViewerComparator());
     }
 
@@ -77,10 +81,10 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
 
             public int compare(Viewer viewer, Object object1, Object object2) {
 
-                if (object1 instanceof VeriniceSearchResultObject && object2 instanceof VeriniceSearchResultObject) {
+                if (object1 instanceof VeriniceSearchResultTable && object2 instanceof VeriniceSearchResultTable) {
 
-                    VeriniceSearchResultObject vResultObject1 = (VeriniceSearchResultObject) object1;
-                    VeriniceSearchResultObject vResultObject2 = (VeriniceSearchResultObject) object2;
+                    VeriniceSearchResultTable vResultObject1 = (VeriniceSearchResultTable) object1;
+                    VeriniceSearchResultTable vResultObject2 = (VeriniceSearchResultTable) object2;
 
                     return comparator.compare(vResultObject1, vResultObject2);
                 } else {
@@ -123,10 +127,10 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
     public Object[] getElements(Object inputElement) {
         if (inputElement instanceof VeriniceSearchResult) {
             VeriniceSearchResult veriniceSearchResult = (VeriniceSearchResult) inputElement;
-            VeriniceSearchResultObject[] input = new VeriniceSearchResultObject[veriniceSearchResult.getAllVeriniceSearchObjects().size()];
+            VeriniceSearchResultTable[] input = new VeriniceSearchResultTable[veriniceSearchResult.getAllVeriniceSearchObjects().size()];
             return veriniceSearchResult.getAllVeriniceSearchObjects().toArray(input);
         } else {
-            return new VeriniceSearchResultObject[0];
+            return new VeriniceSearchResultTable[0];
         }
     }
 
@@ -140,11 +144,11 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
     @Override
     public void selectionChanged(SelectionChangedEvent event) {
         if (!event.getSelection().isEmpty()) {
-            VeriniceSearchResultObject veriniceSearchResultObject = (VeriniceSearchResultObject) ((StructuredSelection) event.getSelection()).getFirstElement();
-            searchView.setTableViewer(veriniceSearchResultObject);
+            VeriniceSearchResultTable veriniceSearchResultTable = (VeriniceSearchResultTable) ((StructuredSelection) event.getSelection()).getFirstElement();
+            searchView.setTableViewer(veriniceSearchResultTable);
             searchView.enableExport2CSVAction(true);
         } else {
-            VeriniceSearchResultObject firstResult = (VeriniceSearchResultObject) getElementAt(0);
+            VeriniceSearchResultTable firstResult = (VeriniceSearchResultTable) getElementAt(0);
             searchView.setTableViewer(firstResult);
             searchView.enableExport2CSVAction(true);
         }

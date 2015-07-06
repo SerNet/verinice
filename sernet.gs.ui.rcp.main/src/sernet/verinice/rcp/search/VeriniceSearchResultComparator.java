@@ -22,24 +22,24 @@ package sernet.verinice.rcp.search;
 import java.util.Comparator;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 
 /**
- * Entries are sorted by there hits pro {@link VeriniceSearchResultObject}. When
+ * Entries are sorted by there hits pro {@link VeriniceSearchResultTable}. When
  * hits are equal the entries are sorted by the {@link NumericStringComparator}.
  *
  * There is one interesting detail. Because in a sorted Set the smallest element
- * comes first, the sign of the {@link VeriniceSearchResultObject#getHits()} has
+ * comes first, the sign of the {@link VeriniceSearchResultTable#getHits()} has
  * to be inverted. After that the {@link SearchComboViewer} shows the elements
  * in a descending order.
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-final class VeriniceSearchResultComparator implements Comparator<VeriniceSearchResultObject> {
+final class VeriniceSearchResultComparator implements Comparator<VeriniceSearchResultTable> {
     NumericStringComparator comparator = new NumericStringComparator();
 
     @Override
-    public int compare(VeriniceSearchResultObject vResultObject1, VeriniceSearchResultObject vResultObject2) {
+    public int compare(VeriniceSearchResultTable vResultObject1, VeriniceSearchResultTable vResultObject2) {
 
         if (vResultObject1.getHits() == vResultObject2.getHits()) {
             return comparator.compare(vResultObject1.getEntityName(), vResultObject2.getEntityName());

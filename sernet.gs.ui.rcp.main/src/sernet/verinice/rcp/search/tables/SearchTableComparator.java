@@ -53,13 +53,13 @@ public class SearchTableComparator extends ViewerComparator {
     }
 
     /**
-     * If column has been already set by the selection listener the sorting
-     * direction is inverted. In the other case the direction is always set to
+     * If column has been already set by the selection listener, the sorting
+     * direction is inverted. Otherwise the direction is always set to
      * up.
      *
      * @param currentColumn
-     *            column which the selection listener provides == the column
-     *            header the use has clicked on.
+     *            column provided by selection listener == column
+     *            header clicked by user
      */
     private void detectSortDirection(IColumn currentColumn) {
         if (this.currentColumn == currentColumn) {

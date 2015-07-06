@@ -24,7 +24,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.Separator;
 
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.rcp.search.Messages;
 import sernet.verinice.rcp.search.SearchView;
 import sernet.verinice.rcp.search.column.ColumnStoreFactory;
@@ -37,9 +37,9 @@ public class TableMenuListener implements IMenuListener {
 
     private IColumnStore columnStore;
 
-    private VeriniceSearchResultObject vSearchResultObject;
+    private VeriniceSearchResultTable vSearchResultObject;
 
-    public TableMenuListener(SearchView searchView, VeriniceSearchResultObject vSearchResultObject) {
+    public TableMenuListener(SearchView searchView, VeriniceSearchResultTable vSearchResultObject) {
         this.searchView = searchView;
         columnStore = ColumnStoreFactory.getColumnStore(vSearchResultObject.getEntityTypeId());
         this.vSearchResultObject = vSearchResultObject;

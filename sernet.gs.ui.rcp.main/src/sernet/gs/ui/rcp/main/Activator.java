@@ -120,6 +120,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private ServiceTracker templateDirTracker;
 
+    private WorkspaceJob reindexJob;
+
     /**
      * The constructor
      */
@@ -162,7 +164,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         templateDirTracker = new ServiceTracker(context, IReportLocalTemplateDirectoryService.class.getName(), null);
         templateDirTracker.open();
-        
+
     }
 
     /**
@@ -216,13 +218,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty("user.home") + File.separatorChar + DERBY_LOG_FILE); //$NON-NLS-1$
 
         // Provide initial DB connection details to server.
-        internalServer.configure(
-                prefs.getString(PreferenceConstants.DB_URL), 
-                prefs.getString(PreferenceConstants.DB_USER), 
-                prefs.getString(PreferenceConstants.DB_PASS), 
-                prefs.getString(PreferenceConstants.DB_DRIVER), 
-                prefs.getString(PreferenceConstants.DB_DIALECT), 
-                prefs.getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
+        internalServer.configure(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT), prefs.getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
 
         // prepare client's workspace:
         CnAWorkspace.getInstance().prepare();
@@ -441,7 +437,18 @@ public class Activator extends AbstractUIPlugin implements IMain {
         if (proxyTracker != null) {
             proxyTracker.close();
         }
+
+        joinReindexJob();
+
         super.stop(context);
+    }
+
+    private void joinReindexJob() throws InterruptedException {
+        if (reindexJob != null) {
+            reindexJob.cancel();
+            reindexJob.join();
+            reindexJob = null;
+        }
     }
 
     /**
@@ -837,7 +844,11 @@ public class Activator extends AbstractUIPlugin implements IMain {
         return CnAWorkspace.getInstance().createLocalReportTemplateDir(IReportService.VERINICE_REPORTS_LOCAL) && CnAWorkspace.getInstance().createReportTemplateDir(IReportService.VERINICE_REPORTS_REMOTE);
     }
 
-    public IReportLocalTemplateDirectoryService getIReportTemplateDirectoryService(){
+    public IReportLocalTemplateDirectoryService getIReportTemplateDirectoryService() {
         return (IReportLocalTemplateDirectoryService) templateDirTracker.getService();
+    }
+
+    public void setReindexJob(WorkspaceJob reindexJob) {
+        this.reindexJob = reindexJob;
     }
 }

@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.verinice.model.search.VeriniceSearchResultObject;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.rcp.search.column.IColumn;
 import sernet.verinice.rcp.search.column.IColumnStore;
@@ -54,7 +54,7 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
 
     private Table table;
 
-    public SearchResultsTableViewer(Composite parent, IColumnStore columnStore, VeriniceSearchResultObject veriniceSearchResultObject) {
+    public SearchResultsTableViewer(Composite parent, IColumnStore columnStore, VeriniceSearchResultTable veriniceSearchResultTable) {
 
         super(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
 
@@ -70,7 +70,7 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
         createColumns();
 
         setContentProvider(this);
-        setInput(veriniceSearchResultObject);
+        setInput(veriniceSearchResultTable);
 
         defaultSort(columnStore);
     }
@@ -124,8 +124,8 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
 
     @Override
     public Object[] getElements(Object inputElement) {
-        if (inputElement instanceof VeriniceSearchResultObject) {
-            VeriniceSearchResultObject object = (VeriniceSearchResultObject) inputElement;
+        if (inputElement instanceof VeriniceSearchResultTable) {
+            VeriniceSearchResultTable object = (VeriniceSearchResultTable) inputElement;
             VeriniceSearchResultRow[] elements = new VeriniceSearchResultRow[object.getRows().size()];
             return object.getRows().toArray(elements);
         }

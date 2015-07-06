@@ -59,7 +59,11 @@ final class ColumnSNCAComparator extends ColumnComparator {
     }
 
     private boolean sortAlphabetically() {
-        return !getPreferenceStore().getBoolean(PreferenceConstants.SEARCH_SORT_COLUMN_BY_SNCA);
+        return getSortPrefs().equals(PreferenceConstants.SEARCH_SORT_COLUMN_BY_ALPHABET);
+    }
+
+    private String getSortPrefs() {
+        return getPreferenceStore().getString(PreferenceConstants.SEARCH_SORT_COLUMN_EDITOR_PREFERENCES);
     }
 
     private IPreferenceStore getPreferenceStore() {

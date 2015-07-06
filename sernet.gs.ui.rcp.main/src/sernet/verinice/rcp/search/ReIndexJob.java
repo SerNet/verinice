@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -37,7 +38,11 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
  */
 public class ReIndexJob extends WorkspaceJob {
 
-    private Action reindex;
+    private final Action reindex;
+
+    private final Logger LOG = Logger.getLogger(ReIndexJob.class);
+
+    private IProgressMonitor mon;
 
     public ReIndexJob(Action reindex) {
         super(Messages.IndexJob_0);
@@ -46,25 +51,52 @@ public class ReIndexJob extends WorkspaceJob {
 
     @Override
     public IStatus runInWorkspace(IProgressMonitor mon) throws CoreException {
+
+        this.mon = mon;
+
         try {
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    reindex.setEnabled(false);
-                }
-            });
+            deactivateReindexButton();
+
             Activator.inheritVeriniceContextState();
+
             ServiceFactory.lookupSearchService().reindex();
+            mon.done();
+
+        } finally {
+            activateReIndexButton();
         }
-        finally {
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    reindex.setEnabled(true);
-                }
-            });
-        }
+
         return Status.OK_STATUS;
+    }
+
+    private void activateReIndexButton() {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                reindex.setEnabled(true);
+
+            }
+        });
+    }
+
+    private void deactivateReindexButton() {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                reindex.setEnabled(false);
+            }
+        });
+    }
+
+
+    /**
+     * This does not canceling the server side reindexing.
+     */
+    @Override
+    protected void canceling() {
+        mon.setCanceled(true);
+        getThread().interrupt();
+        LOG.debug("reindexing was cancelled");
     }
 
 }
