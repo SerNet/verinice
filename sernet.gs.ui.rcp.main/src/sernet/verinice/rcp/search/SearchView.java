@@ -485,7 +485,6 @@ public class SearchView extends RightsEnabledView {
 
     private void reindex() {
         WorkspaceJob job = new ReIndexJob(reindex);
-        job.setUser(true);
         job.schedule();
         Activator.getDefault().setReindexJob(job);
     }
