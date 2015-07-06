@@ -2,9 +2,11 @@ package sernet.verinice.search;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.common.network.NetworkUtils;
@@ -63,12 +65,16 @@ public class ElasticsearchClientFactory implements DisposableBean {
                 // Get a client
                 client = node.client();
                 configure();
+                Map<String, String> map = ImmutableSettings.builder().internalMap();
+                for(String key : map.keySet()){
+                    LOG.error("ES Setting:\t<" + key + ", " + map.get(key) + ">");
+                }
                 // Wait for Yellow status
                 client
                     .admin()
                     .cluster()
                     .prepareHealth()
-                    .setWaitForYellowStatus()
+                    .setWaitForYellowStatus() // yellow means, there are no replicas that could be used, since we are running on 1 node only, we are not going to have any replicas available, so yellow is ok for us
                     .setTimeout(TimeValue.timeValueMinutes(1))
                     .execute()
                     .actionGet();
@@ -124,19 +130,40 @@ public class ElasticsearchClientFactory implements DisposableBean {
     }
 
     protected Settings buildNodeSettings() {
+        final int cores = Runtime.getRuntime().availableProcessors();
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Found " + cores + " useable cores on localhost");
+        }
+        final int shards = 2;
         // Build settings
         ImmutableSettings.Builder builder = ImmutableSettings.settingsBuilder()
             .put("node.name", "elasticsearch-" + NetworkUtils.getLocalAddress().getHostName())
             .put("node.data", true)
             .put("cluster.name", "elasticsearch-cluster-" + NetworkUtils.getLocalAddress().getHostName())
-            .put("index.store.type", "niofs")
             //.put("index.store.fs.memory.enabled", "true")
             .put("gateway.type", "local")
             .put("path.data", getDirectoryCreator().create("data"))
             .put("path.work", getDirectoryCreator().create("work"))
             .put("path.logs", getDirectoryCreator().create("logs"))
             .put("node.local", true)
-            .put("index.number_of_shards", 2);
+            .put("index.number_of_shards", shards)
+            .put("bootstrap.mlockall", true) //disables (false to enable) swapping from memory to disk
+            .put("action.disable_delete_all_indices", true) // prevents deleting all indexes of cluster by "accident"
+            .put("index.store.compress.stored", true) // EXPERIMENTAL, could cause perfomance issues, TEST
+            .put("index.store.compress.tv", true) // EXPERIMENTAL, as above;
+            .put("compress.default.type", "snappy")
+            .put("threadpool.bulk.queue_size", (cores * 5) * 50)
+            .put("threadpool.bulk.size",cores * 5) // The size parameter controls the number of threads, and defaults to the number of cores times 5.
+            .put("threadpool.bulk.type", "fixed")
+            .put("threadpool.index.queue_size", (cores * 5) * 50)
+            .put("threadpool.index.size", cores * 5)
+            .put("threadpool.index.type",  "fixed")
+            .put("threadpool.search.queue_size", (cores * 5) * 50)
+            .put("threadpool.search.size", cores * 5)
+            .put("threadpool.search.type", "fixed");
+        
+        builder = setOSDependentFileSystem(builder);
+
         if (settings != null && builder == null) {
             builder.put(settings);
             if(LOG.isDebugEnabled()){
@@ -157,6 +184,26 @@ public class ElasticsearchClientFactory implements DisposableBean {
 
     public void setDirectoryCreator(IDirectoryCreator directoryCreator) {
         this.directoryCreator = directoryCreator;
+    }
+    
+    /**
+     * sets platform dependent fs for storing the index
+     * see https://www.elastic.co/guide/en/elasticsearch/reference/current/index-modules-store.html
+     * this should be "mmapfs" on win64 and "simplefs" on win32 and "niofs" else
+     **/
+    private ImmutableSettings.Builder setOSDependentFileSystem(ImmutableSettings.Builder builder){
+        String fileSystem = "";
+        if(SystemUtils.IS_OS_WINDOWS){
+          if(System.getProperty("os.arch").contains("64")){
+              fileSystem = "mmapfs";
+          } else {
+              fileSystem = "simplefs";
+          }
+        } else {
+            fileSystem = "niofs";   
+        }
+        builder.put("index.store.type", fileSystem);
+        return builder;
     }
 
 }
