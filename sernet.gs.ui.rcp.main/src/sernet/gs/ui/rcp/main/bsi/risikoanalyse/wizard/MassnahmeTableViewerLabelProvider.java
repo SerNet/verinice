@@ -18,6 +18,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -34,6 +35,8 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
  */
 public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
 
+    private static final Logger LOG = Logger.getLogger(MassnahmeTableViewerLabelProvider.class);
+    
     /**
      * Returns the image of the element for the given column.
      * 
@@ -64,36 +67,50 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
      * @param columnIndex
      *            zero-based index of the column
      * @return the element's text for the column, empty string else
+     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
      */
     public String getColumnText(Object element, int columnIndex) {
-
-        if (element instanceof RisikoMassnahmenUmsetzung) {
-            RisikoMassnahmenUmsetzung massnahme = (RisikoMassnahmenUmsetzung) element;
-            switch (columnIndex) {
-            case 0:
-                return null;
-            case 1:
-                return massnahme.getNumber();
-            case 2:
-                return "[" + massnahme.getStufe() + "] " + massnahme.getName(); //$NON-NLS-1$ //$NON-NLS-2$
-            case 3:
-        		RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(massnahme);
-                return shorten(massnahme.getDescription());
+        try {
+            if (element instanceof RisikoMassnahmenUmsetzung) {
+                return getColumnTextForRisikoMassnahme(element, columnIndex);
+            } else {
+                return getColumnTextForMassnahme(element, columnIndex);
             }
-        } else {
-            MassnahmenUmsetzung massnahme = (MassnahmenUmsetzung) element;
-            switch (columnIndex) {
-            case 0:
-                return null;
-            case 1:
-                return massnahme.getKapitel();
-            case 2:
-                return "[" + massnahme.getStufe() + "] " + massnahme.getName(); //$NON-NLS-1$ //$NON-NLS-2$
-            case 3:
-                return Messages.MassnahmeTableViewerLabelProvider_4;
-            }
+        } catch(Exception e) {
+            LOG.error("Error while getting column text for element: " + element + " and column: " + columnIndex, e);
+            return "";
         }
-        return ""; //$NON-NLS-1$
+    }
+
+    private String getColumnTextForMassnahme(Object element, int columnIndex) {
+        MassnahmenUmsetzung massnahme = (MassnahmenUmsetzung) element;
+        switch (columnIndex) {
+        case 0:
+            return null;
+        case 1:
+            return massnahme.getKapitel();
+        case 2:
+            return "[" + massnahme.getStufe() + "] " + massnahme.getName(); //$NON-NLS-1$ //$NON-NLS-2$
+        case 3:
+            return Messages.MassnahmeTableViewerLabelProvider_4;
+        }
+        return "";
+    }
+
+    private String getColumnTextForRisikoMassnahme(Object element, int columnIndex) {
+        RisikoMassnahmenUmsetzung massnahme = (RisikoMassnahmenUmsetzung) element;
+        switch (columnIndex) {
+        case 0:
+            return null;
+        case 1:
+            return massnahme.getNumber();
+        case 2:
+            return "[" + massnahme.getStufe() + "] " + massnahme.getName(); //$NON-NLS-1$ //$NON-NLS-2$
+        case 3:
+        	RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(massnahme);
+            return shorten(massnahme.getDescription());
+        }
+        return "";
     }
 
     /**
@@ -143,6 +160,9 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
      */
     private String shorten(String description) {
         final int maxLineLength = 100;
+        if(description==null) {
+            return null;
+        }
         String oneline = description.replaceAll(System.getProperty("line.separator"), " "); //$NON-NLS-1$ //$NON-NLS-2$
         if (oneline.length() > maxLineLength) {
             return oneline.substring(0, maxLineLength) + "..."; //$NON-NLS-1$

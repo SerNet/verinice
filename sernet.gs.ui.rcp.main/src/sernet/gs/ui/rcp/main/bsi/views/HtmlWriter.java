@@ -193,7 +193,9 @@ public abstract class HtmlWriter {
             buf.append("</h1>"); //$NON-NLS-1$
         }
         buf.append("<p>"); //$NON-NLS-1$
-        buf.append(bodytext.replaceAll("\\n", "<br/>")); //$NON-NLS-1$ //$NON-NLS-2$
+        if(bodytext!=null) {
+            buf.append(bodytext.replaceAll("\\n", "<br/>")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
         buf.append("</p></div></body></html>"); //$NON-NLS-1$
     }
     

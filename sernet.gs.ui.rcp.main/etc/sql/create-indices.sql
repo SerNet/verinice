@@ -1,4 +1,3 @@
--- verinice Indices zum Verbessern der Performance
 CREATE INDEX dependant_id_idx ON cnalink (dependant_id);
 CREATE INDEX dependency_id_idx ON cnalink (dependency_id);
 CREATE INDEX entity_id_idx ON cnatreeelement (entity_id);

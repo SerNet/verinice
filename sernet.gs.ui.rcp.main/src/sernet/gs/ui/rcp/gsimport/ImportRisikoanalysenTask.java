@@ -42,12 +42,16 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzungFactory;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.AddMassnahmeToGefaherdung;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.AssociateGefaehrdungsUmsetzung;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.NegativeEstimateGefaehrdung;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.SelectRiskTreatment;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.StartNewRiskAnalysis;
 import sernet.snutils.DBException;
 import sernet.verinice.interfaces.CommandException;
@@ -103,6 +107,9 @@ public class ImportRisikoanalysenTask {
     }
 
     public void execute(int importType, IProgress monitor) throws DBException, CommandException, SQLException, IOException {
+        loadGefaehrdungen();
+        loadMassnahmen();
+        
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(Hibernate.class.getClassLoader());
 
@@ -123,6 +130,22 @@ public class ImportRisikoanalysenTask {
         Thread.currentThread().setContextClassLoader(cl);
 
         CnAElementFactory.getInstance().reloadModelFromDatabase();
+    }
+
+    private void loadGefaehrdungen() throws CommandException {
+        List<OwnGefaehrdung> allGefaehrdungen = OwnGefaehrdungHome.getInstance().loadAll();
+        for (OwnGefaehrdung ownGefaehrdung : allGefaehrdungen) {
+            String cacheId = createOwnGefaehrdungsCacheId(ownGefaehrdung);
+            this.allCreatedOwnGefaehrdungen.put(cacheId, ownGefaehrdung);
+        }
+    }
+    
+    private void loadMassnahmen() throws CommandException {
+        List<RisikoMassnahme> allMassnahmen = RisikoMassnahmeHome.getInstance().loadAll();
+        for (RisikoMassnahme massnahme : allMassnahmen) {
+            String cacheId = createOwnMassnahmeCacheId(massnahme);
+            this.allCreatedOwnMassnahmen.put(cacheId, massnahme);
+        }
     }
 
     /**
@@ -186,13 +209,14 @@ public class ImportRisikoanalysenTask {
                 transferData.transferOwnGefaehrdung(ownGefaehrdung, gefaehrdungenResult);
                 // avoid doubles, check if gefaehrdung with same name already
                 // created:
-                if (allCreatedOwnGefaehrdungen.keySet().contains(createOwnGefaehrdungsCacheId(ownGefaehrdung))) {
+                String cacheId = createOwnGefaehrdungsCacheId(ownGefaehrdung);
+                if (allCreatedOwnGefaehrdungen.containsKey(cacheId)) {
                     // reuse existing owngefaehrdung:
-                    gefaehrdung = allCreatedOwnGefaehrdungen.get(createOwnGefaehrdungsCacheId(ownGefaehrdung));
+                    gefaehrdung = allCreatedOwnGefaehrdungen.get(cacheId);
                 } else {
                     // create and save new owngefaehrdung:
                     OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
-                    allCreatedOwnGefaehrdungen.put(createOwnGefaehrdungsCacheId(ownGefaehrdung), ownGefaehrdung);
+                    allCreatedOwnGefaehrdungen.put(cacheId, ownGefaehrdung);
                     gefaehrdung = ownGefaehrdung;
                 }
             } else {
@@ -208,7 +232,19 @@ public class ImportRisikoanalysenTask {
             command2 = ServiceFactory.lookupCommandService().executeCommand(command2);
             GefaehrdungsUmsetzung gefaehrdungsUmsetzung = command2.getGefaehrdungsUmsetzung();
             transferData.transferRAGefaehrdungsUmsetzung(gefaehrdungsUmsetzung, gefaehrdungenResult);
+            CnAElementHome.getInstance().update(gefaehrdungsUmsetzung);
 
+            if(!gefaehrdungsUmsetzung.getOkay()) {
+                NegativeEstimateGefaehrdung negativeEstimateGefaehrdungCommand = new NegativeEstimateGefaehrdung(finishedRiskLists.getDbId(), gefaehrdungsUmsetzung, newRiskAnalysis);
+                negativeEstimateGefaehrdungCommand = ServiceFactory.lookupCommandService().executeCommand(negativeEstimateGefaehrdungCommand);
+                finishedRiskLists = negativeEstimateGefaehrdungCommand.getRaList();
+                gefaehrdungsUmsetzung = negativeEstimateGefaehrdungCommand.getGefaehrdungsUmsetzung();
+                
+                SelectRiskTreatment selectRiskTreatmentCommand = new SelectRiskTreatment(finishedRiskLists.getDbId(), newRiskAnalysis, gefaehrdungsUmsetzung, gefaehrdungsUmsetzung.getAlternative());
+                selectRiskTreatmentCommand = ServiceFactory.lookupCommandService().executeCommand(selectRiskTreatmentCommand);
+                finishedRiskLists = command.getFinishedRiskLists();
+            }
+            
             // FIXME fill remaining finishedRiskLists with the above created
             // "gefaehrdung" objects!!
             // finishedRiskLists.setAssociatedGefaehrdungen(); // should be
@@ -259,17 +295,18 @@ public class ImportRisikoanalysenTask {
     }
 
     private void importMassnahme(CnATreeElement element, RAGefaehrdungsMassnahmenResult massnahmenResult, GefaehrdungsUmsetzung gefaehrdungsUmsetzung) throws SQLException, IOException, CommandException {
+        RisikoMassnahmenUmsetzung risikoMassnahme = null;
         if (transferData.isUserDefMassnahme(massnahmenResult)) {
-            RisikoMassnahmenUmsetzung newMnUms = new RisikoMassnahmenUmsetzung(element, gefaehrdungsUmsetzung);
-            transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, newMnUms);
-            LOG.debug("Transferred user defined massnahme: " + newMnUms.getTitle());
+            risikoMassnahme = new RisikoMassnahmenUmsetzung(element, gefaehrdungsUmsetzung);
+            transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, risikoMassnahme);
+            LOG.debug("Transferred user defined massnahme: " + risikoMassnahme.getTitle());
 
             RisikoMassnahme newRisikoMassnahme = new RisikoMassnahme();
-            newRisikoMassnahme.setNumber(newMnUms.getId());
-            newRisikoMassnahme.setName(newMnUms.getTitle());
-            newRisikoMassnahme.setDescription(newMnUms.getDescription());
+            newRisikoMassnahme.setNumber(risikoMassnahme.getKapitel());
+            newRisikoMassnahme.setName(risikoMassnahme.getName());
+            newRisikoMassnahme.setDescription(risikoMassnahme.getDescription());
 
-            if (allCreatedOwnMassnahmen.keySet().contains(createOwnMassnahmeCacheId(newRisikoMassnahme))) {
+            if (allCreatedOwnMassnahmen.containsKey(createOwnMassnahmeCacheId(newRisikoMassnahme))) {
                 // do nothing, user-defined massnahme was already saved to DB
                 // reuse existing massnahme:
                 // newRisikoMassnahme =
@@ -281,15 +318,19 @@ public class ImportRisikoanalysenTask {
                 RisikoMassnahmeHome.getInstance().save(newRisikoMassnahme);
                 allCreatedOwnMassnahmen.put(createOwnMassnahmeCacheId(newRisikoMassnahme), newRisikoMassnahme);
             }
-            // we do not save newMnUms, it will be saved when saving the
-            // riskanalysis parent
+            
         } else {
             MassnahmenUmsetzung newMnUms = new MassnahmenUmsetzung(gefaehrdungsUmsetzung);
             transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, newMnUms);
             LOG.debug("Transferred BSI-standard massnahme: " + newMnUms.getTitle());
-            // we do not save newGefUms, it will be saved together with
-            // riskanalysis parent
+            risikoMassnahme = RisikoMassnahmenUmsetzungFactory.buildFromMassnahmenUmsetzung(newMnUms, element, null);
         }
+        if(risikoMassnahme!=null) {
+            AddMassnahmeToGefaherdung command = new AddMassnahmeToGefaherdung(gefaehrdungsUmsetzung, risikoMassnahme);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            risikoMassnahme = command.getChild();
+        }
+        
     }
 
     private Gefaehrdung findBsiStandardGefaehrdung(RAGefaehrdungenResult ragResult) {

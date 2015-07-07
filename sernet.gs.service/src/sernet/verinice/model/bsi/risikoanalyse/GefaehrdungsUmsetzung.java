@@ -156,8 +156,14 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
 
     @Override
     public String getTitle() {
-        return "[" + getAlternative() + "] " + //$NON-NLS-1$ //$NON-NLS-2$
-                getEntity().getSimpleValue(PROP_TITEL) + " (" + getAlternativeText() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        StringBuilder sb = new StringBuilder();
+        sb.append("[").append(getAlternative()).append("] "); //$NON-NLS-1$ //$NON-NLS-2$
+        sb.append(getEntity().getSimpleValue(PROP_TITEL));
+        String alternative = getAlternativeText();
+        if(alternative!=null && !alternative.isEmpty()) {
+            sb.append(" (").append(getAlternativeText()).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return sb.toString();
     }
 
     @Override

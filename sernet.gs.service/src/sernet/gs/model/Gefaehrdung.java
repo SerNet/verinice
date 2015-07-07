@@ -90,8 +90,7 @@ public class Gefaehrdung implements IGSModel {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return (this == obj
-				|| (obj instanceof Gefaehrdung
+		return (this == obj || (obj instanceof Gefaehrdung
 					&& this.uuid.equals(((Gefaehrdung)obj).getUuid())
 					)
 				);

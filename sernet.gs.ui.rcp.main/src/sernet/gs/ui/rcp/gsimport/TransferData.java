@@ -17,8 +17,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.gsimport;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.sql.Clob;
@@ -347,7 +350,7 @@ public class TransferData {
         // ragResult.getRzg().getZgDatumBis();
 
         // risikobehandlung A-D
-        gefaehrdungsUmsetzung.setSimpleProperty("gefaehrdungsumsetzung_alternative", String.valueOf(ragResult.getRisikobehandlungABCD()));
+        gefaehrdungsUmsetzung.setAlternative(String.valueOf(ragResult.getRisikobehandlungABCD()));
 
         // ausreichender schutz J/N
         if (ragResult.getRzg().getMsUnjByZgOkUnjId().getUnjId() == GSDBConstants.UNJ_JA) {
@@ -378,7 +381,18 @@ public class TransferData {
         gefaehrdungsUmsetzung.setDescription(convertClobToString(ragResult.getGefaehrdungTxt().getBeschreibung()));
 
         gefaehrdungsUmsetzung.setTitel(ragResult.getGefaehrdungTxt().getName());
-        gefaehrdungsUmsetzung.setUrl(ragResult.getGefaehrdung().getLink());
+        String url = transferUrl(ragResult.getGefaehrdung().getLink());
+        gefaehrdungsUmsetzung.setUrl(url);
+    }
+
+    private String transferUrl(String url) {
+        String regex = "(\\\\.*\\\\.*\\\\)(.*)(\\.html)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(url);
+        if (matcher.find()) {
+            url = matcher.group(2);
+        }
+        return url;
     }
 
     private void transferGefaehrdungsBewertungTxt(GefaehrdungsUmsetzung gefUms, String zgVollstaBegr, String zgStaerkeBegr, String zgZuverlaBegr, MsUnj unterschriftLiegtVor, String begruendungRisikobehandlung) {
@@ -466,10 +480,10 @@ public class TransferData {
      * @throws IOException
      */
     public static String convertClobToString(Clob clob) throws SQLException, IOException {
-        InputStream in = clob.getAsciiStream();
-        StringWriter w = new StringWriter();
-        IOUtils.copy(in, w);
-        return w.toString();
+        Reader reader = clob.getCharacterStream();
+        OutputStream out = new ByteArrayOutputStream();
+        IOUtils.copy(reader, out, "UTF-8");
+        return out.toString();
     }
 
     /**
@@ -493,9 +507,10 @@ public class TransferData {
 
         String massnahmeNr = translateMassnahmenNr(ragmResult);
         mnUms.setSimpleProperty("mnums_id", massnahmeNr);
-        mnUms.setTitel(ragmResult.getMassnahmeTxt().getName());
+        mnUms.setName(ragmResult.getMassnahmeTxt().getName());
         mnUms.setErlaeuterung(convertClobToString(ragmResult.getMassnahmeTxt().getBeschreibung()));
-        mnUms.setUrl(ragmResult.getMassnahme().getLink());
+        mnUms.setUrl(transferUrl(ragmResult.getMassnahme().getLink()));
+        mnUms.setStufe(ragmResult.getRisikobehandlungABCD());
         transferUmsetzung(mnUms, ragmResult.getUmsTxt().getName());
 
         // may be necessary for user defined bausteine:

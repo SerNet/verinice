@@ -27,64 +27,60 @@ import sernet.verinice.model.common.Permission;
 
 /**
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
+ * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
 @SuppressWarnings("serial")
 public class StartNewRiskAnalysis extends GenericCommand implements IAuthAwareCommand {
 
-	private CnATreeElement cnaElement;
-	private FinishedRiskAnalysis finishedRiskAnalysis;
-	private FinishedRiskAnalysisLists finishedRiskLists;
-	
-	private transient IAuthService authService;
+    private CnATreeElement cnaElement;
+    private FinishedRiskAnalysis finishedRiskAnalysis;
+    private FinishedRiskAnalysisLists finishedRiskLists;
 
+    private transient IAuthService authService;
 
-	/**
-	 * @param cnaElement
-	 */
-	public StartNewRiskAnalysis(CnATreeElement cnaElement) {
-		this.cnaElement = cnaElement;
-		
-	}
-	
-	public IAuthService getAuthService() {
-		return authService;
-	}
+    /**
+     * @param cnaElement
+     */
+    public StartNewRiskAnalysis(CnATreeElement cnaElement) {
+        this.cnaElement = cnaElement;
 
-	public void setAuthService(IAuthService service) {
-		this.authService = service;
-	}
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
-	 */
-	public void execute() {
-		getDaoFactory().getDAOforTypedElement(cnaElement).reload(cnaElement, cnaElement.getDbId());
-		finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
-		getDaoFactory().getDAO(FinishedRiskAnalysis.class).saveOrUpdate(finishedRiskAnalysis);
-		cnaElement.addChild(finishedRiskAnalysis);
-		
-		if (authService.isPermissionHandlingNeeded())
-		{
-			finishedRiskAnalysis.setPermissions(
-				Permission.clonePermissionSet(
-						finishedRiskAnalysis,
-						cnaElement.getPermissions()));
-		}
+    public IAuthService getAuthService() {
+        return authService;
+    }
 
-		finishedRiskLists = new FinishedRiskAnalysisLists();
-		finishedRiskLists.setFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());
-		getDaoFactory().getDAO(FinishedRiskAnalysisLists.class).saveOrUpdate(finishedRiskLists);
-	}
+    public void setAuthService(IAuthService service) {
+        this.authService = service;
+    }
 
-	public FinishedRiskAnalysis getFinishedRiskAnalysis() {
-		return finishedRiskAnalysis;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
+     */
+    public void execute() {
+        getDaoFactory().getDAOforTypedElement(cnaElement).reload(cnaElement, cnaElement.getDbId());
+        finishedRiskAnalysis = new FinishedRiskAnalysis(cnaElement);
+        getDaoFactory().getDAO(FinishedRiskAnalysis.class).saveOrUpdate(finishedRiskAnalysis);
+        cnaElement.addChild(finishedRiskAnalysis);
 
-	public FinishedRiskAnalysisLists getFinishedRiskLists() {
-		return finishedRiskLists;
-	}
+        if (authService.isPermissionHandlingNeeded()) {
+            finishedRiskAnalysis.setPermissions(Permission.clonePermissionSet(finishedRiskAnalysis, cnaElement.getPermissions()));
+        }
+
+        finishedRiskLists = new FinishedRiskAnalysisLists();
+        finishedRiskLists.setFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());
+        getDaoFactory().getDAO(FinishedRiskAnalysisLists.class).saveOrUpdate(finishedRiskLists);
+    }
+
+    public FinishedRiskAnalysis getFinishedRiskAnalysis() {
+        return finishedRiskAnalysis;
+    }
+
+    public FinishedRiskAnalysisLists getFinishedRiskLists() {
+        return finishedRiskLists;
+    }
 
 }

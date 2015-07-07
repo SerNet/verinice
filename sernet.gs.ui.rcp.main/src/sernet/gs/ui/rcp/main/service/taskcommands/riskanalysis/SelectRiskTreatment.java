@@ -57,13 +57,12 @@ public class SelectRiskTreatment extends GenericCommand {
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.service.commands.ICommand#execute()
 	 */
-	public void execute() {
+	@Override
+    public void execute() {
 		// attach objects:
-		finishedRiskLists = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class)
-			.findById(listsDbId);
+		finishedRiskLists = getDaoFactory().getDAO(FinishedRiskAnalysisLists.class).findById(listsDbId);
 	
-		gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) getDaoFactory().getDAOforTypedElement(gefaehrdungsUmsetzung)
-			.merge(gefaehrdungsUmsetzung);
+		gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) getDaoFactory().getDAOforTypedElement(gefaehrdungsUmsetzung).merge(gefaehrdungsUmsetzung);
 		
 		getDaoFactory().getDAOforTypedElement(riskAnalysis).reload(riskAnalysis, riskAnalysis.getDbId());
 		

@@ -77,6 +77,8 @@ public class NegativeEstimateGefaehrdung extends GenericCommand {
         gefaehrdungsUmsetzung.setOkay(false);
         
         raList.addGefaehrdungsUmsetzung(gefaehrdungsUmsetzung);
+        
+        getElementDao().merge(gefaehrdungsUmsetzung);
     }
 
     public GefaehrdungsUmsetzung getGefaehrdungsUmsetzung() {
