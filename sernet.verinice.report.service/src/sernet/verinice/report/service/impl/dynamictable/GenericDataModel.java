@@ -51,7 +51,7 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
  *   "asset/asset_name", 
  *   "asset:person_iso", 
  *   "asset/person_iso.person_iso_name", 
- *   "asset/incident_scenario/incident_scenario_name"});
+ *   "asset/incident_scenario.incident_scenario_name"});
  * dm.init();
  * return dm.getResults(); 
  * ============================================================================================
