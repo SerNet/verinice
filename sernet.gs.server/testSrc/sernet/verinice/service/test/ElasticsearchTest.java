@@ -95,22 +95,30 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
     @Test
     public void testUpdate() {
+
         searchIndexer.blockingIndexing();
-        String name = "SerNet";
-        VeriniceSearchResult result = findByTitle(name);
-        assertTrue("Element found with string: " + name, result.getHits() == 0);
-        result = findByTitle("Cryptogr");
-        assertTrue("No element found with 'Cryptogr' in title", result.getHits() > 0);
+
+        final String NEW_TITEL = "SerNet NOT defined yet";
+        final String TITEL = "Cryptography";
+
+        VeriniceSearchResult result = findByTitle(NEW_TITEL);
+        assertTrue("Element found with string: " + NEW_TITEL, result.getHits() == 0);
+
+        result = findByTitle(TITEL);
+        assertTrue("No element found with ' "+ TITEL + "' in title", result.getHits() > 0);
+
         VeriniceSearchResultRow row = result.getAllVeriniceSearchObjects().iterator().next().getRows().iterator().next();
         String uuid = getUuid(row);
         CnATreeElement element = elementDao.findByUuid(uuid, RetrieveInfo.getPropertyInstance().setPermissions(true));
         assertNotNull("No element found with uuid: " + uuid, element);
-        element.setTitel(name);
+
+        element.setTitel(NEW_TITEL);
         String json = jsonBuilder.getJson(element);
-        assertTrue("JSON does not contain " + name + ":VNA_FILENAME " + json, json.contains(name));
+        assertTrue("JSON does not contain " + NEW_TITEL + ":VNA_FILENAME " + json, json.contains(NEW_TITEL));
+
         searchDao.update(uuid, json);
-        result = findByTitle("Cryptogr");
-        assertTrue("No element found with string: " + name, result.getHits() > 0);
+        result = findByTitle(TITEL);
+        assertTrue("No element found with string: " + NEW_TITEL, result.getHits() > 0);
     }
 
     @Test
@@ -169,19 +177,18 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         VeriniceSearchResultTable entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
         Assert.notNull(entity, "Token \"" + longWord + "\" not found in " + VNA_FILENAME);
 
-        Set<VeriniceSearchResultRow> entities = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows();
-        Assert.isTrue(entities.size() == 1, "Token \"" + longWord + "\" should only match one time in " + VNA_FILENAME);
-
         VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows().iterator().next();
         Assert.notNull(element.getValueFromResultString(SamtTopic.PROP_DESC), "Token \"" + longWord + "\" is not in the right column " + SamtTopic.PROP_DESC);
 
-        Assert.isTrue(element.getValueFromResultString(SamtTopic.PROP_DESC).contains(longWord), "Token \"" + longWord + "\" is not in the right column " + SamtTopic.PROP_DESC);
+        String propertyId = element.getOccurence().getColumnIds().first();
+        Assert.isTrue(element.getValueFromResultString(propertyId).contains(longWord),
+                "Token \"" + longWord + "\" is not in the right column " + propertyId);
     }
 
     @Test
     public void findPhrases() {
         searchIndexer.blockingIndexing();
-        String phrase = "ction from malware";
+        String phrase = "Protection from malware";
 
         VeriniceSearchResult result = searchService.query(new VeriniceQuery(phrase, VeriniceQuery.MAX_LIMIT));
         VeriniceSearchResultTable entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
