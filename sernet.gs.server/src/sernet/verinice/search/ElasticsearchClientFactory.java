@@ -2,6 +2,7 @@ package sernet.verinice.search;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -47,6 +48,11 @@ public class ElasticsearchClientFactory implements DisposableBean {
 
     private final static Logger LOG = Logger.getLogger(ElasticsearchClientFactory.class);
     
+    private static final String SERNET_VERINICE_SEARCH_ANALYSIS_JSON = "sernet/verinice/search/analysis";
+    private static final String SEPERATOR_LANGUAGE = "_";
+    private static final String SEPERATOR_EXTENSION = ".";
+    private static final String JSON_EXTENSION = "json";
+
     private Node node = null;
     private Client client = null;
     private Settings settings = null;
@@ -99,7 +105,17 @@ public class ElasticsearchClientFactory implements DisposableBean {
     }
 
     private Builder getAnylysisConf() {
-        return ImmutableSettings.settingsBuilder().loadFromClasspath("sernet/verinice/search/analysis.json");
+        return ImmutableSettings.settingsBuilder().loadFromClasspath(getSearchAnalysisConfiguration());
+    }
+
+    private String getSearchAnalysisConfiguration() {
+        return new StringBuilder()
+            .append(SERNET_VERINICE_SEARCH_ANALYSIS_JSON)
+            .append(SEPERATOR_LANGUAGE)
+            .append(Locale.getDefault().getLanguage())
+            .append(SEPERATOR_EXTENSION)
+            .append(JSON_EXTENSION).toString()
+            .toLowerCase();
     }
 
     private String getMapping() {

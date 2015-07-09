@@ -1,0 +1,26 @@
+{
+	"analysis":{
+		"filter":{
+			"german_stemmer":{
+				"type":"stemmer",
+				"language":"light_german"
+			}
+
+		},
+		"analyzer":{
+			"verinice_analyzer":{
+				"tokenizer":"standard",
+				"filter":[
+					"lowercase",
+					"german_stop",
+					"german_keywords",
+					"german_normalization",
+					"german_stemmer"
+				]
+
+			}
+
+		}
+
+	}
+}
