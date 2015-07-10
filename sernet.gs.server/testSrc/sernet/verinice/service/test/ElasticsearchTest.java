@@ -83,6 +83,9 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
 
     @Resource(name = "jsonBuilder")
     protected IJsonBuilder jsonBuilder;
+    
+    final String NEW_TITEL = "SerNet NOT defined yet";
+    final String TITEL = "Cryptography";
 
     @Test
     public void testIndex() {
@@ -97,9 +100,6 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     public void testUpdate() {
 
         searchIndexer.blockingIndexing();
-
-        final String NEW_TITEL = "SerNet NOT defined yet";
-        final String TITEL = "Cryptography";
 
         VeriniceSearchResult result = findByTitle(NEW_TITEL);
         assertTrue("Element found with string: " + NEW_TITEL, result.getHits() == 0);
@@ -124,11 +124,11 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     @Test
     public void testDelete() {
         searchIndexer.blockingIndexing();
-        VeriniceSearchResult result = findByTitle("Cryptogr");
-        assertTrue("No element found with 'Cryptogr' in title", result.getHits() > 0);
+        VeriniceSearchResult result = findByTitle(TITEL);
+        assertTrue("No element found with " + TITEL + " in title", result.getHits() > 0);
         delete(result);
-        result = findByTitle("Cryptogr");
-        assertTrue("Element found with 'Cryptogr' in title", result.getHits() == 0);
+        result = findByTitle(NEW_TITEL);
+        assertTrue("Element found with " + TITEL + " in title", result.getHits() == 0);
     }
 
     private void delete(VeriniceSearchResult result) {
@@ -194,13 +194,17 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         VeriniceSearchResultTable entity = result.getVeriniceSearchObject(SamtTopic.TYPE_ID);
         Assert.notNull(entity, "Phrase \"" + phrase + "\" not found in " + VNA_FILENAME);
 
+        
+        
         Set<VeriniceSearchResultRow> entities = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows();
         Assert.isTrue(entities.size() == 1, "Phrase \"" + phrase + "\" should only match one time in " + VNA_FILENAME);
 
+        
         VeriniceSearchResultRow element = result.getVeriniceSearchObject(SamtTopic.TYPE_ID).getRows().iterator().next();
-        Assert.notNull(element.getValueFromResultString(SamtTopic.PROP_DESC), "Phrase \"" + phrase + "\" is not in the right column " + SamtTopic.PROP_DESC);
-
-        Assert.isTrue(element.getValueFromResultString(SamtTopic.PROP_DESC).contains(phrase), "Phrase \"" + phrase + "\" is not in the right column " + SamtTopic.PROP_DESC);
+        String propertyId = element.getOccurence().getColumnIds().first();
+        
+        Assert.notNull(element.getValueFromResultString(propertyId), "Phrase \"" + phrase + "\" is not in the right column " + propertyId);
+        Assert.isTrue(element.getValueFromResultString(propertyId).contains(phrase), "Phrase \"" + phrase + "\" is not in the right column " + propertyId);
     }
 
     private int getRandomInt(int limit) {
@@ -284,9 +288,6 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     }
 
     private VeriniceSearchResultTable findByTitle(String type, String title) {
-        if (title.length() > 7) {
-            title = title.substring(0, 7);
-        }
         VeriniceSearchResult result = findByTitle(title);
         VeriniceSearchResultTable typeResult = result.getVeriniceSearchObject(type);
         return typeResult;
