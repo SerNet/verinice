@@ -41,6 +41,13 @@ public class ControlMaturityService {
     public static final int TYPE_MATURITY = 0;
     public static final int TYPE_ISR = 1;
     
+    public static enum DecoratorColor {
+        NULL, GREEN, YELLOW, RED
+    }
+
+    private static final int MATURITY_NOT_EDITED = -2;
+    private static final int MATURITY_NA = -1;
+    
     public ControlMaturityService() {
         this(TYPE_MATURITY);
     }
@@ -71,15 +78,15 @@ public class ControlMaturityService {
     
     /**
      * Calculate accumulated maturity of each control contained in this group.
+     * 
      * @return the calculated maturity for each control
      */
     public Integer getMaturity(ControlGroup cg) {
         int maturity = 0;
         for (CnATreeElement child : cg.getChildren()) {
             if (child instanceof IControl) {
-                int m = getMaturity((IControl)child);
-                // don't add maturity if maturity is NA
-                if(m!=IControl.IMPLEMENTED_NA_NUMERIC) {
+                int m = getMaturity((IControl) child);
+                if (m != MATURITY_NA && m != MATURITY_NOT_EDITED) {
                     maturity += m;
                 }
             }
@@ -89,30 +96,53 @@ public class ControlMaturityService {
         }
         return maturity;
     }
+    
     /**
-     * Calculates the avg maturity of each control contained in this group.
-     * @return the avg maturity for each control
-     * @param cg
-     * @return
+     * Calculates the average maturity of the <code>IControl</code> children of <code>controlGroup</code> and
+     * all sub groups of <code>controlGroup</code>.
+     * 
+     * @return averageMaturity
      */
-    public Double getAvgMaturity(ControlGroup cg){
-        int maturity = 0;
-        int matCount = 0;
-        for (CnATreeElement child : cg.getChildren()) {
+    public Double getAvgMaturity(ControlGroup controlGroup) {
+        Double averageMaturity = null;
+        int accumulativeMaturity = 0;
+        int count = 0;
+        for (CnATreeElement child : controlGroup.getChildren()) {
             if (child instanceof IControl) {
-                int m = getMaturity((IControl)child);
-                // don't add maturity if maturity is NA
-                if(m!=IControl.IMPLEMENTED_NA_NUMERIC) {
-                    maturity += m;
-                    matCount += 1;
+                int maturity = getMaturity((IControl) child);
+                if (maturity != MATURITY_NA && maturity != MATURITY_NOT_EDITED) {
+                    accumulativeMaturity += maturity;
+                    count += 1;
                 }
             }
             if (child instanceof ControlGroup) {
-                maturity += getMaturity((ControlGroup) child);
-                matCount += getControlCount((ControlGroup)child);
+                accumulativeMaturity += getMaturity((ControlGroup) child);
+                count += getControlCount((ControlGroup) child);
             }
         }
-        return Double.valueOf(maturity/(double)matCount);
+        averageMaturity = Double.valueOf(accumulativeMaturity / (double) count);
+        return averageMaturity;
+    }
+    
+    public double getAverageTargetMaturity(ControlGroup controlGroup) {
+        double averageTargetMaturity = 0;
+        int accumulativeTargetMaturity = 0;
+        int count = 0;
+        for (CnATreeElement child : controlGroup.getChildren()) {
+            if (child instanceof IControl) {
+                int targetMaturity = getTargetMaturity((IControl) child);
+                if (targetMaturity != MATURITY_NA && targetMaturity != MATURITY_NOT_EDITED) {
+                    accumulativeTargetMaturity += targetMaturity;
+                    count += 1;
+                }
+            }
+            if (child instanceof ControlGroup) {
+                accumulativeTargetMaturity += getAverageTargetMaturity((ControlGroup) child);
+                count += 1;
+            }
+        }
+        averageTargetMaturity = (double) accumulativeTargetMaturity / (double) count;
+        return averageTargetMaturity;
     }
     
     public int getControlCount(ControlGroup cg){
@@ -300,7 +330,38 @@ public class ControlMaturityService {
         return IControl.IMPLEMENTED_YES;
     }
     
-      
+    public int getTargetMaturity(IControl control) {
+        return control.getThreshold2();
+    }
+    
+    public DecoratorColor getDecoratorColor(IControl control) {
+        int maturity = getMaturity(control);
+        int getTargetMaturity = getTargetMaturity(control);
+        return getDecoratorColor(maturity, getTargetMaturity);
+    }
+    
+    public DecoratorColor getDecoratorColor(ControlGroup controlGroup) {
+        Double averageMaturity = getAvgMaturity(controlGroup);
+        Double averageTargetMaturity = getAverageTargetMaturity(controlGroup);
+        
+        return getDecoratorColor(averageMaturity, averageTargetMaturity);
+    }
+    
+    private DecoratorColor getDecoratorColor(double maturity, double targetMaturity) {
+        maturity = Math.round(maturity);
+        targetMaturity = Math.round(targetMaturity);
+
+        if (maturity == MATURITY_NOT_EDITED) {
+            return DecoratorColor.RED;
+        } else if (maturity == MATURITY_NA) {
+            return DecoratorColor.GREEN;
+        } else if (maturity <= targetMaturity - 2) {
+            return DecoratorColor.RED;
+        } else if (maturity == targetMaturity - 1) {
+            return DecoratorColor.YELLOW;
+        } else if (maturity >= targetMaturity) {
+            return DecoratorColor.GREEN;
+        }
+        return DecoratorColor.NULL;
+    }
 }
-
-

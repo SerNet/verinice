@@ -26,59 +26,75 @@ public class TopicGroupDecorator extends LabelProvider implements ILightweightLa
 	private static final Logger LOG = Logger.getLogger(TopicGroupDecorator.class);
 	
 	private ICommandService commandService;
-	
+	private ImageCache imageCache = ImageCache.getInstance();
 	private ControlMaturityService maturityService = new ControlMaturityService();
+	private IDecoration decoration;
 	
-	@Override
-	public void decorate(Object element, IDecoration decoration) {
-		ControlGroup group = null;
-		try {
-			boolean isActive = Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.ISA_RESULTS); 
-			if(isActive) {
-			    sernet.gs.ui.rcp.main.Activator.inheritVeriniceContextState();
-			    Double securityFigure = null;
-			    if(element instanceof Audit) {
-			        Audit audit = (Audit) element;
-			        audit = (Audit) Retriever.checkRetrieveChildren(audit);
-			        group = (ControlGroup) audit.getGroup(ControlGroup.TYPE_ID);
-			        group = (ControlGroup) Retriever.checkRetrieveChildren(group);
-			        TotalSecurityFigureISA2Command command = new TotalSecurityFigureISA2Command(audit.getDbId());
-			        command = getCommandService().executeCommand(command);
-			        securityFigure = command.getResult();
-			        if (LOG.isDebugEnabled()) {
-                        LOG.debug("Security figure: " + securityFigure + ", audit uuid: " + audit.getUuid());
-                    }
-			    }
-			    if(element instanceof ControlGroup) {	
-    				group = (ControlGroup) Retriever.checkRetrieveChildren((CnATreeElement) element);	
-			    }
-				// add a decorator if at least one isa topic child exists
-				boolean addDecorator = retrieveChildren(group);
-				if(addDecorator) {
-					String state = maturityService.getImplementationState(group);
-					addOverlayAndSuffix(decoration, securityFigure, state);
-				}
-			}		
-		} catch(CommandException t) {
-			LOG.error("Error while loading maturity value", t);
-		}
-	}
+    @Override
+    public void decorate(Object element, IDecoration decoration) {
+        boolean isActive = Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.ISA_RESULTS);
+        if (!isActive) {
+            return;
+        }
 
-    private void addOverlayAndSuffix(IDecoration decoration, Double securityFigure, String state) {
-        if(IControl.IMPLEMENTED_NO.equals(state)) {
-        	decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_NO));
+        this.decoration = decoration;
+        ControlGroup controlGroup = null;
+        
+        try {
+            sernet.gs.ui.rcp.main.Activator.inheritVeriniceContextState();
+            Double securityFigure = null;
+            if (element instanceof Audit) {
+                Audit audit = (Audit) element;
+                audit = (Audit) Retriever.checkRetrieveChildren(audit);
+                controlGroup = (ControlGroup) audit.getGroup(ControlGroup.TYPE_ID);
+                controlGroup = (ControlGroup) Retriever.checkRetrieveChildren(controlGroup);
+                TotalSecurityFigureISA2Command command = new TotalSecurityFigureISA2Command(audit.getDbId());
+                command = getCommandService().executeCommand(command);
+                securityFigure = command.getResult();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Security figure: " + securityFigure + ", audit uuid: " + audit.getUuid());
+                }
+            }
+            if (element instanceof ControlGroup) {
+                controlGroup = (ControlGroup) Retriever.checkRetrieveChildren((CnATreeElement) element);
+            }
+            // add a decorator if at least one isa topic child exists
+            boolean addDecorator = retrieveChildren(controlGroup);
+            if (addDecorator) {
+                addOverlay(maturityService.getDecoratorColor(controlGroup));
+
+                if (securityFigure != null) {
+                    addSuffix(securityFigure);
+                }
+            }
+        } catch (CommandException t) {
+            LOG.error("Error computing decorators for ISA Controls and Control Groups", t);
         }
-        if(IControl.IMPLEMENTED_PARTLY.equals(state)) {
-        	decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_PARTLY));
+    }
+
+    void addOverlay(ControlMaturityService.DecoratorColor color) {
+        switch (color) {
+        case NULL:
+            decoration.addOverlay(imageCache.getImageDescriptor(TopicDecorator.ICON_OVERLAY_EMTPY));
+            break;
+        case GREEN:
+            decoration.addOverlay(imageCache.getImageDescriptor(TopicDecorator.ICON_OVERLAY_GREEN));
+            break;
+        case YELLOW:
+            decoration.addOverlay(imageCache.getImageDescriptor(TopicDecorator.ICON_OVERLAY_YELLOW));
+            break;
+        case RED:
+            decoration.addOverlay(imageCache.getImageDescriptor(TopicDecorator.ICON_OVERLAY_RED));
+            break;
+        default:
+            decoration.addOverlay(imageCache.getImageDescriptor(TopicDecorator.ICON_OVERLAY_EMTPY));
         }
-        if(IControl.IMPLEMENTED_YES.equals(state)) {
-        	decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(TopicDecorator.IMAGE_YES));
-        }
-        if(securityFigure!=null) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(" [").append(String.format("%.2f", securityFigure)).append("]");
-            decoration.addSuffix(sb.toString());
-        }
+    }
+    
+    private void addSuffix(double securityFigure) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" [").append(String.format("%.2f", securityFigure)).append("]");
+        decoration.addSuffix(sb.toString());
     }
 	
 	/**

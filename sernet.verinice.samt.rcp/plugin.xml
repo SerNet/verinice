@@ -360,7 +360,7 @@
 	            id="sernet.verinice.samt.rcp.AuditDecorator"
 	            label="ISA Audit decorator"
 	            lightweight="true"
-	            location="BOTTOM_RIGHT"
+	            location="TOP_LEFT"
 	            state="true">
 	         <enablement>
 	         	<objectClass name="sernet.verinice.model.iso27k.Audit"/>        
