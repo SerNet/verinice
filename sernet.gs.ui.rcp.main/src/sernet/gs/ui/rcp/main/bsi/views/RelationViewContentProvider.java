@@ -115,9 +115,9 @@ public class RelationViewContentProvider implements IStructuredContentProvider, 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(sernet.gs.ui.rcp.main.common.model.CnATreeElement)
 	 */
-	public void databaseChildRemoved(CnATreeElement child) {
-	 // only react to link changes
-	}
+    public void databaseChildRemoved(CnATreeElement child) {
+        view.reloadAll();
+    }
 
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.bsi.model.IBSIModelListener#databaseChildRemoved(sernet.gs.ui.rcp.main.common.model.ChangeLogEntry)
