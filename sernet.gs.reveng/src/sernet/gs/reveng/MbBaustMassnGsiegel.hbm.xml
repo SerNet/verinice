@@ -23,9 +23,6 @@
             <column name="MAS_IMP_ID" not-null="true" />
             <column name="MAS_ID" not-null="true" />
         </many-to-one>
-        <many-to-one name="msZyk" class="sernet.gs.reveng.MsZyk" fetch="select">
-            <column name="ZYK_ID" not-null="true" />
-        </many-to-one>
         <many-to-one name="mbBaust" class="sernet.gs.reveng.MbBaust" update="false" insert="false" fetch="select">
             <column name="BAU_IMP_ID" not-null="true" />
             <column name="BAU_ID" not-null="true" />
@@ -72,32 +69,5 @@
         <property name="guidOrg" type="string">
             <column name="GUID_ORG" length="36" />
         </property>
-        <set name="mbBaustMassnGsiegelTxts" table="MB_BAUST_MASSN_GSIEGEL_TXT" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="BAU_IMP_ID" not-null="true" />
-                <column name="BAU_ID" not-null="true" />
-                <column name="MAS_IMP_ID" not-null="true" />
-                <column name="MAS_ID" not-null="true" />
-            </key>
-            <one-to-many class="sernet.gs.reveng.MbBaustMassnGsiegelTxt" />
-        </set>
-        <set name="mbPrioritaets" table="MB_PRIORITAET" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="BAU_IMP_ID" not-null="true" />
-                <column name="BAU_ID" not-null="true" />
-                <column name="MAS_IMP_ID" not-null="true" />
-                <column name="MAS_ID" not-null="true" />
-            </key>
-            <one-to-many class="sernet.gs.reveng.MbPrioritaet" />
-        </set>
-        <set name="mbB2mDels" table="MB_B2M_DEL" inverse="true" lazy="true" fetch="select">
-            <key>
-                <column name="BAU_IMP_ID" not-null="true" />
-                <column name="BAU_ID" not-null="true" />
-                <column name="MAS_IMP_ID" not-null="true" />
-                <column name="MAS_ID" not-null="true" />
-            </key>
-            <one-to-many class="sernet.gs.reveng.MbB2mDel" />
-        </set>
     </class>
 </hibernate-mapping>

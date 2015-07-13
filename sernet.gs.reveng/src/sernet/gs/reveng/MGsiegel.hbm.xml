@@ -19,23 +19,23 @@
         <property name="timestamp" type="java.util.Date">
             <column name="TIMESTAMP" length="23" not-null="true" />
         </property>
-        <set name="modZobjBsts" inverse="true">
-            <key>
-                <column name="SIEGEL" not-null="true" />
-            </key>
-            <one-to-many class="sernet.gs.reveng.ModZobjBst" />
-        </set>
-        <set name="NZielobjektsForSiegel" inverse="true">
-            <key>
-                <column name="SIEGEL" not-null="true" />
-            </key>
-            <one-to-many class="sernet.gs.reveng.NZielobjekt" />
-        </set>
-        <set name="NZielobjektsForSiegelItv" inverse="true">
-            <key>
-                <column name="SIEGEL_ITV" not-null="true" />
-            </key>
-            <one-to-many class="sernet.gs.reveng.NZielobjekt" />
-        </set>
+<!--         <set name="modZobjBsts" inverse="true"> -->
+<!--             <key> -->
+<!--                 <column name="SIEGEL" not-null="true" /> -->
+<!--             </key> -->
+<!--             <one-to-many class="sernet.gs.reveng.ModZobjBst" /> -->
+<!--         </set> -->
+<!--         <set name="NZielobjektsForSiegel" inverse="true"> -->
+<!--             <key> -->
+<!--                 <column name="SIEGEL" not-null="true" /> -->
+<!--             </key> -->
+<!--             <one-to-many class="sernet.gs.reveng.NZielobjekt" /> -->
+<!--         </set> -->
+<!--         <set name="NZielobjektsForSiegelItv" inverse="true"> -->
+<!--             <key> -->
+<!--                 <column name="SIEGEL_ITV" not-null="true" /> -->
+<!--             </key> -->
+<!--             <one-to-many class="sernet.gs.reveng.NZielobjekt" /> -->
+<!--         </set> -->
     </class>
 </hibernate-mapping>

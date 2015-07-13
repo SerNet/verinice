@@ -324,6 +324,8 @@ public class ImportRisikoanalysenTask {
             transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, newMnUms);
             LOG.debug("Transferred BSI-standard massnahme: " + newMnUms.getTitle());
             risikoMassnahme = RisikoMassnahmenUmsetzungFactory.buildFromMassnahmenUmsetzung(newMnUms, element, null);
+         
+            LOG.debug("Transferred user defined massnahme: " + risikoMassnahme.getTitle());
         }
         if(risikoMassnahme!=null) {
             AddMassnahmeToGefaherdung command = new AddMassnahmeToGefaherdung(gefaehrdungsUmsetzung, risikoMassnahme);

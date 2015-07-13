@@ -85,6 +85,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class TransferData {
 
+    private static char KEIN_SIEGEL = '-';
+    
     // umsetzungs patterns in verinice
     // leaving out "unbearbeitet" since this is the default:
     private static final String[] UMSETZUNG_STATI_VN = new String[] { MassnahmenUmsetzung.P_UMSETZUNG_NEIN, MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, };
@@ -508,9 +510,13 @@ public class TransferData {
         String massnahmeNr = translateMassnahmenNr(ragmResult);
         mnUms.setSimpleProperty("mnums_id", massnahmeNr);
         mnUms.setName(ragmResult.getMassnahmeTxt().getName());
-        mnUms.setErlaeuterung(convertClobToString(ragmResult.getMassnahmeTxt().getBeschreibung()));
+        mnUms.setDescription(convertClobToString(ragmResult.getMassnahmeTxt().getBeschreibung()));
+        mnUms.setErlaeuterung(ragmResult.getMzbm().getUmsBeschr());
         mnUms.setUrl(transferUrl(ragmResult.getMassnahme().getLink()));
-        mnUms.setStufe(ragmResult.getRisikobehandlungABCD());
+        char siegel = convertToChar(ragmResult.getSiegelTxt().getKurzname());
+        if(siegel!=KEIN_SIEGEL) {
+            mnUms.setStufe(siegel);
+        }
         transferUmsetzung(mnUms, ragmResult.getUmsTxt().getName());
 
         // may be necessary for user defined bausteine:
@@ -526,6 +532,26 @@ public class TransferData {
         // Umsetzung J,n,...
         // Lebenszyklusphase
 
+    }
+
+
+    /**
+     * Convert ">G<", A, B, C, W, "-", "---" to a char
+     * ">G<" is converted to G
+     * 
+     * @param kurzname
+     * @return
+     */
+    private char convertToChar(String kurzname) {
+        char result = KEIN_SIEGEL;
+        if(kurzname!=null && !kurzname.isEmpty()) {    
+            if(kurzname.length()>1)  {
+                result = kurzname.toCharArray()[1];   
+            } else {
+                result = kurzname.toCharArray()[0];
+            }
+        }
+        return result;
     }
 
     public boolean isUserDefMassnahme(RAGefaehrdungsMassnahmenResult ragmResult) {

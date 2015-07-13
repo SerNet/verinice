@@ -63,7 +63,16 @@ public class GSVampire {
 			+ "			where zo.mbZielobjSubtyp.id.zotId = txt.id.zotId "
 			+ "			and txt.id.sprId = 1 "
 			+ "			and zo.mbZielobjSubtyp.id.zosId = subtxt.id.zosId "
-			+ "			and subtxt.id.sprId = 1" + "			and zo.loeschDatum = null";
+			+ "			and subtxt.id.sprId = 1 and zo.loeschDatum = null";
+	
+	   private static final String QUERY_ZIELOBJEKT_TYP_BY_ID = "select zo, txt.name, subtxt.name "
+	            + "         from NZielobjekt zo, MbZielobjTypTxt txt, MbZielobjSubtypTxt subtxt "
+	            + "         where zo.mbZielobjSubtyp.id.zotId = txt.id.zotId "
+	            + "         and txt.id.sprId = 1 "
+	            + "         and zo.mbZielobjSubtyp.id.zosId = subtxt.id.zosId "
+	            + "         and subtxt.id.sprId = 1 "
+	            + "         and zo.loeschDatum = null "
+	            + "         and zo.id.zobId = 10637";
 
 //	private static final String QUERY_BAUSTEIN_ZIELOBJEKT = "select zo.name, zo.id.zobId, bst.nr, "
 //			+ "zo_bst.begruendung, zo_bst.bearbeitet, zo_bst.datum "
@@ -204,63 +213,76 @@ public class GSVampire {
 
 	
 	private static final String QUERY_RA_GEF_MNS_FOR_ZIELOBJEKT =  
-			"select new sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult(z, g, gtxt, rabtxt.kurz, m, mtxt, mzbm, umstxt)" +
-			" from RaZobGef rzg, " + 
-			"	RaZobGefMas rzgma," + 
-			"	MbGefaehr g," + 
-			"	MbGefaehrTxt gtxt," + 
-			"	MsRaBehandTxt rabtxt," + 
-			"	NZielobjekt z," + 
-			"	MbMassn m," + 
-			"	MbMassnTxt mtxt, " + 
-			"   ModZobjBstMass mzbm," + 
-			"   MUmsetzStatTxt umstxt " +
-			" where rzg.id.zobId = z.id.zobId" + 
-			"	and rzg.id.gefId = g.id.gefId" + 
-			"	and gtxt.id.gefId = g.id.gefId" + 
-			"	and rabtxt.id.rabId = rzg.msRaBehand.rabId" + 
-			"	and m.id.masId = rzgma.id.masId" + 
-			"	and rzgma.id.gefId = g.id.gefId" + 
-			"	and rzgma.id.zobId = z.id.zobId" +
-			
-			"   and mzbm.id.masId = rzgma.id.masId" + 
-			"   and mzbm.id.zobId = z.id.zobId" + 
-			"   and umstxt.id.ustId = mzbm.ustId" + 
-			"   and umstxt.id.sprId = 1" + 
-			
-			"	and mtxt.id.masId = m.id.masId" + 
-			"	and z.id.zobId = :zobId" + 
-			"	and g.id.gefId = :gefId" + 
-			"	and (gtxt.id.sprId = 1 or gtxt.id.sprId = 0)" + 
-			"	and rabtxt.id.sprId=1" + 
-			"	and (mtxt.id.sprId = 1 or mtxt.id.sprId = 0)";
-	
-
+			"select new sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult(z, g, gtxt, rabtxt.kurz, m, mtxt, mzbm, umstxt, stxt) " +
+	        "from RaZobGef rzg, " + 
+            "   RaZobGefMas rzgma, " + 
+            "   MbGefaehr g, " + 
+            "   MbGefaehrTxt gtxt, " + 
+            "   MsRaBehandTxt rabtxt, " + 
+            "   NZielobjekt z, " + 
+            "   MbMassn m, " + 
+            "   MbMassnTxt mtxt, " +  
+            "   ModZobjBstMass mzbm, " + 
+            "   MUmsetzStatTxt umstxt, " +
+            "   MbBaustMassnGsiegel mbmg, " +
+            "   MGsiegel s, " +
+            "   MGsiegelTxt stxt " +
+	        "where rzg.id.zobId = z.id.zobId " + 
+            "   and rzg.id.gefId = g.id.gefId " + 
+	        "   and gtxt.id.gefId = g.id.gefId " + 
+	        "   and rabtxt.id.rabId = rzg.msRaBehand.rabId " + 
+            "   and m.id.masId = rzgma.id.masId " + 
+            "   and rzgma.id.gefId = g.id.gefId " + 
+            "   and rzgma.id.zobId = z.id.zobId " +
+            "   and mzbm.id.masId = rzgma.id.masId " + 
+            "   and mzbm.id.zobId = z.id.zobId " +
+            "   and mzbm.id.bauImpId = 1 " +
+            "   and umstxt.id.ustId = mzbm.ustId " + 
+            "   and umstxt.id.sprId = 1 " + 
+            "   and mtxt.id.masId = m.id.masId " + 
+            "   and (gtxt.id.sprId = 1 or gtxt.id.sprId = 0) " + 
+            "   and rabtxt.id.sprId=1 " + 
+            "   and (mtxt.id.sprId = 1 or mtxt.id.sprId = 0) " +
+            "   and mbmg.id.bauId = mzbm.id.bauId " +
+            "   and mbmg.id.masId = mzbm.id.masId " +
+            "   and mbmg.MGsiegel.gruId = s.gruId " +
+            "   and s.gruId = stxt.id.gruId " +
+            "   and stxt.id.sprId=1 " +
+            "   and z.id.zobId = :zobId " +
+            "   and g.id.gefId = :gefId ";
 	public GSVampire(String configFile) {
 		HibernateSessionFactory.setConfigFile(configFile);
 	}
 
 	public List<ZielobjektTypeResult> findZielobjektTypAll() {
-		List<ZielobjektTypeResult> result = new ArrayList<ZielobjektTypeResult>();
-		NZielobjektDAO dao = new NZielobjektDAO();
-		Transaction transaction = dao.getSession().beginTransaction();
-		Query query = dao.getSession().createQuery(QUERY_ZIELOBJEKT_TYP);
-		Iterator iterate = query.iterate();
-	
-		loop: while (iterate.hasNext()) {
-			Object[] next = (Object[]) iterate.next();
-			
-			// skip deleted objects:
-			if ( ((NZielobjekt)next[0]).getLoeschDatum() != null )
-				continue loop;
-			
-			result.add(new ZielobjektTypeResult((NZielobjekt) next[0],
-					(String) next[1], (String) next[2]));
-		}
-		transaction.commit();
-		dao.getSession().close();
-		return result;
+		return findZielobjektTyp(QUERY_ZIELOBJEKT_TYP);
 	}
+	
+	public List<ZielobjektTypeResult> findZielobjektTypById() {
+        return findZielobjektTyp(QUERY_ZIELOBJEKT_TYP);
+    }
+	
+	public List<ZielobjektTypeResult> findZielobjektTyp(String hql) {
+        List<ZielobjektTypeResult> result = new ArrayList<ZielobjektTypeResult>();
+        NZielobjektDAO dao = new NZielobjektDAO();
+        Transaction transaction = dao.getSession().beginTransaction();
+        Query query = dao.getSession().createQuery(hql);
+        Iterator iterate = query.iterate();
+    
+        loop: while (iterate.hasNext()) {
+            Object[] next = (Object[]) iterate.next();
+            
+            // skip deleted objects:
+            if ( ((NZielobjekt)next[0]).getLoeschDatum() != null )
+                continue loop;
+            
+            result.add(new ZielobjektTypeResult((NZielobjekt) next[0],
+                    (String) next[1], (String) next[2]));
+        }
+        transaction.commit();
+        dao.getSession().close();
+        return result;
+    }
 
 	/**
 	 * Finds notes that are attached to "massnahmen" by target object.
@@ -615,8 +637,7 @@ public class GSVampire {
 	 * @param gefaehrdung
 	 * @return
 	 */
-	public List<RAGefaehrdungsMassnahmenResult> findRAGefaehrdungsMassnahmenForZielobjekt(
-			NZielobjekt zielobjekt, MbGefaehr gefaehrdung) {
+	public List<RAGefaehrdungsMassnahmenResult> findRAGefaehrdungsMassnahmenForZielobjekt(NZielobjekt zielobjekt, MbGefaehr gefaehrdung) {
 		List result = new ArrayList();
 		NZielobjektDAO dao = new NZielobjektDAO();
 		Transaction transaction = dao.getSession().beginTransaction();

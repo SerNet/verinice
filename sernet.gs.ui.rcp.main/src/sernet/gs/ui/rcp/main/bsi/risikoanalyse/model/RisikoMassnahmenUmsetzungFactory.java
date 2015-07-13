@@ -61,9 +61,11 @@ public class RisikoMassnahmenUmsetzungFactory {
 		RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(draftMnUms);
 		RisikoMassnahme massnahme = draftMnUms.getRisikoMassnahme();
 		RisikoMassnahmenUmsetzung massnahmenUmsetzung = new RisikoMassnahmenUmsetzung(superParent, myParent, massnahme);
-
-		
+	
 		massnahmenUmsetzung.setName(draftMnUms.getName());
+		massnahmenUmsetzung.setErlaeuterung(draftMnUms.getErlaeuterung());     
+        massnahmenUmsetzung.setUmsetzung(draftMnUms.getUmsetzung());
+        
 		massnahmenUmsetzung.setNumber(massnahme.getNumber());
 		massnahmenUmsetzung.setUrl(massnahme.getUrl());
 		massnahmenUmsetzung.setStand(massnahme.getStand());
@@ -72,6 +74,8 @@ public class RisikoMassnahmenUmsetzungFactory {
 		
 		return massnahmenUmsetzung;
 	}
+	
+
 	
 	public static RisikoMassnahmenUmsetzung buildFromMassnahmenUmsetzung(MassnahmenUmsetzung draftMnUms,
 			CnATreeElement superParent,
@@ -89,6 +93,9 @@ public class RisikoMassnahmenUmsetzungFactory {
 		massnahmenUmsetzung.setUrl(draftMnUms.getUrl());
 		massnahmenUmsetzung.setStand(draftMnUms.getStand());
 		massnahmenUmsetzung.setStufe(draftMnUms.getStufe());
+        massnahmenUmsetzung.setDescription(draftMnUms.getDescription());    
+		massnahmenUmsetzung.setErlaeuterung(draftMnUms.getErlaeuterung());     
+        massnahmenUmsetzung.setUmsetzung(draftMnUms.getUmsetzung());
 		
 		return massnahmenUmsetzung;
 	}

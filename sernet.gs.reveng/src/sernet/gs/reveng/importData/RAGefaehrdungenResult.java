@@ -1,5 +1,6 @@
 package sernet.gs.reveng.importData;
 
+import sernet.gs.reveng.MGsiegelTxt;
 import sernet.gs.reveng.MbGefaehr;
 import sernet.gs.reveng.MbGefaehrTxt;
 import sernet.gs.reveng.NZielobjekt;
@@ -19,6 +20,20 @@ public class RAGefaehrdungenResult {
 		private char risikobehandlungABCD;
 		private RaZobGef rzg;
 		
+		public RAGefaehrdungenResult(
+                NZielobjekt zielobjekt,
+                MbGefaehr gefaehrdung, 
+                MbGefaehrTxt gefaehrdungTxt,
+                char risikobehandlungABCD, 
+                RaZobGef rzg) {
+            super();
+            this.zielobjekt = zielobjekt;
+            this.gefaehrdung = gefaehrdung;
+            this.gefaehrdungTxt = gefaehrdungTxt;
+            this.risikobehandlungABCD = risikobehandlungABCD;
+            this.rzg = rzg;
+        }
+		
 		/**
          * @return the rzg
          */
@@ -33,16 +48,7 @@ public class RAGefaehrdungenResult {
             this.rzg = rzg;
         }
 
-        public RAGefaehrdungenResult(NZielobjekt zielobjekt,
-				MbGefaehr gefaehrdung, MbGefaehrTxt gefaehrdungTxt,
-				char risikobehandlungABCD, RaZobGef rzg) {
-			super();
-			this.zielobjekt = zielobjekt;
-			this.gefaehrdung = gefaehrdung;
-			this.gefaehrdungTxt = gefaehrdungTxt;
-			this.risikobehandlungABCD = risikobehandlungABCD;
-			this.rzg = rzg;
-		}
+        
 
 		public NZielobjekt getZielobjekt() {
 			return zielobjekt;

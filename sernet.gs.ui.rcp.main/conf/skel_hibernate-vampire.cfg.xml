@@ -33,7 +33,9 @@
         <mapping resource="sernet/gs/reveng/MbBauMasGef.hbm.xml" />
         <mapping resource="sernet/gs/reveng/MbBaustGefaehr.hbm.xml" />
         <mapping resource="sernet/gs/reveng/MbMasGef.hbm.xml" />
-        <mapping resource="sernet/gs/reveng/MbMassnTxt.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MbMassnTxt.hbm.xml" />       
+        <mapping resource="sernet/gs/reveng/MbBaustMassnGsiegel.hbm.xml" />
+        <mapping resource="sernet/gs/reveng/MGsiegelTxt.hbm.xml" />
 
 		<mapping resource="sernet/gs/reveng/NmbNotiz.hbm.xml" />
 		<mapping resource="sernet/gs/reveng/NZielobjekt.hbm.xml" />

@@ -159,8 +159,7 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 
 	@Override
     public char getStufe() {
-		return getEntity().getSimpleValue(P_SIEGEL).length() > 0 ? getEntity()
-				.getSimpleValue(P_SIEGEL).charAt(0) : ' ';
+		return getEntity().getSimpleValue(P_SIEGEL).length() > 0 ? getEntity().getSimpleValue(P_SIEGEL).charAt(0) : ' ';
 	}
 
 	/**
@@ -398,6 +397,10 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	public String getDescription() {
 		return getEntity().getSimpleValue(P_BESCHREIBUNG);
 	}
+	
+	public void setDescription(String description) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(P_BESCHREIBUNG), description);
+    }
 
 	public String getEncoding() {
 		return getEntity().getSimpleValue(P_ENCODING);
