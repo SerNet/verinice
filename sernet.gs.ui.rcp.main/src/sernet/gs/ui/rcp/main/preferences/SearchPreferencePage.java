@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
-import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
@@ -30,7 +30,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
@@ -55,6 +54,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
     private RadioGroupFieldEditor sortColumns;
     private ComboFieldEditor seperatorFieldEditor;
     private ComboFieldEditor encodingFieldEditor;
+    private BooleanFieldEditor startField;
 
     @Override
     public void init(IWorkbench arg0) {
@@ -62,30 +62,33 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         setDescription(Messages.getString("SearchPreferencePage.0")); //$NON-NLS-1$
     }
 
-    @Override
-    protected void createFieldEditors() {
-
-//        boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
-//
-//        if (standalone) {
-//            BooleanFieldEditor startField = new BooleanFieldEditor(PreferenceConstants.SEARCH_INDEX_ON_STARTUP, "Update index on startup", getFieldEditorParent()); //$NON-NLS-1$
-//            addField(startField);
-//        }
-//
-//
-
-    }
 
     @Override
     protected Control createContents(Composite parent) {
 
-        Composite top = new Composite(parent, SWT.LEFT);
+        Composite top = new Composite(parent, SWT.FILL | SWT.BORDER_DASH);
         top.setLayout(new GridLayout());
-        top.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        top.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-        Composite sortingComposite = new Group(top, SWT.BORDER);
+      boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+
+
+      if (standalone) {
+          Group indexOnStartUpGroup = new Group(top, SWT.FILL | SWT.BORDER);
+          indexOnStartUpGroup.setLayout(new FillLayout());
+          indexOnStartUpGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+          indexOnStartUpGroup.setText(Messages.getString("SearchPreferencePage.13"));
+
+          startField = new BooleanFieldEditor(PreferenceConstants.SEARCH_INDEX_ON_STARTUP, Messages.getString("SearchPreferencePage.14"), indexOnStartUpGroup);
+          startField.setPreferenceStore(getPreferenceStore());
+          startField.load();
+
+      }
+
+        Group sortingComposite = new Group(top, SWT.FILL | SWT.BORDER);
         sortingComposite.setLayout(new GridLayout());
-        sortingComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+        sortingComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        sortingComposite.setText(Messages.getString("SearchPreferencePage.15"));
 
         String[][] labelAndValues = new String[2][2];
         labelAndValues[0] = new String[] { Messages.getString("SearchPreferencePage.10"), PreferenceConstants.SEARCH_SORT_COLUMN_BY_SNCA };
@@ -101,7 +104,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
 
         Group csvExportSettingsGrid = new Group(top, SWT.FILL | SWT.BORDER);
         csvExportSettingsGrid.setLayout(new GridLayout());
-        csvExportSettingsGrid.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+        csvExportSettingsGrid.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         csvExportSettingsGrid.setText(Messages.getString("SearchPreferencePage.12"));
 
         seperatorFieldEditor = new ComboFieldEditor(
@@ -126,18 +129,34 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
 
     @Override
     protected void performDefaults() {
+
         sortColumns.loadDefault();
         seperatorFieldEditor.loadDefault();
         encodingFieldEditor.loadDefault();
+        startField.loadDefault();
+
         super.performDefaults();
     }
 
     @Override
     public boolean performOk() {
+
         sortColumns.store();
         seperatorFieldEditor.store();
         encodingFieldEditor.store();
+        startField.store();
+
         return super.performOk();
+    }
+
+
+    /*
+    * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
+    */
+    @Override
+    protected void createFieldEditors() {
+        // TODO Auto-generated method stub
+
     }
 
 }
