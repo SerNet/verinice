@@ -3315,7 +3315,8 @@ the value between <param></param> will be used directly if no string is found fo
         
         <huiproperty
             name="Title"
-            id="assetgroup_name" />
+            id="assetgroup_name"
+            required="true" />
     </huientity>
     
     <huientity
@@ -3343,7 +3344,8 @@ the value between <param></param> will be used directly if no string is found fo
                
         <huiproperty
             name="Title" 
-            id="asset_name"/>
+            id="asset_name"
+            required="true" />
         <huiproperty
             name="Abbreviation" 
             id="asset_abbr" />
@@ -3706,7 +3708,8 @@ the value between <param></param> will be used directly if no string is found fo
         id="persongroup" >
         <huiproperty
             name="Title"
-            id="persongroup_name" />
+            id="persongroup_name"
+            required="true" />
     </huientity>
     
     <huientity
@@ -4004,7 +4007,7 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Title"
             id="auditgroup_name"
-            />
+            required="true" />
         
         <huirelation to="asset" id="rel_auditgroup_asset"/>
     </huientity>
@@ -4036,7 +4039,8 @@ the value between <param></param> will be used directly if no string is found fo
         
         <huiproperty
             name="Title"
-            id="audit_name" />
+            id="audit_name"
+            required="true" />
         <huiproperty
             name="Abbreviation"
             id="audit_abbr" />
@@ -4215,7 +4219,8 @@ the value between <param></param> will be used directly if no string is found fo
         id="controlgroup" >
         <huiproperty
             name="Title"
-            id="controlgroup_name" required="true"/>
+            id="controlgroup_name"
+            required="true"/>
             
         <huirelation to="person-iso" id="controlgroup_room_inspector" 
         	name="inspector" reversename="is inspector of" tooltip="Person is inspector of this room."/>
@@ -4727,7 +4732,8 @@ the value between <param></param> will be used directly if no string is found fo
         id="exceptiongroup" >
         <huiproperty
             name="Title"
-            id="exceptiongroup_name" />
+            id="exceptiongroup_name"
+            required="true" />
     </huientity>
     
     <huientity
@@ -4751,7 +4757,8 @@ the value between <param></param> will be used directly if no string is found fo
        	
         <huiproperty
             name="Title"
-            id="exception_name" />
+            id="exception_name"
+            required="true" />
         <huiproperty
             name="Abbreviation"
             id="exception_abbr" />
@@ -4792,7 +4799,8 @@ the value between <param></param> will be used directly if no string is found fo
         id="requirementgroup" >
         <huiproperty
             name="Title"
-            id="requirementgroup_name" />
+            id="requirementgroup_name"
+            required="true" />
     </huientity>
     
     <huientity
@@ -4809,7 +4817,8 @@ the value between <param></param> will be used directly if no string is found fo
         	
         <huiproperty
             name="Title"
-            id="requirement_name" />
+            id="requirement_name"
+            required="true" />
         <huiproperty
             name="Abbreviation"
             id="requirement_abbr" />
@@ -4851,7 +4860,8 @@ the value between <param></param> will be used directly if no string is found fo
         
         <huiproperty
             name="Title"
-            id="incident_name" />
+            id="incident_name"
+            required="true" />
         <huiproperty
             name="Abbreviation"
             id="incident_abbr" />
@@ -5038,7 +5048,8 @@ Wurden bereits weitere Stellen informiert?
         id="incident_group" >
         <huiproperty
             name="Title"
-            id="incident_group_name" />
+            id="incident_group_name"
+            required="true" />
     </huientity>
     
     <huientity
@@ -5058,7 +5069,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Title"
             id="incident_scenario_name"
-            tags="Risk,Basic" />
+            tags="Risk,Basic"
+            required="true" />
         <huiproperty
             name="Abbreviation"
             id="incident_scenario_abbr"
@@ -5196,7 +5208,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Title"
             id="incident_scenario_group_name" 
-            tags="Basic"/>
+            tags="Basic"
+            required="true" />
     </huientity>
     
     <huientity
@@ -5204,7 +5217,8 @@ Wurden bereits weitere Stellen informiert?
         id="response" >
         <huiproperty
             name="Title"
-            id="response_name" />
+            id="response_name"
+            required="true" />
         <huiproperty
             name="Abbreviation"
             id="response_abbr" />
@@ -5225,7 +5239,8 @@ Wurden bereits weitere Stellen informiert?
         id="response_group" >
         <huiproperty
             name="Title"
-            id="response_group_name" />
+            id="response_group_name"
+            required="true" />
     </huientity>
     
     <huientity
@@ -5234,7 +5249,8 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Title"
             id="threat_name"
-            tags="Risk,Basic" />
+            tags="Risk,Basic"
+            required="true" />
         <huiproperty
             name="Description"
             id="threat_desc"
@@ -5283,7 +5299,9 @@ Wurden bereits weitere Stellen informiert?
         id="threat_group" >
         <huiproperty
             name="Title"
-            id="threat_group_name" tags="Basic" />
+            id="threat_group_name"
+            tags="Basic"
+            required="true" />
     </huientity>
     
     <huientity
@@ -5291,7 +5309,9 @@ Wurden bereits weitere Stellen informiert?
         id="vulnerability" >
         <huiproperty
             name="Title"
-            id="vulnerability_name" tags="Risk,Basic"/>
+            id="vulnerability_name"
+            tags="Risk,Basic"
+            required="true" />
         <huiproperty
             name="Description"
             id="vulnerability_desc" inputtype="text" tags="Risk,Basic"/>
@@ -5328,7 +5348,9 @@ Wurden bereits weitere Stellen informiert?
         id="vulnerability_group" >
         <huiproperty
             name="Title"
-            id="vulnerability_group_name" tags="Basic" />
+            id="vulnerability_group_name"
+            tags="Basic"
+            required="true" />
     </huientity>
     
     <huientity
@@ -5396,7 +5418,8 @@ Wurden bereits weitere Stellen informiert?
             		        
         <huiproperty
             name="Title"
-            id="document_name" />
+            id="document_name"
+            required="true" />
         <huiproperty
             name="Abbreviation"
             id="document_abbr" />
@@ -5433,7 +5456,8 @@ Wurden bereits weitere Stellen informiert?
         id="document_group" >
         <huiproperty
             name="Title"
-            id="document_group_name" />
+            id="document_group_name"
+            required="true" />
     </huientity>
     
     <huientity
@@ -5498,7 +5522,8 @@ Wurden bereits weitere Stellen informiert?
         id="interview_group" >
         <huiproperty
             name="Title"
-            id="interview_group_name" />
+            id="interview_group_name"
+            required="true" />
     </huientity>
     
     <huientity
@@ -5512,7 +5537,8 @@ Wurden bereits weitere Stellen informiert?
         
         <huiproperty
             name="Title"
-            id="evidence_name" />
+            id="evidence_name"
+            required="true" />
         <huiproperty
             name="Abbreviation"
             id="evidence_abbr" />
@@ -5532,7 +5558,8 @@ Wurden bereits weitere Stellen informiert?
         id="evidence_group" >
         <huiproperty
             name="Title"
-            id="evidence_group_name" />
+            id="evidence_group_name"
+            required="true" />
     </huientity>
     
     <huientity
@@ -5603,7 +5630,8 @@ Wurden bereits weitere Stellen informiert?
         id="finding_group" >
         <huiproperty
             name="Title"
-            id="finding_group_name" />
+            id="finding_group_name"
+            required="true" />
     </huientity>
     
     <huientity name="Process" id="process" >
@@ -5616,7 +5644,8 @@ Wurden bereits weitere Stellen informiert?
 
         <huiproperty
             name="Title"
-            id="process_name" />
+            id="process_name"
+            required="true" />
         <huiproperty
             name="Description"
             inputtype="text"
@@ -6265,7 +6294,8 @@ Wurden bereits weitere Stellen informiert?
         id="process_group" >
         <huiproperty
             name="Title"
-            id="process_group_name" />
+            id="process_group_name"
+            required="true" />
     </huientity>
     
     <huientity
@@ -6273,7 +6303,8 @@ Wurden bereits weitere Stellen informiert?
         id="record" >
         <huiproperty
             name="Title"
-            id="record_name" />
+            id="record_name"
+            required="true" />
         <huiproperty
             name="Abbreviation"
             id="record_abbr" />
@@ -6292,7 +6323,8 @@ Wurden bereits weitere Stellen informiert?
         id="record_group" >
         <huiproperty
             name="Title"
-            id="record_group_name" />
+            id="record_group_name"
+            required="true" />
     </huientity>
     
     <huientity
