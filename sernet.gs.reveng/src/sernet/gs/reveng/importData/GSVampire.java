@@ -128,8 +128,8 @@ public class GSVampire {
 	private static final String QUERY_BAUSTEIN_NOTIZEN_FOR_ZIELOBJEKT_NAME = "select bst, zo_bst, notiz "
         + "from ModZobjBst zo_bst, "
         + " NZielobjekt zo, "
-        + " MbBaust bst," +
-        		"NmbNotiz notiz "
+        + " MbBaust bst, "
+        + "NmbNotiz notiz "
         + "where zo.name = :name "
         + "and zo.id.zobImpId = 1 "
         + "and zo_bst.id.zobImpId = zo.id.zobImpId "
@@ -198,6 +198,20 @@ public class GSVampire {
 			+ "	and link.id.zobId2 = dependant.id.zobId "
 			+ "	and link.loeschDatum = null";
 
+	private static final String QUERY_ZIELOBJEKT_WITH_RA = "select distinct (z)," 
+	        + " txt.name," 
+	        + " subtxt.name"
+	        + " from NZielobjekt z,"
+	        + " MbZielobjTypTxt txt,"
+	        + " MbZielobjSubtypTxt subtxt,"
+	        + " RaZobGef rzg"
+	        + " where z.mbZielobjSubtyp.id.zotId = txt.id.zotId"
+	        + " and txt.id.sprId = 1"
+	        + " and z.mbZielobjSubtyp.id.zosId = subtxt.id.zosId"
+	        + " and subtxt.id.sprId = 1"
+	        + " and z.loeschDatum = null"
+	        + " and rzg.id.zobId = z.id.zobId";
+	
 	private static final String QUERY_RA_GEFS_FOR_ZIELOBJEKT = ""
 			+ "select new sernet.gs.reveng.importData.RAGefaehrdungenResult(z, g, gtxt, rabtxt.kurz, rzg) "
 			+ "from " 
@@ -262,6 +276,10 @@ public class GSVampire {
         return findZielobjektTyp(QUERY_ZIELOBJEKT_TYP);
     }
 	
+	public List<ZielobjektTypeResult> findZielobjektWithRA() {
+        return findZielobjektTyp(QUERY_ZIELOBJEKT_WITH_RA);
+    }
+	
 	public List<ZielobjektTypeResult> findZielobjektTyp(String hql) {
         List<ZielobjektTypeResult> result = new ArrayList<ZielobjektTypeResult>();
         NZielobjektDAO dao = new NZielobjektDAO();
@@ -269,15 +287,12 @@ public class GSVampire {
         Query query = dao.getSession().createQuery(hql);
         Iterator iterate = query.iterate();
     
-        loop: while (iterate.hasNext()) {
-            Object[] next = (Object[]) iterate.next();
-            
+        while (iterate.hasNext()) {
+            Object[] next = (Object[]) iterate.next();            
             // skip deleted objects:
-            if ( ((NZielobjekt)next[0]).getLoeschDatum() != null )
-                continue loop;
-            
-            result.add(new ZielobjektTypeResult((NZielobjekt) next[0],
-                    (String) next[1], (String) next[2]));
+            if ( ((NZielobjekt)next[0]).getLoeschDatum() == null ) {         
+                result.add(new ZielobjektTypeResult((NZielobjekt) next[0], (String) next[1], (String) next[2]));
+            }
         }
         transaction.commit();
         dao.getSession().close();
@@ -297,8 +312,7 @@ public class GSVampire {
 		Transaction transaction = dao.getSession().beginTransaction();
 
 		// get notes for massnahmen:
-		Query query = dao.getSession().createQuery(
-				QUERY_NOTIZEN_FOR_ZIELOBJEKT_NAME);
+		Query query = dao.getSession().createQuery(QUERY_NOTIZEN_FOR_ZIELOBJEKT_NAME);
 		query.setParameter("name", name, Hibernate.STRING);
 		Iterator iterate = query.iterate();
 		while (iterate.hasNext()) {
@@ -310,8 +324,7 @@ public class GSVampire {
 		}
 
 		// get notes for bausteine (bst, zo_bst, notiz)
-		query = dao.getSession().createQuery(
-                QUERY_BAUSTEIN_NOTIZEN_FOR_ZIELOBJEKT_NAME);
+		query = dao.getSession().createQuery(QUERY_BAUSTEIN_NOTIZEN_FOR_ZIELOBJEKT_NAME);
         query.setParameter("name", name, Hibernate.STRING);
         iterate = query.iterate();
         while (iterate.hasNext()) {
@@ -619,8 +632,7 @@ public class GSVampire {
 		List result = new ArrayList();
 		NZielobjektDAO dao = new NZielobjektDAO();
 		Transaction transaction = dao.getSession().beginTransaction();
-		Query query = dao.getSession().createQuery(
-				QUERY_RA_GEFS_FOR_ZIELOBJEKT);
+		Query query = dao.getSession().createQuery(QUERY_RA_GEFS_FOR_ZIELOBJEKT);
 		query.setProperties(zielobjekt.getId());
 		result.addAll(query.list());
 		transaction.commit();

@@ -362,7 +362,7 @@ public class TestGSVampire {
 			System.out.println("RA for " + zielobjekt.getName());
 			
 			for (RAGefaehrdungenResult ragResult : result) {
-				if (ragResult.getRisikobehandlungABCD() == GSDBConstants.RABEHAND_A_CHAR) {
+				if (ragResult.getRisikobehandlungABCD() == GSDBConstants.RA_BEHAND_A_REDUKTION) {
 					List<RAGefaehrdungsMassnahmenResult> ragmResults = 
 							vampire.findRAGefaehrdungsMassnahmenForZielobjekt(zielobjekt, 
 									ragResult.getGefaehrdung());

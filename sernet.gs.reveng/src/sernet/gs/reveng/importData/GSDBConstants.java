@@ -31,9 +31,9 @@ public class GSDBConstants {
 	public static byte RABEHAND_C=4;
 	public static byte RABEHAND_D=5;
 	
-	public static char RABEHAND_UNBEARBEITET_CHAR='-';
-	public static char RABEHAND_A_CHAR='A';
-	public static char RABEHAND_B_CHAR='B';
-	public static char RABEHAND_C_CHAR='C';
-	public static char RABEHAND_D_CHAR='D';
+	public static char RA_BEHAND_UNBEARBEITET='-';
+	public static char RA_BEHAND_A_REDUKTION ='A';
+	public static char RA_BEHAND_B_UMSTRUKTURIERUNG ='B';
+	public static char RA_BEHAND_C_UEBERNAHME ='C';
+	public static char RA_BEHAND_D_TRANSFER ='D';
 }

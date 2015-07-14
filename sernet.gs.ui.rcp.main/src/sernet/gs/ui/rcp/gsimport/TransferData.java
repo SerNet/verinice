@@ -85,6 +85,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class TransferData {
 
+    private static final Logger LOG = Logger.getLogger(TransferData.class);
+    
     private static char KEIN_SIEGEL = '-';
     
     // umsetzungs patterns in verinice
@@ -327,7 +329,7 @@ public class TransferData {
      * @throws IOException
      * @throws SQLException
      */
-    public void transferRAGefaehrdungsUmsetzung(GefaehrdungsUmsetzung gefaehrdungsUmsetzung, RAGefaehrdungenResult ragResult) throws SQLException, IOException {
+    public void transferRAGefaehrdungsUmsetzung(GefaehrdungsUmsetzung gefaehrdungsUmsetzung, RAGefaehrdungenResult ragResult) throws IOException {
         // gefährdungsbewertung:
 
         // vollständigkeit J/N
@@ -481,11 +483,16 @@ public class TransferData {
      * @throws SQLException
      * @throws IOException
      */
-    public static String convertClobToString(Clob clob) throws SQLException, IOException {
-        Reader reader = clob.getCharacterStream();
-        OutputStream out = new ByteArrayOutputStream();
-        IOUtils.copy(reader, out, "UTF-8");
-        return out.toString();
+    public static String convertClobToString(Clob clob) throws IOException {
+        try {
+            Reader reader = clob.getCharacterStream();               
+            OutputStream out = new ByteArrayOutputStream();
+            IOUtils.copy(reader, out, "UTF-8");
+            return out.toString();
+        } catch (SQLException e) {
+            LOG.error("Error while converting clob to String", e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**
