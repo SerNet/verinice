@@ -81,9 +81,12 @@ public class UmsetzungDurchFilter extends ViewerFilter {
 			return true;
 		}
 		IMassnahmeUmsetzung mnums = (IMassnahmeUmsetzung)element;
-		Matcher matcher = regex.matcher(mnums.getUmsetzungDurch());
-		if (matcher.find()){
-			return true;
+		String umsetzungDurch = mnums.getUmsetzungDurch();
+		if (umsetzungDurch != null) {
+	        Matcher matcher = regex.matcher(mnums.getUmsetzungDurch());
+	        if (matcher.find()){
+	            return true;
+	        }  
 		}
 		return false;
 	}
