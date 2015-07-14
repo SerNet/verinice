@@ -377,7 +377,6 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
     }
 
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-        //viewer.setInput(new PlaceHolder(Messages.FileView_0));
         Object element = ((IStructuredSelection) selection).getFirstElement();
         if (part == this) {
             openAction.setEnabled(element != null);
@@ -404,15 +403,17 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                 addFileAction.setEnabled(addFileAction.checkRights());
                 setCurrentCnaElement((CnATreeElement) element);
                 loadFiles();
-
             } else {
                 addFileAction.setEnabled(false);
             }
-            Attachment att = (Attachment) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-            openAction.setEnabled(att != null);
-            saveCopyAction.setEnabled(att != null);
-            deleteFileAction.setEnabled(att != null && deleteFileAction.checkRights());
-
+            
+            Object selectedElement = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+            if (selectedElement instanceof Attachment) {
+                Attachment att = (Attachment) selectedElement;
+                openAction.setEnabled(att != null);
+                saveCopyAction.setEnabled(att != null);
+                deleteFileAction.setEnabled(att != null && deleteFileAction.checkRights());
+            }
         } catch (Exception e) {
             LOG.error("Error while loading notes", e); //$NON-NLS-1$
         }
