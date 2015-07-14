@@ -24,6 +24,7 @@ import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 
+import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
 import sernet.gs.ui.rcp.main.bsi.views.FileView;
 import sernet.gs.ui.rcp.main.bsi.views.NoteView;
 import sernet.gs.ui.rcp.main.bsi.views.RelationView;
@@ -57,6 +58,7 @@ public class Iso27kPerspective implements IPerspectiveFactory {
 		layout.addView(RelationView.ID,  IPageLayout.BOTTOM, relationRatio, ISMView.ID);
 		
 		IFolderLayout folder = layout.createFolder("information", IPageLayout.BOTTOM, folderRatio, editorArea);
+		folder.addView(BrowserView.ID);
 		folder.addView(FileView.ID);
 		folder.addPlaceholder(NoteView.ID + ":*");
 		
