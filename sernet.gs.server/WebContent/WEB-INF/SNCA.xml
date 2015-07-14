@@ -6446,6 +6446,7 @@ Wurden bereits weitere Stellen informiert?
 	        tags="VDA-ISA,VDA_ISA_Audit"/>
           <huiproperty 
             id="samt_topic_version" 
+            editable="false"
             tags="VDA-ISA.VDA_ISA_Audit,Web" />
             
 			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->            

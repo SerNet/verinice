@@ -65,6 +65,7 @@ public class UnifyTest extends BeforeEachVNAImportHelper {
     
     private static final String TEXT_FROM_1_X = "sernet.verinice.service.test.UnifyTest";
     private static final int MATURITY_FROM_1_X_LEVEL_3 = 3;
+    private static final String ISA_VERSION_2_0 = "2.0";
     
     private static final Map<String, String[]> MAP_FROM_ISA_1_TO_2;
     static {
@@ -149,6 +150,7 @@ public class UnifyTest extends BeforeEachVNAImportHelper {
         assertEquals("Unexpected value of property: " + SamtTopic.PROP_EXTERNALNOTE, TEXT_FROM_1_X, isaTopic.getExternalNode());
         assertEquals("Unexpected value of property: " + SamtTopic.PROP_AUDIT_FINDINGS, TEXT_FROM_1_X, isaTopic.getAuditFindings());
         assertEquals("Unexpected value of property: " + SamtTopic.PROP_MATURITY, MATURITY_FROM_1_X_LEVEL_3, isaTopic.getMaturity());
+        assertEquals("Unexpected value of property: " + SamtTopic.PROP_VERSION, ISA_VERSION_2_0, isaTopic.getVersion());
     }
 
     private List<UnifyMapping> loadUnifyMappings() throws CommandException {

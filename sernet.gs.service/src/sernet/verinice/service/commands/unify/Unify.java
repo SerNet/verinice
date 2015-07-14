@@ -55,7 +55,12 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
     
     private transient Logger log = Logger.getLogger(Unify.class);
     
-    public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays.asList(SamtTopic.PROP_DESC,SamtTopic.PROP_NAME,Control.PROP_NAME,Control.PROP_DESC);
+    public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays.asList(
+            SamtTopic.PROP_DESC,
+            SamtTopic.PROP_NAME,
+            SamtTopic.PROP_VERSION,
+            Control.PROP_NAME,
+            Control.PROP_DESC);
     
     private String stationId;
     
