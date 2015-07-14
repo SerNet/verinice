@@ -20,11 +20,12 @@ package sernet.verinice.model.search;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.SortedSet;
 
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.PropertyType;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * Represents a table of properties of several CnATreeElements for the search
@@ -75,8 +76,31 @@ public class VeriniceSearchResultTable implements Serializable {
     }
 
     public void addSearchResult(VeriniceSearchResultRow result) {
-        results.add(result);
+        if(results.contains(result)){
+            addToExistingResult(result);
+        } else {
+            results.add(result);
+        }
         hits = results.size();
+    }
+
+    /**
+     * @param result
+     */
+    private void addToExistingResult(VeriniceSearchResultRow result) {
+        VeriniceSearchResultRow existingRow = getSearchResultByUUID(result.getIdentifier());
+        results.remove(existingRow);
+        Occurence occurence = result.getOccurence();
+        for(Entry<String, SortedSet<String>> entry : occurence.entries.entrySet()){
+            if(!existingRow.getOccurence().getFragments(entry.getKey()).isEmpty()){
+                for(String s : entry.getValue()){
+                    existingRow.getOccurence().getFragments(entry.getKey()).add(s);
+                }
+            } else {
+                existingRow.getOccurence().addFragment(entry.getKey(), occurence.getNameOfPropertyId(entry.getKey()), entry.getValue().first());
+            }
+        }
+        results.add(existingRow);
     }
 
     public int getHits() {
