@@ -95,17 +95,6 @@
      <property name="cronExpression" value="0 ${veriniceserver.notification.minute} ${veriniceserver.notification.hour} * * ?" />
 </bean>
 
-<!-- Activate this to add CnaTreeElements to Elasticsearch index -->
-<!-- See veriniceserver-search.xml -->
-<!-- Spring/Quartz trigger bean to execute cron job indexJob. -->
-<bean id="indexJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-    <property name="jobDetail" ref="indexJob" />
-    <!-- for debug only, execute every 2 minutes -->
-    <property name="cronExpression" value="0 */5 * * * ?" />
-    <!-- execute every 30 minutes -->
-    <!-- <property name="cronExpression" value="0 */30 * * * ?" /> -->
-</bean>
-
 <bean id="quartzSchedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="triggers">
         <list>
@@ -116,7 +105,6 @@
               <ref bean="indexTrigger" />
               <ref bean="taskNotificationTrigger" />  
               
-              <!-- <ref bean="indexJobTrigger" /> -->
             <!--  for debugging purposes, fires the mail scheduler after 2 seconds and then every 60
 			<bean class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 				<property name="jobDetail" ref="notificationJob" />

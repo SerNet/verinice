@@ -76,6 +76,8 @@ public class InternalServer implements IInternalServer {
 	private static final String INTERNAL_SERVER_CONFIGURE_FAILURE = "InternalServer.configure.failed";
 	
 	private static final String SERVLET_NAME = "servlet-name";
+	
+	private boolean searchDisabled = false;
 
 	/**
 	 * Applies the given database credentials to the verinice server and checks
@@ -90,7 +92,7 @@ public class InternalServer implements IInternalServer {
 	 * The credentials will be used when the server is started next time.
 	 * </p>
 	 */
-	public void configure(String url, String user, String pass, String driver, String dialect, boolean indexOnStartup) {
+	public void configureDatabase(String url, String user, String pass, String driver, String dialect) {
 
 		boolean fail = false;
 		Connection c = null;
@@ -115,13 +117,17 @@ public class InternalServer implements IInternalServer {
 		}
 
 		if (fail) {
-		    ServerPropertyPlaceholderConfigurer.setDatabaseProperties(INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE);	    
-		    ServerPropertyPlaceholderConfigurer.setSearchProperties(false);	        
+		    ServerPropertyPlaceholderConfigurer.setDatabaseProperties(INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE, INTERNAL_SERVER_CONFIGURE_FAILURE);	            
 		} else {
-			ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user, pass, driver, dialect);
-			ServerPropertyPlaceholderConfigurer.setSearchProperties(indexOnStartup);    
+			ServerPropertyPlaceholderConfigurer.setDatabaseProperties(url, user, pass, driver, dialect);   
 		}
 	}
+	
+	public void configureSearch(boolean disable, boolean indexOnStartup) {
+	    ServerPropertyPlaceholderConfigurer.setSearchProperties(indexOnStartup); 
+	    searchDisabled = disable;
+	}
+
 
 	public void setGSCatalogURL(URL url) {
 		ServerPropertyPlaceholderConfigurer.setGSCatalogURL(url);
@@ -227,8 +233,7 @@ public class InternalServer implements IInternalServer {
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-ldap.xml \n" //$NON-NLS-1$
 				+ "classpath:/sernet/gs/server/spring/veriniceserver-jbpm-dummy.xml \n" //$NON-NLS-1$
 		        + "classpath:/sernet/gs/server/spring/veriniceserver-rightmanagement-dummy.xml \n" //NON-NLS-1$
-		        + "classpath:/sernet/gs/server/spring/veriniceserver-search-base.xml \n" //NON-NLS-1$
-		        + "classpath:/sernet/gs/server/spring/veriniceserver-search-osgi.xml \n" //NON-NLS-1$
+                + getSearchConfigFiles()
 		        + "classpath:/sernet/gs/server/spring/veriniceserver-reportdeposit-dummy.xml"); //NON-NLS-1$
 		
 		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
@@ -243,6 +248,17 @@ public class InternalServer implements IInternalServer {
 		dict.put(SERVLET_NAME, "serverTest"); //$NON-NLS-1$ //$NON-NLS-2$
 		wc.registerServlet(new ServerTestServlet(), new String[] { "/servertest" }, dict, ctx); //$NON-NLS-1$
 	}
+
+    private String getSearchConfigFiles() {
+        StringBuilder sb = new StringBuilder();  
+        if(searchDisabled) {
+            sb.append("classpath:/sernet/gs/server/spring/veriniceserver-search-dummy.xml \n"); //NON-NLS-1$
+        } else {
+            sb.append("classpath:/sernet/gs/server/spring/veriniceserver-search-base.xml \n"); //NON-NLS-1$
+            sb.append("classpath:/sernet/gs/server/spring/veriniceserver-search-osgi.xml \n"); //NON-NLS-1$
+        }
+        return sb.toString();
+    }
 
 	/**
 	 * Registers the Spring servlets which effectively starts the verinice

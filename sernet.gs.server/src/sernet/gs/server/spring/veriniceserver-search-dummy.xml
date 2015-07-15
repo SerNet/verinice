@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spring configuration for business process engine JBoss jBPM (https://www.jboss.org/jbpm) -->
+<!-- See jBPM developer guide - Chapter 17. Spring Integration -->
+<!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration -->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="searchService" class="sernet.verinice.service.SearchServiceDummy"/>
+  <bean id="searchElementDao" class="sernet.verinice.search.ElementDaoDummy"/>
+  <bean id="jsonBuilder" class="sernet.verinice.search.JsonBuilderDummy" />
+  <bean id="indexTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="indexJob" />
+    <property name="cronExpression" value="0 */2 * * * ?" />
+  </bean>   
+  <bean id="indexJob" class="org.springframework.scheduling.quartz.JobDetailBean"/>
+</beans>

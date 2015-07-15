@@ -165,6 +165,7 @@ public class PreferenceConstants {
     public static final String SEARCH_CSV_EXPORT_ENCODING = "search_csv_export_encoding";
     public static final String SEARCH_CSV_EXPORT_SEPERATOR = "search_csv_export_seperator";
     public static final String SEARCH_INDEX_ON_STARTUP = "search_index_on_startup";
+    public static final String SEARCH_DISABLE = "search_disable";
 
     /**
      * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view

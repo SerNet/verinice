@@ -54,6 +54,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
     private RadioGroupFieldEditor sortColumns;
     private ComboFieldEditor seperatorFieldEditor;
     private ComboFieldEditor encodingFieldEditor;
+    private BooleanFieldEditor disableField;
     private BooleanFieldEditor startField;
 
     @Override
@@ -78,11 +79,10 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
           indexOnStartUpGroup.setLayout(new FillLayout());
           indexOnStartUpGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
           indexOnStartUpGroup.setText(Messages.getString("SearchPreferencePage.13"));
-
+ 
           startField = new BooleanFieldEditor(PreferenceConstants.SEARCH_INDEX_ON_STARTUP, Messages.getString("SearchPreferencePage.14"), indexOnStartUpGroup);
           startField.setPreferenceStore(getPreferenceStore());
-          startField.load();
-
+          startField.load();        
       }
 
         Group sortingComposite = new Group(top, SWT.FILL | SWT.BORDER);
@@ -123,7 +123,13 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         encodingFieldEditor.setPreferenceStore(getPreferenceStore());
         encodingFieldEditor.load();
         encodingFieldEditor.fillIntoGrid(csvExportSettingsGrid, 2);
-
+        
+        if (standalone) {
+            disableField = new BooleanFieldEditor(PreferenceConstants.SEARCH_DISABLE, "Disable search", top);
+            disableField.setPreferenceStore(getPreferenceStore());
+            disableField.load();
+        }
+        
        return top;
     }
 
@@ -134,6 +140,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         seperatorFieldEditor.loadDefault();
         encodingFieldEditor.loadDefault();
         startField.loadDefault();
+        disableField.loadDefault();
 
         super.performDefaults();
     }
@@ -145,6 +152,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         seperatorFieldEditor.store();
         encodingFieldEditor.store();
         startField.store();
+        disableField.store();
 
         return super.performOk();
     }

@@ -392,12 +392,15 @@ public class CnAWorkspace {
 
         Preferences prefs = Activator.getDefault().getPluginPreferences();
 
-        Activator.getDefault().getInternalServer().configure(
+        Activator.getDefault().getInternalServer().configureDatabase(
                 prefs.getString(PreferenceConstants.DB_URL), 
                 prefs.getString(PreferenceConstants.DB_USER), 
                 prefs.getString(PreferenceConstants.DB_PASS), 
                 prefs.getString(PreferenceConstants.DB_DRIVER), 
-                prefs.getString(PreferenceConstants.DB_DIALECT),
+                prefs.getString(PreferenceConstants.DB_DIALECT));
+        
+        Activator.getDefault().getInternalServer().configureSearch(
+                prefs.getBoolean(PreferenceConstants.SEARCH_DISABLE),
                 prefs.getBoolean(PreferenceConstants.SEARCH_INDEX_ON_STARTUP));
 
         createGstoolImportDatabaseConfig(prefs.getString(PreferenceConstants.GS_DB_URL), prefs.getString(PreferenceConstants.GS_DB_USER), prefs.getString(PreferenceConstants.GS_DB_PASS));

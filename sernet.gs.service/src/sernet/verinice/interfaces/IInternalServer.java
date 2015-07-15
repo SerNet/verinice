@@ -25,8 +25,9 @@ public interface IInternalServer {
 	
 	void setDSCatalogURL(URL url);
 	
-	void configure(String url, String user, String pass,
-			String driver, String dialect, boolean b);
+	void configureDatabase(String url, String user, String pass, String driver, String dialect);
+	
+	void configureSearch(boolean disable, boolean indexOnStartup);
 
 	void start() throws IllegalStateException;
 	
