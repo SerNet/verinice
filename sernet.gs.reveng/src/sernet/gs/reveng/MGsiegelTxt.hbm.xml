@@ -16,9 +16,6 @@
         <many-to-one name="MGsiegel" class="sernet.gs.reveng.MGsiegel" update="false" insert="false" fetch="select">
             <column name="GRU_ID" not-null="true" />
         </many-to-one>
-        <many-to-one name="MSprache" class="sernet.gs.reveng.MSprache" update="false" insert="false" fetch="select">
-            <column name="SPR_ID" not-null="true" />
-        </many-to-one>
         <property name="name" type="string">
             <column name="NAME" not-null="true" />
         </property>
