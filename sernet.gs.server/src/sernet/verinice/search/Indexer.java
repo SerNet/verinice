@@ -21,6 +21,7 @@ package sernet.verinice.search;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -54,6 +55,8 @@ public class Indexer {
     private static final Logger LOG = Logger.getLogger(Indexer.class);
 
     private static final int DEFAULT_NUMBER_OF_THREADS = 8;
+
+    private static final String HQL_LOAD_UUIDS = "select e.uuid from CnATreeElement e";
 
     private IBaseDao<CnATreeElement, Integer> elementDao;
 
@@ -126,14 +129,14 @@ public class Indexer {
         ExecutorService executorService = createExecutor();
         CompletionService<CnATreeElement> completionService = new ExecutorCompletionService<CnATreeElement>(executorService);
 
-        List<CnATreeElement> elementList = getElementDao().findAll(RetrieveInfo.getPropertyInstance().setPermissions(true));
+        List<String> allUuids = getElementDao().findByQuery(HQL_LOAD_UUIDS, null);
 
         if (LOG.isInfoEnabled()) {
-            LOG.info("Elements: " + elementList.size() + ", indexingStart indexing...");
+            LOG.info("Elements: " + allUuids.size() + ", start indexing...");
         }
 
         getTitleCache().load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID });
-        Collection<IndexThread> indexThreads = createIndexThreads(elementList);
+        Collection<IndexThread> indexThreads = createIndexThreadsByUuids(allUuids);
         amountOfIndexThreads = indexThreads.size();
 
         for (IndexThread indexThread : indexThreads) {
@@ -144,7 +147,7 @@ public class Indexer {
     }
 
     private void logNonBlockingIndexingTermination(final CompletionService<CnATreeElement> completionService) {
-        if (LOG.isDebugEnabled()) {
+        if (LOG.isInfoEnabled()) {
             Executors.newFixedThreadPool(1).execute(new Runnable() {
                 @Override
                 public void run() {
@@ -166,7 +169,7 @@ public class Indexer {
     private void printIndexingTimeConsumption() {
         long end = System.currentTimeMillis();
         long ms = end - indexingStart;
-        LOG.debug("All indices created, runtime: " + ms + " ms, readable time: " + TimeFormatter.getHumanRedableTime(ms));
+        LOG.info("Index created, runtime: " + TimeFormatter.getHumanRedableTime(ms));
     }
 
     /**
@@ -179,7 +182,9 @@ public class Indexer {
      * {@link IndexThread} is completed.
      * </p>
      *
-     * <p>If you want to test indexing with junit, this is method to go.</p>
+     * <p>
+     * If you want to test indexing with junit, this is method to go.
+     * </p>
      *
      */
     public void blockingIndexing() {
@@ -219,8 +224,18 @@ public class Indexer {
         }
     }
 
+    private Collection<IndexThread> createIndexThreadsByUuids(List<String> allUuids) {
+        Collection<IndexThread> indexThreads = new LinkedList<IndexThread>();
+        for (String uuid : allUuids) {
+            IndexThread indexThread = (IndexThread) indexThreadFactory.getObject();
+            indexThread.setUuid(uuid);
+            indexThreads.add(indexThread);
+        }
+        return indexThreads;
+    }
+
     private Collection<IndexThread> createIndexThreads(List<CnATreeElement> elementList) {
-        Collection<IndexThread> indexThreads = new ArrayList<IndexThread>(0);
+        Collection<IndexThread> indexThreads = new LinkedList<IndexThread>();
 
         for (CnATreeElement element : elementList) {
             IndexThread indexThread = (IndexThread) indexThreadFactory.getObject();

@@ -158,14 +158,17 @@ public class JsonBuilder implements IJsonBuilder {
     private static XContentBuilder addProperties(XContentBuilder builder, String[] propertyTypeIds, Entity e) throws IOException {
         HUITypeFactory factory = HUITypeFactory.getInstance();
         for(String propertyTypeId : propertyTypeIds){
-            builder.field(propertyTypeId, mapPropertyString(e, factory.getPropertyType(e.getEntityType(), propertyTypeId)));
-
+            PropertyType propertyType = factory.getPropertyType(e.getEntityType(), propertyTypeId);
+            // reference types are not indexed
+            if(!propertyType.isReference()) {
+                builder.field(propertyTypeId, mapPropertyString(e, propertyType));
+            }          
         }
         return builder;
     }
     
     
-    private static String mapPropertyString(Entity e, PropertyType pType){
+    private static String mapPropertyString(Entity e, PropertyType pType){    
         String value = e.getSimpleValue(pType.getId());
         String mappedValue = "";
         if(StringUtils.isEmpty(value)){
