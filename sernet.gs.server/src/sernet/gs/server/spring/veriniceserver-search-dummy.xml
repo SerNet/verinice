@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Spring configuration for business process engine JBoss jBPM (https://www.jboss.org/jbpm) -->
-<!-- See jBPM developer guide - Chapter 17. Spring Integration -->
-<!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration -->
+<!-- verinice Spring configuration file  -->
+<!-- This file is referenced in contextConfigLocation parameter of web.xml or in class -->
+<!-- sernet.gs.server.InternalServer -->
+
+<!-- This is a dummy configuration for the search backend. -->
+<!-- All Beans configured in this file return empty result and do nothing. -->
+<!-- Use this file to disable the backend of the search. -->
+
+<!-- To configure a working search backend use files -->
+<!-- veriniceserver-search-base.xml and veriniceserver-search.xml in web.xml -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
@@ -10,7 +17,7 @@
   <bean id="jsonBuilder" class="sernet.verinice.search.JsonBuilderDummy" />
   <bean id="indexTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
     <property name="jobDetail" ref="indexJob" />
-    <property name="cronExpression" value="0 */2 * * * ?" />
+    <property name="cronExpression" value="0 45 4 * * ?" />
   </bean>   
   <bean id="indexJob" class="org.springframework.scheduling.quartz.JobDetailBean"/>
 </beans>
