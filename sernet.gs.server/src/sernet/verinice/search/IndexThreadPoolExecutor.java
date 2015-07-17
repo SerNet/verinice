@@ -24,14 +24,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.omg.IOP.ServiceContext;
-import org.omg.IOP.ServiceContextHolder;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.context.SecurityContextImpl;
 
 import sernet.gs.server.security.DummyAuthentication;
-import sernet.gs.service.ServerInitializer;
 
 /**
  * Sets dummy authentication if needed. Indexing is sometimes called from the
