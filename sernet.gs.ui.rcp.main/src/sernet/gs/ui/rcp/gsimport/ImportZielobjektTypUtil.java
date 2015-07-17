@@ -206,7 +206,7 @@ public abstract class ImportZielobjektTypUtil {
 			type = GS_ITSYSTEM_SUBTYPES.get(zoSubtypeName);
 		}
 		if(type == null){
-		    // TODO i8ln this
+		    LOG.error("Internes Mapping für den Typ\n " + zoTypeName + " (Subtyp: " + zoSubtypeName + ")\n nicht gefunden");
 		    throw new GSImportException("Internes Mapping für den Typ\n " + zoTypeName + " (Subtyp: " + zoSubtypeName + ")\n nicht gefunden"); //NON-NLS-$1
 		}
 		return type;

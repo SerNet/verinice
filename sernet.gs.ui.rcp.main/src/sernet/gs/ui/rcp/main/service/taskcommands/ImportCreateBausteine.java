@@ -285,6 +285,9 @@ public class ImportCreateBausteine extends GenericCommand {
             // erlaeuterung und termin:
             massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_ERLAEUTERUNG, vorlage.obm.getUmsBeschr());
             massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_UMSETZUNGBIS, parseDate(vorlage.obm.getUmsDatBis()));
+            massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_LETZTEREVISIONAM, parseDate(vorlage.obm.getRevDat()));
+            massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_NAECHSTEREVISIONAM, parseDate(vorlage.obm.getRevDatNext()));
+            massnahmenUmsetzung.setRevisionBemerkungen(vorlage.obm.getRevBeschr());         
         }
 
         // transfer kosten:

@@ -47,8 +47,10 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 
 	public static final String P_NAECHSTEREVISIONAM = "mnums_naechsterevisionam"; //$NON-NLS-1$
 	public static final String P_NAECHSTEREVISIONDURCH_LINK = "mnums_naechsterevisiondurch_link"; //$NON-NLS-1$
+    public static final String P_LETZTEREVISIONAM = "mnums_letzterevisionam"; //$NON-NLS-1$
 	public static final String P_LETZTEREVISIONDURCH_LINK = "mnums_letzterevisiondurch_link"; //$NON-NLS-1$
-
+	public static final String P_REV_BEMERKUNGEN = "mnums_bemerkungen"; //$NON-NLS-1$
+	
 	public static final String P_UMSETZUNG = "mnums_umsetzung"; //$NON-NLS-1$
 	// Grundschtuz
 	public static final String P_UMSETZUNG_NEIN = "mnums_umsetzung_nein"; //$NON-NLS-1$
@@ -296,6 +298,12 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 		}
 	}
 	
+	public void setRevisionBemerkungen(String text) {
+        if(text!=null) {
+            getEntity().setSimpleValue(getEntityType().getPropertyType(P_REV_BEMERKUNGEN), text);
+        }
+    }
+	
 	public String getErlaeuterung() {
 		if (getEntity().getProperties(P_ERLAEUTERUNG).getProperty(0) == null){
 			return null;
@@ -330,6 +338,10 @@ public class MassnahmenUmsetzung extends CnATreeElement implements IMassnahmeUms
 	@Override
     public String getRevisionDurch() {
 		return getEntity().getSimpleValue(P_NAECHSTEREVISIONDURCH_LINK);
+	}
+	
+    public Date getLetzteRevisionAm() {
+	    return getEntity().getDate(P_LETZTEREVISIONAM);	    
 	}
 
 	@Override

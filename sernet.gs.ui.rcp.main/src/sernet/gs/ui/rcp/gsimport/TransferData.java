@@ -27,6 +27,7 @@ import java.io.StringWriter;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -519,6 +520,10 @@ public class TransferData {
         mnUms.setName(ragmResult.getMassnahmeTxt().getName());
         mnUms.setDescription(convertClobToString(ragmResult.getMassnahmeTxt().getBeschreibung()));
         mnUms.setErlaeuterung(ragmResult.getMzbm().getUmsBeschr());
+        mnUms.setSimpleProperty(MassnahmenUmsetzung.P_UMSETZUNGBIS, parseDate(ragmResult.getMzbm().getUmsDatBis()));
+        mnUms.setSimpleProperty(MassnahmenUmsetzung.P_LETZTEREVISIONAM, parseDate(ragmResult.getMzbm().getRevDat()));
+        mnUms.setSimpleProperty(MassnahmenUmsetzung.P_NAECHSTEREVISIONAM, parseDate(ragmResult.getMzbm().getRevDatNext()));
+        mnUms.setRevisionBemerkungen(ragmResult.getMzbm().getRevBeschr());
         mnUms.setUrl(transferUrl(ragmResult.getMassnahme().getLink()));
         char siegel = convertToChar(ragmResult.getSiegelTxt().getKurzname());
         if(siegel!=KEIN_SIEGEL) {
@@ -812,6 +817,13 @@ public class TransferData {
         ownGefaehrdung.setId(gefNr);
         ownGefaehrdung.setTitel(ragResult.getGefaehrdungTxt().getName());
         ownGefaehrdung.setBeschreibung(convertClobToString(ragResult.getGefaehrdungTxt().getBeschreibung()));
+    }
+    
+    private String parseDate(Date date) {
+        if (date != null) {
+            return Long.toString(date.getTime());
+        }
+        return "";
     }
 
 }

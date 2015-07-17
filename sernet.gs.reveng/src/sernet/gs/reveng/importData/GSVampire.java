@@ -61,16 +61,17 @@ public class GSVampire {
 	private static final String QUERY_ZIELOBJEKT_TYP = "select zo, txt.name, subtxt.name "
 			+ "			from NZielobjekt zo, MbZielobjTypTxt txt, MbZielobjSubtypTxt subtxt "
 			+ "			where zo.mbZielobjSubtyp.id.zotId = txt.id.zotId "
-			+ "			and txt.id.sprId = 1 "
+			+ "			and (txt.id.sprId = 0 or txt.id.sprId = 1)"
 			+ "			and zo.mbZielobjSubtyp.id.zosId = subtxt.id.zosId "
-			+ "			and subtxt.id.sprId = 1 and zo.loeschDatum = null";
+			+ "			and (subtxt.id.sprId = 0 or subtxt.id.sprId = 1)"
+			+ "         and zo.loeschDatum = null";
 	
 	   private static final String QUERY_ZIELOBJEKT_TYP_BY_ID = "select zo, txt.name, subtxt.name "
 	            + "         from NZielobjekt zo, MbZielobjTypTxt txt, MbZielobjSubtypTxt subtxt "
 	            + "         where zo.mbZielobjSubtyp.id.zotId = txt.id.zotId "
-	            + "         and txt.id.sprId = 1 "
+	            + "         and (txt.id.sprId = 0 or txt.id.sprId = 1) "
 	            + "         and zo.mbZielobjSubtyp.id.zosId = subtxt.id.zosId "
-	            + "         and subtxt.id.sprId = 1 "
+	            + "         and (subtxt.id.sprId = 0 or subtxt.id.sprId = 1) "
 	            + "         and zo.loeschDatum = null "
 	            + "         and zo.id.zobId = 10637";
 
@@ -206,9 +207,9 @@ public class GSVampire {
 	        + " MbZielobjSubtypTxt subtxt,"
 	        + " RaZobGef rzg"
 	        + " where z.mbZielobjSubtyp.id.zotId = txt.id.zotId"
-	        + " and txt.id.sprId = 1"
+	        + " and (txt.id.sprId = 0 or txt.id.sprId = 1)"
 	        + " and z.mbZielobjSubtyp.id.zosId = subtxt.id.zosId"
-	        + " and subtxt.id.sprId = 1"
+	        + " and (subtxt.id.sprId = 0 or subtxt.id.sprId = 1)"
 	        + " and z.loeschDatum = null"
 	        + " and rzg.id.zobId = z.id.zobId";
 	

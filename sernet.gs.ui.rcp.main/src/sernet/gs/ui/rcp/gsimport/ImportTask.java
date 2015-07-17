@@ -184,6 +184,7 @@ public class ImportTask {
 
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         } catch (GSImportException e) {
+            
             ExceptionUtil.log(e, e.getMessage());
         }
     }
@@ -240,7 +241,7 @@ public class ImportTask {
     private String importZielobjekte() throws Exception {
         // generate a sourceId for objects created by this import:
         final int maxUuidLength = 6;
-        final String defaultSubTaskDescription = "Schreibe alle Objekte in Verinice-Datenbank...";
+        final String defaultSubTaskDescription = "Die Daten werden gespeichert.";
         String sourceId = UUID.randomUUID().toString().substring(0, maxUuidLength);
 
         List<ZielobjektTypeResult> zielobjekte = findZielobjekte();
@@ -302,7 +303,7 @@ public class ImportTask {
                 NZielobjekt origITVerbundZO = itverbundZuordnung.get(resultZO.zielobjekt.getGuid());
                 ITVerbund itverbund = (ITVerbund) alleZielobjekte.get(origITVerbundZO);
                 if (itverbund == null) {
-                    LOG.error("ITVerbund not found for ZO: " + resultZO.zielobjekt.getName() + ". Created in BSI");
+                    LOG.debug("ITVerbund not found for ZO: " + resultZO.zielobjekt.getName() + ". Created in BSI");
                     if (itverbundForOrphans == null) {
                         itverbundForOrphans = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
                         itverbundForOrphans.setTitel("---Waisenhaus: Zielobjekte ohne IT-Verbund-Zuordnung");
@@ -346,7 +347,7 @@ public class ImportTask {
         ArrayList<CnATreeElement> toUpdate = new ArrayList<CnATreeElement>();
         toUpdate.addAll(allMnUms);
         LOG.debug("Saving person links to measures.");
-        monitor.beginTask("Speichere Personenreferenzen in Maßnahmen", toUpdate.size());
+        monitor.beginTask("Verknüpfe Ansprechpartner mit Massnahmen...", toUpdate.size());
         ElementListUpdater updater = new ElementListUpdater(toUpdate, monitor);
         updater.setMaxNumberPerCommand(500);
         updater.execute();
@@ -358,20 +359,19 @@ public class ImportTask {
         toUpdate = new ArrayList<CnATreeElement>();
         toUpdate.addAll(this.alleBausteineToBausteinUmsetzungMap.values());
         LOG.debug("Saving person links to modules.");
-        monitor.subTask("Speichere Personenreferenzen zu Bausteinen");
+        monitor.beginTask("Verknüpfe Ansprechpartner mit Bausteinen...", toUpdate.size());
         updater = new ElementListUpdater(toUpdate, monitor);
         updater.setMaxNumberPerCommand(500);
         updater.execute();
 
-        importZielobjektVerknuepfungen(); // FIXME this times out / freezes on
-                                          // big GSTOOL databases
+        importZielobjektVerknuepfungen();
         monitor.subTask(defaultSubTaskDescription);
 
         importSchutzbedarf();
         monitor.subTask(defaultSubTaskDescription);
 
         int n = zielobjekte.size();
-        monitor.beginTask("Lese Bausteinreferenzen", n);
+        monitor.beginTask("Lese Bausteinreferenzen...", n);
         int i = 1;
         for (NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
             CnATreeElement element = alleZielobjekte.get(zielobjekt);
@@ -507,7 +507,7 @@ public class ImportTask {
         }
         LinkCreater linkCreater = new LinkCreater(linkList, monitor);
         int n = linkList.size();
-        monitor.beginTask("Importiere Verknüpfungen von Zielobjekten (" + n + ")...", n);
+        monitor.beginTask("Importiere Verknüpfungen von Zielobjekten...", n);
         linkCreater.execute();
     }
 
@@ -525,7 +525,7 @@ public class ImportTask {
             return;
         }
 
-        monitor.beginTask("Verknüpfe verantwortliche Ansprechpartner mit Massnahmen...", alleMassnahmen.size());
+        monitor.beginTask("Verknüpfe Ansprechpartner mit Massnahmen...", alleMassnahmen.size());
         int n = alleMassnahmen.keySet().size();
         int current = 1;
         for (ModZobjBstMass obm : alleMassnahmen.keySet()) {
@@ -538,7 +538,7 @@ public class ImportTask {
             if (personenSrc != null && personenSrc.size() > 0) {
                 List<Person> dependencies = findPersonen(personenSrc);
                 if (dependencies.size() != personenSrc.size()) {
-                    LOG.debug("ACHTUNG: Es wurde mindestens eine Person für die zu verknüpfenden Verantwortlichen nicht gefunden.");
+                    LOG.warn("ACHTUNG: Es wurde mindestens eine Person für die zu verknüpfenden Verantwortlichen nicht gefunden.");
                 }
                 MassnahmenUmsetzung dependantMassnahme = alleMassnahmen.get(obm);
                 for (Person personToLink : dependencies) {
@@ -554,7 +554,7 @@ public class ImportTask {
             return;
         }
 
-        monitor.beginTask("Verknüpfe befragte Personen mit Bausteinen...", alleBausteineToBausteinUmsetzungMap.size());
+        monitor.beginTask("Verknüpfe Personen mit Bausteinen...", alleBausteineToBausteinUmsetzungMap.size());
         Set<MbBaust> keySet = alleBausteineToBausteinUmsetzungMap.keySet();
         for (MbBaust mbBaust : keySet) {
             monitor.worked(1);
@@ -576,7 +576,7 @@ public class ImportTask {
                 if (befragteMitarbeiter != null && befragteMitarbeiter.size() > 0) {
                     List<Person> dependencies = findPersonen(befragteMitarbeiter);
                     if (dependencies.size() != befragteMitarbeiter.size()) {
-                        LOG.debug("ACHTUNG: Es wurde mindestens eine Person für die " + "zu verknüpfenden Interviewpartner nicht gefunden.");
+                        LOG.warn("ACHTUNG: Es wurde mindestens eine Person für die " + "zu verknüpfenden Interviewpartner nicht gefunden.");
                     }
                     monitor.subTask(bausteinUmsetzung.getTitle());
                     for (Person personToLink : dependencies) {
