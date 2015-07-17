@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -32,13 +31,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.apache.log4j.Logger;
-import org.elasticsearch.action.ActionResponse;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 
 import sernet.gs.server.security.DummyAuthentication;
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.IBaseDao;
@@ -54,7 +51,7 @@ public class Indexer {
 
     private static final Logger LOG = Logger.getLogger(Indexer.class);
 
-    private static final int DEFAULT_NUMBER_OF_THREADS = 8;
+    private static final int DEFAULT_NUMBER_OF_THREADS = 40;
 
     private static final String HQL_LOAD_UUIDS = "select e.uuid from CnATreeElement e";
 
@@ -64,7 +61,7 @@ public class Indexer {
 
     private long indexingStart;
 
-    private DummyAuthentication authentication = new DummyAuthentication();
+    private DummyAuthentication dummyAuthentication = new DummyAuthentication();
 
     /**
      * Factory to create {@link IndexThread} instances configured in
@@ -74,9 +71,6 @@ public class Indexer {
 
     private int amountOfIndexThreads;
 
-    private SecurityContext ctx;
-
-    private boolean dummyAuthAdded;
 
     /**
      * Creates an index in an non blocking way, means this method creates all
@@ -97,39 +91,23 @@ public class Indexer {
      *
      */
     public void nonBlockingIndexing() {
-
         try {
-            ServerInitializer.inheritVeriniceContextState();
-            initializeSecurityIndex();
-
             CompletionService<CnATreeElement> completionService = doIndex();
             logNonBlockingIndexingTermination(completionService);
         } catch (Exception e) {
             LOG.error("Error while indexing elements.", e);
-        } finally {
-            removeDummyAuthentication();
         }
     }
 
-    private void initializeSecurityIndex() {
-        dummyAuthAdded = false;
-        ctx = SecurityContextHolder.getContext();
-
-        if (ctx.getAuthentication() == null) {
-            ctx.setAuthentication(authentication);
-            dummyAuthAdded = true;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
     private CompletionService<CnATreeElement> doIndex() throws InterruptedException, ExecutionException {
 
         indexingStart = System.currentTimeMillis();
 
         ExecutorService executorService = createExecutor();
         CompletionService<CnATreeElement> completionService = new ExecutorCompletionService<CnATreeElement>(executorService);
+        List<String> allUuids = new ArrayList<String>();
 
-        List<String> allUuids = getElementDao().findByQuery(HQL_LOAD_UUIDS, null);
+        allUuids = geAllCnATreeElementUUIDS();
 
         if (LOG.isInfoEnabled()) {
             LOG.info("Elements: " + allUuids.size() + ", start indexing...");
@@ -143,7 +121,32 @@ public class Indexer {
             completionService.submit(indexThread);
         }
 
+        executorService.shutdown();
         return completionService;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String> geAllCnATreeElementUUIDS() {
+        List<String> allUuids;
+        try {
+            initializeSecurityIndex();
+            ServerInitializer.inheritVeriniceContextState();
+            allUuids = getElementDao().findByQuery(HQL_LOAD_UUIDS, null);
+        } finally {
+            removeDummyAuthentication();
+        }
+        return allUuids;
+    }
+
+    private void initializeSecurityIndex() {
+
+        SecurityContext ctx = SecurityContextHolder.getContext();
+
+        if (ctx.getAuthentication() == null) {
+            SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+            ctx.setAuthentication(dummyAuthentication);
+            SecurityContextHolder.setContext(ctx);
+        }
     }
 
     private void logNonBlockingIndexingTermination(final CompletionService<CnATreeElement> completionService) {
@@ -160,9 +163,8 @@ public class Indexer {
     }
 
     private void removeDummyAuthentication() {
-        if (dummyAuthAdded) {
-            ctx.setAuthentication(null);
-            dummyAuthAdded = false;
+        if (dummyAuthentication == SecurityContextHolder.getContext().getAuthentication()){
+            SecurityContextHolder.clearContext();
         }
     }
 
@@ -250,7 +252,7 @@ public class Indexer {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Number of threads: " + getMaxNumberOfThreads());
         }
-        return Executors.newFixedThreadPool(getMaxNumberOfThreads());
+        return IndexThreadPoolExecutor.newInstance(getMaxNumberOfThreads());
     }
 
     private int getMaxNumberOfThreads() {

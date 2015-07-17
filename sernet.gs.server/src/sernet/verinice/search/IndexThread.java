@@ -22,11 +22,7 @@ package sernet.verinice.search;
 import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
-import org.elasticsearch.action.ActionResponse;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
 
-import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.IBaseDao;
@@ -40,20 +36,16 @@ import sernet.verinice.model.common.CnATreeElement;
 public class IndexThread implements Callable<CnATreeElement> {
 
     private static final Logger LOG = Logger.getLogger(IndexThread.class);
-    
+
     private static final RetrieveInfo RI = RetrieveInfo.getPropertyInstance().setPermissions(true);
-    
+
     private IBaseDao<CnATreeElement, Integer> elementDao;
-    private ISearchDao searchDao;  
+    private ISearchDao searchDao;
     private ISearchService searchService;
     private CnATreeElement element;
     private String uuid;
     private IJsonBuilder jsonBuilder;
-    
-    private DummyAuthentication authentication = new DummyAuthentication();
-    private SecurityContext ctx;
-    private boolean dummyAuthAdded;
-   
+
     public IndexThread() {
         super();
     }
@@ -65,39 +57,36 @@ public class IndexThread implements Callable<CnATreeElement> {
      */
     @Override
     public CnATreeElement call() throws Exception {
+
         String json = null;
 
         ServerInitializer.inheritVeriniceContextState();
         json = getJsonBuilder().getJson(getElement());
-        ActionResponse response = null;
-        if (json != null) {
-            response = getSearchDao().updateOrIndex(element.getUuid(), json);
-        }
-        return element;
 
+        if (json != null) {
+            getSearchDao().updateOrIndex(element.getUuid(), json);
+        }
+
+        return element;
     }
-    
+
     public CnATreeElement getElement() {
-        if(element==null) {            
+        if (element == null) {
             element = loadElement();
         }
         return element;
     }
 
-
     private CnATreeElement loadElement() {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Loading element with uuid: " + getUuid() + "...");
-        }       
-        try {
-            initializeSecurityIndex();
-            if(getUuid()!=null) {
-                element = loadElementByDao(getUuid());
-            }        
-            return element;
-        } finally {
-            removeDummyAuthentication();
         }
+
+        if (getUuid() != null) {
+            element = loadElementByDao(getUuid());
+        }
+
+        return element;
     }
 
     private CnATreeElement loadElementByDao(String uuid) {
@@ -115,7 +104,7 @@ public class IndexThread implements Callable<CnATreeElement> {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
-    
+
     public IBaseDao<CnATreeElement, Integer> getElementDao() {
         return elementDao;
     }
@@ -147,23 +136,4 @@ public class IndexThread implements Callable<CnATreeElement> {
     public void setJsonBuilder(IJsonBuilder jsonBuilder) {
         this.jsonBuilder = jsonBuilder;
     }
-    
-    private void initializeSecurityIndex() {
-        dummyAuthAdded = false;
-        ctx = SecurityContextHolder.getContext();
-
-        if (ctx.getAuthentication() == null) {
-            ctx.setAuthentication(authentication);
-            dummyAuthAdded = true;
-        }
-    }
-    
-    private void removeDummyAuthentication() {
-        if (dummyAuthAdded) {
-            ctx.setAuthentication(null);
-            dummyAuthAdded = false;
-        }
-    }
-
-
 }

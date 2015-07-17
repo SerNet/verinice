@@ -32,7 +32,6 @@ import sernet.verinice.interfaces.IHibernateCommandService;
 public class ServerInitializer {
 	
 	private final Logger log = Logger.getLogger(ServerInitializer.class);
-
 	
 	private static VeriniceContext.State state;
 	
