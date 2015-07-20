@@ -4,15 +4,15 @@
 			"german_stemmer":{
 				"type":"stemmer",
 				"language":"light_german"
-			}
-			
+			}			
 		},
 		"analyzer":{
 			"verinice_analyzer":{
+				"type":"custom_german",
 				"tokenizer":"standard",
 				"filter":[
 					"lowercase",
-					"german_normalization",
+					"german_normalization",					
 					"german_stemmer"
 				]
 				
