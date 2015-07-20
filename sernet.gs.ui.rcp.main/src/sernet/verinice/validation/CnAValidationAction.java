@@ -51,22 +51,18 @@ public class CnAValidationAction extends RightsEnabledActionDelegate implements 
     @Override
     public void doRun(IAction action) {
         try {
-            if(rootObjects.size() == 1){
-                Object o = rootObjects.get(0);
-                if(o instanceof Organization || o instanceof ITVerbund){
-                    CnATreeElement c = (CnATreeElement)o;
-                    final CreateValidationsJob job = new CreateValidationsJob(c.getScopeId());
+            for (Object rootObject : rootObjects) {
+                if (rootObject instanceof Organization || rootObject instanceof ITVerbund) {
+                    CnATreeElement cnATreeElement = (CnATreeElement) rootObject;
+                    int scopeID = cnATreeElement.getScopeId();
+                    final CreateValidationsJob validationJob = new CreateValidationsJob(scopeID);
                     IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-                    progressService.run(true, true, job);
-
-                    CnAElementFactory.getModel(c).validationAdded(c.getScopeId());
-                } else {
-                    return;
-                    //tell user element can't be validated
+                    progressService.run(true, true, validationJob);
+                    CnAElementFactory.getModel(cnATreeElement).validationAdded(scopeID);
                 }
             }
-        } catch (Exception e){
-            LOG.error("Error while executin validation action", e);
+        } catch (Exception e) {
+            LOG.error("Error while executing validation action", e);
         }
     }
     
