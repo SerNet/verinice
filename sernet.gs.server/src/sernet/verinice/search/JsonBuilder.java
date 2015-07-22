@@ -22,7 +22,6 @@ package sernet.verinice.search;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
@@ -50,6 +49,8 @@ import sernet.verinice.model.iso27k.Organization;
 public class JsonBuilder implements IJsonBuilder {
     
     private static final Logger LOG = Logger.getLogger(JsonBuilder.class);
+    
+    private static final DateFormat dateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, Locale.getDefault());
     
     private IElementTitleCache titleCache;
     
@@ -174,7 +175,7 @@ public class JsonBuilder implements IJsonBuilder {
         if(StringUtils.isEmpty(value)){
             mappedValue = getNullValue();
         } else if(pType.isDate()){
-            mappedValue = mapDateProperty(value);
+            mappedValue = mapDateProperty(e.getValue(pType.getId()));
         } else if(pType.isSingleSelect() || pType.isMultiselect()){
             mappedValue = mapMultiSelectProperty(value, pType);
         } else if(pType.isNumericSelect()){
@@ -213,6 +214,15 @@ public class JsonBuilder implements IJsonBuilder {
         return type.getOption(value).getName();
     }
     
+    /**
+     * Parses a date which is represented as milliseconds in string form.
+     * 
+     * @param value
+     *            is a string which should contain a positive number e.g.
+     *            "1212023213"
+     * @return the short form of the date {@link DateFormat#SHORT}, SHORT is
+     *         completely numeric, such as 12.13.52 or 3:30pm
+     */
     private static String mapDateProperty(String value){
         if(StringUtils.isNotEmpty(value)){
             try{
@@ -225,38 +235,8 @@ public class JsonBuilder implements IJsonBuilder {
     }
     
     private static String tryParseDate(String value){
-
-        String[] patterns = new String[]{"EEE MMM dd HH:mm:ss zzzz yyyy",
-                "dd.MM.yy",
-                "EE, dd.MM.yyyy",
-                "dd.MM.yyyy",
-                "dd.MM.yyyy HH:mm",
-                "MMM dd, yyyy hh:mm aa",
-                "MMM dd, yyyy hh:mm aa",
-                "yyyy-MM-dd",
-        "EEE MMM dd HH:mm:ss z yyyy"};
-
-        
-        Locale[] locales = new Locale[]{null, Locale.GERMAN, Locale.GERMANY, Locale.ENGLISH, Locale.US, Locale.UK, Locale.FRANCE, Locale.FRENCH, Locale.ITALIAN, Locale.ITALY};
-        for(int i = 0; i < patterns.length; i++){
-            for(int j = 0; j < locales.length; j++){
-                try{
-                    SimpleDateFormat formatter = null;
-                    if(locales[j] == null){
-                        formatter = new SimpleDateFormat(patterns[i]);
-                    } else {
-                        formatter = new SimpleDateFormat(patterns[i], locales[j]);
-                    }
-                    formatter.setLenient(true);
-                    Date parsedDate = formatter.parse(value);
-                    return getLocalizedDatePattern().format(parsedDate);
-                } catch (Exception e) {
-                    // do nothing and go on with next locale
-                }
-            }
-        }
-        LOG.error("Date not parseable:\t" + value);
-        return "unparseable Date:\t" + value;
+        long timeStamp = Long.parseLong(value);
+        return dateFormat.format(timeStamp);
     }
     
     private static DateFormat getLocalizedDatePattern(){
