@@ -189,7 +189,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             accountGroupsFilter = new Text(accountGroupsColumn, SWT.BORDER);
             accountGroupsFilter.addKeyListener(this);
             
-            tableAccountGroups = new TableViewer(accountGroupsColumn, SWT.SINGLE);
+            tableAccountGroups = new TableViewer(accountGroupsColumn, SWT.SINGLE | SWT.BORDER);
             tableAccountGroups.setUseHashlookup(true);
             tableAccountGroups.setContentProvider(new AccountContentProvider(tableAccountGroups));
             tableAccountGroups.setLabelProvider(new AccountLabelProvider());
@@ -232,17 +232,17 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
             addButton.addSelectionListener(this);
             GridDataFactory.fillDefaults().hint(ADD_REMOVE_BUTTON_SIZE).applyTo(addButton);
             
-            addAllButton = new Button(buttonsColumn, SWT.PUSH);
-            addAllButton.setText("\u21c7");
-            addAllButton.setToolTipText(Messages.GroupView_6);
-            addAllButton.addSelectionListener(this);
-            GridDataFactory.fillDefaults().hint(ADD_REMOVE_BUTTON_SIZE).applyTo(addAllButton);
-            
             removeButton = new Button(buttonsColumn, SWT.PUSH);
             removeButton.setText("\u2192");
             removeButton.setToolTipText(Messages.GroupView_7);
             removeButton.addSelectionListener(this);
             GridDataFactory.fillDefaults().hint(ADD_REMOVE_BUTTON_SIZE).applyTo(removeButton);
+            
+            addAllButton = new Button(buttonsColumn, SWT.PUSH);
+            addAllButton.setText("\u21c7");
+            addAllButton.setToolTipText(Messages.GroupView_6);
+            addAllButton.addSelectionListener(this);
+            GridDataFactory.fillDefaults().hint(ADD_REMOVE_BUTTON_SIZE).applyTo(addAllButton);
             
             removeAllButton = new Button(buttonsColumn, SWT.PUSH);
             removeAllButton.setText("\u21c9");
