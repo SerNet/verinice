@@ -48,10 +48,10 @@ import sernet.verinice.model.iso27k.Organization;
  */
 public class JsonBuilder implements IJsonBuilder {
     
-    private static final Logger LOG = Logger.getLogger(JsonBuilder.class);
-    
-    private static final DateFormat dateFormat = SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, Locale.getDefault());
-    
+    private static final Logger LOG = Logger.getLogger(JsonBuilder.class);    
+
+    private final ConcurrentSimpleDateFormatter simpleDateFormatter = new ConcurrentSimpleDateFormatter();
+
     private IElementTitleCache titleCache;
     
     public String getJson(CnATreeElement element) {
@@ -87,7 +87,7 @@ public class JsonBuilder implements IJsonBuilder {
         return element instanceof ITVerbund || element instanceof Organization;
     }
     
-    public static final String getJson(CnATreeElement element, String scopeTitle) {       
+    public final String getJson(CnATreeElement element, String scopeTitle) {
         try {
             String json = null;
             if(isIndexableElement(element)){
@@ -104,7 +104,7 @@ public class JsonBuilder implements IJsonBuilder {
         }  
     }
 
-    private static String doGetJson(CnATreeElement element, String scopeTitle) throws IOException {
+    private String doGetJson(CnATreeElement element, String scopeTitle) throws IOException {
         XContentBuilder builder;
         builder = XContentFactory.jsonBuilder().startObject();      
         builder.field(ISearchService.ES_FIELD_UUID, element.getUuid());
@@ -156,7 +156,7 @@ public class JsonBuilder implements IJsonBuilder {
         builder.endArray();
     }
 
-    private static XContentBuilder addProperties(XContentBuilder builder, String[] propertyTypeIds, Entity e) throws IOException {
+    private XContentBuilder addProperties(XContentBuilder builder, String[] propertyTypeIds, Entity e) throws IOException {
         HUITypeFactory factory = HUITypeFactory.getInstance();
         for(String propertyTypeId : propertyTypeIds){
             PropertyType propertyType = factory.getPropertyType(e.getEntityType(), propertyTypeId);
@@ -169,7 +169,7 @@ public class JsonBuilder implements IJsonBuilder {
     }
     
     
-    private static String mapPropertyString(Entity e, PropertyType pType){    
+    private String mapPropertyString(Entity e, PropertyType pType){
         String value = e.getSimpleValue(pType.getId());
         String mappedValue = "";
         if(StringUtils.isEmpty(value)){
@@ -216,31 +216,27 @@ public class JsonBuilder implements IJsonBuilder {
     
     /**
      * Parses a date which is represented as milliseconds in string form.
-     * 
+     *
      * @param value
      *            is a string which should contain a positive number e.g.
      *            "1212023213"
      * @return the short form of the date {@link DateFormat#SHORT}, SHORT is
      *         completely numeric, such as 12.13.52 or 3:30pm
      */
-    private static String mapDateProperty(String value){
+    private String mapDateProperty(String value){
         if(StringUtils.isNotEmpty(value)){
             try{
                 return tryParseDate(value);
             } catch (Exception e){
-                LOG.error("Error on mapping date property", e);
+                LOG.error("Error on mapping date property: [" + value + "]", e);
             }
         }
         return value;
     }
     
-    private static String tryParseDate(String value){
+    private String tryParseDate(String value){
         long timeStamp = Long.parseLong(value);
-        return dateFormat.format(timeStamp);
-    }
-    
-    private static DateFormat getLocalizedDatePattern(){
-        return SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, Locale.getDefault());
+        return simpleDateFormatter.getFormatedDate(timeStamp);
     }
     
     private static boolean isIndexableElement(CnATreeElement element){

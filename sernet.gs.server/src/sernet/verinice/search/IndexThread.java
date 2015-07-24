@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.search;
 
-import java.util.concurrent.Callable;
-
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
@@ -33,7 +31,7 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class IndexThread implements Callable<CnATreeElement> {
+public class IndexThread extends DummyAuthenticatorCallable<CnATreeElement> {
 
     private static final Logger LOG = Logger.getLogger(IndexThread.class);
 
@@ -46,29 +44,7 @@ public class IndexThread implements Callable<CnATreeElement> {
     private String uuid;
     private IJsonBuilder jsonBuilder;
 
-    public IndexThread() {
-        super();
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.util.concurrent.Callable#call()
-     */
-    @Override
-    public CnATreeElement call() throws Exception {
-
-        String json = null;
-
-        ServerInitializer.inheritVeriniceContextState();
-        json = getJsonBuilder().getJson(getElement());
-
-        if (json != null) {
-            getSearchDao().updateOrIndex(element.getUuid(), json);
-        }
-
-        return element;
-    }
+    public IndexThread(){}
 
     public CnATreeElement getElement() {
         if (element == null) {
@@ -135,5 +111,22 @@ public class IndexThread implements Callable<CnATreeElement> {
 
     public void setJsonBuilder(IJsonBuilder jsonBuilder) {
         this.jsonBuilder = jsonBuilder;
+    }
+
+    /*
+    * @see sernet.verinice.search.DummyAuthenticatorCallable#doCall()
+    */
+    @Override
+    public CnATreeElement doCall() {
+        String json = null;
+
+        ServerInitializer.inheritVeriniceContextState();
+        json = getJsonBuilder().getJson(getElement());
+
+        if (json != null) {
+            getSearchDao().updateOrIndex(element.getUuid(), json);
+        }
+
+        return element;
     }
 }

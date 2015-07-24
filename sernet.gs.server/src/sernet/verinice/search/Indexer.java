@@ -29,13 +29,11 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadFactory;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.security.context.SecurityContext;
-import org.springframework.security.context.SecurityContextHolder;
 
-import sernet.gs.server.security.DummyAuthentication;
 import sernet.gs.service.ServerInitializer;
 import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.IBaseDao;
@@ -45,13 +43,14 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
+ * Creates Elasticsearch index for verinice.
+ *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
 public class Indexer {
 
     private static final Logger LOG = Logger.getLogger(Indexer.class);
-
-    private static final int DEFAULT_NUMBER_OF_THREADS = 40;
 
     private static final String HQL_LOAD_UUIDS = "select e.uuid from CnATreeElement e";
 
@@ -61,8 +60,6 @@ public class Indexer {
 
     private long indexingStart;
 
-    private DummyAuthentication dummyAuthentication = new DummyAuthentication();
-
     /**
      * Factory to create {@link IndexThread} instances configured in
      * veriniceserver-search.xml
@@ -70,7 +67,6 @@ public class Indexer {
     private ObjectFactory indexThreadFactory;
 
     private int amountOfIndexThreads;
-
 
     /**
      * Creates an index in an non blocking way, means this method creates all
@@ -91,12 +87,13 @@ public class Indexer {
      *
      */
     public void nonBlockingIndexing() {
-        try {
-            CompletionService<CnATreeElement> completionService = doIndex();
-            logNonBlockingIndexingTermination(completionService);
-        } catch (Exception e) {
-            LOG.error("Error while indexing elements.", e);
-        }
+        runIndexingThread();
+    }
+
+    private void runIndexingThread() {
+        DummyAuthenticationRunnable dummyAuthenticationRunnable = new DummyAuthenticationRunnableExtension();
+        ThreadFactory threadFactory = new CustomNamedThreadGroupFactory("index");
+        Executors.newSingleThreadExecutor(threadFactory).execute(dummyAuthenticationRunnable);
     }
 
     private CompletionService<CnATreeElement> doIndex() throws InterruptedException, ExecutionException {
@@ -128,25 +125,11 @@ public class Indexer {
     @SuppressWarnings("unchecked")
     private List<String> geAllCnATreeElementUUIDS() {
         List<String> allUuids;
-        try {
-            initializeSecurityIndex();
-            ServerInitializer.inheritVeriniceContextState();
-            allUuids = getElementDao().findByQuery(HQL_LOAD_UUIDS, null);
-        } finally {
-            removeDummyAuthentication();
-        }
+
+        ServerInitializer.inheritVeriniceContextState();
+        allUuids = getElementDao().findByQuery(HQL_LOAD_UUIDS, null);
+
         return allUuids;
-    }
-
-    private void initializeSecurityIndex() {
-
-        SecurityContext ctx = SecurityContextHolder.getContext();
-
-        if (ctx.getAuthentication() == null) {
-            SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
-            ctx.setAuthentication(dummyAuthentication);
-            SecurityContextHolder.setContext(ctx);
-        }
     }
 
     private void logNonBlockingIndexingTermination(final CompletionService<CnATreeElement> completionService) {
@@ -159,12 +142,6 @@ public class Indexer {
                     printIndexingTimeConsumption();
                 }
             });
-        }
-    }
-
-    private void removeDummyAuthentication() {
-        if (dummyAuthentication == SecurityContextHolder.getContext().getAuthentication()){
-            SecurityContextHolder.clearContext();
         }
     }
 
@@ -185,7 +162,7 @@ public class Indexer {
      * </p>
      *
      * <p>
-     * If you want to test indexing with junit, this is method to go.
+     * If you want to test indexing with junit, this is the method to go.
      * </p>
      *
      */
@@ -236,27 +213,21 @@ public class Indexer {
         return indexThreads;
     }
 
-    private Collection<IndexThread> createIndexThreads(List<CnATreeElement> elementList) {
-        Collection<IndexThread> indexThreads = new LinkedList<IndexThread>();
+    private final class DummyAuthenticationRunnableExtension extends DummyAuthenticationRunnable {
+        @Override
+        public void doRun() {
+            try {
+                CompletionService<CnATreeElement> completionService = doIndex();
+                logNonBlockingIndexingTermination(completionService);
 
-        for (CnATreeElement element : elementList) {
-            IndexThread indexThread = (IndexThread) indexThreadFactory.getObject();
-            indexThread.setElement(element);
-            indexThreads.add(indexThread);
+            } catch (Exception e) {
+                LOG.error("Error while indexing elements.", e);
+            }
         }
-
-        return indexThreads;
     }
 
     private ExecutorService createExecutor() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Number of threads: " + getMaxNumberOfThreads());
-        }
-        return IndexThreadPoolExecutor.newInstance(getMaxNumberOfThreads());
-    }
-
-    private int getMaxNumberOfThreads() {
-        return DEFAULT_NUMBER_OF_THREADS;
+        return ServerAuthenticationThreadPoolExecutor.newInstance();
     }
 
     public ObjectFactory getIndexThreadFactory() {
