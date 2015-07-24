@@ -221,7 +221,7 @@ public class BSIElementEditor extends EditorPart {
         }
         try {
             // save element, refresh etc:
-            cnAElement = CnAElementHome.getInstance().updateEntity(cnAElement);           
+            CnAElementHome.getInstance().updateEntity(cnAElement);
             isModelModified = false;
             this.setPartName(cnAElement.getTitle());
             this.setTitleToolTip(cnAElement.getTitle());
