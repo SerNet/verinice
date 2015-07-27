@@ -10,15 +10,8 @@
     <property name="indexLocation" value="./elasticsearch/" />
   </bean>
 
-  <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-    <property name="corePoolSize" value="3" />
-    <property name="maxPoolSize" value="10" />
-    <property name="queueCapacity" value="25" />
-  </bean>
-
   <bean id="OSGIIndexer" class="sernet.verinice.search.OSGIIndexer" init-method="run">
     <property name="indexOnStartup" value="${veriniceserver.search.indexingOnStartup}" />
-    <constructor-arg ref="taskExecutor" />
     <property name="indexer" ref="searchIndexer" />
   </bean>
 

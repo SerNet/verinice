@@ -18,40 +18,28 @@
 package sernet.verinice.search;
 
 import org.apache.log4j.Logger;
-import org.springframework.core.task.TaskExecutor;
-
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
- * Handles elastic search indexing for tier2-mode, starts {@link Indexer}
- * asynchroneously
+ * Handles elastic search indexing for tier2-mode.
+ *
  */
 public class OSGIIndexer {
 
     private static final Logger LOG = Logger.getLogger(OSGIIndexer.class);
 
     private String indexOnStartup = Boolean.FALSE.toString();
-    
-    private TaskExecutor taskExecutor;
 
     private Indexer indexer;
 
-    public OSGIIndexer(TaskExecutor taskExecutor) {
-        this.taskExecutor = taskExecutor;
-    }
+    public OSGIIndexer(){}
 
     public void run() {
-        if(Boolean.parseBoolean(getIndexOnStartup())) {
+        if (Boolean.parseBoolean(getIndexOnStartup())) {
             if (LOG.isInfoEnabled()) {
                 LOG.info("Indexing on startup is enabled.");
-            }     
-            taskExecutor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    indexer.nonBlockingIndexing();
-                }
-            });
+            }
+
+            indexer.nonBlockingIndexing();
         }
     }
 
@@ -70,21 +58,6 @@ public class OSGIIndexer {
         this.indexer = indexer;
     }
 
-    /**
-     * @return the taskExecutor
-     */
-    public TaskExecutor getTaskExecutor() {
-        return taskExecutor;
-    }
-
-    /**
-     * @param taskExecutor
-     *            the taskExecutor to set
-     */
-    public void setTaskExecutor(TaskExecutor taskExecutor) {
-        this.taskExecutor = taskExecutor;
-    }
-    
     public String getIndexOnStartup() {
         return indexOnStartup;
     }
