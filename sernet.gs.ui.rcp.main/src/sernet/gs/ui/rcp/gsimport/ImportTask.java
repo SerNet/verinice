@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.gsimport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -33,6 +34,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
 import org.hibernate.Hibernate;
 import org.hibernate.exception.SQLGrammarException;
+
+import com.heatonresearch.datamover.DataMover;
+import com.heatonresearch.datamover.db.Database;
+import com.heatonresearch.datamover.db.DerbyDatabase;
+import com.heatonresearch.datamover.db.MDBFileDatabase;
 
 import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MbBaust;
@@ -65,11 +71,6 @@ import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Link;
-
-import com.heatonresearch.datamover.DataMover;
-import com.heatonresearch.datamover.db.Database;
-import com.heatonresearch.datamover.db.DerbyDatabase;
-import com.heatonresearch.datamover.db.MDBFileDatabase;
 
 /**
  * Import GSTOOL(tm) databases using the GSVampire. Maps GStool-database objects
@@ -344,6 +345,7 @@ public class ImportTask {
 
         // update this.alleMassnahmen
         Collection<MassnahmenUmsetzung> allMnUms = this.alleMassnahmen.values();
+        allMnUms.removeAll(Collections.singleton(null));
         ArrayList<CnATreeElement> toUpdate = new ArrayList<CnATreeElement>();
         toUpdate.addAll(allMnUms);
         LOG.debug("Saving person links to measures.");

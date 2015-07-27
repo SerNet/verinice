@@ -19,11 +19,9 @@ package sernet.gs.ui.rcp.gsimport;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -639,6 +637,9 @@ public class TransferData {
         element.setKuerzel(result.zielobjekt.getKuerzel());
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
         element.setAnzahl(result.zielobjekt.getAnzahl());
+        element.getEntity().setSimpleValue(element.getEntityType().getPropertyType(Person.P_PHONE), result.zielobjekt.getTelefon());
+        element.getEntity().setSimpleValue(element.getEntityType().getPropertyType("person_orgeinheit"), result.zielobjekt.getAbteilung());
+        
 
         if (importRollen) {
             List<MbRolleTxt> rollen = vampire.findRollenByZielobjekt(result.zielobjekt);

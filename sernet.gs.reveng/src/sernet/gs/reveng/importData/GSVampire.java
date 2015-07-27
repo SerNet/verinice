@@ -1,8 +1,5 @@
 package sernet.gs.reveng.importData;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -14,13 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.rtf.RTFEditorKit;
-
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
-import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
 
@@ -29,13 +21,10 @@ import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MSchutzbedarfkategTxtDAO;
 import sernet.gs.reveng.MUmsetzStatTxt;
 import sernet.gs.reveng.MbBaust;
-import sernet.gs.reveng.MbDringlichkeitDAO;
 import sernet.gs.reveng.MbDringlichkeitTxt;
 import sernet.gs.reveng.MbDringlichkeitTxtDAO;
 import sernet.gs.reveng.MbGefaehr;
-import sernet.gs.reveng.MbGefaehrTxt;
 import sernet.gs.reveng.MbMassn;
-import sernet.gs.reveng.MbMassnTxt;
 import sernet.gs.reveng.MbRolleTxt;
 import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.MbZeiteinheitenTxtDAO;
@@ -43,11 +32,8 @@ import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstId;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.ModZobjBstMassId;
-import sernet.gs.reveng.ModZobjBstMassMitarb;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.NZielobjektDAO;
-import sernet.gs.reveng.NZobEsa;
-import sernet.gs.reveng.NZobEsaHome;
 import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.NZobSbDAO;
 import sernet.gs.reveng.NmbNotiz;
@@ -66,14 +52,14 @@ public class GSVampire {
 			+ "			and (subtxt.id.sprId = 0 or subtxt.id.sprId = 1)"
 			+ "         and zo.loeschDatum = null";
 	
-	   private static final String QUERY_ZIELOBJEKT_TYP_BY_ID = "select zo, txt.name, subtxt.name "
-	            + "         from NZielobjekt zo, MbZielobjTypTxt txt, MbZielobjSubtypTxt subtxt "
-	            + "         where zo.mbZielobjSubtyp.id.zotId = txt.id.zotId "
-	            + "         and (txt.id.sprId = 0 or txt.id.sprId = 1) "
-	            + "         and zo.mbZielobjSubtyp.id.zosId = subtxt.id.zosId "
-	            + "         and (subtxt.id.sprId = 0 or subtxt.id.sprId = 1) "
-	            + "         and zo.loeschDatum = null "
-	            + "         and zo.id.zobId = 10637";
+//	   private static final String QUERY_ZIELOBJEKT_TYP_BY_ID = "select zo, txt.name, subtxt.name "
+//	            + "         from NZielobjekt zo, MbZielobjTypTxt txt, MbZielobjSubtypTxt subtxt "
+//	            + "         where zo.mbZielobjSubtyp.id.zotId = txt.id.zotId "
+//	            + "         and (txt.id.sprId = 0 or txt.id.sprId = 1) "
+//	            + "         and zo.mbZielobjSubtyp.id.zosId = subtxt.id.zosId "
+//	            + "         and (subtxt.id.sprId = 0 or subtxt.id.sprId = 1) "
+//	            + "         and zo.loeschDatum = null "
+//	            + "         and zo.id.zobId = 10637";
 
 //	private static final String QUERY_BAUSTEIN_ZIELOBJEKT = "select zo.name, zo.id.zobId, bst.nr, "
 //			+ "zo_bst.begruendung, zo_bst.bearbeitet, zo_bst.datum "
@@ -144,6 +130,7 @@ public class GSVampire {
 			+ "from ModZobjBstMassMitarb obmm, "
 			+ "NZielobjekt mitarbeiter "
 			+ "where obmm.id.zobImpId = :zobImpId "
+			+ "and obmm.id.zobId = :zobId "
 			+ "and obmm.id.bauId = :bauId "
 			+ "and obmm.id.masId = :masId "
 			+ "and obmm.id.zobIdMit = mitarbeiter.id.zobId " 
@@ -513,8 +500,9 @@ public class GSVampire {
 			
 			ModZobjBst zobst = (ModZobjBst) next[3];
 			if (LOG.isDebugEnabled()) {
-			    if (zobst.getRefZobId() != null)
+			    if (zobst.getRefZobId() != null){
 			        LOG.debug("Baustein Referenz: " + zobst.getRefZobId());
+			    }
             }
 			
 		}
