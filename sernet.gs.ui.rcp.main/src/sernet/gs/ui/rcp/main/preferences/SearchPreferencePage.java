@@ -59,6 +59,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
     private ComboFieldEditor encodingFieldEditor;
     private BooleanFieldEditor disableField;
     private BooleanFieldEditor startField;
+    private Group commonSettings;
 
     @Override
     public void init(IWorkbench arg0) {
@@ -78,7 +79,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
 
 
         if (standalone) {
-            final Group commonSettings = new Group(top, SWT.FILL | SWT.BORDER);
+            commonSettings = new Group(top, SWT.FILL | SWT.BORDER);
             commonSettings.setLayout(new FillLayout());
             commonSettings.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
             commonSettings.setText(Messages.getString("SearchPreferencePage.13"));
@@ -151,6 +152,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         seperatorFieldEditor.loadDefault();
         encodingFieldEditor.loadDefault();
         startField.loadDefault();
+        startField.setEnabled(true, commonSettings);
         disableField.loadDefault();
 
         super.performDefaults();
