@@ -19,10 +19,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -42,6 +44,7 @@ import sernet.gs.ui.rcp.main.Activator;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
 public class SearchPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
+
 
     public static final String SEMICOLON = ";"; //$NON-NLS-1$
     public static final String COMMA = ","; //$NON-NLS-1$
@@ -74,16 +77,22 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
       boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
 
 
-      if (standalone) {
-          Group indexOnStartUpGroup = new Group(top, SWT.FILL | SWT.BORDER);
-          indexOnStartUpGroup.setLayout(new FillLayout());
-          indexOnStartUpGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
-          indexOnStartUpGroup.setText(Messages.getString("SearchPreferencePage.13"));
- 
-          startField = new BooleanFieldEditor(PreferenceConstants.SEARCH_INDEX_ON_STARTUP, Messages.getString("SearchPreferencePage.14"), indexOnStartUpGroup);
-          startField.setPreferenceStore(getPreferenceStore());
-          startField.load();        
-      }
+        if (standalone) {
+            final Group commonSettings = new Group(top, SWT.FILL | SWT.BORDER);
+            commonSettings.setLayout(new FillLayout());
+            commonSettings.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+            commonSettings.setText(Messages.getString("SearchPreferencePage.13"));
+
+            disableField = new BooleanFieldEditor(PreferenceConstants.SEARCH_DISABLE, Messages.getString("SearchPreferencePage.16"), commonSettings);
+            disableField.setPreferenceStore(getPreferenceStore());
+            disableField.load();
+            disableField.setPropertyChangeListener(new DisableFieldListener(commonSettings));
+
+            startField = new BooleanFieldEditor(PreferenceConstants.SEARCH_INDEX_ON_STARTUP, Messages.getString("SearchPreferencePage.14"), commonSettings);
+            startField.setPreferenceStore(getPreferenceStore());
+            startField.load();
+            startField.setEnabled(disableIndexOnStartUp(), commonSettings);
+        }
 
         Group sortingComposite = new Group(top, SWT.FILL | SWT.BORDER);
         sortingComposite.setLayout(new GridLayout());
@@ -124,13 +133,15 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         encodingFieldEditor.load();
         encodingFieldEditor.fillIntoGrid(csvExportSettingsGrid, 2);
         
-        if (standalone) {
-            disableField = new BooleanFieldEditor(PreferenceConstants.SEARCH_DISABLE, "Disable search", top);
-            disableField.setPreferenceStore(getPreferenceStore());
-            disableField.load();
-        }
-        
        return top;
+    }
+
+    /**
+     * If the search is completely disabled this returns also false.
+     *
+     */
+    private boolean disableIndexOnStartUp() {
+        return !disableField.getBooleanValue();
     }
 
     @Override
@@ -157,6 +168,35 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         return super.performOk();
     }
 
+    /**
+     * Sets the {@link SearchPreferencePage#startField} to false, if the
+     * disableField is set to true.
+     *
+     * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+     */
+    private final class DisableFieldListener implements IPropertyChangeListener {
+        /**
+         *
+         */
+        private final Group commonSettings;
+
+        /**
+         * @param commonSettings
+         */
+        private DisableFieldListener(Group commonSettings) {
+            this.commonSettings = commonSettings;
+        }
+
+        @Override
+        public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent arg0) {
+            if (disableField.getBooleanValue() == false) {
+                startField.setEnabled(true, commonSettings);
+            } else {
+                startField.setEnabled(false, commonSettings);
+            }
+        }
+    }
+
 
     /*
     * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
@@ -166,5 +206,4 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         // TODO Auto-generated method stub
 
     }
-
 }
