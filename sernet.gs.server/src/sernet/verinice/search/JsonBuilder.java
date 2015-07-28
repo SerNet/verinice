@@ -21,7 +21,6 @@ package sernet.verinice.search;
 
 import java.io.IOException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
