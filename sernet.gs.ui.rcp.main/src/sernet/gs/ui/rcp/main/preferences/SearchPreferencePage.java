@@ -60,6 +60,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
     private BooleanFieldEditor disableField;
     private BooleanFieldEditor startField;
     private Group commonSettings;
+    private boolean standalone;
 
     @Override
     public void init(IWorkbench arg0) {
@@ -75,7 +76,7 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         top.setLayout(new GridLayout());
         top.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-      boolean standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        standalone = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE).equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
 
 
         if (standalone) {
@@ -151,10 +152,13 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         sortColumns.loadDefault();
         seperatorFieldEditor.loadDefault();
         encodingFieldEditor.loadDefault();
-        startField.loadDefault();
-        startField.setEnabled(true, commonSettings);
-        disableField.loadDefault();
-
+        
+        if (standalone) {
+            startField.loadDefault();
+            startField.setEnabled(true, commonSettings);
+            disableField.loadDefault();
+        }
+        
         super.performDefaults();
     }
 
@@ -164,9 +168,12 @@ public class SearchPreferencePage extends FieldEditorPreferencePage implements I
         sortColumns.store();
         seperatorFieldEditor.store();
         encodingFieldEditor.store();
-        startField.store();
-        disableField.store();
-
+        
+        if (standalone) {
+            startField.store();
+            disableField.store();
+        }
+        
         return super.performOk();
     }
 
