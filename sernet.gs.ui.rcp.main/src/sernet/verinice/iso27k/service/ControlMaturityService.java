@@ -44,9 +44,20 @@ public class ControlMaturityService {
     public static enum DecoratorColor {
         NULL, GREEN, YELLOW, RED
     }
+    
+    private static enum Maturity {
+        NOT_EDITED(-2), NA(-1);
+        
+        private int specialMaturityValue;
+        
+        Maturity(int specialMaturityValue) {
+            this.specialMaturityValue = specialMaturityValue;
+        }
 
-    private static final int MATURITY_NOT_EDITED = -2;
-    private static final int MATURITY_NA = -1;
+        public int getValue() {
+            return specialMaturityValue;
+        }
+    }
     
     public ControlMaturityService() {
         this(TYPE_MATURITY);
@@ -86,7 +97,7 @@ public class ControlMaturityService {
         for (CnATreeElement child : cg.getChildren()) {
             if (child instanceof IControl) {
                 int m = getMaturity((IControl) child);
-                if (m != MATURITY_NA && m != MATURITY_NOT_EDITED) {
+                if (m != Maturity.NA.getValue() && m != Maturity.NOT_EDITED.getValue()) {
                     maturity += m;
                 }
             }
@@ -110,7 +121,7 @@ public class ControlMaturityService {
         for (CnATreeElement child : controlGroup.getChildren()) {
             if (child instanceof IControl) {
                 int maturity = getMaturity((IControl) child);
-                if (maturity != MATURITY_NA && maturity != MATURITY_NOT_EDITED) {
+                if (maturity != Maturity.NA.getValue() && maturity != Maturity.NOT_EDITED.getValue()) {
                     accumulativeMaturity += maturity;
                     count += 1;
                 }
@@ -131,7 +142,7 @@ public class ControlMaturityService {
         for (CnATreeElement child : controlGroup.getChildren()) {
             if (child instanceof IControl) {
                 int targetMaturity = getTargetMaturity((IControl) child);
-                if (targetMaturity != MATURITY_NA && targetMaturity != MATURITY_NOT_EDITED) {
+                if (targetMaturity != Maturity.NA.getValue() && targetMaturity != Maturity.NOT_EDITED.getValue()) {
                     accumulativeTargetMaturity += targetMaturity;
                     count += 1;
                 }
@@ -351,9 +362,9 @@ public class ControlMaturityService {
         maturity = Math.round(maturity);
         targetMaturity = Math.round(targetMaturity);
 
-        if (maturity == MATURITY_NOT_EDITED) {
+        if (maturity == Maturity.NOT_EDITED.getValue()) {
             return DecoratorColor.RED;
-        } else if (maturity == MATURITY_NA) {
+        } else if (maturity == Maturity.NA.getValue()) {
             return DecoratorColor.GREEN;
         } else if (maturity <= targetMaturity - 2) {
             return DecoratorColor.RED;
