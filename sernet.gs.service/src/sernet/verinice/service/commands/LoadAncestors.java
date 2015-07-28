@@ -72,10 +72,6 @@ public class LoadAncestors extends LoadElementByUuid {
         Integer parentId = child.getParentId();
         if (parentId != null) {
 
-            RetrieveInfo ri = new RetrieveInfo();
-            ri.setParent(true);
-            ri.setProperties(true);
-
             CnATreeElement parent = (CnATreeElement) getElementDao().retrieve(parentId, ri);
             if (parent != null) {
                 parent = loadParent(parent);
