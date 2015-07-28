@@ -424,8 +424,8 @@ public class SearchView extends RightsEnabledView {
     }
 
     private void selectedFirstEntry(VeriniceSearchResult veriniceSearchResult) {
-        VeriniceSearchResultTable[] result = new VeriniceSearchResultTable[veriniceSearchResult.getAllVeriniceSearchObjects().size()];
-        result = veriniceSearchResult.getAllVeriniceSearchObjects().toArray(result);
+        VeriniceSearchResultTable[] result = new VeriniceSearchResultTable[veriniceSearchResult.getAllVeriniceSearchTables().size()];
+        result = veriniceSearchResult.getAllVeriniceSearchTables().toArray(result);
         Arrays.sort(result, new VeriniceSearchResultComparator());
 
         resultsByTypeCombo.setSelection(new StructuredSelection(result[0]));

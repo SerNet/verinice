@@ -75,7 +75,7 @@ public class VeriniceSearchResultTable implements Serializable {
         this.propertyTypeIds = propertyTypeIds;
     }
 
-    public void addSearchResult(VeriniceSearchResultRow result) {
+    public void addVeriniceSearchResultRow(VeriniceSearchResultRow result) {
         if(results.contains(result)){
             addToExistingResult(result);
         } else {

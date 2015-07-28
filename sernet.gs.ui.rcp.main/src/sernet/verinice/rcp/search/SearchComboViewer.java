@@ -127,8 +127,8 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
     public Object[] getElements(Object inputElement) {
         if (inputElement instanceof VeriniceSearchResult) {
             VeriniceSearchResult veriniceSearchResult = (VeriniceSearchResult) inputElement;
-            VeriniceSearchResultTable[] input = new VeriniceSearchResultTable[veriniceSearchResult.getAllVeriniceSearchObjects().size()];
-            return veriniceSearchResult.getAllVeriniceSearchObjects().toArray(input);
+            VeriniceSearchResultTable[] input = new VeriniceSearchResultTable[veriniceSearchResult.getAllVeriniceSearchTables().size()];
+            return veriniceSearchResult.getAllVeriniceSearchTables().toArray(input);
         } else {
             return new VeriniceSearchResultTable[0];
         }

@@ -54,7 +54,7 @@ public final class SearchResultGenerator {
         VeriniceSearchResultTable result = new VeriniceSearchResultTable(type, type, propertyList.toArray(new String[propertyList.size()]));
         long n = Math.round(Math.random()*(getRows()*1.0)) + 1;
         for (int i = 0; i < n; i++) {
-            result.addSearchResult(createRow(propertyList, phrase));
+            result.addVeriniceSearchResultRow(createRow(propertyList, phrase));
         }
 
         return result;

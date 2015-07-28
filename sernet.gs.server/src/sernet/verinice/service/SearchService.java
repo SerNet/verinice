@@ -87,10 +87,10 @@ public class SearchService implements ISearchService {
         ServerInitializer.inheritVeriniceContextState();
         VeriniceSearchResult results = new VeriniceSearchResult();
         if (StringUtils.isNotEmpty(elementTypeId)) {
-            results.addVeriniceSearchObject(processSearchResponse(elementTypeId, searchDao.find(elementTypeId, query), query.getLimit()));
+            results.addVeriniceSearchTable(processSearchResponse(elementTypeId, searchDao.find(elementTypeId, query), query.getLimit()));
         } else {
             for (EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()) {
-                results.addVeriniceSearchObject(processSearchResponse(type.getId(), searchDao.find(type.getId(), query), query.getLimit()));
+                results.addVeriniceSearchTable(processSearchResponse(type.getId(), searchDao.find(type.getId(), query), query.getLimit()));
             }
         }
         return results;
@@ -116,7 +116,7 @@ public class SearchService implements ISearchService {
                     result.addProperty(key, hit.getSource().get(key).toString());
                 }
             }
-            results.addSearchResult(result);
+            results.addVeriniceSearchResultRow(result);
 
         }
         return results;

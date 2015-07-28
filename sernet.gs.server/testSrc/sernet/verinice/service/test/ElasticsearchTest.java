@@ -107,7 +107,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         result = findByTitle(TITEL);
         assertTrue("No element found with ' "+ TITEL + "' in title", result.getHits() > 0);
 
-        VeriniceSearchResultRow row = result.getAllVeriniceSearchObjects().iterator().next().getRows().iterator().next();
+        VeriniceSearchResultRow row = result.getAllVeriniceSearchTables().iterator().next().getRows().iterator().next();
         String uuid = getUuid(row);
         CnATreeElement element = elementDao.findByUuid(uuid, RetrieveInfo.getPropertyInstance().setPermissions(true));
         assertNotNull("No element found with uuid: " + uuid, element);
@@ -132,7 +132,7 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
     }
 
     private void delete(VeriniceSearchResult result) {
-        Set<VeriniceSearchResultTable> resultList = result.getAllVeriniceSearchObjects();
+        Set<VeriniceSearchResultTable> resultList = result.getAllVeriniceSearchTables();
         for (VeriniceSearchResultTable resultObject : resultList) {
             Set<VeriniceSearchResultRow> rows = resultObject.getAllResults();
             for (VeriniceSearchResultRow row : rows) {
