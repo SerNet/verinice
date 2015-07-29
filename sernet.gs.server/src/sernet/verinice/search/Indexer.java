@@ -192,13 +192,14 @@ public class Indexer {
         while (Indexer.this.amountOfIndexThreads > 0) {
             try {
                 Future<CnATreeElement> future = completionService.take();
-                CnATreeElement element = future.get();
-                Indexer.this.amountOfIndexThreads--;
+                CnATreeElement element = future.get();           
                 LOG.debug("element was indexed " + element.getTitle() + " - uuid " + element.getUuid());
             } catch (InterruptedException e) {
                 LOG.error("indexing tracking failed", e);
             } catch (ExecutionException ex) {
                 LOG.error("future task execution failed: " + ex.getLocalizedMessage(), ex);
+            } finally{
+                Indexer.this.amountOfIndexThreads--;
             }
         }
     }
