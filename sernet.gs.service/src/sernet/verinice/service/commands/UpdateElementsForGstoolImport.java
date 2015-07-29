@@ -42,7 +42,9 @@ public class UpdateElementsForGstoolImport<T extends ITypedElement> extends Gene
 		    int i = 0;
 			IBaseDao<T, Serializable> dao = getDao();
 			for (T element : elements) {
-				dao.merge(element, true);
+			    if(element != null){
+			        dao.merge(element, true);
+			    }
 				i++;
 				if(i>flushThreshold) {
 				    i=0;

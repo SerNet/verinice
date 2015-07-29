@@ -25,9 +25,12 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Massnahme;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.model.MassnahmenFactory;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
@@ -36,6 +39,7 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.service.commands.LoadAncestors;
 
 /**
  * Create and save new element of type baustein to the database using its class to lookup
@@ -89,6 +93,9 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 			CnATreeElement container = containerDao.findById(dbId);
 			
 			if (container.containsBausteinUmsetzung(baustein.getId())){
+			    // up to now no import of userdefined bausteine
+			    // TODO: implement import of userdefined bausteine (and massnahmen)
+			    getLogger().error("ElementContainer:\t" + getElementPath(container.getUuid(), typeId) + "(" + container.getDbId() + ")" + "\twith TypeId:\t" + typeId + " contains already a baustein with id:\t" + baustein.getId() + "\t" + baustein.getTitel() + " is skipped because of this");
 				return;
 			}
 			
@@ -125,7 +132,6 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 									container.getPermissions()));
 				}
 			}
-			
 			
 		} catch (Exception e) {
 			getLogger().error("Error while creating executing", e);
@@ -166,6 +172,39 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 
 	public void setAuthService(IAuthService service) {
 		this.authService = service;
+	}
+	
+	private String getElementPath(String uuid, String typeId){
+        RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+
+        LoadAncestors command = new LoadAncestors(typeId, uuid, ri);
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+        } catch (CommandException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        CnATreeElement current = command.getElement();
+
+        // build object path
+        StringBuilder sb = new StringBuilder();
+        sb.insert(0, current.getTitle());
+
+        while (current.getParent() != null) {
+            current = current.getParent();
+            sb.insert(0, "/");
+            sb.insert(0, current.getTitle());
+        }
+
+
+
+        // crop the root element, which is always ISO .. or BSI ...
+        String[] p = sb.toString().split("/");
+        sb = new StringBuilder();
+        for (int i = 1; i < p.length; i++) {
+            sb.append("/").append(p[i]);
+        }
+        return sb.toString();
 	}
 
 }

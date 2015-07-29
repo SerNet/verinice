@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +34,7 @@ import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.scraper.GSScraper;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.ImportKostenUtil;
 import sernet.gs.ui.rcp.gsimport.TransferData;
@@ -43,11 +45,13 @@ import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.LoadAncestors;
 
 /**
  * Create BausteinUmsetzung objects during import for given target object and
@@ -161,7 +165,7 @@ public class ImportCreateBausteine extends GenericCommand {
     private BausteinUmsetzung createBaustein(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws Exception {
         Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
         // TODO AK if none found it ma be ben.def. baustein
-        
+        // check here, if user defined baustn is existant, if thats the case, skip bstn from catalogue
         Integer refZobId = null;
         isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
             refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
@@ -171,19 +175,28 @@ public class ImportCreateBausteine extends GenericCommand {
         }
 
         if (baustein != null && refZobId == null) {
-                // BSIKatalogInvisibleRoot.getInstance().getLanguage() caused a classNotFound Exception here, fixed 
-                // but import now only works for German.
-                // this should be loaded from BSIMassnahmenModel which is the ITGS main model class
+            // BSIKatalogInvisibleRoot.getInstance().getLanguage() caused a classNotFound Exception here, fixed 
+            // but import now only works for German.
+            // this should be loaded from BSIMassnahmenModel which is the ITGS main model class
+            
+            // skipping user defined bausteine
+            if(mbBaust.getId().getBauImpId() != 1){
                 CreateBaustein command = new CreateBaustein(element, baustein, GSScraper.CATALOG_LANGUAGE_GERMAN);
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
                 BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
 
-                if (list.iterator().hasNext()) {
-                    BausteineMassnahmenResult queryresult = list.iterator().next();
-                    transferBaustein(baustein, bausteinUmsetzung, queryresult);
-                    transferMassnahmen(bausteinUmsetzung, list);
+                if(bausteinUmsetzung != null){
+                    if (list.iterator().hasNext()) {
+                        BausteineMassnahmenResult queryresult = list.iterator().next();
+                        transferBaustein(baustein, bausteinUmsetzung, queryresult);
+                        transferMassnahmen(bausteinUmsetzung, list);
+                    }
                 }
                 return bausteinUmsetzung;
+            } 
+            return null;
+        } else {
+            getLog().error("Baustein with id:\t" + mbBaust.getId().getBauId() + " and nr:\t" + mbBaust.getNr() + " on ZOB:\t " + getElementPath(element.getUuid(), element.getTypeId()) + " is userdefined. userdefined bausteine are not considered from this import");
         }
         // TODO AK else create ben.def. baustein and transfer content from mbBaust to it instead
         return null;
@@ -206,15 +219,24 @@ public class ImportCreateBausteine extends GenericCommand {
     }
 
     private void transferBaustein(Baustein baustein, BausteinUmsetzung bausteinUmsetzung, BausteineMassnahmenResult vorlage) {
-        bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERLAEUTERUNG, vorlage.zoBst.getBegruendung());
-        bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM, parseDate(vorlage.zoBst.getDatum()));
+        if(bausteinUmsetzung != null && vorlage != null && vorlage.zoBst != null && vorlage.zoBst.getBegruendung() != null){
+
+            bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERLAEUTERUNG, vorlage.zoBst.getBegruendung());
+            bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM, parseDate(vorlage.zoBst.getDatum()));
+        }
+        
+        if(bausteinUmsetzung == null){
+            getLog().error("Bausteinumsetzung für " + baustein.getTitel() + " war null");
+        }
 
         // set zobID as extId to find baustein references linking to it later
         // on:
-        bausteinUmsetzung.setSourceId(sourceId);
-        bausteinUmsetzung.setExtId(createExtId(baustein, vorlage.obm.getId().getZobId()));
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Creating baustein with sourceId and extId: " + sourceId + ", " + bausteinUmsetzung.getExtId());
+        if(bausteinUmsetzung != null){
+            bausteinUmsetzung.setSourceId(sourceId);
+            bausteinUmsetzung.setExtId(createExtId(baustein, vorlage.obm.getId().getZobId()));
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Creating baustein with sourceId and extId: " + sourceId + ", " + bausteinUmsetzung.getExtId());
+            }
         }
 
         // remember baustein for later:
@@ -240,7 +262,12 @@ public class ImportCreateBausteine extends GenericCommand {
    
 
     private void transferMassnahmen(BausteinUmsetzung bausteinUmsetzung, List<BausteineMassnahmenResult> list) {
-        List<MassnahmenUmsetzung> massnahmenUmsetzungen = bausteinUmsetzung.getMassnahmenUmsetzungen();
+        List<MassnahmenUmsetzung> massnahmenUmsetzungen = null;
+        if(bausteinUmsetzung != null){
+            massnahmenUmsetzungen = bausteinUmsetzung.getMassnahmenUmsetzungen();
+        } else {
+            massnahmenUmsetzungen = Collections.EMPTY_LIST;
+        }
         for (MassnahmenUmsetzung massnahmenUmsetzung : massnahmenUmsetzungen) {
             BausteineMassnahmenResult vorlage = TransferData.findMassnahmenVorlageBaustein(massnahmenUmsetzung, list);
             if (vorlage != null){
@@ -321,6 +348,39 @@ public class ImportCreateBausteine extends GenericCommand {
         bausteineMassnahmenMap = null;
         zeiten = null;
         bausteine = null;
+    }
+    
+    private String getElementPath(String uuid, String typeId){
+        RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+
+        LoadAncestors command = new LoadAncestors(typeId, uuid, ri);
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+        } catch (CommandException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        CnATreeElement current = command.getElement();
+
+        // build object path
+        StringBuilder sb = new StringBuilder();
+        sb.insert(0, current.getTitle());
+
+        while (current.getParent() != null) {
+            current = current.getParent();
+            sb.insert(0, "/");
+            sb.insert(0, current.getTitle());
+        }
+
+
+
+        // crop the root element, which is always ISO .. or BSI ...
+        String[] p = sb.toString().split("/");
+        sb = new StringBuilder();
+        for (int i = 1; i < p.length; i++) {
+            sb.append("/").append(p[i]);
+        }
+        return sb.toString();
     }
 
 }
