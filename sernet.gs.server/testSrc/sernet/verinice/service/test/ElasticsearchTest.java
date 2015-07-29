@@ -211,24 +211,6 @@ public class ElasticsearchTest extends BeforeEachVNAImportHelper {
         return new SecureRandom().nextInt(limit);
     }
 
-    @Test
-    public void stressTest() throws InterruptedException {
-        searchIndexer.blockingIndexing();
-         ExecutorService executorService = Executors.newFixedThreadPool(30);
-//        ExecutorService executorService = new ForkJoinPool(java.lang.Runtime.getRuntime().availableProcessors());
-        CompletionService<VeriniceSearchResult> completionService = new ExecutorCompletionService<VeriniceSearchResult>(executorService);
-
-        String[] tokens = new String[] { "ction from malware", "sernet", "automatically", "a", "der", VeriniceQuery.EMPTY_QUERY };
-        final int NUMBER_OF_THREADS = 300;
-        for (int i = 0; i < NUMBER_OF_THREADS; i++) {
-            VeriniceQuery query = new VeriniceQuery(tokens[getRandomInt(tokens.length - 1)], getRandomInt(VeriniceQuery.MAX_LIMIT));
-            completionService.submit(new Task(i, query));
-        }
-
-        executorService.shutdown();
-        executorService.awaitTermination(60, TimeUnit.SECONDS);
-    }
-
     @After
     public void tearDown() throws CommandException {
         searchDao.clear();
