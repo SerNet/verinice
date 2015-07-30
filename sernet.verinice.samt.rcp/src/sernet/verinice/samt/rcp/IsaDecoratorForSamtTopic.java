@@ -10,9 +10,9 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IControl;
 
 @SuppressWarnings("restriction")
-public class TopicDecorator extends LabelProvider implements ILightweightLabelDecorator {
+public class IsaDecoratorForSamtTopic extends LabelProvider implements ILightweightLabelDecorator {
 
-    private static final Logger LOG = Logger.getLogger(TopicDecorator.class);
+    private static final Logger LOG = Logger.getLogger(IsaDecoratorForSamtTopic.class);
 
     private ControlMaturityService maturityService = new ControlMaturityService();
     

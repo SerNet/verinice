@@ -1,5 +1,8 @@
 package sernet.verinice.samt.rcp;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IDecoration;
 
@@ -8,8 +11,11 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.ControlMaturityService;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.AuditGroup;
+import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.service.commands.LoadAncestors;
 
 @SuppressWarnings("restriction")
@@ -69,5 +75,34 @@ public final class IsaDecoratorUtil {
         default:
             decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(IconOverlay.EMPTY.getPath()));
         }
+    }
+    
+    /**
+     * Retrieves all children of a ControlGroup.
+     * Returns true if at least one {@link IControl} child exists.
+     * 
+     * @param controlGroup a ControlGroup
+     * @return true if at least one {@link IControl} child exists
+     */
+    protected static boolean retrieveChildrenAndCheckForIControl(/*not final*/ControlGroup controlGroup) {
+        boolean isIsa = false;
+        Set<CnATreeElement> children = controlGroup.getChildren();
+        Set<CnATreeElement> childrenRetrieved = new HashSet<CnATreeElement>(children.size());
+        for (CnATreeElement child : children) {
+            if(child instanceof IControl) {
+                child = Retriever.checkRetrieveElement(child);
+                isIsa = true;
+            }
+            if(child instanceof ControlGroup) {
+                child = Retriever.checkRetrieveChildren(child);
+                boolean isIsaRecursiv = retrieveChildrenAndCheckForIControl((ControlGroup) child);
+                if(isIsaRecursiv) {
+                    isIsa = true; 
+                }
+            }
+            childrenRetrieved.add(child);               
+        }
+        controlGroup.setChildren(childrenRetrieved);
+        return isIsa;
     }
 }

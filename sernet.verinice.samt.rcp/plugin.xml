@@ -356,9 +356,9 @@
    <extension point="org.eclipse.ui.decorators">
           <decorator
 	            adaptable="true"
-	            class="sernet.verinice.samt.rcp.TopicGroupDecorator"
-	            id="sernet.verinice.samt.rcp.AuditDecorator"
-	            label="ISA Audit decorator"
+	            class="sernet.verinice.samt.rcp.IsaDecoratorForAudit"
+	            id="sernet.verinice.samt.rcp.IsaDecoratorForAudit"
+	            label="ISA Decorator for Audit"
 	            lightweight="true"
 	            location="TOP_LEFT"
 	            state="true">
@@ -368,9 +368,9 @@
 	      </decorator>
 	      <decorator
 	            adaptable="true"
-	            class="sernet.verinice.samt.rcp.TopicGroupDecorator"
-	            id="sernet.verinice.samt.rcp.TopicGroupDecorator"
-	            label="ISA Topic group decorator"
+	            class="sernet.verinice.samt.rcp.IsaDecoratorForControlGroup"
+	            id="sernet.verinice.samt.rcp.IsaDecoratorForControlGroup"
+	            label="ISA Decorator for ControlGroup"
 	            lightweight="true"
 	            location="TOP_LEFT"
 	            state="true">
@@ -380,9 +380,9 @@
 	      </decorator>
 	      <decorator
 	            adaptable="true"
-	            class="sernet.verinice.samt.rcp.TopicDecorator"
-	            id="sernet.verinice.samt.rcp.TopicDecorator"
-	            label="ISA Topic decorator"
+	            class="sernet.verinice.samt.rcp.IsaDecoratorForSamtTopic"
+	            id="sernet.verinice.samt.rcp.IsaDecoratorForSamtTopic"
+	            label="ISA Decorator for SamtTopic"
 	            lightweight="true"
 	            location="TOP_LEFT"
 	            state="true">

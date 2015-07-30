@@ -97,7 +97,7 @@ public class ControlMaturityService {
         for (CnATreeElement child : cg.getChildren()) {
             if (child instanceof IControl) {
                 int m = getMaturity((IControl) child);
-                if (m != Maturity.NA.getValue() && m != Maturity.NOT_EDITED.getValue()) {
+                if (isNotSpecialMaturityValue(m)) {
                     maturity += m;
                 }
             }
@@ -121,7 +121,7 @@ public class ControlMaturityService {
         for (CnATreeElement child : controlGroup.getChildren()) {
             if (child instanceof IControl) {
                 int maturity = getMaturity((IControl) child);
-                if (maturity != Maturity.NA.getValue() && maturity != Maturity.NOT_EDITED.getValue()) {
+                if (isNotSpecialMaturityValue(maturity)) {
                     accumulativeMaturity += maturity;
                     count += 1;
                 }
@@ -142,7 +142,7 @@ public class ControlMaturityService {
         for (CnATreeElement child : controlGroup.getChildren()) {
             if (child instanceof IControl) {
                 int targetMaturity = getTargetMaturity((IControl) child);
-                if (targetMaturity != Maturity.NA.getValue() && targetMaturity != Maturity.NOT_EDITED.getValue()) {
+                if (isNotSpecialMaturityValue(targetMaturity)) {
                     accumulativeTargetMaturity += targetMaturity;
                     count += 1;
                 }
@@ -154,6 +154,10 @@ public class ControlMaturityService {
         }
         averageTargetMaturity = (double) accumulativeTargetMaturity / (double) count;
         return averageTargetMaturity;
+    }
+
+    private boolean isNotSpecialMaturityValue(int targetMaturity) {
+        return targetMaturity != Maturity.NA.getValue() && targetMaturity != Maturity.NOT_EDITED.getValue();
     }
     
     public int getControlCount(ControlGroup cg){
