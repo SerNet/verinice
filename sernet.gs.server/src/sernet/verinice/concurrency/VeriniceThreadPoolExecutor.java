@@ -17,7 +17,7 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.search;
+package sernet.verinice.concurrency;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -31,17 +31,22 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class ServerAuthenticationThreadPoolExecutor extends ThreadPoolExecutor {
+public class VeriniceThreadPoolExecutor extends ThreadPoolExecutor {
 
     private static final int DEFAULT_NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
 
+    private static final String VERINICE_THREADS_POOL = "verinice-thread-pool"; 
 
-    public ServerAuthenticationThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
-        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, new CustomNamedThreadGroupFactory("index"));
+    public VeriniceThreadPoolExecutor(String poolName, int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue<Runnable> workQueue) {
+        super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, new CustomNamedThreadGroupFactory(poolName));
     }
 
     static public ThreadPoolExecutor newInstance() {
-        return new ServerAuthenticationThreadPoolExecutor(DEFAULT_NUMBER_OF_THREADS, 2 * DEFAULT_NUMBER_OF_THREADS, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+        return new VeriniceThreadPoolExecutor(VERINICE_THREADS_POOL, DEFAULT_NUMBER_OF_THREADS, 2 * DEFAULT_NUMBER_OF_THREADS, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+    }
+    
+    static public ThreadPoolExecutor newInstance(String poolName) {
+        return new VeriniceThreadPoolExecutor(poolName, DEFAULT_NUMBER_OF_THREADS, 2 * DEFAULT_NUMBER_OF_THREADS, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
     }
 
 }

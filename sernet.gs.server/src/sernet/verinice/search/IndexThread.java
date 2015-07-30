@@ -21,6 +21,7 @@ package sernet.verinice.search;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.server.security.DummyAuthenticatorCallable;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.IBaseDao;

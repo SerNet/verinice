@@ -30,12 +30,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.ObjectFactory;
 
+import sernet.gs.server.security.DummyAuthenticationRunnable;
 import sernet.gs.service.ServerInitializer;
 import sernet.gs.service.TimeFormatter;
+import sernet.verinice.concurrency.ClosableCompletionService;
+import sernet.verinice.concurrency.CustomNamedThreadGroupFactory;
+import sernet.verinice.concurrency.TrackableCompletionService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IElementTitleCache;
 import sernet.verinice.model.bsi.ITVerbund;
@@ -66,8 +71,6 @@ public class Indexer {
      */
     private ObjectFactory indexThreadFactory;
 
-    private int amountOfIndexThreads;
-
     /**
      * Creates an index in an non blocking way, means this method creates all
      * necessary index threads and returns immediately. It gives no guarantee
@@ -93,15 +96,16 @@ public class Indexer {
     private void runIndexingThread() {
         DummyAuthenticationRunnable dummyAuthenticationRunnable = new DummyAuthenticationRunnableExtension();
         ThreadFactory threadFactory = new CustomNamedThreadGroupFactory("index");
-        Executors.newSingleThreadExecutor(threadFactory).execute(dummyAuthenticationRunnable);
+        ExecutorService exeService = Executors.newSingleThreadExecutor(threadFactory);
+        exeService.execute(dummyAuthenticationRunnable);
+        exeService.shutdown();
     }
 
-    private CompletionService<CnATreeElement> doIndex() throws InterruptedException, ExecutionException {
+    private ClosableCompletionService<CnATreeElement> doIndex() throws InterruptedException, ExecutionException {
 
         indexingStart = System.currentTimeMillis();
-
-        ExecutorService executorService = createExecutor();
-        CompletionService<CnATreeElement> completionService = new ExecutorCompletionService<CnATreeElement>(executorService);
+        
+        ClosableCompletionService<CnATreeElement> completionService = TrackableCompletionService.newInstance();
         List<String> allUuids = new ArrayList<String>();
 
         allUuids = geAllCnATreeElementUUIDS();
@@ -112,13 +116,12 @@ public class Indexer {
 
         getTitleCache().load(new String[] { ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID });
         Collection<IndexThread> indexThreads = createIndexThreadsByUuids(allUuids);
-        amountOfIndexThreads = indexThreads.size();
 
         for (IndexThread indexThread : indexThreads) {
             completionService.submit(indexThread);
         }
 
-        executorService.shutdown();
+        completionService.shutDown();
         return completionService;
     }
 
@@ -132,16 +135,18 @@ public class Indexer {
         return allUuids;
     }
 
-    private void logNonBlockingIndexingTermination(final CompletionService<CnATreeElement> completionService) {
+    private void logNonBlockingIndexingTermination(final ClosableCompletionService<CnATreeElement> completionService) {
         if (LOG.isInfoEnabled()) {
-            Executors.newFixedThreadPool(1).execute(new Runnable() {
+            ExecutorService executor = Executors.newFixedThreadPool(1);
+            executor.execute(new Runnable() {
                 @Override
                 public void run() {
                     ServerInitializer.inheritVeriniceContextState();
                     awaitIndexingTermination(completionService);
                     printIndexingTimeConsumption();
                 }
-            });
+            });            
+            executor.shutdown();
         }
     }
 
@@ -179,7 +184,7 @@ public class Indexer {
     private void doBlockingIndexing() throws InterruptedException, ExecutionException {
 
         ServerInitializer.inheritVeriniceContextState();
-        CompletionService<CnATreeElement> completionService = doIndex();
+        ClosableCompletionService<CnATreeElement> completionService = doIndex();
 
         // This call causes the blocking since it takes every completed task
         // from the executor queue.
@@ -188,8 +193,8 @@ public class Indexer {
         printIndexingTimeConsumption();
     }
 
-    private void awaitIndexingTermination(CompletionService<CnATreeElement> completionService) {
-        while (Indexer.this.amountOfIndexThreads > 0) {
+    private void awaitIndexingTermination(ClosableCompletionService<CnATreeElement> completionService) {
+        while (!completionService.isClosed()) {
             try {
                 Future<CnATreeElement> future = completionService.take();
                 CnATreeElement element = future.get();           
@@ -198,8 +203,6 @@ public class Indexer {
                 LOG.error("indexing tracking failed", e);
             } catch (ExecutionException ex) {
                 LOG.error("future task execution failed: " + ex.getLocalizedMessage(), ex);
-            } finally{
-                Indexer.this.amountOfIndexThreads--;
             }
         }
     }
@@ -218,17 +221,12 @@ public class Indexer {
         @Override
         public void doRun() {
             try {
-                CompletionService<CnATreeElement> completionService = doIndex();
+                ClosableCompletionService<CnATreeElement> completionService = doIndex();
                 logNonBlockingIndexingTermination(completionService);
-
             } catch (Exception e) {
                 LOG.error("Error while indexing elements.", e);
             }
         }
-    }
-
-    private ExecutorService createExecutor() {
-        return ServerAuthenticationThreadPoolExecutor.newInstance();
     }
 
     public ObjectFactory getIndexThreadFactory() {

@@ -17,17 +17,14 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.search;
+package sernet.gs.server.security;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletionService;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
 import org.springframework.security.context.SecurityContext;
 import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.context.SecurityContextImpl;
-
-import sernet.gs.server.security.DummyAuthentication;
 
 /**
  * Authenticates a server job outside of the spring security chain.
@@ -35,23 +32,20 @@ import sernet.gs.server.security.DummyAuthentication;
  * <p>
  * This is useful if a task is not triggered by a servlet. Then this thread is
  * not able to provide a valid security context and this is where this
- * {@link Callable} comes into play. This callable will look up authentication
- * information and if not set it will provide a dummy authentication.
+ * {@link Runnable} comes into play. It will look up authentication information
+ * and if not set it will provide a dummy authentication.
  * </p>
  *
  * <p>
- * <strong>Note:</strong> Since this {@link Callable} is running within a thread
+ * <strong>Note:</strong> Since this {@link Runnable} is running within a thread
  * pool and and threads within this pool are recycled, it is important to
  * cleanup the {@link ThreadLocal} after the task is finished. This is done by
  * this class automatically.
  * </p>
  *
- * @see CompletionService
  * @see ExecutorService
- *
- * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-abstract public class DummyAuthenticatorCallable<T> implements Callable<T> {
+abstract public class DummyAuthenticationRunnable implements Runnable {
 
     private static DummyAuthentication DUMMY_AUTHENTICATION = new DummyAuthentication();
 
@@ -59,21 +53,19 @@ abstract public class DummyAuthenticatorCallable<T> implements Callable<T> {
      * Never call this method directly. It makes sure that a security is set and
      * cleared after the job is done. Use instead {@link #doCall()}.
      *
-     * Usually this method is executed by an {@link CompletionService}.
+     * Usually this method is executed by an {@link Executor}.
      */
     @Override
-    final public T call() throws Exception {
+    final public void run() {
         try {
             initializeSecurityContext();
-            T t = doCall();
-            return t;
+            doRun();
         } finally {
             removeSecurityContext();
         }
-
     }
 
-    abstract public T doCall();
+    abstract public void doRun();
 
     private void initializeSecurityContext() {
         if (isNoAuthenticationAvailable()) {
@@ -90,4 +82,5 @@ abstract public class DummyAuthenticatorCallable<T> implements Callable<T> {
     private void removeSecurityContext() {
         SecurityContextHolder.clearContext();
     };
+
 }

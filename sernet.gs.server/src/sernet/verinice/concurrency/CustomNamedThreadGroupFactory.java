@@ -17,7 +17,7 @@
  * Contributors:
  *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.search;
+package sernet.verinice.concurrency;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,7 +34,7 @@ public class CustomNamedThreadGroupFactory implements ThreadFactory {
     private final AtomicInteger threadNumber = new AtomicInteger(1);
     private final String namePrefix;
 
-    CustomNamedThreadGroupFactory(String namePrefix) {
+    public CustomNamedThreadGroupFactory(String namePrefix) {
         this.namePrefix = namePrefix;
         SecurityManager s = System.getSecurityManager();
         ThreadGroup parent = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
