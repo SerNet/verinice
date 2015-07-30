@@ -61,6 +61,83 @@
     <data-sets>
         <oda-data-set extensionID="verinice.oda.driver.dataSet.id" name="ISAsTopics" id="2164">
             <property name="nullsOrdering">nulls lowest</property>
+            <list-property name="computedColumns">
+                <structure>
+                    <property name="name">Country</property>
+                    <expression name="expression">groups = row["audit_tag"].match( "C=(\\w+)" );
+if (groups) {
+groups[1] 
+} else {
+"-"
+ }</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Region</property>
+                    <expression name="expression">groups = row["audit_tag"].match( "R=(\\w+)" );
+if (groups) {
+groups[1] 
+} else {
+"-"
+ }</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">AuditType</property>
+                    <expression name="expression">groups = row["audit_tag"].match( "AT=(\\w+)" );
+if (groups) {
+groups[1] 
+} else {
+"-"
+ }</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Year</property>
+                    <expression name="expression">groups = row["audit_tag"].match( "Y=(\\d+)" );
+if (groups) {
+groups[1] 
+} else {
+null
+ }</expression>
+                    <property name="dataType">integer</property>
+                </structure>
+                <structure>
+                    <property name="name">Location</property>
+                    <expression name="expression">groups = row["audit_tag"].match( "L=(\\w+)" );
+if (groups) {
+groups[1] 
+} else {
+"-"
+ }</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">Index</property>
+                    <expression name="expression">groups = row["audit_tag"].match( "I=(\\w+)" );
+if (groups) {
+groups[1] 
+} else {
+"-"
+ }</expression>
+                    <property name="dataType">string</property>
+                </structure>
+                <structure>
+                    <property name="name">secFigureNumeric</property>
+                    <expression name="expression">Number(row["totalsecFigure"])</expression>
+                    <property name="dataType">float</property>
+                </structure>
+                <structure>
+                    <property name="name">chapterNum</property>
+                    <expression name="expression">match =  row["chapter"].match("^(\\d)\\s");
+if ( match) {
+'0' +  row["chapter"]
+} else {
+ row["chapter"]
+}</expression>
+                    <property name="dataType">string</property>
+                </structure>
+            </list-property>
             <list-property name="columnHints">
                 <structure>
                     <property name="columnName">audit_executing_company</property>
@@ -100,7 +177,6 @@
                 <structure>
                     <property name="columnName">audit_isa_creatmail</property>
                     <text-property name="displayName">audit_isa_creatmail</text-property>
-                    <text-property name="heading">audit_isa_creatmail</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">audit_included_topics</property>
@@ -168,16 +244,6 @@
                     <text-property name="heading">audit_isr_classfc</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">audit_document_data_responsible_scope</property>
-                    <text-property name="displayName">audit_document_data_responsible_scope</text-property>
-                    <text-property name="heading">audit_document_data_responsible_scope</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">audit_document_data_document_basis</property>
-                    <text-property name="displayName">audit_document_data_document_basis</text-property>
-                    <text-property name="heading">audit_document_data_document_basis</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">audit_document_data_author_name</property>
                     <text-property name="displayName">audit_document_data_author_name</text-property>
                     <text-property name="heading">audit_document_data_author_name</text-property>
@@ -188,9 +254,64 @@
                     <text-property name="heading">audit_document_data_author_date</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">audit_document_data_final_approval_distribution</property>
-                    <text-property name="displayName">audit_document_data_final_approval_distribution</text-property>
-                    <text-property name="heading">audit_document_data_final_approval_distribution</text-property>
+                    <property name="columnName">audit_document_data_first_quality_control_name</property>
+                    <text-property name="displayName">audit_document_data_first_quality_control_name</text-property>
+                    <text-property name="heading">audit_document_data_first_quality_control_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_first_quality_control_date</property>
+                    <text-property name="displayName">audit_document_data_first_quality_control_date</text-property>
+                    <text-property name="heading">audit_document_data_first_quality_control_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_approval_name</property>
+                    <text-property name="displayName">audit_document_data_approval_name</text-property>
+                    <text-property name="heading">audit_document_data_approval_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_approval_date</property>
+                    <text-property name="displayName">audit_document_data_approval_date</text-property>
+                    <text-property name="heading">audit_document_data_approval_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_company_coordination_name</property>
+                    <text-property name="displayName">audit_document_data_company_coordination_name</text-property>
+                    <text-property name="heading">audit_document_data_company_coordination_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_company_coordination_date</property>
+                    <text-property name="displayName">audit_document_data_company_coordination_date</text-property>
+                    <text-property name="heading">audit_document_data_company_coordination_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_adjustment_approval_name</property>
+                    <text-property name="displayName">audit_document_data_adjustment_approval_name</text-property>
+                    <text-property name="heading">audit_document_data_adjustment_approval_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_adjustment_approval_date</property>
+                    <text-property name="displayName">audit_document_data_adjustment_approval_date</text-property>
+                    <text-property name="heading">audit_document_data_adjustment_approval_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_second_quality_control_name</property>
+                    <text-property name="displayName">audit_document_data_second_quality_control_name</text-property>
+                    <text-property name="heading">audit_document_data_second_quality_control_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_second_quality_control_date</property>
+                    <text-property name="displayName">audit_document_data_second_quality_control_date</text-property>
+                    <text-property name="heading">audit_document_data_second_quality_control_date</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_final_approval_distribution_name</property>
+                    <text-property name="displayName">audit_document_data_final_approval_distribution_name</text-property>
+                    <text-property name="heading">audit_document_data_final_approval_distribution_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">audit_document_data_final_approval_distribution_date</property>
+                    <text-property name="displayName">audit_document_data_final_approval_distribution_date</text-property>
+                    <text-property name="heading">audit_document_data_final_approval_distribution_date</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">audit_topics_good_results</property>
@@ -214,13 +335,19 @@
                     <text-property name="heading">orgName</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">UNNAMED_31</property>
+                    <property name="columnName">totalsecFigure</property>
+                    <text-property name="displayName">totalsecFigure</text-property>
+                    <text-property name="heading">totalsecFigure</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">UNNAMED_32</property>
+                    <property name="columnName">chapter</property>
+                    <text-property name="displayName">chapter</text-property>
+                    <text-property name="heading">chapter</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">UNNAMED_33</property>
+                    <property name="columnName">chapterMaturity</property>
+                    <text-property name="displayName">chapterMaturity</text-property>
+                    <text-property name="heading">chapterMaturity</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -346,63 +473,148 @@
                     </structure>
                     <structure>
                         <property name="position">22</property>
-                        <property name="name">audit_document_data_responsible_scope</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">23</property>
-                        <property name="name">audit_document_data_document_basis</property>
-                        <property name="dataType">javaObject</property>
-                    </structure>
-                    <structure>
-                        <property name="position">24</property>
                         <property name="name">audit_document_data_author_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
-                        <property name="position">25</property>
+                        <property name="position">23</property>
                         <property name="name">audit_document_data_author_date</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
+                        <property name="position">24</property>
+                        <property name="name">audit_document_data_first_quality_control_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">25</property>
+                        <property name="name">audit_document_data_first_quality_control_date</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
                         <property name="position">26</property>
-                        <property name="name">audit_document_data_final_approval_distribution</property>
+                        <property name="name">audit_document_data_approval_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">27</property>
-                        <property name="name">audit_topics_good_results</property>
+                        <property name="name">audit_document_data_approval_date</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">28</property>
-                        <property name="name">audit_topics_bad_results</property>
+                        <property name="name">audit_document_data_company_coordination_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">29</property>
-                        <property name="name">dbid</property>
+                        <property name="name">audit_document_data_company_coordination_date</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">30</property>
-                        <property name="name">orgName</property>
+                        <property name="name">audit_document_data_adjustment_approval_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">31</property>
-                        <property name="name">UNNAMED_31</property>
+                        <property name="name">audit_document_data_adjustment_approval_date</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">32</property>
-                        <property name="name">UNNAMED_32</property>
+                        <property name="name">audit_document_data_second_quality_control_name</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">33</property>
-                        <property name="name">UNNAMED_33</property>
+                        <property name="name">audit_document_data_second_quality_control_date</property>
                         <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">34</property>
+                        <property name="name">audit_document_data_final_approval_distribution_name</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">35</property>
+                        <property name="name">audit_document_data_final_approval_distribution_date</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">36</property>
+                        <property name="name">audit_topics_good_results</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">37</property>
+                        <property name="name">audit_topics_bad_results</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">38</property>
+                        <property name="name">dbid</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">39</property>
+                        <property name="name">orgName</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">40</property>
+                        <property name="name">totalsecFigure</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">41</property>
+                        <property name="name">chapter</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">42</property>
+                        <property name="name">chapterMaturity</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">43</property>
+                        <property name="name">Country</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">44</property>
+                        <property name="name">Region</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">45</property>
+                        <property name="name">AuditType</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">46</property>
+                        <property name="name">Year</property>
+                        <property name="dataType">integer</property>
+                    </structure>
+                    <structure>
+                        <property name="position">47</property>
+                        <property name="name">Location</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">48</property>
+                        <property name="name">Index</property>
+                        <property name="dataType">string</property>
+                    </structure>
+                    <structure>
+                        <property name="position">49</property>
+                        <property name="name">secFigureNumeric</property>
+                        <property name="dataType">float</property>
+                    </structure>
+                    <structure>
+                        <property name="position">50</property>
+                        <property name="name">chapterNum</property>
+                        <property name="dataType">string</property>
                     </structure>
                 </list-property>
             </structure>
@@ -557,82 +769,148 @@
                 </structure>
                 <structure>
                     <property name="position">22</property>
-                    <property name="name">audit_document_data_responsible_scope</property>
-                    <property name="nativeName">audit_document_data_responsible_scope</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">23</property>
-                    <property name="name">audit_document_data_document_basis</property>
-                    <property name="nativeName">audit_document_data_document_basis</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">24</property>
                     <property name="name">audit_document_data_author_name</property>
                     <property name="nativeName">audit_document_data_author_name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">25</property>
+                    <property name="position">23</property>
                     <property name="name">audit_document_data_author_date</property>
                     <property name="nativeName">audit_document_data_author_date</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
+                    <property name="position">24</property>
+                    <property name="name">audit_document_data_first_quality_control_name</property>
+                    <property name="nativeName">audit_document_data_first_quality_control_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">25</property>
+                    <property name="name">audit_document_data_first_quality_control_date</property>
+                    <property name="nativeName">audit_document_data_first_quality_control_date</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
                     <property name="position">26</property>
-                    <property name="name">audit_document_data_final_approval_distribution</property>
-                    <property name="nativeName">audit_document_data_final_approval_distribution</property>
+                    <property name="name">audit_document_data_approval_name</property>
+                    <property name="nativeName">audit_document_data_approval_name</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">27</property>
+                    <property name="name">audit_document_data_approval_date</property>
+                    <property name="nativeName">audit_document_data_approval_date</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">28</property>
+                    <property name="name">audit_document_data_company_coordination_name</property>
+                    <property name="nativeName">audit_document_data_company_coordination_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">29</property>
+                    <property name="name">audit_document_data_company_coordination_date</property>
+                    <property name="nativeName">audit_document_data_company_coordination_date</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">30</property>
+                    <property name="name">audit_document_data_adjustment_approval_name</property>
+                    <property name="nativeName">audit_document_data_adjustment_approval_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">31</property>
+                    <property name="name">audit_document_data_adjustment_approval_date</property>
+                    <property name="nativeName">audit_document_data_adjustment_approval_date</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">32</property>
+                    <property name="name">audit_document_data_second_quality_control_name</property>
+                    <property name="nativeName">audit_document_data_second_quality_control_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">33</property>
+                    <property name="name">audit_document_data_second_quality_control_date</property>
+                    <property name="nativeName">audit_document_data_second_quality_control_date</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">34</property>
+                    <property name="name">audit_document_data_final_approval_distribution_name</property>
+                    <property name="nativeName">audit_document_data_final_approval_distribution_name</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">35</property>
+                    <property name="name">audit_document_data_final_approval_distribution_date</property>
+                    <property name="nativeName">audit_document_data_final_approval_distribution_date</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">36</property>
                     <property name="name">audit_topics_good_results</property>
                     <property name="nativeName">audit_topics_good_results</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">28</property>
+                    <property name="position">37</property>
                     <property name="name">audit_topics_bad_results</property>
                     <property name="nativeName">audit_topics_bad_results</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">29</property>
+                    <property name="position">38</property>
                     <property name="name">dbid</property>
                     <property name="nativeName">dbid</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">30</property>
+                    <property name="position">39</property>
                     <property name="name">orgName</property>
                     <property name="nativeName">orgName</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">31</property>
-                    <property name="name">UNNAMED_31</property>
+                    <property name="position">40</property>
+                    <property name="name">totalsecFigure</property>
+                    <property name="nativeName">totalsecFigure</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">32</property>
-                    <property name="name">UNNAMED_32</property>
+                    <property name="position">41</property>
+                    <property name="name">chapter</property>
+                    <property name="nativeName">chapter</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">33</property>
-                    <property name="name">UNNAMED_33</property>
+                    <property name="position">42</property>
+                    <property name="name">chapterMaturity</property>
+                    <property name="nativeName">chapterMaturity</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -641,9 +919,9 @@
 import sernet.gs.ui.rcp.main.service.crudcommands.*;
 import sernet.verinice.report.service.commands.*;
 import java.util.*;
+import sernet.gs.ui.rcp.main.service.crudcommands.*;
 import sernet.verinice.model.iso27k.*;
 import sernet.gs.service.NumericStringComparator;
-import sernet.verinice.report.service.impl.TocHelper2;
        
 
         // set top level element for report:
@@ -696,9 +974,65 @@ import sernet.verinice.report.service.impl.TocHelper2;
                         row.add(allOrgNames.get(i));
                     }
 
-	allISAs.addAll(row);
+                    // add total result figure to each row:
+                    int j=0;
+                    for (List row: orgISAs) {
+                        isaResult = helper.execute(
+                                new sernet.verinice.samt.service.TotalSecurityFigureCommand(
+                                        orgISADbIds.get(j)
+                                        )
+                                ).getResult();
+                        row.add(isaResult);
+                        j++;
+                    }
+
+
+                    // load chapters:
+                        List orgChapters = new ArrayList();
+                    int k=0;
+
+                    for (Object obj : orgISADbIds) {
+                        Integer isaDbID = (Integer) obj;
+                        c = helper.execute(new LoadSamtComplianceRadarChartData(isaDbID));
+                        List chapterRows = c.getResult();
+                        for (List chapterRow : chapterRows) {
+                            // build row with isaRow + chapter and maturity columns:
+                            List newRow = new ArrayList();
+                            newRow.addAll(orgISAs.get(k));
+                            chapterNameIdx = newRow.size();
+                            newRow.add(chapterRow.get(0));
+                            newRow.add(chapterRow.get(1));
+                            orgChapters.add(newRow);
+                        }
+                        k++;
+                    }
+
+
+                    allISAs.addAll(orgChapters);
+
+
             }
-            return allISAs;]]></xml-property>
+
+            int idx = chapterNameIdx;
+
+            // pre-sort list by chapter name:
+            Collections.sort(allISAs, new Comparator() {
+                public int compare(List row1, List row2) {
+                    NumericStringComparator comp = new NumericStringComparator();
+                    if (row1 == null || row2 == null)
+                        return 0;
+                    if (row1.get(idx) == null || row2.get(idx) == null)
+                        return 0;
+                    return comp.compare(row1.get(idx), row2.get(idx));
+                }
+            });
+
+            return allISAs;
+
+
+
+
+    ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
   <Version>2.0</Version>
@@ -947,12 +1281,17 @@ import sernet.verinice.report.service.impl.TocHelper2;
             <list-property name="privateDriverProperties">
                 <ex-property>
                     <name>setupQueryText</name>
-                    <value>cols = helper.getAllPropertyTypes("audit", true);
+                    <value>import sernet.hui.common.*;
+
+cols = helper.getAllPropertyTypes("audit", true);
 inParameters(new String[] { "root_object" });
 
 newcols = new String[cols.length+4];
 System.arraycopy(cols, 0, newcols, 0, cols.length);
 newcols[newcols.length-4] = "orgName";
+newcols[newcols.length-3] = "totalsecFigure";
+newcols[newcols.length-2] = "chapter";
+newcols[newcols.length-1] = "chapterMaturity";
 columns(newcols);</value>
                 </ex-property>
             </list-property>
@@ -1312,6 +1651,9 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.gs.service.NumericStringComparator;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+						  
 
 /** SamtTopics constants for backward compatibility */
 String SAMT_TOPIC_CONTROLNOTE = "samt_topic_controlnote";
@@ -1407,6 +1749,7 @@ taskList = ServiceFactory.lookupTaskService().getTaskList(param);
 
 
 List tasks = new ArrayList();
+DateFormat formatter = new SimpleDateFormat();
 
 for (ITask task : taskList) {
 
@@ -1415,8 +1758,8 @@ for (ITask task : taskList) {
     
     row.add(task.getAssignee());
     row.add(task.getName());
-    row.add(task.getCreateDate());
-    row.add(task.getDueDate());
+    row.add(formatter.format(task.getCreateDate()));
+    row.add(formatter.format(task.getDueDate()));
     row.add(task.getUuid());
     row.add(task.getGroupTitle());
     row.add(task.getElementTitle());
@@ -1824,7 +2167,7 @@ columns(cols);</value>
     </page-setup>
     <body>
         <table id="3279">
-            <property name="width">11.427083333333334in</property>
+            <property name="width">11.177083333333334in</property>
             <property name="dataSet">Tasks</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -1870,12 +2213,6 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">Description</property>
-                    <text-property name="displayName">Description</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["Description"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
                     <property name="name">ElementType</property>
                     <text-property name="displayName">ElementType</text-property>
                     <expression name="expression" type="javascript">dataSetRow["ElementType"]</expression>
@@ -1894,21 +2231,9 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
-                    <property name="name">ProcessName</property>
-                    <text-property name="displayName">ProcessName</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["ProcessName"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
                     <property name="name">auditUuid</property>
                     <text-property name="displayName">auditUuid</text-property>
                     <expression name="expression" type="javascript">dataSetRow["auditUuid"]</expression>
-                    <property name="dataType">javaObject</property>
-                </structure>
-                <structure>
-                    <property name="name">organization</property>
-                    <text-property name="displayName">organization</text-property>
-                    <expression name="expression" type="javascript">dataSetRow["organization"]</expression>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
@@ -1924,6 +2249,24 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
                 <structure>
+                    <property name="name">Description</property>
+                    <text-property name="displayName">Description</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["Description"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">ProcessName</property>
+                    <text-property name="displayName">ProcessName</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["ProcessName"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
+                    <property name="name">organization</property>
+                    <text-property name="displayName">organization</text-property>
+                    <expression name="expression" type="javascript">dataSetRow["organization"]</expression>
+                    <property name="dataType">javaObject</property>
+                </structure>
+                <structure>
                     <property name="name">MajurityLevel</property>
                     <text-property name="displayName">MajurityLevel</text-property>
                     <expression name="expression" type="javascript">dataSetRow["MajurityLevel"]</expression>
@@ -1936,67 +2279,73 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                 </structure>
             </list-property>
+            <structure name="toc"/>
+            <column id="3389">
+                <property name="width">1in</property>
+                <property name="repeat">1</property>
+            </column>
             <column id="3353">
-                <property name="width">0.9375in</property>
+                <property name="width">0.4270833333333333in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3354">
-                <property name="width">1.3229166666666667in</property>
+                <property name="width">0.9791666666666666in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3356">
-                <property name="width">0.6979166666666666in</property>
+                <property name="width">0.5104166666666666in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3349">
-                <property name="width">1.2395833333333333in</property>
+                <property name="width">0.9270833333333334in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3355">
-                <property name="width">1.3020833333333333in</property>
-                <property name="repeat">1</property>
-            </column>
-            <column id="3359">
-                <property name="width">0.7604166666666666in</property>
+                <property name="width">0.96875in</property>
                 <property name="repeat">1</property>
             </column>
             <column id="3348">
-                <property name="width">1in</property>
+                <property name="width">0.5729166666666666in</property>
             </column>
             <column id="3350">
-                <property name="width">0.78125in</property>
+                <property name="width">0.5833333333333334in</property>
                 <property name="textAlign">center</property>
             </column>
             <column id="3358">
-                <property name="width">0.78125in</property>
+                <property name="width">0.5833333333333334in</property>
                 <property name="textAlign">center</property>
             </column>
             <column id="3351">
-                <property name="width">0.8333333333333334in</property>
-                <property name="repeat">1</property>
-                <property name="textAlign">center</property>
-            </column>
-            <column id="3357">
                 <property name="width">0.625in</property>
                 <property name="repeat">1</property>
                 <property name="textAlign">center</property>
             </column>
+            <column id="3357">
+                <property name="width">0.46875in</property>
+                <property name="repeat">1</property>
+                <property name="textAlign">center</property>
+            </column>
             <column id="3360">
-                <property name="width">1.1458333333333333in</property>
+                <property name="width">0.8541666666666666in</property>
             </column>
             <header>
                 <row id="3280">
-                    <property name="height">100%</property>
+                    <property name="height">0.5520833333333334in</property>
                     <property name="backgroundColor">silver</property>
                     <property name="textAlign">left</property>
+                    <cell id="3387">
+                        <label id="3390">
+                            <text-property name="text">Organisation / Scope</text-property>
+                        </label>
+                    </cell>
                     <cell id="3291">
                         <label id="3292">
-                            <text-property name="text">Audit Titel</text-property>
+                            <text-property name="text">Audit Objekt</text-property>
                         </label>
                     </cell>
                     <cell id="3293">
                         <label id="3294">
-                            <text-property name="text">Objekt  Titel</text-property>
+                            <text-property name="text">Objekt Title</text-property>
                         </label>
                     </cell>
                     <cell id="3297">
@@ -2016,22 +2365,17 @@ columns(cols);</value>
                             <text-property name="text">Beschreibung</text-property>
                         </label>
                     </cell>
-                    <cell id="3303">
-                        <label id="3304">
-                            <text-property name="text">Prozess</text-property>
-                        </label>
-                    </cell>
                     <cell id="3281">
                         <label id="3282">
                             <property name="marginLeft">0pt</property>
                             <property name="marginRight">0pt</property>
-                            <text-property name="text">Beauftragte</text-property>
+                            <text-property name="text">Verantwortlicher</text-property>
                         </label>
                     </cell>
                     <cell id="3285">
                         <label id="3286">
                             <property name="marginRight">0pt</property>
-                            <text-property name="text">Erstellt am</text-property>
+                            <text-property name="text">erstellt</text-property>
                         </label>
                     </cell>
                     <cell id="3301">
@@ -2042,29 +2386,32 @@ columns(cols);</value>
                     <cell id="3287">
                         <label id="3288">
                             <property name="marginLeft">0pt</property>
-                            <text-property name="text">Umsetzung bis</text-property>
+                            <text-property name="text">erledigt</text-property>
                         </label>
                     </cell>
                     <cell id="3299">
                         <label id="3300">
-                            <text-property name="text">Gelesen</text-property>
+                            <text-property name="text">gelesen</text-property>
                         </label>
                     </cell>
                     <cell id="3305">
                         <label id="3306">
-                            <text-property name="text">Audit Uuid</text-property>
+                            <text-property name="text">Objekt Uuid</text-property>
                         </label>
                     </cell>
                 </row>
             </header>
             <detail>
                 <row id="3307">
-                    <property name="height">100%</property>
+                    <property name="height">0.53125in</property>
+                    <cell id="3388">
+                        <data id="3391">
+                            <property name="resultSetColumn">organization</property>
+                        </data>
+                    </cell>
                     <cell id="3318">
-                        <data id="3319">
-                            <property name="marginLeft">0pt</property>
-                            <property name="marginRight">0.5cm</property>
-                            <property name="resultSetColumn">AuditTitle</property>
+                        <data id="3397">
+                            <property name="resultSetColumn">genericAuditTitle</property>
                         </data>
                     </cell>
                     <cell id="3320">
@@ -2115,19 +2462,8 @@ columns(cols);</value>
                         </data>
                     </cell>
                     <cell id="3322">
-                        <text-data id="3361">
-                            <property name="marginLeft">0pt</property>
-                            <property name="marginRight">0pt</property>
-                            <property name="paddingRight">0.5cm</property>
-                            <structure name="toc"/>
-                            <expression name="valueExpr" type="javascript">row["Description"]</expression>
-                            <property name="contentType">html</property>
-                        </text-data>
-                    </cell>
-                    <cell id="3330">
-                        <data id="3331">
-                            <property name="marginRight">0.5cm</property>
-                            <property name="resultSetColumn">ProcessName</property>
+                        <data id="3386">
+                            <property name="resultSetColumn">Description</property>
                         </data>
                     </cell>
                     <cell id="3308">
@@ -2137,52 +2473,15 @@ columns(cols);</value>
                         </data>
                     </cell>
                     <cell id="3312">
-                        <text-data id="3363">
-                            <method name="onRender"><![CDATA[this.text = formatLongDate(row["CreateDate"]);
-
-function tryParseDate(inputDate){
-	importPackage(Packages.java.lang);
-	importPackage(Packages.java.util);
-	importPackage(Packages.java.text);
-	importPackage(Packages.sernet.verinice.report.service.impl);
-	var	patterns = new Array("EEE MMM dd HH:mm:ss z yyyy", "dd.MM.yyyy HH:mm","EEE MMM dd HH:mm:ss zzz yyyy");
-	var locales = new Array(Locale.GERMAN, Locale.ENGLISH);
-	for(var i = 0; i < patterns.length; i++){
-		for(var j = 0; j < locales.length; j++){
-			try{
-				formatter = new SimpleDateFormat(patterns[i], locales[j]);
-				formatter.setLenient(true);
-				return formatter.parse(inputDate);
-			} catch(e){
-				
-			}
-		}
-	}	
-	return null;
-}
-
-function formatLongDate(inputDate){
-	importPackage(Packages.java.lang);
-	importPackage(Packages.java.util);
-	importPackage(Packages.java.text);
-	importPackage(Packages.sernet.verinice.report.service.impl);
-		
-	fDate = tryParseDate(inputDate);
-	if(fDate != null){
-		destinationFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
-		retVal = destinationFormat.format(fDate);
-		sb = new StringBuilder();
-		tokens = retVal.split("\\s");
-		for(var i = 0; i < tokens.length; i++){
-			sb.append(tokens[i]);
-		}
-		return sb.toString().trim();
-	} else {
-		return null;
-}
-}]]></method>
-                            <property name="contentType">html</property>
-                        </text-data>
+                        <data id="3399">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Unformatted</property>
+                            </structure>
+                            <structure name="stringFormat">
+                                <property name="category">Unformatted</property>
+                            </structure>
+                            <property name="resultSetColumn">CreateDate</property>
+                        </data>
                     </cell>
                     <cell id="3328">
                         <data id="3329">
@@ -2201,52 +2500,12 @@ function formatLongDate(inputDate){
                         </data>
                     </cell>
                     <cell id="3314">
-                        <text-data id="3364">
-                            <method name="onRender"><![CDATA[this.text = formatLongDate(row["DueDate"]);
-
-function tryParseDate(inputDate){
-	importPackage(Packages.java.lang);
-	importPackage(Packages.java.util);
-	importPackage(Packages.java.text);
-	importPackage(Packages.sernet.verinice.report.service.impl);
-	var	patterns = new Array("EEE MMM dd HH:mm:ss z yyyy", "dd.MM.yyyy HH:mm","EEE MMM dd HH:mm:ss zzz yyyy");
-	var locales = new Array(Locale.GERMAN, Locale.ENGLISH);
-	for(var i = 0; i < patterns.length; i++){
-		for(var j = 0; j < locales.length; j++){
-			try{
-				formatter = new SimpleDateFormat(patterns[i], locales[j]);
-				formatter.setLenient(true);
-				return formatter.parse(inputDate);
-			} catch(e){
-				
-			}
-		}
-	}	
-	return null;
-}
-
-function formatLongDate(inputDate){
-	importPackage(Packages.java.lang);
-	importPackage(Packages.java.util);
-	importPackage(Packages.java.text);
-	importPackage(Packages.sernet.verinice.report.service.impl);
-		
-	fDate = tryParseDate(inputDate);
-	if(fDate != null){
-		destinationFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.GERMAN);
-		retVal = destinationFormat.format(fDate);
-		sb = new StringBuilder();
-		tokens = retVal.split("\\s");
-		for(var i = 0; i < tokens.length; i++){
-			sb.append(tokens[i]);
-		}
-		return sb.toString().trim();
-	} else {
-		return null;
-}
-}]]></method>
-                            <property name="contentType">html</property>
-                        </text-data>
+                        <data id="3400">
+                            <structure name="dateTimeFormat">
+                                <property name="category">Unformatted</property>
+                            </structure>
+                            <property name="resultSetColumn">DueDate</property>
+                        </data>
                     </cell>
                     <cell id="3326">
                         <data id="3327">
@@ -2255,21 +2514,20 @@ function formatLongDate(inputDate){
                                 <structure>
                                     <expression name="testExpr" type="javascript">row["IsRead"]</expression>
                                     <property name="operator">is-true</property>
-                                    <text-property name="display">gelesen</text-property>
+                                    <text-property name="display">read</text-property>
                                 </structure>
                                 <structure>
                                     <expression name="testExpr" type="javascript">row["IsRead"]</expression>
                                     <property name="operator">is-false</property>
-                                    <text-property name="display">noch nicht gelesen</text-property>
+                                    <text-property name="display">not read</text-property>
                                 </structure>
                             </list-property>
                             <property name="resultSetColumn">IsRead</property>
                         </data>
                     </cell>
                     <cell id="3332">
-                        <data id="3333">
-                            <property name="marginRight">0pt</property>
-                            <property name="resultSetColumn">auditUuid</property>
+                        <data id="3398">
+                            <property name="resultSetColumn">CnaUuid</property>
                         </data>
                     </cell>
                 </row>
