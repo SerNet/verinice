@@ -314,21 +314,21 @@ public class LinkMaker extends Composite implements IRelationTable {
         comboLinkType.setItems(comboModelLinkType.getLabelArray());
         selectComboLinkTypeItem();
     
-        if (comboModelLinkType.size() > 1) {
-            comboLinkType.setEnabled(true);
-        } else {
-            comboLinkType.setEnabled(false);
-        }
+        comboLinkType.setEnabled(comboModelLinkType.size() > 1);
+        buttonAddLink.setEnabled(comboModelLinkType.size() > 0 && writeable && checkRights());
+
     }
 
     private void selectComboLinkTypeItem() {
         String prefStoreKey = LAST_SELECTED_LINK_TYPE_PREF_PREFIX + selectedInComboElementTypeId;
+        comboModelLinkType.setSelectedIndex(0);
         if (prefStore.contains(prefStoreKey)) {
             String relationTypeId = prefStore.getString(prefStoreKey);
             HuiRelation huiRelation = huiTypeFactory.getRelation(relationTypeId);
-            comboModelLinkType.setSelectedObject(huiRelation);
-        } else {
-            comboModelLinkType.setSelectedIndex(0);
+            List<ComboModelObject<HuiRelation>> comboModelObjectList = comboModelLinkType.getComboModelObjectList();
+            if (comboModelObjectList.contains(huiRelation)) {
+                comboModelLinkType.setSelectedObject(huiRelation);
+            }
         }
         comboLinkType.select(comboModelLinkType.getSelectedIndex());
     }
