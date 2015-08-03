@@ -341,14 +341,17 @@ public class GenerateReportDialog extends TitleAreaDialog {
                 selectOutputFile();
             }
         });
+        
+        Label useDateLabel = new Label(groupFile, SWT.NONE);
+        useDateLabel.setText(Messages.GenerateReportDialog_33);
+        useDateLabel.setLayoutData(gridDataLabel);
 
         useDateCheckbox = new Button(groupFile, SWT.CHECK);
-        useDateCheckbox.setText(Messages.GenerateReportDialog_33);
         useDateCheckbox.setSelection(true);
         GridData useDateCheckboxGridData = new GridData();
-        useDateCheckboxGridData.horizontalSpan = 3;
+        useDateCheckboxGridData.horizontalSpan = 2;
         useDateCheckboxGridData.grabExcessHorizontalSpace = true;
-        useDateCheckboxGridData.horizontalAlignment = SWT.RIGHT;
+        useDateCheckboxGridData.horizontalAlignment = SWT.LEFT;
         useDateCheckbox.setLayoutData(useDateCheckboxGridData);
         useDateCheckbox.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -357,13 +360,16 @@ public class GenerateReportDialog extends TitleAreaDialog {
             }
         });
         
+        Label useDefaultFolderLabel = new Label(groupFile, SWT.NONE);
+        useDefaultFolderLabel.setText(Messages.GenerateReportDialog_26);
+        useDefaultFolderLabel.setLayoutData(gridDataLabel);
+        
         useDefaultFolderButton = new Button(groupFile, SWT.CHECK);
-        useDefaultFolderButton.setText(Messages.GenerateReportDialog_26);
         useDefaultFolderButton.setSelection(true);
         GridData useDefaultFolderButtonGridData = new GridData();
-        useDefaultFolderButtonGridData.horizontalSpan = 3;
+        useDefaultFolderButtonGridData.horizontalSpan = 2;
         useDefaultFolderButtonGridData.grabExcessHorizontalSpace = true;
-        useDefaultFolderButtonGridData.horizontalAlignment = SWT.RIGHT;
+        useDefaultFolderButtonGridData.horizontalAlignment = SWT.LEFT;
         useDefaultFolderButton.setLayoutData(useDefaultFolderButtonGridData);
         useDefaultFolderButton.addSelectionListener(new SelectionAdapter() {
             @Override
