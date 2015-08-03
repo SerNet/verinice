@@ -302,21 +302,22 @@ public class LinkMaker extends Composite implements IRelationTable {
 
     private void fillComboLinkType() {
         comboModelLinkType = getComboModelLinkType();
-        Comparator<ComboModelObject<HuiRelation>> huiRelationComparator = getHuiRelationComparator();        
-        
+        Comparator<ComboModelObject<HuiRelation>> huiRelationComparator = getHuiRelationComparator();
+
         String elementTypeInEditor = inputElmt.getEntityType().getId();
         comboModelLinkType.addAll(huiTypeFactory.getPossibleRelations(elementTypeInEditor,
-                            selectedInComboElementTypeId));
-        comboModelLinkType.addAll(huiTypeFactory.getPossibleRelations(selectedInComboElementTypeId,
-                        elementTypeInEditor));
+                        selectedInComboElementTypeId));
+        if (!elementTypeInEditor.equals(selectedInComboElementTypeId)) {
+            comboModelLinkType.addAll(huiTypeFactory.getPossibleRelations(selectedInComboElementTypeId,
+                            elementTypeInEditor));
+        }
         comboModelLinkType.sort(huiRelationComparator);
-               
+
         comboLinkType.setItems(comboModelLinkType.getLabelArray());
         selectComboLinkTypeItem();
-    
+
         comboLinkType.setEnabled(comboModelLinkType.size() > 1);
         buttonAddLink.setEnabled(comboModelLinkType.size() > 0 && writeable && checkRights());
-
     }
 
     private void selectComboLinkTypeItem() {
