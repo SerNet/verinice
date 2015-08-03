@@ -58,8 +58,6 @@ public class FolderPreferencePage extends FieldEditorPreferencePage implements I
             Messages.getString("FolderPreferencePage.2"), fep)); //$NON-NLS-1$
         addField(new DirectoryFieldEditor(PreferenceConstants.DEFAULT_TEMPLATE_FOLDER_REPORT,
             Messages.getString("FolderPreferencePage.3"), fep)); //$NON-NLS-1$
-        addField(new DirectoryFieldEditor(PreferenceConstants.DEFAULT_FOLDER_ADDFILE,
-            Messages.getString("FolderPreferencePage.4"), fep)); //$NON-NLS-1$
     }
     
     @Override

@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -547,15 +548,12 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                 FileDialog fd = new FileDialog(FileView.this.getSite().getShell());
                 fd.setText(Messages.FileView_14);
                 String dir = prefStore.getString(PreferenceConstants.DEFAULT_FOLDER_ADDFILE);
-                if (dir != null && !dir.isEmpty()) {
-                    fd.setFilterPath(dir);
-                } else {
-                    dir = prefStore.getDefaultString(PreferenceConstants.DEFAULT_FOLDER_ADDFILE);
-                    fd.setFilterPath(dir);
-                }     
+                fd.setFilterPath(dir);
                 String selected = fd.open();
-                if (selected != null && selected.length() > 0 && !createAndOpenAttachment(selected)){
-                    return;
+                if (selected != null && selected.length() > 0) {
+                    String path = FilenameUtils.getPath(selected);
+                    prefStore.setValue(PreferenceConstants.DEFAULT_FOLDER_ADDFILE, path);
+                    createAndOpenAttachment(selected);
                 }
             }
         };
@@ -943,10 +941,10 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
         this.setContentDescription(title);
     }
 
-    private boolean createAndOpenAttachment(String selected) {
+    private void createAndOpenAttachment(String selected) {
         File file = new File(selected);
         if (file.isDirectory()){
-            return false;
+            return;
         }
         long size = file.length();
         if(AttachmentFile.convertByteToMB(size) > getMaxFileSizeInMB()) {
@@ -955,7 +953,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
                    getSite().getShell(), 
                    Messages.FileView_10, 
                    NLS.bind(Messages.FileView_11, readableSize, getMaxFileSizeInMB())); 
-           return false;
+           return;
         }
         Attachment attachment = new Attachment();
         attachment.setCnATreeElementId(getCurrentCnaElement().getDbId());
@@ -971,7 +969,6 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             }
         });
         EditorFactory.getInstance().openEditor(attachment);
-        return true;
     }
 
     private int getMaxFileSizeInMB() {
