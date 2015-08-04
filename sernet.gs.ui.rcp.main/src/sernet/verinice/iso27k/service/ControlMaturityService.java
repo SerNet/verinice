@@ -142,10 +142,8 @@ public class ControlMaturityService {
         for (CnATreeElement child : controlGroup.getChildren()) {
             if (child instanceof IControl) {
                 int targetMaturity = getTargetMaturity((IControl) child);
-                if (isNotSpecialMaturityValue(targetMaturity)) {
-                    accumulativeTargetMaturity += targetMaturity;
-                    count += 1;
-                }
+                accumulativeTargetMaturity += targetMaturity;
+                count += 1;
             }
             if (child instanceof ControlGroup) {
                 accumulativeTargetMaturity += getAverageTargetMaturity((ControlGroup) child);
@@ -359,12 +357,17 @@ public class ControlMaturityService {
         Double averageMaturity = getAvgMaturity(controlGroup);
         Double averageTargetMaturity = getAverageTargetMaturity(controlGroup);
         
-        return getDecoratorColor(averageMaturity, averageTargetMaturity);
+        DecoratorColor color = getDecoratorColor(averageMaturity, averageTargetMaturity);
+        
+        return color;
     }
     
     private DecoratorColor getDecoratorColor(double maturity, double targetMaturity) {
-        maturity = Math.round(maturity);
-        targetMaturity = Math.round(targetMaturity);
+        if (maturity == Double.NaN) {
+            maturity = Maturity.NOT_EDITED.getValue();
+        } else {
+            maturity = Math.round(maturity);
+        }
 
         if (maturity == Maturity.NOT_EDITED.getValue()) {
             return DecoratorColor.RED;
