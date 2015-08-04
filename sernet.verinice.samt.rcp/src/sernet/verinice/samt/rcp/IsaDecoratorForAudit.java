@@ -49,7 +49,7 @@ public class IsaDecoratorForAudit extends LabelProvider implements ILightweightL
             command = new TotalSecurityFigureISA2Command(audit.getDbId());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
         } catch (CommandException e) {
-            LOG.error("Error computing security figure for Audit.");
+            LOG.error("Error computing security figure for Audit.", e);
         }
         return command.getResult();
     }
