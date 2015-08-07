@@ -75,14 +75,14 @@ public class CreateMultipleLinks extends GenericCommand {
     
     private void createLink(Link link) {
         try {
-            CnATreeElement dependency = link.getFrom();            
+            CnATreeElement dependency = link.getTo();            
             if(retrieve) {
                 RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
                 ri.setLinksUp(true);      
                 dependency = getDao().findByUuid(dependency.getUuid(), ri);  
             }
             
-            CnATreeElement dependant = link.getTo();
+            CnATreeElement dependant = link.getFrom();
             if(retrieve) {
                 RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
                 ri.setLinksDown(true);  
