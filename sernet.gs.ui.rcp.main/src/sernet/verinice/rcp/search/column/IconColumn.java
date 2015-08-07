@@ -26,6 +26,8 @@ import sernet.verinice.rcp.search.Messages;
  */
 public class IconColumn extends AbstractColumn {
 
+    public static final int DEFAULT_WIDTH = 32;
+
     public IconColumn(ColumnStore columnStore) {
         super(columnStore);
     }

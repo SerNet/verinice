@@ -129,4 +129,20 @@ public class ColumnStore implements IColumnStore {
     public boolean isColumnVisible(IColumn iColumn) {
         return visibleColumns.contains(iColumn);
     }
+
+    /*
+    * @see sernet.verinice.rcp.search.column.IColumnStore#getWidth(sernet.verinice.rcp.search.column.IColumn)
+    */
+    @Override
+    public int getWidth(IColumn iColumn) {
+        return IColumn.DEFAULT_WIDTH;
+    }
+
+    /*
+    * @see sernet.verinice.rcp.search.column.IColumnStore#setWidth(sernet.verinice.rcp.search.column.IColumn, int)
+    */
+    @Override
+    public void setWidth(IColumn column, int width) {
+
+    }
 }

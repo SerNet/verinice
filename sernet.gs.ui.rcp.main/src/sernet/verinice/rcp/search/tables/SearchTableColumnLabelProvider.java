@@ -108,7 +108,7 @@ public class SearchTableColumnLabelProvider extends StyledCellLabelProvider {
     }
 
     private String formatOccurences(VeriniceSearchResultRow row) {
-        return StringUtils.join(row.getOccurence().getColumnNames(), "\n");
+        return StringUtils.join(row.getOccurence().getColumnNamesWithoutTitle(), "\n");
     }
 
     private Image getImage(VeriniceSearchResultRow row) {

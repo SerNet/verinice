@@ -31,6 +31,8 @@ import sernet.verinice.rcp.search.tables.SearchResultsTableViewer;
  */
 public interface IColumn {
 
+    static final int DEFAULT_WIDTH = 200;
+
     /**
      * The id can be used to retrieve an value from
      * {@link VeriniceSearchResultRow#getValueFromResultString(String)}.
@@ -72,4 +74,8 @@ public interface IColumn {
     public boolean isText();
 
     public boolean isDate();
+
+    void setWidth(int width);
+
+    public int getWidth();
 }

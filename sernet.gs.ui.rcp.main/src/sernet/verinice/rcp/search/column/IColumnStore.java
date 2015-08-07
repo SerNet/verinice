@@ -74,4 +74,12 @@ public interface IColumnStore {
      */
     public boolean isColumnVisible(IColumn iColumn);
 
+    public int getWidth(IColumn iColumn);
+
+    /**
+     * @param column
+     * @param width
+     */
+    void setWidth(IColumn column, int width);
+
 }

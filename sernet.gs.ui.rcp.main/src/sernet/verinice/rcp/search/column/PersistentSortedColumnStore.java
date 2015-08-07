@@ -52,6 +52,8 @@ public class PersistentSortedColumnStore extends ColumnStore {
 
     private final static String COLUMNS_PERSISTED = "search_table_columns_preferences_";
 
+    private final static String COLUMN_WIDTH = "search_table_column_width_";
+
     public PersistentSortedColumnStore(String entityTypeId) {
         super();
 
@@ -77,9 +79,15 @@ public class PersistentSortedColumnStore extends ColumnStore {
         addColumn(scopeColumn);
         addColumn(occurenceColumn);
 
+        iconColumn.setWidth(IconColumn.DEFAULT_WIDTH);
+        titleColumn.setWidth(IColumn.DEFAULT_WIDTH);
+        scopeColumn.setWidth(IColumn.DEFAULT_WIDTH);
+        occurenceColumn.setWidth(IColumn.DEFAULT_WIDTH);
+
         int order = 0;
         for (PropertyType propertyType : getAllPropertyTypes()) {
             IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this, order++);
+            preferenceStore.setValue(getPrefixForWidthProperty(col), IColumn.DEFAULT_WIDTH);
             if (isDefaultColumn(col)) {
                 addColumn(col);
             } else {
@@ -123,7 +131,10 @@ public class PersistentSortedColumnStore extends ColumnStore {
     }
 
     private String getPropertyVisibilitySettingIdentifier(IColumn column) {
-        return COLUMN_PREFIX + column.getId();
+        return new StringBuilder()
+            .append(COLUMN_PREFIX)
+            .append(entityTypeId)
+            .append(column.getId()).toString();
     }
 
     public boolean isDefaultColumn(IColumn propertyType) {
@@ -150,8 +161,8 @@ public class PersistentSortedColumnStore extends ColumnStore {
                 propertyTypes.add((PropertyType) obj);
             }
 
-            if (obj instanceof PropertyGroup){
-                for(PropertyType propertyType : ((PropertyGroup) obj).getPropertyTypes()){
+            if (obj instanceof PropertyGroup) {
+                for (PropertyType propertyType : ((PropertyGroup) obj).getPropertyTypes()) {
                     propertyTypes.add(propertyType);
                 }
             }
@@ -169,5 +180,23 @@ public class PersistentSortedColumnStore extends ColumnStore {
     public void setVisible(IColumn column, boolean visible) {
         super.setVisible(column, visible);
         preferenceStore.setValue(getPropertyVisibilitySettingIdentifier(column), visible);
+    }
+
+    @Override
+    public void setWidth(IColumn column, int width) {
+        preferenceStore.setValue(getPrefixForWidthProperty(column), width);
+    }
+
+    private String getPrefixForWidthProperty(IColumn column) {
+        return new StringBuilder()
+            .append(COLUMN_WIDTH)
+            .append(entityTypeId)
+            .append(column.getId())
+            .toString();
+    }
+
+    @Override
+    public int getWidth(IColumn column) {
+        return preferenceStore.getInt(getPrefixForWidthProperty(column));
     }
 }

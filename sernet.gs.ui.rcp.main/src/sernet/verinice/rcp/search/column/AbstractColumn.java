@@ -40,6 +40,16 @@ public abstract class AbstractColumn implements IColumn {
         return columnStore.isColumnVisible(this);
     }
 
+    @Override
+    public int getWidth(){
+        return columnStore.getWidth(this);
+    }
+
+    @Override
+    public void setWidth(int width){
+        columnStore.setWidth(this, width);
+    }
+
     /* (non-Javadoc)
      * @see sernet.verinice.rcp.search.column.IColumn#getTitle()
      */

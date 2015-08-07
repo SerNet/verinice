@@ -27,6 +27,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
@@ -44,9 +46,22 @@ import sernet.verinice.rcp.search.column.IconColumn;
  */
 public class SearchResultsTableViewer extends TableViewer implements IStructuredContentProvider {
 
-    private static final int STANDAR_COLUMN_WITH_200 = 200;
+    private final class ListenerImplementation implements Listener {
 
-    private static final int COLUMN_WIDTH_ICON_32 = 32;
+        private final TableViewerColumn columnViewer;
+        private final IColumn col;
+
+
+        private ListenerImplementation(TableViewerColumn columnViewer, IColumn col) {
+            this.columnViewer = columnViewer;
+            this.col = col;
+        }
+
+        @Override
+        public void handleEvent(Event event) {
+             col.setWidth(columnViewer.getColumn().getWidth());
+        }
+    }
 
     private IColumnStore columnStore;
 
@@ -83,7 +98,7 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
             columnViewer.getColumn().setText(col.getTitle());
             columnViewer.getColumn().setMoveable(false);
             columnViewer.getColumn().setResizable(true);
-            columnViewer.getColumn().setWidth(STANDAR_COLUMN_WITH_200);
+            columnViewer.getColumn().setWidth(col.getWidth());
             columnViewer.getColumn().addSelectionListener(new SelectionAdapter() {
 
                 @Override
@@ -96,10 +111,10 @@ public class SearchResultsTableViewer extends TableViewer implements IStructured
 
             if (col instanceof IconColumn) {
                 columnViewer.getColumn().setText("");
-                columnViewer.getColumn().setWidth(COLUMN_WIDTH_ICON_32);
             }
 
             columnViewer.setLabelProvider(new SearchTableColumnLabelProvider(col));
+            columnViewer.getColumn().addListener(SWT.Resize, new ListenerImplementation(columnViewer, col));
         }
     }
 

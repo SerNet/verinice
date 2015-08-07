@@ -20,12 +20,9 @@ package sernet.verinice.rcp.search;
 
 import java.util.Arrays;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.core.internal.jobs.InternalJob;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -41,6 +38,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -48,11 +47,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -64,7 +68,6 @@ import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.search.tables.SearchTableViewerFactory;
 import sernet.verinice.rcp.search.tables.TableMenuListener;
 
 /**
@@ -138,6 +141,11 @@ public class SearchView extends RightsEnabledView {
             ExceptionUtil.log(e, "Something went wrong here");
         }
     }
+
+    @Override
+    public void setFocus() {
+        queryText.setFocus();
+    };
 
     private void initView(Composite parent) {
         parent.setLayout(new FillLayout());
@@ -319,62 +327,22 @@ public class SearchView extends RightsEnabledView {
         GridData gridLimitData = new GridData(SWT.FILL, SWT.NONE, true, false);
         limitText.setLayoutData(gridLimitData);
         limitText.setText(String.valueOf(VeriniceQuery.DEFAULT_LIMIT));
-
         limitText.addKeyListener(new InputFieldsListener());
-        limitText.addModifyListener(new ModifyListener() {
+        limitText.addListener(SWT.Verify, new Listener() {
 
             @Override
-            public void modifyText(ModifyEvent e) {
-                if (checkLimitFieldConditions(e)) {
-                    ((Text) e.getSource()).setToolTipText("");
-                    ((Text) e.getSource()).setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-                } else {
-                    ((Text) e.getSource()).setToolTipText(Messages.SearchView_14);
-                    ((Text) e.getSource()).setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_RED));
-                }
-            }
-
-            private boolean checkLimitFieldConditions(ModifyEvent e) {
-                try {
-                    int limit = Integer.parseInt(((Text) e.getSource()).getText());
-
-                    if (limit < 0) {
-                        return false;
+            public void handleEvent(Event e) {
+                String string = e.text;
+                char[] chars = new char[string.length()];
+                string.getChars(0, chars.length, chars, 0);
+                for (int i = 0; i < chars.length; i++) {
+                    if (!('0' <= chars[i] && chars[i] <= '9')) {
+                        e.doit = false;
+                        return;
                     }
-                } catch (NumberFormatException nfe) {
-                    return false;
                 }
-
-                return true;
             }
         });
-
-    }
-
-    private boolean validateLimit() {
-        try {
-            int limit = Integer.parseInt(limitText.getText());
-
-            if (limit == 0) {
-                limitText.setText(String.valueOf(VeriniceQuery.MAX_LIMIT));
-            }
-
-            if (limit < 0) {
-                limitInputError();
-                return false;
-            }
-            return true;
-
-        } catch (NumberFormatException nfe) {
-            limitInputError();
-            return false;
-        }
-    }
-
-    private void limitInputError() {
-        limitText.setFocus();
-        limitText.selectAll();
-        MessageDialog.openError(getShell(), Messages.SearchView_12, NLS.bind(Messages.SearchView_13, Messages.SearchView_10));
 
     }
 
@@ -473,11 +441,39 @@ public class SearchView extends RightsEnabledView {
     }
 
     private void search() {
-        if (validateLimit()) {
+        if (doSearch()) {
+            validateAndCorrectLimit();
             VeriniceQuery veriniceQuery = new VeriniceQuery(queryText.getText(), Integer.valueOf(limitText.getText()));
             WorkspaceJob job = new SearchJob(veriniceQuery, this);
             job.schedule();
         }
+    }
+
+    private boolean doSearch() {
+        final int ok = 0;
+        int result = ok;
+
+        if (isQueryEmpty()) {
+            MessageDialog dialog = new MessageDialog(getShell(), Messages.SearchView_15, null, Messages.SearchView_16, MessageDialog.WARNING, new String[] { "OK", "Cancel", }, 0);
+            result = dialog.open();
+        }
+
+        return result == ok;
+    }
+
+    private void validateAndCorrectLimit() {
+        try {
+            int limit = Integer.valueOf(limitText.getText());
+            if (limit <= 0) {
+                limitText.setText(String.valueOf(VeriniceQuery.MAX_LIMIT));
+            }
+        } catch (NumberFormatException e) {
+            limitText.setText(String.valueOf(VeriniceQuery.MAX_LIMIT));
+        }
+    }
+
+    private boolean isQueryEmpty() {
+        return null == queryText.getText() || StringUtils.EMPTY.equals(queryText.getText());
     }
 
     private void reindex() {

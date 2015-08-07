@@ -74,7 +74,7 @@ public class OpenMultipleViewAction extends RightsEnabledAction {
     public void doRun() {
         if (window != null) {
             try {
-                window.getActivePage().showView(viewId, "" + instance++, IWorkbenchPage.VIEW_CREATE); //$NON-NLS-1$
+                window.getActivePage().showView(viewId, "" + instance++, IWorkbenchPage.VIEW_ACTIVATE); //$NON-NLS-1$
             } catch (PartInitException e) {
                 ExceptionUtil.log(e, Messages.OpenMultipleViewAction_2);
             }

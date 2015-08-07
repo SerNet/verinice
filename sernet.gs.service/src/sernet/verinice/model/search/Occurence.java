@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,6 +43,8 @@ import sernet.hui.common.connect.PropertyType;
  */
 @SuppressWarnings("serial")
 public class Occurence implements Serializable {
+
+    public static final String TITLE_COLUMN = "title";
 
     public static final String HTML_OPEN_TAG = "<strong>";
 
@@ -188,5 +191,15 @@ public class Occurence implements Serializable {
         TreeSet<String> treeSet = new TreeSet<String>(new NumericStringComparator());
         treeSet.addAll(propertyId2PropertyName.values());
         return treeSet;
+    }
+
+    /**
+     * Returns a sorted set of human readable and translated column names,
+     * without the title column.
+     */
+    public SortedSet<String> getColumnNamesWithoutTitle() {
+        Map<String, String> props = new TreeMap<String, String>(propertyId2PropertyName);
+        props.remove(TITLE_COLUMN);
+        return new TreeSet<String>(props.values());
     }
 }
