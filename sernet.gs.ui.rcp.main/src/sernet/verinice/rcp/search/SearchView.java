@@ -111,8 +111,6 @@ public class SearchView extends RightsEnabledView {
 
     private Composite parent;
 
-    private SearchTableViewerFactory tableFactory;
-
     private RightsEnabledAction export2CSV;
 
     private Action editMode;
@@ -134,7 +132,6 @@ public class SearchView extends RightsEnabledView {
         try {
             super.createPartControl(parent);
             this.parent = parent;
-            this.tableFactory = new SearchTableViewerFactory();
             initView(parent);
         } catch (Exception e) {
             LOG.error("Error while creating control", e); //$NON-NLS-1$
