@@ -26,7 +26,8 @@
 
 		<property name="name"/>
 		
-		<property name="description"/>
+		<property name="description" type="java.lang.String"
+		        	length="30000"/>
 
 	</class>
 </hibernate-mapping>
