@@ -28,6 +28,8 @@ public class Messages extends NLS {
 
     public static String IndexJob_0;
 
+    public static String SearchComboViewer_2;
+
     public static String SearchView_0;
     public static String SearchView_1;
     public static String SearchView_2;

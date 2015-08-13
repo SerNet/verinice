@@ -60,12 +60,17 @@ public class SearchComboViewer extends ComboViewer implements IStructuredContent
                 return getLabelText(veriniceSearchResult);
             }
 
-            private String getLabelText(VeriniceSearchResultTable veriniceSearchResult) {
-                return new StringBuilder()
-                    .append(veriniceSearchResult.getEntityName())
-                    .append(" (")
-                    .append(veriniceSearchResult.getHits())
-                    .append(")").toString();
+            private String getLabelText(VeriniceSearchResultTable result) {
+                StringBuilder sb = new StringBuilder();
+                    sb.append(result.getEntityName())
+                    .append(" (") //$NON-NLS-1$
+                    .append(result.getHits());
+                    if(result.getHits() >= result.getLimit()) {
+                      sb.append(", ") //$NON-NLS-1$
+                      .append(Messages.SearchComboViewer_2);
+                    };
+                    sb.append(")").toString(); //$NON-NLS-1$
+                    return sb.toString();
             }
         });
 
