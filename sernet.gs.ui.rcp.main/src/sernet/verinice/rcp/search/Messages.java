@@ -33,7 +33,27 @@ public class Messages extends NLS {
     public static String SearchView_0;
     public static String SearchView_1;
     public static String SearchView_2;
+
+    public static String SearchView_20;
+
+    public static String SearchView_22;
+
+    public static String SearchView_23;
+
+    public static String SearchView_25;
+
+    public static String SearchView_27;
+
+    public static String SearchView_28;
+
+    public static String SearchView_29;
     public static String SearchView_3;
+
+    public static String SearchView_30;
+
+    public static String SearchView_31;
+
+    public static String SearchView_32;
     public static String SearchView_4;
     public static String SearchView_5;
     public static String SearchView_6;
@@ -47,6 +67,8 @@ public class Messages extends NLS {
     public static String SearchView_14;
     public static String SearchView_15;
     public static String SearchView_16;
+
+    public static String SearchView_19;
     public static String IconColumn_0;
     public static String TitleColumn_0;
     public static String ScopeColumn_0;

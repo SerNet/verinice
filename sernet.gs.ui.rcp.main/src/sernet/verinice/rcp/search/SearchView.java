@@ -100,7 +100,7 @@ public class SearchView extends RightsEnabledView {
 
     static final Logger LOG = Logger.getLogger(SearchView.class);
 
-    public static final String ID = "sernet.verinice.rcp.search.SearchView";
+    public static final String ID = "sernet.verinice.rcp.search.SearchView"; //$NON-NLS-1$
 
     private Text queryText;
 
@@ -138,7 +138,7 @@ public class SearchView extends RightsEnabledView {
             initView(parent);
         } catch (Exception e) {
             LOG.error("Error while creating control", e); //$NON-NLS-1$
-            ExceptionUtil.log(e, "Something went wrong here");
+            ExceptionUtil.log(e, "Something went wrong here"); //$NON-NLS-1$
         }
     }
 
@@ -164,8 +164,8 @@ public class SearchView extends RightsEnabledView {
                 try {
                     doCsvExport();
                 } catch (Exception e) {
-                    LOG.error("Error during CSV export", e);
-                    MessageDialog.openError(getShell(), "Error", "Error during CSV export: " + e.getMessage());
+                    LOG.error("Error during CSV export", e); //$NON-NLS-1$
+                    MessageDialog.openError(getShell(), Messages.SearchView_19, Messages.SearchView_20 + e.getMessage());
                 }
             }
         };
@@ -181,8 +181,8 @@ public class SearchView extends RightsEnabledView {
                 try {
                     reindex();
                 } catch (Exception e) {
-                    LOG.error("Error while creating search index", e);
-                    MessageDialog.openError(getShell(), "Error", "Error while creating search index: " + e.getMessage());
+                    LOG.error("Error while creating search index", e); //$NON-NLS-1$
+                    MessageDialog.openError(getShell(), Messages.SearchView_22, Messages.SearchView_23 + e.getMessage());
                 }
             }
         };
@@ -425,14 +425,14 @@ public class SearchView extends RightsEnabledView {
             tableComposite.layout();
 
         } catch (Exception ex) {
-            LOG.error("table rendering failed", ex);
-            showError("Table rendering faile", ex.getLocalizedMessage());
+            LOG.error("table rendering failed", ex); //$NON-NLS-1$
+            showError(Messages.SearchView_25, ex.getLocalizedMessage());
             throw new RuntimeException(ex);
         }
     }
 
     private void addTableColumnContextMenu(VeriniceSearchResultTable veriniceSearchResultTable) {
-        MenuManager menuMgr = new MenuManager("#ContextMenu");
+        MenuManager menuMgr = new MenuManager("#ContextMenu"); //$NON-NLS-1$
         Menu menu = menuMgr.createContextMenu(currentViewer.getControl());
         menuMgr.addMenuListener(new TableMenuListener(this, veriniceSearchResultTable));
 
@@ -441,7 +441,7 @@ public class SearchView extends RightsEnabledView {
     }
 
     private void search() {
-        if (doSearch()) {
+        if (isSearchConfirmed()) {
             validateAndCorrectLimit();
             VeriniceQuery veriniceQuery = new VeriniceQuery(queryText.getText(), Integer.valueOf(limitText.getText()));
             WorkspaceJob job = new SearchJob(veriniceQuery, this);
@@ -449,12 +449,19 @@ public class SearchView extends RightsEnabledView {
         }
     }
 
-    private boolean doSearch() {
+    private boolean isSearchConfirmed() {
         final int ok = 0;
         int result = ok;
 
         if (isQueryEmpty()) {
-            MessageDialog dialog = new MessageDialog(getShell(), Messages.SearchView_15, null, Messages.SearchView_16, MessageDialog.WARNING, new String[] { "OK", "Cancel", }, 0);
+            MessageDialog dialog = new MessageDialog(
+                    getShell(), 
+                    Messages.SearchView_29, 
+                    null, 
+                    Messages.SearchView_16, 
+                    MessageDialog.WARNING, 
+                    new String[] { Messages.SearchView_27, Messages.SearchView_28 }, 
+                    0);
             result = dialog.open();
         }
 
@@ -477,9 +484,24 @@ public class SearchView extends RightsEnabledView {
     }
 
     private void reindex() {
-        WorkspaceJob job = new ReIndexJob(reindex);
-        job.schedule();
-        Activator.getDefault().setReindexJob(job);
+        if (isReindexConfirmed()) {
+            WorkspaceJob job = new ReIndexJob(reindex);
+            job.schedule();
+            Activator.getDefault().setReindexJob(job);
+        }
+    }
+    
+    private boolean isReindexConfirmed() {
+        final int ok = 0;
+        MessageDialog dialog = new MessageDialog(
+                getShell(), 
+                Messages.SearchView_29, 
+                null, 
+                Messages.SearchView_30, 
+                MessageDialog.WARNING, 
+                new String[] { Messages.SearchView_27, Messages.SearchView_28 }, 
+                0);
+        return dialog.open() == ok;
     }
 
     public TableViewer getCurrentViewer() {
