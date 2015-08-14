@@ -86,12 +86,15 @@ public class PersistentSortedColumnStore extends ColumnStore {
 
         int order = 0;
         for (PropertyType propertyType : getAllPropertyTypes()) {
-            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this, order++);
-            preferenceStore.setValue(getPrefixForWidthProperty(col), IColumn.DEFAULT_WIDTH);
-            if (isDefaultColumn(col)) {
-                addColumn(col);
-            } else {
-                setVisible(col, false);
+            // reference types are ignored (VN-1204)
+            if(!propertyType.isReference()) {
+                IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this, order++);
+                preferenceStore.setValue(getPrefixForWidthProperty(col), IColumn.DEFAULT_WIDTH);
+                if (isDefaultColumn(col)) {
+                    addColumn(col);
+                } else {
+                    setVisible(col, false);
+                }
             }
         }
 
@@ -112,11 +115,14 @@ public class PersistentSortedColumnStore extends ColumnStore {
 
         int order = 0;
         for (PropertyType propertyType : getAllPropertyTypes()) {
-            IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this, order++);
-            if (isColumnVisible(col)) {
-                addColumn(col);
-            } else {
-                setVisible(col, false);
+            // reference types are ignored (VN-1204)
+            if(!propertyType.isReference()) {
+                IColumn col = IColumnFactory.getPropertyTypeColumn(propertyType, this, order++);
+                if (isColumnVisible(col)) {
+                    addColumn(col);
+                } else {
+                    setVisible(col, false);
+                }
             }
         }
 
