@@ -97,7 +97,7 @@
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.gs.ui.rcp.main.bsi.views.AuditView"
-            icon="icons/24-zoom.png"
+            icon="icons/pruefplan-toolbar.png"
             id="sernet.gs.ui.rcp.main.bsi.views.auditview"
             name="%view.name.5"/>
       <view

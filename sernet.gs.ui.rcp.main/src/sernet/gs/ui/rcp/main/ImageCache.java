@@ -174,7 +174,7 @@ public final class ImageCache {
 	public static final String VIEW_ISMVIEW = "sweetie-verinice/png/16-arrow-branch-bgr.png";
 	public static final String VIEW_DSMODEL = "shield.png";
 	public static final String VIEW_TODO = "24-em-check.png";
-	public static final String VIEW_AUDIT = "24-zoom.png";
+	public static final String VIEW_AUDIT = "pruefplan-toolbar.png";
 	public static final String VIEW_NOTE = "note.png";
     public static final String VIEW_TASK = "tasks.gif";
     public static final String VIEW_VALIDATION = "quickfix_warning_obj.gif";
