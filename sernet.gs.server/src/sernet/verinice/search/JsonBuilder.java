@@ -29,6 +29,7 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 
 import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
@@ -104,6 +105,7 @@ public class JsonBuilder implements IJsonBuilder {
     }
 
     private String doGetJson(CnATreeElement element, String scopeTitle) throws IOException {
+        EntityType entityType = element.getEntityType();
         XContentBuilder builder;
         builder = XContentFactory.jsonBuilder().startObject();      
         builder.field(ISearchService.ES_FIELD_UUID, element.getUuid());
@@ -121,8 +123,8 @@ public class JsonBuilder implements IJsonBuilder {
        
         addPermissions(builder, element);
         
-        if(element.getEntity()!=null && element.getEntityType()!=null && element.getEntityType().getAllPropertyTypeIds()!=null) {
-            builder = addProperties(builder, element.getEntityType().getAllPropertyTypeIds(), element.getEntity());
+        if(element.getEntity()!=null && element.getEntityType()!=null && entityType.getAllPropertyTypeIds()!=null) {
+            builder = addProperties(builder, entityType.getAllPropertyTypeIds(), element.getEntity());
         }
         return builder.endObject().string();
     }
@@ -159,7 +161,7 @@ public class JsonBuilder implements IJsonBuilder {
         HUITypeFactory factory = HUITypeFactory.getInstance();
         for(String propertyTypeId : propertyTypeIds){
             PropertyType propertyType = factory.getPropertyType(e.getEntityType(), propertyTypeId);
-            // reference types are not indexed
+            // reference types are ignored (VN-1204)
             if(!propertyType.isReference()) {
                 builder.field(propertyTypeId, mapPropertyString(e, propertyType));
             }          
