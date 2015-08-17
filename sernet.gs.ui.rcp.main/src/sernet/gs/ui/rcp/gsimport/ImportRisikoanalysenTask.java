@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
 import org.hibernate.Hibernate;
@@ -335,7 +336,11 @@ public class ImportRisikoanalysenTask {
         RisikoMassnahme newRisikoMassnahme = new RisikoMassnahme();
         newRisikoMassnahme.setNumber(risikoMassnahme.getKapitel());
         newRisikoMassnahme.setName(risikoMassnahme.getName());
-        newRisikoMassnahme.setDescription(risikoMassnahme.getDescription());
+        String encoding = System.getProperty("file.encoding");
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Using Encoding:\t" + encoding + "\t for transfering description of riskcontrol");
+        }
+        newRisikoMassnahme.setDescription(new String(IOUtils.toByteArray(massnahmenResult.getMassnahmeTxt().getBeschreibung().getCharacterStream(), encoding)));
 
         String key = createOwnMassnahmeCacheId(newRisikoMassnahme);
         if (!allCreatedOwnMassnahmen.containsKey(key)) {
