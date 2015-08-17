@@ -345,7 +345,7 @@ public class AccessControlEditDialog extends TitleAreaDialog {
         String[] allRoles = getRoles();
         List<String> roles = new ArrayList<String>(allRoles.length);
         for (String role : allRoles) {
-            if (role.contains(filterText)) {
+            if (role.toLowerCase().contains(filterText.toLowerCase())) {
                 roles.add(role);
             }
         }
