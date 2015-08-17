@@ -27,9 +27,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Provides a convenient method for checking, if all tasks were finished which
- * are submitted before a {@link ClosableCompletionService#shutDown()} was
- * executed.
+ * Wraps a Provides a {@link CompletionService} and a {@link ThreadPoolExecutor} 
+ * and provides convenient methods for handling tasks.
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
@@ -38,8 +37,6 @@ final public class TrackableCompletionService<V> implements ClosableCompletionSe
     private final CompletionService<V> completionService;
 
     private final ThreadPoolExecutor threadPoolExecutor;
-
-    private int countTasks = 0;
 
     private TrackableCompletionService() {
         threadPoolExecutor = VeriniceThreadPoolExecutor.newInstance();
@@ -58,7 +55,6 @@ final public class TrackableCompletionService<V> implements ClosableCompletionSe
      */
     @Override
     public Future<V> submit(Callable<V> task) {
-        countTasks++;
         return completionService.submit(task);
     }
 
@@ -68,7 +64,6 @@ final public class TrackableCompletionService<V> implements ClosableCompletionSe
      */
     @Override
     public Future<V> submit(Runnable task, V result) {
-        countTasks++;
         return completionService.submit(task, result);
     }
 
@@ -77,7 +72,6 @@ final public class TrackableCompletionService<V> implements ClosableCompletionSe
      */
     @Override
     public Future<V> take() throws InterruptedException {
-        countTasks--;
         return completionService.take();
     }
 
@@ -86,13 +80,7 @@ final public class TrackableCompletionService<V> implements ClosableCompletionSe
      */
     @Override
     public Future<V> poll() {
-        Future<V> future = completionService.poll();
-        if (future == null) {
-            return null;
-        } else {
-            countTasks--;
-            return future;
-        }
+        return completionService.poll();
     }
 
     /*
@@ -101,13 +89,7 @@ final public class TrackableCompletionService<V> implements ClosableCompletionSe
      */
     @Override
     public Future<V> poll(long timeout, TimeUnit unit) throws InterruptedException {
-        Future<V> future = completionService.poll(timeout, unit);
-        if (future == null) {
-            return null;
-        } else {
-            countTasks--;
-            return future;
-        }
+        return completionService.poll(timeout, unit);
     }
 
     /*
@@ -123,7 +105,7 @@ final public class TrackableCompletionService<V> implements ClosableCompletionSe
      */
     @Override
     public boolean isClosed() {
-        return threadPoolExecutor.isTerminated() && countTasks == 0;
+        return threadPoolExecutor.isTerminated();
     }
 
     public static <V> ClosableCompletionService<V> newInstance() {
