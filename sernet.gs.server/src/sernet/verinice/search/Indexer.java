@@ -120,6 +120,10 @@ public class Indexer {
         for (IndexThread indexThread : indexThreads) {
             completionService.submit(indexThread);
         }
+        
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("All threads created ans submitted to completion service.");
+        }
 
         completionService.shutDown();
         return completionService;
