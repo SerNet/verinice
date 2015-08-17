@@ -17,8 +17,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.gsimport;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
@@ -55,7 +57,9 @@ import sernet.gs.reveng.importData.NotizenMassnahmeResult;
 import sernet.gs.reveng.importData.RAGefaehrdungenResult;
 import sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.service.grundschutzparser.InputUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -381,7 +385,7 @@ public class TransferData {
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         gefaehrdungsUmsetzung.setSimpleProperty("gefaehrdungsumsetzung_id", gefNr);
 
-        gefaehrdungsUmsetzung.setDescription(convertClobToString(ragResult.getGefaehrdungTxt().getBeschreibung()));
+        gefaehrdungsUmsetzung.setDescription(convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
 
         gefaehrdungsUmsetzung.setTitel(ragResult.getGefaehrdungTxt().getName());
         String url = transferUrl(ragResult.getGefaehrdung().getLink());
@@ -493,6 +497,21 @@ public class TransferData {
             throw new RuntimeException(e);
         }
     }
+    
+    public static String convertClobToStringEncodingSave(Clob clob, String encoding) throws IOException{
+        try{
+            Reader reader = clob.getCharacterStream();
+            InputStream in = new ByteArrayInputStream(IOUtils.toByteArray(reader, encoding));
+            if(in!=null) {
+                return InputUtil.streamToString(in, encoding );
+            } else {
+                return "";
+            }
+        } catch (SQLException e){
+            LOG.error("Error while converting clob to String", e);
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Transfer all data from one "massnahme" from gstool to existing
@@ -516,7 +535,7 @@ public class TransferData {
         String massnahmeNr = translateMassnahmenNr(ragmResult);
         mnUms.setSimpleProperty("mnums_id", massnahmeNr);
         mnUms.setName(ragmResult.getMassnahmeTxt().getName());
-        mnUms.setDescription(convertClobToString(ragmResult.getMassnahmeTxt().getBeschreibung()));
+        mnUms.setDescription(convertClobToStringEncodingSave(ragmResult.getMassnahmeTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
         mnUms.setErlaeuterung(ragmResult.getMzbm().getUmsBeschr());
         mnUms.setSimpleProperty(MassnahmenUmsetzung.P_UMSETZUNGBIS, parseDate(ragmResult.getMzbm().getUmsDatBis()));
         mnUms.setSimpleProperty(MassnahmenUmsetzung.P_LETZTEREVISIONAM, parseDate(ragmResult.getMzbm().getRevDat()));
@@ -817,7 +836,7 @@ public class TransferData {
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         ownGefaehrdung.setId(gefNr);
         ownGefaehrdung.setTitel(ragResult.getGefaehrdungTxt().getName());
-        ownGefaehrdung.setBeschreibung(convertClobToString(ragResult.getGefaehrdungTxt().getBeschreibung()));
+        ownGefaehrdung.setBeschreibung(convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
     }
     
     private String parseDate(Date date) {

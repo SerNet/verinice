@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
 import org.hibernate.Hibernate;
@@ -41,6 +40,7 @@ import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.scraper.GSScraper;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzungFactory;
@@ -336,11 +336,8 @@ public class ImportRisikoanalysenTask {
         RisikoMassnahme newRisikoMassnahme = new RisikoMassnahme();
         newRisikoMassnahme.setNumber(risikoMassnahme.getKapitel());
         newRisikoMassnahme.setName(risikoMassnahme.getName());
-        String encoding = System.getProperty("file.encoding");
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Using Encoding:\t" + encoding + "\t for transfering description of riskcontrol");
-        }
-        newRisikoMassnahme.setDescription(new String(IOUtils.toByteArray(massnahmenResult.getMassnahmeTxt().getBeschreibung().getCharacterStream(), encoding)));
+        
+        newRisikoMassnahme.setDescription(TransferData.convertClobToStringEncodingSave(massnahmenResult.getMassnahmeTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
 
         String key = createOwnMassnahmeCacheId(newRisikoMassnahme);
         if (!allCreatedOwnMassnahmen.containsKey(key)) {
