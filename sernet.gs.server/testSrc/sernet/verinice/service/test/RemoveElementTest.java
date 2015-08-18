@@ -160,7 +160,6 @@ public class RemoveElementTest extends CommandServiceProvider {
      * {@link FinishedRiskAnalysisLists} exists. {@link RemoveElement} should be
      * harden against this case.
      */
-    @Ignore
     @Test
     public void removeRiskAnalysis() throws CommandException {
 
@@ -179,7 +178,6 @@ public class RemoveElementTest extends CommandServiceProvider {
      * should be harden against this case.
      * 
      */
-    @Ignore
     @Test
     public void removeRiskAnalysisWithRisikoUmsetzung() throws CommandException {
 
@@ -222,7 +220,6 @@ public class RemoveElementTest extends CommandServiceProvider {
      * they imported from a {@link VeriniceArchive}.
      */
     @Test
-    @Ignore
     public void removeVNAImportedBSIVerbund() throws IOException, CommandException, SyncParameterException {
 
         String path = getClass().getResource(VNA_FILE).getPath();
