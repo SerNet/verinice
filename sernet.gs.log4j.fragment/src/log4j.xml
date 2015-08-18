@@ -13,8 +13,8 @@
 	</appender>
 
 	<!-- The path to the logging file is set at runtime by verinice. If the 
-		logging path is set here, verinice would not override it, except there is 
-		defined a log path in verinice.ini -->
+	logging path is set here, verinice would not override it, except there is 
+	defined a log path in verinice.ini -->
 	<appender name="FILE" class="org.apache.log4j.RollingFileAppender">
 		<param name="Append" value="true" />
 		<param name="MaxFileSize" value="1000KB" />
@@ -35,8 +35,9 @@
 	</logger>
 
 	<!-- Add settings for packages here -->
-	<!-- <logger name="sernet.gs.ui.rcp.main.service"> <level value="DEBUG" 
-		/> </logger> -->
+	<!-- <logger name="sernet.gs.ui.rcp.main.service"> 
+		<level value="DEBUG" /> 
+	</logger> -->
 
 	<!-- Logger for everything else -->
 	<root>

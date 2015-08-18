@@ -57,6 +57,7 @@ public class AssociateGefaehrdungsUmsetzung extends GenericCommand implements IA
         this.authService = service;
     }
 
+	
     /**
      * @param finishedRiskLists
      * @param currentGefaehrdung
@@ -69,6 +70,8 @@ public class AssociateGefaehrdungsUmsetzung extends GenericCommand implements IA
         this.riskAnalysisDbId = riskAnalysisDbId;
         this.language = language;
     }
+
+
 
     /*
      * (non-Javadoc)

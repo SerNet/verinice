@@ -11,7 +11,7 @@
    </description>
 
    <copyright url="http://www.verinice.org/">
-      Copyright 1997 - 2012 SerNet GmbH and others.
+      Copyright 1997 - 2015 SerNet GmbH and others.
    </copyright>
 
    <license url="http://www.gnu.org/licenses/lgpl-3.0-standalone.html">
@@ -226,6 +226,7 @@ Library.
       <import plugin="com.springsource.org.apache.commons.io"/>
       <import plugin="com.springsource.com.mchange.v2.c3p0"/>
       <import plugin="org.springframework.web"/>
+      <import plugin="org.junit4"/>
       <import plugin="com.springsource.net.sf.ehcache"/>
       <import plugin="org.springframework.beans"/>
       <import plugin="org.springframework.security.core"/>
@@ -2677,6 +2678,12 @@ Library.
          unpack="false"/>
 
    <plugin
+         id="org.junit4"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
          id="org.ops4j.pax.web.pax-web-bundle"
          download-size="0"
          install-size="0"
@@ -2803,13 +2810,6 @@ Library.
 
    <plugin
          id="com.springsource.org.junit"
-         download-size="0"
-         install-size="0"
-         version="4.4.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.hamcrest.core"
          download-size="0"
          install-size="0"
          version="0.0.0"
