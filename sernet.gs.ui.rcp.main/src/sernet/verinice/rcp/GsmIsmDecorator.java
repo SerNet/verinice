@@ -38,6 +38,7 @@ import sernet.verinice.model.iso27k.Vulnerability;
  * @author Moritz Reiter <mr[at]sernet[dot]de>
  */
 public class GsmIsmDecorator extends LabelProvider implements ILightweightLabelDecorator {
+    
     private static final String GSM_ISM_LEVEL_LOW = "low";
     private static final String GSM_ISM_LEVEL_MEDIUM = "medium";
     private static final String GSM_ISM_LEVEL_HIGH = "high";
@@ -47,18 +48,11 @@ public class GsmIsmDecorator extends LabelProvider implements ILightweightLabelD
     private static final String IMAGE_PATH_RED = "overlays/dot_red.png";
     private static final String IMAGE_PATH_EMPTY = "overlays/empty.png";
     
-    private CnATreeElement treeElement;
-    private String gsmIsmLevel;
-    private String imagePath;
-    
     @Override
     public void decorate(Object element, IDecoration decoration) {
         Activator.inheritVeriniceContextState();
-        treeElement = (CnATreeElement) element;
-        if (prefEnabled() && isApplicable()) {
-            setGsmIsmLevel();
-            setImagePath();
-            decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(imagePath));
+        if (element instanceof CnATreeElement && prefEnabled() && isApplicable((CnATreeElement) element)) {
+            decoration.addOverlay(ImageCache.getInstance().getImageDescriptor(getImagePath(getGsmIsmLevel((CnATreeElement)element))));
         }
     }    
 
@@ -67,32 +61,30 @@ public class GsmIsmDecorator extends LabelProvider implements ILightweightLabelD
                 .getBoolean(PreferenceConstants.SHOW_GSMISM_DECORATOR);
     }
     
-    private boolean isApplicable() {
-        if (treeElement instanceof IncidentScenario || treeElement instanceof Vulnerability) {
-            return true;
-        }
-        return false;
+    private boolean isApplicable(CnATreeElement treeElement) {
+        return IncidentScenario.TYPE_ID.equals(treeElement.getTypeId()) || Vulnerability.TYPE_ID.equals(treeElement.getTypeId());
     }
     
-    private void setGsmIsmLevel() {
-        if (treeElement instanceof IncidentScenario) {
-            gsmIsmLevel = ((IncidentScenario) treeElement).getEntity()
+    private String getGsmIsmLevel(CnATreeElement treeElement) {
+        if (IncidentScenario.TYPE_ID.equals(treeElement.getTypeId())) {
+            return treeElement.getEntity()
                     .getSimpleValue("gsm_ism_scenario_level").toLowerCase();
-        } else if (treeElement instanceof Vulnerability) {
-            gsmIsmLevel = ((Vulnerability) treeElement).getEntity()
+        } else if (Vulnerability.TYPE_ID.equals(treeElement.getTypeId())) {
+            return treeElement.getEntity()
                     .getSimpleValue("gsm_ism_vulnerability_level").toLowerCase();
         }
+        return "";
     }
     
-    private void setImagePath() {
-        if (gsmIsmLevel.equals(GSM_ISM_LEVEL_LOW)) {
-            imagePath = IMAGE_PATH_BLUE;
-        } else if (gsmIsmLevel.equals(GSM_ISM_LEVEL_MEDIUM)) {
-            imagePath = IMAGE_PATH_YELLOW;
-        } else if (gsmIsmLevel.equals(GSM_ISM_LEVEL_HIGH)) {
-            imagePath = IMAGE_PATH_RED;
+    private String getImagePath(String gsmIsmLvl) {
+        if (GSM_ISM_LEVEL_LOW.equals(gsmIsmLvl)) {
+            return IMAGE_PATH_BLUE;
+        } else if (GSM_ISM_LEVEL_MEDIUM.equals(gsmIsmLvl)) {
+            return IMAGE_PATH_YELLOW;
+        } else if (GSM_ISM_LEVEL_HIGH.equals(gsmIsmLvl)) {
+            return IMAGE_PATH_RED;
         } else {
-            imagePath = IMAGE_PATH_EMPTY;
+            return IMAGE_PATH_EMPTY;
         }
     }
 }
