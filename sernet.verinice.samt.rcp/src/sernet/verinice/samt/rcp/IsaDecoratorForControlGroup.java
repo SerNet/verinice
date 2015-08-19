@@ -13,8 +13,6 @@ import sernet.verinice.model.iso27k.ControlGroup;
 @SuppressWarnings("restriction")
 public class IsaDecoratorForControlGroup extends LabelProvider implements ILightweightLabelDecorator {
 
-//    private static final Logger LOG = Logger.getLogger(IsaDecoratorForControlGroup.class);
-
     @Override
     public void decorate(Object element, IDecoration decoration) {
         boolean prefEnabled = Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.ISA_RESULTS);

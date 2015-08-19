@@ -372,7 +372,7 @@ public class ControlMaturityService {
         if (maturity == Maturity.NOT_EDITED.getValue()) {
             return DecoratorColor.RED;
         } else if (maturity == Maturity.NA.getValue()) {
-            return DecoratorColor.GREEN;
+            return DecoratorColor.NULL;
         } else if (maturity <= targetMaturity - 2) {
             return DecoratorColor.RED;
         } else if (maturity == targetMaturity - 1) {

@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IDecoration;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
@@ -42,6 +43,7 @@ public final class IsaDecoratorUtil {
     
     protected static boolean isAuditGroupDescendant(CnATreeElement element) {
         try {
+            Activator.inheritVeriniceContextState();
             LoadAncestors command = new LoadAncestors(element.getUuid(), new RetrieveInfo());
             command = ServiceFactory.lookupCommandService().executeCommand(command);          
             element = command.getElement();
