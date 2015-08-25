@@ -65,6 +65,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
     private boolean canFinish = false;
     private CnATreeElement cnaElement;
+    
+    private final static Logger LOG = Logger.getLogger(RiskAnalysisWizard.class);
 
 
     /**
@@ -274,13 +276,29 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
             LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(cnaElement, BSIKatalogInvisibleRoot.getInstance().getLanguage());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<GefaehrdungsUmsetzung> associatedGefaehrdungen = command.getAssociatedGefaehrdungen();
+            
             for (GefaehrdungsUmsetzung gefaehrdung : associatedGefaehrdungen) {
-                this.finishedRiskLists.addAssociatedGefahr(gefaehrdung);
+                if(!associatedGefExistant(gefaehrdung)){
+                    this.finishedRiskLists.addAssociatedGefahr(gefaehrdung);
+                }
             }
         } catch (CommandException e) {
             ExceptionUtil.log(e, Messages.RiskAnalysisWizard_5);
         }
-
+    }
+    
+    private boolean associatedGefExistant(GefaehrdungsUmsetzung gums){
+        for(GefaehrdungsUmsetzung existantGef : this.finishedRiskLists.getAssociatedGefaehrdungen()){
+            if(existantGef.getTitle().equals(gums.getTitle())){
+                LOG.warn("Gefaehrdungsumsetzung with Title:\t" + gums.getTitle() + "\talready exists in list, not adding this one");
+                return true;
+            } else if(existantGef.getEntity().getSimpleValue(GefaehrdungsUmsetzung.PROP_TITEL).equals(gums.getEntity().getSimpleValue(GefaehrdungsUmsetzung.PROP_TITEL))){
+                LOG.warn("Gefaehrdungsumsetzung with propertyvalue:\t " +  gums.getTitle() + "\t for property " + GefaehrdungsUmsetzung.PROP_TITEL + " already exists in list, not adding this one");
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     /**
