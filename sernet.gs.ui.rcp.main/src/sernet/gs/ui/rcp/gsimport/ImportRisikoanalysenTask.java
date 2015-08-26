@@ -238,7 +238,9 @@ public class ImportRisikoanalysenTask {
 
             // attach "newGef" to this risk analysis:
             GefaehrdungsUmsetzung gefaehrdungsUmsetzung = addGefaehrdungToRiskAnalysis(gefaehrdungenResult, gefaehrdung);
-           
+            if(gefaehrdungsUmsetzung == null){
+                continue;
+            }
             if(!gefaehrdungsUmsetzung.getOkay()) {
                 gefaehrdungsUmsetzung = setNegativeEstimated(gefaehrdungsUmsetzung);
             }
@@ -262,19 +264,21 @@ public class ImportRisikoanalysenTask {
         // "gefaehrdungsumsetzung":
         Gefaehrdung gefaehrdung = null;
         if (transferData.isUserDefGefaehrdung(gefaehrdungenResult.getGefaehrdung())) {
-            OwnGefaehrdung ownGefaehrdung = new OwnGefaehrdung();
-            transferData.transferOwnGefaehrdung(ownGefaehrdung, gefaehrdungenResult);
-            // avoid doubles, check if gefaehrdung with same name already
-            // created:
-            String cacheId = createOwnGefaehrdungsCacheId(ownGefaehrdung);
-            if (allCreatedOwnGefaehrdungen.containsKey(cacheId)) {
-                // reuse existing owngefaehrdung:
-                gefaehrdung = allCreatedOwnGefaehrdungen.get(cacheId);
-            } else {
-                // create and save new owngefaehrdung:
-                OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
-                allCreatedOwnGefaehrdungen.put(cacheId, ownGefaehrdung);
-                gefaehrdung = ownGefaehrdung;
+            if(false){ // deactivated until VN-319 is fixed (migration for existant db needed
+                OwnGefaehrdung ownGefaehrdung = new OwnGefaehrdung();
+                transferData.transferOwnGefaehrdung(ownGefaehrdung, gefaehrdungenResult);
+                // avoid doubles, check if gefaehrdung with same name already
+                // created:
+                String cacheId = createOwnGefaehrdungsCacheId(ownGefaehrdung);
+                if (allCreatedOwnGefaehrdungen.containsKey(cacheId)) {
+                    // reuse existing owngefaehrdung:
+                    gefaehrdung = allCreatedOwnGefaehrdungen.get(cacheId);
+                } else {
+                    // create and save new owngefaehrdung:
+                    OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
+                    allCreatedOwnGefaehrdungen.put(cacheId, ownGefaehrdung);
+                    gefaehrdung = ownGefaehrdung;
+                }
             }
         } else {
             gefaehrdung = findBsiStandardGefaehrdung(gefaehrdungenResult);
@@ -328,27 +332,30 @@ public class ImportRisikoanalysenTask {
     }
     
     private RisikoMassnahmenUmsetzung importUserMassnahme(CnATreeElement element, RAGefaehrdungsMassnahmenResult massnahmenResult, GefaehrdungsUmsetzung gefaehrdungsUmsetzung) throws SQLException, IOException, CommandException {
-        RisikoMassnahmenUmsetzung risikoMassnahme;
-        risikoMassnahme = new RisikoMassnahmenUmsetzung(element, gefaehrdungsUmsetzung);
-        transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, risikoMassnahme);
-        LOG.debug("Transferred user defined massnahme: " + risikoMassnahme.getTitle());
+        if(false){ // deactivated until VN-319 is fixed (migration for existant db needed
+            RisikoMassnahmenUmsetzung risikoMassnahme;
+            risikoMassnahme = new RisikoMassnahmenUmsetzung(element, gefaehrdungsUmsetzung);
+            transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, risikoMassnahme);
+            LOG.debug("Transferred user defined massnahme: " + risikoMassnahme.getTitle());
 
-        RisikoMassnahme newRisikoMassnahme = new RisikoMassnahme();
-        newRisikoMassnahme.setNumber(risikoMassnahme.getKapitel());
-        newRisikoMassnahme.setName(risikoMassnahme.getName());
-        
-        newRisikoMassnahme.setDescription(TransferData.convertClobToStringEncodingSave(massnahmenResult.getMassnahmeTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
+            RisikoMassnahme newRisikoMassnahme = new RisikoMassnahme();
+            newRisikoMassnahme.setNumber(risikoMassnahme.getKapitel());
+            newRisikoMassnahme.setName(risikoMassnahme.getName());
 
-        String key = createOwnMassnahmeCacheId(newRisikoMassnahme);
-        if (!allCreatedOwnMassnahmen.containsKey(key)) {
-            // create and save new RisikoMassnahme to database of user
-            // defined massnahmen:
-            LOG.debug("Saving new user defined massnahme to database.");
-            RisikoMassnahmeHome.getInstance().save(newRisikoMassnahme);
-            allCreatedOwnMassnahmen.put(key, newRisikoMassnahme);
-        }
-        LOG.debug("Transferred user defined massnahme: " + risikoMassnahme.getTitle());
-        return risikoMassnahme;
+            newRisikoMassnahme.setDescription(TransferData.convertClobToStringEncodingSave(massnahmenResult.getMassnahmeTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
+
+            String key = createOwnMassnahmeCacheId(newRisikoMassnahme);
+            if (!allCreatedOwnMassnahmen.containsKey(key)) {
+                // create and save new RisikoMassnahme to database of user
+                // defined massnahmen:
+                LOG.debug("Saving new user defined massnahme to database.");
+                RisikoMassnahmeHome.getInstance().save(newRisikoMassnahme);
+                allCreatedOwnMassnahmen.put(key, newRisikoMassnahme);
+            }
+            LOG.debug("Transferred user defined massnahme: " + risikoMassnahme.getTitle());
+            return risikoMassnahme;
+        } 
+        return null;
     }
     
     private RisikoMassnahmenUmsetzung importBsiMassnahme(CnATreeElement element, RAGefaehrdungsMassnahmenResult massnahmenResult, GefaehrdungsUmsetzung gefaehrdungsUmsetzung) throws SQLException, IOException {
