@@ -173,7 +173,9 @@ public class ImportRisikoanalysenTask {
         // Now create the risk analysis object and add all gefaehrdungen to it:
         List<RAGefaehrdungenResult> gefaehrdungenForZielobjekt = vampire.findRAGefaehrdungenForZielobjekt(zielobjekt.zielobjekt);
         if (gefaehrdungenForZielobjekt == null || gefaehrdungenForZielobjekt.size() == 0) {
-            LOG.debug("No gefaehrungen found, not creating risk analysis object for " + zielobjekt.zielobjekt.getName());
+            if(LOG.isDebugEnabled()){
+                LOG.debug("No gefaehrungen found, not creating risk analysis object for " + zielobjekt.zielobjekt.getName());
+            }
             return;
         }
 
@@ -211,17 +213,21 @@ public class ImportRisikoanalysenTask {
         List<ESAResult> esaResult = vampire.findESAByZielobjekt(zielobjekt.zielobjekt);
 
         if (esaResult == null || esaResult.size() == 0) {
-            LOG.debug("No ESA found for zielobjekt" + zielobjekt.zielobjekt.getName());
+            LOG.warn("No ESA found for zielobjekt" + zielobjekt.zielobjekt.getName());
             return element;
         }
         if (esaResult.size() > 1) {
-            LOG.debug("Warning: More than one ESA found for zielobjekt" + zielobjekt.zielobjekt.getName() + " Using first one only.");
+            LOG.warn("Warning: More than one ESA found for zielobjekt" + zielobjekt.zielobjekt.getName() + " Using first one only.");
         }
-
-        LOG.debug("ESA found for zielobjekt " + zielobjekt.zielobjekt.getName());
+        
+        if(LOG.isDebugEnabled()){
+            LOG.debug("ESA found for zielobjekt " + zielobjekt.zielobjekt.getName());
+        }
         element = findCnaTreeElementByGstoolGuid(zielobjekt.zielobjekt.getGuid());
         if (element == null) {
-            LOG.debug("No matching CnaTreeElement to migrate ESA for zielobjekt " + zielobjekt.zielobjekt.getName());
+            if(LOG.isDebugEnabled()){
+                LOG.debug("No matching CnaTreeElement to migrate ESA for zielobjekt " + zielobjekt.zielobjekt.getName());
+            }
             return element;
         }
         transferData.transferESA(element, esaResult.get(0));
@@ -248,7 +254,9 @@ public class ImportRisikoanalysenTask {
             // only if "risikobehandlung" is alternative_a there can be
             // "massnahmen" linked to it:
             if (gefaehrdungenResult.getRisikobehandlungABCD() == GSDBConstants.RA_BEHAND_A_REDUKTION) {
-                LOG.debug("Loading massnahmen for gefaehrdung " + gefaehrdungsUmsetzung.getTitle());
+                if(LOG.isDebugEnabled()){
+                    LOG.debug("Loading massnahmen for gefaehrdung " + gefaehrdungsUmsetzung.getTitle());
+                }
                 List<RAGefaehrdungsMassnahmenResult> ragmResults = vampire.findRAGefaehrdungsMassnahmenForZielobjekt(zielobjekt.zielobjekt, gefaehrdungenResult.getGefaehrdung());
                 for (RAGefaehrdungsMassnahmenResult massnahmenResult : ragmResults) {
                     importMassnahme(element, massnahmenResult, gefaehrdungsUmsetzung);
@@ -264,21 +272,19 @@ public class ImportRisikoanalysenTask {
         // "gefaehrdungsumsetzung":
         Gefaehrdung gefaehrdung = null;
         if (transferData.isUserDefGefaehrdung(gefaehrdungenResult.getGefaehrdung())) {
-            if(false){ // deactivated until VN-319 is fixed (migration for existant db needed
-                OwnGefaehrdung ownGefaehrdung = new OwnGefaehrdung();
-                transferData.transferOwnGefaehrdung(ownGefaehrdung, gefaehrdungenResult);
-                // avoid doubles, check if gefaehrdung with same name already
-                // created:
-                String cacheId = createOwnGefaehrdungsCacheId(ownGefaehrdung);
-                if (allCreatedOwnGefaehrdungen.containsKey(cacheId)) {
-                    // reuse existing owngefaehrdung:
-                    gefaehrdung = allCreatedOwnGefaehrdungen.get(cacheId);
-                } else {
-                    // create and save new owngefaehrdung:
-                    OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
-                    allCreatedOwnGefaehrdungen.put(cacheId, ownGefaehrdung);
-                    gefaehrdung = ownGefaehrdung;
-                }
+            OwnGefaehrdung ownGefaehrdung = new OwnGefaehrdung();
+            transferData.transferOwnGefaehrdung(ownGefaehrdung, gefaehrdungenResult);
+            // avoid doubles, check if gefaehrdung with same name already
+            // created:
+            String cacheId = createOwnGefaehrdungsCacheId(ownGefaehrdung);
+            if (allCreatedOwnGefaehrdungen.containsKey(cacheId)) {
+                // reuse existing owngefaehrdung:
+                gefaehrdung = allCreatedOwnGefaehrdungen.get(cacheId);
+            } else {
+                // create and save new owngefaehrdung:
+                OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
+                allCreatedOwnGefaehrdungen.put(cacheId, ownGefaehrdung);
+                gefaehrdung = ownGefaehrdung;
             }
         } else {
             gefaehrdung = findBsiStandardGefaehrdung(gefaehrdungenResult);
@@ -328,41 +334,45 @@ public class ImportRisikoanalysenTask {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             risikoMassnahme = command.getChild();
         }
-        
+
     }
-    
+
     private RisikoMassnahmenUmsetzung importUserMassnahme(CnATreeElement element, RAGefaehrdungsMassnahmenResult massnahmenResult, GefaehrdungsUmsetzung gefaehrdungsUmsetzung) throws SQLException, IOException, CommandException {
-        if(false){ // deactivated until VN-319 is fixed (migration for existant db needed
-            RisikoMassnahmenUmsetzung risikoMassnahme;
-            risikoMassnahme = new RisikoMassnahmenUmsetzung(element, gefaehrdungsUmsetzung);
-            transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, risikoMassnahme);
+        RisikoMassnahmenUmsetzung risikoMassnahme;
+        risikoMassnahme = new RisikoMassnahmenUmsetzung(element, gefaehrdungsUmsetzung);
+        transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, risikoMassnahme);
+        if(LOG.isDebugEnabled()){
             LOG.debug("Transferred user defined massnahme: " + risikoMassnahme.getTitle());
+        }
+        RisikoMassnahme newRisikoMassnahme = new RisikoMassnahme();
+        newRisikoMassnahme.setNumber(risikoMassnahme.getKapitel());
+        newRisikoMassnahme.setName(risikoMassnahme.getName());
 
-            RisikoMassnahme newRisikoMassnahme = new RisikoMassnahme();
-            newRisikoMassnahme.setNumber(risikoMassnahme.getKapitel());
-            newRisikoMassnahme.setName(risikoMassnahme.getName());
+        newRisikoMassnahme.setDescription(TransferData.convertClobToStringEncodingSave(massnahmenResult.getMassnahmeTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
 
-            newRisikoMassnahme.setDescription(TransferData.convertClobToStringEncodingSave(massnahmenResult.getMassnahmeTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
-
-            String key = createOwnMassnahmeCacheId(newRisikoMassnahme);
-            if (!allCreatedOwnMassnahmen.containsKey(key)) {
-                // create and save new RisikoMassnahme to database of user
-                // defined massnahmen:
+        String key = createOwnMassnahmeCacheId(newRisikoMassnahme);
+        if (!allCreatedOwnMassnahmen.containsKey(key)) {
+            // create and save new RisikoMassnahme to database of user
+            // defined massnahmen:
+            if(LOG.isDebugEnabled()){
                 LOG.debug("Saving new user defined massnahme to database.");
-                RisikoMassnahmeHome.getInstance().save(newRisikoMassnahme);
-                allCreatedOwnMassnahmen.put(key, newRisikoMassnahme);
             }
+            RisikoMassnahmeHome.getInstance().save(newRisikoMassnahme);
+            allCreatedOwnMassnahmen.put(key, newRisikoMassnahme);
+        }
+        if(LOG.isDebugEnabled()){
             LOG.debug("Transferred user defined massnahme: " + risikoMassnahme.getTitle());
-            return risikoMassnahme;
-        } 
-        return null;
+        }
+        return risikoMassnahme;
     }
     
     private RisikoMassnahmenUmsetzung importBsiMassnahme(CnATreeElement element, RAGefaehrdungsMassnahmenResult massnahmenResult, GefaehrdungsUmsetzung gefaehrdungsUmsetzung) throws SQLException, IOException {
         RisikoMassnahmenUmsetzung risikoMassnahme;
         MassnahmenUmsetzung newMnUms = new MassnahmenUmsetzung(gefaehrdungsUmsetzung);
         transferData.transferRAGefaehrdungsMassnahmen(massnahmenResult, gefaehrdungsUmsetzung, newMnUms);
-        LOG.debug("Transferred BSI-standard massnahme: " + newMnUms.getTitle());
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Transferred BSI-standard massnahme: " + newMnUms.getTitle());
+        }
         risikoMassnahme = RisikoMassnahmenUmsetzungFactory.buildFromMassnahmenUmsetzung(newMnUms, element, null);
         return risikoMassnahme;
     }
@@ -389,7 +399,9 @@ public class ImportRisikoanalysenTask {
     }
 
     private void loadAllBSIGefaehrdungen() {
-        LOG.debug("Caching all BSI standard Gefaehrdungen from catalog...");
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Caching all BSI standard Gefaehrdungen from catalog...");
+        }
         List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance().getBausteine();
         for (Baustein baustein : bausteine) {
             if (baustein.getGefaehrdungen() == null) {
@@ -425,10 +437,14 @@ public class ImportRisikoanalysenTask {
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         List<CnATreeElement> elementList = command.getElements();
         if (elementList == null || elementList.size() == 0) {
-            LOG.debug("NOT found: CnaTreeElmt with sourceID " + sourceID + " and extID " + guid + "...");
+            if(LOG.isDebugEnabled()){
+                LOG.debug("NOT found: CnaTreeElmt with sourceID " + sourceID + " and extID " + guid + "...");
+            }
             return null;
         }
-        LOG.debug("Found: CnaTreeElmt with sourceID " + sourceID + " and extID " + guid + "...");
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Found: CnaTreeElmt with sourceID " + sourceID + " and extID " + guid + "...");
+        }
         return elementList.get(0);
     }
 

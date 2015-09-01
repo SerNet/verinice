@@ -40,10 +40,11 @@
 			<key column="dbId"/>
 			
 			<property name="ownkategorie"/>
-			
-			<property 
-				name="beschreibung"
-				length="400000"/>
+
+			<!-- Mapped to NCLOB only for Oracle, see Bug 136 -->
+			<property name="beschreibung" type="java.lang.String" length="400000">
+				<column name="BESCHREIBUNG" sql-type="NCLOB"/>
+			</property>	
 			
 		</joined-subclass>
 

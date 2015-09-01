@@ -41,9 +41,7 @@
 			
 			<property name="ownkategorie"/>
 			
-			<property 
-				name="beschreibung"
-				length="400000"/>
+			<property name="beschreibung" type="java.lang.String" length="32672"/>
 			
 		</joined-subclass>
 

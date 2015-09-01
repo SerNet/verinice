@@ -22,11 +22,15 @@
 			unique="true"
 		/>
 		
-		<property name="number"/>
+		<property name="number"
+			column='"number"'/>
 
 		<property name="name"/>
-		
-		<property name="description" type="java.lang.String" length="32672"/>
+
+		<!-- Mapped to NCLOB only for Oracle, see Bug 136 -->
+		<property name="description" type="java.lang.String" length="400000">
+			<column name="DESCRIPTION" sql-type="NCLOB"/>
+		</property>
 
 	</class>
 </hibernate-mapping>
