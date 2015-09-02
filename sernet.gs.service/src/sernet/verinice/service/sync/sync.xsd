@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:data="http://www.sernet.de/sync/data"
+    xmlns:map="http://www.sernet.de/sync/mapping"
+    targetNamespace="http://www.sernet.de/sync/sync"
+    elementFormDefault="qualified">
+
+    <xsd:import
+        namespace="http://www.sernet.de/sync/data"
+        schemaLocation="data.xsd" />
+
+    <xsd:import
+        namespace="http://www.sernet.de/sync/mapping"
+        schemaLocation="mapping.xsd" />
+
+    <xsd:element
+        name="syncRequest">
+        <xsd:complexType>
+            <xsd:sequence>
+
+                <xsd:element
+                    ref="data:syncData"
+                    minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element
+                    ref="map:syncMapping"
+                    minOccurs="1"
+                    maxOccurs="1" />
+
+            </xsd:sequence>
+
+            <xsd:attribute
+                name="sourceId"
+                type="xsd:string"
+                use="required" />
+            <!-- insert new object, if object with (sourceId, extId) does not yet exist? -->
+            <xsd:attribute
+                name="insert"
+                type="xsd:boolean"
+                default="true" />
+            <!-- update object, if object with (sourceId, extId) already exists? -->
+            <xsd:attribute
+                name="update"
+                type="xsd:boolean"
+                default="true" />
+            <!-- delete objects missing in syncData, which have been imported previously from sourceId? -->
+            <xsd:attribute
+                name="delete"
+                type="xsd:boolean"
+                default="false" />
+
+        </xsd:complexType>
+    </xsd:element>
+
+    <xsd:element
+        name="syncResponse">
+        <xsd:complexType>
+            <xsd:sequence>
+
+                <xsd:element
+                    name="replyMessage"
+                    type="xsd:string"
+                    minOccurs="1"
+                    maxOccurs="unbounded" />
+                <xsd:element
+                    name="inserted"
+                    type="xsd:int"
+                    minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element
+                    name="updated"
+                    type="xsd:int"
+                    minOccurs="1"
+                    maxOccurs="1" />
+                <xsd:element
+                    name="deleted"
+                    type="xsd:int"
+                    minOccurs="1"
+                    maxOccurs="1" />
+
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>

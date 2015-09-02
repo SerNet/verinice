@@ -1,0 +1,138 @@
+
+<!-- 
+TODO put this in snca.xml (after moving snca.xml to conf folder on client 
+include entities like this: &configuration;
+ -->
+ 
+ 
+<!DOCTYPE huientities [
+<!ENTITY configuration SYSTEM "snca-includes/configuration.xml">
+]>
+
+
+
+<!-- akoderman configuration entity to save per-user account details -->
+ <huientity
+        name="Configuration"
+        id="configuration">
+
+	 <huiproperty
+            name="Benutzername"
+            id="configuration_benutzername" />
+	 <huiproperty
+            name="Passwort"
+            id="configuration_passwort" />
+            
+	 <huiproperty
+            name="Berechtigungsgruppe"
+            id="configuration_rolle"
+            tooltip="Liste von Berechtigungsgruppen"
+			inputtype="reference" 
+			required="true" 
+			crudButtons="true">
+			<references entitytype="role" />
+     </huiproperty>
+     
+   	<huiproperty 
+				name="Administrator" 
+				id="configuration_isadmin"
+				inputtype="singleoption">
+				<option id="configuration_isadmin_yes" name="Ja"/>
+				<option id="configuration_isadmin_no" name="Nein"/>
+	</huiproperty>
+     
+     <huipropertygroup
+			id="configuration_mailing"
+			name="Mailbenachrichtigung">
+			
+			<huiproperty name="Mailadresse" id="configuration_mailing_email"/>
+			
+			<huiproperty 
+				name="Mailbenachrichtigung aktivieren" 
+				id="configuration_mailing_yesno"
+				inputtype="singleoption">
+				<option id="configuration_mailing_yesno_yes" name="Ja"/>
+				<option id="configuration_mailing_yesno_no" name="Nein"/>
+			</huiproperty>
+
+			<huiproperty 
+				name="Alle Maßnahmen / nur eigene" 
+				id="configuration_mailing_owner"
+				inputtype="singleoption">
+				<option id="configuration_mailing_owner_all" name="Alle"/>
+				<option id="configuration_mailing_owner_self" name="Nur eigene"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Neue zu prüfende Aufgaben" 
+				id="configuration_mailing_assigned"
+				inputtype="singleoption">
+				<option id="configuration_mailing_assigned_yesno_yes" name="An"/>
+				<option id="configuration_mailing_assigned_yesno_no" name="Aus"/>
+			</huiproperty>
+
+			<huiproperty 
+				name="Änderung an Massnahmen" 
+				id="configuration_mailing_measure_modification"
+				inputtype="singleoption">
+				<option id="configuration_mailing_measure_modification_yesno_yes" name="An"/>
+				<option id="configuration_mailing_measure_modification_yesno_no" name="Aus"/>
+			</huiproperty>
+
+			<huiproperty 
+				name="Terminwarnung: an / aus" 
+				id="configuration_mailing_expiring"
+				inputtype="singleoption">
+				<option id="configuration_mailing_expiring_yes" name="An"/>
+				<option id="configuration_mailing_expiring_no" name="Aus"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Terminwarnung: bei Ablauf in X Tagen" 
+				id="configuration_mailing_expiredays">
+				 <defaultRule class="SimpleValue">
+                	<param>14</param>
+                </defaultRule>
+			</huiproperty>
+			
+	</huipropertygroup>
+	
+	  <huipropertygroup
+			id="configuration_auditmailing"
+			name="Mailbenachrichtigung Auditor">
+			
+			<huiproperty 
+				name="Alle Maßnahmen / nur eigene" 
+				id="configuration_auditmailing_owner"
+				inputtype="singleoption">
+				<option id="configuration_auditmailing_owner_all" name="Alle"/>
+				<option id="configuration_auditmailing_owner_self" name="Nur eigene"/>
+			</huiproperty>
+	
+			<huiproperty 
+				name="Neue zu prüfende Aufgaben" 
+				id="configuration_auditmailing_assigned"
+				inputtype="singleoption">
+				<option id="configuration_auditmailing_assigned_yes" name="An"/>
+				<option id="configuration_auditmailing_assigned_no" name="Aus"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Terminwarnung: an / aus" 
+				id="configuration_auditmailing_expiring"
+				inputtype="singleoption">
+				<option id="configuration_auditmailing_expiring_yes" name="An"/>
+				<option id="configuration_auditmailing_expiring_no" name="Aus"/>
+			</huiproperty>
+			
+			<huiproperty 
+				name="Terminwarnung: bei Ablauf in X Tagen" 
+				id="configuration_auditmailing_expiredays">
+				 <defaultRule class="SimpleValue">
+	               	<param>14</param>
+	               </defaultRule>
+			</huiproperty>
+			
+	</huipropertygroup>
+
+</huientity>

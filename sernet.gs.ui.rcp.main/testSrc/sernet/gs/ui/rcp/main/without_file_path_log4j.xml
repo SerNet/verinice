@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+	<appender name="FILE" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="${java.io.tmpdir}/log/verinice-client.log" />
+		<param name="Append" value="true" />
+		<param name="MaxFileSize" value="1000KB" />
+		<param name="MaxBackupIndex" value="20" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Logger for everything else -->
+	<root>
+		<priority value="WARN" />
+		<appender-ref ref="FILE" />
+		<!-- <appender-ref ref="STDOUT" /> -->
+	</root>
+
+</log4j:configuration>

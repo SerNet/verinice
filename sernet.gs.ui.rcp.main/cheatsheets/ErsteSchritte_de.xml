@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<cheatsheet title="IT-Grundschutz: Erste Schritte">
+
+  <intro>
+    <description>
+      <b>Willkommen bei verinice.</b>
+      <br /><br />
+      Dieses Tutorial erleichtert es Ihnen, verinice einzurichten und sich schnell darin zurecht zu
+      finden.
+    </description>
+  </intro>
+
+  <item title="Grundschutz-Kataloge herunterladen">
+    <description>
+      Zunächst müssen sie die aktuelle Version der Grundschutz-Kataloge herunterladen. Diese
+      finden Sie im Download-Bereich der verinice-Website bei der Adresse:
+      <b>www.verinice.org/download</b>
+      <br /><br />
+      Wechseln Sie dort in den Abschnitt "Kataloge und mehr" und laden Sie die folgende Datei herunter:
+      <br /><br />
+      <b>IT-Grundschutz-Kataloge, 14. Ergänzungslieferung (ZIP, ca. 10 MB)</b>
+      <br /><br />
+      Speichern Sie die ZIP-Datei auf ihrer lokalen Festplatte.
+    </description>
+  </item>
+
+  <item title="Einstellungen öffnen">
+    <description>
+      Nun müssen die heruntergeladenen Grundschutz-Kataloge in verinice eingebunden werden.
+      <br /><br />
+      Öffnen Sie die Einstellungen über das Menü <b>Bearbeiten > Einstellungen...</b>
+      und hier die Seite mit dem Namen <b>BSI IT-Grundschutz</b>. Geben Sie den Pfad zur heruntergeladenen
+      ZIP-Datei ein.
+      <br /><br />
+      Übernehmen Sie die Einstellungen mit <b>OK</b>.
+    </description>
+  </item>
+
+  <item title="Kataloge werden geladen">
+    <description>
+      Die Grundschutz-Kataloge werden nun im Hintergrund aus der ZIP-Datei geladen. Sobald der Parser
+      mit seiner Arbeit fertig ist, erscheinen alle Bausteine im View <b>IT-Grundschutz</b>.
+      <br /><br />
+      Wenn Sie nun einen Baustein oder eine Maßnahme anklicken, wird der Inhalt im Objektbrowser
+      angezeigt.
+    </description>
+    <onCompletion>
+      Sehr gut! Wenn Sie weitermachen möchten, finden Sie weitere Tutorials im Hilfemenü. Das hiernach
+      folgende Tutorial trägt den Namen "Strukturanalyse".
+    </onCompletion>
+  </item>
+
+</cheatsheet>

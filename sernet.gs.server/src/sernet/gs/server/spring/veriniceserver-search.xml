@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- verinice Spring configuration file  -->
+<!-- This file is referenced in contextConfigLocation parameter of web.xml -->
+<!-- This is a configuration for the search backend. -->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="directoryCreator" class="sernet.verinice.search.ESServerDirectoryCreator">
+    <property name="indexLocation" value="${veriniceserver.search.index.directory}" />
+  </bean>
+  
+  <bean id="serverIndexer" class="sernet.verinice.search.ServerIndexer" init-method="init">
+    <property name="indexOnStartup" value="${veriniceserver.search.indexingOnStartup}" />
+    <property name="indexer" ref="searchIndexer" />
+  </bean>
+
+  <bean id="asyncIndexer" class="sernet.verinice.search.AsyncIndexer">
+    <property name="scheduler" ref="quartzSchedulerFactoryBean" />
+    <property name="indexJobFactory">
+      <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+        <property name="targetBeanName">
+          <idref local="indexJob" />
+        </property>
+      </bean>
+    </property>
+  </bean>
+
+  <bean id="indexJob" class="org.springframework.scheduling.quartz.JobDetailBean" scope="prototype">
+    <property name="jobClass" value="sernet.verinice.search.IndexJob" />
+    <property name="jobDataAsMap">
+      <map>
+        <entry key="indexer" value-ref="searchIndexer" />
+      </map>
+    </property>
+  </bean>
+
+  <bean id="indexTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+    <property name="jobDetail" ref="indexJob" />
+    <!-- Set time for search reindex job here -->
+    <!-- Every N minutes value="0 */N * * * ?" -->
+    <!-- Every N hours value="0 * */N * * ?" -->
+    <!-- Once a day: value="0 MIN HOUR * * ?" -->
+    <property name="cronExpression" value="0 45 4 * * ?" />
+  </bean>
+
+</beans>

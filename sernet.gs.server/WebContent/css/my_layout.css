@@ -1,0 +1,25 @@
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS framework
+ * (en) central stylesheet
+ * (de) zentrales Stylesheet
+ *
+ * @creator       YAML Builder V1.2 (http://builder.yaml.de)
+ * @file          my_layout.css
+ * @-yaml-minver  3.2
+ * 
+ */
+
+/* import core styles | Basis-Stylesheets einbinden */
+@import url(base.css);
+
+/* import screen layout | Screen-Layout einbinden */
+@import url(basemod.css);
+/* @import url(content.css); */
+
+/* import print layout | Druck-Layout einbinden */
+@import url(print_draft.css);
+
+span.roText p {
+	padding: 3px;
+}

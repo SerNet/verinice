@@ -1,0 +1,1125 @@
+
+File: ./sernet.verinice.samt.service/OSGI-INF/l10n/bundle_de.properties
+  Missing -> Bundle-Name
+  Missing -> Bundle-Vendor
+
+
+
+File: ./SNCA-Upstream-Version/snca-messages_de.properties
+  Empty   -> rel_document_evidence_tooltip
+  Empty   -> person-iso_anrede_none
+  Empty   -> rel_person_process_responsible_tooltip
+  Empty   -> rel_exception_requirement_tooltip
+  Empty   -> rel_person_vulnerability_rep_tooltip
+  Empty   -> rel_person_finding_aud_tooltip
+  Empty   -> rel_asset_controlgroup_tooltip
+  Empty   -> rel_finding_response_tooltip
+  Empty   -> rel_exception_document_tooltip
+  Empty   -> rel_document_org_tooltip
+  Empty   -> rel_org_auditgroup_tooltip
+  Empty   -> rel_bstumsetzung_tooltip
+  Empty   -> rel_person_org_ceo_tooltip
+  Empty   -> rel_audit_control_tooltip
+  Empty   -> rel_person_response_devis_tooltip
+  IN DE HINZUGEFÜGT -> Missing -> person_anrede_none
+  Empty   -> rel_document_threat_tooltip
+  Empty   -> rel_audit_evidence_group_tooltip
+  Empty   -> rel_document_person_author_tooltip
+  Empty   -> rel_asset_person_info_tooltip
+  Empty   -> rel_document_asset_tooltip
+  Empty   -> rel_audit_assetgroup_tooltip
+  Empty   -> rel_asset_person_accou_tooltip
+  Empty   -> rel_control_incscen_tooltip
+  Empty   -> rel_raum_tooltip
+  Empty   -> rel_person_interview_intvwer_tooltip
+  Empty   -> rel_document_person_distributed_tooltip
+  Empty   -> rel_audit_asset_tooltip
+  Empty   -> rel_server_tooltip
+  Empty   -> rel_document_audit_tooltip
+  Empty   -> rel_person_interview_intvwee_tooltip
+  Empty   -> rel_audit_person_leadauditor_tooltip
+  Empty   -> rel_document_response_tooltip
+  Empty   -> rel_document_interview_tooltip
+  Empty   -> rel_person_requirement_responsible_tooltip
+  Empty   -> rel_audit_person_mgmtrep_tooltip
+  Empty   -> rel_audit_person_auditee_tooltip
+  Empty   -> rel_person_control_maint_tooltip
+  Empty   -> rel_control_control_tooltip
+  Empty   -> rel_requirement_asset_tooltip
+  Empty   -> rel_person_control_aud_tooltip
+  Empty   -> rel_finding_control_action_tooltip
+  Empty   -> rel_person_control_mon_tooltip
+  Empty   -> rel_incident_control_tooltip
+  Empty   -> rel_auditgroup_asset_tooltip
+  Empty   -> rel_incscen_asset_tooltip
+  Empty   -> rel_audit_finding_tooltip
+  Empty   -> rel_person_org_cto_tooltip
+  Empty   -> rel_control_person-iso_tooltip
+  Empty   -> rel_org_audit_tooltip
+  Empty   -> rel_finding_control_nc_tooltip
+  Empty   -> rel_person_process_accountable_tooltip
+  Empty   -> rel_person_incscen_modl_tooltip
+  Empty   -> rel_document_incident_scenario_tooltip
+  Empty   -> rel_person_incident_rep_tooltip
+  Empty   -> rel_evidence_finding_tooltip
+  Empty   -> rel_document_vulnerability_tooltip
+  Empty   -> rel_exception_control_tooltip
+  Empty   -> rel_exception_person_approved_tooltip
+  Empty   -> rel_asset_person_consu_tooltip
+  Empty   -> rel_finding_audit_tooltip
+  Empty   -> rel_person_control_imp_tooltip
+  Empty   -> rel_person_record_maint_tooltip
+  Empty   -> rel_person_process_informed_tooltip
+  Empty   -> rel_incident_response_tooltip
+  Empty   -> rel_audit_evidence_tooltip
+  Empty   -> rel_gebaeude_tooltip
+  Empty   -> rel_document_person_reads_tooltip
+  Empty   -> rel_asset_control_tooltip
+  Empty   -> rel_mnums_doc_tooltip
+  Empty   -> rel_audit_person_guide_tooltip
+  Empty   -> rel_requirement_control_tooltip
+  Empty   -> rel_incscen_vulnerability_tooltip
+  Empty   -> rel_document_control_tooltip
+  Empty   -> rel_document_incident_tooltip
+  Empty   -> rel_document_person_owner_tooltip
+  Empty   -> rel_person_evidence_rep_tooltip
+  Empty   -> rel_person_threat_rep_tooltip
+  Empty   -> rel_incident_asset_tooltip
+  Empty   -> rel_audit_person_auditor_tooltip
+  Empty   -> rel_document_finding_tooltip
+  Empty   -> rel_document_exception_tooltip
+  Empty   -> rel_audit_controlgroup_tooltip
+  Empty   -> rel_incscen_threat_tooltip
+  Empty   -> rel_document_requirement_tooltip
+  Empty   -> rel_person_finding_ass_tooltip
+  Empty   -> rel_document_person_approved_tooltip
+  Empty   -> rel_exception_person_requested_tooltip
+  Empty   -> rel_audit_finding_group_tooltip
+  Empty   -> rel_anwendung_tooltip
+  Empty   -> rel_person_org_ciso_tooltip
+  Empty   -> rel_person_process_consulted_tooltip
+  Empty   -> rel_incident_incscen_tooltip
+  GELÖSCHT IN DE -> Unused  -> process_value_method_integrity_manual
+  GELÖSCHT IN DE -> Unused  -> incscen_likelihoodmethod_automatic
+  GELÖSCHT IN DE -> Unused  -> process_value_method_availability_manual
+  GELÖSCHT IN DE -> Unused  -> rel_control_asset_reversename
+  GELÖSCHT IN DE -> Unused  -> process_value_method_availability_auto
+  GELÖSCHT IN DE -> Unused  -> process_value_method_integrity_auto
+  GELÖSCHT IN DE -> Unused  -> org_riskaccept
+  GELÖSCHT IN DE -> Unused  -> control_effectiveness_explanation
+  GELÖSCHT IN DE -> Unused  -> incscen_likelihoodmethod_manual
+  GELÖSCHT IN DE -> Unused  -> threat_level
+  GELÖSCHT IN DE -> Unused  -> rel_control_asset_tooltip
+  GELÖSCHT IN DE -> Unused  -> rel_control_asset_name
+  GELÖSCHT IN DE -> Unused  -> process_value_method_confidentiality_manual
+  GELÖSCHT IN DE -> Unused  -> process_value_method_confidentiality_auto
+  GELÖSCHT IN DE -> Unused  -> control_effectiveness
+  Same    -> incscen_likelypc_7
+  Same    -> raum_name
+  Same    -> raum_tag
+  Same    -> incscen_likelyc_5
+  Same    -> anwendung_name
+  Same    -> incident_group
+  Same    -> sonstit_coms_video
+  Same    -> client_coms_wlan
+  Same    -> person_kuerzel_default
+  Same    -> client_status
+  Same    -> anwendung_tag
+  Same    -> incscen_likelypc_1
+  Same    -> raum_kuerzel_default
+  Same    -> sonstit_coms_wlan
+  Same    -> tkkomponente_verfuegbarkeit_normal
+  Same    -> client_coms_usb
+  Same    -> samt_topic_maturity_na
+  Same    -> server_status
+  Same    -> client_name
+  Same    -> client_verfuegbarkeit_normal
+  Same    -> server_status_reserve
+  Same    -> sonstit_coms_audio
+  Same    -> client_tag
+  Same    -> itverbund_version
+  Same    -> mnums_gsaudit_status
+  Same    -> sonstit_integritaet_normal
+  Same    -> sonstit_status_test
+  Same    -> raum_vertraulichkeit_normal
+  Same    -> sonstit_coms_parallel
+  Same    -> gebaeude_vertraulichkeit_normal
+  Same    -> incscen_likelyc_3
+  Same    -> raum_verfuegbarkeit_normal
+  Same    -> assetgroup
+  Same    -> attachment_approval_na
+  Same    -> incscen_likely_5
+  Same    -> asset_replcost_currency_usd
+  Same    -> netzkomponente_name
+  Same    -> control_tag
+  Same    -> audit_isr_group
+  Same    -> finding
+  Same    -> client_admin_link
+  Same    -> anwendung_status_reserve
+  Same    -> server_vertraulichkeit_normal
+  Same    -> client_status_reserve
+  Same    -> control_isr_information_security_reporting
+  Same    -> samt_topic
+  Same    -> server_tag
+  Same    -> sonstit_status_standby
+  Same    -> client_coms_ieee1394
+  Same    -> server_admin_link
+  Same    -> rel_person_org_cto_reversename
+  Same    -> rel_audit_person_mgmtrep_name
+  Same    -> incscen_likelypc_5
+  Same    -> finding_group
+  Same    -> anwendung_vertraulichkeit_normal
+  Same    -> anwendung_verfuegbarkeit_normal
+  Same    -> org_tag
+  Same    -> process_tag
+  Same    -> asset_type_inf
+  Same    -> requirement_tag
+  Same    -> incident
+  Same    -> auditgroup
+  Same    -> mnums_gsaudit_auditor
+  Same    -> asset_value_integrity_hoch
+  Same    -> controlgroup
+  Same    -> incscen_likely_3
+  Same    -> control
+  Same    -> asset_value_group
+  Same    -> control_isaaudit
+  Same    -> asset_type_service
+  Same    -> document_type_policy
+  Same    -> tkkomponente_integritaet_normal
+  Same    -> control_implemented_na
+  Same    -> control_isr_quantity_of_maturity_0
+  Same    -> person_35
+  Same    -> client_coms_irda
+  Same    -> incident_tag
+  Same    -> control_kosten_currency_yen
+  Same    -> sonstit_coms_blue
+  Same    -> samt_topic_audit_ra_na
+  Same    -> person-iso_35
+  Same    -> client_vertraulichkeit_normal
+  Same    -> tkkomponente_status_reserve
+  Same    -> control_isa_maturity_na
+  Same    -> control_isr_quantity_of_maturity_25
+  Same    -> dv_herkunft_5
+  Same    -> gebaeude_verfuegbarkeit_normal
+  Same    -> person_rollen_tooltip
+  Same    -> control_isr_quantity_of_maturity_50
+  Same    -> server_server_vm_reversename
+  Same    -> tkkomponente_name
+  Same    -> evidence_tag
+  Same    -> person_tag
+  Same    -> mnums_gsaudit_methode_i
+  Same    -> audit_type_1st
+  Same    -> samt_topic_audit_devi_na
+  Same    -> control_implementedgroup
+  Same    -> client_status_standby
+  Same    -> person-iso_email
+  Same    -> asset_type_software
+  Same    -> tkkomponente_kuerzel_default
+  Same    -> gebaeude_name
+  Same    -> document_tag
+  Same    -> sonstit_kuerzel_default
+  Same    -> gebaeude_kuerzel_default
+  Same    -> anwendung_status
+  Same    -> configuration
+  Same    -> incscen_likelyc_7
+  Same    -> process_value_group
+  Same    -> control_isa_audit_ra_na
+  Same    -> samt_topic_tag
+  Same    -> org_riskaccept_integ
+  Same    -> server
+  Same    -> gefaehrdungsumsetzung_id
+  Same    -> anwendung_kuerzel_default
+  Same    -> vulnerability_tag
+  Same    -> incscen_likelypc_2
+  Same    -> audit_tag
+  Same    -> asset_value_availability_hoch
+  Same    -> rel_audit_person_guide_name
+  Same    -> incident_scenario_tag
+  Same    -> sonstit_coms_modem
+  Same    -> configuration_auditmailing_expiredays_default
+  Same    -> server_kuerzel_default
+  Same    -> incscen_likely_4
+  Same    -> sonstit_coms_usb
+  Same    -> incscen_likely_7
+  Same    -> incscen_likelyc_4
+  Same    -> incscen_likelypc_6
+  Same    -> control_isa_audit_devi_na
+  Same    -> bstumsetzung_url
+  Same    -> sonstit_status
+  Same    -> rel_person_org_ceo_reversename
+  Same    -> sonstit_tag
+  Same    -> audit_type_2nd
+  Same    -> nachname
+  Same    -> client_coms_ether
+  Same    -> org_riskaccept_confid
+  Same    -> anwendung_integritaet_normal
+  Same    -> asset_replcost_currency_eur
+  Same    -> tkkomponente_admin_link
+  Same    -> configuration_mailing_expiredays_default
+  Same    -> org_isa_duns
+  Same    -> itverbund_tag
+  Same    -> asset_replcost_currency_bpd
+  Same    -> client_coms_blue
+  Same    -> incscen_likelyc_2
+  Same    -> incscen_likelyc_1
+  Same    -> client
+  Same    -> samt_topicimplemented_na
+  Same    -> client_coms_parallel
+  Same    -> server_verfuegbarkeit_normal
+  Same    -> gefaehrdungsumsetzung_url
+  Same    -> zb_zweck_3
+  Same    -> netzkomponente_kuerzel_default
+  Same    -> tkkomponente_status
+  Same    -> audit_type_3rd
+  Same    -> tkkomponente_tag
+  Same    -> control_isr_quantity_of_maturity_100
+  Same    -> incscen_likelypc_4
+  Same    -> sonstit_name
+  Same    -> sonstit_coms_ieee1394
+  Same    -> response_tag
+  Same    -> mnums_gsaudit_abweichung_0
+  Same    -> incscen_likely_2
+  Same    -> note_text
+  Same    -> person-iso_0
+  Same    -> anwendung_status_test
+  Same    -> asset_replcost_currency_yen
+  Same    -> audit
+  Same    -> mnums_url
+  Same    -> sonstit_status_reserve
+  Same    -> incscen_likelyc_6
+  Same    -> sonstit_coms_ether
+  Same    -> client_coms_modem
+  Same    -> server_integritaet_normal
+  Same    -> org_riskaccept_avail
+  Same    -> rel_person_org_ciso_reversename
+  Same    -> person-iso_36
+  Same    -> client_integritaet_normal
+  Same    -> tkkomponente_status_test
+  Same    -> sonstit_vertraulichkeit_normal
+  Same    -> threat_tag
+  Same    -> person_0
+  Same    -> incscen_likelypc_3
+  Same    -> gebaeude_tag
+  Same    -> server_name
+  Same    -> rel_audit_person_mgmtrep_reversename
+  Same    -> tkkomponente_status_standby
+  Same    -> sonstit_admin_link
+  Same    -> sonstit_verfuegbarkeit_normal
+  Same    -> configuration_isadmin
+  Same    -> sonstit_coms_irda
+  Same    -> record_tag
+  Same    -> person_email
+  Same    -> person-iso
+  Same    -> raum_integritaet_normal
+  Same    -> control_kosten_currency_usd
+  Same    -> process_value_integrity_hoch
+  Same    -> bstumsetzung_encoding
+  Same    -> samt_topic_audit
+  Same    -> control_isr_quantity_of_maturity_75
+  Same    -> incscen_likely_1
+  Same    -> tkkomponente_vertraulichkeit_normal
+  Same    -> asset
+  Same    -> server_status_test
+  Same    -> netzkomponente_tag
+  Same    -> interview_tag
+  Same    -> control_revisiongroup
+  Same    -> attachment
+  Same    -> asset_tag
+  Same    -> mnums_group_revision
+  Same    -> rel_audit_person_guide_reversename
+  Same    -> client_status_test
+  Same    -> exception_tag
+  Same    -> server_status_standby
+  Same    -> person_36
+  Same    -> attachment_version
+  Same    -> gebaeude_integritaet_normal
+  Same    -> finding_tag
+  Same    -> control_kosten_currency_bpd
+  Same    -> client_kuerzel_default
+  Same    -> client_coms_audio
+  Same    -> itverbund_name
+  Same    -> incscen_likely_6
+  Same    -> pg_betroffene_9
+  Same    -> client_coms_video
+  Same    -> control_kosten_currency_eur
+  Same    -> person-iso_tag
+
+File: ./sernet.gs.server/src/sernet/gs/server/mailmessages_de.properties
+  Same    -> MailJob_4
+  Same    -> MailJob_5
+
+File: ./sernet.gs.server/WebContent/WEB-INF/snca-messages_de.properties
+  Empty   -> rel_document_evidence_tooltip
+  Empty   -> person-iso_anrede_none
+  Empty   -> rel_person_process_responsible_tooltip
+  Empty   -> rel_exception_requirement_tooltip
+  Empty   -> rel_person_vulnerability_rep_tooltip
+  Empty   -> rel_person_finding_aud_tooltip
+  Empty   -> rel_asset_controlgroup_tooltip
+  Empty   -> rel_finding_response_tooltip
+  Empty   -> rel_exception_document_tooltip
+  Empty   -> rel_document_org_tooltip
+  Empty   -> rel_org_auditgroup_tooltip
+  Empty   -> rel_bstumsetzung_tooltip
+  Empty   -> rel_person_org_ceo_tooltip
+  Empty   -> rel_audit_control_tooltip
+  Empty   -> rel_person_response_devis_tooltip
+  HINZUGEFÜGT IN DE ->Missing -> person_anrede_none
+  Empty   -> rel_document_threat_tooltip
+  Empty   -> rel_audit_evidence_group_tooltip
+  Empty   -> rel_document_person_author_tooltip
+  Empty   -> rel_interview_evidence_relevant_tooltip
+  Empty   -> rel_asset_person_info_tooltip
+  Empty   -> rel_document_samt_topic_documented_tooltip
+  Empty   -> rel_document_asset_tooltip
+  Empty   -> rel_audit_assetgroup_tooltip
+  Empty   -> rel_asset_person_accou_tooltip
+  Empty   -> rel_control_incscen_tooltip
+  Empty   -> rel_raum_tooltip
+  Empty   -> rel_person_interview_intvwer_tooltip
+  Empty   -> rel_document_person_distributed_tooltip
+  Empty   -> rel_audit_asset_tooltip
+  Empty   -> rel_server_tooltip
+  Empty   -> rel_document_audit_tooltip
+  Empty   -> rel_document_process_documented_tooltip
+  Empty   -> rel_person_interview_intvwee_tooltip
+  Empty   -> rel_audit_person_leadauditor_tooltip
+  Empty   -> rel_document_response_tooltip
+  Empty   -> rel_document_interview_tooltip
+  Empty   -> rel_person_requirement_responsible_tooltip
+  Empty   -> rel_audit_person_mgmtrep_tooltip
+  Empty   -> rel_audit_person_auditee_tooltip
+  Empty   -> rel_person_control_maint_tooltip
+  Empty   -> rel_control_control_tooltip
+  Empty   -> rel_requirement_asset_tooltip
+  Empty   -> rel_person_control_aud_tooltip
+  Empty   -> rel_finding_control_action_tooltip
+  Empty   -> rel_person_control_mon_tooltip
+  Empty   -> rel_incident_control_tooltip
+  Empty   -> rel_auditgroup_asset_tooltip
+  Empty   -> rel_incscen_asset_tooltip
+  Empty   -> rel_audit_finding_tooltip
+  Empty   -> rel_person_org_cto_tooltip
+  Empty   -> rel_control_person-iso_tooltip
+  Empty   -> rel_org_audit_tooltip
+  Empty   -> rel_finding_control_nc_tooltip
+  Empty   -> rel_exception_samt_topic_exception_of_tooltip
+  Empty   -> rel_person_process_accountable_tooltip
+  Empty   -> rel_person_samt_topic_monitors_tooltip
+  Empty   -> rel_person_incscen_modl_tooltip
+  Empty   -> rel_document_incident_scenario_tooltip
+  Empty   -> rel_requirement_samt_topic_fullfilled_tooltip
+  Empty   -> rel_person_incident_rep_tooltip
+  Empty   -> rel_person_samt_topic_interviewed_tooltip
+  Empty   -> rel_evidence_finding_tooltip
+  Empty   -> rel_document_vulnerability_tooltip
+  Empty   -> rel_exception_control_tooltip
+  Empty   -> rel_interview_finding_notice_tooltip
+  Empty   -> rel_exception_person_approved_tooltip
+  Empty   -> rel_asset_person_consu_tooltip
+  Empty   -> rel_finding_audit_tooltip
+  Empty   -> rel_person_control_imp_tooltip
+  Empty   -> rel_person_record_maint_tooltip
+  Empty   -> rel_person_process_informed_tooltip
+  Empty   -> rel_incident_response_tooltip
+  Empty   -> rel_person_samt_topic_assignee_tooltip
+  Empty   -> rel_audit_evidence_tooltip
+  Empty   -> rel_gebaeude_tooltip
+  Empty   -> rel_document_person_reads_tooltip
+  Empty   -> rel_person_samt_topic_maintains_tooltip
+  Empty   -> rel_asset_control_tooltip
+  Empty   -> rel_person_samt_topic_implements_tooltip
+  Empty   -> rel_mnums_doc_tooltip
+  Empty   -> rel_audit_person_guide_tooltip
+  Empty   -> rel_requirement_control_tooltip
+  Empty   -> rel_incscen_vulnerability_tooltip
+  Empty   -> rel_document_control_tooltip
+  Empty   -> rel_mnums_mnums_tooltip
+  Empty   -> rel_document_incident_tooltip
+  Empty   -> rel_document_person_owner_tooltip
+  Empty   -> rel_person_evidence_rep_tooltip
+  Empty   -> rel_person_threat_rep_tooltip
+  Empty   -> rel_incident_asset_tooltip
+  Empty   -> rel_audit_person_auditor_tooltip
+  Empty   -> rel_incident_samt_topic_prevented_tooltip
+  Empty   -> rel_document_finding_tooltip
+  Empty   -> rel_incscen_samt_topic_reduce_tooltip
+  Empty   -> rel_person_samt_topic_audits_tooltip
+  Empty   -> rel_document_exception_tooltip
+  Empty   -> rel_audit_controlgroup_tooltip
+  Empty   -> rel_incscen_threat_tooltip
+  Empty   -> rel_document_requirement_tooltip
+  Empty   -> rel_person_finding_ass_tooltip
+  Empty   -> rel_document_person_approved_tooltip
+  Empty   -> rel_exception_person_requested_tooltip
+  Empty   -> rel_audit_finding_group_tooltip
+  Empty   -> rel_anwendung_tooltip
+  Empty   -> rel_person_org_ciso_tooltip
+  Empty   -> rel_person_process_consulted_tooltip
+  Empty   -> rel_incident_incscen_tooltip
+  GELÖSCHT IN DE -> Unused -> process_value_method_integrity_manual
+  GELÖSCHT IN DE -> Unused  -> incscen_likelihoodmethod_automatic
+  GELÖSCHT IN DE -> Unused  -> process_value_method_availability_manual
+  GELÖSCHT IN DE -> Unused  -> rel_control_asset_reversename
+  GELÖSCHT IN DE -> Unused  -> process_value_method_availability_auto
+  GELÖSCHT IN DE -> Unused  -> process_value_method_integrity_auto
+  GELÖSCHT IN DE -> Unused  -> org_riskaccept
+  GELÖSCHT IN DE -> Unused  -> control_effectiveness_explanation
+  GELÖSCHT IN DE -> Unused  -> incscen_likelihoodmethod_manual
+  GELÖSCHT IN DE -> Unused  -> threat_level
+  GELÖSCHT IN DE -> Unused  -> rel_control_asset_tooltip
+  GELÖSCHT IN DE -> Unused  -> rel_control_asset_name
+  GELÖSCHT IN DE -> Unused  -> process_value_method_confidentiality_manual
+  GELÖSCHT IN DE -> Unused  -> process_value_method_confidentiality_auto
+  GELÖSCHT IN DE -> Unused  -> control_effectiveness
+  Same    -> incscen_likelypc_7
+  Same    -> raum_name
+  Same    -> raum_tag
+  Same    -> incscen_likelyc_5
+  Same    -> anwendung_name
+  Same    -> incident_group
+  Same    -> sonstit_coms_video
+  Same    -> client_coms_wlan
+  Same    -> person_kuerzel_default
+  Same    -> client_status
+  Same    -> gsm_cpuinfo
+  Same    -> anwendung_tag
+  Same    -> incscen_likelypc_1
+  Same    -> raum_kuerzel_default
+  Same    -> gsm_asset_group
+  Same    -> sonstit_coms_wlan
+  Same    -> tkkomponente_verfuegbarkeit_normal
+  Same    -> client_coms_usb
+  Same    -> samt_topic_maturity_na
+  Same    -> server_status
+  Same    -> interview_audit_action_type_interview
+  Same    -> client_name
+  Same    -> client_verfuegbarkeit_normal
+  Same    -> server_status_reserve
+  Same    -> sonstit_coms_audio
+  Same    -> client_tag
+  Same    -> itverbund_version
+  Same    -> mnums_gsaudit_status
+  Same    -> sonstit_integritaet_normal
+  Same    -> sonstit_status_test
+  Same    -> raum_vertraulichkeit_normal
+  Same    -> sonstit_coms_parallel
+  Same    -> gebaeude_vertraulichkeit_normal
+  Same    -> incscen_likelyc_3
+  Same    -> raum_verfuegbarkeit_normal
+  Same    -> gsm_ism_control_tag
+  Same    -> assetgroup
+  Same    -> attachment_approval_na
+  Same    -> incscen_likely_5
+  Same    -> asset_replcost_currency_usd
+  Same    -> netzkomponente_name
+  Same    -> control_tag
+  Same    -> audit_isr_group
+  Same    -> finding
+  Same    -> client_admin_link
+  Same    -> anwendung_status_reserve
+  Same    -> server_vertraulichkeit_normal
+  Same    -> client_status_reserve
+  Same    -> control_isr_information_security_reporting
+  Same    -> samt_topic
+  Same    -> server_tag
+  Same    -> sonstit_status_standby
+  Same    -> client_coms_ieee1394
+  Same    -> server_admin_link
+  Same    -> rel_samt_topic_interview_name
+  Same    -> rel_person_org_cto_reversename
+  Same    -> rel_audit_person_mgmtrep_name
+  Same    -> incscen_likelypc_5
+  Same    -> finding_group
+  Same    -> anwendung_vertraulichkeit_normal
+  Same    -> anwendung_verfuegbarkeit_normal
+  Same    -> gsm_ism_control_cpe
+  Same    -> org_tag
+  Same    -> process_tag
+  Same    -> asset_type_inf
+  Same    -> requirement_tag
+  Same    -> incident
+  Same    -> auditgroup
+  Same    -> gsm_ism_scenario_level
+  Same    -> mnums_gsaudit_auditor
+  Same    -> asset_value_integrity_hoch
+  Same    -> controlgroup
+  Same    -> incscen_likely_3
+  Same    -> control
+  Same    -> asset_value_group
+  Same    -> control_isaaudit
+  Same    -> asset_type_service
+  Same    -> document_type_policy
+  Same    -> tkkomponente_integritaet_normal
+  Same    -> control_implemented_na
+  Same    -> control_isr_quantity_of_maturity_0
+  Same    -> person_35
+  Same    -> client_coms_irda
+  Same    -> incident_tag
+  Same    -> control_kosten_currency_yen
+  Same    -> sonstit_coms_blue
+  Same    -> person-iso_35
+  Same    -> client_vertraulichkeit_normal
+  Same    -> tkkomponente_status_reserve
+  Same    -> control_isa_maturity_na
+  Same    -> control_isr_quantity_of_maturity_25
+  Same    -> dv_herkunft_5
+  Same    -> gebaeude_verfuegbarkeit_normal
+  Same    -> person_rollen_tooltip
+  Same    -> control_isr_quantity_of_maturity_50
+  Same    -> server_server_vm_reversename
+  Same    -> tkkomponente_name
+  Same    -> evidence_tag
+  Same    -> person_tag
+  Same    -> mnums_gsaudit_methode_i
+  Same    -> gsm_vuln_group
+  Same    -> audit_type_1st
+  Same    -> samt_topic_audit_devi_na
+  Same    -> control_implementedgroup
+  Same    -> client_status_standby
+  Same    -> person-iso_email
+  Same    -> asset_type_software
+  Same    -> tkkomponente_kuerzel_default
+  Same    -> gebaeude_name
+  Same    -> document_tag
+  Same    -> sonstit_kuerzel_default
+  Same    -> gebaeude_kuerzel_default
+  Same    -> anwendung_status
+  Same    -> configuration
+  Same    -> incscen_likelyc_7
+  Same    -> process_value_group
+  Same    -> control_isa_audit_ra_na
+  Same    -> samt_topic_tag
+  Same    -> org_riskaccept_integ
+  Same    -> gsm_control_group
+  Same    -> server
+  Same    -> gefaehrdungsumsetzung_id
+  Same    -> anwendung_kuerzel_default
+  Same    -> gsm_asset_tag
+  Same    -> vulnerability_tag
+  Same    -> incscen_likelypc_2
+  Same    -> audit_tag
+  Same    -> asset_value_availability_hoch
+  Same    -> rel_audit_person_guide_name
+  Same    -> gsm_ism_scenario_cve
+  Same    -> incident_scenario_tag
+  Same    -> gsm_traceroute
+  Same    -> sonstit_coms_modem
+  Same    -> gsm_incscen_group
+  Same    -> configuration_auditmailing_expiredays_default
+  Same    -> server_kuerzel_default
+  Same    -> incscen_likely_4
+  Same    -> sonstit_coms_usb
+  Same    -> incscen_likely_7
+  Same    -> gsm_ism_vulnerability_level
+  Same    -> incscen_likelyc_4
+  Same    -> incscen_likelypc_6
+  Same    -> control_isa_audit_devi_na
+  Same    -> bstumsetzung_url
+  Same    -> sonstit_status
+  Same    -> rel_person_org_ceo_reversename
+  Same    -> sonstit_tag
+  Same    -> audit_type_2nd
+  Same    -> control_feedback
+  Same    -> nachname
+  Same    -> control_feedback_note
+  Same    -> client_coms_ether
+  Same    -> org_riskaccept_confid
+  Same    -> anwendung_integritaet_normal
+  Same    -> asset_replcost_currency_eur
+  Same    -> tkkomponente_admin_link
+  Same    -> configuration_mailing_expiredays_default
+  Same    -> org_isa_duns
+  Same    -> itverbund_tag
+  Same    -> asset_replcost_currency_bpd
+  Same    -> client_coms_blue
+  Same    -> incscen_likelyc_2
+  Same    -> incscen_likelyc_1
+  Same    -> client
+  Same    -> samt_topicimplemented_na
+  Same    -> client_coms_parallel
+  Same    -> server_verfuegbarkeit_normal
+  Same    -> gefaehrdungsumsetzung_url
+  Same    -> zb_zweck_3
+  Same    -> netzkomponente_kuerzel_default
+  Same    -> tkkomponente_status
+  Same    -> audit_type_3rd
+  Same    -> tkkomponente_tag
+  Same    -> control_isr_quantity_of_maturity_100
+  Same    -> incscen_likelypc_4
+  Same    -> sonstit_name
+  Same    -> rel_samt_topic_interview_reversename
+  Same    -> sonstit_coms_ieee1394
+  Same    -> response_tag
+  Same    -> mnums_gsaudit_abweichung_0
+  Same    -> incscen_likely_2
+  Same    -> note_text
+  Same    -> person-iso_0
+  Same    -> anwendung_status_test
+  Same    -> asset_replcost_currency_yen
+  Same    -> audit
+  Same    -> mnums_url
+  Same    -> sonstit_status_reserve
+  Same    -> incscen_likelyc_6
+  Same    -> gsm_hostname
+  Same    -> sonstit_coms_ether
+  Same    -> client_coms_modem
+  Same    -> server_integritaet_normal
+  Same    -> org_riskaccept_avail
+  Same    -> rel_person_org_ciso_reversename
+  Same    -> person-iso_36
+  Same    -> client_integritaet_normal
+  Same    -> tkkomponente_status_test
+  Same    -> sonstit_vertraulichkeit_normal
+  Same    -> threat_tag
+  Same    -> person_0
+  Same    -> incscen_likelypc_3
+  Same    -> gebaeude_tag
+  Same    -> server_name
+  Same    -> rel_audit_person_mgmtrep_reversename
+  Same    -> tkkomponente_status_standby
+  Same    -> sonstit_admin_link
+  Same    -> sonstit_verfuegbarkeit_normal
+  Same    -> configuration_isadmin
+  Same    -> sonstit_coms_irda
+  Same    -> record_tag
+  Same    -> person_email
+  Same    -> person-iso
+  Same    -> raum_integritaet_normal
+  Same    -> control_kosten_currency_usd
+  Same    -> process_value_integrity_hoch
+  Same    -> bstumsetzung_encoding
+  Same    -> samt_topic_audit
+  Same    -> control_isr_quantity_of_maturity_75
+  Same    -> incscen_likely_1
+  Same    -> tkkomponente_vertraulichkeit_normal
+  Same    -> asset
+  Same    -> server_status_test
+  Same    -> netzkomponente_tag
+  Same    -> interview_tag
+  Same    -> control_revisiongroup
+  Same    -> attachment
+  Same    -> asset_tag
+  Same    -> mnums_group_revision
+  Same    -> rel_audit_person_guide_reversename
+  Same    -> client_status_test
+  Same    -> exception_tag
+  Same    -> server_status_standby
+  Same    -> person_36
+  Same    -> gsm_ism_vulnerability_cve
+  Same    -> attachment_version
+  Same    -> gebaeude_integritaet_normal
+  Same    -> finding_tag
+  Same    -> control_kosten_currency_bpd
+  Same    -> client_kuerzel_default
+  Same    -> client_coms_audio
+  Same    -> itverbund_name
+  Same    -> incscen_likely_6
+  Same    -> pg_betroffene_9
+  Same    -> client_coms_video
+  Same    -> control_kosten_currency_eur
+  Same    -> person-iso_tag
+
+File: ./sernet.gs.server/bin/sernet/gs/server/mailmessages_de.properties
+  Same    -> MailJob_4
+  Same    -> MailJob_5
+
+File: ./sernet.verinice.oda.driver/plugin_de.properties
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> data.source.name
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> oda.data.source.id
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> connection.profile.name
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> data.set.name
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> plugin.name
+  Same    -> page.name
+
+File: ./sernet.verinice.oda.driver/src/sernet/verinice/oda/driver/preferences/messages_de.properties
+  Same    -> ReportLogLevel.3
+  Same    -> ReportLogLevel.0
+
+File: ./sernet.verinice.oda.driver/bin/sernet/verinice/oda/driver/preferences/messages_de.properties
+  Same    -> ReportLogLevel.3
+  Same    -> ReportLogLevel.0
+
+
+
+
+
+File: ./sernet.hui.swtclient/src/sernet/hui/swt/widgets/messages_de.properties
+  Same    -> LabelValidationHint
+
+File: ./sernet.hui.swtclient/bin/sernet/hui/swt/widgets/messages_de.properties
+  Same    -> LabelValidationHint
+
+File: ./sernet.gs.ui.rcp.main/plugin_de.properties
+  HINZUGEFÜGT IN DE -> Missing -> cheatsheets.description.18
+  CHEATSHEET DE EXISTIERT NICHT -> Missing -> cheatsheets.content.19
+  HINZUGEFÜGT IN DE -> Missing -> cheatsheets.18
+  HINZUGEFÜGT IN DE -> Missing -> cheatsheets.content.18
+  BLEIBT NUR IN DE ENTHALTEN (NACH DM) -> Unused  -> page.name.3
+  HINZUGEFÜGT IN EN -> Unused  -> command.tooltip.9
+  Same    -> aboutText
+  Same    -> category.name
+  Same    -> cheatsheets.content.13
+  Same    -> decorator.label.2
+  Same    -> cheatsheets.content.8
+  Same    -> product.name
+  Same    -> cheatsheets.content.4
+  Same    -> cheatsheets.content.6
+  Same    -> cheatsheets.content.17
+  Same    -> cheatsheets.content.12
+  Same    -> cheatsheets.content.10
+  Same    -> cheatsheets.content.16
+  Same    -> category.name.1
+  Same    -> cheatsheets.content.9
+  Same    -> cheatsheets.content.7
+  Same    -> cheatsheets.content.11
+  Same    -> cheatsheets.content.5
+  Same    -> view.name.11
+  Same    -> Bundle-Vendor
+  Same    -> cheatsheets.content.3
+  Same    -> page.name.4
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/gs/ui/rcp/main/messages_de.properties
+  Same    -> ApplicationActionBarAdvisor_20
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/gs/ui/rcp/main/bsi/dialogs/messages_de.properties
+  Same    -> XMLImportDialog_24
+  Same    -> XMLImportDialog_1
+  Same    -> ExportDialog_0
+  Same    -> XMLImportDialog_33
+  Same    -> ExportDialog_7
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/gs/ui/rcp/main/bsi/views/messages_de.properties
+  Same    -> BsiModelView_3
+  Same    -> DocumentView_2
+  Same    -> FileView_6
+  Same    -> FileView_2
+  Same    -> AuditView_10
+  Same    -> AuditView_19
+  Same    -> TodoView_10
+  Same    -> BSIMassnahmenView_3
+  Same    -> TodoView_2
+  Same    -> DocumentView_4
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/gs/ui/rcp/main/bsi/views/chart/messages_de.properties
+  Same    -> MaturityBarChart_1
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/gs/ui/rcp/main/bsi/editors/messages_de.properties
+  Same    -> NoteEditor_3
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/gs/ui/rcp/main/bsi/risikoanalyse/wizard/messages_de.properties
+  Same    -> NewGefaehrdungDialog_1
+  Same    -> RiskHandlingPage_9
+  Same    -> EditGefaehrdungDialog_1
+  Same    -> EditRisikoMassnahmenUmsetzungDialog_1
+  Same    -> NewRisikoMassnahmeDialog_1
+  Same    -> EstimateGefaehrdungPage_6
+  Same    -> ChooseGefaehrdungPage_6
+  Same    -> AdditionalSecurityMeasuresPage_5
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/gs/ui/rcp/main/bsi/wizards/messages_de.properties
+  ERGÄNZT IN EN (NOTWENDIG?) -> Unused  -> EntitySelectionPage_15
+  Same    -> PropertiesSelectionPage_4
+  Same    -> EntitySelectionPage_3
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/gs/ui/rcp/main/preferences/messages_de.properties
+  Same    -> GeneralSettingsPage.10
+  Same    -> CryptoPreferencePage.8
+  Same    -> DatenbankPreferencePage.14
+  Same    -> CryptoPreferencePage.4
+  Same    -> DatenbankPreferencePage.9
+  Same    -> DatenbankPreferencePage.RestartRequired
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/gs/ui/rcp/main/actions/messages_de.properties
+  Same    -> ExportAction_4
+  Same    -> ExportAction_0
+  Same    -> ChangeOwnPasswordAction_1
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/bpm/rcp/messages_de.properties
+  Same    -> StartIsaProcess_0
+  Same    -> NewQmIssueDialog_1
+  Same    -> TaskView_0
+  Same    -> CompleteTaskAction_3
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/report/rcp/messages_de.properties
+  Same    -> GenerateReportDialog_22
+  Same    -> GenerateReportDialog_4
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/iso27k/rcp/messages_de.properties
+  Same    -> ISMViewFilterDialog_3
+  Same    -> SamtExportDialog_0
+  Same    -> SamtExportDialog_15
+  Same    -> ISMViewFilterDialog_1
+  Same    -> LdapImportDialog_39
+  Same    -> LdapImportDialog_28
+  Same    -> LdapImportDialog_42
+  Same    -> SamtExportDialog_14
+  Same    -> LdapImportDialog_37
+  Same    -> LdapImportDialog_30
+  Same    -> LdapImportDialog_6
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/iso27k/rcp/action/messages_de.properties
+  Same    -> ControlDropPerformer.1
+  Same    -> PasteHandler.2
+  Same    -> PasteHandler.5
+  Same    -> PasteHandler.7
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/validation/messages_de.properties
+  Same    -> ValidationView_4
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/rcp/messages_de.properties
+  Same    -> ServerConnectionToggleDialog_4
+  Same    -> ProfileDialog_3
+  Same    -> IconSelectDialog_11
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/rcp/gsm/messages_de.properties
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_0
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_3
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_1
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_2
+
+File: ./sernet.gs.ui.rcp.main/src/sernet/verinice/rcp/group/messages_de.properties
+  Same    -> GroupByTagDialog_2
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/gs/ui/rcp/main/messages_de.properties
+  Same    -> ApplicationActionBarAdvisor_20
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/gs/ui/rcp/main/bsi/dialogs/messages_de.properties
+  Same    -> XMLImportDialog_24
+  Same    -> XMLImportDialog_1
+  Same    -> ExportDialog_0
+  Same    -> XMLImportDialog_33
+  Same    -> ExportDialog_7
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/gs/ui/rcp/main/bsi/views/messages_de.properties
+  Same    -> BsiModelView_3
+  Same    -> DocumentView_2
+  Same    -> FileView_6
+  Same    -> FileView_2
+  Same    -> AuditView_10
+  Same    -> AuditView_19
+  Same    -> TodoView_10
+  Same    -> BSIMassnahmenView_3
+  Same    -> TodoView_2
+  Same    -> DocumentView_4
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/gs/ui/rcp/main/bsi/views/chart/messages_de.properties
+  Same    -> MaturityBarChart_1
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/gs/ui/rcp/main/bsi/editors/messages_de.properties
+  Same    -> NoteEditor_3
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/gs/ui/rcp/main/bsi/risikoanalyse/wizard/messages_de.properties
+  Same    -> NewGefaehrdungDialog_1
+  Same    -> RiskHandlingPage_9
+  Same    -> EditGefaehrdungDialog_1
+  Same    -> EditRisikoMassnahmenUmsetzungDialog_1
+  Same    -> NewRisikoMassnahmeDialog_1
+  Same    -> EstimateGefaehrdungPage_6
+  Same    -> ChooseGefaehrdungPage_6
+  Same    -> AdditionalSecurityMeasuresPage_5
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/gs/ui/rcp/main/bsi/wizards/messages_de.properties
+  ERGÄNZT IN EN (NOTWENDIG?) -> Unused  -> EntitySelectionPage_15
+  Same    -> PropertiesSelectionPage_4
+  Same    -> EntitySelectionPage_3
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/gs/ui/rcp/main/preferences/messages_de.properties
+  Same    -> GeneralSettingsPage.10
+  Same    -> CryptoPreferencePage.8
+  Same    -> DatenbankPreferencePage.14
+  Same    -> CryptoPreferencePage.4
+  Same    -> DatenbankPreferencePage.9
+  Same    -> DatenbankPreferencePage.RestartRequired
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/gs/ui/rcp/main/actions/messages_de.properties
+  Same    -> ExportAction_4
+  Same    -> ExportAction_0
+  Same    -> ChangeOwnPasswordAction_1
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/bpm/rcp/messages_de.properties
+  Same    -> StartIsaProcess_0
+  Same    -> NewQmIssueDialog_1
+  Same    -> TaskView_0
+  Same    -> CompleteTaskAction_3
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/report/rcp/messages_de.properties
+  Same    -> GenerateReportDialog_22
+  Same    -> GenerateReportDialog_4
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/iso27k/rcp/messages_de.properties
+  Same    -> ISMViewFilterDialog_3
+  Same    -> SamtExportDialog_0
+  Same    -> SamtExportDialog_15
+  Same    -> ISMViewFilterDialog_1
+  Same    -> LdapImportDialog_39
+  Same    -> LdapImportDialog_28
+  Same    -> LdapImportDialog_42
+  Same    -> SamtExportDialog_14
+  Same    -> LdapImportDialog_37
+  Same    -> LdapImportDialog_30
+  Same    -> LdapImportDialog_6
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/iso27k/rcp/action/messages_de.properties
+  Same    -> ControlDropPerformer.1
+  Same    -> PasteHandler.2
+  Same    -> PasteHandler.5
+  Same    -> PasteHandler.7
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/validation/messages_de.properties
+  Same    -> ValidationView_4
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/rcp/messages_de.properties
+  Same    -> ServerConnectionToggleDialog_4
+  Same    -> ProfileDialog_3
+  Same    -> IconSelectDialog_11
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/rcp/gsm/messages_de.properties
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_0
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_3
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_1
+  EINGEPFLEGT AM 20130409 -> Missing -> StartGsmExecuteProcess_2
+
+File: ./sernet.gs.ui.rcp.main/bin/sernet/verinice/rcp/group/messages_de.properties
+  Same    -> GroupByTagDialog_2
+
+
+
+File: ./sernet.verinice.report.service/src/sernet/verinice/report/service/impl/messages_de.properties
+  Same    -> RisikoanalyseReport_1
+  Same    -> ISMRiskManagementResults_0
+  Same    -> BasisSichCheckReport_2
+  Same    -> AllItemsReport_3
+  Same    -> GraphUmstzngStatus_0
+  Same    -> ExistingRisksReport_0
+  Same    -> ModellierungReport_2
+  Same    -> AuditberichtReport_1
+  Same    -> GrundschutzA7_1
+  Same    -> ExistingRisksReport_3
+  Same    -> GrundschutzA7_3
+  Same    -> AbhaengigkeitenReport_1
+  Same    -> RisikoanalyseReport_2
+  Same    -> AuditberichtReport_0
+  Same    -> ExistingRisksReport_1
+  Same    -> UserReportType_3
+  Same    -> GrundschutzA7_0
+  Same    -> AllItemsReport_0
+  Same    -> AbhaengigkeitenReport_2
+  Same    -> BasisSichCheckReport_1
+  Same    -> GrundschutzA7_2
+  Same    -> ModellierungReport_1
+  Same    -> AllItemsReport_2
+
+File: ./sernet.verinice.report.service/bin/sernet/verinice/report/service/impl/messages_de.properties
+  Same    -> RisikoanalyseReport_1
+  Same    -> ISMRiskManagementResults_0
+  Same    -> BasisSichCheckReport_2
+  Same    -> AllItemsReport_3
+  Same    -> GraphUmstzngStatus_0
+  Same    -> ExistingRisksReport_0
+  Same    -> ModellierungReport_2
+  Same    -> AuditberichtReport_1
+  Same    -> GrundschutzA7_1
+  Same    -> ExistingRisksReport_3
+  Same    -> GrundschutzA7_3
+  Same    -> AbhaengigkeitenReport_1
+  Same    -> RisikoanalyseReport_2
+  Same    -> AuditberichtReport_0
+  Same    -> ExistingRisksReport_1
+  Same    -> UserReportType_3
+  Same    -> GrundschutzA7_0
+  Same    -> AllItemsReport_0
+  Same    -> AbhaengigkeitenReport_2
+  Same    -> BasisSichCheckReport_1
+  Same    -> GrundschutzA7_2
+  Same    -> ModellierungReport_1
+  Same    -> AllItemsReport_2
+
+File: ./sernet.gs.service/src/sernet/verinice/model/bsi/messages_de.properties
+  ERGÄNZT IN EN -> Unused  -> BausteinKategorie_0
+
+File: ./sernet.gs.service/src/sernet/verinice/model/bsi/risikoanalyse/messages_de.properties
+  Same    -> GefaehrdungsUmsetzung_7
+
+File: ./sernet.gs.service/src/sernet/verinice/model/bpm/messages_de.properties
+  HINZUGEFÜGT IN DE -> Missing -> isa.trans.decline
+  HINZUGEFÜGT IN DE -> Missing -> isa.trans.accepted
+  HINZUGEFÜGT IN DE -> Missing -> isa.trans.complete
+  HINZUGEFÜGT IN DE -> Missing -> isa.trans.escalate
+  HINZUGEFÜGT IN EN -> Unused  -> isa.transition.escalate
+  HINZUGEFÜGT IN EN -> Unused  -> isa.transition.decline
+  HINZUGEFÜGT IN EN -> Unused  -> isa.transition.complete
+  HINZUGEFÜGT IN EN -> Unused  -> isa.transition.accepted
+  Same    -> iqm.trans.ok
+  Same    -> isa-quality-management
+
+File: ./sernet.gs.service/bin/sernet/verinice/model/bsi/messages_de.properties
+  ERGÄNZT IN EN -> Unused  -> BausteinKategorie_0
+
+File: ./sernet.gs.service/bin/sernet/verinice/model/bsi/risikoanalyse/messages_de.properties
+  Same    -> GefaehrdungsUmsetzung_7
+
+File: ./sernet.gs.service/bin/sernet/verinice/model/bpm/messages_de.properties
+  HINZUGEFÜGT IN DE -> Missing -> isa.trans.decline
+  HINZUGEFÜGT IN DE -> Missing -> isa.trans.accepted
+  HINZUGEFÜGT IN DE -> Missing -> isa.trans.complete
+  HINZUGEFÜGT IN DE -> Missing -> isa.trans.escalate
+  HINZUGEFÜGT IN EN -> Unused  -> isa.transition.escalate
+  HINZUGEFÜGT IN EN -> Unused  -> isa.transition.decline
+  HINZUGEFÜGT IN EN -> Unused  -> isa.transition.complete
+  HINZUGEFÜGT IN EN -> Unused  -> isa.transition.accepted
+  Same    -> iqm.trans.ok
+  Same    -> isa-quality-management
+
+File: ./sernet.verinice.oda.driver.designer/plugin_de.properties
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> wizard.data.set.window.title
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> oda.data.source.id
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> wizard.data.set.page.title
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> wizard.window.title
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> newwizard.name
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> wizard.data.source.page.title
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> plugin.name
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> newwizard.description
+  BLEIBT NUR IN DEFAULT-DATEI -> Missing -> profile.propertypage.name
+
+
+
+
+File: ./sernet.verinice.samt.rcp/OSGI-INF/l10n/bundle_de.properties
+  Same    -> view.name.3
+  Same    -> view.name.5
+  Same    -> action.label.13
+  Same    -> view.name.4
+  Same    -> action.label.6
+  Same    -> view.name.1
+  Same    -> menu.label
+  Same    -> view.name.2
+  Same    -> cheatsheets.category.1
+  Same    -> Bundle-Vendor
+  Same    -> view.name
+  Same    -> action.label.0
+
+File: ./sernet.verinice.samt.rcp/src/sernet/verinice/samt/audit/rcp/messages_de.properties
+  HINZUGEFÜGT IN DE -> Missing -> ElementViewContentProvider_1
+  HINZUGEFÜGT IN DE -> Missing -> ElementView_4
+  HINZUGEFÜGT IN DE -> Missing -> ElementView_1
+  HINZUGEFÜGT IN DE -> Missing -> ElementView_5
+  HINZUGEFÜGT IN DE -> Missing -> ElementView_3
+  HINZUGEFÜGT IN DE -> Missing -> ElementView_8
+  HINZUGEFÜGT IN DE -> Missing -> AddAction_1
+  HINZUGEFÜGT IN DE -> Missing -> ElementView_2
+
+File: ./sernet.verinice.samt.rcp/src/sernet/verinice/samt/rcp/messages_de.properties
+  Same    -> AddSelfAssessment_1
+  Same    -> AssignAllIsaTopics_0
+
+
+File: ./sernet.verinice.samt.rcp/bin/sernet/verinice/samt/rcp/messages_de.properties
+  Same    -> AddSelfAssessment_1
+  Same    -> AssignAllIsaTopics_0
+
+
+
+TOTAL: Files: 287 Keys: 30507 Done: 24038(78.80%)
+       Missing: 897(2.94%) Orphan: 789(2.59%) Empty: 1265(4.15%) Same: 3518(11.53%)
+

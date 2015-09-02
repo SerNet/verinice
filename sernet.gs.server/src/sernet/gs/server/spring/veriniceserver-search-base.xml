@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- verinice Spring configuration file  -->
+<!-- This file is referenced in contextConfigLocation parameter of web.xml or in class -->
+<!-- sernet.gs.server.InternalServer -->
+<!-- This is a configuration for the search backend. -->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="searchService" class="sernet.verinice.service.SearchService">
+    <property name="searchDao" ref="searchElementDao" />
+    <property name="searchIndexer" ref="searchIndexer" />
+  </bean>
+
+  <bean id="clientFactory" class="sernet.verinice.search.ElasticsearchClientFactory" init-method="init">
+    <property name="directoryCreator" ref="directoryCreator" />
+  </bean>
+
+  <bean id="indexThread" class="sernet.verinice.search.IndexThread" scope="prototype">
+    <property name="elementDao" ref="cnaTreeElementDao" />
+    <property name="searchDao" ref="searchElementDao" />
+    <property name="searchService" ref="searchService" />
+    <property name="jsonBuilder" ref="jsonBuilder" />
+  </bean>
+
+  <bean id="searchIndexer" class="sernet.verinice.search.Indexer">
+    <property name="elementDao" ref="cnaTreeElementDao" />
+    <property name="indexThreadFactory">
+      <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+        <property name="targetBeanName">
+          <idref local="indexThread" />
+        </property>
+      </bean>
+    </property>
+    <property name="titleCache" ref="titleCache" />
+  </bean>
+
+
+  <bean id="searchElementDao" class="sernet.verinice.search.ElementDao">
+    <property name="authService" ref="authService" />
+    <property name="clientFactory" ref="clientFactory" />
+    <property name="configurationService" ref="configurationService" />
+  </bean>
+  
+  <bean id="jsonBuilder" class="sernet.verinice.search.JsonBuilder">
+    <property name="titleCache" ref="titleCache" />
+  </bean>
+
+</beans>

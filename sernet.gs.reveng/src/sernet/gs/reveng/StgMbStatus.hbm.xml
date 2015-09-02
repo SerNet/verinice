@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgMbStatus" table="STG_MB_STATUS">
+        <composite-id name="id" class="sernet.gs.reveng.StgMbStatusId">
+            <key-property name="staId" type="java.lang.Integer">
+                <column name="STA_ID" />
+            </key-property>
+            <key-property name="staImpId" type="java.lang.Integer">
+                <column name="STA_IMP_ID" />
+            </key-property>
+            <key-property name="metaNeu" type="java.lang.Byte">
+                <column name="META_NEU" />
+            </key-property>
+            <key-property name="metaVers" type="java.lang.Integer">
+                <column name="META_VERS" />
+            </key-property>
+            <key-property name="obsoletVers" type="java.lang.Integer">
+                <column name="OBSOLET_VERS" />
+            </key-property>
+            <key-property name="link" type="string">
+                <column name="LINK" />
+            </key-property>
+            <key-property name="guid" type="string">
+                <column name="GUID" length="36" />
+            </key-property>
+            <key-property name="timestamp" type="timestamp">
+                <column name="TIMESTAMP" length="23" />
+            </key-property>
+            <key-property name="loeschDatum" type="timestamp">
+                <column name="LOESCH_DATUM" length="23" />
+            </key-property>
+            <key-property name="mtyId" type="java.lang.Byte">
+                <column name="MTY_ID" />
+            </key-property>
+            <key-property name="notizId" type="java.lang.Integer">
+                <column name="NOTIZ_ID" />
+            </key-property>
+            <key-property name="erfasstDurch" type="string">
+                <column name="ERFASST_DURCH" length="128" />
+            </key-property>
+            <key-property name="geloeschtDurch" type="string">
+                <column name="GELOESCHT_DURCH" length="128" />
+            </key-property>
+            <key-property name="guidOrg" type="string">
+                <column name="GUID_ORG" length="36" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

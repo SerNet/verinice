@@ -1,0 +1,27 @@
+## Default/English email template for tasks notification
+## Notification properties: veriniceserver-plain.properties
+## Notification configuration: veriniceserver-plain.xml, veriniceserver-jbpm.xml
+## Notifications are send as plain text, don't use HTML.
+## Save this file UTF-8 encoded.
+##
+## Notifications service sets variables:
+## ${address}: Mr, Mrs or if not set Mrs/Mr
+## ${name}: Surname
+## ${n}: Number of new tasks
+## ${url}: Url to task site of verinice.WEB
+## ${email}: Recipient 
+## ${emailFrom}: Sender
+## ${replyTo}: reply to email
+##
+Sehr geehrte(r) ${address} ${name},
+
+ihre Aufgabe für das Qualitätsmanagement wurde nicht akzeptiert.
+Die Aufgabe betraf das Objekt: "${elementTitle}".
+
+Eine Liste mit allen Ihren Aufgaben finden Sie hier:
+${url}
+
+[Diese Email wurde automatisch erzeugt.]
+
+verinice ist ein ISMS-Tool für das Management von Informationssicherheit:
+http://www.verinice.org/

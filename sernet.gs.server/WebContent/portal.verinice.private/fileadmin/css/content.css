@@ -1,0 +1,305 @@
+/* ######################################################################################################
+** # "Yet Another Multicolum Layout" (c) by Dirk Jesse (http://www.yaml.de) #############################
+** # "YAML for TYPO3" (c) by Dieter Bunkerd (http://yaml.t3net.de) ######################################
+** ######################################################################################################
+**
+**  YAML Version: 2.5.2
+**  Dateiversion: 19.1.07
+**  Datei       : content.css
+**  Funktion    : Formatierung der Inhalte und TYPO3-spezifische �nderungen der content.css
+**
+**  Checked with http://jigsaw.w3.org/css-validator/ 19.1.07 - DB
+*/
+
+/* Open @media all - DO NOT DELETE! */
+@media all
+{
+
+/* ######################################################################################################
+** # Standard-Vorgaben ##################################################################################
+** ######################################################################################################
+**
+
+/* ### �berschriften, Flie�texte ###################################################################### */
+
+body {color:#222; font-size:83.33%; font-family:'Trebuchet MS', Verdana, Helvetica, Arial, sans-serif;}
+
+h1,h2,h3,h4 {font-family:'Lucida Grande', Verdana, Arial, Sans-Serif; font-weight:normal;}
+h1,h2,h3,h4 {font-family:'Lucida Grande', Verdana, Arial, Sans-Serif; display:block; font-weight:bold;}
+
+h1 {font-size:1.1em; color:#765; background:inherit;  margin:0.4em 0 0.5em 0; border-bottom:1px #ccc solid; padding-top:1em;}
+h2 {font-size:1.0em; color:#fff; background:#765; margin:0.2em 0 0.5em 0; padding:0.3em; margin-top:1em;}
+h3 {font-size:1.0em; color:#765; background:transparent; margin:0.4em 0 0.3em 0; padding-top:1em;}
+h4 {font-size:1.0em; color:#888; background:transparent; margin:0.4em 0 0.3em 0; border-bottom:1px #ccc solid; padding-top:1em;}
+
+#teaser h1 {font-size:1.2em; border:0;}
+
+p,ul,dd,dt {line-height:1.5em;}
+p {line-height:1.5em; margin:0 0 1em 0;}
+
+strong,b {font-weight:bold;}
+em,i {font-style:italic;}
+pre, code {	font-family:"Courier New", Courier, monospace;}
+address {font-style:normal; line-height:1.5em; margin:0 0 1em 0;}
+
+hr {color:#fff; background:transparent; margin:0 0 0.5em 0; padding:0 0 0.5em 0; border:0; border-bottom:1px #eee solid;}
+
+acronym, abbr {border-bottom:1px dashed #c00; cursor:help;}
+
+/* ### Bildpositionierung ############################################################################ */
+img.float_left {float:left; margin-right:1em; margin-bottom:0.15em; border:0;}
+img.float_right {float:right; margin-left:1em; margin-bottom:0.15em; border:0;}
+img.center {text-align:center; background:#fff; padding:4px; border:1px #ddd solid;}
+
+/* ### Auszeichnung lokaler und Externer Links ######################################################## */
+a, a em.file {color:#1e6289; text-decoration:none;}
+a:hover {background-color:#eef; text-decoration:underline;}
+
+#topnav a {color:#fff; background:transparent; text-decoration:none;}
+#topnav a:hover{text-decoration:underline; background-color:transparent;}
+
+#footer a {color:#669;}
+#footer a:hover {background-color:#eef;}
+
+#main a[href^="http:"], #main a[href^="https:"] {padding-left:0; background-image:none;}
+
+#main a.imagelink {padding-left:0; background:transparent;}
+
+/* ######################################################################################################
+** ### Formulare & Tabellen #############################################################################
+** ######################################################################################################
+*/
+table {border-collapse:collapse; margin-bottom:0.5em;}
+	
+td {padding: 1px;}
+	
+table.contenttable {
+	border-width: 2px 2px 2px 2px;
+	border-spacing: 0px;
+	border-style: solid solid solid solid;
+	border-color: black black black black;
+	border-collapse: collapse;
+	background-color: white;
+}
+table.contenttable th {
+	border-width: 1px 1px 1px 1px;
+	padding: 2px 2px 2px 2px;
+	border-style: solid solid solid solid;
+	border-color: gray gray gray gray;
+	background-color: white;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+table.contenttable td {
+	border-width: 1px 1px 1px 1px;
+	padding: 2px 2px 2px 2px;
+	border-style: solid solid solid solid;
+	border-color: gray gray gray gray;
+	background-color: white;
+	-moz-border-radius: 0px 0px 0px 0px;
+}
+
+form {overflow:hidden;}
+
+input[type=text]:focus, input[type=password]:focus, textarea:focus {background:#f0f0f0; color:#333; border-color:#666;}
+
+/* ######################################################################################################
+** ### Spezielle Formatanweisungen des YAML-Standard-Layouts ############################################
+** ######################################################################################################
+*/
+
+/* ###  Textformatierungen ################################################################## */
+
+/* Beispieldateien */
+p.demo {background-color:#fee; border:1px #fcc solid; padding:6px; margin-bottom:0.5em;}
+
+/* Navigation am Seitenende */
+p.navlink {background-color:#f4f8f4; border:1px #aca dotted; padding:6px; margin-bottom:0.5em;}
+p.navlink a {color:#353;}
+p.navlink a:hover {font-weight:bold; background:transparent;}
+
+blockquote {color:#222; background:#f8f8f8; border:1px #ddd solid; border-left:8px #ddd solid; padding:1em 1em 0 1em; margin:0 0 1em 1em;}
+
+/* Ungeordnete Listen ohne Listenpunkt */
+ul.linklist {list-style-type:none; margin:0 0 1em 0;}
+ul.linklist li {margin:0 0 1em 0;}
+
+/* Auszeichnungen f�r Code, Dateien, Verzeichnisse */
+em.mono, em.file, em.directory {font-family:"Courier New", Courier, monospace; font-style:normal;}
+em.mono {padding:0 0.3em 0 0.3em; background:#f0f0f4; border:1px #ccd solid;}
+em.file {padding:0 0 0 14px; color:#008; background:transparent url(file.gif) no-repeat left;}
+em.directory {padding:0 0 0 15px; color:#008; background:transparent url(dir.gif) no-repeat left;}
+pre, code {display:block; margin:0 0 1em 1em; padding:0.5em; color:#000; background:#f0f0f4; border:1px #ccd solid; border-left:8px #ccd solid;}
+code.css {background-image:url(bg_css.gif); background-repeat:no-repeat; background-position:top right;}
+code.xhtml {background-image:url(bg_xhtml.gif); background-repeat:no-repeat; background-position:top right;}
+code.typoscript {background-image:url(bg_ts.gif); background-repeat:no-repeat; background-position:top right;}
+
+/* ### Tabellen ################################################################## */
+table.bugs {margin-bottom:1em; margin-top:0.5em; width:100%;}
+table.bugs th {background:#fff; color:#222; padding:0.5em; text-align:center; border-bottom:1px #ccd solid; border-right:1px #ccd solid;}
+table.bugs td {background:#f0f0f4; color:#222; padding:0.5em;	text-align:center; border-bottom:1px #ccd solid; border-right:1px #ccd solid;}
+
+/* ### Download-Box ################################################################## */
+.bluebox {color:#000; background:#f0f0f4; padding:2px; border:1px #ccd solid; text-align:center; padding:4px 0 4px 0; margin-bottom:1em;}
+.bluebox p {padding:0px 8px 0 8px;}
+
+a.dl_link {display:block; padding:0; margin:0.5em auto 0 auto; background-image:none;}
+a.dl_link:hover {text-decoration:none; background-color:transparent;}
+
+/* #####################################################################
+** ### Spezielle Formatanweisungen des TYPO3 Templates #################
+** #####################################################################
+*/
+	
+input, textarea {
+	padding:2px; 
+	width:auto; 
+	font:1em Verdana, Arial, Helvetica, Sans-Serif; 
+	border:1px #ccc solid; 
+	background:#fafafa; 
+	color:#777;
+}
+input[type=text]:focus, textarea:focus {background:#f0f0f0; color:#333; border-color:#666;}
+img {border:0;
+}
+p.csc-linkToTop {text-align:right;}
+p.csc-form-label-req {font-weight:bold;}
+.csc-caption {font-size:0.9em; background-color:#E0E7F5; padding:2px; }
+dd.csc-textpic-caption {font-style:italic; font-size:0.9em; background-color:#E0E7F5; padding: 0; padding-bottom: 1em; }
+
+/* #############################
+** ### tt_news #################
+** #############################
+*/
+.tx-ttnews-browsebox {text-align:center; padding:0; margin:1.2em 0 1em 0; padding:1px; border:1px solid #ccd; background:#f0f0f4;}
+.tx-ttnews-browsebox a, .tx-ttnews-browsebox strong {padding:0 0.4em 0.4em 0; margin:0; background:transparent;}
+
+/* LATEST Ansicht */
+.news-latest-item {margin-bottom:1em;}
+.news-latest-item h3 {padding-top:0;}
+.news-latest-item h3 a {text-decoration:underline;}
+.news-latest-item h3 a:hover {background:transparent;}
+.news-latest-item img {padding-right:1em; padding-top:0.5em; float:left;}
+.news-latest-morelink {padding:1px; border:1px solid #ccd; background:#f0f0f4; text-align:center;}
+
+/* LIST Ansicht */
+.news-list-item {margin-bottom:1em;}
+.news-list-item h3 {padding-top:0;}
+.news-list-item h3 a {text-decoration:underline;}
+.news-list-item h3 a:hover {background:transparent;}
+.news-list-item h3 span.news-list-date {color:#aaa; font-weight:normal;}
+.news-list-morelink {padding:1px; border:1px solid #ccd; background:#f0f0f4; text-align:center;}
+.news-list-morelink a {color:#669;}
+.news-list-morelink a:hover {background:transparent;}
+.news-list-category {color:#aaa;}
+
+/* SINGLE Ansicht */
+.news-single-item h3 {margin-bottom:1em; margin-top:1em; color:#000; padding:0.5em; background:#f0f0f4; border-left:8px #E0E7F5 solid;}
+.news-single-img {padding-right:15px;	float:left;}
+.news-single-img p {padding:0; margin:0;}
+.news-single-timedata {color:#aaa; margin-bottom:1em;}
+.news-single-additional-info {}
+.news-single-additional-info dd {margin-top:-1em;}
+.news-single-additional-info dt {margin-bottom:1.4em; color:#aaa;}
+
+/* CATEGORY Menu */
+.news-catmenu {font-size:0.8em; margin-top:2em; padding:1em; background:#eee; border:1px dotted black;}
+.news-catmenu a {display:inline; padding-left:2px;}
+.news-catmenu a:hover {background:transparent; font-style:italic; font-weight:bold;}
+.news-catmenu .news-catmenu-NO {height:16px;}
+p.news-catmenu-header {line-height:1em; margin:0;}
+
+/* ##############################
+** ### tx_indexedsearch #########
+** ##############################
+*/
+.tx-indexedsearch .tx-indexedsearch-searchbox INPUT.tx-indexedsearch-searchbox-button {width:100px;}
+.tx-indexedsearch .tx-indexedsearch-searchbox INPUT.tx-indexedsearch-searchbox-sword {width:150px;}
+.tx-indexedsearch .tx-indexedsearch-whatis P .tx-indexedsearch-sw {font-weight:bold; font-style:italic;}
+.tx-indexedsearch .tx-indexedsearch-whatis {margin-top:10px; margin-bottom:5px;}
+.tx-indexedsearch P.tx-indexedsearch-noresults {text-align:center; font-weight:bold;}
+.tx-indexedsearch .tx-indexedsearch-res .tx-indexedsearch-title {background:#eeeeee;}
+.tx-indexedsearch .tx-indexedsearch-res .tx-indexedsearch-title P {font-weight:bold;}
+.tx-indexedsearch .tx-indexedsearch-res .tx-indexedsearch-title P.tx-indexedsearch-percent {font-weight:normal;}
+.tx-indexedsearch .tx-indexedsearch-res .tx-indexedsearch-descr P {font-style:italic;}
+.tx-indexedsearch .tx-indexedsearch-res .tx-indexedsearch-descr P .tx-indexedsearch-redMarkup {}
+.tx-indexedsearch .tx-indexedsearch-res .tx-indexedsearch-info {background:#E0E7F5;}
+.tx-indexedsearch .tx-indexedsearch-res .tx-indexedsearch-secHead {margin-top:20px; margin-bottom:5px;}
+.tx-indexedsearch .tx-indexedsearch-res .tx-indexedsearch-secHead H2 {color:#006699; margin-top:0px; margin-bottom:0px; background:transparent;}
+.tx-indexedsearch .tx-indexedsearch-res .tx-indexedsearch-secHead TABLE {background:#cccccc;}
+.tx-indexedsearch .tx-indexedsearch-res .tx-indexedsearch-secHead TD {vertical-align:middle;}
+.tx-indexedsearch .tx-indexedsearch-res .noResume {color :#666666;}
+.tx-indexedsearch-sw, .csc-sword, .tx-indexedsearch-redMarkup {	font-family:monospace;	font-style:normal;	padding:0 0.3em 0 0.3em; background:#ffff88; border:1px #ccd solid;}
+
+/* ###########################
+** ### Language menu #########
+** ###########################
+*/
+div.langMenu {padding:0 0 0 0;}
+div.langMenu a:hover {background:transparent;}
+div.langMenu img.flag {margin-top:4px; padding-right:7px;}
+div.langMenu img.arrow {}
+
+/* ##########################
+** ### tx_dropdownsitemap ###
+** ##########################
+*/
+.tx-dropdownsitemap-pi1 A {font-weight:bold;}
+.tx-dropdownsitemap-pi1 li.open ol {display:block;}
+.tx-dropdownsitemap-pi1 li.closed ol {display:none;}
+.tx-dropdownsitemap-pi1 li.open ul {display:block;}
+.tx-dropdownsitemap-pi1 li.closed ul {display:none;}
+.tx-dropdownsitemap-pi1 div {border:solid 1px #ccd; background:#F0F0F4; padding:2px; margin-bottom:5px;}
+.tx-dropdownsitemap-pi1 div.level_2 {background:#FFFFFF;}
+.tx-dropdownsitemap-pi1 div.level_2 a {font-weight:normal;}
+.tx-dropdownsitemap-pi1 div.level_3 {background:#F0F0F4;}
+.tx-dropdownsitemap-pi1 div.level_4 {background:#FFFFFF;}
+.tx-dropdownsitemap-pi1 div.level_5 {background:#F0F0F4;}
+.tx-dropdownsitemap-pi1 div.expAll {text-align:center; border:solid 1px #ccd; background:#F0F0F4;}
+.tx-dropdownsitemap-pi1 img {margin-right:0.5em;}
+.tx-dropdownsitemap-pi1 a:hover {background:transparent;}
+
+/* ##########################
+** ### TYPO3 Mailformular ###
+** ##########################
+*/
+.csc-mailform-field label {color:#369; display:block; font-size:0.8em; margin-top:1em;}
+.csc-mailform-radio label {display:inline; margin-left:0.3em;}
+.csc-mailform-radio legend {display:none;}
+.csc-mailform-submit {margin-top:1em;}
+
+/* ##########################
+** ### sk-pagecomments ######
+** ##########################
+*/
+.sk-pagecomments-error {color:red;font-weight:bold;background:#FFE8CF;border:1px solid #000;margin:8px 12px;padding:4px;}
+.sk-pagecomments-success {color:blue;font-weight:bold;}
+.sk-pagecomments-counter {color:#600;text-align:right;text-decoration:underline;margin-bottom:12px;}
+.sk-pagecomments-headline {border-bottom:1px solid #000;font-weight:bold;background:#d1d1d1;padding-left:6px;height:20px;}
+.sk-pagecomments-namedate {float:left;}
+.sk-pagecomments-emailhomepage{float:right;}
+.sk-pagecomments-comment{background:#f1f1f1;padding:4px 28px;clear:both;}
+.tx-skpagecomments-pi1 form {margin:16px 0;width:480px;}
+.tx-skpagecomments-pi1 form fieldset {border:1px solid #eee;}
+.tx-skpagecomments-pi1 form p.userinfos {text-align:center;padding:6px;}
+.tx-skpagecomments-pi1 form legend {background:#f1f1f1;border:1px solid #000;padding:4px;}
+.tx-skpagecomments-pi1 form label {width:120px;float:left;margin-left:8px;}
+.tx-skpagecomments-pi1 form p {margin:6px 0;}
+.tx-skpagecomments-pi1 form p img {vertical-align:bottom;margin-left:8px;}
+.tx-skpagecomments-pi1 div.smileytext{margin-left:130px;}
+.tx-skpagecomments-pi1 form input#name,
+.tx-skpagecomments-pi1 form input#email,
+.tx-skpagecomments-pi1 form input#homepage {width:320px;}
+.tx-skpagecomments-pi1 form textarea {width:320px;height:160px;}
+.tx-skpagecomments-pi1 form input#skcommentssubmit {float:right;margin:8px 20px;}
+.tx-skpagecomments-pi1 .sk-pagecomments-formlink {margin-top:1em; text-align:right;}
+.tx-skpagecomments-pi1 #skpagecomments-smileys {text-align:right; margin-right:1em;}
+
+/* Close @media all - DO NOT DELETE! */
+}
+/* ##########################
+** ### Accessible menu ######
+** ##########################
+*/
+@media screen, print {
+.mainMenu dfn, #col1_content .hidden {position:absolute; left:-1000em; width:20em;}
+}

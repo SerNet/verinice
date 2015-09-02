@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<cheatsheet title="IT-Grundschutz: Datenschutz">
+
+  <intro>
+    <description>
+      verinice hilft Ihnen auch dabei, datenschutzrechtliche Anforderungen zu erfüllen. Hier erfahren
+      Sie, wie Sie ein Verfahren für den Datenschutz dokumentieren.
+    </description>
+  </intro>
+
+  <item title="Einführung">
+    <description>
+      Öffnen Sie den Datenschutz-View über <b>Ansicht > Zeige View... > Datenschutz</b>.
+    </description>
+  </item>
+
+  <item title="Ansicht Datenschutz">
+    <description>
+      Klappen Sie das Datenschutzkonzept auf. Unter "Verfahren" finden Sie alle
+      Anwendungen wieder, die Sie bei der Strukturanalyse erstellt haben. Klappen Sie das Verfahren
+      "Buchhaltung" auf.
+    </description>
+  </item>
+
+  <item title="Datenverarbeitung">
+    <description>
+      Öffnen Sie den Dokumentationsknoten "Datenverarbeitung" per Doppelklick. Tragen Sie Kategorie,
+      Herkunft, Rechtsgrundlage und Löschfristen für die verarbeiteten Daten ein. Speichern Sie die
+      Änderungen (<b>Strg+S</b>).
+    </description>
+  </item>
+
+  <item title="Personengruppen">
+    <description>
+      Öffnen Sie nun den Dokumentationsknoten "Personengruppen". Hier tragen Sie Betroffene und die
+      Empfänger der Datenverarbeitung ein.
+    </description>
+  </item>
+
+  <item title="Stellungnahme DSB">
+    <description>
+      Die Felder im Dokumentationsknoten "Stellungnahme DSB" lassen sie durch Ihren
+      Datenschutzbeauftragten ausfüllen.
+    </description>
+  </item>
+
+  <item title="Verantwortliche Stelle">
+    <description>
+      Im Dokumentationsknoten "Verantwortliche Stelle" dokumentieren Sie, wer die Daten
+      verarbeitet und wer fachlich und technisch für die Verarbeitung verantwortlich ist.
+      <br /><br />
+      Alle Mitarbeiter und Abteilungen, die Sie in der Strukturanalyse erfasst haben, können hier
+      eingetragen werden. Benutzen Sie zur Auswahl den Button <b>Ändern...</b>.
+    </description>
+  </item>
+
+  <item title="Verarbeitungsangaben">
+    <description>
+      Im Dokumentationsknoten "Verarbeitungsangaben" beschreiben Sie, wie die personenbezogenen
+      Daten verarbeitet werden.
+    </description>
+  </item>
+
+  <item title="Herzlichen Dank">
+    <description>
+      Das war's! Wenn Sie möchten, können Sie uns Ihre Erfahrungen und Verbesserungsvorschläge zu den
+      Tutorials oder zu verinice im Allgemeinen schreiben: verinice@sernet.de
+      <br /><br />
+      Das verinice-Team bedankt sich bei Ihnen für die Wahl von verinice.
+    </description>
+    <onCompletion>
+    </onCompletion>
+  </item>
+
+</cheatsheet>
