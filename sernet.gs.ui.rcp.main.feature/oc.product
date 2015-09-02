@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.10.90" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.11.1" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/icons/product_lg.gif"/>
@@ -67,7 +67,7 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
       </programArgs>
       <programArgsMac>-vm ../../../jre/Contents/Home/jre/lib/jli/libjli.dylib
       </programArgsMac>
-      <vmArgs>-Xms256m -Xmx768m -XX:MaxPermSize=256m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost  -Dosgi.parentClassloader=ext -Dosgi.nl=de
+      <vmArgs>-Xms256m -Xmx768m -XX:MaxPermSize=256m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost  -Dosgi.parentClassloader=ext
       </vmArgs>
       <vmArgsMac>-Djava.awt.headless=true
       </vmArgsMac>
