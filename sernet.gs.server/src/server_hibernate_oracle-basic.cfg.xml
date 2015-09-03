@@ -66,7 +66,7 @@
         <mapping resource="sernet/gs/ui/rcp/hibernate/PropertyOracle.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/CnATreeElement.hbm.xml"/> 
         <mapping resource="sernet/gs/ui/rcp/hibernate/ChangeLogEntry.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/GefaehrdungOracle.hbm.xml"/>
+        <mapping resource="sernet/gs/ui/rcp/hibernate/Gefaehrdung.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/RisikomassnahmeOracle.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/FinishedRiskAnalysisLists.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/AccountGroup.hbm.xml"/>        

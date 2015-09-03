@@ -43,7 +43,7 @@
 			
 			<property 
 				name="beschreibung"
-				length="400000"/>
+				length="30000"/>
 			
 		</joined-subclass>
 

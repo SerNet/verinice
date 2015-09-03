@@ -27,7 +27,7 @@
 
 		<property name="name"/>
 
-		<!-- Mapped to NCLOB only for Oracle, see Bug 136 -->
+		<!-- Mapped to NCLOB only for Oracle, see VN-319 -->
 		<property name="description" type="java.lang.String" length="400000">
 			<column name="DESCRIPTION" sql-type="NCLOB"/>
 		</property>
