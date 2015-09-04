@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                                   "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="sernet.verinice.model.bsi">
+    <class name="AttachmentFile" table="note">
+        <id column="dbId" name="dbId" type="java.lang.Integer">
+            <!-- lets the application assign an identifier to the object before save() is called. -->
+            <generator class="assigned" />
+        </id>
+        <!--<property name="fileData" type="sernet.verinice.hibernate.ByteArrayType" > -->
+        <property name="fileData" type="binary">
+            <!-- 10 MB = 10485760 B -->
+            <!-- 100 MB = 104857600 B -->
+            <column name="fileData" length="104857600" />
+        </property>
+    </class>
+</hibernate-mapping>

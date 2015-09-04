@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="control-execution" name="verinice Control Execution" version="14" xmlns="http://jbpm.org/4.4/jpdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <description>Describes the implementation of controls in verinice</description>
+   <variable name="TASK_READ_STATUS" type="string" init-expr="TASK_UNREAD"/> 
+   <start g="174,-30,48,48" name="start">
+      <transition to="evaluate control"/>
+   </start>
+    <decision g="173,52,80,40" name="evaluate control">
+      <transition g="-113,-15" name="not implemented" to="evaluate assignee">
+        <condition expr="#{IMPLEMENTATION!='control_implemented_yes'}"/>
+      </transition>
+      <transition g="52,78;57,598:-92,-22" name="implemented" to="end">
+        <condition expr="#{IMPLEMENTATION=='control_implemented_yes'}"/>
+      </transition>
+   </decision>
+   <decision g="174,166,80,40" name="evaluate assignee">
+      <transition g="-77,-14" name="is assigned" to="evaluate implementation">
+        <condition expr="#{ASSIGNEE_NAME!=null}"/>
+      </transition>
+      <transition g="-59,-22" name="is not assigned" to="task.setAssignee">
+        <condition expr="#{ASSIGNEE_NAME==null}"/>
+      </transition>
+   </decision>
+   <task assignee="#{OWNER_NAME}" g="348,140,193,40" name="task.setAssignee">
+      <transition g="6,-10" name="transition.complete" to="load assignee"/>
+   </task>
+   <java class="sernet.verinice.bpm.ControlExecution" g="371,213,152,40" method="loadAssignee" name="load assignee" var="ASSIGNEE_NAME">
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="evaluate assignee"/>
+   </java>
+   <task assignee="#{ASSIGNEE_NAME}" duedate="#{DUEDATE}" g="351,299,206,40" name="task.implement">
+      <transition g="6,-11" name="transition.complete" to="load implementation"/>
+      <transition g="-12,4" name="transition.escalate" to="task.escalate">
+        <timer duedate="#{DUEDATE}"/>
+      </transition>
+   </task>
+   <task assignee="#{OWNER_NAME}" g="631,237,118,40" name="task.escalate">
+      <transition g="-8,-19" name="transition.complete" to="load assignee"/>
+   </task>
+   <java class="sernet.verinice.bpm.ControlExecution" g="376,389,159,40" method="loadImplementation" name="load implementation" var="IMPLEMENTATION">
+      <arg><object expr="#{UUID}"/></arg>
+      <transition to="evaluate implementation"/>
+   </java>
+   <decision g="175,324,48,48" name="evaluate implementation">
+      <transition g="-70,-27" name="not implemented" to="task.implement">
+        <condition expr="#{IMPLEMENTATION!='control_implemented_yes'}"/>
+      </transition>
+      <transition g="-92,-14" name="implemented" to="task.checkImplementation">
+        <condition expr="#{IMPLEMENTATION=='control_implemented_yes'}"/>
+      </transition>
+   </decision>
+   <task assignee="#{OWNER_NAME}" g="100,459,201,40" name="task.checkImplementation">
+      <transition g="-128,-17" name="transition.accepted" to="end"/>
+      <transition g="-8,4" name="transition.decline" to="load implementation"/>
+   </task>
+   <end g="179,575,48,48" name="end"/>
+</process>

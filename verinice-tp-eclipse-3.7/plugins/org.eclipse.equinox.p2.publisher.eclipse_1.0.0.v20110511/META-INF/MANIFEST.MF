@@ -1,0 +1,73 @@
+Manifest-Version: 1.0
+Bundle-Localization: plugin
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-SymbolicName: org.eclipse.equinox.p2.publisher.eclipse;singleto
+ n:=true
+Eclipse-SourceReferences: scm:cvs:pserver:dev.eclipse.org:/cvsroot/rt:
+ org.eclipse.equinox/p2/bundles/org.eclipse.equinox.p2.publisher.eclip
+ se;tag=v20110511
+Bundle-Activator: org.eclipse.pde.internal.publishing.Activator
+Require-Bundle: org.eclipse.equinox.common;bundle-version="[3.5.0,4.0.
+ 0)"
+Export-Package: org.eclipse.equinox.internal.p2.publisher.compatibilit
+ y;x-internal:=true,org.eclipse.equinox.internal.p2.publisher.eclipse;
+  x-friends:="org.eclipse.equinox.p2.directorywatcher,  org.eclipse.eq
+ uinox.p2.extensionlocation,  org.eclipse.equinox.p2.repository.tools,
+   org.eclipse.equinox.p2.updatesite,  org.eclipse.pde.build",org.ecli
+ pse.equinox.p2.publisher.eclipse; x-friends:="org.eclipse.equinox.p2.
+ directorywatcher,  org.eclipse.equinox.p2.extensionlocation,  org.ecl
+ ipse.equinox.p2.touchpoint.eclipse,  org.eclipse.equinox.p2.updatesit
+ e,  org.eclipse.equinox.p2.repository.tools",org.eclipse.pde.internal
+ .build.publisher;x-friends:="org.eclipse.pde.build",org.eclipse.pde.i
+ nternal.publishing;x-friends:="org.eclipse.pde.build",org.eclipse.pde
+ .internal.swt.tools;x-internal:=true
+Bundle-Version: 1.0.0.v20110511
+Bundle-ClassPath: pdepublishing.jar
+Bundle-ActivationPolicy: lazy
+Bundle-Vendor: %providerName
+Bundle-Name: %bundleName
+Eclipse-BundleShape: dir
+Import-Package: org.eclipse.equinox.app;version="[1.0.0,2.0.0)",org.ec
+ lipse.equinox.frameworkadmin;version="[2.0.0,3.0.0)",org.eclipse.equi
+ nox.internal.frameworkadmin.equinox,org.eclipse.equinox.internal.fram
+ eworkadmin.utils,org.eclipse.equinox.internal.p2.artifact.repository,
+ org.eclipse.equinox.internal.p2.core.helpers,org.eclipse.equinox.inte
+ rnal.p2.metadata,org.eclipse.equinox.internal.p2.metadata.repository,
+ org.eclipse.equinox.internal.p2.publisher,org.eclipse.equinox.interna
+ l.provisional.frameworkadmin,org.eclipse.equinox.p2.core;version="[2.
+ 0.0,3.0.0)",org.eclipse.equinox.p2.metadata;version="[2.0.0,3.0.0)",o
+ rg.eclipse.equinox.p2.metadata.expression;version="[2.0.0,3.0.0)",org
+ .eclipse.equinox.p2.publisher,org.eclipse.equinox.p2.publisher.action
+ s,org.eclipse.equinox.p2.query;version="[2.0.0,3.0.0)",org.eclipse.eq
+ uinox.p2.repository;version="[2.0.0,3.0.0)",org.eclipse.equinox.p2.re
+ pository.artifact;version="[2.0.0,3.0.0)",org.eclipse.equinox.p2.repo
+ sitory.artifact.spi;version="[2.0.0,3.0.0)",org.eclipse.equinox.p2.re
+ pository.metadata;version="[2.0.0,3.0.0)",org.eclipse.equinox.p2.repo
+ sitory.spi;version="[2.0.0,3.0.0)",org.eclipse.equinox.simpleconfigur
+ ator.manipulator;version="[2.0.0,3.0.0)",org.eclipse.equinox.spi.p2.p
+ ublisher,org.eclipse.osgi.service.datalocation;version="1.3.0",org.ec
+ lipse.osgi.service.environment;version="1.1.0",org.eclipse.osgi.servi
+ ce.pluginconversion;version="1.0.0",org.eclipse.osgi.service.resolver
+ ;version="1.5.0",org.eclipse.osgi.util;version="1.1.0",org.osgi.frame
+ work;version="1.3.0",org.osgi.service.application;version="1.1.0",org
+ .osgi.service.packageadmin;version="1.2.0"
+Bundle-ManifestVersion: 2
+
+Name: pdepublishing.jar
+SHA1-Digest: CZo1i52jhh3RRWBKz5zOlDrVzdw=
+
+Name: ant_tasks/pdepublishing-ant.jar
+SHA1-Digest: ZG9HDtDXiPE06nGaLh2l2U1h1zU=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: KyT9FF7C7t86NoBoa2kZT3ZJBfw=
+
+Name: about.html
+SHA1-Digest: ejOZra0kypGLQQ2bJtGTX+LI8tU=
+
+Name: plugin.xml
+SHA1-Digest: TKOZuitHqWXpwePFR5vhOwJtPGI=
+
+Name: plugin.properties
+SHA1-Digest: aJyknfClKLioPfPa9Mip1PBDnUg=
+

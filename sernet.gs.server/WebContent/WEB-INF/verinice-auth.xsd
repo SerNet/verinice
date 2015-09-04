@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.verinice.org/auth" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified" targetNamespace="http://www.verinice.org/auth">
+    <xs:annotation>
+        <xs:documentation><![CDATA[
+        verinice authorization Schema
+        Author: Daniel Murygin <dm[at]sernet[dot]de>
+        
+        This defines a simple and consistent way of specifying 
+        access rights to application actions.
+        
+        Each profile in this document defines a collection
+        of application actions. All actions in verinice are 
+        defined in property file verinice-action.properties.
+        
+        A userprofile defines a n:m mapping between users and
+        profiles. Userprofiles are configured as whitelist or
+        blacklist. Whitelist means: all actions are disabled
+        except the actions in the userprofile. Blacklist: All 
+        actions are nabled except the actions in the userprofile.
+        You can NOT set a different configuration type in 
+        verinice-auth.xml and verinice-auth-default.xml.
+        
+        You can switch from blacklist to whitelist by attibute 'type'
+        of root element auth. 
+		]]></xs:documentation>
+    </xs:annotation>
+
+    <xs:element name="auth">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+	The top level (typically root) element.	
+			]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="profiles" />
+                <xs:element ref="userprofiles" />
+            </xs:sequence>
+            <xs:attribute name="version" use="required"
+                type="xs:integer" />
+            <xs:attribute name="type" type="configurationType"
+                default="whitelist">
+                <xs:annotation>
+                    <xs:documentation><![CDATA[
+    'whitelist' - by default all actions are disabled, 'blacklist' - all actions are enabled 
+                    ]]></xs:documentation>
+                </xs:annotation>   
+            </xs:attribute>
+        </xs:complexType>
+
+        <xs:key name="profileName">
+            <xs:selector xpath="./profiles/profile" />
+            <xs:field xpath="@name" />
+        </xs:key>
+        <xs:keyref name="profileNameRef" refer="profileName">
+            <xs:selector xpath="./userprofiles/userprofile/profile" />
+            <xs:field xpath="@name" />
+        </xs:keyref>
+    </xs:element>
+    <xs:element name="profiles">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+	A list of profiles.
+			]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded"
+                    ref="profile" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="userprofiles">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+	A list of userprofiles.
+			]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded"
+                    ref="userprofile" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="userprofile">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+	A a list of profiles of a user. User login name is defined in attribute "login".
+			]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded"
+                    ref="profile-ref" />
+            </xs:sequence>
+            <xs:attribute name="login" use="required" type="xs:string" />
+            <xs:attribute name="origin" type="originType"
+                default="modification" />
+        </xs:complexType>
+        <xs:unique name="uniqueProfile">
+            <xs:selector xpath="profile" />
+            <xs:field xpath="@name" />
+        </xs:unique>
+    </xs:element>
+    <xs:element name="action">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+	An application action. One ore more GUI element is mapped to an action.
+	All action ids of verine are defined in verinice-action.properties.
+			]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="id" use="required" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="profile">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+	A list of actions with a name.
+			]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded"
+                    ref="action" />
+            </xs:sequence>
+            <xs:attribute name="name" use="required" type="xs:string" />
+            <xs:attribute name="origin" type="originType"
+                default="modification" />
+        </xs:complexType>
+        <xs:unique name="uniqueAction">
+            <xs:selector xpath="action" />
+            <xs:field xpath="@id" />
+        </xs:unique>
+    </xs:element>
+    <xs:element name="profile-ref">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+    A reference to a profile.
+            ]]></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="name" use="required" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="configurationType">
+        <xs:annotation>
+            <xs:documentation><![CDATA[
+    'whitelist' - by default all actions are disabled, 'blacklist' - all actions are enabled 
+                ]]></xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="blacklist" />
+            <xs:enumeration value="whitelist" />
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="originType">
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="default" />
+            <xs:enumeration value="modification" />
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

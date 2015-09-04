@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- verinice Spring configuration file  -->
+<!-- This file is referenced  in class sernet.gs.server.InternalServer --> 
+<!-- This is a configuration for the search backend. -->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean id="directoryCreator" class="sernet.verinice.search.ESOsgiDirectoryCreator">
+    <!-- Elasticsearch index directory, relative to workspace -->
+    <property name="indexLocation" value="./elasticsearch/" />
+  </bean>
+
+  <bean id="OSGIIndexer" class="sernet.verinice.search.OSGIIndexer" init-method="run">
+    <property name="indexOnStartup" value="${veriniceserver.search.indexingOnStartup}" />
+    <property name="indexer" ref="searchIndexer" />
+  </bean>
+
+</beans>

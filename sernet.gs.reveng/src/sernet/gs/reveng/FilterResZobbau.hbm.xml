@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.FilterResZobbau" table="FILTER_RES_ZOBBAU">
+        <composite-id name="id" class="sernet.gs.reveng.FilterResZobbauId">
+            <key-property name="searchId" type="int">
+                <column name="SEARCH_ID" />
+            </key-property>
+            <key-property name="zobImpId" type="int">
+                <column name="ZOB_IMP_ID" />
+            </key-property>
+            <key-property name="zobId" type="int">
+                <column name="ZOB_ID" />
+            </key-property>
+            <key-property name="bauImpId" type="int">
+                <column name="BAU_IMP_ID" />
+            </key-property>
+            <key-property name="bauId" type="int">
+                <column name="BAU_ID" />
+            </key-property>
+            <key-property name="col" type="int">
+                <column name="COL" />
+            </key-property>
+        </composite-id>
+        <property name="spid" type="short">
+            <column name="SPID" not-null="true" />
+        </property>
+        <property name="orderStr1" type="string">
+            <column name="ORDER_STR_1" length="100" />
+        </property>
+        <property name="orderStr2" type="string">
+            <column name="ORDER_STR_2" length="100" />
+        </property>
+        <property name="orderStr3" type="string">
+            <column name="ORDER_STR_3" length="100" />
+        </property>
+    </class>
+</hibernate-mapping>

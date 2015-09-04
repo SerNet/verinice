@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<cheatsheet title="IT-Grundschutz: Basis-Sicherheitscheck">
+
+  <intro>
+    <description>
+      Im Rahmen des Basis-Sicherheitschecks bestimmen Sie, inwieweit Sie die Maßnahmen  der
+      IT-Grundschutz-Kataloge des BSI bereits umgesetzt haben.
+    </description>
+  </intro>
+
+  <item title="Ansicht optimieren">
+    <description>
+      Den View mit den Grundschutz-Katalogen benötigen Sie nun nicht mehr so oft. Schaffen Sie ein
+      wenig Platz auf dem Bildschirm, indem Sie den View "Grundschutz Modell" an seiner Überschrift
+      mit der Maus in den View "IT-Grundschutz" ziehen.
+      <br /><br />
+      Die beiden Fenster teilen sich nun den selben Bereich. Anhand der Reiter können Sie von einem
+      zum anderen wechseln. Auf diese Weise lassen sich alle Views verschieben und nach Ihren
+      Bedürfnissen anordnen.
+      <br /><br />
+      Sie können einen View sogar aus der Anwendung herausziehen. Das ist z.&#160;B. praktisch, um
+      bei einem Dual-Screen-System den Objektbrowser auf einem eigenen Monitor anzuzeigen. Jetzt
+      haben Sie also ein Argument, bei ihrem Chef ein zweites Display anzufordern.
+    </description>
+  </item>
+
+  <item title="Interview">
+    <description>
+      Legen wir los mit der Modellierung!
+      <br /><br />
+      Öffnen Sie den ersten Baustein B 1.0, den Sie im vorherigen Tutorial Ihrem IT-Verbund im
+      Grundschutz Modell hinzugefügt haben, mit einem Doppelklick. Wählen Sie für das Feld
+      "Erfasst durch" sich selbst aus (Klick auf den Button <b>Ändern...</b>). Für das Feld
+      "Gesprächspartner" wählen Sie bitte einen Interviewpartner aus, den Sie ggf. erst anlegen.
+      Das Datum wird automatisch auf den heutigen Tag gesetzt. Sie können es, falls nötig, ändern.
+      <br /><br />
+      Beachten Sie, wie der Text des Bausteins im Objektbrowser angezeigt wird, sobald Sie ihn
+      selektieren. Hier können Sie die Inhalte noch einmal nachlesen.
+      <br /><br />
+      Speichern Sie die Baustein-Änderungen (<b>Strg+S</b>).
+    </description>
+  </item>
+
+  <item title="Maßnahmenumsetzung">
+    <description>
+      Klappen Sie den Baustein 1.0 im Grundschutz Modell auf und öffnen Sie die erste Maßnahme
+      durch Doppelklick. Der Text der Maßnahme erscheint im Browserfenster, damit Sie die
+      Anforderungen nachlesen können.
+      <br /><br />
+      Setzen Sie den Umsetzungsstatus auf "Ja". Schließen und Speichern Sie die Maßnahme (<b>Strg+W</b>).
+    </description>
+  </item>
+
+
+  <item title="Bulk Edit 1">
+    <description>
+      Sie möchten (nach sorgfältiger Prüfung) alle Maßnahmen des Bausteins B 1.0 auf den Status
+      "umgesetzt" setzen. Selektieren Sie (durch Shift-Klick) alle Maßnahmen des Bausteins.
+      <br /><br />
+      Wählen Sie dann <b>Bearbeiten > Alle editieren ...</b>. Setzen Sie den Umsetzungsstatus auf "Ja"
+      und wählen Sie <b>Okay</b>. Alle anderen Felder lassen Sie bitte unverändert.
+    </description>
+  </item>
+
+  <item title="Bulk Edit 2">
+    <description>
+      Die Änderung wurde bei allen gewählten Objekten vorgenommen. Dies funktioniert mit allen anderen
+      Objekten so wie auch mit Bausteinen, Zielobjekten usw. Voraussetzung ist, dass Sie gleichartige
+      Objekte selektiert haben - also z.&#160;B. <b>nur</b> Server oder nur Bausteine.
+      <br /><br />
+      Alle Felder, die Sie im Masseneditor unverändert lassen, werden ignoriert. Es werden also nur
+      die Felder überschrieben, die Sie ändern möchten, alle anderen bleiben unangetastet.
+    </description>
+  </item>
+
+  <item title="Der Konsolidator 1">
+    <description>
+      Eine weitere Hilfe beim Erfassen der Maßnahmen ist der Konsolidator. Wenn Sie den gleichen
+      Baustein auf mehrere Zielobjekte anwenden, ähnelt sich oft der Umsetzungsgrad der Maßnahmen.
+      <br /><br />
+      Klappen Sie im Grundschutz Modell das Buchhaltungssystem und den Baustein 3.101 auf. Setzen
+      Sie für die Maßnahme 1.28 "Lokale unterbrechungsfreie Stromversorgung" die Umsetzung auf
+      "Ja". Speichern Sie (<b>Strg+S</b>) und klappen Sie den Baustein zu.
+      <br />
+      <br />
+      Erzeugen Sie einen neuen Server mit dem Namen "Mailserver". Ordnen Sie den Baustein
+      B 3.101 nun dem "Mailserver" zu -- per Drag and Drop aus dem Grunschutz Modell.
+      <br />
+      <br />
+      Klicken Sie rechts auf den Baustein 3.101 und wählen Sie "Gleiche Bausteine
+      selektieren".
+    </description>
+  </item>
+
+  <item title="I'll be back.">
+    <description>
+      <b>Alle</b> Server sind an die USV angeschlossen. Sie möchten das nicht für jeden
+      Server einzeln auswählen. Sie können sich dann z.&#160;B. wie folgt die Arbeit vereinfachen.
+      <br /><br />
+      Wählen Sie nun im Menü <b>Bearbeiten > Konsolidator</b> und dort das Buchhaltungssystem als
+      Vorlage. Bestätigen Sie mit <b>OK</b>. Wenn Sie jetzt den Baustein 3.101 beim Mailserver
+      aufklappen, sehen Sie, dass der Umsetzungsstatus der Maßnahme 1.28 übernommen wurde.
+      <br /><br />
+      Wenn Sie weitere Maßnahmen oder den Vorlagenbaustein selbst bearbeitet hätten, wären auch
+      diese Änderungen übernommen worden. So können Sie schnell Ihre Maßnahmen über mehrere
+      Zielobjekte hinweg dokumentieren.
+    </description>
+  </item>
+
+  <item title="Tipp">
+    <description>
+      Tipp: Sie können auch durch das Anlegen von Verknüpfungen modellieren.
+      <br/><br/>
+      Legen Sie einen neuen IT-Verbund an.
+      <br/><br/>
+      Modellieren Sie dort übergeordnet (auf das IT-Verbund-Objekt) alle Bausteine aus den
+      Grundschutzkatalogen. Anschließend verknüpfen Sie per Drag and Drop einen der Server aus
+      dem zuerst angelegten IT-Verbund mit einem Baustein aus dem zuletzt angelegten IT-Verbund.
+      <br /><br />
+      Diese Art der Modellierung hat den Vorteil, dass Sie denselben Baustein nicht immer
+      wieder modellieren und nachpflegen müssen. Die so modellierten Bausteine werden auch beim
+      Erstellen der Reports berücksichtigt.
+    </description>
+  </item>
+
+  <item title="Realisierung">
+    <description>
+      Arbeiten Sie sich durch alle Maßnahmen durch, dokumentieren Sie den Umsetzungsgrad und die
+      Begründung. Für nicht umgesetzte Maßnahmen legen Sie bitte den Umsetzungszeitpunkt und den
+      Verantwortlichen fest.
+      <br /><br />
+      Eine Liste aller umzusetzenden Maßnahmen erhalten Sie über <b>Ansicht > Zeige View... >
+      Realisierungsplan</b>. Sie können diese Ansicht z.&#160;B. nach Verantwortlichen filtern.
+    </description>
+
+    <onCompletion>
+      Sehr gut! Machen Sie weiter mit der ergänzenden Sicherheitsanalyse.
+    </onCompletion>
+  </item>
+
+
+
+</cheatsheet>

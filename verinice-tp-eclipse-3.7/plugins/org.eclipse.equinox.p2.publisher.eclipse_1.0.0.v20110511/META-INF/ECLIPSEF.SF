@@ -1,0 +1,23 @@
+Signature-Version: 1.0
+SHA1-Digest-Manifest: 3UX4jZxQ26Wd1jrOUNYFuCaPKxQ=
+Created-By: 1.6.0 (IBM Corporation)
+SHA1-Digest-Manifest-Main-Attributes: 79ipDqRh+sZ8rg2B3riRApqX0+4=
+
+Name: pdepublishing.jar
+SHA1-Digest: Uw3C0epVxYflLwDiQdN8aROoBZk=
+
+Name: ant_tasks/pdepublishing-ant.jar
+SHA1-Digest: D58kmkZsFUqnGGC5EkIwlfcHb+E=
+
+Name: META-INF/eclipse.inf
+SHA1-Digest: SAqY+5ITAL0mkdYeijlSRhyIaZk=
+
+Name: plugin.xml
+SHA1-Digest: NisAsSNn/jJwun0rKZ4vN6PiNqk=
+
+Name: about.html
+SHA1-Digest: M+fykt9heyWoEv1LNiIEeBhi/2Q=
+
+Name: plugin.properties
+SHA1-Digest: RUKX3stJx2bV19Q8cTCter2wDKg=
+

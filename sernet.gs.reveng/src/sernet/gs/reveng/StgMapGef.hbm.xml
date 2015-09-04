@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Jun 5, 2015 1:28:32 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="sernet.gs.reveng.StgMapGef" table="STG_MAP_GEF">
+        <composite-id name="id" class="sernet.gs.reveng.StgMapGefId">
+            <key-property name="altId" type="int">
+                <column name="ALT_ID" />
+            </key-property>
+            <key-property name="altImpId" type="int">
+                <column name="ALT_IMP_ID" />
+            </key-property>
+            <key-property name="neuId" type="int">
+                <column name="NEU_ID" />
+            </key-property>
+            <key-property name="neuImpId" type="int">
+                <column name="NEU_IMP_ID" />
+            </key-property>
+            <key-property name="inserted" type="boolean">
+                <column name="INSERTED" />
+            </key-property>
+            <key-property name="konkret" type="boolean">
+                <column name="KONKRET" />
+            </key-property>
+            <key-property name="aufheben" type="boolean">
+                <column name="AUFHEBEN" />
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>

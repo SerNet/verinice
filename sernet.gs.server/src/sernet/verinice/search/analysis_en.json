@@ -1,0 +1,23 @@
+{
+	"analysis":{
+		"filter":{
+			"english_stemmer":{
+				"type":"stemmer",
+				"language":"light_english"
+			}
+			
+		},
+		"analyzer":{
+			"verinice_analyzer":{
+				"tokenizer":"standard",
+				"filter":[
+					"lowercase",
+					"english_stemmer"
+				]
+				
+			}
+			
+		}
+		
+	}
+}

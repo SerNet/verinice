@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Spring configuration for JBoss jBPM  (https://www.jboss.org/jbpm) -->
+<!-- See jBPM developer guide - Chapter 17. Spring Integration -->
+<!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+    <bean id="processEngine" class="sernet.verinice.bpm.ProcessEngineDummy"/>
+
+    <bean id="processServiceIsa" class="sernet.verinice.bpm.ProcessServiceDummy"/>
+    
+    <bean id="taskService" class="sernet.verinice.bpm.TaskServiceDummy"/>
+    
+    <!-- Sends a notification to users with assigned tasks. -->
+	<bean name="taskNotificationJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+	    <property name="jobClass" value="sernet.verinice.bpm.NotificationJobDummy" />
+	</bean>
+    
+    <!-- Creates jBPM processes by IProcessCreater implementations. -->
+    <!-- Add a new IProcessCreater to processCreaterSet to create more processes. -->
+    <bean name="processJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+        <property name="jobClass" value="sernet.verinice.bpm.ProcessJob" />
+        <property name="jobDataAsMap">
+            <map>
+                <entry key="processCreaterSet">
+                    <set/>
+                </entry>
+                <entry key="workObjects" value-ref="workObjects" />
+            </map>
+        </property>
+    </bean>
+    
+    <bean id="remindService" class="sernet.verinice.bpm.RemindServiceDummy" />
+    
+    <bean id="isaControlFlowService" class="sernet.verinice.bpm.isam.IsaControlFlowServiceDummy" />
+    
+    <bean id="isaQmService" class="sernet.verinice.bpm.qm.IsaQmServiceDummy" />
+    
+    <bean id="individualService" class="sernet.verinice.bpm.indi.IndividualServiceDummy" />
+    
+    <bean id="gsmService" class="sernet.verinice.bpm.gsm.GsmServiceDummy" />
+  
+</beans>
