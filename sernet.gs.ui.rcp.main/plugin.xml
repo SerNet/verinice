@@ -30,6 +30,12 @@
             id="sernet.verinice.iso27k.rcp.Iso27kPerspective"
             name="%perspective.name.1">
       </perspective>
+      <perspective
+            class="sernet.verinice.iso27k.rcp.GreenbonePerspective"
+            icon="icons/greenbone.gif"
+            id="sernet.verinice.iso27k.rcp.GreenbonePerspective"
+            name="%perspective.name.2">
+      </perspective>
    </extension>
    <extension
          point="org.eclipse.ui.views">
@@ -1304,7 +1310,8 @@ Artwork:&#x0A;Blackbit http://www.blackbit.de - Icons by Axialis Team http://www
          point="org.eclipse.ui.cheatsheets.cheatSheetContent">
       <category
             id="sernet.gs.ui.rcp.main.cheatSheets"
-            name="%cheatsheets.1"/>
+            name="%cheatsheets.1">
+      </category>
       <cheatsheet
             category="sernet.gs.ui.rcp.main.cheatSheets"
             composite="false"
@@ -1425,6 +1432,40 @@ Artwork:&#x0A;Blackbit http://www.blackbit.de - Icons by Axialis Team http://www
               name="%cheatsheets.17">
            <description>
               This tutorial will show you how to accomplish a risk assessment based on the international standards ISO 27005 with verinice. Let's get started.
+           </description>
+        </cheatsheet>
+        <category
+              id="sernet.verinice.greenbone.cheatsheets"
+              name="%cheatsheets.18">
+        </category>
+        <cheatsheet
+              category="sernet.verinice.greenbone.cheatsheets"
+              composite="false"
+              contentFile="%cheatsheets.content.19"
+              id="sernet.verinice.greenbone.cheatsheets.getting_started"
+              name="%cheatsheets.19">
+           <description>
+              Placeholder Desctiption 1
+           </description>
+        </cheatsheet>
+        <cheatsheet
+              category="sernet.verinice.greenbone.cheatsheets"
+              composite="false"
+              contentFile="%cheatsheets.content.20"
+              id="sernet.verinice.greenbone.cheatsheets.placeholder_title_1"
+              name="%cheatsheets.20">
+           <description>
+              Placeholder Description 2
+           </description>
+        </cheatsheet>
+        <cheatsheet
+              category="sernet.verinice.greenbone.cheatsheets"
+              composite="false"
+              contentFile="%cheatsheets.content.21"
+              id="sernet.verinice.greenbone.cheatsheets.placeholder_title_3"
+              name="%cheatsheets.21">
+           <description>
+              Placeholder Description 3
            </description>
         </cheatsheet>
    </extension>

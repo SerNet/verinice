@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<cheatsheet title="Connecting Greenbone Security Manager: Getting Started">
+
+  <intro>
+    <description>
+      (Placeholder for Introduction Text)
+    </description>
+  </intro>
+
+  <item title="(Placeholder for Title Step A)">
+    <description>
+      (Placeholder for Body Step A)
+    </description>
+  </item>
+  
+  <item title="(Placeholder for Title Step A)">
+    <description>
+      (Placeholder for Body Step B)
+    </description>
+  </item>
+  
+  <item title="(Placeholder for Title Step A)">
+    <description>
+      (Placeholder for Body Step C)
+    </description>
+    <onCompletion>
+      (Placeholder for Completion Text)
+    </onCompletion>
+  </item>
+  
+</cheatsheet>

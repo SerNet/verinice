@@ -55,6 +55,7 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
+import sernet.verinice.iso27k.rcp.GreenbonePerspective;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 
 /**
@@ -85,7 +86,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     public void preWindowOpen() {
         final int pointX = 1100;
         final int pointY = 768;
-        final int perspectiveBarSize = 360;
+        final int perspectiveBarSize = 480;
         try {
             IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
             configurer.setInitialSize(new Point(pointX, pointY));
@@ -99,11 +100,24 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             // Set the preference toolbar to the left place
             // If other menus exists then this will be on the left of them
             apiStore.setValue(IWorkbenchPreferenceConstants.DOCK_PERSPECTIVE_BAR, "TOP_LEFT");
-            apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_EXTRAS, Iso27kPerspective.ID + "," + Perspective.ID + ",sernet.verinice.samt.rcp.SamtPerspective" );
+            apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_EXTRAS, getInitialPerspectiveBarList());
             apiStore.setValue(IWorkbenchPreferenceConstants.PERSPECTIVE_BAR_SIZE, perspectiveBarSize);
         } catch(Exception t) {
             LOG.error("Error while configuring window.", t);
         }
+    }
+    
+    private String getInitialPerspectiveBarList() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(Iso27kPerspective.ID);
+        sb.append(",");
+        sb.append(Perspective.ID); // IT Basline Protection perspective
+        sb.append(",");
+        sb.append("sernet.verinice.samt.rcp.SamtPerspective");
+        sb.append(",");
+        sb.append(GreenbonePerspective.ID);
+        
+        return sb.toString();
     }
     
     private String getCurrentUserName(){

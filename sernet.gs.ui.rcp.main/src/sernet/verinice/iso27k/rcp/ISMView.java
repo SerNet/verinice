@@ -129,7 +129,6 @@ import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
-import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.rcp.tree.TreeContentProvider;
@@ -140,7 +139,7 @@ import sernet.verinice.rcp.tree.TreeUpdateListener;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public class ISMView extends RightsEnabledView implements IAttachedToPerspective, ILinkedWithEditorView {
+public class ISMView extends RightsEnabledView implements ILinkedWithEditorView {
 
 	private static final Logger LOG = Logger.getLogger(ISMView.class);
 	
@@ -622,14 +621,6 @@ public class ISMView extends RightsEnabledView implements IAttachedToPerspective
 	@Override
 	public void setFocus() {
 		viewer.getControl().setFocus();
-	}
-
-	/* (non-Javadoc)
-	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
-	 */
-	@Override
-    public String getPerspectiveId() {
-		return Iso27kPerspective.ID;
 	}
 	
 	public ICommandService getCommandService() {

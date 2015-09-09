@@ -34,6 +34,7 @@ h1 {
 	padding:0px;
 	margin-top:0px;
  	margin-bottom:0px;
+	text-decoration: none;
     display:block;
   	background-image:url(link-isa.gif);
 	width:82px;
@@ -57,6 +58,7 @@ h1 {
 	padding:0px;
 	margin-top:0px;
  	margin-bottom:0px;
+	text-decoration: none;
     display:block;
   	background-image:url(link-ism.gif);
 	width:82px;
@@ -74,11 +76,12 @@ h1 {
 
 #a-gs {
 	position:absolute; 
-	top:474px; 
-	left:69px;
+	top:502px; 
+	left:107px;
 	padding:0px;
 	margin-top:0px;
  	margin-bottom:0px;
+	text-decoration: none;
     display:block;
   	background-image:url(link-gs.gif);
 	width:82px;
@@ -89,8 +92,32 @@ h1 {
 .link-gs-text {
 	font-size: 16px;
 	position:absolute;
-	top:495px;
-	left:165px;
+	top:521px;
+	left:202px;
+	width:200px;
+}
+
+#a-gb {
+	position:absolute; 
+	top:244px; 
+	left:158px;
+	padding:0px;
+	margin-top:0px;
+ 	margin-bottom:0px;
+	text-decoration: none;
+    display:block;
+  	background-image:url(link-greenbone.gif);
+	background-position: left top;
+	width:82px;
+ 	height:82px;
+}
+#a-gb:hover {background-position: left bottom; }
+
+.link-gb-text {
+	font-size: 16px;
+	position:absolute;
+	top:264px;
+	left:253px;
 	width:200px;
 }
 
