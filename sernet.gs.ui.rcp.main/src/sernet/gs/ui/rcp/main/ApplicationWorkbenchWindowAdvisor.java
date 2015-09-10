@@ -55,7 +55,6 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.iso27k.rcp.GreenbonePerspective;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 
 /**
@@ -86,7 +85,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     public void preWindowOpen() {
         final int pointX = 1100;
         final int pointY = 768;
-        final int perspectiveBarSize = 480;
+        final int perspectiveBarSize = 360;
         try {
             IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
             configurer.setInitialSize(new Point(pointX, pointY));
@@ -114,8 +113,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         sb.append(Perspective.ID); // IT Basline Protection perspective
         sb.append(",");
         sb.append("sernet.verinice.samt.rcp.SamtPerspective");
-        sb.append(",");
-        sb.append(GreenbonePerspective.ID);
         
         return sb.toString();
     }
