@@ -40,6 +40,8 @@ public class VeriniceQuery implements Serializable{
     private int limit = 0;
 
     private String query = EMPTY_QUERY;
+    
+    private int scopeId = -1;
 
     /**
      * Inits a verinice query object.
@@ -57,6 +59,11 @@ public class VeriniceQuery implements Serializable{
         } else {
             this.limit = (limit >= 0) ? limit : DEFAULT_LIMIT;
         }
+    }
+    
+    public VeriniceQuery(String query, int limit, int scopeId){
+        this(query, limit);
+        this.scopeId = scopeId;
     }
 
     /**
@@ -86,5 +93,19 @@ public class VeriniceQuery implements Serializable{
      */
     public boolean isQueryEmpty() {
         return query == null || EMPTY_QUERY.equals(query);
+    }
+
+    /**
+     * @return the scopeId
+     */
+    public int getScopeId() {
+        return scopeId;
+    }
+
+    /**
+     * @param scopeId the scopeId to set
+     */
+    public void setScopeId(int scopeId) {
+        this.scopeId = scopeId;
     }
 }

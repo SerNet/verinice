@@ -195,6 +195,7 @@ public abstract class BaseDao implements ISearchDao {
         return executeMultiSearch(request);
     }
     
+    
     @Override
     public MultiSearchRequestBuilder prepareQueryWithAllFields(String typeId, VeriniceQuery query, String username){
         Map<String, String> map = new ConcurrentHashMap<String, String>();
@@ -262,6 +263,11 @@ public abstract class BaseDao implements ISearchDao {
                 andBuilder = andBuilder.add(createScopeOnlyFilter(username));
             }
             
+            if(query.getScopeId() != -1){
+                // vermutlich besser als suchkriterium als als filter anwenden
+                andBuilder = andBuilder.add(createScopeIdFilter(query.getScopeId()));
+            }
+
             searchBuilder = searchBuilder.setPostFilter(andBuilder);
             
             searchBuilder = searchBuilder.setFrom(0);
@@ -300,6 +306,10 @@ public abstract class BaseDao implements ISearchDao {
 
     private TermsFilterBuilder createPermissionFilter(String username) {
         return FilterBuilders.inFilter(ISearchService.ES_FIELD_PERMISSION_ROLES + "." + ISearchService.ES_FIELD_PERMISSION_NAME, getRoleString(username).toArray());
+    }
+    
+    private TermFilterBuilder createScopeIdFilter(int scopeId){
+        return FilterBuilders.termFilter(ISearchService.ES_FIELD_SCOPE_ID, scopeId);
     }
     
   
