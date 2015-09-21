@@ -71,16 +71,23 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 	private transient IAuthService authService;
     private String typeId;
     private String language;
+    
+    private CnATreeElement container;
 
 	public CreateBaustein(CnATreeElement container, Baustein baustein, String language) {
 		
 		dbId = container.getDbId();
 		typeId = container.getTypeId();
 		
+		if(dbId == null){
+		    getLogger().error("dbid of element:\t" + container.getTitle() + " is null, WTF!?!");
+		}
 		this.baustein = baustein;
 		stationId = ChangeLogEntry.STATION_ID;
 		
 		this.language = language;
+		
+		this.container = container;
 		
 	}
 	
@@ -89,8 +96,11 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 			= getDaoFactory().getDAO(BausteinUmsetzung.class);
 		
 		try {
-			IBaseDao<CnATreeElement, Integer> containerDao = getDaoFactory().getDAO(typeId);
-			CnATreeElement container = containerDao.findById(dbId);
+			if(dbId == null || typeId == null || baustein == null){
+			    getLogger().warn("Some parameter equals null, not importing current ITGS module");
+			    throw new RuntimeCommandException("Some parameter was null, not importing current ITGS module");
+			}
+			
 			
 			if (container.containsBausteinUmsetzung(baustein.getId())){
 			    // up to now no import of userdefined bausteine

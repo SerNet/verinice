@@ -4,6 +4,7 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 
@@ -16,6 +17,7 @@ public class OwnModulDecorator extends LabelProvider implements ILightweightLabe
     public static final String IMAGE_PATH = "overlays/owned_ovr.gif";
 
     public void decorate(Object o, IDecoration decoration) {
+        Activator.inheritVeriniceContextState();
         if (o instanceof BausteinUmsetzung) {
             BausteinUmsetzung baustein = (BausteinUmsetzung) o;
             if (baustein.getUrl() == null || baustein.getUrl().isEmpty() || baustein.getUrl().equals("null")) {

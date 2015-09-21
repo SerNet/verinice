@@ -42,19 +42,25 @@ import com.heatonresearch.datamover.db.MDBFileDatabase;
 
 import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MbBaust;
+import sernet.gs.reveng.MbBaustGefaehr;
+import sernet.gs.reveng.MbMassn;
 import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.NZobSb;
+import sernet.gs.reveng.importData.BausteinInformationTransfer;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.reveng.importData.GSVampire;
+import sernet.gs.reveng.importData.GefaehrdungInformationTransfer;
+import sernet.gs.reveng.importData.MassnahmeInformationTransfer;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
 import sernet.gs.ui.rcp.main.bsi.model.CnAElementBuilder;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -425,9 +431,10 @@ public class ImportTask {
         ImportCreateBausteinReferences command;
         ServiceFactory.lookupAuthService();
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
-            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, new BSIConfigurationRCPLocal());
+            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, new BSIConfigurationRCPLocal(), alleBausteineToZoBstMap);
+            
         } else {
-            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap);
+            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap);
         }
         ServiceFactory.lookupCommandService().executeCommand(command);
     }
@@ -614,12 +621,22 @@ public class ImportTask {
 
         this.monitor.subTask(numberImported + "/" + numberOfElements + " - Erstelle " + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.keySet().size() + " Baust. und " + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Massn...");
 
+        // maps needed for import of userdefined data, storing information retrieved from itgs catalogues in non userdefined case
+        Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap = new HashMap<MbBaust, BausteinInformationTransfer>();
+        Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap = new HashMap<MbMassn, MassnahmeInformationTransfer>();
+        Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap = new HashMap<MbBaust, List<GefaehrdungInformationTransfer>>();
+        
         ImportCreateBausteine command;
         ServiceFactory.lookupAuthService();
+        for(MbBaust b : bausteineMassnahmenMap.keySet()){
+            if(b.getId().getBauImpId() == 1){// is it possible for a catalog bst to have user defined gefs?
+                prepareUserDefinedBausteinImport(zielobjekt, bausteineMassnahmenMap, udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap, b);
+            }
+        }
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
-            command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung, new BSIConfigurationRCPLocal());
+            command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung, new BSIConfigurationRCPLocal(), udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap);
         } else {
-            command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung);
+            command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung, udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap);
         }
 
         command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -627,6 +644,8 @@ public class ImportTask {
         if (command.getAlleBausteineToBausteinUmsetzungMap() != null) {
             this.alleBausteineToBausteinUmsetzungMap.putAll(command.getAlleBausteineToBausteinUmsetzungMap());
         }
+        
+
 
         if (command.getAlleBausteineToZoBstMap() != null) {
             this.alleBausteineToZoBstMap.putAll(command.getAlleBausteineToZoBstMap());
@@ -638,6 +657,34 @@ public class ImportTask {
 
     }
 
+    /**
+     * @param zielobjekt
+     * @param bausteineMassnahmenMap
+     * @param udBausteineTxtMap
+     * @param udBstMassTxtMap
+     * @param udBaustGefMap
+     * @param b
+     */
+    private void prepareUserDefinedBausteinImport(NZielobjekt zielobjekt, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap, Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap, Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap, MbBaust b) {
+        udBausteineTxtMap.put(b, vampire.findTxtForMbBaust(b, zielobjekt, GSScraperUtil.getInstance().getModel().getEncoding()));
+        List<BausteineMassnahmenResult> lr = bausteineMassnahmenMap.get(b);
+        for(BausteineMassnahmenResult r : lr){
+            udBstMassTxtMap.put(r.massnahme, vampire.findTxtforMbMassn(b, r.massnahme, GSScraperUtil.getInstance().getModel().getEncoding()));
+        }
+        List<GefaehrdungInformationTransfer> gitList = new ArrayList<GefaehrdungInformationTransfer>();
+        List<MbBaustGefaehr> mbBaustGefList = vampire.findGefaehrdungenForBaustein(b, zielobjekt);
+        for(MbBaustGefaehr gefaehr : mbBaustGefList){
+            GefaehrdungInformationTransfer git = vampire.findGITForBstGef(b, gefaehr, zielobjekt, GSScraperUtil.getInstance().getModel().getEncoding());
+            if(git.getTitel() != null && git.getId() != null){
+                gitList.add(git);
+            } 
+            
+        }
+        if(gitList.size() > 0){
+            udBaustGefMap.put(b, gitList);
+        }
+    }
+    
     private int getAnzahlMassnahmen(Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap) {
         Set<MbBaust> keys = bausteineMassnahmenMap.keySet();
         int result = 0;

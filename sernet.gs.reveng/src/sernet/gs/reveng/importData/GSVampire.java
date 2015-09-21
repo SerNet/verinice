@@ -1,30 +1,43 @@
 package sernet.gs.reveng.importData;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Transaction;
 
+import sernet.gs.reveng.BaseHibernateDAO;
 import sernet.gs.reveng.HibernateSessionFactory;
 import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MSchutzbedarfkategTxtDAO;
 import sernet.gs.reveng.MUmsetzStatTxt;
 import sernet.gs.reveng.MbBaust;
+import sernet.gs.reveng.MbBaustGefaehr;
+import sernet.gs.reveng.MbBaustTxt;
 import sernet.gs.reveng.MbDringlichkeitTxt;
 import sernet.gs.reveng.MbDringlichkeitTxtDAO;
 import sernet.gs.reveng.MbGefaehr;
 import sernet.gs.reveng.MbMassn;
+import sernet.gs.reveng.MbMassnTxt;
 import sernet.gs.reveng.MbRolleTxt;
 import sernet.gs.reveng.MbZeiteinheitenTxt;
 import sernet.gs.reveng.MbZeiteinheitenTxtDAO;
@@ -164,9 +177,19 @@ public class GSVampire {
 			+ " where zmi.id.zobId = esa.esaZobIdMit"
 			+ "	and esa.NZielobjekt.id.zobId = :zobId";
 	
-	
+	private static final String QUERY_MBBAUSTTXT_FOR_MBBAUST = "select mbBaustTxt, mzb"
+	        + " from MbBaust mbBaust, MbBaustTxt mbBaustTxt, ModZobjBst mzb"
+	        + " where mbBaust.id.bauId = mbBaustTxt.id.bauId"
+	        + " and mzb.id.bauId = mbBaust.id.bauId"
+	        + " and mzb.id.zobId = :zobId"
+	        + " and mbBaust.id.bauImpId = 1"
+	        + " and mbBaust.id.bauId = :bstId";
 		
-		
+    
+	private static final String QUERY_MBMASSTXT_FOR_MBMASS = "select mbMassnTxt" 
+	       + " from MbMassn mbMassn, MbMassnTxt mbMassnTxt "
+	       + " where mbMassn.id.masId = mbMassnTxt.id.masId"  
+	       + " and mbMassn.id.masId = :masId";
 	
 
 	// private static final String QUERY_ZEITEINHEITEN_TXT_ALL = "select zeittxt
@@ -238,6 +261,7 @@ public class GSVampire {
             "   and rzgma.id.zobId = z.id.zobId " +
             "   and mzbm.id.masId = rzgma.id.masId " + 
             "   and mzbm.id.zobId = z.id.zobId " +
+            // why is it here set to 1 ( 1 means own bst, if you look it up in the query)?
             "   and mzbm.id.bauImpId = 1 " +
             "   and umstxt.id.ustId = mzbm.ustId " + 
             "   and umstxt.id.sprId = 1 " + 
@@ -252,6 +276,31 @@ public class GSVampire {
             "   and stxt.id.sprId=1 " +
             "   and z.id.zobId = :zobId " +
             "   and g.id.gefId = :gefId ";
+	
+	
+//	private static final String QUERY_GEFTXT_FOR_BAUSTEIN = "select mbg from MbBaustGefaehr mbg, MbBaust mbb" 
+//	        + " where mbg.mbGefaehr.id.gefId = :gefId"
+//	        + " and gTxt.id.gefId = mbg.mbGefaehr.id.gefId"
+//	        + " and mbg.mbBaust.id.bauId = :bstId";
+	private static final String QUERY_MBBSTGEF_FOR_BAUSTEIN = "select mbg from MbBaustGefaehr mbg, NZielobjekt z, ModZobjBst mzb" 
+	+ " where mbg.mbBaust.id.bauId = :bstId" 
+	+ " and mzb.id.bauId = :bstId"
+	+ " and mzb.id.zobId = :zobId"
+	+ " and z.id.zobId  = :zobId";
+	
+//	private static final String QUERY_GEFS_FOR_BAUSTEIN = "select mbg.mbGefaehr" 
+//	        + " from MbBaustGefaehr mbg, ModZobjBst zo_bst" 
+//	        + " where mbg.mbBaust.id.bauId = :bstId "
+//	        + " and zo_bst.id.bauId =  mbg.mbBaust.id.bauId"
+//	        + " and zo_bst.id.zobId = :zobId";
+	
+	private static final String QUERY_GEFS_FOR_BAUSTEIN = "select mbg.mbGefaehr.nr, mbg.mbGefaehr.id.gefImpId, mbg.mbGefaehr.gfkId, mbg.mbGefaehr.id.gefId, gtxt.name, gtxt.beschreibung"
+	+ " from MbGefaehrTxt gtxt, MbBaustGefaehr mbg"
+	+ " where mbg.id.gefId = :gefId"
+	+ " and gtxt.id.gefId = :gefId"
+	+ " and (gtxt.id.sprId = 0 or gtxt.id.sprId = 1)"; // german (1) version and userdefs (0) only
+	
+	
 	public GSVampire(String configFile) {
 		HibernateSessionFactory.setConfigFile(configFile);
 	}
@@ -356,6 +405,146 @@ public class GSVampire {
 		transaction.commit();
 		dao.getSession().close();
 		return all;
+	}
+	
+	public BausteinInformationTransfer findTxtForMbBaust(MbBaust mbBaust, NZielobjekt z, String encoding){
+	    BaseHibernateDAO dao = new BaseHibernateDAO();
+	    BausteinInformationTransfer bit = new BausteinInformationTransfer();
+	    Transaction transaction = dao.getSession().beginTransaction();
+	    Query qry = dao.getSession().createQuery(QUERY_MBBAUSTTXT_FOR_MBBAUST);
+	    qry.setParameter("bstId", mbBaust.getId().getBauId());
+	    qry.setParameter("zobId", z.getId().getZobId());
+	    List<Object> hqlResult = qry.list();
+	    if(hqlResult.size() == 1 && hqlResult.get(0) instanceof Object[]){
+	        Object[] resultArr = (Object[])hqlResult.get(0);
+	        MbBaustTxt mTxt =  (MbBaustTxt)resultArr[0];
+	        ModZobjBst mzb = (ModZobjBst)resultArr[1];
+	        try {
+                bit.setDescription(((mTxt.getBeschreibung() != null) ? convertClobToStringEncodingSave(mTxt.getBeschreibung(), encoding) : "no description available"));
+            } catch (IOException e) {
+                LOG.error("Error converting CLOB to String", e);
+            }
+	        bit.setEncoding(encoding);
+	        bit.setId(mbBaust.getNr());
+	        bit.setKapitel("1"); // TODO
+	        bit.setSchicht(String.valueOf(mbBaust.getMbSchicht().getId().getSchId()));
+	        bit.setTitel(mTxt.getName());
+	        bit.setErfasstAm(mzb.getDatum());
+	        bit.setZobId(z.getId().getZobId());
+	        bit.setNr(mbBaust.getNr());
+	        Hibernate.initialize(mzb.getMbBaust());
+	        Hibernate.initialize(mzb.getNZielobjektByFkZbZ());
+	        Hibernate.initialize(mzb.getNZielobjektByFkZbZ2());
+	        bit.setMzb(mzb);
+	    }
+        transaction.commit();
+        dao.getSession().close();
+	    return bit;
+	}
+	
+	public MassnahmeInformationTransfer findTxtforMbMassn(MbBaust mBbaut, MbMassn mbMassn, String encoding){
+        BaseHibernateDAO dao = new BaseHibernateDAO();
+        Transaction transaction = dao.getSession().beginTransaction();
+        Query qry = dao.getSession().createQuery(QUERY_MBMASSTXT_FOR_MBMASS);
+        qry.setParameter("masId", mbMassn.getId().getMasId());
+        List<Object> hqlResult = qry.list();
+        MassnahmeInformationTransfer mit = new MassnahmeInformationTransfer();
+        if(hqlResult.size() == 1 && hqlResult.get(0) instanceof MbMassnTxt){
+            MbMassnTxt mTxt = (MbMassnTxt)hqlResult.get(0);
+            
+            mit.setAbstract_(mTxt.getAbstract_());
+            mit.setTitel(mTxt.getName());
+            try{
+                if(mTxt.getBeschreibung() !=  null ){
+                    mit.setDescription(convertClobToStringEncodingSave(mTxt.getBeschreibung(), encoding));
+                }
+                if(mTxt.getHtmltext() != null){
+                    mit.setHtmltext(convertClobToStringEncodingSave(mTxt.getHtmltext(), encoding));
+                }
+            } catch (IOException e){
+                LOG.error("Error parsing clob to String", e);
+            }
+            mit.setId("bM " + String.valueOf(mbMassn.getMskId().intValue()) + "." + String.valueOf(mbMassn.getNr()));
+            mit.setSiegelstufe('A'); // TODO
+            mit.setZyklus("-1"); // TODO 
+            
+        }
+        transaction.commit();
+        dao.getSession().close();
+        return mit;	    
+	}
+	
+    public GefaehrdungInformationTransfer findGITForBstGef(MbBaust mbBaust, MbBaustGefaehr mbBstGef, NZielobjekt z, String encoding){
+        BaseHibernateDAO dao = new BaseHibernateDAO();
+        Transaction transaction = dao.getSession().beginTransaction();
+        Query qry = dao.getSession().createQuery(QUERY_GEFS_FOR_BAUSTEIN);
+        qry.setParameter("gefId", mbBstGef.getMbGefaehr().getId().getGefId());
+        List<Object> hqlResult = qry.list();
+        GefaehrdungInformationTransfer git = new GefaehrdungInformationTransfer();
+        if(hqlResult.size() >= 1 && hqlResult.get(0) instanceof Object[]){
+            Object[] resultArr = ((Object[])hqlResult.get(0));
+            String gNr = String.valueOf(resultArr[0]);
+            String gKId = String.valueOf(resultArr[2]);
+            String gId = String.valueOf(resultArr[3]);
+            String gName = String.valueOf(resultArr[4]);
+            try {
+                git.setDescription(convertClobToStringEncodingSave((Clob)resultArr[5], encoding));
+            } catch (IOException e) {
+                LOG.error("Error parsing clob to String", e);
+                git.setDescription("Description not parseable from CLOB");
+            }
+            git.setId(String.valueOf(gNr));
+            git.setTitel(gName);
+        }
+        
+        if(LOG.isDebugEnabled() && hqlResult.size() > 1){
+            Map<String, String> tMap = new HashMap<String, String>();
+            for(Object o : hqlResult){
+                if(o instanceof Object[]){
+                    Object[] oArr = (Object[])o;
+                    String gNr = String.valueOf(oArr[0]);
+                    String gId = String.valueOf(oArr[3]);
+                    String gName = String.valueOf(oArr[4]);
+                    String gDesc = "";
+                    try{
+                        gDesc = convertClobToStringEncodingSave((Clob)oArr[5], encoding);
+                    } catch (IOException e){
+                        LOG.error("Error parsing clob to String", e);
+                    }
+                    String id = gId + gNr + gName;
+                    if(tMap.containsKey(id)){
+                        String eDesc = tMap.get(id); // existing description
+                        if(eDesc.equals(gDesc)){
+                            LOG.debug("<" + id + ">\tDuplette found:\t" + gDesc);
+                        }
+                    } else {
+                        LOG.debug("<" + id + ">\tnew desc for existant g:\t" + gDesc);
+                        tMap.put(id, gDesc);
+                    }
+                } else {
+                    LOG.error("Unexpected Class of o:\t" + o.getClass().getCanonicalName());
+                }
+            }
+        }
+        transaction.commit();
+        dao.getSession().close();
+        return git;
+	}
+	
+	public List<MbBaustGefaehr> findGefaehrdungenForBaustein(MbBaust mbBaust, NZielobjekt zo){
+        BaseHibernateDAO dao = new BaseHibernateDAO();
+        Transaction transaction = dao.getSession().beginTransaction();
+        Query qry = dao.getSession().createQuery(QUERY_MBBSTGEF_FOR_BAUSTEIN);
+        qry.setParameter("bstId", mbBaust.getId().getBauId());
+        qry.setParameter("zobId", zo.getId().getZobId());
+        List<Object> hqlResult = qry.list();
+        transaction.commit();
+        dao.getSession().close();
+        if(hqlResult != null && hqlResult.size() > 0){
+            return (List<MbBaustGefaehr>)(List<?>)hqlResult;
+        } else {
+            return Collections.EMPTY_LIST;
+        }
 	}
 
 	public Set<NZielobjekt> findVerantowrtlicheMitarbeiterForMassnahme(
@@ -650,5 +839,20 @@ public class GSVampire {
 		dao.getSession().close();
 		return result;
 	}
-
+	
+	public static String convertClobToStringEncodingSave(Clob clob, String encoding) throws IOException{
+	    try{
+	        Reader reader = clob.getCharacterStream();
+	        InputStream in = new ByteArrayInputStream(IOUtils.toByteArray(reader, encoding));
+	        if(in!=null) {
+	            return IOUtils.toString(in, encoding);
+	        } else {
+	            return "";
+	        }
+	    } catch (SQLException e){
+	        LOG.error("Error while converting clob to String", e);
+	        throw new RuntimeException(e);
+	    }
+    }
+	
 }

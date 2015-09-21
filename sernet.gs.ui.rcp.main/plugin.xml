@@ -615,7 +615,22 @@ Artwork:&#x0A;Blackbit http://www.blackbit.de - Icons by Axialis Team http://www
                menubarPath="content"
                style="push"
                tooltip="%action.tooltip.30"/>
-           </objectContribution>   
+           </objectContribution>
+		<objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bsi.BausteinGefaehrdungContrib"
+            objectClass="sernet.verinice.model.bsi.BausteinUmsetzung">
+         	<action
+               class="sernet.gs.ui.rcp.main.bsi.actions.AddGefaehrdungActionDelegate"
+               enablesFor="1"
+               icon="icons/OMC.png"
+               id="sernet.gs.ui.rcp.main.addGefaehrdung"
+               label="%action.label.37"
+               menubarPath="content"
+               style="push"
+               tooltip="%action.tooltip.37">
+              </action>
+        </objectContribution>              
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.personContribution1"

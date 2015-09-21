@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class BausteinUmsetzung extends CnATreeElement {
@@ -149,7 +150,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 		}
 		allMassnahmen: for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
 			Object obj = iter.next();
-			if (!(obj instanceof MassnahmenUmsetzung)) {
+			if (!(obj instanceof MassnahmenUmsetzung || obj instanceof GefaehrdungsUmsetzung)) {
 				// should never happen:
 				Logger.getLogger(this.getClass()).error(obj.getClass());
 				return '0';

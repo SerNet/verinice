@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.reveng.MbBaust;
+import sernet.gs.reveng.ModZobjBst;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.TransferData;
@@ -64,21 +65,24 @@ public class ImportCreateBausteinReferences extends GenericCommand {
     private CnATreeElement element;
     private List<Baustein> bausteine;
     private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
+    private Map<MbBaust, ModZobjBst> bausteinMap;
     private String sourceId;
     private IBSIConfig bsiConfig;
     private static final String NO_COMMENT = "";
 
-    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap) {
+    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, Map<MbBaust, ModZobjBst> bausteinMap) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
         this.sourceId = sourceId;
+        this.bausteinMap = bausteinMap;
     }
 
-    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, IBSIConfig bsiConfig) {
+    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, IBSIConfig bsiConfig, Map<MbBaust, ModZobjBst> bausteinMap) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
         this.sourceId = sourceId;
         this.bsiConfig = bsiConfig;
+        this.bausteinMap = bausteinMap;
     }
 
     /*
@@ -140,23 +144,36 @@ public class ImportCreateBausteinReferences extends GenericCommand {
 
         String bausteinId = TransferData.getId(mbBaust);
         Baustein baustein = findBausteinForId(bausteinId);
-
-        if(baustein==null) {
-            //throw new RuntimeException("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);       
-            getLog().error("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
-            return;
-        }
         
         Integer refZobId = null;
-        isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
-            refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
-            if (refZobId != null) {
-                break isReference;
+        if(baustein==null) {
+            //throw new RuntimeException("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
+            if(mbBaust.getId().getBauImpId() == 1){ // bst is userdefined, so create own instance of Baustein
+                for(MbBaust mbB : bausteinMap.keySet()){
+                    if(mbB.getNr().equals(mbBaust.getNr())){
+                        refZobId = bausteinMap.get(mbB).getNZielobjektByFkZbZ().getId().getZobId();
+                        break;
+                    }
+                }
+                if(refZobId == null && bausteinMap.containsKey(mbBaust)){
+                    refZobId = bausteinMap.get(mbBaust).getNZielobjektByFkZbZ().getId().getZobId();
+                }
+            } else {
+                getLog().error("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
+                return;
+            }
+        } else {
+            isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
+                refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
+                if (refZobId != null) {
+                    break isReference;
+                }
             }
         }
-
-        if (refZobId != null ) {
-            getLog().debug("Looking for previously created baustein by sourceId, extId: " + sourceId + ", " + createExtId(baustein, refZobId));
+        if (refZobId != null && baustein != null) {
+            if(getLog().isDebugEnabled()){
+                getLog().debug("Looking for previously created baustein by sourceId, extId: " + sourceId + ", " + createExtId(baustein, refZobId));
+            }
             LoadCnAElementByExternalID cmd = new LoadCnAElementByExternalID(sourceId, createExtId(baustein, refZobId));
             cmd = getCommandService().executeCommand(cmd);
             List<CnATreeElement> elements = cmd.getElements();
@@ -175,7 +192,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
     }
     
     private String createExtId(Baustein baustein, Integer refZobId) {
-        return baustein.getId() + "-" + Integer.toString(refZobId);
+        return baustein.getId() + "-" + String.valueOf(refZobId);
     }
 
     private Baustein findBausteinForId(String id) {

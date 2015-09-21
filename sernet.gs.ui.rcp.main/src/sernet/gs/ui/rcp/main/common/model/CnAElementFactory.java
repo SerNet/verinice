@@ -59,6 +59,7 @@ import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.SonstigeITKategorie;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.Datenverarbeitung;
@@ -493,6 +494,21 @@ public final class CnAElementFactory {
 				return child;
 			}
 		});
+		
+		/*
+		 * added due to improvements on gstool-import, which could contain user defined gefaehrdungen 
+		 */
+		elementbuilders.put(GefaehrdungsUmsetzung.TYPE_ID, new ElementBuilder(){
+		    @Override
+            public CnATreeElement build(CnATreeElement container,
+                    BuildInput input) throws CommandException {
+                GefaehrdungsUmsetzung child = dbHome.save(container,
+                        GefaehrdungsUmsetzung.class, GefaehrdungsUmsetzung.TYPE_ID);
+                init(container, child);
+                return child;
+            }
+		});
+        
 
 		elementbuilders.put(ITVerbund.TYPE_ID, new ElementBuilder() {
 			public ITVerbund build(CnATreeElement container, BuildInput input)

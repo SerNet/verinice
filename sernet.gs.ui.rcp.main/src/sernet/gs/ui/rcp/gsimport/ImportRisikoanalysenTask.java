@@ -173,6 +173,8 @@ public class ImportRisikoanalysenTask {
         // Now create the risk analysis object and add all gefaehrdungen to it:
         List<RAGefaehrdungenResult> gefaehrdungenForZielobjekt = vampire.findRAGefaehrdungenForZielobjekt(zielobjekt.zielobjekt);
         if (gefaehrdungenForZielobjekt == null || gefaehrdungenForZielobjekt.size() == 0) {
+            // TODO adjust this to ensure not importing empty riskanalysises
+            // if element.risikoanalyse.entbehrlich = true, then skip
             if(LOG.isDebugEnabled()){
                 LOG.debug("No gefaehrungen found, not creating risk analysis object for " + zielobjekt.zielobjekt.getName());
             }
