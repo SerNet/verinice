@@ -54,7 +54,7 @@ import sernet.verinice.service.commands.GroupByTags;
  * For every organization with this tag method handleOrg(..) is called.
  * 
  * This class is configured by Spring as part of a cron job in veriniceserver-jbpm.xml
- * ans veriniceserver-plain.xml.
+ * and veriniceserver-plain.xml.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
