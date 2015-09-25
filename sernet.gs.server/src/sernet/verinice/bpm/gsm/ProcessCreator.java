@@ -48,12 +48,10 @@ import sernet.verinice.service.commands.GroupByTags;
 /**
  * Creates processes to track vulnerabilities imported from Greenbone Security Scanner (GSM).
  * 
- * The ProcessCreator handles all organizations which sourceId contains
- * <code>sourceIdSection</code>. You can set the value of sourceIdSection in your 
- * Spring configuration.
+ * The ProcessCreator handles an organizations if the property "org_tag" of the organization
+ * contains the return value of method getTag().  
  * 
- * First group by tags is called for asset and control top level groups.
- * After that <code>startProcessesForOrganization</code> from {@link GsmService} is called.
+ * For every organization with this tag method handleOrg(..) is called.
  * 
  * This class is configured by Spring as part of a cron job in veriniceserver-jbpm.xml
  * ans veriniceserver-plain.xml.
@@ -86,7 +84,7 @@ public class ProcessCreator implements IProcessCreater {
             dummyAuthAdded = addSecurityContext(ctx);
             List<String> orgUuids = selectOrgs();
             if (LOG.isDebugEnabled() && orgUuids.isEmpty()) {
-                LOG.debug("No organizations found. Source-id section is: " + getTag());
+                LOG.debug("No organizations found. Tag value is: " + getTag());
             }
             for (String uuid : orgUuids) {
                 Organization org = getOrganizationDao().findByUuid(uuid, RetrieveInfo.getPropertyChildrenInstance());
@@ -99,7 +97,18 @@ public class ProcessCreator implements IProcessCreater {
                 remoceSecurityContext(ctx);
             }
         }
-
+    }
+    
+    private List<String> selectOrgs() {
+        String hql = "select distinct element.uuid from CnATreeElement as element " + //$NON-NLS-1$
+                "inner join element.entity as entity " + //$NON-NLS-1$
+                "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
+                "inner join propertyList.properties as props " + //$NON-NLS-1$
+                "where props.propertyType = ? " + //$NON-NLS-1$
+                "and props.propertyValue like ? "; //$NON-NLS-1$
+        
+        Object[] params = new Object[]{Organization.PROP_TAG,createTagParam()};        
+        return getOrganizationDao().findByQuery(hql,params);     
     }
 
     private void handleOrg(Organization org) {
@@ -117,13 +126,6 @@ public class ProcessCreator implements IProcessCreater {
         } catch (Exception e) {
             LOG.error("Error while creating processes for org with id: " + org.getDbId(), e);
         }
-    }
-
-    private void removeTag(Organization org) {
-        Collection<? extends String> tags = org.getTags();
-        tags.remove(getTag());
-        org.setTags(tags);
-        getOrganizationDao().merge(org);
     }
 
     private void groupByTags(CnATreeElement org) throws CommandException {
@@ -147,26 +149,12 @@ public class ProcessCreator implements IProcessCreater {
     private void cleanUp(Organization org) {
         getGsmService().cleanUpOrganization(org.getDbId()); 
     }
-    
-    private List<String> selectOrgs() {
-        String hql = "select distinct element.uuid from CnATreeElement as element " + //$NON-NLS-1$
-                "inner join element.entity as entity " + //$NON-NLS-1$
-                "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
-                "inner join propertyList.properties as props " + //$NON-NLS-1$
-                "where props.propertyType = ? " + //$NON-NLS-1$
-                "and props.propertyValue like ? "; //$NON-NLS-1$
-        
-        Object[] params = new Object[]{Organization.PROP_TAG,createTagParam()};        
-        return getOrganizationDao().findByQuery(hql,params);
-        
-        
-        /*
-        DetachedCriteria crit = DetachedCriteria.forClass(Organization.class);
-        crit.add(Restrictions.ilike("sourceId", createSourceIdParam()));
-        crit.setFetchMode("children", FetchMode.JOIN);
-        crit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return getOrganizationDao().findByCriteria(crit);
-        */
+
+    private void removeTag(Organization org) {
+        Collection<? extends String> tags = org.getTags();
+        tags.remove(getTag());
+        org.setTags(tags);
+        getOrganizationDao().merge(org);
     }
     
     private boolean addSecurityContext(SecurityContext ctx) {
@@ -200,8 +188,8 @@ public class ProcessCreator implements IProcessCreater {
         return tag;
     }
 
-    public void setTag(String sourceIdSection) {
-        this.tag = sourceIdSection;
+    public void setTag(String tagValue) {
+        this.tag = tagValue;
     }
 
     public IGsmService getGsmService() {
