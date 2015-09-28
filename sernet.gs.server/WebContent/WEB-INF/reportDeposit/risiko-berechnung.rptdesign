@@ -1412,7 +1412,6 @@ columns(cols);</value>
     </page-setup>
     <body>
         <table id="611">
-            <property name="width">54.0625in</property>
             <property name="dataSet">RiskValues</property>
             <list-property name="boundDataColumns">
                 <structure>
@@ -1819,12 +1818,8 @@ columns(cols);</value>
             <column id="1206">
                 <property name="width">1.40625in</property>
             </column>
-            <column id="1211">
-                <property name="width">1.40625in</property>
-            </column>
-            <column id="1216">
-                <property name="width">1.40625in</property>
-            </column>
+            <column id="1211"/>
+            <column id="1216"/>
             <header>
                 <row id="612">
                     <property name="backgroundColor">#BFBFBF</property>
@@ -1842,7 +1837,7 @@ columns(cols);</value>
                     <property name="borderTopWidth">thin</property>
                     <cell id="695">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1862,7 +1857,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="613">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1881,7 +1876,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="701">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1900,7 +1895,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="1217">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1919,7 +1914,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="711">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1938,7 +1933,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="1084">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1957,7 +1952,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="717">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1976,7 +1971,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="722">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -1995,7 +1990,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="727">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2014,7 +2009,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="735">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2033,7 +2028,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="741">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2052,7 +2047,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="747">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2071,7 +2066,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="760">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2090,7 +2085,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="766">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2109,7 +2104,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="778">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2128,7 +2123,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="827">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2147,7 +2142,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="832">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2166,7 +2161,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="788">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2185,7 +2180,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="794">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2204,7 +2199,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="800">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2223,7 +2218,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="806">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2242,7 +2237,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="815">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2261,7 +2256,7 @@ columns(cols);</value>
                     </cell>
                     <cell id="811">
                         <property name="colSpan">1</property>
-                        <property name="rowSpan">2</property>
+                        <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2279,7 +2274,7 @@ columns(cols);</value>
                         </label>
                     </cell>
                     <cell id="1090">
-                        <property name="colSpan">3</property>
+                        <property name="colSpan">1</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -2294,11 +2289,45 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1135">
-                            <text-property name="text">Risikobewertung ohne Controls - detaillierte Werte:</text-property>
+                            <text-property name="text">Risikobewertung ohne Controls - detaillierter Wert: C</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1224">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1226">
+                            <text-property name="text">Risikobewertung ohne Controls - detaillierter Wert: I</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1225">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1227">
+                            <text-property name="text">Risikobewertung ohne Controls - detaillierter Wert: A</text-property>
                         </label>
                     </cell>
                     <cell id="1142">
-                        <property name="colSpan">3</property>
+                        <property name="colSpan">1</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -2313,11 +2342,45 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="880">
-                            <text-property name="text">Risikobewertung mit vorhandenen Controls - detaillierte Werte:</text-property>
+                            <text-property name="text">Risikobewertung mit vorhandenen Controls - detaillierter Wert: C</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1228">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1230">
+                            <text-property name="text">Risikobewertung mit vorhandenen Controls - detaillierter Wert: I</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1229">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1231">
+                            <text-property name="text">Risikobewertung mit vorhandenen Controls - detaillierter Wert: A</text-property>
                         </label>
                     </cell>
                     <cell id="1157">
-                        <property name="colSpan">3</property>
+                        <property name="colSpan">1</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -2332,11 +2395,45 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="906">
-                            <text-property name="text">Risikobewertung mit geplanten Controls - detaillierte Werte:</text-property>
+                            <text-property name="text">Risikobewertung mit geplanten Controls - detaillierter Wert: C</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1232">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1234">
+                            <text-property name="text">Risikobewertung mit geplanten Controls - detaillierter Wert: I</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1233">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1235">
+                            <text-property name="text">Risikobewertung mit geplanten Controls - detaillierter Wert: A</text-property>
                         </label>
                     </cell>
                     <cell id="1172">
-                        <property name="colSpan">3</property>
+                        <property name="colSpan">1</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -2351,11 +2448,45 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1008">
-                            <text-property name="text">Schadenshöhe ohne Controls - detaillierte Werte</text-property>
+                            <text-property name="text">Schadenshöhe ohne Controls - detaillierter Wert: C</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1236">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1238">
+                            <text-property name="text">Schadenshöhe ohne Controls - detaillierter Wert: I</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1237">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1239">
+                            <text-property name="text">Schadenshöhe ohne Controls - detaillierter Wert: A</text-property>
                         </label>
                     </cell>
                     <cell id="1187">
-                        <property name="colSpan">3</property>
+                        <property name="colSpan">1</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -2370,11 +2501,45 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1034">
-                            <text-property name="text">Schadenshöhe mit vorhandenen Controls - detaillierte Werte</text-property>
+                            <text-property name="text">Schadenshöhe mit vorhandenen Controls - detaillierter Wert: C</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1240">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1242">
+                            <text-property name="text">Schadenshöhe mit vorhandenen Controls - detaillierter Wert: I</text-property>
+                        </label>
+                    </cell>
+                    <cell id="1241">
+                        <property name="borderBottomColor">#000000</property>
+                        <property name="borderBottomStyle">solid</property>
+                        <property name="borderBottomWidth">thin</property>
+                        <property name="borderLeftColor">#000000</property>
+                        <property name="borderLeftStyle">solid</property>
+                        <property name="borderLeftWidth">thin</property>
+                        <property name="borderRightColor">#000000</property>
+                        <property name="borderRightStyle">solid</property>
+                        <property name="borderRightWidth">thin</property>
+                        <property name="borderTopColor">#000000</property>
+                        <property name="borderTopStyle">solid</property>
+                        <property name="borderTopWidth">thin</property>
+                        <label id="1243">
+                            <text-property name="text">Schadenshöhe mit vorhandenen Controls - detaillierter Wert: A</text-property>
                         </label>
                     </cell>
                     <cell id="1202">
-                        <property name="colSpan">3</property>
+                        <property name="colSpan">1</property>
                         <property name="rowSpan">1</property>
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
@@ -2389,25 +2554,10 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1058">
-                            <text-property name="text">Schadenshöhe mit geplanten Controls - detaillierte Werte</text-property>
+                            <text-property name="text">Schadenshöhe mit geplanten Controls - detaillierte Werte: C</text-property>
                         </label>
                     </cell>
-                </row>
-                <row id="1095">
-                    <property name="backgroundColor">#BFBFBF</property>
-                    <property name="borderBottomColor">#000000</property>
-                    <property name="borderBottomStyle">solid</property>
-                    <property name="borderBottomWidth">thin</property>
-                    <property name="borderLeftColor">#000000</property>
-                    <property name="borderLeftStyle">solid</property>
-                    <property name="borderLeftWidth">thin</property>
-                    <property name="borderRightColor">#000000</property>
-                    <property name="borderRightStyle">solid</property>
-                    <property name="borderRightWidth">thin</property>
-                    <property name="borderTopColor">#000000</property>
-                    <property name="borderTopStyle">solid</property>
-                    <property name="borderTopWidth">thin</property>
-                    <cell id="1118">
+                    <cell id="1244">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2420,11 +2570,11 @@ columns(cols);</value>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1125">
-                            <text-property name="text">C</text-property>
+                        <label id="1246">
+                            <text-property name="text">Schadenshöhe mit geplanten Controls - detaillierte Werte: I</text-property>
                         </label>
                     </cell>
-                    <cell id="1128">
+                    <cell id="1245">
                         <property name="borderBottomColor">#000000</property>
                         <property name="borderBottomStyle">solid</property>
                         <property name="borderBottomWidth">thin</property>
@@ -2437,280 +2587,8 @@ columns(cols);</value>
                         <property name="borderTopColor">#000000</property>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
-                        <label id="1132">
-                            <text-property name="text">I</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1137">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1141">
-                            <text-property name="text">A</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1143">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="968">
-                            <text-property name="text">C</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1148">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="970">
-                            <text-property name="text">I</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1153">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="972">
-                            <text-property name="text">A</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1158">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="986">
-                            <text-property name="text">C</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1163">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="988">
-                            <text-property name="text">I</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1168">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="990">
-                            <text-property name="text">A</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1173">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1015">
-                            <text-property name="text">C</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1178">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1017">
-                            <text-property name="text">I</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1183">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1019">
-                            <text-property name="text">A</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1188">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1042">
-                            <text-property name="text">C</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1193">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1044">
-                            <text-property name="text">I</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1198">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1046">
-                            <text-property name="text">A</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1203">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1065">
-                            <text-property name="text">C</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1208">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1067">
-                            <text-property name="text">I</text-property>
-                        </label>
-                    </cell>
-                    <cell id="1213">
-                        <property name="borderBottomColor">#000000</property>
-                        <property name="borderBottomStyle">solid</property>
-                        <property name="borderBottomWidth">thin</property>
-                        <property name="borderLeftColor">#000000</property>
-                        <property name="borderLeftStyle">solid</property>
-                        <property name="borderLeftWidth">thin</property>
-                        <property name="borderRightColor">#000000</property>
-                        <property name="borderRightStyle">solid</property>
-                        <property name="borderRightWidth">thin</property>
-                        <property name="borderTopColor">#000000</property>
-                        <property name="borderTopStyle">solid</property>
-                        <property name="borderTopWidth">thin</property>
-                        <label id="1069">
-                            <text-property name="text">A</text-property>
+                        <label id="1247">
+                            <text-property name="text">Schadenshöhe mit geplanten Controls - detaillierte Werte: A</text-property>
                         </label>
                     </cell>
                 </row>
