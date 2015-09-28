@@ -786,7 +786,7 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.report.service.impl.TocHelper2;
 
 String sumConfidentialityIntegrityAvailability(Asset asset, String confidentialy, String integrity, String availability) {
-    
+
     int c = Integer.valueOf(asset.getEntity().getStringValue(confidentialy));
     int i = Integer.valueOf(asset.getEntity().getStringValue(integrity));
     int a = Integer.valueOf(asset.getEntity().getStringValue(availability));
@@ -807,9 +807,9 @@ if (myroot != null &amp;&amp; myroot != -1) {
 
 //load all assets
 cols = helper.getAllPropertyTypes("asset");
-assetHql = " from CnATreeElement elmt " + 
-    "left join fetch elmt.entity as entity " + 
-    "left join fetch entity.typedPropertyLists as propertyList " + 
+assetHql = " from CnATreeElement elmt " +
+    "left join fetch elmt.entity as entity " +
+    "left join fetch entity.typedPropertyLists as propertyList " +
     "left join fetch propertyList.properties as props " +
     " where elmt.scopeId =  ? and elmt.objectType = ?";
 c2 = new ExecuteHQLInReportCommand(assetHql, new Object[]{root, Asset.TYPE_ID }, Asset.TYPE_ID);
@@ -822,12 +822,12 @@ for(Object o : elements){
 }
 
 //hql query for link loading
-linkedHql = " from CnATreeElement elmt " + 
-    "left join fetch elmt.entity as entity " + 
-    "left join fetch entity.typedPropertyLists as propertyList " + 
-    "left join fetch propertyList.properties as props " + 
+linkedHql = " from CnATreeElement elmt " +
+    "left join fetch elmt.entity as entity " +
+    "left join fetch entity.typedPropertyLists as propertyList " +
+    "left join fetch propertyList.properties as props " +
     "where elmt.dbId IN ( " +
-    "select link.id.dependantId from CnALink link where link.id.dependencyId = ? " +  
+    "select link.id.dependantId from CnALink link where link.id.dependencyId = ? " +
     ") and elmt.scopeId = ? and elmt.objectType = ?";
 
 // now iterate topics and linked persons (if existant)
@@ -847,7 +847,7 @@ for(Asset asset : assetSet){
     for(IncidentScenario scenario : scenarioSet){
 
 	assetScenarioResult = new ArrayList(0);
-		
+
 	// get relationID of link via hql
 	hql = "from CnALink link" +
 	    " where link.id.dependencyId = ? " +
@@ -871,11 +871,11 @@ for(Asset asset : assetSet){
 	}
 
 
-	
+
 	valueAdapter = new AssetValueAdapter(asset);
 	ras = new RiskAnalysisServiceImpl();
 
-	/** Get risk values for implement controls */	    
+	/** Get risk values for implement controls */
 	impactC = valueAdapter.getVertraulichkeit();
 	impactI = valueAdapter.getIntegritaet();
 	impactA = valueAdapter.getVerfuegbarkeit();
@@ -908,19 +908,19 @@ for(Asset asset : assetSet){
 
 	// get impact with all controls
 	probabilityWithAllControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
-	
+
 	treatedRiskAllC = probabilityWithAllControls + impactAllC;
 	treatedRiskAllI = probabilityWithAllControls + impactAllI;
 	treatedRiskAllA = probabilityWithAllControls + impactAllA;
-	
-	// feed the result table			
+
+	// feed the result table
 	assetScenarioResult.add(asset.getTitle());
 	assetScenarioResult.add(scenario.getTitle());
 	assetScenarioResult.add(asset.getTags().contains("bcm").toString());
 	assetScenarioResult.add(scenario.getEntity().getSimpleValue("incscen_explanation"));
 	assetScenarioResult.add(asset.getEntity().getSimpleValue("asset_description"));
 
-		
+
 	assetScenarioResult.add(scenario.getEntity().getSimpleValue("scenario_value_method_confidentiality"));
 	assetScenarioResult.add(scenario.getEntity().getSimpleValue("scenario_value_method_integrity"));
 	assetScenarioResult.add(scenario.getEntity().getSimpleValue("scenario_value_method_availability"));
@@ -946,7 +946,7 @@ for(Asset asset : assetSet){
 	assetScenarioResult.add(String.valueOf(conf));
 	assetScenarioResult.add(String.valueOf(integ));
 	assetScenarioResult.add(String.valueOf(avail));
-		
+
 	// impact values with implemented controls
 	assetScenarioResult.add(String.valueOf(impactC));
 	assetScenarioResult.add(String.valueOf(impactI));
@@ -967,7 +967,7 @@ for(Asset asset : assetSet){
 	assetScenarioResult.add(String.valueOf(treatedRiskAllI));
 	assetScenarioResult.add(String.valueOf(treatedRiskAllA));
 
-	
+
 	if(!scenariosForAssetList .contains(assetScenarioResult)){
 	    scenariosForAssetList .add(assetScenarioResult);
 	}
@@ -1316,7 +1316,7 @@ cols = new String[]{
 
     "scenarioThreat",
     "scenarioVulnerability",
-    
+
     "incscen_likelihood",
     "incscen_likelihood_wcontrol",
     "incscen_likelihood_wplancontrol",
@@ -1328,17 +1328,17 @@ cols = new String[]{
     "asset_bsi-C",
     "asset_bsi-I",
     "asset_bsi-A",
-		    
+
     // CIA values from scenario cna link element
     "cnalink-C",
     "cnalink-I",
     "cnalink-A",
-    
+
     // impact values with controls pro asset
     "impactWithImplementedControls_C",
     "impactWithImplementedControls_I",
     "impactWithImplementedControls_A",
-    
+
     // values with all controls pro asset
     "impactWithAllControls_C",
     "impactWithAllControls_I",
@@ -1857,7 +1857,7 @@ columns(cols);</value>
                         <property name="borderTopWidth">thin</property>
                         <label id="699">
                             <property name="textAlign">center</property>
-                            <text-property name="text">Scenario</text-property>
+                            <text-property name="text">Szenario</text-property>
                         </label>
                     </cell>
                     <cell id="613">
@@ -1895,7 +1895,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="705">
-                            <text-property name="text">Relevant to BCM</text-property>
+                            <text-property name="text">BCM relevant</text-property>
                         </label>
                     </cell>
                     <cell id="1217">
@@ -1914,7 +1914,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="715">
-                            <text-property name="text">Explanation Scenario</text-property>
+                            <text-property name="text">Erklärung Szenario</text-property>
                         </label>
                     </cell>
                     <cell id="711">
@@ -1933,7 +1933,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1222">
-                            <text-property name="text">Explanation Asset</text-property>
+                            <text-property name="text">Erklärung Asset</text-property>
                         </label>
                     </cell>
                     <cell id="1084">
@@ -1952,7 +1952,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1088">
-                            <text-property name="text">Explanation Relation</text-property>
+                            <text-property name="text">Erklärung Verknüpfung</text-property>
                         </label>
                     </cell>
                     <cell id="717">
@@ -1971,7 +1971,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="721">
-                            <text-property name="text">Affects Confidentiality</text-property>
+                            <text-property name="text">Betrifft Vertraulichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="722">
@@ -1990,7 +1990,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="726">
-                            <text-property name="text">Affects Integrity</text-property>
+                            <text-property name="text">Betrifft Integrität</text-property>
                         </label>
                     </cell>
                     <cell id="727">
@@ -2009,7 +2009,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="731">
-                            <text-property name="text">Affects Availability</text-property>
+                            <text-property name="text">Betrifft Verfügbarkeit</text-property>
                         </label>
                     </cell>
                     <cell id="735">
@@ -2028,7 +2028,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="739">
-                            <text-property name="text">Threat Likelihood</text-property>
+                            <text-property name="text">Bedrohungshäufigkeit</text-property>
                         </label>
                     </cell>
                     <cell id="741">
@@ -2047,7 +2047,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="745">
-                            <text-property name="text">Vulnerability Level</text-property>
+                            <text-property name="text">Anfälligkeit der Schwachstelle</text-property>
                         </label>
                     </cell>
                     <cell id="747">
@@ -2066,7 +2066,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="751">
-                            <text-property name="text">Probability</text-property>
+                            <text-property name="text">Eintrittswahrscheinlichkeit</text-property>
                         </label>
                     </cell>
                     <cell id="760">
@@ -2085,7 +2085,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="764">
-                            <text-property name="text">Probability with Existing Controls</text-property>
+                            <text-property name="text">Wahrscheinlichkeit mit vorhandenen Controls</text-property>
                         </label>
                     </cell>
                     <cell id="766">
@@ -2104,7 +2104,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="770">
-                            <text-property name="text">Probability with Planned Controls</text-property>
+                            <text-property name="text">Wahrscheinlichkeit mit geplanten Controls</text-property>
                         </label>
                     </cell>
                     <cell id="778">
@@ -2123,7 +2123,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="782">
-                            <text-property name="text">Impact without Controls (C+I+A)</text-property>
+                            <text-property name="text">Schadenshöhe ohne Controls</text-property>
                         </label>
                     </cell>
                     <cell id="827">
@@ -2142,7 +2142,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="831">
-                            <text-property name="text">Impact with Existing Controls</text-property>
+                            <text-property name="text">Schadenshöhe mit vorhandenen Controls</text-property>
                         </label>
                     </cell>
                     <cell id="832">
@@ -2161,7 +2161,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="836">
-                            <text-property name="text">Impact with Planned Controls</text-property>
+                            <text-property name="text">Schadenshöhe mit geplanten Controls</text-property>
                         </label>
                     </cell>
                     <cell id="788">
@@ -2180,7 +2180,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="792">
-                            <text-property name="text">SUM: Risk without Controls</text-property>
+                            <text-property name="text">SUM: Risikobewertung ohne Controls</text-property>
                         </label>
                     </cell>
                     <cell id="794">
@@ -2199,7 +2199,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="798">
-                            <text-property name="text">SUM: Risk with Existing Controls</text-property>
+                            <text-property name="text">SUM: Risikobewertung mit vorhandenen Controls</text-property>
                         </label>
                     </cell>
                     <cell id="800">
@@ -2218,7 +2218,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="804">
-                            <text-property name="text">SUM: Risk with Planned Controls</text-property>
+                            <text-property name="text">SUM: Risikobewertung mit geplanten Controls</text-property>
                         </label>
                     </cell>
                     <cell id="806">
@@ -2237,7 +2237,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="810">
-                            <text-property name="text">MAX: Risk without Controls</text-property>
+                            <text-property name="text">MAX: Risikobewertung ohne Controls</text-property>
                         </label>
                     </cell>
                     <cell id="815">
@@ -2256,7 +2256,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="819">
-                            <text-property name="text">MAX: Risk with Existing Controls</text-property>
+                            <text-property name="text">MAX: Risikobewertung mit vorhanden Controls</text-property>
                         </label>
                     </cell>
                     <cell id="811">
@@ -2275,7 +2275,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="820">
-                            <text-property name="text">MAX: Risk with Planned Controls</text-property>
+                            <text-property name="text">MAX: Risikobewertung mit geplanten Controls</text-property>
                         </label>
                     </cell>
                     <cell id="1090">
@@ -2294,7 +2294,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1135">
-                            <text-property name="text">Risk without Controls - Detailed Values</text-property>
+                            <text-property name="text">Risikobewertung ohne Controls - detaillierte Werte:</text-property>
                         </label>
                     </cell>
                     <cell id="1142">
@@ -2313,7 +2313,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="880">
-                            <text-property name="text">Risk with Existing Controls - Detailed Values</text-property>
+                            <text-property name="text">Risikobewertung mit vorhandenen Controls - detaillierte Werte:</text-property>
                         </label>
                     </cell>
                     <cell id="1157">
@@ -2332,7 +2332,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="906">
-                            <text-property name="text">Risk planned Controls - Detailed Values</text-property>
+                            <text-property name="text">Risikobewertung mit geplanten Controls - detaillierte Werte:</text-property>
                         </label>
                     </cell>
                     <cell id="1172">
@@ -2351,7 +2351,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1008">
-                            <text-property name="text">Impact without Controls - Detailed Values</text-property>
+                            <text-property name="text">Schadenshöhe ohne Controls - detaillierte Werte</text-property>
                         </label>
                     </cell>
                     <cell id="1187">
@@ -2370,7 +2370,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1034">
-                            <text-property name="text">Impact with Existing Controls - Detailed Values</text-property>
+                            <text-property name="text">Schadenshöhe mit vorhandenen Controls - detaillierte Werte</text-property>
                         </label>
                     </cell>
                     <cell id="1202">
@@ -2389,7 +2389,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="1058">
-                            <text-property name="text">Impact with Planned Controls - Detailed Values</text-property>
+                            <text-property name="text">Schadenshöhe mit geplanten Controls - detaillierte Werte</text-property>
                         </label>
                     </cell>
                 </row>
