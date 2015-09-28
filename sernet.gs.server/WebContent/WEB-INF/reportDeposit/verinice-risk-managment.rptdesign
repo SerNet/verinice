@@ -2123,7 +2123,7 @@ columns(cols);</value>
                         <property name="borderTopStyle">solid</property>
                         <property name="borderTopWidth">thin</property>
                         <label id="782">
-                            <text-property name="text">Schadenshöhe ohne Controls (BSI C+I+A)</text-property>
+                            <text-property name="text">Schadenshöhe ohne Controls</text-property>
                         </label>
                     </cell>
                     <cell id="827">
