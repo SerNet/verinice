@@ -141,6 +141,7 @@ public class ImportGstoolAction extends RightsEnabledAction {
 							dialog.isBausteinPersonen()
 							);
                     try {
+                        long importTaskStart = System.currentTimeMillis();
                         importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
                             @Override
                             public void done() {
@@ -162,6 +163,9 @@ public class ImportGstoolAction extends RightsEnabledAction {
                                 monitor.subTask(name);
                             }
                         });
+                        if(LOG.isDebugEnabled()){
+                            LOG.debug("Time for ImportTask:\t" + String.valueOf((System.currentTimeMillis() - importTaskStart)/1000 ) + " seconds");
+                        }
                     } catch (Exception e) {
                         ExceptionUtil.log(e, Messages.ImportGstoolAction_1);
                     }
@@ -176,6 +180,7 @@ public class ImportGstoolAction extends RightsEnabledAction {
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 			            Activator.inheritVeriniceContextState();
 			            
+			            long importNotesStart = System.currentTimeMillis();
 			            ImportNotesTask importTask = new ImportNotesTask();
 			            try {
 			                importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
@@ -196,6 +201,9 @@ public class ImportGstoolAction extends RightsEnabledAction {
 			                        monitor.subTask(name);
 			                    }
 			                });
+	                        if(LOG.isDebugEnabled()){
+	                            LOG.debug("Time for ImportNotesTask:\t" + String.valueOf((System.currentTimeMillis() - importNotesStart)/1000 ) + " seconds");
+	                        }
 			            } catch (Exception e) {
            					ExceptionUtil.log(e.getCause(), Messages.ImportGstoolAction_2);
         				}
@@ -211,6 +219,7 @@ public class ImportGstoolAction extends RightsEnabledAction {
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                         Activator.inheritVeriniceContextState();
 
+                        long importRAStart = System.currentTimeMillis();
                         ImportRisikoanalysenTask importTask = new ImportRisikoanalysenTask(sourceId);
                         try {
                             importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
@@ -231,6 +240,9 @@ public class ImportGstoolAction extends RightsEnabledAction {
                                     monitor.subTask(name);
                                 }
                             });
+                            if(LOG.isDebugEnabled()){
+                                LOG.debug("Time for ImportRATask:\t" + String.valueOf((System.currentTimeMillis() - importRAStart)/1000 ) + " seconds");
+                            }
                         } catch (Exception e) {
                             LOG.error("Error while importing Risikoanalysen", e);
                             ExceptionUtil.log(e.getCause(), Messages.ImportGstoolAction_2);

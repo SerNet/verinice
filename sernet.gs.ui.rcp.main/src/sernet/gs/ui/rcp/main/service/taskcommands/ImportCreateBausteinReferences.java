@@ -66,23 +66,26 @@ public class ImportCreateBausteinReferences extends GenericCommand {
     private List<Baustein> bausteine;
     private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
     private Map<MbBaust, ModZobjBst> bausteinMap;
+    private Map<MbBaust, Baustein> gst2VnBstMap;
     private String sourceId;
     private IBSIConfig bsiConfig;
     private static final String NO_COMMENT = "";
 
-    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, Map<MbBaust, ModZobjBst> bausteinMap) {
+    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, Map<MbBaust, ModZobjBst> bausteinMap, Map<MbBaust, Baustein> gst2VnBstMap) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
         this.sourceId = sourceId;
         this.bausteinMap = bausteinMap;
+        this.gst2VnBstMap = gst2VnBstMap;
     }
 
-    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, IBSIConfig bsiConfig, Map<MbBaust, ModZobjBst> bausteinMap) {
+    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, IBSIConfig bsiConfig, Map<MbBaust, ModZobjBst> bausteinMap, Map<MbBaust, Baustein> gst2VnBstMap) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
         this.sourceId = sourceId;
         this.bsiConfig = bsiConfig;
         this.bausteinMap = bausteinMap;
+        this.gst2VnBstMap = gst2VnBstMap;
     }
 
     /*
@@ -134,6 +137,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         }
 
     }
+    
 
     /*
      * (non-Javadoc)
@@ -141,22 +145,27 @@ public class ImportCreateBausteinReferences extends GenericCommand {
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     public void createBausteinReference(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws CommandException {
-
+        
         String bausteinId = TransferData.getId(mbBaust);
         Baustein baustein = findBausteinForId(bausteinId);
         
         Integer refZobId = null;
-        if(baustein==null) {
+        if(baustein==null) { // no baustein found, so it mbBaust has to be userdefined (not in catalogue existant)
             //throw new RuntimeException("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
             if(mbBaust.getId().getBauImpId() == 1){ // bst is userdefined, so create own instance of Baustein
                 for(MbBaust mbB : bausteinMap.keySet()){
-                    if(mbB.getNr().equals(mbBaust.getNr())){
-                        refZobId = bausteinMap.get(mbB).getNZielobjektByFkZbZ().getId().getZobId();
+
+                    if(mbBausteinEquals(mbB, mbBaust)){
+                        refZobId = bausteinMap.get(mbB).getRefZobId();
+                        baustein = getVNBaust(mbBaust);
+                        if(baustein == null){
+                            baustein = getVNBaust(mbB); // should never happen
+                        }
                         break;
                     }
                 }
                 if(refZobId == null && bausteinMap.containsKey(mbBaust)){
-                    refZobId = bausteinMap.get(mbBaust).getNZielobjektByFkZbZ().getId().getZobId();
+                    refZobId = bausteinMap.get(mbBaust).getRefZobId();
                 }
             } else {
                 getLog().error("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
@@ -165,6 +174,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         } else {
             isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
                 refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
+                
                 if (refZobId != null) {
                     break isReference;
                 }
@@ -199,6 +209,19 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         for (Baustein baustein : bausteine) {
             if (baustein.getId().equals(id)){
                 return baustein;
+            }
+        }
+        return null;
+    }
+    
+    private boolean mbBausteinEquals(MbBaust mbB1, MbBaust mbB2){
+        return mbB1.getNr().equals(mbB2.getNr()) && mbB1.getId().getBauId().equals(mbB2.getId().getBauId());
+    }
+    
+    private Baustein getVNBaust(MbBaust mbBaust){
+        for(MbBaust mbBKey : gst2VnBstMap.keySet()){
+            if(mbBausteinEquals(mbBKey, mbBaust)){
+                return gst2VnBstMap.get(mbBKey);
             }
         }
         return null;

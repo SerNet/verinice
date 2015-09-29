@@ -844,12 +844,8 @@ public class GSVampire {
 	    try{
 	        Reader reader = clob.getCharacterStream();
 	        InputStream in = new ByteArrayInputStream(IOUtils.toByteArray(reader, encoding));
-	        if(in!=null) {
-	            return IOUtils.toString(in, encoding);
-	        } else {
-	            return "";
-	        }
-	    } catch (SQLException e){
+	        return IOUtils.toString(in, encoding);
+	    } catch (Exception e){
 	        LOG.error("Error while converting clob to String", e);
 	        throw new RuntimeException(e);
 	    }

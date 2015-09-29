@@ -40,6 +40,7 @@ import com.heatonresearch.datamover.db.Database;
 import com.heatonresearch.datamover.db.DerbyDatabase;
 import com.heatonresearch.datamover.db.MDBFileDatabase;
 
+import sernet.gs.model.Baustein;
 import sernet.gs.reveng.MSchutzbedarfkategTxt;
 import sernet.gs.reveng.MbBaust;
 import sernet.gs.reveng.MbBaustGefaehr;
@@ -118,6 +119,8 @@ public class ImportTask {
 
     private Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
     private Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
+    
+    private Map<MbBaust, Baustein> gst2VnBstMap;
 
     private String sourceId;
 
@@ -141,6 +144,7 @@ public class ImportTask {
         this.alleBausteineToBausteinUmsetzungMap = new HashMap<MbBaust, BausteinUmsetzung>();
         this.alleBausteineToZoBstMap = new HashMap<MbBaust, ModZobjBst>();
         this.alleMassnahmen = new HashMap<ModZobjBstMass, MassnahmenUmsetzung>();
+        this.gst2VnBstMap = new HashMap<MbBaust, Baustein>();
     }
 
     public void execute(int importType, IProgress monitor) throws Exception {
@@ -296,11 +300,13 @@ public class ImportTask {
                 throw e;
             }
         }
-
+        long importZOStart = System.currentTimeMillis();
         // create all Zielobjekte in their respective ITVerbund,
         for (ZielobjektTypeResult resultZO : zielobjekte) {
             String typeId = ImportZielobjektTypUtil.translateZielobjektType(resultZO.type, resultZO.subtype);
-            LOG.debug("GSTOOL type id " + resultZO.type + " : " + resultZO.subtype + " was translated to: " + typeId);
+            if(LOG.isDebugEnabled()){
+                LOG.debug("GSTOOL type id " + resultZO.type + " : " + resultZO.subtype + " was translated to: " + typeId);
+            }
             if (typeId.equals(ITVerbund.TYPE_ID)) {
                 continue;
             }
@@ -335,6 +341,7 @@ public class ImportTask {
                 transferData.transfer(element, resultZO);
                 element.setSourceId(sourceId);
                 monitor.subTask(numberImported + "/" + numberOfElements + " - " + element.getTitle());
+
                 createBausteine(sourceId, element, resultZO.zielobjekt);
 
                 CnAElementHome.getInstance().update(element);
@@ -343,10 +350,18 @@ public class ImportTask {
             }
 
         }
+        
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Time for ImportZOTask:\t" + String.valueOf((System.currentTimeMillis() - importZOStart)/1000 ) + " seconds");
+        }
 
         monitor.subTask(defaultSubTaskDescription);
 
+        long importMnLinks = System.currentTimeMillis();
         importMassnahmenVerknuepfungen();
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Time for ImportMnLinksTask:\t" + String.valueOf((System.currentTimeMillis() - importMnLinks)/1000 ) + " seconds");
+        }        
         monitor.subTask(defaultSubTaskDescription);
 
         // update this.alleMassnahmen
@@ -360,7 +375,11 @@ public class ImportTask {
         updater.setMaxNumberPerCommand(500);
         updater.execute();
 
+        long importBstPrsnLinksStart = System.currentTimeMillis();
         importBausteinPersonVerknuepfungen();
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Time for ImportBstPrsnLinksTask:\t" + String.valueOf((System.currentTimeMillis() - importBstPrsnLinksStart)/1000 ) + " seconds");
+        }
         monitor.subTask(defaultSubTaskDescription);
 
         // update this. alleBausteineToBausteinUmsetzungMap
@@ -372,15 +391,24 @@ public class ImportTask {
         updater.setMaxNumberPerCommand(500);
         updater.execute();
 
+        long importZoLinksStart = System.currentTimeMillis();
         importZielobjektVerknuepfungen();
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Time for ImportZoLinksTask:\t" + String.valueOf((System.currentTimeMillis() - importZoLinksStart)/1000 ) + " seconds");
+        }
         monitor.subTask(defaultSubTaskDescription);
 
+        long importSBStart = System.currentTimeMillis();
         importSchutzbedarf();
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Time for ImportSBTask:\t" + String.valueOf((System.currentTimeMillis() - importSBStart)/1000 ) + " seconds");
+        }
         monitor.subTask(defaultSubTaskDescription);
 
         int n = zielobjekte.size();
         monitor.beginTask("Lese Bausteinreferenzen...", n);
         int i = 1;
+        long importBstRefStart = System.currentTimeMillis();
         for (NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
             CnATreeElement element = alleZielobjekte.get(zielobjekt);
             monitor.subTask(i + "/" + n + " - " + element.getTitle());
@@ -389,6 +417,9 @@ public class ImportTask {
             }
             monitor.worked(1);
             i++;
+        }
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Time for ImportBstRefTask:\t" + String.valueOf((System.currentTimeMillis() - importBstRefStart)/1000 ) + " seconds");
         }
         monitor.done();
 
@@ -431,10 +462,10 @@ public class ImportTask {
         ImportCreateBausteinReferences command;
         ServiceFactory.lookupAuthService();
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
-            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, new BSIConfigurationRCPLocal(), alleBausteineToZoBstMap);
+            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, new BSIConfigurationRCPLocal(), alleBausteineToZoBstMap, gst2VnBstMap);
             
         } else {
-            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap);
+            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap, gst2VnBstMap);
         }
         ServiceFactory.lookupCommandService().executeCommand(command);
     }
@@ -653,6 +684,10 @@ public class ImportTask {
 
         if (command.getAlleMassnahmen() != null) {
             this.alleMassnahmen.putAll(command.getAlleMassnahmen());
+        }
+        
+        if(command.getGst2VnBstMap() != null && command.getGst2VnBstMap().size() > 0){
+            this.gst2VnBstMap.putAll(command.getGst2VnBstMap());
         }
 
     }

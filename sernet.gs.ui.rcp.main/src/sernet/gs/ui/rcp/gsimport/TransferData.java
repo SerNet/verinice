@@ -18,10 +18,8 @@
 package sernet.gs.ui.rcp.gsimport;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.sql.Clob;
@@ -477,26 +475,6 @@ public class TransferData {
         }
     }
 
-    /**
-     * Some columns are mapped by hibernate-console as CLOBS. This method
-     * converts them to strings.
-     * 
-     * @param clob
-     * @return
-     * @throws SQLException
-     * @throws IOException
-     */
-    public static String convertClobToString(Clob clob) throws IOException {
-        try {
-            Reader reader = clob.getCharacterStream();               
-            OutputStream out = new ByteArrayOutputStream();
-            IOUtils.copy(reader, out, "UTF-8");
-            return out.toString();
-        } catch (SQLException e) {
-            LOG.error("Error while converting clob to String", e);
-            throw new RuntimeException(e);
-        }
-    }
     
     public static String convertClobToStringEncodingSave(Clob clob, String encoding) throws IOException{
         try{
@@ -657,7 +635,7 @@ public class TransferData {
         element.setErlaeuterung(result.zielobjekt.getBeschreibung());
         element.setAnzahl(result.zielobjekt.getAnzahl());
         element.getEntity().setSimpleValue(element.getEntityType().getPropertyType(Person.P_PHONE), result.zielobjekt.getTelefon());
-        element.getEntity().setSimpleValue(element.getEntityType().getPropertyType("person_orgeinheit"), result.zielobjekt.getAbteilung());
+        element.getEntity().setSimpleValue(element.getEntityType().getPropertyType(Person.P_ORGEINHEIT), result.zielobjekt.getAbteilung());
         
 
         if (importRollen) {

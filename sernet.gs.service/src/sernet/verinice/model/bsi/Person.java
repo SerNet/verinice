@@ -53,6 +53,7 @@ implements IBSIStrukturElement {
 	public static final String P_ROLLEN = "person_rollen"; //$NON-NLS-1$
 	public static final String P_EMAIL = "person_email"; //$NON-NLS-1$
 	public static final String P_PHONE = "person_telefon"; //$NON-NLS-1$
+	public static final String P_ORGEINHEIT = "person_orgeinheit"; //$NON-NLS-1$
 
 	// ID must correspond to entity definition in entitytype XML description:
 	public static final String TYPE_ID = "person"; //$NON-NLS-1$

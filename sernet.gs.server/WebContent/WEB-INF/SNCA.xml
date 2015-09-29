@@ -2036,6 +2036,7 @@ the value between <param></param> will be used directly if no string is found fo
 		<huiproperty
 				id="gefaehrdungsumsetzung_id"
                 editable="false"
+                visible="false"
 				name="Id" />
 		<huiproperty
 				id="gefaehrdungsumsetzung_titel"
