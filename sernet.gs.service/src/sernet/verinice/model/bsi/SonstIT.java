@@ -38,6 +38,10 @@ public class SonstIT extends CnATreeElement
 	public static final String PROP_ERLAEUTERUNG = "sonstit_erlaeuterung"; //$NON-NLS-1$
 	private static final String PROP_ANZAHL = "sonstit_anzahl"; //$NON-NLS-1$
 	
+    public static final String PROP_ESA_ENTSCHEIDUNG_DURCH = "sonstit_ergaenzendeanalyse_entscheidung_durch"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_AM = "sonstit_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "sonstit_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
+	
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 	= new SchutzbedarfAdapter(this);
 

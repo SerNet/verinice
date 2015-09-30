@@ -32,6 +32,10 @@ public class NetzKomponente extends CnATreeElement
 	public static final String PROP_TAG			= "netzkomponente_tag"; //$NON-NLS-1$
 	public static final String PROP_ERLAEUTERUNG = "netzkomponente_erlaeuterung"; //$NON-NLS-1$
 	
+    public static final String PROP_ESA_ENTSCHEIDUNG_DURCH = "nkkomponente_ergaenzendeanalyse_entscheidung_durch"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_AM = "nkkomponente_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "nkkomponente_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
+	
 	
 	public String getKuerzel() {
 		return getEntity().getSimpleValue(PROP_KUERZEL);

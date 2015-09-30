@@ -38,7 +38,10 @@ public class Raum extends CnATreeElement
 	public static final String PROP_VERTRAULICHKEIT = "raum_vertraulichkeit"; //$NON-NLS-1$
     public static final String PROP_VERFUEGBARKEIT = "raum_verfuegbarkeit"; //$NON-NLS-1$
     public static final String PROP_INTEGRITAET = "raum_integritaet"; //$NON-NLS-1$
-	
+    
+    public static final String PROP_ESA_ENTSCHEIDUNG_DURCH = "raum_ergaenzendeanalyse_entscheidung_durch"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_AM = "raum_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "raum_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 
 	private  ISchutzbedarfProvider schutzbedarfProvider 
 	= new SchutzbedarfAdapter(this);

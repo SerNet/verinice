@@ -37,6 +37,7 @@ import javax.swing.text.Document;
 import javax.swing.text.rtf.RTFEditorKit;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.reveng.MbBaust;
@@ -190,6 +191,84 @@ public class TransferData {
         }
         begruendung += esa.getBegruendung();
         setEsaBegruendung(target, begruendung);
+        
+        target = setESAEntscheidung(target, esa.getZmiName(), esa.getEntscheidungBis(), esa.getEntscheidungAm());
+    }
+    
+    private CnATreeElement setESAEntscheidung(CnATreeElement target, String entscheidungDurch, Date entscheidungBis, Date entscheidungAm){
+        target = setESAEntscheidungDurch(target, entscheidungDurch);
+        target = setESAEntscheidungAm(target, entscheidungAm);
+        target = setESAEntscheidungBis(target, entscheidungBis);
+        return target;
+    }
+    
+    private CnATreeElement setESAEntscheidungBis(CnATreeElement target, Date entscheidungBis){
+        if(entscheidungBis != null){
+            if (Raum.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Raum.PROP_ESA_ENTSCHEIDUNG_BIS, String.valueOf(entscheidungBis.getTime()));
+            } else if (Anwendung.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Anwendung.PROP_ESA_ENTSCHEIDUNG_BIS, String.valueOf(entscheidungBis.getTime()));        
+            } else if (Client.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Client.PROP_ESA_ENTSCHEIDUNG_BIS, String.valueOf(entscheidungBis.getTime()));
+            } else if (Gebaeude.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Gebaeude.PROP_ESA_ENTSCHEIDUNG_BIS, String.valueOf(entscheidungBis.getTime()));
+            } else if (NetzKomponente.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(NetzKomponente.PROP_ESA_ENTSCHEIDUNG_BIS, String.valueOf(entscheidungBis.getTime()));
+            } else if (Server.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Server.PROP_ESA_ENTSCHEIDUNG_BIS, String.valueOf(entscheidungBis.getTime()));
+            } else if (SonstIT.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(SonstIT.PROP_ESA_ENTSCHEIDUNG_BIS, String.valueOf(entscheidungBis.getTime()));
+            } else if (TelefonKomponente.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(TelefonKomponente.PROP_ESA_ENTSCHEIDUNG_BIS, String.valueOf(entscheidungBis.getTime()));
+            }
+        }        
+        return target;
+    }
+    
+    private CnATreeElement setESAEntscheidungAm(CnATreeElement target, Date entscheidungAm){
+        if(entscheidungAm != null){
+            if (Raum.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Raum.PROP_ESA_ENTSCHEIDUNG_AM, String.valueOf(entscheidungAm.getTime()));
+            } else if (Anwendung.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Anwendung.PROP_ESA_ENTSCHEIDUNG_AM, String.valueOf(entscheidungAm.getTime()));
+            } else if (Client.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Client.PROP_ESA_ENTSCHEIDUNG_AM, String.valueOf(entscheidungAm.getTime()));
+            } else if (Gebaeude.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Gebaeude.PROP_ESA_ENTSCHEIDUNG_AM, String.valueOf(entscheidungAm.getTime()));
+            } else if (NetzKomponente.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(NetzKomponente.PROP_ESA_ENTSCHEIDUNG_AM, String.valueOf(entscheidungAm.getTime()));
+            } else if (Server.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Server.PROP_ESA_ENTSCHEIDUNG_AM, String.valueOf(entscheidungAm.getTime()));
+            } else if (SonstIT.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(SonstIT.PROP_ESA_ENTSCHEIDUNG_AM, String.valueOf(entscheidungAm.getTime()));
+            } else if (TelefonKomponente.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(TelefonKomponente.PROP_ESA_ENTSCHEIDUNG_AM, String.valueOf(entscheidungAm.getTime()));
+            }
+        }
+        return target;
+    }
+    
+    private CnATreeElement setESAEntscheidungDurch(CnATreeElement target, String entscheidungDurch){
+        if(StringUtils.isNotEmpty(entscheidungDurch)){
+            if (Raum.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Raum.PROP_ESA_ENTSCHEIDUNG_DURCH, entscheidungDurch);
+            } else if (Anwendung.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Anwendung.PROP_ESA_ENTSCHEIDUNG_DURCH, entscheidungDurch);
+            } else if (Client.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Client.PROP_ESA_ENTSCHEIDUNG_DURCH, entscheidungDurch);
+            } else if (Gebaeude.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Gebaeude.PROP_ESA_ENTSCHEIDUNG_DURCH, entscheidungDurch);
+            } else if (NetzKomponente.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(NetzKomponente.PROP_ESA_ENTSCHEIDUNG_DURCH, entscheidungDurch);
+            } else if (Server.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(Server.PROP_ESA_ENTSCHEIDUNG_DURCH, entscheidungDurch);
+            } else if (SonstIT.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(SonstIT.PROP_ESA_ENTSCHEIDUNG_DURCH, entscheidungDurch);
+            } else if (TelefonKomponente.TYPE_ID.equals(target.getTypeId())) {
+                target.setSimpleProperty(TelefonKomponente.PROP_ESA_ENTSCHEIDUNG_DURCH, entscheidungDurch);
+            }
+        }
+        return target;
     }
 
     /**

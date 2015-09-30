@@ -1,4 +1,7 @@
 package sernet.gs.reveng.importData;
+
+import java.util.Date;
+
 public class ESAResult {
 	String begruendung;
 	byte einsatz;
@@ -7,10 +10,12 @@ public class ESAResult {
 	byte unj;
 	String entscheidungDurch;
 	String zmiName;
+	Date entscheidungAm;
+	Date entscheidungBis;
 	
 	public ESAResult(String begruendung, byte einsatz,
 			byte modellierung, String szenario, byte unj,
-			String entscheidungDurch, String zmiName) {
+			String entscheidungDurch, String zmiName, Date entscheidungAm, Date entscheidungBis) {
 		super();
 		this.begruendung = begruendung;
 		this.einsatz = einsatz;
@@ -19,6 +24,8 @@ public class ESAResult {
 		this.unj = unj;
 		this.entscheidungDurch = entscheidungDurch;
 		this.zmiName = zmiName;
+		this.entscheidungAm = entscheidungAm;
+		this.entscheidungBis = entscheidungBis;
 	}
 
 	public String getBegruendung() {
@@ -76,4 +83,32 @@ public class ESAResult {
 	public void setZmiName(String zmiName) {
 		this.zmiName = zmiName;
 	}
+
+    /**
+     * @return the entscheidungAm
+     */
+    public Date getEntscheidungAm() {
+        return entscheidungAm;
+    }
+
+    /**
+     * @param entscheidungAm the entscheidungAm to set
+     */
+    public void setEntscheidungAm(Date entscheidungAm) {
+        this.entscheidungAm = entscheidungAm;
+    }
+
+    /**
+     * @return the entscheidungBis
+     */
+    public Date getEntscheidungBis() {
+        return entscheidungBis;
+    }
+
+    /**
+     * @param entscheidungBis the entscheidungBis to set
+     */
+    public void setEntscheidungBis(Date entscheidungBis) {
+        this.entscheidungBis = entscheidungBis;
+    }
 }

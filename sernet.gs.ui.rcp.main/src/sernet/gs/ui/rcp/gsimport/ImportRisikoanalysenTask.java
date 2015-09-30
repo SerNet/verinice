@@ -31,7 +31,6 @@ import org.hibernate.Hibernate;
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
-import sernet.gs.reveng.importData.ESAResult;
 import sernet.gs.reveng.importData.GSDBConstants;
 import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.RAGefaehrdungenResult;
@@ -165,7 +164,7 @@ public class ImportRisikoanalysenTask {
         monitor.worked(1);
         monitor.subTask(i + "/" + numberOfRAs + " - Zielobjekt: " + name);
 
-        CnATreeElement element = importEsa(zielobjekt);
+        CnATreeElement element = findCnaTreeElementByGstoolGuid(zielobjekt.zielobjekt.getGuid());
         if (element == null) {
             return;
         }
@@ -199,43 +198,7 @@ public class ImportRisikoanalysenTask {
         CnAElementHome.getInstance().update(riskAnalysis);
     }
     
-    /**
-     * Import the ergaenzende Sicherheitsanalyse (ESA) for an Zielobjekt.
-     * ESA is a synonyme for Risikoanalyse (RA).
-     * 
-     * @param zielobjekt
-     * @return
-     * @throws CommandException
-     */
-    private CnATreeElement importEsa(ZielobjektTypeResult zielobjekt) throws CommandException {
-        CnATreeElement element = null;
 
-        // First transfer the EAS fields into the previously created
-        // cnatreeelmt:
-        List<ESAResult> esaResult = vampire.findESAByZielobjekt(zielobjekt.zielobjekt);
-
-        if (esaResult == null || esaResult.size() == 0) {
-            LOG.warn("No ESA found for zielobjekt" + zielobjekt.zielobjekt.getName());
-            return element;
-        }
-        if (esaResult.size() > 1) {
-            LOG.warn("Warning: More than one ESA found for zielobjekt" + zielobjekt.zielobjekt.getName() + " Using first one only.");
-        }
-        
-        if(LOG.isDebugEnabled()){
-            LOG.debug("ESA found for zielobjekt " + zielobjekt.zielobjekt.getName());
-        }
-        element = findCnaTreeElementByGstoolGuid(zielobjekt.zielobjekt.getGuid());
-        if (element == null) {
-            if(LOG.isDebugEnabled()){
-                LOG.debug("No matching CnaTreeElement to migrate ESA for zielobjekt " + zielobjekt.zielobjekt.getName());
-            }
-            return element;
-        }
-        transferData.transferESA(element, esaResult.get(0));
-        CnAElementHome.getInstance().update(element);
-        return element;
-    }
 
     private void importGefaehrdungen(ZielobjektTypeResult zielobjekt, CnATreeElement element, List<RAGefaehrdungenResult> gefaehrdungenForZielobjekt) throws SQLException, IOException, CommandException {
         for (RAGefaehrdungenResult gefaehrdungenResult : gefaehrdungenForZielobjekt) {           
@@ -439,12 +402,12 @@ public class ImportRisikoanalysenTask {
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         List<CnATreeElement> elementList = command.getElements();
         if (elementList == null || elementList.size() == 0) {
-            if(LOG.isDebugEnabled()){
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("NOT found: CnaTreeElmt with sourceID " + sourceID + " and extID " + guid + "...");
             }
             return null;
         }
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Found: CnaTreeElmt with sourceID " + sourceID + " and extID " + guid + "...");
         }
         return elementList.get(0);

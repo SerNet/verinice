@@ -51,6 +51,10 @@ implements IBSIStrukturElement {
 
 	private static final String PROP_ANZAHL = "gebaeude_anzahl"; //$NON-NLS-1$
 	
+    public static final String PROP_ESA_ENTSCHEIDUNG_DURCH = "gebaeude_ergaenzendeanalyse_entscheidung_durch"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_AM = "gebaeude_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "gebaeude_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
+	
 	
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 	= new SchutzbedarfAdapter(this);

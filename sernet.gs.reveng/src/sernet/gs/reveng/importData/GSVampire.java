@@ -172,7 +172,8 @@ public class GSVampire {
 	
 	private static final String QUERY_ESA_FOR_ZIELOBJEKT = "select "
 			+ " new sernet.gs.reveng.importData.ESAResult(esa.esaBegruendung, esa.esaEinsatz, "
-			+ " esa.esaModellierung, esa.esaSzenario, esa.msUnj.unjId, esa.esaEntscheidDurch, zmi.name)"
+			+ " esa.esaModellierung, esa.esaSzenario, esa.msUnj.unjId, esa.esaEntscheidDurch, zmi.name,"
+			+ " esa.esaEntscheidDatum, esa.esaRaDatumBis)"
 			+ " from NZobEsa esa, NZielobjekt zmi"
 			+ " where zmi.id.zobId = esa.esaZobIdMit"
 			+ "	and esa.NZielobjekt.id.zobId = :zobId";

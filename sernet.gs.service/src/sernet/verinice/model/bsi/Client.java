@@ -49,6 +49,10 @@ public class Client extends CnATreeElement
 	public static final String PROP_ERLAEUTERUNG = "client_erlaeuterung"; //$NON-NLS-1$
 	private static final String PROP_ANZAHL = "client_anzahl"; //$NON-NLS-1$
 	
+    public static final String PROP_ESA_ENTSCHEIDUNG_DURCH = "client_ergaenzendeanalyse_entscheidung_durch"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_AM = "client_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "client_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
+	
 
 	private final ISchutzbedarfProvider schutzbedarfProvider 
 	= new SchutzbedarfAdapter(this);

@@ -23,10 +23,15 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.LoadAncestors;
 
 /**
+ * Command to retrieve to the complete path from a given {@link CnATreeElement} (by uuid and typid)
+ * to its rootElement ( {@link ITVerbund} or {@link Organization} ) 
+ * 
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
 public class GetElementPathCommand extends GenericCommand {

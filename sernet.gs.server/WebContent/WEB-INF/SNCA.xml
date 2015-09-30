@@ -381,7 +381,21 @@ the value between <param></param> will be used directly if no string is found fo
 					id="raum_ergaenzendeanalyse_modell" 
 					name="zusätzlich vormerken"/>
 			</huiproperty>
-			
+			<huiproperty 
+				id="raum_ergaenzendeanalyse_entscheidung_durch"
+				name="Entscheidung durch"/>
+			<huiproperty
+				id="raum_ergaenzendeanalyse_entscheidung_am"
+				name="Entscheidung am"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+			<huiproperty
+				id="raum_ergaenzendeanalyse_entscheidung_bis"
+				name="Entscheidung bis"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
 			<huiproperty 
 				name="Risikoanalyse" 
 				id="raum_risikoanalyse"
@@ -600,6 +614,21 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Begründung Mgmt" 
 				id="server_risikoanalyse_begruendung"
 				inputtype="text"/>
+			<huiproperty 
+				id="server_ergaenzendeanalyse_entscheidung_durch"
+				name="Entscheidung durch"/>
+			<huiproperty
+				id="server_ergaenzendeanalyse_entscheidung_am"
+				name="Entscheidung am"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+			<huiproperty
+				id="server_ergaenzendeanalyse_entscheidung_bis"
+				name="Entscheidung bis"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
 			
 		</huipropertygroup>   
     </huientity>
@@ -794,6 +823,23 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Begründung Mgmt" 
 				id="tkkomponente_risikoanalyse_begruendung"
 				inputtype="text"/>
+
+			<huiproperty 
+				id="tkkomponente_ergaenzendeanalyse_entscheidung_durch"
+				name="Entscheidung durch"/>
+			<huiproperty
+				id="tkkomponente_ergaenzendeanalyse_entscheidung_am"
+				name="Entscheidung am"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+			<huiproperty
+				id="tkkomponente_ergaenzendeanalyse_entscheidung_bis"
+				name="Entscheidung bis"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+				
 		</huipropertygroup>   
 		
     </huientity>
@@ -906,6 +952,22 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Begründung Mgmt" 
 				id="nkkomponente_risikoanalyse_begruendung"
 				inputtype="text"/>
+			<huiproperty 
+				id="nkkomponente_ergaenzendeanalyse_entscheidung_durch"
+				name="Entscheidung durch"/>
+			<huiproperty
+				id="nkkomponente_ergaenzendeanalyse_entscheidung_am"
+				name="Entscheidung am"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+			<huiproperty
+				id="nkkomponente_ergaenzendeanalyse_entscheidung_bis"
+				name="Entscheidung bis"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+				
 			</huipropertygroup>
     </huientity>
 
@@ -1315,6 +1377,22 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Begründung Mgmt" 
 				id="client_risikoanalyse_begruendung"
 				inputtype="text"/>
+			
+			<huiproperty 
+				id="client_ergaenzendeanalyse_entscheidung_durch"
+				name="Entscheidung durch"/>
+			<huiproperty
+				id="client_ergaenzendeanalyse_entscheidung_am"
+				name="Entscheidung am"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+			<huiproperty
+				id="client_ergaenzendeanalyse_entscheidung_bis"
+				name="Entscheidung bis"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
 			</huipropertygroup>
 		
     </huientity>
@@ -1530,6 +1608,23 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Begründung Mgmt" 
 				id="sonstit_risikoanalyse_begruendung"
 				inputtype="text"/>
+				
+			<huiproperty 
+				id="sonstit_ergaenzendeanalyse_entscheidung_durch"
+				name="Entscheidung durch"/>
+			<huiproperty
+				id="sonstit_ergaenzendeanalyse_entscheidung_am"
+				name="Entscheidung am"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+			<huiproperty
+				id="sonstit_ergaenzendeanalyse_entscheidung_bis"
+				name="Entscheidung bis"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+								
 			</huipropertygroup>
     </huientity>
 
@@ -1936,6 +2031,23 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Begründung Mgmt" 
 				id="gebaeude_risikoanalyse_begruendung"
 				inputtype="text"/>
+				
+			<huiproperty 
+				id="gebaeude_ergaenzendeanalyse_entscheidung_durch"
+				name="Entscheidung durch"/>
+			<huiproperty
+				id="gebaeude_ergaenzendeanalyse_entscheidung_am"
+				name="Entscheidung am"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+			<huiproperty
+				id="gebaeude_ergaenzendeanalyse_entscheidung_bis"
+				name="Entscheidung bis"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+				
 			</huipropertygroup>				
 	</huientity>
 
@@ -2679,6 +2791,22 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Begründung Mgmt" 
 				id="anwendung_risikoanalyse_begruendung"
 				inputtype="text"/>
+				
+			<huiproperty 
+				id="anwendung_ergaenzendeanalyse_entscheidung_durch"
+				name="Entscheidung durch"/>
+			<huiproperty
+				id="anwendung_ergaenzendeanalyse_entscheidung_am"
+				name="Entscheidung am"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>
+			<huiproperty
+				id="anwendung_ergaenzendeanalyse_entscheidung_bis"
+				name="Entscheidung bis"
+				inputtype="date">
+				<defaultRule class="Today"/>
+			</huiproperty>			
 			</huipropertygroup>
     </huientity>
 

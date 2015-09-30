@@ -98,7 +98,9 @@ public class Anwendung extends CnATreeElement
     public static final String PROP_INTEGRITAET_HOCH = "anwendung_integritaet_hoch"; //$NON-NLS-1$
     public static final String PROP_INTEGRITAET_SEHR_HOCH = "anwendung_integritaet_sehrhoch"; //$NON-NLS-1$
     
-
+    public static final String PROP_ESA_ENTSCHEIDUNG_DURCH = "anwendung_ergaenzendeanalyse_entscheidung_durch"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_AM = "anwendung_ergaenzendeanalyse_entscheidung_am"; //$NON-NLS-1$
+    public static final String PROP_ESA_ENTSCHEIDUNG_BIS = "anwendung_ergaenzendeanalyse_entscheidung_bis"; //$NON-NLS-1$
 
 
 	@Override

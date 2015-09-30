@@ -52,6 +52,7 @@ import sernet.gs.reveng.NZielobjekt;
 import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.importData.BausteinInformationTransfer;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
+import sernet.gs.reveng.importData.ESAResult;
 import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.GefaehrdungInformationTransfer;
 import sernet.gs.reveng.importData.MassnahmeInformationTransfer;
@@ -339,6 +340,7 @@ public class ImportTask {
                 }
 
                 transferData.transfer(element, resultZO);
+                importEsa(resultZO, element);
                 element.setSourceId(sourceId);
                 monitor.subTask(numberImported + "/" + numberOfElements + " - " + element.getTitle());
 
@@ -728,4 +730,43 @@ public class ImportTask {
         }
         return result;
     }
+    
+    /**
+     * Import the ergaenzende Sicherheitsanalyse (ESA) for an Zielobjekt.
+     * ESA is a synonyme for Risikoanalyse (RA).
+     * 
+     * @param zielobjekt
+     * @return
+     * @throws CommandException
+     */
+    private CnATreeElement importEsa(ZielobjektTypeResult zielobjekt, CnATreeElement element) throws CommandException {
+
+        // First transfer the EAS fields into the previously created
+        // cnatreeelmt:
+        List<ESAResult> esaResult = vampire.findESAByZielobjekt(zielobjekt.zielobjekt);
+
+        if (esaResult == null || esaResult.size() == 0) {
+            LOG.warn("No ESA found for zielobjekt" + zielobjekt.zielobjekt.getName());
+            return element;
+        }
+        if (esaResult.size() > 1) {
+            LOG.warn("Warning: More than one ESA found for zielobjekt" + zielobjekt.zielobjekt.getName() + " Using first one only.");
+        }
+        
+        if(LOG.isDebugEnabled()){
+            LOG.debug("ESA found for zielobjekt " + zielobjekt.zielobjekt.getName());
+        }
+        if (element == null) {
+            if(LOG.isDebugEnabled()){
+                LOG.debug("No matching CnaTreeElement to migrate ESA for zielobjekt " + zielobjekt.zielobjekt.getName());
+            }
+            return element;
+        }
+        transferData.transferESA(element, esaResult.get(0));
+        CnAElementHome.getInstance().update(element);
+        return element;
+    }
+    
+
+    
 }
