@@ -410,7 +410,7 @@ public class GSVampire {
 	
 	public BausteinInformationTransfer findTxtForMbBaust(MbBaust mbBaust, NZielobjekt z, String encoding){
 	    BaseHibernateDAO dao = new BaseHibernateDAO();
-	    BausteinInformationTransfer bit = new BausteinInformationTransfer();
+	    BausteinInformationTransfer bausteininformation = new BausteinInformationTransfer();
 	    Transaction transaction = dao.getSession().beginTransaction();
 	    Query qry = dao.getSession().createQuery(QUERY_MBBAUSTTXT_FOR_MBBAUST);
 	    qry.setParameter("bstId", mbBaust.getId().getBauId());
@@ -421,26 +421,26 @@ public class GSVampire {
 	        MbBaustTxt mTxt =  (MbBaustTxt)resultArr[0];
 	        ModZobjBst mzb = (ModZobjBst)resultArr[1];
 	        try {
-                bit.setDescription(((mTxt.getBeschreibung() != null) ? convertClobToStringEncodingSave(mTxt.getBeschreibung(), encoding) : "no description available"));
+                bausteininformation.setDescription(((mTxt.getBeschreibung() != null) ? convertClobToStringEncodingSave(mTxt.getBeschreibung(), encoding) : "no description available"));
             } catch (IOException e) {
                 LOG.error("Error converting CLOB to String", e);
             }
-	        bit.setEncoding(encoding);
-	        bit.setId(mbBaust.getNr());
-	        bit.setKapitel("1"); // TODO
-	        bit.setSchicht(String.valueOf(mbBaust.getMbSchicht().getId().getSchId()));
-	        bit.setTitel(mTxt.getName());
-	        bit.setErfasstAm(mzb.getDatum());
-	        bit.setZobId(z.getId().getZobId());
-	        bit.setNr(mbBaust.getNr());
+	        bausteininformation.setEncoding(encoding);
+	        bausteininformation.setId(mbBaust.getNr());
+	        bausteininformation.setKapitel("1"); // TODO
+	        bausteininformation.setSchicht(String.valueOf(mbBaust.getMbSchicht().getId().getSchId()));
+	        bausteininformation.setTitel(mTxt.getName());
+	        bausteininformation.setErfasstAm(mzb.getDatum());
+	        bausteininformation.setZobId(z.getId().getZobId());
+	        bausteininformation.setNr(mbBaust.getNr());
 	        Hibernate.initialize(mzb.getMbBaust());
 	        Hibernate.initialize(mzb.getNZielobjektByFkZbZ());
 	        Hibernate.initialize(mzb.getNZielobjektByFkZbZ2());
-	        bit.setMzb(mzb);
+	        bausteininformation.setMzb(mzb);
 	    }
         transaction.commit();
         dao.getSession().close();
-	    return bit;
+	    return bausteininformation;
 	}
 	
 	public MassnahmeInformationTransfer findTxtforMbMassn(MbBaust mBbaut, MbMassn mbMassn, String encoding){
@@ -449,88 +449,117 @@ public class GSVampire {
         Query qry = dao.getSession().createQuery(QUERY_MBMASSTXT_FOR_MBMASS);
         qry.setParameter("masId", mbMassn.getId().getMasId());
         List<Object> hqlResult = qry.list();
-        MassnahmeInformationTransfer mit = new MassnahmeInformationTransfer();
+        MassnahmeInformationTransfer massnahmeinformation = new MassnahmeInformationTransfer();
         if(hqlResult.size() == 1 && hqlResult.get(0) instanceof MbMassnTxt){
-            MbMassnTxt mTxt = (MbMassnTxt)hqlResult.get(0);
-            
-            mit.setAbstract_(mTxt.getAbstract_());
-            mit.setTitel(mTxt.getName());
-            try{
-                if(mTxt.getBeschreibung() !=  null ){
-                    mit.setDescription(convertClobToStringEncodingSave(mTxt.getBeschreibung(), encoding));
-                }
-                if(mTxt.getHtmltext() != null){
-                    mit.setHtmltext(convertClobToStringEncodingSave(mTxt.getHtmltext(), encoding));
-                }
-            } catch (IOException e){
-                LOG.error("Error parsing clob to String", e);
-            }
-            mit.setId("bM " + String.valueOf(mbMassn.getMskId().intValue()) + "." + String.valueOf(mbMassn.getNr()));
-            mit.setSiegelstufe('A'); // TODO
-            mit.setZyklus("-1"); // TODO 
+            massnahmeinformation = processMassnahme(mbMassn, encoding, hqlResult, massnahmeinformation);
             
         }
         transaction.commit();
         dao.getSession().close();
-        return mit;	    
+        return massnahmeinformation;	    
 	}
+
+    /**
+     * @param mbMassn
+     * @param encoding
+     * @param hqlResult
+     * @param massnahmeinformation
+     */
+    private MassnahmeInformationTransfer processMassnahme(MbMassn mbMassn, String encoding, List<Object> hqlResult, MassnahmeInformationTransfer massnahmeinformation) {
+        MbMassnTxt mTxt = (MbMassnTxt)hqlResult.get(0);
+        
+        massnahmeinformation.setAbstract_(mTxt.getAbstract_());
+        massnahmeinformation.setTitel(mTxt.getName());
+        try{
+            if(mTxt.getBeschreibung() !=  null ){
+                massnahmeinformation.setDescription(convertClobToStringEncodingSave(mTxt.getBeschreibung(), encoding));
+            }
+            if(mTxt.getHtmltext() != null){
+                massnahmeinformation.setHtmltext(convertClobToStringEncodingSave(mTxt.getHtmltext(), encoding));
+            }
+        } catch (IOException e){
+            LOG.error("Error parsing clob to String", e);
+        }
+        massnahmeinformation.setId("bM " + String.valueOf(mbMassn.getMskId().intValue()) + "." + String.valueOf(mbMassn.getNr()));
+        massnahmeinformation.setSiegelstufe('A'); // TODO
+        massnahmeinformation.setZyklus("-1"); // TODO 
+        return massnahmeinformation;
+    }
 	
-    public GefaehrdungInformationTransfer findGITForBstGef(MbBaust mbBaust, MbBaustGefaehr mbBstGef, NZielobjekt z, String encoding){
+    public GefaehrdungInformationTransfer findGefaehrdungInformationForBausteinGefaehrdung(MbBaust mbBaust, MbBaustGefaehr mbBstGef, NZielobjekt z, String encoding){
         BaseHibernateDAO dao = new BaseHibernateDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query qry = dao.getSession().createQuery(QUERY_GEFS_FOR_BAUSTEIN);
         qry.setParameter("gefId", mbBstGef.getMbGefaehr().getId().getGefId());
         List<Object> hqlResult = qry.list();
-        GefaehrdungInformationTransfer git = new GefaehrdungInformationTransfer();
+        GefaehrdungInformationTransfer gefaehrdungInformation = new GefaehrdungInformationTransfer();
         if(hqlResult.size() >= 1 && hqlResult.get(0) instanceof Object[]){
-            Object[] resultArr = ((Object[])hqlResult.get(0));
-            String gNr = String.valueOf(resultArr[0]);
-            String gKId = String.valueOf(resultArr[2]);
-            String gId = String.valueOf(resultArr[3]);
-            String gName = String.valueOf(resultArr[4]);
-            try {
-                git.setDescription(convertClobToStringEncodingSave((Clob)resultArr[5], encoding));
-            } catch (IOException e) {
-                LOG.error("Error parsing clob to String", e);
-                git.setDescription("Description not parseable from CLOB");
-            }
-            git.setId(String.valueOf(gNr));
-            git.setTitel(gName);
+            gefaehrdungInformation = processGefaehrdung(encoding, hqlResult, gefaehrdungInformation);
         }
         
+        logDuplicates(encoding, hqlResult);
+        transaction.commit();
+        dao.getSession().close();
+        return gefaehrdungInformation;
+	}
+
+    /**
+     * @param encoding
+     * @param hqlResult
+     * @param gefaehrdungInformation
+     */
+    private GefaehrdungInformationTransfer processGefaehrdung(String encoding, List<Object> hqlResult, GefaehrdungInformationTransfer gefaehrdungInformation) {
+        Object[] resultArr = ((Object[])hqlResult.get(0));
+        String gefaehrdungNr = String.valueOf(resultArr[0]);
+        String gefaehrdungKapitelId = String.valueOf(resultArr[2]);
+        String gefaehrdungId = String.valueOf(resultArr[3]);
+        String gefaehrdungName = String.valueOf(resultArr[4]);
+        try {
+            gefaehrdungInformation.setDescription(convertClobToStringEncodingSave((Clob)resultArr[5], encoding));
+        } catch (IOException e) {
+            LOG.error("Error parsing clob to String", e);
+            gefaehrdungInformation.setDescription("Description not parseable from CLOB");
+        }
+        gefaehrdungInformation.setId(String.valueOf(gefaehrdungNr));
+        gefaehrdungInformation.setTitel(gefaehrdungName);
+        return gefaehrdungInformation;
+    }
+
+    /**
+     * @param encoding
+     * @param hqlResult
+     */
+    private void logDuplicates(String encoding, List<Object> hqlResult) {
         if(LOG.isDebugEnabled() && hqlResult.size() > 1){
             Map<String, String> tMap = new HashMap<String, String>();
             for(Object o : hqlResult){
                 if(o instanceof Object[]){
                     Object[] oArr = (Object[])o;
-                    String gNr = String.valueOf(oArr[0]);
-                    String gId = String.valueOf(oArr[3]);
-                    String gName = String.valueOf(oArr[4]);
-                    String gDesc = "";
+                    String gefaehrdungNr = String.valueOf(oArr[0]);
+                    String gefaehrdungId = String.valueOf(oArr[3]);
+                    String gefaehrdungName = String.valueOf(oArr[4]);
+                    String gefaehrdungDescription = "";
                     try{
-                        gDesc = convertClobToStringEncodingSave((Clob)oArr[5], encoding);
+                        gefaehrdungDescription = convertClobToStringEncodingSave((Clob)oArr[5], encoding);
                     } catch (IOException e){
                         LOG.error("Error parsing clob to String", e);
                     }
-                    String id = gId + gNr + gName;
+                    String id = gefaehrdungId + gefaehrdungNr + gefaehrdungName;
                     if(tMap.containsKey(id)){
-                        String eDesc = tMap.get(id); // existing description
-                        if(eDesc.equals(gDesc)){
-                            LOG.debug("<" + id + ">\tDuplette found:\t" + gDesc);
+                        String existingDescription = tMap.get(id); // existing description
+                        if(existingDescription.equals(gefaehrdungDescription)){
+                            LOG.debug("<" + id + ">\tDuplicate found:\t" + gefaehrdungDescription);
                         }
                     } else {
-                        LOG.debug("<" + id + ">\tnew desc for existant g:\t" + gDesc);
-                        tMap.put(id, gDesc);
+                        LOG.debug("<" + id + ">\tnew desc for existant g:\t" + gefaehrdungDescription);
+                        tMap.put(id, gefaehrdungDescription);
                     }
                 } else {
                     LOG.error("Unexpected Class of o:\t" + o.getClass().getCanonicalName());
                 }
             }
         }
-        transaction.commit();
-        dao.getSession().close();
-        return git;
-	}
+    }
 	
 	public List<MbBaustGefaehr> findGefaehrdungenForBaustein(MbBaust mbBaust, NZielobjekt zo){
         BaseHibernateDAO dao = new BaseHibernateDAO();

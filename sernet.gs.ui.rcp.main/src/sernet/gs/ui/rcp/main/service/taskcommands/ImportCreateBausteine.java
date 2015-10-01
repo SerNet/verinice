@@ -83,6 +83,8 @@ public class ImportCreateBausteine extends GenericCommand {
         return log;
     }
 
+    // attention dear reader: ud is an abbreviation for [u]ser[d]efined
+    
     private CnATreeElement element;
     private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
     private Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap;
@@ -99,7 +101,7 @@ public class ImportCreateBausteine extends GenericCommand {
     private String sourceId;
     private IBSIConfig bsiConfig;
     
-    private Map<MbBaust, Baustein> gst2VnBstMap;
+    private Map<MbBaust, Baustein> gstool2veriniceBausteinMap;
 
     private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
 
@@ -119,7 +121,7 @@ public class ImportCreateBausteine extends GenericCommand {
         this.udBausteineTxtMap = udBstTxtMap;
         this.udBstMassTxtMap = udBstMassTxtMap;
         this.udBaustGefMap = udBaustGefMap; 
-        this.gst2VnBstMap = new HashMap<MbBaust, Baustein>();
+        this.gstool2veriniceBausteinMap = new HashMap<MbBaust, Baustein>();
     }
 
     public ImportCreateBausteine(String sourceId, CnATreeElement element, 
@@ -135,7 +137,7 @@ public class ImportCreateBausteine extends GenericCommand {
         this.udBausteineTxtMap = udBstTxtMap;
         this.udBstMassTxtMap = udBstMassTxtMap;
         this.udBaustGefMap = udBaustGefMap;
-        this.gst2VnBstMap = new HashMap<MbBaust, Baustein>();
+        this.gstool2veriniceBausteinMap = new HashMap<MbBaust, Baustein>();
     }
     
     
@@ -222,7 +224,7 @@ public class ImportCreateBausteine extends GenericCommand {
                         transferBaustein(baustein, bausteinUmsetzung, queryresult);
                         
                         transferMassnahmen(bausteinUmsetzung, list, false);
-                        gst2VnBstMap.put(mbBaust, baustein);
+                        gstool2veriniceBausteinMap.put(mbBaust, baustein);
                     }
                 }
                 return bausteinUmsetzung;
@@ -239,6 +241,9 @@ public class ImportCreateBausteine extends GenericCommand {
     }
 
     /**
+     * 
+     * creates an instance of {@link BausteinUmsetzung}, given a parent {@link CnATreeElement}, a {@link MbBaust}, a List of {@link BausteineMassnahmenResult} and {@link Baustein}
+     * only used, if baustein (itgs module) is userdefined 
      * @param element
      * @param mbBaust
      * @param list
@@ -259,13 +264,14 @@ public class ImportCreateBausteine extends GenericCommand {
                 transferUserDefinedBaustein(baustein, bit, bausteinUmsetzung);
                 transferMassnahmen(bausteinUmsetzung, list, true);
                 transferGefForUDBst(baustein, bausteinUmsetzung);
-                gst2VnBstMap.put(mbBaust, baustein);
+                gstool2veriniceBausteinMap.put(mbBaust, baustein);
             }
         }
         return bausteinUmsetzung;
     }
 
     /**
+     * transfers instances of {@link Gefaehrdung} to instances of {@link GefaehrdungsUmsetzung} within {@link BausteinUmsetzung}
      * @param baustein
      * @param bausteinUmsetzung
      * @throws SQLException
@@ -280,7 +286,14 @@ public class ImportCreateBausteine extends GenericCommand {
     }
     
     
-    
+    /**
+     * prepares an instance of Baustein for an import of a user defined baustein from the gstool
+     * in case baustein is not userdefined, data is read from itgs-catalogue
+     * @param mbBaust
+     * @param list
+     * @return
+     * @throws CommandException
+     */
     private Baustein importUserDefinedBaustein(MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws CommandException{
         Baustein baustein = createBasicBaustein(mbBaust);
         baustein = createMassnForBst(list, baustein);
@@ -290,16 +303,17 @@ public class ImportCreateBausteine extends GenericCommand {
     
     private Baustein createBasicBaustein(MbBaust mbBaust){
         Baustein baustein = new Baustein();
-        BausteinInformationTransfer bInfo = udBausteineTxtMap.get(mbBaust);
-        baustein.setEncoding((bInfo.getEncoding() != null) ? bInfo.getEncoding() : "UTF-8");
+        BausteinInformationTransfer bausteinInformation = udBausteineTxtMap.get(mbBaust);
+        baustein.setEncoding((bausteinInformation.getEncoding() != null) ? bausteinInformation.getEncoding() : "UTF-8");
         baustein.setId(mbBaust.getNr());
-        baustein.setSchicht((bInfo.getSchicht() != null) ? Integer.valueOf(bInfo.getSchicht()) : -1);
+        baustein.setSchicht((bausteinInformation.getSchicht() != null) ? Integer.valueOf(bausteinInformation.getSchicht()) : -1);
 //        baustein.setStand(stand); // TODO
-        baustein.setTitel((bInfo != null) ? bInfo.getTitel() : "no name available");
+        baustein.setTitel((bausteinInformation != null) ? bausteinInformation.getTitel() : "no name available");
         return baustein;
     }
 
     /**
+     * transfers data from the gstool db ({@link BausteineMassnahmenResult}) to an instance of {@link Baustein}
      * @param list
      * @param baustein
      */
@@ -320,6 +334,8 @@ public class ImportCreateBausteine extends GenericCommand {
 //                m.setSiegelstufe(siegel);
             }
             massnahmen.add(m);
+            
+            // block kept as comment, for future use, if requested
 //            getLog().error(bmr.massnahme.getErfasstDurch());
 //            getLog().error(bmr.massnahme.getId());
 //            getLog().error(bmr.massnahme.getLink());
@@ -351,20 +367,20 @@ public class ImportCreateBausteine extends GenericCommand {
      */
     private Baustein createGefForBst(MbBaust mbBaust, Baustein baustein) {
         if(udBaustGefMap.containsKey(mbBaust)){
-            List<Gefaehrdung> gefs = new ArrayList<Gefaehrdung>();
-            for(GefaehrdungInformationTransfer git : udBaustGefMap.get(mbBaust)){
-                if(git.getTitel() != null){
-                    OwnGefaehrdung g = new OwnGefaehrdung();
-                    g.setEncoding(GSScraperUtil.getInstance().getModel().getEncoding());
-                    g.setId(git.getId());
-                    g.setKategorie(git.getKategorie());
-                    g.setStand(git.getStand());
-                    g.setTitel(git.getTitel());
-                    g.setBeschreibung(git.getDescription());
-                    gefs.add(g);
+            List<Gefaehrdung> gefaehrdungenList = new ArrayList<Gefaehrdung>();
+            for(GefaehrdungInformationTransfer gefaehrdungInformation : udBaustGefMap.get(mbBaust)){
+                if(gefaehrdungInformation.getTitel() != null){
+                    OwnGefaehrdung gefaehrdung = new OwnGefaehrdung();
+                    gefaehrdung.setEncoding(GSScraperUtil.getInstance().getModel().getEncoding());
+                    gefaehrdung.setId(gefaehrdungInformation.getId());
+                    gefaehrdung.setKategorie(gefaehrdungInformation.getKategorie());
+                    gefaehrdung.setStand(gefaehrdungInformation.getStand());
+                    gefaehrdung.setTitel(gefaehrdungInformation.getTitel());
+                    gefaehrdung.setBeschreibung(gefaehrdungInformation.getDescription());
+                    gefaehrdungenList.add(gefaehrdung);
                 }
             }
-            baustein.setGefaehrdungen(gefs);
+            baustein.setGefaehrdungen(gefaehrdungenList);
         } else {
             baustein.setGefaehrdungen(Collections.EMPTY_LIST);
         }
@@ -387,23 +403,23 @@ public class ImportCreateBausteine extends GenericCommand {
         return null;
     }
 
-    private void transferUserDefinedBaustein(Baustein baustein, BausteinInformationTransfer bit, BausteinUmsetzung bstUms ){
-        if(bit != null && baustein != null && bstUms != null){
-            bstUms.setSimpleProperty(BausteinUmsetzung.P_ERLAEUTERUNG, bit.getDescription());
-            bstUms.setSimpleProperty(BausteinUmsetzung.P_BAUSTEIN_BESCHREIBUNG, bit.getDescription());
-            bstUms.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM, parseDate(bit.getErfasstAm()));
-            bstUms.setSimpleProperty(BausteinUmsetzung.P_NR, bit.getNr());
+    private void transferUserDefinedBaustein(Baustein baustein, BausteinInformationTransfer bausteinInformation, BausteinUmsetzung bausteinUmsetzung ){
+        if(bausteinInformation != null && baustein != null && bausteinUmsetzung != null){
+            bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERLAEUTERUNG, bausteinInformation.getDescription());
+            bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_BAUSTEIN_BESCHREIBUNG, bausteinInformation.getDescription());
+            bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM, parseDate(bausteinInformation.getErfasstAm()));
+            bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_NR, bausteinInformation.getNr());
         }
         
-        if(bstUms == null){
+        if(bausteinUmsetzung == null){
             getLog().error("Bausteinumsetzung für " + baustein.getTitel() + " war null");
         }
         
-        if(bstUms != null){
-            bstUms.setSourceId(sourceId);
-            bstUms.setExtId(createExtId(baustein, bit.getZobId()));
+        if(bausteinUmsetzung != null){
+            bausteinUmsetzung.setSourceId(sourceId);
+            bausteinUmsetzung.setExtId(createExtId(baustein, bausteinInformation.getZobId()));
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Creating baustein with sourceId and extId: " + sourceId + ", " + bstUms.getExtId());
+                getLog().debug("Creating baustein with sourceId and extId: " + sourceId + ", " + bausteinUmsetzung.getExtId());
             }
         }
         
@@ -415,8 +431,8 @@ public class ImportCreateBausteine extends GenericCommand {
         if (alleBausteineToZoBstMap == null) {
             alleBausteineToZoBstMap = new HashMap<MbBaust, ModZobjBst>();
         }
-        alleBausteineToBausteinUmsetzungMap.put(bit.getMzb().getMbBaust(), bstUms);
-        alleBausteineToZoBstMap.put(bit.getBaust(), bit.getMzb());
+        alleBausteineToBausteinUmsetzungMap.put(bausteinInformation.getMzb().getMbBaust(), bausteinUmsetzung);
+        alleBausteineToZoBstMap.put(bausteinInformation.getBaust(), bausteinInformation.getMzb());
         
     }
     
@@ -461,29 +477,6 @@ public class ImportCreateBausteine extends GenericCommand {
             return Long.toString(date.getTime());
         }
         return "";
-    }
-
-    private void transferUserDefinedMassnahmen(){
-        
-        MassnahmenUmsetzung mNums = new MassnahmenUmsetzung();
-//        String massnahmeNr = "bM " + mBMass.getMskId() + "." + mBMass.getNr();
-        
-//        mNums.setSimpleProperty("mnums_id", massnahmeNr);
-//        mnUms.setName(ragmResult.getMassnahmeTxt().getName());
-//        mnUms.setDescription(convertClobToStringEncodingSave(ragmResult.getMassnahmeTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
-//        mnUms.setErlaeuterung(ragmResult.getMzbm().getUmsBeschr());
-//        mnUms.setSimpleProperty(MassnahmenUmsetzung.P_UMSETZUNGBIS, parseDate(ragmResult.getMzbm().getUmsDatBis()));
-//        mnUms.setSimpleProperty(MassnahmenUmsetzung.P_LETZTEREVISIONAM, parseDate(ragmResult.getMzbm().getRevDat()));
-//        mnUms.setSimpleProperty(MassnahmenUmsetzung.P_NAECHSTEREVISIONAM, parseDate(ragmResult.getMzbm().getRevDatNext()));
-//        mnUms.setRevisionBemerkungen(ragmResult.getMzbm().getRevBeschr());
-//        mnUms.setUrl(transferUrl(ragmResult.getMassnahme().getLink()));
-//        char siegel = convertToChar(ragmResult.getSiegelTxt().getKurzname());
-//        if(siegel!=KEIN_SIEGEL) {
-//            mnUms.setStufe(siegel);
-//        }
-//        transferUmsetzung(mnUms, ragmResult.getUmsTxt().getName());
-        
-        
     }
 
 
@@ -597,8 +590,8 @@ public class ImportCreateBausteine extends GenericCommand {
         return alleMassnahmen;
     }
     
-    public Map<MbBaust, Baustein> getGst2VnBstMap(){
-        return gst2VnBstMap;
+    public Map<MbBaust, Baustein> getGstool2VeriniceBausteinMap(){
+        return gstool2veriniceBausteinMap;
     }
 
     @Override

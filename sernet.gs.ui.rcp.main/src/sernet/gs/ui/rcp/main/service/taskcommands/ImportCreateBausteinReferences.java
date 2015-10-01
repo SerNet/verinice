@@ -66,26 +66,26 @@ public class ImportCreateBausteinReferences extends GenericCommand {
     private List<Baustein> bausteine;
     private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
     private Map<MbBaust, ModZobjBst> bausteinMap;
-    private Map<MbBaust, Baustein> gst2VnBstMap;
+    private Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
     private String sourceId;
     private IBSIConfig bsiConfig;
     private static final String NO_COMMENT = "";
 
-    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, Map<MbBaust, ModZobjBst> bausteinMap, Map<MbBaust, Baustein> gst2VnBstMap) {
+    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, Map<MbBaust, ModZobjBst> bausteinMap, Map<MbBaust, Baustein> gstool2VeriniceBausteinMap) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
         this.sourceId = sourceId;
         this.bausteinMap = bausteinMap;
-        this.gst2VnBstMap = gst2VnBstMap;
+        this.gstool2VeriniceBausteinMap = gstool2VeriniceBausteinMap;
     }
 
-    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, IBSIConfig bsiConfig, Map<MbBaust, ModZobjBst> bausteinMap, Map<MbBaust, Baustein> gst2VnBstMap) {
+    public ImportCreateBausteinReferences(String sourceId, CnATreeElement element, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, IBSIConfig bsiConfig, Map<MbBaust, ModZobjBst> bausteinMap, Map<MbBaust, Baustein> gstool2VeriniceBausteinMap) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
         this.sourceId = sourceId;
         this.bsiConfig = bsiConfig;
         this.bausteinMap = bausteinMap;
-        this.gst2VnBstMap = gst2VnBstMap;
+        this.gstool2VeriniceBausteinMap = gstool2VeriniceBausteinMap;
     }
 
     /*
@@ -153,50 +153,78 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         if(baustein==null) { // no baustein found, so it mbBaust has to be userdefined (not in catalogue existant)
             //throw new RuntimeException("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
             if(mbBaust.getId().getBauImpId() == 1){ // bst is userdefined, so create own instance of Baustein
-                for(MbBaust mbB : bausteinMap.keySet()){
-
-                    if(mbBausteinEquals(mbB, mbBaust)){
-                        refZobId = bausteinMap.get(mbB).getRefZobId();
-                        baustein = getVNBaust(mbBaust);
-                        if(baustein == null){
-                            baustein = getVNBaust(mbB); // should never happen
-                        }
-                        break;
-                    }
-                }
-                if(refZobId == null && bausteinMap.containsKey(mbBaust)){
-                    refZobId = bausteinMap.get(mbBaust).getRefZobId();
-                }
+                Object[] r = determineBausteinAndRefZobId(mbBaust);
+                refZobId = (r[0] != null) ? (Integer)r[0] : null;
+                baustein = (r[1] != null) ? (Baustein)r[1] : null;
             } else {
                 getLog().error("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
                 return;
             }
         } else {
-            isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
-                refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
-                
-                if (refZobId != null) {
-                    break isReference;
-                }
-            }
+            refZobId = getRefZobIdFromDBResult(list, refZobId);
         }
         if (refZobId != null && baustein != null) {
-            if(getLog().isDebugEnabled()){
-                getLog().debug("Looking for previously created baustein by sourceId, extId: " + sourceId + ", " + createExtId(baustein, refZobId));
+            createBausteinReferences(element, baustein, refZobId);
+        }
+    }
+
+    /**
+     * @param list
+     * @param refZobId
+     * @return
+     */
+    private Integer getRefZobIdFromDBResult(List<BausteineMassnahmenResult> list, Integer refZobId) {
+        isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
+            refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
+            
+            if (refZobId != null) {
+                break isReference;
             }
-            LoadCnAElementByExternalID cmd = new LoadCnAElementByExternalID(sourceId, createExtId(baustein, refZobId));
-            cmd = getCommandService().executeCommand(cmd);
-            List<CnATreeElement> elements = cmd.getElements();
-            if (elements != null && elements.iterator().hasNext()) {
-                CnATreeElement previousBaustein = elements.iterator().next();
-                ArrayList bausteinAsList = new ArrayList();
-                bausteinAsList.add(previousBaustein);
-                
-                Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(previousBaustein.getEntityType().getId(), element.getEntityType().getId());
-                if (!possibleRelations.isEmpty()) {
-                    CreateLink cmd2 = new CreateLink(previousBaustein, element, possibleRelations.iterator().next().getId(), NO_COMMENT);
-                    getCommandService().executeCommand(cmd2);
+        }
+        return refZobId;
+    }
+    
+    private Object[] determineBausteinAndRefZobId(MbBaust mbBaust){
+        Object[] result = new Object[2];
+        for(MbBaust mbB : bausteinMap.keySet()){
+
+            if(mbBausteinEquals(mbB, mbBaust)){
+                result[0] = bausteinMap.get(mbB).getRefZobId();
+                result[1] = getVeriniceBaustein(mbBaust);
+                if(result[1] == null){
+                    result[1] = getVeriniceBaustein(mbB); // should never happen
                 }
+                break;
+            }
+        }
+        if(result[0] == null && bausteinMap.containsKey(mbBaust)){
+            result[0] = bausteinMap.get(mbBaust).getRefZobId();
+        }
+        return result;
+    }
+
+    /**
+     * @param element
+     * @param baustein
+     * @param refZobId
+     * @throws CommandException
+     */
+    private void createBausteinReferences(CnATreeElement element, Baustein baustein, Integer refZobId) throws CommandException {
+        if(getLog().isDebugEnabled()){
+            getLog().debug("Looking for previously created baustein by sourceId, extId: " + sourceId + ", " + createExtId(baustein, refZobId));
+        }
+        LoadCnAElementByExternalID cmd = new LoadCnAElementByExternalID(sourceId, createExtId(baustein, refZobId));
+        cmd = getCommandService().executeCommand(cmd);
+        List<CnATreeElement> elements = cmd.getElements();
+        if (elements != null && elements.iterator().hasNext()) {
+            CnATreeElement previousBaustein = elements.iterator().next();
+            ArrayList bausteinAsList = new ArrayList();
+            bausteinAsList.add(previousBaustein);
+            
+            Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(previousBaustein.getEntityType().getId(), element.getEntityType().getId());
+            if (!possibleRelations.isEmpty()) {
+                CreateLink cmd2 = new CreateLink(previousBaustein, element, possibleRelations.iterator().next().getId(), NO_COMMENT);
+                getCommandService().executeCommand(cmd2);
             }
         }
     }
@@ -218,10 +246,10 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         return mbB1.getNr().equals(mbB2.getNr()) && mbB1.getId().getBauId().equals(mbB2.getId().getBauId());
     }
     
-    private Baustein getVNBaust(MbBaust mbBaust){
-        for(MbBaust mbBKey : gst2VnBstMap.keySet()){
+    private Baustein getVeriniceBaustein(MbBaust mbBaust){
+        for(MbBaust mbBKey : gstool2VeriniceBausteinMap.keySet()){
             if(mbBausteinEquals(mbBKey, mbBaust)){
-                return gst2VnBstMap.get(mbBKey);
+                return gstool2VeriniceBausteinMap.get(mbBKey);
             }
         }
         return null;
