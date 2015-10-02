@@ -688,8 +688,8 @@ public class ImportTask {
             this.alleMassnahmen.putAll(command.getAlleMassnahmen());
         }
         
-        if(command.getGst2VnBstMap() != null && command.getGst2VnBstMap().size() > 0){
-            this.gst2VnBstMap.putAll(command.getGst2VnBstMap());
+        if(command.getGstool2VeriniceBausteinMap() != null && command.getGstool2VeriniceBausteinMap().size() > 0){
+            this.gst2VnBstMap.putAll(command.getGstool2VeriniceBausteinMap());
         }
 
     }
@@ -711,7 +711,7 @@ public class ImportTask {
         List<GefaehrdungInformationTransfer> gitList = new ArrayList<GefaehrdungInformationTransfer>();
         List<MbBaustGefaehr> mbBaustGefList = vampire.findGefaehrdungenForBaustein(b, zielobjekt);
         for(MbBaustGefaehr gefaehr : mbBaustGefList){
-            GefaehrdungInformationTransfer git = vampire.findGITForBstGef(b, gefaehr, zielobjekt, GSScraperUtil.getInstance().getModel().getEncoding());
+            GefaehrdungInformationTransfer git = vampire.findGefaehrdungInformationForBausteinGefaehrdung(b, gefaehr, zielobjekt, GSScraperUtil.getInstance().getModel().getEncoding());
             if(git.getTitel() != null && git.getId() != null){
                 gitList.add(git);
             } 
