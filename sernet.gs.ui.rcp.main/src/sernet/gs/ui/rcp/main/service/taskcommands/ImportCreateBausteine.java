@@ -321,11 +321,11 @@ public class ImportCreateBausteine extends GenericCommand {
         Iterator<BausteineMassnahmenResult> iter = list.iterator();
         List<Massnahme> massnahmen = new ArrayList<Massnahme>();
         while(iter.hasNext()){
-            BausteineMassnahmenResult bmr = iter.next();
+            BausteineMassnahmenResult bausteinMassnahmeResult = iter.next();
             Massnahme m = new Massnahme();
-            m.setLebenszyklus(bmr.obm.getZykId());
+            m.setLebenszyklus(bausteinMassnahmeResult.obm.getZykId());
             
-            MassnahmeInformationTransfer mTxt = udBstMassTxtMap.get(bmr.massnahme);
+            MassnahmeInformationTransfer mTxt = udBstMassTxtMap.get(bausteinMassnahmeResult.massnahme);
             m.setId(mTxt.getId());
             if(mTxt != null){
                 m.setTitel((mTxt.getTitel() != null) ? mTxt.getTitel() : "no name available");
@@ -335,30 +335,38 @@ public class ImportCreateBausteine extends GenericCommand {
             }
             massnahmen.add(m);
             
-            // block kept as comment, for future use, if requested
-//            getLog().error(bmr.massnahme.getErfasstDurch());
-//            getLog().error(bmr.massnahme.getId());
-//            getLog().error(bmr.massnahme.getLink());
-//            getLog().error(bmr.massnahme.getNr());
-//            getLog().error(bmr.obm.getUmsDatVon());
-//            getLog().error(bmr.obm.getUmsDatBis());
-//            getLog().error(bmr.obm.getUmsBeschr());
-//            getLog().error(bmr.obm.getErfasstDurch());
-//            getLog().error(bmr.obm.getKostPersFix());
-//            getLog().error(bmr.obm.getKostPersVar());
-//            getLog().error(bmr.obm.getKostSachFix());
-//            getLog().error(bmr.obm.getKostSachVar());
-//            getLog().error(bmr.obm.getKostPersZeiId().intValue());
-//            getLog().error(bmr.obm.getKostSachZeiId().intValue());
-//            getLog().error(bmr.obm.getRevBeschr());
-//            getLog().error(bmr.obm.getRevDat());
-//            getLog().error(bmr.obm.getRevDatNext());
-//            getLog().error(bmr.obm.getZykId());
-//            getLog().error(bmr.massnahme.getLink());
-            
+            if (getLog().isDebugEnabled()) {
+                logBausteinMassnahmeResult(bausteinMassnahmeResult);
+            }
+                     
         }
         baustein.setMassnahmen(massnahmen);
         return baustein;
+    }
+
+    private void logBausteinMassnahmeResult(BausteineMassnahmenResult bausteinMassnahmeResult) {
+        if(bausteinMassnahmeResult==null) {
+            getLog().debug("bausteinMassnahmeResult is null");
+        }
+        getLog().debug(bausteinMassnahmeResult.massnahme.getErfasstDurch());
+        getLog().debug(bausteinMassnahmeResult.massnahme.getId());
+        getLog().debug(bausteinMassnahmeResult.massnahme.getLink());
+        getLog().debug(bausteinMassnahmeResult.massnahme.getNr());
+        getLog().debug(bausteinMassnahmeResult.obm.getUmsDatVon());
+        getLog().debug(bausteinMassnahmeResult.obm.getUmsDatBis());
+        getLog().debug(bausteinMassnahmeResult.obm.getUmsBeschr());
+        getLog().debug(bausteinMassnahmeResult.obm.getErfasstDurch());
+        getLog().debug(bausteinMassnahmeResult.obm.getKostPersFix());
+        getLog().debug(bausteinMassnahmeResult.obm.getKostPersVar());
+        getLog().debug(bausteinMassnahmeResult.obm.getKostSachFix());
+        getLog().debug(bausteinMassnahmeResult.obm.getKostSachVar());
+        getLog().debug(bausteinMassnahmeResult.obm.getKostPersZeiId().intValue());
+        getLog().debug(bausteinMassnahmeResult.obm.getKostSachZeiId().intValue());
+        getLog().debug(bausteinMassnahmeResult.obm.getRevBeschr());
+        getLog().debug(bausteinMassnahmeResult.obm.getRevDat());
+        getLog().debug(bausteinMassnahmeResult.obm.getRevDatNext());
+        getLog().debug(bausteinMassnahmeResult.obm.getZykId());
+        getLog().debug(bausteinMassnahmeResult.massnahme.getLink());
     }
 
     /**
