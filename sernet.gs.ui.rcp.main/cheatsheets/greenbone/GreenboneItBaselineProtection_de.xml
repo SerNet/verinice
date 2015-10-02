@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<cheatsheet title="IT-Grundschutz mit Greenbone und verinice">
+
+  <intro>
+    <description>
+     verinice garantiert im Zusammenspiel mit einem <b>Greenbone</b>-Schwachstellenscanner (<b>www.greenbone.net</b>)
+     bzw. einem OpenVAS-Schwachstellenscanner (<b>www.openvas.org</b>) ein effizientes Schwachstellenmanagement.<br />
+     <br />
+     Im Grundschutz unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans bei den
+     Funktionen Strukturanalyse, Baustein-Modellierung und Automatischer Basis-Sicherheitscheck.
+    </description>
+  </intro>
+
+  <item title="IT-Grundschutz-Scan in Greenbone durchführen">
+    <description>
+      Mit dem Greenbone Security Manager können automatische Prüfungen zu den IT-Grundschutz-Katalogen des Bundesamt
+      für Sicherheit in der Informationstechnik (BSI) durchgeführt werden.<br />
+      <br />
+      Zur detaillierten Beschreibung der Durchführung eines IT-Grundschutz-Scans in Greenbone informieren Sie sich
+      bitte in der Produktdokumentation oder im <b>Greenbone Learning Center</b> auf der Greenbone-Website unter
+      (<b>www.greenbone.net/learningcenter/task_it_grundschutz.de</b>)<br />
+      <br />
+      Dort stehen eine spezielle Scankonfiguration sowie ein IT-Grundschutz-Report-Plugin für verinice zum Download
+      bereit.
+    </description>
+  </item>
+
+  <item title="Scan-Ergebnisse exportieren">
+    <description>
+      Wählen Sie im Greenbone Security Assistant den Report zu einem erfolgreich durchgeführten Scan über das Menü
+      <b>Scan Management > Reports</b> aus.<br />
+      <br />
+      Exportieren Sie die Ergebnisse des IT-Grundschutz-Scans als vna-Datei. Wählen Sie dazu aus der Dropdown-Liste
+      als Format <b>verinice ITG</b> und starten Sie den Export durch Klick auf den Button <b>Download Filtered
+      Report</b>. Greenbone speichert die vna-Datei im Downloadverzeichnis Ihres Systems.
+    </description>
+  </item>
+
+  <item title="Import des IT-Grundschutz-Scans">
+    <description>
+      Wechseln Sie in verinice über das Menü <b>Ansicht > Zeige Perspektive > BSI Grundschutz Perspektive</b> in die
+      Grundschutz-Perspektive. Starten Sie den Import durch Klick auf den Button <b>Importiere IT-Verbund aus
+      Datei...</b>. Wählen Sie den zuvor aus Greenbone exportierten ITG-Report durch Klick auf den Button <b>Datei
+      auswählen...</b>, die restlichen Parameter können auf ihren Default-Einstellungen belassen werden.<br />
+      <br />
+      Die importierten Objekte befinden sich im Verbund <b>importierte Objekte > GSM ITGS Import > IT-Systeme:
+      Server</b>. Alle Scantargets werden als Server mit einer Beschreibung im Feld <b>Tags</b> importiert.
+      Jedes importierte Objekt besitzt ein Tochterobjekt <b>GSM Result</b> mit den Maßnahmenergebnissen des Scans.
+    </description>
+  </item>
+
+  <item title="Strukturanalyse">
+    <description>
+      Sie können die importierten Objekte in Ihren Verbund übernehmen indem Sie in <b>importierte Objekte > GSM ITGS
+      Import > IT-Systeme: Server</b> navigieren, die Server markieren und über rechten Mausklick <b>Ausschneiden</b>
+      wählen.<br />
+      <br />
+      Navigieren Sie nun in Ihren Verbund, z.B. <b>IT-Verbund > IT-Systeme: Server</b> und fügen die Systeme mittels
+      rechtem Mausklick <b>Einfügen</b> dort ein.
+    </description>
+  </item>
+
+  <item title="Greenbone: Bausteine automatisch zuordnen">
+    <description>
+      Sofern nicht bereits geöffnet blenden Sie den View <b>GS-Kataloge</b> über das Menü <b>Ansicht > Zeige View...
+      > GS-Kataloge</b> ein. Achtung - ohne geöffneten View Grundschutz-Katalog kann die automatische Zuordnung der
+      Grundschutzbausteine im folgenden Schritt nicht ausgeführt werden!<br />
+      <br />
+      Navigieren Sie zu einem der in Ihren Verbund verschobenen Objekte (Server) und wählen Sie mit rechtem Mausklick
+      <b>Greenbone: Bausteine automatisch zuordnen...</b>.
+      Aktualisieren Sie die Ansicht durch Klick auf den Button <b>View neu laden (Strg+F5)</b>.<br />
+      <br />
+      Die Bausteine werden entsprechend der Tags automatisch den jeweiligen Objekten zugewiesen.
+    </description>
+  </item>
+
+  <item title="Greenbone: Automatischer Basis-Sicherheitscheck">
+    <description>
+      Wählen Sie mit rechtem Mausklick auf eines der Objekte die Option <b>Greenbone: Automatischer
+      Basis-Sicherheitscheck</b>. verinice übernimmt aus dem importierten GSM-Result alle Maßnahmen inklusive des
+      Bearbeitungsstatus in die zuvor automatisch zugewiesenen Bausteine.<br />
+      <br />
+  	  Die Übernahme erfolgt nur für die technischen Maßnahmen der Grundschutz-Bausteine der Schichten 4 und 5, da
+      nicht technische Maßnahmen vom Schwachstellenscan naturgemäß nicht geprüft werden können.
+    </description>
+  </item>
+
+</cheatsheet>

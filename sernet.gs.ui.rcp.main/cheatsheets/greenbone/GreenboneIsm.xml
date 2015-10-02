@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<cheatsheet title="Information Security Management with verinice und Greenbone">
+
+  <intro>
+    <description>
+      In connection with a <b>Greenbone</b>-vulnerabilityscanner (<b>www.greenbone.net</b>) as well as an
+      OpenVAS vulnerability scanner (<b>www.openvas.org</b>) verinice enables an effective vulnerability
+      management.<br />
+      <br />
+      In the ISM-perspective verinice supports you in performing the risk analysis and the vulnerability management
+      after importing the results of a vulnerability scan. Exclusive in verinice.PRO there is an additional task
+      workflow for the elimination of vulnerabilities implemented.
+    </description>
+  </intro>
+
+  <item title="ISM Vulnerability Scan in Greenbone">
+    <description>
+      With the Greenbone Security Manager you can automatically perform vulnerabilityscans of your systems.<br />
+      <br />
+      Please refer to the Greenbone user manual or visit the Greenbone website <b>www.greenbone.net</b> for a
+      detailled description how to perform an ISM-vulnerabilityscan. You will find a special scan configuration and
+      an verinice-ISM report plugin to use in verinice for download.
+    </description>
+  </item>
+
+<item title="Create Notes for Scan Results">
+    <description>
+      To make sure that those vulnerabilities found in a Greenbone scan will be created as objects in verinice you
+      need to create notes for them in Greenbone. These procedure enables fine tuning of your vulnerability import in
+      verinice.<br />
+      <br />
+      In case a vulnerability has no note assigned the scanned system will be created as an asset in verinice without
+      the corresponding vulnerability!<br />
+      <br />
+      To create notes in Greenbone click on the button <b>Actions > Add Note</b> in the list of found vulnerabilities.
+    </description>
+  </item>
+
+  <item title="Exporting the Scan Results">
+    <description>
+      Select the report of a successful scan in the Greenbone menu <b>Scan management > reports</b>.<br />
+      <br />
+      Export the results of the ISM-vulnerability scan as vna-file by selecting <b>verinice ISM</b> as the format in
+      the corresponding drop-down-box and start the export by clicking on the button <b>Download filtered report</b>.
+      Greenbone will save the vna-file in the download directory in your system environment.
+    </description>
+  </item>
+
+  <item title="Importing ISM Vulnerability Scan">
+    <description>
+      Switch to the ISM Perspective in verinice using menu <b>View > Show perspective > ISM Perspective</b>. Start
+      the import by clicking the button <b>Import organisation from file...</b>. Select the previously exported
+      Greenbonen ISM-Report by clicking the button <b>Select file...</b>, keep the default values for all other
+      parameters in the dialogue.<br />
+      <br />
+      The results of the vulnerability scan can be found in the group <b>Imported objects</b> in the following object
+      groups:<br />
+      <br />
+      Assets GSM-Scan = all scanned systems<br />
+      Vulnerabilities GSM-Scan = all found Vulnerabilities<br />
+      Controls GSM-Scan = controls for the correction of found vulnerabilities<br />
+      Scenarios GSM-Scan = newly created scenarios for allocation of assets and vulnerabilities<br />
+      <br />
+      With double mouseclick on any imported asset in the chapter <b>Greenbone GSM</b> of the editor view the details
+      for the vulnerability are shown. Plase notice, that the checkbox for the chapter <b>Greenbone_GSM</b> must be set
+      in the menu <b>Edit > Preferences > Editor settings</b>.
+    </description>
+  </item>
+
+  <item title="Risk Analysis">
+    <description>
+      You can transfer the imported assets, controls, scenarios and vulnerabilities one by one into your existing
+      organisation or moove the complete organisation to the top level by navigating to <b>imported objects</b> and
+      chooese the option <b>Cut</b> from the context menu (right mouseclick).<br />
+      <br />
+      Close the group <b>imported objects</b> to make sure that no further selection is active and insert the
+      organisation with right mouseclick and the option <b>Insert</b> to insert the organisation on the top level.
+    </description>
+  </item>
+
+  <item title="Grouping Objcts">
+    <description>
+      For a clear view and to create tasks the imported assets and controls can be grouped according to the <b>GSM
+      tags</b>. To do so select the group <b>Assets GSM-Scan</b> or <b>Controls GSM-Scan</b> and choose the right click
+      option <b>Group by tags...</b>.<br />
+      <br />
+      Additionally each asset group can be assigned a responsible person. Assumed you allready created persons in your
+      organisation you can create the relation simply using drag and drop with one or more asset groups.
+    </description>
+  </item>
+
+  <item title="Workflow - Rectifying Vulnerabilites (verinice.PRO only)">
+    <description>
+      verinice provides a specific workflow to elliminate the vulnerabilities ad support you effectively in this
+      process.<br />
+      <br />
+      To create the tasks for ellimination of the vulnerabilities select any organisation and choose the right click
+      option <b>Task > Greenbone: Start vulnerability process...</b>.<br />
+      <br />
+      The created tasks of the type <b>Recitify vulnerability</b> include  controls, scenarios und assets that are
+      linked to a control group. Any responsible person can now work on these tasks in the task view, available from
+      the menu <b>View > Show view > Tasks</b> or in the section <b>tasks</b> in the webfrontend.<br />
+      <br />
+      The responsible person will receive a weekly reminder by email.
+    </description>
+  </item>
+
+  <item title="Recitifying Vulnerabilities">
+    <description>
+      After closing a task of the type <b>Recitify vulnerability</b> all relations between assets and scenarios will
+      be deleted whereas the vulnerability itself will remain in verinice but has no more effect!<br />
+      <br />
+      The status of the linked control will be set to <b>Implemented > Yes</b> when no more assets are linked to the
+      scenario. In case there exist additional links between assets and scenarios resulting out of other tasks, the
+      control status will be set to <b>Implemented > partially</b>.<br />
+      <br />
+      In this way it is guaranteed that a vulnerability will only be set to the status <b>Recitified</b>, if all
+      responsible persons recitified the vulnerability in their field of responsibility.
+    </description>
+  </item>
+
+  <item title="Closing Tasks for not Rectified Vulnerabilities">
+    <description>
+      Tasks for not recitified vulnerabilities will be closed in the workflow after 3 weeks automatically to reduce
+      the number of open tasks. This behavior is implemented to reflect the fact, that in real life it is not always
+      possible to recitify an enormous number of vulnerabilities immediately. Due to the fact that vulnerability scans
+      are performed on a regular base, vulnerabilities that have not been rectified will be detected again and the
+      corresponding tasks will be created according. Therefore the whole process aims at optimising security while
+      keeping the effort as low as possible.<br />
+      <br />
+      The Greenbone vulnerability scan can be configured to transfer the found vulnerabilities to <b>verince.PRO</b>
+      automatically. In this case <b>verinice.PRO</b> compares the current scan result with the implementation status
+      according to the workflow and performs necessary adjustments. Vulnerabilities that have been set to
+      <b>recitified</b> falsely will be reopened - <b>verinice.PRO</b> recreates the correct links between assets and
+      scenarios. In this process verinice does not create double entries but recognises previously imported assets and
+      vulnerabilities and keeps those in the organisation.
+    </description>
+  </item>
+
+</cheatsheet>

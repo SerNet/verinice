@@ -27,7 +27,7 @@ public class GreenboneIntroAction extends ShowPerspectiveIntroAction {
 
     @Override
     public String getCheatSheetId() {
-        return "sernet.verinice.greenbone.cheatsheets.getting_started";
+        return "sernet.verinice.greenbone.cheatsheets.overview";
     }
 
     @Override

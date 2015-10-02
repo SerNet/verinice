@@ -1451,36 +1451,36 @@ Artwork:&#x0A;Blackbit http://www.blackbit.de - Icons by Axialis Team http://www
         </cheatsheet>
         <category
               id="sernet.verinice.greenbone.cheatsheets"
-              name="%cheatsheets.18">
+              name="%CheatSheets.Greenbone.Category.Name">
         </category>
         <cheatsheet
               category="sernet.verinice.greenbone.cheatsheets"
-              composite="false"
-              contentFile="%cheatsheets.content.19"
-              id="sernet.verinice.greenbone.cheatsheets.getting_started"
-              name="%cheatsheets.19">
+              composite="true"
+              contentFile="%CheatSheets.Greenbone.Overview.ContentFile"
+              id="sernet.verinice.greenbone.cheatsheets.overview"
+              name="%CheatSheets.Greenbone.Overview.Name">
            <description>
-              Placeholder Desctiption 1
+              
            </description>
         </cheatsheet>
         <cheatsheet
               category="sernet.verinice.greenbone.cheatsheets"
               composite="false"
-              contentFile="%cheatsheets.content.20"
-              id="sernet.verinice.greenbone.cheatsheets.placeholder_title_1"
-              name="%cheatsheets.20">
+              contentFile="%CheatSheets.Greenbone.ItBaselineProtection.ContentFile"
+              id="sernet.verinice.greenbone.cheatsheets.it_baseline_protection"
+              name="%CheatSheets.Greenbone.ItBaselineProtection.Name">
            <description>
-              Placeholder Description 2
+              
            </description>
         </cheatsheet>
         <cheatsheet
               category="sernet.verinice.greenbone.cheatsheets"
               composite="false"
-              contentFile="%cheatsheets.content.21"
-              id="sernet.verinice.greenbone.cheatsheets.placeholder_title_3"
-              name="%cheatsheets.21">
+              contentFile="%CheatSheets.Greenbone.Ism.ContentFile"
+              id="sernet.verinice.greenbone.cheatsheets.ism"
+              name="%CheatSheets.Greenbone.Ism.Name">
            <description>
-              Placeholder Description 3
+              
            </description>
         </cheatsheet>
    </extension>

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<cheatsheet title="Information Security Management mit verinice und Greenbone">
+
+  <intro>
+    <description>
+      verinice garantiert im Zusammenspiel mit einem <b>Greenbone</b>-Schwachstellenscanner (<b>www.greenbone.net</b>)
+      bzw. einem OpenVAS-Schwachstellenscanner (<b>www.openvas.org</b>) ein effizientes Schwachstellenmanagement.<br />
+      <br />
+      In der ISM-Perspektive unterstützt verinice Sie nach Import der Ergebnisse eines Greenbone-Schwachstellenscans
+      bei der Risikoanalyse und der Schwachstellenverfolgung. In verinice.PRO steht zusätzlich exklusiv der
+      Aufgaben-Workflow zur Schwachstellenbehebung zur Verfügung.
+    </description>
+  </intro>
+
+<item title="ISM-Schwachstellenscan in Greenbone durchführen">
+    <description>
+      Mit dem Greenbone Security Manager können automatische Schwachstellenscans durchgeführt werden.<br />
+      <br />
+      Zur detaillierten Beschreibung der Durchführung eines ISM-Schwachstellenscans in Greenbone informieren Sie sich
+      bitte in der Produktdokumentation oder auf der Greenbone-Website unter <b>www.greenbone.net</b>.
+      Dort stehen eine spezielle Scankonfiguration sowie ein verinice-ISM Report-Plugin für verinice zum Download
+      bereit.
+    </description>
+  </item>
+
+<item title="Notizen zu Scan-Ergebnissen anlegen">
+    <description>
+      Damit im Scan gefundene Schwachstellen in verinice auch als Schwachstellen-Objekte angelegt werden, müssen diese
+      in Greenbone mit Notizen versehen werden. Diese Vorgehensweise ermöglicht eine feingranulare Steuerung des
+      Schwachstellen-Imports in verinice.<br />
+      <br />
+      Wird zu einer Schwachstelle keine Notiz angelegt, so wird in verinice nur das gescannte System als Asset
+      angelegt, nicht aber die Schwachstelle übernommen!<br />
+      <br />
+      Die Anlage von Notizen in Greenbone erfolgt über den Button <b>Actions > Add Note</b> in der Liste der gefundenen
+      Schwachstellen.
+    </description>
+  </item>
+
+  <item title="Scan-Ergebnisse exportieren">
+    <description>
+      Wählen Sie im Greenbone Security Assistant den Report zu einem erfolgreich durchgeführten Scan über das Menü
+      <b>Scan Management > Reports</b> aus.<br />
+      <br />
+      Exportieren Sie die Ergebnisse des ISM-Schwachstellenscans als vna-Datei. Wählen Sie dazu in der Dropdown-List
+      als Format <b>verinice ISM</b> und starten Sie den Export durch Klick auf den Button <b>Download Filtered
+      Report</b>. Greenbone speichert die vna-Datei im Downloadverzeichnis Ihres Systems.
+    </description>
+  </item>
+
+  <item title="Import des ISM-Schwachstellenscans">
+    <description>
+      Wechseln Sie in verinice über das Menü <b>Ansicht > Zeige Perspektive > ISM Perspektive</b> in die
+      ISM-Perspektive. Starten Sie den Import durch Klick auf den Button <b>Importiere Organisation aus Datei...</b>.
+      Wählen Sie den zuvor aus Greenbone exportierten ISM-Report durch Klick auf den Button <b>Datei auswählen...</b>,
+      die restlichen Parameter können auf ihren Default-Einstellungen belassen werden.<br />
+      <br />
+      Die Ergebnisse des Schwachstellenscans befinden sich unter <b>importierte Objekte</b> in den folgenden
+      Objektgruppen:<br />
+      <br />
+      Assets GSM-Scan = alle gescannten Systeme<br />
+      Vulnerabilities GSM-Scan = alle gefundenen Schwachstellen<br />
+      Controls GSM-Scan = Maßnahmen zur Behebung der gefundenen Schwachstellen<br />
+      Szenarios GSM-Scan = neu erzeugte Szenarios zwecks Zuordnung von Assets und Schwachstellen<br />
+      <br />
+      Durch Doppelklick auf ein importiertes Asset werden im Abschnitt <b>Greenbone GSM</b> des Editorfensters Details
+      des Schwachstellenscans dargestellt. Bitte beachten Sie, dass zur Anzeige die Checkbox für den Abschnitt
+      <b>Greenbone_GSM</b> über das Menü <b>Bearbeiten > Einstellungen > Editor Einstellungen</b> ausgewählt sein muss.
+    </description>
+  </item>
+
+  <item title="Risikoanalyse">
+    <description>
+      Sie können die importierten Assets, Controls, Szenarien und Schwachstellen entweder einzeln in Ihre existierende
+      Organisation übernehmen, oder die ganze Organisation auf die oberste Ebene übernehmen, indem Sie in
+      <b>importierte Objekte</b> navigieren, den Import markieren und über rechten Mausklick <b>Ausschneiden</b>
+      wählen.<br />
+      <br />
+      Schließen Sie nun die Gruppe "importierte Objekte", so dass keine Selektion mehr sichtbar ist und fügen Sie die
+      ausgeschnittenen Organisation mittels rechtem Mausklick <b>Einfügen</b> auf der obersten Ebene ein.
+    </description>
+  </item>
+
+  <item title="Gruppieren der Objekte">
+    <description>
+      Zur besseren Übersicht und zum Erzeugung von Aufgaben können die importierten Asset und Controls  entsprechend
+      der <b>GSM Tags</b> gruppiert werden. Markieren Sie dazu die Gruppe <b>Assets GSM-Scan</b> bzw. <b>Controls
+      GSM-Scan</b> und wählen Sie mit rechtem Mausklick die Option <b>Gruppiere mit Tags...</b>.<br />
+      <br />
+      Zusätzlich kann jeder Assetgruppe eine verantwortliche Person zugewiesen werden. Vorausgesetzt in Ihrer
+      Organisation wurden bereits Personen angelegt können Sie diese einfach per Drag and Drop mit einer oder mehreren
+      Assetgruppen verknüpfen.
+    </description>
+  </item>
+
+  <item title="Workflow - Beheben von Schwachstellen (nur verinice.PRO)">
+    <description>
+      Für die Behebung der Schwachstellen steht in verinice.PRO ein spezieller Workflow zur Verfügung, der Sie effektiv
+      in Ihrer Arbeit unterstützt.<br />
+      <br />
+      Sie erzeugen die Aufgaben zur Behebung der Schwachstellen, indem Sie per rechtem Mausklick auf einer Organisation
+      die Option <b>Aufgaben > Greenbone: Starte Schwachstellenverfolgung...</b> wählen.<br />
+      <br />
+      Die erzeugten Aufgaben vom Typ <b>Schwachstelle beheben</b> enthalten Controls, Szenarien und Assets, die mit
+      einer Controlgruppe verknüpft sind. Sie können von der verantwortlichen Person im View Aufgaben unter
+      <b>Ansicht > Zeige View > Aufgaben</b> oder im Webfrontend unter <b>Aufgaben</b> bearbeitet werden.<br />
+      <br />
+      Die verantwortliche Person erhält per E-Mail wöchentlich eine Erinnerung.
+    </description>
+  </item>
+
+  <item title="Schwachstellen beheben">
+    <description>
+      Nach Abschluss einer Aufgabe vom Typ <b>Schwachstellen beheben</b>, werden alle Verknüpfungen zwischen Assets
+      und Szenarios gelöscht, die dieser Aufgabe zugeordnet waren. Die Schwachstelle selbst bleibt auf diese Weise im
+      System erhalten, hat aber keine Auswirkung mehr!<br />
+      <br />
+      Das verknüpfte Control wird erst auf den Status <b>Implementiert > Ja</b> gesetzt, wenn dem Szenario kein
+      einziges Assets mehr zugeordnet ist. Falls jedoch aus anderen Aufgaben weitere Verknüpfungen zu Assets bestehen,
+      wird der Status eines Controls auf <b>Implementiert > teilweise</b> gesetzt.<br />
+      <br />
+      So wird gewährleistet, dass eine Schwachstelle erst dann als <b>behoben</b> markiert wird, wenn alle
+      Verantwortlichen diese für ihren jeweiligen Verantwortungsbereich geschlossen haben.
+    </description>
+  </item>
+
+  <item title="Aufgaben zu nicht behobenen Schwachstelle schließen">
+    <description>
+      Aufgaben zu nicht behobenen Schwachstelle werden im Workflow nach drei Wochen automatisch geschlossen, um die
+      Anzahl an offenen Aufgaben zu begrenzen. Diese Vorgehensweise trägt der Realität Rechnung, dass die Behebung
+      einer erheblichen Anzahl von Schwachstellen nicht immer zeitnah erfolgen kann. Da Schwachstellenscans üblicher
+      Weise regelmäßig wiederkehrend erfolgen, werden nicht behobene Schwachstellen erneut erkannt und Aufgaben dazu
+      erzeugt, so dass der gesamte Prozess ein Optimum an Sicherheit bei möglichst geringem Aufwand garantiert.<br />
+      <br />
+      Der Greenbone-Schwachstellenscan kann so konfiguriert werden, dass er die Schwachstellen nach jedem Scan direkt
+      an <b>verinice.PRO</b> überträgt. In diesem Fall vergleicht <b>verinice.PRO</b> sofort das aktuelle Scan-Ergebnis
+      mit dem Umsetzungsstatus gemäß Workflow und nimmt nötige Anpassungen vor. Von den Verantwortlichen
+      fälschlicherweise als <b>behoben</b> markierte Schwachstellen werden erneut geöffnet - <b>verinice.PRO</b> legt
+      dafür passende Verknüpfungen zwischen Assets und Szenarien wieder an. Dabei werden keine Dubletten erzeugt, alle
+      in der Vergangenheit bereits importierten Assets und Schwachstellen werden wiedererkannt und beibehalten.
+    </description>
+  </item>
+
+</cheatsheet>
