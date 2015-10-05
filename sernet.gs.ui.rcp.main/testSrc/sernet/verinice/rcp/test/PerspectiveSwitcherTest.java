@@ -1,9 +1,11 @@
-package sernet.verinice.rcp;
+package sernet.verinice.rcp.test;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class PerspectiveSwitcherTest {
 
     @Test
