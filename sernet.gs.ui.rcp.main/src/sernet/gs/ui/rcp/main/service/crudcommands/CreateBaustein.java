@@ -76,9 +76,6 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 		dbId = container.getDbId();
 		typeId = container.getTypeId();
 		
-		if(dbId == null){
-		    getLogger().error("dbid of element:\t" + container.getTitle() + " is null, WTF!?!");
-		}
 		this.baustein = baustein;
 		stationId = ChangeLogEntry.STATION_ID;
 		
