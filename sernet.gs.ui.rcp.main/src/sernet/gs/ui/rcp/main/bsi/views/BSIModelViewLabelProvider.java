@@ -85,7 +85,7 @@ public class BSIModelViewLabelProvider extends LabelProvider {
                 }
                 title.append(el2.getTitle());
                 if (LOG.isDebugEnabled()) {
-                    title.append(" (").append(((CnATreeElement)el).getScopeId()).append(")");
+                    appendIds(title, el2);
                 }
                 return title.toString();
             }
@@ -100,13 +100,19 @@ public class BSIModelViewLabelProvider extends LabelProvider {
             CnATreeElement el = (CnATreeElement) obj;
             StringBuilder title = new StringBuilder(el.getTitle());
             if (LOG.isDebugEnabled()) {
-                title.append(" (").append(((CnATreeElement)el).getScopeId()).append(")");
+                appendIds(title, el);
             }
             return title.toString();
         } catch( Exception e ) {
             LOG.error("Error while getting label", e);
             return "";
         }
+    }
+    
+    void appendIds(StringBuilder sb, CnATreeElement element) {
+        sb.append(" (scope: ").append(element.getScopeId());
+        sb.append(", uu: ").append(element.getUuid());
+        sb.append(", ext: ").append(element.getExtId()).append(")");
     }
 
 }

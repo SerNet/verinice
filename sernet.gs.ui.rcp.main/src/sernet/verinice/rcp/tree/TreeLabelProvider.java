@@ -120,7 +120,7 @@ public class TreeLabelProvider extends LabelProvider  {
                     text = ItemControlTransformer.truncate(sb.toString(),maxTextWidth) ;
                 }
                 if (LOG.isDebugEnabled()) {
-                    text = text + " (" + element.getScopeId() + "," + element.getUuid() + ")";
+                    text = text + " (scope: " + element.getScopeId() + ", uu: " + element.getUuid() + ", ext: " + element.getExtId() + ")";
                 }
 
             }
