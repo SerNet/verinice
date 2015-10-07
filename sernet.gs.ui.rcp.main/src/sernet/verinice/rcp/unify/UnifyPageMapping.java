@@ -49,7 +49,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ITitleAdaptor;
 import sernet.verinice.rcp.WizardPageEnteringAware;
-import sernet.verinice.service.commands.UnifyElement;
+import sernet.verinice.service.commands.unify.UnifyElement;
 import sernet.verinice.service.commands.unify.UnifyMapping;
 
 /**

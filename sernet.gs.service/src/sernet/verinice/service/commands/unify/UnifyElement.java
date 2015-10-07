@@ -17,24 +17,31 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.commands;
+package sernet.verinice.service.commands.unify;
 
 import java.io.Serializable;
 
 /**
+ * Instances of this class are either the source
+ * or the destination of a mapping defined in class UnifyMapping.
+ * 
+ * See comments in class/command Unify to understand what unify means.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
+ * @see sernet.verinice.service.commands.unify.UnifyMapping
  */
-@SuppressWarnings("serial")
 public class UnifyElement implements Serializable{
 
-    private String uuid;
+    private static final long serialVersionUID = -9047016000393432421L;
     
+    private String uuid;    
     private String title;
    
     /**
-     * @param uuid
-     * @param title
+     * Creates a unify element.
+     * 
+     * @param uuid The uuid of a verinice element
+     * @param title The title of a verinice element
      */
     public UnifyElement(String uuid, String title) {
         super();
@@ -42,21 +49,13 @@ public class UnifyElement implements Serializable{
         this.title = title;
     }
     
-    /**
-     * @return the uuid
-     */
+
     public String getUuid() {
         return uuid;
     }
 
-    /**
-     * @return the title
-     */
+
     public String getTitle() {
         return title;
-    }
-
-    
-    
-    
+    }    
 }

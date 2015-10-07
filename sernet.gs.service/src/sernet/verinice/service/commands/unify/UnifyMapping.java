@@ -23,16 +23,21 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import sernet.verinice.service.commands.UnifyElement;
-
 /**
+ * This class defines a mapping from one source element
+ * to one ore more destination elements. It is used by
+ * command {@link Unify}.
+ * 
+ * See comments in class/command Unify to understand what unify means.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
+ * @see Unify
  */
 public class UnifyMapping implements Serializable {
 
-    private UnifyElement sourceElement;
-    
+    private static final long serialVersionUID = 156484508697955787L;
+
+    private UnifyElement sourceElement;    
     private List<UnifyElement> destinationElements;
 
     /**
@@ -44,8 +49,12 @@ public class UnifyMapping implements Serializable {
     }
 
     /**
-     * @param sourceElement
-     * @param destinationElement
+     * Creates a new UnifyMapping from one source element to one
+     * destination element. You cann add more destination elements
+     * later by method  <code>addDestinationElement(..)</code>.
+     * 
+     * @param sourceElement The source of the mapping
+     * @param destinationElement The destination of the mapping
      */
     public UnifyMapping(UnifyElement sourceElement, UnifyElement destinationElement) {
         this(sourceElement);
@@ -81,11 +90,6 @@ public class UnifyMapping implements Serializable {
         return destinationElements;
     }
 
-    private List<UnifyElement> createDestinationElements() {
-        destinationElements = new ArrayList<UnifyElement>(2);
-        return destinationElements;
-    }
-
     public void setSourceElement(UnifyElement sourceElement) {
         this.sourceElement = sourceElement;
     }
@@ -93,4 +97,9 @@ public class UnifyMapping implements Serializable {
     public void addDestinationElement(UnifyElement destinationElement) {
         getDestinationElements().add(destinationElement);
     } 
+    
+    private List<UnifyElement> createDestinationElements() {
+        destinationElements = new ArrayList<UnifyElement>(2);
+        return destinationElements;
+    }
 }

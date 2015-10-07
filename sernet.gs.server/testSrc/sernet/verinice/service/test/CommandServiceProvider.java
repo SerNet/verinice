@@ -259,6 +259,22 @@ public abstract class CommandServiceProvider extends UuidLoader {
         assertNotNull("Db-id of element is null.", element.getDbId());
         checkScopeId(element);
     }
+    
+    protected void checkProperty(CnATreeElement element, String propertyId, String expectedValue) {
+        checkProperty(element,propertyId,expectedValue,true);
+    }
+    
+    protected void checkProperty(CnATreeElement element, String propertyId, String value, boolean equals) {
+        assertTrue("Unexpected value of property: " + propertyId, equals && value.equals(element.getEntity().getSimpleValue(propertyId)));        
+    }
+    
+    protected void checkProperty(CnATreeElement element, String propertyId, int expectedValue) {
+        checkProperty(element,propertyId,expectedValue,true);     
+    }
+    
+    protected void checkProperty(CnATreeElement element, String propertyId, int value, boolean equals) {
+        assertTrue("Unexpected value of property: " + propertyId, (equals) == (value==element.getEntity().getInt(propertyId)));        
+    }
 
     /**
      * Removes all with {@link #registerElementsWithUuid(String)} registered

@@ -38,15 +38,15 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.RemoveLink;
-import sernet.verinice.service.commands.UnifyElement;
 
 /**
  * Unifies a set of elements defined in a list of mappings.
- * Each mapping contains a source and a destination UUID.
- * This command copies all properties from the source to the destination.
- * 
- * Property types from propertyTypeBlacklist are ignored. 
+ * Each mapping contains the UUID of a source and a destination element.
+ * This command copies all properties from the source to the destination elements. 
  * Empty properties from the source will not delete existing value in the destination.
+ * Properties from the blacklist (<code>propertyTypeBlacklist</code> are ignored. 
+ * 
+ * Optional this command also copies links from the source to the destination elements.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -54,30 +54,42 @@ import sernet.verinice.service.commands.UnifyElement;
 public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand {
     
     private transient Logger log = Logger.getLogger(Unify.class);
+    private Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(Unify.class);
+        }
+        return log;
+    }
     
+    /**
+     * A list with property-ids from SNCA.xml.
+     * These properties are ignored while unifying.
+     */
     public static final List<String> PROPERTY_TYPE_BLACKLIST = Arrays.asList(
             SamtTopic.PROP_DESC,
             SamtTopic.PROP_NAME,
             SamtTopic.PROP_VERSION,
+            SamtTopic.PROP_WEIGHT,
+            SamtTopic.PROP_OWNWEIGHT,
+            SamtTopic.PROP_MIN1,
+            SamtTopic.PROP_MIN2,
             Control.PROP_NAME,
             Control.PROP_DESC);
     
-    private String stationId;
-    
+    private boolean copyLinksEnabled = false;
+    private boolean deleteSourceLinks = false;
+    private boolean dontCopyAttributes = false;
+    private List<String> propertyTypeBlacklist;   
     private List<UnifyMapping> mappings;
     
     private List<CnATreeElement> changedElementList;
-    
-    private List<String> propertyTypeBlacklist;
-    
-    private transient IBaseDao<CnATreeElement, Serializable> dao;
-    
-    private boolean copyLinksEnabled = false;
-    private boolean deleteSourceLinksEnabled = false;
-    private boolean copyAttributesDisabled = false;
+    private transient IBaseDao<CnATreeElement, Serializable> dao; 
+    private String stationId;
     
     /**
-     * @param mappings
+     * Creates a new Unify command.
+     * 
+     * @param mappings The unify mapping for the command
      */
     public Unify(List<UnifyMapping> mappings) {
         super();
@@ -87,21 +99,26 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
     }
     
     /**
-     * use this constructor if checkboxes should be considered also
-     * first boolean sets copy links of cnatreeelements also
-     * second sets deletion of existant links after copy is done (representing a cut operation)
-     * @param mappings
-     * @param copyLinks
-     * @param deleteExistantLinks
+     * Creates a new Unify command.
+     * 
+     * @param mappings The unify mapping for the command
+     * @param copyLinks If true the command copies all links from the source to the destination elements.
+     * @param deleteSourceLinks If true the command deletes all links from the ssource elements.
+     * @param dontCopyAttributes If true the command does not copy propertiy values from the source to the destination elements.
      */
-    public Unify(List<UnifyMapping> mappings, boolean copyLinks, boolean deleteExistantLinks, boolean copyAttributesDisabled){
+    public Unify(List<UnifyMapping> mappings, boolean copyLinks, boolean deleteSourceLinks, boolean dontCopyAttributes){
         this(mappings);
         this.copyLinksEnabled = copyLinks;
-        this.deleteSourceLinksEnabled = deleteExistantLinks;
-        this.copyAttributesDisabled = copyAttributesDisabled;
+        this.deleteSourceLinks = deleteSourceLinks;
+        this.dontCopyAttributes = dontCopyAttributes;
     }
     
-    /* (non-Javadoc)
+    /**
+     * See class comment first to understand what's happening here.
+     * 
+     * If unifyinf fails for one {@link UnifyMapping} executing is
+     * continued with the next element after logging the exception.
+     * 
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
@@ -109,22 +126,33 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
         if(mappings!=null) {
             changedElementList = new ArrayList<CnATreeElement>(mappings.size());
             for (UnifyMapping mapping : mappings) {
-                UnifyElement source = mapping.getSourceElement();
-                List<UnifyElement> destinationList = mapping.getDestinationElements();
-                for (UnifyElement destination : destinationList) {
-                    try{
-                        unify(source,destination);
-                    } catch (CommandException e){
-                        getLog().error("Error unifying elements",e);
-                    }
-                }               
+                unify(mapping);               
+            }
+        }
+    }
+
+    /**
+     * Unifies one {@link UnifyMapping}.
+     * 
+     * @param mapping A mapping with a source and an destination element
+     */
+    private void unify(UnifyMapping mapping) {
+        UnifyElement source = mapping.getSourceElement();
+        List<UnifyElement> destinationList = mapping.getDestinationElements();
+        for (UnifyElement destination : destinationList) {
+            try{
+                unify(source,destination);
+            } catch (CommandException e){
+                getLog().error("Error unifying elements",e);
             }
         }
     }
     
     /**
-     * @param source
-     * @param destination
+     * Copies all properties from the source to the destination element.
+     * 
+     * @param source The source element of a single unify process.
+     * @param destination The destination element of a single unify process.
      */
     private void unify(UnifyElement source, UnifyElement destination) throws CommandException {
         if(source==null || destination==null) {
@@ -132,24 +160,70 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
         }
         CnATreeElement sourceElement = getDao().findByUuid(source.getUuid(), RetrieveInfo.getPropertyInstance());
         CnATreeElement destinationElement = getDao().findByUuid(destination.getUuid(), RetrieveInfo.getPropertyInstance());
-        if(!copyAttributesDisabled){
+        if(!dontCopyAttributes){         
             destinationElement.getEntity().copyEntity(sourceElement.getEntity(),propertyTypeBlacklist);
         }
         if(copyLinksEnabled){
             destinationElement = unifyLinks(sourceElement, destinationElement);
         }
-        if(deleteSourceLinksEnabled){
-            sourceElement = deleteExistantLinks(sourceElement);
+        if(deleteSourceLinks){
+            sourceElement = deleteLinks(sourceElement);
             getDao().saveOrUpdate(sourceElement);
             changedElementList.add(sourceElement);
         }
         getDao().saveOrUpdate(destinationElement);
         changedElementList.add(destinationElement);
     }
-
+    
     /**
-     * @param propertyTypeBlacklist the propertyTypeBlacklist to set
+     * Copies all links from the source element to the destination element.
+     * 
+     * @param sourceElement The source element of a single unify process.
+     * @param destinationElement The destination element of a single unify process.
+     * @return The destination elment with all links from the source element.
      */
+    private CnATreeElement unifyLinks(CnATreeElement sourceElement, CnATreeElement destinationElement) throws CommandException{
+        // downLink links dependant -> dependency
+        for(CnALink linkDown : sourceElement.getLinksDown()){
+            createLink(destinationElement, linkDown.getDependency(), linkDown.getRelationId());
+        }
+        for(CnALink linkUp : sourceElement.getLinksUp()){
+            createLink(linkUp.getDependant(), destinationElement, linkUp.getRelationId());
+        }
+        return destinationElement;
+    }
+    
+    /**
+     * Removes all links from an element.
+     * 
+     * @param element An element
+     * @return The element without links
+     */
+    private CnATreeElement deleteLinks(CnATreeElement element) throws CommandException{
+        CnALink[] downLinks = element.getLinksDown().toArray(new CnALink[element.getLinksDown().size()]);
+        for(int i = 0; i < downLinks.length; i++){
+            removeLink(downLinks[i]);
+        }
+        CnALink[] upLinks = element.getLinksUp().toArray(new CnALink[element.getLinksUp().size()]); 
+        for(int i = 0; i < upLinks.length; i++){
+            removeLink(upLinks[i]);
+        }
+        return element;
+    }
+    
+    private void removeLink(CnALink link)throws sernet.verinice.interfaces.CommandException{
+        RemoveLink<CnALink> command = new RemoveLink<CnALink>(link);
+        getCommandService().executeCommand(command);
+    }
+    
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public CnALink createLink(CnATreeElement source, CnATreeElement destination, String relationId) throws CommandException {
+        CreateLink command = new CreateLink(source, destination, relationId);
+        command = getCommandService().executeCommand(command);
+        return command.getLink();
+    }
+
+ 
     protected void setPropertyTypeBlacklist(List<String> propertyTypeBlacklist) {
         this.propertyTypeBlacklist = propertyTypeBlacklist;
     }
@@ -185,47 +259,4 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
         return ChangeLogEntry.TYPE_UPDATE;
     }
     
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(Unify.class);
-        }
-        return log;
-    }
-    
-    private CnATreeElement unifyLinks(CnATreeElement sourceElement, CnATreeElement destinationElement) throws CommandException{
-        // downLink links dependant -> dependency
-        // upLink links d
-        for(CnALink linkDown : sourceElement.getLinksDown()){
-            createLink(destinationElement, linkDown.getDependency(), linkDown.getRelationId());
-        }
-        for(CnALink linkUp : sourceElement.getLinksUp()){
-            createLink(linkUp.getDependant(), destinationElement, linkUp.getRelationId());
-        }
-        return destinationElement;
-    }
-    
-    private CnATreeElement deleteExistantLinks(CnATreeElement elmt) throws CommandException{
-        CnALink[] downLinks = elmt.getLinksDown().toArray(new CnALink[elmt.getLinksDown().size()]);
-        for(int i = 0; i < downLinks.length; i++){
-            removeLink(downLinks[i]);
-        }
-        CnALink[] upLinks = elmt.getLinksUp().toArray(new CnALink[elmt.getLinksUp().size()]); 
-        for(int i = 0; i < upLinks.length; i++){
-            removeLink(upLinks[i]);
-        }
-        return elmt;
-    }
-    
-    private void removeLink(CnALink link)throws sernet.verinice.interfaces.CommandException{
-        RemoveLink<CnALink> command = new RemoveLink<CnALink>(link);
-        getCommandService().executeCommand(command);
-    }
-    
-    public CnALink createLink(CnATreeElement source, CnATreeElement destination, String relationId) throws CommandException {
-        CreateLink command = new CreateLink(source, destination, relationId);
-        command = getCommandService().executeCommand(command);
-        return command.getLink();
-    }
-    
-
 }

@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.UnifyElement;
 
 /**
  * IsaMapper is used by command {@link LoadUnifyMapping} to create a mapping between
