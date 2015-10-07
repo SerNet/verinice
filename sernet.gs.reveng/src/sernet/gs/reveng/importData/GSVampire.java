@@ -427,7 +427,7 @@ public class GSVampire {
             }
 	        bausteininformation.setEncoding(encoding);
 	        bausteininformation.setId(mbBaust.getNr());
-	        bausteininformation.setKapitel("1"); // TODO
+//	        bausteininformation.setKapitel("1"); // TODO
 	        bausteininformation.setSchicht(String.valueOf(mbBaust.getMbSchicht().getId().getSchId()));
 	        bausteininformation.setTitel(mTxt.getName());
 	        bausteininformation.setErfasstAm(mzb.getDatum());

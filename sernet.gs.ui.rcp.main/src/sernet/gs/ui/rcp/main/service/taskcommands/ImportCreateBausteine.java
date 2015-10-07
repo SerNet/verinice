@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -46,15 +47,12 @@ import sernet.gs.scraper.GSScraper;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.gsimport.ImportKostenUtil;
 import sernet.gs.ui.rcp.gsimport.TransferData;
-import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementBuildException;
-import sernet.gs.ui.rcp.main.common.model.IProgress;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
-import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -87,6 +85,7 @@ public class ImportCreateBausteine extends GenericCommand {
     
     private CnATreeElement element;
     private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
+    private Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
     private Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap;
     private Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap;
     private Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap;
@@ -99,7 +98,6 @@ public class ImportCreateBausteine extends GenericCommand {
     private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
     private List<Baustein> bausteine;
     private String sourceId;
-    private IBSIConfig bsiConfig;
     
     private Map<MbBaust, Baustein> gstool2veriniceBausteinMap;
 
@@ -110,24 +108,25 @@ public class ImportCreateBausteine extends GenericCommand {
             Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap,
             List<MbZeiteinheitenTxt> zeiten, boolean kosten, boolean importUmsetzung,
             IBSIConfig bsiConfig, Map<MbBaust, BausteinInformationTransfer> udBstTxtMap, Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap,
-            Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap) {
+            Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap, List<Baustein> bausteine) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
         this.kosten = kosten;
         this.importUmsetzung = importUmsetzung;
         this.zeiten = zeiten;
         this.sourceId = sourceId;
-        this.bsiConfig = bsiConfig;
         this.udBausteineTxtMap = udBstTxtMap;
         this.udBstMassTxtMap = udBstMassTxtMap;
         this.udBaustGefMap = udBaustGefMap; 
         this.gstool2veriniceBausteinMap = new HashMap<MbBaust, Baustein>();
+        this.individualMassnahmenMap = new HashMap<BausteinUmsetzung, List<BausteineMassnahmenResult>>();
+        this.bausteine = bausteine;
     }
 
     public ImportCreateBausteine(String sourceId, CnATreeElement element, 
             Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, List<MbZeiteinheitenTxt> zeiten, 
             boolean kosten, boolean importUmsetzung, Map<MbBaust, BausteinInformationTransfer> udBstTxtMap, 
-            Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap, Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap) {
+            Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap, Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap, List<Baustein> bausteine) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
         this.kosten = kosten;
@@ -138,6 +137,8 @@ public class ImportCreateBausteine extends GenericCommand {
         this.udBstMassTxtMap = udBstMassTxtMap;
         this.udBaustGefMap = udBaustGefMap;
         this.gstool2veriniceBausteinMap = new HashMap<MbBaust, Baustein>();
+        this.individualMassnahmenMap = new HashMap<BausteinUmsetzung, List<BausteineMassnahmenResult>>();
+        this.bausteine = bausteine;
     }
     
     
@@ -149,38 +150,7 @@ public class ImportCreateBausteine extends GenericCommand {
                 getLog().debug("Reloading element " + element.getTitle());
             }
 
-            if (this.bsiConfig == null) {
-                // load bausteine from default config:
-                LoadBausteine command = new LoadBausteine();
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
-                this.bausteine = command.getBausteine();
-            } else {
-                // load bausteine from given config:
-                BSIMassnahmenModel model = GSScraperUtil.getInstance().getModel();
-                model.setBSIConfig(bsiConfig);
-                this.bausteine = model.loadBausteine(new IProgress() {
 
-                    @Override
-                    public void beginTask(String name, int totalWork) {
-                    }
-
-                    @Override
-                    public void done() {
-                    }
-
-                    @Override
-                    public void setTaskName(String string) {
-                    }
-
-                    @Override
-                    public void subTask(String string) {
-                    }
-
-                    @Override
-                    public void worked(int work) {
-                    }
-                });
-            }
 
             
             Set<MbBaust> keySet = bausteineMassnahmenMap.keySet();
@@ -198,6 +168,7 @@ public class ImportCreateBausteine extends GenericCommand {
 
     private BausteinUmsetzung createBaustein(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws Exception {
         Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
+        gstool2veriniceBausteinMap.put(mbBaust, baustein);
         Integer refZobId = null;
         isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
             refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
@@ -224,7 +195,6 @@ public class ImportCreateBausteine extends GenericCommand {
                         transferBaustein(baustein, bausteinUmsetzung, queryresult);
                         
                         transferMassnahmen(bausteinUmsetzung, list, false);
-                        gstool2veriniceBausteinMap.put(mbBaust, baustein);
                     }
                 }
                 return bausteinUmsetzung;
@@ -330,8 +300,6 @@ public class ImportCreateBausteine extends GenericCommand {
             if(mTxt != null){
                 m.setTitel((mTxt.getTitel() != null) ? mTxt.getTitel() : "no name available");
                 m.setLebenszyklus((mTxt.getZyklus() != null) ? Integer.valueOf(mTxt.getZyklus()) : -1);
-//                char siegel = (mTxt.getSiegelstufe() != '') ? String.valueOf(mTxt.getSiegelstufe()) : "";
-//                m.setSiegelstufe(siegel);
             }
             massnahmen.add(m);
             
@@ -490,6 +458,8 @@ public class ImportCreateBausteine extends GenericCommand {
 
     private void transferMassnahmen(BausteinUmsetzung bausteinUmsetzung, List<BausteineMassnahmenResult> list, boolean isUserDefinedBaustein) throws CommandException, CnATreeElementBuildException  {
         List<MassnahmenUmsetzung> massnahmenUmsetzungen = null;
+        List<BausteineMassnahmenResult> indiviualMassnahmen = new ArrayList<BausteineMassnahmenResult>();
+        Set<BausteineMassnahmenResult> usedBausteineMassnahmenResult = new HashSet<BausteineMassnahmenResult>();
         if(bausteinUmsetzung != null){
             massnahmenUmsetzungen = bausteinUmsetzung.getMassnahmenUmsetzungen();
         } else {
@@ -503,11 +473,21 @@ public class ImportCreateBausteine extends GenericCommand {
             vorlage = TransferData.findMassnahmenVorlageBaustein(massnahmenUmsetzung, list);
             if(vorlage != null){
                 createMassnahmenForBaustein(list, massnahmenUmsetzung, vorlage);
+                usedBausteineMassnahmenResult.add(vorlage);
             }
+            // if vorlage not found here, massnahme is not catalogue defined within the itgs module and is origined in another module
+        }
+        if(!isUserDefinedBaustein){
+            for(BausteineMassnahmenResult bausteinMassnahmeResult : list){
+                if(!usedBausteineMassnahmenResult.contains(bausteinMassnahmeResult)){
+                    indiviualMassnahmen.add(bausteinMassnahmeResult);
+                }
+            }
+            individualMassnahmenMap.put(bausteinUmsetzung, indiviualMassnahmen);
         }
 
     }
-
+    
     /**
      * @param list
      * @param massnahmenUmsetzung
@@ -550,6 +530,7 @@ public class ImportCreateBausteine extends GenericCommand {
         }
     }
 
+    // TODO: unify this
     private void transferMassnahme(MassnahmenUmsetzung massnahmenUmsetzung, BausteineMassnahmenResult vorlage) {
         if (importUmsetzung) {
             // erlaeuterung und termin:
@@ -601,6 +582,10 @@ public class ImportCreateBausteine extends GenericCommand {
     public Map<MbBaust, Baustein> getGstool2VeriniceBausteinMap(){
         return gstool2veriniceBausteinMap;
     }
+    
+    public Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> getIndividualMassnahmenMap(){
+        return individualMassnahmenMap;
+    }
 
     @Override
     public void clear() {
@@ -609,6 +594,14 @@ public class ImportCreateBausteine extends GenericCommand {
         bausteineMassnahmenMap = null;
         zeiten = null;
         bausteine = null;
+    }
+    
+    public List<Baustein> getITGSCatalogueBausteine(){
+        if(bausteine != null){
+            return bausteine;
+        } else {
+            return new ArrayList<Baustein>(0);
+        }
     }
 
 

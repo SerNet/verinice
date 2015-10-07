@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.gsimport;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,18 +58,23 @@ import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.GefaehrdungInformationTransfer;
 import sernet.gs.reveng.importData.MassnahmeInformationTransfer;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
+import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
+import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.CnAElementBuilder;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
+import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportCreateBausteinReferences;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportCreateBausteine;
+import sernet.gs.ui.rcp.main.service.taskcommands.ImportIndividualMassnahmen;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportTransferSchutzbedarf;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -105,6 +111,8 @@ public class ImportTask {
     private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
     private Map<NZielobjekt, CnATreeElement> alleZielobjekte = new HashMap<NZielobjekt, CnATreeElement>();
     private List<Person> allePersonen = new ArrayList<Person>();
+    
+    private List<Baustein> allCatalogueBausteine; 
 
     // map of zielobjekt-guid to itverbund NZielobjekt:
     private Map<String, NZielobjekt> itverbundZuordnung = new HashMap<String, NZielobjekt>();
@@ -121,7 +129,9 @@ public class ImportTask {
     private Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
     private Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
     
-    private Map<MbBaust, Baustein> gst2VnBstMap;
+    private Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
+    
+    private Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
 
     private String sourceId;
 
@@ -145,7 +155,8 @@ public class ImportTask {
         this.alleBausteineToBausteinUmsetzungMap = new HashMap<MbBaust, BausteinUmsetzung>();
         this.alleBausteineToZoBstMap = new HashMap<MbBaust, ModZobjBst>();
         this.alleMassnahmen = new HashMap<ModZobjBstMass, MassnahmenUmsetzung>();
-        this.gst2VnBstMap = new HashMap<MbBaust, Baustein>();
+        this.gstool2VeriniceBausteinMap = new HashMap<MbBaust, Baustein>();
+        this.individualMassnahmenMap = new HashMap<BausteinUmsetzung, List<BausteineMassnahmenResult>>();
     }
 
     public void execute(int importType, IProgress monitor) throws Exception {
@@ -173,6 +184,7 @@ public class ImportTask {
             if (sourceDbUrl.indexOf("odbc") > -1) {
                 copyMDBToTempDB(sourceDbUrl);
             }
+            this.allCatalogueBausteine = loadCatalogueBausteine();
 
             this.monitor = monitor;
             File conf = new File(CnAWorkspace.getInstance().getConfDir() + File.separator + "hibernate-vampire.cfg.xml");
@@ -301,7 +313,7 @@ public class ImportTask {
                 throw e;
             }
         }
-        long importZOStart = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         // create all Zielobjekte in their respective ITVerbund,
         for (ZielobjektTypeResult resultZO : zielobjekte) {
             String typeId = ImportZielobjektTypUtil.translateZielobjektType(resultZO.type, resultZO.subtype);
@@ -353,17 +365,19 @@ public class ImportTask {
 
         }
         
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Time for ImportZOTask:\t" + String.valueOf((System.currentTimeMillis() - importZOStart)/1000 ) + " seconds");
-        }
+        long durationImportZO = System.currentTimeMillis() - startTime;
+
+        
+        startTime = System.currentTimeMillis();
+        // create inidividual massnahmen
+        createIndividualMassnahmen();
+        long durationImportIndividual = System.currentTimeMillis() - startTime;
 
         monitor.subTask(defaultSubTaskDescription);
 
-        long importMnLinks = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         importMassnahmenVerknuepfungen();
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Time for ImportMnLinksTask:\t" + String.valueOf((System.currentTimeMillis() - importMnLinks)/1000 ) + " seconds");
-        }        
+        long durationImportMnLinks = System.currentTimeMillis() - startTime;
         monitor.subTask(defaultSubTaskDescription);
 
         // update this.alleMassnahmen
@@ -377,11 +391,9 @@ public class ImportTask {
         updater.setMaxNumberPerCommand(500);
         updater.execute();
 
-        long importBstPrsnLinksStart = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         importBausteinPersonVerknuepfungen();
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Time for ImportBstPrsnLinksTask:\t" + String.valueOf((System.currentTimeMillis() - importBstPrsnLinksStart)/1000 ) + " seconds");
-        }
+        long durationImportBstPrsnLinks = System.currentTimeMillis() - startTime;
         monitor.subTask(defaultSubTaskDescription);
 
         // update this. alleBausteineToBausteinUmsetzungMap
@@ -389,28 +401,24 @@ public class ImportTask {
         toUpdate.addAll(this.alleBausteineToBausteinUmsetzungMap.values());
         LOG.debug("Saving person links to modules.");
         monitor.beginTask("Verknüpfe Ansprechpartner mit Bausteinen...", toUpdate.size());
-        updater = new ElementListUpdater(toUpdate, monitor);
+        updater = new ElementListUpdater(toUpdate, monitor); 
         updater.setMaxNumberPerCommand(500);
         updater.execute();
 
-        long importZoLinksStart = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         importZielobjektVerknuepfungen();
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Time for ImportZoLinksTask:\t" + String.valueOf((System.currentTimeMillis() - importZoLinksStart)/1000 ) + " seconds");
-        }
+        long durationImportZoLinks = System.currentTimeMillis() - startTime;
         monitor.subTask(defaultSubTaskDescription);
 
-        long importSBStart = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         importSchutzbedarf();
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Time for ImportSBTask:\t" + String.valueOf((System.currentTimeMillis() - importSBStart)/1000 ) + " seconds");
-        }
+        long durationImportSB = System.currentTimeMillis() - startTime;
         monitor.subTask(defaultSubTaskDescription);
 
         int n = zielobjekte.size();
         monitor.beginTask("Lese Bausteinreferenzen...", n);
         int i = 1;
-        long importBstRefStart = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
         for (NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
             CnATreeElement element = alleZielobjekte.get(zielobjekt);
             monitor.subTask(i + "/" + n + " - " + element.getTitle());
@@ -420,14 +428,53 @@ public class ImportTask {
             monitor.worked(1);
             i++;
         }
-        if(LOG.isDebugEnabled()){
-            LOG.debug("Time for ImportBstRefTask:\t" + String.valueOf((System.currentTimeMillis() - importBstRefStart)/1000 ) + " seconds");
-        }
+        long durationImportBstRef = System.currentTimeMillis() - startTime;
         monitor.done();
 
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Duration of importing zielobjekte:\t" + String.valueOf(durationImportZO/1000) + " seconds");
+            LOG.debug("Duration of importing individual massnahmen:\t" + String.valueOf(durationImportIndividual/1000) + " seconds");
+            LOG.debug("Duration of importing massnahmen links:\t" + String.valueOf(durationImportMnLinks/1000) + " seconds");
+            LOG.debug("Duration of importing links between bausteine and persons:\t" + String.valueOf(durationImportBstPrsnLinks/1000) + " seconds");
+            LOG.debug("Duration of importing links between zielobjekte:\t" + String.valueOf(durationImportZoLinks/1000) + " seconds");
+            LOG.debug("Duration of importing schutzbedarf:\t" + String.valueOf(durationImportSB/1000) + " seconds");
+            LOG.debug("Duration of importing links between zielobjekte and bausteine:\t" + String.valueOf(durationImportBstRef/1000) + " seconds");
+        }
+        
         return sourceId;
     }
 
+    /**
+     * 
+     */
+    private void createIndividualMassnahmen() throws CommandException {
+        // does not work anymore, check why
+        Map<BausteineMassnahmenResult, MassnahmeInformationTransfer> massnahmenInfos = new HashMap<BausteineMassnahmenResult, MassnahmeInformationTransfer>();
+        for(List<BausteineMassnahmenResult> bausteineMassnahmenResultList : individualMassnahmenMap.values()){
+            createIndividualMassnahmenForBausteineMassnahmenResult(massnahmenInfos, bausteineMassnahmenResultList);
+        }
+        ImportIndividualMassnahmen command = new ImportIndividualMassnahmen(individualMassnahmenMap, alleMassnahmen, allCatalogueBausteine, massnahmenInfos);
+        ServiceFactory.lookupCommandService().executeCommand(command);
+
+    }
+
+    /**
+     * 
+     * @param massnahmenInfos
+     * @param bausteineMassnahmenResultList
+     */
+    private void createIndividualMassnahmenForBausteineMassnahmenResult(Map<BausteineMassnahmenResult, MassnahmeInformationTransfer> massnahmenInfos, List<BausteineMassnahmenResult> bausteineMassnahmenResultList) {
+        for(BausteineMassnahmenResult bausteineMassnahmenResult : bausteineMassnahmenResultList){
+            if(!massnahmenInfos.containsKey(bausteineMassnahmenResult)){
+                MassnahmeInformationTransfer massnahmeInformationTransfer = vampire.
+                        findTxtforMbMassn(bausteineMassnahmenResult.baustein, bausteineMassnahmenResult.massnahme, 
+                                GSScraperUtil.getInstance().getModel().getEncoding());
+                massnahmenInfos.put(bausteineMassnahmenResult, massnahmeInformationTransfer);
+            }
+        }
+    }
+
+    
     private List<ZielobjektTypeResult> findZielobjekte() throws Exception {
         List<ZielobjektTypeResult> zielobjekte;
         try {
@@ -464,10 +511,10 @@ public class ImportTask {
         ImportCreateBausteinReferences command;
         ServiceFactory.lookupAuthService();
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
-            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, new BSIConfigurationRCPLocal(), alleBausteineToZoBstMap, gst2VnBstMap);
+            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, new BSIConfigurationRCPLocal(), alleBausteineToZoBstMap, gstool2VeriniceBausteinMap);
             
         } else {
-            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap, gst2VnBstMap);
+            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap, gstool2VeriniceBausteinMap);
         }
         ServiceFactory.lookupCommandService().executeCommand(command);
     }
@@ -590,6 +637,17 @@ public class ImportTask {
             }
         }
     }
+    
+    private Baustein findBausteinForId(String id) {
+        for (Baustein baustein : allCatalogueBausteine) {
+            if (baustein.getId().equals(id)) {
+                return baustein;
+            }
+        }
+        return null;
+    }
+    
+
 
     private void importBausteinPersonVerknuepfungen() {
         if (!this.bausteinPersonen || !this.importBausteine) {
@@ -667,9 +725,9 @@ public class ImportTask {
             }
         }
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
-            command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung, new BSIConfigurationRCPLocal(), udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap);
+            command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung, udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap, allCatalogueBausteine);
         } else {
-            command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung, udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap);
+            command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung, udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap, allCatalogueBausteine);
         }
 
         command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -689,7 +747,11 @@ public class ImportTask {
         }
         
         if(command.getGstool2VeriniceBausteinMap() != null && command.getGstool2VeriniceBausteinMap().size() > 0){
-            this.gst2VnBstMap.putAll(command.getGstool2VeriniceBausteinMap());
+            this.gstool2VeriniceBausteinMap.putAll(command.getGstool2VeriniceBausteinMap());
+        }
+        
+        if(command.getIndividualMassnahmenMap() != null && command.getIndividualMassnahmenMap().size() > 0){
+            this.individualMassnahmenMap.putAll(command.getIndividualMassnahmenMap());
         }
 
     }
@@ -765,6 +827,50 @@ public class ImportTask {
         transferData.transferESA(element, esaResult.get(0));
         CnAElementHome.getInstance().update(element);
         return element;
+    }
+    
+    private List<Baustein> loadCatalogueBausteine() throws CommandException, IOException, GSServiceException{
+        IBSIConfig bsiConfig = null;
+        if (!ServiceFactory.isPermissionHandlingNeeded()) {
+            bsiConfig = new BSIConfigurationRCPLocal();
+        }
+        List<Baustein> bausteine;
+        if (bsiConfig == null) {
+            // load bausteine from default config:
+            LoadBausteine command = new LoadBausteine();
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            bausteine = command.getBausteine();
+        } else {
+            // load bausteine from given config:
+            BSIMassnahmenModel model = GSScraperUtil.getInstance().getModel();
+            model.setBSIConfig(bsiConfig);
+            bausteine = model.loadBausteine(new sernet.gs.ui.rcp.main.common.model.IProgress() {
+
+                @Override
+                public void beginTask(String name, int totalWork) {
+                }
+
+                @Override
+                public void done() {
+                }
+
+                @Override
+                public void setTaskName(String string) {
+                }
+
+                @Override
+                public void subTask(String string) {
+                }
+
+                @Override
+                public void worked(int work) {
+                }
+            });
+        }
+        if(bausteine == null){
+            bausteine = new ArrayList<Baustein>(0);
+        }
+        return bausteine;
     }
     
 
