@@ -42,10 +42,10 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
     // properties to implement IControl and execute risk analysis
     public static final String PROP_DESC = "samt_topic_desc"; //$NON-NLS-1$
     public static final String PROP_MATURITY = "samt_topic_maturity"; //$NON-NLS-1$
-    public static final String PROP_WEIGHT1 = "samt_topic_weight"; //$NON-NLS-1$
-    public static final String PROP_WEIGHT2 = "samt_topic_ownweight"; //$NON-NLS-1$
-    public static final String PROP_THRESHOLD1 = "samt_topic_min1"; //$NON-NLS-1$
-    public static final String PROP_THRESHOLD2 = "samt_topic_min2"; //$NON-NLS-1$
+    public static final String PROP_WEIGHT = "samt_topic_weight"; //$NON-NLS-1$
+    public static final String PROP_OWNWEIGHT = "samt_topic_ownweight"; //$NON-NLS-1$
+    public static final String PROP_MIN1 = "samt_topic_min1"; //$NON-NLS-1$
+    public static final String PROP_MIN2 = "samt_topic_min2"; //$NON-NLS-1$
     public static final String PROP_IMPLEMENTED = "samt_topic_implemented"; //$NON-NLS-1$
     public static final String PROP_COMPLETE_UNTIL = "samt_topic_audit_compluntil"; //$NON-NLS-1$
     public static final String PROP_AUDIT_FINDINGS = "samt_topic_audit_findings"; //$NON-NLS-1$
@@ -126,22 +126,70 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
         return getEntity().getInt(SamtTopic.PROP_MATURITY);
     }
     
+    /**
+     * This method is using the same name as the related property in
+     * SNCA.xml. 
+     * 
+     * @return The values of property SamtTopic.PROP_MIN1
+     */
+    public int getMin1() {
+        return getEntity().getInt(SamtTopic.PROP_MIN1);
+    }
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#getThreshold1()
+     */
     public int getThreshold1() {
-        return getEntity().getInt(SamtTopic.PROP_THRESHOLD1);
+        return getMin1();
     }
     
-    public void setThreshold1(String value) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(SamtTopic.PROP_THRESHOLD1), value);
+    /**
+     * Sets the values of property SamtTopic.PROP_MIN1
+     * 
+     * This method is using the same name as the related property in
+     * SNCA.xml.
+     */
+    public void setMin1(String value) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(SamtTopic.PROP_MIN1), value);
         
     }
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#setThreshold1(java.lang.String)
+     */
+    public void setThreshold1(String threshold1) {
+        setMin1(threshold1);
+    }
     
+    /**
+     * This method is using the same name as the related property in
+     * SNCA.xml.
+     *  
+     * @return The values of property SamtTopic.PROP_MIN2
+     */
+    public int getMin2() {
+        return getEntity().getInt(SamtTopic.PROP_MIN2);
+    }
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#getThreshold2()
+     */
     public int getThreshold2() {
-        return getEntity().getInt(SamtTopic.PROP_THRESHOLD2);
+        return getMin2();
     }
 
-    public void setThreshold2(String value) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(SamtTopic.PROP_THRESHOLD2), value);
+    /**
+     * Sets the values of property SamtTopic.PROP_MIN2
+     * 
+     * This method is using the same name as the related property in
+     * SNCA.xml.
+     */
+    public void setMin2(String value) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(SamtTopic.PROP_MIN2), value);
         
+    }
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#setThreshold2(java.lang.String)
+     */
+    public void setThreshold2(String threshold2) {
+        setMin2(threshold2);
     }
     
     public String getAuditFindings() {
@@ -157,37 +205,78 @@ public class SamtTopic extends CnATreeElement implements IISO27kElement, IContro
     }
     
     /**
-     * Returns the used weight.
-     * @return
+     * This method is using the same name as the related property in
+     * SNCA.xml.
+     * 
+     * @return Value of property SamtTopic.PROP_WEIGHT
+     */
+    public int getWeight() {
+        return getEntity().getInt(SamtTopic.PROP_WEIGHT);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#getWeight1()
      */
     public int getWeight1() {
-        return getEntity().getInt(SamtTopic.PROP_WEIGHT1);
+        return getWeight();
     }
+    
     
     /**
      * Sets the suggested weight for maturity calculation.
-     * @param value
+     * 
+     * This method is using the same name as the related property in
+     * SNCA.xml. 
+     * 
+     * @param weight
+     */
+    public void setWeight(String weight) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(SamtTopic.PROP_WEIGHT), weight);
+        
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#setWeight1(java.lang.String)
      */
     public void setWeight1(String value) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(SamtTopic.PROP_WEIGHT1), value);
-        
+        setWeight(value);
     }
     
     /**
-     * Returns the used weight.
-     * @return
+     * This method is using the same name as the related property in
+     * SNCA.xml. 
+     * 
+     * @return The used weight.
+     */
+    public int getOwnweight() {
+        return getEntity().getInt(SamtTopic.PROP_OWNWEIGHT);
+    }  
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#getWeight2()
      */
     public int getWeight2() {
-        return getEntity().getInt(SamtTopic.PROP_WEIGHT2);
+        return getOwnweight();
     }
     
     /**
      * Sets the actually used weight for maturity calculation.
-     * @param value
+     * 
+     * This method is using the same name as the related property in
+     * SNCA.xml.
+     * 
+     * @param The actually used weight
+     */
+    public void setOwnweight(String value) {
+        getEntity().setSimpleValue(getEntityType().getPropertyType(SamtTopic.PROP_OWNWEIGHT), value);
+        
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.model.iso27k.IControl#setWeight2(java.lang.String)
      */
     public void setWeight2(String value) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(SamtTopic.PROP_WEIGHT2), value);
-        
+        setOwnweight(value);
     }
     
     /**
