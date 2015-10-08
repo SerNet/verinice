@@ -6,8 +6,10 @@
 	xmlns:mp="http://www.eclipse.org/buckminster/MavenProvider-1.0"
 	xmlns:pp="http://www.eclipse.org/buckminster/PDEMapProvider-1.0">
 	<searchPath name="default">
-		<provider readerType="svn" componentTypes="osgi.bundle,eclipse.feature,buckminster" source="true">
-			<uri format="http://svn.verinice.org/svnroot/TRUNK/{0}">
+		<provider readerType="local" componentTypes="osgi.bundle,eclipse.feature,buckminster" source="true">
+			<uri format="{0}/{1}">
+				<bc:propertyRef key="workspace.root" />
+				<bc:propertyRef key="workspace.root" />
 				<bc:propertyRef key="buckminster.component" />
 			</uri>
 		</provider>
