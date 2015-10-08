@@ -53,6 +53,7 @@ Export-Package: de.sernet.service.vna,
  sernet.verinice.service.auth,
  sernet.verinice.service.commands,
  sernet.verinice.service.commands.unify,
+ sernet.verinice.service.gstoolimport,
  sernet.verinice.service.iso27k,
  sernet.verinice.service.ldap,
  sernet.verinice.service.sync

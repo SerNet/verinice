@@ -454,8 +454,8 @@ public class ImportTask {
             createIndividualMassnahmenForBausteineMassnahmenResult(massnahmenInfos, bausteineMassnahmenResultList);
         }
         ImportIndividualMassnahmen command = new ImportIndividualMassnahmen(individualMassnahmenMap, alleMassnahmen, allCatalogueBausteine, massnahmenInfos);
-        ServiceFactory.lookupCommandService().executeCommand(command);
-
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        CnAElementHome.getInstance().update(new ArrayList<BausteinUmsetzung>(command.getChangedElements()));
     }
 
     /**

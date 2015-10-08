@@ -60,6 +60,7 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**
  * Create BausteinUmsetzung objects during import for given target object and
@@ -521,12 +522,13 @@ public class ImportCreateBausteine extends GenericCommand {
      * @param vorlage
      */
     private void transferMassnahmeUmsetzungsStatus(MassnahmenUmsetzung massnahmenUmsetzung, BausteineMassnahmenResult vorlage) {
+        MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
         // copy umsetzung:
         Short bearbeitet = vorlage.zoBst.getBearbeitetOrg();
         if (bearbeitet == BST_BEARBEITET_ENTBEHRLICH) {
             massnahmenUmsetzung.setUmsetzung(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH);
         } else {
-            TransferData.transferUmsetzung(massnahmenUmsetzung, vorlage.umstxt.getName());
+            massnahmenFactory.transferUmsetzung(massnahmenUmsetzung, vorlage.umstxt.getName());
         }
     }
 
@@ -540,11 +542,10 @@ public class ImportCreateBausteine extends GenericCommand {
                         massnahmenUmsetzung.setDescription(udBstMassTxtMap.get(vorlage.massnahme).getDescription());
                     }
                 }
+                MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
                 massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_ERLAEUTERUNG, vorlage.obm.getUmsBeschr());
-                massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_UMSETZUNGBIS, parseDate(vorlage.obm.getUmsDatBis()));
-                massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_LETZTEREVISIONAM, parseDate(vorlage.obm.getRevDat()));
-                massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_NAECHSTEREVISIONAM, parseDate(vorlage.obm.getRevDatNext()));
-                massnahmenUmsetzung.setRevisionBemerkungen(vorlage.obm.getRevBeschr());
+                massnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(massnahmenUmsetzung, vorlage.umstxt.getName(), vorlage.obm.getUmsDatBis());
+                massnahmenUmsetzung = massnahmenFactory.transferRevision(massnahmenUmsetzung, vorlage.obm.getRevDat(), vorlage.obm.getRevDatNext(), vorlage.obm.getRevBeschr());
             }
         }
 

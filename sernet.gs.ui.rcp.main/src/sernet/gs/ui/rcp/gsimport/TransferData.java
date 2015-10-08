@@ -76,6 +76,7 @@ import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**
  * Utility class to convert result sets (from gstool databases) to
@@ -91,12 +92,6 @@ public class TransferData {
     
     private static char KEIN_SIEGEL = '-';
     
-    // umsetzungs patterns in verinice
-    // leaving out "unbearbeitet" since this is the default:
-    private static final String[] UMSETZUNG_STATI_VN = new String[] { MassnahmenUmsetzung.P_UMSETZUNG_NEIN, MassnahmenUmsetzung.P_UMSETZUNG_JA, MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, };
-
-    // umsetzungs patterns in gstool:
-    private static final String[] UMSETZUNG_STATI_GST = new String[] { "nein", "ja", "teilweise", "entbehrlich", };
 
     private GSVampire vampire;
     private boolean importRollen;
@@ -113,15 +108,6 @@ public class TransferData {
         itverbund.setTitel(source.getName());
         itverbund.setExtId(result.zielobjekt.getGuid());
         CnAElementHome.getInstance().update(itverbund);
-    }
-
-    public static void transferUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung, String gstStatus) {
-        for (int i = 0; i < UMSETZUNG_STATI_GST.length; i++) {
-            if (UMSETZUNG_STATI_GST[i].equals(gstStatus)) {
-                massnahmenUmsetzung.setUmsetzung(UMSETZUNG_STATI_VN[i]);
-                return;
-            }
-        }
     }
 
     public void transfer(CnATreeElement element, ZielobjektTypeResult result) {
@@ -579,7 +565,7 @@ public class TransferData {
      * @throws IOException
      * @throws SQLException
      */
-    public void transferRAGefaehrdungsMassnahmen(RAGefaehrdungsMassnahmenResult ragmResult, GefaehrdungsUmsetzung gefUms, MassnahmenUmsetzung mnUms) throws SQLException, IOException {
+    public void transferRAGefaehrdungsMassnahmen(RAGefaehrdungsMassnahmenResult ragmResult, GefaehrdungsUmsetzung gefUms, MassnahmenUmsetzung massnahmenUmsetzung) throws SQLException, IOException {
         // Ben.def.gs massnahme
         // -------------------
         // katalog
@@ -590,20 +576,24 @@ public class TransferData {
         // maßnahmentext
 
         String massnahmeNr = translateMassnahmenNr(ragmResult);
-        mnUms.setSimpleProperty("mnums_id", massnahmeNr);
-        mnUms.setName(ragmResult.getMassnahmeTxt().getName());
-        mnUms.setDescription(convertClobToStringEncodingSave(ragmResult.getMassnahmeTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
-        mnUms.setErlaeuterung(ragmResult.getMzbm().getUmsBeschr());
-        mnUms.setSimpleProperty(MassnahmenUmsetzung.P_UMSETZUNGBIS, parseDate(ragmResult.getMzbm().getUmsDatBis()));
-        mnUms.setSimpleProperty(MassnahmenUmsetzung.P_LETZTEREVISIONAM, parseDate(ragmResult.getMzbm().getRevDat()));
-        mnUms.setSimpleProperty(MassnahmenUmsetzung.P_NAECHSTEREVISIONAM, parseDate(ragmResult.getMzbm().getRevDatNext()));
-        mnUms.setRevisionBemerkungen(ragmResult.getMzbm().getRevBeschr());
-        mnUms.setUrl(transferUrl(ragmResult.getMassnahme().getLink()));
+        massnahmenUmsetzung.setSimpleProperty("mnums_id", massnahmeNr);
+        massnahmenUmsetzung.setName(ragmResult.getMassnahmeTxt().getName());
+        massnahmenUmsetzung.setDescription(convertClobToStringEncodingSave(ragmResult.getMassnahmeTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
+        massnahmenUmsetzung.setErlaeuterung(ragmResult.getMzbm().getUmsBeschr());
+//        mnUms.setSimpleProperty(MassnahmenUmsetzung.P_UMSETZUNGBIS, parseDate(ragmResult.getMzbm().getUmsDatBis()));
+//        massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_LETZTEREVISIONAM, parseDate(ragmResult.getMzbm().getRevDat()));
+//        massnahmenUmsetzung.setSimpleProperty(MassnahmenUmsetzung.P_NAECHSTEREVISIONAM, parseDate(ragmResult.getMzbm().getRevDatNext()));
+//        massnahmenUmsetzung.setRevisionBemerkungen(ragmResult.getMzbm().getRevBeschr());
+        massnahmenUmsetzung.setUrl(transferUrl(ragmResult.getMassnahme().getLink()));
         char siegel = convertToChar(ragmResult.getSiegelTxt().getKurzname());
         if(siegel!=KEIN_SIEGEL) {
-            mnUms.setStufe(siegel);
+            massnahmenUmsetzung.setStufe(siegel);
         }
-        transferUmsetzung(mnUms, ragmResult.getUmsTxt().getName());
+        MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
+        massnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(massnahmenUmsetzung, ragmResult.getUmsTxt().getName(), ragmResult.getMzbm().getUmsDatBis());
+        massnahmenUmsetzung = massnahmenFactory.transferRevision(massnahmenUmsetzung, ragmResult.getMzbm().getRevDat(), ragmResult.getMzbm().getRevDatNext(), ragmResult.getMzbm().getRevBeschr());
+        
+        
 
         // may be necessary for user defined bausteine:
 
@@ -895,12 +885,6 @@ public class TransferData {
         ownGefaehrdung.setTitel(ragResult.getGefaehrdungTxt().getName());
         ownGefaehrdung.setBeschreibung(convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
     }
-    
-    private String parseDate(Date date) {
-        if (date != null) {
-            return Long.toString(date.getTime());
-        }
-        return "";
-    }
+
 
 }

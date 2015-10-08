@@ -19,8 +19,10 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.taskcommands;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -30,14 +32,16 @@ import sernet.gs.model.Massnahme;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.reveng.importData.MassnahmeInformationTransfer;
-import sernet.gs.scraper.GSScraper;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenFactory;
+import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**
+ * Command imports the controls tagged with >I< from the GSTOOL db, which do not exists as children of the parent baustein in the itgs catalogue
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
+ * 
  */
 @SuppressWarnings("serial")
 public class ImportIndividualMassnahmen extends GenericCommand {
@@ -48,6 +52,8 @@ public class ImportIndividualMassnahmen extends GenericCommand {
     private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmenMap;
     private List<Baustein> allCatalogueBausteine; 
     private Map<BausteineMassnahmenResult, MassnahmeInformationTransfer> massnahmenInfos;
+    private Set<BausteinUmsetzung> changedElements;
+    
     
     public ImportIndividualMassnahmen(Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualBausteinMassnahmenResultMap,
             Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmenMap, List<Baustein> allCatalogueBausteine,
@@ -56,6 +62,7 @@ public class ImportIndividualMassnahmen extends GenericCommand {
         this.alleMassnahmenMap = alleMassnahmenMap; 
         this.allCatalogueBausteine = allCatalogueBausteine;
         this.massnahmenInfos = massnahmenInfos;
+        this.changedElements = new HashSet<BausteinUmsetzung>();
     }
     
     
@@ -82,8 +89,15 @@ public class ImportIndividualMassnahmen extends GenericCommand {
 
             }
             if(m != null){
-                massnahmenFactory.createMassnahmenUmsetzung(bausteinUmsetzung, m, GSScraper.CATALOG_LANGUAGE_GERMAN);
+                individualMassnahmenUmsetzung = massnahmenFactory.createMassnahmenUmsetzung(bausteinUmsetzung, m, GSScraperUtil.getInstance().getModel().getLanguage());
+                individualMassnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(individualMassnahmenUmsetzung, bausteineMassnahmenResult.umstxt.getName(), bausteineMassnahmenResult.obm.getUmsDatBis());
+                individualMassnahmenUmsetzung = massnahmenFactory.transferRevision(individualMassnahmenUmsetzung, bausteineMassnahmenResult.obm.getRevDat(), bausteineMassnahmenResult.obm.getRevDatNext(), bausteineMassnahmenResult.obm.getRevBeschr());
+                changedElements.add(bausteinUmsetzung);
+            } else {
+                LOG.warn("Massnahme not found for massnahme:\t" + bausteineMassnahmenResult.massnahme.getLink());
             }
+        } else {
+            changedElements.add(bausteinUmsetzung);
         }
     }
     
@@ -155,10 +169,15 @@ public class ImportIndividualMassnahmen extends GenericCommand {
                 m.setLebenszyklus((massnahmeInformationTransfer.getZyklus() != null) ? Integer.valueOf(massnahmeInformationTransfer.getZyklus()) : -1);
             }
         }
-        if(m == null){
-            LOG.warn("Massnahme not found for massnahme:\t" + bausteineMassnahmenResult.massnahme.getLink());
-        }
+
         return m;
+    }
+    
+    public Set<BausteinUmsetzung> getChangedElements(){
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Added individual controls to " + changedElements.size() + " itgs modules");
+        }
+        return changedElements;
     }
 
 }

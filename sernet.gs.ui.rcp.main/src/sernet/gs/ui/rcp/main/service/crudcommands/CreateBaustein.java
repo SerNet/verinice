@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.bsi.model.MassnahmenFactory;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -37,6 +36,7 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**
  * Create and save new element of type baustein to the database using its class to lookup
