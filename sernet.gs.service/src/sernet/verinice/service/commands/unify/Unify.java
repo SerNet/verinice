@@ -48,6 +48,12 @@ import sernet.verinice.service.commands.RemoveLink;
  * 
  * Optional this command also copies links from the source to the destination elements.
  * 
+ * This command uses the builder pattern:
+ * https://en.wikipedia.org/wiki/Builder_pattern
+ * To create new instances use this code:
+ * 
+ * Unify unifyCommand = new Unify.Builder(mappings).copyLinks(true).build();
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
@@ -76,10 +82,10 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
             Control.PROP_NAME,
             Control.PROP_DESC);
     
-    private boolean copyLinksEnabled = false;
+    private boolean copyLinks = false;
     private boolean deleteSourceLinks = false;
-    private boolean dontCopyAttributes = false;
-    private List<String> propertyTypeBlacklist;   
+    private boolean dontCopyPropertyValues = false;
+    private List<String> propertyTypeBlacklist = PROPERTY_TYPE_BLACKLIST;   
     private List<UnifyMapping> mappings;
     
     private List<CnATreeElement> changedElementList;
@@ -87,32 +93,27 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
     private String stationId;
     
     /**
-     * Creates a new Unify command.
+     * Creates a new Unify command with a builder.
+     * This constructor ist private. To create a unify command use
+     * this code:
      * 
-     * @param mappings The unify mapping for the command
+     * Unify unifyCommand = new Unify.Builder(mappings).copyLinks(true).build();
+     * 
+     * @param builder A builder for a unify command
+     * @see https://en.wikipedia.org/wiki/Builder_pattern 
      */
-    public Unify(List<UnifyMapping> mappings) {
+    private Unify(Builder builder) {
         super();
-        this.mappings = mappings;
-        this.stationId = ChangeLogEntry.STATION_ID;
-        setPropertyTypeBlacklist(PROPERTY_TYPE_BLACKLIST);
+        
+        // Required parameters
+        mappings = builder.mappings;
+
+        // Optional parameters
+        copyLinks = builder.copyLinks;
+        deleteSourceLinks = builder.deleteSourceLinks;
+        dontCopyPropertyValues = builder.dontCopyPropertyValues;
     }
-    
-    /**
-     * Creates a new Unify command.
-     * 
-     * @param mappings The unify mapping for the command
-     * @param copyLinks If true the command copies all links from the source to the destination elements.
-     * @param deleteSourceLinks If true the command deletes all links from the ssource elements.
-     * @param dontCopyAttributes If true the command does not copy propertiy values from the source to the destination elements.
-     */
-    public Unify(List<UnifyMapping> mappings, boolean copyLinks, boolean deleteSourceLinks, boolean dontCopyAttributes){
-        this(mappings);
-        this.copyLinksEnabled = copyLinks;
-        this.deleteSourceLinks = deleteSourceLinks;
-        this.dontCopyAttributes = dontCopyAttributes;
-    }
-    
+
     /**
      * See class comment first to understand what's happening here.
      * 
@@ -160,10 +161,10 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
         }
         CnATreeElement sourceElement = getDao().findByUuid(source.getUuid(), RetrieveInfo.getPropertyInstance());
         CnATreeElement destinationElement = getDao().findByUuid(destination.getUuid(), RetrieveInfo.getPropertyInstance());
-        if(!dontCopyAttributes){         
+        if(!dontCopyPropertyValues){         
             destinationElement.getEntity().copyEntity(sourceElement.getEntity(),propertyTypeBlacklist);
         }
-        if(copyLinksEnabled){
+        if(copyLinks){
             destinationElement = unifyLinks(sourceElement, destinationElement);
         }
         if(deleteSourceLinks){
@@ -259,4 +260,63 @@ public class Unify extends ChangeLoggingCommand implements IChangeLoggingCommand
         return ChangeLogEntry.TYPE_UPDATE;
     }
     
+    /**
+     * A builder to create an unify command.
+     * 
+     * @see https://en.wikipedia.org/wiki/Builder_pattern
+     */
+    public static class Builder {
+        
+        // Required parameters
+        private final List<UnifyMapping> mappings;
+
+        // Optional parameters - initialize with default values
+        private boolean copyLinks = false;
+        private boolean deleteSourceLinks = false;
+        private boolean dontCopyPropertyValues = false;
+        
+   
+        /**
+         * @param mappings The unify mapping for the command
+         * @return The Unify builder
+         */
+        public Builder(List<UnifyMapping> mappings) {
+            super();
+            this.mappings = mappings;
+        }
+        
+        /**
+         * @param copyLinks If true the command copies all links from the source to the destination elements.
+         * @return The Unify builder
+         */
+        public Builder copyLinks(boolean copyLinks) {
+            this.copyLinks = copyLinks;
+            return this;
+        }
+        
+        /**
+         * @param deleteSourceLinks If true the command deletes all links from the source elements.
+         * @return The Unify builder
+         */
+        public Builder deleteSourceLinks(boolean deleteSourceLinks) {
+            this.deleteSourceLinks = deleteSourceLinks;
+            return this;
+        }
+        
+        /**
+         * @param dontCopyAttributes If true the command does not copy propertiy values from the source to the destination elements.
+         * @return The Unify builder
+         */
+        public Builder dontCopyPropertyValues(boolean dontCopyPropertyValues) {
+            this.dontCopyPropertyValues = dontCopyPropertyValues;
+            return this;
+        }
+        
+        /**
+         * @return The Unify command
+         */
+        public Unify build() {
+            return new Unify(this);
+        }
+    }
 }

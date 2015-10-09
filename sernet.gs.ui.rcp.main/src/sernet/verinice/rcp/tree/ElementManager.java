@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
@@ -41,9 +42,9 @@ import sernet.verinice.service.commands.LoadTreeItem;
  * ElementManager manages domain objects ({@link CnATreeElement}) for trees in
  * views.
  * 
- * One instance of this class created for every view opened at runtime which is
+ * One instance of this class is created for every view opened at runtime. This instance is
  * used by {@link TreeContentProvider} and {@link TreeUpdateListener}. It's used
- * by {@link ISMView} and BsiModelView.
+ * by {@link ISMView} and {@link BsiModelView}.
  * 
  * ElementManager caches objects to ensure that they are loaded only once. If an
  * element is not cached already it's loaded from the backend by command

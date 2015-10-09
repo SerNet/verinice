@@ -175,14 +175,15 @@ public class UnifyTest extends BeforeEachVNAImportHelper {
     public void testBlacklist() throws Exception {
         CnATreeElement element = loadElement(SOURCE_ID, ISA_TOPIC_2_X_C_14_1);
         Map<String, String> valuesBeforeUnify = loadValuesOfBlacklistProperties(element);
-        doUnify();element = loadElement(SOURCE_ID, ISA_TOPIC_2_X_C_14_1);
+        doUnify();
+        element = loadElement(SOURCE_ID, ISA_TOPIC_2_X_C_14_1);
         Map<String, String> valuesAfterUnify = loadValuesOfBlacklistProperties(element);
-        assertTrue("Values of blacklist properties after unify are not the same as beofore.", MapUtil.compare(valuesBeforeUnify, valuesAfterUnify));
+        assertTrue("Values of blacklist properties after unify are not the same as before.", MapUtil.compare(valuesBeforeUnify, valuesAfterUnify));
     }
 
     private void doUnify() throws CommandException {
         List<UnifyMapping> mappingList = loadUnifyMappings();
-        Unify unifyCommand = new Unify(mappingList,false, false, false);
+        Unify unifyCommand = new Unify.Builder(mappingList).build();
         unifyCommand = commandService.executeCommand(unifyCommand);
     }
 

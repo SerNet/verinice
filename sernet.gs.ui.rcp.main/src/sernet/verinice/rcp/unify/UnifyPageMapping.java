@@ -319,7 +319,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
 
     public void setCopyLinksEnabled(boolean copyLinksEnabled) {
         this.copyLinksEnabled = copyLinksEnabled;
-        getUnifyWizard().setCopyLinksEnabled(copyLinksEnabled);
+        getUnifyWizard().setCopyLinks(copyLinksEnabled);
     }
     
     private void toggleButtonEnabled(Button b, boolean enabled){
@@ -330,7 +330,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
 
     public void setDeleteSourceLinksEnabled(boolean deleteSourceLinksEnabled) {
         this.deleteSourceLinksEnabled = deleteSourceLinksEnabled;
-        getUnifyWizard().setDeleteSourceLinksEnabled(deleteSourceLinksEnabled);
+        getUnifyWizard().setDeleteSourceLinks(deleteSourceLinksEnabled);
     }
 
 
@@ -342,7 +342,7 @@ public class UnifyPageMapping extends WizardPageEnteringAware {
 
     public void setCopyAttributesEnabled(boolean copyAttributesEnabled) {
         this.copyAttributesEnabled = copyAttributesEnabled;
-        getUnifyWizard().setCopyObjectAttributesDisabled(copyAttributesEnabled);
+        getUnifyWizard().setDontCopyPropertyValues(copyAttributesEnabled);
     }
 
 
