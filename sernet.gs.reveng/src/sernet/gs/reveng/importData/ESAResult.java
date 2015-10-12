@@ -12,7 +12,7 @@ public class ESAResult {
 	String zmiName;
 	Date entscheidungAm;
 	Date entscheidungBis;
-	
+
 	public ESAResult(String begruendung, byte einsatz,
 			byte modellierung, String szenario, byte unj,
 			String entscheidungDurch, String zmiName, Date entscheidungAm, Date entscheidungBis) {
@@ -84,30 +84,18 @@ public class ESAResult {
 		this.zmiName = zmiName;
 	}
 
-    /**
-     * @return the entscheidungAm
-     */
     public Date getEntscheidungAm() {
         return entscheidungAm;
     }
 
-    /**
-     * @param entscheidungAm the entscheidungAm to set
-     */
     public void setEntscheidungAm(Date entscheidungAm) {
         this.entscheidungAm = entscheidungAm;
     }
 
-    /**
-     * @return the entscheidungBis
-     */
     public Date getEntscheidungBis() {
         return entscheidungBis;
     }
 
-    /**
-     * @param entscheidungBis the entscheidungBis to set
-     */
     public void setEntscheidungBis(Date entscheidungBis) {
         this.entscheidungBis = entscheidungBis;
     }
