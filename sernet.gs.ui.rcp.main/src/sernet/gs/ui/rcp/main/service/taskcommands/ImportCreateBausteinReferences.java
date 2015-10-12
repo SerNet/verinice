@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2010 Alexander Koderman <ak@sernet.de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU General Public License for more details.
- *     You should have received a copy of the GNU General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak@sernet.de> - initial API and implementation
  ******************************************************************************/
@@ -49,7 +49,7 @@ import sernet.verinice.service.commands.LoadCnAElementByExternalID;
 /**
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- * 
+ *
  */
 public class ImportCreateBausteinReferences extends GenericCommand {
 
@@ -61,13 +61,13 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         }
         return log;
     }
-    
+
     private CnATreeElement element;
     private List<Baustein> bausteine;
-    private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
-    private Map<MbBaust, ModZobjBst> bausteinMap;
-    private Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
-    private String sourceId;
+    private final Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
+    private final Map<MbBaust, ModZobjBst> bausteinMap;
+    private final Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
+    private final String sourceId;
     private IBSIConfig bsiConfig;
     private static final String NO_COMMENT = "";
 
@@ -90,7 +90,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     @Override
@@ -110,23 +110,28 @@ public class ImportCreateBausteinReferences extends GenericCommand {
                 model.setBSIConfig(bsiConfig);
                 this.bausteine = model.loadBausteine(new IProgress() {
 
+                    @Override
                     public void beginTask(String name, int totalWork) {
                     }
 
+                    @Override
                     public void done() {
                     }
 
+                    @Override
                     public void setTaskName(String string) {
                     }
 
+                    @Override
                     public void subTask(String string) {
                     }
 
+                    @Override
                     public void worked(int work) {
                     }
                 });
             }
-            
+
             Set<MbBaust> keySet = bausteineMassnahmenMap.keySet();
             for (MbBaust mbBaust : keySet) {
                 createBausteinReference(element, mbBaust, bausteineMassnahmenMap.get(mbBaust));
@@ -137,18 +142,18 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         }
 
     }
-    
+
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     public void createBausteinReference(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws CommandException {
-        
+
         String bausteinId = TransferData.getId(mbBaust);
         Baustein baustein = findBausteinForId(bausteinId);
-        
+
         Integer refZobId = null;
         if(baustein==null) { // no baustein found, so it mbBaust has to be userdefined (not in catalogue existant)
             //throw new RuntimeException("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
@@ -176,23 +181,23 @@ public class ImportCreateBausteinReferences extends GenericCommand {
     private Integer getRefZobIdFromDBResult(List<BausteineMassnahmenResult> list, Integer refZobId) {
         isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
             refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
-            
+
             if (refZobId != null) {
                 break isReference;
             }
         }
         return refZobId;
     }
-    
+
     private Object[] determineBausteinAndRefZobId(MbBaust mbBaust){
         Object[] result = new Object[2];
-        for(MbBaust mbB : bausteinMap.keySet()){
+        for(MbBaust key : bausteinMap.keySet()){
 
-            if(mbBausteinEquals(mbB, mbBaust)){
-                result[0] = bausteinMap.get(mbB).getRefZobId();
+            if(mbBausteinEquals(key, mbBaust)){
+                result[0] = bausteinMap.get(key).getRefZobId();
                 result[1] = getVeriniceBaustein(mbBaust);
                 if(result[1] == null){
-                    result[1] = getVeriniceBaustein(mbB); // should never happen
+                    result[1] = getVeriniceBaustein(key); // should never happen
                 }
                 break;
             }
@@ -202,6 +207,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         }
         return result;
     }
+
 
     /**
      * @param element
@@ -220,7 +226,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
             CnATreeElement previousBaustein = elements.iterator().next();
             ArrayList bausteinAsList = new ArrayList();
             bausteinAsList.add(previousBaustein);
-            
+
             Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(previousBaustein.getEntityType().getId(), element.getEntityType().getId());
             if (!possibleRelations.isEmpty()) {
                 CreateLink cmd2 = new CreateLink(previousBaustein, element, possibleRelations.iterator().next().getId(), NO_COMMENT);
@@ -228,7 +234,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
             }
         }
     }
-    
+
     private String createExtId(Baustein baustein, Integer refZobId) {
         return baustein.getId() + "-" + String.valueOf(refZobId);
     }
@@ -241,11 +247,11 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         }
         return null;
     }
-    
+
     private boolean mbBausteinEquals(MbBaust mbB1, MbBaust mbB2){
         return mbB1.getNr().equals(mbB2.getNr()) && mbB1.getId().getBauId().equals(mbB2.getId().getBauId());
     }
-    
+
     private Baustein getVeriniceBaustein(MbBaust mbBaust){
         for(MbBaust mbBKey : gstool2VeriniceBausteinMap.keySet()){
             if(mbBausteinEquals(mbBKey, mbBaust)){
