@@ -33,7 +33,18 @@
       In case a vulnerability has no note assigned the scanned system will be created as an asset in verinice without
       the corresponding vulnerability!<br />
       <br />
-      To create notes in Greenbone click on the button <b>Actions > Add Note</b> in the list of found vulnerabilities.
+      To create notes in Greenbone click on the button <b>Actions > Add Note</b> in the list of found vulnerabilities.<br />
+      <br />
+      You should create only as many notes as your administrators can realistically work on in a given 
+      time frame. You should see the list of all vulnerabilities as your backlog, from which you select 
+      the most important ones for immediate remediation.<br />
+      <br />
+      You do this by adding notes to them. In the first line of each description you can add keywords 
+      which are used by verinice to group them. Usually it is advisable to group the notes by affected
+      application. For instance you can set up one group for all notes regarding your PDF-Reader. To do 
+      that, enter the following in the first line: <b>+PdfReader</b>.<br />
+      In the second line and following you can add your task description for this particular note which 
+      can be as long as you want.
     </description>
   </item>
 

@@ -34,7 +34,19 @@
       angelegt, nicht aber die Schwachstelle übernommen!<br />
       <br />
       Die Anlage von Notizen in Greenbone erfolgt über den Button <b>Actions > Add Note</b> in der Liste der gefundenen
-      Schwachstellen.
+      Schwachstellen.<br />
+      <br />
+      Legen Sie immer nur so viele Notizen an, wie Ihre Administratoren in einem Durchgang 
+      realistischerweise bearbeiten können. Betrachten Sie die Liste aller gefundenen Schwachstellen als
+      Backlog, aus dem Sie die Wichtigsten zur Bearbeitung mit Notizen markieren. <br />
+      <br />
+      In die erste Zeile der Beschreibung der Notiz können Sie Stichworte angeben, die für die 
+      Gruppierung der Notiz in verinice verwendet werden. In der Regel bietet sich eine Gruppierung der 
+      Controls anhand der betroffenen Applikation an - zum Beispiel je eine Gruppe für alle 
+      Schwachstellen in PDF-Readern. Geben Sie dafür als Beschreibung in der ersten Zeile als 
+      Stichwort: <b>+PdfReader</b> ein.<br />
+      In der zweiten Zeile beginnen Sie mit der Handlungsanweisung für diese spezielle Notiz, die 
+      beliebig lang sein darf.
     </description>
   </item>
 
