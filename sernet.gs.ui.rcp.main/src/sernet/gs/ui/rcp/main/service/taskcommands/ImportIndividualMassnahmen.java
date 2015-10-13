@@ -1,19 +1,19 @@
 /*******************************************************************************
  * Copyright (c) 2015 Sebastian Hagedorn.
  *
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  *
  * You should have received a copy of the GNU Lesser General Public License
- * along with this program. 
+ * along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Sebastian Hagedorn <sh[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -41,31 +41,31 @@ import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 /**
  * Command imports the controls tagged with >I< from the GSTOOL db, which do not exists as children of the parent baustein in the itgs catalogue
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
- * 
+ *
  */
 @SuppressWarnings("serial")
 public class ImportIndividualMassnahmen extends GenericCommand {
-    
+
     private static final Logger LOG =  Logger.getLogger(ImportIndividualMassnahmen.class);
 
     private Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
     private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmenMap;
-    private List<Baustein> allCatalogueBausteine; 
+    private List<Baustein> allCatalogueBausteine;
     private Map<BausteineMassnahmenResult, MassnahmeInformationTransfer> massnahmenInfos;
     private Set<BausteinUmsetzung> changedElements;
-    
-    
+
+
     public ImportIndividualMassnahmen(Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualBausteinMassnahmenResultMap,
             Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmenMap, List<Baustein> allCatalogueBausteine,
-            Map<BausteineMassnahmenResult, MassnahmeInformationTransfer> massnahmenInfos){ 
+            Map<BausteineMassnahmenResult, MassnahmeInformationTransfer> massnahmenInfos){
         this.individualMassnahmenMap = individualBausteinMassnahmenResultMap;
-        this.alleMassnahmenMap = alleMassnahmenMap; 
+        this.alleMassnahmenMap = alleMassnahmenMap;
         this.allCatalogueBausteine = allCatalogueBausteine;
         this.massnahmenInfos = massnahmenInfos;
         this.changedElements = new HashSet<BausteinUmsetzung>();
     }
-    
-    
+
+
     @Override
     public void execute() {
         for(BausteinUmsetzung bausteinUmsetzung : individualMassnahmenMap.keySet()){
@@ -74,7 +74,7 @@ public class ImportIndividualMassnahmen extends GenericCommand {
             }
         }
     }
-    
+
     /**
      * @param bausteinUmsetzung
      * @param bausteineMassnahmenResult
@@ -94,13 +94,15 @@ public class ImportIndividualMassnahmen extends GenericCommand {
                 individualMassnahmenUmsetzung = massnahmenFactory.transferRevision(individualMassnahmenUmsetzung, bausteineMassnahmenResult.obm.getRevDat(), bausteineMassnahmenResult.obm.getRevDatNext(), bausteineMassnahmenResult.obm.getRevBeschr());
                 changedElements.add(bausteinUmsetzung);
             } else {
-                LOG.warn("Massnahme not found for massnahme:\t" + bausteineMassnahmenResult.massnahme.getLink());
+                if(LOG.isDebugEnabled()) {
+                    LOG.debug("Massnahme not found for massnahmenlink:\t" + bausteineMassnahmenResult.massnahme.getLink());
+                }
             }
         } else {
             changedElements.add(bausteinUmsetzung);
         }
     }
-    
+
     private void createIndividualMassnahmenForBausteinUmsetzung(BausteinUmsetzung bausteinUmsetzung) {
         if(LOG.isDebugEnabled()){
             LOG.debug("creating " + individualMassnahmenMap.get(bausteinUmsetzung).size() + " individual massnahmen for bausteinUmsetzung:\t" + bausteinUmsetzung.getTitle() + "<" + bausteinUmsetzung.getUuid() + ">" );
@@ -110,7 +112,7 @@ public class ImportIndividualMassnahmen extends GenericCommand {
             createIndividualMassnahmenForBausteinMassnahmenResult(bausteinUmsetzung, bausteineMassnahmenResult);
         }
     }
-    
+
     private MassnahmenUmsetzung getIndividualMassnahmenUmsetzungFromAlreadyParsedElements(BausteineMassnahmenResult bausteinMassnahmenResult, BausteinUmsetzung parent){
         MassnahmenUmsetzung existingSourceMassnahmenUmsetzung = getMassnahmeFromAlleMassnahmenMap(bausteinMassnahmenResult);
         MassnahmenUmsetzung individualMassnahmenUmsetzung = null;
@@ -118,10 +120,10 @@ public class ImportIndividualMassnahmen extends GenericCommand {
             individualMassnahmenUmsetzung = new MassnahmenUmsetzung(parent);
             individualMassnahmenUmsetzung.getEntity().copyEntity(existingSourceMassnahmenUmsetzung.getEntity());
             individualMassnahmenUmsetzung.setTitel("bM " + individualMassnahmenUmsetzung.getTitle());
-        } 
+        }
         return individualMassnahmenUmsetzung;
     }
-    
+
     private MassnahmenUmsetzung getMassnahmeFromAlleMassnahmenMap(BausteineMassnahmenResult bausteineMassnahmenResult){
         ModZobjBstMass modZobjBstMass = bausteineMassnahmenResult.obm;
         for(ModZobjBstMass key : alleMassnahmenMap.keySet()){
@@ -135,7 +137,7 @@ public class ImportIndividualMassnahmen extends GenericCommand {
         }
         return null;
     }
-    
+
     private Massnahme findCatalogMassnahmeByURL(String url){
         if(url.contains("\\")){
             url = url.substring(url.lastIndexOf("\\")+1);
@@ -152,7 +154,7 @@ public class ImportIndividualMassnahmen extends GenericCommand {
         }
         return null;
     }
-    
+
     /**
      * @param bausteineMassnahmenResult
      * @param m
@@ -172,7 +174,7 @@ public class ImportIndividualMassnahmen extends GenericCommand {
 
         return m;
     }
-    
+
     public Set<BausteinUmsetzung> getChangedElements(){
         if(LOG.isDebugEnabled()){
             LOG.debug("Added individual controls to " + changedElements.size() + " itgs modules");

@@ -152,22 +152,13 @@ public class ImportCreateBausteinReferences extends GenericCommand {
     public void createBausteinReference(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws CommandException {
 
         String bausteinId = TransferData.getId(mbBaust);
-        Baustein baustein = findBausteinForId(bausteinId);
+        Baustein baustein = findBausteinForId(bausteinId); // catalogue-baustein
 
         Integer refZobId = null;
-        if(baustein==null) { // no baustein found, so it mbBaust has to be userdefined (not in catalogue existant)
-            //throw new RuntimeException("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
-            if(mbBaust.getId().getBauImpId() == 1){ // bst is userdefined, so create own instance of Baustein
-                Object[] r = determineBausteinAndRefZobId(mbBaust);
-                refZobId = (r[0] != null) ? (Integer)r[0] : null;
-                baustein = (r[1] != null) ? (Baustein)r[1] : null;
-            } else {
-                getLog().error("Could not find baustein, Nr.: " +  mbBaust.getNr() + ", id: " + bausteinId);
-                return;
-            }
-        } else {
-            refZobId = getRefZobIdFromDBResult(list, refZobId);
+        if(baustein==null && mbBaust.getId().getBauImpId() == 1) { // no baustein found, so it mbBaust has to be userdefined (not in catalogue existant)
+            baustein = getVeriniceBaustein(mbBaust);// bst is userdefined, so create own instance of Baustein
         }
+        refZobId = getRefZobIdFromDBResult(list, refZobId);
         if (refZobId != null && baustein != null) {
             createBausteinReferences(element, baustein, refZobId);
         }
@@ -188,26 +179,6 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         }
         return refZobId;
     }
-
-    private Object[] determineBausteinAndRefZobId(MbBaust mbBaust){
-        Object[] result = new Object[2];
-        for(MbBaust key : bausteinMap.keySet()){
-
-            if(mbBausteinEquals(key, mbBaust)){
-                result[0] = bausteinMap.get(key).getRefZobId();
-                result[1] = getVeriniceBaustein(mbBaust);
-                if(result[1] == null){
-                    result[1] = getVeriniceBaustein(key); // should never happen
-                }
-                break;
-            }
-        }
-        if(result[0] == null && bausteinMap.containsKey(mbBaust)){
-            result[0] = bausteinMap.get(mbBaust).getRefZobId();
-        }
-        return result;
-    }
-
 
     /**
      * @param element

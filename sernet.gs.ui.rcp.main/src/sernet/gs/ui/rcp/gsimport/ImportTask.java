@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -89,10 +89,10 @@ import sernet.verinice.model.common.Link;
 /**
  * Import GSTOOL(tm) databases using the GSVampire. Maps GStool-database objects
  * to Verinice-Objects and fields.
- * 
+ *
  * @author koderman[at]sernet[dot]de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- * 
+ *
  */
 public class ImportTask {
 
@@ -111,8 +111,8 @@ public class ImportTask {
     private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
     private Map<NZielobjekt, CnATreeElement> alleZielobjekte = new HashMap<NZielobjekt, CnATreeElement>();
     private List<Person> allePersonen = new ArrayList<Person>();
-    
-    private List<Baustein> allCatalogueBausteine; 
+
+    private List<Baustein> allCatalogueBausteine;
 
     // map of zielobjekt-guid to itverbund NZielobjekt:
     private Map<String, NZielobjekt> itverbundZuordnung = new HashMap<String, NZielobjekt>();
@@ -128,9 +128,9 @@ public class ImportTask {
 
     private Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
     private Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
-    
+
     private Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
-    
+
     private Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
 
     private String sourceId;
@@ -208,7 +208,7 @@ public class ImportTask {
 
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         } catch (GSImportException e) {
-            
+
             ExceptionUtil.log(e, e.getMessage());
         }
     }
@@ -258,7 +258,7 @@ public class ImportTask {
     /**
      * Imports all zielobjekte from GSTOOL with all selected properties. Returns
      * the sourceID with which all objects have been created.
-     * 
+     *
      * @return
      * @throws Exception
      */
@@ -364,10 +364,10 @@ public class ImportTask {
             }
 
         }
-        
+
         long durationImportZO = System.currentTimeMillis() - startTime;
 
-        
+
         startTime = System.currentTimeMillis();
         // create inidividual massnahmen
         createIndividualMassnahmen();
@@ -401,7 +401,7 @@ public class ImportTask {
         toUpdate.addAll(this.alleBausteineToBausteinUmsetzungMap.values());
         LOG.debug("Saving person links to modules.");
         monitor.beginTask("Verknüpfe Ansprechpartner mit Bausteinen...", toUpdate.size());
-        updater = new ElementListUpdater(toUpdate, monitor); 
+        updater = new ElementListUpdater(toUpdate, monitor);
         updater.setMaxNumberPerCommand(500);
         updater.execute();
 
@@ -440,12 +440,12 @@ public class ImportTask {
             LOG.debug("Duration of importing schutzbedarf:\t" + String.valueOf(durationImportSB/1000) + " seconds");
             LOG.debug("Duration of importing links between zielobjekte and bausteine:\t" + String.valueOf(durationImportBstRef/1000) + " seconds");
         }
-        
+
         return sourceId;
     }
 
     /**
-     * 
+     *
      */
     private void createIndividualMassnahmen() throws CommandException {
         // does not work anymore, check why
@@ -459,7 +459,7 @@ public class ImportTask {
     }
 
     /**
-     * 
+     *
      * @param massnahmenInfos
      * @param bausteineMassnahmenResultList
      */
@@ -467,14 +467,14 @@ public class ImportTask {
         for(BausteineMassnahmenResult bausteineMassnahmenResult : bausteineMassnahmenResultList){
             if(!massnahmenInfos.containsKey(bausteineMassnahmenResult)){
                 MassnahmeInformationTransfer massnahmeInformationTransfer = vampire.
-                        findTxtforMbMassn(bausteineMassnahmenResult.baustein, bausteineMassnahmenResult.massnahme, 
+                        findTxtforMbMassn(bausteineMassnahmenResult.baustein, bausteineMassnahmenResult.massnahme,
                                 GSScraperUtil.getInstance().getModel().getEncoding());
                 massnahmenInfos.put(bausteineMassnahmenResult, massnahmeInformationTransfer);
             }
         }
     }
 
-    
+
     private List<ZielobjektTypeResult> findZielobjekte() throws Exception {
         List<ZielobjektTypeResult> zielobjekte;
         try {
@@ -512,7 +512,7 @@ public class ImportTask {
         ServiceFactory.lookupAuthService();
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
             command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, new BSIConfigurationRCPLocal(), alleBausteineToZoBstMap, gstool2VeriniceBausteinMap);
-            
+
         } else {
             command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap, gstool2VeriniceBausteinMap);
         }
@@ -572,11 +572,14 @@ public class ImportTask {
             for (NZielobjekt dependency : dependencies) {
                 CnATreeElement dependencyElement = findZielobjektFor(dependency);
                 if (dependencyElement == null) {
-                    LOG.debug("Kein Ziel gefunden für Verknüpfung von " + dependant.getTitle() + " zu ZO: " + dependency.getName());
+                    if(LOG.isDebugEnabled()) {
+                        LOG.debug("Kein Ziel gefunden für Verknüpfung von " + dependant.getTitle() + " zu ZO: " + dependency.getName());
+                    }
                     continue;
                 }
-                LOG.debug("Neue Verknüpfung von " + dependant.getTitle() + " zu " + dependencyElement.getTitle());
-
+                if(LOG.isDebugEnabled()) {
+                    LOG.debug("Neue Verknüpfung von " + dependant.getTitle() + " zu " + dependencyElement.getTitle());
+                }
                 // verinice models dependencies DOWN, not UP as the gstool.
                 // therefore we need to turn things around, except for persons,
                 // networks and itverbund
@@ -631,13 +634,15 @@ public class ImportTask {
                 }
                 MassnahmenUmsetzung dependantMassnahme = alleMassnahmen.get(obm);
                 for (Person personToLink : dependencies) {
-                    LOG.debug("Verknüpfe Massnahme " + dependantMassnahme.getTitle() + " mit Person " + personToLink.getTitle());
+                    if(LOG.isDebugEnabled()) {
+                        LOG.debug("Verknüpfe Massnahme " + dependantMassnahme.getTitle() + " mit Person " + personToLink.getTitle());
+                    }
                     dependantMassnahme.addUmsetzungDurch(personToLink);
                 }
             }
         }
     }
-    
+
     private Baustein findBausteinForId(String id) {
         for (Baustein baustein : allCatalogueBausteine) {
             if (baustein.getId().equals(id)) {
@@ -646,7 +651,7 @@ public class ImportTask {
         }
         return null;
     }
-    
+
 
 
     private void importBausteinPersonVerknuepfungen() {
@@ -667,7 +672,9 @@ public class ImportTask {
                     set.add(interviewer);
                     List<Person> personen = findPersonen(set);
                     if (personen != null && personen.size() > 0) {
-                        LOG.debug("Befragung für Baustein " + bausteinUmsetzung.getTitle() + " durchgeführt von " + personen.get(0));
+                        if(LOG.isDebugEnabled()) {
+                            LOG.debug("Befragung für Baustein " + bausteinUmsetzung.getTitle() + " durchgeführt von " + personen.get(0));
+                        }
                         bausteinUmsetzung.addBefragungDurch(personen.get(0));
                     }
                 }
@@ -680,7 +687,9 @@ public class ImportTask {
                     }
                     monitor.subTask(bausteinUmsetzung.getTitle());
                     for (Person personToLink : dependencies) {
-                        LOG.debug("Verknüpfe Baustein " + bausteinUmsetzung.getTitle() + " mit befragter Person " + personToLink.getTitle());
+                        if(LOG.isDebugEnabled()) {
+                            LOG.debug("Verknüpfe Baustein " + bausteinUmsetzung.getTitle() + " mit befragter Person " + personToLink.getTitle());
+                        }
                         bausteinUmsetzung.addBefragtePersonDurch(personToLink);
                     }
                 }
@@ -716,7 +725,7 @@ public class ImportTask {
         Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap = new HashMap<MbBaust, BausteinInformationTransfer>();
         Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap = new HashMap<MbMassn, MassnahmeInformationTransfer>();
         Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap = new HashMap<MbBaust, List<GefaehrdungInformationTransfer>>();
-        
+
         ImportCreateBausteine command;
         ServiceFactory.lookupAuthService();
         for(MbBaust b : bausteineMassnahmenMap.keySet()){
@@ -735,7 +744,7 @@ public class ImportTask {
         if (command.getAlleBausteineToBausteinUmsetzungMap() != null) {
             this.alleBausteineToBausteinUmsetzungMap.putAll(command.getAlleBausteineToBausteinUmsetzungMap());
         }
-        
+
 
 
         if (command.getAlleBausteineToZoBstMap() != null) {
@@ -745,11 +754,11 @@ public class ImportTask {
         if (command.getAlleMassnahmen() != null) {
             this.alleMassnahmen.putAll(command.getAlleMassnahmen());
         }
-        
+
         if(command.getGstool2VeriniceBausteinMap() != null && command.getGstool2VeriniceBausteinMap().size() > 0){
             this.gstool2VeriniceBausteinMap.putAll(command.getGstool2VeriniceBausteinMap());
         }
-        
+
         if(command.getIndividualMassnahmenMap() != null && command.getIndividualMassnahmenMap().size() > 0){
             this.individualMassnahmenMap.putAll(command.getIndividualMassnahmenMap());
         }
@@ -776,14 +785,14 @@ public class ImportTask {
             GefaehrdungInformationTransfer git = vampire.findGefaehrdungInformationForBausteinGefaehrdung(b, gefaehr, zielobjekt, GSScraperUtil.getInstance().getModel().getEncoding());
             if(git.getTitel() != null && git.getId() != null){
                 gitList.add(git);
-            } 
-            
+            }
+
         }
         if(gitList.size() > 0){
             udBaustGefMap.put(b, gitList);
         }
     }
-    
+
     private int getAnzahlMassnahmen(Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap) {
         Set<MbBaust> keys = bausteineMassnahmenMap.keySet();
         int result = 0;
@@ -792,11 +801,11 @@ public class ImportTask {
         }
         return result;
     }
-    
+
     /**
      * Import the ergaenzende Sicherheitsanalyse (ESA) for an Zielobjekt.
      * ESA is a synonyme for Risikoanalyse (RA).
-     * 
+     *
      * @param zielobjekt
      * @return
      * @throws CommandException
@@ -814,7 +823,7 @@ public class ImportTask {
         if (esaResult.size() > 1) {
             LOG.warn("Warning: More than one ESA found for zielobjekt" + zielobjekt.zielobjekt.getName() + " Using first one only.");
         }
-        
+
         if(LOG.isDebugEnabled()){
             LOG.debug("ESA found for zielobjekt " + zielobjekt.zielobjekt.getName());
         }
@@ -828,7 +837,7 @@ public class ImportTask {
         CnAElementHome.getInstance().update(element);
         return element;
     }
-    
+
     private List<Baustein> loadCatalogueBausteine() throws CommandException, IOException, GSServiceException{
         IBSIConfig bsiConfig = null;
         if (!ServiceFactory.isPermissionHandlingNeeded()) {
@@ -872,7 +881,7 @@ public class ImportTask {
         }
         return bausteine;
     }
-    
 
-    
+
+
 }

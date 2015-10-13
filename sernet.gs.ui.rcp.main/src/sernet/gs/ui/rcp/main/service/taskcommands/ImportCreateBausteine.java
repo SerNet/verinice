@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -65,11 +65,11 @@ import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 /**
  * Create BausteinUmsetzung objects during import for given target object and
  * assigned Bausteine from source database.
- * 
- * 
+ *
+ *
  * @author koderman[at]sernet[dot]de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- * 
+ *
  */
 public class ImportCreateBausteine extends GenericCommand {
 
@@ -83,7 +83,7 @@ public class ImportCreateBausteine extends GenericCommand {
     }
 
     // attention dear reader: ud is an abbreviation for [u]ser[d]efined
-    
+
     private CnATreeElement element;
     private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
     private Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
@@ -94,18 +94,18 @@ public class ImportCreateBausteine extends GenericCommand {
     private boolean kosten;
     private Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
     private Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
-    
+
     private List<MbZeiteinheitenTxt> zeiten;
     private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
     private List<Baustein> bausteine;
     private String sourceId;
-    
+
     private Map<MbBaust, Baustein> gstool2veriniceBausteinMap;
 
     private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
 
-  
-    public ImportCreateBausteine(String sourceId, CnATreeElement element, 
+
+    public ImportCreateBausteine(String sourceId, CnATreeElement element,
             Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap,
             List<MbZeiteinheitenTxt> zeiten, boolean kosten, boolean importUmsetzung,
             IBSIConfig bsiConfig, Map<MbBaust, BausteinInformationTransfer> udBstTxtMap, Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap,
@@ -118,15 +118,15 @@ public class ImportCreateBausteine extends GenericCommand {
         this.sourceId = sourceId;
         this.udBausteineTxtMap = udBstTxtMap;
         this.udBstMassTxtMap = udBstMassTxtMap;
-        this.udBaustGefMap = udBaustGefMap; 
+        this.udBaustGefMap = udBaustGefMap;
         this.gstool2veriniceBausteinMap = new HashMap<MbBaust, Baustein>();
         this.individualMassnahmenMap = new HashMap<BausteinUmsetzung, List<BausteineMassnahmenResult>>();
         this.bausteine = bausteine;
     }
 
-    public ImportCreateBausteine(String sourceId, CnATreeElement element, 
-            Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, List<MbZeiteinheitenTxt> zeiten, 
-            boolean kosten, boolean importUmsetzung, Map<MbBaust, BausteinInformationTransfer> udBstTxtMap, 
+    public ImportCreateBausteine(String sourceId, CnATreeElement element,
+            Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, List<MbZeiteinheitenTxt> zeiten,
+            boolean kosten, boolean importUmsetzung, Map<MbBaust, BausteinInformationTransfer> udBstTxtMap,
             Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap, Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap, List<Baustein> bausteine) {
         this.element = element;
         this.bausteineMassnahmenMap = bausteineMassnahmenMap;
@@ -141,19 +141,13 @@ public class ImportCreateBausteine extends GenericCommand {
         this.individualMassnahmenMap = new HashMap<BausteinUmsetzung, List<BausteineMassnahmenResult>>();
         this.bausteine = bausteine;
     }
-    
-    
+
+
 
     @Override
     public void execute() {
         try {
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("Reloading element " + element.getTitle());
-            }
 
-
-
-            
             Set<MbBaust> keySet = bausteineMassnahmenMap.keySet();
 
             for (MbBaust mbBaust : keySet) {
@@ -179,42 +173,57 @@ public class ImportCreateBausteine extends GenericCommand {
         }
 
 
-        if (baustein != null && refZobId == null) { // if baustein != null, baustein is found in bsi catalogue
-            // BSIKatalogInvisibleRoot.getInstance().getLanguage() caused a classNotFound Exception here, fixed 
-            // but import now only works for German.
-            // this should be loaded from BSIMassnahmenModel which is the ITGS main model class
+        if(refZobId == null) { // if refzobid != null, baustein is created via reference later on, so skip this
+            if (baustein != null) { // if baustein != null, baustein is found in bsi catalogue
+                // BSIKatalogInvisibleRoot.getInstance().getLanguage() caused a classNotFound Exception here, fixed
+                // but import now only works for German.
+                // this should be loaded from BSIMassnahmenModel which is the ITGS main model class
 
-            // skipping user defined bausteine
-            if(mbBaust.getId().getBauImpId() != 1){ // should always be != 1
-                CreateBaustein command = new CreateBaustein(element, baustein, GSScraper.CATALOG_LANGUAGE_GERMAN);
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
-                BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
+                if(mbBaust.getId().getBauImpId() != 1){ // should always be != 1 for bausteine from itgs catalogue
+                    CreateBaustein command = new CreateBaustein(element, baustein, GSScraper.CATALOG_LANGUAGE_GERMAN);
+                    command = ServiceFactory.lookupCommandService().executeCommand(command);
+                    BausteinUmsetzung bausteinUmsetzung = command.getNewElement();
 
-                if(bausteinUmsetzung != null){
-                    if (list.iterator().hasNext()) {
-                        BausteineMassnahmenResult queryresult = list.iterator().next();
-                        transferBaustein(baustein, bausteinUmsetzung, queryresult);
-                        
-                        transferMassnahmen(bausteinUmsetzung, list, false);
+                    if(bausteinUmsetzung != null){
+                        if (list.iterator().hasNext()) {
+                            BausteineMassnahmenResult queryresult = list.iterator().next();
+                            transferBaustein(baustein, bausteinUmsetzung, queryresult);
+
+                            transferMassnahmen(bausteinUmsetzung, list, false);
+                        }
                     }
+                    return bausteinUmsetzung;
+                } else if(mbBaust.getId().getBauImpId() == 1) { // user defined but in catalogue existant
+                    // import as userdefined
+                    createUserDefinedBausteinUmsetzung(element, mbBaust, list);
                 }
-                return bausteinUmsetzung;
-            } else if(mbBaust.getId().getBauImpId() == 1) { // user defined but in catalogue existant
-                // import as userdefined
+            } else { // baustein is null if mbBaust.getId().getBauImpId() == 1, baustein not found in catalogue, lets assume its userdefined
+                createUserDefinedBausteinUmsetzung(element, mbBaust, list);
             }
-        } else { // baustein is null if mbBaust.getId().getBauImpId() == 1, baustein not found in catalogue, lets assume its userdefined
-            if(mbBaust.getId().getBauImpId() == 1 && mbBaust.getNrNum() == null){ // NrNum != null is RA 
-
-                return createBstUms(element, mbBaust, list, importUserDefinedBaustein(mbBaust, list));
-            } 
         }
         return null;
     }
 
     /**
-     * 
+     * @param element
+     * @param mbBaust
+     * @param list
+     * @throws CommandException
+     * @throws CnATreeElementBuildException
+     * @throws SQLException
+     * @throws IOException
+     */
+    private BausteinUmsetzung createUserDefinedBausteinUmsetzung(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws CommandException, CnATreeElementBuildException, SQLException, IOException {
+        if(mbBaust.getId().getBauImpId() == 1 && mbBaust.getNrNum() == null){ // NrNum != null is RA
+            return createBstUms(element, mbBaust, list, importUserDefinedBaustein(mbBaust, list));
+        }
+        return null;
+    }
+
+    /**
+     *
      * creates an instance of {@link BausteinUmsetzung}, given a parent {@link CnATreeElement}, a {@link MbBaust}, a List of {@link BausteineMassnahmenResult} and {@link Baustein}
-     * only used, if baustein (itgs module) is userdefined 
+     * only used, if baustein (itgs module) is userdefined
      * @param element
      * @param mbBaust
      * @param list
@@ -255,8 +264,8 @@ public class ImportCreateBausteine extends GenericCommand {
             getDaoFactory().getDAO(GefaehrdungsUmsetzung.TYPE_ID).saveOrUpdate(createGefaehrdung((OwnGefaehrdung)g, bausteinUmsetzung));
         }
     }
-    
-    
+
+
     /**
      * prepares an instance of Baustein for an import of a user defined baustein from the gstool
      * in case baustein is not userdefined, data is read from itgs-catalogue
@@ -271,14 +280,13 @@ public class ImportCreateBausteine extends GenericCommand {
         baustein = createGefForBst(mbBaust, baustein);
         return baustein;
     }
-    
+
     private Baustein createBasicBaustein(MbBaust mbBaust){
         Baustein baustein = new Baustein();
         BausteinInformationTransfer bausteinInformation = udBausteineTxtMap.get(mbBaust);
         baustein.setEncoding((bausteinInformation.getEncoding() != null) ? bausteinInformation.getEncoding() : "UTF-8");
         baustein.setId(mbBaust.getNr());
         baustein.setSchicht((bausteinInformation.getSchicht() != null) ? Integer.valueOf(bausteinInformation.getSchicht()) : -1);
-//        baustein.setStand(stand); // TODO
         baustein.setTitel((bausteinInformation != null) ? bausteinInformation.getTitel() : "no name available");
         return baustein;
     }
@@ -295,7 +303,7 @@ public class ImportCreateBausteine extends GenericCommand {
             BausteineMassnahmenResult bausteinMassnahmeResult = iter.next();
             Massnahme m = new Massnahme();
             m.setLebenszyklus(bausteinMassnahmeResult.obm.getZykId());
-            
+
             MassnahmeInformationTransfer mTxt = udBstMassTxtMap.get(bausteinMassnahmeResult.massnahme);
             m.setId(mTxt.getId());
             if(mTxt != null){
@@ -303,11 +311,11 @@ public class ImportCreateBausteine extends GenericCommand {
                 m.setLebenszyklus((mTxt.getZyklus() != null) ? Integer.valueOf(mTxt.getZyklus()) : -1);
             }
             massnahmen.add(m);
-            
+
             if (getLog().isDebugEnabled()) {
                 logBausteinMassnahmeResult(bausteinMassnahmeResult);
             }
-                     
+
         }
         baustein.setMassnahmen(massnahmen);
         return baustein;
@@ -363,7 +371,7 @@ public class ImportCreateBausteine extends GenericCommand {
         }
         return baustein;
     }
-    
+
     /**
      * @return
      */
@@ -387,11 +395,11 @@ public class ImportCreateBausteine extends GenericCommand {
             bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM, parseDate(bausteinInformation.getErfasstAm()));
             bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_NR, bausteinInformation.getNr());
         }
-        
+
         if(bausteinUmsetzung == null){
             getLog().error("Bausteinumsetzung für " + baustein.getTitel() + " war null");
         }
-        
+
         if(bausteinUmsetzung != null){
             bausteinUmsetzung.setSourceId(sourceId);
             bausteinUmsetzung.setExtId(createExtId(baustein, bausteinInformation.getZobId()));
@@ -399,7 +407,7 @@ public class ImportCreateBausteine extends GenericCommand {
                 getLog().debug("Creating baustein with sourceId and extId: " + sourceId + ", " + bausteinUmsetzung.getExtId());
             }
         }
-        
+
         // remember baustein for later:
         if (alleBausteineToBausteinUmsetzungMap == null) {
             alleBausteineToBausteinUmsetzungMap = new HashMap<MbBaust, BausteinUmsetzung>();
@@ -410,18 +418,18 @@ public class ImportCreateBausteine extends GenericCommand {
         }
         alleBausteineToBausteinUmsetzungMap.put(bausteinInformation.getMzb().getMbBaust(), bausteinUmsetzung);
         alleBausteineToZoBstMap.put(bausteinInformation.getBaust(), bausteinInformation.getMzb());
-        
+
     }
-    
-    
+
+
     private void transferBaustein(Baustein baustein, BausteinUmsetzung bausteinUmsetzung, BausteineMassnahmenResult vorlage) {
         if(bausteinUmsetzung != null && vorlage != null && vorlage.zoBst != null && vorlage.zoBst.getBegruendung() != null){
 
             bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERLAEUTERUNG, vorlage.zoBst.getBegruendung());
             bausteinUmsetzung.setSimpleProperty(BausteinUmsetzung.P_ERFASSTAM, parseDate(vorlage.zoBst.getDatum()));
-            
+
         }
-        
+
         if(bausteinUmsetzung == null){
             getLog().error("Bausteinumsetzung für " + baustein.getTitel() + " war null");
         }
@@ -466,9 +474,6 @@ public class ImportCreateBausteine extends GenericCommand {
         } else {
             massnahmenUmsetzungen = Collections.EMPTY_LIST;
         }
-        if(massnahmenUmsetzungen.size() < list.size()){
-            getLog().error("Individualisierte Massnahmen gefunden in Element:\t" + element.getTitle() + " und Baustein:\t" + bausteinUmsetzung.getTitle() + "\tmNUms:\t" + massnahmenUmsetzungen.size() + "\tbmr aus DB:\t" + list.size());
-        }
         for (MassnahmenUmsetzung massnahmenUmsetzung : massnahmenUmsetzungen) {
             BausteineMassnahmenResult vorlage = null;
             vorlage = TransferData.findMassnahmenVorlageBaustein(massnahmenUmsetzung, list);
@@ -488,7 +493,7 @@ public class ImportCreateBausteine extends GenericCommand {
         }
 
     }
-    
+
     /**
      * @param list
      * @param massnahmenUmsetzung
@@ -560,11 +565,11 @@ public class ImportCreateBausteine extends GenericCommand {
         }
         alleMassnahmen.put(vorlage.obm, massnahmenUmsetzung);
     }
-    
+
     private GefaehrdungsUmsetzung createGefaehrdung(OwnGefaehrdung oGef, BausteinUmsetzung bstUms) throws SQLException, IOException, CommandException {
-        
+
         GefaehrdungsUmsetzung gefUms = GefaehrdungsUmsetzungFactory.build(bstUms, oGef, GSScraper.CATALOG_LANGUAGE_GERMAN);
-               
+
         return gefUms;
     }
 
@@ -579,11 +584,11 @@ public class ImportCreateBausteine extends GenericCommand {
     public Map<ModZobjBstMass, MassnahmenUmsetzung> getAlleMassnahmen() {
         return alleMassnahmen;
     }
-    
+
     public Map<MbBaust, Baustein> getGstool2VeriniceBausteinMap(){
         return gstool2veriniceBausteinMap;
     }
-    
+
     public Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> getIndividualMassnahmenMap(){
         return individualMassnahmenMap;
     }
@@ -596,7 +601,7 @@ public class ImportCreateBausteine extends GenericCommand {
         zeiten = null;
         bausteine = null;
     }
-    
+
     public List<Baustein> getITGSCatalogueBausteine(){
         if(bausteine != null){
             return bausteine;

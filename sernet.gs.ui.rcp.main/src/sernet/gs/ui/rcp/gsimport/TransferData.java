@@ -224,20 +224,20 @@ public class TransferData {
 
 
     private CnATreeElement setESAEntscheidungBis(CnATreeElement target, Date entscheidungBis){
-        if(entscheidungBis != null){
+        if(entscheidungBis != null && typeIdESAEntscheidungBisMap.containsKey(target.getTypeId())){
             target.setSimpleProperty(typeIdESAEntscheidungBisMap.get(target.getTypeId()), String.valueOf(entscheidungBis.getTime()));
         }
         return target;
     }
 
     private CnATreeElement setESAEntscheidungAm(CnATreeElement target, Date entscheidungAm){
-        if(entscheidungAm != null){
+        if(entscheidungAm != null && typeIdESAEntscheidungAmMap.containsKey(target.getTypeId())){
             target.setSimpleProperty(typeIdESAEntscheidungAmMap.get(target.getTypeId()), String.valueOf(entscheidungAm.getTime()));
         }
         return target;
     }
     private CnATreeElement setESAEntscheidungDurch(CnATreeElement target, String entscheidungDurch){
-        if(StringUtils.isNotEmpty(entscheidungDurch)){
+        if(StringUtils.isNotEmpty(entscheidungDurch) && typeIdESAEntscheidungDurchMap.containsKey(target.getTypeId())){
             target.setSimpleProperty(typeIdESAEntscheidungDurchMap.get(target.getTypeId()), entscheidungDurch);
         }
         return target;
