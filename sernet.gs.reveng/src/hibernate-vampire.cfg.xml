@@ -8,8 +8,9 @@
 
 	<session-factory>
 		<property name="connection.username">sa</property>
-		 <property name="connection.url">jdbc:jtds:sqlserver://192.168.134.132:49492/GSTOOL_Beispiel-DB_RECPLAST_V48</property> 
-		<!--<property name="connection.url">jdbc:jtds:sqlserver://192.168.134.129:49492/BSIDB_V45_Produktion_db_201504290200</property> -->
+		<property name="connection.url">
+			jdbc:jtds:sqlserver://host:port/database
+		</property>
 		<property name="dialect">
 			org.hibernate.dialect.SQLServerDialect
 		</property>
