@@ -283,8 +283,10 @@ public class CnAWorkspace {
             settings.put("dialect", PreferenceConstants.GS_DB_DIALECT_JTDS); //$NON-NLS-1$
         }
 
-        createTextFile(CONF + File.separator + "skel_hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
-                workDir, CONF + File.separator + "hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
+        createTextFile(
+                CONF + File.separator + "skel_hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
+                workDir, 
+                CONF + File.separator + "hibernate-vampire.cfg.xml", //$NON-NLS-1$ //$NON-NLS-2$
                 settings);
     }
 
