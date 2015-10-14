@@ -5,7 +5,7 @@
 
 <!-- Hibernate configuration for GSTOOL import.           -->
 <!-- This file is a template. Variables                   -->
-<!-- {user}, {url}, {dialect}, {pass}, {driver}           -->
+<!-- user, url, dialect, pass, driver           -->
 <!-- are replaced by user preferences in class            -->
 <!-- CnAWorkspace. After replacement the configuration is -->
 <!-- saved in the workspace of the client in file         -->
