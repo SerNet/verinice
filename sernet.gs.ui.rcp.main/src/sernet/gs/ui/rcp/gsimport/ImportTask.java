@@ -286,37 +286,33 @@ public class ImportTask {
 
         // create all found ITVerbund first
         List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
-        for (ZielobjektTypeResult resultITV : zielobjekte) {
-            try {
-                if (ITVerbund.TYPE_ID.equals(ImportZielobjektTypUtil.translateZielobjektType(resultITV.type, resultITV.subtype))) {
-                    ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
-                    itverbund.setSourceId(sourceId);
-                    neueVerbuende.add(itverbund);
-                    monitor.worked(1);
-                    numberImported++;
+        for (ZielobjektTypeResult resultITV : zielobjekte) {         
+            if (ITVerbund.TYPE_ID.equals(GstoolTypeMapper.getVeriniceType(resultITV.type, resultITV.subtype))) {
+                ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
+                itverbund.setSourceId(sourceId);
+                neueVerbuende.add(itverbund);
+                monitor.worked(1);
+                numberImported++;
 
-                    // save element for later:
-                    alleZielobjekte.put(resultITV.zielobjekt, itverbund);
+                // save element for later:
+                alleZielobjekte.put(resultITV.zielobjekt, itverbund);
 
-                    transferData.transfer(itverbund, resultITV);
-                    createBausteine(sourceId, itverbund, resultITV.zielobjekt);
+                transferData.transfer(itverbund, resultITV);
+                createBausteine(sourceId, itverbund, resultITV.zielobjekt);
 
-                    // save links from itverbuende to other objects to
-                    // facilitate creating ZOs in their correct IT-Verbund:
-                    List<NZielobjekt> itvLinks = vampire.findLinksByZielobjekt(resultITV.zielobjekt);
-                    for (NZielobjekt nZielobjekt : itvLinks) {
-                        LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + resultITV.zielobjekt.getName());
-                        itverbundZuordnung.put(nZielobjekt.getGuid(), resultITV.zielobjekt);
-                    }
+                // save links from itverbuende to other objects to
+                // facilitate creating ZOs in their correct IT-Verbund:
+                List<NZielobjekt> itvLinks = vampire.findLinksByZielobjekt(resultITV.zielobjekt);
+                for (NZielobjekt nZielobjekt : itvLinks) {
+                    LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + resultITV.zielobjekt.getName());
+                    itverbundZuordnung.put(nZielobjekt.getGuid(), resultITV.zielobjekt);
                 }
-            } catch (GSImportException e) {
-                throw e;
-            }
+            }      
         }
         long startTime = System.currentTimeMillis();
         // create all Zielobjekte in their respective ITVerbund,
         for (ZielobjektTypeResult resultZO : zielobjekte) {
-            String typeId = ImportZielobjektTypUtil.translateZielobjektType(resultZO.type, resultZO.subtype);
+            String typeId = GstoolTypeMapper.getVeriniceType(resultZO.type, resultZO.subtype);
             if(LOG.isDebugEnabled()){
                 LOG.debug("GSTOOL type id " + resultZO.type + " : " + resultZO.subtype + " was translated to: " + typeId);
             }

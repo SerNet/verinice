@@ -43,6 +43,7 @@ import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.osgi.util.NLS;
 
 import sernet.gs.service.VeriniceCharset;
+import sernet.gs.ui.rcp.gsimport.GstoolTypeMapper;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.report.IReportService;
 
@@ -166,6 +167,7 @@ public class CnAWorkspace {
             workspace.createHtmlDir();
             workspace.createOfficeDir();
             workspace.createDatabaseConfig();
+            workspace.createGstoolPropertyFiles();
         } catch (Exception e) {
             ExceptionUtil.log(e, NLS.bind(Messages.CnAWorkspace_4, confDir.getAbsolutePath()));
         }
@@ -225,6 +227,11 @@ public class CnAWorkspace {
         createTextFile(html + File.separator + "screen.css", workDir); //$NON-NLS-1$ //$NON-NLS-2$
         createTextFile(html + File.separator + "about.html", workDir); //$NON-NLS-1$ //$NON-NLS-2$
         createBinaryFile("browserdefault.png", workDir + File.separator + html); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    
+    private void createGstoolPropertyFiles() throws IOException {
+        createTextFile(CONF + File.separator + GstoolTypeMapper.TYPE_PROPERTIES_FILE, getConfDir(), GstoolTypeMapper.TYPE_PROPERTIES_FILE);
+        createTextFile(CONF + File.separator + GstoolTypeMapper.SUBTYPE_PROPERTIES_FILE, getConfDir(), GstoolTypeMapper.SUBTYPE_PROPERTIES_FILE);
     }
 
     /**
