@@ -14,7 +14,7 @@
       <id>tomcat-p2</id>
       <layout>p2</layout>
       <!-- reference BIRT TP here, locate it on local tomcat -->
-      <url>http://localhost:8080/repos/verinicerepo/</url>
+      <url>file://tmp/repos/verinicerepo/</url>
     </repository>
     <repository>
        <id>indigo-p2</id>
