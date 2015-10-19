@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -45,6 +45,7 @@ import org.eclipse.ui.internal.cheatsheets.actions.CheatSheetCategoryBasedSelect
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
+import sernet.gs.ui.rcp.gsimport.GSImportMappingView;
 import sernet.gs.ui.rcp.main.actions.ChangeOwnPasswordAction;
 import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
 import sernet.gs.ui.rcp.main.actions.ImportCSVAction;
@@ -90,11 +91,11 @@ import sernet.verinice.validation.CnAValidationView;
  * An action bar advisor is responsible for creating, adding, and disposing of
  * the actions added to a workbench window. Each window will be populated with
  * new actions.
- * 
+ *
  * @author koderman[at]sernet[dot]de
  */
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
-    
+
     private static final String WARNING_RESTRICTION = "restriction"; //$NON-NLS-1$
 
     // Actions - important to allocate these only in makeActions, and then use
@@ -138,19 +139,19 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openFileAction;
 
     private OpenViewAction openRelationViewAction;
-    
+
     private OpenViewAction openValidationViewAction;
-    
+
     private OpenViewAction openGroupViewAction;
-    
+
     private OpenMultipleViewAction openSearchViewAction;
 
     private OpenMultipleViewAction openCatalogAction;
-    
+
     private OpenTaskViewAction openTaskViewAction;
-    
+
     private OpenViewAction openAccountViewAction;
-    
+
     private OpenViewAction openReportdepositViewAction;
 
     private IWorkbenchAction copyAction;
@@ -158,15 +159,15 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction pasteAction;
 
     private IWorkbenchAction deleteAction;
-    
+
     private ShowBulkEditAction bulkEditAction;
 
     private ShowAccessControlEditAction accessControlEditAction;
-    
+
     private ProfileEditAction profileEditAction;
 
     private ChangeOwnPasswordAction changeOwnPasswordAction;
-    
+
     private IWorkbenchAction introAction;
 
     private ShowKonsolidatorAction konsolidatorAction;
@@ -175,17 +176,19 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private ImportGstoolAction importGstoolAction;
 
-	private ImportCSVAction importCSVAction;
+    private ImportCSVAction importCSVAction;
 
-	private ImportPersonFromLdap importPersonFromLdap;
+    private ImportPersonFromLdap importPersonFromLdap;
 
     private OpenViewAction openDocumentViewAction;
 
-	private ImportGstoolNotesAction importGSNotesAction;
+    private ImportGstoolNotesAction importGSNotesAction;
 
     private RunRiskAnalysisAction runRiskAnalysisAction;
-    
+
     private ServerConnectionToggleAction serverConnectionToggleAction;
+
+    private OpenViewAction openGSToolMappingViewAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -195,12 +198,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     @SuppressWarnings(WARNING_RESTRICTION)
     @Override
     protected void makeActions(final IWorkbenchWindow window) {
-        
+
         BausteinZuordnungAction bausteinZuordnungAction;
         GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
         GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
         TestAction testAction;
-        
+
         // Creates the actions and registers them.
         // Registering is needed to ensure that key bindings work.
         // The corresponding commands keybindings are defined in the plugin.xml
@@ -208,79 +211,80 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         // Registering also provides automatic disposal of the actions when
         // the window is closed.
 
-        
 
-        exitAction = ActionFactory.QUIT.create(window);
-        copyAction = ActionFactory.COPY.create(window);
-        pasteAction = ActionFactory.PASTE.create(window);
-        aboutAction = ActionFactory.ABOUT.create(window);
-        newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
-        saveAction = ActionFactory.SAVE.create(window);
-        closeAction = ActionFactory.CLOSE.create(window);
-        closeAllAction = ActionFactory.CLOSE_ALL.create(window);
-        closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
-        deleteAction = ActionFactory.DELETE.create(window);
-        openGroupViewAction = new OpenViewAction(window,Messages.ApplicationActionBarAdvisor_36, GroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.ACCOUNTSETTINGS); //$NON-NLS-1$
-        openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
-        openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
-        openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
-        openCatalogAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_3, CatalogView.ID, ImageCache.WRENCH, ActionRightIDs.ISMCATALOG);
-        openRelationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_4, RelationView.ID, ImageCache.LINKS, ActionRightIDs.RELATIONS);
-        openBSIViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_5, BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN, ActionRightIDs.BSIMASSNAHMEN);
-        openBSIModelViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_6, BsiModelView.ID, ImageCache.VIEW_BSIMODEL, ActionRightIDs.BSIMODELVIEW);
-        openISMViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_7, ISMView.ID, ImageCache.VIEW_ISMVIEW, ActionRightIDs.ISMVIEW);
-        openDSViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_8, DSModelView.ID, ImageCache.VIEW_DSMODEL, ActionRightIDs.DSMODELVIEW);
-        openTodoViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_9, TodoView.ID, ImageCache.VIEW_TODO, ActionRightIDs.TODO);
-        openDocumentViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_10, DocumentView.ID, ImageCache.VIEW_DOCUMENT, ActionRightIDs.DOCUMENTVIEW);
-        openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT, ActionRightIDs.AUDITVIEW);
-        openTaskViewAction = new OpenTaskViewAction(window, ActionRightIDs.TASKVIEW);
-        openValidationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_35, CnAValidationView.ID, ImageCache.VIEW_VALIDATION, ActionRightIDs.CNAVALIDATION);
-        openAccountViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_38, AccountView.ID, ImageCache.PERSON, ActionRightIDs.ACCOUNTSETTINGS);
-        openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
-        openSearchViewAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_42, SearchView.ID, ImageCache.SEARCH, ActionRightIDs.SEARCHVIEW);
-        
-        reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
-        importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
-        importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
-        importPersonFromLdap = new ImportPersonFromLdap(window,Messages.ApplicationActionBarAdvisor_32);
-		importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
-        showPreferencesAction = new ShowPreferencesAction();
-        bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16);
-        runRiskAnalysisAction = new RunRiskAnalysisAction(window);
-        accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17);
-        profileEditAction = new ProfileEditAction(window, Messages.ApplicationActionBarAdvisor_33);
-        konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18);
+
+        this.exitAction = ActionFactory.QUIT.create(window);
+        this.copyAction = ActionFactory.COPY.create(window);
+        this.pasteAction = ActionFactory.PASTE.create(window);
+        this.aboutAction = ActionFactory.ABOUT.create(window);
+        this.newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
+        this.saveAction = ActionFactory.SAVE.create(window);
+        this.closeAction = ActionFactory.CLOSE.create(window);
+        this.closeAllAction = ActionFactory.CLOSE_ALL.create(window);
+        this.closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
+        this.deleteAction = ActionFactory.DELETE.create(window);
+        this.openGroupViewAction = new OpenViewAction(window,Messages.ApplicationActionBarAdvisor_36, GroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.ACCOUNTSETTINGS); //$NON-NLS-1$
+        this.openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
+        this.openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
+        this.openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
+        this.openCatalogAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_3, CatalogView.ID, ImageCache.WRENCH, ActionRightIDs.ISMCATALOG);
+        this.openRelationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_4, RelationView.ID, ImageCache.LINKS, ActionRightIDs.RELATIONS);
+        this.openBSIViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_5, BSIMassnahmenView.ID, ImageCache.VIEW_MASSNAHMEN, ActionRightIDs.BSIMASSNAHMEN);
+        this.openBSIModelViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_6, BsiModelView.ID, ImageCache.VIEW_BSIMODEL, ActionRightIDs.BSIMODELVIEW);
+        this.openISMViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_7, ISMView.ID, ImageCache.VIEW_ISMVIEW, ActionRightIDs.ISMVIEW);
+        this.openDSViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_8, DSModelView.ID, ImageCache.VIEW_DSMODEL, ActionRightIDs.DSMODELVIEW);
+        this.openTodoViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_9, TodoView.ID, ImageCache.VIEW_TODO, ActionRightIDs.TODO);
+        this.openDocumentViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_10, DocumentView.ID, ImageCache.VIEW_DOCUMENT, ActionRightIDs.DOCUMENTVIEW);
+        this.openAuditViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_12, AuditView.ID, ImageCache.VIEW_AUDIT, ActionRightIDs.AUDITVIEW);
+        this.openTaskViewAction = new OpenTaskViewAction(window, ActionRightIDs.TASKVIEW);
+        this.openValidationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_35, CnAValidationView.ID, ImageCache.VIEW_VALIDATION, ActionRightIDs.CNAVALIDATION);
+        this.openAccountViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_38, AccountView.ID, ImageCache.PERSON, ActionRightIDs.ACCOUNTSETTINGS);
+        this.openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
+        this.openSearchViewAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_42, SearchView.ID, ImageCache.SEARCH, ActionRightIDs.SEARCHVIEW);
+        this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GSImportMappingView.ID, ImageCache.SHIELD, ActionRightIDs.GSTOOLIMPORT);
+
+        this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
+        this.importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
+        this.importCSVAction = new ImportCSVAction(window, Messages.ApplicationActionBarAdvisor_30);
+        this.importPersonFromLdap = new ImportPersonFromLdap(window,Messages.ApplicationActionBarAdvisor_32);
+        this.importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
+        this.showPreferencesAction = new ShowPreferencesAction();
+        this.bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16);
+        this.runRiskAnalysisAction = new RunRiskAnalysisAction(window);
+        this.accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17);
+        this.profileEditAction = new ProfileEditAction(window, Messages.ApplicationActionBarAdvisor_33);
+        this.konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18);
         gsmbasicsecuritycheckAction = new GSMBasicSecurityCheckAction(window, Messages.ApplicationActionBarAdvisor_34);
         bausteinZuordnungAction = new BausteinZuordnungAction(window);
         gsmbausteinZuordnungAction = new GSMBausteinZuordnungAction(window);
-        changeOwnPasswordAction = new ChangeOwnPasswordAction(window, Messages.ApplicationActionBarAdvisor_31);
-        
-        showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
-        
-        serverConnectionToggleAction = new ServerConnectionToggleAction();
-        
+        this.changeOwnPasswordAction = new ChangeOwnPasswordAction(window, Messages.ApplicationActionBarAdvisor_31);
+
+        this.showCheatSheetListAction = new CheatSheetCategoryBasedSelectionAction(Messages.ApplicationActionBarAdvisor_20);
+
+        this.serverConnectionToggleAction = new ServerConnectionToggleAction();
+
         testAction = new TestAction(window, "test command", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
-        introAction = ActionFactory.INTRO.create(window);
-        
-        IAction actions[] = new IAction[]{exitAction, copyAction, pasteAction,
-                aboutAction, newWindowAction, saveAction, closeAction, closeAllAction,
-                closeOthersAction, openBSIBrowserAction, openNoteAction, openFileAction,
-                openCatalogAction, openRelationViewAction, openBSIViewAction,
-                openBSIModelViewAction, openISMViewAction, openDSViewAction,
-                openTodoViewAction, openAuditViewAction, openTaskViewAction,
-                openValidationViewAction, reloadAction, importGstoolAction,
-                importCSVAction, importPersonFromLdap, importGSNotesAction,
-                showPreferencesAction, bulkEditAction, runRiskAnalysisAction, 
-                accessControlEditAction, profileEditAction, konsolidatorAction,
+        this.introAction = ActionFactory.INTRO.create(window);
+
+        IAction actions[] = new IAction[]{this.exitAction, this.copyAction, this.pasteAction,
+                this.aboutAction, this.newWindowAction, this.saveAction, this.closeAction, this.closeAllAction,
+                this.closeOthersAction, this.openBSIBrowserAction, this.openNoteAction, this.openFileAction,
+                this.openCatalogAction, this.openRelationViewAction, this.openBSIViewAction,
+                this.openBSIModelViewAction, this.openISMViewAction, this.openDSViewAction,
+                this.openTodoViewAction, this.openAuditViewAction, this.openTaskViewAction,
+                this.openValidationViewAction, this.reloadAction, this.importGstoolAction,
+                this.importCSVAction, this.importPersonFromLdap, this.importGSNotesAction,
+                this.showPreferencesAction, this.bulkEditAction, this.runRiskAnalysisAction,
+                this.accessControlEditAction, this.profileEditAction, this.konsolidatorAction,
                 gsmbasicsecuritycheckAction,bausteinZuordnungAction,
-                gsmbausteinZuordnungAction, openDocumentViewAction,
-                introAction, openGroupViewAction, openReportdepositViewAction, 
-                openSearchViewAction
+                gsmbausteinZuordnungAction, this.openDocumentViewAction,
+                this.introAction, this.openGroupViewAction, this.openReportdepositViewAction,
+                this.openSearchViewAction, this.openGSToolMappingViewAction
         };
         registerActions(actions);
 
     }
-    
+
     private void registerActions(IAction[] actions){
         for(IAction action : actions){
             register(action);
@@ -297,7 +301,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         menuBar.add(createWindowMenu(window));
         menuBar.add(createHelpMenu());
     }
-    
+
     @Override
     protected void fillStatusLine(IStatusLineManager statusLine) {
         final int statusItemCharWidth = 100;
@@ -305,29 +309,29 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             StatusLineContributionItem statusItem = new StatusLineContributionItem("server-url",statusItemCharWidth); //$NON-NLS-1$
             statusItem.setText(Messages.ApplicationActionBarAdvisor_40 + getShortServerUrl());
             statusLine.add(statusItem);
-        }       
+        }
     }
-    
+
     private String getShortServerUrl() {
         final int httpURLLength = 7;
         final int httpsURLLength = 8;
         String url = getServerUrlPreference();
         if(url!=null && !url.isEmpty()) {
-           if(url.startsWith("http://")) { //$NON-NLS-1$
-               url = url.substring(httpURLLength);
-           }
-           if(url.startsWith("https://")) { //$NON-NLS-1$
-               url = url.substring(httpsURLLength);
-           }
+            if(url.startsWith("http://")) { //$NON-NLS-1$
+                url = url.substring(httpURLLength);
+            }
+            if(url.startsWith("https://")) { //$NON-NLS-1$
+                url = url.substring(httpsURLLength);
+            }
         }
         return url;
     }
 
     private IContributionItem createHelpMenu() {
         MenuManager helpMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_21,IWorkbenchActionConstants.M_HELP);
-        helpMenu.add(introAction);
-        helpMenu.add(showCheatSheetListAction);
-        helpMenu.add(aboutAction);
+        helpMenu.add(this.introAction);
+        helpMenu.add(this.showCheatSheetListAction);
+        helpMenu.add(this.aboutAction);
         helpMenu.add(new Separator());
         helpMenu.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
         return helpMenu;
@@ -336,39 +340,39 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IContributionItem createEditMenu() {
         MenuManager editMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_22, IWorkbenchActionConstants.M_EDIT);
 
-        editMenu.add(bulkEditAction);
-        editMenu.add(runRiskAnalysisAction);
-        editMenu.add(accessControlEditAction);
-        editMenu.add(profileEditAction);
-        editMenu.add(konsolidatorAction);
+        editMenu.add(this.bulkEditAction);
+        editMenu.add(this.runRiskAnalysisAction);
+        editMenu.add(this.accessControlEditAction);
+        editMenu.add(this.profileEditAction);
+        editMenu.add(this.konsolidatorAction);
         editMenu.add(new Separator());
-        editMenu.add(copyAction);
-        editMenu.add(pasteAction);
+        editMenu.add(this.copyAction);
+        editMenu.add(this.pasteAction);
         editMenu.add(new Separator());
-        editMenu.add(changeOwnPasswordAction);
-        editMenu.add(showPreferencesAction);
+        editMenu.add(this.changeOwnPasswordAction);
+        editMenu.add(this.showPreferencesAction);
         return editMenu;
     }
 
     private IContributionItem createFileMenu() {
         MenuManager fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_23, IWorkbenchActionConstants.M_FILE);
 
-        fileMenu.add(saveAction);
-        fileMenu.add(closeAction);
-        fileMenu.add(closeAllAction);
-        fileMenu.add(closeOthersAction);
+        fileMenu.add(this.saveAction);
+        fileMenu.add(this.closeAction);
+        fileMenu.add(this.closeAllAction);
+        fileMenu.add(this.closeOthersAction);
 
         fileMenu.add(new Separator(VeriniceActionConstants.MENU_FILE));
         fileMenu.add(new Separator());
-        fileMenu.add(importGstoolAction);
-        fileMenu.add(importGSNotesAction);
+        fileMenu.add(this.importGstoolAction);
+        fileMenu.add(this.importGSNotesAction);
         fileMenu.add(new Separator());
-        fileMenu.add(importCSVAction);
-        fileMenu.add(importPersonFromLdap);
+        fileMenu.add(this.importCSVAction);
+        fileMenu.add(this.importPersonFromLdap);
 
         fileMenu.add(new Separator());
-        fileMenu.add(serverConnectionToggleAction);
-        fileMenu.add(exitAction);
+        fileMenu.add(this.serverConnectionToggleAction);
+        fileMenu.add(this.exitAction);
         return fileMenu;
     }
 
@@ -378,41 +382,42 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         MenuManager viewsMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_25, VeriniceActionConstants.MENU_VIEWS);
 
-        viewsMenu.add(openBSIViewAction);
-        viewsMenu.add(openBSIModelViewAction);
-        viewsMenu.add(openTodoViewAction);
-        viewsMenu.add(openAuditViewAction);
-        viewsMenu.add(openDSViewAction);
-        viewsMenu.add(openDocumentViewAction);
-        viewsMenu.add(new Separator());
-        
-        viewsMenu.add(openISMViewAction);
-        viewsMenu.add(openCatalogAction);
-        viewsMenu.add(openAccountViewAction);
-        viewsMenu.add(openGroupViewAction);
-        viewsMenu.add(openReportdepositViewAction);
-        viewsMenu.add(openTaskViewAction);
+        viewsMenu.add(this.openBSIViewAction);
+        viewsMenu.add(this.openBSIModelViewAction);
+        viewsMenu.add(this.openTodoViewAction);
+        viewsMenu.add(this.openAuditViewAction);
+        viewsMenu.add(this.openDSViewAction);
+        viewsMenu.add(this.openDocumentViewAction);
         viewsMenu.add(new Separator());
 
-        viewsMenu.add(openBSIBrowserAction);
-        viewsMenu.add(openNoteAction);
-        viewsMenu.add(openFileAction);
-        viewsMenu.add(openRelationViewAction);
-        viewsMenu.add(openValidationViewAction);
-        viewsMenu.add(openSearchViewAction);
-        
+        viewsMenu.add(this.openISMViewAction);
+        viewsMenu.add(this.openCatalogAction);
+        viewsMenu.add(this.openAccountViewAction);
+        viewsMenu.add(this.openGroupViewAction);
+        viewsMenu.add(this.openReportdepositViewAction);
+        viewsMenu.add(this.openTaskViewAction);
+        viewsMenu.add(new Separator());
+
+        viewsMenu.add(this.openBSIBrowserAction);
+        viewsMenu.add(this.openNoteAction);
+        viewsMenu.add(this.openFileAction);
+        viewsMenu.add(this.openRelationViewAction);
+        viewsMenu.add(this.openValidationViewAction);
+        viewsMenu.add(this.openSearchViewAction);
+        viewsMenu.add(this.openGSToolMappingViewAction);
+
         viewsMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
 
         MenuManager perspectivesMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_26, VeriniceActionConstants.MENU_PERSPECTIVES);
         addPerspectiveMenu(window, perspectivesMenu, Iso27kPerspective.ID);
         addPerspectiveMenu(window, perspectivesMenu, Perspective.ID);
         perspectivesMenu.add(new Separator(IWorkbenchActionConstants.MB_ADDITIONS));
-        
+
         IContributionItem perspectiveList = ContributionItemFactory.PERSPECTIVES_SHORTLIST.create(window);
         perspectivesMenu.add(perspectiveList);
 
-        windowMenu.add(newWindowAction);
-        windowMenu.add(reloadAction);
+        windowMenu.add(this.newWindowAction);
+        windowMenu.add(this.reloadAction);
         windowMenu.add(new Separator());
         windowMenu.add(perspectivesMenu);
         windowMenu.add(viewsMenu);
@@ -433,49 +438,50 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     protected void fillCoolBar(ICoolBarManager coolBar) {
         IToolBarManager myToolbar = new ToolBarManager(coolBar.getStyle());
         coolBar.add(new ToolBarContributionItem(myToolbar,VeriniceActionConstants.TOOLBAR));
-        myToolbar.add(saveAction);
+        myToolbar.add(this.saveAction);
         myToolbar.add(new Separator(VeriniceActionConstants.TOOLBAR_REPORT));
         myToolbar.add(new Separator());
-        myToolbar.add(bulkEditAction);
-        myToolbar.add(accessControlEditAction);
-        myToolbar.add(profileEditAction);
-        myToolbar.add(konsolidatorAction);
+        myToolbar.add(this.bulkEditAction);
+        myToolbar.add(this.accessControlEditAction);
+        myToolbar.add(this.profileEditAction);
+        myToolbar.add(this.konsolidatorAction);
 
-        myToolbar.add(reloadAction);
-        myToolbar.add(runRiskAnalysisAction);
+        myToolbar.add(this.reloadAction);
+        myToolbar.add(this.runRiskAnalysisAction);
 
         myToolbar.add(new Separator());
         // Grundschutz items
-        myToolbar.add(openBSIViewAction);
-        myToolbar.add(openBSIModelViewAction);
-        myToolbar.add(openTodoViewAction);
-        myToolbar.add(openAuditViewAction);
-        myToolbar.add(openDSViewAction);
-        myToolbar.add(openDocumentViewAction);
+        myToolbar.add(this.openBSIViewAction);
+        myToolbar.add(this.openBSIModelViewAction);
+        myToolbar.add(this.openTodoViewAction);
+        myToolbar.add(this.openAuditViewAction);
+        myToolbar.add(this.openDSViewAction);
+        myToolbar.add(this.openDocumentViewAction);
 
         myToolbar.add(new Separator());
         // ISO 27k items
-        myToolbar.add(openISMViewAction);
-        myToolbar.add(openCatalogAction);
-        myToolbar.add(openTaskViewAction);
+        myToolbar.add(this.openISMViewAction);
+        myToolbar.add(this.openCatalogAction);
+        myToolbar.add(this.openTaskViewAction);
 
         myToolbar.add(new Separator());
         // common items
-        myToolbar.add(openAccountViewAction);
-        myToolbar.add(openGroupViewAction);
-        myToolbar.add(openReportdepositViewAction);
-        myToolbar.add(openBSIBrowserAction);
-        myToolbar.add(openNoteAction);
-        myToolbar.add(openFileAction);
-        myToolbar.add(openRelationViewAction);
-        myToolbar.add(openValidationViewAction);
-        myToolbar.add(openSearchViewAction);
+        myToolbar.add(this.openAccountViewAction);
+        myToolbar.add(this.openGroupViewAction);
+        myToolbar.add(this.openReportdepositViewAction);
+        myToolbar.add(this.openBSIBrowserAction);
+        myToolbar.add(this.openNoteAction);
+        myToolbar.add(this.openFileAction);
+        myToolbar.add(this.openRelationViewAction);
+        myToolbar.add(this.openValidationViewAction);
+        myToolbar.add(this.openSearchViewAction);
+        myToolbar.add(this.openGSToolMappingViewAction);
     }
 
     /**
      * This removes some actions that we inherit from org.eclipse.ui.ide which
      * we don't want.
-     * 
+     *
      */
     @SuppressWarnings(WARNING_RESTRICTION)
     private void removeExtraneousActions() {
@@ -512,12 +518,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
             reg.removeExtension(ext, new Object[] { actionSets[i] });
         }
     }
-    
+
     public static boolean isServerMode() {
         return PreferenceConstants.OPERATION_MODE_REMOTE_SERVER.equals(getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE));
     }
 
-    private String getServerUrlPreference() {        
+    private String getServerUrlPreference() {
         return getPreferenceStore().getString(PreferenceConstants.VNSERVER_URI);
     }
 
