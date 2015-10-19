@@ -868,5 +868,15 @@ public class TransferData {
         ownGefaehrdung.setBeschreibung(convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
     }
 
+    public static String createBausteineMassnahmenResultIdentifier(BausteineMassnahmenResult bausteineMassnahmenResult) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(bausteineMassnahmenResult.baustein.getId().getBauId());
+        sb.append(bausteineMassnahmenResult.massnahme.getId().getMasId());
+        sb.append(bausteineMassnahmenResult.obm.hashCode());
+        sb.append(bausteineMassnahmenResult.umstxt.getId());
+        sb.append(bausteineMassnahmenResult.zoBst.getId().hashCode());
+        return sb.toString();
+    }
+
 
 }

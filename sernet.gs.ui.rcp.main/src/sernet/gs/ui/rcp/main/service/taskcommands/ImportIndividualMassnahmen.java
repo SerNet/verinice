@@ -32,6 +32,7 @@ import sernet.gs.model.Massnahme;
 import sernet.gs.reveng.ModZobjBstMass;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.reveng.importData.MassnahmeInformationTransfer;
+import sernet.gs.ui.rcp.gsimport.TransferData;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -48,21 +49,32 @@ public class ImportIndividualMassnahmen extends GenericCommand {
 
     private static final Logger LOG =  Logger.getLogger(ImportIndividualMassnahmen.class);
 
-    private Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
-    private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmenMap;
-    private List<Baustein> allCatalogueBausteine;
-    private Map<BausteineMassnahmenResult, MassnahmeInformationTransfer> massnahmenInfos;
-    private Set<BausteinUmsetzung> changedElements;
+    private final Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
+    private final Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmenMap;
+    private final List<Baustein> allCatalogueBausteine;
+    private final Map<String, MassnahmeInformationTransfer> massnahmenInfos;
+    private final Set<MassnahmenUmsetzung> changedElements;
 
 
     public ImportIndividualMassnahmen(Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualBausteinMassnahmenResultMap,
             Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmenMap, List<Baustein> allCatalogueBausteine,
-            Map<BausteineMassnahmenResult, MassnahmeInformationTransfer> massnahmenInfos){
-        this.individualMassnahmenMap = individualBausteinMassnahmenResultMap;
-        this.alleMassnahmenMap = alleMassnahmenMap;
-        this.allCatalogueBausteine = allCatalogueBausteine;
-        this.massnahmenInfos = massnahmenInfos;
-        this.changedElements = new HashSet<BausteinUmsetzung>();
+            Map<String, MassnahmeInformationTransfer> massnahmenInfos){
+        this.individualMassnahmenMap = individualBausteinMassnahmenResultMap; // bausteinumsetzung, list<bausteinmassnahmeresult>
+        this.alleMassnahmenMap = alleMassnahmenMap; // modzobjbstmass, massnahmenumsetzung
+        this.allCatalogueBausteine = allCatalogueBausteine; // list baustein
+        this.massnahmenInfos = massnahmenInfos; // bausteinmassnahmeresult, massnahmeinformationstransfer
+        this.changedElements = new HashSet<>(); // set<bausteinumsetzung>
+    }
+
+    private BausteineMassnahmenResult getBausteineMassnahmeResultFromCache(String identifier) {
+        for(List<BausteineMassnahmenResult> list : individualMassnahmenMap.values()) {
+            for(BausteineMassnahmenResult bausteineMassnahmenResult : list) {
+                if(identifier.equals(TransferData.createBausteineMassnahmenResultIdentifier(bausteineMassnahmenResult))) {
+                    return bausteineMassnahmenResult;
+                }
+            }
+        }
+        return null;
     }
 
 
@@ -85,21 +97,21 @@ public class ImportIndividualMassnahmen extends GenericCommand {
             Massnahme m = findCatalogMassnahmeByURL(bausteineMassnahmenResult.massnahme.getLink());
             MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
             if(m == null){
-                m = getIndividualMassnahmeFromGstoolDb(bausteineMassnahmenResult, m);
-
+                m = getIndividualMassnahmeFromGstoolDb(TransferData.createBausteineMassnahmenResultIdentifier(bausteineMassnahmenResult), m);
             }
             if(m != null){
                 individualMassnahmenUmsetzung = massnahmenFactory.createMassnahmenUmsetzung(bausteinUmsetzung, m, GSScraperUtil.getInstance().getModel().getLanguage());
                 individualMassnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(individualMassnahmenUmsetzung, bausteineMassnahmenResult.umstxt.getName(), bausteineMassnahmenResult.obm.getUmsDatBis());
                 individualMassnahmenUmsetzung = massnahmenFactory.transferRevision(individualMassnahmenUmsetzung, bausteineMassnahmenResult.obm.getRevDat(), bausteineMassnahmenResult.obm.getRevDatNext(), bausteineMassnahmenResult.obm.getRevBeschr());
-                changedElements.add(bausteinUmsetzung);
             } else {
                 if(LOG.isDebugEnabled()) {
                     LOG.debug("Massnahme not found for massnahmenlink:\t" + bausteineMassnahmenResult.massnahme.getLink());
                 }
             }
-        } else {
-            changedElements.add(bausteinUmsetzung);
+        }
+        if(individualMassnahmenUmsetzung != null) {
+                individualMassnahmenUmsetzung.setName("bM " + individualMassnahmenUmsetzung.getName());
+                changedElements.add(individualMassnahmenUmsetzung);
         }
     }
 
@@ -119,7 +131,6 @@ public class ImportIndividualMassnahmen extends GenericCommand {
         if(existingSourceMassnahmenUmsetzung != null){
             individualMassnahmenUmsetzung = new MassnahmenUmsetzung(parent);
             individualMassnahmenUmsetzung.getEntity().copyEntity(existingSourceMassnahmenUmsetzung.getEntity());
-            individualMassnahmenUmsetzung.setTitel("bM " + individualMassnahmenUmsetzung.getTitle());
         }
         return individualMassnahmenUmsetzung;
     }
@@ -160,12 +171,11 @@ public class ImportIndividualMassnahmen extends GenericCommand {
      * @param m
      * @return
      */
-    private Massnahme getIndividualMassnahmeFromGstoolDb(BausteineMassnahmenResult bausteineMassnahmenResult, Massnahme m) {
-        if(massnahmenInfos.containsKey(bausteineMassnahmenResult)){
-            MassnahmeInformationTransfer massnahmeInformationTransfer = massnahmenInfos.get(bausteineMassnahmenResult);
+    private Massnahme getIndividualMassnahmeFromGstoolDb(String bausteineMassnahmenResultIdentifier, Massnahme m) {
+        if(massnahmenInfos.containsKey(bausteineMassnahmenResultIdentifier)){
+            MassnahmeInformationTransfer massnahmeInformationTransfer = massnahmenInfos.get(bausteineMassnahmenResultIdentifier);
             if(StringUtils.isNotEmpty(massnahmeInformationTransfer.getTitel())){
                 m = new Massnahme();
-                m.setLebenszyklus(bausteineMassnahmenResult.obm.getZykId());
                 m.setId(massnahmeInformationTransfer.getId());
                 m.setTitel((massnahmeInformationTransfer.getTitel() != null) ? massnahmeInformationTransfer.getTitel() : "no name available");
                 m.setLebenszyklus((massnahmeInformationTransfer.getZyklus() != null) ? Integer.valueOf(massnahmeInformationTransfer.getZyklus()) : -1);
@@ -175,9 +185,9 @@ public class ImportIndividualMassnahmen extends GenericCommand {
         return m;
     }
 
-    public Set<BausteinUmsetzung> getChangedElements(){
+    public Set<MassnahmenUmsetzung> getChangedElements(){
         if(LOG.isDebugEnabled()){
-            LOG.debug("Added individual controls to " + changedElements.size() + " itgs modules");
+            LOG.debug("Added " + changedElements.size() + " individual controls ");
         }
         return changedElements;
     }

@@ -86,21 +86,21 @@ public class ImportCreateBausteine extends GenericCommand {
 
     private CnATreeElement element;
     private Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap;
-    private Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
-    private Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap;
-    private Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap;
-    private Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap;
-    private boolean importUmsetzung;
-    private boolean kosten;
+    private final Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
+    private final Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap;
+    private final Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap;
+    private final Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap;
+    private final boolean importUmsetzung;
+    private final boolean kosten;
     private Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
     private Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
 
     private List<MbZeiteinheitenTxt> zeiten;
     private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
     private List<Baustein> bausteine;
-    private String sourceId;
+    private final String sourceId;
 
-    private Map<MbBaust, Baustein> gstool2veriniceBausteinMap;
+    private final Map<MbBaust, Baustein> gstool2veriniceBausteinMap;
 
     private static final short BST_BEARBEITET_ENTBEHRLICH = 3;
 
@@ -163,7 +163,9 @@ public class ImportCreateBausteine extends GenericCommand {
 
     private BausteinUmsetzung createBaustein(CnATreeElement element, MbBaust mbBaust, List<BausteineMassnahmenResult> list) throws Exception {
         Baustein baustein = findBausteinForId(TransferData.getId(mbBaust));
-        gstool2veriniceBausteinMap.put(mbBaust, baustein);
+        if(baustein != null) {
+            gstool2veriniceBausteinMap.put(mbBaust, baustein);
+        }
         Integer refZobId = null;
         isReference: for (BausteineMassnahmenResult bausteineMassnahmenResult : list) {
             refZobId = bausteineMassnahmenResult.zoBst.getRefZobId();
@@ -195,10 +197,10 @@ public class ImportCreateBausteine extends GenericCommand {
                     return bausteinUmsetzung;
                 } else if(mbBaust.getId().getBauImpId() == 1) { // user defined but in catalogue existant
                     // import as userdefined
-                    createUserDefinedBausteinUmsetzung(element, mbBaust, list);
+                    return createUserDefinedBausteinUmsetzung(element, mbBaust, list);
                 }
             } else { // baustein is null if mbBaust.getId().getBauImpId() == 1, baustein not found in catalogue, lets assume its userdefined
-                createUserDefinedBausteinUmsetzung(element, mbBaust, list);
+                return createUserDefinedBausteinUmsetzung(element, mbBaust, list);
             }
         }
         return null;
@@ -591,6 +593,10 @@ public class ImportCreateBausteine extends GenericCommand {
 
     public Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> getIndividualMassnahmenMap(){
         return individualMassnahmenMap;
+    }
+
+    public CnATreeElement getChangedElement() {
+        return this.element;
     }
 
     @Override

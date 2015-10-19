@@ -108,30 +108,32 @@ public class ImportTask {
     private TransferData transferData;
 
     private List<MbZeiteinheitenTxt> zeiten;
-    private Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
-    private Map<NZielobjekt, CnATreeElement> alleZielobjekte = new HashMap<NZielobjekt, CnATreeElement>();
-    private List<Person> allePersonen = new ArrayList<Person>();
+    private final Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmen;
+    private final Map<NZielobjekt, CnATreeElement> alleZielobjekte = new HashMap<NZielobjekt, CnATreeElement>();
+    private final List<Person> allePersonen = new ArrayList<Person>();
 
     private List<Baustein> allCatalogueBausteine;
 
     // map of zielobjekt-guid to itverbund NZielobjekt:
-    private Map<String, NZielobjekt> itverbundZuordnung = new HashMap<String, NZielobjekt>();
+    private final Map<String, NZielobjekt> itverbundZuordnung = new HashMap<String, NZielobjekt>();
 
-    private boolean importBausteine;
-    private boolean massnahmenPersonen;
-    private boolean bausteinPersonen;
-    private boolean zielObjekteZielobjekte;
-    private boolean schutzbedarf;
-    private boolean importRollen;
-    private boolean kosten;
-    private boolean importUmsetzung;
+    private final boolean importBausteine;
+    private final boolean massnahmenPersonen;
+    private final boolean bausteinPersonen;
+    private final boolean zielObjekteZielobjekte;
+    private final boolean schutzbedarf;
+    private final boolean importRollen;
+    private final boolean kosten;
+    private final boolean importUmsetzung;
 
-    private Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
-    private Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
+    private final Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
+    private final Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
 
-    private Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
+    private final Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
 
-    private Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
+    private final Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
+    
+    private final Map<NZielobjekt, List<BausteineMassnahmenResult>> nZielObjektBausteineMassnahmenResultMap;
 
     private String sourceId;
 
@@ -152,11 +154,12 @@ public class ImportTask {
         this.importUmsetzung = umsetzung;
         this.bausteinPersonen = bausteinPersonen;
 
-        this.alleBausteineToBausteinUmsetzungMap = new HashMap<MbBaust, BausteinUmsetzung>();
-        this.alleBausteineToZoBstMap = new HashMap<MbBaust, ModZobjBst>();
-        this.alleMassnahmen = new HashMap<ModZobjBstMass, MassnahmenUmsetzung>();
-        this.gstool2VeriniceBausteinMap = new HashMap<MbBaust, Baustein>();
-        this.individualMassnahmenMap = new HashMap<BausteinUmsetzung, List<BausteineMassnahmenResult>>();
+        this.alleBausteineToBausteinUmsetzungMap = new HashMap<>();
+        this.alleBausteineToZoBstMap = new HashMap<>();
+        this.alleMassnahmen = new HashMap<>();
+        this.gstool2VeriniceBausteinMap = new HashMap<>();
+        this.individualMassnahmenMap = new HashMap<>();
+        this.nZielObjektBausteineMassnahmenResultMap = new HashMap<>();
     }
 
     public void execute(int importType, IProgress monitor) throws Exception {
@@ -348,13 +351,14 @@ public class ImportTask {
                 }
 
                 transferData.transfer(element, resultZO);
-                importEsa(resultZO, element);
+                element = importEsa(resultZO, element);
                 element.setSourceId(sourceId);
                 monitor.subTask(numberImported + "/" + numberOfElements + " - " + element.getTitle());
-
+                
                 createBausteine(sourceId, element, resultZO.zielobjekt);
-
+                
                 CnAElementHome.getInstance().update(element);
+                
                 monitor.worked(1);
                 numberImported++;
             }
@@ -395,7 +399,9 @@ public class ImportTask {
         // update this. alleBausteineToBausteinUmsetzungMap
         toUpdate = new ArrayList<CnATreeElement>();
         toUpdate.addAll(this.alleBausteineToBausteinUmsetzungMap.values());
-        LOG.debug("Saving person links to modules.");
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Saving person links to modules.");
+        }
         monitor.beginTask("Verknüpfe Ansprechpartner mit Bausteinen...", toUpdate.size());
         updater = new ElementListUpdater(toUpdate, monitor);
         updater.setMaxNumberPerCommand(500);
@@ -418,9 +424,7 @@ public class ImportTask {
         for (NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
             CnATreeElement element = alleZielobjekte.get(zielobjekt);
             monitor.subTask(i + "/" + n + " - " + element.getTitle());
-            if (!element.getTypeId().equals(ITVerbund.TYPE_ID)) {
-                createBausteinReferences(sourceId, element, zielobjekt);
-            }
+            createBausteinReferences(sourceId, element, zielobjekt);
             monitor.worked(1);
             i++;
         }
@@ -440,34 +444,40 @@ public class ImportTask {
         return sourceId;
     }
 
+
     /**
      *
      */
-    private void createIndividualMassnahmen() throws CommandException {
+    private Collection<MassnahmenUmsetzung> createIndividualMassnahmen() throws CommandException {
         // does not work anymore, check why
-        Map<BausteineMassnahmenResult, MassnahmeInformationTransfer> massnahmenInfos = new HashMap<BausteineMassnahmenResult, MassnahmeInformationTransfer>();
+        Map<String, MassnahmeInformationTransfer> massnahmenInfos = new HashMap<>();
         for(List<BausteineMassnahmenResult> bausteineMassnahmenResultList : individualMassnahmenMap.values()){
-            createIndividualMassnahmenForBausteineMassnahmenResult(massnahmenInfos, bausteineMassnahmenResultList);
+            massnahmenInfos.putAll(createIndividualMassnahmenForBausteineMassnahmenResult(bausteineMassnahmenResultList));
         }
         ImportIndividualMassnahmen command = new ImportIndividualMassnahmen(individualMassnahmenMap, alleMassnahmen, allCatalogueBausteine, massnahmenInfos);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
-        CnAElementHome.getInstance().update(new ArrayList<BausteinUmsetzung>(command.getChangedElements()));
+        CnAElementHome.getInstance().update(new ArrayList<MassnahmenUmsetzung>(command.getChangedElements()));
+        return command.getChangedElements();
     }
+
+
 
     /**
      *
      * @param massnahmenInfos
      * @param bausteineMassnahmenResultList
      */
-    private void createIndividualMassnahmenForBausteineMassnahmenResult(Map<BausteineMassnahmenResult, MassnahmeInformationTransfer> massnahmenInfos, List<BausteineMassnahmenResult> bausteineMassnahmenResultList) {
+    private Map<String, MassnahmeInformationTransfer> createIndividualMassnahmenForBausteineMassnahmenResult(List<BausteineMassnahmenResult> bausteineMassnahmenResultList) {
+        Map<String, MassnahmeInformationTransfer> massnahmenInfos = new HashMap<>();
         for(BausteineMassnahmenResult bausteineMassnahmenResult : bausteineMassnahmenResultList){
             if(!massnahmenInfos.containsKey(bausteineMassnahmenResult)){
                 MassnahmeInformationTransfer massnahmeInformationTransfer = vampire.
                         findTxtforMbMassn(bausteineMassnahmenResult.baustein, bausteineMassnahmenResult.massnahme,
                                 GSScraperUtil.getInstance().getModel().getEncoding());
-                massnahmenInfos.put(bausteineMassnahmenResult, massnahmeInformationTransfer);
+                massnahmenInfos.put(TransferData.createBausteineMassnahmenResultIdentifier(bausteineMassnahmenResult), massnahmeInformationTransfer);
             }
         }
+        return massnahmenInfos;
     }
 
 
@@ -499,19 +509,18 @@ public class ImportTask {
         if (!importBausteine) {
             return;
         }
-
-        List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = vampire.findBausteinMassnahmenByZielobjekt(zielobjekt);
-
-        Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
-
-        ImportCreateBausteinReferences command;
-        ServiceFactory.lookupAuthService();
-        if (!ServiceFactory.isPermissionHandlingNeeded()) {
-            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, new BSIConfigurationRCPLocal(), alleBausteineToZoBstMap, gstool2VeriniceBausteinMap);
-
+        
+        List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = null;
+        if(nZielObjektBausteineMassnahmenResultMap.containsKey(zielobjekt)) {
+            findBausteinMassnahmenByZielobjekt = nZielObjektBausteineMassnahmenResultMap.get(zielobjekt);
         } else {
-            command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap, gstool2VeriniceBausteinMap);
+            findBausteinMassnahmenByZielobjekt = Collections.EMPTY_LIST;
         }
+        
+        Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
+        
+        ImportCreateBausteinReferences command;
+        command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap, gstool2VeriniceBausteinMap, this.allCatalogueBausteine);
         ServiceFactory.lookupCommandService().executeCommand(command);
     }
 
@@ -651,6 +660,7 @@ public class ImportTask {
 
 
     private void importBausteinPersonVerknuepfungen() {
+        Set<BausteinUmsetzung> changedElements = new HashSet<>();
         if (!this.bausteinPersonen || !this.importBausteine) {
             return;
         }
@@ -672,6 +682,7 @@ public class ImportTask {
                             LOG.debug("Befragung für Baustein " + bausteinUmsetzung.getTitle() + " durchgeführt von " + personen.get(0));
                         }
                         bausteinUmsetzung.addBefragungDurch(personen.get(0));
+                        changedElements.add(bausteinUmsetzung);
                     }
                 }
 
@@ -687,6 +698,7 @@ public class ImportTask {
                             LOG.debug("Verknüpfe Baustein " + bausteinUmsetzung.getTitle() + " mit befragter Person " + personToLink.getTitle());
                         }
                         bausteinUmsetzung.addBefragtePersonDurch(personToLink);
+                        changedElements.add(bausteinUmsetzung);
                     }
                 }
             }
@@ -706,12 +718,13 @@ public class ImportTask {
         return result;
     }
 
-    private void createBausteine(String sourceId, CnATreeElement element, NZielobjekt zielobjekt) throws CommandException {
+    private CnATreeElement createBausteine(String sourceId, CnATreeElement element, NZielobjekt zielobjekt) throws CommandException {
         if (!importBausteine) {
-            return;
+            return element;
         }
 
         List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = vampire.findBausteinMassnahmenByZielobjekt(zielobjekt);
+        nZielObjektBausteineMassnahmenResultMap.put(zielobjekt, findBausteinMassnahmenByZielobjekt);
 
         Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
 
@@ -729,12 +742,7 @@ public class ImportTask {
                 prepareUserDefinedBausteinImport(zielobjekt, bausteineMassnahmenMap, udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap, b);
             }
         }
-        if (!ServiceFactory.isPermissionHandlingNeeded()) {
-            command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung, udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap, allCatalogueBausteine);
-        } else {
-            command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung, udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap, allCatalogueBausteine);
-        }
-
+        command = new ImportCreateBausteine(sourceId, element, bausteineMassnahmenMap, zeiten, kosten, importUmsetzung, udBausteineTxtMap, udBstMassTxtMap, udBaustGefMap, allCatalogueBausteine);
         command = ServiceFactory.lookupCommandService().executeCommand(command);
 
         if (command.getAlleBausteineToBausteinUmsetzungMap() != null) {
@@ -758,6 +766,8 @@ public class ImportTask {
         if(command.getIndividualMassnahmenMap() != null && command.getIndividualMassnahmenMap().size() > 0){
             this.individualMassnahmenMap.putAll(command.getIndividualMassnahmenMap());
         }
+        
+        return command.getChangedElement();
 
     }
 
