@@ -23,7 +23,7 @@ import org.eclipse.osgi.util.NLS;
  *
  */
 public class Messages extends NLS {
-    private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.gsimport"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.gsimport.messages"; //$NON-NLS-1$
     public static String Import_Task_1;
     public static String GSImportException_1;
     public static String GSImportMappingView_1;
