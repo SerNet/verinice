@@ -183,7 +183,7 @@ public class GSImportMappingView extends RightsEnabledView {
             }
 
         };
-        this.addMappingEntryAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.NOTE_NEW));
+        this.addMappingEntryAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PLUS));
         this.addMappingEntryAction.setEnabled(true);
 
         this.deleteMappingEntryAction = new Action() {
@@ -193,7 +193,7 @@ public class GSImportMappingView extends RightsEnabledView {
             }
 
         };
-        this.deleteMappingEntryAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.DELETE));
+        this.deleteMappingEntryAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MINUS));
         this.deleteMappingEntryAction.setEnabled(false);
 
     }

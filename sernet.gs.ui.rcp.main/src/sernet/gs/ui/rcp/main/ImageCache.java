@@ -96,7 +96,11 @@ public final class ImageCache {
 	
 	public static final String UNKNOW_NEW = "generic_element_new.png";
 
-	public static final String UNKNOWN_GROUP = "generic_elements.gif";
+    public static final String UNKNOWN_GROUP = "generic_elements.gif";
+
+    public static final String PLUS = "plus.png";
+    public static final String MINUS = "minus.png";
+
 
 	public static final String UNKNOWN_GROUP_NEW = "generic_elements_new.png";
 	
