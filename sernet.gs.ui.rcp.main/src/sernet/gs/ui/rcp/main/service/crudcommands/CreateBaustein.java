@@ -90,6 +90,8 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 			= getDaoFactory().getDAO(BausteinUmsetzung.class);
 		
 		try {
+	          IBaseDao<CnATreeElement, Integer> containerDao = getDaoFactory().getDAO(typeId);
+	          CnATreeElement container = containerDao.findById(dbId);
 			if(dbId == null || typeId == null || baustein == null){
 			    getLogger().warn("Some parameter equals null, not importing current ITGS module");
 			    throw new RuntimeCommandException("Some parameter was null, not importing current ITGS module");
@@ -115,7 +117,6 @@ public class CreateBaustein extends ChangeLoggingCommand implements IChangeLoggi
 			child.setName(baustein.getTitel());
 			child.setUrl(baustein.getUrl());
 			child.setStand(baustein.getStand());
-
 			
 			
 			List<Massnahme> massnahmen = baustein
