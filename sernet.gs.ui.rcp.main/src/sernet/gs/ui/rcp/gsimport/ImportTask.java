@@ -59,6 +59,7 @@ import sernet.gs.reveng.importData.GefaehrdungInformationTransfer;
 import sernet.gs.reveng.importData.MassnahmeInformationTransfer;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.service.GSServiceException;
+import sernet.gs.service.TimeFormatter;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -69,6 +70,7 @@ import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.CnATreeElementBuildException;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
@@ -288,36 +290,14 @@ public class ImportTask {
         ITVerbund itverbundForOrphans = null;
 
         // create all found ITVerbund first
-        List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
-        for (ZielobjektTypeResult resultITV : zielobjekte) {         
-            if (ITVerbund.TYPE_ID.equals(GstoolTypeMapper.getVeriniceType(resultITV.type, resultITV.subtype))) {
-                ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
-                itverbund.setSourceId(sourceId);
-                neueVerbuende.add(itverbund);
-                monitor.worked(1);
-                numberImported++;
-
-                // save element for later:
-                alleZielobjekte.put(resultITV.zielobjekt, itverbund);
-
-                transferData.transfer(itverbund, resultITV);
-                createBausteine(sourceId, itverbund, resultITV.zielobjekt);
-
-                // save links from itverbuende to other objects to
-                // facilitate creating ZOs in their correct IT-Verbund:
-                List<NZielobjekt> itvLinks = vampire.findLinksByZielobjekt(resultITV.zielobjekt);
-                for (NZielobjekt nZielobjekt : itvLinks) {
-                    LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + resultITV.zielobjekt.getName());
-                    itverbundZuordnung.put(nZielobjekt.getGuid(), resultITV.zielobjekt);
-                }
-            }      
-        }
+        List<ITVerbund> neueVerbuende = importItVerbuende(sourceId, zielobjekte);
+        
         long startTime = System.currentTimeMillis();
         // create all Zielobjekte in their respective ITVerbund,
-        for (ZielobjektTypeResult resultZO : zielobjekte) {
-            String typeId = GstoolTypeMapper.getVeriniceType(resultZO.type, resultZO.subtype);
+        for (ZielobjektTypeResult zielobjekt : zielobjekte) {
+            String typeId = GstoolTypeMapper.getVeriniceType(zielobjekt.type, zielobjekt.subtype);
             if(LOG.isDebugEnabled()){
-                LOG.debug("GSTOOL type id " + resultZO.type + " : " + resultZO.subtype + " was translated to: " + typeId);
+                LOG.debug("GSTOOL type id " + zielobjekt.type + " : " + zielobjekt.subtype + " was translated to: " + typeId);
             }
             if (typeId.equals(ITVerbund.TYPE_ID)) {
                 continue;
@@ -325,10 +305,10 @@ public class ImportTask {
             CnATreeElement element = null;
             if (neueVerbuende.size() > 0) {
                 // find correct itverbund for resultZO
-                NZielobjekt origITVerbundZO = itverbundZuordnung.get(resultZO.zielobjekt.getGuid());
+                NZielobjekt origITVerbundZO = itverbundZuordnung.get(zielobjekt.zielobjekt.getGuid());
                 ITVerbund itverbund = (ITVerbund) alleZielobjekte.get(origITVerbundZO);
                 if (itverbund == null) {
-                    LOG.debug("ITVerbund not found for ZO: " + resultZO.zielobjekt.getName() + ". Created in BSI");
+                    LOG.debug("ITVerbund not found for ZO: " + zielobjekt.zielobjekt.getName() + ". Created in BSI");
                     if (itverbundForOrphans == null) {
                         itverbundForOrphans = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
                         itverbundForOrphans.setTitel("---Waisenhaus: Zielobjekte ohne IT-Verbund-Zuordnung");
@@ -337,25 +317,25 @@ public class ImportTask {
                     }
                     itverbund = itverbundForOrphans;
                 }
-                LOG.debug("Creating ZO " + resultZO.zielobjekt.getName() + " in ITVerbund " + itverbund.getTitle());
+                LOG.debug("Creating ZO " + zielobjekt.zielobjekt.getName() + " in ITVerbund " + itverbund.getTitle());
                 itverbund.setSourceId(sourceId);
                 element = CnAElementBuilder.getInstance().buildAndSave(itverbund, typeId);
             }
             if (element != null) {
                 // save element for later:
-                alleZielobjekte.put(resultZO.zielobjekt, element);
+                alleZielobjekte.put(zielobjekt.zielobjekt, element);
 
                 // separately save persons:
                 if (element instanceof Person) {
                     allePersonen.add((Person) element);
                 }
 
-                transferData.transfer(element, resultZO);
-                element = importEsa(resultZO, element);
+                transferData.transfer(element, zielobjekt);
+                element = importEsa(zielobjekt, element);
                 element.setSourceId(sourceId);
                 monitor.subTask(numberImported + "/" + numberOfElements + " - " + element.getTitle());
                 
-                createBausteine(sourceId, element, resultZO.zielobjekt);
+                createBausteine(sourceId, element, zielobjekt.zielobjekt);
                 
                 CnAElementHome.getInstance().update(element);
                 
@@ -432,16 +412,44 @@ public class ImportTask {
         monitor.done();
 
         if(LOG.isDebugEnabled()){
-            LOG.debug("Duration of importing zielobjekte:\t" + String.valueOf(durationImportZO/1000) + " seconds");
-            LOG.debug("Duration of importing individual massnahmen:\t" + String.valueOf(durationImportIndividual/1000) + " seconds");
-            LOG.debug("Duration of importing massnahmen links:\t" + String.valueOf(durationImportMnLinks/1000) + " seconds");
-            LOG.debug("Duration of importing links between bausteine and persons:\t" + String.valueOf(durationImportBstPrsnLinks/1000) + " seconds");
-            LOG.debug("Duration of importing links between zielobjekte:\t" + String.valueOf(durationImportZoLinks/1000) + " seconds");
-            LOG.debug("Duration of importing schutzbedarf:\t" + String.valueOf(durationImportSB/1000) + " seconds");
-            LOG.debug("Duration of importing links between zielobjekte and bausteine:\t" + String.valueOf(durationImportBstRef/1000) + " seconds");
+            LOG.debug("Duration of importing zielobjekte:\t" + TimeFormatter.getHumanRedableTime(durationImportZO));
+            LOG.debug("Duration of importing individual massnahmen:\t" + TimeFormatter.getHumanRedableTime(durationImportIndividual));
+            LOG.debug("Duration of importing massnahmen links:\t" + TimeFormatter.getHumanRedableTime(durationImportMnLinks));
+            LOG.debug("Duration of importing links between bausteine and persons:\t" + TimeFormatter.getHumanRedableTime(durationImportBstPrsnLinks));
+            LOG.debug("Duration of importing links between zielobjekte:\t" + TimeFormatter.getHumanRedableTime(durationImportZoLinks));
+            LOG.debug("Duration of importing schutzbedarf:\t" + TimeFormatter.getHumanRedableTime(durationImportSB));
+            LOG.debug("Duration of importing links between zielobjekte and bausteine:\t" + TimeFormatter.getHumanRedableTime(durationImportBstRef));
         }
 
         return sourceId;
+    }
+
+    private List<ITVerbund> importItVerbuende(String sourceId, List<ZielobjektTypeResult> zielobjekte) throws CommandException, CnATreeElementBuildException {
+        List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
+        for (ZielobjektTypeResult zielobjekt : zielobjekte) {         
+            if (ITVerbund.TYPE_ID.equals(GstoolTypeMapper.getVeriniceType(zielobjekt.type, zielobjekt.subtype))) {
+                ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
+                itverbund.setSourceId(sourceId);
+                neueVerbuende.add(itverbund);
+                monitor.worked(1);
+                numberImported++;
+
+                // save element for later:
+                alleZielobjekte.put(zielobjekt.zielobjekt, itverbund);
+
+                transferData.transfer(itverbund, zielobjekt);
+                createBausteine(sourceId, itverbund, zielobjekt.zielobjekt);
+
+                // save links from itverbuende to other objects to
+                // facilitate creating ZOs in their correct IT-Verbund:
+                List<NZielobjekt> itvLinks = vampire.findLinksByZielobjekt(zielobjekt.zielobjekt);
+                for (NZielobjekt nZielobjekt : itvLinks) {
+                    LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + zielobjekt.zielobjekt.getName());
+                    itverbundZuordnung.put(nZielobjekt.getGuid(), zielobjekt.zielobjekt);
+                }
+            }      
+        }
+        return neueVerbuende;
     }
 
 
