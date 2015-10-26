@@ -190,7 +190,8 @@ public class GSVampire {
 	private static final String QUERY_MBMASSTXT_FOR_MBMASS = "select mbMassnTxt" 
 	       + " from MbMassn mbMassn, MbMassnTxt mbMassnTxt "
 	       + " where mbMassn.id.masId = mbMassnTxt.id.masId"  
-	       + " and mbMassn.id.masId = :masId";
+	       + " and mbMassn.id.masId = :masId"
+	       + " and (mbMassnTxt.id.sprId = 1 or mbMassnTxt.id.sprId = 0)";
 	
 
 	// private static final String QUERY_ZEITEINHEITEN_TXT_ALL = "select zeittxt
@@ -444,7 +445,7 @@ public class GSVampire {
 	}
 	
 	public MassnahmeInformationTransfer findTxtforMbMassn(MbBaust mBbaut, MbMassn mbMassn, String encoding){
-        BaseHibernateDAO dao = new BaseHibernateDAO();
+	    BaseHibernateDAO dao = new BaseHibernateDAO();
         Transaction transaction = dao.getSession().beginTransaction();
         Query qry = dao.getSession().createQuery(QUERY_MBMASSTXT_FOR_MBMASS);
         qry.setParameter("masId", mbMassn.getId().getMasId());

@@ -1,6 +1,21 @@
-/**
- *
- */
+/*******************************************************************************
+ * Copyright (c) 2015 Sebastian Hagedorn <sh@sernet.de>.
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU General Public License for more details.
+ *     You should have received a copy of the GNU General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Sebastian Hagedorn <sh@sernet.de> - initial API and implementation
+ ******************************************************************************/
+
 package sernet.gs.ui.rcp.gsimport;
 
 import java.util.HashSet;
@@ -21,6 +36,7 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -34,6 +50,7 @@ import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.rcp.RightsEnabledView;
 
@@ -143,7 +160,7 @@ public class GSImportMappingView extends RightsEnabledView {
         gstoolTypeColumn.getColumn().setWidth(gstoolTypeColumnWidth);
         gstoolTypeColumn.getColumn().setText(Messages.GSImportMappingView_1);
         gstoolTypeColumn.getColumn().addSelectionListener(new SortSelectionAdapter(this, gstoolTypeColumn.getColumn(), 0));
-        gstoolTypeColumn.setEditingSupport(new GsImportMappingStringEditingSupport(this.viewer));
+        gstoolTypeColumn.setEditingSupport(new GsImportMappingStringEditingSupport(this.viewer, this));
 
         veriniceTypeColumn = new TableViewerColumn(this.viewer, SWT.LEFT);
         veriniceTypeColumn.getColumn().setWidth(veriniceTypeColumnWidth);
@@ -172,7 +189,12 @@ public class GSImportMappingView extends RightsEnabledView {
                 }
             }
         });
+        
 
+    }
+    
+    void refresh() {
+        this.viewer.setInput(GstoolTypeMapper.getGstoolSubtypes());
     }
 
     private void makeActions() {
@@ -376,7 +398,7 @@ public class GSImportMappingView extends RightsEnabledView {
         final CCombo combo = new CCombo(this.mainTable, SWT.NONE);
         combo.setText(""); //$NON-NLS-1$
         String gstoolSubtype = text.getText();
-        String veriniceValue = GstoolTypeMapper.getGstoolSubtypes().get(gstoolSubtype);
+        String veriniceValue = HitroUtil.getInstance().getTypeFactory().getMessage(GstoolTypeMapper.getGstoolSubtypes().get(gstoolSubtype));
         int index = -1;
         for(int j = 0; j < combo.getItems().length; j++) {
             if(veriniceValue.equals(combo.getItem(j))) {
@@ -387,6 +409,20 @@ public class GSImportMappingView extends RightsEnabledView {
         if(index > -1) {
             combo.select(index);
         }
+        combo.addSelectionListener(new SelectionListener() {
+            
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                TableItem item = mainTable.getItem(mainTable.getSelectionIndex());
+                item.hashCode();
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+                
+            }
+        });
         this.combos.add(combo);
 
         editor.grabHorizontal = true;

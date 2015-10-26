@@ -111,7 +111,7 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         }
         refZobId = getRefZobIdFromDBResult(list);
         if(refZobId != null && baustein == null) {
-            // do extra check and try to get baustein from somewhere over the rainbow
+            // do extra check and try to get baustein from elsewhere 
             for(MbBaust mbb : gstool2VeriniceBausteinMap.keySet()) {
                 if(mbb.getNr().equals(mbBaust.getNr())){
                     baustein = gstool2VeriniceBausteinMap.get(mbb);
@@ -121,6 +121,8 @@ public class ImportCreateBausteinReferences extends GenericCommand {
         }
         if (refZobId != null && baustein != null) {
             createBausteinReferences(element, baustein, refZobId);
+        } else {
+            getLog().warn("No baustein-reference found for element:\t" + element.getTitle());
         }
     }
 
@@ -161,6 +163,9 @@ public class ImportCreateBausteinReferences extends GenericCommand {
 
             Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(previousBaustein.getEntityType().getId(), element.getEntityType().getId());
             if (!possibleRelations.isEmpty()) {
+                if(getLog().isDebugEnabled()) {
+                    getLog().debug("Creating BausteinReference between " + previousBaustein.getTitle() + " and " + element.getTitle());
+                }
                 CreateLink cmd2 = new CreateLink(previousBaustein, element, possibleRelations.iterator().next().getId(), NO_COMMENT);
                 getCommandService().executeCommand(cmd2);
             }

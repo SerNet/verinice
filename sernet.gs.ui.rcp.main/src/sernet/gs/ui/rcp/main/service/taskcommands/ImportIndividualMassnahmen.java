@@ -35,6 +35,7 @@ import sernet.gs.reveng.importData.MassnahmeInformationTransfer;
 import sernet.gs.ui.rcp.gsimport.TransferData;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.service.gstoolimport.MassnahmenFactory;
@@ -100,6 +101,8 @@ public class ImportIndividualMassnahmen extends GenericCommand {
                 m = getIndividualMassnahmeFromGstoolDb(TransferData.createBausteineMassnahmenResultIdentifier(bausteineMassnahmenResult), m);
             }
             if(m != null){
+                bausteinUmsetzung = (BausteinUmsetzung)Retriever.checkRetrieveElementAndChildren(bausteinUmsetzung);
+                
                 individualMassnahmenUmsetzung = massnahmenFactory.createMassnahmenUmsetzung(bausteinUmsetzung, m, GSScraperUtil.getInstance().getModel().getLanguage());
                 individualMassnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(individualMassnahmenUmsetzung, bausteineMassnahmenResult.umstxt.getName(), bausteineMassnahmenResult.obm.getUmsDatBis());
                 individualMassnahmenUmsetzung = massnahmenFactory.transferRevision(individualMassnahmenUmsetzung, bausteineMassnahmenResult.obm.getRevDat(), bausteineMassnahmenResult.obm.getRevDatNext(), bausteineMassnahmenResult.obm.getRevBeschr());

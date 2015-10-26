@@ -66,11 +66,34 @@ import sernet.verinice.service.gstoolimport.MassnahmenFactory;
  * Create BausteinUmsetzung objects during import for given target object and
  * assigned Bausteine from source database.
  *
+ * for future use, if its necessary to add a field from gstooldb to verinice objects, this describes how to access the fields:
+ * 
+ *      bausteinMassnahmeResult.massnahme.getErfasstDurch());
+        bausteinMassnahmeResult.massnahme.getId());
+        bausteinMassnahmeResult.massnahme.getLink());
+        bausteinMassnahmeResult.massnahme.getNr());
+        bausteinMassnahmeResult.obm.getUmsDatVon());
+        bausteinMassnahmeResult.obm.getUmsDatBis());
+        bausteinMassnahmeResult.obm.getUmsBeschr());
+        bausteinMassnahmeResult.obm.getErfasstDurch());
+        bausteinMassnahmeResult.obm.getKostPersFix());
+        bausteinMassnahmeResult.obm.getKostPersVar());
+        bausteinMassnahmeResult.obm.getKostSachFix());
+        bausteinMassnahmeResult.obm.getKostSachVar());
+        bausteinMassnahmeResult.obm.getKostPersZeiId().intValue());
+        bausteinMassnahmeResult.obm.getKostSachZeiId().intValue());
+        bausteinMassnahmeResult.obm.getRevBeschr());
+        bausteinMassnahmeResult.obm.getRevDat());
+        bausteinMassnahmeResult.obm.getRevDatNext());
+        bausteinMassnahmeResult.obm.getZykId());
+ *
  *
  * @author koderman[at]sernet[dot]de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
+
+@SuppressWarnings("serial")
 public class ImportCreateBausteine extends GenericCommand {
 
     private transient Logger log = Logger.getLogger(ImportCreateBausteine.class);
@@ -314,39 +337,11 @@ public class ImportCreateBausteine extends GenericCommand {
             }
             massnahmen.add(m);
 
-            if (getLog().isDebugEnabled()) {
-                logBausteinMassnahmeResult(bausteinMassnahmeResult);
-            }
-
         }
         baustein.setMassnahmen(massnahmen);
         return baustein;
     }
 
-    private void logBausteinMassnahmeResult(BausteineMassnahmenResult bausteinMassnahmeResult) {
-        if(bausteinMassnahmeResult==null) {
-            getLog().debug("bausteinMassnahmeResult is null");
-        }
-        getLog().debug(bausteinMassnahmeResult.massnahme.getErfasstDurch());
-        getLog().debug(bausteinMassnahmeResult.massnahme.getId());
-        getLog().debug(bausteinMassnahmeResult.massnahme.getLink());
-        getLog().debug(bausteinMassnahmeResult.massnahme.getNr());
-        getLog().debug(bausteinMassnahmeResult.obm.getUmsDatVon());
-        getLog().debug(bausteinMassnahmeResult.obm.getUmsDatBis());
-        getLog().debug(bausteinMassnahmeResult.obm.getUmsBeschr());
-        getLog().debug(bausteinMassnahmeResult.obm.getErfasstDurch());
-        getLog().debug(bausteinMassnahmeResult.obm.getKostPersFix());
-        getLog().debug(bausteinMassnahmeResult.obm.getKostPersVar());
-        getLog().debug(bausteinMassnahmeResult.obm.getKostSachFix());
-        getLog().debug(bausteinMassnahmeResult.obm.getKostSachVar());
-        getLog().debug(bausteinMassnahmeResult.obm.getKostPersZeiId().intValue());
-        getLog().debug(bausteinMassnahmeResult.obm.getKostSachZeiId().intValue());
-        getLog().debug(bausteinMassnahmeResult.obm.getRevBeschr());
-        getLog().debug(bausteinMassnahmeResult.obm.getRevDat());
-        getLog().debug(bausteinMassnahmeResult.obm.getRevDatNext());
-        getLog().debug(bausteinMassnahmeResult.obm.getZykId());
-        getLog().debug(bausteinMassnahmeResult.massnahme.getLink());
-    }
 
     /**
      * @param mbBaust

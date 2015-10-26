@@ -1,7 +1,23 @@
-/**
+/*******************************************************************************
+ * Copyright (c) 2015 Sebastian Hagedorn <sh@sernet.de>.
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU General Public License for more details.
+ *     You should have received a copy of the GNU General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
  * 
- */
+ * Contributors:
+ *     Sebastian Hagedorn <sh@sernet.de> - initial API and implementation
+ ******************************************************************************/
 package sernet.gs.ui.rcp.gsimport;
+
+import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
@@ -18,10 +34,12 @@ public class GsImportMappingStringEditingSupport extends EditingSupport {
     private static final Logger LOG = Logger.getLogger(GsImportMappingStringEditingSupport.class);
     
     private TableViewer viewer;
+    private GSImportMappingView view;
     
-    public GsImportMappingStringEditingSupport(TableViewer viewer) {
+    public GsImportMappingStringEditingSupport(TableViewer viewer, GSImportMappingView view) {
         super(viewer);
         this.viewer = viewer;
+        this.view = view;
     }
 
     /* (non-Javadoc)
@@ -57,6 +75,17 @@ public class GsImportMappingStringEditingSupport extends EditingSupport {
      */
     @Override
     protected void setValue(Object element, Object value) {
+        if(element instanceof Object[] && value instanceof String) {
+            try {
+                Object[] newEntry = new Object[] {value, ((Object[])element)[1]};
+                GstoolTypeMapper.addGstoolSubtypeToPropertyFile(newEntry);
+                viewer.refresh(newEntry, true);
+            } catch (IOException e) {
+                LOG.error("writing of property to gstool-subtypes-mapping file fails", e);
+            }
+        } else {
+            LOG.error("Class of Element:\t" + element.getClass().getCanonicalName());
+        }
         // somehow save that stuff to file in workspace, gstool-subtypes.properties
     }
 

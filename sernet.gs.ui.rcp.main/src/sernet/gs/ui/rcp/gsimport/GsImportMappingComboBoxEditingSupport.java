@@ -1,8 +1,24 @@
-/**
- *
- */
+/*******************************************************************************
+ * Copyright (c) 2015 Sebastian Hagedorn <sh@sernet.de>.
+ * This program is free software: you can redistribute it and/or 
+ * modify it under the terms of the GNU General Public License 
+ * as published by the Free Software Foundation, either version 3 
+ * of the License, or (at your option) any later version.
+ *     This program is distributed in the hope that it will be useful,    
+ * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * See the GNU General Public License for more details.
+ *     You should have received a copy of the GNU General Public 
+ * License along with this program. 
+ * If not, see <http://www.gnu.org/licenses/>.
+ * 
+ * Contributors:
+ *     Sebastian Hagedorn <sh@sernet.de> - initial API and implementation
+ ******************************************************************************/
+
 package sernet.gs.ui.rcp.gsimport;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -112,8 +128,13 @@ public class GsImportMappingComboBoxEditingSupport extends EditingSupport {
      */
     @Override
     protected void setValue(Object element, Object value) {
-        //        GstoolTypeMapper.
-        // somehow save that stuff to file in workspace, gstool-subtypes.properties
+        if(element instanceof Object[]) {
+            try {
+                GstoolTypeMapper.addGstoolSubtypeToPropertyFile((Object[])element);
+            } catch (IOException e) {
+                LOG.error("writing of property to gstool-subtypes-mapping file fails", e);
+            }
+        }
     }
 
 }

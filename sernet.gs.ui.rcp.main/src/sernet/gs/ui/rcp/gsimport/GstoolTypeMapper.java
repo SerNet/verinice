@@ -18,7 +18,9 @@
 package sernet.gs.ui.rcp.gsimport;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -235,6 +237,12 @@ public abstract class GstoolTypeMapper {
         }
         return gstoolTypes;
     }
+    
+    public static void addGstoolSubtypeToPropertyFile(Object[] mappingEntry) throws IOException {
+        Properties properties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
+        properties.put((String)mappingEntry[0], (String)mappingEntry[1]);
+        writePropertyFile(properties, SUBTYPE_PROPERTIES_FILE);
+    }
 
     public static Map<String, String> getGstoolSubtypes() {
         if(gstoolSubtypes==null) {
@@ -254,6 +262,17 @@ public abstract class GstoolTypeMapper {
             }
         }
         return gstoolSubtypes;
+    }
+    
+    public static Map<String, String> getGsToolSubtypesFromFile(){
+        return createGstoolSubtypes();
+    }
+    
+    private static void writePropertyFile(Properties properties, String filename) throws IOException {
+        File file = new File(getPropertyFolderPath() + File.separator + filename);
+        FileOutputStream fileOut = new FileOutputStream(file);
+        properties.store(fileOut, "");
+        fileOut.close();
     }
     
     private static Properties readPropertyFile(String fileName) {

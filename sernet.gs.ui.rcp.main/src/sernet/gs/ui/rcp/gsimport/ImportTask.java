@@ -731,9 +731,9 @@ public class ImportTask {
         this.monitor.subTask(numberImported + "/" + numberOfElements + " - Erstelle " + zielobjekt.getName() + " mit " + bausteineMassnahmenMap.keySet().size() + " Baust. und " + getAnzahlMassnahmen(bausteineMassnahmenMap) + " Massn...");
 
         // maps needed for import of userdefined data, storing information retrieved from itgs catalogues in non userdefined case
-        Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap = new HashMap<MbBaust, BausteinInformationTransfer>();
-        Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap = new HashMap<MbMassn, MassnahmeInformationTransfer>();
-        Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap = new HashMap<MbBaust, List<GefaehrdungInformationTransfer>>();
+        Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap = new HashMap<>();
+        Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap = new HashMap<>();
+        Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap = new HashMap<>();
 
         ImportCreateBausteine command;
         ServiceFactory.lookupAuthService();
