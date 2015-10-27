@@ -34,13 +34,9 @@ import sernet.gs.ui.rcp.gsimport.ImportTask;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.iso27k.ISO27KModel;
 
 public class ImportGstoolAction extends RightsEnabledAction {
 
@@ -48,52 +44,14 @@ public class ImportGstoolAction extends RightsEnabledAction {
     
 	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolaction";
 
+	private GSImportDialog dialog;
+	
 	private String sourceId;
-
-    private IModelLoadListener loadListener = new IModelLoadListener() {
-        
-        /* (non-Javadoc)
-         * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#closed(sernet.gs.ui.rcp.main.bsi.model.BSIModel)
-         */
-        @Override
-        public void closed(BSIModel model) {
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-//                    setEnabled(false);server only
-                }
-            });
-        }
-
-        /* (non-Javadoc)
-         * @see sernet.gs.ui.rcp.main.common.model.IModelLoadListener#loaded(sernet.gs.ui.rcp.main.bsi.model.BSIModel)
-         */
-        @Override
-        public void loaded(final BSIModel model) {
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    // only enable in server mode:
-//                    ServiceFactory.lookupAuthService();
-//                    if (ServiceFactory.isPermissionHandlingNeeded()) {
-//                        setEnabled(true);
-//                    }
-                }
-            });
-        }
-
-        @Override
-        public void loaded(ISO27KModel model) {
-            // nothing to do
-            
-        }
-    };
 
     public ImportGstoolAction(IWorkbenchWindow window, String label) {
         setText(label);
         setId(ID);
         setEnabled(true); // now works in standalone again
-        CnAElementFactory.getInstance().addLoadListener(loadListener);
         setRightID(ActionRightIDs.GSTOOLIMPORT);
         if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
             IInternalServerStartListener listener = new IInternalServerStartListener(){
@@ -117,139 +75,19 @@ public class ImportGstoolAction extends RightsEnabledAction {
      */
     @Override
     public void doRun() {
-        try {
-            
-            final GSImportDialog dialog = new GSImportDialog(Display.getCurrent().getActiveShell());
+        try {          
+            dialog = new GSImportDialog(Display.getCurrent().getActiveShell());
 			if (dialog.open() != InputDialog.OK){
                 return;
 			}
-			PlatformUI.getWorkbench().getProgressService().
-			busyCursorWhile(new IRunnableWithProgress() {
-
-                @Override
-                public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                    Activator.inheritVeriniceContextState();
-
-					ImportTask importTask = new ImportTask(
-							dialog.isBausteine(),
-							dialog.isMassnahmenPersonen(),
-							dialog.isZielObjekteZielobjekte(),
-							dialog.isSchutzbedarf(),
-							dialog.isRollen(),
-							dialog.isKosten(),
-							dialog.isUmsetzung(),
-							dialog.isBausteinPersonen()
-							);
-                    try {
-                        long importTaskStart = System.currentTimeMillis();
-                        importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
-                            @Override
-                            public void done() {
-                                monitor.done();
-                            }
-
-                            @Override
-                            public void worked(int work) {
-                                monitor.worked(work);
-                            }
-
-                            @Override
-                            public void beginTask(String name, int totalWork) {
-                                monitor.beginTask(name, totalWork);
-                            }
-
-                            @Override
-                            public void subTask(String name) {
-                                monitor.subTask(name);
-                            }
-                        });
-                        if(LOG.isDebugEnabled()){
-                            LOG.debug("Time for ImportTask:\t" + String.valueOf((System.currentTimeMillis() - importTaskStart)/1000 ) + " seconds");
-                        }
-                    } catch (Exception e) {
-                        ExceptionUtil.log(e, Messages.ImportGstoolAction_1);
-                    }
-                    sourceId = importTask.getSourceId();
-                }
-            });
+			importZielobjekte();
       	
 			if (dialog.isNotizen()) {
-			    PlatformUI.getWorkbench().getProgressService().
-			    busyCursorWhile(new IRunnableWithProgress() {
-			        @Override
-                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-			            Activator.inheritVeriniceContextState();
-			            
-			            long importNotesStart = System.currentTimeMillis();
-			            ImportNotesTask importTask = new ImportNotesTask();
-			            try {
-			                importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
-			                    @Override
-                                public void done() {
-			                        monitor.done();
-			                    }
-			                    @Override
-                                public void worked(int work) {
-			                        monitor.worked(work);
-			                    }
-			                    @Override
-                                public void beginTask(String name, int totalWork) {
-			                        monitor.beginTask(name, totalWork);
-			                    }
-			                    @Override
-                                public void subTask(String name) {
-			                        monitor.subTask(name);
-			                    }
-			                });
-	                        if(LOG.isDebugEnabled()){
-	                            LOG.debug("Time for ImportNotesTask:\t" + String.valueOf((System.currentTimeMillis() - importNotesStart)/1000 ) + " seconds");
-	                        }
-			            } catch (Exception e) {
-           					ExceptionUtil.log(e.getCause(), Messages.ImportGstoolAction_2);
-        				}
-			        }
-			    });
+			    importNotes();
 			}
 			
 			if (dialog.isRisikoanalysen()) {
-
-                PlatformUI.getWorkbench().getProgressService().
-                busyCursorWhile(new IRunnableWithProgress() {
-                    @Override
-                    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        Activator.inheritVeriniceContextState();
-
-                        long importRAStart = System.currentTimeMillis();
-                        ImportRisikoanalysenTask importTask = new ImportRisikoanalysenTask(sourceId);
-                        try {
-                            importTask.execute(ImportTask.TYPE_SQLSERVER, new IProgress() {
-                                @Override
-                                public void done() {
-                                    monitor.done();
-                                }
-                                @Override
-                                public void worked(int work) {
-                                    monitor.worked(work);
-                                }
-                                @Override
-                                public void beginTask(String name, int totalWork) {
-                                    monitor.beginTask(name, totalWork);
-                                }
-                                @Override
-                                public void subTask(String name) {
-                                    monitor.subTask(name);
-                                }
-                            });
-                            if(LOG.isDebugEnabled()){
-                                LOG.debug("Time for ImportRATask:\t" + String.valueOf((System.currentTimeMillis() - importRAStart)/1000 ) + " seconds");
-                            }
-                        } catch (Exception e) {
-                            LOG.error("Error while importing Risikoanalysen", e);
-                            ExceptionUtil.log(e.getCause(), Messages.ImportGstoolAction_2);
-                        }
-                    }
-                });
-            
+                importRiskAnalyses();          
 			}
 			
 		} catch (InvocationTargetException e) {
@@ -259,5 +97,113 @@ public class ImportGstoolAction extends RightsEnabledAction {
         }
     }
     
+    private void importZielobjekte() throws InvocationTargetException, InterruptedException {
+        PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+            @Override
+            public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                Activator.inheritVeriniceContextState();
+
+                ImportTask importTask = new ImportTask(
+                        dialog.isBausteine(),
+                        dialog.isMassnahmenPersonen(),
+                        dialog.isZielObjekteZielobjekte(),
+                        dialog.isSchutzbedarf(),
+                        dialog.isRollen(),
+                        dialog.isKosten(),
+                        dialog.isUmsetzung(),
+                        dialog.isBausteinPersonen()
+                        );
+                try {
+                    long importTaskStart = System.currentTimeMillis();
+                    importTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
+                    if(LOG.isDebugEnabled()){
+                        LOG.debug("Time for ImportTask:\t" + String.valueOf((System.currentTimeMillis() - importTaskStart)/1000 ) + " seconds");
+                    }
+                } catch (Exception e) {
+                    ExceptionUtil.log(e, Messages.ImportGstoolAction_1);
+                }
+                sourceId = importTask.getSourceId();
+            }
+        });
+    }
+    
+    private void importNotes() throws InvocationTargetException, InterruptedException {
+        PlatformUI.getWorkbench().getProgressService().
+        busyCursorWhile(new IRunnableWithProgress() {
+            @Override
+            public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                Activator.inheritVeriniceContextState();
+                
+                long importNotesStart = System.currentTimeMillis();
+                ImportNotesTask importTask = new ImportNotesTask();
+                try {
+                    importTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
+                    if(LOG.isDebugEnabled()){
+                        LOG.debug("Time for ImportNotesTask:\t" + String.valueOf((System.currentTimeMillis() - importNotesStart)/1000 ) + " seconds");
+                    }
+                } catch (Exception e) {
+                    ExceptionUtil.log(e.getCause(), Messages.ImportGstoolAction_2);
+                }
+            }
+        });
+    }
+
+
+    private void importRiskAnalyses() throws InvocationTargetException, InterruptedException {
+        PlatformUI.getWorkbench().getProgressService().
+        busyCursorWhile(new IRunnableWithProgress() {
+            @Override
+            public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                Activator.inheritVeriniceContextState();
+
+                long importRAStart = System.currentTimeMillis();
+                ImportRisikoanalysenTask importTask = new ImportRisikoanalysenTask(sourceId);
+                try {
+                    importTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
+                    if(LOG.isDebugEnabled()){
+                        LOG.debug("Time for ImportRATask:\t" + String.valueOf((System.currentTimeMillis() - importRAStart)/1000 ) + " seconds");
+                    }
+                } catch (Exception e) {
+                    LOG.error("Error while importing Risikoanalysen", e);
+                    ExceptionUtil.log(e.getCause(), Messages.ImportGstoolAction_2);
+                }
+            }
+        });
+    }
+    
+    /**
+     * This IProgress implementation delegates all method
+     * calls to a Eclipse IProgressMonitor.
+     * 
+     * @author Daniel Murygin <dm[at]sernet[dot]de>
+     */
+    private final class EclipseProgressMonitorDelegator implements IProgress {
+
+        private final IProgressMonitor monitor;
+
+        private EclipseProgressMonitorDelegator(IProgressMonitor monitor) {
+            this.monitor = monitor;
+        }
+
+        @Override
+        public void done() {
+            monitor.done();
+        }
+
+        @Override
+        public void worked(int work) {
+            monitor.worked(work);
+        }
+
+        @Override
+        public void beginTask(String name, int totalWork) {
+            monitor.beginTask(name, totalWork);
+        }
+
+        @Override
+        public void subTask(String name) {
+            monitor.subTask(name);
+        }
+    }
 
 }
