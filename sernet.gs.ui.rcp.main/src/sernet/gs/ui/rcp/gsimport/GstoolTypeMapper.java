@@ -202,19 +202,44 @@ public abstract class GstoolTypeMapper {
 	 * @param gstoolSubtype A GSTOOL subtype
 	 * @return The verinice type-id for a GSTOOL type and subtype
 	 */
-	public static String getVeriniceType(String gstoolType, String gstoolSubtype) {
-	    String type = getGstoolTypes().get(gstoolType);
-		if (type == null){
-			type = getGstoolSubtypes().get(gstoolSubtype);
-		}
-		if(type == null){
-		    LOG.error("Could not find a type id for GSTOOL type: " + gstoolType + " and sub type: " + gstoolSubtype + ", using default verinice type id instead: " + DEFAULT_TYPE_ID);
-		    type = DEFAULT_TYPE_ID;
-		}
-		if (LOG.isDebugEnabled()) {
-            LOG.debug("GSTOOL type: '" + gstoolType + "' and subtype: '" + gstoolSubtype + "', returning verinice type: " + type);
+	public static String getVeriniceTypeOrDefault(String gstoolType, String gstoolSubtype) {
+	    String type;
+        try {
+            type = getVeriniceType(gstoolType, gstoolSubtype);
+        } catch (GstoolTypeNotFoundException e) {
+            LOG.error(e.getMessage() + ", using default verinice type id instead: " + DEFAULT_TYPE_ID);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Stacktrace: ", e);
+            }
+            type = DEFAULT_TYPE_ID;
         }
 		return type;
+	}
+	
+	/**
+     * The verinice type-id for a GSTOOL type and subtype.
+     * The verinice type is derived from the mapping defined in this class and in thr property files
+     * TYPE_PROPERTIES_FILE and SUBTYPE_PROPERTIES_FILE.
+     * 
+     * If no type is found in the mapping GstoolTypeNotFoundException is thrown.
+     * 
+     * @param gstoolType A GSTOOL type
+     * @param gstoolSubtype A GSTOOL subtype
+     * @return The verinice type-id for a GSTOOL type and subtype
+	 * @throws GstoolTypeNotFoundException If no type is found
+	 */
+	public static String getVeriniceType(String gstoolType, String gstoolSubtype) throws GstoolTypeNotFoundException {
+	    String type = getGstoolTypes().get(gstoolType);
+        if (type == null){
+            type = getGstoolSubtypes().get(gstoolSubtype);
+        }
+        if(type == null){
+            throw new GstoolTypeNotFoundException("Could not find a type id for GSTOOL type: " + gstoolType + " and sub type: " + gstoolSubtype);
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("GSTOOL type: '" + gstoolType + "' and subtype: '" + gstoolSubtype + "', returning verinice type: " + type);
+        }
+        return type;
 	}
 
     public static Map<String, String> getGstoolTypes() {

@@ -33,13 +33,8 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
-import org.hibernate.Hibernate;
+import org.eclipse.swt.widgets.Shell;
 import org.hibernate.exception.SQLGrammarException;
-
-import com.heatonresearch.datamover.DataMover;
-import com.heatonresearch.datamover.db.Database;
-import com.heatonresearch.datamover.db.DerbyDatabase;
-import com.heatonresearch.datamover.db.MDBFileDatabase;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.reveng.MSchutzbedarfkategTxt;
@@ -54,7 +49,6 @@ import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.importData.BausteinInformationTransfer;
 import sernet.gs.reveng.importData.BausteineMassnahmenResult;
 import sernet.gs.reveng.importData.ESAResult;
-import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.GefaehrdungInformationTransfer;
 import sernet.gs.reveng.importData.MassnahmeInformationTransfer;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
@@ -88,6 +82,11 @@ import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Link;
 
+import com.heatonresearch.datamover.DataMover;
+import com.heatonresearch.datamover.db.Database;
+import com.heatonresearch.datamover.db.DerbyDatabase;
+import com.heatonresearch.datamover.db.MDBFileDatabase;
+
 /**
  * Import GSTOOL(tm) databases using the GSVampire. Maps GStool-database objects
  * to Verinice-Objects and fields.
@@ -96,17 +95,13 @@ import sernet.verinice.model.common.Link;
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
  */
-public class ImportTask {
+public class ImportTask extends AbstractGstoolImportTask {
 
     private static final Logger LOG = Logger.getLogger(ImportTask.class);
-
-    public static final int TYPE_SQLSERVER = 1;
-    public static final int TYPE_MDB = 2;
 
     private IProgress monitor;
     int numberOfElements;
     int numberImported;
-    private GSVampire vampire;
     private TransferData transferData;
 
     private List<MbZeiteinheitenTxt> zeiten;
@@ -130,21 +125,11 @@ public class ImportTask {
 
     private final Map<MbBaust, BausteinUmsetzung> alleBausteineToBausteinUmsetzungMap;
     private final Map<MbBaust, ModZobjBst> alleBausteineToZoBstMap;
-
     private final Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
-
-    private final Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
-    
+    private final Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;  
     private final Map<NZielobjekt, List<BausteineMassnahmenResult>> nZielObjektBausteineMassnahmenResultMap;
-
+   
     private String sourceId;
-
-    /**
-     * @return the sourceId
-     */
-    public String getSourceId() {
-        return sourceId;
-    }
 
     public ImportTask(boolean bausteine, boolean massnahmenPersonen, boolean zielObjekteZielobjekte, boolean schutzbedarf, boolean importRollen, boolean kosten, boolean umsetzung, boolean bausteinPersonen) {
         this.importBausteine = bausteine;
@@ -164,100 +149,28 @@ public class ImportTask {
         this.nZielObjektBausteineMassnahmenResultMap = new HashMap<>();
     }
 
-    public void execute(int importType, IProgress monitor) throws Exception {
-        // On this thread Hibernate will access Antlr in order to create a
-        // lexer.
-        // Hibernate will provide the name of a Hibernate-based class to Antlr.
-        // Antlr
-        // will try to load that class. In an OSGi-environment this will
-        // miserably
-        // fail since the Antlr bundle's classloader has no access to the
-        // Hibernate
-        // bundle's classes. However Antlr will use the context classloader if
-        // it
-        // finds one. For this reason we initialize the context classloader with
-        // a classloader from a Hibernate class. This classloader is able to
-        // resolve
-        // Hibernate classes and can be used successfully by Antlr to access.
-        try {
-            ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            ClassLoader classLoader = Hibernate.class.getClassLoader();
-            Thread.currentThread().setContextClassLoader(classLoader);
-
-            Preferences prefs = Activator.getDefault().getPluginPreferences();
-            String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
-            if (sourceDbUrl.indexOf("odbc") > -1) {
-                copyMDBToTempDB(sourceDbUrl);
-            }
-            this.allCatalogueBausteine = loadCatalogueBausteine();
-
-            this.monitor = monitor;
-            File conf = new File(CnAWorkspace.getInstance().getConfDir() + File.separator + "hibernate-vampire.cfg.xml");
-            vampire = new GSVampire(conf.getAbsolutePath());
-
-            zeiten = vampire.findZeiteinheitenTxtAll();
-
-            // print all types and subtypes to debug, in case we need to add
-            // those to our mapping manually;
-            List<ZielobjektTypeResult> findZielobjektTypAll = vampire.findZielobjektTypAll();
-            LOG.debug("List of all ZO types in GSTOOL DB: ");
-            for (ZielobjektTypeResult zielobjektTypeResult : findZielobjektTypAll) {
-                LOG.debug(zielobjektTypeResult.subtype + "=" + zielobjektTypeResult.type);
-            }
-
-            transferData = new TransferData(vampire, importRollen);
-            this.sourceId = importZielobjekte();
-
-            // Set back the original context class loader.
-            Thread.currentThread().setContextClassLoader(cl);
-
-            CnAElementFactory.getInstance().reloadModelFromDatabase();
-        } catch (GSImportException e) {
-
-            ExceptionUtil.log(e, e.getMessage());
+    protected void executeTask(int importType, IProgress monitor) throws Exception {     
+        Preferences prefs = Activator.getDefault().getPluginPreferences();
+        String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
+        if (sourceDbUrl.indexOf("odbc") > -1) {
+            copyMDBToTempDB(sourceDbUrl);
         }
-    }
+        this.allCatalogueBausteine = loadCatalogueBausteine();
 
-    private void copyMDBToTempDB(String sourceDbUrl) {
-        Database source = new MDBFileDatabase();
-        Database target = new DerbyDatabase();
-        try {
-            // copy contents of MDB file to temporary derby db:
-            String tempDbUrl = CnAWorkspace.getInstance().createTempImportDbUrl();
+        this.monitor = monitor;
 
-            DataMover mover = new DataMover();
+        zeiten = getGstoolDao().findZeiteinheitenTxtAll();
 
-            source.connect(PreferenceConstants.GS_DB_DRIVER_ODBC, sourceDbUrl);
-            target.connect(PreferenceConstants.DB_DRIVER_DERBY, tempDbUrl);
-
-            mover.setSource(source);
-            mover.setTarget(target);
-            mover.exportDatabse();
-        } catch (Exception e) {
-            LOG.error("Error: ", e);
-            ExceptionUtil.log(e, "Fehler beim Import aus MDB Datei über temporäre Derby-DB.");
-        } finally {
-            try {
-                source.close();
-                target.close();
-            } catch (Exception e) {
-                LOG.debug("Konnte temporäre Import DB nicht schließen.", e);
-            }
+        // print all types and subtypes to debug, in case we need to add
+        // those to our mapping manually;
+        List<ZielobjektTypeResult> findZielobjektTypAll = getGstoolDao().findZielobjektTypAll();
+        LOG.debug("List of all ZO types in GSTOOL DB: ");
+        for (ZielobjektTypeResult zielobjektTypeResult : findZielobjektTypAll) {
+            LOG.debug(zielobjektTypeResult.subtype + "=" + zielobjektTypeResult.type);
         }
 
-    }
-
-    public boolean delete(File dir) {
-        if (dir.isDirectory()) {
-            String[] subdirs = dir.list();
-            for (int i = 0; i < subdirs.length; i++) {
-                boolean success = delete(new File(dir, subdirs[i]));
-                if (!success) {
-                    return false;
-                }
-            }
-        }
-        return dir.delete();
+        transferData = new TransferData(getGstoolDao(), importRollen);
+        this.sourceId = importZielobjekte();
     }
 
     /**
@@ -273,7 +186,8 @@ public class ImportTask {
         final String defaultSubTaskDescription = "Die Daten werden gespeichert.";
         String sourceId = UUID.randomUUID().toString().substring(0, maxUuidLength);
 
-        List<ZielobjektTypeResult> zielobjekte = findZielobjekte();
+        List<ZielobjektTypeResult> zielobjekte = findZielobjekte();       
+            
         numberOfElements = zielobjekte.size();
         numberImported = 0;
         if (this.importBausteine) {
@@ -295,7 +209,7 @@ public class ImportTask {
         long startTime = System.currentTimeMillis();
         // create all Zielobjekte in their respective ITVerbund,
         for (ZielobjektTypeResult zielobjekt : zielobjekte) {
-            String typeId = GstoolTypeMapper.getVeriniceType(zielobjekt.type, zielobjekt.subtype);
+            String typeId = GstoolTypeMapper.getVeriniceTypeOrDefault(zielobjekt.type, zielobjekt.subtype);
             if(LOG.isDebugEnabled()){
                 LOG.debug("GSTOOL type id " + zielobjekt.type + " : " + zielobjekt.subtype + " was translated to: " + typeId);
             }
@@ -346,7 +260,6 @@ public class ImportTask {
         }
 
         long durationImportZO = System.currentTimeMillis() - startTime;
-
 
         startTime = System.currentTimeMillis();
         // create inidividual massnahmen
@@ -427,7 +340,7 @@ public class ImportTask {
     private List<ITVerbund> importItVerbuende(String sourceId, List<ZielobjektTypeResult> zielobjekte) throws CommandException, CnATreeElementBuildException {
         List<ITVerbund> neueVerbuende = new ArrayList<ITVerbund>();
         for (ZielobjektTypeResult zielobjekt : zielobjekte) {         
-            if (ITVerbund.TYPE_ID.equals(GstoolTypeMapper.getVeriniceType(zielobjekt.type, zielobjekt.subtype))) {
+            if (ITVerbund.TYPE_ID.equals(GstoolTypeMapper.getVeriniceTypeOrDefault(zielobjekt.type, zielobjekt.subtype))) {
                 ITVerbund itverbund = (ITVerbund) CnAElementFactory.getInstance().saveNew(CnAElementFactory.getLoadedModel(), ITVerbund.TYPE_ID, null, false);
                 itverbund.setSourceId(sourceId);
                 neueVerbuende.add(itverbund);
@@ -442,7 +355,7 @@ public class ImportTask {
 
                 // save links from itverbuende to other objects to
                 // facilitate creating ZOs in their correct IT-Verbund:
-                List<NZielobjekt> itvLinks = vampire.findLinksByZielobjekt(zielobjekt.zielobjekt);
+                List<NZielobjekt> itvLinks = getGstoolDao().findLinksByZielobjekt(zielobjekt.zielobjekt);
                 for (NZielobjekt nZielobjekt : itvLinks) {
                     LOG.debug("Saving Zuordnung from ZO" + nZielobjekt.getName() + "(GUID " + nZielobjekt.getGuid() + ") to ITVerbund " + zielobjekt.zielobjekt.getName());
                     itverbundZuordnung.put(nZielobjekt.getGuid(), zielobjekt.zielobjekt);
@@ -452,10 +365,6 @@ public class ImportTask {
         return neueVerbuende;
     }
 
-
-    /**
-     *
-     */
     private Collection<MassnahmenUmsetzung> createIndividualMassnahmen() throws CommandException {
         // does not work anymore, check why
         Map<String, MassnahmeInformationTransfer> massnahmenInfos = new HashMap<>();
@@ -468,18 +377,11 @@ public class ImportTask {
         return command.getChangedElements();
     }
 
-
-
-    /**
-     *
-     * @param massnahmenInfos
-     * @param bausteineMassnahmenResultList
-     */
     private Map<String, MassnahmeInformationTransfer> createIndividualMassnahmenForBausteineMassnahmenResult(List<BausteineMassnahmenResult> bausteineMassnahmenResultList) {
         Map<String, MassnahmeInformationTransfer> massnahmenInfos = new HashMap<>();
         for(BausteineMassnahmenResult bausteineMassnahmenResult : bausteineMassnahmenResultList){
             if(!massnahmenInfos.containsKey(bausteineMassnahmenResult)){
-                MassnahmeInformationTransfer massnahmeInformationTransfer = vampire.
+                MassnahmeInformationTransfer massnahmeInformationTransfer = getGstoolDao().
                         findTxtforMbMassn(bausteineMassnahmenResult.baustein, bausteineMassnahmenResult.massnahme,
                                 GSScraperUtil.getInstance().getModel().getEncoding());
                 massnahmenInfos.put(TransferData.createBausteineMassnahmenResultIdentifier(bausteineMassnahmenResult), massnahmeInformationTransfer);
@@ -492,7 +394,7 @@ public class ImportTask {
     private List<ZielobjektTypeResult> findZielobjekte() throws Exception {
         List<ZielobjektTypeResult> zielobjekte;
         try {
-            zielobjekte = vampire.findZielobjektTypAll();
+            zielobjekte = getGstoolDao().findZielobjektTypAll();
         } catch (SQLGrammarException e) {
             SQLGrammarException sqlException = e;
             // wrong db version has columns missing, i.e. "GEF_ID":
@@ -541,13 +443,13 @@ public class ImportTask {
         Set<Entry<NZielobjekt, CnATreeElement>> alleZielobjekteEntries = alleZielobjekte.entrySet();
 
         for (Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekteEntries) {
-            List<NZobSb> internalSchutzbedarf = vampire.findSchutzbedarfByZielobjekt(entry.getKey());
+            List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjekt(entry.getKey());
             for (NZobSb schubeda : internalSchutzbedarf) {
                 CnATreeElement element = entry.getValue();
 
-                MSchutzbedarfkategTxt vertr = vampire.findSchutzbedarfNameForId(schubeda.getZsbVertrSbkId());
-                MSchutzbedarfkategTxt verfu = vampire.findSchutzbedarfNameForId(schubeda.getZsbVerfuSbkId());
-                MSchutzbedarfkategTxt integ = vampire.findSchutzbedarfNameForId(schubeda.getZsbIntegSbkId());
+                MSchutzbedarfkategTxt vertr = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbVertrSbkId());
+                MSchutzbedarfkategTxt verfu = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbVerfuSbkId());
+                MSchutzbedarfkategTxt integ = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbIntegSbkId());
 
                 int vertraulichkeit = (vertr != null) ? transferData.translateSchutzbedarf(vertr.getName()) : Schutzbedarf.UNDEF;
 
@@ -580,7 +482,7 @@ public class ImportTask {
         for (NZielobjekt zielobjekt : allElements) {
             monitor.worked(1);
             CnATreeElement dependant = alleZielobjekte.get(zielobjekt);
-            List<NZielobjekt> dependencies = vampire.findLinksByZielobjekt(zielobjekt);
+            List<NZielobjekt> dependencies = getGstoolDao().findLinksByZielobjekt(zielobjekt);
 
             for (NZielobjekt dependency : dependencies) {
                 CnATreeElement dependencyElement = findZielobjektFor(dependency);
@@ -639,7 +541,7 @@ public class ImportTask {
             current++;
             // transferiere individuell verknüpfte verantowrtliche in massnahmen
             // (TAB "Verantwortlich" im GSTOOL):
-            Set<NZielobjekt> personenSrc = vampire.findVerantowrtlicheMitarbeiterForMassnahme(obm.getId());
+            Set<NZielobjekt> personenSrc = getGstoolDao().findVerantowrtlicheMitarbeiterForMassnahme(obm.getId());
             if (personenSrc != null && personenSrc.size() > 0) {
                 List<Person> dependencies = findPersonen(personenSrc);
                 if (dependencies.size() != personenSrc.size()) {
@@ -655,17 +557,6 @@ public class ImportTask {
             }
         }
     }
-
-    private Baustein findBausteinForId(String id) {
-        for (Baustein baustein : allCatalogueBausteine) {
-            if (baustein.getId().equals(id)) {
-                return baustein;
-            }
-        }
-        return null;
-    }
-
-
 
     private void importBausteinPersonVerknuepfungen() {
         Set<BausteinUmsetzung> changedElements = new HashSet<>();
@@ -694,7 +585,7 @@ public class ImportTask {
                     }
                 }
 
-                Set<NZielobjekt> befragteMitarbeiter = vampire.findBefragteMitarbeiterForBaustein(alleBausteineToZoBstMap.get(mbBaust).getId());
+                Set<NZielobjekt> befragteMitarbeiter = getGstoolDao().findBefragteMitarbeiterForBaustein(alleBausteineToZoBstMap.get(mbBaust).getId());
                 if (befragteMitarbeiter != null && befragteMitarbeiter.size() > 0) {
                     List<Person> dependencies = findPersonen(befragteMitarbeiter);
                     if (dependencies.size() != befragteMitarbeiter.size()) {
@@ -731,7 +622,7 @@ public class ImportTask {
             return element;
         }
 
-        List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = vampire.findBausteinMassnahmenByZielobjekt(zielobjekt);
+        List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = getGstoolDao().findBausteinMassnahmenByZielobjekt(zielobjekt);
         nZielObjektBausteineMassnahmenResultMap.put(zielobjekt, findBausteinMassnahmenByZielobjekt);
 
         Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
@@ -756,8 +647,6 @@ public class ImportTask {
         if (command.getAlleBausteineToBausteinUmsetzungMap() != null) {
             this.alleBausteineToBausteinUmsetzungMap.putAll(command.getAlleBausteineToBausteinUmsetzungMap());
         }
-
-
 
         if (command.getAlleBausteineToZoBstMap() != null) {
             this.alleBausteineToZoBstMap.putAll(command.getAlleBausteineToZoBstMap());
@@ -788,15 +677,15 @@ public class ImportTask {
      * @param b
      */
     private void prepareUserDefinedBausteinImport(NZielobjekt zielobjekt, Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap, Map<MbBaust, BausteinInformationTransfer> udBausteineTxtMap, Map<MbMassn, MassnahmeInformationTransfer> udBstMassTxtMap, Map<MbBaust, List<GefaehrdungInformationTransfer>> udBaustGefMap, MbBaust b) {
-        udBausteineTxtMap.put(b, vampire.findTxtForMbBaust(b, zielobjekt, GSScraperUtil.getInstance().getModel().getEncoding()));
+        udBausteineTxtMap.put(b, getGstoolDao().findTxtForMbBaust(b, zielobjekt, GSScraperUtil.getInstance().getModel().getEncoding()));
         List<BausteineMassnahmenResult> lr = bausteineMassnahmenMap.get(b);
         for(BausteineMassnahmenResult r : lr){
-            udBstMassTxtMap.put(r.massnahme, vampire.findTxtforMbMassn(b, r.massnahme, GSScraperUtil.getInstance().getModel().getEncoding()));
+            udBstMassTxtMap.put(r.massnahme, getGstoolDao().findTxtforMbMassn(b, r.massnahme, GSScraperUtil.getInstance().getModel().getEncoding()));
         }
         List<GefaehrdungInformationTransfer> gitList = new ArrayList<GefaehrdungInformationTransfer>();
-        List<MbBaustGefaehr> mbBaustGefList = vampire.findGefaehrdungenForBaustein(b, zielobjekt);
+        List<MbBaustGefaehr> mbBaustGefList = getGstoolDao().findGefaehrdungenForBaustein(b, zielobjekt);
         for(MbBaustGefaehr gefaehr : mbBaustGefList){
-            GefaehrdungInformationTransfer git = vampire.findGefaehrdungInformationForBausteinGefaehrdung(b, gefaehr, zielobjekt, GSScraperUtil.getInstance().getModel().getEncoding());
+            GefaehrdungInformationTransfer git = getGstoolDao().findGefaehrdungInformationForBausteinGefaehrdung(b, gefaehr, zielobjekt, GSScraperUtil.getInstance().getModel().getEncoding());
             if(git.getTitel() != null && git.getId() != null){
                 gitList.add(git);
             }
@@ -828,7 +717,7 @@ public class ImportTask {
 
         // First transfer the EAS fields into the previously created
         // cnatreeelmt:
-        List<ESAResult> esaResult = vampire.findESAByZielobjekt(zielobjekt.zielobjekt);
+        List<ESAResult> esaResult = getGstoolDao().findESAByZielobjekt(zielobjekt.zielobjekt);
 
         if (esaResult == null || esaResult.size() == 0) {
             LOG.warn("No ESA found for zielobjekt" + zielobjekt.zielobjekt.getName());
@@ -896,6 +785,48 @@ public class ImportTask {
         return bausteine;
     }
 
+    private void copyMDBToTempDB(String sourceDbUrl) {
+        Database source = new MDBFileDatabase();
+        Database target = new DerbyDatabase();
+        try {
+            // copy contents of MDB file to temporary derby db:
+            String tempDbUrl = CnAWorkspace.getInstance().createTempImportDbUrl();
 
+            DataMover mover = new DataMover();
 
+            source.connect(PreferenceConstants.GS_DB_DRIVER_ODBC, sourceDbUrl);
+            target.connect(PreferenceConstants.DB_DRIVER_DERBY, tempDbUrl);
+
+            mover.setSource(source);
+            mover.setTarget(target);
+            mover.exportDatabse();
+        } catch (Exception e) {
+            LOG.error("Error: ", e);
+            ExceptionUtil.log(e, "Fehler beim Import aus MDB Datei über temporäre Derby-DB.");
+        } finally {
+            try {
+                source.close();
+                target.close();
+            } catch (Exception e) {
+                LOG.debug("Konnte temporäre Import DB nicht schließen.", e);
+            }
+        }
+    }
+
+    public boolean delete(File dir) {
+        if (dir.isDirectory()) {
+            String[] subdirs = dir.list();
+            for (int i = 0; i < subdirs.length; i++) {
+                boolean success = delete(new File(dir, subdirs[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
+    
+    public String getSourceId() {
+        return sourceId;
+    }
 }

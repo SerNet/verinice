@@ -17,7 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.gsimport;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -26,25 +25,21 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
-import org.hibernate.Hibernate;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
 import sernet.gs.reveng.importData.GSDBConstants;
-import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.RAGefaehrdungenResult;
 import sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 import sernet.gs.scraper.GSScraper;
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzungFactory;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -78,12 +73,11 @@ import sernet.verinice.service.commands.LoadCnAElementByExternalID;
  * @author dm@sernet.de
  *
  */
-public class ImportRisikoanalysenTask {
+public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
 
     private static final Logger LOG = Logger.getLogger(ImportRisikoanalysenTask.class);
     
     private IProgress monitor;
-    private GSVampire vampire;
     private TransferData transferData;
     private int numberOfRAs;
     
@@ -109,13 +103,10 @@ public class ImportRisikoanalysenTask {
         this.allCreatedOwnMassnahmen = new HashMap<String, RisikoMassnahme>();
     }
 
-    public void execute(int importType, IProgress monitor) throws DBException, CommandException, SQLException, IOException {
+    public void executeTask(int importType, IProgress monitor) throws Exception {
         loadGefaehrdungen();
         loadMassnahmen();
-        
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(Hibernate.class.getClassLoader());
-
+       
         Preferences prefs = Activator.getDefault().getPluginPreferences();
         String sourceDbUrl = prefs.getString(PreferenceConstants.GS_DB_URL);
         if (sourceDbUrl.indexOf("odbc") > -1) {
@@ -123,16 +114,9 @@ public class ImportRisikoanalysenTask {
         }
 
         this.monitor = monitor;
-        File conf = new File(CnAWorkspace.getInstance().getConfDir() + File.separator + "hibernate-vampire.cfg.xml");
-        vampire = new GSVampire(conf.getAbsolutePath());
 
-        transferData = new TransferData(vampire, false);
+        transferData = new TransferData(getGstoolDao(), false);
         importRisikoanalysen();
-
-        // Set back the original context class loader.
-        Thread.currentThread().setContextClassLoader(cl);
-
-        CnAElementFactory.getInstance().reloadModelFromDatabase();
     }
     
     /**
@@ -149,7 +133,7 @@ public class ImportRisikoanalysenTask {
      * @throws SQLException
      */
     private void importRisikoanalysen() throws CommandException, SQLException, IOException {
-        List<ZielobjektTypeResult> allZielobjekte = vampire.findZielobjektWithRA();
+        List<ZielobjektTypeResult> allZielobjekte = getGstoolDao().findZielobjektWithRA();
         numberOfRAs = allZielobjekte.size();
         monitor.beginTask("Importiere Risikoanalysen...", numberOfRAs);
         int i = 1;
@@ -170,7 +154,7 @@ public class ImportRisikoanalysenTask {
         }
 
         // Now create the risk analysis object and add all gefaehrdungen to it:
-        List<RAGefaehrdungenResult> gefaehrdungenForZielobjekt = vampire.findRAGefaehrdungenForZielobjekt(zielobjekt.zielobjekt);
+        List<RAGefaehrdungenResult> gefaehrdungenForZielobjekt = getGstoolDao().findRAGefaehrdungenForZielobjekt(zielobjekt.zielobjekt);
         if (gefaehrdungenForZielobjekt == null || gefaehrdungenForZielobjekt.size() == 0) {
             // TODO adjust this to ensure not importing empty riskanalysises
             // if element.risikoanalyse.entbehrlich = true, then skip
@@ -222,7 +206,7 @@ public class ImportRisikoanalysenTask {
                 if(LOG.isDebugEnabled()){
                     LOG.debug("Loading massnahmen for gefaehrdung " + gefaehrdungsUmsetzung.getTitle());
                 }
-                List<RAGefaehrdungsMassnahmenResult> ragmResults = vampire.findRAGefaehrdungsMassnahmenForZielobjekt(zielobjekt.zielobjekt, gefaehrdungenResult.getGefaehrdung());
+                List<RAGefaehrdungsMassnahmenResult> ragmResults = getGstoolDao().findRAGefaehrdungsMassnahmenForZielobjekt(zielobjekt.zielobjekt, gefaehrdungenResult.getGefaehrdung());
                 for (RAGefaehrdungsMassnahmenResult massnahmenResult : ragmResults) {
                     importMassnahme(element, massnahmenResult, gefaehrdungsUmsetzung);
                 }
