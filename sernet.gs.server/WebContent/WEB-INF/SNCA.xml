@@ -278,7 +278,8 @@ the value between <param></param> will be used directly if no string is found fo
        
         <huiproperty
             name="Name"
-            id="raum_name" />
+            id="raum_name" 
+            required="true"/>
 
         <huiproperty
             id="raum_tag"
@@ -441,7 +442,8 @@ the value between <param></param> will be used directly if no string is found fo
         </huiproperty>
         <huiproperty
             name="Name"
-            id="server_name" />
+            id="server_name"  
+            required="true"/>
 
         <huiproperty
             id="server_tag"
@@ -650,7 +652,8 @@ the value between <param></param> will be used directly if no string is found fo
         </huiproperty>
         <huiproperty
             name="Name"
-            id="tkkomponente_name" />
+            id="tkkomponente_name"  
+            required="true"/>
             
         <huiproperty
             id="tkkomponente_tag"
@@ -862,7 +865,8 @@ the value between <param></param> will be used directly if no string is found fo
         </huiproperty>
         <huiproperty
             name="Name"
-            id="netzkomponente_name"/>
+            id="netzkomponente_name" 
+            required="true"/>
         <huiproperty
             id="netzkomponente_tag"
             name="Tags"
@@ -977,7 +981,8 @@ the value between <param></param> will be used directly if no string is found fo
         id="itverbund" >
         <huiproperty
             name="Name"
-            id="itverbund_name" />
+            id="itverbund_name"  
+            required="true"/>
         <huiproperty
             name="Organisation"
             id="itverbund_organisation" />
@@ -1183,7 +1188,8 @@ the value between <param></param> will be used directly if no string is found fo
         </huiproperty>
         <huiproperty
             name="Name"
-            id="client_name" />
+            id="client_name"  
+            required="true"/>
         
         <huiproperty
             id="client_tag"
@@ -1414,7 +1420,8 @@ the value between <param></param> will be used directly if no string is found fo
         </huiproperty>
         <huiproperty
             name="Name"
-            id="sonstit_name" />
+            id="sonstit_name"  
+            required="true"/>
             
         <huiproperty
             id="sonstit_tag"
@@ -1702,7 +1709,8 @@ the value between <param></param> will be used directly if no string is found fo
 		</huiproperty>
 		<huiproperty
 			name="Name"
-			id="nachname" />
+			id="nachname"  
+            required="true"/>
 
         <huiproperty
             id="person_tag"
@@ -1915,7 +1923,8 @@ the value between <param></param> will be used directly if no string is found fo
 		</huiproperty>
 		<huiproperty
 			name="Name"
-			id="gebaeude_name">
+			id="gebaeude_name" 
+            required="true">
 		</huiproperty>
 		
         <huiproperty
@@ -2586,7 +2595,8 @@ the value between <param></param> will be used directly if no string is found fo
         
         <huiproperty
             id="anwendung_name"
-            name="Name" 
+            name="Name"  
+            required="true"
         />
 		
 		<huiproperty
