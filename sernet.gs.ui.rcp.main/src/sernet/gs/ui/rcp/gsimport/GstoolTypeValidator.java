@@ -20,17 +20,25 @@
 package sernet.gs.ui.rcp.gsimport;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
 
 /**
+ * Checks if a type or subtypes of a GSTOOL Zielobjekt 
+ * can be found in the configuration. 
+ * 
+ * If an unknown type was found
+ * the user is asked to cancel the import. If the user cancels the import
+ * a GstoolImportCanceledException is thrown. GstoolImportCanceledException
+ * is a runtime exception.
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class GstoolTypeValidator {
@@ -49,7 +57,14 @@ public class GstoolTypeValidator {
         this.shell = shell;
     }
 
-
+    /**
+     * Checks the types and subtypes of a list of GSTOOL Zielobjekte.
+     * 
+     * @param zielobjekte A list with GSTOOL Zielobjekte
+     * @return 
+     *   True if all types and subtypes can be found in the configuration
+     *   False if an unknown type was found and the user canceled the import 
+     */
     public boolean validate(List<ZielobjektTypeResult> zielobjekte) {
         unknownTypes = new HashSet<String>();
         for (ZielobjektTypeResult zielobjekt : zielobjekte) {
@@ -61,6 +76,13 @@ public class GstoolTypeValidator {
         return result;
     }
     
+    /**
+     * Checks if gstoolType or gstoolSubtype can be found in the configuration.
+     * 
+     * @param gstoolType A type of a Zielobjekt
+     * @param gstoolSubtype A subtype of a Zielobjekt
+     * @return True if gstoolType or gstoolSubtype can be found fasle if not
+     */
     public boolean validate(String gstoolType, String gstoolSubtype) {
         try {
             GstoolTypeMapper.getVeriniceType(gstoolType, gstoolSubtype);
@@ -72,26 +94,30 @@ public class GstoolTypeValidator {
     }
     
     private boolean showCancelDialog() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Unknown GSTOOL types found. Click OK to use the default type: '");
-        sb.append(GstoolTypeMapper.DEFAULT_TYPE_ID);
-        sb.append("' and continue import. Click Cancel to cancel the import.\n\n");
-        for (String typeLabel : unknownTypes) {
-            sb.append(typeLabel).append("\n");
-        }
-        final String message = sb.toString();
+        final String message = createMessage();
         Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
-                result = MessageDialog.openConfirm(getShell(), "Unknown GSTOOL types", message);
+                result = MessageDialog.openConfirm(getShell(), Messages.GstoolTypeValidator_0, message);
             }
         }); 
         return result;
     }
 
+    private String createMessage() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(NLS.bind(Messages.GstoolTypeValidator_1, GstoolTypeMapper.DEFAULT_TYPE_ID));
+        sb.append("\n\n"); //$NON-NLS-1$
+        for (String typeLabel : unknownTypes) {
+            sb.append(typeLabel).append("\n"); //$NON-NLS-1$
+        }
+        final String message = sb.toString();
+        return message;
+    }
+
     private void addToUnknownTypes(String gstoolType, String gstoolSubtype) {
         StringBuilder sb = new StringBuilder();
-        sb.append(gstoolSubtype).append(" (").append(gstoolType).append(")");
+        sb.append(gstoolSubtype).append(" (").append(gstoolType).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
         if(unknownTypes==null) {
             unknownTypes = new HashSet<String>();
         }

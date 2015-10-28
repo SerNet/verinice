@@ -55,12 +55,14 @@ public abstract class AbstractGstoolImportTask {
 
     private ClassLoader originalClassLoader;
     
-    public void execute(int importType, IProgress monitor)  {
+    public void execute(int importType, IProgress monitor) { // throws GstoolImportCanceledException  {
         try {
             initThreadContextClassLoader();
             executeTask(importType, monitor);
             resetThreadContextClassLoader();
             CnAElementFactory.getInstance().reloadModelFromDatabase();
+        } catch (GstoolImportCanceledException e) {
+            throw e;
         } catch (Exception e) {
             LOG.error("Error while importing data from GSTOOL", e);
             ExceptionUtil.log(e, e.getMessage());

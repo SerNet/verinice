@@ -28,10 +28,13 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.service.TimeFormatter;
+import sernet.gs.ui.rcp.gsimport.GstoolImportCanceledException;
 import sernet.gs.ui.rcp.gsimport.IProgress;
 import sernet.gs.ui.rcp.gsimport.ImportNotesTask;
 import sernet.gs.ui.rcp.gsimport.ImportRisikoanalysenTask;
 import sernet.gs.ui.rcp.gsimport.ImportTask;
+import sernet.gs.ui.rcp.gsimport.ValidateTask;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.GSImportDialog;
@@ -39,16 +42,19 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 
+/**
+ * Rights enables JFace action which starts the GSTOOL import.
+ * 
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ */
 public class ImportGstoolAction extends RightsEnabledAction {
 
     private static final Logger LOG = Logger.getLogger(ImportGstoolAction.class);
     
 	public static final String ID = "sernet.gs.ui.rcp.main.importgstoolaction";
 
-	private GSImportDialog dialog;
-	
-	private Shell shell;
-	
+	private GSImportDialog dialog;	
+	private Shell shell;	
 	private String sourceId;
 
     public ImportGstoolAction(IWorkbenchWindow window, String label) {
@@ -64,7 +70,6 @@ public class ImportGstoolAction extends RightsEnabledAction {
                         setEnabled(checkRights());
                     }
                 }
-
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else {
@@ -84,76 +89,142 @@ public class ImportGstoolAction extends RightsEnabledAction {
 			if (dialog.open() != InputDialog.OK){
                 return;
 			}
-			importZielobjekte();
-      	
+			validateNonBlocking();
+			importZielobjekteNonBlocking();   	
 			if (dialog.isNotizen()) {
-			    importNotes();
-			}
-			
+			    importNotesNonBlocking();
+			}		
 			if (dialog.isRisikoanalysen()) {
-                importRiskAnalyses();          
+                importRiskAnalysesNonBlocking();          
 			}			
-		} catch (Exception e) {
-			ExceptionUtil.log(e, "Import aus dem Gstool fehlgeschlagen.");
+        } catch (InvocationTargetException e) {
+            handleInvocationTargetException(e);           
+        } catch (Exception e) {
+			handleException(e);
 		} 
     }
     
-    private void importZielobjekte() throws InvocationTargetException, InterruptedException {
+    /**
+     * Checks if all types and subtypes of the Zielobjekte in GSTOOL
+     * can be found in the configuration. If an unknown type was found
+     * the user is asked to cancel the import. If the user cancels the import
+     * a GstoolImportCanceledException is thrown. GstoolImportCanceledException
+     * is a runtime exception.
+     * 
+     * @param monitor A progress monitor
+     * @throws GstoolImportCanceledException If user cancels the import after an unknown type was found
+     */
+    private void validate(final IProgressMonitor monitor) { // throws GstoolImportCanceledException
+        Activator.inheritVeriniceContextState();
+        ValidateTask validateTask = new ValidateTask(shell);         
+        long importTaskStart = System.currentTimeMillis();
+        validateTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Time for validating:\t" + TimeFormatter.getHumanRedableTime(System.currentTimeMillis() - importTaskStart));
+        }
+    }
+    
+    /**
+     * Imports Zielobjekte from GSTOOL
+     * Bausteine, Gefaehrdungen, Massnahmen und relations between
+     * these objects are also imported if selected in configuration dialog.
+     * 
+     * @param monitor A progress monitor
+     */
+    private void importZielobjekte(final IProgressMonitor monitor) {
+        Activator.inheritVeriniceContextState();
+        ImportTask importTask = new ImportTask(
+                dialog.isBausteine(),
+                dialog.isMassnahmenPersonen(),
+                dialog.isZielObjekteZielobjekte(),
+                dialog.isSchutzbedarf(),
+                dialog.isRollen(),
+                dialog.isKosten(),
+                dialog.isUmsetzung(),
+                dialog.isBausteinPersonen()
+                );         
+        long importTaskStart = System.currentTimeMillis();
+        importTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Time for ImportTask:\t" + String.valueOf((System.currentTimeMillis() - importTaskStart)/1000 ) + " seconds");
+        }             
+        sourceId = importTask.getSourceId();
+    }
+    
+    /**
+     * Imports notes from GSTOOL
+     * 
+     * @param monitor A progress monitor
+     */
+    private void importNotes(final IProgressMonitor monitor) {
+        Activator.inheritVeriniceContextState();            
+        long importNotesStart = System.currentTimeMillis();
+        ImportNotesTask importTask = new ImportNotesTask();
+        importTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Time for ImportNotesTask:\t" + String.valueOf((System.currentTimeMillis() - importNotesStart)/1000 ) + " seconds");
+        }
+    }
+    
+    /**
+     * Imports risk analyses from GSTOOL.
+     * 
+     * @param monitor A progress monitor
+     */
+    private void importRiskAnalyses(final IProgressMonitor monitor) {
+        Activator.inheritVeriniceContextState();
+        long importRAStart = System.currentTimeMillis();
+        ImportRisikoanalysenTask importTask = new ImportRisikoanalysenTask(sourceId);
+        importTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
+        if(LOG.isDebugEnabled()){
+            LOG.debug("Time for ImportRATask:\t" + String.valueOf((System.currentTimeMillis() - importRAStart)/1000 ) + " seconds");
+        }
+    }
+    
+    private void handleInvocationTargetException(InvocationTargetException e) {
+        Throwable cause = e.getCause();
+        if(cause!=null && cause instanceof GstoolImportCanceledException) {
+            LOG.warn("Import from GSTOOL was canceled, cause: ", cause);
+        } else {
+            handleException(e);
+        }       
+    }
+
+    private void handleException(Exception e) {
+        ExceptionUtil.log(e, "Import aus dem Gstool fehlgeschlagen.");
+    }
+    
+    private void validateNonBlocking() throws InvocationTargetException, InterruptedException {
+        PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+            @Override
+            public void run(final IProgressMonitor monitor)  {
+                validate(monitor);
+            }          
+        });
+    }    
+    private void importZielobjekteNonBlocking() throws InvocationTargetException, InterruptedException {
         PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
             @Override
             public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                Activator.inheritVeriniceContextState();
-                ImportTask importTask = new ImportTask(
-                        dialog.isBausteine(),
-                        dialog.isMassnahmenPersonen(),
-                        dialog.isZielObjekteZielobjekte(),
-                        dialog.isSchutzbedarf(),
-                        dialog.isRollen(),
-                        dialog.isKosten(),
-                        dialog.isUmsetzung(),
-                        dialog.isBausteinPersonen()
-                        );         
-                long importTaskStart = System.currentTimeMillis();
-                importTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
-                if(LOG.isDebugEnabled()){
-                    LOG.debug("Time for ImportTask:\t" + String.valueOf((System.currentTimeMillis() - importTaskStart)/1000 ) + " seconds");
-                }             
-                sourceId = importTask.getSourceId();
-            }
+                importZielobjekte(monitor);
+            } 
+        });
+    }   
+    private void importNotesNonBlocking() throws InvocationTargetException, InterruptedException {
+        PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+            @Override
+            public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                importNotes(monitor);
+            }          
         });
     }
-    
-    private void importNotes() throws InvocationTargetException, InterruptedException {
+    private void importRiskAnalysesNonBlocking() throws InvocationTargetException, InterruptedException {
         PlatformUI.getWorkbench().getProgressService().
         busyCursorWhile(new IRunnableWithProgress() {
             @Override
             public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                Activator.inheritVeriniceContextState();            
-                long importNotesStart = System.currentTimeMillis();
-                ImportNotesTask importTask = new ImportNotesTask();
-                importTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
-                if(LOG.isDebugEnabled()){
-                    LOG.debug("Time for ImportNotesTask:\t" + String.valueOf((System.currentTimeMillis() - importNotesStart)/1000 ) + " seconds");
-                }
-            }
-        });
-    }
-
-
-    private void importRiskAnalyses() throws InvocationTargetException, InterruptedException {
-        PlatformUI.getWorkbench().getProgressService().
-        busyCursorWhile(new IRunnableWithProgress() {
-            @Override
-            public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                Activator.inheritVeriniceContextState();
-
-                long importRAStart = System.currentTimeMillis();
-                ImportRisikoanalysenTask importTask = new ImportRisikoanalysenTask(sourceId);
-                importTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
-                if(LOG.isDebugEnabled()){
-                    LOG.debug("Time for ImportRATask:\t" + String.valueOf((System.currentTimeMillis() - importRAStart)/1000 ) + " seconds");
-                }
-            }
+                importRiskAnalyses(monitor);
+            }   
         });
     }
     
