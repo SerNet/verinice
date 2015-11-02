@@ -18,45 +18,50 @@
 
 package sernet.gs.ui.rcp.gsimport;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.ISelectionListener;
 
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.hui.common.connect.HitroUtil;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
+import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
 
 /**
+ * View for mapping the specified Subtypes of the GS-Tool with the verinice
+ * subtypes Frontend for GSToolTypeMapper
+ * 
  * @author shagedorn
- *
+ * 
  */
 public class GSImportMappingView extends RightsEnabledView {
 
@@ -64,66 +69,95 @@ public class GSImportMappingView extends RightsEnabledView {
 
     public static final String ID = "sernet.gs.ui.rcp.gsimport.gsimportmappingview";
 
-    // new way
     private TableViewer viewer;
     private TableSorter tableSorter = new TableSorter();
-    private ISelectionListener selectionListener;
     private GsImportMappingLabelProvider labelProvider;
     private GsImportMappingContentProvider contentProvider;
-
+    private WorkspaceJob initDataJob;
     private Action addMappingEntryAction;
-
     private Action deleteMappingEntryAction;
+    private IModelLoadListener modelLoadListener;
 
 
-    // old way
-    private Table mainTable;
-    private TableItem[] items;
-    private Set<Text> texts;
-    private Set<CCombo> combos;
 
-    private boolean useNewWay = true;
+    public GSImportMappingView() {
+        initDataJob = new WorkspaceJob("") {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask("", IProgressMonitor.UNKNOWN);
+                    init();
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", "Error while loading data.", e); //$NON-NLS-1$ //$NON-NLS-2$
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
 
+        };
+    }
+
+    private static Display getDisplay() {
+        Display display = Display.getCurrent();
+        // may be null if outside the UI thread
+        if (display == null) {
+            display = Display.getDefault();
+        }
+        return display;
+    }
+
+    private void init() {
+        getDisplay().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                viewer.setInput(GstoolTypeMapper.getGstoolSubtypes());
+            }
+        });
+    }
+
+    protected void startInitDataJob() {
+        if (CnAElementFactory.isIsoModelLoaded()) {
+            JobScheduler.scheduleInitJob(initDataJob);
+        } else if (modelLoadListener == null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No model loaded, adding model load listener."); //$NON-NLS-1$
+            }
+            createModelLoadListener();
+        }
+    }
+
+    private void createModelLoadListener() {
+        // model is not loaded yet: add a listener to load data when it's loaded
+        modelLoadListener = new IModelLoadListener() {
+            @Override
+            public void closed(BSIModel model) {
+                // nothing to do
+            }
+
+            @Override
+            public void loaded(BSIModel model) {
+                JobScheduler.scheduleInitJob(initDataJob);
+                CnAElementFactory.getInstance().removeLoadListener(modelLoadListener);
+            }
+
+            @Override
+            public void loaded(ISO27KModel model) {
+                // nothing to do
+            }
+        };
+        CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+    }
 
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
-
-        if(this.useNewWay) {
             alternateCreatePartControl(parent);
-        } else {
-
-            this.combos = new HashSet<>();
-            this.texts = new HashSet<>();
-
-            final int layoutMarginWidth = 5;
-            final int layoutMarginHeight = 10;
-            final int layoutSpacing = 3;
-            final int gdVerticalSpan = 4;
-            final int mainTableItemHeightFactor = 20;
-            final int tableColumnDefaultWidth = 225;
-
-            FillLayout layout = new FillLayout();
-            layout.type = SWT.VERTICAL;
-            layout.marginWidth = layoutMarginWidth;
-            layout.marginHeight = layoutMarginHeight;
-            layout.spacing = layoutSpacing;
-
-            GridLayout gridLayout = new GridLayout(1, false);
-            gridLayout.marginWidth = 0;
-            gridLayout.marginHeight = 0;
-
-            Composite container = new Composite(parent, SWT.NONE);
-            container.setLayout(gridLayout);
-
-            createTable(gdVerticalSpan, mainTableItemHeightFactor, tableColumnDefaultWidth, container);
-
-            this.mainTable.setSortColumn(this.mainTable.getColumn(0));
-            this.mainTable.setSortDirection(SWT.DOWN);
-
-        }
 
     }
+
 
     private void fillLocalToolBar() {
         IActionBars bars = getViewSite().getActionBars();
@@ -142,6 +176,7 @@ public class GSImportMappingView extends RightsEnabledView {
         makeActions();
         fillLocalToolBar();
         getSite().setSelectionProvider(this.viewer);
+        startInitDataJob();
     }
 
     private void createTableViewer(Composite parent) {
@@ -152,8 +187,6 @@ public class GSImportMappingView extends RightsEnabledView {
         final int veriniceTypeColumnWidth = 80;
 
         this.viewer = new TableViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-        //        viewer.setContentProvider(contentProvider);
-        //        viewer.setLabelProvider(new ValidationLabelProvider());
         Table table = this.viewer.getTable();
 
         gstoolTypeColumn = new TableViewerColumn(this.viewer, SWT.LEFT);
@@ -166,7 +199,7 @@ public class GSImportMappingView extends RightsEnabledView {
         veriniceTypeColumn.getColumn().setWidth(veriniceTypeColumnWidth);
         veriniceTypeColumn.getColumn().setText(Messages.GSImportMappingView_2);
         veriniceTypeColumn.getColumn().addSelectionListener(new SortSelectionAdapter(this, veriniceTypeColumn.getColumn(), 1));
-        veriniceTypeColumn.setEditingSupport(new GsImportMappingComboBoxEditingSupport(this.viewer));
+        veriniceTypeColumn.setEditingSupport(new GsImportMappingComboBoxEditingSupport(this.viewer, this));
 
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -174,14 +207,14 @@ public class GSImportMappingView extends RightsEnabledView {
         this.viewer.setContentProvider(this.contentProvider);
         this.viewer.setLabelProvider(this.labelProvider);
 
-        this.viewer.setInput(GstoolTypeMapper.getGstoolSubtypes());
+        this.viewer.setInput(new PlaceHolder(""));
 
         this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
-                if(event.getSelection() instanceof IStructuredSelection) {
-                    if(((IStructuredSelection)event.getSelection()).getFirstElement() instanceof Object[]) {
+                if (event.getSelection() instanceof IStructuredSelection) {
+                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof Object[]) {
                         deleteMappingEntryAction.setEnabled(true);
                     } else {
                         deleteMappingEntryAction.setEnabled(false);
@@ -189,10 +222,9 @@ public class GSImportMappingView extends RightsEnabledView {
                 }
             }
         });
-        
 
     }
-    
+
     void refresh() {
         this.viewer.setInput(GstoolTypeMapper.getGstoolSubtypes());
     }
@@ -221,13 +253,33 @@ public class GSImportMappingView extends RightsEnabledView {
     }
 
     private void addMappingEntry() {
+        Object[] element = { "< " + Messages.GSImportMappingView_newEntry + " >", SonstIT.TYPE_ID };
 
+        try {
+            GstoolTypeMapper.addGstoolSubtypeToPropertyFile(element);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        refresh();
+            StructuredSelection selection = new StructuredSelection(element);
+        viewer.setSelection(selection);
+        
     }
 
     private void deleteMappingEntry() {
-
+        try {
+            if (viewer.getSelection() instanceof StructuredSelection) {
+                StructuredSelection selection = (StructuredSelection) viewer.getSelection();
+                GstoolTypeMapper.removeGstoolSubtypeToPropertyFile(((Object[]) selection.getFirstElement())[0]);
+                refresh();
+            } else {
+                LOG.warn("wrong selection type", new IllegalArgumentException("wrong selection type"));
+            }
+        } catch (IOException e) {
+            LOG.error("removing of property from gstool-subtypes-mapping file fails", e);
+        }
     }
-
 
     private static class SortSelectionAdapter extends SelectionAdapter {
         private GSImportMappingView gsiView;
@@ -304,13 +356,13 @@ public class GSImportMappingView extends RightsEnabledView {
                 // e1 and e2 != null
                 switch (this.propertyIndex) {
                 case 0:
-                    if(a1.length == 2 && a2.length == 2 && a1[0] != null && a2[0] != null){
-                        rc = ((String)a1[0]).compareTo((String)a2[0]);
+                    if (a1.length == 2 && a2.length == 2 && a1[0] != null && a2[0] != null) {
+                        rc = ((String) a1[0]).compareTo((String) a2[0]);
                         break;
                     }
                 case 1:
-                    if(a1.length == 2 && a2.length == 2 && a1[1] != null && a2[1] != null){
-                        rc = ((String)a1[1]).compareTo((String)a2[1]);
+                    if (a1.length == 2 && a2.length == 2 && a1[1] != null && a2[1] != null) {
+                        rc = ((String) a1[1]).compareTo((String) a2[1]);
                         break;
                     }
                 default:
@@ -327,109 +379,9 @@ public class GSImportMappingView extends RightsEnabledView {
 
     }
 
-
-
-
-    /**
-     * @param gdVerticalSpan
-     * @param mainTableItemHeightFactor
-     * @param tableColumnDefaultWidth
-     * @param container
-     */
-    private void createTable(final int gdVerticalSpan, final int mainTableItemHeightFactor, final int tableColumnDefaultWidth, Composite container) {
-
-        this.mainTable = new Table(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
-        GridData gridData = new GridData(GridData.FILL, GridData.FILL, true, true);
-        gridData.verticalSpan = gdVerticalSpan;
-        int listHeight = this.mainTable.getItemHeight() * mainTableItemHeightFactor;
-        Rectangle trim = this.mainTable.computeTrim(0, 0, 0, listHeight);
-        gridData.heightHint = trim.height;
-        this.mainTable.setLayoutData(gridData);
-        this.mainTable.setHeaderVisible(true);
-        this.mainTable.setLinesVisible(true);
-
-        // set the columns of the table
-        String[] titles = { Messages.GSImportMappingView_1, Messages.GSImportMappingView_2};
-
-
-        for (String title2 : titles) {
-            TableColumn column = new TableColumn(this.mainTable, SWT.NONE);
-            column.setText(title2);
-            column.setWidth(tableColumnDefaultWidth);
-        }
-
-        // fill table
-        initData();
-    }
-
-    /**
-     *
-     */
-    private void initData() {
-        Set<String> gstoolSubtypes = GstoolTypeMapper.getGstoolSubtypes().keySet();
-        String[] propertyColumns = gstoolSubtypes.toArray(new String[gstoolSubtypes.size()]);
-        for (int i = 1; i < propertyColumns.length; i++) {
-            new TableItem(this.mainTable, SWT.NONE);
-        }
-
-        this.items = this.mainTable.getItems();
-        // fill the combos with content
-        for (int i = 0; i < this.items.length; i++) {
-            handleSubtype(propertyColumns, i);
-        }
-    }
-
-    /**
-     * @param propertyColumns
-     * @param i
-     */
-    private void handleSubtype(String[] propertyColumns, int i) {
-        TableEditor editor;
-        editor = new TableEditor(this.mainTable);
-
-        Text text = new Text(this.mainTable, SWT.NONE);
-        text.setText(propertyColumns[i + 1]);
-        text.setEditable(false);
-        editor.grabHorizontal = true;
-        editor.setEditor(text, this.items[i], 0);
-        this.texts.add(text);
-
-        editor = new TableEditor(this.mainTable);
-        final CCombo combo = new CCombo(this.mainTable, SWT.NONE);
-        combo.setText(""); //$NON-NLS-1$
-        String gstoolSubtype = text.getText();
-        String veriniceValue = HitroUtil.getInstance().getTypeFactory().getMessage(GstoolTypeMapper.getGstoolSubtypes().get(gstoolSubtype));
-        int index = -1;
-        for(int j = 0; j < combo.getItems().length; j++) {
-            if(veriniceValue.equals(combo.getItem(j))) {
-                index = j;
-                break;
-            }
-        }
-        if(index > -1) {
-            combo.select(index);
-        }
-        combo.addSelectionListener(new SelectionListener() {
-            
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                TableItem item = mainTable.getItem(mainTable.getSelectionIndex());
-                item.hashCode();
-            }
-            
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-                
-            }
-        });
-        this.combos.add(combo);
-
-        editor.grabHorizontal = true;
-        editor.setEditor(combo, this.items[i], 1);
-    }
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getRightID()
      */
     @Override
@@ -437,7 +389,9 @@ public class GSImportMappingView extends RightsEnabledView {
         return ActionRightIDs.GSTOOLIMPORT;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override

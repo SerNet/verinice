@@ -56,6 +56,16 @@ public class GsImportMappingStringEditingSupport extends EditingSupport {
     @Override
     protected CellEditor getCellEditor(Object arg0) {
         return new TextCellEditor(viewer.getTable());
+        //
+        // String[] currentLinkTypeNames = { "1", "2", "3" };//
+        // getPossibleLinkTypeNames(link);
+        // ComboBoxCellEditor choiceEditor = new
+        // ComboBoxCellEditor(viewer.getTable(), currentLinkTypeNames,
+        // SWT.READ_ONLY);
+        // choiceEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
+        //
+        // return choiceEditor;
+
     }
 
     /* (non-Javadoc)
@@ -77,9 +87,10 @@ public class GsImportMappingStringEditingSupport extends EditingSupport {
     protected void setValue(Object element, Object value) {
         if(element instanceof Object[] && value instanceof String) {
             try {
-                Object[] newEntry = new Object[] {value, ((Object[])element)[1]};
-                GstoolTypeMapper.addGstoolSubtypeToPropertyFile(newEntry);
-                viewer.refresh(newEntry, true);
+                Object[] oldEntry = (Object[]) element;
+                Object[] newEntry = new Object[] { value, oldEntry[1] };
+                GstoolTypeMapper.editGstoolSubtypeToPropertyFile(oldEntry[0], newEntry);
+                view.refresh();
             } catch (IOException e) {
                 LOG.error("writing of property to gstool-subtypes-mapping file fails", e);
             }

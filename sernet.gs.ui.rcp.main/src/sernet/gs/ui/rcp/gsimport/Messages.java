@@ -30,6 +30,7 @@ public class Messages extends NLS {
     public static String GSImportMappingView_2;
     public static String GstoolTypeValidator_0;
     public static String GstoolTypeValidator_1;
+    public static String GSImportMappingView_newEntry;
 
     static {
         // initialize resource bundle

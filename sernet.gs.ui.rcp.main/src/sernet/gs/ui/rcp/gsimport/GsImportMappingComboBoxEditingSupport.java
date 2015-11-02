@@ -21,7 +21,9 @@ package sernet.gs.ui.rcp.gsimport;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -64,10 +66,14 @@ public class GsImportMappingComboBoxEditingSupport extends EditingSupport {
     }
 
     private TableViewer viewer;
+    private GSImportMappingView view;
+    private String[] translatedVeriniceValues = null;
+    private Map<String, String> veriniceValuesMap = null;
 
-    public GsImportMappingComboBoxEditingSupport(TableViewer viewer) {
+    public GsImportMappingComboBoxEditingSupport(TableViewer viewer, GSImportMappingView view) {
         super(viewer);
         this.viewer = viewer;
+        this.view = view;
 
     }
 
@@ -104,13 +110,28 @@ public class GsImportMappingComboBoxEditingSupport extends EditingSupport {
     }
 
     private String[] getTranslatedVeriniceValues() {
-        String[] list = new String[veriniceITGSObjectTypes.size()];
-        int i = 0;
-        for(String value : veriniceITGSObjectTypes) {
-            String msg = HitroUtil.getInstance().getTypeFactory().getMessage(value);
-            list[i] = (StringUtils.isNotEmpty(msg)) ? msg : value;
+        if (translatedVeriniceValues == null) {
+            translatedVeriniceValues = getMappedTranslatedVeriniceValues().keySet().toArray(new String[veriniceITGSObjectTypes.size()]);
         }
-        return list;
+        return translatedVeriniceValues;
+    }
+
+    /**
+     * 
+     * @return
+     */
+    // TODO rmotza write javadoc
+    private Map<String, String> getMappedTranslatedVeriniceValues() {
+        // lazy loading because not often changed
+        if (veriniceValuesMap == null) {
+            veriniceValuesMap = new TreeMap<>();
+            for (String value : veriniceITGSObjectTypes) {
+                String msg = HitroUtil.getInstance().getTypeFactory().getMessage(value);
+                String tmp = (StringUtils.isNotEmpty(msg)) ? msg : value;
+                veriniceValuesMap.put(tmp, value);
+            }
+        }
+        return veriniceValuesMap;
     }
 
     private int getIndexOfVeriniceObjectType(String objectType) {
@@ -130,9 +151,15 @@ public class GsImportMappingComboBoxEditingSupport extends EditingSupport {
     protected void setValue(Object element, Object value) {
         if(element instanceof Object[]) {
             try {
-                GstoolTypeMapper.addGstoolSubtypeToPropertyFile((Object[])element);
+                Object[] oldEntry = (Object[]) element;
+                Object[] newEntry = new Object[] { oldEntry[0], getMappedTranslatedVeriniceValues().get(getTranslatedVeriniceValues()[(int) value]) };
+                GstoolTypeMapper.addGstoolSubtypeToPropertyFile(newEntry);
+                view.refresh();
+
             } catch (IOException e) {
                 LOG.error("writing of property to gstool-subtypes-mapping file fails", e);
+            } catch (Exception e) {
+                LOG.error("error", e);
             }
         }
     }

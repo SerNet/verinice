@@ -199,7 +199,7 @@
       		allowMultiple="false"
       		category="sernet.gs.ui.rcp.main.views"
       		class="sernet.gs.ui.rcp.gsimport.GSImportMappingView"
-      		icon="icons/folder_table.png"
+      		icon="icons/plugin_depend.gif"
       		id="sernet.gs.ui.rcp.gsimport.gsimportmappingview"
       		name="%view.name.18"
       		restorable="true">
