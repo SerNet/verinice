@@ -58,7 +58,7 @@ import sernet.verinice.rcp.RightsEnabledView;
 
 /**
  * View for mapping the specified Subtypes of the GS-Tool with the verinice
- * subtypes Frontend for GSToolTypeMapper
+ * Types Frontend for GSToolTypeMapper
  * 
  * @author shagedorn
  * 

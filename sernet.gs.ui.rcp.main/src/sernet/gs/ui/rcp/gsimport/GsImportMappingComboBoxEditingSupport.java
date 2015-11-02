@@ -117,10 +117,11 @@ public class GsImportMappingComboBoxEditingSupport extends EditingSupport {
     }
 
     /**
+     * Method for translating the verinice types with .properties and mapping
+     * them for later back-tracking
      * 
-     * @return
+     * @return Map<translatedType, veriniceITGSObjectType>
      */
-    // TODO rmotza write javadoc
     private Map<String, String> getMappedTranslatedVeriniceValues() {
         // lazy loading because not often changed
         if (veriniceValuesMap == null) {
