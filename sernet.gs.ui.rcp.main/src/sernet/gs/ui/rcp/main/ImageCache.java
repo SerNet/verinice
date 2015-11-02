@@ -182,6 +182,7 @@ public final class ImageCache {
 	public static final String VIEW_NOTE = "note.png";
     public static final String VIEW_TASK = "tasks.gif";
     public static final String VIEW_VALIDATION = "quickfix_warning_obj.gif";
+    public static final String VIEW_GSMAPPING = "plugin_depend.gif";
 
 	public static final String EXPANDALL   = "expandall.gif";
 	public static final String COLLAPSEALL = "collapseall.gif";
