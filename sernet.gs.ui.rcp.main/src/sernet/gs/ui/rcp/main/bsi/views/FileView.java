@@ -615,7 +615,7 @@ public class FileView extends RightsEnabledView implements ILinkedWithEditorView
             }
         };
         toggleLinkAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
-        toggleLinkAction.setChecked(false);
+        toggleLinkAction.setChecked(isLinkingActive());
     }
 
     private void openFile() {
