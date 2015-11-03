@@ -2523,14 +2523,6 @@ if(persons != null &amp;&amp; !(persons.equals(""))){
             <property name="borderTopStyle">solid</property>
             <property name="borderTopWidth">thin</property>
             <property name="dataSet">incidents</property>
-            <list-property name="paramBindings">
-                <structure>
-                    <property name="paramName">root_object</property>
-                    <simple-property-list name="expression">
-                        <value type="javascript">row["dbid"]</value>
-                    </simple-property-list>
-                </structure>
-            </list-property>
             <list-property name="boundDataColumns">
                 <structure>
                     <property name="name">incident_name</property>
