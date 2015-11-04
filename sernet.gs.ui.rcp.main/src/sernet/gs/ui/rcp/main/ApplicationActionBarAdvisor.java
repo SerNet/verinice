@@ -45,7 +45,7 @@ import org.eclipse.ui.internal.cheatsheets.actions.CheatSheetCategoryBasedSelect
 import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
-import sernet.gs.ui.rcp.gsimport.GSImportMappingView;
+import sernet.gs.ui.rcp.gsimport.GstoolImportMappingView;
 import sernet.gs.ui.rcp.main.actions.ChangeOwnPasswordAction;
 import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
 import sernet.gs.ui.rcp.main.actions.ImportCSVAction;
@@ -241,7 +241,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openAccountViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_38, AccountView.ID, ImageCache.PERSON, ActionRightIDs.ACCOUNTSETTINGS);
         this.openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
         this.openSearchViewAction = new OpenMultipleViewAction(window, Messages.ApplicationActionBarAdvisor_42, SearchView.ID, ImageCache.SEARCH, ActionRightIDs.SEARCHVIEW);
-        this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GSImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
+        this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
 
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         this.importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
