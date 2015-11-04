@@ -230,8 +230,18 @@ public class CnAWorkspace {
     }
     
     private void createGstoolPropertyFiles() throws IOException {
-        createTextFile(CONF + File.separator + GstoolTypeMapper.TYPE_PROPERTIES_FILE, getConfDir(), GstoolTypeMapper.TYPE_PROPERTIES_FILE);
-        createTextFile(CONF + File.separator + GstoolTypeMapper.SUBTYPE_PROPERTIES_FILE, getConfDir(), GstoolTypeMapper.SUBTYPE_PROPERTIES_FILE);
+        createTextFile(CONF + File.separator + GstoolTypeMapper.TYPE_PROPERTIES_FILE,
+                VeriniceCharset.CHARSET_ISO_8859_15, 
+                getConfDir(), 
+                GstoolTypeMapper.TYPE_PROPERTIES_FILE,
+                VeriniceCharset.CHARSET_ISO_8859_15,
+                null);
+        createTextFile(CONF + File.separator + GstoolTypeMapper.SUBTYPE_PROPERTIES_FILE,
+                VeriniceCharset.CHARSET_ISO_8859_15,
+                getConfDir(), 
+                GstoolTypeMapper.SUBTYPE_PROPERTIES_FILE,
+                VeriniceCharset.CHARSET_ISO_8859_15,
+                null);
     }
 
     /**
@@ -329,8 +339,36 @@ public class CnAWorkspace {
      * @throws IOException
      */
     protected void createTextFile(String infile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
-        createTextFile(infile, VeriniceCharset.CHARSET_DEFAULT, toDir, outfile, variables);
+        createTextFile(infile, VeriniceCharset.CHARSET_DEFAULT, toDir, outfile, VeriniceCharset.CHARSET_DEFAULT, variables);
     }
+    
+    /**
+     * Create a text file in the local file system from a resource (i.e. inside
+     * a JAR file distributed with the application).
+     *
+     * Adapt line-feeds to local settings and optionally replace variables with
+     * values given in a hashmap.
+     *
+     * Files are converted from charsetInfile to CHARSET_DEFAULT.
+     *
+     * @param infile
+     *            relative path to a file accessed by a class loader
+     * @param charsetInfile
+     *            charset of input file Files are converted from charsetInfile
+     *            to VeriniceCharset.CHARSET_DEFAULT
+     * @param toDir
+     *            path to directory of the created file
+     * @param outfile
+     *            name of created file
+     * @param variables
+     *            property added to the file, may be null
+     * @throws NullPointerException
+     * @throws IOException
+     */
+    protected void createTextFile(String infile, Charset charsetInfile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
+        createTextFile(infile, charsetInfile, toDir, outfile, VeriniceCharset.CHARSET_DEFAULT, variables);
+    }
+
 
     /**
      * Create a text file in the local file system from a resource (i.e. inside
@@ -345,17 +383,19 @@ public class CnAWorkspace {
      *            relative path to a file accessed by a class loader
      * @param charsetInfile
      *            charset of input file Files are converted from charsetInfile
-     *            to CHARSET_DEFAULT
+     *            to charsetOutfile
      * @param toDir
      *            path to directory of the created file
      * @param outfile
      *            name of created file
+     * @param charsetOutfile
+     *            charset of output file
      * @param variables
      *            property added to the file, may be null
      * @throws NullPointerException
      * @throws IOException
      */
-    protected void createTextFile(String infile, Charset charsetInfile, String toDir, String outfile, Map<String, String> variables) throws NullPointerException, IOException {
+    protected void createTextFile(String infile, Charset charsetInfile, String toDir, String outfile, Charset charsetOutfile, Map<String, String> variables) throws NullPointerException, IOException {
 
         String infileResource = infile.replace('\\', '/');
         InputStream is = getClass().getClassLoader().getResourceAsStream(infileResource);
@@ -383,7 +423,7 @@ public class CnAWorkspace {
 
         backupFile(toDir, outfile);
         FileOutputStream fout = new FileOutputStream(toDir + File.separator + outfile, false);
-        OutputStreamWriter outWrite = new OutputStreamWriter(fout, VeriniceCharset.CHARSET_DEFAULT);
+        OutputStreamWriter outWrite = new OutputStreamWriter(fout, charsetOutfile);
         outWrite.write(skelFile.toString());
         outWrite.close();
         fout.close();
