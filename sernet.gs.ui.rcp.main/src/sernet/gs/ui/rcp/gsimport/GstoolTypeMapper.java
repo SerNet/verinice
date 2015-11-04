@@ -53,7 +53,7 @@ public abstract class GstoolTypeMapper {
     
     public static final String TYPE_PROPERTIES_FILE = "gstool-types.properties";
     public static final String SUBTYPE_PROPERTIES_FILE = "gstool-subtypes.properties";
-    public static final String SUBTYPE_PROPERTIES_FIL_ENCODINGE = "ISO-8859-15";
+    public static final String SUBTYPE_PROPERTIES_FILE_ENCODING = "ISO-8859-15";
  
     /**
      * DEFAULT_TYPE_ID is used as element type id if no 
@@ -118,26 +118,6 @@ public abstract class GstoolTypeMapper {
         return type;
 	}
 
-    public static Map<String, String> getGstoolTypes() {
-        if(gstoolTypes==null) {
-            gstoolTypes = createGstoolTypes();
-        }
-        return gstoolTypes;
-    }
-
-
-    private static Map<String, String> createGstoolTypes() {
-        Properties properties =  readPropertyFile(TYPE_PROPERTIES_FILE);
-        Set<Object> keys = properties.keySet();
-        for (Object key : keys) {
-            gstoolTypes.put((String) key, (String) properties.get(key));
-            if (LOG.isInfoEnabled()) {
-                LOG.info("Type added: " + key + " = " + properties.get(key));
-            }
-        }
-        return gstoolTypes;
-    }
-
     public static void addGstoolSubtypeToPropertyFile(Object[] mappingEntry) throws IOException {
         Properties properties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
         properties.put((String)mappingEntry[0], (String)mappingEntry[1]);
@@ -156,15 +136,36 @@ public abstract class GstoolTypeMapper {
         properties.put((String) mappingEntry[0], (String) mappingEntry[1]);
         writePropertyFile(properties, SUBTYPE_PROPERTIES_FILE);
     }
+    
+    public static Map<String, String> getGstoolTypes() {
+        if(gstoolTypes==null) {
+            gstoolTypes = getGstoolTypesFromFile();
+        }
+        return gstoolTypes;
+    }
+
+
+    private static Map<String, String> getGstoolTypesFromFile() {
+        Properties properties =  readPropertyFile(TYPE_PROPERTIES_FILE);
+        Set<Object> keys = properties.keySet();
+        gstoolTypes = new HashMap<>();
+        for (Object key : keys) {
+            gstoolTypes.put((String) key, (String) properties.get(key));
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Type added: " + key + " = " + properties.get(key));
+            }
+        }
+        return gstoolTypes;
+    }
 
     public static Map<String, String> getGstoolSubtypes() {
         if (gstoolSubtypes == null) {
-            gstoolSubtypes = getGsToolSubtypesFromFile();
+            gstoolSubtypes = getGstoolSubtypesFromFile();
         }
         return gstoolSubtypes;
     }
 
-    private static void refreshGsToolSubTypes(Properties properties) {
+    private static void refreshGstoolSubTypes(Properties properties) {
         gstoolSubtypes = changePropertiesToMap(properties);
     }
 
@@ -180,7 +181,7 @@ public abstract class GstoolTypeMapper {
         return gstoolSubtypesMap;
     }
     
-    public static Map<String, String> getGsToolSubtypesFromFile(){
+    public static Map<String, String> getGstoolSubtypesFromFile(){
         gstoolSubtypes = new HashMap<>();
         Properties subProperties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
         return changePropertiesToMap(subProperties);
@@ -196,9 +197,9 @@ public abstract class GstoolTypeMapper {
             }
             file = new File(filepath);
             fileOut = new FileOutputStream(file);
-            PrintStream ps1 = new PrintStream(fileOut, true, SUBTYPE_PROPERTIES_FIL_ENCODINGE);
+            PrintStream ps1 = new PrintStream(fileOut, true, SUBTYPE_PROPERTIES_FILE_ENCODING);
             properties.store(ps1, "");
-            refreshGsToolSubTypes(properties);
+            refreshGstoolSubTypes(properties);
         } finally {
             IOUtils.closeQuietly(fileOut);
         }
@@ -209,7 +210,7 @@ public abstract class GstoolTypeMapper {
         Properties properties = new Properties();
         try {  
             fullPath = getPropertyFolderPath() + File.separator + fileName;
-            InputStreamReader reader = new InputStreamReader(new FileInputStream(fullPath), SUBTYPE_PROPERTIES_FIL_ENCODINGE);
+            InputStreamReader reader = new InputStreamReader(new FileInputStream(fullPath), SUBTYPE_PROPERTIES_FILE_ENCODING);
             properties.load(reader);
             LOG.debug("Reading types from " + fullPath + "...");
         } catch (Exception e) {
