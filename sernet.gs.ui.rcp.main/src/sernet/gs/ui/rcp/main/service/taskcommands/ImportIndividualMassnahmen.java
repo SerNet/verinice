@@ -49,6 +49,8 @@ import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 public class ImportIndividualMassnahmen extends GenericCommand {
 
     private static final Logger LOG =  Logger.getLogger(ImportIndividualMassnahmen.class);
+    
+    private static final String INDIVIDUAL_CONTROL_IDENTIFIER = "iM ";
 
     private final Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;
     private final Map<ModZobjBstMass, MassnahmenUmsetzung> alleMassnahmenMap;
@@ -102,6 +104,7 @@ public class ImportIndividualMassnahmen extends GenericCommand {
             }
             if(m != null){
                 bausteinUmsetzung = (BausteinUmsetzung)Retriever.checkRetrieveElementAndChildren(bausteinUmsetzung);
+                m.setId(getIndividualId(m.getId()));
                 
                 individualMassnahmenUmsetzung = massnahmenFactory.createMassnahmenUmsetzung(bausteinUmsetzung, m, GSScraperUtil.getInstance().getModel().getLanguage());
                 individualMassnahmenUmsetzung = massnahmenFactory.transferUmsetzungWithDate(individualMassnahmenUmsetzung, bausteineMassnahmenResult.umstxt.getName(), bausteineMassnahmenResult.obm.getUmsDatBis());
@@ -113,9 +116,19 @@ public class ImportIndividualMassnahmen extends GenericCommand {
             }
         }
         if(individualMassnahmenUmsetzung != null) {
-                individualMassnahmenUmsetzung.setName("bM " + individualMassnahmenUmsetzung.getName());
-                changedElements.add(individualMassnahmenUmsetzung);
+            changedElements.add(individualMassnahmenUmsetzung);
         }
+    }
+    
+    private String getIndividualId(String id) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(INDIVIDUAL_CONTROL_IDENTIFIER);
+        for(int i = 0; i <  id.toCharArray().length; i++) {
+            if(StringUtils.isNumeric(String.valueOf(id.toCharArray()[i])) || id.toCharArray()[i] == '.'){
+                sb.append(id.toCharArray()[i]);
+            }
+        }
+        return sb.toString();
     }
 
     private void createIndividualMassnahmenForBausteinUmsetzung(BausteinUmsetzung bausteinUmsetzung) {

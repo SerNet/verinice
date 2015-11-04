@@ -68,7 +68,7 @@ import sernet.gs.ui.rcp.main.common.model.CnATreeElementBuildException;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
-import sernet.gs.ui.rcp.main.service.taskcommands.ImportCreateBausteinReferences;
+import sernet.gs.ui.rcp.main.service.taskcommands.ImportCreateBausteinReferences2;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportCreateBausteine;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportIndividualMassnahmen;
 import sernet.gs.ui.rcp.main.service.taskcommands.ImportTransferSchutzbedarf;
@@ -408,7 +408,9 @@ public class ImportTask extends AbstractGstoolImportTask {
         }
         return zielobjekte;
     }
-
+    
+    Set<String> createdLinks = new HashSet();
+    
     /**
      * @param sourceId
      * @param element
@@ -420,6 +422,7 @@ public class ImportTask extends AbstractGstoolImportTask {
             return;
         }
         
+        long startTime = System.currentTimeMillis();
         List<BausteineMassnahmenResult> findBausteinMassnahmenByZielobjekt = null;
         if(nZielObjektBausteineMassnahmenResultMap.containsKey(zielobjekt)) {
             findBausteinMassnahmenByZielobjekt = nZielObjektBausteineMassnahmenResultMap.get(zielobjekt);
@@ -427,11 +430,113 @@ public class ImportTask extends AbstractGstoolImportTask {
             findBausteinMassnahmenByZielobjekt = Collections.EMPTY_LIST;
         }
         
-        Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
+        findBausteinMassnahmenByZielobjekt = reduceBausteinMassnahmeResultToOnePerBaustein(findBausteinMassnahmenByZielobjekt);
         
-        ImportCreateBausteinReferences command;
-        command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap, gstool2VeriniceBausteinMap, this.allCatalogueBausteine);
-        ServiceFactory.lookupCommandService().executeCommand(command);
+        for(BausteineMassnahmenResult bausteineMassnahmenResult : findBausteinMassnahmenByZielobjekt) {
+            Set<CnATreeElement> targets = new HashSet<>();
+            List<Integer> targetIds = getGstoolDao().findReferencedZobsByBaustein(bausteineMassnahmenResult.zoBst, zielobjekt.getId().getZobId());
+            for(Integer targetId : targetIds) {
+                CnATreeElement mappedElement = getCnATreeElementByZobId(targetId);
+                if(mappedElement != null) {
+                    targets.add(mappedElement);
+                }
+            }
+            
+            
+            BausteinUmsetzung bu = getVeriniceBausteinUmsetzung(bausteineMassnahmenResult, element);
+            Set<CnATreeElement> filteredTargets = new HashSet<>();
+            StringBuilder sb = new StringBuilder();
+            if(bu != null){
+                for(CnATreeElement target : targets) {
+                    sb.append(bu.hashCode()).append("#").append(target.hashCode());
+                    if(!createdLinks.contains(sb.toString())) {
+                        filteredTargets.add(target);
+                    }
+                    sb.setLength(0);
+                }
+                ImportCreateBausteinReferences2 command = new ImportCreateBausteinReferences2(bu, filteredTargets);
+                long commandStart = System.currentTimeMillis();
+                command = ServiceFactory.lookupCommandService().executeCommand(command);
+                createdLinks.addAll(command.getCreatedLinksIdentifier());
+                if(LOG.isDebugEnabled()) {
+                    LOG.debug("Time executing command on element <" + element.getTitle() + ">:\t" + String.valueOf( ((System.currentTimeMillis() - commandStart) / 1000) ) + "s");
+                }
+            } else {
+                LOG.warn("BausteinUmsetzung with Nr.:" + bausteineMassnahmenResult.baustein.getNr() +  " not found for element "  + element.getTitle());
+            }
+        }
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Time computing references for element <" + element.getTitle() + ">:\t" + String.valueOf( ((System.currentTimeMillis() - startTime) / 1000) ) + "s");
+        }
+        
+//        Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
+//        
+//        ImportCreateBausteinReferences command;
+//        command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap, gstool2VeriniceBausteinMap, this.allCatalogueBausteine);
+//        ServiceFactory.lookupCommandService().executeCommand(command);
+    }
+    
+    private List<BausteineMassnahmenResult> reduceBausteinMassnahmeResultToOnePerBaustein(List<BausteineMassnahmenResult> inputList){
+        long startTime = System.currentTimeMillis();
+        Map<Integer, BausteineMassnahmenResult> map = new HashMap<>();
+        for(BausteineMassnahmenResult bausteineMassnahmenResult : inputList) {
+            if(!map.containsKey(bausteineMassnahmenResult.baustein.getId().getBauId())) {
+                map.put(bausteineMassnahmenResult.baustein.getId().getBauId(), bausteineMassnahmenResult);
+            }
+        }
+        List<BausteineMassnahmenResult> reducedList = new ArrayList<>(map.size());
+        reducedList.addAll(map.values());
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Reduced BausteineMassnahmenList from " + inputList.size() + " to " + reducedList.size());
+            LOG.debug("Time needed for Reducing:\t" + String.valueOf( ((System.currentTimeMillis() - startTime) / 1000) ) + "s");
+        }
+        return reducedList;
+    }
+    
+    private boolean mbBausteinEquals(MbBaust mbB1, MbBaust mbB2){
+        return mbB1.getNr().equals(mbB2.getNr()) && mbB1.getId().getBauId().equals(mbB2.getId().getBauId());
+    }
+
+    private BausteinUmsetzung getVeriniceBausteinUmsetzung(BausteineMassnahmenResult bausteineMassnahmeResult, CnATreeElement parent){
+        if(parent.getTitle().equals("Druckservice Bad Godesberg") && bausteineMassnahmeResult.baustein.getNr().equals("5.99")){
+            this.hashCode();
+        }
+        for(MbBaust mbBKey : alleBausteineToBausteinUmsetzungMap.keySet()){
+            if(mbBausteinEquals(mbBKey, bausteineMassnahmeResult.baustein)){
+                BausteinUmsetzung bausteinUmsetzung = alleBausteineToBausteinUmsetzungMap.get(mbBKey);
+                if(parent.equals(bausteinUmsetzung.getParent())){
+                    return bausteinUmsetzung;
+                }
+                
+//                for(Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekte.entrySet()) {
+//                    if(veriniceObject.getTitle().equals("Internet-Recherche") && entry.getValue().getTitle().equals("Internet-Recherche") &&
+//                            entry.getKey().getId().getZobId().equals(bausteineMassnahmeResult.zoBst.getId().getZobId())){
+//                        this.hashCode();
+//                    }
+//                    if(entry.getKey().getId().getZobId().equals(bausteineMassnahmeResult.zoBst.getRefZobId())){
+//                        this.hashCode();
+//                    }
+//                    if(entry.getValue().equals(veriniceObject)) {
+//                        NZielobjekt nZielobjekt = entry.getKey();
+//                        if(nZielobjekt.getId().getZobId().equals(bausteineMassnahmeResult.zoBst.getId().getZobId())) {
+//                            return bausteinUmsetzung;
+//                        } else {
+//                            break;
+//                        }
+//                    }
+//                }
+            }
+        }
+        return null;
+    }
+    
+    private CnATreeElement getCnATreeElementByZobId(Integer zobId) {
+        for(NZielobjekt zielobjekt : alleZielobjekte.keySet()) {
+            if(zobId.equals(zielobjekt.getId().getZobId())){
+                return alleZielobjekte.get(zielobjekt);
+            }
+        }
+        return null;
     }
 
     private void importSchutzbedarf() throws Exception {
@@ -557,6 +662,17 @@ public class ImportTask extends AbstractGstoolImportTask {
             }
         }
     }
+
+    private Baustein findBausteinForId(String id) {
+        for (Baustein baustein : allCatalogueBausteine) {
+            if (baustein.getId().equals(id)) {
+                return baustein;
+            }
+        }
+        return null;
+    }
+
+
 
     private void importBausteinPersonVerknuepfungen() {
         Set<BausteinUmsetzung> changedElements = new HashSet<>();

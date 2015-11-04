@@ -54,6 +54,8 @@ import sernet.gs.reveng.NmbNotiz;
 public class GSVampire {
     
     private static final Logger LOG = Logger.getLogger(GSVampire.class);
+    
+    private static final String USER_DEFINED_CONTROL_IDENTIFIER = "bM ";
 
 	List<MSchutzbedarfkategTxt> allSchutzbedarf;
 
@@ -303,6 +305,13 @@ public class GSVampire {
 	+ " and (gtxt.id.sprId = 0 or gtxt.id.sprId = 1)"; // german (1) version and userdefs (0) only
 	
 	
+	private static final String QUERY_ZOBS_REF_BY_BAUSTEIN = "select nZob.id.zobId"
+	        + " from ModZobjBst mZBst, NZielobjekt nZob"
+	        + " where mZBst.id.bauId = :bauId"
+	        + " and mZBst.refZobId = :refZobId"
+	        + " and mZBst.id.zobId = nZob.id.zobId";
+//	        + " and nZob.id.refZobId = ";
+	
 	public GSVampire(String configFile) {
 		HibernateSessionFactory.setConfigFile(configFile);
 	}
@@ -337,6 +346,33 @@ public class GSVampire {
         dao.getSession().close();
         return result;
     }
+	
+	public List<Integer> findReferencedZobsByBaustein(ModZobjBst mZobBst, Integer refZobId){
+	    long startTime = System.currentTimeMillis();
+	    if("2.99".equals(mZobBst.getMbBaust().getNr())) {
+	        this.hashCode();
+	    }
+	    NZielobjektDAO dao = new NZielobjektDAO();
+	    Transaction transaction = dao.getSession().beginTransaction();
+	    Query query = dao.getSession().createQuery(QUERY_ZOBS_REF_BY_BAUSTEIN);
+	    query.setParameter("bauId", mZobBst.getId().getBauId());
+	    query.setParameter("refZobId", refZobId);
+	    List<Object> queryResult = query.list();
+	    List<Integer> result = new ArrayList<Integer>(queryResult.size());
+	    if(!queryResult.contains(mZobBst.getId().getZobId())) {
+	        for(Object o : queryResult) {
+	            if(o instanceof Integer) {
+	                result.add((Integer)o);
+	            }
+	        }
+	    }
+        transaction.commit();
+        dao.getSession().close();
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Time computing references for ModZobjBst <" + mZobBst.getId().getBauId() + "|" + mZobBst.getId().getZobId() + ">:\t" + String.valueOf( ((System.currentTimeMillis() - startTime) / 1000) ) + "s");
+        }
+        return result;
+	}
 
 	/**
 	 * Finds notes that are attached to "massnahmen" by target object.
@@ -481,7 +517,11 @@ public class GSVampire {
         } catch (IOException e){
             LOG.error("Error parsing clob to String", e);
         }
-        massnahmeinformation.setId("bM " + String.valueOf(mbMassn.getMskId().intValue()) + "." + String.valueOf(mbMassn.getNr()));
+        String prefix = "";
+        if(mbMassn.getUserdef() == GSDBConstants.USERDEF_YES) {
+            prefix = USER_DEFINED_CONTROL_IDENTIFIER;
+        }
+        massnahmeinformation.setId(prefix + String.valueOf(mbMassn.getMskId().intValue()) + "." + String.valueOf(mbMassn.getNr()));
         massnahmeinformation.setSiegelstufe('A'); // TODO
         massnahmeinformation.setZyklus("-1"); // TODO 
         return massnahmeinformation;
