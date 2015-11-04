@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +32,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.verinice.model.bsi.SonstIT;
 
@@ -197,8 +199,8 @@ public abstract class GstoolTypeMapper {
             }
             file = new File(filepath);
             fileOut = new FileOutputStream(file);
-            PrintStream ps1 = new PrintStream(fileOut, true, SUBTYPE_PROPERTIES_FILE_ENCODING);
-            properties.store(ps1, "");
+            OutputStreamWriter outWrite = new OutputStreamWriter(fileOut, VeriniceCharset.CHARSET_ISO_8859_15);
+            properties.store(outWrite, "");
             refreshGstoolSubTypes(properties);
         } finally {
             IOUtils.closeQuietly(fileOut);
