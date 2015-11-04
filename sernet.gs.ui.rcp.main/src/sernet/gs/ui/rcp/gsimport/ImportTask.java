@@ -33,8 +33,12 @@ import java.util.UUID;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.swt.widgets.Shell;
 import org.hibernate.exception.SQLGrammarException;
+
+import com.heatonresearch.datamover.DataMover;
+import com.heatonresearch.datamover.db.Database;
+import com.heatonresearch.datamover.db.DerbyDatabase;
+import com.heatonresearch.datamover.db.MDBFileDatabase;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.reveng.MSchutzbedarfkategTxt;
@@ -82,11 +86,6 @@ import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Link;
 
-import com.heatonresearch.datamover.DataMover;
-import com.heatonresearch.datamover.db.Database;
-import com.heatonresearch.datamover.db.DerbyDatabase;
-import com.heatonresearch.datamover.db.MDBFileDatabase;
-
 /**
  * Import GSTOOL(tm) databases using the GSVampire. Maps GStool-database objects
  * to Verinice-Objects and fields.
@@ -128,6 +127,8 @@ public class ImportTask extends AbstractGstoolImportTask {
     private final Map<MbBaust, Baustein> gstool2VeriniceBausteinMap;
     private final Map<BausteinUmsetzung, List<BausteineMassnahmenResult>> individualMassnahmenMap;  
     private final Map<NZielobjekt, List<BausteineMassnahmenResult>> nZielObjektBausteineMassnahmenResultMap;
+    
+    private final Set<String> createdLinks;
    
     private String sourceId;
 
@@ -147,6 +148,7 @@ public class ImportTask extends AbstractGstoolImportTask {
         this.gstool2VeriniceBausteinMap = new HashMap<>();
         this.individualMassnahmenMap = new HashMap<>();
         this.nZielObjektBausteineMassnahmenResultMap = new HashMap<>();
+        this.createdLinks = new HashSet();
     }
 
     protected void executeTask(int importType, IProgress monitor) throws Exception {     
@@ -409,8 +411,6 @@ public class ImportTask extends AbstractGstoolImportTask {
         return zielobjekte;
     }
     
-    Set<String> createdLinks = new HashSet();
-    
     /**
      * @param sourceId
      * @param element
@@ -435,32 +435,12 @@ public class ImportTask extends AbstractGstoolImportTask {
         for(BausteineMassnahmenResult bausteineMassnahmenResult : findBausteinMassnahmenByZielobjekt) {
             Set<CnATreeElement> targets = new HashSet<>();
             List<Integer> targetIds = getGstoolDao().findReferencedZobsByBaustein(bausteineMassnahmenResult.zoBst, zielobjekt.getId().getZobId());
-            for(Integer targetId : targetIds) {
-                CnATreeElement mappedElement = getCnATreeElementByZobId(targetId);
-                if(mappedElement != null) {
-                    targets.add(mappedElement);
-                }
-            }
+            targets = getCnATreeElementsById(targetIds);
             
             
             BausteinUmsetzung bu = getVeriniceBausteinUmsetzung(bausteineMassnahmenResult, element);
-            Set<CnATreeElement> filteredTargets = new HashSet<>();
-            StringBuilder sb = new StringBuilder();
             if(bu != null){
-                for(CnATreeElement target : targets) {
-                    sb.append(bu.hashCode()).append("#").append(target.hashCode());
-                    if(!createdLinks.contains(sb.toString())) {
-                        filteredTargets.add(target);
-                    }
-                    sb.setLength(0);
-                }
-                ImportCreateBausteinReferences2 command = new ImportCreateBausteinReferences2(bu, filteredTargets);
-                long commandStart = System.currentTimeMillis();
-                command = ServiceFactory.lookupCommandService().executeCommand(command);
-                createdLinks.addAll(command.getCreatedLinksIdentifier());
-                if(LOG.isDebugEnabled()) {
-                    LOG.debug("Time executing command on element <" + element.getTitle() + ">:\t" + String.valueOf( ((System.currentTimeMillis() - commandStart) / 1000) ) + "s");
-                }
+                createReferencesForBausteinUmsetzung(element, targets, bu);
             } else {
                 LOG.warn("BausteinUmsetzung with Nr.:" + bausteineMassnahmenResult.baustein.getNr() +  " not found for element "  + element.getTitle());
             }
@@ -469,11 +449,46 @@ public class ImportTask extends AbstractGstoolImportTask {
             LOG.debug("Time computing references for element <" + element.getTitle() + ">:\t" + String.valueOf( ((System.currentTimeMillis() - startTime) / 1000) ) + "s");
         }
         
-//        Map<MbBaust, List<BausteineMassnahmenResult>> bausteineMassnahmenMap = transferData.convertBausteinMap(findBausteinMassnahmenByZielobjekt);
-//        
-//        ImportCreateBausteinReferences command;
-//        command = new ImportCreateBausteinReferences(sourceId, element, bausteineMassnahmenMap, alleBausteineToZoBstMap, gstool2VeriniceBausteinMap, this.allCatalogueBausteine);
-//        ServiceFactory.lookupCommandService().executeCommand(command);
+    }
+
+    /**
+     * @param element
+     * @param targets
+     * @param bu
+     * @throws CommandException
+     */
+    private void createReferencesForBausteinUmsetzung(CnATreeElement element, Set<CnATreeElement> targets, BausteinUmsetzung bu) throws CommandException {
+        Set<CnATreeElement> filteredTargets = new HashSet<>();
+        StringBuilder sb = new StringBuilder();
+        for(CnATreeElement target : targets) {
+            sb.append(bu.hashCode()).append("#").append(target.hashCode());
+            if(!createdLinks.contains(sb.toString())) {
+                filteredTargets.add(target);
+            }
+            sb.setLength(0);
+        }
+        ImportCreateBausteinReferences2 command = new ImportCreateBausteinReferences2(bu, filteredTargets);
+        long commandStart = System.currentTimeMillis();
+        command = ServiceFactory.lookupCommandService().executeCommand(command);
+        createdLinks.addAll(command.getCreatedLinksIdentifier());
+        if(LOG.isDebugEnabled()) {
+            LOG.debug("Time executing command on element <" + element.getTitle() + ">:\t" + String.valueOf( ((System.currentTimeMillis() - commandStart) / 1000) ) + "s");
+        }
+    }
+
+    /**
+     * @param targets
+     * @param targetIds
+     */
+    private Set<CnATreeElement> getCnATreeElementsById(List<Integer> targetIds) {
+        Set<CnATreeElement> targets = new HashSet<>(targetIds.size());
+        for(Integer targetId : targetIds) {
+            CnATreeElement mappedElement = getCnATreeElementByZobId(targetId);
+            if(mappedElement != null) {
+                targets.add(mappedElement);
+            }
+        }
+        return targets;
     }
     
     private List<BausteineMassnahmenResult> reduceBausteinMassnahmeResultToOnePerBaustein(List<BausteineMassnahmenResult> inputList){
@@ -498,33 +513,12 @@ public class ImportTask extends AbstractGstoolImportTask {
     }
 
     private BausteinUmsetzung getVeriniceBausteinUmsetzung(BausteineMassnahmenResult bausteineMassnahmeResult, CnATreeElement parent){
-        if(parent.getTitle().equals("Druckservice Bad Godesberg") && bausteineMassnahmeResult.baustein.getNr().equals("5.99")){
-            this.hashCode();
-        }
         for(MbBaust mbBKey : alleBausteineToBausteinUmsetzungMap.keySet()){
             if(mbBausteinEquals(mbBKey, bausteineMassnahmeResult.baustein)){
                 BausteinUmsetzung bausteinUmsetzung = alleBausteineToBausteinUmsetzungMap.get(mbBKey);
                 if(parent.equals(bausteinUmsetzung.getParent())){
                     return bausteinUmsetzung;
                 }
-                
-//                for(Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekte.entrySet()) {
-//                    if(veriniceObject.getTitle().equals("Internet-Recherche") && entry.getValue().getTitle().equals("Internet-Recherche") &&
-//                            entry.getKey().getId().getZobId().equals(bausteineMassnahmeResult.zoBst.getId().getZobId())){
-//                        this.hashCode();
-//                    }
-//                    if(entry.getKey().getId().getZobId().equals(bausteineMassnahmeResult.zoBst.getRefZobId())){
-//                        this.hashCode();
-//                    }
-//                    if(entry.getValue().equals(veriniceObject)) {
-//                        NZielobjekt nZielobjekt = entry.getKey();
-//                        if(nZielobjekt.getId().getZobId().equals(bausteineMassnahmeResult.zoBst.getId().getZobId())) {
-//                            return bausteinUmsetzung;
-//                        } else {
-//                            break;
-//                        }
-//                    }
-//                }
             }
         }
         return null;
@@ -662,16 +656,6 @@ public class ImportTask extends AbstractGstoolImportTask {
             }
         }
     }
-
-    private Baustein findBausteinForId(String id) {
-        for (Baustein baustein : allCatalogueBausteine) {
-            if (baustein.getId().equals(id)) {
-                return baustein;
-            }
-        }
-        return null;
-    }
-
 
 
     private void importBausteinPersonVerknuepfungen() {
