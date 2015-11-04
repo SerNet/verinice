@@ -19,6 +19,7 @@
 package sernet.gs.ui.rcp.gsimport;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -63,11 +64,10 @@ import sernet.verinice.rcp.RightsEnabledView;
  * @author shagedorn
  * 
  */
-public class GSImportMappingView extends RightsEnabledView {
+public class GstoolImportMappingView extends RightsEnabledView {
 
-    private static final Logger LOG = Logger.getLogger(GSImportMappingView.class);
-
-    public static final String ID = "sernet.gs.ui.rcp.gsimport.gsimportmappingview";
+    private static final Logger LOG = Logger.getLogger(GstoolImportMappingView.class);
+    public static final String ID = "sernet.gs.ui.rcp.gsimport.gstoolimportmappingview";
 
     private TableViewer viewer;
     private TableSorter tableSorter = new TableSorter();
@@ -78,9 +78,7 @@ public class GSImportMappingView extends RightsEnabledView {
     private Action deleteMappingEntryAction;
     private IModelLoadListener modelLoadListener;
 
-
-
-    public GSImportMappingView() {
+    public GstoolImportMappingView() {
         initDataJob = new WorkspaceJob("") {
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
@@ -158,7 +156,6 @@ public class GSImportMappingView extends RightsEnabledView {
 
     }
 
-
     private void fillLocalToolBar() {
         IActionBars bars = getViewSite().getActionBars();
         IToolBarManager manager = bars.getToolBarManager();
@@ -222,7 +219,6 @@ public class GSImportMappingView extends RightsEnabledView {
                 }
             }
         });
-
     }
 
     void refresh() {
@@ -235,17 +231,14 @@ public class GSImportMappingView extends RightsEnabledView {
             public void run() {
                 addMappingEntry();
             }
-
         };
         this.addMappingEntryAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PLUS));
         this.addMappingEntryAction.setEnabled(true);
-
         this.deleteMappingEntryAction = new Action() {
             @Override
             public void run() {
                 deleteMappingEntry();
             }
-
         };
         this.deleteMappingEntryAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.MINUS));
         this.deleteMappingEntryAction.setEnabled(false);
@@ -258,20 +251,22 @@ public class GSImportMappingView extends RightsEnabledView {
         try {
             GstoolTypeMapper.addGstoolSubtypeToPropertyFile(element);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("error while adding mapping Entry", e);
             return;
         }
         refresh();
-            StructuredSelection selection = new StructuredSelection(element);
-        viewer.setSelection(selection);
-        
     }
 
     private void deleteMappingEntry() {
         try {
             if (viewer.getSelection() instanceof StructuredSelection) {
                 StructuredSelection selection = (StructuredSelection) viewer.getSelection();
-                GstoolTypeMapper.removeGstoolSubtypeToPropertyFile(((Object[]) selection.getFirstElement())[0]);
+                Object[] deletedObject = null;
+                Iterator iterator = selection.iterator();
+                while (iterator.hasNext()) {
+                    deletedObject = (Object[]) iterator.next();
+                    GstoolTypeMapper.removeGstoolSubtypeToPropertyFile(deletedObject[0]);
+                }
                 refresh();
             } else {
                 LOG.warn("wrong selection type", new IllegalArgumentException("wrong selection type"));
@@ -282,11 +277,11 @@ public class GSImportMappingView extends RightsEnabledView {
     }
 
     private static class SortSelectionAdapter extends SelectionAdapter {
-        private GSImportMappingView gsiView;
+        private GstoolImportMappingView gsiView;
         private TableColumn column;
         private int index;
 
-        public SortSelectionAdapter(GSImportMappingView gsiView, TableColumn column, int index) {
+        public SortSelectionAdapter(GstoolImportMappingView gsiView, TableColumn column, int index) {
             super();
             this.gsiView = gsiView;
             this.column = column;
@@ -300,37 +295,34 @@ public class GSImportMappingView extends RightsEnabledView {
             if (this.gsiView.viewer.getTable().getSortColumn() == this.column) {
                 dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
             } else {
-
                 dir = SWT.DOWN;
             }
             this.gsiView.viewer.getTable().setSortDirection(dir);
             this.gsiView.viewer.getTable().setSortColumn(this.column);
             this.gsiView.viewer.refresh();
         }
-
     }
 
     private static class TableSorter extends ViewerSorter {
-        private int propertyIndex;
+
+        private int currentColumnIndex;
         private static final int DEFAULT_SORT_COLUMN = 0;
-        private static final int DESCENDING = 1;
-        private static final int ASCENDING = 0;
-        private int direction = ASCENDING;
+        private boolean isAscending = true;
 
         public TableSorter() {
             super();
-            this.propertyIndex = DEFAULT_SORT_COLUMN;
-            this.direction = ASCENDING;
+            this.currentColumnIndex = DEFAULT_SORT_COLUMN;
+            this.isAscending = true;
         }
 
         public void setColumn(int column) {
-            if (column == this.propertyIndex) {
+            if (column == this.currentColumnIndex) {
                 // Same column as last sort; toggle the direction
-                this.direction = (this.direction == ASCENDING) ? DESCENDING : ASCENDING;
+                this.isAscending = !isAscending;
             } else {
                 // New column; do an ascending sort
-                this.propertyIndex = column;
-                this.direction = ASCENDING;
+                this.currentColumnIndex = column;
+                this.isAscending = true;
             }
         }
 
@@ -354,29 +346,18 @@ public class GSImportMappingView extends RightsEnabledView {
                 rc = -1;
             } else {
                 // e1 and e2 != null
-                switch (this.propertyIndex) {
-                case 0:
-                    if (a1.length == 2 && a2.length == 2 && a1[0] != null && a2[0] != null) {
-                        rc = ((String) a1[0]).compareTo((String) a2[0]);
-                        break;
-                    }
-                case 1:
-                    if (a1.length == 2 && a2.length == 2 && a1[1] != null && a2[1] != null) {
-                        rc = ((String) a1[1]).compareTo((String) a2[1]);
-                        break;
-                    }
-                default:
+                if ((this.currentColumnIndex == 0 || this.currentColumnIndex == 1) && a1.length == 2 && a2.length == 2 && a1[this.currentColumnIndex] != null && a2[this.currentColumnIndex] != null) {
+                    rc = ((String) a1[this.currentColumnIndex]).toLowerCase().compareTo(((String) a2[this.currentColumnIndex]).toLowerCase());
+                }else{
                     rc = 0;
                 }
             }
-
             // If descending order, flip the direction
-            if (this.direction == DESCENDING) {
+            if (!isAscending) {
                 rc = -rc;
             }
             return rc;
         }
-
     }
 
     /*
@@ -398,5 +379,4 @@ public class GSImportMappingView extends RightsEnabledView {
     public String getViewId() {
         return ID;
     }
-
 }

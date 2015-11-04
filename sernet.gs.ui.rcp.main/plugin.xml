@@ -198,9 +198,9 @@
       <view
       		allowMultiple="false"
       		category="sernet.gs.ui.rcp.main.views"
-      		class="sernet.gs.ui.rcp.gsimport.GSImportMappingView"
+      		class="sernet.gs.ui.rcp.gsimport.GstoolImportMappingView"
       		icon="icons/plugin_depend.gif"
-      		id="sernet.gs.ui.rcp.gsimport.gsimportmappingview"
+      		id="sernet.gs.ui.rcp.gsimport.gstoolimportmappingview"
       		name="%view.name.18"
       		restorable="true">
       </view>

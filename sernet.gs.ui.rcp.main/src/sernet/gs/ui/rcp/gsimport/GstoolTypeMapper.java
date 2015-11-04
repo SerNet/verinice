@@ -23,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -55,7 +54,7 @@ public abstract class GstoolTypeMapper {
     
     public static final String TYPE_PROPERTIES_FILE = "gstool-types.properties";
     public static final String SUBTYPE_PROPERTIES_FILE = "gstool-subtypes.properties";
-    public static final String SUBTYPE_PROPERTIES_FILE_ENCODING = "ISO-8859-15";
+    public static final String SUBTYPE_PROPERTIES_FILE_ENCODING = VeriniceCharset.CHARSET_ISO_8859_15.toString();
  
     /**
      * DEFAULT_TYPE_ID is used as element type id if no 
@@ -199,7 +198,7 @@ public abstract class GstoolTypeMapper {
             }
             file = new File(filepath);
             fileOut = new FileOutputStream(file);
-            OutputStreamWriter outWrite = new OutputStreamWriter(fileOut, VeriniceCharset.CHARSET_ISO_8859_15);
+            OutputStreamWriter outWrite = new OutputStreamWriter(fileOut, SUBTYPE_PROPERTIES_FILE_ENCODING);
             properties.store(outWrite, "");
             refreshGstoolSubTypes(properties);
         } finally {

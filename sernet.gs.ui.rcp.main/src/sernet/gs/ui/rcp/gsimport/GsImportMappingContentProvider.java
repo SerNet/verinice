@@ -33,11 +33,11 @@ import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
  */
 public class GsImportMappingContentProvider implements IStructuredContentProvider {
 
-    GSImportMappingView view;
+    GstoolImportMappingView view;
 
     TableViewer viewer;
 
-    public GsImportMappingContentProvider(GSImportMappingView view) {
+    public GsImportMappingContentProvider(GstoolImportMappingView view) {
         this.view = view;
     }
 

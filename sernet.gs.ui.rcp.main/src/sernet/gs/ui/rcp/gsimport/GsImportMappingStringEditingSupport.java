@@ -34,9 +34,9 @@ public class GsImportMappingStringEditingSupport extends EditingSupport {
     private static final Logger LOG = Logger.getLogger(GsImportMappingStringEditingSupport.class);
     
     private TableViewer viewer;
-    private GSImportMappingView view;
+    private GstoolImportMappingView view;
     
-    public GsImportMappingStringEditingSupport(TableViewer viewer, GSImportMappingView view) {
+    public GsImportMappingStringEditingSupport(TableViewer viewer, GstoolImportMappingView view) {
         super(viewer);
         this.viewer = viewer;
         this.view = view;

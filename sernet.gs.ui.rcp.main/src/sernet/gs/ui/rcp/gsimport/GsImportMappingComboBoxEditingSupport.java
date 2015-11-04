@@ -66,11 +66,11 @@ public class GsImportMappingComboBoxEditingSupport extends EditingSupport {
     }
 
     private TableViewer viewer;
-    private GSImportMappingView view;
+    private GstoolImportMappingView view;
     private String[] translatedVeriniceValues = null;
     private Map<String, String> veriniceValuesMap = null;
 
-    public GsImportMappingComboBoxEditingSupport(TableViewer viewer, GSImportMappingView view) {
+    public GsImportMappingComboBoxEditingSupport(TableViewer viewer, GstoolImportMappingView view) {
         super(viewer);
         this.viewer = viewer;
         this.view = view;
