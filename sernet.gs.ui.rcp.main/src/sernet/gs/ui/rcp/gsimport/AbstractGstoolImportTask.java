@@ -35,7 +35,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
  * This class replaces the the context class loader of the 
  * current thread with the Hibernate class loader before 
  * executing the task. After executing the original class 
- * loader ist set to thread context again.
+ * loader is set to thread context again.
  * 
  * This class also provides a GSTOOL dao to all subclasses.
  * With the GSTOOL dao subclasses can load data from the GSTOOL

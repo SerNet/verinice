@@ -782,17 +782,17 @@ public class ImportTask extends AbstractGstoolImportTask {
         for(BausteineMassnahmenResult r : lr){
             udBstMassTxtMap.put(r.massnahme, getGstoolDao().findTxtforMbMassn(b, r.massnahme, GSScraperUtil.getInstance().getModel().getEncoding()));
         }
-        List<GefaehrdungInformationTransfer> gitList = new ArrayList<GefaehrdungInformationTransfer>();
+        List<GefaehrdungInformationTransfer> gefaehrdunInformationTransferList = new ArrayList<GefaehrdungInformationTransfer>();
         List<MbBaustGefaehr> mbBaustGefList = getGstoolDao().findGefaehrdungenForBaustein(b, zielobjekt);
         for(MbBaustGefaehr gefaehr : mbBaustGefList){
             GefaehrdungInformationTransfer git = getGstoolDao().findGefaehrdungInformationForBausteinGefaehrdung(b, gefaehr, zielobjekt, GSScraperUtil.getInstance().getModel().getEncoding());
             if(git.getTitel() != null && git.getId() != null){
-                gitList.add(git);
+                gefaehrdunInformationTransferList.add(git);
             }
 
         }
-        if(gitList.size() > 0){
-            udBaustGefMap.put(b, gitList);
+        if(gefaehrdunInformationTransferList.size() > 0){
+            udBaustGefMap.put(b, gefaehrdunInformationTransferList);
         }
     }
 

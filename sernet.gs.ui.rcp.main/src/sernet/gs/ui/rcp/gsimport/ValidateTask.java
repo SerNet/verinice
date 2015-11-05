@@ -29,8 +29,8 @@ import sernet.gs.reveng.importData.ZielobjektTypeResult;
  * Checks if all types and subtypes of the Zielobjekte in GSTOOL
  * can be found in the configuration. If an unknown type was found
  * the user is asked to cancel the import. If the user cancels the import
- * a GstoolImportCanceledException is thrown. GstoolImportCanceledException
- * is a runtime exception.
+ * a {@link GstoolImportCanceledException} is thrown. {@link GstoolImportCanceledException}
+ * is a {@link RuntimeException}.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */

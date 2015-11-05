@@ -108,11 +108,11 @@ public class ImportGstoolAction extends RightsEnabledAction {
      * Checks if all types and subtypes of the Zielobjekte in GSTOOL
      * can be found in the configuration. If an unknown type was found
      * the user is asked to cancel the import. If the user cancels the import
-     * a GstoolImportCanceledException is thrown. GstoolImportCanceledException
-     * is a runtime exception.
+     * a {@link GstoolImportCanceledException} is thrown. {@link GstoolImportCanceledException}
+     * is a {@link RuntimeException}.
      * 
-     * @param monitor A progress monitor
-     * @throws GstoolImportCanceledException If user cancels the import after an unknown type was found
+     * @param monitor A {@link IProgressMonitor}
+     * @throws {@link GstoolImportCanceledException} If user cancels the import after an unknown type was found
      */
     private void validate(final IProgressMonitor monitor) { // throws GstoolImportCanceledException
         Activator.inheritVeriniceContextState();
