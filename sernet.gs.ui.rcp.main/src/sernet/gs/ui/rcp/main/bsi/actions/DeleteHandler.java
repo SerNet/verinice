@@ -21,8 +21,10 @@ package sernet.gs.ui.rcp.main.bsi.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -34,13 +36,16 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -57,6 +62,7 @@ import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.RightsEnabledHandler;
 import sernet.verinice.service.commands.LoadConfiguration;
@@ -95,6 +101,8 @@ public class DeleteHandler extends RightsEnabledHandler {
 
             final List<CnATreeElement> deleteList = createList(selection.toList());       
 
+            closeOpenEditors(deleteList);
+            
             if (!deleteList.isEmpty() && deleteList.get(0) instanceof IISO27kElement) {
                 doDeleteIso(deleteList);
             } else {
@@ -111,6 +119,82 @@ public class DeleteHandler extends RightsEnabledHandler {
             ExceptionUtil.log(e, Messages.DeleteActionDelegate_17);
         }
         return null;
+    }
+    
+    /**
+     * closes editors of elements that are going to be deleted
+     * @param deleteList
+     * @throws PartInitException
+     */
+    private void closeOpenEditors(List<CnATreeElement> deleteList) throws PartInitException {
+        Set<IEditorReference> editorsToCloseSet = getRelevantEditors(deleteList);
+        List<IEditorReference> editorsToCloseList = new ArrayList(editorsToCloseSet.size());
+        editorsToCloseList.addAll(editorsToCloseSet);
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(
+                (IEditorReference[]) editorsToCloseList.toArray(new IEditorReference[editorsToCloseList.size()]), true);
+    }
+    
+
+    /**
+     * iterates all elements that are going to be deleted, checks if an editor for this element
+     * is currently open (special handling for {@link ITVerbund} and {@link Organization}) and returns
+     * a set of editors that needs to be closed because their content is going to be deleted
+     * @param deleteList
+     * @throws PartInitException
+     */
+    private Set<IEditorReference> getRelevantEditors(List<CnATreeElement> deleteList) throws PartInitException {
+        Set<IEditorReference> closeableEditors = new HashSet();
+        for(CnATreeElement elementToDelete : deleteList) {
+            if(!(Organization.TYPE_ID.equals(elementToDelete.getTypeId()) || ITVerbund.TYPE_ID.equals(elementToDelete.getTypeId()))) {
+                IEditorReference reference = isElementOpen(elementToDelete);
+                if(reference != null) {
+                    closeableEditors.add(reference);
+                }
+            } else { // if element is a scope, add all editors that shows children of that scope
+                closeableEditors.addAll(isScopeIdOpen(elementToDelete.getScopeId()));
+            }
+        }
+        return closeableEditors;
+    }
+    
+    /**
+     * returns all editors that shows elements with a given scope id
+     * @param scopeId
+     * @return
+     * @throws PartInitException
+     */
+    private Set<IEditorReference> isScopeIdOpen(int scopeId) throws PartInitException{
+        Set<IEditorReference> closeableEditors = new HashSet();
+        for(IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
+            Object o = editorReference.getEditorInput();
+            if(o instanceof BSIElementEditorInput) {
+                BSIElementEditorInput bsiElementEditorInput = (BSIElementEditorInput)o;
+                if(scopeId ==  bsiElementEditorInput.getCnAElement().getScopeId()){
+                    closeableEditors.add(editorReference);
+                }
+            }
+        }
+        return closeableEditors;
+    }
+    
+    /**
+     * returns {@link IEditorReference} of given {@link CnATreeElement} if element is currently opened by an editor
+     * @param element
+     * @return
+     * @throws PartInitException 
+     */
+    private IEditorReference isElementOpen(CnATreeElement element) throws PartInitException {
+        for(IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
+            Object o = editorReference.getEditorInput();
+            if(o instanceof BSIElementEditorInput) {
+                BSIElementEditorInput bsiElementEditorInput = (BSIElementEditorInput)o;
+                if(element.equals(bsiElementEditorInput.getCnAElement())){
+                    return editorReference;
+                }
+            }
+        }
+        return null;
+        
     }
     
     
