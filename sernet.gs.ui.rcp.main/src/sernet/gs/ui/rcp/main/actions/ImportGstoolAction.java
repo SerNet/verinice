@@ -117,10 +117,10 @@ public class ImportGstoolAction extends RightsEnabledAction {
     private void validate(final IProgressMonitor monitor) { // throws GstoolImportCanceledException
         Activator.inheritVeriniceContextState();
         ValidateTask validateTask = new ValidateTask(shell);         
-        long importTaskStart = System.currentTimeMillis();
+        long taskStart = System.currentTimeMillis();
         validateTask.execute(ImportTask.TYPE_SQLSERVER, new EclipseProgressMonitorDelegator(monitor));
         if(LOG.isDebugEnabled()){
-            LOG.debug("Time for validating:\t" + TimeFormatter.getHumanRedableTime(System.currentTimeMillis() - importTaskStart));
+            LOG.debug("Time for validating:\t" + TimeFormatter.getHumanRedableTime(System.currentTimeMillis() - taskStart));
         }
     }
     

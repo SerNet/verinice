@@ -60,15 +60,15 @@ public class GstoolTypeValidator {
     /**
      * Checks the types and subtypes of a list of GSTOOL Zielobjekte.
      * 
-     * @param zielobjekte A {@link List} with GSTOOL Zielobjekte
+     * @param zielobjektTypeList A {@link List} with GSTOOL Zielobjekt types
      * @return 
      *   True if all types and subtypes can be found in the configuration
      *   False if an unknown type was found and the user canceled the import 
      */
-    public boolean validate(List<ZielobjektTypeResult> zielobjekte) {
+    public boolean validate(List<ZielobjektTypeResult> zielobjektTypeList) {
         unknownTypes = new HashSet<String>();
-        for (ZielobjektTypeResult zielobjekt : zielobjekte) {
-            validate(zielobjekt.type, zielobjekt.subtype);
+        for (ZielobjektTypeResult zielobjektType : zielobjektTypeList) {
+            validate(zielobjektType.type, zielobjektType.subtype);
         }
         if(!unknownTypes.isEmpty()) {
             showCancelDialog();
@@ -111,8 +111,7 @@ public class GstoolTypeValidator {
         for (String typeLabel : unknownTypes) {
             sb.append(typeLabel).append("\n"); //$NON-NLS-1$
         }
-        final String message = sb.toString();
-        return message;
+        return sb.toString();
     }
 
     private void addToUnknownTypes(String gstoolType, String gstoolSubtype) {
