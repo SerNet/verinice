@@ -30,16 +30,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -54,16 +49,16 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IPartListener;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.UIJob;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
 import sernet.verinice.model.search.VeriniceSearchResultTable;
@@ -190,6 +185,8 @@ public class SearchView extends RightsEnabledView {
         reindex.setText(Messages.SearchView_2);
         reindex.setToolTipText(Messages.SearchView_2);
         reindex.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.RELOAD));
+
+        switchButtonsToSearchEnabled();
     }
 
     private void initDoubleClickListener() {
@@ -568,6 +565,24 @@ public class SearchView extends RightsEnabledView {
         @Override
         public void keyPressed(KeyEvent e) {
 
+        }
+    }
+
+    private void switchButtonsToSearchEnabled() {
+        if(isSearchEnabled()) {
+            enableSearch();
+            reindex.setEnabled(true);
+        } else {
+            disableSearch();
+            reindex.setEnabled(false);
+        }
+    }
+
+    private boolean isSearchEnabled() {
+        if(Activator.getDefault().isStandalone()){
+            return !Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.SEARCH_DISABLE);
+        } else {
+            return ServiceFactory.lookupSearchService().getImplementationtype() == ISearchService.ES_IMPLEMENTATION_TYPE_REAL;
         }
     }
 }

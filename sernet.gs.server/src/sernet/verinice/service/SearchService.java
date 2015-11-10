@@ -42,11 +42,10 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.search.Occurence;
 import sernet.verinice.model.search.VeriniceQuery;
 import sernet.verinice.model.search.VeriniceSearchResult;
-import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.search.IElementSearchDao;
 import sernet.verinice.search.Indexer;
-import sernet.verinice.search.JsonBuilder;
 
 public class SearchService implements ISearchService {
 
@@ -273,6 +272,13 @@ public class SearchService implements ISearchService {
 
     public void setJsonBuilder(IJsonBuilder jsonBuilder) {
         this.jsonBuilder = jsonBuilder;
+    }
+
+
+
+    @Override
+    public int getImplementationtype() {
+        return ISearchService.ES_IMPLEMENTATION_TYPE_REAL;
     }
 
 

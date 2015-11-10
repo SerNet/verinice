@@ -45,6 +45,9 @@ public interface ISearchService {
     public static final String ES_FIELD_PERMISSION_NAME = "p-name";
     public static final String ES_FIELD_PERMISSION_VALUE = "p-value";
     
+    public static final short ES_IMPLEMENTATION_TYPE_DUMMY = 0;
+    public static final short ES_IMPLEMENTATION_TYPE_REAL = 1;
+
     /**
      * Executes a query on all types of elements.
      * 
@@ -93,4 +96,10 @@ public interface ISearchService {
      */
     void update(CnATreeElement element);
     
+    /**
+     * returns a constant that determines the type of the implementation (dummy or not)
+     * @return
+     */
+    int getImplementationtype();
+
 }

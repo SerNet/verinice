@@ -80,4 +80,9 @@ public class SearchServiceDummy implements ISearchService {
     public void update(CnATreeElement element) {
     }
 
+    @Override
+    public int getImplementationtype() {
+        return ISearchService.ES_IMPLEMENTATION_TYPE_DUMMY;
+    }
+
 }
