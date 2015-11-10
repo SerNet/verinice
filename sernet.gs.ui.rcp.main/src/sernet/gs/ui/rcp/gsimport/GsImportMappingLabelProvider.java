@@ -51,14 +51,15 @@ public class GsImportMappingLabelProvider extends LabelProvider implements ITabl
                 return ph.getTitle();
             }
             return ""; //$NON-NLS-1$
-        } else if(element instanceof Object[]) {
-            Object[] entry = (Object[])element;
+        } else if (element instanceof GstoolImportMappingElement) {
+            GstoolImportMappingElement entry = (GstoolImportMappingElement) element;
+
             switch (columnIndex) {
 
             case 0:
-                return (String)entry[0];
+                return entry.getKey();
             case 1:
-                return getHuiTranslation((String)entry[1]);
+                return getHuiTranslation(entry.getValue());
             default:
                 return null;
             }

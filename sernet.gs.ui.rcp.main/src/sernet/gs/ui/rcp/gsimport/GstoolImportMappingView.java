@@ -111,7 +111,7 @@ public class GstoolImportMappingView extends RightsEnabledView {
         getDisplay().syncExec(new Runnable() {
             @Override
             public void run() {
-                viewer.setInput(GstoolTypeMapper.getGstoolSubtypes());
+                refresh();
             }
         });
     }
@@ -211,7 +211,7 @@ public class GstoolImportMappingView extends RightsEnabledView {
             @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 if (event.getSelection() instanceof IStructuredSelection) {
-                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof Object[]) {
+                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof GstoolImportMappingElement) {
                         deleteMappingEntryAction.setEnabled(true);
                     } else {
                         deleteMappingEntryAction.setEnabled(false);
@@ -222,7 +222,13 @@ public class GstoolImportMappingView extends RightsEnabledView {
     }
 
     void refresh() {
-        this.viewer.setInput(GstoolTypeMapper.getGstoolSubtypes());
+        Display.getDefault().syncExec(new Runnable() {
+            public void run() {
+                StructuredSelection selection = (StructuredSelection) viewer.getSelection();
+                viewer.setInput(GstoolTypeMapper.getGstoolSubtypesAsList());
+                viewer.setSelection(selection, true);
+            }
+        });
     }
 
     private void makeActions() {
@@ -246,26 +252,28 @@ public class GstoolImportMappingView extends RightsEnabledView {
     }
 
     private void addMappingEntry() {
-        Object[] element = { "< " + Messages.GSImportMappingView_newEntry + " >", SonstIT.TYPE_ID };
+
+        GstoolImportMappingElement mappingElement = new GstoolImportMappingElement("< " + Messages.GSImportMappingView_newEntry + " >", SonstIT.TYPE_ID);
 
         try {
-            GstoolTypeMapper.addGstoolSubtypeToPropertyFile(element);
+            GstoolTypeMapper.addGstoolSubtypeToPropertyFile(mappingElement);
+            refresh();
+            viewer.setSelection(new StructuredSelection(mappingElement), true);
         } catch (IOException e) {
             LOG.error("error while adding mapping Entry", e);
             return;
         }
-        refresh();
     }
 
     private void deleteMappingEntry() {
         try {
             if (viewer.getSelection() instanceof StructuredSelection) {
                 StructuredSelection selection = (StructuredSelection) viewer.getSelection();
-                Object[] deletedObject = null;
+                GstoolImportMappingElement deletedObject = null;
                 Iterator iterator = selection.iterator();
                 while (iterator.hasNext()) {
-                    deletedObject = (Object[]) iterator.next();
-                    GstoolTypeMapper.removeGstoolSubtypeToPropertyFile(deletedObject[0]);
+                    deletedObject = (GstoolImportMappingElement) iterator.next();
+                    GstoolTypeMapper.removeGstoolSubtypeToPropertyFile(deletedObject);
                 }
                 refresh();
             } else {
@@ -299,7 +307,7 @@ public class GstoolImportMappingView extends RightsEnabledView {
             }
             this.gsiView.viewer.getTable().setSortDirection(dir);
             this.gsiView.viewer.getTable().setSortColumn(this.column);
-            this.gsiView.viewer.refresh();
+            this.gsiView.refresh();
         }
     }
 
@@ -335,28 +343,25 @@ public class GstoolImportMappingView extends RightsEnabledView {
          */
         @Override
         public int compare(Viewer viewer, Object e1, Object e2) {
-            Object[] a1 = (Object[]) e1;
-            Object[] a2 = (Object[]) e2;
+
             int rc = 0;
-            if (e1 == null) {
-                if (e2 != null) {
-                    rc = 1;
-                }
-            } else if (e2 == null) {
-                rc = -1;
-            } else {
-                // e1 and e2 != null
-                if ((this.currentColumnIndex == 0 || this.currentColumnIndex == 1) && a1.length == 2 && a2.length == 2 && a1[this.currentColumnIndex] != null && a2[this.currentColumnIndex] != null) {
-                    rc = ((String) a1[this.currentColumnIndex]).toLowerCase().compareTo(((String) a2[this.currentColumnIndex]).toLowerCase());
-                }else{
+            if ((e1 instanceof GstoolImportMappingElement && e2 instanceof GstoolImportMappingElement)) {
+                GstoolImportMappingElement g1 = (GstoolImportMappingElement) e1;
+                GstoolImportMappingElement g2 = (GstoolImportMappingElement) e2;
+                if (this.currentColumnIndex == 0) {
+                rc = g1.compareTo(g2);
+                } else if (this.currentColumnIndex == 1) {
+                    rc = (g1.getValue()).compareToIgnoreCase(g2.getValue());
+                } else {
                     rc = 0;
                 }
-            }
-            // If descending order, flip the direction
-            if (!isAscending) {
-                rc = -rc;
+                // If descending order, flip the direction
+                if (!isAscending) {
+                    rc = -rc;
+                }
             }
             return rc;
+
         }
     }
 

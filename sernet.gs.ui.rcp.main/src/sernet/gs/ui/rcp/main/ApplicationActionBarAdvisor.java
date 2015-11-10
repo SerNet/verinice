@@ -475,7 +475,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(this.openRelationViewAction);
         myToolbar.add(this.openValidationViewAction);
         myToolbar.add(this.openSearchViewAction);
-        myToolbar.add(this.openGSToolMappingViewAction);
     }
 
     /**

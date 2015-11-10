@@ -23,7 +23,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -66,7 +68,8 @@ public abstract class GstoolTypeMapper {
     
 	
 	private static Map<String, String> gstoolTypes;
-	private static Map<String, String> gstoolSubtypes;
+    private static Map<String, String> gstoolSubtypesMap;
+    private static List<GstoolImportMappingElement> gstoolSubtypesList;
 
 	/**
 	 * The verinice type-id for a GSTOOL type and subtype.
@@ -119,26 +122,26 @@ public abstract class GstoolTypeMapper {
         return type;
 	}
 
-    public static void addGstoolSubtypeToPropertyFile(Object[] mappingEntry) throws IOException {
+    public static void addGstoolSubtypeToPropertyFile(GstoolImportMappingElement mappingEntry) throws IOException {
         Properties properties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
-        properties.put((String)mappingEntry[0], (String)mappingEntry[1]);
+        properties.put(mappingEntry.getKey(), mappingEntry.getValue());
         writePropertyFile(properties, SUBTYPE_PROPERTIES_FILE);
     }
 
-    public static void removeGstoolSubtypeToPropertyFile(Object oldKey) throws IOException {
+    public static void removeGstoolSubtypeToPropertyFile(GstoolImportMappingElement oldElement) throws IOException {
         Properties properties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
-        properties.remove(oldKey);
+        properties.remove(oldElement.getKey());
         writePropertyFile(properties, SUBTYPE_PROPERTIES_FILE);
     }
 
-    public static void editGstoolSubtypeToPropertyFile(Object oldKey, Object[] mappingEntry) throws IOException {
+    public static void editGstoolSubtypeToPropertyFile(GstoolImportMappingElement oldElement, GstoolImportMappingElement mappingEntry) throws IOException {
         Properties properties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
-        properties.remove(oldKey);
-        properties.put((String) mappingEntry[0], (String) mappingEntry[1]);
+        properties.remove(oldElement.getKey());
+        properties.put(mappingEntry.getKey(), mappingEntry.getValue());
         writePropertyFile(properties, SUBTYPE_PROPERTIES_FILE);
     }
-    
-    public static Map<String, String> getGstoolTypes() {
+
+    private static Map<String, String> getGstoolTypes() {
         if(gstoolTypes==null) {
             gstoolTypes = getGstoolTypesFromFile();
         }
@@ -160,14 +163,36 @@ public abstract class GstoolTypeMapper {
     }
 
     public static Map<String, String> getGstoolSubtypes() {
-        if (gstoolSubtypes == null) {
-            gstoolSubtypes = getGstoolSubtypesFromFile();
+        if (gstoolSubtypesMap == null) {
+            gstoolSubtypesMap = getGstoolSubtypesFromFile();
         }
-        return gstoolSubtypes;
+        return gstoolSubtypesMap;
+    }
+
+    public static List<GstoolImportMappingElement> getGstoolSubtypesAsList() {
+
+        if (gstoolSubtypesList == null) {
+            gstoolSubtypesList = getGstoolSubtypesListFromFile();
+        }
+        return gstoolSubtypesList;
     }
 
     private static void refreshGstoolSubTypes(Properties properties) {
-        gstoolSubtypes = changePropertiesToMap(properties);
+        gstoolSubtypesMap = changePropertiesToMap(properties);
+        gstoolSubtypesList = changePropertiesToList(properties);
+    }
+
+    private static List<GstoolImportMappingElement> changePropertiesToList(Properties properties) {
+        ArrayList<GstoolImportMappingElement> gsToolSubtypesList = new ArrayList<>();
+        Set<Object> keys = properties.keySet();
+        for (Object key : keys) {
+            gsToolSubtypesList.add(new GstoolImportMappingElement((String) key, (String) properties.get(key)));
+
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Subtype added: " + key + " = " + properties.get(key));
+            }
+        }
+        return gsToolSubtypesList;
     }
 
     private static Map<String, String> changePropertiesToMap(Properties properties) {
@@ -181,11 +206,16 @@ public abstract class GstoolTypeMapper {
         }
         return gstoolSubtypesMap;
     }
-    
+
     public static Map<String, String> getGstoolSubtypesFromFile(){
-        gstoolSubtypes = new HashMap<>();
+        gstoolSubtypesMap = new HashMap<>();
         Properties subProperties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
         return changePropertiesToMap(subProperties);
+    }
+
+    public static List<GstoolImportMappingElement> getGstoolSubtypesListFromFile() {
+        Properties subProperties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
+        return changePropertiesToList(subProperties);
     }
 
     private static void writePropertyFile(Properties properties, String filename) throws IOException {

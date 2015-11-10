@@ -30,6 +30,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 
@@ -100,9 +101,9 @@ public class GsImportMappingComboBoxEditingSupport extends EditingSupport {
      */
     @Override
     protected Object getValue(Object element) {
-        if(element instanceof Object[]) {
-            Object[] entry = (Object[])element;
-            return getIndexOfVeriniceObjectType((String)entry[0]);
+        if (element instanceof GstoolImportMappingElement) {
+            GstoolImportMappingElement entry = (GstoolImportMappingElement) element;
+            return getIndexOfVeriniceObjectType(entry.getKey());
 
         }
 
@@ -150,19 +151,29 @@ public class GsImportMappingComboBoxEditingSupport extends EditingSupport {
      */
     @Override
     protected void setValue(Object element, Object value) {
-        if(element instanceof Object[]) {
-            try {
-                Object[] oldEntry = (Object[]) element;
-                Object[] newEntry = new Object[] { oldEntry[0], getMappedTranslatedVeriniceValues().get(getTranslatedVeriniceValues()[(int) value]) };
-                GstoolTypeMapper.addGstoolSubtypeToPropertyFile(newEntry);
-                view.refresh();
+        int val;
+        try {
+            if (value instanceof Integer) {
+                val = (Integer) value;
+                if (element instanceof GstoolImportMappingElement) {
 
-            } catch (IOException e) {
-                LOG.error("writing of property to gstool-subtypes-mapping file fails", e);
-            } catch (Exception e) {
-                LOG.error("error", e);
+                    GstoolImportMappingElement oldEntry = (GstoolImportMappingElement) element;
+                    GstoolImportMappingElement newEntry = new GstoolImportMappingElement(oldEntry.getKey(), getMappedTranslatedVeriniceValues().get(getTranslatedVeriniceValues()[val]));
+                    GstoolTypeMapper.addGstoolSubtypeToPropertyFile(newEntry);
+                    view.refresh();
+                    viewer.setSelection(new StructuredSelection(newEntry), true);
+                } else {
+                    LOG.error("Class of Element:\t" + element.getClass().getCanonicalName());
+                }
+
+            } else {
+                LOG.error("Class of value-Element:\t" + element.getClass().getCanonicalName());
             }
+        } catch (IOException e) {
+            LOG.error("writing of property to gstool-subtypes-mapping file fails", e);
+        } catch (Exception e) {
+            LOG.error("error", e);
         }
-    }
 
+    }
 }

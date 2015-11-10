@@ -22,6 +22,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TextCellEditor;
 
@@ -56,16 +57,6 @@ public class GsImportMappingStringEditingSupport extends EditingSupport {
     @Override
     protected CellEditor getCellEditor(Object arg0) {
         return new TextCellEditor(viewer.getTable());
-        //
-        // String[] currentLinkTypeNames = { "1", "2", "3" };//
-        // getPossibleLinkTypeNames(link);
-        // ComboBoxCellEditor choiceEditor = new
-        // ComboBoxCellEditor(viewer.getTable(), currentLinkTypeNames,
-        // SWT.READ_ONLY);
-        // choiceEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
-        //
-        // return choiceEditor;
-
     }
 
     /* (non-Javadoc)
@@ -73,9 +64,9 @@ public class GsImportMappingStringEditingSupport extends EditingSupport {
      */
     @Override
     protected Object getValue(Object element) {
-        if(element instanceof Object[]) {
-            Object[] entry = (Object[])element;
-            return entry[0];
+        if (element instanceof GstoolImportMappingElement) {
+            GstoolImportMappingElement entry = (GstoolImportMappingElement) element;
+            return entry.getKey();
         }
         return null;
     }
@@ -85,19 +76,25 @@ public class GsImportMappingStringEditingSupport extends EditingSupport {
      */
     @Override
     protected void setValue(Object element, Object value) {
-        if(element instanceof Object[] && value instanceof String) {
+        String val;
+        if (value instanceof String) {
+            val = (String) value;
             try {
-                Object[] oldEntry = (Object[]) element;
-                Object[] newEntry = new Object[] { value, oldEntry[1] };
-                GstoolTypeMapper.editGstoolSubtypeToPropertyFile(oldEntry[0], newEntry);
-                view.refresh();
+                if (element instanceof GstoolImportMappingElement) {
+                    GstoolImportMappingElement oldEntry = (GstoolImportMappingElement) element;
+                    GstoolImportMappingElement newEntry = new GstoolImportMappingElement(val, oldEntry.getValue());
+                    GstoolTypeMapper.editGstoolSubtypeToPropertyFile(oldEntry, newEntry);
+                    view.refresh();
+                    viewer.setSelection(new StructuredSelection(newEntry), true);
+                } else {
+                    LOG.error("Class of Element:\t" + element.getClass().getCanonicalName());
+                }
             } catch (IOException e) {
                 LOG.error("writing of property to gstool-subtypes-mapping file fails", e);
             }
         } else {
-            LOG.error("Class of Element:\t" + element.getClass().getCanonicalName());
+            LOG.error("Class of vlaue-Element:\t" + element.getClass().getCanonicalName());
         }
-        // somehow save that stuff to file in workspace, gstool-subtypes.properties
     }
 
 }

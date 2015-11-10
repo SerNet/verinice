@@ -18,8 +18,9 @@
 
 package sernet.gs.ui.rcp.gsimport;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
@@ -63,24 +64,22 @@ public class GsImportMappingContentProvider implements IStructuredContentProvide
      */
     @Override
     public Object[] getElements(Object inputElement) {
+        List<GstoolImportMappingElement> gsToolMappings = null;
         if (inputElement instanceof PlaceHolder) {
             return new Object[] {inputElement};
-        }
-        if(inputElement instanceof Map) {
-            Map<String, String> map = (Map<String, String>)inputElement;
-            Object [] content = new Object[map.size()];
-            Set<String> keys = map.keySet();
-            String[] keyArray = keys.toArray(new String[keys.size()]);
-            for(int i = 0; i < keyArray.length; i++) {
-                Object[] entry = new Object[2];
-                entry[0] = keyArray[i];
-                entry[1] = map.get(keyArray[i]);
-                content[i] = entry;
+        } else if (inputElement instanceof Map) {
+            Map<String, String> map = (Map<String, String>) inputElement;
+            gsToolMappings = new ArrayList<>();
+            for (String key : map.keySet()) {
+                gsToolMappings.add(new GstoolImportMappingElement(key, map.get(key)));
             }
-            return content;
+        } else if (inputElement instanceof List)  {
+            gsToolMappings = (List<GstoolImportMappingElement>) inputElement;
+        } else{
+            throw new IllegalArgumentException("Type not supported");
         }
+        return gsToolMappings.toArray();
 
-        return new Object[] {};
     }
 
 }
