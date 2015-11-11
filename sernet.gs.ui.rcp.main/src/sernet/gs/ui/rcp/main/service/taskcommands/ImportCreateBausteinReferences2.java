@@ -31,12 +31,16 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
 
 /**
+ *
+ * creates references from itgs modules to itgs objects for all kind of modules (user defined also)
+ * replaces {@link ImportCreateBausteinReferences} which is deprecated with the existant of this class
+ *
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
 public class ImportCreateBausteinReferences2 extends GenericCommand {
     
-    private transient Logger log = Logger.getLogger(ImportCreateBausteinReferences.class);
+    private transient Logger log = Logger.getLogger(ImportCreateBausteinReferences2.class);
     private static final String NO_COMMENT = "";
     
     private CnATreeElement source = null;

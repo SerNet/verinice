@@ -44,7 +44,11 @@ import sernet.verinice.service.commands.LoadCnAElementByExternalID;
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$
  *
+ * class is deprecated, due to unsolveable troubles with references on user-defined itgs modules
+ * use {@link ImportCreateBausteinReferences2} instead
+ *
  */
+@Deprecated
 public class ImportCreateBausteinReferences extends GenericCommand {
 
     private transient Logger log = Logger.getLogger(ImportCreateBausteinReferences.class);
