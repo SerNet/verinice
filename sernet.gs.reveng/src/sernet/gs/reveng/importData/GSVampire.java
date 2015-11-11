@@ -349,9 +349,6 @@ public class GSVampire {
 	
 	public List<Integer> findReferencedZobsByBaustein(ModZobjBst mZobBst, Integer refZobId){
 	    long startTime = System.currentTimeMillis();
-	    if("2.99".equals(mZobBst.getMbBaust().getNr())) {
-	        this.hashCode();
-	    }
 	    NZielobjektDAO dao = new NZielobjektDAO();
 	    Transaction transaction = dao.getSession().beginTransaction();
 	    Query query = dao.getSession().createQuery(QUERY_ZOBS_REF_BY_BAUSTEIN);
