@@ -1,16 +1,40 @@
+/*******************************************************************************
+ * Copyright (c) 2015 Ruth Motza.
+ *
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.
+ * If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Contributors:
+ *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
+ ******************************************************************************/
 package sernet.gs.ui.rcp.gsimport;
 
-import java.io.Serializable;
-
-import sernet.hui.common.connect.ITypedElement;
-
-@SuppressWarnings("serial")
-public class GstoolImportMappingElement implements Serializable, Comparable<GstoolImportMappingElement>, ITypedElement {
-
-    public static final String TYPE_ID = "gstool_mapping";
+/**
+ * Wrapper for elements used by {@link GsToolImportMappingView}. Constructed for support
+ * of selecting edited and added elements in view.
+ *
+ * @author Ruth Motza <rm[at]sernet[dot]de>
+ */
+public class GstoolImportMappingElement implements Comparable<GstoolImportMappingElement> {
 
     private String key;
     private String value;
+
+    public GstoolImportMappingElement(String key, String value) {
+        super();
+        this.key = key;
+        this.value = value;
+    }
 
     public String getKey() {
         return key;
@@ -29,13 +53,7 @@ public class GstoolImportMappingElement implements Serializable, Comparable<Gsto
     }
 
     @Override
-    public String getTypeId() {
-        return TYPE_ID;
-    }
-
-    @Override
     public int compareTo(GstoolImportMappingElement o) {
-//        return key.compareTo(o.getKey());
 
         int rc = 0;
         if (o == null) {
@@ -54,12 +72,6 @@ public class GstoolImportMappingElement implements Serializable, Comparable<Gsto
         result = prime * result + ((key == null) ? 0 : key.hashCode());
         result = prime * result + ((value == null) ? 0 : value.hashCode());
         return result;
-    }
-
-    public GstoolImportMappingElement(String key, String value) {
-        super();
-        this.key = key;
-        this.value = value;
     }
 
     @Override
@@ -94,11 +106,9 @@ public class GstoolImportMappingElement implements Serializable, Comparable<Gsto
 
     }
 
-
     @Override
     public String toString() {
-        String string = key + "=" + value;
-        return string;
+        return key + "=" + value;
     }
 
 }
