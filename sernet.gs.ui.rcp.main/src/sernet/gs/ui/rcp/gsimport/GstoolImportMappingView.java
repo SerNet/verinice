@@ -64,10 +64,10 @@ import sernet.verinice.rcp.RightsEnabledView;
  * @author shagedorn
  * 
  */
-public class GstoolImportMappingView extends RightsEnabledView {
+public class GstoolImportMappingView extends RightsEnabledView implements IGstoolImportMappingChangeListener {
 
     private static final Logger LOG = Logger.getLogger(GstoolImportMappingView.class);
-    public static final String ID = "sernet.gs.ui.rcp.gsimport.gstoolimportmappingview";
+    public static final String ID = "sernet.gs.ui.rcp.gsimport.gstoolimportmappingview"; //$NON-NLS-1$
 
     private TableViewer viewer;
     private TableSorter tableSorter = new TableSorter();
@@ -79,12 +79,12 @@ public class GstoolImportMappingView extends RightsEnabledView {
     private IModelLoadListener modelLoadListener;
 
     public GstoolImportMappingView() {
-        initDataJob = new WorkspaceJob("") {
+        initDataJob = new WorkspaceJob("") { //$NON-NLS-1$
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
                 try {
-                    monitor.beginTask("", IProgressMonitor.UNKNOWN);
+                    monitor.beginTask("", IProgressMonitor.UNKNOWN); //$NON-NLS-1$
                     init();
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
@@ -96,6 +96,7 @@ public class GstoolImportMappingView extends RightsEnabledView {
             }
 
         };
+        GstoolTypeMapper.addChangeListener(this);
     }
 
     private static Display getDisplay() {
@@ -204,7 +205,7 @@ public class GstoolImportMappingView extends RightsEnabledView {
         this.viewer.setContentProvider(this.contentProvider);
         this.viewer.setLabelProvider(this.labelProvider);
 
-        this.viewer.setInput(new PlaceHolder(""));
+        this.viewer.setInput(new PlaceHolder("")); //$NON-NLS-1$
 
         this.viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
@@ -252,35 +253,24 @@ public class GstoolImportMappingView extends RightsEnabledView {
     }
 
     private void addMappingEntry() {
-
-        GstoolImportMappingElement mappingElement = new GstoolImportMappingElement("< " + Messages.GSImportMappingView_newEntry + " >", SonstIT.TYPE_ID);
-
-        try {
-            GstoolTypeMapper.addGstoolSubtypeToPropertyFile(mappingElement);
-            refresh();
-            viewer.setSelection(new StructuredSelection(mappingElement), true);
-        } catch (IOException e) {
-            LOG.error("error while adding mapping Entry", e);
-            return;
-        }
+        GstoolImportMappingElement mappingElement = new GstoolImportMappingElement("< " + Messages.GSImportMappingView_newEntry + " >", SonstIT.TYPE_ID); //$NON-NLS-1$ //$NON-NLS-2$
+        GstoolTypeMapper.addGstoolSubtypeToPropertyFile(mappingElement);
+        refresh();
+        viewer.setSelection(new StructuredSelection(mappingElement), true);
     }
 
     private void deleteMappingEntry() {
-        try {
-            if (viewer.getSelection() instanceof StructuredSelection) {
-                StructuredSelection selection = (StructuredSelection) viewer.getSelection();
-                GstoolImportMappingElement deletedObject = null;
-                Iterator iterator = selection.iterator();
-                while (iterator.hasNext()) {
-                    deletedObject = (GstoolImportMappingElement) iterator.next();
-                    GstoolTypeMapper.removeGstoolSubtypeToPropertyFile(deletedObject);
-                }
-                refresh();
-            } else {
-                LOG.warn("wrong selection type", new IllegalArgumentException("wrong selection type"));
+        if (viewer.getSelection() instanceof StructuredSelection) {
+            StructuredSelection selection = (StructuredSelection) viewer.getSelection();
+            GstoolImportMappingElement deletedObject = null;
+            Iterator iterator = selection.iterator();
+            while (iterator.hasNext()) {
+                deletedObject = (GstoolImportMappingElement) iterator.next();
+                GstoolTypeMapper.removeGstoolSubtypeToPropertyFile(deletedObject);
             }
-        } catch (IOException e) {
-            LOG.error("removing of property from gstool-subtypes-mapping file fails", e);
+            refresh();
+        } else {
+            LOG.warn("wrong selection type", new IllegalArgumentException("wrong selection type")); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -383,5 +373,40 @@ public class GstoolImportMappingView extends RightsEnabledView {
     @Override
     public String getViewId() {
         return ID;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.gsimport.IGstoolImportMappingChangeListener#mappingAdded(sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement)
+     */
+    @Override
+    public void mappingAdded(GstoolImportMappingElement mappingElement) {
+        refresh();
+        viewer.setSelection(new StructuredSelection(mappingElement), true);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.gsimport.IGstoolImportMappingChangeListener#mappingChanged(sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement)
+     */
+    @Override
+    public void mappingChanged(GstoolImportMappingElement mappingElement) {
+        refresh();
+        viewer.setSelection(new StructuredSelection(mappingElement), true);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.gs.ui.rcp.gsimport.IGstoolImportMappingChangeListener#mappingRemoved(sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement)
+     */
+    @Override
+    public void mappingRemoved(GstoolImportMappingElement mappingElement) {
+        refresh();
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.part.WorkbenchPart#dispose()
+     */
+    @Override
+    public void dispose() {
+        GstoolTypeMapper.removeChangeListener(this);
+        super.dispose();
     }
 }

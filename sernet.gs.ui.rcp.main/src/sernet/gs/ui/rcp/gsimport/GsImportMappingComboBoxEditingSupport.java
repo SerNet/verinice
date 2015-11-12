@@ -169,8 +169,6 @@ public class GsImportMappingComboBoxEditingSupport extends EditingSupport {
             } else {
                 LOG.error("Class of value-Element:\t" + element.getClass().getCanonicalName());
             }
-        } catch (IOException e) {
-            LOG.error("writing of property to gstool-subtypes-mapping file fails", e);
         } catch (Exception e) {
             LOG.error("error", e);
         }

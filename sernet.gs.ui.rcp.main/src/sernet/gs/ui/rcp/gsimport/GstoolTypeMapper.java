@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -71,6 +72,9 @@ public abstract class GstoolTypeMapper {
     private static Map<String, String> gstoolSubtypesMap;
     private static List<GstoolImportMappingElement> gstoolSubtypesList;
 
+
+    private static Set<IGstoolImportMappingChangeListener> changeListenerSet;
+
 	/**
 	 * The verinice type-id for a GSTOOL type and subtype.
 	 * The verinice type is derived from the mapping defined in this class and in thr property files
@@ -113,7 +117,7 @@ public abstract class GstoolTypeMapper {
         if (type == null){
             type = getGstoolSubtypes().get(gstoolSubtype);
         }
-        if(type == null){
+        if(type == null || type.equals(GstoolImportMappingElement.UNKNOWN)){
             throw new GstoolTypeNotFoundException("Could not find a type id for GSTOOL type: " + gstoolType + " and sub type: " + gstoolSubtype);
         }
         if (LOG.isDebugEnabled()) {
@@ -122,23 +126,26 @@ public abstract class GstoolTypeMapper {
         return type;
 	}
 
-    public static void addGstoolSubtypeToPropertyFile(GstoolImportMappingElement mappingEntry) throws IOException {
+    public static void addGstoolSubtypeToPropertyFile(GstoolImportMappingElement mappingEntry)  {
         Properties properties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
         properties.put(mappingEntry.getKey(), mappingEntry.getValue());
         writePropertyFile(properties, SUBTYPE_PROPERTIES_FILE);
+        fireMappingAddedEvent(mappingEntry);
     }
 
-    public static void removeGstoolSubtypeToPropertyFile(GstoolImportMappingElement oldElement) throws IOException {
+    public static void removeGstoolSubtypeToPropertyFile(GstoolImportMappingElement oldElement) {
         Properties properties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
         properties.remove(oldElement.getKey());
         writePropertyFile(properties, SUBTYPE_PROPERTIES_FILE);
+        fireMappingRemovedEvent(oldElement);
     }
 
-    public static void editGstoolSubtypeToPropertyFile(GstoolImportMappingElement oldElement, GstoolImportMappingElement mappingEntry) throws IOException {
+    public static void editGstoolSubtypeToPropertyFile(GstoolImportMappingElement oldElement, GstoolImportMappingElement mappingEntry) {
         Properties properties = readPropertyFile(SUBTYPE_PROPERTIES_FILE);
         properties.remove(oldElement.getKey());
         properties.put(mappingEntry.getKey(), mappingEntry.getValue());
         writePropertyFile(properties, SUBTYPE_PROPERTIES_FILE);
+        fireMappingChangedEvent(mappingEntry);
     }
 
     private static Map<String, String> getGstoolTypes() {
@@ -218,7 +225,7 @@ public abstract class GstoolTypeMapper {
         return changePropertiesToList(subProperties);
     }
 
-    private static void writePropertyFile(Properties properties, String filename) throws IOException {
+    private static void writePropertyFile(Properties properties, String filename) {
         File file = null;
         FileOutputStream fileOut = null;
         String filepath = getPropertyFolderPath() + File.separator + filename;
@@ -231,6 +238,9 @@ public abstract class GstoolTypeMapper {
             OutputStreamWriter outWrite = new OutputStreamWriter(fileOut, SUBTYPE_PROPERTIES_FILE_ENCODING);
             properties.store(outWrite, "");
             refreshGstoolSubTypes(properties);
+        } catch (IOException e) {
+            LOG.error("Error wgile writing to property file: " + filename, e);
+            throw new RuntimeException(e);
         } finally {
             IOUtils.closeQuietly(fileOut);
         }
@@ -244,8 +254,12 @@ public abstract class GstoolTypeMapper {
             InputStreamReader reader = new InputStreamReader(new FileInputStream(fullPath), SUBTYPE_PROPERTIES_FILE_ENCODING);
             properties.load(reader);
             LOG.debug("Reading types from " + fullPath + "...");
+        } catch (RuntimeException e) {
+            LOG.error("Can not read properties from file " + fullPath, e);
+            throw e;
         } catch (Exception e) {
-            LOG.warn("Can not load file " + fullPath + ". Using default values.");
+            LOG.error("Can not read properties from file " + fullPath, e);
+            throw new RuntimeException(e);
         }
         return properties;
     }
@@ -254,4 +268,37 @@ public abstract class GstoolTypeMapper {
         return CnAWorkspace.getInstance().getConfDir();
     }
     
+    private static void fireMappingAddedEvent(GstoolImportMappingElement mappingEntry) {
+        for (IGstoolImportMappingChangeListener listener : getChangeListenerSet()) {
+            listener.mappingAdded(mappingEntry);
+        }
+    }
+
+    private static void fireMappingChangedEvent(GstoolImportMappingElement mappingEntry) {
+        for (IGstoolImportMappingChangeListener listener : getChangeListenerSet()) {
+            listener.mappingChanged(mappingEntry);
+        }
+    }
+
+    private static void fireMappingRemovedEvent(GstoolImportMappingElement mappingEntry) {
+        for (IGstoolImportMappingChangeListener listener : getChangeListenerSet()) {
+            listener.mappingRemoved(mappingEntry);
+        }
+    }
+
+    public static void addChangeListener(IGstoolImportMappingChangeListener listener) {
+        getChangeListenerSet().add(listener);
+    }
+
+    public static void removeChangeListener(IGstoolImportMappingChangeListener listener) {
+        getChangeListenerSet().remove(listener);
+    }
+
+    private static Set<IGstoolImportMappingChangeListener> getChangeListenerSet() {
+        if(changeListenerSet==null) {
+            changeListenerSet = new HashSet<IGstoolImportMappingChangeListener>();
+        }
+        return changeListenerSet;
+    }
+
 }

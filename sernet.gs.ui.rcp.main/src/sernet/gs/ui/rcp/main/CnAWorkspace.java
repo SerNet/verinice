@@ -75,7 +75,7 @@ public class CnAWorkspace {
      * Version number to check against version file. When changing this, also
      * change version number in skeleton file "conf/configuration.version"
      */
-    public static final Object CONFIG_CURRENT_VERSION = "0.8.1"; //$NON-NLS-1$
+    public static final Object CONFIG_CURRENT_VERSION = "1.12"; //$NON-NLS-1$
 
     protected static final String VERINICEDB = "verinicedb"; //$NON-NLS-1$
 

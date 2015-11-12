@@ -63,9 +63,12 @@ public abstract class AbstractGstoolImportTask {
             CnAElementFactory.getInstance().reloadModelFromDatabase();
         } catch (GstoolImportCanceledException e) {
             throw e;
+        } catch (RuntimeException e) {
+            LOG.error("Error while importing data from GSTOOL", e);
+            throw e;
         } catch (Exception e) {
             LOG.error("Error while importing data from GSTOOL", e);
-            ExceptionUtil.log(e, e.getMessage());
+            throw new RuntimeException(e);
         }
     }
     

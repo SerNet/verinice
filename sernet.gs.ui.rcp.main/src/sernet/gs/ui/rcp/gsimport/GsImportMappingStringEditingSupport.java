@@ -79,21 +79,17 @@ public class GsImportMappingStringEditingSupport extends EditingSupport {
         String val;
         if (value instanceof String) {
             val = (String) value;
-            try {
-                if (element instanceof GstoolImportMappingElement) {
-                    GstoolImportMappingElement oldEntry = (GstoolImportMappingElement) element;
-                    GstoolImportMappingElement newEntry = new GstoolImportMappingElement(val, oldEntry.getValue());
-                    GstoolTypeMapper.editGstoolSubtypeToPropertyFile(oldEntry, newEntry);
-                    view.refresh();
-                    viewer.setSelection(new StructuredSelection(newEntry), true);
-                } else {
-                    LOG.error("Class of Element:\t" + element.getClass().getCanonicalName());
-                }
-            } catch (IOException e) {
-                LOG.error("writing of property to gstool-subtypes-mapping file fails", e);
+            if (element instanceof GstoolImportMappingElement) {
+                GstoolImportMappingElement oldEntry = (GstoolImportMappingElement) element;
+                GstoolImportMappingElement newEntry = new GstoolImportMappingElement(val, oldEntry.getValue());
+                GstoolTypeMapper.editGstoolSubtypeToPropertyFile(oldEntry, newEntry);
+                view.refresh();
+                viewer.setSelection(new StructuredSelection(newEntry), true);
+            } else {
+                LOG.error("Class of Element:\t" + element.getClass().getCanonicalName());
             }
         } else {
-            LOG.error("Class of vlaue-Element:\t" + element.getClass().getCanonicalName());
+            LOG.error("Class of value-Element:\t" + element.getClass().getCanonicalName());
         }
     }
 

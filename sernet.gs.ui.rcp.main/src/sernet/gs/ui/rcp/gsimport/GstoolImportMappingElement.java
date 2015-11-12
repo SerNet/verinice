@@ -27,6 +27,8 @@ package sernet.gs.ui.rcp.gsimport;
  */
 public class GstoolImportMappingElement implements Comparable<GstoolImportMappingElement> {
 
+    public static final String UNKNOWN = "UNKNOWN";
+
     private String key;
     private String value;
 

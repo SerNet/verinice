@@ -186,12 +186,16 @@ public class ImportGstoolAction extends RightsEnabledAction {
         if(cause!=null && cause instanceof GstoolImportCanceledException) {
             LOG.warn("Import from GSTOOL was canceled, cause: ", cause);
         } else {
-            handleException(e);
+            if(cause!=null) {
+                handleException(cause);
+            } else {
+                handleException(e);
+            }
         }       
     }
 
-    private void handleException(Exception e) {
-        ExceptionUtil.log(e, "Import aus dem Gstool fehlgeschlagen.");
+    private void handleException(Throwable cause) {
+        ExceptionUtil.log(cause, "Import aus dem Gstool fehlgeschlagen.");
     }
     
     private void validateNonBlocking() throws InvocationTargetException, InterruptedException {

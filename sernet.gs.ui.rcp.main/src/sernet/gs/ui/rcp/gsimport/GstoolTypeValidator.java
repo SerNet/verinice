@@ -23,8 +23,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
@@ -94,33 +92,20 @@ public class GstoolTypeValidator {
     }
     
     private boolean showCancelDialog() {
-        final String message = createMessage();
         Display.getDefault().syncExec(new Runnable() {
             @Override
             public void run() {
-                result = MessageDialog.openConfirm(getShell(), Messages.GstoolTypeValidator_0, message);
+                result = UnknownTypeDialog.open(getShell(), unknownTypes);
             }
         }); 
         return result;
     }
 
-    private String createMessage() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(NLS.bind(Messages.GstoolTypeValidator_1, GstoolTypeMapper.DEFAULT_TYPE_ID));
-        sb.append("\n\n"); //$NON-NLS-1$
-        for (String typeLabel : unknownTypes) {
-            sb.append(typeLabel).append("\n"); //$NON-NLS-1$
-        }
-        return sb.toString();
-    }
-
     private void addToUnknownTypes(String gstoolType, String gstoolSubtype) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(gstoolSubtype).append(" (").append(gstoolType).append(")"); //$NON-NLS-1$ //$NON-NLS-2$
         if(unknownTypes==null) {
             unknownTypes = new HashSet<String>();
         }
-        unknownTypes.add(sb.toString());        
+        unknownTypes.add(gstoolSubtype);
     }
 
     public Shell getShell() {

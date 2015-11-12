@@ -103,12 +103,7 @@ public final class CnAElementBuilder {
 			CnATreeElement category = itverbund.getCategory(RaeumeKategorie.TYPE_ID);
 			return CnAElementFactory.getInstance().saveNew(category, Raum.TYPE_ID, null, false);
 		}
-		
-		// else, build nothing:
-		if (LOG.isDebugEnabled()) {
-            LOG.debug("Could not create element for typeId: " + typeId);
-        }
+		LOG.warn("Could not create element for typeId: " + typeId);
 		return null;
-		
 	}
 }

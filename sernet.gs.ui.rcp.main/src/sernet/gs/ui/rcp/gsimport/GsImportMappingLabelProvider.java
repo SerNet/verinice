@@ -68,6 +68,9 @@ public class GsImportMappingLabelProvider extends LabelProvider implements ITabl
     }
 
     private String getHuiTranslation(String id) {
+        if(GstoolImportMappingElement.UNKNOWN.equals(id)) {
+            return Messages.UnknownTypeDialog_2;
+        }
         return HitroUtil.getInstance().getTypeFactory().getMessage(id);
     }
 }
