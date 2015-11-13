@@ -9,7 +9,6 @@
 		<provider readerType="local" componentTypes="osgi.bundle,eclipse.feature,buckminster" source="true">
 			<uri format="{0}/{1}">
 				<bc:propertyRef key="workspace.root" />
-				<bc:propertyRef key="workspace.root" />
 				<bc:propertyRef key="buckminster.component" />
 			</uri>
 		</provider>
