@@ -108,6 +108,7 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
                 getLog().debug("Creating link from " + dependency.getTypeId() + " to " + dependant.getTypeId());
             }
             
+            // only validate, if relationtype is set
             if(StringUtils.isEmpty(relationId) || isRelationValid(dependant, dependency, relationId)) {
                 link = new CnALink(dependant, dependency, relationId, comment);
                 linkDao.merge(link, true);
@@ -152,6 +153,14 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
         return link;
     }
 
+    /**
+     * gets all possible relations outgoing from entityType of sourceElement targeting the entityType of destinationElement. If one of those equals linkType, return true
+     * else return false (relationtype for source and destination is not defined in SNCA.xml )
+     * @param sourceElement
+     * @param destinationElement
+     * @param linkType
+     * @return
+     */
     private boolean isRelationValid(CnATreeElement sourceElement, CnATreeElement destinationElement, String linkType) {
 
         // special handling for links between elements of itgs model
