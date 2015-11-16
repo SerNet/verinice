@@ -49,13 +49,20 @@ import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.RelationNotDefinedException;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Evidence;
 import sernet.verinice.model.iso27k.EvidenceGroup;
 import sernet.verinice.model.iso27k.Finding;
 import sernet.verinice.model.iso27k.FindingGroup;
+import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.model.iso27k.IncidentScenarioGroup;
 import sernet.verinice.model.iso27k.Interview;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
 
@@ -136,6 +143,39 @@ public class LinkTest extends CommandServiceProvider {
             CnATreeElement element = command.getElement();
             assertNull("Organization was not deleted.", element);
         } 
+    }
+
+    /**
+     * Test if creating a {@link CnALink} with the wrong direction fails (gets detected by the validation of {@link CreateLink}
+     * asserts that a {@link RelationNotDefinedException} is thrown by executing {@link CreateLink}-Command
+     * @throws CommandException
+     */
+    @Test
+    public void testNotValidLink() throws CommandException {
+        Organization organization = createOrganization();
+        IncidentScenario scenario = null;
+        Asset asset = null;
+        for(CnATreeElement child : organization.getChildren()) {
+            if(IncidentScenarioGroup.TYPE_ID.equals(child.getTypeId()) ) {
+                scenario = (IncidentScenario)createNewElement((Group<CnATreeElement>)child, IncidentScenario.class);
+            } else if(AssetGroup.TYPE_ID.equals(child.getTypeId())) {
+                asset = (Asset)createNewElement((Group<CnATreeElement>)child, Asset.class);
+            }
+        }
+
+        boolean thrown = false;
+        for(HuiRelation relation : huiTypeFactory.getPossibleRelations(scenario.getEntityType().getId(), asset.getEntityType().getId())) {
+            try {
+                createLink(asset, scenario, relation.getId());
+            } catch (CommandException e) {
+                if(e.getCause().getMessage().contains(RelationNotDefinedException.class.getSimpleName())) {
+                    thrown = true;
+                }
+            }
+        }
+
+        assertTrue(thrown);
+
     }
 
     protected CnATreeElement checkLinksInElement(CnATreeElement element) {

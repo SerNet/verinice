@@ -19,13 +19,17 @@ package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.RelationNotDefinedException;
 
 /**
  * Create and save new element of type type to the database using its class to
@@ -104,17 +108,28 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
                 getLog().debug("Creating link from " + dependency.getTypeId() + " to " + dependant.getTypeId());
             }
             
-            link = new CnALink(dependant, dependency, relationId, comment);
+            if(StringUtils.isEmpty(relationId) || isRelationValid(dependant, dependency, relationId)) {
+                link = new CnALink(dependant, dependency, relationId, comment);
+                linkDao.merge(link, true);
+            } else {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Relation for typeId:\t").append(relationId).append("\tfrom entityType:\t");
+                sb.append(dependant.getEntityType().getId()).append("\tto\t").append(dependency.getEntityType().getId());
+                sb.append(" is not defined in SNCA.xml. Link will not be created");
+                throw new RelationNotDefinedException(sb.toString());
+            }
 
-            linkDao.merge(link, true);
         } catch (RuntimeException e) {
             getLog().error("RuntimeException while creating link.", e);
             throw e;
         } catch (Exception e) {
-            getLog().error("Error while creating link", e);
-            throw new RuntimeException("Error while creating link", e);
+            String message = "Error while creating link";
+            getLog().error(message, e);
+            if(e instanceof RelationNotDefinedException) {
+                message = "Linktype did not pass validation";
+            }
+            throw new RuntimeException(message, e);
         }
-
     }
 
     private String getDependantUuid() {
@@ -135,6 +150,22 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
 
     public CnALink getLink() {
         return link;
+    }
+
+    private boolean isRelationValid(CnATreeElement sourceElement, CnATreeElement destinationElement, String linkType) {
+
+        // special handling for links between elements of itgs model
+        if(sourceElement instanceof IBSIStrukturElement && destinationElement instanceof IBSIStrukturElement){
+            return true;
+        }
+
+        for(HuiRelation relation : sourceElement.getEntityType().getPossibleRelations(destinationElement.getEntityType().getId())) {
+            if(linkType.equals(relation.getId())) {
+                return true;
+            }
+        };
+
+        return false;
     }
 
 }
