@@ -43,6 +43,8 @@ import sernet.verinice.model.common.RelationNotDefinedException;
 public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends CnATreeElement> extends GenericCommand {
 
     private transient Logger log = Logger.getLogger(CreateLink.class);
+    
+    boolean validateLinkCreation = false;
 
     public Logger getLog() {
         if (log == null) {
