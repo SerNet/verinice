@@ -24,8 +24,19 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.iso27k.service.GS2BSITransformService;
 import sernet.verinice.iso27k.service.IModelUpdater;
 import sernet.verinice.iso27k.service.IProgressObserver;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.model.iso27k.IncidentScenario;
 
+/**
+ * confusing name, should be GS2ISMTransformOperation, since it enables transfering
+ * ITGS elements to the ISM perspective
+ * {@link MassnahmenUmsetzung} => {@link Control}
+ * {@link GefaehrdungsUmsetzung} => {@link IncidentScenario}
+ * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
+ */
 public class GS2BSITransformOperation implements IRunnableWithProgress {
 
 	private GS2BSITransformService service;
