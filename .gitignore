@@ -1,1 +1,8 @@
 **/bin
+
+sernet.gs.server/WebContent/WEB-INF/lib/sernet.gs.reveng.jar
+sernet.gs.server/WebContent/WEB-INF/lib/sernet.gs.service.jar
+sernet.gs.server/WebContent/WEB-INF/lib/sernet.gs.ui.rcp.main.jar
+sernet.gs.server/WebContent/WEB-INF/lib/sernet.hui.common.jar
+sernet.gs.server/WebContent/WEB-INF/lib/sernet.hui.server.jar
+sernet.gs.server/WebContent/WEB-INF/lib/sernet.hui.swtclient.jar
