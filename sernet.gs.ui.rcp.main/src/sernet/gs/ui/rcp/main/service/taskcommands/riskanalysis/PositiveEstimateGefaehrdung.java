@@ -71,13 +71,13 @@ public class PositiveEstimateGefaehrdung extends GenericCommand {
             gefaehrdungsUmsetzung.setPermissions(Permission.clonePermissionSet(gefaehrdungsUmsetzung, finishedRiskAnalysis.getPermissions()));
         }
         
-        
-        gefaehrdungsUmsetzung.setOkay(true);
-        
         finishedRiskAnalysis.removeChild(gefaehrdungsUmsetzung);
 
         GefaehrdungsUtil.removeBySameId(finishedRiskLists.getAllGefaehrdungsUmsetzungen(), gefaehrdungsUmsetzung);
-        GefaehrdungsUtil.removeBySameId(finishedRiskLists.getNotOKGefaehrdungsUmsetzungen(), gefaehrdungsUmsetzung);       
+        GefaehrdungsUtil.removeBySameId(finishedRiskLists.getNotOKGefaehrdungsUmsetzungen(), gefaehrdungsUmsetzung);
+        GefaehrdungsUtil.removeBySameId(finishedRiskLists.getAssociatedGefaehrdungen(), gefaehrdungsUmsetzung);
+
+        getElementDao().delete(gefaehrdungsUmsetzung);
     }
 
     public GefaehrdungsUmsetzung getGefaehrdungsUmsetzung() {

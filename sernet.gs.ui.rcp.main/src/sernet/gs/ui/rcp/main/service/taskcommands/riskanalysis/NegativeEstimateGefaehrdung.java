@@ -71,14 +71,13 @@ public class NegativeEstimateGefaehrdung extends GenericCommand {
             gefaehrdungsUmsetzung.setPermissions(Permission.clonePermissionSet(gefaehrdungsUmsetzung, finishedRiskAnalysis.getPermissions()));
         }
         
-        gefaehrdungsUmsetzung.setOkay(true);
+        gefaehrdungsUmsetzung.setOkay(false);
         finishedRiskAnalysis.addChild(gefaehrdungsUmsetzung);
         gefaehrdungsUmsetzung.setParentAndScope(finishedRiskAnalysis);
-        gefaehrdungsUmsetzung.setOkay(false);
         
         raList.addGefaehrdungsUmsetzung(gefaehrdungsUmsetzung);
         
-        getElementDao().merge(gefaehrdungsUmsetzung);
+        raList.addAssociatedGefahr(gefaehrdungsUmsetzung);
     }
 
     public GefaehrdungsUmsetzung getGefaehrdungsUmsetzung() {
