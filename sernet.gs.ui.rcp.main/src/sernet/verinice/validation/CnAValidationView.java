@@ -513,8 +513,8 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                     rc = propertyA1.compareToIgnoreCase(propertyA2);
                     break;
                 case 3:
-                	String hintA1 = HUITypeFactory.getInstance().getMessage(a1.getHintId());
-                	String hintA2 = HUITypeFactory.getInstance().getMessage(a2.getHintId());
+                	String hintA1 = a1.getHintId();
+                	String hintA2 = a2.getHintId();
                     rc = hintA1.compareToIgnoreCase(hintA2);
                     break;
                 default:
