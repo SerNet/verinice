@@ -495,19 +495,27 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                 switch (propertyIndex) {
                 case 0:
                     if(a1.getElementType() != null && a2.getElementType() != null){
-                        rc = a1.getElementType().compareTo(a2.getElementType());
+                    	String typeA1 = HUITypeFactory.getInstance().getMessage(a1.getElementType());
+                    	String typeA2 = HUITypeFactory.getInstance().getMessage(a2.getElementType());
+                        rc = typeA1.compareToIgnoreCase(typeA2);
                         break;
                     }
                 case 1:
                     if(a1.getElmtTitle() != null && a2.getElmtTitle() != null){
-                        rc = a1.getElmtTitle().compareTo(a2.getElmtTitle());
-                        break;
+                    	String titleA1 = HUITypeFactory.getInstance().getMessage(a1.getElmtTitle());
+                    	String titleA2 = HUITypeFactory.getInstance().getMessage(a2.getElmtTitle());
+                        rc = titleA1.compareToIgnoreCase(titleA2);
                     }
+                    break;
                 case 2:
-                    rc = a1.getPropertyId().compareTo(a2.getPropertyId());
+                	String propertyA1 = HUITypeFactory.getInstance().getMessage(a1.getPropertyId());
+                	String propertyA2 = HUITypeFactory.getInstance().getMessage(a2.getPropertyId());
+                    rc = propertyA1.compareToIgnoreCase(propertyA2);
                     break;
                 case 3:
-                    rc = a1.getHintId().compareTo(a2.getHintId());
+                	String hintA1 = HUITypeFactory.getInstance().getMessage(a1.getHintId());
+                	String hintA2 = HUITypeFactory.getInstance().getMessage(a2.getHintId());
+                    rc = hintA1.compareToIgnoreCase(hintA2);
                     break;
                 default:
                     rc = 0;
