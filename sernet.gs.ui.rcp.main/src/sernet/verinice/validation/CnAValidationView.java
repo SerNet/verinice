@@ -502,8 +502,8 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                     }
                 case 1:
                     if(a1.getElmtTitle() != null && a2.getElmtTitle() != null){
-                    	String titleA1 = HUITypeFactory.getInstance().getMessage(a1.getElmtTitle());
-                    	String titleA2 = HUITypeFactory.getInstance().getMessage(a2.getElmtTitle());
+                    	String titleA1 = a1.getElmtTitle();
+                    	String titleA2 = a2.getElmtTitle();
                         rc = titleA1.compareToIgnoreCase(titleA2);
                     }
                     break;
