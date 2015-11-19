@@ -1,17 +1,17 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
  * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
+ * modify it under the terms of the GNU Lesser General Public License
  * as published by the Free Software Foundation, either version 3 
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
  * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
@@ -32,6 +32,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.ChangeLinkType;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
@@ -40,17 +41,24 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.CreateLink;
 
 /**
- * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ $LastChangedBy$
+ * This class provides the editing support for the relation type column in the relations table used
+ * in the LinkMaker and in the RelationTableViewer.
  * 
+ * Note that some concepts used in this context are somewhat confusing. The terms "Dependant" and
+ * "Dependency" stemming from CnALink are incorrect. Instead the terms "Source" and "Target"
+ * should be used.
+ *
+ * @author koderman[at]sernet[dot]de
  */
 public class RelationTypeEditingSupport extends EditingSupport {
 
-    private IRelationTable view;
-    private TableViewer viewer;
-    
     private Logger log = Logger.getLogger(RelationTypeEditingSupport.class);
 
+    private IRelationTable view;
+    private TableViewer viewer;
+ 
+    private static HUITypeFactory huiTypeFactory = HitroUtil.getInstance().getTypeFactory();
+    
     public RelationTypeEditingSupport(IRelationTable view, TableViewer viewer) {
         super(viewer);
         this.viewer = viewer;
@@ -62,8 +70,11 @@ public class RelationTypeEditingSupport extends EditingSupport {
         if (!(element instanceof CnALink)) {
             return false;
         }
-        CnALink link = (CnALink) element;
-        Set<HuiRelation> possibleRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependant().getEntityType().getId(), link.getDependency().getEntityType().getId());
+        CnALink cnaLink = (CnALink) element;
+        String sourceEntityTypeId = cnaLink.getDependant().getEntityType().getId();
+        String targetEntityTypeId = cnaLink.getDependency().getEntityType().getId();
+        Set<HuiRelation> possibleRelations = huiTypeFactory.getPossibleRelations(
+                sourceEntityTypeId, targetEntityTypeId);
 
         return (possibleRelations != null && possibleRelations.size() > 0);
     }
@@ -73,35 +84,48 @@ public class RelationTypeEditingSupport extends EditingSupport {
         if (!(element instanceof CnALink)) {
             return null;
         }
-        CnALink link = (CnALink) element;
+        CnALink cnaLink = (CnALink) element;
 
-        String[] currentLinkTypeNames = getPossibleLinkTypeNames(link);
-        ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(viewer.getTable(), currentLinkTypeNames, SWT.READ_ONLY);
-        choiceEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
-        return choiceEditor;
+        String[] linkTypeNames = getPossibleLinkTypeNames(cnaLink);
+        ComboBoxCellEditor cellEditor = new ComboBoxCellEditor(
+                viewer.getTable(), linkTypeNames, SWT.READ_ONLY);
+        cellEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
+        return cellEditor;
     }
 
-    private String[] getPossibleLinkTypeNames(CnALink link) {
-        Set<HuiRelation> possibleDownRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependant().getEntityType().getId(), link.getDependency().getEntityType().getId());
-        Set<HuiRelation> possibleUpRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependency().getEntityType().getId(), link.getDependant().getEntityType().getId());
-        Set<String> names = new HashSet<String>();
-        Set<String> ids = new HashSet<String>();
-           
+    private String[] getPossibleLinkTypeNames(CnALink cnaLink) {
+        HUITypeFactory huiTypeFactory = HitroUtil.getInstance().getTypeFactory();
+        CnATreeElement relationSource = cnaLink.getDependant();
+        CnATreeElement relationTarget = cnaLink.getDependency();
+        String relationSourceEntityTypeId = relationSource.getEntityType().getId();
+        String relationTargetEntityTypeId = relationTarget.getEntityType().getId();
+        
+        Set<HuiRelation> possibleDownRelations = huiTypeFactory
+                .getPossibleRelations(relationSourceEntityTypeId, relationTargetEntityTypeId);
+        Set<HuiRelation> possibleUpRelations = huiTypeFactory
+                .getPossibleRelations(relationTargetEntityTypeId, relationSourceEntityTypeId);
+
+        Set<String> relationNames = new HashSet<String>();
+        String relationName;
+
         for (HuiRelation huiRelation : possibleDownRelations) {
-            String id = huiRelation.getId();
-            String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation.getName() : huiRelation.getReversename();
-            names.add(name);
-            ids.add(id);
+            if (CnALink.isDownwardLink(view.getInputElmt(), cnaLink)) {
+                relationName = huiRelation.getName();
+            } else {
+                relationName = huiRelation.getReversename();
+            }
+            relationNames.add(relationName);
         }
         for (HuiRelation huiRelation : possibleUpRelations) {
-            String id = huiRelation.getId();
-            String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation.getReversename() : huiRelation.getName();
-            names.add(name);
-            ids.add(id);
+            if (CnALink.isDownwardLink(view.getInputElmt(), cnaLink)) {
+                relationName = huiRelation.getReversename();
+            } else {
+                relationName = huiRelation.getName();
+            }
+            relationNames.add(relationName);
         }
         
-
-        String[] currentLinkTypeNames = names.toArray(new String[names.size()]);
+        String[] currentLinkTypeNames = relationNames.toArray(new String[relationNames.size()]);
         return currentLinkTypeNames;
     }
 
@@ -110,17 +134,19 @@ public class RelationTypeEditingSupport extends EditingSupport {
         if (!(element instanceof CnALink)) {
             return null;
         }
-        CnALink link = (CnALink) element;
-        String currentName = CnALink.getRelationName(view.getInputElmt(), link);
+        CnALink cnaLink = (CnALink) element;
+        
+        String currentName = CnALink.getRelationName(view.getInputElmt(), cnaLink);
         if(log.isDebugEnabled()){
-            log.debug("current name " + currentName);
+            log.debug("Current name: " + currentName);
         }
 
-        int idx = getIndex(currentName, getPossibleLinkTypeNames(link));
+        int index = getIndex(currentName, getPossibleLinkTypeNames(cnaLink));
         if(log.isDebugEnabled()){
-            log.debug("getvalue index: " + idx);
+            log.debug("Index in getValue(): " + index);
         }
-        return idx;
+                
+        return index;
     }
 
     private int getIndex(String currentName, String[] currentLinkTypeNames) {
@@ -139,70 +165,87 @@ public class RelationTypeEditingSupport extends EditingSupport {
         if (!(element instanceof CnALink)) {
             return;
         }
-        CnALink link = (CnALink) element;
+        CnALink cnaLink = (CnALink) element;
         int index = (Integer) value;
-
-        String linkTypeName = getPossibleLinkTypeNames(link)[index];
-        String linkTypeID = getLinkIdForName(link, linkTypeName);
-        if(log.isDebugEnabled()){
-            log.debug("Setting value " + linkTypeID);
+        
+        String[] possibleLinkTypeNames = getPossibleLinkTypeNames(cnaLink);
+        String linkTypeName = possibleLinkTypeNames[index];
+        String linkTypeId = getLinkTypeIdForName(cnaLink, linkTypeName);
+        if(log.isDebugEnabled()) {
+            log.debug("Setting value " + linkTypeId);
         }
         
-        CnALink newLink = null;
-        if(changeLinkDirection(link, linkTypeID)){
-            CreateLink<CnALink, CnATreeElement, CnATreeElement> createLinkCommand = new CreateLink<CnALink, CnATreeElement, CnATreeElement>(link.getDependency(), link.getDependant(), linkTypeID);
+        CnALink newCnaLink = null;
+        if (changeLinkDirection(cnaLink, linkTypeId)) {
+            CreateLink<CnALink, CnATreeElement, CnATreeElement> createLinkCommand =
+                    new CreateLink<CnALink, CnATreeElement, CnATreeElement>(
+                            cnaLink.getDependency(), cnaLink.getDependant(), linkTypeId);
             try {
-                createLinkCommand = ServiceFactory.lookupCommandService().executeCommand(createLinkCommand);
-                newLink = createLinkCommand.getLink();
-                if(CnAElementHome.getInstance().isDeleteAllowed(link)){
-                    CnAElementHome.getInstance().remove(link);
+                createLinkCommand = ServiceFactory.lookupCommandService()
+                        .executeCommand(createLinkCommand);
+                newCnaLink = createLinkCommand.getLink();
+                if(CnAElementHome.getInstance().isDeleteAllowed(cnaLink)){
+                    CnAElementHome.getInstance().remove(cnaLink);
                     if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getLoadedModel().linkRemoved(link);
-                        CnAElementFactory.getLoadedModel().linkAdded(newLink);
+                        CnAElementFactory.getLoadedModel().linkRemoved(cnaLink);
+                        CnAElementFactory.getLoadedModel().linkAdded(newCnaLink);
                     }
-                    CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
-                    CnAElementFactory.getInstance().getISO27kModel().linkAdded(newLink);
+                    CnAElementFactory.getInstance().getISO27kModel().linkRemoved(cnaLink);
+                    CnAElementFactory.getInstance().getISO27kModel().linkAdded(newCnaLink);
                 }
             } catch (CommandException e) {
                 ExceptionUtil.log(e, Messages.RelationTypeEditingSupport_1);
             }
         } else {
-
-            ChangeLinkType command = new ChangeLinkType(link, linkTypeID, link.getComment());
+            ChangeLinkType command = new ChangeLinkType(cnaLink, linkTypeId, cnaLink.getComment());
 
             try {
                 command = ServiceFactory.lookupCommandService().executeCommand(command);
-                newLink = command.getLink();
+                newCnaLink = command.getLink();
             } catch (CommandException e) {
                 ExceptionUtil.log(e, Messages.RelationTypeEditingSupport_2);
             }
-            CnAElementFactory.getModel(link.getDependant()).linkChanged(link, newLink, view);
+            
+            CnATreeElement source = cnaLink.getDependant();
+            CnATreeElement sourceModel = CnAElementFactory.getModel(source);
+            sourceModel.linkChanged(cnaLink, newCnaLink, view);
             if (CnAElementFactory.isModelLoaded()) {
-                CnAElementFactory.getLoadedModel().linkChanged(link, newLink, view);
+                CnAElementFactory.getLoadedModel().linkChanged(cnaLink, newCnaLink, view);
             }
-            CnAElementFactory.getInstance().getISO27kModel().linkChanged(link, newLink, view);
+            
+            CnAElementFactory.getInstance().getISO27kModel().linkChanged(cnaLink, newCnaLink, view);
         }
     }
     
-    private boolean changeLinkDirection(CnALink link, String linkTypeId){
-        Set<HuiRelation> toFromRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependency().getEntityType().getId(), link.getDependant().getEntityType().getId());
-        for(HuiRelation hr : toFromRelations){
-            if(hr.getId().equals(linkTypeId)){
+    private boolean changeLinkDirection(CnALink link, String linkTypeId) {
+        String sourceTypeId = link.getDependency().getEntityType().getId();
+        String targetTypeId = link.getDependant().getEntityType().getId();
+        Set<HuiRelation> huiRelations = huiTypeFactory.getPossibleRelations(
+                sourceTypeId, targetTypeId);
+        for(HuiRelation huiRelation : huiRelations){
+            if(huiRelation.getId().equals(linkTypeId)){
                 return true;
             }
         }
         return false;
     }
 
-    /**
-     * @param linkTypeName
-     */
-    private String getLinkIdForName(CnALink link, String linkTypeName) {
-        Set<HuiRelation> possibleDownRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependant().getEntityType().getId(), link.getDependency().getEntityType().getId());
-        Set<HuiRelation> possibleUpRelations = HitroUtil.getInstance().getTypeFactory().getPossibleRelations(link.getDependency().getEntityType().getId(), link.getDependant().getEntityType().getId());
+    private String getLinkTypeIdForName(CnALink link, String linkTypeName) {
+        String sourceTypeId = link.getDependant().getEntityType().getId();
+        String targetTypeId = link.getDependency().getEntityType().getId();
+        Set<HuiRelation> possibleDownRelations = huiTypeFactory.getPossibleRelations(
+                sourceTypeId, targetTypeId);
+        Set<HuiRelation> possibleUpRelations = huiTypeFactory.getPossibleRelations(
+                targetTypeId, sourceTypeId);
+        
         for (HuiRelation huiRelation : possibleDownRelations) {
             String id = huiRelation.getId();
-            String name = (CnALink.isDownwardLink(view.getInputElmt(), link)) ? huiRelation.getName() : huiRelation.getReversename();
+            String name;
+            if (CnALink.isDownwardLink(view.getInputElmt(), link)) {
+                name = huiRelation.getName();
+            } else {
+                name = huiRelation.getReversename();
+            }
             if (name.equals(linkTypeName)) {
                 return id;
             }
@@ -210,14 +253,17 @@ public class RelationTypeEditingSupport extends EditingSupport {
 
         for (HuiRelation huiRelation : possibleUpRelations) {
             String id = huiRelation.getId();
-            String name = (view.getInputElmt().getLinksUp().contains(link)) ? huiRelation.getName() : huiRelation.getReversename();
+            String name;
+            if (view.getInputElmt().getLinksUp().contains(link)) {
+                name = huiRelation.getName();
+            } else {
+                name = huiRelation.getReversename();
+            }
             if (name.equals(linkTypeName)) {
                 return id;
             }
         }
-
-        
+     
         return "";
-
     }
 }
