@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
@@ -160,18 +161,18 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
      * else return false (relationtype for source and destination is not defined in SNCA.xml )
      * @param sourceElement
      * @param destinationElement
-     * @param linkType
+     * @param relationType
      * @return
      */
-    private boolean isRelationValid(CnATreeElement sourceElement, CnATreeElement destinationElement, String linkType) {
+    private boolean isRelationValid(CnATreeElement sourceElement, CnATreeElement destinationElement, String relationType) {
 
         // special handling for links between elements of itgs model
         if(sourceElement instanceof IBSIStrukturElement && destinationElement instanceof IBSIStrukturElement){
             return true;
         }
 
-        for(HuiRelation relation : sourceElement.getEntityType().getPossibleRelations(destinationElement.getEntityType().getId())) {
-            if(linkType.equals(relation.getId())) {
+        for(HuiRelation relation : HUITypeFactory.getInstance().getPossibleRelations(sourceElement.getEntityType().getId(), destinationElement.getEntityType().getId())) {
+            if(relationType.equals(relation.getId())) {
                 return true;
             }
         };

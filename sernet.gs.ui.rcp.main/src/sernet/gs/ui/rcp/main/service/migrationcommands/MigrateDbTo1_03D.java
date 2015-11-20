@@ -49,12 +49,15 @@ import sernet.verinice.service.commands.CreateLink;
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
 public class MigrateDbTo1_03D extends DbMigration {
-    
+   
+    private static final long serialVersionUID = 20151120133756L;
+
     private final static String HQL_ALL_LINKTYPES = "select source.objectType, target.objectType,"
             + " source.uuid, target.uuid, link"
             + " from CnALink link, CnATreeElement source, CnATreeElement target" 
             + " where link.id.dependantId = source.dbId"
             + " and link.id.dependencyId = target.dbId";
+    
     private transient Logger log;
 
     @Override
@@ -62,13 +65,6 @@ public class MigrateDbTo1_03D extends DbMigration {
         
         IBaseDao<CnALink, Serializable> linkDao = getDaoFactory().getDAO(CnALink.class);
         
-//        Object o = linkDao.findByCallback(new HibernateCallback() {
-//            
-//            @Override
-//            public Object doInHibernate(Session session) throws HibernateException, SQLException {
-//                return session.createSQLQuery(SQL_ALL_LINKTYPES).list();
-//            }
-//        });
         List<Object[]> hqlResultList = linkDao.findByQuery(HQL_ALL_LINKTYPES, new Object[] {});
         StringBuilder sb = new StringBuilder();
         
@@ -111,29 +107,8 @@ public class MigrateDbTo1_03D extends DbMigration {
                 }
             }
         }
-        
-		List<CnALink> linkList = linkDao.findAll();
-		for(int index = 0; index < linkList.size(); index++){
-			CnALink link = linkList.get(index);
-		
-			
-			if(index % 50 == 0){
-				sb.append("Validating Link #").append(index).append("/").append(linkList.size());
-				getLog().error(sb.toString());
-				sb.setLength(0);
-			}
-			
-			if(StringUtils.isNotEmpty(link.getRelationId())){
-				boolean valid = isRelationValid(link.getDependant(), link.getDependency(), link.getRelationId());
-				if(!valid){
-					sb.setLength(0);
-					sb.append("Found invalid Link:\t").append(link.getId());
-					getLog().error(sb.toString());
-				}
-			}
-		}
 
-//        super.updateVersion();
+        super.updateVersion();
 
     }
     
@@ -184,24 +159,4 @@ public class MigrateDbTo1_03D extends DbMigration {
         return log;
     }
     
-    private boolean isRelationValid(CnATreeElement sourceElement, CnATreeElement destinationElement, String relationId){
-        // this is used for links between audit and controlgroup, not(!) defined in snca!
-    	if("rel_audit_control".equals(relationId)){
-    		this.hashCode();
-    	}
-    	
-        // special handling for links between elements of itgs model
-        if(sourceElement instanceof IBSIStrukturElement && destinationElement instanceof IBSIStrukturElement){
-            return true;
-        }
-        
-        for(HuiRelation relation : sourceElement.getEntityType().getPossibleRelations(destinationElement.getEntityType().getId())) {
-            if(relationId.equals(relation.getId())) {
-                return true;
-            }
-        };
-        
-        return false;
-    }
-
 }
