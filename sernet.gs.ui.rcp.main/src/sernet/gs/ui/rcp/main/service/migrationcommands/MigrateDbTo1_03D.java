@@ -30,6 +30,7 @@ import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NetzKomponente;
@@ -38,6 +39,7 @@ import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.StellungnahmeDSB;
 import sernet.verinice.model.ds.VerantwortlicheStelle;
 import sernet.verinice.model.iso27k.IncidentGroup;
@@ -68,6 +70,13 @@ public class MigrateDbTo1_03D extends DbMigration {
 //            }
 //        });
         List<Object[]> hqlResultList = linkDao.findByQuery(HQL_ALL_LINKTYPES, new Object[] {});
+        StringBuilder sb = new StringBuilder();
+        
+        if(getLog().isDebugEnabled()){
+        	sb.setLength(0);
+        	sb.append("Checking ").append(hqlResultList.size()).append(" Links for corrupted content");
+        	getLog().debug(sb.toString());
+        }
         
         for(Object[] result : hqlResultList) {
             String sourceEntityType = ensureTypeIDisUsed((String)result[0]);
@@ -102,6 +111,27 @@ public class MigrateDbTo1_03D extends DbMigration {
                 }
             }
         }
+        
+		List<CnALink> linkList = linkDao.findAll();
+		for(int index = 0; index < linkList.size(); index++){
+			CnALink link = linkList.get(index);
+		
+			
+			if(index % 50 == 0){
+				sb.append("Validating Link #").append(index).append("/").append(linkList.size());
+				getLog().error(sb.toString());
+				sb.setLength(0);
+			}
+			
+			if(StringUtils.isNotEmpty(link.getRelationId())){
+				boolean valid = isRelationValid(link.getDependant(), link.getDependency(), link.getRelationId());
+				if(!valid){
+					sb.setLength(0);
+					sb.append("Found invalid Link:\t").append(link.getId());
+					getLog().error(sb.toString());
+				}
+			}
+		}
 
 //        super.updateVersion();
 
@@ -152,6 +182,26 @@ public class MigrateDbTo1_03D extends DbMigration {
         if (log == null)
             log = Logger.getLogger(MigrateDbTo1_02D.class);
         return log;
+    }
+    
+    private boolean isRelationValid(CnATreeElement sourceElement, CnATreeElement destinationElement, String relationId){
+        // this is used for links between audit and controlgroup, not(!) defined in snca!
+    	if("rel_audit_control".equals(relationId)){
+    		this.hashCode();
+    	}
+    	
+        // special handling for links between elements of itgs model
+        if(sourceElement instanceof IBSIStrukturElement && destinationElement instanceof IBSIStrukturElement){
+            return true;
+        }
+        
+        for(HuiRelation relation : sourceElement.getEntityType().getPossibleRelations(destinationElement.getEntityType().getId())) {
+            if(relationId.equals(relation.getId())) {
+                return true;
+            }
+        };
+        
+        return false;
     }
 
 }

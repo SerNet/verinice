@@ -32,6 +32,7 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportCountRisksBySeverity;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.service.commands.SwapCnaLinkReferences;
 
 public class TestAction extends Action {
 
@@ -74,6 +75,9 @@ public class TestAction extends Action {
             
             StringBuilder allsb = new StringBuilder();
             
+            SwapCnaLinkReferences swapCommand = new SwapCnaLinkReferences();
+            ServiceFactory.lookupCommandService().executeCommand(swapCommand);
+            
 //            LoadReportProcessesWithRisk cmd = new LoadReportProcessesWithRisk(152);
 //            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
 //            List<List<String>> result2 = cmd.getResult();
@@ -83,9 +87,9 @@ public class TestAction extends Action {
 //            List<List<String>> result2 = command.getResult();
             
             
-            LoadReportCountRisksBySeverity command = new LoadReportCountRisksBySeverity(152, 'c', 3);
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            List<List<Object>> result2 = command.getResult();
+//            LoadReportCountRisksBySeverity command = new LoadReportCountRisksBySeverity(152, 'c', 3);
+//            command = ServiceFactory.lookupCommandService().executeCommand(command);
+//            List<List<Object>> result2 = command.getResult();
 
             
 //            LoadReportProcessesWithRisk command = new LoadReportProcessesWithRisk(152);
@@ -100,13 +104,13 @@ public class TestAction extends Action {
 //                allsb.append("\n");
 //            }
 
-            
-                        for (List<Object> row : result2) {
-              for (Object col : row) {
-                  allsb.append(col + ":");
-              }
-              allsb.append("\n");
-          }
+//            
+//                        for (List<Object> row : result2) {
+//              for (Object col : row) {
+//                  allsb.append(col + ":");
+//              }
+//              allsb.append("\n");
+//          }
 //            
 //            for (Integer[] row : countC) {
 //                for (Integer col : row) {
