@@ -3854,7 +3854,7 @@ the value between <param></param> will be used directly if no string is found fo
     <huientity
         name="Person"
         id="person-iso" >
-        
+
         <huirelation to="person-iso" id="rel_person_person_employee"
             name="Mitarbeiter von" reversename="Mitarbeiter" tooltip="" />
         
@@ -5526,11 +5526,11 @@ Wurden bereits weitere Stellen informiert?
 		  	name="documents" reversename="related document" tooltip="" /> 
 		  				
         <huirelation to="person-iso" id="rel_document_person_owner" 
-        	name="owner" reversename="is owner of" tooltip=""/>
+        	name="owned by" reversename="is owner of" tooltip=""/>
         <huirelation to="person-iso" id="rel_document_person_author" 
-        	name="author" reversename="is author of" tooltip=""/>
+        	name="authored by" reversename="is author of" tooltip=""/>
         <huirelation to="person-iso" id="rel_document_person_approved" 
-        	name="approval" reversename="approved" tooltip=""/>
+        	name="approved by" reversename="approves" tooltip=""/>
         <huirelation to="person-iso" id="rel_document_person_distributed" 
         	name="distributed to" reversename="receives" tooltip=""/>
         <huirelation to="person-iso" id="rel_document_person_reads" 
