@@ -55,6 +55,7 @@ import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
@@ -454,6 +455,7 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
         private static final int DESCENDING = 1;
         private static final int ASCENDING = 0;
         private int direction = ASCENDING;
+        private NumericStringComparator comparator = new NumericStringComparator();
 
         public TableSorter() {
             super();
@@ -494,31 +496,79 @@ public class CnAValidationView extends RightsEnabledView implements ILinkedWithE
                 // e1 and e2 != null
                 switch (propertyIndex) {
                 case 0:
-                    if(a1.getElementType() != null && a2.getElementType() != null){
-                        rc = a1.getElementType().compareTo(a2.getElementType());
+                    if (a1.getElementType() != null && a2.getElementType() != null) {
+                        rc = compareByType(a1, a2);
                         break;
                     }
                 case 1:
-                    if(a1.getElmtTitle() != null && a2.getElmtTitle() != null){
-                        rc = a1.getElmtTitle().compareTo(a2.getElmtTitle());
-                        break;
+                    if (a1.getElmtTitle() != null && a2.getElmtTitle() != null) {
+                        rc = compareByName(a1, a2);
                     }
+                    break;
                 case 2:
-                    rc = a1.getPropertyId().compareTo(a2.getPropertyId());
+                    rc = compareByAttribute(a1, a2);
                     break;
                 case 3:
-                    rc = a1.getHintId().compareTo(a2.getHintId());
+                    rc = compareByHint(a1, a2);
                     break;
                 default:
-                    rc = 0;
+                    throw new IllegalArgumentException("propertyIndex not possible in this table");
+                }
+
+                if(!compareReturnsEquals(rc)){
+                    // If descending order, flip the direction
+                    if (direction == DESCENDING) {
+                        rc = -rc;
+                    }
+                    return rc;
+                }else{
+                    // second, third (...) level comparison
+                    rc = compareByType(a1, a2);
+                    if(!compareReturnsEquals(rc)){
+                        return rc;
+                    }
+                    rc = compareByName(a1, a2);
+                    if(!compareReturnsEquals(rc)){
+                        return rc;
+                    }
+                    rc = compareByAttribute(a1, a2);
+                    if(!compareReturnsEquals(rc)){
+                        return rc;
+                    }
+                    rc = compareByHint(a1, a2);
+                    
                 }
             }
-            
-            // If descending order, flip the direction
-            if (direction == DESCENDING) {
-                rc = -rc;
-            }
+
             return rc;
+        }
+        
+        private boolean compareReturnsEquals(int rc){
+            return rc == 0;
+        }
+
+        private int compareByHint(CnAValidation a1, CnAValidation a2) {
+            String hintA1 = a1.getHintId();
+            String hintA2 = a2.getHintId();
+            return comparator.compare(hintA1, hintA2);
+        }
+
+        private int compareByAttribute(CnAValidation a1, CnAValidation a2) {
+            String propertyA1 = HUITypeFactory.getInstance().getMessage(a1.getPropertyId());
+            String propertyA2 = HUITypeFactory.getInstance().getMessage(a2.getPropertyId());
+            return comparator.compare(propertyA1, propertyA2);
+        }
+
+        private int compareByName(CnAValidation a1, CnAValidation a2) {
+            String titleA1 = a1.getElmtTitle();
+            String titleA2 = a2.getElmtTitle();
+            return comparator.compare(titleA1, titleA2);
+        }
+
+        private int compareByType(CnAValidation a1, CnAValidation a2) {
+            String typeA1 = HUITypeFactory.getInstance().getMessage(a1.getElementType());
+            String typeA2 = HUITypeFactory.getInstance().getMessage(a2.getElementType());
+            return comparator.compare(typeA1, typeA2);
         }
 
     }
