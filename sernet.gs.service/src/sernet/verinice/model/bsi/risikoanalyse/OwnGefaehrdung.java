@@ -34,8 +34,7 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
 	
 	
 	public OwnGefaehrdung() {
-		setTitel("");
-		setId("");
+		super();
 		this.beschreibung = "";
 		this.ownkategorie = "";
 	}
@@ -74,6 +73,15 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
      */
     public String getTypeId() {
         return TYPE_ID;
+    }
+    
+    @Override
+    public String getKategorieAsString(String language) {
+        if(ownkategorie.isEmpty() || ownkategorie.equalsIgnoreCase(Messages.OwnGefaehrdungCategoryDefault)){
+            return getLocalizedKategorie(getKategorie(), language);
+        }else{
+            return ownkategorie;
+        }
     }
 
 	

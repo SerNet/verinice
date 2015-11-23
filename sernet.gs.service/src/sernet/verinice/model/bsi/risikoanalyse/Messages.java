@@ -32,6 +32,7 @@ public final class Messages extends NLS {
     public static String GefaehrdungsUmsetzung_5;
     public static String GefaehrdungsUmsetzung_6;
     public static String GefaehrdungsUmsetzung_7;
+    public static String OwnGefaehrdungCategoryDefault;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
