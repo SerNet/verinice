@@ -35,19 +35,6 @@ for specific objects as needed or to remove unneeded fields from the
 standard forms. That is how you can adapt verinice to your working
 methods and the requirements of your organization.
 
-Dynamisches Objektmodell (HitroUI)
-==================================
-
-Ein Bestandteil von verinice ist das HitroUI Framework. In einer
-einfachen XML-Datei sind alle Felder und Feldtypen definiert. Datenbank
-und angezeigte Formulare werden automatisch an die von Ihnen definierten
-Felder angepasst.
-
-Dieses Dynamische Objektmodell ermöglicht es Ihnen, zusätzliche Daten zu
-erfassen oder nicht benötigte Felder aus den Standardformularen zu
-entfernen. Sie können verinice dadurch an Ihre Arbeitsweise und Vorgaben
-Ihrer Organisation anpassen. Datenbanken
-
 Databases
 =========
 
