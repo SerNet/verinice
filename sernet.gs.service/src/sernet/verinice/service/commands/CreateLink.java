@@ -165,7 +165,9 @@ public class CreateLink<T extends CnALink, U extends CnATreeElement, V extends C
      * @return
      */
     private boolean isRelationValid(CnATreeElement sourceElement, CnATreeElement destinationElement, String relationType) {
-
+        if(CnALink.Id.NO_TYPE.equals(relationId)){ // special dnd itgs case which is allowed always
+            return true;
+        }
         // special handling for links between elements of itgs model
         if(sourceElement instanceof IBSIStrukturElement && destinationElement instanceof IBSIStrukturElement){
             return true;

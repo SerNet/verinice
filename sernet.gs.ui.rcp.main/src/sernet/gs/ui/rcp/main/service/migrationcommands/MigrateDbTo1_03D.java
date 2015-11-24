@@ -20,7 +20,10 @@
 package sernet.gs.ui.rcp.main.service.migrationcommands;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
+
+import javax.sound.midi.MidiDeviceTransmitter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -29,12 +32,18 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.NetzKomponente;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.Raum;
+import sernet.verinice.model.bsi.Server;
 import sernet.verinice.model.bsi.SonstIT;
+import sernet.verinice.model.bsi.Client;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -57,6 +66,19 @@ public class MigrateDbTo1_03D extends DbMigration {
             + " from CnALink link, CnATreeElement source, CnATreeElement target" 
             + " where link.id.dependantId = source.dbId"
             + " and link.id.dependencyId = target.dbId";
+    
+    private static final String[] BSI_TYPE_IDS = new String[]{ITVerbund.TYPE_ID,
+            Anwendung.TYPE_ID,
+            Client.TYPE_ID,
+            TelefonKomponente.TYPE_ID,
+            Server.TYPE_ID,
+            NetzKomponente.TYPE_ID,
+            Gebaeude.TYPE_ID,
+            Person.TYPE_ID,
+            SonstIT.TYPE_ID,
+            Raum.TYPE_ID,
+            MassnahmenUmsetzung.TYPE_ID,
+            BausteinUmsetzung.TYPE_ID};
     
     private transient Logger log;
 
@@ -81,7 +103,7 @@ public class MigrateDbTo1_03D extends DbMigration {
             String targetUuid = (String)result[3];
             CnALink link = (CnALink)result[4];
             String relationId = link.getRelationId();
-            if(StringUtils.isNotEmpty(relationId) && !isExistantId(sourceEntityType, targetEntityType, relationId)){
+            if(StringUtils.isNotEmpty(relationId) && !isBSIUseCase(sourceEntityType, targetEntityType) && !isExistantId(sourceEntityType, targetEntityType, relationId)){
                 if(getLog().isDebugEnabled()) {
                     getLog().debug("RelationId: <" + relationId + "> is not defined for [" + sourceEntityType + "]=>[" + targetEntityType + "]");
                     getLog().debug("repairing relation");
@@ -112,6 +134,18 @@ public class MigrateDbTo1_03D extends DbMigration {
 
     }
     
+    private boolean isBSITypeID(String typeId){
+        return Arrays.asList(BSI_TYPE_IDS).contains(typeId);
+    }
+    
+    private boolean isBSIUseCase(String sourceEntityType, String targetEntityType){
+        return isPartOfBSIModell(sourceEntityType) && isPartOfBSIModell(targetEntityType);
+    }
+    
+    private boolean isPartOfBSIModell(String entityType){
+        return isBSITypeID(entityType);
+    }
+    
     private String ensureTypeIDisUsed(String typeId) {
         if(BausteinUmsetzung.HIBERNATE_TYPE_ID.equals(typeId)) {
             return BausteinUmsetzung.TYPE_ID;
@@ -140,6 +174,9 @@ public class MigrateDbTo1_03D extends DbMigration {
     }
     
     private boolean isExistantId(String sourceEntityType, String targetEntityType, String relationId) {
+        if(CnALink.Id.NO_TYPE.equals(relationId)){ // special dnd itgs case which is allowed always
+            return true;
+        }
         for(HuiRelation relation : HUITypeFactory.getInstance().getPossibleRelations(sourceEntityType, targetEntityType)) {
             if(relation.getId().equals(relationId)) {
                 return true;
