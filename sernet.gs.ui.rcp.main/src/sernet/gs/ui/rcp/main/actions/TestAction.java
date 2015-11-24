@@ -29,6 +29,7 @@ import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportAllRisksForScope;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportCountRisksBySeverity;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -75,16 +76,14 @@ public class TestAction extends Action {
             
             StringBuilder allsb = new StringBuilder();
             
-            SwapCnaLinkReferences swapCommand = new SwapCnaLinkReferences();
-            ServiceFactory.lookupCommandService().executeCommand(swapCommand);
             
 //            LoadReportProcessesWithRisk cmd = new LoadReportProcessesWithRisk(152);
 //            cmd = ServiceFactory.lookupCommandService().executeCommand(cmd);
 //            List<List<String>> result2 = cmd.getResult();
 //            
-//            LoadReportAllRisksForScope command = new LoadReportAllRisksForScope(152);
-//            command = ServiceFactory.lookupCommandService().executeCommand(command);
-//            List<List<String>> result2 = command.getResult();
+            LoadReportAllRisksForScope command = new LoadReportAllRisksForScope(152);
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            List<List<String>> result2 = command.getResult();
             
             
 //            LoadReportCountRisksBySeverity command = new LoadReportCountRisksBySeverity(152, 'c', 3);

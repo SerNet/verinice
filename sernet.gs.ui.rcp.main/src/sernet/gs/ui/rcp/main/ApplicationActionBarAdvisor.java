@@ -204,7 +204,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         BausteinZuordnungAction bausteinZuordnungAction;
         GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
         GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
-        TestAction testAction;
 
         // Creates the actions and registers them.
         // Registering is needed to ensure that key bindings work.
@@ -281,7 +280,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
                 gsmbasicsecuritycheckAction,bausteinZuordnungAction,
                 gsmbausteinZuordnungAction, this.openDocumentViewAction,
                 this.introAction, this.openGroupViewAction, this.openReportdepositViewAction,
-                this.openSearchViewAction, this.openGSToolMappingViewAction, this.testAction
+                this.openSearchViewAction, this.openGSToolMappingViewAction
         };
         registerActions(actions);
 
@@ -371,7 +370,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         fileMenu.add(new Separator());
         fileMenu.add(this.importCSVAction);
         fileMenu.add(this.importPersonFromLdap);
-        fileMenu.add(this.testAction);
 
         fileMenu.add(new Separator());
         fileMenu.add(this.serverConnectionToggleAction);
