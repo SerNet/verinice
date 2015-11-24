@@ -189,6 +189,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private ServerConnectionToggleAction serverConnectionToggleAction;
 
     private OpenViewAction openGSToolMappingViewAction;
+    
+    private TestAction testAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
         super(configurer);
@@ -202,7 +204,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         BausteinZuordnungAction bausteinZuordnungAction;
         GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
         GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
-        TestAction testAction;
 
         // Creates the actions and registers them.
         // Registering is needed to ensure that key bindings work.
@@ -263,7 +264,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
         this.serverConnectionToggleAction = new ServerConnectionToggleAction();
 
-        testAction = new TestAction(window, "test command", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
+        this.testAction = new TestAction(window, "test command", "asset", 152); //$NON-NLS-1$ //$NON-NLS-2$
         this.introAction = ActionFactory.INTRO.create(window);
 
         IAction actions[] = new IAction[]{this.exitAction, this.copyAction, this.pasteAction,
