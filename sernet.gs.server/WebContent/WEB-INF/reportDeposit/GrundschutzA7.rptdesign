@@ -4812,7 +4812,7 @@ if(elements.size() > 0){
 		")";
 		c2 = new ExecuteHQLInReportCommand(personNameHql, new Object[]{root, "massnahmen-umsetzung", Integer.parseInt(dbid)}, Person.TYPE_ID);
 		persons = helper.execute(c2).getResult();		
-		if(persons != null && persons.size() > 0){		
+		if(persons != null &amp;&amp; persons.size() > 0){		
 			for(Object[] oArr : persons){
 				for(Object o : oArr){
 					if(o instanceof Person){
@@ -5423,7 +5423,7 @@ bestehende Risiken</text-property>
             <property name="pageBreakBefore">always</property>
             <property name="pageBreakInside">auto</property>
             <structure name="toc"/>
-            <text-property name="text">Aufstellung nicht umgesetzter oder nur teilweise umgesetzer Grundschutzmaßnahmen</text-property>
+            <text-property name="text">Aufstellung nicht umgesetzter oder nur teilweise umgesetzter Grundschutzmaßnahmen</text-property>
         </label>
         <table id="1573">
             <property name="marginTop">0pt</property>
