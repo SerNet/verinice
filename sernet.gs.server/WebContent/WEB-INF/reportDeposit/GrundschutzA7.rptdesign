@@ -4812,7 +4812,7 @@ if(elements.size() > 0){
 		")";
 		c2 = new ExecuteHQLInReportCommand(personNameHql, new Object[]{root, "massnahmen-umsetzung", Integer.parseInt(dbid)}, Person.TYPE_ID);
 		persons = helper.execute(c2).getResult();		
-		if(persons != null &amp;&amp; persons.size() > 0){		
+		if(persons != null && persons.size() > 0){		
 			for(Object[] oArr : persons){
 				for(Object o : oArr){
 					if(o instanceof Person){
