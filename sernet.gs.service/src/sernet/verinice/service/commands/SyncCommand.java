@@ -188,6 +188,7 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
 
     private void doInsertAndUpdate() throws CommandException, IOException {
         SyncInsertUpdateCommand cmdInsertUpdate = new SyncInsertUpdateCommand(veriniceArchive.getSourceId(), veriniceArchive.getSyncData(), veriniceArchive.getSyncMapping(), getAuthService().getUsername(), parameter, errors);           
+        cmdInsertUpdate.setTempDirName(veriniceArchive.getTempDirName());
         cmdInsertUpdate = getCommandService().executeCommand(cmdInsertUpdate);
         if (isVeriniceArchive()) {
             cmdInsertUpdate.importFileData(veriniceArchive);

@@ -98,7 +98,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     @Override
     public byte[] getFileData(String fileName) {
         StringBuilder sb = new StringBuilder();       
-        sb.append(getTempFileName()).append(File.separator).append(fileName);
+        sb.append(getTempDirName()).append(File.separator).append(fileName);
         String fullPath = sb.toString();
         try {
             return FileUtils.readFileToByteArray(new File(fullPath));
@@ -116,7 +116,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
      */
     public void extractZipEntries(byte[] zipFileData) throws IOException {
         byte[] buffer = new byte[1024];;        
-        new File(getTempFileName()).mkdirs();
+        new File(getTempDirName()).mkdirs();
         // get the zip file content
         ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(zipFileData));
         // get the zipped file list entry
@@ -125,7 +125,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
         while (ze != null) {
             if(!ze.isDirectory()) {              
                 String fileName = ze.getName();
-                File newFile = new File(getTempFileName() + File.separator + fileName);
+                File newFile = new File(getTempDirName() + File.separator + fileName);
                 new File(newFile.getParent()).mkdirs();
 
                 FileOutputStream fos = new FileOutputStream(newFile);
@@ -185,7 +185,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     @Override
     public void clear() {
         try {
-            FileUtils.deleteDirectory(new File(getTempFileName()));
+            FileUtils.deleteDirectory(new File(getTempDirName()));
         } catch (IOException e) {
             LOG.error("Error while deleting zipfile content.", e);
         }
@@ -195,7 +195,7 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
         return uuid;
     }
  
-    public String getTempFileName() {
+    public String getTempDirName() {
         if(tempFileName==null) {
             tempFileName = createTempFileName(getUuid());
         }

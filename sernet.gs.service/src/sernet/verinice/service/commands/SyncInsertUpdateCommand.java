@@ -67,32 +67,34 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 
 /**
- * This command is used as a sub-command of {@link SyncCommand} to insert and update
- * elements during the import process.
+ * This command is used as a sub-command of {@link SyncCommand} to insert and
+ * update elements during the import process.
  * 
  * It's not a standalone-command.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings({ "serial"})
-public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwareCommand  {
+@SuppressWarnings({ "serial" })
+public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwareCommand {
 
     private transient Logger log = Logger.getLogger(SyncInsertUpdateCommand.class);
+
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(SyncInsertUpdateCommand.class);
         }
         return log;
     }
-    
+
     private transient Logger logrt = Logger.getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
+
     public Logger getLogrt() {
         if (logrt == null) {
             logrt = Logger.getLogger(SyncInsertUpdateCommand.class.getName() + ".rt");
         }
         return logrt;
     }
-    
+
     private static final int FLUSH_LEVEL = 50;
 
     private String sourceId;
@@ -100,34 +102,29 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     private transient SyncMapping syncMapping;
     private transient SyncData syncData;
     private String userName;
-
-    private SyncParameter parameter;
+    private String tempDirName;
     
+    private SyncParameter parameter;
+
     private List<String> errorList;
 
     private int inserted = 0, potentiallyUpdated = 0, merged = 0;
-    
+
     private long globalStart = 0;
-    
-    private Map<Class,CnATreeElement> containerMap = new HashMap<Class,CnATreeElement>(2);
+
+    private Map<Class, CnATreeElement> containerMap = new HashMap<Class, CnATreeElement>(2);
 
     private Set<CnATreeElement> elementSet = new HashSet<CnATreeElement>();
-    
+
     private transient Map<String, CnATreeElement> idElementMap = new HashMap<String, CnATreeElement>();
 
     private transient Map<String, Attachment> attachmentMap;
-    
+
     private transient IAuthService authService;
-    
-    private transient Map<Class,IBaseDao> daoMap = new HashMap<Class, IBaseDao>();
-    
-    public SyncInsertUpdateCommand(
-    		String sourceId, 
-    		SyncData syncData, 
-    		SyncMapping syncMapping,
-    		String userName,
-    		SyncParameter parameter,
-    		List<String> errorList) {
+
+    private transient Map<Class, IBaseDao> daoMap = new HashMap<Class, IBaseDao>();
+
+    public SyncInsertUpdateCommand(String sourceId, SyncData syncData, SyncMapping syncMapping, String userName, SyncParameter parameter, List<String> errorList) {
         super();
         this.sourceId = sourceId;
         this.syncData = syncData;
@@ -165,15 +162,15 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 getLog().debug("Source-Id exists in DB: " + sourceId);
             }
             List<SyncObject> soList = syncData.getSyncObject();
-            
+
             for (SyncObject so : soList) {
-                importObject(null, so);        
+                importObject(null, so);
             } // for <syncObject>
-            
+
             if (getLogrt().isDebugEnabled()) {
                 getLogrt().debug("Elements: " + merged);
             }
-            
+
             for (SyncLink syncLink : syncData.getSyncLink()) {
                 importLink(syncLink);
             }
@@ -197,7 +194,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         if (getLog().isDebugEnabled()) {
             getLog().debug("Importing element type: " + extObjectType + ", extId: " + extId + "...");
         }
-        
+
         boolean setAttributes = false;
 
         MapObjectType mot = getMap(extObjectType);
@@ -212,22 +209,22 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         // this element "knows", which huientitytype is applicable and
         // how the associated properties have to be mapped!
         String veriniceObjectType = mot.getIntId();
-        
+
         CnATreeElement elementInDB = null;
-        if(sourceIdExists) {
+        if (sourceIdExists) {
             elementInDB = findDbElement(sourceId, extId, true, true);
         }
-        
+
         if (elementInDB != null) {
             if (parameter.isUpdate()) {
                 /*** UPDATE: ***/
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Element found in db: updating, uuid: " + elementInDB.getUuid());
                 }
-                // use current parent from DB instead the parent from xml/vna 
+                // use current parent from DB instead the parent from xml/vna
                 parent = elementInDB.getParent();
-                
-                if(parameter.isIntegrate()) {
+
+                if (parameter.isIntegrate()) {
                     elementInDB.setSourceId(null);
                     elementInDB.setExtId(null);
                 }
@@ -241,29 +238,29 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 setAttributes = false;
             }
         }
-       
+
         Class clazz = CnATypeMapper.getClassFromTypeId(veriniceObjectType);
-        IBaseDao<CnATreeElement, Serializable> dao = getDao(clazz);      
-        
+        IBaseDao<CnATreeElement, Serializable> dao = getDao(clazz);
+
         parent = (parent == null) ? accessContainer(clazz) : parent;
-        
+
         // If no previous object was found in the database and the 'insert'
         // flag is given, create a new object.
-        if (elementInDB == null && parameter.isInsert()) {                          
+        if (elementInDB == null && parameter.isInsert()) {
             try {
                 // create new object in db...
-                elementInDB =createElement(parent, clazz);
-                 
+                elementInDB = createElement(parent, clazz);
+
                 // ...and set its sourceId and extId:
-                if(!parameter.isIntegrate()) {
+                if (!parameter.isIntegrate()) {
                     elementInDB.setSourceId(sourceId);
                     elementInDB.setExtId(extId);
                 }
-                
-                if(elementInDB instanceof Organization || elementInDB instanceof ITVerbund) {
+
+                if (elementInDB instanceof Organization || elementInDB instanceof ITVerbund) {
                     addElement(elementInDB);
                 }
-                
+
                 setAttributes = true;
                 inserted++;
                 if (getLog().isDebugEnabled()) {
@@ -280,7 +277,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
          * set the associated attributes:
          */
         if (null != elementInDB && setAttributes) {
-            if(so.getIcon()!=null && !so.getIcon().isEmpty()) {
+            if (so.getIcon() != null && !so.getIcon().isEmpty()) {
                 elementInDB.setIconPath(so.getIcon());
             }
             // for all <syncAttribute>-Elements below current
@@ -298,34 +295,34 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                     getLog().warn(message);
                     attrIntId = attrExtId;
                 } else {
-                    attrIntId = mat.getIntId();                  
+                    attrIntId = mat.getIntId();
                 }
-                elementInDB.getEntity().importProperties(huiTypeFactory,attrIntId, attrValues);
+                elementInDB.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues);
                 addElement(elementInDB);
             } // for <syncAttribute>
             elementInDB = dao.merge(elementInDB);
             parent.addChild(elementInDB);
             elementInDB.setParentAndScope(parent);
-            
+
             // set the scope id of orgs. and it-verbunds.
-            if(elementInDB instanceof Organization || elementInDB instanceof ITVerbund) {
+            if (elementInDB instanceof Organization || elementInDB instanceof ITVerbund) {
                 elementInDB.setScopeId(elementInDB.getDbId());
             }
-     
+
             merged++;
-            if(merged % FLUSH_LEVEL == 0 ) {
-               flushAndClearDao(dao);
+            if (merged % FLUSH_LEVEL == 0) {
+                flushAndClearDao(dao);
             }
         } // if( null != ... )
 
-        if(isVeriniceArchive()) {
+        if (isVeriniceArchive()) {
             importFileList(elementInDB, so.getFile());
         }
-        
-        if(elementInDB!=null) {
+
+        if (elementInDB != null) {
             idElementMap.put(extId, elementInDB);
         }
-        
+
         if (getLogrt().isDebugEnabled()) {
             logRuntime(start);
         }
@@ -334,7 +331,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             // The object that was created or modified during the course of
             // this method call is the parent for the import of the
             // child elements.
-            if (getLog().isDebugEnabled() && child!=null) {
+            if (getLog().isDebugEnabled() && child != null) {
                 getLog().debug("Child found, type: " + child.getExtObjectType() + ", extId: " + child.getExtId());
             }
             importObject(elementInDB, child);
@@ -348,19 +345,19 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private <T> IBaseDao<T, Serializable> getDao(Class clazz) {
         IBaseDao<T, Serializable> dao = daoMap.get(clazz);
-        if(dao==null) {
+        if (dao == null) {
             dao = getDaoFactory().getDAO(clazz);
             daoMap.put(clazz, dao);
         }
         return dao;
     }
-    
+
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private CnATreeElement createElement(CnATreeElement parent, Class clazz) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         CnATreeElement child;
         // get constructor with parent-parameter and create new object:
-        if(clazz.equals(Organization.class)) {
-            child = (CnATreeElement) clazz.getConstructor(CnATreeElement.class,boolean.class).newInstance(parent,false);
+        if (clazz.equals(Organization.class)) {
+            child = (CnATreeElement) clazz.getConstructor(CnATreeElement.class, boolean.class).newInstance(parent, false);
         } else {
             child = (CnATreeElement) clazz.getConstructor(CnATreeElement.class).newInstance(parent);
         }
@@ -371,14 +368,14 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
         return child;
     }
-    
-    private void addPermissions(/*not final*/ CnATreeElement element) {
+
+    private void addPermissions(/* not final */CnATreeElement element) {
         addPermissions(element, authService.getUsername());
     }
 
     private void addPermissions(CnATreeElement element, String userName) {
         Set<Permission> permission = element.getPermissions();
-        if(permission==null) {
+        if (permission == null) {
             permission = new HashSet<Permission>();
         }
         permission.add(Permission.createPermission(element, userName, true, true));
@@ -391,15 +388,15 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     /**
      * @param elementInDB
      * @param file
-     * @throws CommandException 
+     * @throws CommandException
      */
     private void importFileList(CnATreeElement elementInDB, List<SyncFile> fileList) throws CommandException {
         HUITypeFactory huiTypeFactory = getHuiTypeFactory();
         for (SyncFile fileXml : fileList) {
             LoadAttachmentByExternalId loadAttachment = new LoadAttachmentByExternalId(sourceId, fileXml.getExtId());
             loadAttachment = getCommandService().executeCommand(loadAttachment);
-            Attachment attachment = loadAttachment.getAttachment();     
-            if(attachment==null) { 
+            Attachment attachment = loadAttachment.getAttachment();
+            if (attachment == null) {
                 attachment = new Attachment();
                 attachment.setExtId(fileXml.getExtId());
                 attachment.setSourceId(sourceId);
@@ -409,11 +406,15 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             attachment.setCnAElementTitel(elementInDB.getTitle());
             attachment.setTitel(fileXml.getFile());
             attachment.setFileSize(String.valueOf(getSyncObjectFileSize(fileXml)));
-                   
-            SaveNote command = new SaveNote(attachment);        
+
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Attachment file size: " + attachment.getFileSize());
+            }
+
+            SaveNote command = new SaveNote(attachment);
             command = getCommandService().executeCommand(command);
             attachment = (Attachment) command.getAddition();
-            
+
             MapObjectType mot = getMap(Attachment.TYPE_ID);
             for (SyncAttribute sa : fileXml.getSyncAttribute()) {
                 String attrExtId = sa.getName();
@@ -429,26 +430,28 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                     attachment.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues);
                 }
             }
-            
-            
-        }   
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Attachment file size (after properties save): " + attachment.getFileSize());
+            }
+
+        }
     }
-    
-    private long getSyncObjectFileSize(SyncFile syncFile){
-        if(syncFile != null && syncFile.getFile() != null){
-            return new File(syncFile.getFile()).length();
-            
+
+    private long getSyncObjectFileSize(SyncFile syncFile) {
+        if (syncFile != null && syncFile.getFile() != null) {
+            return new File(getTempDirName() + File.separator + syncFile.getFile()).length();
         }
         return 0;
     }
-    
+
     /**
-     * Imports all file data from a verinice Archive (zipFileData).
-     * Call importFileList before calling this method! 
+     * Imports all file data from a verinice Archive (zipFileData). Call
+     * importFileList before calling this method!
      * 
      * Danger: Out-of-memory trouble for large file...
      * 
-     * @param zipFileData a verinice Archive
+     * @param zipFileData
+     *            a verinice Archive
      * @throws IOException
      * @throws CommandException
      */
@@ -456,10 +459,10 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         SaveAttachment saveFileCommand = new SaveAttachment();
         IBaseDao<AttachmentFile, Serializable> dao = getDao(AttachmentFile.class);
         for (String fileName : attachmentMap.keySet()) {
-            Attachment attachment = attachmentMap.get(fileName);       
+            Attachment attachment = attachmentMap.get(fileName);
             AttachmentFile attachmentFile = dao.findById(attachment.getDbId());
             attachmentFile.setFileData(veriniceArchive.getFileData(fileName));
-            if(attachmentFile.getFileData()!=null) {
+            if (attachmentFile.getFileData() != null) {
                 saveFileCommand.setElement(attachmentFile);
                 saveFileCommand = getCommandService().executeCommand(saveFileCommand);
                 saveFileCommand.clear();
@@ -468,20 +471,20 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             } else {
                 log.warn("File was not imported. No file data: " + fileName);
             }
-        }  
+        }
     }
 
     /**
      * @param syncLink
-     * @throws CommandException 
+     * @throws CommandException
      */
     private void importLink(SyncLink syncLink) {
         String dependantId = syncLink.getDependant();
         String dependencyId = syncLink.getDependency();
         CnATreeElement dependant = idElementMap.get(dependantId);
-        if(dependant==null) {     
-        	dependant = findDbElement(this.sourceId, dependantId, true, true);
-            if(dependant==null) {
+        if (dependant == null) {
+            dependant = findDbElement(this.sourceId, dependantId, true, true);
+            if (dependant == null) {
                 getLog().error("Can not import link. dependant not found in xml file and db, dependant ext-id: " + dependantId + " dependency ext-id: " + dependencyId);
                 return;
             } else if (getLog().isDebugEnabled()) {
@@ -489,62 +492,58 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             }
         }
         CnATreeElement dependency = idElementMap.get(dependencyId);
-        if(dependency==null) { 
-        	dependency = findDbElement(this.sourceId, dependencyId, true, true);
-            if(dependency==null) {
+        if (dependency == null) {
+            dependency = findDbElement(this.sourceId, dependencyId, true, true);
+            if (dependency == null) {
                 getLog().error("Can not import link. dependency not found in xml file and db, dependency ext-id: " + dependencyId + " dependant ext-id: " + dependantId);
                 return;
             } else if (getLog().isDebugEnabled()) {
                 getLog().debug("dependency not found in XML file but in db, ext-id: " + dependencyId);
             }
         }
-        
-        CnALink link = new CnALink(dependant,dependency,syncLink.getRelationId(),syncLink.getComment());
-        
+
+        CnALink link = new CnALink(dependant, dependency, syncLink.getRelationId(), syncLink.getComment());
+
         String titleDependant = "unknown";
-    	String titleDependency = "unknown";
-    	if (getLog().isDebugEnabled()) {     	
-			try { 
-				titleDependant = dependant.getTitle();
-				titleDependency = dependency.getTitle();
-			} catch(Exception e) {
-				getLog().debug("Error while reading title.", e);
-			}
-    	}
-    	
-        if(isNew(link)) {
-	        dependant.addLinkDown(link);
-	        dependency.addLinkUp(link);
-	        if (getLog().isDebugEnabled()) {
-	        	getLog().debug("Creating new link from: " + titleDependant + " to: " + titleDependency + "...");
-			}
-	        getDao(CnALink.class).saveOrUpdate(link);
+        String titleDependency = "unknown";
+        if (getLog().isDebugEnabled()) {
+            try {
+                titleDependant = dependant.getTitle();
+                titleDependency = dependency.getTitle();
+            } catch (Exception e) {
+                getLog().debug("Error while reading title.", e);
+            }
+        }
+
+        if (isNew(link)) {
+            dependant.addLinkDown(link);
+            dependency.addLinkUp(link);
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Creating new link from: " + titleDependant + " to: " + titleDependency + "...");
+            }
+            getDao(CnALink.class).saveOrUpdate(link);
         } else if (getLog().isDebugEnabled()) {
-        	getLog().debug("Link exists: " + titleDependant + " to: " + titleDependency);
-		}
-        
+            getLog().debug("Link exists: " + titleDependant + " to: " + titleDependency);
+        }
+
     }
 
     private boolean isNew(CnALink link) {
-    	String hql = "from CnALink as link where link.id.dependantId=? and link.id.dependencyId=? and (link.id.typeId=? or link.id.typeId=?)";
-    	String relationId = link.getRelationId();
-    	String relationId2 = relationId;
-    	if(CnALink.Id.NO_TYPE.equals(relationId)) {
-    		relationId2 = "";
-    	}
-    	if(relationId!=null && relationId.isEmpty()) {
-    		relationId2 = CnALink.Id.NO_TYPE;
-    	}
-    	Object[] paramArray = new Object[]{
-    			link.getDependant().getDbId(),
-    			link.getDependency().getDbId(),
-    			relationId,
-    			relationId2};
-    	List result = getDao(CnALink.class).findByQuery(hql, paramArray); 	
-		return result==null || result.isEmpty();
-	}
+        String hql = "from CnALink as link where link.id.dependantId=? and link.id.dependencyId=? and (link.id.typeId=? or link.id.typeId=?)";
+        String relationId = link.getRelationId();
+        String relationId2 = relationId;
+        if (CnALink.Id.NO_TYPE.equals(relationId)) {
+            relationId2 = "";
+        }
+        if (relationId != null && relationId.isEmpty()) {
+            relationId2 = CnALink.Id.NO_TYPE;
+        }
+        Object[] paramArray = new Object[] { link.getDependant().getDbId(), link.getDependency().getDbId(), relationId, relationId2 };
+        List result = getDao(CnALink.class).findByQuery(hql, paramArray);
+        return result == null || result.isEmpty();
+    }
 
-	private MapObjectType getMap(String extObjectType) {
+    private MapObjectType getMap(String extObjectType) {
         for (MapObjectType mot : syncMapping.getMapObjectType()) {
             if (extObjectType.equals(mot.getExtId())) {
                 return mot;
@@ -563,7 +562,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
         return null;
     }
-    
+
     /**
      * Query element (by externalID) from DB, which has been previously
      * synchronized from the given sourceID.
@@ -571,34 +570,35 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * @param sourceId
      * @param externalId
      * @return the CnATreeElement from the query or null, if nothing was found
-     * @throws RuntimeException if more than one element is found
+     * @throws RuntimeException
+     *             if more than one element is found
      */
     private CnATreeElement findDbElement(String sourceId, String externalId, boolean fetchLinksDown, boolean fetchLinksUp) {
-    	CnATreeElement result = null;
-    	// use a new crudCommand (load by external, source id):
+        CnATreeElement result = null;
+        // use a new crudCommand (load by external, source id):
         LoadCnAElementByExternalID command = new LoadCnAElementByExternalID(sourceId, externalId, fetchLinksDown, fetchLinksUp);
         command.setParent(true);
         try {
-			command = getCommandService().executeCommand(command);
-		} catch (CommandException e) {
-			final String message = "Error while loading element by source and externeal id";
-    		log.error(message,e);
-			throw new RuntimeCommandException(message,e);
-		}
+            command = getCommandService().executeCommand(command);
+        } catch (CommandException e) {
+            final String message = "Error while loading element by source and externeal id";
+            log.error(message, e);
+            throw new RuntimeCommandException(message, e);
+        }
         List<CnATreeElement> foundElements = command.getElements();
         if (foundElements != null) {
-        	if(foundElements.size()==1) {  
-        		result = foundElements.get(0);
-        	}
-        	if(foundElements.size()>1) {  
-        		final String message = "Found more than one element with source-id: " + sourceId + " and externeal-id: " + externalId;
-        		log.error(message);
-    			throw new RuntimeCommandException(message);
-        	}
+            if (foundElements.size() == 1) {
+                result = foundElements.get(0);
+            }
+            if (foundElements.size() > 1) {
+                final String message = "Found more than one element with source-id: " + sourceId + " and externeal-id: " + externalId;
+                log.error(message);
+                throw new RuntimeCommandException(message);
+            }
         }
         return result;
     }
-   
+
     /**
      * If during the import action an object has to be created for which no
      * parent is available (or can be found) the artificial 'rootImportObject'
@@ -610,15 +610,16 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * only created but also automatically persisted in the database. If it were
      * not used later on the user would see an object node in the object tree.
      * </p>
-     * @param clazz 
+     * 
+     * @param clazz
      * 
      * @return
      */
     private CnATreeElement accessContainer(Class clazz) {
         // Create the importRootObject if it does not exist yet
         // and set the 'importRootObject' variable.
-    	CnATreeElement container = containerMap.get(clazz);
-        if (container==null) {
+        CnATreeElement container = containerMap.get(clazz);
+        if (container == null) {
             LoadImportObjectsHolder cmdLoadContainer = new LoadImportObjectsHolder(clazz);
             try {
                 cmdLoadContainer = getCommandService().executeCommand(cmdLoadContainer);
@@ -628,26 +629,26 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 throw new RuntimeCommandException("Fehler beim Anlegen des Behälters für importierte Objekte.", e);
             }
             container = cmdLoadContainer.getHolder();
-            if(container==null) {
+            if (container == null) {
                 container = createContainer(clazz);
-            }    
+            }
             // load the parent
             container.getParent().getTitle();
-            containerMap.put(clazz,container);
-        } 
+            containerMap.put(clazz, container);
+        }
         return container;
     }
 
     private CnATreeElement createContainer(Class clazz) {
-        if(LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class, IMassnahmeUmsetzung.class)) {
+        if (LoadImportObjectsHolder.isImplementation(clazz, IBSIStrukturElement.class, IMassnahmeUmsetzung.class)) {
             return createBsiContainer();
-        } else if(BausteinUmsetzung.class.equals(clazz)) {
+        } else if (BausteinUmsetzung.class.equals(clazz)) {
             return createBsiContainer();
-        }else {
+        } else {
             return createIsoContainer();
-        }     
+        }
     }
-    
+
     private CnATreeElement createBsiContainer() {
         LoadBSIModel cmdLoadModel = new LoadBSIModel();
         try {
@@ -660,14 +661,14 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         try {
             importGroup = new ImportBsiGroup(model);
             addPermissions(importGroup);
-            addPermissions(importGroup,IRightsService.USERDEFAULTGROUPNAME);
+            addPermissions(importGroup, IRightsService.USERDEFAULTGROUPNAME);
             getDao(ImportBsiGroup.class).saveOrUpdate(importGroup);
         } catch (Exception e) {
             handleCreateContainerException(e);
         }
         return importGroup;
     }
-    
+
     private CnATreeElement createIsoContainer() {
         LoadModel cmdLoadModel = new LoadModel();
         try {
@@ -680,30 +681,30 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         try {
             importGroup = new ImportIsoGroup(model);
             addPermissions(importGroup);
-            addPermissions(importGroup,IRightsService.USERDEFAULTGROUPNAME);
+            addPermissions(importGroup, IRightsService.USERDEFAULTGROUPNAME);
             getDao(ImportIsoGroup.class).saveOrUpdate(importGroup);
         } catch (Exception e1) {
             handleCreateContainerException(e1);
         }
         return importGroup;
     }
-    
+
     private void handleCreateContainerException(Exception e) {
         String message = "Fehler beim Anlegen des Behaelters für importierte Objekte.";
-        getLog().error(message,e);
+        getLog().error(message, e);
         errorList.add(message);
-        throw new RuntimeCommandException(message,e );
+        throw new RuntimeCommandException(message, e);
     }
-    
+
     protected void addElement(CnATreeElement element) {
-        if(elementSet==null) {
+        if (elementSet == null) {
             elementSet = new HashSet<CnATreeElement>();
         }
         // load the parent
         element.getParent().getTitle();
         elementSet.add(element);
     }
-    
+
     public int getUpdated() {
         return potentiallyUpdated;
     }
@@ -717,51 +718,59 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     public Map<Class, CnATreeElement> getContainerMap() {
-		return containerMap;
-	}
+        return containerMap;
+    }
 
-	public Set<CnATreeElement> getElementSet() {
+    public Set<CnATreeElement> getElementSet() {
         return elementSet;
     }
 
     protected String getUserName() {
-		return userName;
-	}
+        return userName;
+    }
 
-	protected void setUserName(String userName) {
-		this.userName = userName;
-	}
-	
-	private boolean isVeriniceArchive() {
+    protected void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getTempDirName() {
+        return tempDirName;
+    }
+
+    public void setTempDirName(String tempFileName) {
+        this.tempDirName = tempFileName;
+    }
+
+    private boolean isVeriniceArchive() {
         return SyncParameter.EXPORT_FORMAT_VERINICE_ARCHIV.equals(parameter.getFormat());
     }
-	
-	private void finalizeDaos() {
+
+    private void finalizeDaos() {
         daoMap.clear();
     }
-	
-	private void flushAndClearDao(IBaseDao<CnATreeElement, Serializable> dao) {
+
+    private void flushAndClearDao(IBaseDao<CnATreeElement, Serializable> dao) {
         long flushstart = 0;
-           if (getLogrt().isDebugEnabled()) {
-               flushstart = System.currentTimeMillis();
-           }
-           dao.flush();
-           dao.clear();
-           if (getLogrt().isDebugEnabled()) {
-               long time = System.currentTimeMillis() - flushstart;
-               getLogrt().debug("Flushed, runtime: " + time + " ms");
-           }
+        if (getLogrt().isDebugEnabled()) {
+            flushstart = System.currentTimeMillis();
+        }
+        dao.flush();
+        dao.clear();
+        if (getLogrt().isDebugEnabled()) {
+            long time = System.currentTimeMillis() - flushstart;
+            getLogrt().debug("Flushed, runtime: " + time + " ms");
+        }
     }
-	
-	private void logRuntime(long start) {
+
+    private void logRuntime(long start) {
         long cur = System.currentTimeMillis();
         long time = cur - start;
         long globalTime = cur - globalStart;
-        long a = Math.round((globalTime*1.0)/merged);
+        long a = Math.round((globalTime * 1.0) / merged);
         getLogrt().debug("Element " + merged + ": " + time + "ms, ave.: " + a);
     }
-	
-	/**
+
+    /**
      * @return the authService
      */
     @Override
@@ -770,7 +779,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     /**
-     * @param authService the authService to set
+     * @param authService
+     *            the authService to set
      */
     @Override
     public void setAuthService(IAuthService authService) {
@@ -778,8 +788,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     private HUITypeFactory getHuiTypeFactory() {
-	    return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-	}
-    
+        return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
+    }
 
 }
