@@ -5423,7 +5423,7 @@ bestehende Risiken</text-property>
             <property name="pageBreakBefore">always</property>
             <property name="pageBreakInside">auto</property>
             <structure name="toc"/>
-            <text-property name="text">Aufstellung nicht umgesetzter oder nur teilweise umgesetzer Grundschutzmaßnahmen</text-property>
+            <text-property name="text">Aufstellung nicht umgesetzter oder nur teilweise umgesetzter Grundschutzmaßnahmen</text-property>
         </label>
         <table id="1573">
             <property name="marginTop">0pt</property>
