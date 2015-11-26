@@ -77,7 +77,7 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
     
     @Override
     public String getKategorieAsString(String language) {
-        if(ownkategorie.isEmpty() || ownkategorie.equalsIgnoreCase(Messages.OwnGefaehrdungCategoryDefault)){
+        if(ownkategorie.isEmpty() || ownkategorie.equalsIgnoreCase(Messages.OwnGefaehrdungCategoryDefault_0)){
             return getLocalizedKategorie(getKategorie(), language);
         }else{
             return ownkategorie;
