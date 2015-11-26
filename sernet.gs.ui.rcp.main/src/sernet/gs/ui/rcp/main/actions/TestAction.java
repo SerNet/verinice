@@ -30,10 +30,8 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportAllRisksForScope;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportCountRisksBySeverity;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
-import sernet.verinice.service.commands.SwapCnaLinkReferences;
 
 public class TestAction extends Action {
 
