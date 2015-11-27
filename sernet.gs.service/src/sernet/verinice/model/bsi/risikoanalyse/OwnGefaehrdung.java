@@ -27,6 +27,8 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
 	
 	public static final String TYPE_ID = "owngefaehrdung";
 
+    public static final String NEW_CATEGORY_DE = "[Neue Kategorie]";
+    public static final String NEW_CATEGORY_EN = "[New Category]";
 	
 	
 	// TODO eigener Entity-Type für eigene Gefährundengen
@@ -77,7 +79,7 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
     
     @Override
     public String getKategorieAsString(String language) {
-        if(ownkategorie.isEmpty() || ownkategorie.equalsIgnoreCase(Messages.OwnGefaehrdungCategoryDefault_0)){
+        if(ownkategorie.isEmpty() || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_DE) || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_EN)){
             return getLocalizedKategorie(getKategorie(), language);
         }else{
             return ownkategorie;

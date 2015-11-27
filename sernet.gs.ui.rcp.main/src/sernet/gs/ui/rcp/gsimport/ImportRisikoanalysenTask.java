@@ -231,7 +231,7 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
                 gefaehrdung = allCreatedOwnGefaehrdungen.get(cacheId);
             } else {
                 // create and save new owngefaehrdung:
-                OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
+                ownGefaehrdung = OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
                 allCreatedOwnGefaehrdungen.put(cacheId, ownGefaehrdung);
                 gefaehrdung = ownGefaehrdung;
             }
