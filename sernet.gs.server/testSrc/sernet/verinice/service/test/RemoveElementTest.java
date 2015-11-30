@@ -171,7 +171,7 @@ public class RemoveElementTest extends CommandServiceProvider {
         ITVerbund itVerbund = createElement(ITVerbund.class, importBsiGroup);
 
         removeElement(itVerbund);
-        assertElementIsDeleted(itVerbund);        
+        assertElementIsDeleted(itVerbund);
     }
 
     /**
@@ -190,9 +190,11 @@ public class RemoveElementTest extends CommandServiceProvider {
 
         for (CnATreeElement element : syncCommand.getElementSet()) {
             if (element instanceof ITVerbund) {
+                element = loadElement(element.getSourceId(), element.getExtId());
                 removeElement((ITVerbund) element);
                 assertElementIsDeleted(element);
             } else if (element instanceof Organization) {
+                element = loadElement(element.getSourceId(), element.getExtId());
                 removeElement((Organization) element);
                 assertElementIsDeleted(element);
             }
