@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -53,6 +54,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisListsHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -81,6 +83,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
     private GefaehrdungenFilter gefaehrdungFilter = new GefaehrdungenFilter();
     private SearchFilter searchFilter = new SearchFilter();
     private RiskAnalysisWizard wizard;
+
+    private final static Logger LOG = Logger.getLogger(ChooseGefaehrdungPage.class);
 
     /**
      * Constructor sets title an description of WizardPage.
@@ -153,12 +157,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
             @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
                 Gefaehrdung currentGefaehrdung = (Gefaehrdung) event.getElement();
-
-                if (event.getChecked()) {
-                    associateGefaehrdung(currentGefaehrdung, true);
-                } else {
-                    associateGefaehrdung(currentGefaehrdung, false);
-                }
+                associateGefaehrdung(currentGefaehrdung, event.getChecked());
             }
 
         });
@@ -481,6 +480,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
                     }
                 }
             }
+            FinishedRiskAnalysisListsHome.getInstance().update(wizard.getFinishedRiskAnalysisLists());
         } catch (CommandException e) {
             ExceptionUtil.log(e, ""); //$NON-NLS-1$
         }
