@@ -54,11 +54,11 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisListsHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.LoadAssociatedGefaehrdungen;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.UpdateRiskAnalysis;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
@@ -480,7 +480,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
                     }
                 }
             }
-            FinishedRiskAnalysisListsHome.getInstance().update(wizard.getFinishedRiskAnalysisLists());
+            UpdateRiskAnalysis updateCommand = new UpdateRiskAnalysis(wizard.getFinishedRiskAnalysisLists());
+            updateCommand = ServiceFactory.lookupCommandService().executeCommand(updateCommand);
         } catch (CommandException e) {
             ExceptionUtil.log(e, ""); //$NON-NLS-1$
         }
