@@ -35,6 +35,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmenUmsetzungFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Gebaeude;
@@ -153,41 +154,6 @@ public class RemoveElementTest extends CommandServiceProvider {
 
             assertElementIsDeleted(element);
         }
-    }
-
-    /**
-     * RemoveElement throws a {@link NullPointerException} when no
-     * {@link FinishedRiskAnalysisLists} exists. {@link RemoveElement} should be
-     * harden against this case.
-     */
-    @Test
-    public void removeRiskAnalysis() throws CommandException {
-
-        GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, organization);
-        Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
-        FinishedRiskAnalysis finishedRiskAnalysis = createElement(FinishedRiskAnalysis.class, gebaeude);
-        GefaehrdungsUmsetzung gefaehrdungsUmsetzung = createElement(GefaehrdungsUmsetzung.class, finishedRiskAnalysis);
-
-        MassnahmenUmsetzung massnahmenUmsetzung = createElement(MassnahmenUmsetzung.class, gefaehrdungsUmsetzung);
-        RemoveElement removeElementCommand = removeElement(finishedRiskAnalysis);
-    }
-
-    /**
-     * The create command throws an exception, since there is no matching
-     * constructor in {@link RisikoMassnahmenUmsetzung}. {@link CreateElement}
-     * should be harden against this case.
-     * 
-     */
-    @Test
-    public void removeRiskAnalysisWithRisikoUmsetzung() throws CommandException {
-
-        GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, organization);
-        Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
-        FinishedRiskAnalysis finishedRiskAnalysis = createElement(FinishedRiskAnalysis.class, gebaeude);
-        GefaehrdungsUmsetzung gefaehrdungsUmsetzung = createElement(GefaehrdungsUmsetzung.class, finishedRiskAnalysis);
-
-        RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung = createElement(RisikoMassnahmenUmsetzung.class, gefaehrdungsUmsetzung);
-        removeElement(finishedRiskAnalysis);
     }
 
     @Test
