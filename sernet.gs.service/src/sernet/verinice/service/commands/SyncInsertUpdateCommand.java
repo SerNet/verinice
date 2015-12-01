@@ -124,7 +124,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private transient Map<Class, IBaseDao> daoMap = new HashMap<Class, IBaseDao>();
 
-    public SyncInsertUpdateCommand(String sourceId, SyncData syncData, SyncMapping syncMapping, String userName, SyncParameter parameter, List<String> errorList) {
+    public SyncInsertUpdateCommand(String sourceId, 
+    		SyncData syncData, 
+    		SyncMapping syncMapping, 
+    		String userName, 
+    		SyncParameter parameter, 
+    		List<String> errorList) {
         super();
         this.sourceId = sourceId;
         this.syncData = syncData;
@@ -313,7 +318,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             if (merged % FLUSH_LEVEL == 0) {
                 flushAndClearDao(dao);
             }
-        } // if( null != ... )
+        }
 
         if (isVeriniceArchive()) {
             importFileList(elementInDB, so.getFile());
@@ -538,7 +543,11 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         if (relationId != null && relationId.isEmpty()) {
             relationId2 = CnALink.Id.NO_TYPE;
         }
-        Object[] paramArray = new Object[] { link.getDependant().getDbId(), link.getDependency().getDbId(), relationId, relationId2 };
+        Object[] paramArray = new Object[] { 
+        		link.getDependant().getDbId(), 
+        		link.getDependency().getDbId(), 
+        		relationId, 
+        		relationId2 };
         List result = getDao(CnALink.class).findByQuery(hql, paramArray);
         return result == null || result.isEmpty();
     }
