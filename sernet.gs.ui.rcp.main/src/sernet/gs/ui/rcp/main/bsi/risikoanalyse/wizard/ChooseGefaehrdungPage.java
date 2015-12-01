@@ -30,7 +30,9 @@ import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
@@ -52,6 +54,7 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
+import sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
@@ -81,6 +84,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
     private GefaehrdungenFilter gefaehrdungFilter = new GefaehrdungenFilter();
     private SearchFilter searchFilter = new SearchFilter();
     private RiskAnalysisWizard wizard;
+    private Button buttonDelete, buttonEdit;
 
     /**
      * Constructor sets title an description of WizardPage.
@@ -342,9 +346,29 @@ public class ChooseGefaehrdungPage extends WizardPage {
                 assignBausteinGefaehrdungen();
             }
         });
+        /* edit button */
+        buttonEdit = new Button(groupButtons, SWT.PUSH);
+        buttonEdit.setText(Messages.ChooseGefaehrdungPage_17);
+        GridData gridEdit = new GridData();
+        buttonEdit.setLayoutData(gridEdit);
 
+        /* Listener opens Dialog for editing the selected Gefaehrdung */
+        buttonEdit.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+                IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+                IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
+                if (selectedGefaehrdung instanceof OwnGefaehrdung) {
+                    OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
+                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(composite.getShell(), ownGefSelected);
+                    dialog.open();
+                    viewer.refresh();
+                }
+            }
+        });
+        
         /* delete button */
-        Button buttonDelete = new Button(groupButtons, SWT.PUSH);
+        buttonDelete = new Button(groupButtons, SWT.PUSH);
         buttonDelete.setText(Messages.ChooseGefaehrdungPage_13);
         GridData gridDelete = new GridData();
         buttonDelete.setLayoutData(gridDelete);
@@ -370,26 +394,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
             }
         });
 
-        /* edit button */
-        Button buttonEdit = new Button(groupButtons, SWT.PUSH);
-        buttonEdit.setText(Messages.ChooseGefaehrdungPage_17);
-        GridData gridEdit = new GridData();
-        buttonEdit.setLayoutData(gridEdit);
-
-        /* Listener opens Dialog for editing the selected Gefaehrdung */
-        buttonEdit.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-                IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
-                if (selectedGefaehrdung instanceof OwnGefaehrdung) {
-                    OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
-                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(composite.getShell(), ownGefSelected);
-                    dialog.open();
-                    viewer.refresh();
-                }
-            }
-        });
+        
     }
 
     protected void associateGefaehrdung(Gefaehrdung currentGefaehrdung, boolean select) {
@@ -438,6 +443,22 @@ public class ChooseGefaehrdungPage extends WizardPage {
         /* associate domain model with viewer */
         viewer.setInput(arrListAllGefaehrdungen);
         viewer.setSorter(new GefaehrdungenSorter());
+        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                if (event.getSelection() instanceof IStructuredSelection) {
+                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof OwnGefaehrdung) {
+                        buttonDelete.setEnabled(true);
+                        buttonEdit.setEnabled(true);
+                    } else {
+                        buttonDelete.setEnabled(false);
+                        buttonEdit.setEnabled(false);
+                    }
+                }
+//                
+            }
+        });
         assignBausteinGefaehrdungen();
         checkAllSelectedGefaehrdungen();
         packAllColumns();

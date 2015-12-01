@@ -13,3 +13,6 @@ sernet.gs.server/WebContent/WEB-INF/lib/sernet.verinice.fei.service.jar
 sernet.gs.server/WebContent/WEB-INF/lib/sernet.verinice.oda.driver.jar
 sernet.gs.server/WebContent/WEB-INF/lib/sernet.verinice.report.service.jar
 sernet.gs.server/WebContent/WEB-INF/lib/sernet.verinice.samt.service.jar
+
+#regex for all catalouges, hopefully they do not change the name
+it-grundschutz_el*_html_de.zip

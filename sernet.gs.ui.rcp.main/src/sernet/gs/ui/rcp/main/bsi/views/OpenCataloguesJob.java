@@ -33,6 +33,9 @@ import sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.ChangeItgsCatalogue;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.LoadAssociatedGefaehrdungen;
 
 /**
  * 
@@ -44,6 +47,7 @@ import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 public class OpenCataloguesJob extends WorkspaceJob {
 	
 	private BSIMassnahmenModel model;
+	private ChangeItgsCatalogue command;
 	
 	/**
 	 * Creates a workspace job which loads the catalues with
@@ -77,15 +81,19 @@ public class OpenCataloguesJob extends WorkspaceJob {
 		// already loaded data.
 		if (newConfig != null){
 			model.setBSIConfig(newConfig);
+			command = new ChangeItgsCatalogue(newConfig);
+	        
 		}
 	}
 
-	public IStatus runInWorkspace(IProgressMonitor monitor)
-			throws CoreException {
+	public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 		// Needed for access to 'commandService' when using a remote 
-		Activator.inheritVeriniceContextState();
+		Activator.inheritVeriniceContextState();	
 		
 		try {
+			if(command!=null) {
+				command = ServiceFactory.lookupCommandService().executeCommand(command);
+			}
 			List<Baustein> bausteine = model.loadBausteine(new ProgressAdapter(monitor));
 
 			BSIKatalogInvisibleRoot.getInstance().setBausteine(bausteine);
