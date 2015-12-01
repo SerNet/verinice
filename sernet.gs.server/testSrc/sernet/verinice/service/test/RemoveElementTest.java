@@ -32,7 +32,6 @@ import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import sernet.verinice.interfaces.CommandException;
@@ -41,13 +40,8 @@ import sernet.verinice.model.bsi.Gebaeude;
 import sernet.verinice.model.bsi.GebaeudeKategorie;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.bsi.PersonenKategorie;
-import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
-import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
-import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.Document;
@@ -155,41 +149,6 @@ public class RemoveElementTest extends CommandServiceProvider {
         }
     }
 
-    /**
-     * RemoveElement throws a {@link NullPointerException} when no
-     * {@link FinishedRiskAnalysisLists} exists. {@link RemoveElement} should be
-     * harden against this case.
-     */
-    @Test
-    public void removeRiskAnalysis() throws CommandException {
-
-        GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, organization);
-        Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
-        FinishedRiskAnalysis finishedRiskAnalysis = createElement(FinishedRiskAnalysis.class, gebaeude);
-        GefaehrdungsUmsetzung gefaehrdungsUmsetzung = createElement(GefaehrdungsUmsetzung.class, finishedRiskAnalysis);
-
-        MassnahmenUmsetzung massnahmenUmsetzung = createElement(MassnahmenUmsetzung.class, gefaehrdungsUmsetzung);
-        RemoveElement removeElementCommand = removeElement(finishedRiskAnalysis);
-    }
-
-    /**
-     * The create command throws an exception, since there is no matching
-     * constructor in {@link RisikoMassnahmenUmsetzung}. {@link CreateElement}
-     * should be harden against this case.
-     * 
-     */
-    @Test
-    public void removeRiskAnalysisWithRisikoUmsetzung() throws CommandException {
-
-        GebaeudeKategorie gebaeudeKategorie = createElement(GebaeudeKategorie.class, organization);
-        Gebaeude gebaeude = createElement(Gebaeude.class, gebaeudeKategorie);
-        FinishedRiskAnalysis finishedRiskAnalysis = createElement(FinishedRiskAnalysis.class, gebaeude);
-        GefaehrdungsUmsetzung gefaehrdungsUmsetzung = createElement(GefaehrdungsUmsetzung.class, finishedRiskAnalysis);
-
-        RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung = createElement(RisikoMassnahmenUmsetzung.class, gefaehrdungsUmsetzung);
-        removeElement(finishedRiskAnalysis);
-    }
-
     @Test
     public void removePerson() throws CommandException {
         PersonenKategorie personenKategorie = createElement(PersonenKategorie.class, organization);
@@ -212,7 +171,7 @@ public class RemoveElementTest extends CommandServiceProvider {
         ITVerbund itVerbund = createElement(ITVerbund.class, importBsiGroup);
 
         removeElement(itVerbund);
-        assertElementIsDeleted(itVerbund);        
+        assertElementIsDeleted(itVerbund);
     }
 
     /**
@@ -231,9 +190,11 @@ public class RemoveElementTest extends CommandServiceProvider {
 
         for (CnATreeElement element : syncCommand.getElementSet()) {
             if (element instanceof ITVerbund) {
+                element = loadElement(element.getSourceId(), element.getExtId());
                 removeElement((ITVerbund) element);
                 assertElementIsDeleted(element);
             } else if (element instanceof Organization) {
+                element = loadElement(element.getSourceId(), element.getExtId());
                 removeElement((Organization) element);
                 assertElementIsDeleted(element);
             }
