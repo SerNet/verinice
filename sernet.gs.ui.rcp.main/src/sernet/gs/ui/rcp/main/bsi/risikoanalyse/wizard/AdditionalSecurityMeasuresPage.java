@@ -28,7 +28,9 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -53,6 +55,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -61,6 +64,7 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsBaumRoot;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.IGefaehrdungsBaumElement;
+import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.rcp.SWTElementFactory;
@@ -84,6 +88,7 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 	private MassnahmenUmsetzungenFilter massnahmenUmsetzungenFilter = new MassnahmenUmsetzungenFilter();
 	private RisikoMassnahmenUmsetzungenFilter risikoMassnahmenUmsetzungenFilter = new RisikoMassnahmenUmsetzungenFilter();
 	private SearchFilter searchFilter = new SearchFilter();
+	private Button buttonDeleteMassnahme, buttonEditMassnahme, buttonDeleteGefaehrdung;
 
 	/**
 	 * Constructor sets title an description of WizardPage.
@@ -139,6 +144,8 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		tableMassnahme.setLayoutData(gridTableMassnahme);
 		tableMassnahme.setHeaderVisible(true);
 		tableMassnahme.setLinesVisible(true);
+		
+
 
 		imageColumnMassnahme = new TableColumn(tableMassnahme, SWT.LEFT);
 		imageColumnMassnahme.setText(""); //$NON-NLS-1$
@@ -224,10 +231,24 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		    }
 		};
 		/* delete button for viewerGefaehrdung */
-		Button buttonDeleteGefaehrdung = SWTElementFactory.generatePushButton(groupButtonsGefaehrdung, Messages.AdditionalSecurityMeasuresPage_8, null, deleteGefaehrdungAdapter);
+		buttonDeleteGefaehrdung = SWTElementFactory.generatePushButton(groupButtonsGefaehrdung, Messages.AdditionalSecurityMeasuresPage_8, null, deleteGefaehrdungAdapter);
 		GridData gridDeleteGefaehrdung = new GridData();
 		buttonDeleteGefaehrdung.setLayoutData(gridDeleteGefaehrdung);
+		buttonDeleteGefaehrdung.setEnabled(false);
 
+        viewerGefaehrdung.addSelectionChangedListener(new ISelectionChangedListener() {
+            
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                if (event.getSelection() instanceof IStructuredSelection) {
+                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof RisikoMassnahmenUmsetzung) {
+                        buttonDeleteGefaehrdung.setEnabled(true);
+                    } else {
+                        buttonDeleteGefaehrdung.setEnabled(false);
+                    }
+                }
+            }
+        });
 
 		/* group the buttons for viewerMassnahme with group */
 		Group groupButtonsMassnahme = new Group(composite, SWT.SHADOW_ETCHED_OUT);
@@ -272,6 +293,22 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		GridData gridButtonMassnahmeNew = new GridData();
 		buttonNewMassnahme.setLayoutData(gridButtonMassnahmeNew);
 
+		
+		/* listener opens edit Dialog for the selected Massnahme */
+		SelectionAdapter editMassnahmeAdapter = new SelectionAdapter() {
+		    
+		    @Override
+		    public void widgetSelected(SelectionEvent event) {
+		        editMassnahme();
+		    }
+		};
+		
+		/* edit button */
+		buttonEditMassnahme = SWTElementFactory.generatePushButton(groupButtonsMassnahme, Messages.AdditionalSecurityMeasuresPage_18, null, editMassnahmeAdapter);
+		GridData gridButtonEditMassnahme = new GridData();
+		buttonEditMassnahme.setLayoutData(gridButtonEditMassnahme);
+		buttonEditMassnahme.setEnabled(false);
+
 
 		/* listener deletes the selected Massnahme after confirmation */
 		SelectionAdapter deleteMassnahmeAdapter = new SelectionAdapter() {
@@ -303,24 +340,30 @@ public class AdditionalSecurityMeasuresPage extends WizardPage {
 		        }
 		    }
 		};
+		
 		/* delete button */
-		Button buttonDeleteMassnahme = SWTElementFactory.generatePushButton(groupButtonsMassnahme, Messages.AdditionalSecurityMeasuresPage_14, null, deleteMassnahmeAdapter);
+		buttonDeleteMassnahme = SWTElementFactory.generatePushButton(groupButtonsMassnahme, Messages.AdditionalSecurityMeasuresPage_14, null, deleteMassnahmeAdapter);
 		GridData gridButtonMassnahmeDelete = new GridData();
 		buttonDeleteMassnahme.setLayoutData(gridButtonMassnahmeDelete);
+		buttonDeleteMassnahme.setEnabled(false);
 
-		/* listener opens edit Dialog for the selected Massnahme */
-		SelectionAdapter editMassnahmeAdapter = new SelectionAdapter() {
-		    
-		    @Override
-		    public void widgetSelected(SelectionEvent event) {
-		        editMassnahme();
-		    }
-		};
-		/* edit button */
-		Button buttonEditMassnahme = SWTElementFactory.generatePushButton(groupButtonsGefaehrdung, Messages.AdditionalSecurityMeasuresPage_18, null, editMassnahmeAdapter);
-		GridData gridButtonEditMassnahme = new GridData();
-		buttonEditMassnahme.setLayoutData(gridButtonEditMassnahme);
 
+        viewerMassnahme.addSelectionChangedListener(new ISelectionChangedListener() {
+            
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                if (event.getSelection() instanceof IStructuredSelection) {
+                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof RisikoMassnahmenUmsetzung) {
+                        buttonDeleteMassnahme.setEnabled(true);
+                        buttonEditMassnahme.setEnabled(true);
+                    } else {
+                        buttonDeleteMassnahme.setEnabled(false);
+                        buttonEditMassnahme.setEnabled(false);
+                    }
+                }
+            }
+        });
+		
 
 		/* group the Filter checkboxes with composite */
 		Composite compositeFilter = new Composite(composite, SWT.NULL);
