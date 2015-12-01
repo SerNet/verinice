@@ -143,7 +143,7 @@ public class Gefaehrdung implements IGSModel {
 		return getLocalizedKategorie(this.kategorie, language);
 	}
 	
-	private String getLocalizedKategorie(int kat, String language){
+	protected String getLocalizedKategorie(int kat, String language){
         if(GSScraper.CATALOG_LANGUAGE_ENGLISH.equals(language)){
             switch(kat){
             case KAT_HOEHERE_GEWALT: return KAT_STRING_EN_HOEHERE_GEWALT;

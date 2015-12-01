@@ -43,9 +43,12 @@ public final class OwnGefaehrdungHome {
 		return instance;
 	}
 	
-	public void save(OwnGefaehrdung gef) throws CommandException {
-		SaveElement command = new SaveElement(gef);
-		commandService.executeCommand(command);
+    public OwnGefaehrdung save(OwnGefaehrdung gef) throws CommandException {
+        SaveElement<OwnGefaehrdung> command = new SaveElement<>(gef);
+        command = commandService.executeCommand(command);
+        OwnGefaehrdung newGef = (OwnGefaehrdung) command.getElement();
+
+        return newGef;
 	}
 	
 	public void remove(OwnGefaehrdung gef) throws CommandException {

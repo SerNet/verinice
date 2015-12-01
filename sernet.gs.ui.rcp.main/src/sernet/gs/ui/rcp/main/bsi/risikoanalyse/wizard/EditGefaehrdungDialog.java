@@ -203,7 +203,9 @@ public class EditGefaehrdungDialog extends Dialog {
         ownGefaehrdung.setOwnkategorie(textCategory.getText());
 
         try {
-            OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
+
+            ownGefaehrdung = OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
+
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.EditGefaehrdungDialog_6);
         }

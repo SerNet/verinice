@@ -206,13 +206,15 @@ public class NewGefaehrdungDialog extends Dialog {
         ownGefaehrdung.setTitel(textName.getText());
         ownGefaehrdung.setBeschreibung(textDescription.getText());
         ownGefaehrdung.setOwnkategorie(textCategory.getText());
-        ownGefaehrdungen.add(ownGefaehrdung);
 
         try {
-            OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
+
+            ownGefaehrdung = OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
+
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.NewGefaehrdungDialog_7);
         }
+        ownGefaehrdungen.add(ownGefaehrdung);
 
         super.okPressed();
     }
