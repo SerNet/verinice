@@ -126,4 +126,9 @@ public class PureXml implements IVeriniceArchive {
         
     }
 
+    @Override
+    public String getTempDirName() {
+        return null;
+    }
+
 }

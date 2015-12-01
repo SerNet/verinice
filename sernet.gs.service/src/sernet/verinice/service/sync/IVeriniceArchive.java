@@ -42,6 +42,8 @@ public interface IVeriniceArchive {
     void setSyncMapping(SyncMapping syncMapping);
 
     void setSyncData(SyncData syncData);
+    
+    String getTempDirName();
 
     byte[] getFileData(String fileName);
     
