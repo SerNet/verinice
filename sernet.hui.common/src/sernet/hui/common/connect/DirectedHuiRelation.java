@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Moritz Reiter <mr@sernet.de> - initial API and implementation
+ *     Moritz Reiter - initial API and implementation
  ******************************************************************************/
 
 package sernet.hui.common.connect;
@@ -31,7 +31,7 @@ package sernet.hui.common.connect;
  * the relation from the perspective of X, means that the relation is forward,
  * looking at it from the perspective of Y means that it is backward.
  * 
- * @author Moritz Reiter <mr@sernet.de>
+ * @author Moritz Reiter
  */
 public final class DirectedHuiRelation {
 

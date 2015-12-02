@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Moritz Reiter <mr@sernet.de> - initial API and implementation
+ *     Moritz Reiter - initial API and implementation
  ******************************************************************************/
 
 package sernet.gs.ui.rcp.main.common.model;
@@ -34,7 +34,7 @@ import sernet.verinice.service.commands.CreateLink;
  * Utility class for creating Links (CnALink). Could get expanded to allow more
  * operations, like removing.
  * 
- * @author Moritz Reiter <mr@sernet.de>
+ * @author Moritz Reiter
  */
 public final class LinkUtil {
     
