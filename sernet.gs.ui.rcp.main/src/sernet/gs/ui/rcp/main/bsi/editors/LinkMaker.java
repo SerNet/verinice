@@ -14,35 +14,38 @@
  * 
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
+ *     Moritz Reiter - enhancement and refactoring
  ******************************************************************************/
+
 package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
+import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.ToolTip;
-import org.eclipse.jface.window.Window;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
@@ -59,8 +62,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.part.WorkbenchPart;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.bsi.views.IRelationTable;
 import sernet.gs.ui.rcp.main.bsi.views.RelationByNameSorter;
 import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer;
@@ -70,17 +71,13 @@ import sernet.gs.ui.rcp.main.bsi.views.RelationViewLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.taskcommands.FindRelationsFor;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.DirectedHuiRelation;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.ComboModel;
-import sernet.verinice.iso27k.rcp.ComboModelObject;
-import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -90,50 +87,47 @@ import sernet.verinice.model.common.CnATreeElement;
  * linked items in the editor area etc.
  * 
  * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- * 
  */
-@SuppressWarnings("restriction")
 public class LinkMaker extends Composite implements IRelationTable {
 
-    private static final Logger LOG = Logger.getLogger(LinkMaker.class);
+    static final String LAST_SELECTED_RELATION_PREF_PREFIX = "last_selected_relation_for";
+
+    private static final int RELATION_COMBO_WIDTH = 200;
     
-    private static final int COMBO_RELATION_TYPE_WIDTH = 200;
-    
-    private final int formAttachmentNumeratorDefault = 100;
-    private final int formAttachmentOffsetDefault = 5;
-    
-    private final static String LAST_SELECTED_LINK_TYPE_PREF_PREFIX = "last_selected_link_type_for_";
+    private static final int FORM_ATTACHMENT_NUMERATOR_DEFAULT = 100;
+    private static final int FORM_ATTACHMENT_OFFSET_DEFAULT = 5;
 
     // SWT
+    RelationTableViewer viewer;
     private WorkbenchPart part;
-    private RelationTableViewer viewer;
     private SelectionListener linkAction;
     private SelectionListener unlinkAction;
     private Action doubleClickAction;
-    
+
     // SWT widgets
+    Combo comboElementType;
     private Label label;
-    private Combo comboElementType;
-    private Combo comboLinkType;
-    private Button buttonAddLink;
-    private Button buttonRemoveLink;
+    private Button addLinkButton;
+    private Button removeLinkButton;
     
-    // Utilities 
+    // JFaces
+    final ComboViewer relationComboViewer = new ComboViewer(this, SWT.READ_ONLY);
+
+    // Utilities
+    static IPreferenceStore prefStore = Activator.getDefault().getPreferenceStore();
     private static HUITypeFactory huiTypeFactory = HitroUtil.getInstance().getTypeFactory();
-    private static IPreferenceStore prefStore = Activator.getDefault().getPreferenceStore();
-    private EntityTypeFilter elementTypeFilter;
+    private EntityTypeFilter entityTypeFilter;
     private LinkRemover linkRemover;
     private RelationViewContentProvider relationViewContentProvider;
     private RelationViewLabelProvider relationViewLabelProvider;
-    private ComboModel<HuiRelation> comboModelLinkType;
-   
-    private CnATreeElement inputElmt;
-    private List<HuiRelation> allPossibleRelations;    
-    private SortedMap<String, String> elementTypeNamesAndIds;
+
+    CnATreeElement inputElmt;
+    SortedMap<String, String> elementTypeNamesAndIds;
+    String selectedElementTypeId;
+    private List<HuiRelation> allPossibleRelations;
     private String[] elementTypeNames;
-    private String selectedInComboElementTypeId;  
-    private int oldSelection = -1;  
+    //
+    private int oldSelection = -1;
     private boolean writeable;
 
     public LinkMaker(Composite parent, WorkbenchPart part) {
@@ -142,14 +136,14 @@ public class LinkMaker extends Composite implements IRelationTable {
         this.setLayout(formLayout);
         this.part = part;
     }
-    
+
     public void createPartControl(Boolean isWriteAllowed) {
-        
+
         this.writeable = isWriteAllowed;
-        
+
         createLabel();
-        createComboElementType();    
-        createComboLinkType();
+        createElementTypeCombo();
+        createRelationCombo();
         createButtonAddLink();
         createButtonRemoveLink();
         initLinkTableViewer();
@@ -157,7 +151,8 @@ public class LinkMaker extends Composite implements IRelationTable {
         // listeners to reload view:
         CnAElementFactory.getLoadedModel().addBSIModelListener(relationViewContentProvider);
         CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(relationViewContentProvider);
-        // listeners to remove stale links from currently open object in editor to prevent conflicts when saving:
+        // listeners to remove stale links from currently open object in editor
+        // to prevent conflicts when saving:
         linkRemover = new LinkRemover(this);
         CnAElementFactory.getLoadedModel().addBSIModelListener(linkRemover);
         CnAElementFactory.getInstance().getISO27kModel().addISO27KModelListener(linkRemover);
@@ -168,13 +163,13 @@ public class LinkMaker extends Composite implements IRelationTable {
         // register resize listener for cutting the tooltips
         addResizeListener(cellLabelProviders);
 
-        createButtonListeners();
-        hookButtonListeners();
-  
-        createFilter();    
+        linkAction = new CreateLinkSelectionListener(this);
+        unlinkAction = new RemoveLinkSelectionListener(this);
+        this.addLinkButton.addSelectionListener(linkAction);
+        this.removeLinkButton.addSelectionListener(unlinkAction);
         
-        addComboLinkTypeListener();
-        
+        createFilter();
+
         createDoubleClickAction();
         hookDoubleClickAction();
     }
@@ -183,76 +178,109 @@ public class LinkMaker extends Composite implements IRelationTable {
         label = new Label(this, SWT.NULL);
         label.setText(Messages.LinkMaker_0);
         FormData formData = new FormData();
-        formData.top = new FormAttachment(0, formAttachmentOffsetDefault);
-        formData.left = new FormAttachment(0, formAttachmentOffsetDefault);
+        formData.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
+        formData.left = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
         label.setLayoutData(formData);
         label.pack();
     }
 
-    private void createComboElementType() {
+    private void createElementTypeCombo() {
         comboElementType = new Combo(this, SWT.READ_ONLY);
         FormData formData = new FormData();
-        formData.top = new FormAttachment(0, formAttachmentOffsetDefault);
-        formData.left = new FormAttachment(label, formAttachmentOffsetDefault);
+        formData.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
+        formData.left = new FormAttachment(label, FORM_ATTACHMENT_OFFSET_DEFAULT);
         comboElementType.setLayoutData(formData);
     }
-    
-    private void createComboLinkType() {
-        comboLinkType = new Combo(this, SWT.READ_ONLY);
+
+    private void createRelationCombo() {
+
         FormData formData = new FormData();
-        formData.top = new FormAttachment(0, formAttachmentOffsetDefault);
-        formData.left = new FormAttachment(comboElementType, formAttachmentOffsetDefault);
-        formData.width = COMBO_RELATION_TYPE_WIDTH;
-        comboLinkType.setLayoutData(formData);
+        formData.top = new FormAttachment(0, FORM_ATTACHMENT_OFFSET_DEFAULT);
+        formData.left = new FormAttachment(comboElementType, FORM_ATTACHMENT_OFFSET_DEFAULT);
+        formData.width = RELATION_COMBO_WIDTH;
+        relationComboViewer.getCombo().setLayoutData(formData);
+        
+        relationComboViewer.setContentProvider(new ArrayContentProvider() {
+            @Override
+            public Object[] getElements(Object inputElement) {
+                ArrayList<DirectedHuiRelation> relations = new ArrayList<>();
+                if (inputElement instanceof Set) {
+                    @SuppressWarnings("unchecked")
+                    Set<DirectedHuiRelation> input = (Set<DirectedHuiRelation>) inputElement;
+                    relations.addAll(input);
+                    return relations.toArray();
+                }
+
+                return relations.toArray();
+            }
+        });
+                
+        relationComboViewer.setLabelProvider(new LabelProvider() {
+
+            @Override
+            public String getText(Object element) {
+                if (element instanceof DirectedHuiRelation) {
+                    DirectedHuiRelation relation = (DirectedHuiRelation) element;
+                    return relation.getLabel();
+                } else {
+                    return "unknown object type";
+                }
+            }
+
+        });
+
+        addRelationComboListener();
     }
-    
+
     private void createButtonAddLink() {
-        buttonAddLink = new Button(this, SWT.PUSH);
+        addLinkButton = new Button(this, SWT.PUSH);
         FormData formData = new FormData();
         formData.top = new FormAttachment(comboElementType, 0, SWT.CENTER);
-        formData.left = new FormAttachment(comboLinkType, formAttachmentOffsetDefault);
-        buttonAddLink.setLayoutData(formData);
-        buttonAddLink.setText(Messages.LinkMaker_1);
-        buttonAddLink.setToolTipText(Messages.LinkMaker_2);
-        buttonAddLink.setEnabled(false);
+        formData.left = new FormAttachment(relationComboViewer.getCombo(),
+                FORM_ATTACHMENT_OFFSET_DEFAULT);
+        addLinkButton.setLayoutData(formData);
+        addLinkButton.setText(Messages.LinkMaker_1);
+        addLinkButton.setToolTipText(Messages.LinkMaker_2);
+        addLinkButton.setEnabled(false);
     }
-    
+
     private void createButtonRemoveLink() {
-        buttonRemoveLink = new Button(this, SWT.PUSH);
+        removeLinkButton = new Button(this, SWT.PUSH);
         FormData formData = new FormData();
         formData.top = new FormAttachment(comboElementType, 0, SWT.CENTER);
-        formData.left = new FormAttachment(buttonAddLink, formAttachmentOffsetDefault);
-        buttonRemoveLink.setLayoutData(formData);
-        buttonRemoveLink.setText(Messages.LinkMaker_3);
-        buttonRemoveLink.setEnabled(writeable && checkRights());
-        buttonRemoveLink.setToolTipText(Messages.LinkMaker_4);
+        formData.left = new FormAttachment(addLinkButton, FORM_ATTACHMENT_OFFSET_DEFAULT);
+        removeLinkButton.setLayoutData(formData);
+        removeLinkButton.setText(Messages.LinkMaker_3);
+        removeLinkButton.setEnabled(writeable && checkRights());
+        removeLinkButton.setToolTipText(Messages.LinkMaker_4);
     }
-    
+
     private void initLinkTableViewer() {
         viewer = new RelationTableViewer(this, this, SWT.FULL_SELECTION | SWT.MULTI, true);
         FormData formData = new FormData();
-        formData.top = new FormAttachment(buttonAddLink, 2);
+        formData.top = new FormAttachment(addLinkButton, 2);
         formData.left = new FormAttachment(0, 1);
-        formData.right = new FormAttachment(formAttachmentNumeratorDefault, -1);
-        formData.bottom = new FormAttachment(formAttachmentNumeratorDefault, -1);
+        formData.right = new FormAttachment(FORM_ATTACHMENT_NUMERATOR_DEFAULT, -1);
+        formData.bottom = new FormAttachment(FORM_ATTACHMENT_NUMERATOR_DEFAULT, -1);
         viewer.getTable().setLayoutData(formData);
         viewer.getTable().setEnabled(writeable);
         relationViewContentProvider = new RelationViewContentProvider(this, viewer);
         viewer.setContentProvider(relationViewContentProvider);
-        
+
         relationViewLabelProvider = new RelationViewLabelProvider(this);
         viewer.setLabelProvider(relationViewLabelProvider);
         viewer.setSorter(new RelationByNameSorter(this, IRelationTable.COLUMN_TITLE, IRelationTable.COLUMN_TYPE_IMG));
-        
+
         part.getSite().setSelectionProvider(viewer);
     }
-    
+
     /**
-     * Tracks changes of viewpart size and delegates them to the tooltip provider.
+     * Tracks changes of viewpart size and delegates them to the tooltip
+     * provider.
      */
     private void addResizeListener(final List<RelationTableCellLabelProvider> cellLabelProviders) {
         addControlListener(new ControlAdapter() {
-        
+
             @Override
             public void controlResized(ControlEvent e) {
                 for (RelationTableCellLabelProvider c : cellLabelProviders) {
@@ -262,16 +290,16 @@ public class LinkMaker extends Composite implements IRelationTable {
         });
     }
 
-    private void createFilter() {      
-        elementTypeFilter = new EntityTypeFilter(viewer);
-        comboElementType.addSelectionListener(new SelectionListener() {    
-             
+    private void createFilter() {
+        entityTypeFilter = new EntityTypeFilter(viewer);
+        comboElementType.addSelectionListener(new SelectionListener() {
+
             @Override
             public void widgetSelected(SelectionEvent e) {
                 oldSelection = comboElementType.getSelectionIndex();
                 setFilter(comboElementType.getSelectionIndex());
             }
-       
+
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
@@ -281,175 +309,127 @@ public class LinkMaker extends Composite implements IRelationTable {
 
     protected void setFilter(int selectionIndex) {
         if (selectionIndex == 0) {
-            elementTypeFilter.setEntityType(null);
-            buttonAddLink.setEnabled(false);
-            comboLinkType.setEnabled(false);
+            entityTypeFilter.setEntityType(null);
+            addLinkButton.setEnabled(false);
+            relationComboViewer.getCombo().setEnabled(false);
             return;
         }
-        
+
         Object[] array = elementTypeNamesAndIds.entrySet().toArray();
-        
+
         @SuppressWarnings("unchecked")
         Entry<String, String> entry = (Entry<String, String>) array[selectionIndex];
-        selectedInComboElementTypeId = entry.getValue();
-        elementTypeFilter.setEntityType(selectedInComboElementTypeId);
+        selectedElementTypeId = entry.getValue();
+        entityTypeFilter.setEntityType(selectedElementTypeId);
 
         // enable link button if we have write permissions:
-        buttonAddLink.setEnabled(writeable && checkRights());
-        
-        fillComboLinkType();
+        addLinkButton.setEnabled(writeable && checkRights());
+
+        fillRelationCombo();
     }
 
-    private void fillComboLinkType() {
-        comboModelLinkType = getComboModelLinkType();
-        Comparator<ComboModelObject<HuiRelation>> huiRelationComparator = getHuiRelationComparator();
+    private void fillRelationCombo() {
+        String sourceEntityTypeId = inputElmt.getEntityType().getId();
+        String targetEntityTypeId = selectedElementTypeId;
 
-        String elementTypeInEditor = inputElmt.getEntityType().getId();
-        comboModelLinkType.addAll(huiTypeFactory.getPossibleRelations(elementTypeInEditor,
-                        selectedInComboElementTypeId));
-        if (!elementTypeInEditor.equals(selectedInComboElementTypeId)) {
-            comboModelLinkType.addAll(huiTypeFactory.getPossibleRelations(selectedInComboElementTypeId,
-                            elementTypeInEditor));
+        Set<HuiRelation> forwardRelations = huiTypeFactory.getPossibleRelations(sourceEntityTypeId,
+                targetEntityTypeId);
+        Set<HuiRelation> backwardRelations = new HashSet<>();
+        if (!sourceEntityTypeId.equals(targetEntityTypeId)) {
+            backwardRelations = huiTypeFactory.getPossibleRelations(targetEntityTypeId,
+                    sourceEntityTypeId);
         }
-        comboModelLinkType.sort(huiRelationComparator);
+        Set<DirectedHuiRelation> relations = collateRelations(forwardRelations, backwardRelations);
+        relationComboViewer.setInput(relations);
 
-        comboLinkType.setItems(comboModelLinkType.getLabelArray());
-        selectComboLinkTypeItem();
+        int relationItemCount = relationComboViewer.getCombo().getItemCount();
+        if (relationItemCount <= 1) {
+            relationComboViewer.getCombo().setEnabled(false);
+        } else {
+            relationComboViewer.getCombo().setEnabled(true);
+        }
+        addLinkButton.setEnabled(relationItemCount > 0 && writeable && checkRights());
 
-        comboLinkType.setEnabled(comboModelLinkType.size() > 1);
-        buttonAddLink.setEnabled(comboModelLinkType.size() > 0 && writeable && checkRights());
+        selectRelationType();
     }
 
-    private void selectComboLinkTypeItem() {
-        String prefStoreKey = LAST_SELECTED_LINK_TYPE_PREF_PREFIX + selectedInComboElementTypeId;
-        comboModelLinkType.setSelectedIndex(0);
+    private Set<DirectedHuiRelation> collateRelations(Set<HuiRelation> forwardRelations,
+            Set<HuiRelation> backwardRelations) {
+
+        Set<DirectedHuiRelation> collatedRelations = new TreeSet<>(
+                getDirectedHuiRelationComparator());
+
+        for (HuiRelation forwardRelation : forwardRelations) {
+            collatedRelations
+                    .add(DirectedHuiRelation.getDirectedHuiRelation(forwardRelation, true));
+        }
+        for (HuiRelation backwardRelation : backwardRelations) {
+            collatedRelations
+                    .add(DirectedHuiRelation.getDirectedHuiRelation(backwardRelation, false));
+        }
+
+        return collatedRelations;
+    }
+
+    private void selectRelationType() {
+        Object firstElementInRelationCombo = relationComboViewer.getElementAt(0);
+        relationComboViewer.setSelection(new StructuredSelection(firstElementInRelationCombo));
+
+        String prefStoreKey = LAST_SELECTED_RELATION_PREF_PREFIX + inputElmt.getTypeId()
+                + selectedElementTypeId;
+
         if (prefStore.contains(prefStoreKey)) {
-            String relationTypeId = prefStore.getString(prefStoreKey);
-            HuiRelation huiRelation = huiTypeFactory.getRelation(relationTypeId);
-            List<ComboModelObject<HuiRelation>> comboModelObjectList = comboModelLinkType.getComboModelObjectList();
-            if (comboModelObjectList.contains(huiRelation)) {
-                comboModelLinkType.setSelectedObject(huiRelation);
+            String relationId = prefStore.getString(prefStoreKey);
+            Object comboItems = relationComboViewer.getInput();
+
+            if (comboItems instanceof Set) {
+                for (Object item : (Set<?>) comboItems) {
+                    setSelection(item, relationId);
+                }
             }
         }
-        comboLinkType.select(comboModelLinkType.getSelectedIndex());
     }
 
-    private ComboModel<HuiRelation> getComboModelLinkType() {
-        return new ComboModel<HuiRelation>(new IComboModelLabelProvider<HuiRelation>() {
-            @Override
-            public String getLabel(HuiRelation element) {
-                return element.getName();
+    private void setSelection(Object item, String relationId) {
+        if (item instanceof DirectedHuiRelation) {
+            DirectedHuiRelation relation = (DirectedHuiRelation) item;
+            if (relation.getHuiRelation().getId().equals(relationId)) {
+                relationComboViewer.setSelection(new StructuredSelection(relation));
             }
-        });
+        }
     }
 
-    private Comparator<ComboModelObject<HuiRelation>> getHuiRelationComparator() {
-        return new Comparator<ComboModelObject<HuiRelation>>() {
+    private Comparator<DirectedHuiRelation> getDirectedHuiRelationComparator() {
+        return new Comparator<DirectedHuiRelation>() {
             Collator collator = Collator.getInstance(Locale.getDefault());
-            
+
             @Override
-            public int compare(
-                            ComboModelObject<HuiRelation> comboModelObject1,
-                            ComboModelObject<HuiRelation> comboModelObject2) {
-                String comboModelObject1Name = comboModelObject1.getObject().getName();
-                String comboModelObject2Name = comboModelObject2.getObject().getName();
-                return collator.compare(comboModelObject1Name, comboModelObject2Name);
+            public int compare(DirectedHuiRelation relation1, DirectedHuiRelation relation2) {
+                return collator.compare(relation1.getLabel(), relation2.getLabel());
             }
         };
     }
-    
-    private void addComboLinkTypeListener() {
-        comboLinkType.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                comboModelLinkType.setSelectedIndex(comboLinkType.getSelectionIndex());
-            }
+
+    private void addRelationComboListener() {
+        relationComboViewer.addSelectionChangedListener(new ISelectionChangedListener() {
             
             @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
+            public void selectionChanged(SelectionChangedEvent event) {
+ 
+                StructuredSelection selection = (StructuredSelection) relationComboViewer
+                        .getSelection();
+                DirectedHuiRelation selectedRelation = (DirectedHuiRelation) selection
+                        .getFirstElement();
+                if (selectedRelation != null) {
+                    addLinkButton.setEnabled(true);
+                } else {
+                    addLinkButton.setEnabled(false);
+                }
             }
         });
     }
 
-    private void createButtonListeners() {
-        linkAction = new SelectionListener() {
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-            }
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                // create new link to object
-                Object[] array = elementTypeNamesAndIds.entrySet().toArray();
-                @SuppressWarnings("unchecked")
-                String selectedElementType = ((Entry<String, String>) array[comboElementType.getSelectionIndex()]).getValue();
-                CnATreeElementSelectionDialog dialog = new CnATreeElementSelectionDialog(
-                                viewer.getControl().getShell(), selectedElementType, inputElmt);
-                if (dialog.open() != Window.OK) {
-                    return;
-                }
-                List<CnATreeElement> linkTargets = dialog.getSelectedElements();
-                
-                String selectedLinkType = comboModelLinkType.getSelectedObject().getId();                                
-                prefStore.putValue(LAST_SELECTED_LINK_TYPE_PREF_PREFIX + selectedElementType, selectedLinkType);
-                                
-                // this method also fires events for added links:
-                CnAElementHome.getInstance().createLinksAccordingToBusinessLogic(
-                                getInputElmt(), linkTargets, selectedLinkType);
-                // refresh viewer because it doesn't listen to events:
-                reloadLinks();
-            }
-        };
-
-        unlinkAction = new SelectionListener() {
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-            }
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                // delete link:
-                if (viewer.getSelection().isEmpty()) {
-                    return;
-                }
-                List<?> selection = ((IStructuredSelection) viewer.getSelection()).toList();
-                String msg = NLS.bind(Messages.LinkMaker_6, selection.size());
-                boolean confirm = MessageDialog.openConfirm(getShell(), Messages.LinkMaker_5, msg);
-                if (!confirm) {
-                    return;
-                }
-                CnALink link = null;
-                for (Object object : selection) {
-                    link = (CnALink) object;
-                    try {
-                        CnAElementHome.getInstance().remove(link);
-                        inputElmt.removeLinkDown(link);
-                    } catch (Exception e1) {
-                        LOG.error("Error while removing link", e1);
-                        ExceptionUtil.log(e1, Messages.LinkMaker_7);
-                    }
-                }
-                // calling linkRemoved for one link reloads all changed links
-                if (link != null) {
-                    // notify local listeners:
-                    if (CnAElementFactory.isModelLoaded()) {
-                        CnAElementFactory.getLoadedModel().linkRemoved(link);
-                    }
-                    CnAElementFactory.getInstance().getISO27kModel().linkRemoved(link);
-                }
-            }
-        };
-    }
-    
-    private void hookButtonListeners() {
-        this.buttonAddLink.addSelectionListener(linkAction);
-        this.buttonRemoveLink.addSelectionListener(unlinkAction);
-    }
-
-    private void initNamesForComboElementType() {
+    private void initNamesForElementTypeCombo() {
         elementTypeNamesAndIds = new TreeMap<String, String>();
 
         if (allPossibleRelations == null) {
@@ -479,20 +459,20 @@ public class LinkMaker extends Composite implements IRelationTable {
     private void fillPossibleLinkLists() {
         allPossibleRelations = new ArrayList<HuiRelation>();
         String entityTypeID = inputElmt.getEntity().getEntityType();
-        
+
         allPossibleRelations.addAll(huiTypeFactory.getPossibleRelationsFrom(entityTypeID));
         allPossibleRelations.addAll(huiTypeFactory.getPossibleRelationsTo(entityTypeID));
     }
-    
+
     private void createDoubleClickAction() {
         doubleClickAction = new Action() {
-        
+
             @Override
             public void run() {
                 ISelection selection = viewer.getSelection();
                 Object obj = ((IStructuredSelection) selection).getFirstElement();
                 CnALink link = (CnALink) obj;
-                
+
                 // open the object on the other side of the link:
                 if (CnALink.isDownwardLink(getInputElmt(), link)) {
                     EditorFactory.getInstance().updateAndOpenObject(link.getDependency());
@@ -502,10 +482,10 @@ public class LinkMaker extends Composite implements IRelationTable {
             }
         };
     }
-    
+
     private void hookDoubleClickAction() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
-        
+
             @Override
             public void doubleClick(DoubleClickEvent event) {
                 doubleClickAction.run();
@@ -545,7 +525,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         }
         this.inputElmt = inputElmt;
         fillPossibleLinkLists();
-        initNamesForComboElementType();
+        initNamesForElementTypeCombo();
         comboElementType.setItems(elementTypeNames);
         if (oldSelection != -1 && oldSelection < comboElementType.getItemCount()) {
             comboElementType.select(oldSelection);
@@ -559,7 +539,7 @@ public class LinkMaker extends Composite implements IRelationTable {
         reloadLinks();
     }
 
-    private void reloadLinks() {
+    void reloadLinks() {
         if (!CnAElementHome.getInstance().isOpen() || inputElmt == null) {
             return;
         }
@@ -570,67 +550,38 @@ public class LinkMaker extends Composite implements IRelationTable {
             }
         });
 
-        WorkspaceJob job = new WorkspaceJob(Messages.LinkMaker_10) {
-            @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                Activator.inheritVeriniceContextState();
-
-                try {
-                    monitor.setTaskName(Messages.LinkMaker_11);
-
-                    FindRelationsFor command = new FindRelationsFor(inputElmt);
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
-                    final CnATreeElement linkElmt = command.getElmt();
-
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewer.setInput(linkElmt);
-                        }
-                    });
-                } catch (Exception e) {
-                    Display.getDefault().asyncExec(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewer.setInput(new PlaceHolder(Messages.LinkMaker_12));
-                        }
-                    });
-                    LOG.error("Error while searching relations", e);
-                    ExceptionUtil.log(e, Messages.LinkMaker_13);
-                }
-                return Status.OK_STATUS;
-            }
-        };
+        WorkspaceJob job = new ReloadLinksWorkspaceJob(inputElmt, viewer, Messages.LinkMaker_10);
+        
         job.setUser(false);
         job.schedule();
 
     }
-    
-    @SuppressWarnings("static-access")
+
     @Override
     public void dispose() {
-        CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(relationViewContentProvider);
+        CnAElementFactory.getLoadedModel().removeBSIModelListener(relationViewContentProvider);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(relationViewContentProvider);
-        
-        CnAElementFactory.getInstance().getLoadedModel().removeBSIModelListener(linkRemover);
+
+        CnAElementFactory.getLoadedModel().removeBSIModelListener(linkRemover);
         CnAElementFactory.getInstance().getISO27kModel().removeISO27KModelListener(linkRemover);
-                
+
         super.dispose();
     }
-    
-    private String getRightID() {
+
+    private static String getRightID() {
         return ActionRightIDs.EDITLINKS;
     }
-    
-    private boolean checkRights() {
+
+    private static boolean checkRights() {
         // no right management should be used
         if (getRightID() == null) {
             return true;
         }
         // id set but empty, right not granted, action disabled
-        else if (getRightID().equals("")) {
+        else if (("").equals(getRightID())) {
             return false;
-            // right management enabled, check rights and return true if right enabled / false if not
+            // right management enabled, check rights and return true if right
+            // enabled / false if not
         } else {
             Activator.inheritVeriniceContextState();
             RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
