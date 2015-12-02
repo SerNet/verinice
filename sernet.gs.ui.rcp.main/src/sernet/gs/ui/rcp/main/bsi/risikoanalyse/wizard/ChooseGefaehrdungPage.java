@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -60,6 +61,7 @@ import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.LoadAssociatedGefaehrdungen;
+import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.UpdateRiskAnalysis;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
@@ -85,6 +87,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
     private SearchFilter searchFilter = new SearchFilter();
     private RiskAnalysisWizard wizard;
     private Button buttonDelete, buttonEdit;
+
+    private final static Logger LOG = Logger.getLogger(ChooseGefaehrdungPage.class);
 
     /**
      * Constructor sets title an description of WizardPage.
@@ -157,12 +161,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
             @Override
             public void checkStateChanged(CheckStateChangedEvent event) {
                 Gefaehrdung currentGefaehrdung = (Gefaehrdung) event.getElement();
-
-                if (event.getChecked()) {
-                    associateGefaehrdung(currentGefaehrdung, true);
-                } else {
-                    associateGefaehrdung(currentGefaehrdung, false);
-                }
+                associateGefaehrdung(currentGefaehrdung, event.getChecked());
             }
 
         });
@@ -502,6 +501,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
                     }
                 }
             }
+            UpdateRiskAnalysis updateCommand = new UpdateRiskAnalysis(wizard.getFinishedRiskAnalysisLists());
+            updateCommand = ServiceFactory.lookupCommandService().executeCommand(updateCommand);
         } catch (CommandException e) {
             ExceptionUtil.log(e, ""); //$NON-NLS-1$
         }
