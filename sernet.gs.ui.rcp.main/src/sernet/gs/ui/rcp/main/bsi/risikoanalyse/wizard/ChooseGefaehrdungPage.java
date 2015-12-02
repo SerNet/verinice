@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
@@ -50,12 +51,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
-import sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
@@ -76,11 +75,11 @@ import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 public class ChooseGefaehrdungPage extends WizardPage {
 
     private Composite composite;
-    private TableColumn checkboxColumn;
-    private TableColumn imageColumn;
-    private TableColumn numberColumn;
-    private TableColumn nameColumn;
-    private TableColumn descriptionColumn;
+    private TableViewerColumn checkboxColumn;
+    private TableViewerColumn imageColumn;
+    private TableViewerColumn numberColumn;
+    private TableViewerColumn nameColumn;
+    private TableViewerColumn descriptionColumn;
     private CheckboxTableViewer viewer;
     private OwnGefaehrdungenFilter ownGefaehrdungFilter = new OwnGefaehrdungenFilter();
     private GefaehrdungenFilter gefaehrdungFilter = new GefaehrdungenFilter();
@@ -133,25 +132,26 @@ public class ChooseGefaehrdungPage extends WizardPage {
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
-        checkboxColumn = new TableColumn(table, SWT.LEFT);
-        checkboxColumn.setText(""); //$NON-NLS-1$
-        checkboxColumn.setWidth(checkboxColumnWidth);
+        checkboxColumn = new TableViewerColumn(viewer, SWT.LEFT);
+        checkboxColumn.getColumn().setText(""); //$NON-NLS-1$
+        checkboxColumn.getColumn().setWidth(checkboxColumnWidth);
 
-        imageColumn = new TableColumn(table, SWT.LEFT);
-        imageColumn.setText(""); //$NON-NLS-1$
-        imageColumn.setWidth(imageColumnWidth);
+        imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
+        imageColumn.getColumn().setText(""); //$NON-NLS-1$
+        imageColumn.getColumn().setWidth(imageColumnWidth);
 
-        numberColumn = new TableColumn(table, SWT.LEFT);
-        numberColumn.setText(Messages.ChooseGefaehrdungPage_5);
-        numberColumn.setWidth(numberColumnWidth);
+        numberColumn = new TableViewerColumn(viewer, SWT.LEFT);
+        numberColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_5);
+        numberColumn.getColumn().setWidth(numberColumnWidth);
 
-        nameColumn = new TableColumn(table, SWT.LEFT);
-        nameColumn.setText(Messages.ChooseGefaehrdungPage_6);
-        nameColumn.setWidth(nameColumnWidth);
+        nameColumn = new TableViewerColumn(viewer, SWT.LEFT);
+        nameColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_6);
+        nameColumn.getColumn().setWidth(nameColumnWidth);
 
-        descriptionColumn = new TableColumn(table, SWT.LEFT);
-        descriptionColumn.setText(Messages.ChooseGefaehrdungPage_7);
-        descriptionColumn.setWidth(descriptionColumnWidth);
+        descriptionColumn = new TableViewerColumn(viewer, SWT.LEFT);
+        descriptionColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_7);
+        descriptionColumn.getColumn().setWidth(descriptionColumnWidth);
+       
 
         /*
          * listener adds/removes Gefaehrdungen to Array of selected
@@ -512,11 +512,11 @@ public class ChooseGefaehrdungPage extends WizardPage {
      * Adjusts all columns of the CheckboxTableViewer.
      */
     private void packAllColumns() {
-        checkboxColumn.pack();
-        imageColumn.pack();
-        numberColumn.pack();
-        nameColumn.pack();
-        descriptionColumn.pack();
+        checkboxColumn.getColumn().pack();
+        imageColumn.getColumn().pack();
+        numberColumn.getColumn().pack();
+        nameColumn.getColumn().pack();
+        descriptionColumn.getColumn().pack();
     }
 
     /**
