@@ -17,5 +17,8 @@ sernet.gs.server/WebContent/WEB-INF/lib/sernet.verinice.samt.service.jar
 #regex for all catalouges, hopefully they do not change the name
 it-grundschutz_el*_html_de.zip
 
+# exclude the datenschutz katalog
+B1.5-Datenschutz-2008-08-26.zip
+
 #ignore the locally created folder for the search-index
 sernet.gs.server/elasticsearch/
