@@ -63,9 +63,6 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
 
         try {
 
-            // TODO: testen ob Fehler bei Auswahl von Gefaehrdung, Seite 2,
-            // Seite 1, auch in dev-branch existiert
-
             /*
              * look for associated Gefaehrdung via children of cnaelement
              */
