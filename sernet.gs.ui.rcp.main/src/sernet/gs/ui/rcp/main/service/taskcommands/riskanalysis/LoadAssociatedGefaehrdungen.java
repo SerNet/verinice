@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportLinkedElements;
@@ -34,6 +35,7 @@ import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
@@ -60,6 +62,9 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
         dao.reload(cnaElement, cnaElement.getDbId());
 
         try {
+
+            // TODO: testen ob Fehler bei Auswahl von Gefaehrdung, Seite 2,
+            // Seite 1, auch in dev-branch existiert
 
             /*
              * look for associated Gefaehrdung via children of cnaelement
@@ -122,6 +127,7 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
         Set<BausteinUmsetzung> linkedBausteinUmsetzungen = new HashSet<>(linkLoader.getElements().size());
         for (CnATreeElement foundElement : linkLoader.getElements()) {
             if (BausteinUmsetzung.TYPE_ID.equals(foundElement.getTypeId())) {
+                foundElement = Retriever.retrieveElement(foundElement, RetrieveInfo.getPropertyInstance());
                 linkedBausteinUmsetzungen.add((BausteinUmsetzung) foundElement);
             }
         }
