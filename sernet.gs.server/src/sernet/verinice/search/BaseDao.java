@@ -167,11 +167,17 @@ public abstract class BaseDao implements ISearchDao {
      */
     @Override
     public SearchResponse find(String title, Operator operator) {
-        return getClient().prepareSearch(getIndex()).setTypes(getType())
+        long startTime = System.currentTimeMillis();
+        SearchResponse response = getClient().prepareSearch(getIndex()).setTypes(getType())
                 .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
                 .setQuery(QueryBuilders.matchQuery("_all", title).operator(operator))
                 .execute()
                 .actionGet();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Time for executing find():\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
+        }
+
+        return response;
     }
     
     /* (non-Javadoc)

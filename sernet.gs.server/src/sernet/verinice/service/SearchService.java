@@ -83,13 +83,20 @@ public class SearchService implements ISearchService {
      */
     @Override
     public VeriniceSearchResult query(VeriniceQuery query, String elementTypeId) {
+        long startTime = System.currentTimeMillis();
         ServerInitializer.inheritVeriniceContextState();
         VeriniceSearchResult results = new VeriniceSearchResult();
         if (StringUtils.isNotEmpty(elementTypeId)) {
             results.addVeriniceSearchTable(processSearchResponse(elementTypeId, searchDao.find(elementTypeId, query), query.getLimit()));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Time for executing query( " + query.getQuery() + ", " + elementTypeId + "):\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
+            }
         } else {
             for (EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()) {
                 results.addVeriniceSearchTable(processSearchResponse(type.getId(), searchDao.find(type.getId(), query), query.getLimit()));
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Time for executing query( " + query.getQuery() + ", <allTypeIds>):\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
             }
         }
         return results;
@@ -101,6 +108,7 @@ public class SearchService implements ISearchService {
     }
 
     private VeriniceSearchResultTable processSearchResponse(String elementTypeId, MultiSearchResponse msr, int limit) {
+        long startTime = System.currentTimeMillis();
         List<SearchHit> hitList = createHitList(msr, limit);
         String identifier = "";
         VeriniceSearchResultTable results = new VeriniceSearchResultTable(elementTypeId, getEntityName(elementTypeId), getPropertyIds(elementTypeId));
@@ -117,6 +125,9 @@ public class SearchService implements ISearchService {
             }
             results.addVeriniceSearchResultRow(result);
 
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Time for executing processSearchResponse:\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
         }
         return results;
     }
