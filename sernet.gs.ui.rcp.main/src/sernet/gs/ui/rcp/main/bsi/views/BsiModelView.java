@@ -25,8 +25,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
@@ -121,7 +119,6 @@ import sernet.verinice.rcp.tree.TreeUpdateListener;
  * 
  * @author koderman[at]sernet[dot]de *
  */
-@SuppressWarnings("restriction")
 public class BsiModelView extends RightsEnabledView
         implements IAttachedToPerspective, ILinkedWithEditorView {
 
@@ -172,6 +169,7 @@ public class BsiModelView extends RightsEnabledView
     private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
 
     public BsiModelView() {
+        
         elementManager = new ElementManager();
     }
     
@@ -188,7 +186,6 @@ public class BsiModelView extends RightsEnabledView
         super.dispose();
     }
 
-    
     public void setNullModel() {
         model = new NullModel();
 
@@ -248,6 +245,7 @@ public class BsiModelView extends RightsEnabledView
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
+
         try {
             initView(parent);
             startInitDataJob();
@@ -255,6 +253,8 @@ public class BsiModelView extends RightsEnabledView
             LOG.error("Error while creating organization view", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.BsiModelView_7);
         }
+
+        loadItBaselineProtectionCatalogs();
     }
 
     private void initView(Composite parent) {
@@ -329,6 +329,11 @@ public class BsiModelView extends RightsEnabledView
             };
             CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
         }
+    }
+
+    private static void loadItBaselineProtectionCatalogs() {
+        WorkspaceJob job = new OpenCataloguesJob(Messages.BSIMassnahmenView_0);
+        JobScheduler.scheduleInitJob(job);
     }
 
     private void fillContextMenu(IMenuManager manager) {
@@ -409,6 +414,7 @@ public class BsiModelView extends RightsEnabledView
     }
 
     private void makeActions() {
+
         final int newSelDefaultSize = 10;
         selectEqualsAction = new Action() {
 
@@ -424,7 +430,7 @@ public class BsiModelView extends RightsEnabledView
 
                     try {
                         LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<BausteinUmsetzung>(
-                                        BausteinUmsetzung.class);
+                                BausteinUmsetzung.class);
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
                         List<BausteinUmsetzung> bausteine = command.getElements();
 
@@ -463,8 +469,10 @@ public class BsiModelView extends RightsEnabledView
                 getViewSite().getWorkbenchWindow());
 
         doubleClickAction = new Action() {
+
             @Override
             public void run() {
+
                 final int wizardWidth = 800;
                 final int wizardHeight = 600;
                 Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
@@ -479,7 +487,6 @@ public class BsiModelView extends RightsEnabledView
                     wizDialog.setPageSize(wizardWidth, wizardHeight);
                     wizDialog.open();
                 } else {
-                    // open editor:
                     EditorFactory.getInstance().updateAndOpenObject(sel);
                 }
             }
@@ -494,8 +501,10 @@ public class BsiModelView extends RightsEnabledView
                 new TagFilter(viewer));
 
         expandAllAction = new Action() {
+
             @Override
             public void run() {
+
                 expandAll();
             }
         };
@@ -504,8 +513,10 @@ public class BsiModelView extends RightsEnabledView
                 ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
         collapseAction = new Action() {
+
             @Override
             public void run() {
+
                 viewer.collapseAll();
             }
         };
@@ -514,8 +525,10 @@ public class BsiModelView extends RightsEnabledView
                 ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
         linkWithEditorAction = new Action(Messages.BsiModelView_6, IAction.AS_CHECK_BOX) {
+
             @Override
             public void run() {
+
                 toggleLinking(isChecked());
             }
         };
