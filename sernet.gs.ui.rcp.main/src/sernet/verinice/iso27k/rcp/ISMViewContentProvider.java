@@ -40,12 +40,12 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IParameter;
 import sernet.verinice.iso27k.rcp.action.TagFilter;
 import sernet.verinice.iso27k.rcp.action.TypeFilter;
-import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.ElementComparator;
 import sernet.verinice.model.common.ElementFilter;
 import sernet.verinice.model.common.ITitleAdaptor;
 import sernet.verinice.rcp.tree.TreeContentProvider;
+import sernet.verinice.service.commands.RetrieveCnATreeElement;
 
 /**
  * Content provider for BSI model elements.

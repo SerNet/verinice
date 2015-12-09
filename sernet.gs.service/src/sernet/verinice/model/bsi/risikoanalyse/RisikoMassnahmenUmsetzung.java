@@ -39,6 +39,7 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
     private RisikoMassnahme massnahme;
 
     public static final String TYPE_ID = "mnums"; //$NON-NLS-1$
+    public static final String HIBERNATE_TYPE_ID = "risiko-massnahmen-umsetzung" ; //$NON-NLS-1$
 
     public RisikoMassnahmenUmsetzung(CnATreeElement superParent, GefaehrdungsUmsetzung myParent, RisikoMassnahme massnahme) {
         super();
@@ -90,7 +91,6 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
      * @return - the parent element "parent" (IGefaehrdungsBaumElement)
      */
     public IGefaehrdungsBaumElement getGefaehrdungsBaumParent() {
-        // TODO Auto-generated method stub
         return parent;
     }
 

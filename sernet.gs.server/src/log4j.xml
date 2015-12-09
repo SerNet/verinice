@@ -32,17 +32,12 @@
     <!-- 
     <logger name="sernet.verinice.web">
         <level value="DEBUG" />
-    </logger>
-     -->
-    <!--
+    </logger> 
     <logger name="org.hibernate.SQL">
         <level value="DEBUG" />
     </logger>
     -->
     
-    <logger name="sernet.verinice.bpm.TaskService">
-        <level value="DEBUG" />
-    </logger>
     
 	<!-- Logger for everything else -->
 	<root>

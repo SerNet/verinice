@@ -106,6 +106,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.SEARCH_CSV_EXPORT_ENCODING, VeriniceCharset.CHARSET_WINDOWS_1250.name());
         
         store.setDefault(PreferenceConstants.DEFAULT_FOLDER_ADDFILE, System.getProperty("user.home"));
+        
+        store.setDefault(PreferenceConstants.EXPORT_RISK_ANALYSIS, true);
 	}
 
 }

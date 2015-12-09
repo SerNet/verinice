@@ -21,6 +21,7 @@ package sernet.verinice.service.sync;
 
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
+import de.sernet.sync.risk.Risk;
 
 /**
  *
@@ -30,10 +31,14 @@ import de.sernet.sync.mapping.SyncMapping;
 public interface IVeriniceArchive {
 
     byte[] getVeriniceXml();
+    
+    byte[] getRiskAnalysisXml();
 
     SyncMapping getSyncMapping();
 
     SyncData getSyncData();
+    
+    Risk getSyncRiskAnalysis();
 
     String getSourceId();
 

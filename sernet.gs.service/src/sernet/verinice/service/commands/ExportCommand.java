@@ -96,14 +96,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 {
     private transient Logger log = Logger.getLogger(ExportCommand.class);
     
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(ExportCommand.class);
-        }
-        return log;
-    }
-    
-    private static final Integer LOCK = Integer.valueOf(0);
+    private static final Object LOCK = new Object();
    
     public static final String PROP_MAX_NUMBER_OF_THREADS = "maxNumberOfThreads";
     public static final int DEFAULT_NUMBER_OF_THREADS = 3;
@@ -112,6 +105,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private List<CnATreeElement> elements;
 	private String sourceId;
     private boolean reImport = false;
+    private boolean exportRiskAnalysis = true;
     private Integer exportFormat;
     private Map<String,String> entityTypesBlackList;   
     private Map<Class,Class> entityClassBlackList;
@@ -124,8 +118,10 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     
     // Fields used on server only
     private transient byte[] xmlData;
+    private transient byte[] xmlDataRiskAnalysis;
     private transient Set<CnALink> linkSet;
     private transient Set<Attachment> attachmentSet;
+    private transient Set<Integer> riskAnalysisIdSet;
     private transient Set<EntityType> exportedEntityTypes;
     private transient Set<String> exportedTypes;    
     private transient CacheManager manager = null;
@@ -166,6 +162,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         this.changedElements = new LinkedList<CnATreeElement>();
         this.linkSet = new HashSet<CnALink>();
         this.attachmentSet = new HashSet<Attachment>();
+        this.riskAnalysisIdSet = new HashSet<Integer>();
         this.exportedTypes = new HashSet<String>();
         this.exportedEntityTypes = new HashSet<EntityType>();
 	}
@@ -178,6 +175,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 	    try {
 	        createFields();
     	    xmlData = export();
+            xmlDataRiskAnalysis = exportRiskAnalysises();
     		
     		if(isVeriniceArchive()) {
     		    result = createVeriniceArchive();
@@ -244,6 +242,31 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ExportFactory.marshal(syncRequest, bos);
 		return bos.toByteArray();
+    }
+    
+    private byte[] exportRiskAnalysises() {
+        if(!isRiskAnalysis()) {
+            return null;
+        }
+        RiskAnalysisExporter exporter = new RiskAnalysisExporter();
+        exporter.setCommandService(getCommandService());
+        exporter.setRiskAnalysisIdSet(riskAnalysisIdSet);
+        exporter.run();
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ExportFactory.marshal(exporter.getRisk(), bos);
+        return bos.toByteArray();
+    }
+
+    private boolean isRiskAnalysis() {
+        return isExportRiskAnalysis() && !riskAnalysisIdSet.isEmpty();
+    }
+    
+    public boolean isExportRiskAnalysis() {
+        return exportRiskAnalysis;
+    }
+    
+    public void setExportRiskAnalysis(boolean exportRiskAnalysis) {
+        this.exportRiskAnalysis = exportRiskAnalysis;
     }
 
     private void exportElement(ExportTransaction exportTransaction) throws CommandException {
@@ -345,9 +368,13 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             ZipOutputStream zipOut = new ZipOutputStream(byteOut);     
             
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.VERINICE_XML, xmlData);
+            if(isRiskAnalysis()) {
+                ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XML, xmlDataRiskAnalysis);
+            }
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.DATA_XSD, StreamFactory.getDataXsdAsStream());
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.MAPPING_XSD, StreamFactory.getMappingXsdAsStream());
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.SYNC_XSD, StreamFactory.getSyncXsdAsStream());
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XSD, StreamFactory.getRiskXsdAsStream());
             ExportFactory.createZipEntry(zipOut, VeriniceArchive.README_TXT, StreamFactory.getReadmeAsStream());
                      
             for (Attachment attachment : getAttachmentSet()) {
@@ -474,6 +501,17 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         exportedEntityTypes.addAll(exportThread.getExportedEntityTypes());
         exportedTypes.addAll(exportThread.getExportedTypes());
         changedElements.addAll(exportThread.getChangedElementList());
+        CnATreeElement element = getElementFromThread(exportThread);
+        if(element!=null && FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
+            riskAnalysisIdSet.add(element.getDbId());
+        }
+    }
+
+    private CnATreeElement getElementFromThread(ExportThread exportThread) {
+        if(exportThread==null || exportThread.getTransaction()==null) {
+            return null;
+        }
+        return exportThread.getTransaction().getElement();
     }
 
 	private boolean isVeriniceArchive() {
@@ -498,19 +536,19 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         return entityClassBlackList;
     }
     
-    /**
-     * @return
-     */
     private Map<String, String> createDefaultEntityTypesBlackList() {
         Map<String, String> blacklist = new HashMap<String, String>();
-        // BSI Risk analyses will not be imported or exported(Bug 194)
-        blacklist.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.TYPE_ID);
+        if(!isExportRiskAnalysis()) {
+            blacklist.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.TYPE_ID);
+        }
         return blacklist;
     }
     
     private Map<Class, Class> createDefaultEntityClassBlackList() {
         Map<Class, Class> blacklist = new HashMap<Class, Class>();
-        blacklist.put(RisikoMassnahmenUmsetzung.class, RisikoMassnahmenUmsetzung.class);
+        if(!isExportRiskAnalysis()) {
+            blacklist.put(RisikoMassnahmenUmsetzung.class, RisikoMassnahmenUmsetzung.class);
+        }
         return blacklist;
     }
 
@@ -644,6 +682,13 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             }
         }
         return number;
+    }
+    
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(ExportCommand.class);
+        }
+        return log;
     }
     
 }

@@ -18,6 +18,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -32,6 +33,8 @@ import sernet.verinice.model.bsi.risikoanalyse.IGefaehrdungsBaumElement;
 public class GefaehrdungTreeViewerContentProvider implements
 		ITreeContentProvider {
 
+    private static final Logger LOG = Logger.getLogger(GefaehrdungTreeViewerContentProvider.class);
+    
 	/**
 	 * Returns the child elements of the given parent element.
 	 * 
@@ -44,6 +47,7 @@ public class GefaehrdungTreeViewerContentProvider implements
 			return elmt.getGefaehrdungsBaumChildren().toArray();
 
 		} catch (Exception e) {
+            LOG.error("Error in getChildren()", e);
 			return null;
 		}
 	}
@@ -59,6 +63,7 @@ public class GefaehrdungTreeViewerContentProvider implements
 			IGefaehrdungsBaumElement elmt = (IGefaehrdungsBaumElement) element;
 			return elmt.getGefaehrdungsBaumParent();
 		} catch (Exception e) {
+            LOG.error("Error in getParent()", e);
 			return null;
 		}
 	}
@@ -78,6 +83,7 @@ public class GefaehrdungTreeViewerContentProvider implements
 				return elmt.getGefaehrdungsBaumChildren().size() > 0;
 			}
 		} catch (Exception e) {
+		    LOG.error("Error in hasChildren()", e);
 			return false;
 		}
 	}

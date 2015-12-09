@@ -82,6 +82,9 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
      */
     @Override
     public boolean performDrop(Object data) {
+    	if(LOG.isDebugEnabled()){
+            LOG.debug("performDrop, data: " + data);
+        }
         Object toDrop = data;
         Object selectedData = null;
         if(data == null){
@@ -141,7 +144,9 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("validateDrop, target: " + ((CnATreeElement)target).getTitle());
+            LOG.debug("validateDrop, target: " + ((CnATreeElement)target).getTitle() +
+            		", transfer type class: " + transferType.getClass().getName() +
+            		", transfer-type-id: " + transferType.type);
         }
         if(!checkRights()){
             return false;
@@ -162,18 +167,30 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         }
         if(target instanceof BausteinUmsetzung && !(IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType))){
             isActive = false;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("target is BausteinUmsetzung,  IBSIStrukturElementTransfer.getInstance().isSupportedType(..) return false");
+            }
             return isActive;
         }
         else if(target instanceof IBSIStrukturElement && isSupportedData(transferType)){
             isActive = true;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("target is IBSIStrukturElement,  isSupportedData return false");
+            }
             return isActive;
         }
         if(target instanceof IISO27kGroup && BausteinElementTransfer.getInstance().isSupportedType(transferType)){
             isActive = false;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("target is IISO27kGroup,  IISO27kGroup return true");
+            }
             return isActive;
         }
         if(IGSModelElementTransfer.getInstance().isSupportedType(transferType)){
             isActive = false;
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("IGSModelElementTransfer.getInstance().isSupportedType(..) return true");
+            }
             return isActive;
         }
         isActive = true;

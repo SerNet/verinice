@@ -15,10 +15,14 @@ files                 directory containing all attached files
   |
   +- ...
   |
-verinice.xml          XML file containing data of all verinice elements
+verinice.xml               XML file containing data of verinice elements
   |
-sync.xsd              XML Schema / XML Schema Definition (XSD) for verinice.xml
+verinice-risk-analysis.xml XML file containing data of verinice risk analyses (optional)
   |
-data.xsd              XSD for verinice.xml
+sync.xsd                   XML Schema / XML Schema Definition (XSD) for verinice.xml
   |
-mapping.xsd           XSD for verinice.xml
+data.xsd                   XSD for verinice.xml  
+  |
+mapping.xsd                XSD for verinice.xml 
+  |
+risk.xsd                   XSD for verinice-risk-analysis.xml

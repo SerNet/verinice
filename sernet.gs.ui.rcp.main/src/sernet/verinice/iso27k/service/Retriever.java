@@ -30,8 +30,8 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.PropertyList;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.RetrieveCnATreeElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

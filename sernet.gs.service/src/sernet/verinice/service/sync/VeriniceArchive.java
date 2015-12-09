@@ -30,8 +30,14 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.xml.bind.JAXB;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+
+import de.sernet.sync.data.SyncData;
+import de.sernet.sync.risk.Risk;
+import de.sernet.sync.sync.SyncRequest;
 
 /**
  * Class to read the content of a verinice archive.
@@ -45,22 +51,28 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     public static final String EXTENSION_VERINICE_ARCHIVE = ".vna"; //$NON-NLS-1$
     
     public static final String VERINICE_XML = "verinice.xml"; //$NON-NLS-1$
+    public static final String RISK_XML = "verinice-risk-analysis.xml"; //$NON-NLS-1$
     public static final String DATA_XSD = "data.xsd"; //$NON-NLS-1$
     public static final String MAPPING_XSD = "mapping.xsd"; //$NON-NLS-1$
     public static final String SYNC_XSD = "sync.xsd"; //$NON-NLS-1$
+    public static final String RISK_XSD = "risk.xsd"; //$NON-NLS-1$
     public static final String README_TXT = "readme.txt"; //$NON-NLS-1$
     
     public static final String[] ALL_STATIC_FILES = new String[]{
         VERINICE_XML,
+        RISK_XML,
         DATA_XSD,
         MAPPING_XSD,
         SYNC_XSD,
+        RISK_XSD,
         README_TXT,
     };
     
     static {
         Arrays.sort(ALL_STATIC_FILES);
     }
+    
+    private Risk riskData = null;
     
     private String uuid;
     
@@ -97,15 +109,20 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     
     @Override
     public byte[] getFileData(String fileName) {
-        StringBuilder sb = new StringBuilder();       
-        sb.append(getTempDirName()).append(File.separator).append(fileName);
-        String fullPath = sb.toString();
+        String fullPath = getFullPath(fileName);
         try {
             return FileUtils.readFileToByteArray(new File(fullPath));
         } catch (Exception e) {
             LOG.error("Error while loading file data: " + fullPath, e);
             return null;
         }
+    }
+
+    private String getFullPath(String fileName) {
+        StringBuilder sb = new StringBuilder();       
+        sb.append(getTempDirName()).append(File.separator).append(fileName);
+        String fullPath = sb.toString();
+        return fullPath;
     }
     
     /**
@@ -147,6 +164,22 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
         zis.close();      
     }
     
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.sync.IVeriniceArchive#getSyncRiskAnalysis()
+     */
+    @Override
+    public Risk getSyncRiskAnalysis() {
+        if(isRiskAnalysis() && riskData==null) {
+            riskData = JAXB.unmarshal(new ByteArrayInputStream(getRiskAnalysisXml()), Risk.class);  
+        }
+        return riskData;
+    }
+
+
+    private boolean isRiskAnalysis() {
+        return new File(getFullPath(RISK_XML)).exists();
+    }
+
     /**
      * Returns all entry names of the archive.
      * 
@@ -165,6 +198,14 @@ public class VeriniceArchive extends PureXml implements IVeriniceArchive {
     @Override
     public byte[] getVeriniceXml() {
         return getFileData(VERINICE_XML);
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.sync.IVeriniceArchive#getRiskAnalysisXml()
+     */
+    @Override
+    public byte[] getRiskAnalysisXml() {
+        return (isRiskAnalysis()) ? getFileData(RISK_XML) : null;
     }
 
     /**

@@ -193,7 +193,11 @@ public final class ExportFactory {
         }
         String extId = element.getExtId();
         if(extId==null || extId.isEmpty()) {
-            extId = element.getId();
+            if(element.getEntity()!=null) {
+                extId = element.getEntity().getId();
+            } else {
+                extId = element.getId();
+            }
         }
         return extId;
     }

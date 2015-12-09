@@ -91,13 +91,13 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		
         BooleanFieldEditor showGsmIsmDecorator = new BooleanFieldEditor(
                 PreferenceConstants.SHOW_GSMISM_DECORATOR,
-                Messages.getString("GeneralSettingsPage.ShowGsmIsmDecorator"),
+                Messages.getString("GeneralSettingsPage.ShowGsmIsmDecorator"), //$NON-NLS-1$
                 getFieldEditorParent()); //$NON-NLS-1$
         addField(showGsmIsmDecorator);
         
         BooleanFieldEditor showRiskAnalysisDecorator = new BooleanFieldEditor(
                 PreferenceConstants.SHOW_RISK_ANALYSIS_DECORATOR,
-                Messages.getString("GeneralSettingsPage.ShowRiskAnalysisDecorator"),
+                Messages.getString("GeneralSettingsPage.ShowRiskAnalysisDecorator"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(showRiskAnalysisDecorator);
 		
@@ -112,6 +112,9 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		
 		BooleanFieldEditor cutInheritPermissions = new BooleanFieldEditor(PreferenceConstants.CUT_INHERIT_PERMISSIONS, Messages.getString("GeneralSettingsPage.CutInheritPermissions"), getFieldEditorParent()); //$NON-NLS-1$
         addField(cutInheritPermissions);
+        
+        BooleanFieldEditor exportRiskAnalysis = new BooleanFieldEditor(PreferenceConstants.EXPORT_RISK_ANALYSIS, Messages.getString("GeneralSettingsPage.13"), getFieldEditorParent()); //$NON-NLS-1$
+        addField(exportRiskAnalysis);
 		
 		ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$

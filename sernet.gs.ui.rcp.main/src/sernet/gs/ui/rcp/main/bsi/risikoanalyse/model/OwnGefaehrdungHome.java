@@ -20,11 +20,11 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
 import java.util.List;
 
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
+import sernet.verinice.service.commands.LoadGenericElementByType;
 import sernet.verinice.service.commands.SaveElement;
 
 public final class OwnGefaehrdungHome {

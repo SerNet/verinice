@@ -31,7 +31,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindResponsiblePerson;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
@@ -46,6 +45,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.LoadCnAElementsByEntityIds;
 import sernet.verinice.service.commands.LoadConfiguration;
+import sernet.verinice.service.commands.LoadGenericElementByType;
 
 /**
  * Iterates over all {@link MassnahmenUmsetzung} instances and prepares the following collections containing
