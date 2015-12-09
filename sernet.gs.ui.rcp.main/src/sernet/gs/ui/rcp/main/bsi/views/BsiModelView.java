@@ -284,9 +284,6 @@ public class BsiModelView extends RightsEnabledView
         setNullModel();
     }
 
-    /**
-     * 
-     */
     protected void startInitDataJob() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.BsiModelView_5) {
             @Override
