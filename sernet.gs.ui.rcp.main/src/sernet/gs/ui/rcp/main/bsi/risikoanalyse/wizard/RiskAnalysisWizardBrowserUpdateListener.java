@@ -1,7 +1,6 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
@@ -20,7 +19,7 @@ public final class RiskAnalysisWizardBrowserUpdateListener implements
     private static final Logger LOG = Logger.getLogger(RiskAnalysisWizardBrowserUpdateListener.class);
     private Object viewedElement = null;
 
-    public RiskAnalysisWizardBrowserUpdateListener(SerializeBrowserLoadingListener browserLoadingListener, CheckboxTableViewer viewer) {
+    public RiskAnalysisWizardBrowserUpdateListener(SerializeBrowserLoadingListener browserLoadingListener, TableViewer viewer) {
         this.viewer = viewer;
         this.browserLoadingListener = browserLoadingListener;
     }
