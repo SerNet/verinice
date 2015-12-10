@@ -57,11 +57,9 @@ import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
-import sernet.gs.service.GSServiceException;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
-import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
 import sernet.gs.ui.rcp.main.bsi.views.SerializeBrowserLoadingListener;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.LoadAssociatedGefaehrdungen;
@@ -70,7 +68,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
-import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
 /**
  * WizardPage which lists all Gefaehrdungen from BSI IT-Grundschutz-Kataloge and
@@ -97,16 +94,20 @@ public class ChooseGefaehrdungPage extends WizardPage {
     // SWT & JFace
     protected static final Point ADD_EDIT_REMOVE_BUTTON_SIZE = new Point(70, 30);
     protected static final int BUTTONS_GRID_COLUMN_AMOUNT = 5;
-    protected static final int NUM_COLS_ROOT = 2;
     protected static final int NUM_COLS_BUTTONS = 3;
     protected static final int NUM_COLS_FILTERS = 1;
     protected static final int NUM_COLS_CONTROLS = 2;
+    protected static final int WIDTH_COL_NAME = 400;
+    protected static final int WIZARD_BROWSER_WIDTH = 700;
+    protected static final int WIZARD_NUM_COLS_ROOT = 2;
+
     private static final Point MARGINS = new Point(5, 5);
     private static final Point SPACING = new Point(5, 5);
 
     private Browser browser;
     private SerializeBrowserLoadingListener browserLoadingListener;
     private Text textSearch;
+    private RiskAnalysisWizardBrowserUpdateListener browserListener;
 
     /**
      * Constructor sets title an description of WizardPage.
@@ -126,17 +127,21 @@ public class ChooseGefaehrdungPage extends WizardPage {
     @Override
     public void createControl(Composite parent) {
     
-        rootContainer = new Composite(parent, SWT.BORDER);
+        rootContainer = new Composite(parent, SWT.NONE);
        
         setLeftColumn(rootContainer);
         setRightColumn(rootContainer);
-
         addControls(rootContainer);
-        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_ROOT).margins(MARGINS).spacing(SPACING).generateLayout(rootContainer);
+        GridLayoutFactory.fillDefaults().numColumns(WIZARD_NUM_COLS_ROOT).extendedMargins(5, 5, 5, 5).spacing(SPACING).generateLayout(rootContainer);
 
         setControl(rootContainer);
         rootContainer.layout();
         addListeners();
+    }
+
+    public void refresh() {
+        viewer.refresh();
+        browserListener.selectionChanged(null);
     }
 
     private void setRightColumn(Composite parent) {
@@ -145,17 +150,17 @@ public class ChooseGefaehrdungPage extends WizardPage {
         browser = new Browser(rightColumn, SWT.BORDER);
         browserLoadingListener = new SerializeBrowserLoadingListener(browser);
         browser.addProgressListener(browserLoadingListener);
-        GridLayoutFactory.fillDefaults().margins(MARGINS).spacing(SPACING).generateLayout(rightColumn);
+        GridLayoutFactory.fillDefaults().extendedMargins(0, 5, 5, 5).generateLayout(rightColumn);
         browser.setLayoutData(new GridData(GridData.FILL_BOTH
                 | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
         GridDataFactory.generate(rightColumn, 1, 1);
-        GridDataFactory.fillDefaults().hint(500, SWT.DEFAULT).grab(false, true).applyTo(rightColumn);
+        GridDataFactory.fillDefaults().hint(WIZARD_BROWSER_WIDTH, SWT.LONG).grab(false, true).applyTo(rightColumn);
     }
 
     private void setLeftColumn(Composite parent) {
         
         /* CheckboxTableViewer */
-        Composite leftColumn = new Composite(parent, SWT.BORDER);
+        Composite leftColumn = new Composite(parent, SWT.NONE);
         viewer = CheckboxTableViewer.newCheckList(leftColumn, SWT.BORDER | SWT.FULL_SELECTION);
         final Table table = viewer.getTable();
 
@@ -173,21 +178,22 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
         nameColumn = new TableViewerColumn(viewer, SWT.LEFT);
         nameColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_6);
-        nameColumn.getColumn().setWidth(10);
 
         categoryColumn = new TableViewerColumn(viewer, SWT.LEFT);
         categoryColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_7);
 
+
+
         table.layout();
-        GridLayoutFactory.fillDefaults().margins(MARGINS).spacing(SPACING).generateLayout(leftColumn);
+        GridLayoutFactory.fillDefaults().extendedMargins(5, 5, 5, 5).spacing(SPACING).generateLayout(leftColumn);
         GridDataFactory.generate(leftColumn, 1, 1);
-        GridDataFactory.fillDefaults().hint(1200, 800).grab(true, true).applyTo(leftColumn);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(leftColumn);
     }
 
     private void addControls(Composite parent) {
 
 
-        Composite controls = new Composite(parent, SWT.BORDER);
+        Composite controls = new Composite(parent, SWT.NONE);
         addFilters(controls);
 
         addButtons(controls);
@@ -197,7 +203,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
     }
 
     private void addFilters(Composite parent) {
-        Composite compositeFilter = new Composite(parent, SWT.BORDER);
+        Composite compositeFilter = new Composite(parent, SWT.NONE);
 
         /* filter button - OwnGefaehrdungen only */
         buttonOwnGefaehrdungen = new Button(compositeFilter, SWT.CHECK);
@@ -215,7 +221,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
         GridLayoutFactory.fillDefaults().numColumns(2).margins(MARGINS).spacing(SPACING).generateLayout(search);
         GridDataFactory.fillDefaults();
         GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_FILTERS).margins(MARGINS).spacing(SPACING).generateLayout(compositeFilter);
-        GridDataFactory.fillDefaults().hint(100, SWT.DEFAULT).align(SWT.LEFT, SWT.TOP).applyTo(textSearch);
+        GridDataFactory.fillDefaults().hint(125, SWT.DEFAULT).align(SWT.LEFT, SWT.TOP).applyTo(textSearch);
     }
 
     private void addButtons(Composite parent) {
@@ -265,7 +271,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
                     checkAllSelectedGefaehrdungen();
                 } else {
                     viewer.removeFilter(gefaehrdungFilter);
-                    viewer.refresh();
+                    refresh();
                     assignBausteinGefaehrdungen();
                     checkAllSelectedGefaehrdungen();
                 }
@@ -312,48 +318,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
 
         });
 
-        // TODO rmotza finish
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                Object eventSource = event.getSource();
-                if (eventSource == viewer) {
-
-                    IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-
-                    if (selection != null && !selection.isEmpty()) {
-                        Object firstElement = selection.getFirstElement();
-
-                        if (firstElement instanceof OwnGefaehrdung) {
-                            OwnGefaehrdung ownGefaehrdung = (OwnGefaehrdung) firstElement;
-                            if (ownGefaehrdung != null) {
-                                browserLoadingListener.setText(ownGefaehrdung.getBeschreibung());
-                                // } else {
-                                // browserLoadingListener.setText("no
-                                // description available");
-                                // return;
-
-                            }
-                        } else if (firstElement instanceof RisikoMassnahmenUmsetzung) {
-                            RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) firstElement;
-                            if (risikoMassnahmenUmsetzung.getText() != null) {
-                                browserLoadingListener.setText(risikoMassnahmenUmsetzung.getText());
-                            }
-                        } else {
-                            try {
-                                String htmlText = HtmlWriter.getHtml(firstElement);
-                                browserLoadingListener.setText(htmlText);
-                            } catch (GSServiceException e1) {
-                                // TODO Auto-generated catch block
-                                e1.printStackTrace();
-                            }
-                        }
-
-                    }
-                }
-            }
-        });
+        browserListener = new RiskAnalysisWizardBrowserUpdateListener(browserLoadingListener, viewer);
+        viewer.addSelectionChangedListener(browserListener);
 
         /* listener opens edit Dialog for the selected Gefaehrdung */
         viewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -373,7 +339,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
                     OwnGefaehrdung selectedOwnGefaehrdung = (OwnGefaehrdung) selectedGefaehrdung;
                     final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), selectedOwnGefaehrdung);
                     dialog.open();
-                    viewer.refresh();
+                    refresh();
                 }
             }
         });
@@ -464,7 +430,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
                     OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
                     final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), ownGefSelected);
                     dialog.open();
-                    viewer.refresh();
+                    refresh();
                 }
             }
         });
@@ -593,6 +559,7 @@ public class ChooseGefaehrdungPage extends WizardPage {
         imageColumn.getColumn().pack();
         numberColumn.getColumn().pack();
         nameColumn.getColumn().pack();
+        nameColumn.getColumn().setWidth(Math.min(nameColumn.getColumn().getWidth(), WIDTH_COL_NAME));
         categoryColumn.getColumn().pack();
     }
 
@@ -639,6 +606,8 @@ public class ChooseGefaehrdungPage extends WizardPage {
             ExceptionUtil.log(e, Messages.ChooseGefaehrdungPage_20);
         }
     }
+
+
 
     /**
      * Filter to extract all OwnGefaehrdungen in CheckboxTableViewer.

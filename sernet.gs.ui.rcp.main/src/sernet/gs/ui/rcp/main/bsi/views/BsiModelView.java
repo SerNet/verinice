@@ -472,9 +472,7 @@ public class BsiModelView extends RightsEnabledView
 
             @Override
             public void run() {
-
-                final int wizardWidth = 800;
-                final int wizardHeight = 600;
+                
                 Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 
                 if (sel instanceof FinishedRiskAnalysis) {
@@ -482,9 +480,9 @@ public class BsiModelView extends RightsEnabledView
                     RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis.getParent(),
                             analysis);
                     wizard.init(PlatformUI.getWorkbench(), null);
-                    WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(new Shell(),
-                            wizard);
-                    wizDialog.setPageSize(wizardWidth, wizardHeight);
+                    WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(new Shell(), wizard);
+                    wizDialog.setPageSize(wizard.getWidth(), wizard.getHeight());
+
                     wizDialog.open();
                 } else {
                     EditorFactory.getInstance().updateAndOpenObject(sel);
