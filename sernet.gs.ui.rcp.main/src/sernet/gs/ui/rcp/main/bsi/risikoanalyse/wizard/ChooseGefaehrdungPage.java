@@ -24,6 +24,7 @@ import java.util.List;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
+import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -63,7 +64,7 @@ import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
  * @author ahanekop[at]sernet[dot]de
  */
 @SuppressWarnings("restriction")
-public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage {
+public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableViewer> {
 
     private TableViewerColumn checkboxColumn;
     private TableViewerColumn imageColumn;
@@ -94,7 +95,6 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage {
 
         categoryColumn = new TableViewerColumn(viewer, SWT.LEFT);
         categoryColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_7);
-
     }
     
     /**
@@ -215,13 +215,13 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage {
                 if (text.getText().length() > 0) {
 
                     ViewerFilter[] filters = viewer.getFilters();
-                    SearchFilter thisFilter = null;
+                    RiskAnalysisWizardPageSearchFilter thisFilter = null;
                     boolean contains = false;
 
                     for (ViewerFilter item : filters) {
-                        if (item instanceof SearchFilter) {
+                        if (item instanceof RiskAnalysisWizardPageSearchFilter) {
                             contains = true;
-                            thisFilter = (SearchFilter) item;
+                            thisFilter = (RiskAnalysisWizardPageSearchFilter) item;
                         }
                     }
                     if (contains) {
@@ -245,6 +245,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage {
                 }
             }
         });
+
         /* Listener opens MessageDialog and deletes selected Gefaehrdung */
         buttonDelete.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -505,15 +506,10 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage {
         }
     }
 
-    @Override
-    protected void addViewer(Composite parent) {
-        // TODO rmotza Auto-generated method stub
-
-    }
 
     @Override
-    protected void addLeftColumn(Composite parent) {
-        // TODO rmotza Auto-generated method stub
-
+    protected CheckboxTableViewer initializeViewer(Composite parent) {
+        return CheckboxTableViewer.newCheckList(parent, SWT.BORDER | SWT.FULL_SELECTION);
     }
+
 }

@@ -29,14 +29,10 @@ import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -48,7 +44,7 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
  * 
  * @author ahanekop[at]sernet[dot]de
  */
-public class RiskHandlingPage extends WizardPage {
+public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
 
     private static final Logger LOG = Logger.getLogger(RiskHandlingPage.class);
     
@@ -56,7 +52,11 @@ public class RiskHandlingPage extends WizardPage {
 	private TableColumn numberColumn;
 	private TableColumn nameColumn;
 	private TableColumn choiceColumn;
-	private TableViewer viewer;
+
+    private static final int imgColWidth = 35;
+    private static final int numColWidth = 100;
+    private static final int nameColWidth = numColWidth;
+    private static final int choiceColWidth = 200;
 	private SearchFilter searchFilter = new SearchFilter();
 	public static final String IMG_COLUMN_ID = "image"; //$NON-NLS-1$
 	public static final String NUMBER_COLUMN_ID = "number"; //$NON-NLS-1$
@@ -67,135 +67,7 @@ public class RiskHandlingPage extends WizardPage {
 	 * Constructor sets title an description of WizardPage.
 	 */
 	protected RiskHandlingPage() {
-		super(Messages.RiskHandlingPage_4);
-		setTitle(Messages.RiskHandlingPage_5);
-		setDescription(Messages.RiskHandlingPage_6);
-	}
-	
-	/**
-	 * Adds widgets to the wizardPage.
-	 * Called once at startup of Wizard.
-	 * 
-	 *  @param parent the parent Composite
-	 */
-	@Override
-    public void createControl(Composite parent) {
-	    
-	    final int imgColWidth = 35;
-	    final int numColWidth = 100;
-	    final int nameColWidth = numColWidth;
-	    final int choiceColWidth = 200;
-	    
-	    Composite composite = new Composite(parent, SWT.NULL);
-		final GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		composite.setLayout(gridLayout);
-		setControl(composite);
-
-		/* TableViewer */
-		viewer = new TableViewer(composite, SWT.FULL_SELECTION);
-		final Table table = viewer.getTable();
-		GridData gridTable = new GridData();
-	    gridTable.grabExcessHorizontalSpace = true;
-	    gridTable.grabExcessVerticalSpace = true;
-	    gridTable.horizontalSpan = 2;
-	    gridTable.horizontalAlignment = SWT.FILL;
-	    gridTable.verticalAlignment = SWT.FILL;
-	    table.setLayoutData(gridTable);
-	    table.setHeaderVisible(true);
-		table.setLinesVisible(true);
-	    
-		imgColumn = new TableColumn(table, SWT.LEFT);
-		imgColumn.setText(""); //$NON-NLS-1$
-		imgColumn.setWidth(imgColWidth);
-		
-		numberColumn = new TableColumn(table, SWT.LEFT);
-		numberColumn.setText(Messages.RiskHandlingPage_8);
-		numberColumn.setWidth(numColWidth);
-		
-		nameColumn = new TableColumn(table, SWT.LEFT);
-		nameColumn.setText(Messages.RiskHandlingPage_9);
-		nameColumn.setWidth(nameColWidth);
-		
-		choiceColumn = new TableColumn(table, SWT.LEFT);
-		choiceColumn.setText(Messages.RiskHandlingPage_10);
-		choiceColumn.setWidth(choiceColWidth);
-		
-		/* needed for PropertiesComboBoxCellModifier */
-		viewer.setColumnProperties(new String[] {
-				IMG_COLUMN_ID,
-				NUMBER_COLUMN_ID,
-				NAME_COLUMN_ID,
-				CHOICE_COLUMN_ID
-		});
-		
-		final ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(table, 
-				GefaehrdungsUmsetzung.getAlternativenText(), 
-				SWT.READ_ONLY);
-		choiceEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
-		
-		// allow modification of risk treatment:
-	    viewer.setCellEditors(new CellEditor[] {null,null,null,choiceEditor});
-	    viewer.setCellModifier(new PropertiesComboBoxCellModifier(viewer, (RiskAnalysisWizard)getWizard(), this));
-	    
-		/* group the Filter checkboxes with composite */
-		Composite compositeFilter = new Composite(composite, SWT.NULL);
-		GridLayout gridLayoutFilters = new GridLayout();
-        gridLayoutFilters.numColumns = 2;
-        compositeFilter.setLayout(gridLayoutFilters);
-        GridData gridCompositeFilter = new GridData();
-        gridCompositeFilter.horizontalAlignment = SWT.LEFT;
-        gridCompositeFilter.verticalAlignment = SWT.TOP;
-	    compositeFilter.setLayoutData(gridCompositeFilter);
-	    
-	    /* filter button - search */
-	    new Label(compositeFilter, SWT.NULL).setText(Messages.RiskHandlingPage_11);
-	    Text search = new Text(compositeFilter, SWT.SINGLE | SWT.BORDER);
-	    GridData gridSearch = new GridData();
-	    gridSearch.horizontalAlignment = SWT.FILL;
-	    search.setLayoutData(gridSearch);
-	    
-	    /* Listener adds/removes Filter searchFilter */
-	    search.addModifyListener(new ModifyListener(){
-	    	
-	    	/**
-			 * Adds/removes Filter when Text is modified depending on event.
-			 * 
-			 * @param event event containing information about the selection
-			 */
-	    	@Override
-            public void modifyText(ModifyEvent event) {
-				Text text = (Text) event.widget;
-				if (text.getText().length() > 0) {
-					
-					ViewerFilter[] filters = viewer.getFilters();
-					SearchFilter thisFilter = null;
-					boolean contains = false;
-					
-					for (ViewerFilter item : filters) {
-						if (item instanceof SearchFilter) {
-							contains = true;
-							thisFilter = (SearchFilter) item;
-						}
-					}
-					if (contains) {
-						/* filter is already active - update filter */
-						thisFilter.setPattern(text.getText());
-						viewer.refresh();
-						
-					} else {
-						/* filter is not active - add */
-						searchFilter.setPattern(text.getText());
-						viewer.addFilter(searchFilter);
-						viewer.refresh();
-					}
-				} else {
-					viewer.removeFilter(searchFilter);
-					viewer.refresh();
-					packAllColumns();
-				}
-			}
-	    });
+        super(Messages.RiskHandlingPage_4, Messages.RiskHandlingPage_5, Messages.RiskHandlingPage_6);
 	}
 	
 	/**
@@ -221,6 +93,20 @@ public class RiskHandlingPage extends WizardPage {
 		List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = 
 			((RiskAnalysisWizard)getWizard()).getAllGefaehrdungsUmsetzungen();
 
+        final ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(viewer.getTable(),
+                GefaehrdungsUmsetzung.getAlternativenText(),
+                SWT.READ_ONLY);
+        choiceEditor.setActivationStyle(ComboBoxCellEditor.DROP_DOWN_ON_MOUSE_ACTIVATION);
+        viewer.setCellEditors(new CellEditor[] { null, null, null, choiceEditor });
+        viewer.setCellModifier(new PropertiesComboBoxCellModifier(viewer, (RiskAnalysisWizard) getWizard(), this));
+
+        /* needed for PropertiesComboBoxCellModifier */
+        viewer.setColumnProperties(new String[] {
+                IMG_COLUMN_ID,
+                NUMBER_COLUMN_ID,
+                NAME_COLUMN_ID,
+                CHOICE_COLUMN_ID
+        });
 		/* map a domain model object into multiple images and text labels */
 		viewer.setLabelProvider(new TableViewerLabelProvider());
 		/* map domain model into array */
@@ -314,4 +200,81 @@ public class RiskHandlingPage extends WizardPage {
             }		
 		}
 	}
+
+
+    @Override
+    protected void setColumns() {
+        Table table = viewer.getTable();
+
+        imgColumn = new TableColumn(table, SWT.LEFT);
+        imgColumn.setText(""); //$NON-NLS-1$
+        imgColumn.setWidth(imgColWidth);
+
+        numberColumn = new TableColumn(table, SWT.LEFT);
+        numberColumn.setText(Messages.RiskHandlingPage_8);
+        numberColumn.setWidth(numColWidth);
+
+        nameColumn = new TableColumn(table, SWT.LEFT);
+        nameColumn.setText(Messages.RiskHandlingPage_9);
+        nameColumn.setWidth(nameColWidth);
+
+        choiceColumn = new TableColumn(table, SWT.LEFT);
+        choiceColumn.setText(Messages.RiskHandlingPage_10);
+        choiceColumn.setWidth(choiceColWidth);
+
+    }
+
+    @Override
+    protected void addSpecificListenersForPage() {
+
+        /* Listener adds/removes Filter searchFilter */
+        textSearch.addModifyListener(new ModifyListener() {
+
+            /**
+             * Adds/removes Filter when Text is modified depending on event.
+             * 
+             * @param event
+             *            event containing information about the selection
+             */
+            @Override
+            public void modifyText(ModifyEvent event) {
+                Text text = (Text) event.widget;
+                if (text.getText().length() > 0) {
+
+                    ViewerFilter[] filters = viewer.getFilters();
+                    SearchFilter thisFilter = null;
+                    boolean contains = false;
+
+                    for (ViewerFilter item : filters) {
+                        if (item instanceof SearchFilter) {
+                            contains = true;
+                            thisFilter = (SearchFilter) item;
+                        }
+                    }
+                    if (contains) {
+                        /* filter is already active - update filter */
+                        thisFilter.setPattern(text.getText());
+                        viewer.refresh();
+
+                    } else {
+                        /* filter is not active - add */
+                        searchFilter.setPattern(text.getText());
+                        viewer.addFilter(searchFilter);
+                        viewer.refresh();
+                    }
+                } else {
+                    viewer.removeFilter(searchFilter);
+                    viewer.refresh();
+                    packAllColumns();
+                }
+            }
+        });
+
+    }
+
+
+    @Override
+    protected TableViewer initializeViewer(Composite parent) {
+        return new TableViewer(parent, SWT.FULL_SELECTION);
+    }
 }
