@@ -46,6 +46,8 @@ public class Messages extends NLS {
     public static String ProfileDialog_1;
     public static String ProfileDialog_10;
     public static String ProfileDialog_11;
+    public static String ProfileDialog_12;
+    public static String ProfileDialog_13;
     public static String ProfileDialog_2;
     public static String ProfileDialog_3;
     public static String ProfileDialog_4;
