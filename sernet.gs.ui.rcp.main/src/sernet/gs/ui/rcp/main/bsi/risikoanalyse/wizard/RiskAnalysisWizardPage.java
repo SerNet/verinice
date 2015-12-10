@@ -1,13 +1,8 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.viewers.CheckboxTableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
@@ -21,28 +16,27 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.GefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.OwnGefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.views.SerializeBrowserLoadingListener;
 
-public abstract class RiskAnalysisWizardPage extends WizardPage {
+public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends WizardPage {
 
 
     protected Composite rootContainer;
-    protected CheckboxTableViewer viewer;
     protected Button buttonOwnGefaehrdungen, buttonGefaehrdungen;
     protected Text textSearch;
     private Browser browser;
     private RiskAnalysisWizardBrowserUpdateListener browserListener;
     private SerializeBrowserLoadingListener browserLoadingListener;
     protected Button buttonNew, buttonEdit, buttonDelete;
+    protected T viewer;
 
     protected OwnGefaehrdungenFilter ownGefaehrdungFilter = new OwnGefaehrdungenFilter();
     protected GefaehrdungenFilter gefaehrdungFilter = new GefaehrdungenFilter();
-    protected SearchFilter searchFilter = new SearchFilter();
+    protected RiskAnalysisWizardPageSearchFilter searchFilter = new RiskAnalysisWizardPageSearchFilter();
 
-    protected RiskAnalysisWizard riskWizard;
+    private RiskAnalysisWizard riskWizard;
 
     // SWT & JFace
     protected static final Point ADD_EDIT_REMOVE_BUTTON_SIZE = new Point(70, 30);
@@ -70,6 +64,7 @@ public abstract class RiskAnalysisWizardPage extends WizardPage {
         }
         return riskWizard;
     }
+
 
     @Override
     public void createControl(Composite parent) {
@@ -104,11 +99,16 @@ public abstract class RiskAnalysisWizardPage extends WizardPage {
         GridDataFactory.fillDefaults().hint(WIZARD_BROWSER_WIDTH, SWT.LONG).grab(false, true).applyTo(rightColumn);
     }
 
+    /**
+     * function adds a new checkboxTableview. Overwrite to change
+     * 
+     * @param parent
+     */
     protected void setLeftColumn(Composite parent) {
         
         /* CheckboxTableViewer */
         Composite leftColumn = new Composite(parent, SWT.NONE);
-        viewer = CheckboxTableViewer.newCheckList(leftColumn, SWT.BORDER | SWT.FULL_SELECTION);
+        viewer = initializeViewer(leftColumn);
         final Table table = viewer.getTable();
 
         table.setHeaderVisible(true);
@@ -123,6 +123,8 @@ public abstract class RiskAnalysisWizardPage extends WizardPage {
         GridDataFactory.generate(leftColumn, 1, 1);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(leftColumn);
     }
+
+    protected abstract T initializeViewer(Composite parent);
 
     protected abstract void setColumns();
 
@@ -160,7 +162,7 @@ public abstract class RiskAnalysisWizardPage extends WizardPage {
         GridDataFactory.fillDefaults().hint(125, SWT.DEFAULT).align(SWT.LEFT, SWT.TOP).applyTo(textSearch);
     }
 
-    private void addButtons(Composite parent) {
+    protected void addButtons(Composite parent) {
 
         /* group the buttons with Group */
         Group groupButtons = new Group(parent, SWT.SHADOW_ETCHED_OUT);
@@ -198,53 +200,8 @@ public abstract class RiskAnalysisWizardPage extends WizardPage {
     }
 
 
-    protected abstract void addViewer(Composite parent);
-
     protected abstract void addSpecificListenersForPage();
 
-    protected abstract void addLeftColumn(Composite parent);
 
-    /**
-     * Filter to extract all (Own)Gefaehrdungen matching a given String.
-     * 
-     * @author ahanekop[at]sernet[dot]de
-     */
-    class SearchFilter extends ViewerFilter {
-
-        private Pattern pattern;
-
-        /**
-         * Updates the Pattern.
-         * 
-         * @param searchString
-         *            the String to search for
-         */
-        void setPattern(String searchString) {
-            pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
-        }
-
-        /**
-         * Selects all (Own)Gefaehrdungen matching the Pattern.
-         * 
-         * @param viewer
-         *            the Viewer to operate on
-         * @param parentElement
-         *            not used
-         * @param element
-         *            given element
-         * @return true if element passes test, false else
-         */
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            Gefaehrdung gefaehrdung = (Gefaehrdung) element;
-            String gefaehrdungTitle = gefaehrdung.getTitel();
-            Matcher matcher = pattern.matcher(gefaehrdungTitle);
-
-            if (matcher.find()) {
-                return true;
-            }
-            return false;
-        }
-    }
 
 }
