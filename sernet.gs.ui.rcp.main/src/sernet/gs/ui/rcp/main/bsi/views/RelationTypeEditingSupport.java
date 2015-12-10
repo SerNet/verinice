@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +28,7 @@ import org.eclipse.jface.viewers.EditingSupport;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
@@ -126,6 +128,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
         }
         
         String[] currentLinkTypeNames = relationNames.toArray(new String[relationNames.size()]);
+        Arrays.sort(currentLinkTypeNames, 0, currentLinkTypeNames.length, new NumericStringComparator());
         return currentLinkTypeNames;
     }
 
