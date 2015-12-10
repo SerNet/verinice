@@ -1,22 +1,22 @@
 /*******************************************************************************
  * Copyright (c) 2009 Alexander Koderman <ak[at]sernet[dot]de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU Lesser General Public License 
- * as published by the Free Software Foundation, either version 3 
+ * This program is free software: you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License
+ * as published by the Free Software Foundation, either version 3
  * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ *     This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *     You should have received a copy of the GNU Lesser General Public 
- * License along with this program. 
+ *     You should have received a copy of the GNU Lesser General Public
+ * License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  *     Robert Schuster <r.schuster@tarent.de> - use HibernateCallback
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.sql.SQLException;
@@ -41,8 +41,13 @@ public class LoadPolymorphicCnAElementById extends GenericCommand implements ICa
     private Integer[] ids;
 
     private List<CnATreeElement> list = new ArrayList<CnATreeElement>();
-    
+
     private boolean resultInjectedFromCache = false;
+
+    public LoadPolymorphicCnAElementById(int dbId){
+        ids = new Integer[1];
+        ids[0] = dbId;
+    }
 
     public LoadPolymorphicCnAElementById(Integer[] ds) {
         ids = (ds != null) ? ds.clone() : null;
@@ -111,5 +116,5 @@ public class LoadPolymorphicCnAElementById extends GenericCommand implements ICa
     public Object getCacheableResult() {
         return this.list;
     }
-    
+
 }

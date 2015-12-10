@@ -18,6 +18,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.service.commands.CnATypeMapper;
+import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  * Loads an element with all links from / to it.
