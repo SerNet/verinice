@@ -32,7 +32,6 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
@@ -195,6 +194,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                     final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), selectedOwnGefaehrdung);
                     dialog.open();
                     refresh();
+                    refreshBrowser();
                 }
             }
         });
@@ -268,10 +268,10 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         buttonNew.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
-                List<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard()).getAllOwnGefaehrdungen();
+                List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard().getAllOwnGefaehrdungen();
                 final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(rootContainer.getShell(), arrListOwnGefaehrdungen);
                 dialog.open();
-                ((RiskAnalysisWizard) getWizard()).addOwnGefaehrdungen();
+                getRiskAnalysisWizard().addOwnGefaehrdungen();
                 viewer.refresh();
                 assignBausteinGefaehrdungen();
             }
@@ -287,6 +287,23 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                     final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), ownGefSelected);
                     dialog.open();
                     refresh();
+                    refreshBrowser();
+                }
+            }
+        });
+
+        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                if (event.getSelection() instanceof IStructuredSelection) {
+                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof OwnGefaehrdung) {
+                        buttonDelete.setEnabled(true);
+                        buttonEdit.setEnabled(true);
+                    } else {
+                        buttonDelete.setEnabled(false);
+                        buttonEdit.setEnabled(false);
+                    }
                 }
             }
         });
@@ -325,27 +342,12 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         /* associate domain model with viewer */
         viewer.setInput(arrListAllGefaehrdungen);
         viewer.setSorter(new GefaehrdungenSorter());
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                if (event.getSelection() instanceof IStructuredSelection) {
-                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof OwnGefaehrdung) {
-                        buttonDelete.setEnabled(true);
-                        buttonEdit.setEnabled(true);
-                    } else {
-                        buttonDelete.setEnabled(false);
-                        buttonEdit.setEnabled(false);
-                    }
-                }
-                //
-            }
-        });
         assignBausteinGefaehrdungen();
         checkAllSelectedGefaehrdungen();
         packAllColumns();
 
-        ((RiskAnalysisWizard) getWizard()).setCanFinish(false);
+        getRiskAnalysisWizard().setCanFinish(false);
         checkPageComplete();
     }
 
@@ -408,68 +410,10 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      * empty.
      */
     private void checkPageComplete() {
-        if (((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen().isEmpty()) {
+        if (getRiskAnalysisWizard().getAssociatedGefaehrdungen().isEmpty()) {
             setPageComplete(false);
         } else {
             setPageComplete(true);
-        }
-    }
-
-
-
-
-
-    /**
-     * Filter to extract all OwnGefaehrdungen in CheckboxTableViewer.
-     * 
-     * @author ahanekop[at]sernet[dot]de
-     */
-    static class OwnGefaehrdungenFilter extends ViewerFilter {
-
-        /**
-         * Returns true, if the given element is an OwnGefaehrdung.
-         * 
-         * @param viewer
-         *            the Viewer to operate on
-         * @param parentElement
-         *            not used
-         * @param element
-         *            given element
-         * @return true if element passes test, false else
-         */
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            if (element instanceof OwnGefaehrdung) {
-                return true;
-            }
-            return false;
-        }
-    }
-
-    /**
-     * Filter to extract all Gefaehrdungen in CheckboxTableViewer.
-     * 
-     * @author ahanekop[at]sernet[dot]de
-     */
-    static class GefaehrdungenFilter extends ViewerFilter {
-
-        /**
-         * Returns true, if the given element is a Gefaehrdung.
-         * 
-         * @param viewer
-         *            the Viewer to operate on
-         * @param parentElement
-         *            not used
-         * @param element
-         *            given element
-         * @return true if element passes test, false else
-         */
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            if (!(element instanceof OwnGefaehrdung)) {
-                return true;
-            }
-            return false;
         }
     }
 
@@ -481,9 +425,9 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      *            the (Own)Gefaehrdung to delete
      */
     private void deleteOwnGefaehrdung(Gefaehrdung delGefaehrdung) {
-        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) ((RiskAnalysisWizard) getWizard()).getAllGefaehrdungen();
-        List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = ((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
-        List<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard()).getAllOwnGefaehrdungen();
+        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) getRiskAnalysisWizard().getAllGefaehrdungen();
+        List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = getRiskAnalysisWizard().getAssociatedGefaehrdungen();
+        List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard().getAllOwnGefaehrdungen();
 
         try {
             if (arrListOwnGefaehrdungen.contains(delGefaehrdung)) {

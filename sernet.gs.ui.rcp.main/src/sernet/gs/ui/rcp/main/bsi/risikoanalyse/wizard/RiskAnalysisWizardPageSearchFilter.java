@@ -7,6 +7,8 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 
 /**
  * Filter to extract all (Own)Gefaehrdungen matching a given String.
@@ -40,9 +42,20 @@ public class RiskAnalysisWizardPageSearchFilter extends ViewerFilter {
      */
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
-        Gefaehrdung gefaehrdung = (Gefaehrdung) element;
-        String gefaehrdungTitle = gefaehrdung.getTitel();
-        Matcher matcher = pattern.matcher(gefaehrdungTitle);
+        String title = "";
+        if (element instanceof Gefaehrdung) {
+
+            Gefaehrdung gefaehrdung = (Gefaehrdung) element;
+            title = gefaehrdung.getTitel();
+        } else if (element instanceof MassnahmenUmsetzung) {
+            MassnahmenUmsetzung massnahmeUmsetzung = (MassnahmenUmsetzung) element;
+            title = massnahmeUmsetzung.getTitle();
+        } else if (element instanceof GefaehrdungsUmsetzung) {
+            GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) element;
+            title = gefaehrdung.getTitle();
+        }
+
+        Matcher matcher = pattern.matcher(title);
 
         if (matcher.find()) {
             return true;
