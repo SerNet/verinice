@@ -23,6 +23,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -33,6 +35,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -275,6 +278,21 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
 
     @Override
     protected TableViewer initializeViewer(Composite parent) {
-        return new TableViewer(parent, SWT.FULL_SELECTION);
+        return new TableViewer(parent, SWT.BORDER | SWT.FULL_SELECTION);
     }
+
+    @Override
+    protected void addButtons(Composite parent, String groupName) {
+        /* there are no buttons needed in this Page */
+    }
+
+    @Override
+    protected void addFilters(Composite parent) {
+        Composite search = new Composite(parent, SWT.NULL);
+        new Label(search, SWT.NULL).setText(Messages.ChooseGefaehrdungPage_10);
+        textSearch = new Text(search, SWT.SINGLE | SWT.BORDER);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(DEFAULT_MARGINS).generateLayout(search);
+        GridDataFactory.fillDefaults().hint(125, SWT.DEFAULT).applyTo(textSearch);
+    };
+
 }

@@ -3,11 +3,12 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -16,9 +17,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.GefaehrdungenFilter;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.ChooseGefaehrdungPage.OwnGefaehrdungenFilter;
 import sernet.gs.ui.rcp.main.bsi.views.SerializeBrowserLoadingListener;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 
 public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends WizardPage {
 
@@ -48,9 +49,7 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
     protected static final int WIZARD_BROWSER_WIDTH = 500;
     protected static final int WIZARD_NUM_COLS_ROOT = 2;
 
-    private static final Point DEFAULT_MARGINS = new Point(5, 5);
-    private static final Rectangle DEFAULT_EXTENDED_MARGINS = new Rectangle(5, 5, 5, 5);
-    private static final Point DEFAULT_SPACING = new Point(5, 5);
+    protected static final Point DEFAULT_MARGINS = new Point(5, 5);
 
     protected RiskAnalysisWizardPage(String pageName, String title, String description) {
         super(pageName);
@@ -68,16 +67,19 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
     @Override
     public void createControl(Composite parent) {
-        rootContainer = new Composite(parent, SWT.NONE);
-
+        rootContainer = new Composite(parent, SWT.BORDER);
+        
         setLeftColumn(rootContainer);
         setRightColumn(rootContainer);
         addControls(rootContainer);
-        GridLayoutFactory.fillDefaults().numColumns(WIZARD_NUM_COLS_ROOT).extendedMargins(DEFAULT_EXTENDED_MARGINS).spacing(DEFAULT_SPACING).generateLayout(rootContainer);
-
+        GridLayoutFactory.fillDefaults().numColumns(WIZARD_NUM_COLS_ROOT).margins(DEFAULT_MARGINS).generateLayout(rootContainer);
         setControl(rootContainer);
-        rootContainer.layout();
         addListeners();
+
+    }
+
+    public void refreshBrowser() {
+        browserListener.selectionChanged(RiskAnalysisWizardBrowserUpdateListener.UPDATE_CURRENT);
 
     }
 
@@ -92,10 +94,9 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
         browser = new Browser(rightColumn, SWT.BORDER);
         browserLoadingListener = new SerializeBrowserLoadingListener(browser);
         browser.addProgressListener(browserLoadingListener);
-        GridLayoutFactory.fillDefaults().extendedMargins(0, 5, 5, 5).generateLayout(rightColumn);
+        GridLayoutFactory.fillDefaults().margins(DEFAULT_MARGINS).generateLayout(rightColumn);
         browser.setLayoutData(new GridData(GridData.FILL_BOTH
                 | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
-        GridDataFactory.generate(rightColumn, 1, 1);
         GridDataFactory.fillDefaults().hint(WIZARD_BROWSER_WIDTH, SWT.LONG).grab(false, true).applyTo(rightColumn);
     }
 
@@ -119,8 +120,7 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
 
         table.layout();
-        GridLayoutFactory.fillDefaults().extendedMargins(5, 5, 5, 5).spacing(DEFAULT_SPACING).generateLayout(leftColumn);
-        GridDataFactory.generate(leftColumn, 1, 1);
+        GridLayoutFactory.fillDefaults().margins(DEFAULT_MARGINS).generateLayout(leftColumn);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(leftColumn);
     }
 
@@ -134,13 +134,13 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
         Composite controls = new Composite(parent, SWT.NONE);
         addFilters(controls);
 
-        addButtons(controls);
+        addButtons(controls, Messages.ChooseGefaehrdungPage_11);
 
-        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_CONTROLS).margins(DEFAULT_MARGINS).spacing(DEFAULT_SPACING).generateLayout(controls);
+        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_CONTROLS).margins(DEFAULT_MARGINS).generateLayout(controls);
 
     }
 
-    private void addFilters(Composite parent) {
+    protected void addFilters(Composite parent) {
         Composite compositeFilter = new Composite(parent, SWT.NONE);
 
         /* filter button - OwnGefaehrdungen only */
@@ -152,21 +152,20 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
         buttonGefaehrdungen.setText(Messages.ChooseGefaehrdungPage_9);
 
         /* filter button - search */
-
         Composite search = new Composite(compositeFilter, SWT.NULL);
         new Label(search, SWT.NULL).setText(Messages.ChooseGefaehrdungPage_10);
         textSearch = new Text(search, SWT.SINGLE | SWT.BORDER);
-        GridLayoutFactory.fillDefaults().numColumns(2).margins(DEFAULT_MARGINS).spacing(DEFAULT_SPACING).generateLayout(search);
-        GridDataFactory.fillDefaults();
-        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_FILTERS).margins(DEFAULT_MARGINS).spacing(DEFAULT_SPACING).generateLayout(compositeFilter);
-        GridDataFactory.fillDefaults().hint(125, SWT.DEFAULT).align(SWT.LEFT, SWT.TOP).applyTo(textSearch);
+        GridLayoutFactory.fillDefaults().numColumns(2).margins(DEFAULT_MARGINS).generateLayout(search);
+        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_FILTERS).margins(DEFAULT_MARGINS).generateLayout(compositeFilter);
+        GridDataFactory.fillDefaults().hint(125, SWT.DEFAULT).applyTo(textSearch);
+
     }
 
-    protected void addButtons(Composite parent) {
+    protected void addButtons(Composite parent, String groupName) {
 
         /* group the buttons with Group */
         Group groupButtons = new Group(parent, SWT.SHADOW_ETCHED_OUT);
-        groupButtons.setText(Messages.ChooseGefaehrdungPage_11);
+        groupButtons.setText(groupName);
 
         buttonNew = new Button(groupButtons, SWT.PUSH);
         buttonNew.setText(Messages.ChooseGefaehrdungPage_12);
@@ -183,9 +182,8 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
         GridDataFactory.fillDefaults().hint(ADD_EDIT_REMOVE_BUTTON_SIZE).applyTo(buttonDelete);
 
 
-        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_BUTTONS).margins(DEFAULT_MARGINS).spacing(DEFAULT_SPACING).generateLayout(groupButtons);
+        GridLayoutFactory.fillDefaults().numColumns(NUM_COLS_BUTTONS).margins(DEFAULT_MARGINS).generateLayout(groupButtons);
 
-        GridDataFactory.generate(groupButtons, 1, 1);
         GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(groupButtons);
 
     }
@@ -202,6 +200,78 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
     protected abstract void addSpecificListenersForPage();
 
+    /**
+     * Filter to extract all OwnGefaehrdungen in CheckboxTableViewer.
+     * 
+     * @author ahanekop[at]sernet[dot]de
+     */
+    static class OwnGefaehrdungenFilter extends ViewerFilter {
+
+        /**
+         * Returns true, if the given element is an OwnGefaehrdung.
+         * 
+         * @param viewer
+         *            the Viewer to operate on
+         * @param parentElement
+         *            not used
+         * @param element
+         *            given element
+         * @return true if element passes test, false else
+         */
+        @Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+            if (element instanceof OwnGefaehrdung) {
+                return true;
+            }
+            if (element instanceof GefaehrdungsUmsetzung) {
+                return isOwnGefaehrung((GefaehrdungsUmsetzung) element);
+
+            }
+            return false;
+        }
+
+        public boolean isOwnGefaehrung(GefaehrdungsUmsetzung gef) {
+            // only gefaehrdungen from BSI catalog have a URL associated
+            // with
+            // them:
+            return gef.getUrl() == null || gef.getUrl().length() == 0 || gef.getUrl().equals("null"); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * Filter to extract all Gefaehrdungen in CheckboxTableViewer.
+     * 
+     * @author ahanekop[at]sernet[dot]de
+     */
+    static class GefaehrdungenFilter extends ViewerFilter {
+
+        /**
+         * Returns true, if the given element is a Gefaehrdung.
+         * 
+         * @param viewer
+         *            the Viewer to operate on
+         * @param parentElement
+         *            not used
+         * @param element
+         *            given element
+         * @return true if element passes test, false else
+         */
+        @Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+            if (element instanceof GefaehrdungsUmsetzung) {
+                return !isOwnGefaehrung((GefaehrdungsUmsetzung) element);
+            }
+            return !(element instanceof OwnGefaehrdung);
+        }
+
+        public boolean isOwnGefaehrung(GefaehrdungsUmsetzung gef) {
+            // only gefaehrdungen from BSI catalog have a URL associated
+            // with
+            // them:
+            return gef.getUrl() == null || gef.getUrl().length() == 0 || gef.getUrl().equals("null"); //$NON-NLS-1$
+        }
+
+    }
 
 
 }

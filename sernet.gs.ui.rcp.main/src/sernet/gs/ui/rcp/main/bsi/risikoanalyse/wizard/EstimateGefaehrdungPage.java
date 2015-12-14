@@ -19,8 +19,6 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ArrayContentProvider;
@@ -28,7 +26,6 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -39,7 +36,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Text;
 
-import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis.NegativeEstimateGefaehrdung;
@@ -142,113 +138,6 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
         }
     }
 
-    /**
-     * Filter to extract all OwnGefaehrdungen in CheckboxTableViewer.
-     * 
-     * @author ahanekop[at]sernet[dot]de
-     */
-    class OwnGefaehrdungenFilter extends ViewerFilter {
-
-        /**
-         * Returns true, if the given element is an OwnGefaehrdung.
-         * 
-         * @param viewer
-         *            the Viewer to operate on
-         * @param parentElement
-         *            not used
-         * @param element
-         *            given element
-         * @return true if element passes test, false else
-         */
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            return isOwnGefaehrung(element);
-        }
-    }
-
-    /**
-     * Filter to extract all Gefaehrdungen in CheckboxTableViewer.
-     * 
-     * @author ahanekop[at]sernet[dot]de
-     */
-    class GefaehrdungenFilter extends ViewerFilter {
-
-        /**
-         * Returns true, if the given element is a BSI Gefaehrdung.
-         * 
-         * @param viewer
-         *            the Viewer to operate on
-         * @param parentElement
-         *            not used
-         * @param element
-         *            given element
-         * @return true if element passes test, false else
-         */
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            return !isOwnGefaehrung(element);
-        }
-    }
-
-    public boolean isOwnGefaehrung(Object element) {
-        if (element instanceof GefaehrdungsUmsetzung) {
-            GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
-            // only gefaehrdungen from BSI catalog have a URL associated with
-            // them:
-            return (gef.getUrl() == null || gef.getUrl().length() == 0 || gef.getUrl().equals("null")); //$NON-NLS-1$
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Filter to extract all (Own)Gefaehrdungen matching a given String.
-     * 
-     * @author ahanekop[at]sernet[dot]de
-     */
-    class SearchFilter extends ViewerFilter {
-
-        private Pattern pattern;
-
-        /**
-         * Updates the Pattern.
-         * 
-         * @param searchString
-         *            the String to search for
-         */
-        void setPattern(String searchString) {
-            pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
-        }
-
-        /**
-         * Selects all (Own)Gefaehrdungen matching the Pattern.
-         * 
-         * @param viewer
-         *            the Viewer to operate on
-         * @param parentElement
-         *            not used
-         * @param element
-         *            given element
-         * @return true if element passes test, false else
-         */
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            String gefaehrdungTitle = ""; //$NON-NLS-1$
-            if (element instanceof Gefaehrdung) {
-                Gefaehrdung gefaehrdung = (Gefaehrdung) element;
-                gefaehrdungTitle = gefaehrdung.getTitel();
-            } else if (element instanceof GefaehrdungsUmsetzung) {
-                GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) element;
-                gefaehrdungTitle = gefaehrdung.getTitle();
-            }
-
-            Matcher matcher = pattern.matcher(gefaehrdungTitle);
-            if (matcher.find()) {
-                return true;
-            } 
-            return false;
-        }
-    }
 
     @Override
     protected void setColumns() {
@@ -298,13 +187,13 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
                 if (text.getText().length() > 0) {
 
                     ViewerFilter[] filters = viewer.getFilters();
-                    SearchFilter thisFilter = null;
+                    RiskAnalysisWizardPageSearchFilter thisFilter = null;
                     boolean contains = false;
 
                     for (ViewerFilter item : filters) {
-                        if (item instanceof SearchFilter) {
+                        if (item instanceof RiskAnalysisWizardPageSearchFilter) {
                             contains = true;
-                            thisFilter = (SearchFilter) item;
+                            thisFilter = (RiskAnalysisWizardPageSearchFilter) item;
                         }
                     }
                     if (contains) {
@@ -419,8 +308,9 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
         });
     }
 
+    
     @Override
-    protected void addButtons(Composite parent) {
+    protected void addButtons(Composite parent, String groupName) {
         /* there are no buttons needed in this Page */
     }
 
