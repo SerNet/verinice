@@ -60,6 +60,8 @@ public class SearchService implements ISearchService {
     @Resource(name = "jsonBuilder")
     protected IJsonBuilder jsonBuilder;
 
+    private volatile boolean reindexRunning = false;
+
     /**
      * Should be used by client to pass a query to the service in future
      * releases the method should decide which kind of query must be send to es.
@@ -274,7 +276,13 @@ public class SearchService implements ISearchService {
         this.jsonBuilder = jsonBuilder;
     }
 
+    public boolean isReindexRunning() {
+        return reindexRunning;
+    }
 
+    public synchronized void setReindexRunning(boolean running) {
+        this.reindexRunning = running;
+    }
 
     @Override
     public int getImplementationtype() {

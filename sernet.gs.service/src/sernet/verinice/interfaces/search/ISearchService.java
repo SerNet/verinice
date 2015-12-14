@@ -102,4 +102,8 @@ public interface ISearchService {
      */
     int getImplementationtype();
 
+    boolean isReindexRunning();
+
+    void setReindexRunning(boolean running);
+
 }
