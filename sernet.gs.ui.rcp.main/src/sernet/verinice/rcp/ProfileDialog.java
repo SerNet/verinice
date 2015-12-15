@@ -320,8 +320,17 @@ public class ProfileDialog extends TitleAreaDialog {
         this.textName.setFocus();
     }
 
+    /**
+     * prevent empty profile names, also names that contains whitespaces only
+     * @return is profileName valid
+     */
     private boolean validateInput() {
-        return StringUtils.isNotEmpty(this.textName.getText());
+        String input = this.textName.getText();
+        String trimmedInput = null;
+        if (input != null) {
+            trimmedInput = input.trim();
+        }
+        return StringUtils.isNotEmpty(trimmedInput);
     }
     
     /* (non-Javadoc)
