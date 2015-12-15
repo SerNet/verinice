@@ -49,6 +49,8 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
     protected static final int WIZARD_BROWSER_WIDTH = 500;
     protected static final int WIZARD_NUM_COLS_ROOT = 2;
 
+    private static final String DB_NULL = "null";
+
     protected static final Point DEFAULT_MARGINS = new Point(5, 5);
 
     protected RiskAnalysisWizardPage(String pageName, String title, String description) {
@@ -67,7 +69,7 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
     @Override
     public void createControl(Composite parent) {
-        rootContainer = new Composite(parent, SWT.BORDER);
+        rootContainer = new Composite(parent, SWT.NONE);
         
         setLeftColumn(rootContainer);
         setRightColumn(rootContainer);
@@ -194,7 +196,6 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
         browserListener = new RiskAnalysisWizardBrowserUpdateListener(browserLoadingListener, viewer);
         viewer.addSelectionChangedListener(browserListener);
-
     }
 
 
@@ -234,7 +235,7 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
             // only gefaehrdungen from BSI catalog have a URL associated
             // with
             // them:
-            return gef.getUrl() == null || gef.getUrl().length() == 0 || gef.getUrl().equals("null"); //$NON-NLS-1$
+            return gef.getUrl() == null || gef.getUrl().length() == 0 || gef.getUrl().equals(DB_NULL); // $NON-NLS-1$
         }
     }
 
@@ -268,7 +269,7 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
             // only gefaehrdungen from BSI catalog have a URL associated
             // with
             // them:
-            return gef.getUrl() == null || gef.getUrl().length() == 0 || gef.getUrl().equals("null"); //$NON-NLS-1$
+            return gef.getUrl() == null || gef.getUrl().length() == 0 || gef.getUrl().equals(DB_NULL); // $NON-NLS-1$
         }
 
     }

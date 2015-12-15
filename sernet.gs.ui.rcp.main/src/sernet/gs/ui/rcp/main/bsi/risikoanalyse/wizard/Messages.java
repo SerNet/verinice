@@ -86,7 +86,6 @@ public class Messages extends NLS {
     public static String EstimateGefaehrdungPage_7;
     public static String EstimateGefaehrdungPage_8;
     public static String EstimateGefaehrdungPage_9;
-    public static String MassnahmeTableViewerLabelProvider_4;
     public static String NewGefaehrdungDialog_0;
     public static String NewGefaehrdungDialog_1;
     public static String NewGefaehrdungDialog_2;

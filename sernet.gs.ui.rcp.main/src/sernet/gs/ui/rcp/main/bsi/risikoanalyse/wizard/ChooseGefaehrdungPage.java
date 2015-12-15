@@ -13,8 +13,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Anne Hanekop <ah[at]sernet[dot]de> 	- initial API and implementation
- *     ak[at]sernet[dot]de					- various fixes, adapted to command layer
+ *     Anne Hanekop <ah[at]sernet[dot]de>     - initial API and implementation
+ *     ak[at]sernet[dot]de                    - various fixes, adapted to command layer
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
@@ -352,7 +352,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
     }
 
     private void checkAllSelectedGefaehrdungen() {
-        List<Gefaehrdung> toCheck = new ArrayList<Gefaehrdung>();
+        List<Gefaehrdung> toCheck = new ArrayList<>();
         for (GefaehrdungsUmsetzung associatedGefaehrdung : getRiskAnalysisWizard().getAssociatedGefaehrdungen()) {
             if (associatedGefaehrdung != null) {
                 for (Gefaehrdung gefaehrdung : getRiskAnalysisWizard().getAllGefaehrdungen()) {
