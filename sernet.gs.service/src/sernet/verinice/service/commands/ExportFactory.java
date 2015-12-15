@@ -101,27 +101,38 @@ public final class ExportFactory {
      * @param typeId
      * @param huiTypeFactory
      */
-    public static void transform(Entity entity, List<SyncAttribute> syncAttributeList, String typeId, HUITypeFactory huiTypeFactory) {
+    public static void transform(Entity entity, List<SyncAttribute> syncAttributeList, String typeId, HUITypeFactory huiTypeFactory, ExportReferenceTypes exportReferenceTypes) {
         Map<String, PropertyList> properties = entity.getTypedPropertyLists();
-        for (String propertyTypeId : properties.keySet()) {             
+        for (String propertyTypeId : properties.keySet()) {
+
             PropertyType propertyType = huiTypeFactory.getPropertyType(typeId, propertyTypeId);
-            if(propertyType==null) {
+            if (propertyType == null) {
                 LOG.warn("Property type not found in SNCA.xml: " + propertyTypeId + ", typeId: " + typeId);
             }
-            if( propertyType==null || propertyType.isReportable()) {
+
+            if (propertyType == null || propertyType.isReportable()) {
                 SyncAttribute syncAttribute = new SyncAttribute();
                 // Add <syncAttribute> to this <syncObject>:
                 syncAttribute.setName(propertyTypeId);
-                
-                int noOfValues = entity.exportProperties(propertyTypeId, syncAttribute.getValue());
-                // Only if any value for the attribute could be found the whole
-                // attribute instance is being added to the SyncObject's attribute
-                // list.
-                if (noOfValues > 0) {
+
+                // transform dbid to uuid for the export
+                if (isReference(propertyType)) {
+                    PropertyList propertyList = entity.getProperties(propertyTypeId);
+                    exportReferenceTypes.mapEntityDatabaseId2ExtId(syncAttribute, propertyList);
+
+                } else {
+                    entity.exportProperties(propertyTypeId, syncAttribute.getValue());
+                }
+
+                if (!syncAttribute.getValue().isEmpty()) {
                     syncAttributeList.add(syncAttribute);
                 }
             }
         }
+    }
+
+    private static boolean isReference(PropertyType propertyType) {
+        return propertyType != null && propertyType.isReference();
     }
     
     /**

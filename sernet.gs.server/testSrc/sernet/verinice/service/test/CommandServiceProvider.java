@@ -295,9 +295,10 @@ public abstract class CommandServiceProvider extends UuidLoader {
     }
     
     
-    protected void updateElement(CnATreeElement element) throws CommandException {
+    protected CnATreeElement updateElement(CnATreeElement element) throws CommandException {
         UpdateElementEntity<CnATreeElement> updateElementCommand = new UpdateElementEntity<CnATreeElement>(element, ChangeLogEntry.STATION_ID);
         updateElementCommand = commandService.executeCommand(updateElementCommand);
+        return updateElementCommand.getElement();
     }
 
     protected CnATreeElement loadElement(String sourceId, String extId) throws CommandException {
