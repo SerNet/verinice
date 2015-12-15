@@ -4131,6 +4131,40 @@ columns(cols);</value>
                                         <data id="2042">
                                             <property name="fontSize">12pt</property>
                                             <property name="fontWeight">bold</property>
+                                            <list-property name="mapRules">
+                                                <structure>
+                                                    <expression name="testExpr" type="javascript">row["gefaehrdungsumsetzung_alternative"]</expression>
+                                                    <property name="operator">eq</property>
+                                                    <simple-property-list name="value1">
+                                                        <value type="javascript">"A"</value>
+                                                    </simple-property-list>
+                                                    <text-property name="display">A Reduktion</text-property>
+                                                </structure>
+                                                <structure>
+                                                    <expression name="testExpr" type="javascript">row["gefaehrdungsumsetzung_alternative"]</expression>
+                                                    <property name="operator">eq</property>
+                                                    <simple-property-list name="value1">
+                                                        <value type="javascript">"B"</value>
+                                                    </simple-property-list>
+                                                    <text-property name="display">B Umstrukturierung</text-property>
+                                                </structure>
+                                                <structure>
+                                                    <expression name="testExpr" type="javascript">row["gefaehrdungsumsetzung_alternative"]</expression>
+                                                    <property name="operator">eq</property>
+                                                    <simple-property-list name="value1">
+                                                        <value type="javascript">"C"</value>
+                                                    </simple-property-list>
+                                                    <text-property name="display">C Übernahme</text-property>
+                                                </structure>
+                                                <structure>
+                                                    <expression name="testExpr" type="javascript">row["gefaehrdungsumsetzung_alternative"]</expression>
+                                                    <property name="operator">eq</property>
+                                                    <simple-property-list name="value1">
+                                                        <value type="javascript">"D"</value>
+                                                    </simple-property-list>
+                                                    <text-property name="display">D Transfer</text-property>
+                                                </structure>
+                                            </list-property>
                                             <property name="resultSetColumn">gefaehrdungsumsetzung_alternative</property>
                                         </data>
                                     </cell>
