@@ -13,8 +13,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Anne Hanekop <ah[at]sernet[dot]de> 	- initial API and implementation
- *     ak[at]sernet[dot]de					- various fixes, adapted to command layer
+ *     Anne Hanekop <ah[at]sernet[dot]de>     - initial API and implementation
+ *     ak[at]sernet[dot]de                    - various fixes, adapted to command layer
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
