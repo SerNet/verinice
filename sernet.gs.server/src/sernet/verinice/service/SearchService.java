@@ -33,9 +33,11 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightField;
 
 import sernet.gs.service.ServerInitializer;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
@@ -69,6 +71,11 @@ public class SearchService implements ISearchService {
     @Override
     public VeriniceSearchResult query(VeriniceQuery veriniceQuery) {
         ServerInitializer.inheritVeriniceContextState();
+        IAuthService authService = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+        /* query returns false by default */
+        if (authService.isPermissionHandlingNeeded()) {
+            veriniceQuery.setScopeOnly(authService.isScopeOnly());
+        }
         return query(veriniceQuery, null);
     }
     

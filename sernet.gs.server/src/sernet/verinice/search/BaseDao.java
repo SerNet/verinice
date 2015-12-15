@@ -241,6 +241,9 @@ public abstract class BaseDao implements ISearchDao {
     
     private MultiSearchRequestBuilder buildQueryIterative(Map<String, String> map, String typeId, String username, VeriniceQuery query){
         MultiSearchRequestBuilder requestBuilder = getClient().prepareMultiSearch();
+        // only 1 call per query, instead of calling
+        // isPermissionHandlingNeeded() from within for-loop
+        boolean permissionHandlingNeeded = isPermissionHandlingNeeded();
         for(String field : map.keySet()){
             String value = map.get(field);
             SearchRequestBuilder searchBuilder = getClient().prepareSearch(getIndex())
@@ -262,11 +265,12 @@ public abstract class BaseDao implements ISearchDao {
             TermsFilterBuilder typeBuilder = FilterBuilders.inFilter(ISearchService.ES_FIELD_ELEMENT_TYPE, new String[]{typeId});
             AndFilterBuilder andBuilder = FilterBuilders.andFilter(typeBuilder);
             
-            if(isPermissionHandlingNeeded()) {
+            if (permissionHandlingNeeded) {
                 andBuilder = andBuilder.add(createPermissionFilter(username));              
-            }
-            if(getAuthService().isScopeOnly()) {
-                andBuilder = andBuilder.add(createScopeOnlyFilter(username));
+                if (query.isScopeOnly()) { // scopeOnly is not needed if no
+                                           // permission handling is needed
+                    andBuilder = andBuilder.add(createScopeOnlyFilter(username));
+                }
             }
             
             if(query.getScopeId() != -1){
