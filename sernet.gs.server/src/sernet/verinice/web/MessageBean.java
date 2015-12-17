@@ -50,4 +50,11 @@ public class MessageBean {
     public void german() {
         Util.german();
     }
+
+
+    public static String getcurrentLanguageTag() {
+        return Util.getcurrentLanguageTag();
+    }
+
+
 }
