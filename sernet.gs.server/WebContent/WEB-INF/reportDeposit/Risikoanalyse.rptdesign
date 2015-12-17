@@ -29,8 +29,8 @@
     </parameters>
     <data-sources>
         <oda-data-source extensionID="verinice.oda.driver.dataSource.id" name="verinice" id="44">
-            <property name="sncaUrl">http://localhost:2010/veriniceserver/GetHitroConfig</property>
-            <property name="serverURI">http://localhost:2010/veriniceserver</property>
+            <property name="sncaUrl">http://localhost:8080/veriniceserver/GetHitroConfig</property>
+            <property name="serverURI">http://localhost:8080/veriniceserver</property>
         </oda-data-source>
     </data-sources>
     <data-sets>
@@ -1158,58 +1158,74 @@ columns(cols);</value>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_okay</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_okay</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_okay</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_vollstaendigkeit</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_vollstaendigkeit</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_vollstaendigkeit</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_titel</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_titel</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_titel</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_zuverlaessigkeit</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_zuverlaessigkeit</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">gefaehrdungsumsetzung_description</property>
-                    <text-property name="displayName">gefaehrdungsumsetzung_description</text-property>
-                </structure>
-                <structure>
-                    <property name="columnName">gefaehrdungsumsetzung_mechanismenstaerke</property>
-                    <text-property name="displayName">gefaehrdungsumsetzung_mechanismenstaerke</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_zuverlaessigkeit</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_dokument</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_dokument</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_dokument</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gefaehrdungsumsetzung_description</property>
+                    <text-property name="displayName">gefaehrdungsumsetzung_description</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_description</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">gefaehrdungsumsetzung_mechanismenstaerke</property>
+                    <text-property name="displayName">gefaehrdungsumsetzung_mechanismenstaerke</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_mechanismenstaerke</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_kategorie</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_kategorie</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_kategorie</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_erlaeuterung</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_erlaeuterung</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_erlaeuterung</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_stand</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_stand</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_stand</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_url</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_url</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_url</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_id</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_id</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_id</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">gefaehrdungsumsetzung_alternative</property>
                     <text-property name="displayName">gefaehrdungsumsetzung_alternative</text-property>
+                    <text-property name="heading">gefaehrdungsumsetzung_alternative</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">dbid</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">dbid</text-property>
+                    <text-property name="heading">dbid</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -1248,17 +1264,17 @@ columns(cols);</value>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">gefaehrdungsumsetzung_description</property>
+                        <property name="name">gefaehrdungsumsetzung_dokument</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">gefaehrdungsumsetzung_mechanismenstaerke</property>
+                        <property name="name">gefaehrdungsumsetzung_description</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">gefaehrdungsumsetzung_dokument</property>
+                        <property name="name">gefaehrdungsumsetzung_mechanismenstaerke</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
@@ -1330,22 +1346,22 @@ columns(cols);</value>
                 </structure>
                 <structure>
                     <property name="position">5</property>
+                    <property name="name">gefaehrdungsumsetzung_dokument</property>
+                    <property name="nativeName">gefaehrdungsumsetzung_dokument</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
                     <property name="name">gefaehrdungsumsetzung_description</property>
                     <property name="nativeName">gefaehrdungsumsetzung_description</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">gefaehrdungsumsetzung_mechanismenstaerke</property>
                     <property name="nativeName">gefaehrdungsumsetzung_mechanismenstaerke</property>
-                    <property name="dataType">javaObject</property>
-                    <property name="nativeDataType">2000</property>
-                </structure>
-                <structure>
-                    <property name="position">7</property>
-                    <property name="name">gefaehrdungsumsetzung_dokument</property>
-                    <property name="nativeName">gefaehrdungsumsetzung_dokument</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -1409,7 +1425,7 @@ elmtid = inpv("elmt_id");
 cmd = new LoadReportRiskAnalysis(elmtid);
 elements = helper.execute(cmd).getAllGefaehrdungsUmsetzungen();
 
-cols = helper.getAllPropertyTypes("gefaehrdungsumsetzung", true);
+cols = helper.getAllPropertyTypes("gefaehrdungsumsetzung");
 return helper.map(
 	elements,
 	cols,
@@ -1418,27 +1434,31 @@ return helper.map(
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>elmt_id</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>elmt_id</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
 </model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
@@ -3837,10 +3857,10 @@ columns(cols);</value>
                 </row>
                 <row id="1819">
                     <cell id="1820">
-                        <table id="1821">
+                        <table id="2001">
                             <property name="marginTop">10pt</property>
-                            <property name="width">11.074380165289256in</property>
-                            <property name="dataSet">riskanalysis_notokgef</property>
+                            <property name="width">11.041666666666666in</property>
+                            <property name="dataSet">riskanalysis_allgef</property>
                             <list-property name="paramBindings">
                                 <structure>
                                     <property name="paramName">elmt_id</property>
@@ -3921,24 +3941,21 @@ columns(cols);</value>
                                     <property name="dataType">javaObject</property>
                                 </structure>
                             </list-property>
-                            <column id="1846">
-                                <property name="width">1.1818181818181819in</property>
+                            <column id="2035">
+                                <property name="width">1.7291666666666667in</property>
                             </column>
-                            <column id="1847">
-                                <property name="width">3.2479338842975207in</property>
+                            <column id="2036">
+                                <property name="width">3.7708333333333335in</property>
                             </column>
-                            <column id="1848">
-                                <property name="width">2.2148760330578514in</property>
+                            <column id="2037">
+                                <property name="width">2.7604166666666665in</property>
                             </column>
-                            <column id="1849">
-                                <property name="width">2.2148760330578514in</property>
-                            </column>
-                            <column id="1850">
-                                <property name="width">2.2148760330578514in</property>
+                            <column id="2038">
+                                <property name="width">2.71875in</property>
                             </column>
                             <header>
-                                <row id="1822">
-                                    <cell id="1823">
+                                <row id="2002">
+                                    <cell id="2003">
                                         <property name="colSpan">2</property>
                                         <property name="rowSpan">1</property>
                                         <property name="borderBottomColor">#000000</property>
@@ -3953,12 +3970,12 @@ columns(cols);</value>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <label id="1824">
+                                        <label id="2004">
                                             <property name="textAlign">left</property>
                                             <text-property name="text">3. Risikobehandlung</text-property>
                                         </label>
                                     </cell>
-                                    <cell id="1827">
+                                    <cell id="2005">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -3972,21 +3989,7 @@ columns(cols);</value>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
                                     </cell>
-                                    <cell id="1828">
-                                        <property name="borderBottomColor">#000000</property>
-                                        <property name="borderBottomStyle">solid</property>
-                                        <property name="borderBottomWidth">thin</property>
-                                        <property name="borderLeftColor">#000000</property>
-                                        <property name="borderLeftStyle">solid</property>
-                                        <property name="borderLeftWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                        <property name="borderTopColor">#000000</property>
-                                        <property name="borderTopStyle">solid</property>
-                                        <property name="borderTopWidth">thin</property>
-                                    </cell>
-                                    <cell id="1829">
+                                    <cell id="2006">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -4001,8 +4004,8 @@ columns(cols);</value>
                                         <property name="borderTopWidth">thin</property>
                                     </cell>
                                 </row>
-                                <row id="1830">
-                                    <cell id="1831">
+                                <row id="2009">
+                                    <cell id="2010">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -4015,11 +4018,11 @@ columns(cols);</value>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <label id="1832">
+                                        <label id="2011">
                                             <text-property name="text">Kap.</text-property>
                                         </label>
                                     </cell>
-                                    <cell id="1833">
+                                    <cell id="2012">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -4032,11 +4035,11 @@ columns(cols);</value>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <label id="1834">
+                                        <label id="2013">
                                             <text-property name="text">Titel</text-property>
                                         </label>
                                     </cell>
-                                    <cell id="1835">
+                                    <cell id="2014">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -4049,11 +4052,11 @@ columns(cols);</value>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <label id="1904">
+                                        <label id="2015">
                                             <text-property name="text">Risikobehandlung</text-property>
                                         </label>
                                     </cell>
-                                    <cell id="1836">
+                                    <cell id="2016">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -4066,31 +4069,15 @@ columns(cols);</value>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <label id="1905">
+                                        <label id="2017">
                                             <text-property name="text">Erläuterung</text-property>
                                         </label>
-                                    </cell>
-                                    <cell id="1837">
-                                        <property name="borderBottomColor">#000000</property>
-                                        <property name="borderBottomStyle">solid</property>
-                                        <property name="borderBottomWidth">thin</property>
-                                        <property name="borderLeftColor">#000000</property>
-                                        <property name="borderLeftStyle">solid</property>
-                                        <property name="borderLeftWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                        <property name="borderTopColor">#000000</property>
-                                        <property name="borderTopStyle">solid</property>
-                                        <property name="borderTopWidth">thin</property>
                                     </cell>
                                 </row>
                             </header>
                             <detail>
-                                <row id="1838">
-                                    <property name="fontSize">12pt</property>
-                                    <property name="fontWeight">bold</property>
-                                    <cell id="1839">
+                                <row id="2022">
+                                    <cell id="2023">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -4103,12 +4090,13 @@ columns(cols);</value>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <data id="1854">
-                                            <property name="marginTop">10pt</property>
+                                        <data id="2024">
+                                            <property name="fontSize">12pt</property>
+                                            <property name="fontWeight">bold</property>
                                             <property name="resultSetColumn">gefaehrdungsumsetzung_id</property>
                                         </data>
                                     </cell>
-                                    <cell id="1841">
+                                    <cell id="2025">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -4121,12 +4109,13 @@ columns(cols);</value>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <data id="1853">
-                                            <property name="marginTop">10pt</property>
+                                        <data id="2026">
+                                            <property name="fontSize">12pt</property>
+                                            <property name="fontWeight">bold</property>
                                             <property name="resultSetColumn">gefaehrdungsumsetzung_titel</property>
                                         </data>
                                     </cell>
-                                    <cell id="1843">
+                                    <cell id="2027">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -4139,12 +4128,47 @@ columns(cols);</value>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <data id="1869">
-                                            <property name="marginTop">10pt</property>
+                                        <data id="2042">
+                                            <property name="fontSize">12pt</property>
+                                            <property name="fontWeight">bold</property>
+                                            <list-property name="mapRules">
+                                                <structure>
+                                                    <expression name="testExpr" type="javascript">row["gefaehrdungsumsetzung_alternative"]</expression>
+                                                    <property name="operator">eq</property>
+                                                    <simple-property-list name="value1">
+                                                        <value type="javascript">"A"</value>
+                                                    </simple-property-list>
+                                                    <text-property name="display">A Reduktion</text-property>
+                                                </structure>
+                                                <structure>
+                                                    <expression name="testExpr" type="javascript">row["gefaehrdungsumsetzung_alternative"]</expression>
+                                                    <property name="operator">eq</property>
+                                                    <simple-property-list name="value1">
+                                                        <value type="javascript">"B"</value>
+                                                    </simple-property-list>
+                                                    <text-property name="display">B Umstrukturierung</text-property>
+                                                </structure>
+                                                <structure>
+                                                    <expression name="testExpr" type="javascript">row["gefaehrdungsumsetzung_alternative"]</expression>
+                                                    <property name="operator">eq</property>
+                                                    <simple-property-list name="value1">
+                                                        <value type="javascript">"C"</value>
+                                                    </simple-property-list>
+                                                    <text-property name="display">C Übernahme</text-property>
+                                                </structure>
+                                                <structure>
+                                                    <expression name="testExpr" type="javascript">row["gefaehrdungsumsetzung_alternative"]</expression>
+                                                    <property name="operator">eq</property>
+                                                    <simple-property-list name="value1">
+                                                        <value type="javascript">"D"</value>
+                                                    </simple-property-list>
+                                                    <text-property name="display">D Transfer</text-property>
+                                                </structure>
+                                            </list-property>
                                             <property name="resultSetColumn">gefaehrdungsumsetzung_alternative</property>
                                         </data>
                                     </cell>
-                                    <cell id="1844">
+                                    <cell id="2029">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
                                         <property name="borderBottomWidth">thin</property>
@@ -4157,29 +4181,16 @@ columns(cols);</value>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <data id="1870">
-                                            <property name="marginTop">10pt</property>
+                                        <data id="2044">
+                                            <property name="fontSize">12pt</property>
+                                            <property name="fontWeight">bold</property>
                                             <property name="resultSetColumn">gefaehrdungsumsetzung_erlaeuterung</property>
                                         </data>
                                     </cell>
-                                    <cell id="1845">
-                                        <property name="borderBottomColor">#000000</property>
-                                        <property name="borderBottomStyle">solid</property>
-                                        <property name="borderBottomWidth">thin</property>
-                                        <property name="borderLeftColor">#000000</property>
-                                        <property name="borderLeftStyle">solid</property>
-                                        <property name="borderLeftWidth">thin</property>
-                                        <property name="borderRightColor">#000000</property>
-                                        <property name="borderRightStyle">solid</property>
-                                        <property name="borderRightWidth">thin</property>
-                                        <property name="borderTopColor">#000000</property>
-                                        <property name="borderTopStyle">solid</property>
-                                        <property name="borderTopWidth">thin</property>
-                                    </cell>
                                 </row>
-                                <row id="1855">
-                                    <cell id="1856">
-                                        <property name="colSpan">5</property>
+                                <row id="2045">
+                                    <cell id="2046">
+                                        <property name="colSpan">4</property>
                                         <property name="rowSpan">1</property>
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
@@ -4193,9 +4204,15 @@ columns(cols);</value>
                                         <property name="borderTopColor">#000000</property>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
-                                        <table id="1871">
+                                        <table id="2050">
                                             <property name="width">11.016528925619834in</property>
                                             <property name="dataSet">gef_mnums</property>
+                                            <list-property name="visibility">
+                                                <structure>
+                                                    <property name="format">all</property>
+                                                    <expression name="valueExpr" type="javascript">!(BirtComp.equalTo(row._outer["gefaehrdungsumsetzung_alternative"], "A"));</expression>
+                                                </structure>
+                                            </list-property>
                                             <list-property name="paramBindings">
                                                 <structure>
                                                     <property name="paramName">elmt_id</property>
@@ -4336,15 +4353,15 @@ columns(cols);</value>
                                                     <property name="dataType">javaObject</property>
                                                 </structure>
                                             </list-property>
-                                            <column id="1881">
+                                            <column id="2066">
                                                 <property name="width">1.140495867768595in</property>
                                             </column>
-                                            <column id="1882">
+                                            <column id="2067">
                                                 <property name="width">9.87603305785124in</property>
                                             </column>
                                             <header>
-                                                <row id="1883">
-                                                    <cell id="1884">
+                                                <row id="2051">
+                                                    <cell id="2052">
                                                         <property name="borderBottomColor">#000000</property>
                                                         <property name="borderBottomStyle">solid</property>
                                                         <property name="borderBottomWidth">thin</property>
@@ -4357,11 +4374,11 @@ columns(cols);</value>
                                                         <property name="borderTopColor">#000000</property>
                                                         <property name="borderTopStyle">solid</property>
                                                         <property name="borderTopWidth">thin</property>
-                                                        <label id="1887">
+                                                        <label id="2053">
                                                             <text-property name="text">Zusätzliche Massnahme</text-property>
                                                         </label>
                                                     </cell>
-                                                    <cell id="1885">
+                                                    <cell id="2054">
                                                         <property name="borderBottomColor">#000000</property>
                                                         <property name="borderBottomStyle">solid</property>
                                                         <property name="borderBottomWidth">thin</property>
@@ -4374,15 +4391,15 @@ columns(cols);</value>
                                                         <property name="borderTopColor">#000000</property>
                                                         <property name="borderTopStyle">solid</property>
                                                         <property name="borderTopWidth">thin</property>
-                                                        <label id="1889">
+                                                        <label id="2055">
                                                             <text-property name="text">Titel / Erläuterung</text-property>
                                                         </label>
                                                     </cell>
                                                 </row>
                                             </header>
                                             <detail>
-                                                <row id="1875">
-                                                    <cell id="1876">
+                                                <row id="2056">
+                                                    <cell id="2057">
                                                         <property name="borderBottomColor">#000000</property>
                                                         <property name="borderBottomStyle">solid</property>
                                                         <property name="borderBottomWidth">thin</property>
@@ -4395,12 +4412,12 @@ columns(cols);</value>
                                                         <property name="borderTopColor">#000000</property>
                                                         <property name="borderTopStyle">solid</property>
                                                         <property name="borderTopWidth">thin</property>
-                                                        <data id="1888">
+                                                        <data id="2058">
                                                             <property name="fontWeight">bold</property>
                                                             <property name="resultSetColumn">mnums_id</property>
                                                         </data>
                                                     </cell>
-                                                    <cell id="1877">
+                                                    <cell id="2059">
                                                         <property name="borderBottomColor">#000000</property>
                                                         <property name="borderBottomStyle">solid</property>
                                                         <property name="borderBottomWidth">thin</property>
@@ -4413,14 +4430,14 @@ columns(cols);</value>
                                                         <property name="borderTopColor">#000000</property>
                                                         <property name="borderTopStyle">solid</property>
                                                         <property name="borderTopWidth">thin</property>
-                                                        <data id="1890">
+                                                        <data id="2060">
                                                             <property name="fontWeight">bold</property>
                                                             <property name="resultSetColumn">mnums_name</property>
                                                         </data>
                                                     </cell>
                                                 </row>
-                                                <row id="1891">
-                                                    <cell id="1892">
+                                                <row id="2061">
+                                                    <cell id="2062">
                                                         <property name="borderBottomColor">#000000</property>
                                                         <property name="borderBottomStyle">solid</property>
                                                         <property name="borderBottomWidth">thin</property>
@@ -4433,11 +4450,11 @@ columns(cols);</value>
                                                         <property name="borderTopColor">#000000</property>
                                                         <property name="borderTopStyle">solid</property>
                                                         <property name="borderTopWidth">thin</property>
-                                                        <data id="1894">
+                                                        <data id="2063">
                                                             <property name="resultSetColumn">mnums_umsetzung</property>
                                                         </data>
                                                     </cell>
-                                                    <cell id="1893">
+                                                    <cell id="2064">
                                                         <property name="borderBottomColor">#000000</property>
                                                         <property name="borderBottomStyle">solid</property>
                                                         <property name="borderBottomWidth">thin</property>
@@ -4450,7 +4467,7 @@ columns(cols);</value>
                                                         <property name="borderTopColor">#000000</property>
                                                         <property name="borderTopStyle">solid</property>
                                                         <property name="borderTopWidth">thin</property>
-                                                        <data id="1895">
+                                                        <data id="2065">
                                                             <property name="resultSetColumn">mnums_erlaeuterung</property>
                                                         </data>
                                                     </cell>
