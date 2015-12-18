@@ -112,9 +112,6 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		
 		BooleanFieldEditor cutInheritPermissions = new BooleanFieldEditor(PreferenceConstants.CUT_INHERIT_PERMISSIONS, Messages.getString("GeneralSettingsPage.CutInheritPermissions"), getFieldEditorParent()); //$NON-NLS-1$
         addField(cutInheritPermissions);
-        
-        BooleanFieldEditor exportRiskAnalysis = new BooleanFieldEditor(PreferenceConstants.EXPORT_RISK_ANALYSIS, Messages.getString("GeneralSettingsPage.13"), getFieldEditorParent()); //$NON-NLS-1$
-        addField(exportRiskAnalysis);
 		
 		ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$
