@@ -18,6 +18,7 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import sernet.verinice.interfaces.encryption.EncryptionException;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.encryption.PasswordException;
 
 /**
@@ -95,6 +96,34 @@ public abstract class PasswordBasedEncryption {
         return decryptedData;
     }
 
+    public static byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException {
+        byte[] decryptedData;
+
+        PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
+        PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, ITERATION_COUNT);
+
+        try {
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
+            SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
+
+            // Generate and initialize a PBE cipher
+            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
+            cipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParameterSpec);
+
+            // encrypt
+            decryptedData = cipher.doFinal(unencryptedByteData);
+
+        } catch (GeneralSecurityException e) {
+            throw new EncryptionException("There was a problem during the encryption process. See the stacktrace for details.", e);
+        }
+        decryptedData = (decryptedData == null) ? new byte[] {} : decryptedData;
+        byte[] decryptedDataWithSaltPrefix = new byte[decryptedData.length + IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+        System.arraycopy(salt, 0, decryptedDataWithSaltPrefix, 0, salt.length - 1);
+        System.arraycopy(decryptedData, 0, decryptedDataWithSaltPrefix, salt.length, decryptedData.length);
+        pbeKeySpec.clearPassword();
+        return decryptedDataWithSaltPrefix;
+    }
+
     /**
      * Decrypts the given byte data with the given password using the AES
      * algorithm.
@@ -113,6 +142,35 @@ public abstract class PasswordBasedEncryption {
 
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
+
+        try {
+            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
+            SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
+
+            // Generate and initialize a PBE cipher
+            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
+            cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParameterSpec);
+
+            // decrypt
+            decryptedData = cipher.doFinal(encryptedByteData);
+
+        } catch (InvalidKeyException e) {
+            throw new PasswordException("Check your password.", e);
+        } catch (BadPaddingException e) {
+            throw new PasswordException("Check your password.", e);
+        } catch (GeneralSecurityException e) {
+            throw new EncryptionException("There was a problem during the decryption process. See the stacktrace for details.", e);
+        }
+        decryptedData = (decryptedData == null) ? new byte[] {} : decryptedData;
+        return decryptedData;
+    }
+
+    public static byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt) throws EncryptionException {
+
+        byte[] decryptedData;
+
+        PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
+        PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, ITERATION_COUNT);
 
         try {
             SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);

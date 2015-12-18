@@ -662,7 +662,12 @@ public class XMLImportDialog extends Dialog {
                 fileData = FileUtils.readFileToByteArray(dataFile);
                 IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
                 if (selectedEncryptionMethod == EncryptionMethod.PASSWORD) {
-                    fileData = service.decrypt(fileData, password.toCharArray());
+                    byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+                    System.arraycopy(fileData, 0, saltBytes, 0, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH - 1);
+                    byte[] cypherText = new byte[fileData.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+
+                    System.arraycopy(fileData, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH - 1, cypherText, 0, fileData.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
+                    fileData = service.decrypt(cypherText, password.toCharArray(), saltBytes);
                 } else if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {
                     fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile, privateKeyPassword);
                 }

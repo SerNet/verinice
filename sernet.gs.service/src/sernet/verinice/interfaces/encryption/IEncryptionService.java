@@ -36,6 +36,9 @@ public interface IEncryptionService {
 	
 	public enum EncryptionMethod { PASSWORD, EXTERNAL_CERTIFICATE, PKCS11 };
 
+    public static final int CRYPTO_SALT_DEFAULT_LENGTH = 8;
+    public static final String CRYPTO_DEFAULT_ENCODING = "UTF-8";
+
 	/**
 	 * Encrypts the given byte data with the given password using the AES algorithm.
 	 * 
@@ -49,6 +52,11 @@ public interface IEncryptionService {
 	 */
 	byte[] encrypt(byte[] unencryptedByteData, char[] password) throws EncryptionException;
 
+    byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException;
+
+    // byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt)
+    // throws EncryptionException;
+
 	/**
 	 * Decrypts the given byte data with the given password using the AES algorithm.
 	 * 
@@ -61,6 +69,8 @@ public interface IEncryptionService {
 	 *             if a problem occured during the decryption process
 	 */
 	byte[] decrypt(byte[] encryptedByteData, char[] password) throws EncryptionException;
+
+    byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt) throws EncryptionException;
 
 	/**
 	 * Encrypts data received from the given OutputStream using the AES algorithm.

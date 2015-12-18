@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -182,7 +183,11 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
             try {
         		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
         		if(exportCommand.getResult()!=null) {
-        		    FileUtils.writeByteArrayToFile(new File(filePath), encrypt(exportCommand.getResult()));
+                    String salt = RandomStringUtils.random(IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, true, true);
+                    byte[] saltBytes = salt.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING);
+        		    byte[] cypherTextBytes = encrypt(exportCommand.getResult(), saltBytes);
+        		    
+                    FileUtils.writeByteArrayToFile(new File(filePath), cypherTextBytes);
         		}
         		updateModel(exportCommand.getChangedElements());
         	} catch (Exception e) {
@@ -226,18 +231,24 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         }
     }
 	
-    private byte[] encrypt(byte[] result) throws CertificateException, EncryptionException, IOException {
+    private byte[] encrypt(byte[] result, byte[] salt) throws CertificateException, EncryptionException, IOException {
         IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
+        byte[] cypherTextBytes;
         byte[] returnResult;
         if (keyAlias != null) {
-        	returnResult = service.encrypt(result, keyAlias);
+            cypherTextBytes = service.encrypt(result, keyAlias);
         } else if (password!=null) {
-            returnResult = service.encrypt(result, password);
+            cypherTextBytes = service.encrypt(result, password, salt);
+            // Encrypt message
+
         } else if (x509CertificateFile!=null) {
-            returnResult = service.encrypt(result, x509CertificateFile);
+            cypherTextBytes = service.encrypt(result, x509CertificateFile);
         } else {
-            returnResult = result;
-        }      
+            cypherTextBytes = result;
+        }
+        returnResult = new byte[cypherTextBytes.length + salt.length];
+        System.arraycopy(salt, 0, returnResult, 0, salt.length);
+        System.arraycopy(cypherTextBytes, 0, returnResult, salt.length - 1, cypherTextBytes.length);
         return returnResult;
     }
 

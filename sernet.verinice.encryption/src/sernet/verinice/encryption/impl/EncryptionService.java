@@ -45,10 +45,20 @@ public class EncryptionService implements IEncryptionService {
 		return PasswordBasedEncryption.encrypt(unencryptedByteData, password);
 	}
 
+    @Override
+    public byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException {
+        return PasswordBasedEncryption.encrypt(unencryptedByteData, password, salt);
+    }
+
 	@Override
 	public byte[] decrypt(byte[] encryptedByteData, char[] password) throws EncryptionException {
 		return PasswordBasedEncryption.decrypt(encryptedByteData, password);
 	}
+
+    @Override
+    public byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt) throws EncryptionException {
+        return PasswordBasedEncryption.decrypt(encryptedByteData, password, salt);
+    }
 
 	@Override
 	public OutputStream encrypt(OutputStream unencryptedDataStream, char[] password)
