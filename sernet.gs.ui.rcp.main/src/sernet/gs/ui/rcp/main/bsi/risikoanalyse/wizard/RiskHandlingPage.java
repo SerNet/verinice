@@ -263,17 +263,17 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
                     if (contains) {
                         /* filter is already active - update filter */
                         thisFilter.setPattern(text.getText());
-                        viewer.refresh();
+                        refresh();
 
                     } else {
                         /* filter is not active - add */
                         searchFilter.setPattern(text.getText());
                         viewer.addFilter(searchFilter);
-                        viewer.refresh();
+                        refresh();
                     }
                 } else {
                     viewer.removeFilter(searchFilter);
-                    viewer.refresh();
+                    refresh();
                     packAllColumns();
                 }
             }
