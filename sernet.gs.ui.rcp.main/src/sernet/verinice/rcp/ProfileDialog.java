@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -296,17 +297,40 @@ public class ProfileDialog extends TitleAreaDialog {
      */
     @Override
     protected void okPressed() {
-        try {
-            if(!this.profile.getName().equals(this.profileName)) {
-                updateProfileRefs();
+        if (validateInput()) {
+            try {
+                if (!this.profile.getName().equals(this.profileName)) {
+                    updateProfileRefs();
+                }
+                getRightService().updateConfiguration(auth);
+                super.okPressed();
+            } catch (Exception e) {
+                final String message = "Error while saving profiles.";
+                LOG.error(message, e);
+                MessageDialog.openError(this.getShell(), "Error", message);
             }
-            getRightService().updateConfiguration(auth);   
-            super.okPressed();
-        } catch(Exception e) {           
-            final String message = "Error while saving profiles.";
-            LOG.error(message, e);
-            MessageDialog.openError(this.getShell(), "Error", message);
+        } else {
+            showValidationWarning();
         }
+    }
+
+    private void showValidationWarning() {
+        MessageDialog.openWarning(this.getShell(), Messages.ProfileDialog_12, Messages.ProfileDialog_13);
+        this.textName.selectAll();
+        this.textName.setFocus();
+    }
+
+    /**
+     * prevent empty profile names, also names that contains whitespaces only
+     * @return is profileName valid
+     */
+    private boolean validateInput() {
+        String input = this.textName.getText();
+        String trimmedInput = null;
+        if (input != null) {
+            trimmedInput = input.trim();
+        }
+        return StringUtils.isNotEmpty(trimmedInput);
     }
     
     /* (non-Javadoc)
