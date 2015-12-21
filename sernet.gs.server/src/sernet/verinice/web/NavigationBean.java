@@ -32,11 +32,15 @@ public class NavigationBean {
     public static final String VIEW_ID_TODO = "/todo/todo.xhtml";
     
     public static final String VIEW_ID_EDIT = "/edit/index.xhtml";
-    
+
     public static final String CLASS_ACTIVE = "active";
     
     public static final String CLASS_INACTIVE = "inactive";
     
+    public static final String CLASS_NAV_ACTIVE = "liNavi active";
+
+    public static final String CLASS_NAV_INACTIVE = "liNavi";
+
     public String getTaskStyle() {
         return VIEW_ID_TASK.equals(getViewId()) ? CLASS_ACTIVE : CLASS_INACTIVE;
     }
@@ -44,9 +48,28 @@ public class NavigationBean {
     public String getBsiTodoStyle() {
         return VIEW_ID_TODO.equals(getViewId()) ? CLASS_ACTIVE : CLASS_INACTIVE;
     }
-    
+
     public String getEditStyle() {
         return VIEW_ID_EDIT.equals(getViewId()) ? CLASS_ACTIVE : CLASS_INACTIVE;
+    }
+
+    public String getIndexNavStyle() {
+        String fullId = "/portal.verinice.private/index.xhtml";
+        return fullId.equals(getViewId()) ? CLASS_NAV_ACTIVE : CLASS_NAV_INACTIVE;
+    }
+
+    public String getDownloadNavStyle() {
+        String fullId = "/portal.verinice.private/download.xhtml";
+        return fullId.equals(getViewId()) ? CLASS_NAV_ACTIVE : CLASS_NAV_INACTIVE;
+    }
+
+    public String getManualNavStyle() {
+        String fullId = "/portal.verinice.private/manual.xhtml";
+        return fullId.equals(getViewId()) ? CLASS_NAV_ACTIVE : CLASS_NAV_INACTIVE;
+    }
+
+    public String getTodoNavStyle() {
+        return VIEW_ID_TODO.equals(getViewId()) || VIEW_ID_EDIT.equals(getViewId()) || VIEW_ID_TASK.equals(getViewId()) ? CLASS_NAV_ACTIVE : CLASS_NAV_INACTIVE;
     }
     
     private String getViewId() {

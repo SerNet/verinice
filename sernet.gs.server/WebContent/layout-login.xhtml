@@ -9,13 +9,15 @@
 <f:loadBundle basename="sernet.verinice.web.TaskMessages" var="msgTask"/>
 <f:loadBundle basename="sernet.verinice.web.EditMessages" var="msgEdit"/>
 <f:loadBundle basename="sernet.verinice.web.TreeMessages" var="msgTree"/>
+<f:loadBundle basename="sernet.verinice.web.WebMessages" var="msgWeb"/>
 	<h:head>
 	
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		
+		<link href="#{request.contextPath}/image/favicon.png" rel="icon" type="image/png" />
 		<link href="#{request.contextPath}/css/my_layout.css" rel="stylesheet" type="text/css" />
 		<link href="#{request.contextPath}/css/standard.css" rel="stylesheet" type="text/css" />
 		<link href="#{request.contextPath}/css/default.css" rel="stylesheet" type="text/css" />
+		<link href="#{request.contextPath}/css/portal.css" rel="stylesheet" type="text/css" />
 		<title>verinice.</title>
 		<link rel="stylesheet" href="#{request.contextPath}/css/slightbox.css" type="text/css" media="screen,projection" />
 		<script type="text/javascript" src="#{request.contextPath}/css/slimbox.2.0.4.yui.js"></script>
@@ -98,7 +100,7 @@
 
 			<!-- begin: #footer -->
 			<div id="footer">
-				<p class="bodytext">© 1996-2015<b> SerNet GmbH</b> | Dieses Layout basiert auf YAML © von Dirk Jesse</p>
+				<p class="bodytext"><h:outputText escape="false" value="#{msgWeb['copyRight']}" /></p>
 			</div>
 		</div>
 	</body>

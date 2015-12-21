@@ -52,7 +52,7 @@ public class MessageBean {
     }
 
 
-    public static String getcurrentLanguageTag() {
+    public String getcurrentLanguageTag() {
         return Util.getcurrentLanguageTag();
     }
 
