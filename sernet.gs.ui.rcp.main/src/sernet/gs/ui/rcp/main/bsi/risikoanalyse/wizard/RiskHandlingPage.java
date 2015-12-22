@@ -19,17 +19,13 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -49,7 +45,6 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
  */
 public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
 
-    private static final Logger LOG = Logger.getLogger(RiskHandlingPage.class);
     
     private TableColumn imgColumn;
     private TableColumn numberColumn;
@@ -60,7 +55,6 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
     private static final int NUM_COL_WIDTH = 100;
     private static final int NAME_COL_WIDTH = NUM_COL_WIDTH;
     private static final int CHOISE_COL_WIDTH = 200;
-    private SearchFilter searchFilter = new SearchFilter();
     public static final String IMG_COLUMN_ID = "image"; //$NON-NLS-1$
     public static final String NUMBER_COLUMN_ID = "number"; //$NON-NLS-1$
     public static final String NAME_COLUMN_ID = "name"; //$NON-NLS-1$
@@ -162,53 +156,6 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
         }
     }
 
-    /**
-     * Filter to extract all GefaehrdungsUmsetzungen matching a given String.
-     *
-     * @author ahanekop[at]sernet[dot]de
-     */
-    class SearchFilter extends ViewerFilter {
-
-        private Pattern pattern;
-
-        /**
-         * Updates the Pattern.
-         * 
-         * @param searchString
-         *            the String to search for
-         */
-        void setPattern(String searchString) {
-            pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
-        }
-
-        /**
-         * Selects all GefaehrdungsUmsetzungen matching the Pattern.
-         * 
-         * @param viewer
-         *            the Viewer to operate on
-         * @param parentElement
-         *            not used
-         * @param element
-         *            given element
-         * @return true if element passes test, false else
-         */
-        @Override
-        public boolean select(Viewer viewer, Object parentElement, Object element) {
-            try {
-                GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) element;
-                String gefaehrdungTitle = gefaehrdung.getTitle();
-                Matcher matcher = pattern.matcher(gefaehrdungTitle);
-
-                if (matcher.find()) {
-                    return true;
-                }
-                return false;
-            } catch (Exception e) {
-                LOG.error("Error while filtering table.", e);
-                return true;
-            }
-        }
-    }
 
 
     @Override
@@ -251,13 +198,13 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
                 if (text.getText().length() > 0) {
 
                     ViewerFilter[] filters = viewer.getFilters();
-                    SearchFilter thisFilter = null;
+                    RiskAnalysisWizardPageSearchFilter thisFilter = null;
                     boolean contains = false;
 
                     for (ViewerFilter item : filters) {
-                        if (item instanceof SearchFilter) {
+                        if (item instanceof RiskAnalysisWizardPageSearchFilter) {
                             contains = true;
-                            thisFilter = (SearchFilter) item;
+                            thisFilter = (RiskAnalysisWizardPageSearchFilter) item;
                         }
                     }
                     if (contains) {

@@ -172,6 +172,55 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
     @Override
     protected void addSpecificListenersForPage() {
 
+        addFilterListeners();
+
+        /**
+         * listener adds/removes Gefaehrdungen to Arrays of Gefaehrdungen
+         */
+        viewer.addCheckStateListener(new ICheckStateListener() {
+
+            /**
+             * Notifies of a change to the checked state of an element.
+             */
+            @Override
+            public void checkStateChanged(CheckStateChangedEvent event) {
+                GefaehrdungsUmsetzung gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) event.getElement();
+
+                Integer raListDbId = getRiskAnalysisWizard().getFinishedRiskAnalysisLists().getDbId();
+                if (event.getChecked()) {
+                    /* checkbox set */
+
+                    try {
+                        NegativeEstimateGefaehrdung command = new NegativeEstimateGefaehrdung(raListDbId, gefaehrdungsUmsetzung, getRiskAnalysisWizard().getFinishedRiskAnalysis());
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        getRiskAnalysisWizard().setFinishedRiskLists(command.getRaList());
+                    } catch (Exception e) {
+                        LOG.error("Error while selecting", e);
+                        ExceptionUtil.log(e, Messages.EstimateGefaehrdungPage_8);
+                    }
+
+                } else {
+                    try {
+                        /* checkbox unset */
+                        PositiveEstimateGefaehrdung command = new PositiveEstimateGefaehrdung(raListDbId, gefaehrdungsUmsetzung, getRiskAnalysisWizard().getFinishedRiskAnalysis());
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        if (command.getLists() != null) {
+                            getRiskAnalysisWizard().setFinishedRiskLists(command.getLists());
+                        }
+                    } catch (Exception e) {
+                        LOG.error("Error while deselecting", e);
+                        ExceptionUtil.log(e, Messages.EstimateGefaehrdungPage_9);
+                    }
+
+                }
+                ((RiskAnalysisWizard) getWizard()).setCanFinish(false);
+                checkPageComplete();
+            }
+        });
+    }
+
+    private void addFilterListeners() {
+
         /* Listener adds/removes Filter searchFilter */
         textSearch.addModifyListener(new ModifyListener() {
 
@@ -263,52 +312,9 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
             }
         });
 
-        /**
-         * listener adds/removes Gefaehrdungen to Arrays of Gefaehrdungen
-         */
-        viewer.addCheckStateListener(new ICheckStateListener() {
-
-            /**
-             * Notifies of a change to the checked state of an element.
-             */
-            @Override
-            public void checkStateChanged(CheckStateChangedEvent event) {
-                GefaehrdungsUmsetzung gefaehrdungsUmsetzung = (GefaehrdungsUmsetzung) event.getElement();
-
-                Integer raListDbId = getRiskAnalysisWizard().getFinishedRiskAnalysisLists().getDbId();
-                if (event.getChecked()) {
-                    /* checkbox set */
-
-                    try {
-                        NegativeEstimateGefaehrdung command = new NegativeEstimateGefaehrdung(raListDbId, gefaehrdungsUmsetzung, getRiskAnalysisWizard().getFinishedRiskAnalysis());
-                        command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        getRiskAnalysisWizard().setFinishedRiskLists(command.getRaList());
-                    } catch (Exception e) {
-                        LOG.error("Error while selecting", e);
-                        ExceptionUtil.log(e, Messages.EstimateGefaehrdungPage_8);
-                    }
-
-                } else {
-                    try {
-                        /* checkbox unset */
-                        PositiveEstimateGefaehrdung command = new PositiveEstimateGefaehrdung(raListDbId, gefaehrdungsUmsetzung, getRiskAnalysisWizard().getFinishedRiskAnalysis());
-                        command = ServiceFactory.lookupCommandService().executeCommand(command);
-                        if (command.getLists() != null) {
-                            getRiskAnalysisWizard().setFinishedRiskLists(command.getLists());
-                        }
-                    } catch (Exception e) {
-                        LOG.error("Error while deselecting", e);
-                        ExceptionUtil.log(e, Messages.EstimateGefaehrdungPage_9);
-                    }
-
-                }
-                ((RiskAnalysisWizard) getWizard()).setCanFinish(false);
-                checkPageComplete();
-            }
-        });
     }
 
-    
+
     @Override
     protected void addButtons(Composite parent, String groupName) {
         /* there are no buttons needed in this Page */

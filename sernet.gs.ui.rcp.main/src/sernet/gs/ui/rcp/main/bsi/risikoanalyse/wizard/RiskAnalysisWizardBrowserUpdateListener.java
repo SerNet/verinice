@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) ${year} Ruth Motza.
+ * Copyright (c) 2015 Ruth Motza.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -33,6 +33,8 @@ import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
 /**
+ * Listener for updating the Browser in the RiskAnalysisWizard as soon as the
+ * selection in the viewer changes
  * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
