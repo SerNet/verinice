@@ -53,137 +53,138 @@ import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.RightsEnabledView;
 
 public class BrowserView extends RightsEnabledView implements ILinkedWithEditorView {
-    
-	private static final Logger LOG = Logger.getLogger(BrowserView.class);
-	
-	public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.browserview"; //$NON-NLS-1$
 
-	private Browser browser;
+    private static final Logger LOG = Logger.getLogger(BrowserView.class);
 
-	private ISelectionListener selectionListener;
-	
-	private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
-    
+    public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.browserview"; //$NON-NLS-1$
+
+    private Browser browser;
+
+    private ISelectionListener selectionListener;
+
+    private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
+
     private boolean linkingActive = true;
-    
+
     private SerialiseBrowserLoadingListener serialiseListener;
-    
+
     private CnATreeElement selectedInISMView;
 
-	@Override
+    @Override
     public void createPartControl(Composite parent) {
-	    super.createPartControl(parent);
-		GridLayout gl = new GridLayout(1, false);
-		parent.setLayout(gl);
-        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
-		try {
-			browser = new Browser(parent, SWT.NONE);
-			browser.setLayoutData(new GridData(GridData.FILL_BOTH
-					| GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
-			
-			serialiseListener = new SerialiseBrowserLoadingListener(browser);
-			browser.addProgressListener(serialiseListener);
-			
-			browser.setUrl(defaultImage());
+        super.createPartControl(parent);
+        GridLayout gl = new GridLayout(1, false);
+        parent.setLayout(gl);
+        toggleLinking(Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+        try {
+            browser = new Browser(parent, SWT.NONE);
+            browser.setLayoutData(new GridData(
+                    GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
 
-		    Action linkWithEditorAction = new Action(Messages.BrowserView_0, IAction.AS_CHECK_BOX) {
-	            @Override
-	            public void run() {
-	                toggleLinking(isChecked());
-	            }
-	        };
-	        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
-	        getViewSite().getActionBars().getToolBarManager().add(linkWithEditorAction);
-	        linkWithEditorAction.setChecked(isLinkingActive());
-			
-			hookPageSelection();
-		} catch (Exception e) {
-			ExceptionUtil.log(e, Messages.BrowserView_3);
-		}
-	}
-	
-	protected void toggleLinking(boolean checked) {
+            serialiseListener = new SerialiseBrowserLoadingListener(browser);
+            browser.addProgressListener(serialiseListener);
+
+            browser.setUrl(defaultImage());
+
+            Action linkWithEditorAction = new Action(Messages.BrowserView_0, IAction.AS_CHECK_BOX) {
+                @Override
+                public void run() {
+                    toggleLinking(isChecked());
+                }
+            };
+            linkWithEditorAction.setImageDescriptor(
+                    ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+            getViewSite().getActionBars().getToolBarManager().add(linkWithEditorAction);
+            linkWithEditorAction.setChecked(isLinkingActive());
+
+            hookPageSelection();
+        } catch (Exception e) {
+            ExceptionUtil.log(e, Messages.BrowserView_3);
+        }
+    }
+
+    protected void toggleLinking(boolean checked) {
         this.linkingActive = checked;
         if (checked) {
             editorActivated(getSite().getPage().getActiveEditor());
         }
     }
-	
-	protected boolean isLinkingActive() {
+
+    protected boolean isLinkingActive() {
         return linkingActive;
     }
-	
-	@Override
-    public String getRightID(){
-	    return ActionRightIDs.BSIBROWSER;
-	}
-	
-	/* (non-Javadoc)
+
+    @Override
+    public String getRightID() {
+        return ActionRightIDs.BSIBROWSER;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.rcp.RightsEnabledView#getViewId()
      */
     @Override
     public String getViewId() {
         return ID;
     }
-	
-	private String defaultImage() {
-		return String.format("file:///%s/html/about.html", CnAWorkspace //$NON-NLS-1$
-				.getInstance().getWorkdir()); //$NON-NLS-1$
-	}
 
-	private void hookPageSelection() {
-		selectionListener = new ISelectionListener() {
-			@Override
+    private static String defaultImage() {
+        return String.format("file:///%s/html/about.html", CnAWorkspace //$NON-NLS-1$
+                .getInstance().getWorkdir()); // $NON-NLS-1$
+    }
+
+    private void hookPageSelection() {
+        selectionListener = new ISelectionListener() {
+            @Override
             public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-				pageSelectionChanged(part, selection);
-			}
-		};
-		getSite().getPage().addPostSelectionListener(selectionListener);
-		getSite().getPage().addPartListener(linkWithEditorPartListener);
-	}
+                pageSelectionChanged(part, selection);
+            }
+        };
+        getSite().getPage().addPostSelectionListener(selectionListener);
+        getSite().getPage().addPartListener(linkWithEditorPartListener);
+    }
 
-	protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
-	    if (part != this && selection instanceof IStructuredSelection) {
-	        Object element = ((IStructuredSelection) selection).getFirstElement();	        
-	        if (part instanceof ISMView) {
-	            setSelectedInISMView(element);
-	        } else if (part instanceof RelationView) {
-	            if (element instanceof CnALink) {
-	                element = determineLinkedElement((CnALink) element);
-	            }
-	        } else if (part instanceof BSIElementEditor && isLinkingActive()) {
-	            if (element instanceof CnALink) {
-	                element = determineLinkedElement((CnALink) element);
-	            }
-	        }
-	        elementSelected(element);
-	    }
-	}
-	
-	private void setSelectedInISMView(Object element) {
-	    if(element instanceof CnATreeElement){
-	        selectedInISMView = (CnATreeElement) element;
-	    }
-	}
+    protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
+        if (part != this && selection instanceof IStructuredSelection) {
+            Object element = ((IStructuredSelection) selection).getFirstElement();
+            if (part instanceof ISMView) {
+                setSelectedInISMView(element);
+            } else if (part instanceof RelationView) {
+                if (element instanceof CnALink) {
+                    element = determineLinkedElement((CnALink) element);
+                }
+            } else if (part instanceof BSIElementEditor && element instanceof CnALink
+                    && isLinkingActive()) {
+                element = determineLinkedElement((CnALink) element);
+            }
+            elementSelected(element);
+        }
+    }
 
-	private Object determineLinkedElement(CnALink link) {
-	    IControl linkedElement = null;
-	    Object dependant = link.getDependant();
-	    Object dependency = link.getDependency();
-	    
-	    if (dependant instanceof IControl 
-	            && !dependant.equals(selectedInISMView)) {
-	        linkedElement = castToCorrectControlType((IControl) dependant);
-	    } else if (dependency instanceof IControl
-	            && !dependency.equals(selectedInISMView)
-	            || dependant.equals(dependency)) {
-	        linkedElement = castToCorrectControlType((IControl) dependency);
-	    }	        
-	    return linkedElement;
-	}
-	
-	private IControl castToCorrectControlType(IControl element) {
-	    IControl linkedElement = null;
+    private void setSelectedInISMView(Object element) {
+        if (element instanceof CnATreeElement) {
+            selectedInISMView = (CnATreeElement) element;
+        }
+    }
+
+    private Object determineLinkedElement(CnALink link) {
+        IControl linkedElement = null;
+        Object dependant = link.getDependant();
+        Object dependency = link.getDependency();
+
+        if (dependant instanceof IControl && !dependant.equals(selectedInISMView)) {
+            linkedElement = castToCorrectControlType((IControl) dependant);
+        } else if (dependency instanceof IControl && !dependency.equals(selectedInISMView)
+                || dependant.equals(dependency)) {
+            linkedElement = castToCorrectControlType((IControl) dependency);
+        }
+        return linkedElement;
+    }
+
+    private static IControl castToCorrectControlType(IControl element) {
+        IControl linkedElement = null;
         if (element instanceof Control) {
             linkedElement = (Control) element;
         } else if (element instanceof SamtTopic) {
@@ -193,7 +194,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     protected void elementSelected(Object element) {
-	    try {
+        try {
             StatusLine.setErrorMessage(""); //$NON-NLS-1$
             setText(HtmlWriter.getHtml(element));
 
@@ -202,34 +203,38 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
             LOG.error(Messages.BrowserView_4 + Messages.BrowserView_5, e);
             browser.setUrl(defaultImage());
         }
-	}
+    }
 
-	@Override
+    @Override
     public void setFocus() {
-		browser.setFocus();
-	}
-	
-	/**
-	 * Sets the contents to be displayed in the browser window.
-	 * 
-	 * @param is
-	 *            The HTML page to be displayed as an input stream
-	 */
-	public void setText(String text) {
-	    if(text!=null) {
-	        serialiseListener.setText(text);
-	    }
-	}
+        browser.setFocus();
+    }
 
-	@Override
-	public void dispose() {
-		getSite().getPage().removePostSelectionListener(selectionListener);
-		getSite().getPage().removePartListener(linkWithEditorPartListener);
-		super.dispose();
-	}
+    /**
+     * Sets the contents to be displayed in the browser window.
+     * 
+     * @param is
+     *            The HTML page to be displayed as an input stream
+     */
+    public void setText(String text) {
+        if (text != null) {
+            serialiseListener.setText(text);
+        }
+    }
 
-	/* (non-Javadoc)
-     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+    @Override
+    public void dispose() {
+        getSite().getPage().removePostSelectionListener(selectionListener);
+        getSite().getPage().removePartListener(linkWithEditorPartListener);
+        super.dispose();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
+     * eclipse.ui.IEditorPart)
      */
     @Override
     public void editorActivated(IEditorPart activeEditor) {
@@ -238,9 +243,9 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
         if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {
             return;
         }
-        if(element==null) {
+        if (element == null) {
             return;
-        } 
-        elementSelected(element);       
+        }
+        elementSelected(element);
     }
 }

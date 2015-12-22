@@ -15,6 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
+
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.ArrayList;
@@ -24,8 +25,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Preferences.IPropertyChangeListener;
-import org.eclipse.core.runtime.Preferences.PropertyChangeEvent;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.GroupMarker;
@@ -114,16 +113,14 @@ import sernet.verinice.rcp.tree.TreeContentProvider;
 import sernet.verinice.rcp.tree.TreeUpdateListener;
 
 /**
- * View for model of own "ITVerbund" with associated controls, risk analysis
- * etc.
+ * View for a tree structure, representing the data model for modeling an IT
+ * Baseline Protection implementation comprising IT Networks, associated
+ * Controls, Risk Analysis's etc.
  * 
- * 
- * @author koderman[at]sernet[dot]de
- * @version $Rev$ $LastChangedDate$ $LastChangedBy$
- * 
+ * @author koderman[at]sernet[dot]de *
  */
-@SuppressWarnings("restriction")
-public class BsiModelView extends RightsEnabledView implements IAttachedToPerspective, ILinkedWithEditorView {
+public class BsiModelView extends RightsEnabledView
+        implements IAttachedToPerspective, ILinkedWithEditorView {
 
     private static final Logger LOG = Logger.getLogger(BsiModelView.class);
 
@@ -171,22 +168,14 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
     
     private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
 
-
-    private final IPropertyChangeListener prefChangeListener = new IPropertyChangeListener() {
-        @Override
-        public void propertyChange(PropertyChangeEvent event) {
-            if (event.getProperty().equals(PreferenceConstants.DB_URL) || event.getProperty().equals(PreferenceConstants.DB_USER) || event.getProperty().equals(PreferenceConstants.DB_DRIVER) || event.getProperty().equals(PreferenceConstants.DB_PASS)) {
-                CnAElementFactory.getInstance().closeModel();
-                setNullModel();
-            }
-        }
-    };
-
     public BsiModelView() {
+        
         elementManager = new ElementManager();
     }
-
-    /* (non-Javadoc)
+    
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
     @Override
@@ -197,7 +186,6 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
         super.dispose();
     }
 
-    
     public void setNullModel() {
         model = new NullModel();
 
@@ -257,6 +245,7 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
+
         try {
             initView(parent);
             startInitDataJob();
@@ -264,6 +253,8 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
             LOG.error("Error while creating organization view", e); //$NON-NLS-1$
             ExceptionUtil.log(e, Messages.BsiModelView_7);
         }
+
+        loadItBaselineProtectionCatalogs();
     }
 
     private void initView(Composite parent) {
@@ -275,9 +266,11 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
         TreeContentProvider contentProvider = new TreeContentProvider(elementManager);
         viewer.setContentProvider(contentProvider);
                 
-        viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(), workbench.getDecoratorManager()));
+        viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(),
+                workbench.getDecoratorManager()));
         viewer.setSorter(new CnAElementByTitelSorter());
-        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
+        toggleLinking(Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
         getSite().setSelectionProvider(viewer);
         makeActions();
@@ -287,14 +280,10 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
         hookDNDListeners();
         addBSIFilter();
         fillLocalToolBar();
-        Activator.getDefault().getPluginPreferences().addPropertyChangeListener(this.prefChangeListener);
         getSite().getPage().addPartListener(linkWithEditorPartListener);
         setNullModel();
     }
 
-    /**
-     * 
-     */
     protected void startInitDataJob() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.BsiModelView_5) {
             @Override
@@ -305,7 +294,8 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
                     initData();
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.BsiModelView_9, e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            Messages.BsiModelView_9, e);
                 } finally {
                     monitor.done();
                 }
@@ -341,6 +331,11 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
         }
     }
 
+    private static void loadItBaselineProtectionCatalogs() {
+        WorkspaceJob job = new OpenCataloguesJob(Messages.BSIMassnahmenView_0);
+        JobScheduler.scheduleInitJob(job);
+    }
+
     private void fillContextMenu(IMenuManager manager) {
         manager.add(new GroupMarker("content")); //$NON-NLS-1$
         manager.add(new Separator());
@@ -365,7 +360,8 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
 
     private boolean bausteinSelected() {
         IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-        if (!sel.isEmpty() && sel.size() == 1 && sel.getFirstElement() instanceof BausteinUmsetzung) {
+        if (!sel.isEmpty() && sel.size() == 1
+                && sel.getFirstElement() instanceof BausteinUmsetzung) {
             return true;
         }
         return false;
@@ -396,8 +392,12 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
     }
 
     private void hookDNDListeners() {
-        Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(), BausteinUmsetzungTransfer.getInstance(), IBSIStrukturElementTransfer.getInstance() };
-        Transfer[] dragTypes = new Transfer[] { IBSIStrukturElementTransfer.getInstance(), BausteinUmsetzungTransfer.getInstance() };
+
+        Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
+                BausteinUmsetzungTransfer.getInstance(),
+                IBSIStrukturElementTransfer.getInstance() };
+        Transfer[] dragTypes = new Transfer[] { IBSIStrukturElementTransfer.getInstance(),
+                BausteinUmsetzungTransfer.getInstance() };
 
         int operations = DND.DROP_COPY | DND.DROP_MOVE;
         viewer.addDropSupport(operations, dropTypes, new BSIModelViewDropListener(viewer));
@@ -414,52 +414,79 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
     }
 
     private void makeActions() {
+
+        final int newSelDefaultSize = 10;
         selectEqualsAction = new Action() {
+
             @Override
             public void run() {
+
                 IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
                 Object o = sel.getFirstElement();
                 if (o instanceof BausteinUmsetzung) {
-
                     BausteinUmsetzung sourceBst = (BausteinUmsetzung) o;
+                    ArrayList<BausteinUmsetzung> newsel = new ArrayList<>(newSelDefaultSize);
+                    newsel.add(sourceBst);
 
-                    buildBausteinUmsetzung(sourceBst);
+                    try {
+                        LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<BausteinUmsetzung>(
+                                BausteinUmsetzung.class);
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        List<BausteinUmsetzung> bausteine = command.getElements();
 
+                        for (BausteinUmsetzung bst : bausteine) {
+                            if (bst.getKapitel().equals(sourceBst.getKapitel())) {
+                                newsel.add(bst);
+                            }
+                        }
+                    } catch (CommandException e) {
+                        ExceptionUtil.log(e, ""); //$NON-NLS-1$
+                    }
+
+                    viewer.setSelection(new StructuredSelection(newsel));
                 }
             }
         };
         selectEqualsAction.setText(Messages.BsiModelView_11);
 
-        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_13);
+        bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
+                Messages.BsiModelView_13);
 
-        accessControlEditAction = new ShowAccessControlEditAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_14);
+        accessControlEditAction = new ShowAccessControlEditAction(
+                getViewSite().getWorkbenchWindow(), Messages.BsiModelView_14);
 
         naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
 
-        konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_15);
+        konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(),
+                Messages.BsiModelView_15);
 
-        gsmbasicsecuritycheckAction = new GSMBasicSecurityCheckAction(getViewSite().getWorkbenchWindow(), Messages.BsiModelView_19);
+        gsmbasicsecuritycheckAction = new GSMBasicSecurityCheckAction(
+                getViewSite().getWorkbenchWindow(), Messages.BsiModelView_19);
 
         bausteinZuordnungAction = new BausteinZuordnungAction(getViewSite().getWorkbenchWindow());
 
-        gsmbausteinZuordnungAction = new GSMBausteinZuordnungAction(getViewSite().getWorkbenchWindow());
+        gsmbausteinZuordnungAction = new GSMBausteinZuordnungAction(
+                getViewSite().getWorkbenchWindow());
 
         doubleClickAction = new Action() {
+
             @Override
             public void run() {
+
                 final int wizardWidth = 800;
                 final int wizardHeight = 600;
                 Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
 
                 if (sel instanceof FinishedRiskAnalysis) {
                     FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
-                    RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis.getParent(), analysis);
+                    RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis.getParent(),
+                            analysis);
                     wizard.init(PlatformUI.getWorkbench(), null);
-                    WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(new Shell(), wizard);
+                    WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(new Shell(),
+                            wizard);
                     wizDialog.setPageSize(wizardWidth, wizardHeight);
                     wizDialog.open();
                 } else {
-                    // open editor:
                     EditorFactory.getInstance().updateAndOpenObject(sel);
                 }
             }
@@ -467,34 +494,47 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
 
         BSIModelElementFilter modelElementFilter = new BSIModelElementFilter(viewer);
 
-        filterAction = new BSIModelViewFilterAction(Messages.BsiModelView_3, new MassnahmenUmsetzungFilter(viewer), new MassnahmenSiegelFilter(viewer), new LebenszyklusPropertyFilter(viewer), new ObjektLebenszyklusPropertyFilter(viewer), modelElementFilter, new TagFilter(viewer));
+        filterAction = new BSIModelViewFilterAction(Messages.BsiModelView_3,
+                new MassnahmenUmsetzungFilter(viewer), new MassnahmenSiegelFilter(viewer),
+                new LebenszyklusPropertyFilter(viewer),
+                new ObjektLebenszyklusPropertyFilter(viewer), modelElementFilter,
+                new TagFilter(viewer));
 
         expandAllAction = new Action() {
+
             @Override
             public void run() {
+
                 expandAll();
             }
         };
         expandAllAction.setText(Messages.BsiModelView_16);
-        expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+        expandAllAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
         collapseAction = new Action() {
+
             @Override
             public void run() {
+
                 viewer.collapseAll();
             }
         };
         collapseAction.setText(Messages.BsiModelView_17);
-        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+        collapseAction.setImageDescriptor(
+                ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
         linkWithEditorAction = new Action(Messages.BsiModelView_6, IAction.AS_CHECK_BOX) {
+
             @Override
             public void run() {
+
                 toggleLinking(isChecked());
             }
         };
         linkWithEditorAction.setChecked(isLinkingActive());
-        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
+        linkWithEditorAction
+                .setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
     }
 
     protected void buildBausteinUmsetzung(BausteinUmsetzung sourceBst) {
@@ -577,8 +617,12 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
         return Perspective.ID;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.eclipse.ui.IEditorPart)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
+     * eclipse.ui.IEditorPart)
      */
     @Override
     public void editorActivated(IEditorPart editor) {
@@ -589,10 +633,9 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
         if(element == null){
             element = getElementFromAttachment(editor);
         }
-        if(element!=null               
-           && ((element instanceof IBSIStrukturElement) || 
-                   (element instanceof MassnahmenUmsetzung) || 
-                   (element instanceof BausteinUmsetzung))) {
+        if (element != null && ((element instanceof IBSIStrukturElement)
+                || (element instanceof MassnahmenUmsetzung)
+                || (element instanceof BausteinUmsetzung))) {
            viewer.setSelection(new StructuredSelection(element),true);          
         }      
         return;    
@@ -611,10 +654,12 @@ public class BsiModelView extends RightsEnabledView implements IAttachedToPerspe
     
     /**
      * gets Element that is referenced by attachment shown by editor
-     * @param editor - ({@link AttachmentEditor}) Editor of {@link Attachment}
+     * 
+     * @param editor
+     *            - ({@link AttachmentEditor}) Editor of {@link Attachment}
      * @return {@link CnATreeElement}
      */
-    private CnATreeElement getElementFromAttachment(IEditorPart editor) {
+    private static CnATreeElement getElementFromAttachment(IEditorPart editor) {
         return AttachmentEditorInput.extractCnaTreeElement(editor);
     }
 }
