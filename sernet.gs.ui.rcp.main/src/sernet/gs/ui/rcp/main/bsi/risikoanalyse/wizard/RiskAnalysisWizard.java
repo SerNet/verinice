@@ -65,8 +65,12 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
     private boolean canFinish = false;
     private CnATreeElement cnaElement;
+    private static final int WIZARD_WIDTH = 1300;
+    private static final int WIZARD_HEIGHT = 600;
+    protected static final int WIZARD_BROWSER_WIDTH = 700;
+    protected static final int WIZARD_NUM_COLS_ROOT = 2;
     
-    private final static Logger LOG = Logger.getLogger(RiskAnalysisWizard.class);
+    private static final Logger LOG = Logger.getLogger(RiskAnalysisWizard.class);
 
 
     /**
@@ -88,7 +92,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
     private List<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
 
     // Are we editing a previous Risk Analysis?
-    private boolean previousAnalysis = false;
     private FinishedRiskAnalysisLists finishedRiskLists;
 
     public RiskAnalysisWizard(CnATreeElement treeElement) {
@@ -156,7 +159,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
                 finishedRiskLists = command.getFinishedRiskLists();
             } else {
                 finishedRiskLists = FinishedRiskAnalysisListsHome.getInstance().loadById(finishedRiskAnalysis.getDbId());
-                previousAnalysis = true;
             }
         } catch (CommandException e) {
             ExceptionUtil.log(e, Messages.RiskAnalysisWizard_1);
@@ -509,5 +511,21 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
     public void setFinishedRiskLists(FinishedRiskAnalysisLists finishedRiskLists) {
         this.finishedRiskLists = finishedRiskLists;
+    }
+
+    public int getHeight() {
+        return WIZARD_HEIGHT;
+    }
+
+    public int getBrowserWidth() {
+        return WIZARD_BROWSER_WIDTH;
+    }
+
+    public int getWidth() {
+        return WIZARD_WIDTH;
+    }
+
+    public int getNumColsWizard() {
+        return WIZARD_WIDTH;
     }
 }

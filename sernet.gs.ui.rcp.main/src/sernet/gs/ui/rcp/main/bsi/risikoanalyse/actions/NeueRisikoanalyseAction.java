@@ -93,16 +93,13 @@ public class NeueRisikoanalyseAction implements IObjectActionDelegate {
 								public void run() {
 									Activator.inheritVeriniceContextState();
 									
-									final int pageWidht = 800;
-									final int pageHeight = 600;
-									
 									CnATreeElement element = (CnATreeElement) selection;
 									Shell shell = new Shell();
 									RiskAnalysisWizard wizard = new RiskAnalysisWizard(element);
 									wizard.init(PlatformUI.getWorkbench(), null);
 									WizardDialog wizardDialog = new org.eclipse.jface.wizard.WizardDialog(
 											shell, wizard);
-									wizardDialog.setPageSize(pageWidht, pageHeight);
+                                    wizardDialog.setPageSize(wizard.getWidth(), wizard.getHeight());
 									wizardDialog.open();
 								}
 							});
