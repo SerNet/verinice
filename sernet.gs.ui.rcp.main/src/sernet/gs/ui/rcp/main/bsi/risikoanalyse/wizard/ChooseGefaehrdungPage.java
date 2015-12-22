@@ -28,20 +28,14 @@ import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
@@ -112,55 +106,9 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
 
     @Override
     protected void addSpecificListenersForPage() {
-        /* Listener adds/removes Filter gefaehrdungFilter */
-        buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {
 
-            /**
-             * Adds/removes Filter depending on event.
-             * 
-             * @param event
-             *            event containing information about the selection
-             */
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-                Button button = (Button) event.widget;
-                if (button.getSelection()) {
-                    viewer.addFilter(gefaehrdungFilter);
-                    refresh();
-                    checkAllSelectedGefaehrdungen();
-                } else {
-                    viewer.removeFilter(gefaehrdungFilter);
-                    refresh();
-                    assignBausteinGefaehrdungen();
-                    checkAllSelectedGefaehrdungen();
-                }
-            }
-        });
-
-        /* Listener adds/removes Filter ownGefaehrdungFilter */
-        buttonOwnGefaehrdungen.addSelectionListener(new SelectionAdapter() {
-
-            /**
-             * Adds/removes Filter depending on event.
-             * 
-             * @param event
-             *            event containing information about the selection
-             */
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-                Button button = (Button) event.widget;
-                if (button.getSelection()) {
-                    viewer.addFilter(ownGefaehrdungFilter);
-                    refresh();
-                    checkAllSelectedGefaehrdungen();
-                } else {
-                    viewer.removeFilter(ownGefaehrdungFilter);
-                    refresh();
-                    assignBausteinGefaehrdungen();
-                    checkAllSelectedGefaehrdungen();
-                }
-            }
-        });
+        addButtonListeners();
+        addFilterListeners();
 
         /*
          * listener adds/removes Gefaehrdungen to Array of selected
@@ -199,51 +147,66 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         });
 
 
-        /* Listener adds/removes Filter searchFilter */
-        textSearch.addModifyListener(new ModifyListener() {
+
+
+    }
+
+    private void addFilterListeners() {
+        /* Listener adds/removes Filter gefaehrdungFilter */
+        buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {
 
             /**
-             * Adds/removes Filter when Text is modified depending on event.
+             * Adds/removes Filter depending on event.
              * 
              * @param event
              *            event containing information about the selection
              */
             @Override
-            public void modifyText(ModifyEvent event) {
-                Text text = (Text) event.widget;
-                if (text.getText().length() > 0) {
+            public void widgetSelected(SelectionEvent event) {
+                Button button = (Button) event.widget;
+                if (button.getSelection()) {
+                    viewer.addFilter(gefaehrdungFilter);
 
-                    ViewerFilter[] filters = viewer.getFilters();
-                    RiskAnalysisWizardPageSearchFilter thisFilter = null;
-                    boolean contains = false;
-
-                    for (ViewerFilter item : filters) {
-                        if (item instanceof RiskAnalysisWizardPageSearchFilter) {
-                            contains = true;
-                            thisFilter = (RiskAnalysisWizardPageSearchFilter) item;
-                        }
-                    }
-                    if (contains) {
-                        /* filter is already active - update filter */
-                        thisFilter.setPattern(text.getText());
                         refresh();
-                        checkAllSelectedGefaehrdungen();
-
-                    } else {
-                        /* filter is not active - add */
-                        searchFilter.setPattern(text.getText());
-                        viewer.addFilter(searchFilter);
-                        refresh();
-                        checkAllSelectedGefaehrdungen();
-                    }
+                    checkAllSelectedGefaehrdungen();
                 } else {
-                    viewer.removeFilter(searchFilter);
+                    viewer.removeFilter(gefaehrdungFilter);
+                    refresh();
+                    assignBausteinGefaehrdungen();
+                    refresh();
+                    checkAllSelectedGefaehrdungen();
+                }
+            }
+        });
+
+        /* Listener adds/removes Filter ownGefaehrdungFilter */
+        buttonOwnGefaehrdungen.addSelectionListener(new SelectionAdapter() {
+
+            /**
+             * Adds/removes Filter depending on event.
+             * 
+             * @param event
+             *            event containing information about the selection
+             */
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+                Button button = (Button) event.widget;
+                if (button.getSelection()) {
+                    viewer.addFilter(ownGefaehrdungFilter);
+                    viewer.refresh();
+                    checkAllSelectedGefaehrdungen();
+                } else {
+                    viewer.removeFilter(ownGefaehrdungFilter);
                     refresh();
                     assignBausteinGefaehrdungen();
                     checkAllSelectedGefaehrdungen();
                 }
             }
         });
+
+    }
+
+    private void addButtonListeners() {
 
         /* Listener opens MessageDialog and deletes selected Gefaehrdung */
         buttonDelete.addSelectionListener(new SelectionAdapter() {
@@ -286,22 +249,6 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                     final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), ownGefSelected);
                     dialog.open();
                     refresh();
-                }
-            }
-        });
-
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                if (event.getSelection() instanceof IStructuredSelection) {
-                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof OwnGefaehrdung) {
-                        buttonDelete.setEnabled(true);
-                        buttonEdit.setEnabled(true);
-                    } else {
-                        buttonDelete.setEnabled(false);
-                        buttonEdit.setEnabled(false);
-                    }
                 }
             }
         });

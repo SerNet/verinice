@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) ${year} Ruth Motza.
+ * Copyright (c) 2015 Ruth Motza.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -31,6 +31,8 @@ import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
 import sernet.gs.ui.rcp.main.bsi.views.SerializeBrowserLoadingListener;
 
 /**
+ * Listener for updating the Browser in the RiskAnalysisWizard as soon as the
+ * selection in the viewer changes
  * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
