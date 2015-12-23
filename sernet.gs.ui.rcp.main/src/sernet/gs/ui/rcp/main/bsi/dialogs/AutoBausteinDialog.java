@@ -47,10 +47,10 @@ import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.gs.ui.rcp.main.service.crudcommands.RemoveGenericElement;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.BausteinVorschlag;
+import sernet.verinice.service.commands.LoadGenericElementByType;
 import sernet.verinice.service.commands.SaveElement;
 
 /**

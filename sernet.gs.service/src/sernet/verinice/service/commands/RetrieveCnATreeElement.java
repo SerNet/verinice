@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service.commands;
+package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.util.Map;

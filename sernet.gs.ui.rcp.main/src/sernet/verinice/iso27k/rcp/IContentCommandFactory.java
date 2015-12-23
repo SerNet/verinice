@@ -19,8 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
-import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.RetrieveCnATreeElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

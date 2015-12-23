@@ -164,12 +164,13 @@ public class ExportThread extends NotifyingThread {
             // For those we do not store any property values.
             if (entity != null) {
                 ExportFactory.transform(entity, attributes, typeId, getHuiTypeFactory());
-                
+            }
+            EntityType entityType = element.getEntityType();
+            if(entityType!=null) {
                 // Add the elements EntityType to the set of exported EntityTypes in order to
                 // use it for the mapping generation later on.
-                getExportedEntityTypes().add(element.getEntityType());
-            }
-            else {
+                getExportedEntityTypes().add(entityType);
+            } else {
                 // Instance has no EntityType. This is fine but still some mapping
                 // information is needed. We save the typeId for later then.
                 getExportedTypes().add(typeId);

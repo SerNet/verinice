@@ -21,11 +21,11 @@ package sernet.verinice.samt.audit.rcp;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.iso27k.rcp.IContentCommandFactory;
-import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.RetrieveCnATreeElement;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>

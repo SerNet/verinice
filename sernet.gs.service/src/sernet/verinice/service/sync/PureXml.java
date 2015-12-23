@@ -25,6 +25,7 @@ import javax.xml.bind.JAXB;
 
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
+import de.sernet.sync.risk.Risk;
 import de.sernet.sync.sync.SyncRequest;
 
 /**
@@ -128,6 +129,26 @@ public class PureXml implements IVeriniceArchive {
 
     @Override
     public String getTempDirName() {
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.sync.IVeriniceArchive#getSyncRiskAnalysis()
+     */
+    @Override
+    public Risk getSyncRiskAnalysis() {
+        // always return null because risk analysis data is stored in a seperate 
+        // file in a VNA
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.sync.IVeriniceArchive#getRiskAnalysisXml()
+     */
+    @Override
+    public byte[] getRiskAnalysisXml() {
+     // always return null because risk analysis data is stored in a seperate 
+        // file in a VNA
         return null;
     }
 

@@ -17,7 +17,7 @@
                     name="syncLink"
                     type="data:syncLink"
                     minOccurs="0"
-                    maxOccurs="unbounded" />
+                    maxOccurs="unbounded" />             
             </xsd:sequence>
 
         </xsd:complexType>
@@ -28,17 +28,20 @@
         <xsd:sequence>
             <xsd:element
                 name="syncAttribute"
+                minOccurs="0"
                 maxOccurs="unbounded"
                 type="data:syncAttribute" />
             <xsd:element
                 name="extId"
                 type="xsd:string"
                 minOccurs="1"
+                maxOccurs="1"
                 nillable="false" />
             <xsd:element
                 name="extObjectType"
                 type="xsd:string"
                 minOccurs="1"
+                maxOccurs="1"
                 nillable="false" />
             <xsd:element
                 name="icon"
@@ -128,6 +131,5 @@
                 nillable="false" />
         </xsd:sequence>
     </xsd:complexType>
-
-
+                
 </xsd:schema>

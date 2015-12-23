@@ -91,13 +91,13 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		
         BooleanFieldEditor showGsmIsmDecorator = new BooleanFieldEditor(
                 PreferenceConstants.SHOW_GSMISM_DECORATOR,
-                Messages.getString("GeneralSettingsPage.ShowGsmIsmDecorator"),
+                Messages.getString("GeneralSettingsPage.ShowGsmIsmDecorator"), //$NON-NLS-1$
                 getFieldEditorParent()); //$NON-NLS-1$
         addField(showGsmIsmDecorator);
         
         BooleanFieldEditor showRiskAnalysisDecorator = new BooleanFieldEditor(
                 PreferenceConstants.SHOW_RISK_ANALYSIS_DECORATOR,
-                Messages.getString("GeneralSettingsPage.ShowRiskAnalysisDecorator"),
+                Messages.getString("GeneralSettingsPage.ShowRiskAnalysisDecorator"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(showRiskAnalysisDecorator);
 		

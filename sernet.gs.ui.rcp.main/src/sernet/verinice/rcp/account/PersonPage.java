@@ -21,7 +21,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.service.Retriever;
-import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
@@ -32,6 +31,7 @@ import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.ElementSelectionComponent;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 import sernet.verinice.service.commands.LoadConfiguration;
+import sernet.verinice.service.commands.RetrieveCnATreeElement;
 
 /**
  * Wizard page of wizard {@link AccountWizard}.

@@ -19,10 +19,10 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.util.List;
 
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadGenericElementByType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.LoadGenericElementByType;
 
 /**
  * Deletes a role from the database, removing it from all Configuration objects.

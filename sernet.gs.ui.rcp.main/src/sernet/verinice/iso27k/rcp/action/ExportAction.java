@@ -53,6 +53,7 @@ import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
@@ -180,7 +181,9 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
                 exportCommand = new ExportCommand(new LinkedList<CnATreeElement>(getElementSet()), internalSourceId, isReImport(), getFileFormat());
             }
             try {
-        		exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
+                boolean exportRiskAnalysis = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.EXPORT_RISK_ANALYSIS);        		
+                exportCommand.setExportRiskAnalysis(exportRiskAnalysis);  
+                exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
         		if(exportCommand.getResult()!=null) {
         		    FileUtils.writeByteArrayToFile(new File(filePath), encrypt(exportCommand.getResult()));
         		}

@@ -42,7 +42,6 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.validation.IValidationService;
-import sernet.verinice.iso27k.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
@@ -51,6 +50,7 @@ import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.model.validation.CnAValidation;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.RemoveElement;
+import sernet.verinice.service.commands.RetrieveCnATreeElement;
 import sernet.verinice.service.commands.UpdateElementEntity;
 
 /**

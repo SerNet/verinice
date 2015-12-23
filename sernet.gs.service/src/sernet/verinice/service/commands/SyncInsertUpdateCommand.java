@@ -31,6 +31,16 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import de.sernet.sync.data.SyncAttribute;
+import de.sernet.sync.data.SyncData;
+import de.sernet.sync.data.SyncFile;
+import de.sernet.sync.data.SyncLink;
+import de.sernet.sync.data.SyncObject;
+import de.sernet.sync.mapping.SyncMapping;
+import de.sernet.sync.mapping.SyncMapping.MapObjectType;
+import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
+import de.sernet.sync.risk.Risk;
+import de.sernet.sync.risk.SyncRiskAnalysis;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -48,6 +58,9 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
+import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -57,14 +70,6 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.iso27k.LoadImportObjectsHolder;
 import sernet.verinice.service.iso27k.LoadModel;
 import sernet.verinice.service.sync.IVeriniceArchive;
-import de.sernet.sync.data.SyncAttribute;
-import de.sernet.sync.data.SyncData;
-import de.sernet.sync.data.SyncFile;
-import de.sernet.sync.data.SyncLink;
-import de.sernet.sync.data.SyncObject;
-import de.sernet.sync.mapping.SyncMapping;
-import de.sernet.sync.mapping.SyncMapping.MapObjectType;
-import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 
 /**
  * This command is used as a sub-command of {@link SyncCommand} to insert and
@@ -101,6 +106,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     private boolean sourceIdExists;
     private transient SyncMapping syncMapping;
     private transient SyncData syncData;
+    private transient Risk risk;
     private String userName;
     private String tempDirName;
     
@@ -179,6 +185,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             for (SyncLink syncLink : syncData.getSyncLink()) {
                 importLink(syncLink);
             }
+            
+            importRiskAnalysis();
+            
             finalizeDaos();
         } catch (RuntimeException e) {
             getLog().error("RuntimeException while importing", e);
@@ -551,6 +560,19 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         List result = getDao(CnALink.class).findByQuery(hql, paramArray);
         return result == null || result.isEmpty();
     }
+    
+    private void importRiskAnalysis() {
+        if(risk==null) {
+            return;
+        }
+        RiskAnalysisImporter riskAnalysisImporter = new RiskAnalysisImporter(risk.getAnalysis(),risk.getScenario(),risk.getControl());      
+        riskAnalysisImporter.setFinishedRiskAnalysisListsDao( getDaoFactory().getDAO(FinishedRiskAnalysisLists.class));     
+        riskAnalysisImporter.setOwnGefaehrdungDao( getDaoFactory().getDAO(OwnGefaehrdung.class));     
+        riskAnalysisImporter.setRisikoMassnahmeDao( getDaoFactory().getDAO(RisikoMassnahme.class));   
+        riskAnalysisImporter.setElementDao( getDaoFactory().getDAO(CnATreeElement.class));
+        riskAnalysisImporter.setExtIdElementMap(idElementMap);
+        riskAnalysisImporter.run();
+    }
 
     private MapObjectType getMap(String extObjectType) {
         for (MapObjectType mot : syncMapping.getMapObjectType()) {
@@ -562,7 +584,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         return null;
     }
 
-    private SyncMapping.MapObjectType.MapAttributeType getMapAttribute(MapObjectType mot, String extObjectType) {
+    private MapAttributeType getMapAttribute(MapObjectType mot, String extObjectType) {
         for (SyncMapping.MapObjectType.MapAttributeType mat : mot.getMapAttributeType()) {
             if (extObjectType.equals(mat.getExtId())) {
                 return mat;
@@ -712,6 +734,14 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         // load the parent
         element.getParent().getTitle();
         elementSet.add(element);
+    }
+
+    public Risk getSyncRisk() {
+        return risk;
+    }
+
+    public void setRisk(Risk risk) {
+        this.risk = risk;
     }
 
     public int getUpdated() {
