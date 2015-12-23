@@ -175,7 +175,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 	    try {
 	        createFields();
     	    xmlData = export();
-            xmlDataRiskAnalysis = exportRiskAnalysises();
+            xmlDataRiskAnalysis = exportRiskAnalyses();
     		
     		if(isVeriniceArchive()) {
     		    result = createVeriniceArchive();
@@ -244,7 +244,7 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 		return bos.toByteArray();
     }
     
-    private byte[] exportRiskAnalysises() {
+    private byte[] exportRiskAnalyses() {
         if(!isRiskAnalysis()) {
             return null;
         }
@@ -502,13 +502,13 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         exportedTypes.addAll(exportThread.getExportedTypes());
         changedElements.addAll(exportThread.getChangedElementList());
         CnATreeElement element = getElementFromThread(exportThread);
-        if(element!=null && FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
+        if (element != null && FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
             riskAnalysisIdSet.add(element.getDbId());
         }
     }
 
     private CnATreeElement getElementFromThread(ExportThread exportThread) {
-        if(exportThread==null || exportThread.getTransaction()==null) {
+        if (exportThread == null || exportThread.getTransaction() == null) {
             return null;
         }
         return exportThread.getTransaction().getElement();
