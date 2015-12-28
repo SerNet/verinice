@@ -219,11 +219,11 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
      */
     private void loadAllGefaehrdungen() {
         List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance().getBausteine();
-        alleBausteine: for (Baustein baustein : bausteine) {
+        for (Baustein baustein : bausteine) {
             if (baustein.getGefaehrdungen() == null) {
                 continue;
             }
-            alleGefaehrdungen: for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
+            for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
                 Boolean duplicate = false;
                 alleTitel: for (IGSModel element : allGefaehrdungen) {
                     if (element.getId().equals(gefaehrdung.getId())) {
@@ -245,8 +245,8 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
         List<Baustein> bausteine = BSIKatalogInvisibleRoot.getInstance().getBausteine();
 
         MassnahmenFactory massnahmenFactory = new MassnahmenFactory();
-        alleBausteine: for (Baustein baustein : bausteine) {
-            alleMassnahmen: for (Massnahme massnahme : baustein.getMassnahmen()) {
+        for (Baustein baustein : bausteine) {
+            for (Massnahme massnahme : baustein.getMassnahmen()) {
                 Boolean duplicate = false;
                 alleTitel: for (MassnahmenUmsetzung vorhandeneMassnahmenumsetzung : allMassnahmenUmsetzungen) {
                     if (vorhandeneMassnahmenumsetzung.getName().equals(massnahme.getTitel())) {
