@@ -80,16 +80,16 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
     private FinishedRiskAnalysis finishedRiskAnalysis = null;
 
     /* list of all Gefaehrdungen - ChooseGefaehrungPage_OK */
-    private List<Gefaehrdung> allGefaehrdungen = new ArrayList<Gefaehrdung>();
+    private List<Gefaehrdung> allGefaehrdungen = new ArrayList<>();
 
     /*
      * list of all own Gefaehrdungen of type OwnGefaehrdung -
      * ChooseGefaehrungPage_OK
      */
-    private List<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>();
+    private List<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<>();
 
     /* list of all MassnahmenUmsetzungen - AdditionalSecurityMeasuresPage */
-    private List<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<MassnahmenUmsetzung>();
+    private List<MassnahmenUmsetzung> allMassnahmenUmsetzungen = new ArrayList<>();
 
     // Are we editing a previous Risk Analysis?
     private FinishedRiskAnalysisLists finishedRiskLists;
