@@ -19,6 +19,7 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -175,12 +176,12 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
 
     }
 
-    private List<RisikoMassnahme> loadRisikomassnahmen() {
+    private static List<RisikoMassnahme> loadRisikomassnahmen() {
         try {
             return RisikoMassnahmeHome.getInstance().loadAll();
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.RiskAnalysisWizard_2);
-            return null;
+            return Collections.<RisikoMassnahme>emptyList();
         }
     }
 
