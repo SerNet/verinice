@@ -736,5 +736,11 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
           }
           return 0;
         }
-   }    
+    }
+
+    public void setActionsEnabled(boolean enabled) {
+        newGroup.setEnabled(enabled);
+        deleteGroup.setEnabled(enabled);
+        editGroup.setEnabled(enabled);
+    }
 }
