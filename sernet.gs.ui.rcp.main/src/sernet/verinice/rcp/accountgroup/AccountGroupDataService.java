@@ -47,10 +47,11 @@ import sernet.verinice.service.account.AccountSearchParameterFactory;
  * @contributor Sebastian Hagedorn <sh[at]sernet[dot]de> - Concurrency Implementation
  *
  */
-@SuppressWarnings("unchecked")
 public class AccountGroupDataService implements IAccountGroupViewDataService {
 
     private static final Logger LOG = Logger.getLogger(AccountGroupDataService.class);
+
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     private IAccountService accountService;
 
@@ -77,7 +78,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         if(accountGroupToConfiguration != null && accountGroupToConfiguration.keySet() != null){
             return convertToStringArray(accountGroupToConfiguration.keySet());
         } else {
-            return null;
+            return EMPTY_STRING_ARRAY;
         }
     }
 
@@ -86,7 +87,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         if(accounts != null){
             return convertToStringArray(accounts);
         } else {
-            return null;
+            return EMPTY_STRING_ARRAY;
         }
     }
 
@@ -100,7 +101,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
                     Activator.inheritVeriniceContextState();
                     List<AccountGroup> accountGroups = accountService.listGroups();
 
-                    accountGroupToConfiguration = new TreeMap<String, Set<String>>(new NumericStringComparator());
+                    accountGroupToConfiguration = new TreeMap<>(new NumericStringComparator());
 
                     accounts = accountService.listAccounts();
 
@@ -139,7 +140,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
 
     private <T> String[] convertToStringArray(Set<T> accountGroupOrConfiguration) {
 
-        Set<String> set = new TreeSet<String>(new NumericStringComparator());
+        Set<String> set = new TreeSet<>(new NumericStringComparator());
         for (T accountOrGroup : accountGroupOrConfiguration) {
             if (accountOrGroup instanceof AccountGroup) {
                 set.add(((AccountGroup) accountOrGroup).getName());
@@ -242,14 +243,14 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     
     private void initPrettyAccountNames(){
         if(prettyAccountNames == null){
-            prettyAccountNames = new HashMap<String, String>(0);
+            prettyAccountNames = new HashMap<>(0);
             for(Configuration conf : accountService.findAccounts(AccountSearchParameter.newInstance())){
                 prettyAccountNames.put(conf.getUser(), createPrettyAccountName(conf));
             }
         }
     }
     
-    private String createPrettyAccountName(Configuration account){
+    private static String createPrettyAccountName(Configuration account){
         StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(account.getPerson()));
         sb.append(" [").append(account.getUser()).append("]");
         return sb.toString();
