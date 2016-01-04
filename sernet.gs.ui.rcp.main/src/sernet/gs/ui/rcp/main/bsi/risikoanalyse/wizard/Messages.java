@@ -25,7 +25,6 @@ import org.eclipse.osgi.util.NLS;
  * @author Daniel Murygin <dm@sernet.de>
  *
  */
-@SuppressWarnings("restriction")
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.messages"; //$NON-NLS-1$
     public static String AdditionalSecurityMeasuresPage_0;
@@ -86,6 +85,7 @@ public class Messages extends NLS {
     public static String EstimateGefaehrdungPage_7;
     public static String EstimateGefaehrdungPage_8;
     public static String EstimateGefaehrdungPage_9;
+    public static String MassnahmeTableViewerLabelProvider_4;
     public static String NewGefaehrdungDialog_0;
     public static String NewGefaehrdungDialog_1;
     public static String NewGefaehrdungDialog_2;
@@ -114,7 +114,6 @@ public class Messages extends NLS {
     public static String RiskHandlingPage_6;
     public static String RiskHandlingPage_8;
     public static String RiskHandlingPage_9;
-    public static String RiskAnalysisBrowserUpdateListener_0;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

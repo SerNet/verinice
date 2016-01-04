@@ -25,15 +25,15 @@ import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
 
 /**
- * Serializes the loading of pages in a SWT browser.
+ * Serialises the loading of pages in a SWT browser.
  * If browser is busy rendering while HTML content changes
  * new HTML is saved and loaded after rendering is completed. 
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class SerializeBrowserLoadingListener implements ProgressListener {
+public class SerialiseBrowserLoadingListener implements ProgressListener {
 
-    private static final Logger LOG = Logger.getLogger(SerializeBrowserLoadingListener.class);
+    private static final Logger LOG = Logger.getLogger(SerialiseBrowserLoadingListener.class);
     
     private Browser browser;
     
@@ -41,7 +41,7 @@ public class SerializeBrowserLoadingListener implements ProgressListener {
     
     private String html;
     
-    public SerializeBrowserLoadingListener(Browser browser) {
+    public SerialiseBrowserLoadingListener(Browser browser) {
         this.browser = browser;
     }
 

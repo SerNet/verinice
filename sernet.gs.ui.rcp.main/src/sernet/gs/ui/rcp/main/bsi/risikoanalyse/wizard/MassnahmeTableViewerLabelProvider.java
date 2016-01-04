@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
@@ -90,9 +91,10 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
             return massnahme.getKapitel();
         case 2:
             return "[" + massnahme.getStufe() + "] " + massnahme.getName(); //$NON-NLS-1$ //$NON-NLS-2$
-        default:
-            return "";
+        case 3:
+            return Messages.MassnahmeTableViewerLabelProvider_4;
         }
+        return "";
     }
 
     private String getColumnTextForRisikoMassnahme(Object element, int columnIndex) {
@@ -104,17 +106,27 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
             return massnahme.getNumber();
         case 2:
             return "[" + massnahme.getStufe() + "] " + massnahme.getName(); //$NON-NLS-1$ //$NON-NLS-2$
-        default:
-            return "";
+        case 3:
+        	RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(massnahme);
+            return shorten(massnahme.getDescription());
         }
+        return "";
     }
 
+    /**
+     * Not used. Must be implemented due to IBaseLabelProvider.
+     * 
+     * @param listener
+     *            a label provider listener
+     */
     public void addListener(ILabelProviderListener listener) {
-        /* Not used. Must be implemented due to IBaseLabelProvider. */
     }
 
+    /**
+     * Not used. Must be implemented due to IBaseLabelProvider.
+     */
     public void dispose() {
-        /* Not used. Must be implemented due to IBaseLabelProvider. */ }
+    }
 
     /**
      * Returns whether the label would be affected by a change to the given
@@ -130,8 +142,32 @@ public class MassnahmeTableViewerLabelProvider implements ITableLabelProvider {
         return false;
     }
 
+    /**
+     * Not used. Must be implemented due to IBaseLabelProvider.
+     * 
+     * @param listener
+     *            a label provider listener
+     */
     public void removeListener(ILabelProviderListener listener) {
-        /* Not used. Must be implemented due to IBaseLabelProvider. */
     }
 
+    /**
+     * Shortens the description for single-line table display.
+     * 
+     * @param description
+     *            the full length description
+     * @return shortened version of the description without newline-characters
+     */
+    private String shorten(String description) {
+        final int maxLineLength = 100;
+        if(description==null) {
+            return null;
+        }
+        String oneline = description.replaceAll(System.getProperty("line.separator"), " "); //$NON-NLS-1$ //$NON-NLS-2$
+        if (oneline.length() > maxLineLength) {
+            return oneline.substring(0, maxLineLength) + "..."; //$NON-NLS-1$
+        }
+        return oneline;
+
+    }
 }

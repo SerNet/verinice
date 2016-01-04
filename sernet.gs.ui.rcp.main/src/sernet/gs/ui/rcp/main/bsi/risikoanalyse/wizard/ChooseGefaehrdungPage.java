@@ -13,14 +13,17 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Anne Hanekop <ah[at]sernet[dot]de>     - initial API and implementation
- *     ak[at]sernet[dot]de                    - various fixes, adapted to command layer
+ *     Anne Hanekop <ah[at]sernet[dot]de> 	- initial API and implementation
+ *     ak[at]sernet[dot]de					- various fixes, adapted to command layer
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -28,17 +31,31 @@ import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IDoubleClickListener;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
+import sernet.gs.ui.rcp.gsimport.GstoolImportMappingElement;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
 import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
@@ -56,59 +73,85 @@ import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
  * 
  * @author ahanekop[at]sernet[dot]de
  */
-@SuppressWarnings("restriction")
-public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableViewer> {
+public class ChooseGefaehrdungPage extends WizardPage {
 
-    private TableViewerColumn checkboxColumn;
-    private TableViewerColumn imageColumn;
-    private TableViewerColumn numberColumn;
-    private TableViewerColumn nameColumn;
-    private TableViewerColumn categoryColumn;
+    private Composite composite;
+    private TableColumn checkboxColumn;
+    private TableColumn imageColumn;
+    private TableColumn numberColumn;
+    private TableColumn nameColumn;
+    private TableColumn descriptionColumn;
+    private CheckboxTableViewer viewer;
+    private OwnGefaehrdungenFilter ownGefaehrdungFilter = new OwnGefaehrdungenFilter();
+    private GefaehrdungenFilter gefaehrdungFilter = new GefaehrdungenFilter();
+    private SearchFilter searchFilter = new SearchFilter();
+    private RiskAnalysisWizard wizard;
+    private Button buttonDelete, buttonEdit;
+
+    private final static Logger LOG = Logger.getLogger(ChooseGefaehrdungPage.class);
 
     /**
      * Constructor sets title an description of WizardPage.
      */
     protected ChooseGefaehrdungPage() {
-        super(Messages.ChooseGefaehrdungPage_0, Messages.ChooseGefaehrdungPage_1, Messages.ChooseGefaehrdungPage_2);
+        super(Messages.ChooseGefaehrdungPage_0);
+        setTitle(Messages.ChooseGefaehrdungPage_1);
+        setDescription(Messages.ChooseGefaehrdungPage_2);
     }
 
-    @Override
-    protected void setColumns() {
-        checkboxColumn = new TableViewerColumn(viewer, SWT.LEFT);
-        checkboxColumn.getColumn().setText(""); //$NON-NLS-1$
-
-        imageColumn = new TableViewerColumn(viewer, SWT.LEFT);
-        imageColumn.getColumn().setText(""); //$NON-NLS-1$
-
-        numberColumn = new TableViewerColumn(viewer, SWT.LEFT);
-        numberColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_5);
-
-        nameColumn = new TableViewerColumn(viewer, SWT.LEFT);
-        nameColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_6);
-
-        categoryColumn = new TableViewerColumn(viewer, SWT.LEFT);
-        categoryColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_7);
-    }
-    
     /**
-     * Sets the control to the given visibility state.
+     * Adds widgets to the wizardPage. Called once at startup of Wizard.
      * 
-     * @param visible
-     *            boolean indicating if content should be visible
+     * @param parent
+     *            the parent Composite
      */
     @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        if (visible) {
-            initContents();
-        }
-    }
+    public void createControl(Composite parent) {
+        final int checkboxColumnWidth = 35;
+        final int imageColumnWidth = checkboxColumnWidth;
+        final int numberColumnWidth = 100;
+        final int nameColumnWidth = numberColumnWidth;
+        final int descriptionColumnWidth = 200;
+        final int buttonsGridColumnAmount = 5;
+        
+        composite = new Composite(parent, SWT.NULL);
+        final GridLayout gridLayout = new GridLayout();
+        gridLayout.numColumns = 2;
+        composite.setLayout(gridLayout);
+        setControl(composite);
 
-    @Override
-    protected void addSpecificListenersForPage() {
+        /* CheckboxTableViewer */
+        viewer = CheckboxTableViewer.newCheckList(composite, SWT.BORDER | SWT.FULL_SELECTION);
+        final Table table = viewer.getTable();
+        GridData data1 = new GridData();
+        data1.grabExcessHorizontalSpace = true;
+        data1.grabExcessVerticalSpace = true;
+        data1.horizontalSpan = 2;
+        data1.horizontalAlignment = SWT.FILL;
+        data1.verticalAlignment = SWT.FILL;
+        table.setLayoutData(data1);
+        table.setHeaderVisible(true);
+        table.setLinesVisible(true);
 
-        addButtonListeners();
-        addFilterListeners();
+        checkboxColumn = new TableColumn(table, SWT.LEFT);
+        checkboxColumn.setText(""); //$NON-NLS-1$
+        checkboxColumn.setWidth(checkboxColumnWidth);
+
+        imageColumn = new TableColumn(table, SWT.LEFT);
+        imageColumn.setText(""); //$NON-NLS-1$
+        imageColumn.setWidth(imageColumnWidth);
+
+        numberColumn = new TableColumn(table, SWT.LEFT);
+        numberColumn.setText(Messages.ChooseGefaehrdungPage_5);
+        numberColumn.setWidth(numberColumnWidth);
+
+        nameColumn = new TableColumn(table, SWT.LEFT);
+        nameColumn.setText(Messages.ChooseGefaehrdungPage_6);
+        nameColumn.setWidth(nameColumnWidth);
+
+        descriptionColumn = new TableColumn(table, SWT.LEFT);
+        descriptionColumn.setText(Messages.ChooseGefaehrdungPage_7);
+        descriptionColumn.setWidth(descriptionColumnWidth);
 
         /*
          * listener adds/removes Gefaehrdungen to Array of selected
@@ -139,44 +182,29 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
                 if (selectedGefaehrdung instanceof OwnGefaehrdung) {
                     OwnGefaehrdung selectedOwnGefaehrdung = (OwnGefaehrdung) selectedGefaehrdung;
-                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), selectedOwnGefaehrdung);
+                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(composite.getShell(), selectedOwnGefaehrdung);
                     dialog.open();
-                    refresh();
-                    refreshBrowser();
-                }
-            }
-        });
-
-
-
-
-    }
-
-    private void addFilterListeners() {
-        /* Listener adds/removes Filter gefaehrdungFilter */
-        buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {
-
-            /**
-             * Adds/removes Filter depending on event.
-             * 
-             * @param event
-             *            event containing information about the selection
-             */
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-                Button button = (Button) event.widget;
-                if (button.getSelection()) {
-                    viewer.addFilter(gefaehrdungFilter);
                     viewer.refresh();
-                    checkAllSelectedGefaehrdungen();
-                } else {
-                    viewer.removeFilter(gefaehrdungFilter);
-                    refresh();
-                    assignBausteinGefaehrdungen();
-                    checkAllSelectedGefaehrdungen();
                 }
             }
         });
+
+        /* group the Filter checkboxes with composite */
+        Composite compositeFilter = new Composite(composite, SWT.NULL);
+        GridLayout gridLayoutFilters = new GridLayout();
+        gridLayoutFilters.numColumns = 2;
+        compositeFilter.setLayout(gridLayoutFilters);
+        GridData gridCompositeFilter = new GridData();
+        gridCompositeFilter.horizontalAlignment = SWT.LEFT;
+        gridCompositeFilter.verticalAlignment = SWT.TOP;
+        compositeFilter.setLayoutData(gridCompositeFilter);
+
+        /* filter button - OwnGefaehrdungen only */
+        Button buttonOwnGefaehrdungen = new Button(compositeFilter, SWT.CHECK);
+        buttonOwnGefaehrdungen.setText(Messages.ChooseGefaehrdungPage_8);
+        GridData gridOwnGefaehrdungen = new GridData();
+        gridOwnGefaehrdungen.horizontalSpan = 2;
+        buttonOwnGefaehrdungen.setLayoutData(gridOwnGefaehrdungen);
 
         /* Listener adds/removes Filter ownGefaehrdungFilter */
         buttonOwnGefaehrdungen.addSelectionListener(new SelectionAdapter() {
@@ -203,9 +231,146 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
             }
         });
 
-    }
+        /* filter button - BSI Gefaehrdungen only */
+        Button buttonGefaehrdungen = new Button(compositeFilter, SWT.CHECK);
+        buttonGefaehrdungen.setText(Messages.ChooseGefaehrdungPage_9);
+        GridData gridGefaehrdungen = new GridData();
+        gridGefaehrdungen.horizontalSpan = 2;
+        buttonGefaehrdungen.setLayoutData(gridGefaehrdungen);
 
-    private void addButtonListeners() {
+        /* Listener adds/removes Filter gefaehrdungFilter */
+        buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {
+
+            /**
+             * Adds/removes Filter depending on event.
+             * 
+             * @param event
+             *            event containing information about the selection
+             */
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+                Button button = (Button) event.widget;
+                if (button.getSelection()) {
+                    viewer.addFilter(gefaehrdungFilter);
+                    viewer.refresh();
+                    checkAllSelectedGefaehrdungen();
+                } else {
+                    viewer.removeFilter(gefaehrdungFilter);
+                    viewer.refresh();
+                    assignBausteinGefaehrdungen();
+                    checkAllSelectedGefaehrdungen();
+                }
+            }
+        });
+
+        /* filter button - search */
+        new Label(compositeFilter, SWT.NULL).setText(Messages.ChooseGefaehrdungPage_10);
+        Text textSearch = new Text(compositeFilter, SWT.SINGLE | SWT.BORDER);
+        GridData gridSearch = new GridData();
+        gridSearch.horizontalAlignment = SWT.FILL;
+        textSearch.setLayoutData(gridSearch);
+
+        /* Listener adds/removes Filter searchFilter */
+        textSearch.addModifyListener(new ModifyListener() {
+
+            /**
+             * Adds/removes Filter when Text is modified depending on event.
+             * 
+             * @param event
+             *            event containing information about the selection
+             */
+            @Override
+            public void modifyText(ModifyEvent event) {
+                Text text = (Text) event.widget;
+                if (text.getText().length() > 0) {
+
+                    ViewerFilter[] filters = viewer.getFilters();
+                    SearchFilter thisFilter = null;
+                    boolean contains = false;
+
+                    for (ViewerFilter item : filters) {
+                        if (item instanceof SearchFilter) {
+                            contains = true;
+                            thisFilter = (SearchFilter) item;
+                        }
+                    }
+                    if (contains) {
+                        /* filter is already active - update filter */
+                        thisFilter.setPattern(text.getText());
+                        viewer.refresh();
+                        checkAllSelectedGefaehrdungen();
+
+                    } else {
+                        /* filter is not active - add */
+                        searchFilter.setPattern(text.getText());
+                        viewer.addFilter(searchFilter);
+                        viewer.refresh();
+                        checkAllSelectedGefaehrdungen();
+                    }
+                } else {
+                    viewer.removeFilter(searchFilter);
+                    viewer.refresh();
+                    assignBausteinGefaehrdungen();
+                    checkAllSelectedGefaehrdungen();
+                }
+            }
+        });
+
+        /* group the buttons with Group */
+        Group groupButtons = new Group(composite, SWT.SHADOW_ETCHED_OUT);
+        groupButtons.setText(Messages.ChooseGefaehrdungPage_11);
+        GridLayout gridLayoutButtons = new GridLayout();
+        gridLayoutButtons.numColumns = buttonsGridColumnAmount;
+        groupButtons.setLayout(gridLayoutButtons);
+        GridData gridButtons = new GridData();
+        gridButtons.horizontalAlignment = SWT.RIGHT;
+        gridButtons.verticalAlignment = SWT.TOP;
+        groupButtons.setLayoutData(gridButtons);
+
+        /* new button */
+        Button buttonNew = new Button(groupButtons, SWT.PUSH);
+        buttonNew.setText(Messages.ChooseGefaehrdungPage_12);
+        GridData gridNew = new GridData();
+        buttonNew.setLayoutData(gridNew);
+
+        /* Listener opens Dialog for creation of new OwnGefaehrdung */
+        buttonNew.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+                List<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard()).getAllOwnGefaehrdungen();
+                final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(composite.getShell(), arrListOwnGefaehrdungen);
+                dialog.open();
+                ((RiskAnalysisWizard) getWizard()).addOwnGefaehrdungen();
+                viewer.refresh();
+                assignBausteinGefaehrdungen();
+            }
+        });
+        /* edit button */
+        buttonEdit = new Button(groupButtons, SWT.PUSH);
+        buttonEdit.setText(Messages.ChooseGefaehrdungPage_17);
+        GridData gridEdit = new GridData();
+        buttonEdit.setLayoutData(gridEdit);
+
+        /* Listener opens Dialog for editing the selected Gefaehrdung */
+        buttonEdit.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+                IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
+                IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
+                if (selectedGefaehrdung instanceof OwnGefaehrdung) {
+                    OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
+                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(composite.getShell(), ownGefSelected);
+                    dialog.open();
+                    viewer.refresh();
+                }
+            }
+        });
+        
+        /* delete button */
+        buttonDelete = new Button(groupButtons, SWT.PUSH);
+        buttonDelete.setText(Messages.ChooseGefaehrdungPage_13);
+        GridData gridDelete = new GridData();
+        buttonDelete.setLayoutData(gridDelete);
 
         /* Listener opens MessageDialog and deletes selected Gefaehrdung */
         buttonDelete.addSelectionListener(new SelectionAdapter() {
@@ -215,7 +380,10 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection.getFirstElement();
                 if (selectedGefaehrdung instanceof OwnGefaehrdung) {
                     /* ask user to confirm */
-                    boolean confirmed = MessageDialog.openQuestion(rootContainer.getShell(), Messages.ChooseGefaehrdungPage_14, NLS.bind(Messages.ChooseGefaehrdungPage_15, selectedGefaehrdung.getTitel()));
+                    boolean confirmed = MessageDialog.openQuestion(
+                            composite.getShell(), 
+                            Messages.ChooseGefaehrdungPage_14, 
+                            NLS.bind(Messages.ChooseGefaehrdungPage_15, selectedGefaehrdung.getTitel()));
                     if (confirmed) {
                         deleteOwnGefaehrdung(selectedGefaehrdung);
                         viewer.refresh();
@@ -225,43 +393,17 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
             }
         });
 
-        /* Listener opens Dialog for creation of new OwnGefaehrdung */
-        buttonNew.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-                List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard().getAllOwnGefaehrdungen();
-                final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(rootContainer.getShell(), arrListOwnGefaehrdungen);
-                dialog.open();
-                getRiskAnalysisWizard().addOwnGefaehrdungen();
-                viewer.refresh();
-                assignBausteinGefaehrdungen();
-            }
-        });
-        /* Listener opens Dialog for editing the selected Gefaehrdung */
-        buttonEdit.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-                IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
-                if (selectedGefaehrdung instanceof OwnGefaehrdung) {
-                    OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
-                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), ownGefSelected);
-                    dialog.open();
-                    refresh();
-                    refreshBrowser();
-                }
-            }
-        });
-
+        
     }
 
     protected void associateGefaehrdung(Gefaehrdung currentGefaehrdung, boolean select) {
+        RiskAnalysisWizard internalWizard = ((RiskAnalysisWizard) getWizard());
 
         if (select) {
-            getRiskAnalysisWizard().addAssociatedGefaehrdung(currentGefaehrdung);
+            internalWizard.addAssociatedGefaehrdung(currentGefaehrdung);
         } else {
             try {
-                getRiskAnalysisWizard().removeAssociatedGefaehrdung(currentGefaehrdung);
+                internalWizard.removeAssociatedGefaehrdung(currentGefaehrdung);
             } catch (Exception e) {
                 ExceptionUtil.log(e, NLS.bind(Messages.ChooseGefaehrdungPage_18, currentGefaehrdung.getTitel()));
             }
@@ -272,36 +414,64 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
     }
 
     /**
+     * Sets the control to the given visibility state.
+     * 
+     * @param visible
+     *            boolean indicating if content should be visible
+     */
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            initContents();
+        }
+    }
+
+    /**
      * Fills the CheckboxTableViewer with all Gefaehrdungen available. Is
      * processed each time the WizardPage is set visible.
      */
     private void initContents() {
-
-        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) getRiskAnalysisWizard().getAllGefaehrdungen();
+        wizard = ((RiskAnalysisWizard) getWizard());
+        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>)wizard.getAllGefaehrdungen();
 
         /* map a domain model object into multiple images and text labels */
         viewer.setLabelProvider(new CheckboxTableViewerLabelProvider());
-
         /* map domain model into array */
         viewer.setContentProvider(new ArrayContentProvider());
         /* associate domain model with viewer */
         viewer.setInput(arrListAllGefaehrdungen);
         viewer.setSorter(new GefaehrdungenSorter());
-
+        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                if (event.getSelection() instanceof IStructuredSelection) {
+                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof OwnGefaehrdung) {
+                        buttonDelete.setEnabled(true);
+                        buttonEdit.setEnabled(true);
+                    } else {
+                        buttonDelete.setEnabled(false);
+                        buttonEdit.setEnabled(false);
+                    }
+                }
+//                
+            }
+        });
         assignBausteinGefaehrdungen();
         checkAllSelectedGefaehrdungen();
         packAllColumns();
 
-        getRiskAnalysisWizard().setCanFinish(false);
+        ((RiskAnalysisWizard) getWizard()).setCanFinish(false);
         checkPageComplete();
     }
 
     private void checkAllSelectedGefaehrdungen() {
-        List<Gefaehrdung> toCheck = new ArrayList<>();
-        for (GefaehrdungsUmsetzung associatedGefaehrdung : getRiskAnalysisWizard().getAssociatedGefaehrdungen()) {
-            if (associatedGefaehrdung != null) {
-                for (Gefaehrdung gefaehrdung : getRiskAnalysisWizard().getAllGefaehrdungen()) {
-                    if (gefaehrdung != null && gefaehrdung.getId() != null && gefaehrdung.getId().equals(associatedGefaehrdung.getId())) {
+        List<Gefaehrdung> toCheck = new ArrayList<Gefaehrdung>();
+        for (GefaehrdungsUmsetzung associatedGefaehrdung : wizard.getAssociatedGefaehrdungen()) {
+            if(associatedGefaehrdung!=null) {
+                for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
+                    if (gefaehrdung!=null && gefaehrdung.getId()!=null && gefaehrdung.getId().equals(associatedGefaehrdung.getId())) {
                         toCheck.add(gefaehrdung);
                     }
                 }
@@ -318,20 +488,20 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      */
     private void assignBausteinGefaehrdungen() {
         try {
-            LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(getRiskAnalysisWizard().getCnaElement(), BSIKatalogInvisibleRoot.getInstance().getLanguage());
+            LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(wizard.getCnaElement(), BSIKatalogInvisibleRoot.getInstance().getLanguage());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<GefaehrdungsUmsetzung> list = command.getAssociatedGefaehrdungen();
 
             for (GefaehrdungsUmsetzung selectedGefaehrdung : list) {
-                if (selectedGefaehrdung != null) {
-                    for (Gefaehrdung gefaehrdung : getRiskAnalysisWizard().getAllGefaehrdungen()) {
-                        if (gefaehrdung != null && gefaehrdung.getId() != null && gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
+                if(selectedGefaehrdung!=null) {
+                    for (Gefaehrdung gefaehrdung : wizard.getAllGefaehrdungen()) {
+                        if (gefaehrdung!=null && gefaehrdung.getId()!=null && gefaehrdung.getId().equals(selectedGefaehrdung.getId())) {
                             associateGefaehrdung(gefaehrdung, true);
                         }
                     }
                 }
             }
-            UpdateRiskAnalysis updateCommand = new UpdateRiskAnalysis(getRiskAnalysisWizard().getFinishedRiskAnalysisLists());
+            UpdateRiskAnalysis updateCommand = new UpdateRiskAnalysis(wizard.getFinishedRiskAnalysisLists());
             updateCommand = ServiceFactory.lookupCommandService().executeCommand(updateCommand);
         } catch (CommandException e) {
             ExceptionUtil.log(e, ""); //$NON-NLS-1$
@@ -342,12 +512,11 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      * Adjusts all columns of the CheckboxTableViewer.
      */
     private void packAllColumns() {
-        checkboxColumn.getColumn().pack();
-        imageColumn.getColumn().pack();
-        numberColumn.getColumn().pack();
-        nameColumn.getColumn().pack();
-        nameColumn.getColumn().setWidth(Math.min(nameColumn.getColumn().getWidth(), WIDTH_COL_NAME));
-        categoryColumn.getColumn().pack();
+        checkboxColumn.pack();
+        imageColumn.pack();
+        numberColumn.pack();
+        nameColumn.pack();
+        descriptionColumn.pack();
     }
 
     /**
@@ -355,13 +524,12 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      * empty.
      */
     private void checkPageComplete() {
-        if (getRiskAnalysisWizard().getAssociatedGefaehrdungen().isEmpty()) {
+        if (((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen().isEmpty()) {
             setPageComplete(false);
         } else {
             setPageComplete(true);
         }
     }
-
 
     /**
      * Deletes a OwnGefaehrdung.
@@ -370,9 +538,9 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      *            the (Own)Gefaehrdung to delete
      */
     private void deleteOwnGefaehrdung(Gefaehrdung delGefaehrdung) {
-        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) getRiskAnalysisWizard().getAllGefaehrdungen();
-        List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = getRiskAnalysisWizard().getAssociatedGefaehrdungen();
-        List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard().getAllOwnGefaehrdungen();
+        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>)((RiskAnalysisWizard) getWizard()).getAllGefaehrdungen();
+        List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = ((RiskAnalysisWizard) getWizard()).getAssociatedGefaehrdungen();
+        List<OwnGefaehrdung> arrListOwnGefaehrdungen = ((RiskAnalysisWizard) getWizard()).getAllOwnGefaehrdungen();
 
         try {
             if (arrListOwnGefaehrdungen.contains(delGefaehrdung)) {
@@ -395,10 +563,100 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         }
     }
 
+    /**
+     * Filter to extract all OwnGefaehrdungen in CheckboxTableViewer.
+     * 
+     * @author ahanekop[at]sernet[dot]de
+     */
+    static class OwnGefaehrdungenFilter extends ViewerFilter {
 
-    @Override
-    protected CheckboxTableViewer initializeViewer(Composite parent) {
-        return CheckboxTableViewer.newCheckList(parent, SWT.BORDER | SWT.FULL_SELECTION);
+        /**
+         * Returns true, if the given element is an OwnGefaehrdung.
+         * 
+         * @param viewer
+         *            the Viewer to operate on
+         * @param parentElement
+         *            not used
+         * @param element
+         *            given element
+         * @return true if element passes test, false else
+         */
+        @Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+            if (element instanceof OwnGefaehrdung) {
+                return true;
+            }
+            return false;
+        }
     }
 
+    /**
+     * Filter to extract all Gefaehrdungen in CheckboxTableViewer.
+     * 
+     * @author ahanekop[at]sernet[dot]de
+     */
+    static class GefaehrdungenFilter extends ViewerFilter {
+
+        /**
+         * Returns true, if the given element is a Gefaehrdung.
+         * 
+         * @param viewer
+         *            the Viewer to operate on
+         * @param parentElement
+         *            not used
+         * @param element
+         *            given element
+         * @return true if element passes test, false else
+         */
+        @Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+            if (!(element instanceof OwnGefaehrdung)) {
+                return true;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Filter to extract all (Own)Gefaehrdungen matching a given String.
+     * 
+     * @author ahanekop[at]sernet[dot]de
+     */
+    class SearchFilter extends ViewerFilter {
+
+        private Pattern pattern;
+
+        /**
+         * Updates the Pattern.
+         * 
+         * @param searchString
+         *            the String to search for
+         */
+        void setPattern(String searchString) {
+            pattern = Pattern.compile(searchString, Pattern.CASE_INSENSITIVE);
+        }
+
+        /**
+         * Selects all (Own)Gefaehrdungen matching the Pattern.
+         * 
+         * @param viewer
+         *            the Viewer to operate on
+         * @param parentElement
+         *            not used
+         * @param element
+         *            given element
+         * @return true if element passes test, false else
+         */
+        @Override
+        public boolean select(Viewer viewer, Object parentElement, Object element) {
+            Gefaehrdung gefaehrdung = (Gefaehrdung) element;
+            String gefaehrdungTitle = gefaehrdung.getTitel();
+            Matcher matcher = pattern.matcher(gefaehrdungTitle);
+
+            if (matcher.find()) {
+                return true;
+            } 
+            return false;
+        }
+    }
 }

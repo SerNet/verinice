@@ -122,48 +122,48 @@ import sernet.verinice.rcp.tree.TreeUpdateListener;
 public class BsiModelView extends RightsEnabledView
         implements IAttachedToPerspective, ILinkedWithEditorView {
 
-	private static final Logger LOG = Logger.getLogger(BsiModelView.class);
-	
-	public static final String ID = "sernet.gs.ui.rcp.main.views.bsimodelview"; //$NON-NLS-1$
+    private static final Logger LOG = Logger.getLogger(BsiModelView.class);
 
-	private Action doubleClickAction;
+    public static final String ID = "sernet.gs.ui.rcp.main.views.bsimodelview"; //$NON-NLS-1$
 
-	private DrillDownAdapter drillDownAdapter;
+    private Action doubleClickAction;
 
-	private BSIModel model;
+    private DrillDownAdapter drillDownAdapter;
 
-	private TreeViewer viewer;
+    private BSIModel model;
 
-	private BSIModelViewFilterAction filterAction;
+    private TreeViewer viewer;
+
+    private BSIModelViewFilterAction filterAction;
 
     private ElementManager elementManager;
 
-	private Action expandAllAction;
+    private Action expandAllAction;
 
-	private Action collapseAction;
+    private Action collapseAction;
     
     private Action linkWithEditorAction;
 
-	private ShowBulkEditAction bulkEditAction;
+    private ShowBulkEditAction bulkEditAction;
 
-	private ShowAccessControlEditAction accessControlEditAction;
+    private ShowAccessControlEditAction accessControlEditAction;
 
     private NaturalizeAction naturalizeAction;
 
-	private Action selectEqualsAction;
+    private Action selectEqualsAction;
 
-	private ShowKonsolidatorAction konsolidatorAction;
-	
-	private GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
+    private ShowKonsolidatorAction konsolidatorAction;
 
-	private BausteinZuordnungAction bausteinZuordnungAction;
-	
-	private GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
-	
-	private IModelLoadListener modelLoadListener;
+    private GSMBasicSecurityCheckAction gsmbasicsecuritycheckAction;
 
-	private TreeUpdateListener bsiModelListener;
-	
+    private BausteinZuordnungAction bausteinZuordnungAction;
+
+    private GSMBausteinZuordnungAction gsmbausteinZuordnungAction;
+
+    private IModelLoadListener modelLoadListener;
+
+    private TreeUpdateListener bsiModelListener;
+
     private boolean linkingActive = false;
     
     private IPartListener2 linkWithEditorPartListener  = new LinkWithEditorPartListener(this);
@@ -191,28 +191,28 @@ public class BsiModelView extends RightsEnabledView
 
         refreshModelAsync();
 
-            }
-    
+    }
+
     private void refreshModelAsync() {
 
-		Display.getDefault().asyncExec(new Runnable() {
-			@Override
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
             public void run() {
                 try {
-				viewer.setInput(model);
-				viewer.refresh();
+                    viewer.setInput(model);
+                    viewer.refresh();
                 } catch (Exception e) {
                     ExceptionUtil.log(e, Messages.BsiModelView_18);
                 }
-			}
-		});
-	}
+            }
+        });
+    }
 
-	@Override
+    @Override
     public String getRightID(){
-	    return ActionRightIDs.BSIMODELVIEW;
-	}
-	
+        return ActionRightIDs.BSIMODELVIEW;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -223,306 +223,308 @@ public class BsiModelView extends RightsEnabledView
         return ID;
     }
 
-	private void addBSIFilter() {
-		viewer.addFilter(new ViewerFilter() {
-			@Override
-			public boolean select(Viewer viewer, Object parentElement, Object element) {
-				if (element instanceof IDatenschutzElement) {
-					return false;
-				}
-				return true;
-			}
+    private void addBSIFilter() {
+        viewer.addFilter(new ViewerFilter() {
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof IDatenschutzElement) {
+                    return false;
+                }
+                return true;
+            }
 
-		});
-	}
+        });
+    }
 
     /*
      * (non-Javadoc)
      * 
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.
      * widgets.Composite)
-	 */
-	@Override
-	public void createPartControl(Composite parent) {
-	    super.createPartControl(parent);
+     */
+    @Override
+    public void createPartControl(Composite parent) {
+        super.createPartControl(parent);
 
-		try {
-			initView(parent);
-			startInitDataJob();
-		} catch (Exception e) {
-			LOG.error("Error while creating organization view", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.BsiModelView_7);
-		}
+        try {
+            initView(parent);
+            startInitDataJob();
+        } catch (Exception e) {
+            LOG.error("Error while creating organization view", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.BsiModelView_7);
+        }
 
         loadItBaselineProtectionCatalogs();
-	}
+    }
 
-	private void initView(Composite parent) {
-	    IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
+    private void initView(Composite parent) {
+        IWorkbench workbench = getSite().getWorkbenchWindow().getWorkbench();
+
+        viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
+        drillDownAdapter = new DrillDownAdapter(viewer);
         
-		viewer = new TreeViewer(parent, SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI);
-		drillDownAdapter = new DrillDownAdapter(viewer);
-		
-	    TreeContentProvider contentProvider = new TreeContentProvider(elementManager);	
+        TreeContentProvider contentProvider = new TreeContentProvider(elementManager);
         viewer.setContentProvider(contentProvider);
                 
         viewer.setLabelProvider(new DecoratingLabelProvider(new BSIModelViewLabelProvider(),
                 workbench.getDecoratorManager()));
-		viewer.setSorter(new CnAElementByTitelSorter());
+        viewer.setSorter(new CnAElementByTitelSorter());
         toggleLinking(Activator.getDefault().getPreferenceStore()
                 .getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
-		getSite().setSelectionProvider(viewer);
-		makeActions();
-		createPullDownMenu();
-		hookContextMenu();
-		hookDoubleClickAction();
-		hookDNDListeners();
-		addBSIFilter();
-		fillLocalToolBar();
-		getSite().getPage().addPartListener(linkWithEditorPartListener);
-		setNullModel();
-	}
-	
-	protected void startInitDataJob() {
-		WorkspaceJob initDataJob = new WorkspaceJob(Messages.BsiModelView_5) {
-			@Override
+        getSite().setSelectionProvider(viewer);
+        makeActions();
+        createPullDownMenu();
+        hookContextMenu();
+        hookDoubleClickAction();
+        hookDNDListeners();
+        addBSIFilter();
+        fillLocalToolBar();
+        getSite().getPage().addPartListener(linkWithEditorPartListener);
+        setNullModel();
+    }
+
+    protected void startInitDataJob() {
+        WorkspaceJob initDataJob = new WorkspaceJob(Messages.BsiModelView_5) {
+            @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
-				IStatus status = Status.OK_STATUS;
-				try {
-					monitor.beginTask(Messages.BsiModelView_5, IProgressMonitor.UNKNOWN);
-					initData();
-				} catch (Exception e) {
-					LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask(Messages.BsiModelView_5, IProgressMonitor.UNKNOWN);
+                    initData();
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
                     status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
                             Messages.BsiModelView_9, e);
-				} finally {
-					monitor.done();
-				}
-				return status;
-			}
-		};
-		JobScheduler.scheduleInitJob(initDataJob);		
-	}
-	
-	private void initData() {
-		if(CnAElementFactory.isModelLoaded()) {
-			setModel(CnAElementFactory.getLoadedModel());
-		} else if(modelLoadListener==null) {
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleInitJob(initDataJob);
+    }
+
+    private void initData() {
+        if (CnAElementFactory.isModelLoaded()) {
+            setModel(CnAElementFactory.getLoadedModel());
+        } else if (modelLoadListener == null) {
             // model is not loaded yet: add a listener to load data when it's
             // laoded
-			modelLoadListener = new IModelLoadListener() {
-				@Override
+            modelLoadListener = new IModelLoadListener() {
+                @Override
                 public void closed(BSIModel model) {
-					// nothing to do
-				}
+                    // nothing to do
+                }
 
-				@Override
+                @Override
                 public void loaded(BSIModel model) {
-					startInitDataJob();
-				}
-				
+                    startInitDataJob();
+                }
+
                 @Override
                 public void loaded(ISO27KModel model) {
                     // nothing to do            
-                }		
-			};
-			CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
-		}
-	}
+                }
+            };
+            CnAElementFactory.getInstance().addLoadListener(modelLoadListener);
+        }
+    }
 
     private static void loadItBaselineProtectionCatalogs() {
         WorkspaceJob job = new OpenCataloguesJob(Messages.BSIMassnahmenView_0);
         JobScheduler.scheduleInitJob(job);
-	}
+    }
 
-	private void fillContextMenu(IMenuManager manager) {
-		manager.add(new GroupMarker("content")); //$NON-NLS-1$
-		manager.add(new Separator());
-		manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
-		manager.add(new Separator());
-		manager.add(new GroupMarker("special")); //$NON-NLS-1$
-		manager.add(bulkEditAction);
-		manager.add(accessControlEditAction);
+    private void fillContextMenu(IMenuManager manager) {
+        manager.add(new GroupMarker("content")); //$NON-NLS-1$
+        manager.add(new Separator());
+        manager.add(new GroupMarker(IWorkbenchActionConstants.MB_ADDITIONS));
+        manager.add(new Separator());
+        manager.add(new GroupMarker("special")); //$NON-NLS-1$
+        manager.add(bulkEditAction);
+        manager.add(accessControlEditAction);
         manager.add(naturalizeAction);
-		manager.add(selectEqualsAction);
-		selectEqualsAction.setEnabled(bausteinSelected());
-		manager.add(konsolidatorAction);
-		manager.add(gsmbasicsecuritycheckAction);
-		manager.add(bausteinZuordnungAction);
-		manager.add(gsmbausteinZuordnungAction);
-		
-		manager.add(new Separator());
-		drillDownAdapter.addNavigationActions(manager);
-		manager.add(expandAllAction);
-		manager.add(collapseAction);
-	}
+        manager.add(selectEqualsAction);
+        selectEqualsAction.setEnabled(bausteinSelected());
+        manager.add(konsolidatorAction);
+        manager.add(gsmbasicsecuritycheckAction);
+        manager.add(bausteinZuordnungAction);
+        manager.add(gsmbausteinZuordnungAction);
 
-	private boolean bausteinSelected() {
-		IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+        manager.add(new Separator());
+        drillDownAdapter.addNavigationActions(manager);
+        manager.add(expandAllAction);
+        manager.add(collapseAction);
+    }
+
+    private boolean bausteinSelected() {
+        IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
         if (!sel.isEmpty() && sel.size() == 1
                 && sel.getFirstElement() instanceof BausteinUmsetzung) {
-			return true;
-		}
-		return false;
-	}
+            return true;
+        }
+        return false;
+    }
 
-	private void fillLocalToolBar() {
-		IActionBars bars = getViewSite().getActionBars();
-		IToolBarManager manager = bars.getToolBarManager();
-		manager.add(this.filterAction);
-		manager.add(new Separator());
-		drillDownAdapter.addNavigationActions(manager);
+    private void fillLocalToolBar() {
+        IActionBars bars = getViewSite().getActionBars();
+        IToolBarManager manager = bars.getToolBarManager();
+        manager.add(this.filterAction);
+        manager.add(new Separator());
+        drillDownAdapter.addNavigationActions(manager);
         manager.add(linkWithEditorAction);
-	}
+    }
 
-	private void hookContextMenu() {
-		MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
-		menuMgr.setRemoveAllWhenShown(true);
-		menuMgr.addMenuListener(new IMenuListener() {
-			@Override
+    private void hookContextMenu() {
+        MenuManager menuMgr = new MenuManager("#PopupMenu"); //$NON-NLS-1$
+        menuMgr.setRemoveAllWhenShown(true);
+        menuMgr.addMenuListener(new IMenuListener() {
+            @Override
             public void menuAboutToShow(IMenuManager manager) {
-				fillContextMenu(manager);
-			}
-		});
-		Menu menu = menuMgr.createContextMenu(viewer.getControl());
+                fillContextMenu(manager);
+            }
+        });
+        Menu menu = menuMgr.createContextMenu(viewer.getControl());
 
-		viewer.getControl().setMenu(menu);
-		getSite().registerContextMenu(menuMgr, viewer);
-	}
+        viewer.getControl().setMenu(menu);
+        getSite().registerContextMenu(menuMgr, viewer);
+    }
 
-	private void hookDNDListeners() {
+    private void hookDNDListeners() {
 
-		Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
-		                                        BausteinUmsetzungTransfer.getInstance(),
+        Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
+                BausteinUmsetzungTransfer.getInstance(),
                 IBSIStrukturElementTransfer.getInstance() };
-		Transfer[] dragTypes = new Transfer[]{  IBSIStrukturElementTransfer.getInstance(),
+        Transfer[] dragTypes = new Transfer[] { IBSIStrukturElementTransfer.getInstance(),
                 BausteinUmsetzungTransfer.getInstance() };
 
-		int operations = DND.DROP_COPY | DND.DROP_MOVE;
-		viewer.addDropSupport(operations, dropTypes, new BSIModelViewDropListener(viewer));
-		viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
-	}
+        int operations = DND.DROP_COPY | DND.DROP_MOVE;
+        viewer.addDropSupport(operations, dropTypes, new BSIModelViewDropListener(viewer));
+        viewer.addDragSupport(operations, dragTypes, new BSIModelViewDragListener(viewer));
+    }
 
-	private void hookDoubleClickAction() {
-		viewer.addDoubleClickListener(new IDoubleClickListener() {
-			@Override
+    private void hookDoubleClickAction() {
+        viewer.addDoubleClickListener(new IDoubleClickListener() {
+            @Override
             public void doubleClick(DoubleClickEvent event) {
-				doubleClickAction.run();
-			}
-		});
-	}
+                doubleClickAction.run();
+            }
+        });
+    }
 
-	private void makeActions() {
+    private void makeActions() {
 
-	    final int newSelDefaultSize = 10;
-		selectEqualsAction = new Action() {
+        final int newSelDefaultSize = 10;
+        selectEqualsAction = new Action() {
 
-			@Override
-			public void run() {
+            @Override
+            public void run() {
 
-				IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
-				Object o = sel.getFirstElement();
-				if (o instanceof BausteinUmsetzung) {
-					BausteinUmsetzung sourceBst = (BausteinUmsetzung) o;
+                IStructuredSelection sel = (IStructuredSelection) viewer.getSelection();
+                Object o = sel.getFirstElement();
+                if (o instanceof BausteinUmsetzung) {
+                    BausteinUmsetzung sourceBst = (BausteinUmsetzung) o;
                     ArrayList<BausteinUmsetzung> newsel = new ArrayList<>(newSelDefaultSize);
-					newsel.add(sourceBst);
+                    newsel.add(sourceBst);
 
-					try {
+                    try {
                         LoadCnAElementByType<BausteinUmsetzung> command = new LoadCnAElementByType<BausteinUmsetzung>(
                                 BausteinUmsetzung.class);
-						command = ServiceFactory.lookupCommandService().executeCommand(command);
-						List<BausteinUmsetzung> bausteine = command.getElements();
+                        command = ServiceFactory.lookupCommandService().executeCommand(command);
+                        List<BausteinUmsetzung> bausteine = command.getElements();
 
-						for (BausteinUmsetzung bst : bausteine) {
-							if (bst.getKapitel().equals(sourceBst.getKapitel())) {
-								newsel.add(bst);
-							}
-						}
-					} catch (CommandException e) {
-						ExceptionUtil.log(e, ""); //$NON-NLS-1$
-					}
+                        for (BausteinUmsetzung bst : bausteine) {
+                            if (bst.getKapitel().equals(sourceBst.getKapitel())) {
+                                newsel.add(bst);
+                            }
+                        }
+                    } catch (CommandException e) {
+                        ExceptionUtil.log(e, ""); //$NON-NLS-1$
+                    }
 
-					viewer.setSelection(new StructuredSelection(newsel));
-				}
-			}
-		};
-		selectEqualsAction.setText(Messages.BsiModelView_11);
+                    viewer.setSelection(new StructuredSelection(newsel));
+                }
+            }
+        };
+        selectEqualsAction.setText(Messages.BsiModelView_11);
 
         bulkEditAction = new ShowBulkEditAction(getViewSite().getWorkbenchWindow(),
                 Messages.BsiModelView_13);
 
         accessControlEditAction = new ShowAccessControlEditAction(
                 getViewSite().getWorkbenchWindow(), Messages.BsiModelView_14);
-		
-		naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
+
+        naturalizeAction = new NaturalizeAction(getViewSite().getWorkbenchWindow());
 
         konsolidatorAction = new ShowKonsolidatorAction(getViewSite().getWorkbenchWindow(),
                 Messages.BsiModelView_15);
-		
+
         gsmbasicsecuritycheckAction = new GSMBasicSecurityCheckAction(
                 getViewSite().getWorkbenchWindow(), Messages.BsiModelView_19);
 
-		bausteinZuordnungAction = new BausteinZuordnungAction(getViewSite().getWorkbenchWindow());
-		
+        bausteinZuordnungAction = new BausteinZuordnungAction(getViewSite().getWorkbenchWindow());
+
         gsmbausteinZuordnungAction = new GSMBausteinZuordnungAction(
                 getViewSite().getWorkbenchWindow());
-		
+
         doubleClickAction = new Action() {
-		
-			@Override
-			public void run() {
 
-				Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+            @Override
+            public void run() {
 
-				if (sel instanceof FinishedRiskAnalysis) {
-					FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
+                final int wizardWidth = 800;
+                final int wizardHeight = 600;
+                Object sel = ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+
+                if (sel instanceof FinishedRiskAnalysis) {
+                    FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
                     RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis.getParent(),
                             analysis);
-					wizard.init(PlatformUI.getWorkbench(), null);
+                    wizard.init(PlatformUI.getWorkbench(), null);
                     WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(new Shell(),
                             wizard);
-                    wizDialog.setPageSize(wizard.getWidth(), wizard.getHeight());
-					wizDialog.open();
-				} else {
-					EditorFactory.getInstance().updateAndOpenObject(sel);
-				}
-			}
-		};
+                    wizDialog.setPageSize(wizardWidth, wizardHeight);
+                    wizDialog.open();
+                } else {
+                    EditorFactory.getInstance().updateAndOpenObject(sel);
+                }
+            }
+        };
 
-		BSIModelElementFilter modelElementFilter = new BSIModelElementFilter(viewer);
-		
+        BSIModelElementFilter modelElementFilter = new BSIModelElementFilter(viewer);
+
         filterAction = new BSIModelViewFilterAction(Messages.BsiModelView_3,
                 new MassnahmenUmsetzungFilter(viewer), new MassnahmenSiegelFilter(viewer),
                 new LebenszyklusPropertyFilter(viewer),
                 new ObjektLebenszyklusPropertyFilter(viewer), modelElementFilter,
                 new TagFilter(viewer));
 
-		expandAllAction = new Action() {
+        expandAllAction = new Action() {
 
-			@Override
-			public void run() {
+            @Override
+            public void run() {
 
-				expandAll();
-			}
-		};
-		expandAllAction.setText(Messages.BsiModelView_16);
+                expandAll();
+            }
+        };
+        expandAllAction.setText(Messages.BsiModelView_16);
         expandAllAction.setImageDescriptor(
                 ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
-		collapseAction = new Action() {
+        collapseAction = new Action() {
 
-			@Override
-			public void run() {
+            @Override
+            public void run() {
 
-				viewer.collapseAll();
-			}
-		};
-		collapseAction.setText(Messages.BsiModelView_17);
+                viewer.collapseAll();
+            }
+        };
+        collapseAction.setText(Messages.BsiModelView_17);
         collapseAction.setImageDescriptor(
                 ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
 
-		linkWithEditorAction = new Action(Messages.BsiModelView_6, IAction.AS_CHECK_BOX) {
+        linkWithEditorAction = new Action(Messages.BsiModelView_6, IAction.AS_CHECK_BOX) {
 
             @Override
             public void run() {
@@ -557,63 +559,63 @@ public class BsiModelView extends RightsEnabledView
         }
 
         viewer.setSelection(new StructuredSelection(newsel));
-	}
+    }
 
-	private void expandAll() {
+    private void expandAll() {
 
-		// TODO: do this a new thread and show user a progress bar
-		viewer.expandAll();
-	}
+        // TODO: do this a new thread and show user a progress bar
+        viewer.expandAll();
+    }
 
-	/**
-	 * Passing the focus request to the viewer's control.
-	 */
-	@Override
-	public void setFocus() {
-		viewer.getControl().setFocus();
-	}
+    /**
+     * Passing the focus request to the viewer's control.
+     */
+    @Override
+    public void setFocus() {
+        viewer.getControl().setFocus();
+    }
 
-	private void createPullDownMenu() {
-		IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
-		menuManager.add(filterAction);
-		menuManager.add(expandAllAction);
-		menuManager.add(collapseAction);
+    private void createPullDownMenu() {
+        IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
+        menuManager.add(filterAction);
+        menuManager.add(expandAllAction);
+        menuManager.add(collapseAction);
 
-		menuManager.add(new Separator());
-	}
+        menuManager.add(new Separator());
+    }
 
     public void setModel(BSIModel newModel) {
 
-		// create listener only once:
-		if (bsiModelListener == null) {
-			bsiModelListener = new TreeUpdateListener(viewer,elementManager);
-		}
-		
-		if (model != null) {
-			// remove listener from old model:
-			model.removeBSIModelListener(bsiModelListener);
-		}
-		
+        // create listener only once:
+        if (bsiModelListener == null) {
+            bsiModelListener = new TreeUpdateListener(viewer, elementManager);
+        }
+
+        if (model != null) {
+            // remove listener from old model:
+            model.removeBSIModelListener(bsiModelListener);
+        }
+
         this.model = newModel;
-		model.addBSIModelListener(bsiModelListener);
-		
+        model.addBSIModelListener(bsiModelListener);
+
         refreshModelAsync();
 
-	}
+    }
 
-	public IStructuredSelection getSelection() {
-		return (IStructuredSelection) viewer.getSelection();
-	}
+    public IStructuredSelection getSelection() {
+        return (IStructuredSelection) viewer.getSelection();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.rcp.IAttachedToPerspective#getPerspectiveId()
+     */
+    @Override
     public String getPerspectiveId() {
-		return Perspective.ID;
-	}
+        return Perspective.ID;
+    }
 
     /*
      * (non-Javadoc)
