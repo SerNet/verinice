@@ -47,7 +47,7 @@
   <item title="Modellieren von Controls">
     <description>
 		Um Controls aus Katalogen wie z.B. der ISO 27001 in verinice zu verwenden, müssen Sie die Controls 
-		zunächst anlegen. Am besten eigenet sich hierfür der verinice Risikokatalog, der im verinice.SHOP 
+		zunächst anlegen. Am besten eignet sich hierfür der verinice Risikokatalog, der im verinice.SHOP 
 		erhältlich ist: <b> shop.verinice.com</b> <br />
 		Alternativ können Sie die benötigten Controls aus einer CSV-Datei selbst importieren oder die 
 		Controls auch einfach über das Kontextmenü direkt in verinice anlegen. Der CSV-Import wird im 

@@ -37,23 +37,31 @@
   
   <item title="Modelling Controls">
   	<description>
-  		Before using controls from catalogs like e.g. the ISO 27001 in verinice, you have to apply 
-  		the controls.
-  		Best suited for the purpose is the verinice Risk Catalog, available in the verinice.SHOP: 
-  		<b> shop.verinice.com</b> <br />
-		Alternativly it is possible to import the required controls of a CSV-file or to create them 
-		in verinice directly. The CSV-import is discribed in the verinice-manual, 
+  		When working with catalogs such as ISO/IEC 27001 in
+		verinice, you have to import or create the corresponding controls first.
+		
+		The easiest way to do that is to use the verinice risk catalog which is
+		available in the verinice.SHOP:
+		<b> shop.verinice.com</b> <br />
+		
+		Alternatively it is possible to import the required controls from a
+		CSV-file or to simply create them
+		in verinice manually.
+		
+		The CSV-import is described in the verinice-manual,
 		which is available in the verinice.SHOP as well.<br/>
-		You can get information at no charge at our websites, in the forum and from our youtube channel.
+		You can also get free information on our websites, in the verinice-forum
+		and from our Youtube channel.
 		<br/>
-		In the tutorial we assume that the verinice Risk Catalog is used.
+		In this tutorial we assume that you are using the verinice risk catalog.
 		<br /><br />
 		
-		By double-clicking the inserted controls you can now edit the information for this control in
-	    the editor view. 
-		Open the control "8.1.1 Inventory of assets". 
-		Set the field "Implemented" to "yes" by selecting the right line in the drop-down menu. 
+		By double-clicking on a control you can now edit the
+		information for this control in
+		the editor view: open the control "8.1.1 Inventory of assets".
 		
+		Set the field "Implemented" to "yes" by selecting the correct entry in the
+		drop-down menu.
     </description>
   </item>
 
