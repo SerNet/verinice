@@ -85,4 +85,16 @@ public class SearchServiceDummy implements ISearchService {
         return ISearchService.ES_IMPLEMENTATION_TYPE_DUMMY;
     }
 
+    @Override
+    public boolean isReindexRunning() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void setReindexRunning(boolean running) {
+        // TODO Auto-generated method stub
+
+    }
+
 }
