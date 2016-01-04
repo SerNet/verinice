@@ -165,9 +165,7 @@ public class BasicAuthenticationService implements IAuthService {
     // stored in configuration_benutzername in db table properties.propertvalue
     @Override
     public boolean isScopeOnly() {
-        boolean isScopeOnly = false; // TODO: discuss the default here,
-                                     // sernet.gs.server.security.DigestAuthenticationService.isScopeOnly()
-                                     // returns false by default also
+        boolean isScopeOnly = false;
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
         Object principal = authentication.getPrincipal();
