@@ -5,6 +5,7 @@
 	  xmlns:ui="http://java.sun.com/jsf/facelets"
 	  xmlns:p="http://primefaces.org/ui"
 	  xml:lang="de-DE">
+<f:view locale="#{message.locale}">
 <f:loadBundle basename="sernet.gs.web.Messages" var="msg"/>
 <f:loadBundle basename="sernet.verinice.web.TaskMessages" var="msgTask"/>
 <f:loadBundle basename="sernet.verinice.web.EditMessages" var="msgEdit"/>
@@ -104,6 +105,7 @@
 			</div>
 		</div>
 	</body>
+	</f:view>
 </html>
 <!-- Cached page generated 19-01-11 16:52. Expires 21-01-11 16:52 -->
 <!-- Parsetime: 0 ms-->
