@@ -280,7 +280,7 @@ public class SearchService implements ISearchService {
         return reindexRunning;
     }
 
-    public synchronized void setReindexRunning(boolean running) {
+    public void setReindexRunning(boolean running) {
         this.reindexRunning = running;
     }
 
