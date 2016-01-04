@@ -66,7 +66,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
 
     private boolean linkingActive = true;
 
-    private SerialiseBrowserLoadingListener serialiseListener;
+    private SerializeBrowserLoadingListener serializeListener;
 
     private CnATreeElement selectedInISMView;
 
@@ -82,8 +82,8 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
             browser.setLayoutData(new GridData(
                     GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
 
-            serialiseListener = new SerialiseBrowserLoadingListener(browser);
-            browser.addProgressListener(serialiseListener);
+			serializeListener = new SerializeBrowserLoadingListener(browser);
+			browser.addProgressListener(serializeListener);
 
             browser.setUrl(defaultImage());
 
@@ -218,7 +218,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
      */
     public void setText(String text) {
         if (text != null) {
-            serialiseListener.setText(text);
+            serializeListener.setText(text);
         }
     }
 

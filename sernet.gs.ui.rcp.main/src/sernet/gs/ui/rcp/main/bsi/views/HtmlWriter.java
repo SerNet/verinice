@@ -39,6 +39,7 @@ import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.Threat;
@@ -50,14 +51,17 @@ import sernet.verinice.model.iso27k.Vulnerability;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 public abstract class HtmlWriter {
 
     private static final Logger LOG = Logger.getLogger(HtmlWriter.class);
     
     private static final String ISO_8859_1 = "iso-8859-1";
     private static final String UTF_8 = "utf-8";
+    private static final String NULL_STRING = "null";
   
+    private HtmlWriter() {
+    }
+
     public static String getHtml(Object element) throws GSServiceException {
         String html = null;
         
@@ -66,14 +70,21 @@ public abstract class HtmlWriter {
             html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
         }
 
-        if (element instanceof Gefaehrdung) {
+        if (element instanceof OwnGefaehrdung) {
+            OwnGefaehrdung ownGefaehrdung = (OwnGefaehrdung) element;
+            if (ownGefaehrdung.getUrl() == null || ownGefaehrdung.getUrl().isEmpty() || ownGefaehrdung.getUrl().equals(NULL_STRING)) { // $NON-NLS-1$
+                html = toHtml(ownGefaehrdung);
+            } else {
+                html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(ownGefaehrdung.getUrl(), ownGefaehrdung.getStand()), UTF_8);
+            }
+        } else if (element instanceof Gefaehrdung) {
             Gefaehrdung gef = (Gefaehrdung) element;
             html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gef.getUrl(), gef.getStand()), gef.getEncoding());
         }
 
         if (element instanceof GefaehrdungsUmsetzung) {
             GefaehrdungsUmsetzung gefUms = (GefaehrdungsUmsetzung) element;
-            if (gefUms.getUrl() == null || gefUms.getUrl().isEmpty() || gefUms.getUrl().equals("null")) { //$NON-NLS-1$
+            if (gefUms.getUrl() == null || gefUms.getUrl().isEmpty() || gefUms.getUrl().equals(NULL_STRING)) { // $NON-NLS-1$
                 html = toHtml(gefUms);
             } else {
                 html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()), UTF_8); //$NON-NLS-1$
@@ -81,9 +92,10 @@ public abstract class HtmlWriter {
             }
         }
 
+
         if (element instanceof BausteinUmsetzung) {
             BausteinUmsetzung bst = (BausteinUmsetzung) element;
-            if (bst.getUrl() == null || bst.getUrl().isEmpty() || bst.getUrl().equals("null")){
+            if (bst.getUrl() == null || bst.getUrl().isEmpty() || bst.getUrl().equals(NULL_STRING)) {
             	html=toHtml(bst);
             }else {
             
@@ -95,7 +107,7 @@ public abstract class HtmlWriter {
             Massnahme mn = (Massnahme) element;
             html = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mn.getUrl(), mn.getStand());
         }
- 
+
         if (element instanceof RisikoMassnahmenUmsetzung) {
             RisikoMassnahmenUmsetzung ums = (RisikoMassnahmenUmsetzung) element;
             RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(ums);
@@ -106,11 +118,11 @@ public abstract class HtmlWriter {
             }
         } else if (element instanceof MassnahmenUmsetzung) {
             MassnahmenUmsetzung mnu = (MassnahmenUmsetzung) element;
-            if (mnu.getUrl() == null || mnu.getUrl().isEmpty() || mnu.getUrl().equals("null")){
-            	html=toHtml(mnu);
-            }else {
-            html = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mnu.getUrl(), mnu.getStand());
-        }
+            if (mnu.getUrl() == null || mnu.getUrl().isEmpty() || mnu.getUrl().equals(NULL_STRING)) {
+                html = toHtml(mnu);
+            } else {
+                html = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mnu.getUrl(), mnu.getStand());
+            }
         }
  
         if (element instanceof TodoViewItem) {
@@ -161,11 +173,17 @@ public abstract class HtmlWriter {
     	writeHtml(buf, mnums.getTitle(), mnums.getDescription(), ISO_8859_1);
     	return buf.toString();
     }
-    
+
     private static String toHtml(GefaehrdungsUmsetzung ums) {
         StringBuilder buf = new StringBuilder();
         writeHtml(buf, ums.getId() + " " + ums.getTitle(), ums.getDescription(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return buf.toString();
+    }
+
+    private static String toHtml(OwnGefaehrdung gef) {
+        StringBuilder buf = new StringBuilder();
+        writeHtml(buf, gef.getId() + " " + gef.getTitel(), gef.getBeschreibung(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
+        return removeUnsupportedHtmlPattern(buf.toString());
     }
     
     private static String toHtml(RisikoMassnahmenUmsetzung ums) {
@@ -230,13 +248,8 @@ public abstract class HtmlWriter {
 
                // we strip away images et al to keep just the information we
                // need:
-               line = line.replace("../../media/style/css/screen.css", cssDir); //$NON-NLS-1$
-               line = line.replace("../../../screen.css", cssDir); //$NON-NLS-1$
-               line = line.replace("../../screen.css", cssDir); //$NON-NLS-1$
-               line = line.replace("../screen.css", cssDir); //$NON-NLS-1$
-               line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
-               line = line.replaceAll("</a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
-               line = line.replaceAll("<img.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+               line = convertCss(line, cssDir);
+               line = removeUnsupportedHtmlPattern(line);
                line = line.replace((char) utf8SkipWhitespaceChar, ' '); // replace non-breaking spaces
 
 
@@ -250,4 +263,19 @@ public abstract class HtmlWriter {
            return null;
        }
    }
+
+private static String removeUnsupportedHtmlPattern(String line) {
+    line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+       line = line.replaceAll("</a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+       line = line.replaceAll("<img.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+    return line;
+}
+
+private static String convertCss(String line, String cssDir) {
+    line = line.replace("../../media/style/css/screen.css", cssDir); //$NON-NLS-1$
+       line = line.replace("../../../screen.css", cssDir); //$NON-NLS-1$
+       line = line.replace("../../screen.css", cssDir); //$NON-NLS-1$
+       line = line.replace("../screen.css", cssDir); //$NON-NLS-1$
+    return line;
+}
 }
