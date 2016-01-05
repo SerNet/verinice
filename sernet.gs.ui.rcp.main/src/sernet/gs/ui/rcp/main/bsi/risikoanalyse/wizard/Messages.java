@@ -94,6 +94,8 @@ public class Messages extends NLS {
     public static String NewGefaehrdungDialog_5;
     public static String NewGefaehrdungDialog_6;
     public static String NewGefaehrdungDialog_7;
+    public static String NewGefaehrdungDialog_Error_0;
+    public static String NewGefaehrdungDialog_Error_1;
     public static String NewRisikoMassnahmeDialog_0;
     public static String NewRisikoMassnahmeDialog_1;
     public static String NewRisikoMassnahmeDialog_2;

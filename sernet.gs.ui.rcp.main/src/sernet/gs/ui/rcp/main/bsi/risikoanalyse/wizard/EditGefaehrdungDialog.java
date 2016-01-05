@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -34,6 +36,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 
 /**
@@ -48,6 +51,7 @@ public class EditGefaehrdungDialog extends Dialog {
     private Text textDescription;
     private Combo textCategory;
     private OwnGefaehrdung ownGefaehrdung;
+    private List<Gefaehrdung> allGefaehrdungen;
 
     /**
      * Constructor.
@@ -57,10 +61,11 @@ public class EditGefaehrdungDialog extends Dialog {
      * @param newOwnGefaehrdung
      *            the OwnGefaehrdung to edit
      */
-    public EditGefaehrdungDialog(Shell parentShell, OwnGefaehrdung newOwnGefaehrdung) {
+    public EditGefaehrdungDialog(Shell parentShell, OwnGefaehrdung newOwnGefaehrdung, List<Gefaehrdung> allGefaehrdungen) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
         ownGefaehrdung = newOwnGefaehrdung;
+        this.allGefaehrdungen = allGefaehrdungen;
     }
 
     /**
@@ -197,19 +202,23 @@ public class EditGefaehrdungDialog extends Dialog {
      */
     @Override
     protected void okPressed() {
-        ownGefaehrdung.setId(textNumber.getText());
-        ownGefaehrdung.setTitel(textName.getText());
-        ownGefaehrdung.setBeschreibung(textDescription.getText());
-        ownGefaehrdung.setOwnkategorie(textCategory.getText());
+        if (GefaehrdungsUtil.isUniqueId(allGefaehrdungen, textNumber.getText(), ownGefaehrdung)) {
+            ownGefaehrdung.setId(textNumber.getText());
+            ownGefaehrdung.setTitel(textName.getText());
+            ownGefaehrdung.setBeschreibung(textDescription.getText());
+            ownGefaehrdung.setOwnkategorie(textCategory.getText());
 
-        try {
+            try {
 
-            ownGefaehrdung = OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
+                ownGefaehrdung = OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
 
-        } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.EditGefaehrdungDialog_6);
+            } catch (Exception e) {
+                ExceptionUtil.log(e, Messages.EditGefaehrdungDialog_6);
+            }
+
+            super.okPressed();
+        } else {
+            MessageDialog.openError(getShell(), Messages.NewGefaehrdungDialog_Error_0, NLS.bind(Messages.NewGefaehrdungDialog_Error_1, textNumber.getText()));
         }
-
-        super.okPressed();
     }
 }

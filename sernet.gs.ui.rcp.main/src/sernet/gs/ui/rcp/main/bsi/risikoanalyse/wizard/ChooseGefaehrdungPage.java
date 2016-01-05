@@ -127,7 +127,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
                 if (selectedGefaehrdung instanceof OwnGefaehrdung) {
                     OwnGefaehrdung selectedOwnGefaehrdung = (OwnGefaehrdung) selectedGefaehrdung;
-                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), selectedOwnGefaehrdung);
+                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), selectedOwnGefaehrdung, getRiskAnalysisWizard().getAllGefaehrdungen());
                     dialog.open();
                     refresh();
                 }
@@ -241,7 +241,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
             @Override
             public void widgetSelected(SelectionEvent event) {
                 List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard().getAllOwnGefaehrdungen();
-                final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(rootContainer.getShell(), arrListOwnGefaehrdungen);
+                final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(rootContainer.getShell(), arrListOwnGefaehrdungen, getRiskAnalysisWizard().getAllGefaehrdungen());
                 dialog.open();
                 getRiskAnalysisWizard().addOwnGefaehrdungen();
                 refresh();
@@ -256,7 +256,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
                 if (selectedGefaehrdung instanceof OwnGefaehrdung) {
                     OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
-                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), ownGefSelected);
+                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), ownGefSelected, getRiskAnalysisWizard().getAllGefaehrdungen());
                     dialog.open();
                     refresh();
                 }

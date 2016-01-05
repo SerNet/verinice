@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -35,6 +37,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 
 /**
@@ -42,6 +45,7 @@ import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
  * 
  * @author ahanekop[at]sernet[dot]de
  */
+@SuppressWarnings("restriction")
 public class NewGefaehrdungDialog extends Dialog {
 
     private Text textNumber;
@@ -49,6 +53,7 @@ public class NewGefaehrdungDialog extends Dialog {
     private Text textDescription;
     private Combo textCategory;
     private List<OwnGefaehrdung> ownGefaehrdungen;
+    private List<Gefaehrdung> allGefaehrdungen;
     private OwnGefaehrdung ownGefaehrdung = new OwnGefaehrdung();
 
     /**
@@ -59,7 +64,7 @@ public class NewGefaehrdungDialog extends Dialog {
      * @param newOwnGefaehrdungen
      *            List of all currently existing OwnGefaehrdungen
      */
-    public NewGefaehrdungDialog(Shell parentShell, List<OwnGefaehrdung> newOwnGefaehrdungen) {
+    public NewGefaehrdungDialog(Shell parentShell, List<OwnGefaehrdung> newOwnGefaehrdungen, List<Gefaehrdung> allGefaehrdungen) {
         /*
          * note: you need to hand the ArrayList over differently, if you don't
          * use this this dialog modally!
@@ -67,6 +72,7 @@ public class NewGefaehrdungDialog extends Dialog {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
         ownGefaehrdungen = newOwnGefaehrdungen;
+        this.allGefaehrdungen = allGefaehrdungen;
     }
 
     /**
@@ -153,7 +159,8 @@ public class NewGefaehrdungDialog extends Dialog {
         textCategory.setLayoutData(gridTextCategory);
         textCategory.setItems(loadCategories());
         textCategory.setText(Messages.NewGefaehrdungDialog_4);
-
+        
+        
         return composite;
     }
 
@@ -202,20 +209,24 @@ public class NewGefaehrdungDialog extends Dialog {
     @Override
     protected void okPressed() {
 
-        ownGefaehrdung.setId(textNumber.getText());
-        ownGefaehrdung.setTitel(textName.getText());
-        ownGefaehrdung.setBeschreibung(textDescription.getText());
-        ownGefaehrdung.setOwnkategorie(textCategory.getText());
+        if (GefaehrdungsUtil.isUniqueId(allGefaehrdungen, textNumber.getText(), null)) {
+            ownGefaehrdung.setId(textNumber.getText());
+            ownGefaehrdung.setTitel(textName.getText());
+            ownGefaehrdung.setBeschreibung(textDescription.getText());
+            ownGefaehrdung.setOwnkategorie(textCategory.getText());
 
-        try {
+            try {
 
-            ownGefaehrdung = OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
+                ownGefaehrdung = OwnGefaehrdungHome.getInstance().save(ownGefaehrdung);
 
-        } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.NewGefaehrdungDialog_7);
+            } catch (Exception e) {
+                ExceptionUtil.log(e, Messages.NewGefaehrdungDialog_7);
+            }
+            ownGefaehrdungen.add(ownGefaehrdung);
+
+            super.okPressed();
+        } else {
+            MessageDialog.openError(getShell(), Messages.NewGefaehrdungDialog_Error_0, NLS.bind(Messages.NewGefaehrdungDialog_Error_1, textNumber.getText()));
         }
-        ownGefaehrdungen.add(ownGefaehrdung);
-
-        super.okPressed();
     }
 }
