@@ -169,12 +169,14 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
 
                         refresh();
                     checkAllSelectedGefaehrdungen();
+                    packAllColumns();
                 } else {
                     viewer.removeFilter(gefaehrdungFilter);
                     refresh();
                     assignBausteinGefaehrdungen();
                     refresh();
                     checkAllSelectedGefaehrdungen();
+                    packAllColumns();
                 }
             }
         });
@@ -195,11 +197,13 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                     viewer.addFilter(ownGefaehrdungFilter);
                     viewer.refresh();
                     checkAllSelectedGefaehrdungen();
+                    packAllColumns();
                 } else {
                     viewer.removeFilter(ownGefaehrdungFilter);
                     refresh();
                     assignBausteinGefaehrdungen();
                     checkAllSelectedGefaehrdungen();
+                    packAllColumns();
                 }
             }
         });

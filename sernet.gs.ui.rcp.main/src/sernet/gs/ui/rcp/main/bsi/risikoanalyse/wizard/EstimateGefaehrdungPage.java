@@ -281,11 +281,13 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
                 Button button = (Button) event.widget;
                 if (button.getSelection()) {
                     viewer.addFilter(gefaehrdungFilter);
-                    refresh();
+                    refresh();  
+                    packAllColumns();
                 } else {
                     viewer.removeFilter(gefaehrdungFilter);
                     refresh();
                     selectAssignedGefaehrdungen();
+                    packAllColumns();
                 }
             }
         });
@@ -304,10 +306,12 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
                 if (button.getSelection()) {
                     viewer.addFilter(ownGefaehrdungFilter);
                     refresh();
+                    packAllColumns();
                 } else {
                     viewer.removeFilter(ownGefaehrdungFilter);
                     refresh();
                     selectAssignedGefaehrdungen();
+                    packAllColumns();
                 }
             }
         });
