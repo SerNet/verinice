@@ -81,24 +81,10 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
     }
 
     /**
-     * Sets the control to the given visibility state.
-     * 
-     * @param visible
-     *            boolean indicating if content should be visible
-     */
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        if (visible) {
-            initContents();
-        }
-    }
-
-    /**
      * Fills the CheckboxTableViewer with all previously selected Gefaehrdungen.
      * Is processed each time the WizardPage is set visible.
      */
-    private void initContents() {   
+    protected void doInitContents() {
         List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = getRiskAnalysisWizard().getAssociatedGefaehrdungen();
 
         /* map a domain model object into multiple images and text labels */

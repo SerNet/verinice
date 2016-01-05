@@ -68,26 +68,13 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
         super(Messages.RiskHandlingPage_4, Messages.RiskHandlingPage_5, Messages.RiskHandlingPage_6);
     }
 
-    /**
-     * Sets the control to the given visibility state.
-     * 
-     * @param visible
-     *            boolean indicating if content should be visible
-     */
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        if (visible) {
-            initContents();
-        }
-    }
 
     /**
      * Fills the TableViewer with all previously selected Gefaehrdungen in order
      * to choose an alternate proceeding. Is processed each time the WizardPage
      * is set visible.
      */
-    private void initContents() {
+    protected void doInitContents() {
         List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen();
 
         final ComboBoxCellEditor choiceEditor = new ComboBoxCellEditor(viewer.getTable(),

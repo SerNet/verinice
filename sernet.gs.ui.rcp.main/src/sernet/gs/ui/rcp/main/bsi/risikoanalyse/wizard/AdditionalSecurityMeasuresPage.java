@@ -94,19 +94,6 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         super(Messages.AdditionalSecurityMeasuresPage_0, Messages.AdditionalSecurityMeasuresPage_1, Messages.AdditionalSecurityMeasuresPage_2);
     }
 
-    /**
-     * Sets the control to the given visibility state.
-     * 
-     * @param visible
-     *            boolean indicating if content should be visible
-     */
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        if (visible) {
-            initContents();
-        }
-    }
 
     /**
      * fills the CheckboxTableViewer with all Gefaehrdungen available
@@ -116,7 +103,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
      * Fills the TreeViewer with Gefaehrdungen and the TableViewer with
      * Massnahmen. Is processed each time the WizardPage is set visible.
      */
-    private void initContents() {
+    protected void doInitContents() {
 
         List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = getRiskAnalysisWizard().getNotOKGefaehrdungsUmsetzungen();
         
@@ -428,21 +415,6 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             }
         });
 
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            @Override
-            public void selectionChanged(SelectionChangedEvent event) {
-                if (event.getSelection() instanceof IStructuredSelection) {
-                    if (((IStructuredSelection) event.getSelection()).getFirstElement() instanceof RisikoMassnahmenUmsetzung) {
-                        buttonDelete.setEnabled(true);
-                        buttonEdit.setEnabled(true);
-                    } else {
-                        buttonDelete.setEnabled(false);
-                        buttonEdit.setEnabled(false);
-                    }
-                }
-            }
-        });
 
         /* Listener adds/removes Filter gefaehrdungFilter */
         buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {

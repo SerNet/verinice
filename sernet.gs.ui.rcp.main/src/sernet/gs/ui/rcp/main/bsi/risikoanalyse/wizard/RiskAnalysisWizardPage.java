@@ -21,6 +21,8 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -40,6 +42,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.bsi.views.SerializeBrowserLoadingListener;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
 /**
  * Base risk analysis wizard page. Every RiskAnalysisWizard page inherits
@@ -107,6 +110,36 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
     }
 
+
+    private void resetSearchField() {
+        if (textSearch != null) {
+            textSearch.setText("");
+        }
+
+    }
+
+    /**
+     * Sets the control to the given visibility state.
+     * 
+     * @param visible
+     *            boolean indicating if content should be visible
+     */
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            initContents();
+        }
+    }
+
+    private void initContents() {
+
+        resetSearchField();
+
+        doInitContents();
+    }
+
+    protected abstract void doInitContents();
 
     public void refresh() {
         viewer.refresh();
@@ -220,6 +253,26 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
         browserListener = new RiskAnalysisWizardBrowserUpdateListener(browserLoadingListener, viewer);
         viewer.addSelectionChangedListener(browserListener);
+
+        if (buttonDelete != null && buttonEdit != null) {
+            viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+                @Override
+                public void selectionChanged(SelectionChangedEvent event) {
+                    if (event.getSelection() instanceof IStructuredSelection) {
+                        Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
+                        if (element instanceof RisikoMassnahmenUmsetzung || element instanceof OwnGefaehrdung) {
+                            buttonDelete.setEnabled(true);
+                            buttonEdit.setEnabled(true);
+                        } else {
+                            buttonDelete.setEnabled(false);
+                            buttonEdit.setEnabled(false);
+                        }
+                    }
+                }
+            });
+        }
+        
     }
 
 
