@@ -216,8 +216,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             int result = dialog.open();
             if (result == Window.OK) {
                 getRiskAnalysisWizard().replaceMassnahmenUmsetzung(dialog.getRisikoMassnahmenUmsetzung());
-                viewer.refresh();
-                refreshBrowser();
+                refresh();
                 packAllMassnahmeColumns();
             }
 
@@ -331,6 +330,9 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
     @Override
     protected void addSpecificListenersForPage() {
 
+        RiskAnalysisWizardBrowserUpdateListener browserListener = new RiskAnalysisWizardBrowserUpdateListener(browserLoadingListener, viewerScenario);
+        viewerScenario.addSelectionChangedListener(browserListener);
+
         /* listener opens edit Dialog for selected Massnahme */
         viewer.addDoubleClickListener(new IDoubleClickListener() {
 
@@ -354,8 +356,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
                 if (result == Window.OK) {
                     /* add new RisikoMassnahmenUmsetzung to List and viewer */
                     getRiskAnalysisWizard().addRisikoMassnahmeUmsetzung(dialog.getNewRisikoMassnahme());
-                    viewer.refresh();
-                    refreshBrowser();
+                    refresh();
                     packAllMassnahmeColumns();
                 }
             }
@@ -375,6 +376,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
                 if (confirmed) {
                     deleteControlFromTreeViewer(selectedRisikoMassnahmenUmsetzung);
                     viewerScenario.refresh();
+                    refresh();
                 }
             }
         });
@@ -420,7 +422,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
                     /* delete */
                     if (confirmed) {
                         deleteOwnControl(rsUmsetzung);
-                        viewer.refresh();
+                        refresh();
                     }
                 }
             }
@@ -458,10 +460,10 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
 
                 if (thisButton.getSelection()) {
                     viewer.addFilter(controlFilter);
-                    viewer.refresh();
+                    refresh();
                 } else {
                     viewer.removeFilter(controlFilter);
-                    viewer.refresh();
+                    refresh();
                 }
             }
         });
@@ -482,10 +484,10 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
 
                 if (thisButton.getSelection()) {
                     viewer.addFilter(ownControlFilter);
-                    viewer.refresh();
+                    refresh();
                 } else {
                     viewer.removeFilter(ownControlFilter);
-                    viewer.refresh();
+                    refresh();
                 }
             }
         });
@@ -516,17 +518,17 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
                     if (contains) {
                         /* filter is already active - update filter */
                         thisFilter.setPattern(text.getText());
-                        viewer.refresh();
+                        refresh();
 
                     } else {
                         /* filter is not active - add */
                         searchFilter.setPattern(text.getText());
                         viewer.addFilter(searchFilter);
-                        viewer.refresh();
+                        refresh();
                     }
                 } else {
                     viewer.removeFilter(searchFilter);
-                    viewer.refresh();
+                    refresh();
                 }
             }
         });

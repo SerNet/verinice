@@ -33,9 +33,11 @@ import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.highlight.HighlightField;
 
 import sernet.gs.service.ServerInitializer;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.search.IJsonBuilder;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.common.CnATreeElement;
@@ -60,6 +62,8 @@ public class SearchService implements ISearchService {
     @Resource(name = "jsonBuilder")
     protected IJsonBuilder jsonBuilder;
 
+    private volatile boolean reindexRunning = false;
+
     /**
      * Should be used by client to pass a query to the service in future
      * releases the method should decide which kind of query must be send to es.
@@ -69,6 +73,11 @@ public class SearchService implements ISearchService {
     @Override
     public VeriniceSearchResult query(VeriniceQuery veriniceQuery) {
         ServerInitializer.inheritVeriniceContextState();
+        IAuthService authService = (IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE);
+        /* query returns false by default */
+        if (authService.isPermissionHandlingNeeded()) {
+            veriniceQuery.setScopeOnly(authService.isScopeOnly());
+        }
         return query(veriniceQuery, null);
     }
     
@@ -83,13 +92,20 @@ public class SearchService implements ISearchService {
      */
     @Override
     public VeriniceSearchResult query(VeriniceQuery query, String elementTypeId) {
+        long startTime = System.currentTimeMillis();
         ServerInitializer.inheritVeriniceContextState();
         VeriniceSearchResult results = new VeriniceSearchResult();
         if (StringUtils.isNotEmpty(elementTypeId)) {
             results.addVeriniceSearchTable(processSearchResponse(elementTypeId, searchDao.find(elementTypeId, query), query.getLimit()));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Time for executing query( " + query.getQuery() + ", " + elementTypeId + "):\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
+            }
         } else {
             for (EntityType type : HUITypeFactory.getInstance().getAllEntityTypes()) {
                 results.addVeriniceSearchTable(processSearchResponse(type.getId(), searchDao.find(type.getId(), query), query.getLimit()));
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Time for executing query( " + query.getQuery() + ", <allTypeIds>):\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
             }
         }
         return results;
@@ -101,6 +117,7 @@ public class SearchService implements ISearchService {
     }
 
     private VeriniceSearchResultTable processSearchResponse(String elementTypeId, MultiSearchResponse msr, int limit) {
+        long startTime = System.currentTimeMillis();
         List<SearchHit> hitList = createHitList(msr, limit);
         String identifier = "";
         VeriniceSearchResultTable results = new VeriniceSearchResultTable(elementTypeId, getEntityName(elementTypeId), getPropertyIds(elementTypeId));
@@ -117,6 +134,9 @@ public class SearchService implements ISearchService {
             }
             results.addVeriniceSearchResultRow(result);
 
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Time for executing processSearchResponse:\t" + String.valueOf((System.currentTimeMillis() - startTime) / 1000) + " seconds");
         }
         return results;
     }
@@ -274,7 +294,13 @@ public class SearchService implements ISearchService {
         this.jsonBuilder = jsonBuilder;
     }
 
+    public boolean isReindexRunning() {
+        return reindexRunning;
+    }
 
+    public void setReindexRunning(boolean running) {
+        this.reindexRunning = running;
+    }
 
     @Override
     public int getImplementationtype() {

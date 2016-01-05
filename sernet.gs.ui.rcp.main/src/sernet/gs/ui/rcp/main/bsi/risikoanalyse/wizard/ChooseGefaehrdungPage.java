@@ -142,7 +142,6 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                     final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), selectedOwnGefaehrdung);
                     dialog.open();
                     refresh();
-                    refreshBrowser();
                 }
             }
         });
@@ -167,13 +166,15 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 Button button = (Button) event.widget;
                 if (button.getSelection()) {
                     viewer.addFilter(gefaehrdungFilter);
-                    viewer.refresh();
+
+                        refresh();
                     checkAllSelectedGefaehrdungen();
                     packAllColumns();
                 } else {
                     viewer.removeFilter(gefaehrdungFilter);
                     refresh();
                     assignBausteinGefaehrdungen();
+                    refresh();
                     checkAllSelectedGefaehrdungen();
                     packAllColumns();
                 }
@@ -199,7 +200,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                     packAllColumns();
                 } else {
                     viewer.removeFilter(ownGefaehrdungFilter);
-                    viewer.refresh();
+                    refresh();
                     assignBausteinGefaehrdungen();
                     checkAllSelectedGefaehrdungen();
                     packAllColumns();
@@ -222,8 +223,8 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                     boolean confirmed = MessageDialog.openQuestion(rootContainer.getShell(), Messages.ChooseGefaehrdungPage_14, NLS.bind(Messages.ChooseGefaehrdungPage_15, selectedGefaehrdung.getTitel()));
                     if (confirmed) {
                         deleteOwnGefaehrdung(selectedGefaehrdung);
-                        viewer.refresh();
                         assignBausteinGefaehrdungen();
+                        refresh();
                     }
                 }
             }
@@ -237,7 +238,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(rootContainer.getShell(), arrListOwnGefaehrdungen);
                 dialog.open();
                 getRiskAnalysisWizard().addOwnGefaehrdungen();
-                viewer.refresh();
+                refresh();
                 assignBausteinGefaehrdungen();
             }
         });
@@ -252,7 +253,6 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                     final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), ownGefSelected);
                     dialog.open();
                     refresh();
-                    refreshBrowser();
                 }
             }
         });

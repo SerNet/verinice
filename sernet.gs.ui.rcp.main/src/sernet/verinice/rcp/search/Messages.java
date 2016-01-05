@@ -54,6 +54,8 @@ public class Messages extends NLS {
     public static String SearchView_31;
 
     public static String SearchView_32;
+    public static String SearchView_33;
+    public static String SearchView_34;
     public static String SearchView_4;
     public static String SearchView_5;
     public static String SearchView_6;

@@ -248,19 +248,19 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
                     if (contains) {
                         /* filter is already active - update filter */
                         thisFilter.setPattern(text.getText());
-                        viewer.refresh();
+                        refresh();
                         selectAssignedGefaehrdungen();
 
                     } else {
                         /* filter is not active - add */
                         searchFilter.setPattern(text.getText());
                         viewer.addFilter(searchFilter);
-                        viewer.refresh();
+                        refresh();
                         selectAssignedGefaehrdungen();
                     }
                 } else {
                     viewer.removeFilter(searchFilter);
-                    viewer.refresh();
+                    refresh();
                     selectAssignedGefaehrdungen();
                 }
             }
@@ -281,11 +281,11 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
                 Button button = (Button) event.widget;
                 if (button.getSelection()) {
                     viewer.addFilter(gefaehrdungFilter);
-                    viewer.refresh();
+                    refresh();  
                     packAllColumns();
                 } else {
                     viewer.removeFilter(gefaehrdungFilter);
-                    viewer.refresh();
+                    refresh();
                     selectAssignedGefaehrdungen();
                     packAllColumns();
                 }
@@ -305,11 +305,11 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
                 Button button = (Button) event.widget;
                 if (button.getSelection()) {
                     viewer.addFilter(ownGefaehrdungFilter);
-                    viewer.refresh();
+                    refresh();
                     packAllColumns();
                 } else {
                     viewer.removeFilter(ownGefaehrdungFilter);
-                    viewer.refresh();
+                    refresh();
                     selectAssignedGefaehrdungen();
                     packAllColumns();
                 }

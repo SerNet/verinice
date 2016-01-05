@@ -21,6 +21,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -55,7 +56,7 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
     protected Text textSearch;
     private Browser browser;
     private RiskAnalysisWizardBrowserUpdateListener browserListener;
-    private SerializeBrowserLoadingListener browserLoadingListener;
+    protected SerializeBrowserLoadingListener browserLoadingListener;
     protected Button buttonNew, buttonEdit, buttonDelete;
     protected T viewer;
 
@@ -106,15 +107,12 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
     }
 
-    public void refreshBrowser() {
-        browserListener.selectionChanged(RiskAnalysisWizardBrowserUpdateListener.UPDATE_CURRENT);
-
-    }
 
     public void refresh() {
         viewer.refresh();
-        browserListener.selectionChanged(null);
+        browserListener.selectionChanged(new SelectionChangedEvent(viewer, viewer.getSelection()));
     }
+
 
     private void setRightColumn(Composite parent) {
         Composite rightColumn = new Composite(parent, SWT.FULL_SELECTION);

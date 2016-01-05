@@ -23,6 +23,8 @@ import java.util.Arrays;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
@@ -483,6 +485,39 @@ public class SearchView extends RightsEnabledView {
     private void reindex() {
         if (isReindexConfirmed()) {
             WorkspaceJob job = new ReIndexJob(reindex);
+            job.addJobChangeListener(new IJobChangeListener() {
+
+                @Override
+                public void scheduled(IJobChangeEvent arg0) {
+                    ServiceFactory.lookupSearchService().setReindexRunning(true);
+                }
+
+                @Override
+                public void done(IJobChangeEvent arg0) {
+                    ServiceFactory.lookupSearchService().setReindexRunning(false);
+                }
+
+                @Override
+                public void aboutToRun(IJobChangeEvent arg0) {
+                    // do nothing
+                }
+
+                @Override
+                public void awake(IJobChangeEvent arg0) {
+                    // do nothing
+                }
+
+                @Override
+                public void running(IJobChangeEvent arg0) {
+                    // do nothing
+                }
+
+                @Override
+                public void sleeping(IJobChangeEvent arg0) {
+                    // do nothing
+                }
+
+            });
             job.schedule();
             Activator.getDefault().setReindexJob(job);
         }
@@ -490,6 +525,10 @@ public class SearchView extends RightsEnabledView {
     
     private boolean isReindexConfirmed() {
         final int ok = 0;
+        if (ServiceFactory.lookupSearchService().isReindexRunning()) {
+            MessageDialog.openWarning(Display.getDefault().getActiveShell(), Messages.SearchView_33, Messages.SearchView_34);
+            return false;
+        }
         MessageDialog dialog = new MessageDialog(
                 getShell(), 
                 Messages.SearchView_29, 

@@ -28,8 +28,10 @@ import org.springframework.security.context.SecurityContextHolder;
 import org.springframework.security.ui.basicauth.BasicProcessingFilterEntryPoint;
 
 import sernet.gs.common.ApplicationRoles;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -159,22 +161,23 @@ public class BasicAuthenticationService implements IAuthService {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.IAuthService#isScopeOnly()
-     */
+    // TODO: test multidomain setup, before that get to know how domains are
+    // stored in configuration_benutzername in db table properties.propertvalue
     @Override
     public boolean isScopeOnly() {
-        String username = getUsername();
-        if(username!=null) {
-                username = username.replace("\\", "\\\\");
+        boolean isScopeOnly = false;
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        Object principal = authentication.getPrincipal();
+        String username = "";
+        if (principal instanceof String) {
+            username = (String) principal;
         }
-        Object[] params = new Object[]{Configuration.PROP_USERNAME,username,Configuration.PROP_SCOPE};                
-        List<String> resultList = getConfigurationDao().findByQuery(HQL,params);
-        String value = null;
-        if (resultList != null && resultList.size() == 1) {
-            value = resultList.get(0);
-        }       
-        return Configuration.PROP_SCOPE_YES.equals(value);
+        if (username.equals("")) {
+            username = username.replace("\\", "\\\\");
+            isScopeOnly = ((IConfigurationService) VeriniceContext.get(VeriniceContext.CONFIGURATION_SERVICE)).isScopeOnly(username);
+        }
+        return isScopeOnly;
     }
 
     /* (non-Javadoc)

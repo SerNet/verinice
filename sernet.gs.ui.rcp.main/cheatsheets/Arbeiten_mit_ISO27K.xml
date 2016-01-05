@@ -36,16 +36,32 @@
   </item>
   
   <item title="Modelling Controls">
-    <description>
-      Before starting the procedure, you have to import the catalog first. The catalog "ISO 27001
-      Implementation Guidance" can be found at <b>www.verinice.org/download</b>.
-      <br /><br />
-      To insert controls into the "Information Security Model", you need to drag and drop the required
-      controls from the catalog view onto the group "Controls" in the view "Information Security Model".
-      Do this with the control "11.5 Responsibility for assets".
-      <br /><br />
-      By double-clicking the inserted controls you can now edit the information for this control in
-      the editor view. Choose "Yes" for the item "Implemented".
+  	<description>
+  		When working with catalogs such as ISO/IEC 27001 in
+		verinice, you have to import or create the corresponding controls first.
+		
+		The easiest way to do that is to use the verinice risk catalog which is
+		available in the verinice.SHOP:
+		<b> shop.verinice.com</b> <br />
+		
+		Alternatively it is possible to import the required controls from a
+		CSV-file or to simply create them
+		in verinice manually.
+		
+		The CSV-import is described in the verinice-manual,
+		which is available in the verinice.SHOP as well.<br/>
+		You can also get free information on our websites, in the verinice-forum
+		and from our Youtube channel.
+		<br/>
+		In this tutorial we assume that you are using the verinice risk catalog.
+		<br /><br />
+		
+		By double-clicking on a control you can now edit the
+		information for this control in
+		the editor view: open the control "8.1.1 Inventory of assets".
+		
+		Set the field "Implemented" to "yes" by selecting the correct entry in the
+		drop-down menu.
     </description>
   </item>
 
