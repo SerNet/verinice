@@ -43,6 +43,12 @@ public class VeriniceQuery implements Serializable{
     
     private int scopeId = -1;
 
+    /*
+     * false by default, as implemented in all implementations of {@link
+     * sernet.verinice.interfaces.IAuthService.isScopeOnly()}
+     */
+    private boolean isScopeOnly = false;
+
     /**
      * Inits a verinice query object.
      *
@@ -107,5 +113,13 @@ public class VeriniceQuery implements Serializable{
      */
     public void setScopeId(int scopeId) {
         this.scopeId = scopeId;
+    }
+
+    public boolean isScopeOnly() {
+        return isScopeOnly;
+    }
+
+    public void setScopeOnly(boolean isScopeOnly) {
+        this.isScopeOnly = isScopeOnly;
     }
 }

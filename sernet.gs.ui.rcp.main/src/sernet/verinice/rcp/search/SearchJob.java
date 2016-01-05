@@ -19,14 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -37,6 +36,8 @@ import sernet.verinice.model.search.VeriniceSearchResult;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
 public class SearchJob extends WorkspaceJob {
+
+    private final static Logger LOG = Logger.getLogger(SearchJob.class);
 
     private VeriniceQuery query;
 
@@ -51,6 +52,8 @@ public class SearchJob extends WorkspaceJob {
 
     @Override
     public IStatus runInWorkspace(IProgressMonitor mon) throws CoreException {
+
+        final long startTime = System.currentTimeMillis();
 
         try {
 
@@ -70,6 +73,9 @@ public class SearchJob extends WorkspaceJob {
                 @Override
                 public void run() {
                     searchView.updateResultCombobox(result);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("executing search for " + query.getQuery() + " lasts:\t" + String.valueOf(((System.currentTimeMillis() - startTime) / 1000)) + " seconds");
+                    }
                 }
             });
 
