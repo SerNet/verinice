@@ -28,9 +28,12 @@ import javax.faces.application.FacesMessage.Severity;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
+
 public final class Util {
 
 	private static final String DEFAULT_COMPONENT_ID = "massagePanel";
+    private static final Logger LOG = Logger.getLogger(Util.class);
 
 	private static String lastComponentId;
 	
@@ -74,10 +77,10 @@ public final class Util {
 	    context.getViewRoot().setLocale(Locale.ENGLISH);
 	}
 
-	public static void german() {
-		FacesContext context = FacesContext.getCurrentInstance();
-	    context.getViewRoot().setLocale(Locale.GERMAN);
-	}
+    public static void german() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getViewRoot().setLocale(Locale.GERMAN);
+    }
 
 	public static void addInfo(String componentId, String text ) {
 		addMessage(componentId, text, FacesMessage.SEVERITY_INFO );
@@ -125,6 +128,12 @@ public final class Util {
 		}
 		return component;
 	}
+
+    public static String getcurrentLanguageTag() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Locale currentLanguage = context.getViewRoot().getLocale();
+        return currentLanguage.toLanguageTag();
+    }
 
 	protected static ClassLoader getCurrentClassLoader(Object defaultObject){	
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();	

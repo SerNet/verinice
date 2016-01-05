@@ -3,22 +3,15 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:h="http://java.sun.com/jsf/html" >
 	<div id="mainNavi">
-		<ul id="topNavi" class="listNavi">
-			<li class="liNavi" id="liNavi_02"><a
-				href="#{request.contextPath}/portal.verinice.private/index.html">verinice.PRO</a></li>
-			<li class="liNavi active" id="liNavi_02">
-				<div class="navWrap1">
-					<div class="navWrap11">
-						<div class="navWrap2">
-							<div class="navWrap3">
-								<div class="navWrap4"><a href="#">verinice.WEB</a></div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</li>
-			<li class="liNavi" id="liNavi_03"><a href="#{request.contextPath}/portal.verinice.private/download.html">Downloads</a></li>
-            <li class="liNavi" id="liNavi_03"><a href="#{request.contextPath}/portal.verinice.private/manual.html">Handbuch / Manual</a></li>   	
+		<ul id="topNavi">
+			<li class="#{nav.indexNavStyle}" id="liNavi_01"><a href="#{request.contextPath}/portal.verinice.private/index.jsf">verinice.PRO</a></li>
+			<li class="#{nav.todoNavStyle}" id="liNavi_02"><a href="#{request.contextPath}/todo/todo.jsf">verinice.WEB</a></li>
+			<li class="#{nav.downloadNavStyle}" id="liNavi_03"><a href="#{request.contextPath}/portal.verinice.private/download.jsf">Downloads</a></li>
+            <li class="#{nav.manualNavStyle}" id="liNavi_04">
+            	<a href="#{request.contextPath}/portal.verinice.private/manual.jsf"> 
+           	 		<h:outputText value="#{msgWeb['manual']}" />
+      			</a>
+      		</li>   	
 		</ul>
 	</div>
 </ui:composition>

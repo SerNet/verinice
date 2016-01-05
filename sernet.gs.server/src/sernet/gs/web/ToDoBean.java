@@ -573,4 +573,8 @@ public class ToDoBean {
         return(ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
 
+    public static String getcurrentLanguageTag() {
+        return Util.getcurrentLanguageTag();
+    }
+
 }

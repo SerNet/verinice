@@ -1,6 +1,7 @@
+
+<jsp:forward page="portal.verinice.private/index.jsf"/>
 <html>
 <head>
-<meta http-equiv="refresh" content="0; URL=portal.verinice.private/index.html">
 <title>
 Verinice Server Welcome Page
 </title>
@@ -9,15 +10,15 @@ Verinice Server Welcome Page
 Sie werden auf die Portalseite weitergeleitet.
 <p>
 Wenn die Weiterleitung nicht automatisch erfolgt, klicken Sie 
-<a href="portal.verinice.private/index.html">hier.</a>
+<a href="portal.verinice.private/index.jsf">hier.</a>
 
 <p>
 
 <pre>
 <%  
-java.util.Date today = new java.util.Date();
-out.println(today);
-%>
+java.util.Date today = new java.util.Date(); 
+out.println(today); 
+ %> 
 </pre>
 </body>
 </html>

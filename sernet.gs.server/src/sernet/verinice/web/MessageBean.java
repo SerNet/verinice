@@ -1,5 +1,9 @@
 package sernet.verinice.web;
 
+import java.util.Locale;
+
+import javax.faces.context.FacesContext;
+
 import sernet.gs.web.Util;
 
 /**
@@ -13,6 +17,8 @@ public class MessageBean {
     
     private String error;
     
+    private Locale locale = null;
+
     public void showInfo() {
         Util.addInfo("massagePanel", getInfo()); //$NON-NLS-1$
         setInfo(null);
@@ -44,10 +50,36 @@ public class MessageBean {
     }
     
     public void english() {
-        Util.english();
+        setLocale(Locale.ENGLISH);
     }
     
     public void german() {
-        Util.german();
+        setLocale(Locale.GERMAN);
     }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.getViewRoot().setLocale(locale);
+    }
+
+    public Locale getLocale() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (locale == null) {
+            locale = context.getViewRoot().getLocale();
+        } else {
+            context.getViewRoot().setLocale(locale);
+        }
+        return locale;
+    }
+
+    public String getLanguage() {
+        return locale.getLanguage();
+    }
+
+    public String getcurrentLanguageTag() {
+        return Util.getcurrentLanguageTag();
+    }
+
+
 }

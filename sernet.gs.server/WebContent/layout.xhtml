@@ -5,13 +5,16 @@
 	  xmlns:ui="http://java.sun.com/jsf/facelets"
 	  xmlns:p="http://primefaces.org/ui"
 	  xml:lang="de-DE">
+<f:view locale="#{message.locale}">
 <f:loadBundle basename="sernet.gs.web.Messages" var="msg"/>
 <f:loadBundle basename="sernet.verinice.web.TaskMessages" var="msgTask"/>
 <f:loadBundle basename="sernet.verinice.web.EditMessages" var="msgEdit"/>
 <f:loadBundle basename="sernet.verinice.web.TreeMessages" var="msgTree"/>
+<f:loadBundle basename="sernet.verinice.web.WebMessages" var="msgWeb"/>
 	<h:head>
 	
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="#{request.contextPath}/image/favicon.png" rel="icon" type="image/png" />
 		<link href="#{request.contextPath}/css/my_layout.css" rel="stylesheet" type="text/css" />
 		<link href="#{request.contextPath}/css/standard.css" rel="stylesheet" type="text/css" />
 		<link href="#{request.contextPath}/css/default.css" rel="stylesheet" type="text/css" />
@@ -110,10 +113,11 @@
 
 			<!-- begin: #footer -->
 			<div id="footer">
-				<p class="bodytext">© 1996-2015<b> SerNet GmbH</b> | Dieses Layout basiert auf YAML © von Dirk Jesse</p>
+				<p class="bodytext"><h:outputText escape="false" value="#{msgWeb['copyRight']}" /></p>
 			</div>
 		</div>
 	</body>
+	</f:view>
 </html>
 <!-- Cached page generated 19-01-11 16:52. Expires 21-01-11 16:52 -->
 <!-- Parsetime: 0 ms-->
