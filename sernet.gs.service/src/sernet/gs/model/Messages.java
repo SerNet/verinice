@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.bsi.risikoanalyse;
+package sernet.gs.model;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -27,12 +27,13 @@ import org.eclipse.osgi.util.NLS;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public final class Messages extends NLS {
-    private static final String BUNDLE_NAME = "sernet.verinice.model.bsi.risikoanalyse.messages"; //$NON-NLS-1$
-    public static String GefaehrdungsUmsetzung_4;
-    public static String GefaehrdungsUmsetzung_5;
-    public static String GefaehrdungsUmsetzung_6;
-    public static String GefaehrdungsUmsetzung_7;
-    public static String FinishedRiskAnalysis_0;
+    private static final String BUNDLE_NAME = "sernet.gs.model.messages"; //$NON-NLS-1$
+    public static String Gefaehrdung_0;
+    public static String Gefaehrdung_1;
+    public static String Gefaehrdung_2;
+    public static String Gefaehrdung_3;
+    public static String Gefaehrdung_4;
+    public static String Gefaehrdung_5;
 
     static {
         // initialize resource bundle

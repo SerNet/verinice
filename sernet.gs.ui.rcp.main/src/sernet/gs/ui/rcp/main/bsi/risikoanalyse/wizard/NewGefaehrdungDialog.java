@@ -165,11 +165,7 @@ public class NewGefaehrdungDialog extends Dialog {
     private String[] loadCategories() {
         ArrayList<String> allCategories = new ArrayList<String>();
         allCategories.add(Messages.NewGefaehrdungDialog_5);
-        allCategories.add(Gefaehrdung.KAT_STRING_HOEHERE_GEWALT);
-        allCategories.add(Gefaehrdung.KAT_STRING_ORG_MANGEL);
-        allCategories.add(Gefaehrdung.KAT_STRING_MENSCH);
-        allCategories.add(Gefaehrdung.KAT_STRING_TECHNIK);
-        allCategories.add(Gefaehrdung.KAT_STRING_VORSATZ);
+        allCategories.addAll(Gefaehrdung.getAllCategories());
 
         List<OwnGefaehrdung> allOwnGefaehrdungen = new ArrayList<OwnGefaehrdung>(0);
         try {
