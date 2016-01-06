@@ -21,13 +21,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PartInitException;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -86,12 +89,12 @@ import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
- * This class maps editors for different ressources and either opens a new
+ * This class is a singleton and maps editors for different ressources and either opens a new
  * editor or looks them up in the EditorRegistry and shows an already open
  * editor for an object
  * 
  * @author koderman[at]sernet[dot]de
- * 
+ * @author dm[at]sernet[dot]de
  */
 public final class EditorFactory {
 	
@@ -101,33 +104,122 @@ public final class EditorFactory {
 	private static Map<Class<?>, IEditorTypeFactory> typedFactories = new HashMap<Class<?>, IEditorTypeFactory>();
 
 	private interface IEditorTypeFactory {
-		void openEditorFor(Object o) throws Exception;
+		void openEditorFor(Object o) throws PartInitException;
 	}
 
 	/**
-	 * Singleton constructor
-	 * 
+	 * Private singleton constructor
 	 */
 	private EditorFactory() {
-		// register editor-factory for bsi-element-editors:
-		IEditorTypeFactory bsiEditorFactory = new IEditorTypeFactory() {
+		registerCnaTreeElements();
+		registerGefaehrdung();
+		registerTodoViewItem();	
+		registerAttachment();		
+		registerNote();
+	}
+	
+	/**
+	 * @return The singleton instzance of this class
+	 */
+	public static EditorFactory getInstance() {
+        if (instance == null){
+            instance = new EditorFactory();
+        }
+        return instance;
+    }
+	
+	/**
+     * Checks if an editor factory is registered for the given object type and
+     * opens a new editor for it.
+     * 
+     * @param sel
+     */
+    public void openEditor(Object sel) {
+        IEditorTypeFactory factory = typedFactories.get(sel.getClass());
+        if (factory!= null) {
+            try {
+                factory.openEditorFor(sel);
+            } catch (Exception e) {
+                log.error("Error while opening editor.", e); //$NON-NLS-1$
+                ExceptionUtil.log(e, Messages.EditorFactory_2);
+            }
+        }
+    }
 
-			public void openEditorFor(Object o) throws Exception {
-				IEditorPart editor;
-		
-				BSIElementEditorInput input = new BSIElementEditorInput((CnATreeElement) o);
-				String id = input.getId();
-				editor = EditorRegistry.getInstance().getOpenEditor(id);
-				if (editor == null) {
-					// open new editor:
-					editor = Activator.getActivePage().openEditor(input, BSIElementEditor.EDITOR_ID);
-					EditorRegistry.getInstance().registerOpenEditor(id, editor);
-				} else {
-					// show existing editor:
-					Activator.getActivePage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
-				}
+    public void updateAndOpenObject(Object sel) {
+        if (sel instanceof CnATreeElement) {
+            EditorFactory.getInstance().openEditor(sel);
+        }
+    }
+
+    private void registerNote() {
+        IEditorTypeFactory noteEditorFactory = new IEditorTypeFactory() {
+		    @Override
+			public void openEditorFor(Object o) throws PartInitException {
+				// replace element with new instance from DB:
+				Note selection = (Note) o;
+				NoteEditorInput input = new NoteEditorInput(selection);					
+				openEditor(String.valueOf(input.getId()), input, NoteEditor.EDITOR_ID);			
+			}			
+		};
+		typedFactories.put(Note.class, noteEditorFactory);
+    }
+
+    private void registerAttachment() {
+        IEditorTypeFactory attachmentEditorFactory = new IEditorTypeFactory() {
+		    @Override
+			public void openEditorFor(Object o) throws PartInitException {
+				Attachment attachment = (Attachment) o;
+				AttachmentEditorInput input = new AttachmentEditorInput(attachment);
+				openEditor(String.valueOf(input.getId()), input, AttachmentEditor.EDITOR_ID);			
+			}			
+		};
+		typedFactories.put(Attachment.class, attachmentEditorFactory);
+    }
+
+    private void registerTodoViewItem() {
+        IEditorTypeFactory todoItemEditorFactory = new IEditorTypeFactory() {
+		    @Override
+		    public void openEditorFor(Object o) throws PartInitException {
+				// replace element with new instance from DB:
+				TodoViewItem selection = (TodoViewItem) o;
+				CnATreeElement element;
+                try {
+                    element = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID, selection.getDbId());
+                    openEditor(element.getId(), new BSIElementEditorInput(element), BSIElementEditor.EDITOR_ID);
+                } catch (CommandException e) {
+                    log.error("Error while opening editor.", e); //$NON-NLS-1$
+                    ExceptionUtil.log(e, Messages.EditorFactory_2);
+                }								
 			}
+		};
+		typedFactories.put(TodoViewItem.class, todoItemEditorFactory);
+    }
 
+    private void registerGefaehrdung() {
+        IEditorTypeFactory gefaehrdungsUmsetzungFactory = new IEditorTypeFactory() {
+		    @Override
+            public void openEditorFor(Object o) throws PartInitException {
+                GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) o;
+                String id;
+                if (gefaehrdung.getEntity() == null){
+                    id = Entity.TITLE + gefaehrdung.getUuid();
+                } else {
+                    id = gefaehrdung.getEntity().getId();
+                }
+                openEditor(id, new BSIElementEditorInput(gefaehrdung), BSIElementEditor.EDITOR_ID);
+            }
+        };
+        typedFactories.put(GefaehrdungsUmsetzung.class, gefaehrdungsUmsetzungFactory);
+    }
+
+    private void registerCnaTreeElements() {
+        IEditorTypeFactory bsiEditorFactory = new IEditorTypeFactory() {
+		    @Override
+			public void openEditorFor(Object o) throws PartInitException  {			
+				BSIElementEditorInput input = new BSIElementEditorInput((CnATreeElement) o);
+				openEditor(input.getId(), input, BSIElementEditor.EDITOR_ID);			
+			}
 		};
 		typedFactories.put(ITVerbund.class, bsiEditorFactory);
 		typedFactories.put(Client.class, bsiEditorFactory);
@@ -142,13 +234,11 @@ public final class EditorFactory {
 		typedFactories.put(BausteinUmsetzung.class, bsiEditorFactory);
 		typedFactories.put(MassnahmenUmsetzung.class, bsiEditorFactory);
 		typedFactories.put(RisikoMassnahmenUmsetzung.class, bsiEditorFactory);
-
 		typedFactories.put(Verarbeitungsangaben.class, bsiEditorFactory);
 		typedFactories.put(VerantwortlicheStelle.class, bsiEditorFactory);
 		typedFactories.put(Personengruppen.class, bsiEditorFactory);
 		typedFactories.put(Datenverarbeitung.class, bsiEditorFactory);
 		typedFactories.put(StellungnahmeDSB.class, bsiEditorFactory);
-
 		// ISO 27000 elements
 		typedFactories.put(Organization.class, bsiEditorFactory);
 		typedFactories.put(AssetGroup.class, bsiEditorFactory);
@@ -185,136 +275,20 @@ public final class EditorFactory {
 		typedFactories.put(ProcessGroup.class, bsiEditorFactory);
 		typedFactories.put(Record.class, bsiEditorFactory);
 		typedFactories.put(RecordGroup.class, bsiEditorFactory);
-		
-		IEditorTypeFactory gefaehrdungsUmsetzungFactory = new IEditorTypeFactory() {
-
-            public void openEditorFor(Object o) throws Exception {
-                GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) o;
-                String id;
-                if (gefaehrdung.getEntity() == null){
-                    id = Entity.TITLE + gefaehrdung.getUuid();
-                } else {
-                    id = gefaehrdung.getEntity().getId();
-                }
-              
-                BSIElementEditorInput input = new BSIElementEditorInput(gefaehrdung);             
-                IEditorPart editor = EditorRegistry.getInstance().getOpenEditor(id);
-                if (editor == null) {
-                    // open new editor:
-                    editor = Activator.getActivePage().openEditor(input, BSIElementEditor.EDITOR_ID);
-                    EditorRegistry.getInstance().registerOpenEditor(id, editor);
-                } else {
-                    // show existing editor:
-                    Activator.getActivePage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
-                }
-            }
-
-        };
-        typedFactories.put(GefaehrdungsUmsetzung.class, gefaehrdungsUmsetzungFactory);
-		
-		// Self Assessment (SAMT) elements
-	
+		// Self Assessment (SAMT) elements    
         typedFactories.put(SamtTopic.class, bsiEditorFactory);
-		
-		IEditorTypeFactory todoItemEditorFactory = new IEditorTypeFactory() {
-			public void openEditorFor(Object o) throws Exception {
-				IEditorPart editor;
-
-				// replace element with new instance from DB:
-				TodoViewItem selection = (TodoViewItem) o;
-				CnATreeElement newElement = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID, selection.getDbId());
-				BSIElementEditorInput input = new BSIElementEditorInput(newElement);
-
-				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {
-					// open new editor:
-					editor = Activator.getActivePage().openEditor(input, BSIElementEditor.EDITOR_ID);
-					EditorRegistry.getInstance().registerOpenEditor(input.getId(), editor);
-				} else {
-					// show existing editor:
-					Activator.getActivePage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
-				}
-			}
-
-		};
-
-		typedFactories.put(TodoViewItem.class, todoItemEditorFactory);
-
-		
-		IEditorTypeFactory attachmentEditorFactory = new IEditorTypeFactory() {
-
-			public void openEditorFor(Object o) throws Exception {
-				IEditorPart editor;
-
-				Attachment attachment = (Attachment) o;
-				AttachmentEditorInput input = new AttachmentEditorInput(attachment);
-
-				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {
-					// open new editor:
-					editor = Activator.getActivePage().openEditor(input, AttachmentEditor.EDITOR_ID);
-					EditorRegistry.getInstance().registerOpenEditor(String.valueOf(input.getId()), editor);
-				} else {
-					// show existing editor:
-					((AttachmentEditorInput)editor.getEditorInput()).setInput(attachment);
-					Activator.getActivePage().openEditor(editor.getEditorInput(), AttachmentEditor.EDITOR_ID);
-				}
-			}
-			
-		};
-		typedFactories.put(Attachment.class, attachmentEditorFactory);
-		
-		IEditorTypeFactory noteEditorFactory = new IEditorTypeFactory() {
-
-			public void openEditorFor(Object o) throws Exception {
-				IEditorPart editor;
-
-				// replace element with new instance from DB:
-				Note selection = (Note) o;
-				NoteEditorInput input = new NoteEditorInput(selection);
-
-				if ((editor = EditorRegistry.getInstance().getOpenEditor(String.valueOf(input.getId()))) == null) {
-					// open new editor:
-					editor = Activator.getActivePage().openEditor(input, NoteEditor.EDITOR_ID);
-					EditorRegistry.getInstance().registerOpenEditor(String.valueOf(input.getId()), editor);
-				} else {
-					// show existing editor:
-					((NoteEditorInput)editor.getEditorInput()).setInput(selection);
-					Activator.getActivePage().openEditor(editor.getEditorInput(), NoteEditor.EDITOR_ID);
-				}
-			}
-			
-		};
-		typedFactories.put(Note.class, noteEditorFactory);
-	}
-
-	public static EditorFactory getInstance() {
-		if (instance == null){
-			instance = new EditorFactory();
-		}
-		return instance;
-	}
-
-	/**
-	 * Checks if an editor factory is registered for the given object type and
-	 * opens a new editor for it.
-	 * 
-	 * @param sel
-	 */
-	public void openEditor(Object sel) {
-		IEditorTypeFactory fact;
-		if ((fact = typedFactories.get(sel.getClass())) != null) {
-			try {
-				fact.openEditorFor(sel);
-			} catch (Exception e) {
-				log.error("Error while opening editor.", e); //$NON-NLS-1$
-				ExceptionUtil.log(e, Messages.EditorFactory_2);
-			}
-		}
-	}
-
-	public void updateAndOpenObject(Object sel) {
-		if (sel instanceof CnATreeElement) {
-			EditorFactory.getInstance().openEditor(sel);
-		}
-	}
+    }
+	
+	 private static void openEditor(String id, IEditorInput input, String editorId) throws PartInitException {         
+         IEditorPart editor = EditorRegistry.getInstance().getOpenEditor(id);
+         if (editor == null) {
+             // open new editor:             
+             editor = Activator.getActivePage().openEditor(input, editorId);
+             EditorRegistry.getInstance().registerOpenEditor(id, editor);
+         } else {
+             // show existing editor:
+             Activator.getActivePage().openEditor(editor.getEditorInput(), editorId);
+         }     
+     }
 
 }
