@@ -27,6 +27,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -115,11 +116,12 @@ public final class EditorFactory {
 				IEditorPart editor;
 		
 				BSIElementEditorInput input = new BSIElementEditorInput((CnATreeElement) o);
-
-				if ((editor = EditorRegistry.getInstance().getOpenEditor(input.getId())) == null) {
+				String id = input.getId();
+				editor = EditorRegistry.getInstance().getOpenEditor(id);
+				if (editor == null) {
 					// open new editor:
 					editor = Activator.getActivePage().openEditor(input, BSIElementEditor.EDITOR_ID);
-					EditorRegistry.getInstance().registerOpenEditor(input.getId(), editor);
+					EditorRegistry.getInstance().registerOpenEditor(id, editor);
 				} else {
 					// show existing editor:
 					Activator.getActivePage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
@@ -139,7 +141,6 @@ public final class EditorFactory {
 		typedFactories.put(Anwendung.class, bsiEditorFactory);
 		typedFactories.put(BausteinUmsetzung.class, bsiEditorFactory);
 		typedFactories.put(MassnahmenUmsetzung.class, bsiEditorFactory);
-		typedFactories.put(GefaehrdungsUmsetzung.class, bsiEditorFactory);
 		typedFactories.put(RisikoMassnahmenUmsetzung.class, bsiEditorFactory);
 
 		typedFactories.put(Verarbeitungsangaben.class, bsiEditorFactory);
@@ -184,6 +185,32 @@ public final class EditorFactory {
 		typedFactories.put(ProcessGroup.class, bsiEditorFactory);
 		typedFactories.put(Record.class, bsiEditorFactory);
 		typedFactories.put(RecordGroup.class, bsiEditorFactory);
+		
+		IEditorTypeFactory gefaehrdungsUmsetzungFactory = new IEditorTypeFactory() {
+
+            public void openEditorFor(Object o) throws Exception {
+                GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) o;
+                String id;
+                if (gefaehrdung.getEntity() == null){
+                    id = Entity.TITLE + gefaehrdung.getUuid();
+                } else {
+                    id = gefaehrdung.getEntity().getId();
+                }
+              
+                BSIElementEditorInput input = new BSIElementEditorInput(gefaehrdung);             
+                IEditorPart editor = EditorRegistry.getInstance().getOpenEditor(id);
+                if (editor == null) {
+                    // open new editor:
+                    editor = Activator.getActivePage().openEditor(input, BSIElementEditor.EDITOR_ID);
+                    EditorRegistry.getInstance().registerOpenEditor(id, editor);
+                } else {
+                    // show existing editor:
+                    Activator.getActivePage().openEditor(editor.getEditorInput(), BSIElementEditor.EDITOR_ID);
+                }
+            }
+
+        };
+        typedFactories.put(GefaehrdungsUmsetzung.class, gefaehrdungsUmsetzungFactory);
 		
 		// Self Assessment (SAMT) elements
 	
