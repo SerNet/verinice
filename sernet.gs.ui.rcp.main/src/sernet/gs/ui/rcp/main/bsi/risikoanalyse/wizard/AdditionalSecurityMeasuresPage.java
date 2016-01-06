@@ -198,7 +198,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection.getFirstElement();
         if (selectedMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) {
             RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selectedMassnahmenUmsetzung;
-            final EditRisikoMassnahmenUmsetzungDialog dialog = new EditRisikoMassnahmenUmsetzungDialog(rootContainer.getShell(), selectedRisikoMassnahmenUmsetzung);
+            final EditRisikoMassnahmenUmsetzungDialog dialog = new EditRisikoMassnahmenUmsetzungDialog(rootContainer.getShell(), selectedRisikoMassnahmenUmsetzung, new RiskAnalysisDialogItems<MassnahmenUmsetzung>(getRiskAnalysisWizard().getAllMassnahmenUmsetzungen(), MassnahmenUmsetzung.class));
             int result = dialog.open();
             if (result == Window.OK) {
                 getRiskAnalysisWizard().replaceMassnahmenUmsetzung(dialog.getRisikoMassnahmenUmsetzung());
@@ -330,6 +330,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
                 editOwnControl();
             }
         });
+
+
 
         /* Listener opens MessageDialog and deletes selected Massnahme */
         buttonRemoveControlFromScenario.addSelectionListener(new SelectionAdapter() {
@@ -463,8 +465,9 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             @Override
             public void widgetSelected(SelectionEvent event) {
 
+
                 /* create new RisikoMassnahmenUmsetzung */
-                final NewRisikoMassnahmeDialog dialog = new NewRisikoMassnahmeDialog(rootContainer.getShell());
+                final NewRisikoMassnahmeDialog dialog = new NewRisikoMassnahmeDialog(rootContainer.getShell(), new RiskAnalysisDialogItems<MassnahmenUmsetzung>(getRiskAnalysisWizard().getAllMassnahmenUmsetzungen(), MassnahmenUmsetzung.class));
                 int result = dialog.open();
 
                 if (result == Window.OK) {

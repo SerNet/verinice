@@ -19,18 +19,13 @@
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import org.apache.log4j.Logger;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
@@ -39,13 +34,10 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
  * 
  * @author ahanekop[at]sernet[dot]de
  */
-public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
+public class EditRisikoMassnahmenUmsetzungDialog extends RiskAnalysisDialog<MassnahmenUmsetzung> {
 
 	private static final Logger LOG = Logger.getLogger(EditRisikoMassnahmenUmsetzungDialog.class);
 	
-	private Text textNumber;
-	private Text textName;
-	private Text textDescription;
 	private RisikoMassnahmenUmsetzung risikoMassnahmenUmsetzung;
 
 	/**
@@ -56,85 +48,12 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	 * @param newRisikoMassnahmenUmsetzung
 	 *            the RisikoMassnahmenUmsetzung to edit
 	 */
-	public EditRisikoMassnahmenUmsetzungDialog(Shell parentShell, RisikoMassnahmenUmsetzung newRisikoMassnahmenUmsetzung) {
-		super(parentShell);
+    public EditRisikoMassnahmenUmsetzungDialog(Shell parentShell, RisikoMassnahmenUmsetzung newRisikoMassnahmenUmsetzung, RiskAnalysisDialogItems<MassnahmenUmsetzung> items) {
+        super(parentShell, items);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		risikoMassnahmenUmsetzung = newRisikoMassnahmenUmsetzung;
 	}
 
-	/**
-	 * Creates the content area of the Dialog.
-	 * 
-	 * @param parent
-	 *            the parent Composite
-	 */
-	@Override
-	protected Control createDialogArea(Composite parent) {
-	    final int gridTextDescriptionWidthHint = 400;
-	    final int gridTextDescriptionHeightHint = 200;
-		Composite container = (Composite) super.createDialogArea(parent);
-		final GridLayout gridLayout = new GridLayout();
-		gridLayout.numColumns = 2;
-		container.setLayout(gridLayout);
-
-		/* label number */
-		final Label labelNumber = new Label(container, SWT.NONE);
-		GridData gridLabelNumber = new GridData();
-		gridLabelNumber.horizontalAlignment = SWT.LEFT;
-		gridLabelNumber.verticalAlignment = SWT.CENTER;
-		labelNumber.setText(Messages.EditRisikoMassnahmenUmsetzungDialog_0);
-		labelNumber.setLayoutData(gridLabelNumber);
-
-		/* text number */
-		textNumber = new Text(container, SWT.BORDER);
-		GridData gridTextNumber = new GridData();
-		gridTextNumber.horizontalAlignment = SWT.FILL;
-		gridTextNumber.verticalAlignment = SWT.CENTER;
-		gridTextNumber.grabExcessHorizontalSpace = true;
-		textNumber.setLayoutData(gridTextNumber);
-		textNumber.setText(notNull(risikoMassnahmenUmsetzung.getNumber()));
-
-		/* label name */
-		final Label labelName = new Label(container, SWT.NONE);
-		GridData gridLabelName = new GridData();
-		gridLabelName.horizontalAlignment = SWT.LEFT;
-		gridLabelName.verticalAlignment = SWT.CENTER;
-		labelName.setText(Messages.EditRisikoMassnahmenUmsetzungDialog_1);
-		labelName.setLayoutData(gridLabelName);
-
-		/* text name */
-		textName = new Text(container, SWT.BORDER);
-		GridData gridTextName = new GridData();
-		gridTextName.horizontalAlignment = SWT.FILL;
-		gridTextName.verticalAlignment = SWT.CENTER;
-		gridTextName.grabExcessHorizontalSpace = true;
-		textName.setLayoutData(gridTextName);
-		textName.setText(notNull(risikoMassnahmenUmsetzung.getTitle()));
-
-		/* label description */
-		final Label labelDescription = new Label(container, SWT.NONE);
-		GridData gridLabelDescription = new GridData();
-		gridLabelDescription.horizontalAlignment = SWT.LEFT;
-		gridLabelDescription.verticalAlignment = SWT.CENTER;
-		labelDescription.setText(Messages.EditRisikoMassnahmenUmsetzungDialog_2);
-		labelDescription.setLayoutData(gridLabelDescription);
-
-		/* text description */
-		textDescription = new Text(container, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI | SWT.WRAP);
-		GridData gridTextDescription = new GridData();
-		gridTextDescription.horizontalAlignment = SWT.FILL;
-		gridTextDescription.verticalAlignment = SWT.FILL;
-		gridTextDescription.grabExcessHorizontalSpace = true;
-		gridTextDescription.grabExcessVerticalSpace = true;
-		gridTextDescription.widthHint = gridTextDescriptionWidthHint;
-		gridTextDescription.heightHint = gridTextDescriptionHeightHint;
-		textDescription.setLayoutData(gridTextDescription);
-		
-		RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(risikoMassnahmenUmsetzung);
-		textDescription.setText(notNull(risikoMassnahmenUmsetzung.getDescription()));
-
-		return container;
-	}
 
 	/**
 	 * Returns true if given String is not null.
@@ -143,35 +62,55 @@ public class EditRisikoMassnahmenUmsetzungDialog extends Dialog {
 	 *            the String to test
 	 * @return true if given String is not null, false else
 	 */
-	private String notNull(String string) {
+    private static String notNull(String string) {
 		return string != null ? string : ""; //$NON-NLS-1$
 	}
 
-	/**
-	 * Saves the RisikoMassnahmenUmsetzung in the database, if okay button is
-	 * pressed.
-	 */
-	@Override
-	protected void okPressed() {
-		RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(risikoMassnahmenUmsetzung);
-		risikoMassnahmenUmsetzung.getRisikoMassnahme().setNumber(textNumber.getText());
-		risikoMassnahmenUmsetzung.setName(textName.getText());
-		risikoMassnahmenUmsetzung.getRisikoMassnahme().setDescription(textDescription.getText());
-		risikoMassnahmenUmsetzung.setNumber(textNumber.getText());
-		risikoMassnahmenUmsetzung.getRisikoMassnahme().setName(textName.getText());
-
-		try {
-			RisikoMassnahme rm = RisikoMassnahmeHome.getInstance().save(risikoMassnahmenUmsetzung.getRisikoMassnahme());
-			risikoMassnahmenUmsetzung.setMassnahme(rm);
-		} catch (Exception e) {
-			LOG.error("Error while saving massnahme", e); //$NON-NLS-1$
-			ExceptionUtil.log(e, Messages.EditRisikoMassnahmenUmsetzungDialog_5);
-		}
-
-		super.okPressed();
-	}
 	
 	public RisikoMassnahmenUmsetzung getRisikoMassnahmenUmsetzung() {
 		return risikoMassnahmenUmsetzung;
 	}
+
+    @Override
+    protected Object getItem() {
+        return risikoMassnahmenUmsetzung;
+    }
+
+    @Override
+    protected void okPressedAndApproved() {
+        RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(risikoMassnahmenUmsetzung);
+        risikoMassnahmenUmsetzung.getRisikoMassnahme().setNumber(textNumber.getText());
+        risikoMassnahmenUmsetzung.setName(textName.getText());
+        risikoMassnahmenUmsetzung.getRisikoMassnahme().setDescription(textDescription.getText());
+        risikoMassnahmenUmsetzung.setNumber(textNumber.getText());
+        risikoMassnahmenUmsetzung.getRisikoMassnahme().setName(textName.getText());
+
+        try {
+            RisikoMassnahme rm = RisikoMassnahmeHome.getInstance().save(risikoMassnahmenUmsetzung.getRisikoMassnahme());
+            risikoMassnahmenUmsetzung.setMassnahme(rm);
+        } catch (Exception e) {
+            LOG.error("Error while saving massnahme", e); //$NON-NLS-1$
+            ExceptionUtil.log(e, Messages.EditRisikoMassnahmenUmsetzungDialog_5);
+        }
+
+    }
+
+    @Override
+    protected String[] loadCategories() {
+        return new String[0];
+    }
+
+    @Override
+    protected void initContents() {
+        RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(risikoMassnahmenUmsetzung);
+        textNumber.setText(notNull(risikoMassnahmenUmsetzung.getNumber()));
+        textName.setText(notNull(risikoMassnahmenUmsetzung.getTitle()));
+        textDescription.setText(notNull(risikoMassnahmenUmsetzung.getDescription()));
+
+    }
+
+    @Override
+    protected void addCategory(Composite parent) {
+        /* no category needed */
+    }
 }

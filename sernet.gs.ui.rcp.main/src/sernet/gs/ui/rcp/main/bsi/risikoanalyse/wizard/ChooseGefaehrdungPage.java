@@ -123,21 +123,21 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
             @Override
             public void doubleClick(DoubleClickEvent event) {
                 /* retrieve selected Gefaehrdung and open edit dialog with it */
-                IStructuredSelection selection = (IStructuredSelection) event.getSelection();
+                editGefaehrdung();
+            }
+        });
+    }
+
+    private void editGefaehrdung() {
+        IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
                 IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
                 if (selectedGefaehrdung instanceof OwnGefaehrdung) {
-                    OwnGefaehrdung selectedOwnGefaehrdung = (OwnGefaehrdung) selectedGefaehrdung;
-                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), selectedOwnGefaehrdung, getRiskAnalysisWizard().getAllGefaehrdungen());
+            OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
+            final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), ownGefSelected, new RiskAnalysisDialogItems<>(getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class));
                     dialog.open();
                     refresh();
                 }
             }
-        });
-
-
-
-
-    }
 
     private void addFilterListeners() {
         /* Listener adds/removes Filter gefaehrdungFilter */
@@ -241,7 +241,8 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
             @Override
             public void widgetSelected(SelectionEvent event) {
                 List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard().getAllOwnGefaehrdungen();
-                final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(rootContainer.getShell(), arrListOwnGefaehrdungen, getRiskAnalysisWizard().getAllGefaehrdungen());
+                
+                final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(rootContainer.getShell(), arrListOwnGefaehrdungen, new RiskAnalysisDialogItems<>(getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class));
                 dialog.open();
                 getRiskAnalysisWizard().addOwnGefaehrdungen();
                 refresh();
@@ -252,18 +253,14 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         buttonEdit.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
-                IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-                IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
-                if (selectedGefaehrdung instanceof OwnGefaehrdung) {
-                    OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
-                    final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), ownGefSelected, getRiskAnalysisWizard().getAllGefaehrdungen());
-                    dialog.open();
-                    refresh();
-                }
+                editGefaehrdung();
+
             }
+
         });
 
     }
+
 
     protected void associateGefaehrdung(Gefaehrdung currentGefaehrdung, boolean select) {
 
