@@ -21,6 +21,8 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -28,6 +30,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -40,6 +44,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.bsi.views.SerializeBrowserLoadingListener;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
 /**
  * Base risk analysis wizard page. Every RiskAnalysisWizard page inherits
@@ -107,6 +112,36 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
     }
 
+
+    private void resetSearchField() {
+        if (textSearch != null) {
+            textSearch.setText("");
+        }
+
+    }
+
+    /**
+     * Sets the control to the given visibility state.
+     * 
+     * @param visible
+     *            boolean indicating if content should be visible
+     */
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if (visible) {
+            initContents();
+        }
+    }
+
+    private void initContents() {
+
+        resetSearchField();
+
+        doInitContents();
+    }
+
+    protected abstract void doInitContents();
 
     public void refresh() {
         viewer.refresh();
@@ -220,10 +255,87 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
 
         browserListener = new RiskAnalysisWizardBrowserUpdateListener(browserLoadingListener, viewer);
         viewer.addSelectionChangedListener(browserListener);
+
+        if (buttonDelete != null && buttonEdit != null) {
+            viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+                @Override
+                public void selectionChanged(SelectionChangedEvent event) {
+                    if (event.getSelection() instanceof IStructuredSelection) {
+                        Object element = ((IStructuredSelection) event.getSelection()).getFirstElement();
+                        if (element instanceof RisikoMassnahmenUmsetzung || element instanceof OwnGefaehrdung) {
+                            buttonDelete.setEnabled(true);
+                            buttonEdit.setEnabled(true);
+                        } else {
+                            buttonDelete.setEnabled(false);
+                            buttonEdit.setEnabled(false);
+                        }
+                    }
+                }
+            });
+        }
+        
+        if (textSearch != null) {
+            /* Listener adds/removes Filter searchFilter */
+            textSearch.addModifyListener(new ModifyListener() {
+
+                /**
+                 * Adds/removes Filter when Text is modified depending on event.
+                 * 
+                 * @param event
+                 *            event containing information about the selection
+                 */
+                @Override
+                public void modifyText(ModifyEvent event) {
+                    String searchText = textSearch.getText();
+                    if (!searchText.isEmpty()) {
+                        filterItems(searchText);
+                    } else {
+                        viewer.removeFilter(searchFilter);
+                        viewer.refresh();
+                        doAfterRemoveSearchFilter();
+                    }
+                }
+
+                private void filterItems(String text) {
+                    ViewerFilter[] filters = viewer.getFilters();
+                    RiskAnalysisWizardPageSearchFilter thisFilter = null;
+                    boolean contains = false;
+
+                    for (ViewerFilter item : filters) {
+                        if (item instanceof RiskAnalysisWizardPageSearchFilter) {
+                            contains = true;
+                            thisFilter = (RiskAnalysisWizardPageSearchFilter) item;
+                        }
+                    }
+                    updateOrAddFilter(text, thisFilter, contains);
+                }
+
+            });
+        }
     }
 
+    protected void updateOrAddFilter(String text, RiskAnalysisWizardPageSearchFilter thisFilter, boolean contains) {
+        if (contains) {
+            /* filter is already active - update filter */
+            thisFilter.setPattern(text);
+            viewer.refresh();
+            doAfterUpdateFilter();
+
+        } else {
+            /* filter is not active - add */
+            searchFilter.setPattern(text);
+            viewer.addFilter(searchFilter);
+            viewer.refresh();
+        }
+
+    }
+
+    protected abstract void doAfterUpdateFilter();
 
     protected abstract void addSpecificListenersForPage();
+
+    protected abstract void doAfterRemoveSearchFilter();
 
     /**
      * Filter to extract all OwnGefaehrdungen in CheckboxTableViewer.

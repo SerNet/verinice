@@ -90,19 +90,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         categoryColumn.getColumn().setText(Messages.ChooseGefaehrdungPage_7);
     }
     
-    /**
-     * Sets the control to the given visibility state.
-     * 
-     * @param visible
-     *            boolean indicating if content should be visible
-     */
-    @Override
-    public void setVisible(boolean visible) {
-        super.setVisible(visible);
-        if (visible) {
-            initContents();
-        }
-    }
+
 
     @Override
     protected void addSpecificListenersForPage() {
@@ -194,20 +182,38 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
             public void widgetSelected(SelectionEvent event) {
                 Button button = (Button) event.widget;
                 if (button.getSelection()) {
-                    viewer.addFilter(ownGefaehrdungFilter);
-                    viewer.refresh();
-                    checkAllSelectedGefaehrdungen();
-                    packAllColumns();
+                    addFilter();
                 } else {
-                    viewer.removeFilter(ownGefaehrdungFilter);
-                    refresh();
-                    assignBausteinGefaehrdungen();
-                    checkAllSelectedGefaehrdungen();
-                    packAllColumns();
+                    removeFilter();
                 }
+            }
+
+            private void removeFilter() {
+                viewer.removeFilter(ownGefaehrdungFilter);
+                refresh();
+                assignBausteinGefaehrdungen();
+                checkAllSelectedGefaehrdungen();
+                packAllColumns();
+            }
+
+            private void addFilter() {
+                viewer.addFilter(ownGefaehrdungFilter);
+                viewer.refresh();
+                checkAllSelectedGefaehrdungen();
+                packAllColumns();
             }
         });
 
+    }
+
+    @Override
+    protected void doAfterUpdateFilter() {
+        checkAllSelectedGefaehrdungen();
+    }
+
+    @Override
+    protected void doAfterRemoveSearchFilter() {
+        checkAllSelectedGefaehrdungen();
     }
 
     private void addButtonListeners() {
@@ -279,7 +285,8 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      * Fills the CheckboxTableViewer with all Gefaehrdungen available. Is
      * processed each time the WizardPage is set visible.
      */
-    private void initContents() {
+    @Override
+    protected void doInitContents() {
 
         ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) getRiskAnalysisWizard().getAllGefaehrdungen();
 
@@ -402,5 +409,6 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
     protected CheckboxTableViewer initializeViewer(Composite parent) {
         return CheckboxTableViewer.newCheckList(parent, SWT.BORDER | SWT.FULL_SELECTION);
     }
+
 
 }
