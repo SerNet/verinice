@@ -71,7 +71,7 @@ public class RiskAnalysisWizardPageSearchFilter extends ViewerFilter {
             title = massnahmeUmsetzung.getTitle();
         } else if (element instanceof GefaehrdungsUmsetzung) {
             GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) element;
-            title = gefaehrdung.getTitle();
+            title = gefaehrdung.getText();
         }
 
         Matcher matcher = pattern.matcher(title);

@@ -26,10 +26,7 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
@@ -74,6 +71,7 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
      * to choose an alternate proceeding. Is processed each time the WizardPage
      * is set visible.
      */
+    @Override
     protected void doInitContents() {
         List<GefaehrdungsUmsetzung> arrListAllGefaehrdungsUmsetzungen = ((RiskAnalysisWizard) getWizard()).getAllGefaehrdungsUmsetzungen();
 
@@ -170,48 +168,20 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
     @Override
     protected void addSpecificListenersForPage() {
 
-        /* Listener adds/removes Filter searchFilter */
-        textSearch.addModifyListener(new ModifyListener() {
+        /* no specific listener */
 
-            /**
-             * Adds/removes Filter when Text is modified depending on event.
-             * 
-             * @param event
-             *            event containing information about the selection
-             */
-            @Override
-            public void modifyText(ModifyEvent event) {
-                Text text = (Text) event.widget;
-                if (text.getText().length() > 0) {
+    }
 
-                    ViewerFilter[] filters = viewer.getFilters();
-                    RiskAnalysisWizardPageSearchFilter thisFilter = null;
-                    boolean contains = false;
+    @Override
+    protected void doAfterUpdateFilter(){
+        /* nothing to do */
 
-                    for (ViewerFilter item : filters) {
-                        if (item instanceof RiskAnalysisWizardPageSearchFilter) {
-                            contains = true;
-                            thisFilter = (RiskAnalysisWizardPageSearchFilter) item;
-                        }
-                    }
-                    if (contains) {
-                        /* filter is already active - update filter */
-                        thisFilter.setPattern(text.getText());
-                        refresh();
+    }
 
-                    } else {
-                        /* filter is not active - add */
-                        searchFilter.setPattern(text.getText());
-                        viewer.addFilter(searchFilter);
-                        refresh();
-                    }
-                } else {
-                    viewer.removeFilter(searchFilter);
-                    refresh();
-                    packAllColumns();
-                }
-            }
-        });
+
+    @Override
+    protected void doAfterRemoveSearchFilter() {
+        /* nothing to do */
 
     }
 
@@ -234,5 +204,6 @@ public class RiskHandlingPage extends RiskAnalysisWizardPage<TableViewer> {
         GridLayoutFactory.fillDefaults().numColumns(2).margins(DEFAULT_MARGINS).generateLayout(search);
         GridDataFactory.fillDefaults().hint(125, SWT.DEFAULT).applyTo(textSearch);
     }
+
 
 }

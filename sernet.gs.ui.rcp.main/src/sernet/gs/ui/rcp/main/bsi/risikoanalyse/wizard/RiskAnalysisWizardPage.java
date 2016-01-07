@@ -30,6 +30,8 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
@@ -273,10 +275,67 @@ public abstract class RiskAnalysisWizardPage<T extends TableViewer> extends Wiza
             });
         }
         
+        if (textSearch != null) {
+            /* Listener adds/removes Filter searchFilter */
+            textSearch.addModifyListener(new ModifyListener() {
+
+                /**
+                 * Adds/removes Filter when Text is modified depending on event.
+                 * 
+                 * @param event
+                 *            event containing information about the selection
+                 */
+                @Override
+                public void modifyText(ModifyEvent event) {
+                    String searchText = textSearch.getText();
+                    if (!searchText.isEmpty()) {
+                        filterItems(searchText);
+                    } else {
+                        viewer.removeFilter(searchFilter);
+                        viewer.refresh();
+                        doAfterRemoveSearchFilter();
+                    }
+                }
+
+                private void filterItems(String text) {
+                    ViewerFilter[] filters = viewer.getFilters();
+                    RiskAnalysisWizardPageSearchFilter thisFilter = null;
+                    boolean contains = false;
+
+                    for (ViewerFilter item : filters) {
+                        if (item instanceof RiskAnalysisWizardPageSearchFilter) {
+                            contains = true;
+                            thisFilter = (RiskAnalysisWizardPageSearchFilter) item;
+                        }
+                    }
+                    updateOrAddFilter(text, thisFilter, contains);
+                }
+
+            });
+        }
     }
 
+    protected void updateOrAddFilter(String text, RiskAnalysisWizardPageSearchFilter thisFilter, boolean contains) {
+        if (contains) {
+            /* filter is already active - update filter */
+            thisFilter.setPattern(text);
+            viewer.refresh();
+            doAfterUpdateFilter();
+
+        } else {
+            /* filter is not active - add */
+            searchFilter.setPattern(text);
+            viewer.addFilter(searchFilter);
+            viewer.refresh();
+        }
+
+    }
+
+    protected abstract void doAfterUpdateFilter();
 
     protected abstract void addSpecificListenersForPage();
+
+    protected abstract void doAfterRemoveSearchFilter();
 
     /**
      * Filter to extract all OwnGefaehrdungen in CheckboxTableViewer.

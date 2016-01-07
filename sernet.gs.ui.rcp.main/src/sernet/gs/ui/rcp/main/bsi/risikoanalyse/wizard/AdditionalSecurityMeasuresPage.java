@@ -40,8 +40,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -103,6 +101,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
      * Fills the TreeViewer with Gefaehrdungen and the TableViewer with
      * Massnahmen. Is processed each time the WizardPage is set visible.
      */
+    @Override
     protected void doInitContents() {
 
         List<GefaehrdungsUmsetzung> arrListGefaehrdungsUmsetzungen = getRiskAnalysisWizard().getNotOKGefaehrdungsUmsetzungen();
@@ -317,6 +316,9 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
     @Override
     protected void addSpecificListenersForPage() {
 
+        addButtonListeners();
+        addFilterListeners();
+
         RiskAnalysisWizardBrowserUpdateListener browserListener = new RiskAnalysisWizardBrowserUpdateListener(browserLoadingListener, viewerScenario);
         viewerScenario.addSelectionChangedListener(browserListener);
 
@@ -326,26 +328,6 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             public void doubleClick(DoubleClickEvent event) {
                 /* retrieve selected Massnahme and open edit dialog with it */
                 editOwnControl();
-            }
-        });
-
-        /*
-         * Listener opens Dialog for creation of new RisikoMassnahmenUmsetzung
-         */
-        buttonNew.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-
-                /* create new RisikoMassnahmenUmsetzung */
-                final NewRisikoMassnahmeDialog dialog = new NewRisikoMassnahmeDialog(rootContainer.getShell());
-                int result = dialog.open();
-
-                if (result == Window.OK) {
-                    /* add new RisikoMassnahmenUmsetzung to List and viewer */
-                    getRiskAnalysisWizard().addRisikoMassnahmeUmsetzung(dialog.getNewRisikoMassnahme());
-                    refresh();
-                    packAllMassnahmeColumns();
-                }
             }
         });
 
@@ -383,6 +365,117 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         });
 
 
+
+
+
+
+
+        /* add drag and drop support */
+        CnATreeElement cnaElement = getRiskAnalysisWizard().getFinishedRiskAnalysis();
+
+        /*
+         * note: this Transfer is not used for data transfer, but for fulfilling
+         * parameter needs of addDropSupport and addDragSupport. The actual data
+         * transfer ins realized through DNDItems in
+         * RisikoMassnahmenUmsetzungDragListener and
+         * RisikoMassnahmenUmsetzungDropListener
+         */
+        Transfer[] types = new Transfer[] { RisikoMassnahmenUmsetzungTransfer.getInstance() };
+        int operations = DND.DROP_COPY | DND.DROP_MOVE;
+
+        viewerScenario.addDropSupport(operations, types, new RisikoMassnahmenUmsetzungDropListener(viewerScenario));
+
+        viewer.addDragSupport(operations, types, new RisikoMassnahmenUmsetzungDragListener(viewer, cnaElement));
+
+    }
+
+    private void addFilterListeners() {
+
+        /* Listener adds/removes Filter ownGefaehrdungFilter */
+        buttonOwnGefaehrdungen.addSelectionListener(new SelectionAdapter() {
+
+            /**
+             * Adds/removes Filter depending on event.
+             * 
+             * @param event
+             *            event containing information about the selection
+             */
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+
+                Button thisButton = (Button) event.widget;
+
+                if (thisButton.getSelection()) {
+                    viewer.addFilter(ownControlFilter);
+                    refresh();
+                } else {
+                    viewer.removeFilter(ownControlFilter);
+                    refresh();
+                }
+            }
+        });
+
+        /* Listener adds/removes Filter gefaehrdungFilter */
+        buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {
+
+            /**
+             * Adds/removes Filter depending on event.
+             * 
+             * @param event
+             *            event containing information about the selection
+             */
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+
+                Button thisButton = (Button) event.widget;
+
+                if (thisButton.getSelection()) {
+                    viewer.addFilter(controlFilter);
+                    refresh();
+                } else {
+                    viewer.removeFilter(controlFilter);
+                    refresh();
+                }
+            }
+        });
+
+        
+    }
+
+    @Override
+    protected void doAfterUpdateFilter() {
+        /*nothing to do*/
+    }
+
+    @Override
+    protected void doAfterRemoveSearchFilter() {
+        /* nothing to do */
+
+    }
+
+
+    private void addButtonListeners() {
+
+        /*
+         * Listener opens Dialog for creation of new RisikoMassnahmenUmsetzung
+         */
+        buttonNew.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+
+                /* create new RisikoMassnahmenUmsetzung */
+                final NewRisikoMassnahmeDialog dialog = new NewRisikoMassnahmeDialog(rootContainer.getShell());
+                int result = dialog.open();
+
+                if (result == Window.OK) {
+                    /* add new RisikoMassnahmenUmsetzung to List and viewer */
+                    getRiskAnalysisWizard().addRisikoMassnahmeUmsetzung(dialog.getNewRisikoMassnahme());
+                    refresh();
+                    packAllMassnahmeColumns();
+                }
+            }
+        });
+        
         /* Listener opens Dialog for editing the selected Gefaehrdung */
         buttonEdit.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -415,116 +508,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             }
         });
 
-
-        /* Listener adds/removes Filter gefaehrdungFilter */
-        buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {
-
-            /**
-             * Adds/removes Filter depending on event.
-             * 
-             * @param event
-             *            event containing information about the selection
-             */
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-
-                Button thisButton = (Button) event.widget;
-
-                if (thisButton.getSelection()) {
-                    viewer.addFilter(controlFilter);
-                    refresh();
-                } else {
-                    viewer.removeFilter(controlFilter);
-                    refresh();
-                }
-            }
-        });
-
-        /* Listener adds/removes Filter ownGefaehrdungFilter */
-        buttonOwnGefaehrdungen.addSelectionListener(new SelectionAdapter() {
-
-            /**
-             * Adds/removes Filter depending on event.
-             * 
-             * @param event
-             *            event containing information about the selection
-             */
-            @Override
-            public void widgetSelected(SelectionEvent event) {
-
-                Button thisButton = (Button) event.widget;
-
-                if (thisButton.getSelection()) {
-                    viewer.addFilter(ownControlFilter);
-                    refresh();
-                } else {
-                    viewer.removeFilter(ownControlFilter);
-                    refresh();
-                }
-            }
-        });
-
-        /* listener adds/removes search Filter */
-        textSearch.addModifyListener(new ModifyListener() {
-
-            /**
-             * Adds/removes search Filter when Text is modified.
-             * 
-             * @param event
-             *            event containing information about the modify
-             */
-            public void modifyText(ModifyEvent event) {
-                Text text = (Text) event.widget;
-                if (text.getText().length() > 0) {
-
-                    ViewerFilter[] filters = viewer.getFilters();
-                    RiskAnalysisWizardPageSearchFilter thisFilter = null;
-                    boolean contains = false;
-
-                    for (ViewerFilter item : filters) {
-                        if (item instanceof RiskAnalysisWizardPageSearchFilter) {
-                            contains = true;
-                            thisFilter = (RiskAnalysisWizardPageSearchFilter) item;
-                        }
-                    }
-                    if (contains) {
-                        /* filter is already active - update filter */
-                        thisFilter.setPattern(text.getText());
-                        refresh();
-
-                    } else {
-                        /* filter is not active - add */
-                        searchFilter.setPattern(text.getText());
-                        viewer.addFilter(searchFilter);
-                        refresh();
-                    }
-                } else {
-                    viewer.removeFilter(searchFilter);
-                    refresh();
-                }
-            }
-        });
-
-        /* add drag and drop support */
-        CnATreeElement cnaElement = getRiskAnalysisWizard().getFinishedRiskAnalysis();
-
-        /*
-         * note: this Transfer is not used for data transfer, but for fulfilling
-         * parameter needs of addDropSupport and addDragSupport. The actual data
-         * transfer ins realized through DNDItems in
-         * RisikoMassnahmenUmsetzungDragListener and
-         * RisikoMassnahmenUmsetzungDropListener
-         */
-        Transfer[] types = new Transfer[] { RisikoMassnahmenUmsetzungTransfer.getInstance() };
-        int operations = DND.DROP_COPY | DND.DROP_MOVE;
-
-        viewerScenario.addDropSupport(operations, types, new RisikoMassnahmenUmsetzungDropListener(viewerScenario));
-
-        viewer.addDragSupport(operations, types, new RisikoMassnahmenUmsetzungDragListener(viewer, cnaElement));
-
-
-
     }
+
 
     @Override
     protected void addControls(Composite parent) {
@@ -581,6 +566,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         GridDataFactory.fillDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(compositeFilter);
 
     }
+
 
 
 

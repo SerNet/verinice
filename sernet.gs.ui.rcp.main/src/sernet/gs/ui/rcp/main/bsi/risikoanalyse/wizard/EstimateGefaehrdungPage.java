@@ -26,15 +26,11 @@ import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTableViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -84,6 +80,7 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
      * Fills the CheckboxTableViewer with all previously selected Gefaehrdungen.
      * Is processed each time the WizardPage is set visible.
      */
+    @Override
     protected void doInitContents() {
         List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = getRiskAnalysisWizard().getAssociatedGefaehrdungen();
 
@@ -207,51 +204,6 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
 
     private void addFilterListeners() {
 
-        /* Listener adds/removes Filter searchFilter */
-        textSearch.addModifyListener(new ModifyListener() {
-
-            /**
-             * Adds/removes Filter when Text is modified depending on event.
-             * 
-             * @param event
-             *            event containing information about the selection
-             */
-            @Override
-            public void modifyText(ModifyEvent event) {
-                Text text = (Text) event.widget;
-                if (text.getText().length() > 0) {
-
-                    ViewerFilter[] filters = viewer.getFilters();
-                    RiskAnalysisWizardPageSearchFilter thisFilter = null;
-                    boolean contains = false;
-
-                    for (ViewerFilter item : filters) {
-                        if (item instanceof RiskAnalysisWizardPageSearchFilter) {
-                            contains = true;
-                            thisFilter = (RiskAnalysisWizardPageSearchFilter) item;
-                        }
-                    }
-                    if (contains) {
-                        /* filter is already active - update filter */
-                        thisFilter.setPattern(text.getText());
-                        refresh();
-                        selectAssignedGefaehrdungen();
-
-                    } else {
-                        /* filter is not active - add */
-                        searchFilter.setPattern(text.getText());
-                        viewer.addFilter(searchFilter);
-                        refresh();
-                        selectAssignedGefaehrdungen();
-                    }
-                } else {
-                    viewer.removeFilter(searchFilter);
-                    refresh();
-                    selectAssignedGefaehrdungen();
-                }
-            }
-
-        });
 
         /* Listener adds/removes Filter gefaehrdungFilter */
         buttonGefaehrdungen.addSelectionListener(new SelectionAdapter() {
@@ -277,6 +229,7 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
                 }
             }
         });
+
         /* Listener adds/removes Filter ownGefaehrdungFilter */
         buttonOwnGefaehrdungen.addSelectionListener(new SelectionAdapter() {
 
@@ -304,6 +257,17 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
 
     }
 
+    @Override
+    protected void doAfterUpdateFilter() {
+        selectAssignedGefaehrdungen();
+    }
+
+    @Override
+    protected void doAfterRemoveSearchFilter() {
+        selectAssignedGefaehrdungen();
+
+    }
+
 
     @Override
     protected void addButtons(Composite parent, String groupName) {
@@ -314,5 +278,6 @@ public class EstimateGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTabl
     protected CheckboxTableViewer initializeViewer(Composite parent) {
         return CheckboxTableViewer.newCheckList(parent, SWT.BORDER | SWT.FULL_SELECTION);
     }
+
 
 }

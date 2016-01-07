@@ -30,16 +30,12 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewerColumn;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
@@ -186,66 +182,38 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
             public void widgetSelected(SelectionEvent event) {
                 Button button = (Button) event.widget;
                 if (button.getSelection()) {
-                    viewer.addFilter(ownGefaehrdungFilter);
-                    viewer.refresh();
-                    checkAllSelectedGefaehrdungen();
-                    packAllColumns();
+                    addFilter();
                 } else {
-                    viewer.removeFilter(ownGefaehrdungFilter);
-                    refresh();
-                    assignBausteinGefaehrdungen();
-                    checkAllSelectedGefaehrdungen();
-                    packAllColumns();
+                    removeFilter();
                 }
+            }
+
+            private void removeFilter() {
+                viewer.removeFilter(ownGefaehrdungFilter);
+                refresh();
+                assignBausteinGefaehrdungen();
+                checkAllSelectedGefaehrdungen();
+                packAllColumns();
+            }
+
+            private void addFilter() {
+                viewer.addFilter(ownGefaehrdungFilter);
+                viewer.refresh();
+                checkAllSelectedGefaehrdungen();
+                packAllColumns();
             }
         });
 
-        /* Listener adds/removes Filter searchFilter */
-        textSearch.addModifyListener(new ModifyListener() {
+    }
 
-            /**
-             * Adds/removes Filter when Text is modified depending on event.
-             * 
-             * @param event
-             *            event containing information about the selection
-             */
-            @Override
-            public void modifyText(ModifyEvent event) {
-                Text text = (Text) event.widget;
-                if (text.getText().length() > 0) {
+    @Override
+    protected void doAfterUpdateFilter() {
+        checkAllSelectedGefaehrdungen();
+    }
 
-                    ViewerFilter[] filters = viewer.getFilters();
-                    RiskAnalysisWizardPageSearchFilter thisFilter = null;
-                    boolean contains = false;
-
-                    for (ViewerFilter item : filters) {
-                        if (item instanceof RiskAnalysisWizardPageSearchFilter) {
-                            contains = true;
-                            thisFilter = (RiskAnalysisWizardPageSearchFilter) item;
-                        }
-                    }
-                    if (contains) {
-                        /* filter is already active - update filter */
-                        thisFilter.setPattern(text.getText());
-                        viewer.refresh();
-                        checkAllSelectedGefaehrdungen();
-
-                    } else {
-                        /* filter is not active - add */
-                        searchFilter.setPattern(text.getText());
-                        viewer.addFilter(searchFilter);
-                        viewer.refresh();
-                        checkAllSelectedGefaehrdungen();
-                    }
-                } else {
-                    viewer.removeFilter(searchFilter);
-                    viewer.refresh();
-                    assignBausteinGefaehrdungen();
-                    checkAllSelectedGefaehrdungen();
-                }
-            }
-        });
-
+    @Override
+    protected void doAfterRemoveSearchFilter() {
+        checkAllSelectedGefaehrdungen();
     }
 
     private void addButtonListeners() {
@@ -317,6 +285,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      * Fills the CheckboxTableViewer with all Gefaehrdungen available. Is
      * processed each time the WizardPage is set visible.
      */
+    @Override
     protected void doInitContents() {
 
         ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) getRiskAnalysisWizard().getAllGefaehrdungen();
@@ -442,5 +411,6 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
     protected CheckboxTableViewer initializeViewer(Composite parent) {
         return CheckboxTableViewer.newCheckList(parent, SWT.BORDER | SWT.FULL_SELECTION);
     }
+
 
 }
