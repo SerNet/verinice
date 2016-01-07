@@ -1,4 +1,4 @@
-# Verinice Coding Style (Proposal)
+# Verinice Coding Style
 
 This document defines basic principles, established by the Verinice team, for the coding style of
 the Verinice project. All contributors and reviewers of Verinice source code shall aspire to follow
