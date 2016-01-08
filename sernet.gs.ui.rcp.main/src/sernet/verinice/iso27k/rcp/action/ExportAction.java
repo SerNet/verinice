@@ -248,7 +248,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         }
         returnResult = new byte[cypherTextBytes.length + salt.length];
         System.arraycopy(salt, 0, returnResult, 0, salt.length);
-        System.arraycopy(cypherTextBytes, 0, returnResult, salt.length - 1, cypherTextBytes.length);
+        System.arraycopy(cypherTextBytes, 0, returnResult, salt.length, cypherTextBytes.length);
         return returnResult;
     }
 

@@ -64,10 +64,7 @@ class PasswordBasedByteArrayEncryption {
 
         try {
 
-            // Encrypt message
-            // byte[] encryptedMessage =
-            // encryptionService.encrypt(SECRET_MESSAGE.getBytes(),
-            // PASSWORD.toCharArray(), SALT.getBytes("UTF-8"));
+
             byte[] encryptedMessage = encryptionService.encrypt(SECRET_MESSAGE.getBytes(), PASSWORD.toCharArray(), saltString.getBytes());
 
             System.out.println("Encrypted message(with Salt) is:");
@@ -77,7 +74,7 @@ class PasswordBasedByteArrayEncryption {
             System.out.println("\n");
 
             byte[] saltBytes = new byte[SALT_LENGTH];
-            System.arraycopy(encryptedMessage, 0, saltBytes, 0, SALT_LENGTH - 1);
+            System.arraycopy(encryptedMessage, 0, saltBytes, 0, SALT_LENGTH);
 
             System.out.println("From file read Salt is:");
             System.out.println("======================");
@@ -87,7 +84,7 @@ class PasswordBasedByteArrayEncryption {
 
             byte[] cypherText = new byte[encryptedMessage.length - SALT_LENGTH];
 
-            System.arraycopy(encryptedMessage, SALT_LENGTH - 1, cypherText, 0, encryptedMessage.length - SALT_LENGTH);
+            System.arraycopy(encryptedMessage, SALT_LENGTH, cypherText, 0, encryptedMessage.length - SALT_LENGTH);
 
             System.out.println("Encrypted message(withOut Salt) is:");
             System.out.println("======================");
@@ -107,7 +104,7 @@ class PasswordBasedByteArrayEncryption {
     }
 
     private static void testPBEWithoutSalt() {
-        System.out.println("Password Based Encryption (without generic salt) example for byte arrays");
+        System.out.println("Password Based Encryption (with static salt) example for byte arrays");
         System.out.println("==================================================");
         System.out.println();
         System.out.println("Secret message is:");

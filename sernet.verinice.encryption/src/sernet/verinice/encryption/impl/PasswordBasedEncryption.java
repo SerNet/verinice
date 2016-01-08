@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
+import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -15,6 +16,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
+import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import sernet.verinice.interfaces.encryption.EncryptionException;
@@ -97,7 +99,7 @@ public abstract class PasswordBasedEncryption {
     }
 
     public static byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException {
-        byte[] decryptedData;
+        byte[] encryptedData;
 
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, ITERATION_COUNT);
@@ -111,17 +113,27 @@ public abstract class PasswordBasedEncryption {
             cipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParameterSpec);
 
             // encrypt
-            decryptedData = cipher.doFinal(unencryptedByteData);
+            encryptedData = cipher.doFinal(unencryptedByteData);
 
         } catch (GeneralSecurityException e) {
             throw new EncryptionException("There was a problem during the encryption process. See the stacktrace for details.", e);
         }
-        decryptedData = (decryptedData == null) ? new byte[] {} : decryptedData;
-        byte[] decryptedDataWithSaltPrefix = new byte[decryptedData.length + IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
-        System.arraycopy(salt, 0, decryptedDataWithSaltPrefix, 0, salt.length - 1);
-        System.arraycopy(decryptedData, 0, decryptedDataWithSaltPrefix, salt.length, decryptedData.length);
+        encryptedData = (encryptedData == null) ? new byte[] {} : encryptedData;
+        byte[] encryptedDataWithSaltPrefix = new byte[encryptedData.length + IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+
+        // attach (generic) salt to cyphertext as a prefix
+        System.arraycopy(salt, 0, encryptedDataWithSaltPrefix, 0, salt.length);
+        System.arraycopy(encryptedData, 0, encryptedDataWithSaltPrefix, salt.length, encryptedData.length);
+
         pbeKeySpec.clearPassword();
-        return decryptedDataWithSaltPrefix;
+
+        if (Logger.getLogger(PasswordBasedEncryption.class).isDebugEnabled()) {
+            Logger.getLogger(PasswordBasedEncryption.class).debug("Length of decryptedByteData:\t" + encryptedData.length);
+            Logger.getLogger(PasswordBasedEncryption.class).debug("Length of salt:\t" + salt.length);
+            Logger.getLogger(PasswordBasedEncryption.class).debug("Length of decryptedDataWithSaltPrefix:\t" + encryptedDataWithSaltPrefix.length);
+        }
+
+        return encryptedDataWithSaltPrefix;
     }
 
     /**
@@ -168,6 +180,20 @@ public abstract class PasswordBasedEncryption {
     public static byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt) throws EncryptionException {
 
         byte[] decryptedData;
+
+        // remove salt prefix from cyphertext
+        byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+        System.arraycopy(encryptedByteData, 0, saltBytes, 0, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
+
+        // if beginning of cyphertext not equals the passed (by parameter)
+        // bytes, try decrypting with static salt
+        if (!Arrays.equals(salt, saltBytes)) {
+            return decrypt(encryptedByteData, password);
+        }
+
+        byte[] cypherText = new byte[encryptedByteData.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+
+        System.arraycopy(encryptedByteData, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, cypherText, 0, encryptedByteData.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
 
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, ITERATION_COUNT);
