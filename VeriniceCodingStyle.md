@@ -1,21 +1,24 @@
 # Verinice Coding Style
 
 This document defines basic principles, established by the Verinice team, for the coding style of
-the Verinice project. All contributors and reviewers of Verinice source code shall aspire to follow
-these principles as closely as possible to ensure the long term quality of the product.
+the Verinice project. All contributors and reviewers of Verinice source code strive to follow these
+principles as closely as possible to ensure the long term quality of the product.
 
 ## Basis
 
-The basis for the Verinice Coding Style shall be these three documents:
+The following three documents form the basis for the Verinice Coding Style:
 
 * The [_Google Java Style_](https://google.github.io/styleguide/javaguide.html)
 * The [Android project's _Code Style for Contributors_](https://source.android.com/source/code-style.html)
 * _Effective Java (2nd edition)_ by Joshua Bloch
 
-These three documents complement each other to a large extent. In some parts they overlap and in
-very few aspects they contradict each other. Those few contradictions shall be clarified
+All three complement each other to a large extent. In some parts they overlap and in
+very few aspects they contradict each other. Where contradictions occur, they should be clarified
 unambiguously in this document. As probably not all of these potential contradictions are known at
-the time of this writing, they shall become clarified as needed.
+the time of this writing, they should become clarified as needed.
+
+_Clean Code_ by Robert C. Martin is regarded as a further authoritative source regarding good coding
+style.
 
 ## Formatting
 
@@ -24,9 +27,9 @@ reformatting.
 
 ### License Header
 
-Every class and every interface file shall have a license header.
+Every class and every interface file must have a license header.
 
-The license header shall comply to the following template, which in turn follows the
+The license header should comply to the following template, which in turn follows the
 [instructions given by the Free Software Foundation](http://www.gnu.org/licenses/gpl-howto.html):
 
 ```java
@@ -64,9 +67,10 @@ Contributors_, but contradictory to the _Google Java Style_.
 
 ### Line Length Limit
 
-* Each line of code should be at most __100 characters__ long.
+* Code lines must not exceed __100 characters__.
 
-The same exceptions described in the [Android project's _Code Style for Contributors_](https://source.android.com/source/code-style.html) apply:
+The same exceptions described in the [Android project's _Code Style for
+Contributors_](https://source.android.com/source/code-style.html) apply:
 
 > * If a comment line contains an example command or a literal URL longer than 100 characters, that
 >   line may be longer than 100 characters for ease of cut and paste.
@@ -75,7 +79,7 @@ The same exceptions described in the [Android project's _Code Style for Contribu
 
 ## Exception Handling
 
-Exceptions may never be ignored. All exception handling shall be compliant to _Chapter 9:
+Exceptions may never be ignored. All exception handling must be compliant to _Chapter 9:
 Exceptions_ in _Effective Java (2nd ed.)_.
 
 ### Abstraction Level of Exceptions
@@ -143,15 +147,15 @@ void setServerPort(String value) {
     try {
         serverPort = Integer.parseInt(value);
     } catch (NumberFormatException e) {
-        LOGGER.error("invalid port, use default port instead");
+        logger.error("invalid port, use default port instead");
     }
 }
 ```
 
 ## Logging
 
-In Verinice the logging framework [_log4j_](http://logging.apache.org/log4j) is used for all logging
-tasks.
+Currently, logging in Verinice is executed via the logging framework
+[_log4j_](http://logging.apache.org/log4j). This may change at a later point.
 
 The following log levels should be used in compliance with their description:
 
