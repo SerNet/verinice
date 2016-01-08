@@ -64,12 +64,14 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
     private TableViewerColumn numberColumn;
     private TableViewerColumn nameColumn;
     private TableViewerColumn categoryColumn;
+    private RiskAnalysisDialogItems<Gefaehrdung> itemsToCheckForUniqueNumber;
 
     /**
      * Constructor sets title an description of WizardPage.
      */
     protected ChooseGefaehrdungPage() {
-        super(Messages.ChooseGefaehrdungPage_0, Messages.ChooseGefaehrdungPage_1, Messages.ChooseGefaehrdungPage_2);
+        super(Messages.ChooseGefaehrdungPage_0, Messages.ChooseGefaehrdungPage_1,
+                Messages.ChooseGefaehrdungPage_2);
     }
 
     @Override
@@ -130,14 +132,17 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
 
     private void editGefaehrdung() {
         IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
-                IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
-                if (selectedGefaehrdung instanceof OwnGefaehrdung) {
+        IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
+        if (selectedGefaehrdung instanceof OwnGefaehrdung) {
             OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
-            final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(), ownGefSelected, new RiskAnalysisDialogItems<>(getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class));
-                    dialog.open();
-                    refresh();
-                }
-            }
+            itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
+                    getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class);
+            final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(),
+                    ownGefSelected, itemsToCheckForUniqueNumber);
+            dialog.open();
+            refresh();
+        }
+    }
 
     private void addFilterListeners() {
         /* Listener adds/removes Filter gefaehrdungFilter */
@@ -226,7 +231,10 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection.getFirstElement();
                 if (selectedGefaehrdung instanceof OwnGefaehrdung) {
                     /* ask user to confirm */
-                    boolean confirmed = MessageDialog.openQuestion(rootContainer.getShell(), Messages.ChooseGefaehrdungPage_14, NLS.bind(Messages.ChooseGefaehrdungPage_15, selectedGefaehrdung.getTitel()));
+                    boolean confirmed = MessageDialog.openQuestion(rootContainer.getShell(),
+                            Messages.ChooseGefaehrdungPage_14,
+                            NLS.bind(Messages.ChooseGefaehrdungPage_15,
+                                    selectedGefaehrdung.getTitel()));
                     if (confirmed) {
                         deleteOwnGefaehrdung((OwnGefaehrdung) selectedGefaehrdung);
                         assignBausteinGefaehrdungen();
@@ -240,15 +248,20 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         buttonNew.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
-                List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard().getAllOwnGefaehrdungen();
-                
-                final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(rootContainer.getShell(), arrListOwnGefaehrdungen, new RiskAnalysisDialogItems<>(getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class));
+                List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard()
+                        .getAllOwnGefaehrdungen();
+                itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
+                        getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class);
+                final NewGefaehrdungDialog dialog = new NewGefaehrdungDialog(
+                        rootContainer.getShell(), arrListOwnGefaehrdungen,
+                        itemsToCheckForUniqueNumber);
                 dialog.open();
                 getRiskAnalysisWizard().addOwnGefaehrdungen();
                 refresh();
                 assignBausteinGefaehrdungen();
             }
         });
+
         /* Listener opens Dialog for editing the selected Gefaehrdung */
         buttonEdit.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -270,10 +283,10 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
             try {
                 getRiskAnalysisWizard().removeAssociatedGefaehrdung(currentGefaehrdung);
             } catch (Exception e) {
-                ExceptionUtil.log(e, NLS.bind(Messages.ChooseGefaehrdungPage_18, currentGefaehrdung.getTitel()));
+                ExceptionUtil.log(e,
+                        NLS.bind(Messages.ChooseGefaehrdungPage_18, currentGefaehrdung.getTitel()));
             }
         }
-
         checkPageComplete();
 
     }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) ${year} Ruth Motza.
+ * Copyright (c) 2016 Ruth Motza.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -38,6 +38,13 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
+/**
+ * Basic class for the Dialogs of create and edit OwnGefaehrdung or
+ * RisikoMassnahme(nUmsetzung)
+ * 
+ * @author Ruth Motza <rm[at]sernet[dot]de>
+ * @param <T>
+ */
 @SuppressWarnings("restriction")
 public abstract class RiskAnalysisDialog<T> extends Dialog {
     protected Text textNumber;
@@ -54,43 +61,66 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
     }
 
     protected boolean isUniqueId(String id, Object element) {
-        /* NewGefaehrdungDialog and EditGefaehrdungDialog */
-        if(items.getGenericType().equals(Gefaehrdung.class) && element instanceof Gefaehrdung){
-            Gefaehrdung gefaehrdung = (Gefaehrdung) element;
-            for (T item : items) {
-                Gefaehrdung currentGefaehrdung = (Gefaehrdung) item;
-                if (currentGefaehrdung.getId().equals(id) && !gefaehrdung.equals(currentGefaehrdung)) {
-                    return false;
-                }
-            }
-            return true;
-        } else if (items.getGenericType().equals(MassnahmenUmsetzung.class) && element instanceof RisikoMassnahme) {
-            /* NewGefaehrdungDialog and EditGefaehrdungDialog */
-            RisikoMassnahme massnahme = (RisikoMassnahme) element;
-            for (T item : items) {
-                MassnahmenUmsetzung currentMassnahmenUmsetzung = (MassnahmenUmsetzung) item;
-                boolean isUsed = currentMassnahmenUmsetzung.getKapitel().equals(id) || currentMassnahmenUmsetzung.getId().equals(id) &&
-                        (!(currentMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) ||
-                                !massnahme.equals(((RisikoMassnahmenUmsetzung) currentMassnahmenUmsetzung).getRisikoMassnahme()));
-                if (isUsed) {
-                    return false;
-                }
-            }
-            return true;
-        } else if (items.getGenericType().equals(MassnahmenUmsetzung.class) && element instanceof RisikoMassnahmenUmsetzung) {
-            RisikoMassnahmenUmsetzung massnahmenUmsetzung = (RisikoMassnahmenUmsetzung) element;
-            for (T item : items) {
-                MassnahmenUmsetzung currentMassnahmenUmsetzung = (MassnahmenUmsetzung) item;
-                boolean isUsed = currentMassnahmenUmsetzung.getKapitel().equals(id) && !massnahmenUmsetzung.getUuid().equals(currentMassnahmenUmsetzung.getUuid());
-                if (isUsed) {
-                    return false;
-                }
-            }
-            return true;
-        }else{
-            LOG.error("the type of element or list is not supported", new IllegalArgumentException());
+        if (items.getGenericType().equals(Gefaehrdung.class) && element instanceof Gefaehrdung) {
+            return isUniqueGefaehrdung(id, element);
+        } else if (items.getGenericType().equals(MassnahmenUmsetzung.class)
+                && element instanceof RisikoMassnahme) {
+            return isUniqueRisikoMassnahme(id, element);
+        } else if (items.getGenericType().equals(MassnahmenUmsetzung.class)
+                && element instanceof RisikoMassnahmenUmsetzung) {
+            return isUniqueRisikoMassnahmenUmsetzung(id, element);
+        } else {
+            LOG.error("the type of element or list is not supported",
+                    new IllegalArgumentException());
             return false;
         }
+    }
+
+    private boolean isUniqueRisikoMassnahmenUmsetzung(String id, Object element) {
+        /* EditRisikoMassnahmenUmsetzungDialog */
+        RisikoMassnahmenUmsetzung massnahmenUmsetzung = (RisikoMassnahmenUmsetzung) element;
+        for (T item : items) {
+            MassnahmenUmsetzung currentMassnahmenUmsetzung = (MassnahmenUmsetzung) item;
+            boolean isUsed = currentMassnahmenUmsetzung.getKapitel().equals(id)
+                    && !massnahmenUmsetzung.getUuid().equals(currentMassnahmenUmsetzung.getUuid());
+            if (isUsed) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+
+    private boolean isUniqueRisikoMassnahme(String id, Object element) {
+        /* NewRisikoMassnahmeDialog */
+        /* NewGefaehrdungDialog and EditGefaehrdungDialog */
+        RisikoMassnahme massnahme = (RisikoMassnahme) element;
+        for (T item : items) {
+            MassnahmenUmsetzung currentMassnahmenUmsetzung = (MassnahmenUmsetzung) item;
+            boolean isUsed = currentMassnahmenUmsetzung.getKapitel().equals(id)
+                    || currentMassnahmenUmsetzung.getId().equals(id) &&
+                            (!(currentMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) ||
+                                    !massnahme
+                                            .equals(((RisikoMassnahmenUmsetzung) currentMassnahmenUmsetzung)
+                                                    .getRisikoMassnahme()));
+            if (isUsed) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    private boolean isUniqueGefaehrdung(String id, Object element) {
+        /* NewGefaehrdungDialog and EditGefaehrdungDialog */
+        Gefaehrdung gefaehrdung = (Gefaehrdung) element;
+        for (T item : items) {
+            Gefaehrdung currentGefaehrdung = (Gefaehrdung) item;
+            if (currentGefaehrdung.getId().equals(id) && !gefaehrdung.equals(currentGefaehrdung)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -101,7 +131,8 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
 
             super.okPressed();
         } else {
-            MessageDialog.openError(getShell(), Messages.NewGefaehrdungDialog_Error_0, NLS.bind(Messages.NewGefaehrdungDialog_Error_1, textNumber.getText()));
+            MessageDialog.openError(getShell(), Messages.NewGefaehrdungDialog_Error_0, NLS.bind(
+                    Messages.NewGefaehrdungDialog_Error_1, textNumber.getText()));
         }
     }
 

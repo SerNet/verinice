@@ -48,7 +48,9 @@ public class EditRisikoMassnahmenUmsetzungDialog extends RiskAnalysisDialog<Mass
 	 * @param newRisikoMassnahmenUmsetzung
 	 *            the RisikoMassnahmenUmsetzung to edit
 	 */
-    public EditRisikoMassnahmenUmsetzungDialog(Shell parentShell, RisikoMassnahmenUmsetzung newRisikoMassnahmenUmsetzung, RiskAnalysisDialogItems<MassnahmenUmsetzung> items) {
+    public EditRisikoMassnahmenUmsetzungDialog(Shell parentShell,
+            RisikoMassnahmenUmsetzung newRisikoMassnahmenUmsetzung,
+            RiskAnalysisDialogItems<MassnahmenUmsetzung> items) {
         super(parentShell, items);
 		setShellStyle(getShellStyle() | SWT.RESIZE);
 		risikoMassnahmenUmsetzung = newRisikoMassnahmenUmsetzung;
@@ -86,7 +88,8 @@ public class EditRisikoMassnahmenUmsetzungDialog extends RiskAnalysisDialog<Mass
         risikoMassnahmenUmsetzung.getRisikoMassnahme().setName(textName.getText());
 
         try {
-            RisikoMassnahme rm = RisikoMassnahmeHome.getInstance().save(risikoMassnahmenUmsetzung.getRisikoMassnahme());
+            RisikoMassnahme rm = RisikoMassnahmeHome.getInstance()
+                    .save(risikoMassnahmenUmsetzung.getRisikoMassnahme());
             risikoMassnahmenUmsetzung.setMassnahme(rm);
         } catch (Exception e) {
             LOG.error("Error while saving massnahme", e); //$NON-NLS-1$

@@ -47,7 +47,8 @@ public class NewGefaehrdungDialog extends RiskAnalysisDialog<Gefaehrdung> {
      * @param newOwnGefaehrdungen
      *            List of all currently existing OwnGefaehrdungen
      */
-    public NewGefaehrdungDialog(Shell parentShell, List<OwnGefaehrdung> newOwnGefaehrdungen, RiskAnalysisDialogItems<Gefaehrdung> items) {
+    public NewGefaehrdungDialog(Shell parentShell, List<OwnGefaehrdung> newOwnGefaehrdungen,
+            RiskAnalysisDialogItems<Gefaehrdung> items) {
         /*
          * note: you need to hand the ArrayList over differently, if you don't
          * use this this dialog modally!

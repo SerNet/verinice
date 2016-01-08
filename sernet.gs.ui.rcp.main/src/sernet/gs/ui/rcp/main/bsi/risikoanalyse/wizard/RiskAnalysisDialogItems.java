@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 
+ * Container for the RiskAnalysisDialog Items to ensure support of generic types
+ * in the Dialog
+ * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class RiskAnalysisDialogItems<T> extends ArrayList<T> {
