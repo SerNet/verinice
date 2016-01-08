@@ -29,7 +29,10 @@ import sernet.gs.scraper.GSScraper;
 
 
 public class Gefaehrdung implements IGSModel {
-	private Integer dbId;
+
+    private static final long serialVersionUID = 5678950532578545503L;
+
+    private Integer dbId;
 	
 	private String id;
 	private String titel;
@@ -39,15 +42,6 @@ public class Gefaehrdung implements IGSModel {
 	
 	private String uuid;
 	private String encoding;
-	
-	
-	public String getEncoding() {
-		return encoding;
-	}
-
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
-	}
 
     public static final int NUM_KATEGORIES = 6;
     public static final int KAT_UNDEF = 0;
@@ -91,10 +85,7 @@ public class Gefaehrdung implements IGSModel {
 	
 	@Override
 	public boolean equals(Object obj) {
-		return (this == obj || (obj instanceof Gefaehrdung
-					&& this.uuid.equals(((Gefaehrdung)obj).getUuid())
-					)
-				);
+        return this == obj || obj instanceof Gefaehrdung && this.uuid.equals(((Gefaehrdung) obj).getUuid());
 	}
 	
 	@Override
@@ -141,22 +132,12 @@ public class Gefaehrdung implements IGSModel {
 	}
 	
     public String getKategorieAsString(String language) {
-        return getLocalizedKategorie(this.kategorie, language);
+        return getCategory(this.kategorie);
     }
 
-    public String getKategorieAsString() {
-        return getLocalizedKategorie(this.kategorie, "EN");
-    }
-	
-	protected String getLocalizedKategorie(int kat, String language){
-        return getCategory(kat);
-        
-    }
-	
 	public String getCategory(int category){
         return categories.get(category);
 	}
-	
 	
 	public void setUrl(String url) {
 		this.url = url;
@@ -180,21 +161,17 @@ public class Gefaehrdung implements IGSModel {
 	public static int kategorieAsInt(String kategorie) {
 		if (kategorie.indexOf(KAT_MATCH_HOEHERE_GEWALT) != -1){
 			return KAT_HOEHERE_GEWALT;
-		}
-		if (kategorie.indexOf(KAT_MATCH_MENSCH) != -1){
+        } else if (kategorie.indexOf(KAT_MATCH_MENSCH) != -1) {
 			return KAT_MENSCH;
-		}
-		if (kategorie.indexOf(KAT_MATCH_ORG_MANGEL) != -1){
+        } else if (kategorie.indexOf(KAT_MATCH_ORG_MANGEL) != -1) {
 			return KAT_ORG_MANGEL;
-		}
-		if (kategorie.indexOf(KAT_MATCH_TECHNIK) != -1){
+        } else if (kategorie.indexOf(KAT_MATCH_TECHNIK) != -1) {
 			return KAT_TECHNIK;
-		}
-		if (kategorie.indexOf(KAT_MATCH_VORSATZ) != -1){
+        } else if (kategorie.indexOf(KAT_MATCH_VORSATZ) != -1) {
 			return KAT_VORSATZ;
+        } else {
+            return KAT_UNDEF;
 		}
-		return KAT_UNDEF;
-		
 	}
 
 	public void setStand(String stand) {
@@ -221,6 +198,14 @@ public class Gefaehrdung implements IGSModel {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
 
 	
 
