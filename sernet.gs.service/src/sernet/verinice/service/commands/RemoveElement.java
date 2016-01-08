@@ -100,9 +100,11 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             if (element instanceof Person || element instanceof PersonIso){
                 removeConfiguration(element);
             }
-            int listsDbId = 0;
+            int listsDbId = -1;
             if (element instanceof GefaehrdungsUmsetzung) {
-                listsDbId = element.getParent().getDbId();
+                if (element.getParent() != null) {
+                    listsDbId = element.getParent().getDbId();
+                }
             }
 
             IBaseDao dao = getDaoFactory().getDAOforTypedElement(element);
@@ -130,7 +132,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 removeRiskAnalysis(analysis);
             }
 
-            if (element instanceof GefaehrdungsUmsetzung) {
+            if (element instanceof GefaehrdungsUmsetzung && listsDbId >= 0) {
                 GefaehrdungsUmsetzung gef = (GefaehrdungsUmsetzung) element;
                 removeFromLists(listsDbId, gef);
             }   

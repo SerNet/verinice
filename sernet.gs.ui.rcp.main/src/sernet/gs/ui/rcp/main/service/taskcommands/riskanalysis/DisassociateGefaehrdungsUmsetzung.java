@@ -20,13 +20,17 @@ package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.model.Gefaehrdung;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.common.HydratorUtil;
+import sernet.verinice.service.commands.RemoveElement;
 
 /**
  * Remove a threat instance from the list of associated threat instances for an object.
@@ -38,10 +42,19 @@ import sernet.verinice.model.common.HydratorUtil;
  */
 public class DisassociateGefaehrdungsUmsetzung extends GenericCommand {
 
-	private Gefaehrdung currentGefaehrdung;
+    private static final long serialVersionUID = 7398528679618741086L;
+    private Gefaehrdung currentGefaehrdung;
 	private Integer listDbId;
 	private FinishedRiskAnalysisLists finishedRiskLists;
 	private FinishedRiskAnalysis finishedRiskAnalysis;
+    private transient Logger log = Logger.getLogger(RemoveElement.class);
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(RemoveElement.class);
+        }
+        return log;
+    }
 
 	/**
 	 * @param finishedRiskAnalysis 
@@ -77,9 +90,15 @@ public class DisassociateGefaehrdungsUmsetzung extends GenericCommand {
 				.getNotOKGefaehrdungsUmsetzungen(), currentGefaehrdung);
 		found.addAll(toRemove);
 
-		for (GefaehrdungsUmsetzung removeMe : toRemove) {
+        for (GefaehrdungsUmsetzung removeMe : found) {
 			finishedRiskAnalysis.removeChild(removeMe);
-			removeMe.remove();
+            try {
+                RemoveElement<GefaehrdungsUmsetzung> command = new RemoveElement<>(removeMe);
+                getCommandService().executeCommand(command);
+            } catch (CommandException e) {
+                getLog().error("could not remove GefaehrdunsUmsetzung " + removeMe.getUuid(), e);
+            }
+
 		}
 	}
 
