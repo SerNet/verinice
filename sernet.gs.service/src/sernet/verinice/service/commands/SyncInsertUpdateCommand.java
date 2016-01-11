@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+
 
 import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
@@ -41,9 +43,16 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 import de.sernet.sync.risk.Risk;
 import de.sernet.sync.risk.SyncRiskAnalysis;
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.Entity;
+import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.HuiRelation;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -130,6 +139,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     private transient Map<Class, IBaseDao> daoMap = new HashMap<Class, IBaseDao>();
 
+    private ImportReferenceTypes importReferenceTypes;
+
+
     public SyncInsertUpdateCommand(String sourceId, 
     		SyncData syncData, 
     		SyncMapping syncMapping, 
@@ -161,6 +173,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      */
     @Override
     public void execute() {
+
+        importReferenceTypes = new ImportReferenceTypes(getDao(CnATreeElement.class), getCommandService(), idElementMap);
+
         try {
             if (getLogrt().isDebugEnabled()) {
                 globalStart = System.currentTimeMillis();
@@ -177,6 +192,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             for (SyncObject so : soList) {
                 importObject(null, so);
             } // for <syncObject>
+
+            importReferenceTypes.replaceExternalIdsWithDbIds();
 
             if (getLogrt().isDebugEnabled()) {
                 getLogrt().debug("Elements: " + merged);
@@ -197,6 +214,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             throw new RuntimeCommandException(e);
         }
     }
+
 
     private void importObject(CnATreeElement parent, SyncObject so) throws CommandException {
         String extId = so.getExtId();
@@ -311,6 +329,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
                 } else {
                     attrIntId = mat.getIntId();
                 }
+
+
+                importReferenceTypes.trackReferences(elementInDB, sa, attrIntId);
                 elementInDB.getEntity().importProperties(huiTypeFactory, attrIntId, attrValues);
                 addElement(elementInDB);
             } // for <syncAttribute>

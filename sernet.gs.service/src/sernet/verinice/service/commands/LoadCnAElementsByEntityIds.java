@@ -19,6 +19,7 @@ package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,9 +28,11 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.HydratorUtil;
 
 @SuppressWarnings("serial")
 public class LoadCnAElementsByEntityIds<T extends CnATreeElement> extends GenericCommand {
@@ -39,6 +42,10 @@ public class LoadCnAElementsByEntityIds<T extends CnATreeElement> extends Generi
 	private Class<T> klass;
 
 	private List<T> list;
+
+    private IBaseDao<CnATreeElement, Serializable> elementDao;
+
+    private RetrieveInfo ri;
 	
 	public LoadCnAElementsByEntityIds(Class<T> klass, Collection<Integer> ids) {
 		this.klass = klass;
@@ -49,11 +56,30 @@ public class LoadCnAElementsByEntityIds<T extends CnATreeElement> extends Generi
 		}
 	}
 
+	   public LoadCnAElementsByEntityIds(Class<T> klass, Collection<Integer> ids, RetrieveInfo ri) {
+	        this.klass = klass;
+	        this.ids = ids;
+            this.ri = ri;
+
+	        if (ids.isEmpty()){
+	            throw new IllegalArgumentException("There must be at least one id available.");
+	        }
+	    }
+
 	@SuppressWarnings("unchecked")
 	public void execute() {
 		IBaseDao<T, Serializable> dao = getDaoFactory().getDAO(klass);
 		
 		list = (List<T>) dao.findByCallback(new Callback(ids));
+
+		if (ri != null){
+		    List<T> hydratedElements =  new ArrayList<T>();
+		    for(T element : list){
+		        hydratedElements.add((T) getElementDao().retrieve(element.getDbId(), ri));
+		    }
+
+		    list = hydratedElements;
+		}
 	}
 
 	public List<T> getElements() {
@@ -81,5 +107,13 @@ public class LoadCnAElementsByEntityIds<T extends CnATreeElement> extends Generi
 		}
 		
 	}
+
+
+    public IBaseDao<CnATreeElement, Serializable> getElementDao() {
+        if (elementDao == null) {
+            elementDao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(CnATreeElement.class);
+        }
+        return elementDao;
+    }
 
 }

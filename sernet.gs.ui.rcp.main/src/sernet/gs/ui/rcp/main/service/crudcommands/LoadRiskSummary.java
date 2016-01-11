@@ -17,6 +17,7 @@ import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueService;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  * 

@@ -35,6 +35,7 @@ import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  *

@@ -41,6 +41,7 @@ import sernet.verinice.model.iso27k.IncidentScenarioGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  * command categorizes all scenario groups of a rootElmt to red or yellow if

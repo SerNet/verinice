@@ -178,5 +178,8 @@ public class Property implements Serializable, ITypedElement {
         return true;
     }
 
-    
+    @Override
+    public String toString() {
+        return "Property [dbId=" + dbId + ", propertyType=" + propertyType + ", propertyValue=" + propertyValue + "]";
+    }
 }

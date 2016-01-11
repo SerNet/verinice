@@ -16,6 +16,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
+import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  * Loads parent of given element.

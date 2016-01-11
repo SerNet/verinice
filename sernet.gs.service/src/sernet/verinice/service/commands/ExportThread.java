@@ -20,6 +20,7 @@
 package sernet.verinice.service.commands;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,6 +92,7 @@ public class ExportThread extends NotifyingThread {
     
     private ICommandService commandService;
     
+    private ExportReferenceTypes exportReferenceTypes;
     
     public ExportThread(ExportTransaction transaction) {
         super();
@@ -130,6 +132,9 @@ public class ExportThread extends NotifyingThread {
      * @throws CommandException 
      */
     public void export() throws CommandException {
+
+        exportReferenceTypes = new ExportReferenceTypes(getCommandService());
+
         CnATreeElement element = transaction.getElement();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Exporting element: " + element.getUuid());
@@ -140,13 +145,16 @@ public class ExportThread extends NotifyingThread {
          * or category element) AND, if we should restrict the exported objects to certain
          * entity types, this element's entity type IS allowed:
          **/
-        
+
         String typeId = element.getTypeId();
         if(checkElement(element)) {
             element = hydrate( element );
             transaction.setElement(element);
             
             String extId = ExportFactory.createExtId(element);
+
+            exportReferenceTypes.addReference2ExtId(element.getDbId(), extId);
+
             SyncObject syncObject = new SyncObject();
             syncObject.setExtId(extId);
             syncObject.setExtObjectType(typeId);
@@ -160,11 +168,13 @@ public class ExportThread extends NotifyingThread {
              * Retrieve all properties from the entity:
              */     
             Entity entity = element.getEntity();
+
             // Category instance may have no Entity attached to it
             // For those we do not store any property values.
             if (entity != null) {
-                ExportFactory.transform(entity, attributes, typeId, getHuiTypeFactory());
+                ExportFactory.transform(entity, attributes, typeId, getHuiTypeFactory(), exportReferenceTypes);
             }
+
             EntityType entityType = element.getEntityType();
             if(entityType!=null) {
                 // Add the elements EntityType to the set of exported EntityTypes in order to
@@ -266,7 +276,7 @@ public class ExportThread extends NotifyingThread {
                 String extId = ExportFactory.createExtId(attachment);
                 syncFile.setExtId(extId);
                 syncFile.setFile(ExportFactory.createZipFileName(attachment));
-                ExportFactory.transform(entity, syncFile.getSyncAttribute(), Attachment.TYPE_ID, getHuiTypeFactory());
+                ExportFactory.transform(entity, syncFile.getSyncAttribute(), Attachment.TYPE_ID, getHuiTypeFactory(), exportReferenceTypes);
                 fileListXml.add(syncFile);
                 if(isReImport()) {
                     attachment.setExtId(extId);
