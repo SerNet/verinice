@@ -101,7 +101,7 @@ public final class EditorFactory {
 	private final Logger log = Logger.getLogger(EditorFactory.class);
 	
 	private static EditorFactory instance;
-	private static Map<Class<?>, IEditorTypeFactory> typedFactories = new HashMap<Class<?>, IEditorTypeFactory>();
+	private static Map<Class<?>, IEditorTypeFactory> typedFactories = new HashMap<>();
 
 	private interface IEditorTypeFactory {
 		void openEditorFor(Object o) throws PartInitException;
@@ -132,13 +132,13 @@ public final class EditorFactory {
      * Checks if an editor factory is registered for the given object type and
      * opens a new editor for it.
      * 
-     * @param sel
+     * @param o Object which is opened in the editor
      */
-    public void openEditor(Object sel) {
-        IEditorTypeFactory factory = typedFactories.get(sel.getClass());
+    public void openEditor(Object o) {
+        IEditorTypeFactory factory = typedFactories.get(o.getClass());
         if (factory!= null) {
             try {
-                factory.openEditorFor(sel);
+                factory.openEditorFor(o);
             } catch (Exception e) {
                 log.error("Error while opening editor.", e); //$NON-NLS-1$
                 ExceptionUtil.log(e, Messages.EditorFactory_2);
@@ -146,9 +146,15 @@ public final class EditorFactory {
         }
     }
 
-    public void updateAndOpenObject(Object sel) {
-        if (sel instanceof CnATreeElement) {
-            EditorFactory.getInstance().openEditor(sel);
+    /**
+     * Checks if an editor factory is registered for the given object type and
+     * opens a new editor for it. Also updates the object.
+     * 
+     * @param o Object which is opened in the editor
+     */
+    public void updateAndOpenObject(Object o) {
+        if (o instanceof CnATreeElement) {
+            EditorFactory.getInstance().openEditor(o);
         }
     }
 
