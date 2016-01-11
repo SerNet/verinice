@@ -75,6 +75,7 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
     private TableColumn numberColumnMassnahme;
     private TableColumn nameColumnMassnahme;
     private TreeViewer viewerScenario;
+    private RiskAnalysisDialogItems<MassnahmenUmsetzung> itemsToCheckForUniqueNumber;
 
     private static final int IMAGE_CM_WIDTH = 35;
     private static final int NUMBER_CM_WIDTH = 100;
@@ -198,7 +199,12 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
         MassnahmenUmsetzung selectedMassnahmenUmsetzung = (MassnahmenUmsetzung) selection.getFirstElement();
         if (selectedMassnahmenUmsetzung instanceof RisikoMassnahmenUmsetzung) {
             RisikoMassnahmenUmsetzung selectedRisikoMassnahmenUmsetzung = (RisikoMassnahmenUmsetzung) selectedMassnahmenUmsetzung;
-            final EditRisikoMassnahmenUmsetzungDialog dialog = new EditRisikoMassnahmenUmsetzungDialog(rootContainer.getShell(), selectedRisikoMassnahmenUmsetzung);
+            itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
+                    getRiskAnalysisWizard().getAllMassnahmenUmsetzungen(),
+                    MassnahmenUmsetzung.class);
+            final EditRisikoMassnahmenUmsetzungDialog dialog = new EditRisikoMassnahmenUmsetzungDialog(
+                    rootContainer.getShell(), selectedRisikoMassnahmenUmsetzung,
+                    itemsToCheckForUniqueNumber);
             int result = dialog.open();
             if (result == Window.OK) {
                 getRiskAnalysisWizard().replaceMassnahmenUmsetzung(dialog.getRisikoMassnahmenUmsetzung());
@@ -330,6 +336,8 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
                 editOwnControl();
             }
         });
+
+
 
         /* Listener opens MessageDialog and deletes selected Massnahme */
         buttonRemoveControlFromScenario.addSelectionListener(new SelectionAdapter() {
@@ -463,8 +471,14 @@ public class AdditionalSecurityMeasuresPage extends RiskAnalysisWizardPage<Table
             @Override
             public void widgetSelected(SelectionEvent event) {
 
+
                 /* create new RisikoMassnahmenUmsetzung */
-                final NewRisikoMassnahmeDialog dialog = new NewRisikoMassnahmeDialog(rootContainer.getShell());
+                itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
+                        getRiskAnalysisWizard().getAllMassnahmenUmsetzungen(),
+                        MassnahmenUmsetzung.class);
+                final NewRisikoMassnahmeDialog dialog = new NewRisikoMassnahmeDialog(
+                        rootContainer.getShell(),
+                        itemsToCheckForUniqueNumber);
                 int result = dialog.open();
 
                 if (result == Window.OK) {
