@@ -2251,7 +2251,8 @@ the value between <param></param> will be used directly if no string is found fo
 		<huiproperty
 				id="mnums_id"
                 editable="true"
-				name="Kapitel" />
+				name="Kapitel"
+				required="true" />
 		<huiproperty
 				id="mnums_url"
                 editable="false"
@@ -2275,7 +2276,8 @@ the value between <param></param> will be used directly if no string is found fo
 		<huiproperty
 				id="mnums_name"
                 editable="true"
-				name="Titel" />
+				name="Titel"
+				required="true" />
             <huiproperty
                 id="mnums_lebenszyklus"
                 name="Lebenszyklus"
