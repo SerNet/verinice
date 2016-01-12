@@ -19,17 +19,20 @@
  ******************************************************************************/
 package sernet.verinice.service.commands;
 
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
-import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
-import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
+import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
-import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.ChangeLogEntry;
 
 /**
  * Checks whether the ownGefaehrdung is already used - means if there is a
@@ -41,7 +44,7 @@ public class CheckOwnGefaehrdungInUseCommand extends GenericCommand {
 
     private static final long serialVersionUID = 6512515989362442858L;
     private OwnGefaehrdung ownGefaehrdung;
-    private boolean isInUse;
+    private boolean isInUse = true;
     private transient Logger log = Logger.getLogger(CheckOwnGefaehrdungInUseCommand.class);
 
     public CheckOwnGefaehrdungInUseCommand(OwnGefaehrdung ownGefaehrdungToCheck) {
@@ -58,20 +61,49 @@ public class CheckOwnGefaehrdungInUseCommand extends GenericCommand {
 
     @Override
     public void execute() {
-        try {
-            LoadElementByTypeId command = new LoadElementByTypeId(
-                    GefaehrdungsUmsetzung.TYPE_ID, RetrieveInfo.getPropertyInstance());
-            command = getCommandService().executeCommand(command);
-            List<? extends CnATreeElement> elements = command.getElementList();
-            isInUse = GefaehrdungsUtil.listContainsById(elements, ownGefaehrdung);
-        } catch (CommandException e) {
-            log.error("Error while checking OwnGefaehrdung", e);
 
+        IBaseDao<ChangeLogEntry, Serializable> dao = getDaoFactory().getDAO(ChangeLogEntry.class);
+        List<?> entries = (List<?>) dao
+                .findByCallback(new Callback(ownGefaehrdung.getId()));
+        isInUse = !entries.isEmpty();
+        if (getLog().isInfoEnabled()) {
+            if (isInUse) {
+                getLog().info(ownGefaehrdung.getId() + " is in use");
+            } else {
+                getLog().info(ownGefaehrdung.getId() + " is unused");
+            }
         }
-
     }
 
     public boolean isInUse() {
         return isInUse;
+    }
+
+    private static class Callback implements HibernateCallback, Serializable {
+
+        private static final long serialVersionUID = -3853601020062695555L;
+
+        private String id;
+
+        Callback(String id) {
+            this.id = id;
+        }
+
+        public Object doInHibernate(Session session) throws HibernateException, SQLException {
+
+            Query query = session.createSQLQuery(
+                    "SELECT cnatreeelement.uuid,"
+                            + " properties.propertytype,"
+                            + " properties.propertyvalue "
+                            + " FROM cnatreeelement"
+                            + " JOIN entity ON cnatreeelement.entity_id=entity.dbid"
+                            + " JOIN propertylist ON propertylist.typedlist_id=entity.dbid"
+                            + " JOIN properties ON properties.properties_id=propertylist.dbid"
+                            + " WHERE "
+                            + " properties.propertytype='gefaehrdungsumsetzung_id' AND properties.propertyvalue='"
+                            + id + "'");
+            return query.list();
+        }
+
     }
 }
