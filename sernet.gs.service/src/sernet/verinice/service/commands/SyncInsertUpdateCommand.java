@@ -174,7 +174,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     @Override
     public void execute() {
 
-        importReferenceTypes = new ImportReferenceTypes(getDao(CnATreeElement.class), getCommandService(), idElementMap);
+        IBaseDao<CnATreeElement,Serializable>  iBaseDao = getDao(CnATreeElement.class);
+        importReferenceTypes = new ImportReferenceTypes(iBaseDao, getCommandService(), idElementMap);
 
         try {
             if (getLogrt().isDebugEnabled()) {
