@@ -657,14 +657,16 @@ public class XMLImportDialog extends Dialog {
         byte[] fileData = null;
 
         SyncCommand command;
+        IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
         try {
             if (selectedEncryptionMethod != null) {
                 fileData = FileUtils.readFileToByteArray(dataFile);
-                IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
                 if (selectedEncryptionMethod == EncryptionMethod.PASSWORD) {
-                    byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
-                    System.arraycopy(fileData, 0, saltBytes, 0, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
-                    fileData = service.decrypt(fileData, password.toCharArray(), saltBytes);
+                    try {
+                        fileData = decryptWithGenericSalt(fileData, service);
+                    } catch (PasswordException e) {
+                        fileData = decryptWithStaticSalt(fileData, service);
+                    }
                 } else if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {
                     fileData = service.decrypt(fileData, x509CertificateFile, privateKeyPemFile, privateKeyPassword);
                 }
@@ -695,6 +697,22 @@ public class XMLImportDialog extends Dialog {
         }
 
         updateModelAndValidate(command);
+    }
+
+    private byte[] decryptWithGenericSalt(byte[] fileData, IEncryptionService service) throws PasswordException {
+        byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+        System.arraycopy(fileData, 0, saltBytes, 0, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
+        fileData = service.decrypt(fileData, password.toCharArray(), saltBytes);
+        return fileData;
+    }
+
+    /*
+     * method ensures that vnas with static salt (from versions <= 1.11.1 )
+     * could still be imported
+     */
+    private byte[] decryptWithStaticSalt(byte[] fileData, IEncryptionService service) throws PasswordException {
+        fileData = service.decrypt(fileData, password.toCharArray());
+        return fileData;
     }
 
     private void updateModelAndValidate(SyncCommand command) {
