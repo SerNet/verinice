@@ -139,13 +139,4 @@ public abstract class GefaehrdungsUtil {
     }
 
 
-    public static boolean isUniqueId(List<Gefaehrdung> allGefaehrdungen, String id, Gefaehrdung gefaehrdung) {
-        for (Gefaehrdung currentgefaehrdung : allGefaehrdungen) {
-            if (currentgefaehrdung.getId().equals(id) && (gefaehrdung == null || !gefaehrdung.equals(currentgefaehrdung))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 }

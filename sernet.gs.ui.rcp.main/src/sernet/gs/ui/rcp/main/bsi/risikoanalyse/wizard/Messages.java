@@ -64,6 +64,9 @@ public class Messages extends NLS {
     public static String ChooseGefaehrdungPage_17;
     public static String ChooseGefaehrdungPage_18;
     public static String ChooseGefaehrdungPage_20;
+    public static String ChooseGefaehrdungPage_Error_0;
+    public static String ChooseGefaehrdungPage_Error_1;
+    public static String ChooseGefaehrdungPage_Error_2;
     public static String EditGefaehrdungDialog_0;
     public static String EditGefaehrdungDialog_1;
     public static String EditGefaehrdungDialog_2;

@@ -36,6 +36,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.internal.intro.impl.util.Log;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
@@ -49,6 +50,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
+import sernet.verinice.service.commands.CheckOwnGefaehrdungInUseCommand;
 
 /**
  * WizardPage which lists all Gefaehrdungen from BSI IT-Grundschutz-Kataloge and
@@ -135,12 +137,31 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
         if (selectedGefaehrdung instanceof OwnGefaehrdung) {
             OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
-            itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
-                    getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class);
-            final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(),
-                    ownGefSelected, itemsToCheckForUniqueNumber);
-            dialog.open();
-            refresh();
+            boolean iseditable = isunUsedOwnGefaehrdung(ownGefSelected);
+            if (iseditable) {
+                itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
+                        getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class);
+                final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(
+                        rootContainer.getShell(),
+                        ownGefSelected, itemsToCheckForUniqueNumber);
+                dialog.open();
+                refresh();
+            } else {
+                MessageDialog.openError(getShell(), Messages.ChooseGefaehrdungPage_Error_0,
+                        NLS.bind(Messages.ChooseGefaehrdungPage_Error_2, ownGefSelected.getId()));
+            }
+        }
+    }
+
+    private boolean isunUsedOwnGefaehrdung(OwnGefaehrdung ownGefSelected) {
+        CheckOwnGefaehrdungInUseCommand command = new CheckOwnGefaehrdungInUseCommand(ownGefSelected);
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            return !command.isInUse();
+        } catch (CommandException e) {
+            Log.error("Error while checking if OwnGefaehrdung is used", e);
+            return true; // better prevent editing/deleting when something went
+                         // wrong
         }
     }
 
@@ -230,15 +251,24 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
                 Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection.getFirstElement();
                 if (selectedGefaehrdung instanceof OwnGefaehrdung) {
-                    /* ask user to confirm */
-                    boolean confirmed = MessageDialog.openQuestion(rootContainer.getShell(),
-                            Messages.ChooseGefaehrdungPage_14,
-                            NLS.bind(Messages.ChooseGefaehrdungPage_15,
-                                    selectedGefaehrdung.getTitel()));
-                    if (confirmed) {
-                        deleteOwnGefaehrdung((OwnGefaehrdung) selectedGefaehrdung);
-                        assignBausteinGefaehrdungen();
-                        refresh();
+                    boolean iseditable = isunUsedOwnGefaehrdung(
+                            (OwnGefaehrdung) selectedGefaehrdung);
+                    if (iseditable) {
+                        /* ask user to confirm */
+                        boolean confirmed = MessageDialog.openQuestion(rootContainer.getShell(),
+                                Messages.ChooseGefaehrdungPage_14,
+                                NLS.bind(Messages.ChooseGefaehrdungPage_15,
+                                        selectedGefaehrdung.getTitel()));
+                        if (confirmed) {
+                            deleteOwnGefaehrdung((OwnGefaehrdung) selectedGefaehrdung);
+                            assignBausteinGefaehrdungen();
+                            refresh();
+                        }
+                    } else {
+                        String message = NLS.bind(Messages.ChooseGefaehrdungPage_Error_2,
+                                selectedGefaehrdung.getId());
+                        MessageDialog.openError(getShell(), Messages.ChooseGefaehrdungPage_Error_1, message);
+                                
                     }
                 }
             }
