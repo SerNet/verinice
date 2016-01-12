@@ -39,8 +39,16 @@ public abstract class PasswordBasedEncryption {
 
     /**
      * The salt used for Password Based En- and decryption. This should be at
-     * least 64 bit long ...
+     * least 64 bit long ... Since V 1.12. the static use of SALT for
+     * initializing the AES is deprecated and a generic salt is generated for
+     * each encryption. The generic salt is stored as a prefix in the byte[]
+     * that represents the cyphertext and will be removed before decryption. See
+     * {@link sernet.verinice.encryption.impl.PasswordBasedEncryption.decrypt(byte[],
+     * char[], byte[]) } and
+     * {@link sernet.verinice.encryption.impl.PasswordBasedEncryption.encrypt(byte[],
+     * char[], byte[])}
      */
+    @Deprecated
     private static final byte[] SALT = { (byte) 0xa3, (byte) 0x51, (byte) 0x56, (byte) 0x7b, (byte) 0x9d, (byte) 0xf5, (byte) 0xf3, (byte) 0xff };
 
     /**
@@ -50,7 +58,7 @@ public abstract class PasswordBasedEncryption {
     private static final int ITERATION_COUNT = 1200;
 
     /**
-     * The algorithm used for en- and decryption. ASE is only available through
+     * The algorithm used for en- and decryption. AES is only available through
      * the BouncyCastle library.
      */
     private static final String ENCRYPTION_ALGORITHM = "PBEWITHSHA256AND256BITAES-CBC-BC";
@@ -98,6 +106,20 @@ public abstract class PasswordBasedEncryption {
         return decryptedData;
     }
 
+    /**
+     * Encrypts the given byte data with the given password using the AES
+     * algorithm.
+     * 
+     * @param unencryptedByteData
+     *            the byte data to encrypt
+     * @param password
+     *            the password used for encryption
+     * @param salt
+     *            a generic salt passed to the parameters of the crypto-engine
+     * @return the encrypted data as array of bytes
+     * @throws EncryptionException
+     *             when a problem occured during the encryption process
+     */
     public static byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException {
         byte[] encryptedData;
 
@@ -128,9 +150,9 @@ public abstract class PasswordBasedEncryption {
         pbeKeySpec.clearPassword();
 
         if (Logger.getLogger(PasswordBasedEncryption.class).isDebugEnabled()) {
-            Logger.getLogger(PasswordBasedEncryption.class).debug("Length of decryptedByteData:\t" + encryptedData.length);
+            Logger.getLogger(PasswordBasedEncryption.class).debug("Length of encryptedByteData:\t" + encryptedData.length);
             Logger.getLogger(PasswordBasedEncryption.class).debug("Length of salt:\t" + salt.length);
-            Logger.getLogger(PasswordBasedEncryption.class).debug("Length of decryptedDataWithSaltPrefix:\t" + encryptedDataWithSaltPrefix.length);
+            Logger.getLogger(PasswordBasedEncryption.class).debug("Length of encryptedDataWithSaltPrefix:\t" + encryptedDataWithSaltPrefix.length);
         }
 
         return encryptedDataWithSaltPrefix;
@@ -177,6 +199,20 @@ public abstract class PasswordBasedEncryption {
         return decryptedData;
     }
 
+    /**
+     * Decrypts the given byte data with the given password using the AES
+     * algorithm.
+     * 
+     * @param encryptedByteData
+     *            the byte data to decrypt
+     * @param password
+     *            the password used for decryption
+     * @param salt
+     *            a generic salt passed to the parameters of the crypto-engine
+     * @return the decrypted data as array of bytes
+     * @throws EncryptionException
+     *             when a problem occured during the decryption process
+     */
     public static byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt) throws EncryptionException {
 
         byte[] decryptedData;

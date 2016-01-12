@@ -238,14 +238,15 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         if (keyAlias != null) {
             cypherTextBytes = service.encrypt(result, keyAlias);
         } else if (password!=null) {
-            cypherTextBytes = service.encrypt(result, password, salt);
             // Encrypt message
+            cypherTextBytes = service.encrypt(result, password, salt);
 
         } else if (x509CertificateFile!=null) {
             cypherTextBytes = service.encrypt(result, x509CertificateFile);
         } else {
             cypherTextBytes = result;
         }
+        // merge salt + cyphertext in one byte array
         returnResult = new byte[cypherTextBytes.length + salt.length];
         System.arraycopy(salt, 0, returnResult, 0, salt.length);
         System.arraycopy(cypherTextBytes, 0, returnResult, salt.length, cypherTextBytes.length);
