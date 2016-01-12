@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Daniel Murygin.
+ * Copyright (c) 2016 Ruth Motza.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -15,16 +15,15 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
+ *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.gs.model;
 
 import org.eclipse.osgi.util.NLS;
 
 /**
- *
- *
- * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * 
+ * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public final class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.gs.model.messages"; //$NON-NLS-1$
