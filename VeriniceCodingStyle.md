@@ -34,7 +34,7 @@ The license header should comply to the following template, which in turn follow
 
 ```java
 /**
- * Copyright 2015 <author>.
+ * Copyright <year> <author>.
  *
  * This file is part of Verinice.
  *
