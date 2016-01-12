@@ -77,6 +77,11 @@ Contributors_](https://source.android.com/source/code-style.html) apply:
 > * Import lines can go over the limit because humans rarely see them (this also simplifies tool
 >   writing).
 
+## Documentation
+
+Exposed API elements must be commented with an appropriate Javadoc section. Please consult Item 44
+of _Effective Java (2nd ed.)_ for details.
+
 ## Exception Handling
 
 Exceptions may never be ignored. All exception handling must be compliant to _Chapter 9:
