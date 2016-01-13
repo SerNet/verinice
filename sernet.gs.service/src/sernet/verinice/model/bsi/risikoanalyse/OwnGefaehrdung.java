@@ -22,7 +22,8 @@ import sernet.hui.common.connect.ITypedElement;
 
 public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
 	
-	private String beschreibung;
+    private static final long serialVersionUID = -5602823890068961674L;
+    private String beschreibung;
 	private String ownkategorie;
 	
 	public static final String TYPE_ID = "owngefaehrdung";
@@ -30,17 +31,11 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
     public static final String NEW_CATEGORY_DE = "[Neue Kategorie]";
     public static final String NEW_CATEGORY_EN = "[New Category]";
 	
-	
-	// TODO eigener Entity-Type für eigene Gefährundengen
-//	private Entity entity;
-	
-	
 	public OwnGefaehrdung() {
 		super();
 		this.beschreibung = "";
 		this.ownkategorie = "";
 	}
-	
 	
 	public String getKategorieAsString() {
 		return this.ownkategorie;
@@ -53,7 +48,6 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
 	public String getBeschreibung() {
 		return this.beschreibung;
 	}
-	
 	
 	/**
 	 * @return the ownkategorie
@@ -69,7 +63,6 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
 		this.ownkategorie = ownkategorie;
 	}
 
-
     /* (non-Javadoc)
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
@@ -80,11 +73,9 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
     @Override
     public String getKategorieAsString(String language) {
         if(ownkategorie.isEmpty() || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_DE) || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_EN)){
-            return getLocalizedKategorie(getKategorie(), language);
+            return getCategory(this.getKategorie());
         }else{
             return ownkategorie;
         }
     }
-
-	
 }

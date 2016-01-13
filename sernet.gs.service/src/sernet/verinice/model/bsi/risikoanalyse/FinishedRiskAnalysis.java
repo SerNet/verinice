@@ -37,7 +37,7 @@ public class FinishedRiskAnalysis extends CnATreeElement  {
 
 	@Override
 	public String getTitle() {
-		return "Risikoanalyse";
+        return Messages.FinishedRiskAnalysis_0;
 	}
 
 	@Override
