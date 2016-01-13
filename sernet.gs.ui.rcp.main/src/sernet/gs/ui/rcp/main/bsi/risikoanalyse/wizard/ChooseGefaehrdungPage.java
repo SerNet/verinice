@@ -21,6 +21,7 @@ package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -49,6 +50,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
+import sernet.verinice.service.commands.CheckOwnGefaehrdungInUseCommand;
 
 /**
  * WizardPage which lists all Gefaehrdungen from BSI IT-Grundschutz-Kataloge and
@@ -65,6 +67,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
     private TableViewerColumn nameColumn;
     private TableViewerColumn categoryColumn;
     private RiskAnalysisDialogItems<Gefaehrdung> itemsToCheckForUniqueNumber;
+    private static final Logger LOG = Logger.getLogger(ChooseGefaehrdungPage.class);
 
     /**
      * Constructor sets title an description of WizardPage.
@@ -135,13 +138,32 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
         IGSModel selectedGefaehrdung = (IGSModel) selection.getFirstElement();
         if (selectedGefaehrdung instanceof OwnGefaehrdung) {
             OwnGefaehrdung ownGefSelected = (OwnGefaehrdung) selectedGefaehrdung;
-            itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
-                    getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class);
-            final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(rootContainer.getShell(),
-                    ownGefSelected, itemsToCheckForUniqueNumber);
-            dialog.open();
-            refresh();
+            boolean isEditable = isUnusedOwnGefaehrdung(ownGefSelected);
+            if (isEditable) {
+                itemsToCheckForUniqueNumber = new RiskAnalysisDialogItems<>(
+                        getRiskAnalysisWizard().getAllGefaehrdungen(), Gefaehrdung.class);
+                final EditGefaehrdungDialog dialog = new EditGefaehrdungDialog(
+                        rootContainer.getShell(),
+                        ownGefSelected, itemsToCheckForUniqueNumber);
+                dialog.open();
+                refresh();
+            } else {
+                MessageDialog.openError(getShell(), Messages.ChooseGefaehrdungPage_Error_0,
+                        NLS.bind(Messages.ChooseGefaehrdungPage_Error_2, ownGefSelected.getId()));
+            }
         }
+    }
+
+    private boolean isUnusedOwnGefaehrdung(OwnGefaehrdung ownGefaehrdung) {
+        boolean isUnused = false;
+        CheckOwnGefaehrdungInUseCommand command = new CheckOwnGefaehrdungInUseCommand(ownGefaehrdung);
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            isUnused = !command.isInUse();
+        } catch (CommandException e) {
+            LOG.warn("Error while checking if OwnGefaehrdung is used", e);
+        }
+        return isUnused;
     }
 
     private void addFilterListeners() {
@@ -230,15 +252,24 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                 IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
                 Gefaehrdung selectedGefaehrdung = (Gefaehrdung) selection.getFirstElement();
                 if (selectedGefaehrdung instanceof OwnGefaehrdung) {
-                    /* ask user to confirm */
-                    boolean confirmed = MessageDialog.openQuestion(rootContainer.getShell(),
-                            Messages.ChooseGefaehrdungPage_14,
-                            NLS.bind(Messages.ChooseGefaehrdungPage_15,
-                                    selectedGefaehrdung.getTitel()));
-                    if (confirmed) {
-                        deleteOwnGefaehrdung((OwnGefaehrdung) selectedGefaehrdung);
-                        assignBausteinGefaehrdungen();
-                        refresh();
+                    boolean isDeletable = isUnusedOwnGefaehrdung(
+                            (OwnGefaehrdung) selectedGefaehrdung);
+                    if (isDeletable) {
+                        /* ask user to confirm */
+                        boolean confirmed = MessageDialog.openQuestion(rootContainer.getShell(),
+                                Messages.ChooseGefaehrdungPage_14,
+                                NLS.bind(Messages.ChooseGefaehrdungPage_15,
+                                        selectedGefaehrdung.getTitel()));
+                        if (confirmed) {
+                            deleteOwnGefaehrdung((OwnGefaehrdung) selectedGefaehrdung);
+                            assignBausteinGefaehrdungen();
+                            refresh();
+                        }
+                    } else {
+                        String message = NLS.bind(Messages.ChooseGefaehrdungPage_Error_2,
+                                selectedGefaehrdung.getId());
+                        MessageDialog.openError(getShell(), Messages.ChooseGefaehrdungPage_Error_1, message);
+                                
                     }
                 }
             }
