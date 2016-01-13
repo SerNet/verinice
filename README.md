@@ -1,5 +1,4 @@
-verinice
-========
+# verinice
 
 verinice helps you to build and operate your management system for
 information security (ISMS). Whether you base it on ISO 27001, BSI IT
@@ -11,8 +10,7 @@ be easily imported. All data is stored in an object model that is
 tailored to the requirements of information security and is dynamically
 expandable. This makes your data the basis for a sustainable IS process.
 
-Eclipse Rich Client Platform
-============================
+## Eclipse Rich Client Platform
 
 verinice is a Java application. The graphical surface is implemented
 with the Rich Client Platform (RCP). This makes verinice platform
@@ -23,8 +21,7 @@ verinice reports can be customized – and you’re able to design
 completely new reports which can be exported as PDF, HTML or Excel (CSV)
 file.
 
-Dynamic Object Model (HitroUI)
-==============================
+## Dynamic Object Model (HitroUI)
 
 The HitroUI Framework is a part of verinice. A simple XML-file defines
 all fields and field types which appear in the application. So the
@@ -35,19 +32,19 @@ for specific objects as needed or to remove unneeded fields from the
 standard forms. That is how you can adapt verinice to your working
 methods and the requirements of your organization.
 
-Databases
-=========
+## Databases
+
 
 By using the object-relational mapper Hibernate, verinice is able to
 connect with different database systems. The supported database systems
 are:
 
--   PostgreSQL
--   Apache Derby
--   Oracle DB
+- PostgreSQL
+- Apache Derby
+- Oracle DB
 
-Three-Tier Architecture
-=======================
+## Three-Tier Architecture
+
 
 verinice uses a three-tier architecture where independent software
 modules are implemented. A centralized database and an application
