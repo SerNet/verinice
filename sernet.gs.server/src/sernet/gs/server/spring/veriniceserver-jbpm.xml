@@ -304,9 +304,9 @@
         <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
-    <!-- Activate this to activate GSM process generation for data imported from Greenbone Security Manager-->
+    <!-- Greenbone Security Manager (GSM) task generation for data imported from GSM-->
     <!-- See veriniceserver-plain.xml -->
-    <!-- Job to generate GSM processes -->
+    <!-- Job to generate GSM tasks -->
     <bean name="gsmProcessJob" class="org.springframework.scheduling.quartz.JobDetailBean">  		
         <property name="jobClass" value="sernet.verinice.bpm.ProcessJob" />
         <property name="jobDataAsMap">

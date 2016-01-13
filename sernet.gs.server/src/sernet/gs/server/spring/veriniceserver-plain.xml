@@ -76,9 +76,9 @@
     <property name="cronExpression" value="0 */30 * * * ?" />
 </bean>
 
-<!-- Activate this to activate GSM process generation for data imported from Greenbone Security Manager-->
+<!-- Greenbone Security Manager (GSM) task generation for data imported from GSM -->
 <!-- See veriniceserver-jbpm.xml -->
-<!-- Spring/Quartz trigger bean to execute cron job processJob. -->
+<!-- Spring/Quartz trigger bean to execute cron job gsmProcessJob. -->
 <bean id="gsmProcessJobTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
     <property name="jobDetail" ref="gsmProcessJob" />
     <property name="cronExpression" value="${veriniceserver.gsmGenerator.cron}" />
@@ -97,7 +97,7 @@
         <list>
               <ref bean="cronTrigger" />
               <ref bean="processJobTrigger" />
-              <!-- Activate this to activate GSM process generation -->
+              <!-- GSM task generation -->
               <ref bean="gsmProcessJobTrigger" />            
               <ref bean="indexTrigger" />
               <ref bean="taskNotificationTrigger" />  
