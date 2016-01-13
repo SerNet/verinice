@@ -53,3 +53,20 @@ server provide data to the client.
 The verinice.PRO application server complements the pure client with a
 centralized IS repository hosted in your company. It enables multiple
 people to work on one ISMS - even across different locations.
+
+# Contributing to verinice via GitHub
+
+- fork our repository on GitHub
+
+- become familiar with our coding standards and read [verinice coding
+  style](VeriniceCodingStyle.md)
+
+- send a pull request for your branch through GitHub
+
+- this will trigger an email to the verinice developer mailing list
+
+- discussion happens on your pull request on github
+
+- after your pull request is approved, we pull the branch in our
+  internal repository, do the merge there and push it back to the
+  GitHub mirror
