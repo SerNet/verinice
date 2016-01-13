@@ -307,11 +307,11 @@
     <!-- Activate this to activate GSM process generation for data imported from Greenbone Security Manager-->
     <!-- See veriniceserver-plain.xml -->
     <!-- Job to generate GSM processes -->
-    <!-- 
-    <bean name="gsmProcessJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+    <bean name="gsmProcessJob" class="org.springframework.scheduling.quartz.JobDetailBean">  		
         <property name="jobClass" value="sernet.verinice.bpm.ProcessJob" />
         <property name="jobDataAsMap">
             <map>
+            		<entry key="enabled" value="${veriniceserver.gsmGenerator.enabled}" />
                 <entry key="processCreaterSet">
                     <set>
                         <ref bean="gsmProcessCreater" />
@@ -328,7 +328,6 @@
         <property name="configurationService" ref="configurationService" />
         <property name="tag" value="ap-GSM" />
     </bean>
-    -->
     
     <!-- Creates one control-execution processes for every control. -->
     <!--
