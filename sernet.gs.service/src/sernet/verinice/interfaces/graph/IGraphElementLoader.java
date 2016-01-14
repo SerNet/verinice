@@ -33,10 +33,20 @@ import sernet.verinice.model.common.CnATreeElement;
 public interface IGraphElementLoader {
 
     /**
+     * If this parameter is set only elements of these scopes / organizations
+     * are loaded.
+     * 
+     * @param scopeId
+     *            Scope-id / organization db-id
+     */
+    void setScopeIds(Integer... scopeIds);
+
+    /**
      * If this parameter is set only elements of one one scope / organization
      * are loaded.
      * 
-     * @param scopeId Scope-id / organization db-id
+     * @param scopeId
+     *            Scope-id / organization db-id
      */
     void setScopeId(Integer scopeId);
     
