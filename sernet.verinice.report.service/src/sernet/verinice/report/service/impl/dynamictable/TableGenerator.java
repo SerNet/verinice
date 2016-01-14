@@ -21,7 +21,6 @@ package sernet.verinice.report.service.impl.dynamictable;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-
-import sernet.gs.service.NumericStringComparator;
 
 /**
  * Creates a table out of a map. The key of the map is a set of db-ids of
