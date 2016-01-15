@@ -4,7 +4,7 @@ COPYRIGHT NOTICE
 verinice is Open Source Software, Copyright 1996-2016 SerNet Service
 Network and others.
 
-Under the terms of the LGPL (see license.txt) you may freely modify
+Under the terms of the LGPL (see LICENSE) you may freely modify
 and distribute verinice.  All source files in the folder "src" are
 published under the terms of the LGPLv3 license unless otherwise
 stated in the file itself (some files from other authors may be under

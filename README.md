@@ -59,7 +59,7 @@ people to work on one ISMS - even across different locations.
 - fork our repository on GitHub
 
 - become familiar with our coding standards and read [verinice coding
-  style](VeriniceCodingStyle.md)
+  style](CODINGSTYLE.md)
 
 - send a pull request for your branch through GitHub
 
