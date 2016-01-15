@@ -1,7 +1,7 @@
 COPYRIGHT NOTICE
 ================
 
-verinice is Open Source Software, Copyright 1996-2013 SerNet Service
+verinice is Open Source Software, Copyright 1996-2016 SerNet Service
 Network and others.
 
 Under the terms of the LGPL (see license.txt) you may freely modify
