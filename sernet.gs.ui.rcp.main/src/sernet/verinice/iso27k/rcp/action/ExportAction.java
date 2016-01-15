@@ -247,10 +247,11 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
             cypherTextBytes = result;
         }
         // merge salt + cyphertext in one byte array
-        returnResult = new byte[cypherTextBytes.length + salt.length];
-        System.arraycopy(salt, 0, returnResult, 0, salt.length);
-        System.arraycopy(cypherTextBytes, 0, returnResult, salt.length, cypherTextBytes.length);
-        return returnResult;
+        // returnResult = new byte[cypherTextBytes.length + salt.length];
+        // System.arraycopy(salt, 0, returnResult, 0, salt.length);
+        // System.arraycopy(cypherTextBytes, 0, returnResult, salt.length,
+        // cypherTextBytes.length);
+        return cypherTextBytes;
     }
 
     public OutputStream getExportOutputStream(String path, char[] password, File x509CertificateFile) {

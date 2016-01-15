@@ -243,7 +243,7 @@ public abstract class PasswordBasedEncryption {
             cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParameterSpec);
 
             // decrypt
-            decryptedData = cipher.doFinal(encryptedByteData);
+            decryptedData = cipher.doFinal(cypherText);
 
         } catch (InvalidKeyException e) {
             throw new PasswordException("Check your password.", e);
