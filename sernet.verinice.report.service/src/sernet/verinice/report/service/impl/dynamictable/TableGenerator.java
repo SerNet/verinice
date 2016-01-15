@@ -51,7 +51,10 @@ public class TableGenerator {
         List<String> keyList =  new LinkedList<String>(allRowMap.keySet());        
         Collections.sort(keyList);
         for (String key : keyList) {
-            resultTable.add(Arrays.asList(allRowMap.get(key)));
+            String[] value = allRowMap.get(key);
+            if(value!=null) {
+                resultTable.add(Arrays.asList(value));
+            }
         }  
         //Collections.sort(resultTable, new RowComparator());
         return resultTable;
