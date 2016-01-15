@@ -40,6 +40,18 @@ public class TableGenerator {
     
     private static final Logger LOG = Logger.getLogger(TableGenerator.class);
     
+    /**
+     * Creates a table by converting the data of map allRowMap.
+     * 
+     * Each entry of the parameter allRowMap map holds the data of one cell of the result table.
+     * The key of the map is a path of db-ids followed by the index of the column:
+     * <DB-ID>[.<DB-ID>]#<COLUMN-INDEX>
+     * 
+     * The result can be used as a data the in BIRT reports.
+     * 
+     * @param allRowMap A map with all data
+     * @return A table with all data
+     */
     public static final List<List<String>> createTable(Map<String, String[]> allRowMap) {
         log(allRowMap);
         
@@ -56,7 +68,6 @@ public class TableGenerator {
                 resultTable.add(Arrays.asList(value));
             }
         }  
-        //Collections.sort(resultTable, new RowComparator());
         return resultTable;
     }
     
@@ -87,7 +98,7 @@ public class TableGenerator {
             }
             key2 = keyIterator.next();
             row2= allRowMap.get(key2);
-            merged = checkRows(key1, row1, key2, row2, cleanMap);
+            merged = checkRows(key1, row1, key2, row2);
         }    
         cleanMap.put(key1, row1);  
         if(!merged && key2!=null) {
@@ -97,7 +108,7 @@ public class TableGenerator {
     }
 
   
-    private static boolean checkRows(String key1, String[] row1, String key2, String[] row2, Map<String, String[]> cleanMap) {
+    private static boolean checkRows(String key1, String[] row1, String key2, String[] row2) {
         boolean merged = false;
         if(startsWith(key2, key1)) {
             merge(row2,row1);
@@ -107,23 +118,15 @@ public class TableGenerator {
     }
 
     private static boolean startsWith(String key2, String key1) {
-        String keyClean2 = removeRowNumer(key2);
-        String keyClean1 = removeRowNumer(key1);
+        String keyClean2 = GenericDataModel.removeRowNumer(key2);
+        String keyClean1 = GenericDataModel.removeRowNumer(key1);
         return keyClean2.startsWith(keyClean1);
     }
-    
-    private static String removeRowNumer(String key2) {
-        int i = key2.indexOf(GenericDataModel.COLUMN_SEPERATOR);
-        if(i==-1) {
-            return key2;
-        }
-        return key2.substring(0, i);
-    }
 
-    private static void merge(String[] row, String[] lastRow) {
-        for (int i = 0; i < lastRow.length; i++) {
-            if(lastRow[i]==null) {
-                lastRow[i] = row[i];
+    private static void merge(String[] rowFrom, String[] rowTo) {
+        for (int i = 0; i < rowTo.length; i++) {
+            if(rowTo[i]==null) {
+                rowTo[i] = rowFrom[i];
             }
         }      
     }
