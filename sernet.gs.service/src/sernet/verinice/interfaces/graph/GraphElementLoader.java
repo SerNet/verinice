@@ -29,16 +29,20 @@ import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- *
+ * GraphElementLoader loads elements for {@link GraphService} or {@link GraphCommand}s.
+ * You can add one or more loader to GraphService.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class GraphElementLoader implements IGraphElementLoader, Serializable {
  
+    private static final long serialVersionUID = -8252969358190237977L;
+
     private static final Logger LOG = Logger.getLogger(GraphElementLoader.class);
     
     private Integer scopeId;
@@ -61,6 +65,7 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
         if(getTypeIds()!=null) {
             crit.add(Restrictions.in("objectType", getTypeIds()));
         }
+        @SuppressWarnings("unchecked") // daos does not use generics
         List<CnATreeElement> elementList = getCnaTreeElementDao().findByCriteria(crit);
         elementList = filterElements(elementList);
         if (LOG.isInfoEnabled()) {
@@ -73,7 +78,7 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
         if(getElementFilter()==null) {
             return elementList;
         }
-        List<CnATreeElement> filteredList = new ArrayList<CnATreeElement>();
+        List<CnATreeElement> filteredList = new ArrayList<>();
         for (CnATreeElement element : elementList) {
             if(getElementFilter().check(element)) {
                 filteredList.add(element);

@@ -48,16 +48,16 @@ public class ParentElement extends BaseElement {
             LOG.debug("Loading parent of " + element.getTitle() + "...");
         }
         String parentId = String.valueOf(element.getDbId());
-
-        CnATreeElement parent = graph.getParent(element); 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(parent.getTitle() + " loaded");
-        }
-        getChild().load(parent,graph);
-
         Map<String, Object> result = new HashMap<String, Object>();
-        String id = String.valueOf(parent.getDbId());
-        result.put(id, getChild().getResult());       
+        CnATreeElement parent = graph.getParent(element); 
+        if(parent!=null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(parent.getTitle() + " loaded");
+            }
+            getChild().load(parent,graph); 
+            String id = String.valueOf(parent.getDbId());
+            result.put(id, getChild().getResult()); 
+        }
         getResult().put(parentId, result);       
     }
 

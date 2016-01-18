@@ -21,24 +21,29 @@ package sernet.verinice.report.service.impl.dynamictable;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import sernet.gs.service.NumericStringComparator;
 
 /**
  * Creates a table out of a map. The key of the map is a set of db-ids of
  * elements linked with dots. Data format for the table is: 
  * List<List<String>>.
  * 
+ * This is a static class. Do not create instances. Use public static method createTable(..).
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class TableGenerator {
+public final class TableGenerator {
     
-    private static final Logger LOG = Logger.getLogger(TableGenerator.class);
+    private TableGenerator() {
+        // do not instantiate this class, use public static methods
+    }
     
     /**
      * Creates a table by converting the data of map allRowMap.
@@ -53,24 +58,23 @@ public class TableGenerator {
      * @return A table with all data
      */
     public static final List<List<String>> createTable(Map<String, String[]> allRowMap) {
-        log(allRowMap);
+        GenericDataModel.log(allRowMap);       
+        Map<String, String[]> allRowMapClean = cleanUpRows(allRowMap);       
+        GenericDataModel.log(allRowMapClean);
         
-        allRowMap = cleanUpRows(allRowMap);  
-        
-        log(allRowMap);
-        
-        List<List<String>> resultTable = new LinkedList<List<String>>();
-        List<String> keyList =  new LinkedList<String>(allRowMap.keySet());        
+        List<List<String>> resultTable = new LinkedList<>();
+        List<String> keyList =  new LinkedList<>(allRowMapClean.keySet());        
         Collections.sort(keyList);
         for (String key : keyList) {
-            resultTable.add(Arrays.asList(allRowMap.get(key)));
+            resultTable.add(Arrays.asList(allRowMapClean.get(key)));
         }  
+        Collections.sort(resultTable, new RowComparator());
         return resultTable;
     }
     
     private static Map<String, String[]> cleanUpRows(Map<String, String[]> allRowMap) {
-        Map<String, String[]> cleanMap = new HashMap<String, String[]>();
-        List<String> keyList =  new LinkedList<String>(allRowMap.keySet());       
+        Map<String, String[]> cleanMap = new HashMap<>();
+        List<String> keyList =  new LinkedList<>(allRowMap.keySet());       
         Collections.sort(keyList);
         Iterator<String> keyIterator = keyList.iterator();
         String key1 = null;
@@ -127,15 +131,42 @@ public class TableGenerator {
             }
         }      
     }
+    
+    /**
+     * Compares two rows of a table by comparing
+     * the first column of the table. If first column is equal
+     * the comparator continues with the second [3.,4.] column.
+     * 
+     * For comparison a NumericStringComparator is used.
+     * 
+     * @author Daniel Murygin <dm[at]sernet[dot]de>
+     */
+    private static final class RowComparator implements Comparator<List<String>> {
+        
+        private static final NumericStringComparator NSC = new NumericStringComparator();
+        
+        @Override
+        public int compare(List<String> row1, List<String> row2) {
+            return compare(row1, row2, 0);
+        }
 
-    private static void log(Map<String, String[]> valueMap) {
-        if (LOG.isDebugEnabled()) {
-            List<String> keyList =  new LinkedList<String>(valueMap.keySet());
-          
-            Collections.sort(keyList);
-            for (String key : keyList) {
-                LOG.debug(key + ":" + Arrays.toString(valueMap.get(key)));
+        private static int compare(List<String> row1, List<String> row2, int column) {
+            int value = 0;
+            String s1 = row1.get(column);
+            String s2 = row2.get(column);
+            if(s1==null && s2!=null) {
+                value = 1;
             }
+            if(s1!=null && s2==null) {
+                value = -1;
+            }
+            if(s1!=null && s2!=null) {
+                value = NSC.compare(s1, s2);
+            }
+            if(value==0 && column+1 < row1.size()) {               
+                value = compare(row1, row2, column+1);
+            }
+            return value;
         }
     }
     

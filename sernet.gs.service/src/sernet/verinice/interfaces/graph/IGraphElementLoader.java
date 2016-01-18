@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.graph;
 
+import java.io.Serializable;
 import java.util.List;
 
 import sernet.verinice.interfaces.IBaseDao;
@@ -30,7 +31,7 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface IGraphElementLoader {
+public interface IGraphElementLoader extends Serializable {
 
     /**
      * If this parameter is set only elements of one one scope / organization
