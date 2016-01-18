@@ -19,12 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl.dynamictable;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.graph.VeriniceGraph;
@@ -119,7 +123,7 @@ public class GenericDataModel {
     }
 
     private void createColumnPaths() {
-        columnPaths = new LinkedList<ColumnPath>();
+        columnPaths = new LinkedList<>();
         int n = 0;
         for (String columnString : columnStrings) {
             columnPaths.add(new ColumnPath(n, columnString));
@@ -158,7 +162,7 @@ public class GenericDataModel {
      * @return A map with all data
      */
     private Map<String, String[]> createResultMap() {
-        Map<String, String[]> allRowMap = new HashMap<String, String[]>(); 
+        Map<String, String[]> allRowMap = new HashMap<>(); 
         for (ColumnPath columnPath : columnPaths) {
             Map<String, String> valueMap = columnPath.getValueMap();
             Set<String> keySet = valueMap.keySet();
@@ -168,7 +172,9 @@ public class GenericDataModel {
                 allRowMap.put(key + COLUMN_SEPERATOR + columnPath.getNumber(), row);
             }                  
         }
+        GenericDataModel.log(allRowMap);
         fillEmptyRows(allRowMap);
+        GenericDataModel.log(allRowMap);
         return allRowMap;
     }
 
@@ -186,11 +192,62 @@ public class GenericDataModel {
                 String value = allRowMap.get(key)[i];
                 if((value)!=null) {
                     // fill rows with found values if needed
-                    fillEmptyRows(allRowMap, i, removeRowNumer(key), value);
+                    fillEmptyRows(allRowMap, i, removeRowNumer(key), value);                                   
+                }
+            }
+        }
+        // fill up columns of ParentElements
+        for (int i = 0; i < columnPaths.size(); i++) {
+            // find non-empty values for this row
+            List<String> keys = new LinkedList<>(allRowMap.keySet());
+            Collections.sort(keys);
+            //Collections.reverse(keys);
+            for (String key : keys) {
+                String value = allRowMap.get(key)[i];
+                if((value)!=null) {
+                    String parentKey = getChildKey(columnPaths.get(i),key);
+                    if(parentKey!=null) {
+                        fillEmptyGroupRows(allRowMap, i, parentKey, value);
+                    }
                 }
             }
         }
         
+    }
+
+    /**
+     * Returns the key of the path from the beginning
+     * to the first occurence of a parent delimiter '<'.
+     * If there is parent delimiter null is returned.
+     * 
+     * If the path is: "samt_topic<controlgroup.controlgroup_name"
+     * And the key <samt_topic_id>.<controlgroup_id>#5
+     * <samt_topic_id> is returned.
+     * 
+     * @param pathWithParent A ColumnPath with a {@link ParentElement}
+     * @param key The key of a row
+     * @return The key of child from the first parent element 
+     *         or null if there is no parent element
+     */
+    private String getChildKey(ColumnPath pathWithParent, String key) {
+        StringBuilder sb = new StringBuilder();
+        String strippedKey = removeRowNumer(key);
+        StringTokenizer st = new StringTokenizer(strippedKey, ".");
+        int n = 0;
+        for (IPathElement pathElement : pathWithParent.getPathElements()) {
+            if(pathElement instanceof ParentElement) {
+                break;
+            }
+            if(st.hasMoreTokens()) {
+                if(n>0) {
+                    sb.append(".");
+                }
+                sb.append(st.nextToken());
+            }
+            n++;
+        }
+        String parentKey = (sb.length()>0) ? sb.toString() : null;
+        return parentKey;
     }
 
     /**
@@ -202,16 +259,42 @@ public class GenericDataModel {
      * @param key Object db-id path of a row
      * @param value The value of the column with index i
      */
-    private void fillEmptyRows(Map<String, String[]> allRowMap, int i, String key, String value) {
+    private static void fillEmptyRows(Map<String, String[]> allRowMap, int i, String key, String value) {
         Set<String> keys = allRowMap.keySet();
         for (String keyCurrent : keys) {
-            if(keyCurrent.contains(key)) {
+            if(keyCurrent.startsWith(key)) {
                 String[] row = allRowMap.get(keyCurrent);
                 if(row!=null) {
                     row[i] = value;
                     allRowMap.put(keyCurrent, row);
                 }          
             }
+        }
+    }
+    
+    private static void fillEmptyGroupRows(Map<String, String[]> allRowMap, int i, String key, String value) {
+        Set<String> keys = allRowMap.keySet();
+        for (String keyCurrent : keys) {
+            String strippedKey = removeRowNumer(keyCurrent);
+            if(strippedKey.startsWith(key)) {
+                String[] row = allRowMap.get(keyCurrent);
+                if(row != null && row[i] == null ) {
+                    row[i] = value;
+                    allRowMap.put(keyCurrent, row);
+                }          
+            }
+        }
+    }
+
+    private static boolean startsWith(String key, String strippedKey) {
+        boolean result = key.startsWith(strippedKey);
+        if(result) {
+            return true;
+        } else if(strippedKey.contains(".") 
+                  && StringUtils.countMatches(key, ".") < StringUtils.countMatches(strippedKey, ".") ) {
+            return startsWith(key, removeLastElement(strippedKey));
+        } else {
+            return false;
         }
     }
 
@@ -225,12 +308,31 @@ public class GenericDataModel {
         return resultTable;
     }
     
-    public static String removeRowNumer(String key2) {
-        int i = key2.indexOf(GenericDataModel.COLUMN_SEPERATOR);
+    public static String removeRowNumer(String key) {
+        int i = key.indexOf(GenericDataModel.COLUMN_SEPERATOR);
         if(i==-1) {
-            return key2;
+            return key;
         }
-        return key2.substring(0, i);
+        return key.substring(0, i);
+    }
+    
+    private static String removeLastElement(String key) {
+        String strippedKey = removeRowNumer(key);
+        if(strippedKey.contains(IPathElement.RESULT_KEY_SEPERATOR)) {
+            strippedKey = strippedKey.substring(0, strippedKey.indexOf(IPathElement.RESULT_KEY_SEPERATOR));
+        }
+        return strippedKey;
+    }
+    
+    public static void log(Map<String, String[]> valueMap) {
+        if (LOG.isDebugEnabled()) {
+            List<String> keyList =  new LinkedList<>(valueMap.keySet());
+          
+            Collections.sort(keyList);
+            for (String key : keyList) {
+                LOG.debug(key + ":" + Arrays.toString(valueMap.get(key)));
+            }
+        }
     }
     
 }
