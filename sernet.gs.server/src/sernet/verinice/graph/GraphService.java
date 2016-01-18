@@ -128,7 +128,7 @@ public class GraphService implements IGraphService {
         DetachedCriteria linkCrit = DetachedCriteria.forClass(CnALink.class);
         linkCrit.setFetchMode("dependant", FetchMode.JOIN);
         linkCrit.setFetchMode("dependency", FetchMode.JOIN);
-        if(getRelationIds()!=null) {
+        if (getRelationIds() != null && getRelationIds().length > 0) {
             linkCrit.add(Restrictions.in("id.typeId", getRelationIds()));
         }
         linkCrit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
