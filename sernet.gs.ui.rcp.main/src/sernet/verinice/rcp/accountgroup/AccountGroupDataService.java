@@ -29,6 +29,11 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.service.NumericStringComparator;
@@ -47,10 +52,11 @@ import sernet.verinice.service.account.AccountSearchParameterFactory;
  * @contributor Sebastian Hagedorn <sh[at]sernet[dot]de> - Concurrency Implementation
  *
  */
-@SuppressWarnings("unchecked")
 public class AccountGroupDataService implements IAccountGroupViewDataService {
 
     private static final Logger LOG = Logger.getLogger(AccountGroupDataService.class);
+
+    private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     private IAccountService accountService;
 
@@ -77,7 +83,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         if(accountGroupToConfiguration != null && accountGroupToConfiguration.keySet() != null){
             return convertToStringArray(accountGroupToConfiguration.keySet());
         } else {
-            return null;
+            return EMPTY_STRING_ARRAY;
         }
     }
 
@@ -86,49 +92,69 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
         if(accounts != null){
             return convertToStringArray(accounts);
         } else {
-            return null;
+            return EMPTY_STRING_ARRAY;
         }
     }
 
     @Override
     public final void loadAccountGroupData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
 
-                try{
+        class LoadDataJob extends WorkspaceJob {
+
+            public LoadDataJob() {
+                super(Messages.loadDataJoblabel);
+            }
+
+            @Override
+            public IStatus runInWorkspace(IProgressMonitor arg0) throws CoreException {
+
+                try {
+                    view.setActionsEnabled(false);
+
                     Activator.inheritVeriniceContextState();
                     List<AccountGroup> accountGroups = accountService.listGroups();
 
-                    accountGroupToConfiguration = new TreeMap<String, Set<String>>(new NumericStringComparator());
+                    accountGroupToConfiguration = new TreeMap<>(new NumericStringComparator());
 
                     accounts = accountService.listAccounts();
 
                     for (AccountGroup accountGroup : accountGroups) {
-                        IAccountSearchParameter parameter = AccountSearchParameterFactory.createAccountGroupParameter(accountGroup.getName());
-                        List<Configuration> configurationsForAccountGroup = accountService.findAccounts(parameter);
-                        accountGroupToConfiguration.put(accountGroup.getName(), new HashSet<String>());
+                        IAccountSearchParameter parameter = AccountSearchParameterFactory
+                                .createAccountGroupParameter(accountGroup.getName());
+                        List<Configuration> configurationsForAccountGroup = accountService
+                                .findAccounts(parameter);
+                        accountGroupToConfiguration.put(accountGroup.getName(),
+                                new HashSet<String>());
                         for (Configuration account : configurationsForAccountGroup) {
-                            accountGroupToConfiguration.get(accountGroup.getName()).add(account.getUser());
+                            accountGroupToConfiguration.get(accountGroup.getName())
+                                    .add(account.getUser());
                         }
                     }
                     initPrettyAccountNames();
-                    if(view != null){
+                    if (view != null) {
                         Display.getDefault().syncExec(new Runnable() {
 
                             @Override
                             public void run() {
+
                                 view.passServiceToLabelProvider();
                                 view.refreshView();
                                 view.switchButtons(true);
                             }
                         });
                     }
-                } catch(Exception e){
-                    LOG.error("Somethin went wrong on initializing groupview data",e);
+
+                    view.setActionsEnabled(true);
+                } catch (Exception e) {
+                    LOG.error("Error while loading data for Account Group View", e);
                 }
+
+                return Status.OK_STATUS;
             }
-        }).start();
+        }
+
+        LoadDataJob job = new LoadDataJob();
+        job.schedule();
     }
 
     
@@ -139,7 +165,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
 
     private <T> String[] convertToStringArray(Set<T> accountGroupOrConfiguration) {
 
-        Set<String> set = new TreeSet<String>(new NumericStringComparator());
+        Set<String> set = new TreeSet<>(new NumericStringComparator());
         for (T accountOrGroup : accountGroupOrConfiguration) {
             if (accountOrGroup instanceof AccountGroup) {
                 set.add(((AccountGroup) accountOrGroup).getName());
@@ -242,14 +268,14 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     
     private void initPrettyAccountNames(){
         if(prettyAccountNames == null){
-            prettyAccountNames = new HashMap<String, String>(0);
+            prettyAccountNames = new HashMap<>(0);
             for(Configuration conf : accountService.findAccounts(AccountSearchParameter.newInstance())){
                 prettyAccountNames.put(conf.getUser(), createPrettyAccountName(conf));
             }
         }
     }
     
-    private String createPrettyAccountName(Configuration account){
+    private static String createPrettyAccountName(Configuration account){
         StringBuilder sb = new StringBuilder(PersonAdapter.getFullName(account.getPerson()));
         sb.append(" [").append(account.getUser()).append("]");
         return sb.toString();
