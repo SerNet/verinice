@@ -241,9 +241,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openValidationViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_35, CnAValidationView.ID, ImageCache.VIEW_VALIDATION, ActionRightIDs.CNAVALIDATION);
         this.openAccountViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_38, AccountView.ID, ImageCache.PERSON, ActionRightIDs.ACCOUNTSETTINGS);
         this.openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
-        // this.openSearchViewAction = new OpenMultipleViewAction(window,
-        // Messages.ApplicationActionBarAdvisor_42, SearchView.ID,
-        // ImageCache.SEARCH, ActionRightIDs.SEARCHVIEW);
         this.openSearchViewAction = new OpenSearchViewAction(window, Messages.ApplicationActionBarAdvisor_42);
         this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
 

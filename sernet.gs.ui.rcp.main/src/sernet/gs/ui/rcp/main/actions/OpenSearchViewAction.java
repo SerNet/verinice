@@ -35,11 +35,15 @@ import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.rcp.search.SearchView;
 
 /**
- * special implementation of [{@link OpenMultipleViewAction} necessary because
- * full-text-search could be disabled during runtime, which requires to disable
- * this action (implemented via listener) in tier3 full-text-search could only
- * be en-/disabled by setting a property in the web.xml of the server and
- * restarting it, so no need to react during (client-)runtime in that case
+ * Special implementation of [{@link OpenMultipleViewAction}
+ * 
+ * This is necessary because of full-text-search could be disabled during
+ * runtime (tier2-only), which requires to disable this action (implemented via
+ * listener)
+ * 
+ * In tier3 full-text-search could only be en-/disabled by setting a property in
+ * the web.xml of the server and restarting it, so no need to react during
+ * (client-)runtime in that case
  * 
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
@@ -66,7 +70,7 @@ public class OpenSearchViewAction extends OpenMultipleViewAction {
         syncEnabledWithPreference();
         if (window != null) {
             try {
-                window.getActivePage().showView(viewId, "" + instance++, IWorkbenchPage.VIEW_ACTIVATE); //$NON-NLS-1$
+                window.getActivePage().showView(viewId, "" + String.valueOf(instance++), IWorkbenchPage.VIEW_ACTIVATE); //$NON-NLS-1$
             } catch (PartInitException e) {
                 ExceptionUtil.log(e, Messages.OpenMultipleViewAction_2);
             }
