@@ -66,7 +66,7 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
    <launcherArgs>
       <programArgs>-data @user.home/verinice/workspace
       </programArgs>
-      <programArgsMac>-vm ../../../jre/Contents/Home/jre/lib/jli/libjli.dylib
+      <programArgsMac>-vm ../../../jre/Contents/Home/lib/jli/libjli.dylib
       </programArgsMac>
       <vmArgs>-Xms256m -Xmx768m -XX:MaxMetaspaceSize=256m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost  -Dosgi.parentClassloader=ext
       </vmArgs>
