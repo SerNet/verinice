@@ -269,7 +269,6 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
                         String message = NLS.bind(Messages.ChooseGefaehrdungPage_Error_2,
                                 selectedGefaehrdung.getId());
                         MessageDialog.openError(getShell(), Messages.ChooseGefaehrdungPage_Error_1, message);
-                                
                     }
                 }
             }
@@ -421,25 +420,27 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      * @param delGefaehrdung
      *            the (Own)Gefaehrdung to delete
      */
-    private void deleteOwnGefaehrdung(OwnGefaehrdung delGefaehrdung) {
-        List<Gefaehrdung> arrListAllGefaehrdungen = getRiskAnalysisWizard().getAllGefaehrdungen();
+    private void deleteOwnGefaehrdung(Gefaehrdung delGefaehrdung) {
+        ArrayList<Gefaehrdung> arrListAllGefaehrdungen = (ArrayList<Gefaehrdung>) getRiskAnalysisWizard().getAllGefaehrdungen();
         List<GefaehrdungsUmsetzung> arrListAssociatedGefaehrdungen = getRiskAnalysisWizard().getAssociatedGefaehrdungen();
         List<OwnGefaehrdung> arrListOwnGefaehrdungen = getRiskAnalysisWizard().getAllOwnGefaehrdungen();
 
         try {
             if (arrListOwnGefaehrdungen.contains(delGefaehrdung)) {
                 /* delete OwnGefaehrdung from Database */
-                OwnGefaehrdungHome.getInstance().remove(delGefaehrdung);
+                OwnGefaehrdungHome.getInstance().remove((OwnGefaehrdung) delGefaehrdung);
 
-            }
                 /* delete OwnGefaehrdung from List of OwnGefaehrdungen */
-            arrListOwnGefaehrdungen.remove(delGefaehrdung);
+                arrListOwnGefaehrdungen.remove(delGefaehrdung);
 
                 /* delete OwnGefaehrdung from List of selected Gefaehrdungen */
-            GefaehrdungsUtil.removeBySameId(arrListAssociatedGefaehrdungen, delGefaehrdung);
+                GefaehrdungsUtil.removeBySameId(arrListAssociatedGefaehrdungen, delGefaehrdung);
 
                 /* delete OwnGefaehrdung from list of all Gefaehrdungen */
-            arrListAllGefaehrdungen.remove(delGefaehrdung);
+                if (arrListAllGefaehrdungen.contains(delGefaehrdung)) {
+                    arrListAllGefaehrdungen.remove(delGefaehrdung);
+                }
+            }
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.ChooseGefaehrdungPage_20);
         }

@@ -205,9 +205,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(analysisId);
         getCommandService().executeCommand(command);
         FinishedRiskAnalysisLists lists = command.getFoundLists();
-        if (lists != null) {
-            lists.removeGefaehrdungCompletely(gef);
-        }
+        lists.removeGefaehrdungCompletely(gef);
     }
 
     private void removeConfiguration(CnATreeElement person) throws CommandException {

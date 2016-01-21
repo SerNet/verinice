@@ -2092,13 +2092,11 @@ the value between <param></param> will be used directly if no string is found fo
 		<huiproperty
 			id="bstumsetzung_nr"
             editable="true"
-			name="Kapitel"
-			required="true" />
+			name="Kapitel" />
 		<huiproperty
 			id="bstumsetzung_name"
             editable="true"
-			name="Titel" 
-			required="true"/>
+			name="Titel" />
 		<huiproperty
 			id="bstumsetzung_url"
             editable="false"
@@ -2158,14 +2156,13 @@ the value between <param></param> will be used directly if no string is found fo
 		name="Gefährdungsumsetzung">
 		<huiproperty
 				id="gefaehrdungsumsetzung_id"
-                editable="true"
-				name="Number" 
-				required="true"/>
+                editable="false"
+                visible="false"
+				name="Id" />
 		<huiproperty
 				id="gefaehrdungsumsetzung_titel"
                 editable="true"
-				name="Titel" 
-				required="true"/>
+				name="Titel" />
 		<huiproperty
 				id="gefaehrdungsumsetzung_description"
                 editable="true"

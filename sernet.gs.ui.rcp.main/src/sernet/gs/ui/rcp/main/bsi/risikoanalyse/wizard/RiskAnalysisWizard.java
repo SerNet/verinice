@@ -32,7 +32,6 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
 import sernet.gs.model.Massnahme;
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisListsHome;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.OwnGefaehrdungHome;
@@ -56,7 +55,6 @@ import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.LoadElementByTypeId;
 import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**
@@ -239,47 +237,6 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
                 }
             }
         }
-        addAllGefaehrdungenFromTree();
-
-    }
-
-    private void addAllGefaehrdungenFromTree() {
-        try {
-            LoadElementByTypeId command = new LoadElementByTypeId(GefaehrdungsUmsetzung.TYPE_ID, RetrieveInfo.getPropertyInstance());
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-            List<? extends CnATreeElement> gefaehrdungsUmsetzungen = command.getElementList();
-            for (CnATreeElement element : gefaehrdungsUmsetzungen) {
-                if (element instanceof GefaehrdungsUmsetzung) {
-                    addTreeGefaehrdungIfNotExist(allOwnGefaehrdungen, (GefaehrdungsUmsetzung) element);
-                }
-            }
-            addOwnGefaehrdungen();
-
-        } catch (CommandException e) {
-            ExceptionUtil.log(e, Messages.RiskAnalysisWizard_1);
-        }
-
-    }
-
-    private void addTreeGefaehrdungIfNotExist(List<OwnGefaehrdung> ownGefaehrdungen, GefaehrdungsUmsetzung element) {
-        if (element.getId() != null) {
-            int numExistant = 0;
-            if (!GefaehrdungsUtil.listContainsById(ownGefaehrdungen, element)) {
-                OwnGefaehrdung gefaehrdung = GefaehrdungsUtil.createOwnGefaehrdungFromGefehrdungsUmsetzung(element);
-                try {
-                    OwnGefaehrdungHome.getInstance().save(gefaehrdung);
-                } catch (CommandException e) {
-                    LOG.error("could not safe ownGefehrdung", e);
-                }
-                ownGefaehrdungen.add(gefaehrdung);
-            } else {
-                numExistant++;
-            }
-
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(numExistant + " Gefaehrdungen already existed");
-            }
-        }
     }
 
     /**
@@ -436,7 +393,7 @@ public class RiskAnalysisWizard extends Wizard implements IExportWizard {
     public void addOwnGefaehrdungen() {
         for (OwnGefaehrdung element : allOwnGefaehrdungen) {
             /* add to list of all Gefaehrdungen */
-            if (!(GefaehrdungsUtil.listContainsById(allGefaehrdungen, element))) {
+            if (!(allGefaehrdungen.contains(element))) {
                 allGefaehrdungen.add(element);
             }
         }

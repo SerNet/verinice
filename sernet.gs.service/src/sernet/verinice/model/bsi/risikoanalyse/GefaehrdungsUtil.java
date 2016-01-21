@@ -83,8 +83,9 @@ public abstract class GefaehrdungsUtil {
         return found;
     }
 
-    public static boolean listContainsById(List<?> selectedArrayList, Gefaehrdung currentGefaehrdung) {
-        for (Iterator<?> iterator = selectedArrayList.iterator(); iterator.hasNext();) {
+    @SuppressWarnings("unchecked")
+    public static boolean listContainsById(List selectedArrayList, Gefaehrdung currentGefaehrdung) {
+        for (Iterator iterator = selectedArrayList.iterator(); iterator.hasNext();) {
             Object object = iterator.next();
             if (object instanceof Gefaehrdung) {
                 Gefaehrdung gefaehrdung = (Gefaehrdung) object;
@@ -102,41 +103,13 @@ public abstract class GefaehrdungsUtil {
         return false;
     }
 
-    public static boolean listContainsById(List<?> selectedArrayList, GefaehrdungsUmsetzung currentGefaehrdung) {
-        for (Iterator<?> iterator = selectedArrayList.iterator(); iterator.hasNext();) {
-            Object object = iterator.next();
-            if (object instanceof Gefaehrdung) {
-                Gefaehrdung gefaehrdung = (Gefaehrdung) object;
-                if (gefaehrdung.getId().equals(currentGefaehrdung.getId())) {
-                    return true;
-                }
-            }
-            if (object instanceof GefaehrdungsUmsetzung) {
-                GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) object;
-                if (gefaehrdung.getId().equals(currentGefaehrdung.getId())) {
-                    return true;
-                }
+    public static boolean listContainsById(List<GefaehrdungsUmsetzung> selectedArrayList, GefaehrdungsUmsetzung currentGefaehrdung) {
+        for (GefaehrdungsUmsetzung gefaehrdung : selectedArrayList) {
+            if (gefaehrdung.getId().equals(currentGefaehrdung.getId())) {
+                return true;
             }
         }
         return false;
     }
-
-    /**
-     * ID, OwnKategorie, Url, Description, stand, text must not be null
-     * 
-     * @param gefaehrdungsUmsetzung
-     * @return
-     */
-    public static OwnGefaehrdung createOwnGefaehrdungFromGefehrdungsUmsetzung(GefaehrdungsUmsetzung gefaehrdungsUmsetzung) {
-        OwnGefaehrdung gefaehrdung = new OwnGefaehrdung();
-        gefaehrdung.setId(gefaehrdungsUmsetzung.getId());
-        gefaehrdung.setOwnkategorie(gefaehrdungsUmsetzung.getKategorie());
-        gefaehrdung.setBeschreibung(gefaehrdungsUmsetzung.getDescription());
-        gefaehrdung.setStand(gefaehrdungsUmsetzung.getStand());
-        gefaehrdung.setTitel(gefaehrdungsUmsetzung.getText());
-
-        return gefaehrdung;
-    }
-
 
 }
