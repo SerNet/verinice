@@ -28,6 +28,7 @@
             "taskshowall"
             "taskchangeassignee"
             "taskchangeduedate"
+            "searchreindex"
             "showallfiles" -->
         <action id="addbsielement" />
         <action id="addcatalog" />
@@ -83,8 +84,7 @@
         <action id="riskanalysis" />
         <action id="samtview" />
         <action id="searchexport" />
-        <action id="searchreindex" />
-        <action id="searchview" />
+        <action id="searchview" />    
         <action id="showchartview" />
         <action id="showpreferences" />
         <action id="simpleauditview" />
@@ -106,6 +106,7 @@
             "addismorg"
             "additverbund"
             "xmlimport" 
+            "searchreindex
             "showallfiles"
             "addsecurityassessment"-->
 	        <action id="addbsielement" />

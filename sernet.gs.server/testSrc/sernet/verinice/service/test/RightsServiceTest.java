@@ -53,6 +53,7 @@ public class RightsServiceTest extends ContextConfiguration {
         ActionRightIDs.EDITPROFILE,
         ActionRightIDs.TASKDELETE,
         ActionRightIDs.TASKSHOWALL,
+        ActionRightIDs.SEARCHREINDEX,
         ActionRightIDs.SHOWALLFILES,
         ActionRightIDs.TASKCHANGEASSIGNEE,
         ActionRightIDs.TASKCHANGEDUEDATE
