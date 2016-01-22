@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.actions;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.IWorkbenchPage;
@@ -86,11 +87,16 @@ public class OpenSearchViewAction extends OpenMultipleViewAction {
     }
 
     private void syncEnabledServer() {
-        int searchServiceImplementation = ServiceFactory.lookupSearchService().getImplementationtype();
-        if (ISearchService.ES_IMPLEMENTATION_TYPE_DUMMY == searchServiceImplementation) {
+        try {
+            int searchServiceImplementation = ServiceFactory.lookupSearchService().getImplementationtype();
+            if (ISearchService.ES_IMPLEMENTATION_TYPE_DUMMY == searchServiceImplementation) {
+                this.setEnabled(false);
+            } else if (checkRights() && ISearchService.ES_IMPLEMENTATION_TYPE_REAL == searchServiceImplementation) {
+                this.setEnabled(true);
+            }
+        } catch (Exception e) {
+            Logger.getLogger(OpenSearchViewAction.class).error("Can't connect to searchService, disabling searchView", e);
             this.setEnabled(false);
-        } else if (checkRights() && ISearchService.ES_IMPLEMENTATION_TYPE_REAL == searchServiceImplementation) {
-            this.setEnabled(true);
         }
     }
 
