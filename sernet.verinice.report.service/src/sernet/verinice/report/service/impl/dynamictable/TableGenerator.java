@@ -119,14 +119,14 @@ public final class TableGenerator {
     }
 
     private static boolean startsWith(String key2, String key1) {
-        String keyClean2 = GenericDataModel.removeRowNumer(key2);
-        String keyClean1 = GenericDataModel.removeRowNumer(key1);
+        String keyClean2 = GenericDataModel.removeRowNumber(key2);       
+        String keyClean1 = GenericDataModel.removeRowNumber(key1);
         return keyClean2.startsWith(keyClean1);
     }
 
     private static void merge(String[] rowFrom, String[] rowTo) {
         for (int i = 0; i < rowTo.length; i++) {
-            if(rowTo[i]==null) {
+            if(i < rowTo.length && rowTo[i] == null) {
                 rowTo[i] = rowFrom[i];
             }
         }      
@@ -137,7 +137,7 @@ public final class TableGenerator {
      * the first column of the table. If first column is equal
      * the comparator continues with the second [3.,4.] column.
      * 
-     * For comparison a NumericStringComparator is used.
+     * For comparison a {@link NumericStringComparator} is used.
      * 
      * @author Daniel Murygin <dm[at]sernet[dot]de>
      */

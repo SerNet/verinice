@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.graph.VeriniceGraph;
@@ -192,7 +191,7 @@ public class GenericDataModel {
                 String value = allRowMap.get(key)[i];
                 if((value)!=null) {
                     // fill rows with found values if needed
-                    fillEmptyRows(allRowMap, i, removeRowNumer(key), value);                                   
+                    fillEmptyRows(allRowMap, i, removeRowNumber(key), value);                                   
                 }
             }
         }
@@ -201,7 +200,6 @@ public class GenericDataModel {
             // find non-empty values for this row
             List<String> keys = new LinkedList<>(allRowMap.keySet());
             Collections.sort(keys);
-            //Collections.reverse(keys);
             for (String key : keys) {
                 String value = allRowMap.get(key)[i];
                 if((value)!=null) {
@@ -229,9 +227,9 @@ public class GenericDataModel {
      * @return The key of child from the first parent element 
      *         or null if there is no parent element
      */
-    private String getChildKey(ColumnPath pathWithParent, String key) {
+    private static String getChildKey(ColumnPath pathWithParent, String key) {
         StringBuilder sb = new StringBuilder();
-        String strippedKey = removeRowNumer(key);
+        String strippedKey = removeRowNumber(key);
         StringTokenizer st = new StringTokenizer(strippedKey, ".");
         int n = 0;
         for (IPathElement pathElement : pathWithParent.getPathElements()) {
@@ -246,8 +244,7 @@ public class GenericDataModel {
             }
             n++;
         }
-        String parentKey = (sb.length()>0) ? sb.toString() : null;
-        return parentKey;
+        return (sb.length()>0) ? sb.toString() : null;
     }
 
     /**
@@ -275,7 +272,7 @@ public class GenericDataModel {
     private static void fillEmptyGroupRows(Map<String, String[]> allRowMap, int i, String key, String value) {
         Set<String> keys = allRowMap.keySet();
         for (String keyCurrent : keys) {
-            String strippedKey = removeRowNumer(keyCurrent);
+            String strippedKey = removeRowNumber(keyCurrent);
             if(strippedKey.startsWith(key)) {
                 String[] row = allRowMap.get(keyCurrent);
                 if(row != null && row[i] == null ) {
@@ -283,18 +280,6 @@ public class GenericDataModel {
                     allRowMap.put(keyCurrent, row);
                 }          
             }
-        }
-    }
-
-    private static boolean startsWith(String key, String strippedKey) {
-        boolean result = key.startsWith(strippedKey);
-        if(result) {
-            return true;
-        } else if(strippedKey.contains(".") 
-                  && StringUtils.countMatches(key, ".") < StringUtils.countMatches(strippedKey, ".") ) {
-            return startsWith(key, removeLastElement(strippedKey));
-        } else {
-            return false;
         }
     }
 
@@ -308,20 +293,12 @@ public class GenericDataModel {
         return resultTable;
     }
     
-    public static String removeRowNumer(String key) {
+    public static String removeRowNumber(String key) {
         int i = key.indexOf(GenericDataModel.COLUMN_SEPERATOR);
         if(i==-1) {
             return key;
         }
         return key.substring(0, i);
-    }
-    
-    private static String removeLastElement(String key) {
-        String strippedKey = removeRowNumer(key);
-        if(strippedKey.contains(IPathElement.RESULT_KEY_SEPERATOR)) {
-            strippedKey = strippedKey.substring(0, strippedKey.indexOf(IPathElement.RESULT_KEY_SEPERATOR));
-        }
-        return strippedKey;
     }
     
     public static void log(Map<String, String[]> valueMap) {
