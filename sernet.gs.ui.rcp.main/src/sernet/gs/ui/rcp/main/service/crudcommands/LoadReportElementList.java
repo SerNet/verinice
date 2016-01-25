@@ -11,7 +11,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  * Load lsit of elements and their databse ids for further use in reports.

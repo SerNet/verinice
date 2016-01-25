@@ -17,7 +17,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.Process;
-import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  * Load Process name, CIA, calculated total risk.

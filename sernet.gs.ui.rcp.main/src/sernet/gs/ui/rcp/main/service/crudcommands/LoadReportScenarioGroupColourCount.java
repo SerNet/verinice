@@ -30,7 +30,6 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  *
