@@ -22,7 +22,6 @@ import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
-import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
@@ -101,9 +100,6 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 		datenschutzZipPath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
 		addField(datenschutzZipPath);
 		
-		BooleanFieldEditor exportRiskAnalysis = new BooleanFieldEditor(PreferenceConstants.EXPORT_RISK_ANALYSIS, Messages.getString("GeneralSettingsPage.13"), getFieldEditorParent()); //$NON-NLS-1$
-        addField(exportRiskAnalysis);
-
 	}
 
 	@Override

@@ -83,9 +83,6 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 		BooleanFieldEditor inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, Messages.getString("GeneralSettingsPage.3"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(inputHelperHints);
 
-		BooleanFieldEditor showAlienDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_ALIEN_DECORATOR, Messages.getString("GeneralSettingsPage.ShowAlienDecorator"), getFieldEditorParent()); //$NON-NLS-1$
-		addField(showAlienDecorator);
-		
 		BooleanFieldEditor showDBIDDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_DBID_DECORATOR, Messages.getString("GeneralSettingsPage.ShowDBIDDecorator"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(showDBIDDecorator);
 		

@@ -1296,10 +1296,15 @@
             id="sernet.gs.ui.rcp.main.preferences.folderpreferencepage"
             name="%page.name.10">
       </page>
-            <page
+      <page
             class="sernet.gs.ui.rcp.main.preferences.SearchPreferencePage"
             id="sernet.gs.ui.rcp.main.preferences.searchpreferencepage"
             name="%page.name.11">
+      </page>
+      <page
+            class="sernet.gs.ui.rcp.main.preferences.ImportExportPreferencePage"
+            id="sernet.gs.ui.rcp.main.preferences.importexportpreferencepage"
+            name="%page.name.12">
       </page>
    </extension>
    <extension
