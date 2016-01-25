@@ -48,7 +48,7 @@ public class ParentElement extends BaseElement {
             LOG.debug("Loading parent of " + element.getTitle() + "...");
         }
         String parentId = String.valueOf(element.getDbId());
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         CnATreeElement parent = graph.getParent(element); 
         if(parent!=null) {
             if (LOG.isDebugEnabled()) {
