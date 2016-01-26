@@ -42,6 +42,8 @@ import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.oda.SortSpec;
 import org.eclipse.datatools.connectivity.oda.spec.QuerySpecification;
 
+import bsh.EvalError;
+import bsh.Interpreter;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -50,8 +52,6 @@ import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
-import bsh.EvalError;
-import bsh.Interpreter;
 
 
 
@@ -307,6 +307,9 @@ public class Query implements IQuery
         }
         
         public Integer[] getRootElements(){
+            if (vnRootElements == null || vnRootElements.length <= 0) {
+                return new Integer[] { getRoot() };
+            }
         	return vnRootElements;
         }
 

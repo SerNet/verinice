@@ -39,9 +39,11 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class GraphElementLoader implements IGraphElementLoader, Serializable {
  
+    private static final long serialVersionUID = -6099406083025720444L;
+
     private static final Logger LOG = Logger.getLogger(GraphElementLoader.class);
     
-    private Integer scopeId;
+    private Integer[] scopeIds;
     
     private String[] typeIds;
     
@@ -55,10 +57,10 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
     @Override
     public List<CnATreeElement> loadElements() {
         DetachedCriteria crit = createDefaultCriteria();
-        if(getScopeId()!=null) {
-            crit.add(Restrictions.eq("scopeId", getScopeId()));
+        if (getScopeIds() != null && getScopeIds().length > 0) {
+            crit.add(Restrictions.in("scopeId", getScopeIds()));
         }
-        if(getTypeIds()!=null) {
+        if (getTypeIds() != null && getTypeIds().length > 0) {
             crit.add(Restrictions.in("objectType", getTypeIds()));
         }
         List<CnATreeElement> elementList = getCnaTreeElementDao().findByCriteria(crit);
@@ -73,7 +75,7 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
         if(getElementFilter()==null) {
             return elementList;
         }
-        List<CnATreeElement> filteredList = new ArrayList<CnATreeElement>();
+        List<CnATreeElement> filteredList = new ArrayList<>();
         for (CnATreeElement element : elementList) {
             if(getElementFilter().check(element)) {
                 filteredList.add(element);
@@ -90,13 +92,18 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
         return crit;
     }
     
-    public Integer getScopeId() {
-        return scopeId;
+    public Integer[] getScopeIds() {
+        return scopeIds;
     }
 
     @Override
+    public void setScopeIds(Integer... scopeIds) {
+        this.scopeIds = scopeIds;
+    }
+    
+    @Override
     public void setScopeId(Integer scopeId) {
-        this.scopeId = scopeId;
+        this.scopeIds = new Integer[] { scopeId };
     }
     
     public String[] getTypeIds() {
