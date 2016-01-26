@@ -57,6 +57,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.encryption.PasswordException;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -665,6 +666,8 @@ public class XMLImportDialog extends Dialog {
                     try {
                         fileData = decryptWithGenericSalt(fileData, service);
                     } catch (PasswordException e) {
+                        fileData = decryptWithStaticSalt(fileData, service);
+                    } catch (EncryptionException e) {
                         fileData = decryptWithStaticSalt(fileData, service);
                     }
                 } else if (selectedEncryptionMethod == EncryptionMethod.X509_CERTIFICATE) {

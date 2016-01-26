@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
-import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -220,12 +219,6 @@ public abstract class PasswordBasedEncryption {
         // remove salt prefix from cyphertext
         byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
         System.arraycopy(encryptedByteData, 0, saltBytes, 0, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
-
-        // if beginning of cyphertext not equals the passed (by parameter)
-        // bytes, try decrypting with static salt
-        if (!Arrays.equals(salt, saltBytes)) {
-            return decrypt(encryptedByteData, password);
-        }
 
         byte[] cypherText = new byte[encryptedByteData.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
 
