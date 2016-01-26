@@ -364,10 +364,11 @@
                name="appName"
                value="verinice">
          </property>
-         <property
-               name="startupProgressRect"
-               value="5,5,300,15">
-         </property>
+         <!-- START ProgressBar im Splash -->
+            <property name="startupProgressRect" value="-1,290,459,8"/>
+            <property name="startupForegroundColor" value="000000"/>
+            <property name="startupMessageRect" value="0,0,0,0"/>
+		 <!-- END ProgressBar im Splash -->
       </product>
    </extension>
    <extension
