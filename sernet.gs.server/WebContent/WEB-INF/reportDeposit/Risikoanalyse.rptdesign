@@ -2882,7 +2882,7 @@ columns(cols);</value>
             <property name="fontSize">12pt</property>
             <property name="fontWeight">bold</property>
             <property name="paddingTop">20pt</property>
-            <text-property name="text">Durchgeführte Risikoanalysenx</text-property>
+            <text-property name="text">Durchgeführte Risikoanalysen</text-property>
         </label>
         <table id="1697">
             <property name="borderBottomColor">#000000</property>
