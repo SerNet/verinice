@@ -19,15 +19,19 @@ package sernet.gs.ui.rcp.main.service.taskcommands;
 
 import java.io.Serializable;
 
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
+import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class ImportTransferSchutzbedarf extends GenericCommand {
 
-	private CnATreeElement element;
+    private static final long serialVersionUID = 20160127105556L;
+
+    private CnATreeElement element;
 	private int vertraulichkeit;
 	private int verfuegbarkeit;
 	private int integritaet;
@@ -36,6 +40,11 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
 	private String integBegruendung;
 	private short isPersonenbezogen;
 
+    private boolean[] kritiaklitaetLevel = null;
+
+    /**
+     * default constructor
+     */
 	public ImportTransferSchutzbedarf(CnATreeElement element,
 			int vertraulichkeit, int verfuegbarkeit, int integritaet,
 			String vertrBegruendung, String verfuBegruendung,
@@ -50,14 +59,39 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
 		this.isPersonenbezogen = isPersonenbezogen;
 	}
 
-	public void execute() {
+    /**
+     * use this constructor if you want to import schutzbedarf-properties for an
+     * object of type {@link Netzkomponente} which equals "Netz" in gstools
+     * busines logic Schutzbedarfproperties for instances of
+     * {@link Netzkomponente} are called "Kritikalität" and are not provided via
+     * a {@link ISchutzbedarfProvider} which causes this special handling of
+     * that type of objects
+     * 
+     * @param element
+     *            - the element to compute the schutzbedarf for
+     * @param kritikalitaetLevel
+     *            - properties (set / unset checkboxes) from gstool business
+     *            logic
+     */
+    public ImportTransferSchutzbedarf(NetzKomponente element, boolean[] kritikalitaetLevel) {
+        this.element = element;
+        this.kritiaklitaetLevel = kritikalitaetLevel;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void execute() {
 		IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(
 				element);
 		dao.reload(element, element.getDbId());
-		transferSchutzbedarf();
+        if (NetzKomponente.TYPE_ID.equals(element.getTypeId()) && kritiaklitaetLevel != null) {
+		    transferSchutzbedarfNetzkomponente();
+		} else {
+		    transferSchutzbedarf();
+		}
 	}
 
-	public boolean transferSchutzbedarf() {
+    private boolean transferSchutzbedarf() {
 		if (element.getSchutzbedarfProvider() == null){
 			return false;
 		}
@@ -81,5 +115,34 @@ public class ImportTransferSchutzbedarf extends GenericCommand {
 		}
 		return true;
 	}
+
+    private void transferSchutzbedarfNetzkomponente() {
+        PropertyType propertyType = element.getEntityType().getPropertyType(NetzKomponente.PROP_KRITIKALITAET);
+        
+        if (kritiaklitaetLevel[0]) {
+            /*
+             * the option {@link NetzKomponente.PROP_KRITIKALITAET_OPTION_0}
+             * does not exist in the gstool business logic, so it isn't
+             * considered here
+             */
+
+            // do nothing
+        }
+        if (kritiaklitaetLevel[0]) {
+            element.getEntity().createNewProperty(propertyType, NetzKomponente.PROP_KRITIKALITAET_OPTION_1);
+        }
+        if (kritiaklitaetLevel[1]) {
+            element.getEntity().createNewProperty(propertyType, NetzKomponente.PROP_KRITIKALITAET_OPTION_2);
+        }
+        if (kritiaklitaetLevel[2]) {
+            element.getEntity().createNewProperty(propertyType, NetzKomponente.PROP_KRITIKALITAET_OPTION_3);
+        }
+        if (kritiaklitaetLevel[3]) {
+            element.getEntity().createNewProperty(propertyType, NetzKomponente.PROP_KRITIKALITAET_OPTION_4);
+        }
+        if (kritiaklitaetLevel[4]) {
+            element.getEntity().createNewProperty(propertyType, NetzKomponente.PROP_KRITIKALITAET_OPTION_5);
+        }
+    }
 
 }
