@@ -4,7 +4,7 @@
 <product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.11.1" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
-      <image path="/sernet.gs.ui.rcp.main/icons/product_lg.gif"/>
+      <image path="/sernet.gs.ui.rcp.main/verinice_icons/about_img.png"/>
       <text>
          SerNet verinice 1.12 - Codename &apos;Piha&apos;
 
@@ -66,7 +66,7 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
    <launcherArgs>
       <programArgs>-data @user.home/verinice/workspace
       </programArgs>
-      <programArgsMac>-vm ../../../jre/Contents/Home/jre/lib/jli/libjli.dylib
+      <programArgsMac>-vm ../../../jre/Contents/Home/lib/jli/libjli.dylib
       </programArgsMac>
       <vmArgs>-Xms256m -Xmx768m -XX:MaxMetaspaceSize=256m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost  -Dosgi.parentClassloader=ext
       </vmArgs>
@@ -74,17 +74,17 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
       </vmArgsMac>
    </launcherArgs>
 
-   <windowImages i16="/sernet.gs.ui.rcp.main/icons/v-16.gif" i32="/sernet.gs.ui.rcp.main/icons/v-32.gif" i48="/sernet.gs.ui.rcp.main/icons/v-48.gif" i64="/sernet.gs.ui.rcp.main/icons/v-64.gif" i128="/sernet.gs.ui.rcp.main/icons/v-128.gif"/>
+   <windowImages i16="/sernet.gs.ui.rcp.main/verinice_icons/v-16.png" i32="/sernet.gs.ui.rcp.main/verinice_icons/v-32.png" i48="/sernet.gs.ui.rcp.main/verinice_icons/v-48.png" i64="/sernet.gs.ui.rcp.main/verinice_icons/v-64.png" i128="/sernet.gs.ui.rcp.main/verinice_icons/v-128.png"/>
 
    <splash
       location="sernet.gs.ui.rcp.main"
-      startupProgressRect="5,5,300,15" />
+      handlerType="extensible" />
    <launcher name="verinice">
-      <linux icon="/sernet.gs.ui.rcp.main.feature/v.xpm"/>
-      <macosx icon="/sernet.gs.ui.rcp.main.feature/v_logo_mac.icns"/>
+      <linux icon="/sernet.gs.ui.rcp.main/verinice_icons/v.xpm"/>
+      <macosx icon="/sernet.gs.ui.rcp.main/verinice_icons/v.icns"/>
       <solaris/>
       <win useIco="true">
-         <ico path="/sernet.gs.ui.rcp.main.feature/v-128-16.ico"/>
+         <ico path="/sernet.gs.ui.rcp.main/verinice_icons/v-128-16.ico"/>
          <bmp/>
       </win>
    </launcher>
