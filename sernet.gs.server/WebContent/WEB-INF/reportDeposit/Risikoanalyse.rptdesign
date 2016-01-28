@@ -3942,10 +3942,10 @@ columns(cols);</value>
                                 </structure>
                             </list-property>
                             <column id="2035">
-                                <property name="width">1.7291666666666667in</property>
+                                <property name="width">1.1875in</property>
                             </column>
                             <column id="2036">
-                                <property name="width">3.7708333333333335in</property>
+                                <property name="width">4.354166666666667in</property>
                             </column>
                             <column id="2037">
                                 <property name="width">2.7604166666666665in</property>
@@ -4091,8 +4091,8 @@ columns(cols);</value>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
                                         <data id="2024">
-                                            <property name="fontSize">12pt</property>
-                                            <property name="fontWeight">bold</property>
+                                            <property name="fontSize">10pt</property>
+                                            <property name="fontWeight">normal</property>
                                             <property name="resultSetColumn">gefaehrdungsumsetzung_id</property>
                                         </data>
                                     </cell>
@@ -4110,8 +4110,8 @@ columns(cols);</value>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
                                         <data id="2026">
-                                            <property name="fontSize">12pt</property>
-                                            <property name="fontWeight">bold</property>
+                                            <property name="fontSize">10pt</property>
+                                            <property name="fontWeight">normal</property>
                                             <property name="resultSetColumn">gefaehrdungsumsetzung_titel</property>
                                         </data>
                                     </cell>
@@ -4129,8 +4129,8 @@ columns(cols);</value>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
                                         <data id="2042">
-                                            <property name="fontSize">12pt</property>
-                                            <property name="fontWeight">bold</property>
+                                            <property name="fontSize">10pt</property>
+                                            <property name="fontWeight">normal</property>
                                             <list-property name="mapRules">
                                                 <structure>
                                                     <expression name="testExpr" type="javascript">row["gefaehrdungsumsetzung_alternative"]</expression>
@@ -4182,8 +4182,8 @@ columns(cols);</value>
                                         <property name="borderTopStyle">solid</property>
                                         <property name="borderTopWidth">thin</property>
                                         <data id="2044">
-                                            <property name="fontSize">12pt</property>
-                                            <property name="fontWeight">bold</property>
+                                            <property name="fontSize">10pt</property>
+                                            <property name="fontWeight">normal</property>
                                             <property name="resultSetColumn">gefaehrdungsumsetzung_erlaeuterung</property>
                                         </data>
                                     </cell>
