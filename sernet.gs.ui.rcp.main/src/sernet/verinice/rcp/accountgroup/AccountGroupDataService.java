@@ -29,11 +29,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.gs.service.NumericStringComparator;
@@ -54,7 +53,7 @@ import sernet.verinice.service.account.AccountSearchParameterFactory;
  */
 public class AccountGroupDataService implements IAccountGroupViewDataService {
 
-    private static final Logger LOG = Logger.getLogger(AccountGroupDataService.class);
+    private static final Logger logger = Logger.getLogger(AccountGroupDataService.class);
 
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
 
@@ -99,18 +98,16 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     @Override
     public final void loadAccountGroupData() {
 
-        class LoadDataJob extends WorkspaceJob {
+        final class LoadAccountGroupDataJob extends Job {
 
-            public LoadDataJob() {
-                super(Messages.loadDataJoblabel);
+            public LoadAccountGroupDataJob(String name) {
+                super(name);
             }
 
             @Override
-            public IStatus runInWorkspace(IProgressMonitor arg0) throws CoreException {
+            protected IStatus run(IProgressMonitor monitor) {
 
                 try {
-                    view.setActionsEnabled(false);
-
                     Activator.inheritVeriniceContextState();
                     List<AccountGroup> accountGroups = accountService.listGroups();
 
@@ -143,18 +140,15 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
                             }
                         });
                     }
-
-                    view.setActionsEnabled(true);
                 } catch (Exception e) {
-                    LOG.error("Error while loading data for Account Group View", e);
+                    logger.error("Error loading account group data", e);
                 }
-
                 return Status.OK_STATUS;
             }
+
         }
 
-        LoadDataJob job = new LoadDataJob();
-        job.schedule();
+        new LoadAccountGroupDataJob(Messages.loadDataJoblabel).schedule();
     }
 
     
@@ -206,7 +200,7 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
             return convertToStringArray(accountGroupToConfiguration.get(groupName));
 
         } catch (Exception ex) {
-            LOG.error("updated view for account groups failed", ex);
+            logger.error("updated view for account groups failed", ex);
         }
 
         return new String[] {};
