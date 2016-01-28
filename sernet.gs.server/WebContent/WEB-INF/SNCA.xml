@@ -4362,6 +4362,11 @@ the value between <param></param> will be used directly if no string is found fo
             name="Title"
             id="controlgroup_name"
             required="true"/>
+       
+        <huiproperty
+			name="Description" 
+			id="controlgroup_desc" 
+			inputtype="text" />   
 
     	<!-- Flag to decide if a controlgroup is a group which contains only the controls of ISO 27001 annex A or not -->
         <huiproperty
