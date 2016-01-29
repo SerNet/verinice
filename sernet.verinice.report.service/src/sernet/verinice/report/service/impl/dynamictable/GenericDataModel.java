@@ -232,8 +232,12 @@ public class GenericDataModel {
         String strippedKey = removeRowNumber(key);
         StringTokenizer st = new StringTokenizer(strippedKey, ".");
         int n = 0;
+        boolean isValidParentPath = false;
         for (IPathElement pathElement : pathWithParent.getPathElements()) {
             if(pathElement instanceof ParentElement) {
+                if(isFollowedByPropertyOrParent(pathElement)) {
+                    isValidParentPath = true;              
+                }
                 break;
             }
             if(st.hasMoreTokens()) {
@@ -244,7 +248,18 @@ public class GenericDataModel {
             }
             n++;
         }
-        return (sb.length()>0) ? sb.toString() : null;
+        return (isValidParentPath && sb.length()>0) ? sb.toString() : null;
+    }
+
+    /**
+     * @param pathElement A path element
+     * @return true if pathElement is followed by parent element(s) or property element
+     */
+    private static boolean isFollowedByPropertyOrParent(IPathElement pathElement) {
+        if(pathElement.getChild() instanceof ParentElement) {
+            return isFollowedByPropertyOrParent(pathElement.getChild());
+        }
+        return pathElement.getChild() instanceof PropertyElement;
     }
 
     /**
