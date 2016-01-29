@@ -3453,11 +3453,16 @@ the value between <param></param> will be used directly if no string is found fo
         <huirelation to="person-iso" id="rel_assetgroup_person-iso" 
             name="responsible" reversename="responsible for" tooltip="Operational responsibility is delegated to this person. He / she has to ensure that controls are in place."/>
         
-        
         <huiproperty
             name="Title"
             id="assetgroup_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="assetgroup_desc" 
+			inputtype="text" />   
+        
     </huientity>
     
     <huientity
@@ -3851,6 +3856,12 @@ the value between <param></param> will be used directly if no string is found fo
             name="Title"
             id="persongroup_name"
             required="true" />
+            
+             <huiproperty
+			name="Description" 
+			id="persongroup_desc" 
+			inputtype="text" />   
+        
     </huientity>
     
     <huientity
@@ -4145,10 +4156,16 @@ the value between <param></param> will be used directly if no string is found fo
     <huientity
         name="Audit-Group"
         id="auditgroup" >
+        
         <huiproperty
             name="Title"
             id="auditgroup_name"
             required="true" />
+            
+         <huiproperty
+			name="Description" 
+			id="auditgroup_desc" 
+			inputtype="text" />   
         
         <huirelation to="asset" id="rel_auditgroup_asset"/>
     </huientity>
@@ -4874,6 +4891,12 @@ the value between <param></param> will be used directly if no string is found fo
             name="Title"
             id="exceptiongroup_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="exceptiongroup_desc" 
+			inputtype="text" />   
+        
     </huientity>
     
     <huientity
@@ -4941,6 +4964,11 @@ the value between <param></param> will be used directly if no string is found fo
             name="Title"
             id="requirementgroup_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="requirementgroup_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
@@ -5190,6 +5218,11 @@ Wurden bereits weitere Stellen informiert?
             name="Title"
             id="incident_group_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="incidentgroup_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
@@ -5350,6 +5383,11 @@ Wurden bereits weitere Stellen informiert?
             id="incident_scenario_group_name" 
             tags="Basic"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="incident_scenario_group_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
@@ -5381,6 +5419,11 @@ Wurden bereits weitere Stellen informiert?
             name="Title"
             id="response_group_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="response_group_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
@@ -5442,6 +5485,11 @@ Wurden bereits weitere Stellen informiert?
             id="threat_group_name"
             tags="Basic"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="threat_group_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
@@ -5491,6 +5539,11 @@ Wurden bereits weitere Stellen informiert?
             id="vulnerability_group_name"
             tags="Basic"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="vulnerability_group_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
@@ -5598,6 +5651,11 @@ Wurden bereits weitere Stellen informiert?
             name="Title"
             id="document_group_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="documentgroup_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
@@ -5664,6 +5722,11 @@ Wurden bereits weitere Stellen informiert?
             name="Title"
             id="interview_group_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="interview_group_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
@@ -5700,6 +5763,11 @@ Wurden bereits weitere Stellen informiert?
             name="Title"
             id="evidence_group_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="evidence_group_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
@@ -5772,6 +5840,11 @@ Wurden bereits weitere Stellen informiert?
             name="Title"
             id="finding_group_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="finding_group_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity name="Process" id="process" >
@@ -6436,6 +6509,11 @@ Wurden bereits weitere Stellen informiert?
             name="Title"
             id="process_group_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="process_group_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
@@ -6465,6 +6543,11 @@ Wurden bereits weitere Stellen informiert?
             name="Title"
             id="record_group_name"
             required="true" />
+            
+        <huiproperty
+			name="Description" 
+			id="record_group_desc" 
+			inputtype="text" />   
     </huientity>
     
     <huientity
