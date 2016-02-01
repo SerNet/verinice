@@ -4391,36 +4391,6 @@ the value between <param></param> will be used directly if no string is found fo
         	id="controlgroup_is_NoIso_group"
         	inputtype="booleanoption" defaultValue="0"
         	tags="VDA_ISA_Audit" />
-        <huipropertygroup id="controlgroup_isroom_group" name="IT-Room-Check" tags="VDA_ISA_Audit" >
-        	<huiproperty
-        		name="isRoom"
-        		id="controlgroup_is_room"
-        		inputtype="booleanoption" defaultValue="0"
-        		tags="VDA_ISA_Audit" />
-        	<huiproperty
-        		name="dateofinspection"
-        		id="controlgroup_isroom_dateofinspection"
-        		inputtype="date"
-         		tags="VDA_ISA_Audit">             
-                <depends option="controlgroup_is_room" value="1"/>
-				<defaultRule class="Today" />
-        	</huiproperty>       		
-        	<huiproperty
-        		name="categorisation"
-          		id="controlgroup_isroom_categorisation"
-        		inputtype="singleoption"
-         		tags="VDA_ISA_Audit" >
-                <depends option="controlgroup_is_room" value="1"/>
-        		<option name="dataCentre" id="controlgroup_isroom_categorisation_datacentre" />
-        	</huiproperty>
-        	<huiproperty
-        		name="gotConcept"
-        		id="controlgroup_is_room_gotConcept"
-        		inputtype="booleanoption" defaultValue="0"
-        		tags="VDA_ISA_Audit" >
-                <depends option="controlgroup_is_room" value="1"/>
-            </huiproperty>           
-        </huipropertygroup>        	
     </huientity>
 
     <huientity
