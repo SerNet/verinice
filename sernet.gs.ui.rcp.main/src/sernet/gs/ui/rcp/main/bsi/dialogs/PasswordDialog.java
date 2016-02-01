@@ -68,11 +68,12 @@ public class PasswordDialog extends Dialog {
     protected void configureShell(Shell newShell) {
         super.configureShell(newShell);
         newShell.setText(Messages.PasswordDialog_0);
-        newShell.setSize(SIZE_X, SIZE_Y);
+        // newShell.setSize(SIZE_X, SIZE_Y);
         
         // open the window right under the mouse pointer:
         Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x-SIZE_X/2, cursorLocation.y-SIZE_Y/2));
+        newShell.setLocation(new Point(cursorLocation.x - SIZE_X / 2,
+                cursorLocation.y - SIZE_Y / 2));
     }
     
     /* (non-Javadoc)
@@ -97,7 +98,7 @@ public class PasswordDialog extends Dialog {
         oldBackground = text2.getBackground();
 
         addListeners();
-
+        container.pack();
         return container;
 
     }
