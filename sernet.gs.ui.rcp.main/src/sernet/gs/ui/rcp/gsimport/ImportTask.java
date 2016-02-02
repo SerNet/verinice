@@ -545,51 +545,63 @@ public class ImportTask extends AbstractGstoolImportTask {
         Set<Entry<NZielobjekt, CnATreeElement>> alleZielobjekteEntries = alleZielobjekte.entrySet();
 
         for (Entry<NZielobjekt, CnATreeElement> entry : alleZielobjekteEntries) {
-            if (entry.getValue().getSchutzbedarfProvider() != null) {
-                List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjekt(entry.getKey());
-                for (NZobSb schubeda : internalSchutzbedarf) {
-                    CnATreeElement element = entry.getValue();
-
-                    MSchutzbedarfkategTxt vertr = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbVertrSbkId());
-                    MSchutzbedarfkategTxt verfu = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbVerfuSbkId());
-                    MSchutzbedarfkategTxt integ = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbIntegSbkId());
-
-                    int vertraulichkeit = (vertr != null) ? transferData.translateSchutzbedarf(vertr.getName()) : Schutzbedarf.UNDEF;
-
-                    int verfuegbarkeit = (verfu != null) ? transferData.translateSchutzbedarf(verfu.getName()) : Schutzbedarf.UNDEF;
-
-                    int integritaet = (integ != null) ? transferData.translateSchutzbedarf(integ.getName()) : Schutzbedarf.UNDEF;
-
-                    String vertrBegruendung = schubeda.getZsbVertrBegr();
-                    String verfuBegruendung = schubeda.getZsbVerfuBegr();
-                    String integBegruendung = schubeda.getZsbIntegBegr();
-
-                    Short isPersonenbezogen = schubeda.getZsbPersDaten();
-                    if (isPersonenbezogen == null) {
-                        isPersonenbezogen = 0;
-                    }
-
-                    ImportTransferSchutzbedarf command = new ImportTransferSchutzbedarf(element, vertraulichkeit, verfuegbarkeit, integritaet, vertrBegruendung, verfuBegruendung, integBegruendung, isPersonenbezogen);
-                    ServiceFactory.lookupCommandService().executeCommand(command);
-                }
-            } else if (NetzKomponente.TYPE_ID.equals(entry.getValue().getTypeId())) {
-                List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjekt(entry.getKey());
-                boolean uebertragung, angebunden, vertraulich, integritaet, verfuegbar;
-                if (internalSchutzbedarf.size() == 1) {
-                    NZobSb nzobSb = internalSchutzbedarf.get(0);
-                    uebertragung = nzobSb.getZsbUebertragung().equals((byte) 0x01);
-                    angebunden = nzobSb.getZsbAngebunden().equals((byte) 0x01);
-                    vertraulich = nzobSb.getZsbVertraulich().equals((byte) 0x01);
-                    integritaet = nzobSb.getZsbIntegritaet().equals((byte) 0x01);
-                    verfuegbar = nzobSb.getZsbVerfuegbar().equals((byte) 0x01);
-                    ImportTransferSchutzbedarf command = new ImportTransferSchutzbedarf((NetzKomponente) entry.getValue(), new boolean[] { angebunden, vertraulich, integritaet, verfuegbar, uebertragung });
-                    ServiceFactory.lookupCommandService().executeCommand(command);
-                } else {
-                    LOG.warn("Found more than one schutzbedarfEntry for element:\t" + entry.getValue().getUuid() + "\n=>Will not import Schutzbedarf for this element");
-                }
-            }
+            handleSchutzBedarfForSingleElement(entry);
         }
 
+    }
+
+    private void handleSchutzBedarfForSingleElement(Entry<NZielobjekt, CnATreeElement> entry) throws CommandException {
+        if (entry.getValue().getSchutzbedarfProvider() != null) {
+            List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjekt(entry.getKey());
+            for (NZobSb schubeda : internalSchutzbedarf) {
+                transferSchutzBedarfGeneral(entry, schubeda);
+            }
+        } else if (NetzKomponente.TYPE_ID.equals(entry.getValue().getTypeId())) {
+            transferSchutzBedarfNetzkomponente(entry);
+        }
+    }
+
+    private void transferSchutzBedarfNetzkomponente(Entry<NZielobjekt, CnATreeElement> entry) throws CommandException {
+        List<NZobSb> internalSchutzbedarf = getGstoolDao().findSchutzbedarfByZielobjekt(entry.getKey());
+        boolean uebertragung, angebunden, vertraulich, integritaet, verfuegbar;
+        if (internalSchutzbedarf.size() == 1) {
+            NZobSb nzobSb = internalSchutzbedarf.get(0);
+            uebertragung = nzobSb.getZsbUebertragung().equals((byte) 0x01);
+            angebunden = nzobSb.getZsbAngebunden().equals((byte) 0x01);
+            vertraulich = nzobSb.getZsbVertraulich().equals((byte) 0x01);
+            integritaet = nzobSb.getZsbIntegritaet().equals((byte) 0x01);
+            verfuegbar = nzobSb.getZsbVerfuegbar().equals((byte) 0x01);
+            ImportTransferSchutzbedarf command = new ImportTransferSchutzbedarf((NetzKomponente) entry.getValue(), new boolean[] { angebunden, vertraulich, integritaet, verfuegbar, uebertragung });
+            ServiceFactory.lookupCommandService().executeCommand(command);
+        } else {
+            LOG.warn("Found more than one schutzbedarfEntry for element:\t" + entry.getValue().getUuid() + "\n=>Will not import Schutzbedarf for this element");
+        }
+    }
+
+    private void transferSchutzBedarfGeneral(Entry<NZielobjekt, CnATreeElement> entry, NZobSb schubeda) throws CommandException {
+        CnATreeElement element = entry.getValue();
+
+        MSchutzbedarfkategTxt vertr = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbVertrSbkId());
+        MSchutzbedarfkategTxt verfu = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbVerfuSbkId());
+        MSchutzbedarfkategTxt integ = getGstoolDao().findSchutzbedarfNameForId(schubeda.getZsbIntegSbkId());
+
+        int vertraulichkeit = (vertr != null) ? transferData.translateSchutzbedarf(vertr.getName()) : Schutzbedarf.UNDEF;
+
+        int verfuegbarkeit = (verfu != null) ? transferData.translateSchutzbedarf(verfu.getName()) : Schutzbedarf.UNDEF;
+
+        int integritaet = (integ != null) ? transferData.translateSchutzbedarf(integ.getName()) : Schutzbedarf.UNDEF;
+
+        String vertrBegruendung = schubeda.getZsbVertrBegr();
+        String verfuBegruendung = schubeda.getZsbVerfuBegr();
+        String integBegruendung = schubeda.getZsbIntegBegr();
+
+        Short isPersonenbezogen = schubeda.getZsbPersDaten();
+        if (isPersonenbezogen == null) {
+            isPersonenbezogen = 0;
+        }
+
+        ImportTransferSchutzbedarf command = new ImportTransferSchutzbedarf(element, vertraulichkeit, verfuegbarkeit, integritaet, vertrBegruendung, verfuBegruendung, integBegruendung, isPersonenbezogen);
+        ServiceFactory.lookupCommandService().executeCommand(command);
     }
 
     private void importZielobjektVerknuepfungen() throws CommandException {
