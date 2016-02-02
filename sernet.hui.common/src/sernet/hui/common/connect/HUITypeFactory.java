@@ -190,6 +190,10 @@ public class HUITypeFactory {
         }
     }
 
+    public Set<String> getAllTypeIds() {
+        return allEntities.keySet();
+    }
+
     public EntityType getEntityType(String id) {
         return this.allEntities.get(id);
     }
