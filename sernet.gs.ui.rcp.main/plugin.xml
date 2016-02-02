@@ -15,7 +15,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="sernet.gs.ui.rcp.main.Perspective"
-            icon="icons/de.png"
+            icon="icons/gs.png"
             id="sernet.gs.ui.rcp.main.perspective"
             name="%perspective.name">
       </perspective>
@@ -71,7 +71,7 @@
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView"
-            icon="icons/de.png"
+            icon="icons/gs.png"
             id="sernet.gs.ui.rcp.main.views.bsimassnahmenview"
             name="%view.name.1">
       </view>
