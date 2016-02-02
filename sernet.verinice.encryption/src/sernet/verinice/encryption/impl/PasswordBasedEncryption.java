@@ -15,7 +15,6 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
 
-import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import sernet.verinice.interfaces.encryption.EncryptionException;
@@ -71,6 +70,8 @@ public abstract class PasswordBasedEncryption {
      * Encrypts the given byte data with the given password using the AES
      * algorithm.
      * 
+     * Method is deprecated, because usage of static attribute {@value SALT}
+     * 
      * @param unencryptedByteData
      *            the byte data to encrypt
      * @param password
@@ -79,30 +80,9 @@ public abstract class PasswordBasedEncryption {
      * @throws EncryptionException
      *             when a problem occured during the encryption process
      */
+    @Deprecated
     public static byte[] encrypt(byte[] unencryptedByteData, char[] password) throws EncryptionException {
-
-        byte[] decryptedData;
-
-        PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
-        PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
-
-        try {
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
-            SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
-
-            // Generate and initialize a PBE cipher
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
-            cipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParameterSpec);
-
-            // encrypt
-            decryptedData = cipher.doFinal(unencryptedByteData);
-
-        } catch (GeneralSecurityException e) {
-            throw new EncryptionException("There was a problem during the encryption process. See the stacktrace for details.", e);
-        }
-        decryptedData = (decryptedData == null) ? new byte[] {} : decryptedData;
-        pbeKeySpec.clearPassword();
-        return decryptedData;
+        return encryptData(unencryptedByteData, password, SALT);
     }
 
     /**
@@ -120,8 +100,19 @@ public abstract class PasswordBasedEncryption {
      *             when a problem occured during the encryption process
      */
     public static byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException {
-        byte[] encryptedData;
+        byte[] encryptedData = encryptData(unencryptedByteData, password, salt);
+        encryptedData = (encryptedData == null) ? new byte[] {} : encryptedData;
 
+        // attach (generic) salt to cyphertext as a prefix
+        byte[] encryptedDataWithSaltPrefix = new byte[encryptedData.length + IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+        System.arraycopy(salt, 0, encryptedDataWithSaltPrefix, 0, salt.length);
+        System.arraycopy(encryptedData, 0, encryptedDataWithSaltPrefix, salt.length, encryptedData.length);
+
+        return encryptedDataWithSaltPrefix;
+    }
+
+    private static byte[] encryptData(byte[] unencryptedByteData, char[] password, byte[] salt) {
+        byte[] encryptedData = null;
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, ITERATION_COUNT);
 
@@ -136,30 +127,20 @@ public abstract class PasswordBasedEncryption {
             // encrypt
             encryptedData = cipher.doFinal(unencryptedByteData);
 
+            pbeKeySpec.clearPassword();
         } catch (GeneralSecurityException e) {
             throw new EncryptionException("There was a problem during the encryption process. See the stacktrace for details.", e);
         }
-        encryptedData = (encryptedData == null) ? new byte[] {} : encryptedData;
-        byte[] encryptedDataWithSaltPrefix = new byte[encryptedData.length + IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
-
-        // attach (generic) salt to cyphertext as a prefix
-        System.arraycopy(salt, 0, encryptedDataWithSaltPrefix, 0, salt.length);
-        System.arraycopy(encryptedData, 0, encryptedDataWithSaltPrefix, salt.length, encryptedData.length);
-
-        pbeKeySpec.clearPassword();
-
-        if (Logger.getLogger(PasswordBasedEncryption.class).isDebugEnabled()) {
-            Logger.getLogger(PasswordBasedEncryption.class).debug("Length of encryptedByteData:\t" + encryptedData.length);
-            Logger.getLogger(PasswordBasedEncryption.class).debug("Length of salt:\t" + salt.length);
-            Logger.getLogger(PasswordBasedEncryption.class).debug("Length of encryptedDataWithSaltPrefix:\t" + encryptedDataWithSaltPrefix.length);
-        }
-
-        return encryptedDataWithSaltPrefix;
+        return encryptedData;
     }
 
     /**
      * Decrypts the given byte data with the given password using the AES
      * algorithm.
+     * 
+     * Method is deprecated because usage of static attribute {@value SALT} but
+     * do NOT REMOVE this, as it is still used to import vna generated with
+     * versions < 1.12
      * 
      * @param encryptedByteData
      *            the byte data to decrypt
@@ -169,33 +150,12 @@ public abstract class PasswordBasedEncryption {
      * @throws EncryptionException
      *             when a problem occured during the decryption process
      */
+    @Deprecated
     public static byte[] decrypt(byte[] encryptedByteData, char[] password) throws EncryptionException {
 
-        byte[] decryptedData;
+        byte[] decryptedData = decryptData(password, SALT, encryptedByteData);
 
-        PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
-        PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(SALT, ITERATION_COUNT);
-
-        try {
-            SecretKeyFactory secretKeyFactory = SecretKeyFactory.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
-            SecretKey pbeKey = secretKeyFactory.generateSecret(pbeKeySpec);
-
-            // Generate and initialize a PBE cipher
-            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
-            cipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParameterSpec);
-
-            // decrypt
-            decryptedData = cipher.doFinal(encryptedByteData);
-
-        } catch (InvalidKeyException e) {
-            throw new PasswordException("Check your password.", e);
-        } catch (BadPaddingException e) {
-            throw new PasswordException("Check your password.", e);
-        } catch (GeneralSecurityException e) {
-            throw new EncryptionException("There was a problem during the decryption process. See the stacktrace for details.", e);
-        }
-        decryptedData = (decryptedData == null) ? new byte[] {} : decryptedData;
-        return decryptedData;
+        return (decryptedData == null) ? new byte[] {} : decryptedData;
     }
 
     /**
@@ -214,7 +174,6 @@ public abstract class PasswordBasedEncryption {
      */
     public static byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt) throws EncryptionException {
 
-        byte[] decryptedData;
 
         // remove salt prefix from cyphertext
         byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
@@ -224,6 +183,11 @@ public abstract class PasswordBasedEncryption {
 
         System.arraycopy(encryptedByteData, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, cypherText, 0, encryptedByteData.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
 
+        return decryptData(password, salt, cypherText);
+    }
+
+    private static byte[] decryptData(char[] password, byte[] salt, byte[] cypherText) {
+        byte[] decryptedData = null;
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
         PBEParameterSpec pbeParameterSpec = new PBEParameterSpec(salt, ITERATION_COUNT);
 
@@ -245,8 +209,7 @@ public abstract class PasswordBasedEncryption {
         } catch (GeneralSecurityException e) {
             throw new EncryptionException("There was a problem during the decryption process. See the stacktrace for details.", e);
         }
-        decryptedData = (decryptedData == null) ? new byte[] {} : decryptedData;
-        return decryptedData;
+        return (decryptedData == null) ? new byte[] {} : decryptedData;
     }
 
     /**

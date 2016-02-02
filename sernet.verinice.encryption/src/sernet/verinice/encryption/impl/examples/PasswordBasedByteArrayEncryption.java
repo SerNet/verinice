@@ -27,7 +27,6 @@ class PasswordBasedByteArrayEncryption {
      * The password used for symmetric encryption
      */
     private static final String PASSWORD = "s3cr3tPassw0rd";
-    // private static final String PASSWORD = "1";
 	
 	private static IEncryptionService encryptionService = new EncryptionService();
 	
@@ -40,14 +39,12 @@ class PasswordBasedByteArrayEncryption {
 	 */
 	public static void main(String[] args) {
 
-        // testPBEWithoutSalt();
+        testPBEWithoutSalt();
         testPBEWithSalt();
     }
 
     private static void testPBEWithSalt() {
-        // String saltString =
-        // RandomStringUtils.random(IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH,
-        // true, true);
+
         String saltString = RandomStringUtils.random(SALT_LENGTH, true, true);
         System.out.println("Password Based Encryption (with generic salt) example for byte arrays");
         System.out.println("==================================================");

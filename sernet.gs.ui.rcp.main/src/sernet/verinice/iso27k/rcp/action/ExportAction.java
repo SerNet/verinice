@@ -234,7 +234,6 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
     private byte[] encrypt(byte[] result, byte[] salt) throws CertificateException, EncryptionException, IOException {
         IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
         byte[] cypherTextBytes;
-        byte[] returnResult;
         if (keyAlias != null) {
             cypherTextBytes = service.encrypt(result, keyAlias);
         } else if (password!=null) {
@@ -246,11 +245,7 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         } else {
             cypherTextBytes = result;
         }
-        // merge salt + cyphertext in one byte array
-        // returnResult = new byte[cypherTextBytes.length + salt.length];
-        // System.arraycopy(salt, 0, returnResult, 0, salt.length);
-        // System.arraycopy(cypherTextBytes, 0, returnResult, salt.length,
-        // cypherTextBytes.length);
+
         return cypherTextBytes;
     }
 
