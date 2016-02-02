@@ -5191,7 +5191,7 @@ Wurden bereits weitere Stellen informiert?
             
         <huiproperty
 			name="Description" 
-			id="incidentgroup_desc" 
+			id="incident_group_desc" 
 			inputtype="text" />   
     </huientity>
     
@@ -5624,7 +5624,7 @@ Wurden bereits weitere Stellen informiert?
             
         <huiproperty
 			name="Description" 
-			id="documentgroup_desc" 
+			id="document_group_desc" 
 			inputtype="text" />   
     </huientity>
     
