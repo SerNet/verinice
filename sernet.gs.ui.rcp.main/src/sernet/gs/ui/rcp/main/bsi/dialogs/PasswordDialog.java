@@ -49,8 +49,6 @@ public class PasswordDialog extends Dialog {
 
 
     private static final int TEXT_WIDTH = 125;
-    private static final int SIZE_X = 300;
-    private static final int SIZE_Y = 200;
 
     protected static final int WIZARD_NUM_COLS_ROOT = 2;
     protected static final Point DEFAULT_MARGINS = new Point(10, 10);
@@ -66,14 +64,9 @@ public class PasswordDialog extends Dialog {
     
     @Override
     protected void configureShell(Shell newShell) {
+
         super.configureShell(newShell);
         newShell.setText(Messages.PasswordDialog_0);
-        // newShell.setSize(SIZE_X, SIZE_Y);
-        
-        // open the window right under the mouse pointer:
-        Point cursorLocation = Display.getCurrent().getCursorLocation();
-        newShell.setLocation(new Point(cursorLocation.x - SIZE_X / 2,
-                cursorLocation.y - SIZE_Y / 2));
     }
     
     /* (non-Javadoc)
