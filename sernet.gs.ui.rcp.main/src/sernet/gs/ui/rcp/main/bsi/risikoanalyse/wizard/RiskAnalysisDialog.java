@@ -19,21 +19,31 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.GetHibernateDialect;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
@@ -47,12 +57,22 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
  */
 @SuppressWarnings("restriction")
 public abstract class RiskAnalysisDialog<T> extends Dialog {
+
     protected Text textNumber;
     protected Text textName;
     protected Text textDescription;
     protected Combo textCategory;
     private RiskAnalysisDialogItems<T> items;
+    protected Color defaultBackground;
     private static final Logger LOG = Logger.getLogger(RiskAnalysisDialog.class);
+    private int maxSizeForUsedDB = -1;
+    private static final Map<String, Integer> MAX_LENGTH_PER_DATABASE = new HashMap<>();
+
+    static {
+        MAX_LENGTH_PER_DATABASE.put("org.hibernate.dialect.PostgreSQLDialect", 400000);
+        MAX_LENGTH_PER_DATABASE.put("sernet.verinice.hibernate.Oracle10gNclobDialect", 400000);
+        MAX_LENGTH_PER_DATABASE.put("sernet.verinice.hibernate.ByteArrayDerbyDialect", 32672);
+    }
 
     protected RiskAnalysisDialog(Shell parentShell, RiskAnalysisDialogItems<T> items) {
         super(parentShell);
@@ -125,15 +145,53 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
 
     @Override
     protected void okPressed() {
-
+        textDescription.getTextLimit();
         if (isUniqueId(textNumber.getText(), getItem())) {
-            okPressedAndApproved();
 
-            super.okPressed();
+            if (descriptionLengthOK()) {
+
+                okPressedAndApproved();
+                super.okPressed();
+            } else {
+                MessageDialog.openError(getShell(), Messages.RiskAnalysisDialog_Error_0,
+                        NLS.bind(Messages.RiskAnalysisDialog_Error_1,
+                                textDescription.getText().length(), getMaxDescriptionLength()));
+            }
         } else {
             MessageDialog.openError(getShell(), Messages.NewGefaehrdungDialog_Error_0, NLS.bind(
                     Messages.NewGefaehrdungDialog_Error_1, textNumber.getText()));
         }
+    }
+
+    private boolean descriptionLengthOK() {
+
+        return textDescription.getText().length() <= getMaxDescriptionLength();
+            
+    }
+
+    private int getMaxDescriptionLength() {
+        if (maxSizeForUsedDB < 0) {
+            maxSizeForUsedDB = getMaxLengthForUsedDatabase();
+        }
+
+        return maxSizeForUsedDB;
+    }
+
+    private int getMaxLengthForUsedDatabase() {
+
+        GetHibernateDialect command;
+        try {
+            command = new GetHibernateDialect();
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+        } catch (CommandException e) {
+            LOG.error(e);
+            throw new IllegalArgumentException(e);
+        } catch (Exception e) {
+            LOG.error(e);
+            throw new IllegalArgumentException(e);
+        }
+        return MAX_LENGTH_PER_DATABASE.get(command.getHibernateDialect());
+
     }
 
     protected abstract Object getItem();
@@ -205,6 +263,7 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
         gridTextDescription.widthHint = gridTextDescriptionWidthHint;
         gridTextDescription.heightHint = gridTextDescriptionHeightHint;
         textDescription.setLayoutData(gridTextDescription);
+        defaultBackground = textDescription.getBackground();
 
         /* label category */
         final Label labelCategory = new Label(composite, SWT.NONE);
@@ -217,6 +276,25 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
         addCategory(composite);
 
         initContents();
+
+        textDescription.addModifyListener(new ModifyListener() {
+
+            @Override
+            public void modifyText(ModifyEvent e) {
+                final int red = 250;
+                final int green = red;
+                final int blue = 120;
+                
+                if (!descriptionLengthOK()) {
+                    textDescription
+                            .setBackground(new Color(Display.getCurrent(), red, green, blue));
+
+                    
+                } else {
+                    textDescription.setBackground(defaultBackground);
+                }
+            }
+        });
 
         return composite;
     }
