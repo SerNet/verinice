@@ -2535,7 +2535,7 @@ if(elements.size() > 0){
 		")";
 		c2 = new ExecuteHQLInReportCommand(personNameHql, new Object[]{root, "massnahmen-umsetzung", Integer.parseInt(dbid)}, Person.TYPE_ID);
 		persons = helper.execute(c2).getResult();		
-		if(persons != null && persons.size() > 0){		
+		if(persons != null &amp;&amp; persons.size() > 0){		
 			for(Object[] oArr : persons){
 				for(Object o : oArr){
 					if(o instanceof Person){
@@ -3130,12 +3130,6 @@ columns(cols);</value>
                 </cell>
             </row>
         </grid>
-        <label id="1703">
-            <property name="fontSize">12pt</property>
-            <property name="fontWeight">bold</property>
-            <property name="paddingTop">20pt</property>
-            <text-property name="text">Nicht &amp; teilweise umgesetzte Grundschutzmaßnahmen</text-property>
-        </label>
         <table id="1573">
             <property name="marginTop">20pt</property>
             <property name="dataSet">bausteine1</property>
