@@ -279,10 +279,6 @@ public class HUITypeFactory {
         }
     }
 
-    /**
-     * @param child
-     * @param relation
-     */
     private void readRelation(Element child, String sourceTypeId, HuiRelation relation) {
         final String id = child.getAttribute(ATTRIBUTE_ID);
         // name, reversename and tooltip are loaded from SNCAMessages (resource bundles)
@@ -366,30 +362,28 @@ public class HUITypeFactory {
         return propObj;
     }
 
-    /**
-     * @return
-     */
     private String readReferencedCnaLinkType(Element prop) {
         NodeList list = prop.getElementsByTagName("references");
-        for (int i = 0; i < list.getLength(); ++i) {
-            Element referencesElmt = (Element) list.item(i);
+        if(list != null && list.getLength()>0){
+            Element referencesElmt = (Element) list.item(0);
             return referencesElmt.getAttribute("linkType");
+        } else {
+
+            return "";
         }
-        return "";
     }
 
     private String readReferencedEntityId(Element prop) {
         NodeList list = prop.getElementsByTagName("references");
-        for (int i = 0; i < list.getLength(); ++i) {
-            Element referencesElmt = (Element) list.item(i);
+        if (list != null && list.getLength() > 0) {
+            Element referencesElmt = (Element) list.item(0);
             return referencesElmt.getAttribute("entitytype");
+        } else {
+
+            return "";
         }
-        return "";
     }
 
-    /**
-     * @param attribute
-     */
     private void addToTagList(String tags) {
         if (tags == null || tags.length()<1){
             return;
@@ -399,9 +393,6 @@ public class HUITypeFactory {
         allTags.addAll(Arrays.asList(individualTags));
     }
     
-    /**
-     * @return the allTags
-     */
     public Set<String> getAllTags() {
         return allTags;
     }
@@ -423,10 +414,6 @@ public class HUITypeFactory {
         return groupObj;
     }
 
-    /**
-     * @param prop
-     * @return
-     */
     private Set<DependsType> readDependencies(Element prop) {
         Set<DependsType> depends = new HashSet<>();
         NodeList nodes = prop.getChildNodes();
@@ -591,9 +578,6 @@ public class HUITypeFactory {
         return allDependecies.contains(opt.getId());
     }
 
-    /**
-     * @param typeId
-     */
     public HuiRelation getRelation(String typeId) {
         if (allEntities == null) {
             Logger.getLogger(this.getClass()).debug("No entities in HUITypeFactory!! Instance: " + this);
