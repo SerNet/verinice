@@ -49,7 +49,7 @@ import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
  * value between 1 and 5
  * 
  * In addition the typed to be tested in the arrays are selected via random to
- * ensure different combinations to be tested everytime the test is run.
+ * ensure different combinations to be tested every time the test is run.
  * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
@@ -122,6 +122,9 @@ public class LoadElementTitlesTest extends BeforeEachVNAImportHelper {
         ArrayList<String> list = new ArrayList<>(getAllTypeIds());
         Collections.shuffle(list);
 
+        if (list.size() <= num) {
+            return new HashSet<>(list);
+        }
         int i = 0;
         while (subset.size() != num) {
             i = (int) (Math.random() * list.size());
