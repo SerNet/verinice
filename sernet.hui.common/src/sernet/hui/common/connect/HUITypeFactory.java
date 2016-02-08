@@ -44,7 +44,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.rules.IFillRule;
 import sernet.hui.common.rules.IValidationRule;
 import sernet.hui.common.rules.NotEmpty;
@@ -81,8 +80,6 @@ public class HUITypeFactory {
 
     private Map<String, EntityType> allEntities = null;
 
-    private Set<String> allDependecies = new HashSet<>();
-
     // loads translated messages for HUI entities from resource bundles
     private SNCAMessages messages;
 
@@ -101,20 +98,63 @@ public class HUITypeFactory {
      */
     private HUITypeFactory(URL xmlFile) throws DBException {
         
-        URL validatedXmlFile = validateXmlFile(xmlFile);
 
-        messages = new SNCAMessages(validatedXmlFile.toExternalForm());
+        if (xmlFile == null) {
+            throw new DBException("Pfad für XML Systemdefinition nicht initialisiert. Config File korrekt?");
+        }
+        if (xmlFile.getProtocol().equals("http") || xmlFile.getProtocol().equals("ftp")) {
+            try {
+                xmlFile = new URL(xmlFile.toString() + "?nocache=" + Math.random());
+            } catch (MalformedURLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        messages = new SNCAMessages(xmlFile.toExternalForm());
 
         if (LOG.isDebugEnabled()) {
             LOG.debug("Conf url: " + messages.getBaseUrl() + ", localized name of huientity role: " + messages.getString("role"));
         }
 
-        DocumentBuilder parser = buildParser();
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setValidating(true);
+        DocumentBuilder parser = null;
 
-        LOG.debug("Getting XML property definition from " + validatedXmlFile);
-        setParserErrorHandlers(parser);
+        // uncomment this to enable validating of the schema:
         try {
-            doc = parser.parse(validatedXmlFile.openStream());
+            factory.setFeature("http://xml.org/sax/features/validation", true);
+            factory.setFeature("http://apache.org/xml/features/validation/schema", true);
+
+            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
+            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", getClass().getResource("/hitro.xsd").toString());
+
+            parser = factory.newDocumentBuilder();
+
+        } catch (ParserConfigurationException e) {
+            LOG.error("Unrecognized parser feature.", e);
+            throw new RuntimeException(e);
+        }
+
+        try {
+            LOG.debug("Getting XML property definition from " + xmlFile);
+            parser.setErrorHandler(new ErrorHandler() {
+                @Override
+                public void error(SAXParseException exception) throws SAXException {
+                    throw new RuntimeException(exception);
+                }
+
+                @Override
+                public void fatalError(SAXParseException exception) throws SAXException {
+                    throw new RuntimeException(exception);
+                }
+
+                @Override
+                public void warning(SAXParseException exception) throws SAXException {
+                    Logger.getLogger(this.getClass()).debug("Parser warning: " + exception.getLocalizedMessage());
+                }
+            });
+            doc = parser.parse(xmlFile.openStream());
             readAllEntities();
 
         } catch (IOException ie) {
@@ -123,65 +163,6 @@ public class HUITypeFactory {
         } catch (SAXException e) {
             throw new DBException("Die XML Datei mit der Definition der Formularfelder ist defekt!", e);
         }
-    }
-
-    private void setParserErrorHandlers(DocumentBuilder parser) {
-        parser.setErrorHandler(new ErrorHandler() {
-            @Override
-            public void error(SAXParseException exception) throws SAXException {
-                throw new IllegalStateException(exception);
-            }
-
-            @Override
-            public void fatalError(SAXParseException exception) throws SAXException {
-                throw new IllegalStateException(exception);
-            }
-
-            @Override
-            public void warning(SAXParseException exception) throws SAXException {
-                Logger.getLogger(this.getClass())
-                        .debug("Parser warning: " + exception.getLocalizedMessage());
-            }
-        });
-    }
-
-    private URL validateXmlFile(URL xmlFile) throws DBException {
-        URL testesXmlFile = null;
-        if (xmlFile == null) {
-            throw new DBException("Pfad für XML Systemdefinition nicht initialisiert. Config File korrekt?");
-        }
-        if ("http".equals(xmlFile.getProtocol()) || "ftp".equals(xmlFile.getProtocol())) {
-            try {
-                testesXmlFile = new URL(xmlFile.toString() + "?nocache=" + Math.random());
-            } catch (MalformedURLException e) {
-                throw new IllegalArgumentException(e);
-            }
-        }
-        return testesXmlFile;
-    }
-
-    private DocumentBuilder buildParser() {
-        DocumentBuilder parser = null;
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setNamespaceAware(true);
-        factory.setValidating(true);
-
-        try {
-            factory.setFeature("http://xml.org/sax/features/validation", true);
-            factory.setFeature("http://apache.org/xml/features/validation/schema", true);
-
-            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
-                    "http://www.w3.org/2001/XMLSchema");
-            factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource",
-                    getClass().getResource("/hitro.xsd").toString());
-
-            parser = factory.newDocumentBuilder();
-
-        } catch (ParserConfigurationException e) {
-            LOG.error("Unrecognized parser feature.", e);
-            throw new IllegalStateException(e);
-        }
-        return parser;
     }
 
     public static HUITypeFactory createInstance(URL xmlUrl) throws DBException {
@@ -574,20 +555,23 @@ public class HUITypeFactory {
     }
     
 
-    public boolean isDependency(IMLPropertyOption opt) {
-        return allDependecies.contains(opt.getId());
-    }
-
-    public HuiRelation getRelation(String typeId) {
+    /**
+     * Returns the HuiRelation object with the ID = huiRelationId.
+     * 
+     * @param huiRelationId
+     *            - id of the HuiRelation object to be returned.
+     * @return the HuiRelation object to the given huiRelationId.
+     */
+    public HuiRelation getRelation(String huiRelationId) {
         if (allEntities == null) {
-            Logger.getLogger(this.getClass()).debug("No entities in HUITypeFactory!! Instance: " + this);
+            LOG.debug("No entities in HUITypeFactory!! Instance: " + this);
             return null;
         }
 
         Set<Entry<String, EntityType>> entrySet = allEntities.entrySet();
         for (Entry<String, EntityType> entry : entrySet) {
             EntityType entityType = entry.getValue();
-            HuiRelation possibleRelation = entityType.getPossibleRelation(typeId);
+            HuiRelation possibleRelation = entityType.getPossibleRelation(huiRelationId);
             if (possibleRelation != null) {
                 return possibleRelation;
             }
@@ -679,7 +663,11 @@ public class HUITypeFactory {
                 }
                 return "";
             } else {
-                LOG.warn("SNCA message not found, key is: " + key);
+                if (!"".equals(key)) {
+                    LOG.warn("SNCA message not found, key is: " + key);
+                } else {
+                    LOG.info("key is empty String");
+                }
                 return key + " (!)";
             }
         } else {
@@ -687,8 +675,6 @@ public class HUITypeFactory {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("returning message from SNCA.XML: " + defaultMessage + ", key: " + key);
                 // mark missing resource bundle entries
-                // TODO rmotza is not clean to alter the return message when
-                // debug is enabled???
                 return defaultMessage + " (SNCA.xml)";
             }
             return defaultMessage;
