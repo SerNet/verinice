@@ -34,6 +34,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -44,13 +45,16 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.snutils.DBException;
 
 /**
- * Class to test HUITypeFactory There are some methods which get random subsets,
- * because the number of items to test is too big.
+ * Class to test HUITypeFactory.
+ * 
+ * There are some methods which get random subsets, because the number of items
+ * to test is too big.
  * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class HUITypeFactoryTest extends CommandServiceProvider {
 
+    private static final Logger LOG = Logger.getLogger(HUITypeFactoryTest.class);
     private static URL url;
     private static final String ABSOLUTE_SNCA_PATH = new File("").getAbsolutePath()
             + "/testSrc/SNCA.xml";
@@ -62,14 +66,8 @@ public class HUITypeFactoryTest extends CommandServiceProvider {
     @Resource(name = "huiTypeFactory")
     private HUITypeFactory huiTypeFactory;
 
-    /**
-     * @throws MalformedURLException
-     * @throws java.lang.Exception
-     */
     @BeforeClass
     public static void setUpBeforeClass() throws MalformedURLException {
-        // LOG.info(new File("").getAbsolutePath());
-
         url = Paths.get(ABSOLUTE_SNCA_PATH).toUri().toURL();
 
     }
@@ -91,9 +89,9 @@ public class HUITypeFactoryTest extends CommandServiceProvider {
     /**
      * Test method for
      * {@link sernet.hui.common.connect.HUITypeFactory#getPossibleRelations(java.lang.String, java.lang.String)}
-     * . Test method for
+     * ,
      * {@link sernet.hui.common.connect.HUITypeFactory#getPossibleRelationsFrom(java.lang.String)}
-     * . Test method for
+     * and
      * {@link sernet.hui.common.connect.HUITypeFactory#getPossibleRelationsTo(java.lang.String)}
      * .
      */
@@ -222,9 +220,8 @@ public class HUITypeFactoryTest extends CommandServiceProvider {
 
             allRelations.addAll(huiTypeFactory.getPossibleRelationsFrom(typeID));
             allRelations.addAll(huiTypeFactory.getPossibleRelationsTo(typeID));
-
         }
-        allRelations = getRandomSubset(allRelations, getRandomSize(1, MAX_NUM_TO_TEST));
+        allRelations = getRandomSubset(allRelations, getRandomInteger(1, MAX_NUM_TO_TEST));
         for (HuiRelation relation : allRelations) {
             assertEquals(relation, huiTypeFactory.getRelation(relation.getId()));
         }
@@ -241,11 +238,11 @@ public class HUITypeFactoryTest extends CommandServiceProvider {
 
         HashSet<EntityType> allTypes = new HashSet<>(huiTypeFactory.getAllEntityTypes());
         HashSet<EntityType> typesSubSet = getRandomSubset(allTypes,
-                getRandomSize(1, MAX_NUM_TO_TEST));
+                getRandomInteger(1, MAX_NUM_TO_TEST));
 
         for (EntityType type : typesSubSet) {
             HashSet<PropertyType> propertyTypes = new HashSet<>(type.getAllPropertyTypes());
-            propertyTypes = getRandomSubset(propertyTypes, getRandomSize(1, MAX_NUM_TO_TEST));
+            propertyTypes = getRandomSubset(propertyTypes, getRandomInteger(1, MAX_NUM_TO_TEST));
             for (PropertyType propertyType : propertyTypes) {
                 assertEquals(propertyType,
                         huiTypeFactory.getPropertyType(type.getId(), propertyType.getId()));
@@ -253,13 +250,23 @@ public class HUITypeFactoryTest extends CommandServiceProvider {
         }
     }
 
-    private int getRandomSize(int min, int max) {
+    private int getRandomInteger(int min, int max) {
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Random int between " + min + " and " + max + ".");
+        }
         return (int) (min + Math.random() * max);
     }
 
     private <T> HashSet<T> getRandomSubset(Set<T> set, int num) {
         if (set.size() <= num) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("The whole subset will be returned.");
+            }
             return new HashSet<>(set);
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Subset with " + num + " entries.");
         }
 
         HashSet<T> subset = new HashSet<>();
