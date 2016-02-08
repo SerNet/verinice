@@ -34,14 +34,17 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportLinkedElements;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthAwareCommand;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 
-public class LoadAssociatedGefaehrdungen extends GenericCommand {
+public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuthAwareCommand {
 
 	private CnATreeElement cnaElement;
 	private List<Baustein> alleBausteine;
@@ -50,6 +53,8 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
     private transient Logger log;
 
 	private String language;
+
+    private transient IAuthService authService;
 
 	public LoadAssociatedGefaehrdungen(CnATreeElement cnaElement, String language) {
 		this.cnaElement = cnaElement;
@@ -72,6 +77,12 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
              * look for associated Gefaehrdung via downlinks of cnaelement
              */
             associatedGefaehrdungen.addAll(getAssociatedGefaehrdungenViaLinks());
+            
+            for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : associatedGefaehrdungen) {
+                if (authService.isPermissionHandlingNeeded()) {
+                    gefaehrdungsUmsetzung.setPermissions(Permission.clonePermissionSet(gefaehrdungsUmsetzung, cnaElement.getPermissions()));
+                }              
+            }
         } catch (CommandException e) {
             getLog().error("Something went wrong on computing associated Gefaehrdungen via link for element:\t" + cnaElement.getUuid(), e);
             throw new RuntimeException(e);
@@ -166,6 +177,16 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
             log = Logger.getLogger(LoadAssociatedGefaehrdungen.class);
         }
         return log;
+    }
+
+    @Override
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    @Override
+    public void setAuthService(IAuthService service) {
+        this.authService = service;
     }
 
 }
