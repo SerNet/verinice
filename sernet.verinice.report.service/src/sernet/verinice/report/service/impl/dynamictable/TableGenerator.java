@@ -126,7 +126,7 @@ public final class TableGenerator {
 
     private static void merge(String[] rowFrom, String[] rowTo) {
         for (int i = 0; i < rowTo.length; i++) {
-            if(i < rowTo.length && rowTo[i] == null) {
+            if(i < rowFrom.length && rowTo[i] == null) {
                 rowTo[i] = rowFrom[i];
             }
         }      
