@@ -185,10 +185,7 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
         } catch (CommandException e) {
             LOG.error(e);
-            throw new IllegalArgumentException(e);
-        } catch (Exception e) {
-            LOG.error(e);
-            throw new IllegalArgumentException(e);
+            throw new IllegalStateException(e);
         }
         return MAX_LENGTH_PER_DATABASE.get(command.getHibernateDialect());
 
@@ -284,14 +281,12 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
                 final int red = 250;
                 final int green = red;
                 final int blue = 120;
-                
-                if (!descriptionLengthOK()) {
+
+                if (descriptionLengthOK()) {
+                    textDescription.setBackground(defaultBackground);
+                } else {
                     textDescription
                             .setBackground(new Color(Display.getCurrent(), red, green, blue));
-
-                    
-                } else {
-                    textDescription.setBackground(defaultBackground);
                 }
             }
         });
