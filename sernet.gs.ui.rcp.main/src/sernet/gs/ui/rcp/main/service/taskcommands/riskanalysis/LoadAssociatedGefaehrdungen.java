@@ -45,8 +45,8 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 
 /**
- * This command loads all threats (German: Gefaehrdungen) for an elmenent
- * which are either children of the element or linked to the element.
+ * This command loads all threats (German: Gefaehrdungen) for an elmenent which
+ * are either children of the element or linked to the element.
  * 
  * After loading the permissions of the element are inherited to the threats.
  * 
@@ -56,12 +56,13 @@ import sernet.verinice.model.common.Permission;
 public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuthAwareCommand {
 
     private static final long serialVersionUID = -7092181298463682487L;
-    
+
     private CnATreeElement cnaElement;
-	private List<Baustein> alleBausteine;
-	private List<GefaehrdungsUmsetzung> associatedGefaehrdungen;
-	
+    private List<Baustein> alleBausteine;
+    private List<GefaehrdungsUmsetzung> associatedGefaehrdungen;
+
     private transient Logger log;
+
     private Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(LoadAssociatedGefaehrdungen.class);
@@ -71,18 +72,20 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
 
     private transient IAuthService authService;
 
-	public LoadAssociatedGefaehrdungen(CnATreeElement cnaElement) {
-		this.cnaElement = cnaElement;
-	}
+    public LoadAssociatedGefaehrdungen(CnATreeElement cnaElement) {
+        this.cnaElement = cnaElement;
+    }
 
-	/* (non-Javadoc)
-	 * @see sernet.verinice.interfaces.ICommand#execute()
-	 */
-	@Override
-	public void execute() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.ICommand#execute()
+     */
+    @Override
+    public void execute() {
         reloadElement();
         try {
-            loadAssociatedGefaehrdungen();          
+            loadAssociatedGefaehrdungen();
             inheritPermissions();
         } catch (CommandException e) {
             getLog().error("Something went wrong on computing associated Gefaehrdungen via link for element:\t" + cnaElement.getUuid(), e);
@@ -117,14 +120,14 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
     private Set<GefaehrdungsUmsetzung> getAssociatedGefaehrdungenViaChildren() {
         Set<CnATreeElement> children = cnaElement.getChildren();
         Set<GefaehrdungsUmsetzung> gefaehrdungen = new HashSet<>();
-		for (CnATreeElement cnATreeElement : children) {
-			if (!(cnATreeElement instanceof BausteinUmsetzung)){
-				continue;
-			}
-			BausteinUmsetzung bausteinUmsetzung = (BausteinUmsetzung) cnATreeElement;
+        for (CnATreeElement cnATreeElement : children) {
+            if (!(cnATreeElement instanceof BausteinUmsetzung)) {
+                continue;
+            }
+            BausteinUmsetzung bausteinUmsetzung = (BausteinUmsetzung) cnATreeElement;
             gefaehrdungen.addAll(getGefaehrdungsUmsetzungenFromBausteinUmsetzung(bausteinUmsetzung));
         }
-		
+
         return gefaehrdungen;
     }
 
@@ -156,32 +159,32 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
         return linkedBausteinUmsetzungen;
     }
 
-	private Baustein findBausteinForId(String id) {
-		if (alleBausteine == null) {
-			LoadBausteine bstsCommand = new LoadBausteine();
-			try {
-				bstsCommand = getCommandService().executeCommand(bstsCommand);
-			} catch (CommandException e) {
-				throw new RuntimeCommandException(e);
-			}
-			alleBausteine = bstsCommand.getBausteine();
-		}
-		
-		if(alleBausteine != null){ 
-    		for (Baustein baustein : alleBausteine) {
-    			if (baustein.getId().equals(id)){
-    				return baustein;
-    			}
-    		}
-		}
-		return null;
-	}
-	
+    private Baustein findBausteinForId(String id) {
+        if (alleBausteine == null) {
+            LoadBausteine bstsCommand = new LoadBausteine();
+            try {
+                bstsCommand = getCommandService().executeCommand(bstsCommand);
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
+            }
+            alleBausteine = bstsCommand.getBausteine();
+        }
+
+        if (alleBausteine != null) {
+            for (Baustein baustein : alleBausteine) {
+                if (baustein.getId().equals(id)) {
+                    return baustein;
+                }
+            }
+        }
+        return null;
+    }
+
     private void inheritPermissions() {
         for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : associatedGefaehrdungen) {
             if (authService.isPermissionHandlingNeeded()) {
                 gefaehrdungsUmsetzung.setPermissions(Permission.clonePermissionSet(gefaehrdungsUmsetzung, cnaElement.getPermissions()));
-            }              
+            }
         }
     }
 
@@ -190,11 +193,13 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
         dao.reload(cnaElement, cnaElement.getDbId());
     }
 
-	public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
-		return associatedGefaehrdungen;
-	}
-	
-	/* (non-Javadoc)
+    public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
+        return associatedGefaehrdungen;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.GenericCommand#clear()
      */
     @Override
