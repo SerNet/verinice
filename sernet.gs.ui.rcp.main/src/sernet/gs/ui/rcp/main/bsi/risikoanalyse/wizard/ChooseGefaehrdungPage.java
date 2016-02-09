@@ -369,7 +369,7 @@ public class ChooseGefaehrdungPage extends RiskAnalysisWizardPage<CheckboxTableV
      */
     private void assignBausteinGefaehrdungen() {
         try {
-            LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(getRiskAnalysisWizard().getCnaElement(), BSIKatalogInvisibleRoot.getInstance().getLanguage());
+            LoadAssociatedGefaehrdungen command = new LoadAssociatedGefaehrdungen(getRiskAnalysisWizard().getCnaElement());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             List<GefaehrdungsUmsetzung> list = command.getAssociatedGefaehrdungen();
 
