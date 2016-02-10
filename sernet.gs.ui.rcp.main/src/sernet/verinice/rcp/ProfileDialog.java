@@ -264,7 +264,6 @@ public class ProfileDialog extends TitleAreaDialog {
         } else {
             this.profile = new Profile();
             selectedActions = profile.getAction();
-            auth.getProfiles().getProfile().add(this.profile);
         }
         setUnselected();
         table.setInput(unselectedActions);
@@ -302,6 +301,9 @@ public class ProfileDialog extends TitleAreaDialog {
                 if (!this.profile.getName().equals(this.profileName)) {
                     updateProfileRefs();
                 }
+                if (isNewProfile()) {
+                    auth.getProfiles().getProfile().add(this.profile);
+                }
                 getRightService().updateConfiguration(auth);
                 super.okPressed();
             } catch (Exception e) {
@@ -312,6 +314,11 @@ public class ProfileDialog extends TitleAreaDialog {
         } else {
             showValidationWarning();
         }
+    }
+
+    private boolean isNewProfile() {
+
+        return profileName == null;
     }
 
     private void showValidationWarning() {
@@ -338,14 +345,14 @@ public class ProfileDialog extends TitleAreaDialog {
      */
     @Override
     protected void cancelPressed() {
-        if(this.profile!=null) {
+        if (this.profile != null && profileNameOld != null) {
             this.profile.setName(profileNameOld);
             this.profile.getAction().clear();
             for (Action action : selectedActionsOld) {
                 this.profile.getAction().add(action);
             }
         }
-        super.okPressed();
+        super.cancelPressed();
     }
 
     /**
