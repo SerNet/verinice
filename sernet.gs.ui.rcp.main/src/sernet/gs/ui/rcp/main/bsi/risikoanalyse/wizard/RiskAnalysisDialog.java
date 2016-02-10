@@ -145,7 +145,6 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
 
     @Override
     protected void okPressed() {
-        textDescription.getTextLimit();
         if (isUniqueId(textNumber.getText(), getItem())) {
 
             if (descriptionLengthOK()) {
@@ -165,6 +164,7 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
 
     private boolean descriptionLengthOK() {
 
+        LOG.error(textDescription.getText().getBytes().length + "Bytes");
         return textDescription.getText().length() <= getMaxDescriptionLength();
             
     }
