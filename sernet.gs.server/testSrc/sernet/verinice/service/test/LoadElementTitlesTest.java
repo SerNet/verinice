@@ -127,7 +127,7 @@ public class LoadElementTitlesTest extends BeforeEachVNAImportHelper {
         }
         int i = 0;
         while (subset.size() != num) {
-            i = (int) (Math.random() * list.size());
+            i = (int) (Math.random() * (list.size() - 1));
             subset.add(list.get(i));
         }
 
