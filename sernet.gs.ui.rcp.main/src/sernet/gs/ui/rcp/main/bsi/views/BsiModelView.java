@@ -34,6 +34,7 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DecoratingLabelProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -87,6 +88,7 @@ import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewFilterAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.NullModel;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -477,13 +479,19 @@ public class BsiModelView extends RightsEnabledView
 
                 if (sel instanceof FinishedRiskAnalysis) {
                     FinishedRiskAnalysis analysis = (FinishedRiskAnalysis) sel;
-                    RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis.getParent(),
-                            analysis);
-                    wizard.init(PlatformUI.getWorkbench(), null);
-                    WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(new Shell(), wizard);
-                    wizDialog.setPageSize(wizard.getWidth(), wizard.getHeight());
+                    if (CnAElementHome.getInstance().isWriteAllowed(analysis)) {
+                        RiskAnalysisWizard wizard = new RiskAnalysisWizard(analysis.getParent(),
+                                analysis);
+                        wizard.init(PlatformUI.getWorkbench(), null);
+                        WizardDialog wizDialog = new org.eclipse.jface.wizard.WizardDialog(
+                                new Shell(), wizard);
+                        wizDialog.setPageSize(wizard.getWidth(), wizard.getHeight());
 
-                    wizDialog.open();
+                        wizDialog.open();
+                    } else {
+                        MessageDialog.openError(viewer.getTree().getShell(),
+                                Messages.BsiModelView_RA_0, Messages.BsiModelView_RA_1);
+                    }
                 } else {
                     EditorFactory.getInstance().updateAndOpenObject(sel);
                 }
