@@ -103,9 +103,9 @@ public class LoadElementTitlesTest extends BeforeEachVNAImportHelper {
         }
 
         Set<String> typeIdsToTest;
-        for (int i = 1; i < getRandomInInterval(1, MAX_NUM_TO_TEST); i++) {
+        for (int i = 1; i <= getRandomInInterval(1, MAX_NUM_TO_TEST); i++) {
 
-            typeIdsToTest = getRandomSubset(i);
+            typeIdsToTest = getRandomSubset(k);
 
             LoadElementTitles command = new LoadElementTitles(
                     typeIdsToTest.toArray(new String[typeIdsToTest.size()]));
