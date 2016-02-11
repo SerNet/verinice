@@ -151,7 +151,6 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
 
     private boolean descriptionLengthOK() {
 
-        LOG.error(textDescription.getText().getBytes().length + "Bytes");
         return textDescription.getText().length() <= getMaxDescriptionLength();
             
     }
