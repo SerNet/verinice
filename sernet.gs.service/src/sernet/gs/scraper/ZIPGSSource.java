@@ -183,7 +183,7 @@ public class ZIPGSSource implements IGSSource {
 			
 		
 		} catch (Exception e) {
-			Logger.getLogger(ZIPGSSource.class).error("Fehler beim Parsen eines Bausteins.", e);
+			Logger.getLogger(ZIPGSSource.class).warn("Fehler beim Parsen eines Bausteins.");
 			throw new GSServiceException("Fehler beim Parsen eines Bausteins (ZIP).", e);
 		}
 	

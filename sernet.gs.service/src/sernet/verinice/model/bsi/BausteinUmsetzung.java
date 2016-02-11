@@ -54,7 +54,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 		= Pattern.compile("(\\d+)\\.(\\d+)"); //$NON-NLS-1$
 
 	private static final String[] SCHICHTEN = new String[] {
-		"1", "2", "3", "4", "5" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+		"0", "1", "2", "3", "4", "5" //$NON-NLS-0$ //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 	};
 	
 	private static final String[] SCHICHTEN_BEZEICHNUNG = new String[] {
@@ -62,7 +62,8 @@ public class BausteinUmsetzung extends CnATreeElement {
 		Messages.BausteinUmsetzung_1,
 		Messages.BausteinUmsetzung_2,
 		Messages.BausteinUmsetzung_3,
-		Messages.BausteinUmsetzung_4
+		Messages.BausteinUmsetzung_4,
+		Messages.BausteinUmsetzung_5
 	};
 
 	
@@ -114,7 +115,7 @@ public class BausteinUmsetzung extends CnATreeElement {
 				kapitel[1] = Integer.parseInt(m.group(2));
 			} catch (NumberFormatException e) {
 				Logger.getLogger(this.getClass())
-					.error(Messages.BausteinUmsetzung_5, e);
+					.error(Messages.BausteinUmsetzung_6, e);
 			}
 		}
 		return kapitel;

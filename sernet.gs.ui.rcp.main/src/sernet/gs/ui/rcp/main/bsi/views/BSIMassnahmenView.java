@@ -363,12 +363,13 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
             // Please be careful when refactoring this. For an unknown reason "size() > 0"
             // behaves different then "isEmpty()" here. Replacing the former with the latter
             // as Sonar suggests breaks the tree in the IT Baseline Protection Catalog View.
-            if (parent instanceof Baustein) {
-                return ((Baustein) parent).getMassnahmen().size() > 0;
-            } else if (parent instanceof BSIKatalogInvisibleRoot) {
-                return ((BSIKatalogInvisibleRoot) parent).getBausteine().size() > 0;
-            }
-            return false;
+            if (parent instanceof Baustein){
+                Baustein baustein = (Baustein) parent;
+				return baustein.getMassnahmen().size() > 0 || baustein.getGefaehrdungen() != null ? baustein.getGefaehrdungen().size() > 0 : false;
+            } else if (parent instanceof BSIKatalogInvisibleRoot){
+				return ((BSIKatalogInvisibleRoot) parent).getBausteine().size() > 0;
+			}
+			return false;
         }
 
         @Override

@@ -43,15 +43,17 @@ public class Gefaehrdung implements IGSModel {
 	private String uuid;
 	private String encoding;
 
-    public static final int NUM_KATEGORIES = 6;
     public static final int KAT_UNDEF = 0;
 	public static final int KAT_HOEHERE_GEWALT	= 1;
-    public static final int KAT_ORG_MANGEL = 2;
-    public static final int KAT_MENSCH = 3;
-    public static final int KAT_TECHNIK = 4;
-    public static final int KAT_VORSATZ = 5;
+	public static final int KAT_ORG_MANGEL		= 2;
+	public static final int KAT_MENSCH 		    = 3;
+	public static final int KAT_TECHNIK 		= 4; 
+	public static final int KAT_VORSATZ 		= 5;
+    public static final int KAT_ALLGEMEIN       = 6;
+	public static final int NUM_KATEGORIES		= 7;
 	
 	// do not output these values, they are used for string matching:
+	public static final String KAT_MATCH_ALLGEMEIN          = "Elementare";
 	public static final String KAT_MATCH_HOEHERE_GEWALT		= "Gewalt";
 	public static final String KAT_MATCH_ORG_MANGEL			= "Organisatorisch";
 	public static final String KAT_MATCH_MENSCH 			= "Menschliche Fehlhandlungen";
@@ -71,6 +73,7 @@ public class Gefaehrdung implements IGSModel {
         categories.put(KAT_MENSCH, Messages.Gefaehrdung_3);
         categories.put(KAT_TECHNIK, Messages.Gefaehrdung_4);
         categories.put(KAT_VORSATZ, Messages.Gefaehrdung_5);
+        categories.put(KAT_ALLGEMEIN, Messages.Gefaehrdung_6);
     }
 
 	
@@ -176,6 +179,8 @@ public class Gefaehrdung implements IGSModel {
 			return KAT_TECHNIK;
         } else if (kategorie.indexOf(KAT_MATCH_VORSATZ) != -1) {
 			return KAT_VORSATZ;
+        } else if (kategorie.indexOf(KAT_MATCH_ALLGEMEIN) != -1) {
+			return KAT_ALLGEMEIN;
         } else {
             return KAT_UNDEF;
 		}

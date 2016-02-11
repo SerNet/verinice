@@ -243,7 +243,14 @@ public class GSScraper {
 		} catch (XPathException e) {
 			Logger.getLogger(GSScraper.class).error(e);
 			throw new GSServiceException(e);
-		}
+        } catch (GSServiceException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(e.getMessage());
+            }
+            if (!kapitel.equals("b00")) {
+                throw e;
+            }
+        }
 		writeToFile("bausteine_" + kapitel, result);
 		return result;
 	}
@@ -366,7 +373,14 @@ public class GSScraper {
 		} catch (XPathException e) {
 			Logger.getLogger(GSScraper.class).error(e);
 			throw new GSServiceException(e);
-		}
+        } catch (GSServiceException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(e.getMessage());
+            }
+            if (!baustein.equals("b00000")) {
+                throw e;
+            }
+        }
 		writeToFile("massnahmen_" + baustein, result);
 		return result;
 

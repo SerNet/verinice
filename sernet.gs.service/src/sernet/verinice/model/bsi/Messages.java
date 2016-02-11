@@ -34,6 +34,7 @@ public final class Messages extends NLS {
     public static String BausteinUmsetzung_3;
     public static String BausteinUmsetzung_4;
     public static String BausteinUmsetzung_5;
+    public static String BausteinUmsetzung_6;
     public static String BSIMassnahmenModel_0;
     public static String BSIMassnahmenModel_1;
     public static String BSIMassnahmenModel_10;

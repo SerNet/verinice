@@ -152,6 +152,7 @@ public class BSIMassnahmenModel {
             processBausteinLayer(mon, alleBst, "b03", 2);
             processBausteinLayer(mon, alleBst, "b04", 3);
             processBausteinLayer(mon, alleBst, "b05", 4);
+            processBausteinLayer(mon, alleBst, "b00", 5);
 
             this.language = scrape.getLanguage();
 
