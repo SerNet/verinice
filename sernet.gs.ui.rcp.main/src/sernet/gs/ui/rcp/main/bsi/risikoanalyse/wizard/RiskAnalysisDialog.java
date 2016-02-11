@@ -19,9 +19,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -41,9 +38,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.GetHibernateDialect;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
@@ -65,14 +59,7 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
     private RiskAnalysisDialogItems<T> items;
     protected Color defaultBackground;
     private static final Logger LOG = Logger.getLogger(RiskAnalysisDialog.class);
-    private int maxSizeForUsedDB = -1;
-    private static final Map<String, Integer> MAX_LENGTH_PER_DATABASE = new HashMap<>();
-
-    static {
-        MAX_LENGTH_PER_DATABASE.put("org.hibernate.dialect.PostgreSQLDialect", 400000);
-        MAX_LENGTH_PER_DATABASE.put("sernet.verinice.hibernate.Oracle10gNclobDialect", 400000);
-        MAX_LENGTH_PER_DATABASE.put("sernet.verinice.hibernate.ByteArrayDerbyDialect", 32672);
-    }
+    private static final int MAX_DESCRIPTION_LENGTH_FOR_GEFAEHRDUNG = 30000;
 
     protected RiskAnalysisDialog(Shell parentShell, RiskAnalysisDialogItems<T> items) {
         super(parentShell);
@@ -170,26 +157,10 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
     }
 
     private int getMaxDescriptionLength() {
-        if (maxSizeForUsedDB < 0) {
-            maxSizeForUsedDB = getMaxLengthForUsedDatabase();
-        }
 
-        return maxSizeForUsedDB;
+        return MAX_DESCRIPTION_LENGTH_FOR_GEFAEHRDUNG;
     }
 
-    private int getMaxLengthForUsedDatabase() {
-
-        GetHibernateDialect command;
-        try {
-            command = new GetHibernateDialect();
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
-        } catch (CommandException e) {
-            LOG.error(e);
-            throw new IllegalStateException(e);
-        }
-        return MAX_LENGTH_PER_DATABASE.get(command.getHibernateDialect());
-
-    }
 
     protected abstract Object getItem();
 
