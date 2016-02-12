@@ -84,7 +84,7 @@ public class ProcessCreator implements IProcessCreater {
             dummyAuthAdded = addSecurityContext(ctx);
             List<String> orgUuids = selectOrgs();
             if (LOG.isDebugEnabled() && orgUuids.isEmpty()) {
-                LOG.debug("No organizations found. Tag value is: " + getTag());
+                LOG.debug("No GSM organizations found. Tag value is: " + getTag());
             }
             for (String uuid : orgUuids) {
                 Organization org = getOrganizationDao().findByUuid(uuid, RetrieveInfo.getPropertyChildrenInstance());
