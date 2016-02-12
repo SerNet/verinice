@@ -33,6 +33,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinElementTransfer;
@@ -41,10 +42,13 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
+import sernet.gs.ui.rcp.main.bsi.views.BSIKatalogInvisibleRoot;
 import sernet.gs.ui.rcp.main.common.model.BuildInput;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementBuildException;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.GetElementPathCommand;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -55,9 +59,12 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**
  *
@@ -116,7 +123,15 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                     }
                 }
                 return dropBaustein((CnATreeElement) target, viewer, list.toArray(new Baustein[list.size()]));
-            } else if(firstOne != null && (firstOne instanceof IBSIStrukturElement || firstOne instanceof BausteinUmsetzung || firstOne instanceof IISO27kElement || firstOne instanceof IMassnahmeUmsetzung)) {
+            } else if (firstOne instanceof Massnahme && target instanceof BausteinUmsetzung) {
+                ArrayList<Massnahme> list = new ArrayList<Massnahme>(0);
+                for (Object object : items) {
+                    if (object instanceof Massnahme) {
+                        list.add((Massnahme) object);
+                    }
+                }
+                return dropMassnahmen((BausteinUmsetzung) target, viewer, list.toArray(new Massnahme[list.size()]));
+            } else if (firstOne != null && (firstOne instanceof IBSIStrukturElement || firstOne instanceof BausteinUmsetzung || firstOne instanceof IISO27kElement || firstOne instanceof IMassnahmeUmsetzung)) {
                 CnATreeElement element = (CnATreeElement) target;
                 LinkDropper dropper = new LinkDropper();
                 ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>();
@@ -144,7 +159,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("validateDrop, target: " + ((CnATreeElement)target).getTitle() +
+            LOG.debug("validateDrop, target: " + target != null ? target.toString() : "no target set" +
             		", transfer type class: " + transferType.getClass().getName() +
             		", transfer-type-id: " + transferType.type);
         }
@@ -177,10 +192,14 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
             isActive=false;
             return isActive;
         }
-        if(target instanceof BausteinUmsetzung && !(IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType))){
-            isActive = false;
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("target is BausteinUmsetzung,  IBSIStrukturElementTransfer.getInstance().isSupportedType(..) return false");
+        if (target instanceof BausteinUmsetzung && !(IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType))) {
+            if (IGSModelElementTransfer.getInstance().isSupportedType(transferType) && ((BausteinUmsetzung) target).isOwnModule()) {
+                isActive = true;
+            }else {
+                isActive = false;
+                if (LOG.isDebugEnabled()) {
+                	LOG.debug("target is BausteinUmsetzung,  IBSIStrukturElementTransfer.getInstance().isSupportedType(..) return false");
+            	}
             }
             return isActive;
         }
@@ -213,16 +232,20 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         return isActive;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
      */
     @Override
     public boolean checkRights() {
-        RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        RightsServiceClient service = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
      */
     @Override
@@ -230,15 +253,21 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         return ActionRightIDs.TREEDND;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.
+     * lang.String)
      */
     @Override
     public void setRightID(String rightID) {
         // nothing
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.iso27k.rcp.action.DropPerformer#isActive()
      */
     @Override
@@ -246,18 +275,17 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         return isActive;
     }
 
-    private boolean dropBaustein(final CnATreeElement target, Viewer viewer,final Baustein[] bausteine) {
-        if (!CnAElementHome.getInstance().isNewChildAllowed(target)){
+    private boolean dropBaustein(final CnATreeElement target, Viewer viewer, final Baustein[] bausteine) {
+        if (!CnAElementHome.getInstance().isNewChildAllowed(target)) {
             return false;
         }
         Check: for (Baustein baustein : bausteine) {
             int targetSchicht = 0;
-            if (target instanceof IBSIStrukturElement){
+            if (target instanceof IBSIStrukturElement) {
                 targetSchicht = ((IBSIStrukturElement) target).getSchicht();
             }
             if (baustein.getSchicht() != targetSchicht) {
-                if (!SanityCheckDialog.checkLayer(viewer.getControl().getShell(), baustein.getSchicht(),
-                        targetSchicht)){
+                if (!SanityCheckDialog.checkLayer(viewer.getControl().getShell(), baustein.getSchicht(), targetSchicht)) {
                     return false;
                 } else {
                     break Check; // user say he knows what he's doing, stop
@@ -295,35 +323,82 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     private void createBausteinUmsetzung(Baustein[] toDrop, CnATreeElement target) throws CnATreeElementBuildException, CommandException {
         CnATreeElement saveNew = null;
         for (Baustein baustein : toDrop) {
-            saveNew = CnAElementFactory.getInstance().saveNew(target,
-                    BausteinUmsetzung.TYPE_ID,
-                    new BuildInput<Baustein>(baustein),
-                    false /* do not notify single elements*/,
+            saveNew = CnAElementFactory.getInstance().saveNew(target, BausteinUmsetzung.TYPE_ID, new BuildInput<Baustein>(baustein),
+                    false /* do not notify single elements */,
                     false /* do not inherit icon */);
         }
         // notifying for the last element is sufficient to update all views:
-        CnAElementFactory.getLoadedModel().childAdded(target,saveNew);
+        CnAElementFactory.getLoadedModel().childAdded(target, saveNew);
+    }
+
+    private boolean dropMassnahmen(final BausteinUmsetzung target, Viewer viewer, final Massnahme[] massnahmen) {
+        if (!CnAElementHome.getInstance().isNewChildAllowed(target)) {
+            return false;
+        }
+
+        try {
+            Job dropJob = new Job(Messages.getString("BSIModelViewDropListener.3")) { //$NON-NLS-1$
+                @Override
+                protected IStatus run(IProgressMonitor monitor) {
+                    Activator.inheritVeriniceContextState();
+
+                    try {
+                        addMassnahmeToBausteinUmsetzung(massnahmen, target);
+                    } catch (Exception e) {
+                        Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
+                        return Status.CANCEL_STATUS;
+                    }
+                    return Status.OK_STATUS;
+                }
+            };
+            dropJob.setUser(true);
+            dropJob.setSystem(false);
+            dropJob.schedule();
+        } catch (Exception e) {
+            LOG.error(Messages.getString("BSIModelViewDropListener.5"), e); //$NON-NLS-1$
+            return false;
+        }
+        return true;
+    }
+
+    private void addMassnahmeToBausteinUmsetzung(Massnahme[] toDrop, BausteinUmsetzung target) throws CnATreeElementBuildException, CommandException {
+        CnATreeElement massnahmeUmsetzung = null;
+        for (Massnahme massnahme : toDrop) {
+            if (target.containsMassnahmenUmsetzung(massnahme.getId())){
+                GetElementPathCommand pathLoader = new GetElementPathCommand(target.getUuid(), target.getTypeId());
+                String elementPath = ServiceFactory.lookupCommandService().executeCommand(pathLoader).getResult();
+                LOG.error("ElementContainer:\t" + elementPath + "(" + target.getDbId() + ")" + "\twith TypeId:\t" + target.getTypeId() + " contains already a massnahmen with id:\t" + massnahme.getId() + "\t" + massnahme.getTitel() + " is skipped because of this");
+                return;
+            }
+            
+            MassnahmenFactory mFactory = new MassnahmenFactory();
+            massnahmeUmsetzung = mFactory.createMassnahmenUmsetzung(target, massnahme, BSIKatalogInvisibleRoot.getInstance().getLanguage());
+            massnahmeUmsetzung = CnAElementHome.getInstance().update(massnahmeUmsetzung);
+        }
+        // notifying for the last element is sufficient to update all views:
+        CnAElementFactory.getLoadedModel().childAdded(target, massnahmeUmsetzung);
     }
 
     @Override
-    public void dropAccept(DropTargetEvent event){
+    public void dropAccept(DropTargetEvent event) {
     }
-    
-    private boolean isSupportedData(TransferData transferType){
-        boolean retVal = IGSModelElementTransfer.getInstance().isSupportedType(transferType)
-                || IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType)
-                || BausteinUmsetzungTransfer.getInstance().isSupportedType(transferType);
-        retVal = retVal || ISO27kElementTransfer.getInstance().isSupportedType(transferType)
-                || ISO27kGroupTransfer.getInstance().isSupportedType(transferType);
+
+    private boolean isSupportedData(TransferData transferType) {
+        boolean retVal = IGSModelElementTransfer.getInstance().isSupportedType(transferType) || IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType) || BausteinUmsetzungTransfer.getInstance().isSupportedType(transferType);
+        retVal = retVal || ISO27kElementTransfer.getInstance().isSupportedType(transferType) || ISO27kGroupTransfer.getInstance().isSupportedType(transferType);
         return retVal;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.rcp.action.DropPerformer#performDrop(java.lang.Object, java.lang.Object, org.eclipse.jface.viewers.Viewer)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.iso27k.rcp.action.DropPerformer#performDrop(java.lang.
+     * Object, java.lang.Object, org.eclipse.jface.viewers.Viewer)
      */
     @Override
     public boolean performDrop(Object data, Object target, Viewer viewer) {
         return performDrop(data);
     }
-    
+
 }

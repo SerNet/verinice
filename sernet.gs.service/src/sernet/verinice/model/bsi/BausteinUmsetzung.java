@@ -134,113 +134,12 @@ public class BausteinUmsetzung extends CnATreeElement {
         // Massnahmen:
         char erreichteStufe = 'C';
 
-        // bausteine ohne massnahmen werden als '0' = "keine umsetzungsstufe"
-        // dargestellt:
-        if (getChildren().size() == 0) {
-            return '0';
-        }
-        allMassnahmen: for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
-            Object obj = iter.next();
-            if (!(obj instanceof MassnahmenUmsetzung || obj instanceof GefaehrdungsUmsetzung)) {
-                // should never happen:
-                Logger.getLogger(this.getClass()).error(obj.getClass());
-                return '0';
-            }
-
-            MassnahmenUmsetzung mn = (MassnahmenUmsetzung) obj;
-            // prüfe nicht umgesetzte Massnahmen:
-            if (mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_NEIN) || mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE) || mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET)) {
-                switch (mn.getStufe()) {
-                case 'A':
-                    // reduzieren auf 0 und return:
-                    erreichteStufe = '0';
-                    break allMassnahmen;
-                case 'B':
-                    // reduzieren auf A:
-                    erreichteStufe = 'A';
-                    break;
-                case 'C':
-                    // reduzieren auf B:
-                    if (erreichteStufe != 'A') {
-                        erreichteStufe = 'B';
-                    }
-                    break;
-                default:
-                    break;
-                // change nothing (Z nicht umgesetzt, optional)
-                }
-            }
-        }
-        return erreichteStufe;
-    }
-
-    @Override
-    public boolean canContain(Object obj) {
-        if (obj instanceof MassnahmenUmsetzung) {
-            return true;
-        }
-        return false;
-    }
-
-    public static String[] getSchichten() {
-        return SCHICHTEN.clone();
-    }
-
-    public static String[] getSchichtenBezeichnung() {
-        return SCHICHTEN_BEZEICHNUNG.clone();
-    }
-
-    public static String getSchichtenBezeichnung(String schichtNummer) {
-        for (int i = 0; i < SCHICHTEN.length; i++) {
-            if (SCHICHTEN[i].equals(schichtNummer)) {
-                return SCHICHTEN_BEZEICHNUNG[i];
-            }
-        }
-        return ""; //$NON-NLS-1$
-    }
-
-    public String getUrl() {
-        return getEntity().getSimpleValue(P_URL);
-    }
-
-    public String getEncoding() {
-        return getEntity().getSimpleValue(P_ENCODING);
-    }
-
-    public void setUrl(String url2) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(P_URL), url2);
-    }
-
-    public void setEncoding(String enc) {
-        getEntity().setSimpleValue(getEntityType().getPropertyType(P_ENCODING), enc);
-    }
-
-    public MassnahmenUmsetzung getMassnahmenUmsetzung(String url) {
-        for (Iterator iter = getChildren().iterator(); iter.hasNext();) {
-            MassnahmenUmsetzung mn = (MassnahmenUmsetzung) iter.next();
-            if (mn.getUrl().equals(url)) {
-                return mn;
-            }
-        }
-        return null;
-    }
-
-    public String getStand() {
-        return getEntity().getSimpleValue(P_STAND);
-    }
-
-    public void addBefragtePersonDurch(Person personToLink) {
-        PropertyType propertyType = getEntityType().getPropertyType(P_GESPRAECHSPARTNER_LINK);
-        getEntity().createNewProperty(propertyType, personToLink.getEntity().getDbId().toString());
-    }
-
-    public void addBefragungDurch(Person person) {
-        PropertyType propertyType = getEntityType().getPropertyType(P_ERFASSTDURCH_LINK);
-        getEntity().createNewProperty(propertyType, person.getEntity().getDbId().toString());
-    }
-
-    public String getDescription() {
-        return getEntity().getSimpleValue(P_BAUSTEIN_BESCHREIBUNG);
-    }
+	public String getDescription() {
+		return getEntity().getSimpleValue(P_BAUSTEIN_BESCHREIBUNG);
+	}
+	
+	public boolean isOwnModule() {
+	    return this.getUrl() == null || this.getUrl().isEmpty() || this.getUrl().equals("null");
+	}
 
 }

@@ -38,6 +38,7 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.bsi.LinkKategorie;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Schutzbedarf;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.InheritLogger;
@@ -397,6 +398,18 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		}
 		return false;
 	}
+	
+	public boolean containsMassnahmenUmsetzung(String kapitel) {
+        for (CnATreeElement elmt : getChildren()) {
+            if (elmt instanceof MassnahmenUmsetzung) {
+                MassnahmenUmsetzung mu = (MassnahmenUmsetzung) elmt;
+                if (mu.getKapitel().equals(kapitel)){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 	
 	/**
