@@ -79,47 +79,50 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
 
     private Object target = null;
 
-    public BSIModelViewDropListener(TreeViewer viewer){
+    public BSIModelViewDropListener(TreeViewer viewer) {
         super(viewer);
         this.viewer = viewer;
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.ViewerDropAdapter#performDrop(java.lang.Object)
      */
     @Override
     public boolean performDrop(Object data) {
-    	if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("performDrop, data: " + data);
         }
         Object toDrop = data;
         Object selectedData = null;
-        if(data == null){
-            if(LOG.isDebugEnabled()){
+        if (data == null) {
+            if (LOG.isDebugEnabled()) {
                 LOG.debug("data is null - setting to selected Object");
             }
-            
-            selectedData = ((IStructuredSelection)this.getViewer().getSelection()).toArray();
+
+            selectedData = ((IStructuredSelection) this.getViewer().getSelection()).toArray();
         } else {
             selectedData = data;
         }
         List items = DNDHelper.arrayToList(selectedData);
         Object firstOne = items.get(0);
         if (toDrop != null && (toDrop instanceof Object[])) {
-            Object[] o = (Object[])toDrop;
-            if(o.length > 0){
+            Object[] o = (Object[]) toDrop;
+            if (o.length > 0) {
                 firstOne = o[0];
             }
-        } else if(toDrop != null && (toDrop instanceof Object)){
+        } else if (toDrop != null && (toDrop instanceof Object)) {
             firstOne = toDrop;
         }
 
-        if(isActive()) {
-            if(firstOne instanceof Baustein && target.getClass().getPackage().getName().contains("model.bsi")){
+        if (isActive()) {
+            if (firstOne instanceof Baustein && target.getClass().getPackage().getName().contains("model.bsi")) {
                 ArrayList<Baustein> list = new ArrayList<Baustein>(0);
-                for(Object object : items){
-                    if(object instanceof Baustein){
-                        list.add((Baustein)object);
+                for (Object object : items) {
+                    if (object instanceof Baustein) {
+                        list.add((Baustein) object);
                     }
                 }
                 return dropBaustein((CnATreeElement) target, viewer, list.toArray(new Baustein[list.size()]));
@@ -135,9 +138,9 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                 CnATreeElement element = (CnATreeElement) target;
                 LinkDropper dropper = new LinkDropper();
                 ArrayList<CnATreeElement> list = new ArrayList<CnATreeElement>();
-                for(Object object : items){
-                    if(object instanceof CnATreeElement){
-                        list.add((CnATreeElement)object);
+                for (Object object : items) {
+                    if (object instanceof CnATreeElement) {
+                        list.add((CnATreeElement) object);
                     }
                 }
                 return dropper.dropLink(list, element);
@@ -145,23 +148,24 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         }
         return false;
     }
-    
+
     @Override
-    public void drop(DropTargetEvent event){
+    public void drop(DropTargetEvent event) {
         LOG.debug("entered drop(DropTargetEvent event)");
         target = determineTarget(event);
         super.drop(event);
     }
-    
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.Object, int, org.eclipse.swt.dnd.TransferData)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.ViewerDropAdapter#validateDrop(java.lang.
+     * Object, int, org.eclipse.swt.dnd.TransferData)
      */
     @Override
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("validateDrop, target: " + target != null ? target.toString() : "no target set" +
-            		", transfer type class: " + transferType.getClass().getName() +
-            		", transfer-type-id: " + transferType.type);
+            LOG.debug("validateDrop, target: " + target != null ? target.toString() : "no target set" + ", transfer type class: " + transferType.getClass().getName() + ", transfer-type-id: " + transferType.type);
         }
         if(!checkRights()){
             if (LOG.isDebugEnabled()) {
@@ -195,29 +199,28 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         if (target instanceof BausteinUmsetzung && !(IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType))) {
             if (IGSModelElementTransfer.getInstance().isSupportedType(transferType) && ((BausteinUmsetzung) target).isOwnModule()) {
                 isActive = true;
-            }else {
+            } else {
                 isActive = false;
                 if (LOG.isDebugEnabled()) {
-                	LOG.debug("target is BausteinUmsetzung,  IBSIStrukturElementTransfer.getInstance().isSupportedType(..) return false");
-            	}
+                    LOG.debug("target is BausteinUmsetzung,  IBSIStrukturElementTransfer.getInstance().isSupportedType(..) return false");
+                }
             }
             return isActive;
-        }
-        else if(target instanceof IBSIStrukturElement && isSupportedData(transferType)){
+        } else if (target instanceof IBSIStrukturElement && isSupportedData(transferType)) {
             isActive = true;
             if (LOG.isDebugEnabled()) {
                 LOG.debug("target is IBSIStrukturElement,  isSupportedData return false");
             }
             return isActive;
         }
-        if(target instanceof IISO27kGroup && BausteinElementTransfer.getInstance().isSupportedType(transferType)){
+        if (target instanceof IISO27kGroup && BausteinElementTransfer.getInstance().isSupportedType(transferType)) {
             isActive = false;
             if (LOG.isDebugEnabled()) {
                 LOG.debug("target is IISO27kGroup,  IISO27kGroup return true");
             }
             return isActive;
         }
-        if(IGSModelElementTransfer.getInstance().isSupportedType(transferType)){
+        if (IGSModelElementTransfer.getInstance().isSupportedType(transferType)) {
             isActive = false;
             if (LOG.isDebugEnabled()) {
                 LOG.debug("IGSModelElementTransfer.getInstance().isSupportedType(..) return true");
@@ -364,13 +367,13 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
     private void addMassnahmeToBausteinUmsetzung(Massnahme[] toDrop, BausteinUmsetzung target) throws CnATreeElementBuildException, CommandException {
         CnATreeElement massnahmeUmsetzung = null;
         for (Massnahme massnahme : toDrop) {
-            if (target.containsMassnahmenUmsetzung(massnahme.getId())){
+            if (target.containsMassnahmenUmsetzung(massnahme.getId())) {
                 GetElementPathCommand pathLoader = new GetElementPathCommand(target.getUuid(), target.getTypeId());
                 String elementPath = ServiceFactory.lookupCommandService().executeCommand(pathLoader).getResult();
                 LOG.error("ElementContainer:\t" + elementPath + "(" + target.getDbId() + ")" + "\twith TypeId:\t" + target.getTypeId() + " contains already a massnahmen with id:\t" + massnahme.getId() + "\t" + massnahme.getTitel() + " is skipped because of this");
                 return;
             }
-            
+
             MassnahmenFactory mFactory = new MassnahmenFactory();
             massnahmeUmsetzung = mFactory.createMassnahmenUmsetzung(target, massnahme, BSIKatalogInvisibleRoot.getInstance().getLanguage());
             massnahmeUmsetzung = CnAElementHome.getInstance().update(massnahmeUmsetzung);

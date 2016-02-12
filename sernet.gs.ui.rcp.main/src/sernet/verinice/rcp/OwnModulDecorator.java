@@ -8,7 +8,9 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 
-/**Decorator for a new own module
+/**
+ * Decorator for a new own module
+ * 
  * @author Julia Haas <jh[at]sernet[dot]de>
  * 
  */
