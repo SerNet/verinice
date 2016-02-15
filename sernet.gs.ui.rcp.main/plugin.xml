@@ -1616,6 +1616,22 @@
 	            </with>
 	         </and>
          </activeWhen>
+         
+         <enabledWhen>
+            	<with variable="selection">
+	                <iterate operator="and">
+	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.bsi.ImportBsiGroup"/>
+	                    </not>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup"/>
+	                    </not>
+	                </iterate>
+            	</with>
+		 </enabledWhen>
+         
+         
       </handler>
       <handler class="sernet.verinice.iso27k.rcp.action.CopyWithLinksHandler"
             commandId="sernet.verinice.iso27k.rcp.commands.copywithlinks">
@@ -1632,6 +1648,20 @@
 	            </with>
 	         </and>
          </activeWhen>
+         
+         <enabledWhen>
+            	<with variable="selection">
+	                <iterate operator="and">
+	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.bsi.ImportBsiGroup"/>
+	                    </not>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup"/>
+	                    </not>
+	                </iterate>
+            	</with>
+		 </enabledWhen>
       </handler>
       <handler class="sernet.verinice.iso27k.rcp.action.CutHandler"
             commandId="org.eclipse.ui.edit.cut">
