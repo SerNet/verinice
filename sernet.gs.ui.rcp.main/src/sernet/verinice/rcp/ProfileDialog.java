@@ -41,8 +41,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -158,20 +156,6 @@ public class ProfileDialog extends TitleAreaDialog {
         gridData = new GridData(GridData.GRAB_HORIZONTAL);
         gridData.minimumWidth = minWidthGridLayout;
         textName.setLayoutData(gridData);
-        textName.addFocusListener(new FocusListener() {
-            
-            @Override
-            public void focusLost(FocusEvent e) {
-                if(ProfileDialog.this.profile!=null) {
-                    ProfileDialog.this.profile.setName(textName.getText());
-                }
-            }
-            
-            @Override
-            public void focusGained(FocusEvent e) {
-                // nothing to do
-            }
-        });
         
         Label labelTranslated = new Label(comboComposite, SWT.WRAP);
         labelTranslated.setText(Messages.ProfileDialog_4);
@@ -297,22 +281,31 @@ public class ProfileDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         if (validateInput()) {
-            try {
+            saveProfile();
+        } else {
+            showValidationWarning();
+        }
+    }
+
+
+    private void saveProfile() {
+        try {
+            if (this.profile != null) {
+                this.profile.setName(textName.getText());
+            }
+            if (isNewProfile()) {
+                auth.getProfiles().getProfile().add(this.profile);
+            } else {
                 if (!this.profile.getName().equals(this.profileName)) {
                     updateProfileRefs();
                 }
-                if (isNewProfile()) {
-                    auth.getProfiles().getProfile().add(this.profile);
-                }
-                getRightService().updateConfiguration(auth);
-                super.okPressed();
-            } catch (Exception e) {
-                final String message = "Error while saving profiles.";
-                LOG.error(message, e);
-                MessageDialog.openError(this.getShell(), "Error", message);
             }
-        } else {
-            showValidationWarning();
+            getRightService().updateConfiguration(auth);
+            super.okPressed();
+        } catch (Exception e) {
+            final String message = "Error while saving profiles.";
+            LOG.error(message, e);
+            MessageDialog.openError(this.getShell(), "Error", message);
         }
     }
 
