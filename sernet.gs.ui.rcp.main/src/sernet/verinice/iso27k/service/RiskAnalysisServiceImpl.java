@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadPolymorphicCnAElementById;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -34,7 +35,6 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  * Performs risk analysis according to ISO 27005.

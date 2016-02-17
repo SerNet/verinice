@@ -34,87 +34,115 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportLinkedElements;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthAwareCommand;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 
-public class LoadAssociatedGefaehrdungen extends GenericCommand {
+/**
+ * This command loads all threats (German: Gefaehrdungen) for an elmenent which
+ * are either children of the element or linked to the element.
+ * 
+ * After loading the permissions of the element are inherited to the threats.
+ * 
+ * @author Alexander Koderman <ak[at]sernet[dot]de>
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
+ */
+public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuthAwareCommand {
 
-	private CnATreeElement cnaElement;
-	private List<Baustein> alleBausteine;
-	private List<GefaehrdungsUmsetzung> associatedGefaehrdungen;
-	
+    private static final long serialVersionUID = -7092181298463682487L;
+
+    private CnATreeElement cnaElement;
+    private List<Baustein> alleBausteine;
+    private List<GefaehrdungsUmsetzung> associatedGefaehrdungen;
+
     private transient Logger log;
 
-	private String language;
+    private Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(LoadAssociatedGefaehrdungen.class);
+        }
+        return log;
+    }
 
-	public LoadAssociatedGefaehrdungen(CnATreeElement cnaElement, String language) {
-		this.cnaElement = cnaElement;
-	}
+    private transient IAuthService authService;
 
-	public void execute() {
-        associatedGefaehrdungen = new ArrayList<GefaehrdungsUmsetzung>();
+    public LoadAssociatedGefaehrdungen(CnATreeElement cnaElement) {
+        this.cnaElement = cnaElement;
+    }
 
-        IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(cnaElement);
-        dao.reload(cnaElement, cnaElement.getDbId());
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.ICommand#execute()
+     */
+    @Override
+    public void execute() {
+        reloadElement();
         try {
-
-            /*
-             * look for associated Gefaehrdung via children of cnaelement
-             */
-            associatedGefaehrdungen.addAll(getAssociatedGefaehrdungenViaChildren());
-
-            /*
-             * look for associated Gefaehrdung via downlinks of cnaelement
-             */
-            associatedGefaehrdungen.addAll(getAssociatedGefaehrdungenViaLinks());
+            loadAssociatedGefaehrdungen();
+            inheritPermissions();
         } catch (CommandException e) {
             getLog().error("Something went wrong on computing associated Gefaehrdungen via link for element:\t" + cnaElement.getUuid(), e);
-            throw new RuntimeException(e);
+            throw new RuntimeCommandException(e);
         }
 
     }
 
+    private void loadAssociatedGefaehrdungen() throws CommandException {
+        associatedGefaehrdungen = new ArrayList<>();
+
+        /*
+         * look for associated Gefaehrdung via children of cnaelement
+         */
+        associatedGefaehrdungen.addAll(getAssociatedGefaehrdungenViaChildren());
+
+        /*
+         * look for associated Gefaehrdung via downlinks of cnaelement
+         */
+        associatedGefaehrdungen.addAll(getAssociatedGefaehrdungenViaLinks());
+    }
+
     private Set<GefaehrdungsUmsetzung> getAssociatedGefaehrdungenViaLinks() throws CommandException {
-        Set<GefaehrdungsUmsetzung> associatedGefaehrdungen = new HashSet<>();
+        Set<GefaehrdungsUmsetzung> gefaehrdungen = new HashSet<>();
         Set<BausteinUmsetzung> linkedBausteinUmsetzungen = findLinkedBausteinUmsetzungen(cnaElement);
         for (BausteinUmsetzung linkedBausteinUmsetzung : linkedBausteinUmsetzungen) {
-            associatedGefaehrdungen.addAll(getGefaehrdungsUmsetzungenFromBausteinUmsetzung(linkedBausteinUmsetzung));
+            gefaehrdungen.addAll(getGefaehrdungsUmsetzungenFromBausteinUmsetzung(linkedBausteinUmsetzung));
         }
-        return associatedGefaehrdungen;
+        return gefaehrdungen;
     }
 
     private Set<GefaehrdungsUmsetzung> getAssociatedGefaehrdungenViaChildren() {
         Set<CnATreeElement> children = cnaElement.getChildren();
-        Set<GefaehrdungsUmsetzung> associatedGefaehrdungen = new HashSet<>();
-		for (CnATreeElement cnATreeElement : children) {
-			if (!(cnATreeElement instanceof BausteinUmsetzung)){
-				continue;
-			}
-			BausteinUmsetzung bausteinUmsetzung = (BausteinUmsetzung) cnATreeElement;
-            associatedGefaehrdungen.addAll(getGefaehrdungsUmsetzungenFromBausteinUmsetzung(bausteinUmsetzung));
+        Set<GefaehrdungsUmsetzung> gefaehrdungen = new HashSet<>();
+        for (CnATreeElement cnATreeElement : children) {
+            if (!(cnATreeElement instanceof BausteinUmsetzung)) {
+                continue;
+            }
+            BausteinUmsetzung bausteinUmsetzung = (BausteinUmsetzung) cnATreeElement;
+            gefaehrdungen.addAll(getGefaehrdungsUmsetzungenFromBausteinUmsetzung(bausteinUmsetzung));
         }
-		
-        return associatedGefaehrdungen;
+
+        return gefaehrdungen;
     }
 
     private Set<GefaehrdungsUmsetzung> getGefaehrdungsUmsetzungenFromBausteinUmsetzung(BausteinUmsetzung bausteinUmsetzung) {
-        Set<GefaehrdungsUmsetzung> associatedGefaehrdungen = new HashSet<>();
+        Set<GefaehrdungsUmsetzung> gefaehrdungen = new HashSet<>();
         Baustein baustein = findBausteinForId(bausteinUmsetzung.getKapitel());
         if (baustein == null) {
-            return associatedGefaehrdungen;
+            return gefaehrdungen;
         }
         for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
             if (!GefaehrdungsUtil.listContainsById(this.associatedGefaehrdungen, gefaehrdung)) {
-                associatedGefaehrdungen.add(GefaehrdungsUmsetzungFactory.build(null, gefaehrdung, language));
+                gefaehrdungen.add(GefaehrdungsUmsetzungFactory.build(null, gefaehrdung, null));
             }
         }
-
-        return associatedGefaehrdungen;
+        return gefaehrdungen;
 
     }
 
@@ -131,41 +159,63 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand {
         return linkedBausteinUmsetzungen;
     }
 
-	private Baustein findBausteinForId(String id) {
-		if (alleBausteine == null) {
-			LoadBausteine bstsCommand = new LoadBausteine();
-			try {
-				bstsCommand = getCommandService().executeCommand(bstsCommand);
-			} catch (CommandException e) {
-				throw new RuntimeCommandException(e);
-			}
-			alleBausteine = bstsCommand.getBausteine();
-		}
-		
-		if(alleBausteine != null){ 
-    		for (Baustein baustein : alleBausteine) {
-    			if (baustein.getId().equals(id)){
-    				return baustein;
-    			}
-    		}
-		}
-		return null;
-	}
-
-	public void clear() {
-		alleBausteine = null;
-		cnaElement = null;
-	}
-
-	public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
-		return associatedGefaehrdungen;
-	}
-
-    private Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadAssociatedGefaehrdungen.class);
+    private Baustein findBausteinForId(String id) {
+        if (alleBausteine == null) {
+            LoadBausteine bstsCommand = new LoadBausteine();
+            try {
+                bstsCommand = getCommandService().executeCommand(bstsCommand);
+            } catch (CommandException e) {
+                throw new RuntimeCommandException(e);
+            }
+            alleBausteine = bstsCommand.getBausteine();
         }
-        return log;
+
+        if (alleBausteine != null) {
+            for (Baustein baustein : alleBausteine) {
+                if (baustein.getId().equals(id)) {
+                    return baustein;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void inheritPermissions() {
+        for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : associatedGefaehrdungen) {
+            if (authService.isPermissionHandlingNeeded()) {
+                gefaehrdungsUmsetzung.setPermissions(Permission.clonePermissionSet(gefaehrdungsUmsetzung, cnaElement.getPermissions()));
+            }
+        }
+    }
+
+    private void reloadElement() {
+        IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(cnaElement);
+        dao.reload(cnaElement, cnaElement.getDbId());
+    }
+
+    public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
+        return associatedGefaehrdungen;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.interfaces.GenericCommand#clear()
+     */
+    @Override
+    public void clear() {
+        alleBausteine = null;
+        cnaElement = null;
+    }
+
+    @Override
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    @Override
+    public void setAuthService(IAuthService service) {
+        this.authService = service;
     }
 
 }

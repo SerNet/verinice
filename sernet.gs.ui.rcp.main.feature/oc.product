@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.11.1" useFeatures="true" includeLaunchers="true">
+<product name="verinice" uid="sernet.gs.ui.rcp.main.product" id="sernet.gs.ui.rcp.main.product" application="sernet.gs.ui.rcp.main.application" version="1.12.0" useFeatures="true" includeLaunchers="true">
 
    <aboutInfo>
       <image path="/sernet.gs.ui.rcp.main/verinice_icons/about_img.png"/>
       <text>
-         SerNet verinice 1.12 - Codename &apos;Piha&apos;
+         SerNet verinice 1.12.0 - Codename &apos;Piha&apos;
 
 (c) SerNet Service Network GmbH and others
 1996-2016
@@ -68,7 +68,11 @@ VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilin
       </programArgs>
       <programArgsMac>-vm ../../../jre/Contents/Home/lib/jli/libjli.dylib
       </programArgsMac>
+<<<<<<< HEAD
       <vmArgs>-Xms256m -Xmx768m -XX:MaxMetaspaceSize=256m -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost  -Dosgi.parentClassloader=ext
+=======
+      <vmArgs>-Xms256m -Xmx768m -XX:MaxMetaspaceSize=256m -XX:MaxPermSize=256m -XX:+IgnoreUnrecognizedVMOptions -Dorg.osgi.service.http.port=8800 -Dorg.ops4j.pax.web.listening.addresses=localhost  -Dosgi.parentClassloader=ext
+>>>>>>> master
       </vmArgs>
       <vmArgsMac>-Djava.awt.headless=true
       </vmArgsMac>

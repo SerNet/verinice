@@ -84,36 +84,36 @@
                 <structure>
                     <property name="name">bcm_relevant_text</property>
                     <expression name="expression">if(row["bcm_relevant"] === "true"){
-	"Ja";
+	"Yes";
 } else {
-	"Nein";
+	"No";
 }</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">affect_conf_text</property>
                     <expression name="expression">if(row["affect-confidentialy"] === "1"){
-	"Ja"
+	"Yes"
 } else {
-   "Nein"
+   "No"
 }</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">affect_integrity_text</property>
                     <expression name="expression">if(row["affect-integrity"] === "1"){
-	"Ja"
+	"Yes"
 } else {
-   "Nein"
+   "No"
 }</expression>
                     <property name="dataType">string</property>
                 </structure>
                 <structure>
                     <property name="name">affect_availability_text</property>
                     <expression name="expression">if(row["affect-availability"] === "1"){
-	"Ja"
+	"Yes"
 } else {
-   "Nein"
+   "No"
 }</expression>
                     <property name="dataType">string</property>
                 </structure>

@@ -14,7 +14,6 @@ import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  * Loads an element with all its children.

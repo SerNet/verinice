@@ -18,7 +18,6 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.common.TransactionAbortedException;
-import sernet.verinice.service.commands.LoadPolymorphicCnAElementById;
 
 /**
  * Load all elements of given type linked to the given root element.
