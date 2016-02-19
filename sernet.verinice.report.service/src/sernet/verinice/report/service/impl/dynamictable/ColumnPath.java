@@ -103,6 +103,10 @@ public class ColumnPath {
     public void setNumber(int number) {
         this.number = number;
     }
+
+    public List<IPathElement> getPathElements() {
+        return pathElements;
+    }
     
     
 }

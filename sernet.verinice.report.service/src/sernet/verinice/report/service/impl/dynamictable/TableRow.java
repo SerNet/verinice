@@ -23,8 +23,6 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 /**
  * this class wraps information used within the command {@link GraphReportDataModel} to flatten a treestructure into a table, that can be
  * used within a verinice report template dataset
@@ -37,8 +35,6 @@ import org.apache.log4j.Logger;
 public class TableRow implements Serializable {
 
     private static final long serialVersionUID = 201506090913L;
-    
-    private static final Logger LOG = Logger.getLogger(TableRow.class);
     
     // the predefined columns each row has to represent
     private String[] columns;
@@ -126,10 +122,10 @@ public class TableRow implements Serializable {
     
     @Override
     public boolean equals(Object other){
-        if ((this == other)){
+        if (this == other){
             return true;
         }
-        if ((other == null)){
+        if (other == null){
             return false;
         }
         if (!(other instanceof TableRow)){

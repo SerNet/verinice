@@ -29,11 +29,13 @@ import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- *
+ * GraphElementLoader loads elements for {@link GraphService} or {@link GraphCommand}s.
+ * You can add one or more loader to GraphService.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -63,6 +65,7 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
         if (getTypeIds() != null && getTypeIds().length > 0) {
             crit.add(Restrictions.in("objectType", getTypeIds()));
         }
+        @SuppressWarnings("unchecked") // daos does not use generics
         List<CnATreeElement> elementList = getCnaTreeElementDao().findByCriteria(crit);
         elementList = filterElements(elementList);
         if (LOG.isInfoEnabled()) {
