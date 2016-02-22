@@ -254,7 +254,9 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
         associateGefaehrdung = ServiceFactory.lookupCommandService().executeCommand(associateGefaehrdung);
         GefaehrdungsUmsetzung gefaehrdungsUmsetzung = associateGefaehrdung.getGefaehrdungsUmsetzung();
         transferData.transferRAGefaehrdungsUmsetzung(gefaehrdungsUmsetzung, gefaehrdungenResult);
+        gefaehrdungsUmsetzung.setExtId(gefaehrdungenResult.getZielobjekt().getGuid());
         CnAElementHome.getInstance().update(gefaehrdungsUmsetzung);
+        assert (gefaehrdungsUmsetzung.getExtId() != null);
         return gefaehrdungsUmsetzung;
     }
 

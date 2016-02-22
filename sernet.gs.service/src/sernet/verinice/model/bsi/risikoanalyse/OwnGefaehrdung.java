@@ -22,9 +22,10 @@ import sernet.hui.common.connect.ITypedElement;
 
 public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
 	
-    private static final long serialVersionUID = -5602823890068961674L;
+    private static final long serialVersionUID = 20160222105816L;
     private String beschreibung;
 	private String ownkategorie;
+    private String extId;
 	
 	public static final String TYPE_ID = "owngefaehrdung";
 
@@ -35,6 +36,7 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
 		super();
 		this.beschreibung = "";
 		this.ownkategorie = "";
+        this.extId = "";
 	}
 	
 	public String getKategorieAsString() {
@@ -70,6 +72,14 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
         return TYPE_ID;
     }
     
+    public String getExtId() {
+        return extId;
+    }
+
+    public void setExtId(String extId) {
+        this.extId = extId;
+    }
+
     @Override
     public String getKategorieAsString(String language) {
         if(ownkategorie.isEmpty() || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_DE) || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_EN)){

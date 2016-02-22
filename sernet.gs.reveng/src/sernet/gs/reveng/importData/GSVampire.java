@@ -530,15 +530,15 @@ public class GSVampire {
         Query qry = dao.getSession().createQuery(QUERY_GEFS_FOR_BAUSTEIN);
         qry.setParameter("gefId", mbBstGef.getMbGefaehr().getId().getGefId());
         List<Object> hqlResult = qry.list();
-        GefaehrdungInformationTransfer gefaehrdungInformation = new GefaehrdungInformationTransfer();
+        GefaehrdungInformationTransfer gefaehrdungsInformation = null;
         if(hqlResult.size() >= 1 && hqlResult.get(0) instanceof Object[]){
-            gefaehrdungInformation = processGefaehrdung(encoding, hqlResult, gefaehrdungInformation);
+            gefaehrdungsInformation = processGefaehrdung(encoding, hqlResult);
         }
-        
+        gefaehrdungsInformation.setExtId(z.getGuid());
         logDuplicates(encoding, hqlResult);
         transaction.commit();
         dao.getSession().close();
-        return gefaehrdungInformation;
+        return gefaehrdungsInformation;
 	}
 
     /**
@@ -546,12 +546,14 @@ public class GSVampire {
      * @param hqlResult
      * @param gefaehrdungInformation
      */
-    private GefaehrdungInformationTransfer processGefaehrdung(String encoding, List<Object> hqlResult, GefaehrdungInformationTransfer gefaehrdungInformation) {
+    private GefaehrdungInformationTransfer processGefaehrdung(String encoding, List<Object> hqlResult) {
+        GefaehrdungInformationTransfer gefaehrdungInformation = new GefaehrdungInformationTransfer();
         Object[] resultArr = ((Object[])hqlResult.get(0));
         String gefaehrdungNr = String.valueOf(resultArr[0]);
         String gefaehrdungKapitelId = String.valueOf(resultArr[2]);
         String gefaehrdungId = String.valueOf(resultArr[3]);
         String gefaehrdungName = String.valueOf(resultArr[4]);
+        String extId = String.valueOf(resultArr[5]);
         try {
             gefaehrdungInformation.setDescription(convertClobToStringEncodingSave((Clob)resultArr[5], encoding));
         } catch (IOException e) {

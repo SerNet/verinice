@@ -864,6 +864,7 @@ public class TransferData {
     public void transferOwnGefaehrdung(OwnGefaehrdung ownGefaehrdung, RAGefaehrdungenResult ragResult) throws SQLException, IOException {
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         ownGefaehrdung.setId(gefNr);
+        ownGefaehrdung.setExtId(ragResult.getZielobjekt().getGuid());
         ownGefaehrdung.setTitel(ragResult.getGefaehrdungTxt().getName());
         ownGefaehrdung.setBeschreibung(convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
     }
