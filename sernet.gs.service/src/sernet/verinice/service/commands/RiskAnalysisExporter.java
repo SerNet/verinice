@@ -106,7 +106,10 @@ public class RiskAnalysisExporter {
             syncScenario.setDescription(scenario.getBeschreibung());
             syncScenario.setName(scenario.getTitel());
             syncScenario.setNumber(scenario.getId());
-            syncScenario.setUuid(scenario.getUuid());  
+            syncScenario.setUuid(scenario.getUuid()); 
+            if(scenario.getOwnkategorie()!=null && !scenario.getOwnkategorie().isEmpty()) {
+                syncScenario.setCategory(scenario.getOwnkategorie());
+            }
             risk.getScenario().add(syncScenario);      
         }
     }
