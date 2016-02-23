@@ -76,6 +76,7 @@ import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.gstoolimport.GefaehrdungsUmsetzungFactory;
 import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**
@@ -864,7 +865,9 @@ public class TransferData {
     public void transferOwnGefaehrdung(OwnGefaehrdung ownGefaehrdung, RAGefaehrdungenResult ragResult) throws SQLException, IOException {
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         ownGefaehrdung.setId(gefNr);
-        ownGefaehrdung.setExtId(ragResult.getZielobjekt().getGuid());
+        ownGefaehrdung.setExtId(GefaehrdungsUmsetzungFactory.getExtid(String.valueOf(ragResult.getGefaehrdung().getId().getGefId()), String.valueOf(ragResult.getZielobjekt().getId().getZobId()), ragResult.getGefaehrdung().getGuid(), ragResult.getZielobjekt().getGuid()));
+        // ownGefaehrdung.setExtId(ragResult.getGefaehrdung().getId().getGefId()
+        // + "-" + );
         ownGefaehrdung.setTitel(ragResult.getGefaehrdungTxt().getName());
         ownGefaehrdung.setBeschreibung(convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
     }

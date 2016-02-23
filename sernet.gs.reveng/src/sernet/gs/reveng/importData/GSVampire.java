@@ -50,6 +50,7 @@ import sernet.gs.reveng.NZielobjektDAO;
 import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.NZobSbDAO;
 import sernet.gs.reveng.NmbNotiz;
+import sernet.verinice.service.gstoolimport.GefaehrdungsUmsetzungFactory;
 
 public class GSVampire {
     
@@ -298,7 +299,7 @@ public class GSVampire {
 //	        + " and zo_bst.id.bauId =  mbg.mbBaust.id.bauId"
 //	        + " and zo_bst.id.zobId = :zobId";
 	
-	private static final String QUERY_GEFS_FOR_BAUSTEIN = "select mbg.mbGefaehr.nr, mbg.mbGefaehr.id.gefImpId, mbg.mbGefaehr.gfkId, mbg.mbGefaehr.id.gefId, gtxt.name, gtxt.beschreibung"
+    private static final String QUERY_GEFS_FOR_BAUSTEIN = "select mbg.mbGefaehr.nr, mbg.mbGefaehr.id.gefImpId, mbg.mbGefaehr.gfkId," + " mbg.mbGefaehr.id.gefId, gtxt.name, gtxt.beschreibung, mbg.mbGefaehr.guid"
 	+ " from MbGefaehrTxt gtxt, MbBaustGefaehr mbg"
 	+ " where mbg.id.gefId = :gefId"
 	+ " and gtxt.id.gefId = :gefId"
@@ -533,8 +534,11 @@ public class GSVampire {
         GefaehrdungInformationTransfer gefaehrdungsInformation = null;
         if(hqlResult.size() >= 1 && hqlResult.get(0) instanceof Object[]){
             gefaehrdungsInformation = processGefaehrdung(encoding, hqlResult);
+            gefaehrdungsInformation.setExtId(GefaehrdungsUmsetzungFactory.getExtid(String.valueOf(((Object[]) hqlResult.get(0))[0]), String.valueOf(z.getId().getZobId()), String.valueOf(((Object[]) hqlResult.get(0))[6]), z.getGuid()));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Setting extId for GefaehrdungsUmsetzung to:\t" + gefaehrdungsInformation.getExtId());
+            }
         }
-        gefaehrdungsInformation.setExtId(z.getGuid());
         logDuplicates(encoding, hqlResult);
         transaction.commit();
         dao.getSession().close();
@@ -553,7 +557,6 @@ public class GSVampire {
         String gefaehrdungKapitelId = String.valueOf(resultArr[2]);
         String gefaehrdungId = String.valueOf(resultArr[3]);
         String gefaehrdungName = String.valueOf(resultArr[4]);
-        String extId = String.valueOf(resultArr[5]);
         try {
             gefaehrdungInformation.setDescription(convertClobToStringEncodingSave((Clob)resultArr[5], encoding));
         } catch (IOException e) {

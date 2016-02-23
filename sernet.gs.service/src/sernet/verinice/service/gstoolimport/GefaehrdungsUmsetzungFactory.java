@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
+package sernet.verinice.service.gstoolimport;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -42,5 +42,17 @@ public class GefaehrdungsUmsetzungFactory {
 		}
 		return gefaehrdungsUmsetzung;
 	}
+
+    public static String getExtid(String gefaehrdungId, String zielobjektId, String zobGuid, String gefaehrdungGuid) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(gefaehrdungId);
+        sb.append("-");
+        sb.append(zielobjektId);
+        sb.append("-");
+        sb.append(gefaehrdungGuid);
+        sb.append("-");
+        sb.append(zobGuid);
+        return sb.toString();
+    }
 
 }
