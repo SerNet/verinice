@@ -27,8 +27,9 @@ import sernet.hui.common.connect.ITypedElement;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
-@SuppressWarnings("serial")
 public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdungsBaumElement, ITypedElement {
+
+    private static final long serialVersionUID = -8778503394169834062L;
 
     private IGefaehrdungsBaumElement gefaehrdungsParent;
 
@@ -157,6 +158,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
     @Override
     public String getTitle() {
         StringBuilder sb = new StringBuilder();
+        sb.append(getId()).append(" ");
         sb.append("[").append(getAlternative()).append("] "); //$NON-NLS-1$ //$NON-NLS-2$
         sb.append(getEntity().getSimpleValue(PROP_TITEL));
         String alternative = getAlternativeText();
@@ -165,6 +167,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
         }
         return sb.toString();
     }
+
 
     @Override
     public String getTypeId() {
