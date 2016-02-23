@@ -50,7 +50,6 @@ import sernet.gs.reveng.NZielobjektDAO;
 import sernet.gs.reveng.NZobSb;
 import sernet.gs.reveng.NZobSbDAO;
 import sernet.gs.reveng.NmbNotiz;
-import sernet.verinice.service.gstoolimport.GefaehrdungsUmsetzungFactory;
 
 public class GSVampire {
     
@@ -534,7 +533,7 @@ public class GSVampire {
         GefaehrdungInformationTransfer gefaehrdungsInformation = null;
         if(hqlResult.size() >= 1 && hqlResult.get(0) instanceof Object[]){
             gefaehrdungsInformation = processGefaehrdung(encoding, hqlResult);
-            gefaehrdungsInformation.setExtId(GefaehrdungsUmsetzungFactory.getExtid(String.valueOf(((Object[]) hqlResult.get(0))[0]), String.valueOf(z.getId().getZobId()), String.valueOf(((Object[]) hqlResult.get(0))[6]), z.getGuid()));
+            gefaehrdungsInformation.setExtId(generateGefaehrdungsUmsetzungExtid(String.valueOf(((Object[]) hqlResult.get(0))[0]), String.valueOf(z.getId().getZobId()), String.valueOf(((Object[]) hqlResult.get(0))[6]), z.getGuid()));
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Setting extId for GefaehrdungsUmsetzung to:\t" + gefaehrdungsInformation.getExtId());
             }
@@ -924,4 +923,16 @@ public class GSVampire {
 	    }
     }
 	
+    public static String generateGefaehrdungsUmsetzungExtid(String gefaehrdungId, String zielobjektId, String zobGuid, String gefaehrdungGuid) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(gefaehrdungId);
+        sb.append("-");
+        sb.append(zielobjektId);
+        sb.append("-");
+        sb.append(gefaehrdungGuid);
+        sb.append("-");
+        sb.append(zobGuid);
+        return sb.toString();
+    }
+
 }

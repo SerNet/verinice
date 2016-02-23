@@ -30,6 +30,7 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
 import sernet.gs.reveng.importData.GSDBConstants;
+import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.RAGefaehrdungenResult;
 import sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
@@ -59,7 +60,6 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadCnAElementByExternalID;
-import sernet.verinice.service.gstoolimport.GefaehrdungsUmsetzungFactory;
 
 /**
  * Import Risikoanalysen (RA) for existing zielobjekt elements. In GSTOOL a RA is called
@@ -255,7 +255,7 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
         associateGefaehrdung = ServiceFactory.lookupCommandService().executeCommand(associateGefaehrdung);
         GefaehrdungsUmsetzung gefaehrdungsUmsetzung = associateGefaehrdung.getGefaehrdungsUmsetzung();
         transferData.transferRAGefaehrdungsUmsetzung(gefaehrdungsUmsetzung, gefaehrdungenResult);
-        gefaehrdungsUmsetzung.setExtId(GefaehrdungsUmsetzungFactory.getExtid(String.valueOf(gefaehrdungenResult.getGefaehrdung().getId().getGefId()), String.valueOf(gefaehrdungenResult.getZielobjekt().getId().getZobId()), gefaehrdungenResult.getGefaehrdung().getGuid(), gefaehrdungenResult.getZielobjekt().getGuid()));
+        gefaehrdungsUmsetzung.setExtId(GSVampire.generateGefaehrdungsUmsetzungExtid(String.valueOf(gefaehrdungenResult.getGefaehrdung().getId().getGefId()), String.valueOf(gefaehrdungenResult.getZielobjekt().getId().getZobId()), gefaehrdungenResult.getGefaehrdung().getGuid(), gefaehrdungenResult.getZielobjekt().getGuid()));
         // gefaehrdungsUmsetzung.setExtId(gefaehrdungenResult.getGefaehrdung().getId().getGefId()
         // + "-" + gefaehrdungenResult.getZielobjekt().getId().getZobId());
         CnAElementHome.getInstance().update(gefaehrdungsUmsetzung);

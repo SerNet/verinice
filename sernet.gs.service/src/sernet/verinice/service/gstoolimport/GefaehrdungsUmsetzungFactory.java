@@ -43,16 +43,5 @@ public class GefaehrdungsUmsetzungFactory {
 		return gefaehrdungsUmsetzung;
 	}
 
-    public static String getExtid(String gefaehrdungId, String zielobjektId, String zobGuid, String gefaehrdungGuid) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(gefaehrdungId);
-        sb.append("-");
-        sb.append(zielobjektId);
-        sb.append("-");
-        sb.append(gefaehrdungGuid);
-        sb.append("-");
-        sb.append(zobGuid);
-        return sb.toString();
-    }
 
 }
