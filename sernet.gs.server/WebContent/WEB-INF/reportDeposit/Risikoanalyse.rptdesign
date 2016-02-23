@@ -4248,6 +4248,7 @@ columns(cols);</value>
                         <table id="2001">
                             <property name="marginTop">10pt</property>
                             <property name="width">100%</property>
+                            <property name="marginBottom">30pt</property>
                             <property name="dataSet">riskanalysis_allgef</property>
                             <list-property name="paramBindings">
                                 <structure>
