@@ -29,6 +29,10 @@ import sernet.verinice.model.iso27k.IISRControl;
  * 
  * Calculate maturity values and weights for controls and control groups.
  * 
+ * For calculation (regarding maturity) of ISA 2.0 keyfigures use 
+ * sernet.verinice.samt.service.TotalSecurityFigureISA2Command 
+ * instead of this class
+ * 
  * @author koderman@sernet.de
  * @version $Rev$ $LastChangedDate$ 
  * $LastChangedBy$
