@@ -18,7 +18,6 @@
 package sernet.verinice.model.bsi.risikoanalyse;
 
 import sernet.hui.common.connect.Entity;
-import sernet.verinice.model.bsi.CnaStructureHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class FinishedRiskAnalysis extends CnATreeElement  {
@@ -48,10 +47,7 @@ public class FinishedRiskAnalysis extends CnATreeElement  {
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof GefaehrdungsUmsetzung) {
-			return true;
-		}
-		return CnaStructureHelper.canContain(obj);
+        return obj instanceof GefaehrdungsUmsetzung;
 	}
 
 

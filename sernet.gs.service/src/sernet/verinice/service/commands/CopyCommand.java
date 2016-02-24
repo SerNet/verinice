@@ -22,7 +22,6 @@ package sernet.verinice.service.commands;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -42,6 +41,8 @@ import sernet.verinice.interfaces.IPostProcessor;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
@@ -56,9 +57,9 @@ import sernet.verinice.model.iso27k.IISO27kGroup;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("serial")
 public class CopyCommand extends GenericCommand {
 
+    private static final long serialVersionUID = -269076325994387265L;
     private transient Logger log = Logger.getLogger(CopyCommand.class);
     public Logger getLog() {
         if (log == null) {
@@ -70,13 +71,6 @@ public class CopyCommand extends GenericCommand {
     private static final int FLUSH_LEVEL = 10;
     private final boolean flush = false;
     
-    public static final List<String> copy_blacklist;
-    public static final List<String> cut_blacklist;
-    
-    static {
-    	copy_blacklist = Arrays.asList("riskanalysis","gefaehrdungsumsetzung"); //$NON-NLS-1$
-        cut_blacklist = Arrays.asList("riskanalysis","gefaehrdungsumsetzung"); //$NON-NLS-1$
-    }
     
     private String uuidGroup;
     
@@ -174,18 +168,17 @@ public class CopyCommand extends GenericCommand {
         CnATreeElement elementCopy = element;
         if(element!=null 
             && element.getTypeId()!=null 
-            && !copy_blacklist.contains(element.getTypeId()) 
             && group.canContain(element)) {
-            elementCopy = saveCopy(group, element);     
-            number++;
-            sourceDestMap.put(element.getUuid(), elementCopy.getUuid());
-            if(number % FLUSH_LEVEL == 0 ) {
-                getDao().flush();
-            }
-            if(element.getChildren()!=null) {
-                for (final CnATreeElement child : element.getChildren()) {
-                    copy(elementCopy,child,sourceDestMap);
-                }
+            if (element instanceof FinishedRiskAnalysis) {
+
+                elementCopy = copyRiskAnalysis(group, element, sourceDestMap);
+                afterCopy(element.getUuid(), elementCopy.getUuid(), sourceDestMap);
+
+            } else {
+                elementCopy = saveCopy(group, element);
+                number++;
+                afterCopy(element.getUuid(), elementCopy.getUuid(), sourceDestMap);
+                copyChildrenIfExistant(element, sourceDestMap, elementCopy);
             }
         } else if(element!=null) {
             getLog().warn("Can not copy element with pk: " + element.getDbId() + " to group with pk: " + selectedGroup.getDbId()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -195,7 +188,104 @@ public class CopyCommand extends GenericCommand {
         return elementCopy;
     }
 
-    private CnATreeElement saveCopy(final CnATreeElement toGroup, CnATreeElement copyElement) throws CommandException, IOException {
+    // <<<<<<< a9dfdfe586b1203620dcf348d671e89d73789cc0
+    // private CnATreeElement saveCopy(final CnATreeElement toGroup,
+    // CnATreeElement copyElement) throws CommandException, IOException {
+    // ||||||| merged common ancestors
+    // private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement
+    // copyElement) throws CommandException {
+    // =======
+    private CnATreeElement copyRiskAnalysis(CnATreeElement group, CnATreeElement finishedRiskAnalysis,
+            Map<String, String> sourceDestMap) throws CommandException, IOException {
+
+        CnATreeElement copyOfFinishedRiskAnalysis = saveCopy(group, finishedRiskAnalysis);
+        number++;
+        copyFinishedRiskAnalysisLists((FinishedRiskAnalysis) finishedRiskAnalysis,
+                (FinishedRiskAnalysis) copyOfFinishedRiskAnalysis, sourceDestMap);
+
+        return copyOfFinishedRiskAnalysis;
+    }
+
+    private void copyFinishedRiskAnalysisLists(FinishedRiskAnalysis oldFinishedRiskAnalysis,
+            FinishedRiskAnalysis copyOfFinishedRiskAnalysis, Map<String, String> sourceDestMap)
+            throws CommandException, IOException {
+
+        FindRiskAnalysisListsByParentID command = new FindRiskAnalysisListsByParentID(
+                oldFinishedRiskAnalysis.getDbId());
+        command = getCommandService().executeCommand(command);
+        FinishedRiskAnalysisLists listsToCopy = command.getFoundLists();
+
+        FinishedRiskAnalysisLists newLists = new FinishedRiskAnalysisLists();
+        newLists.setFinishedRiskAnalysisId(copyOfFinishedRiskAnalysis.getDbId());
+
+        copyAssociatedGefaehrdungen(copyOfFinishedRiskAnalysis, sourceDestMap, listsToCopy,
+                newLists);
+
+        saveFinishedRiskAnalysisLists(newLists);
+
+    }
+
+    private void copyAssociatedGefaehrdungen(FinishedRiskAnalysis copyOfFinishedRiskAnalysis,
+            Map<String, String> sourceDestMap, FinishedRiskAnalysisLists listsToCopy,
+            FinishedRiskAnalysisLists newLists) throws CommandException, IOException {
+
+        for (GefaehrdungsUmsetzung gefaehrdung : listsToCopy.getAssociatedGefaehrdungen()) {
+
+            GefaehrdungsUmsetzung newGefaehrdung = (GefaehrdungsUmsetzung) copy(
+                    copyOfFinishedRiskAnalysis, gefaehrdung, sourceDestMap);
+            newLists.getAssociatedGefaehrdungen().add(newGefaehrdung);
+            addToRAWizardListsIfNeccessary(listsToCopy, newLists, gefaehrdung, newGefaehrdung);
+
+            SaveElement<GefaehrdungsUmsetzung> saveCommand = new SaveElement<>(
+                    newGefaehrdung);
+            getCommandService().executeCommand(saveCommand);
+            number++;
+        }
+    }
+
+    private void addToRAWizardListsIfNeccessary(FinishedRiskAnalysisLists listsToCopy,
+            FinishedRiskAnalysisLists newLists, GefaehrdungsUmsetzung gefaehrdung,
+            GefaehrdungsUmsetzung newGefaehrdung) {
+        if (gefaehrdung.getParent() == null) {
+            newGefaehrdung.setParent(null);
+            return;
+        }
+        if (listsToCopy.getAllGefaehrdungsUmsetzungen().contains(gefaehrdung)) {
+            newLists.getAllGefaehrdungsUmsetzungen().add(newGefaehrdung);
+        }
+        if (listsToCopy.getNotOKGefaehrdungsUmsetzungen().contains(gefaehrdung)) {
+            newLists.getNotOKGefaehrdungsUmsetzungen().add(newGefaehrdung);
+        }
+    }
+
+    private void saveFinishedRiskAnalysisLists(FinishedRiskAnalysisLists newLists)
+            throws CommandException {
+        SaveElement<FinishedRiskAnalysisLists> saveCommand = new SaveElement<>(
+                newLists);
+        getCommandService().executeCommand(saveCommand);
+    }
+
+
+    private void afterCopy(String uuidElement, String uuidElementCopy,
+            Map<String, String> sourceDestMap) {
+        sourceDestMap.put(uuidElement, uuidElementCopy);
+        if (number % FLUSH_LEVEL == 0) {
+            getDao().flush();
+        }
+    }
+
+    private void copyChildrenIfExistant(CnATreeElement element, Map<String, String> sourceDestMap,
+            CnATreeElement elementCopy) throws CommandException, IOException {
+        if (element.getChildren() != null) {
+            for (CnATreeElement child : element.getChildren()) {
+                copy(elementCopy, child, sourceDestMap);
+            }
+        }
+    }
+
+    private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement copyElement)
+            throws CommandException, IOException {
+        // >>>>>>> Resolve wrong canContain of FinishedRiskAnalysis
         copyElement = getDao().initializeAndUnproxy(copyElement);
         CnATreeElement newElement = saveNew(toGroup, copyElement);
         if(newElement.getEntity()!=null) {
