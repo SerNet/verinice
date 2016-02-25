@@ -2538,6 +2538,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.*;
 import sernet.gs.service.NumericStringComparator;
 import java.util.Comparator;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.iso27k.service.Retriever;
 
 // get current elmt:
 elmtid = inpv("elmt_id");
@@ -2550,6 +2551,8 @@ comparator = new NumericStringComparator();
 sb = new StringBuilder();
 Collections.sort(elements, new Comparator() {
 	public int compare(CnATreeElement e1, CnATreeElement e2) {
+		e1 = Retriever.checkRetrieveElement(e1);
+		e2 = Retriever.checkRetrieveElement(e2);
 		sb.setLength(0);
 		sb.append(e1.getKapitel()).append(" ").append(e1.getName());
 		c1 = sb.toString();
@@ -4247,8 +4250,8 @@ columns(cols);</value>
                     <cell id="1820">
                         <table id="2001">
                             <property name="marginTop">10pt</property>
-                            <property name="width">100%</property>
                             <property name="marginBottom">30pt</property>
+                            <property name="width">100%</property>
                             <property name="dataSet">riskanalysis_allgef</property>
                             <list-property name="paramBindings">
                                 <structure>
@@ -4467,6 +4470,7 @@ columns(cols);</value>
                             </header>
                             <detail>
                                 <row id="2022">
+                                    <property name="height">100%</property>
                                     <cell id="2023">
                                         <property name="borderBottomColor">#000000</property>
                                         <property name="borderBottomStyle">solid</property>
