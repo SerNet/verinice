@@ -51,7 +51,7 @@ public class IsaDecoratorForAudit extends LabelProvider implements ILightweightL
         } catch (CommandException e) {
             LOG.error("Error computing security figure for Audit.", e);
         }
-        return command.getResult();
+        return command.getTotalSecurityFigure();
     }
 
     private void addSuffix(double securityFigure, IDecoration decoration) {

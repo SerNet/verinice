@@ -138,12 +138,12 @@ if (myroot != null &amp;&amp; myroot != -1) {
 }
 
 c = helper.execute(new TotalSecurityFigureISA2Command(root));
-secfig = c.getResult();
+secfig = c.getTotalSecurityFigure();
 results = new ArrayList(0);
 result = new ArrayList(0);
 result.add(String.valueOf(secfig));
-result.add(String.valueOf(c.getTargetMaturity()));
-result.add(String.valueOf(c.getAverageMaturity()));
+result.add(String.valueOf(c.getReducedTargetMaturity()));
+result.add(String.valueOf(c.getAverageMaximumAchieveableMaturity()));
 results.add(result);
 return results;]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
