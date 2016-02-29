@@ -42,11 +42,11 @@ public class ControlMaturityService {
     public static final int TYPE_MATURITY = 0;
     public static final int TYPE_ISR = 1;
     
-    public static enum DecoratorColor {
+    public enum DecoratorColor {
         NULL, GREEN, YELLOW, RED
     }
     
-    private static enum Maturity {
+    private enum Maturity {
         NOT_EDITED(-2), NA(-1);
         
         private int specialMaturityValue;
@@ -116,7 +116,7 @@ public class ControlMaturityService {
      * @return averageMaturity
      */
     public Double getAvgMaturity(ControlGroup controlGroup) {
-        Double averageMaturity = null;
+        Double averageMaturity;
         int accumulativeMaturity = 0;
         int count = 0;
         for (CnATreeElement child : controlGroup.getChildren()) {
@@ -137,7 +137,7 @@ public class ControlMaturityService {
     }
     
     public double getAverageTargetMaturity(ControlGroup controlGroup) {
-        double averageTargetMaturity = 0;
+        double averageTargetMaturity;
         int accumulativeTargetMaturity = 0;
         int count = 0;
         for (CnATreeElement child : controlGroup.getChildren()) {
@@ -197,7 +197,7 @@ public class ControlMaturityService {
         int weight = 0;
         for (CnATreeElement child : cg.getChildren()) {
             if (child instanceof IControl) {
-            	IControl control = (IControl) child;
+                IControl control = (IControl) child;
                 weight += control.getWeight2();
             }
             if (child instanceof ControlGroup) {
@@ -213,8 +213,7 @@ public class ControlMaturityService {
     }
     
     public Double getMaturityByWeight(IControl contr) {
-        double result = ((double)getWeightedMaturity(contr)) / ((double)contr.getWeight2());
-        return result;
+        return ((double)getWeightedMaturity(contr)) / ((double)contr.getWeight2());
     }
 
     public Double getMaxMaturityValue(ControlGroup group) {
@@ -259,7 +258,7 @@ public class ControlMaturityService {
                 }
             }
             if (child instanceof ControlGroup) {
-            	result += getThreshold1((ControlGroup)child);
+                result += getThreshold1((ControlGroup)child);
             }
         }
         return result;
@@ -276,7 +275,7 @@ public class ControlMaturityService {
                 }
             }
             if (child instanceof ControlGroup) {
-            	result+= getThreshold2((ControlGroup)child);
+                result+= getThreshold2((ControlGroup)child);
             }
         }
         return result;
@@ -289,17 +288,18 @@ public class ControlMaturityService {
      * @return the implementation state as definied in the <code>IControl.IMPLEMENTED</code> constants.
      */
     public String getImplementationState(ControlGroup group) {
-    	String state = IControl.IMPLEMENTED_NO;
-    	int threshold1 = getThreshold1(group);
-    	int maturity = getMaturity(group);
-    	if (maturity >= threshold1) {
-    		state = IControl.IMPLEMENTED_PARTLY;
-        	int threshold2 = getThreshold2(group); 		
-    		if (maturity >= threshold2) {
-        		state = IControl.IMPLEMENTED_YES;
-        	}
-    	} 	
-    	return state;
+
+        String state = IControl.IMPLEMENTED_NO;
+        int threshold1 = getThreshold1(group);
+        int maturity = getMaturity(group);
+        if (maturity >= threshold1) {
+            state = IControl.IMPLEMENTED_PARTLY;
+            int threshold2 = getThreshold2(group);
+            if (maturity >= threshold2) {
+                state = IControl.IMPLEMENTED_YES;
+            }
+        }
+        return state;
     }
     
     /**
@@ -309,17 +309,18 @@ public class ControlMaturityService {
      * @return the implementation state as definied in the <code>IControl.IMPLEMENTED</code> constants.
      */
     public String getImplementationState(IControl control) {
-    	String state =  IControl.IMPLEMENTED_NO;
-    	if (getMaturity(control) >= control.getThreshold1()) {
-    		state = IControl.IMPLEMENTED_PARTLY;
-    	}
-    	if (getMaturity(control) >= control.getThreshold2()) {
-    		state = IControl.IMPLEMENTED_YES;
-    	}
-    	if(getMaturity(control)==IControl.IMPLEMENTED_NA_NUMERIC) {
-    	    state = IControl.IMPLEMENTED_YES;
-    	}
-    	return state;
+
+        String state = IControl.IMPLEMENTED_NO;
+        if (getMaturity(control) >= control.getThreshold1()) {
+            state = IControl.IMPLEMENTED_PARTLY;
+        }
+        if (getMaturity(control) >= control.getThreshold2()) {
+            state = IControl.IMPLEMENTED_YES;
+        }
+        if (getMaturity(control) == IControl.IMPLEMENTED_NA_NUMERIC) {
+            state = IControl.IMPLEMENTED_YES;
+        }
+        return state;
     }
     
     /**
@@ -351,9 +352,7 @@ public class ControlMaturityService {
         Double averageMaturity = getAvgMaturity(controlGroup);
         Double averageTargetMaturity = getAverageTargetMaturity(controlGroup);
         
-        DecoratorColor color = getDecoratorColor(averageMaturity, averageTargetMaturity);
-        
-        return color;
+        return getDecoratorColor(averageMaturity, averageTargetMaturity);
     }
     
     private DecoratorColor getDecoratorColor(double maturity, double targetMaturity) {
