@@ -52,6 +52,7 @@ import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
+import sernet.verinice.oda.driver.impl.security.ReportClassLoader;
 
 
 
@@ -86,6 +87,7 @@ public class Query implements IQuery
     
     Query(Integer rootElementId)
     {
+        
     	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
     	
     	vnRootElement = rootElementId;
@@ -104,7 +106,9 @@ public class Query implements IQuery
 
     		// BSH environment:
     		interpreter = new Interpreter();
-    		interpreter.setClassLoader(Query.class.getClassLoader());
+//    		interpreter.setClassLoader(Query.class.getClassLoader());
+    		ReportClassLoader reportClassLoader = new ReportClassLoader();
+    		interpreter.setClassLoader(reportClassLoader);
     		
     		
 			interpreter.set("_inpv", inParameterValues);
@@ -124,6 +128,7 @@ public class Query implements IQuery
     		interpreter.set("helper", new Helper());
     		interpreter.eval("gpt(entityType) { return helper.getAllPropertyTypes(entityType); }");
     		interpreter.set("properties", properties);
+    		
 
     		
     		

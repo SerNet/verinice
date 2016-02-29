@@ -160,4 +160,5 @@ grant {
         permission java.io.FilePermission "/tmp", "write, read, delete";
         permission java.io.FilePermission "/tmp/-", "write, read, delete";
         permission java.util.logging.LoggingPermission "control";
+        permission java.io.FilePermission "/home/shagedorn/workspace-TRUNK-verinice-x86_64-linux-gtk/report_templates_remote/-", "delete, write, delete";
 };
