@@ -1,20 +1,25 @@
-/*******************************************************************************
- * Copyright (c) 2010 Alexander Koderman <ak@sernet.de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation, either version 3 
- * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
- * See the GNU General Public License for more details.
- *     You should have received a copy of the GNU General Public 
- * License along with this program. 
- * If not, see <http://www.gnu.org/licenses/>.
- * 
+/**
+ * Copyright 2010 Alexander Koderman.
+ *
+ * This file is part of Verinice.
+ *
+ * Verinice is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Verinice is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Verinice. If not, see <http://www.gnu.org/licenses/>.
+ *
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
- ******************************************************************************/
+ *  - Alexander Koderman - Initial API and implementation
+ */
+
 package sernet.verinice.iso27k.service;
 
 import sernet.hui.common.VeriniceContext;
@@ -26,17 +31,9 @@ import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IISRControl;
 
 /**
- * 
  * Calculate maturity values and weights for controls and control groups.
  * 
- * For calculation (regarding maturity) of ISA 2.0 keyfigures use 
- * sernet.verinice.samt.service.TotalSecurityFigureISA2Command 
- * instead of this class
- * 
- * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @author Alexander Koderman
  */
 public class ControlMaturityService {
     
@@ -211,9 +208,6 @@ public class ControlMaturityService {
         return weight;
     }
     
-    /**
-     * @return
-     */
     public Integer getWeightedMaturity(IControl contr) {
         return getMaturity(contr) * contr.getWeight2();
     }
@@ -223,10 +217,6 @@ public class ControlMaturityService {
         return result;
     }
 
-    /**
-     * @param group
-     * @return
-     */
     public Double getMaxMaturityValue(ControlGroup group) {
         Double result = Double.valueOf(0);
         for (CnATreeElement child : group.getChildren()) {
