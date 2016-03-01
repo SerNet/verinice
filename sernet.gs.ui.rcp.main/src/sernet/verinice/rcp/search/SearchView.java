@@ -33,6 +33,8 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -57,6 +59,8 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
+import sernet.gs.ui.rcp.main.bsi.dnd.SearchViewDragListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.SearchViewElementTransfer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -419,6 +423,16 @@ public class SearchView extends RightsEnabledView {
             addTableColumnContextMenu(veriniceSearchResultTable);
 
             currentViewer.addDoubleClickListener(doubleClickListener);
+
+            Transfer[] dragTypes = new Transfer[] { SearchViewElementTransfer.getInstance(),
+                    // IBSIStrukturElementTransfer.getInstance(),
+                    // ISO27kElementTransfer.getInstance()
+            };
+
+            int operations = DND.DROP_COPY | DND.DROP_MOVE;
+
+            currentViewer.addDragSupport(operations, dragTypes,
+                    new SearchViewDragListener(currentViewer));
 
             // repaint the table and rearranged the dimensions
             tableComposite.layout();
