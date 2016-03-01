@@ -351,35 +351,34 @@ public class ControlMaturityService {
     
     public DecoratorColor getDecoratorColor(IControl control) {
         int maturity = getMaturity(control);
-        int getTargetMaturity = getTargetMaturity(control);
-        return getDecoratorColor(maturity, getTargetMaturity);
+        int targetMaturity = getTargetMaturity(control);
+        return getDecoratorColor(Double.valueOf(maturity), targetMaturity);
     }
     
     public DecoratorColor getDecoratorColor(ControlGroup controlGroup) {
         Double averageMaturity = getAvgMaturity(controlGroup);
         Double averageTargetMaturity = getAverageTargetMaturity(controlGroup);
         
-        return getDecoratorColor(averageMaturity, averageTargetMaturity);
+        return getDecoratorColor(averageMaturity, Math.round(averageTargetMaturity));
     }
     
-    private DecoratorColor getDecoratorColor(double maturity, double targetMaturity) {
-        if (maturity == Double.NaN) {
-            maturity = Maturity.NOT_EDITED.getValue();
-        } else {
-            maturity = Math.round(maturity);
-        }
-
-        if (maturity == Maturity.NOT_EDITED.getValue()) {
-            return DecoratorColor.RED;
-        } else if (maturity == Maturity.NA.getValue()) {
+    private DecoratorColor getDecoratorColor(Double maturity, long targetMaturity) {
+        if (maturity.isNaN()) {
             return DecoratorColor.NULL;
-        } else if (maturity <= targetMaturity - 2) {
-            return DecoratorColor.RED;
-        } else if (maturity == targetMaturity - 1) {
-            return DecoratorColor.YELLOW;
-        } else if (maturity >= targetMaturity) {
-            return DecoratorColor.GREEN;
         }
-        return DecoratorColor.NULL;
+        
+        Long roundedMaturity = Math.round(maturity);
+        DecoratorColor decoratorColor = DecoratorColor.NULL;
+
+        if (roundedMaturity == Maturity.NOT_EDITED.getValue()) {
+            decoratorColor = DecoratorColor.RED;
+        } else if (roundedMaturity <= targetMaturity - 2) {
+            decoratorColor = DecoratorColor.RED;
+        } else if (roundedMaturity == targetMaturity - 1) {
+            decoratorColor = DecoratorColor.YELLOW;
+        } else if (roundedMaturity >= targetMaturity) {
+            decoratorColor = DecoratorColor.GREEN;
+        }
+        return decoratorColor;
     }
 }
