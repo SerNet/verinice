@@ -60,6 +60,9 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.bsi.dnd.SearchViewDragListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.SearchViewDropListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.SearchViewElementTransfer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -428,11 +431,18 @@ public class SearchView extends RightsEnabledView {
                     // IBSIStrukturElementTransfer.getInstance(),
                     // ISO27kElementTransfer.getInstance()
             };
+            Transfer[] dropTypes = new Transfer[] { SearchViewElementTransfer.getInstance(),
+                    IBSIStrukturElementTransfer.getInstance(),
+                    ISO27kElementTransfer.getInstance()
+            };
 
             int operations = DND.DROP_COPY | DND.DROP_MOVE;
 
             currentViewer.addDragSupport(operations, dragTypes,
                     new SearchViewDragListener(currentViewer));
+
+            currentViewer.addDropSupport(operations, dropTypes,
+                    new SearchViewDropListener(currentViewer));
 
             // repaint the table and rearranged the dimensions
             tableComposite.layout();

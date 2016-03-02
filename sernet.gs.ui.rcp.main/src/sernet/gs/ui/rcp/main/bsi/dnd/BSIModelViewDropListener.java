@@ -149,19 +149,31 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
             		", transfer-type-id: " + transferType.type);
         }
         if(!checkRights()){
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("ChechRights() failed  ... return false");
+            }
             return false;
         }
         if (target == null){
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Target is null ... return false");
+            }
             isActive=false;
             return isActive;
         } else {
             this.target = target;
         }
         if (!(target instanceof CnATreeElement)){
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Target is no CnATreeElement ... return false");
+            }
             isActive=false;
             return isActive;
         }
         if (target instanceof IBSIStrukturKategorie){
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Target is BSI category ... return false");
+            }
             isActive=false;
             return isActive;
         }
@@ -192,6 +204,10 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                 LOG.debug("IGSModelElementTransfer.getInstance().isSupportedType(..) return true");
             }
             return isActive;
+        }
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("return true");
         }
         isActive = true;
         return isActive;
