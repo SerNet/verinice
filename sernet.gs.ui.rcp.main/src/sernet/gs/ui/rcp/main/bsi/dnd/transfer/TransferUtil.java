@@ -32,7 +32,9 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
- * Class for BSI and ISM "javaToNative"-methods to prevent code duplication
+ * Class for BSI and ISM "javaToNative"-methods uused by multiple
+ * ElementTransfer classes ({@link SearchViewElementTransfer},
+ * {@link IBSIStrukturElementTransfer} and {@link ISO27kElementTransfer} )
  * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */

@@ -37,12 +37,6 @@ public class SearchViewElementTransfer extends VeriniceElementTransfer {
             TYPENAME_SEARCH_VIEW_ELEMENT);
     private transient Logger log = Logger.getLogger(SearchViewElementTransfer.class);
 
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(SearchViewElementTransfer.class);
-        }
-        return log;
-    }
 
 
     private static SearchViewElementTransfer instance = new SearchViewElementTransfer();
@@ -50,6 +44,12 @@ public class SearchViewElementTransfer extends VeriniceElementTransfer {
     private SearchViewElementTransfer() {
     }
 
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(SearchViewElementTransfer.class);
+        }
+        return log;
+    }
     public static SearchViewElementTransfer getInstance() {
         return instance;
     }
