@@ -22,9 +22,6 @@ import org.eclipse.swt.dnd.TransferData;
 
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 
-/**
- *
- */
 public final class IBSIStrukturElementTransfer extends VeriniceElementTransfer {
     
     private static final String TYPENAME_IBSIELEMENT = "bsiElement";
@@ -77,19 +74,6 @@ public final class IBSIStrukturElementTransfer extends VeriniceElementTransfer {
     public boolean validateData(Object data) {
         return data instanceof IBSIStrukturElement ||
                 data instanceof IBSIStrukturElement[];
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer#
-     * doJavaToNative(byte[], org.eclipse.swt.dnd.TransferData)
-     */
-    @Override
-    public void doJavaToNative(byte[] byteArray, TransferData transferData) {
-
-        super.javaToNative(byteArray, transferData);
-
     }
 
 }

@@ -17,12 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd.transfer;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.OptionalDataException;
-
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
 
@@ -64,28 +58,6 @@ public final class ISO27kElementTransfer extends VeriniceElementTransfer {
         TransferUtil.iSO27KtoNative(getInstance(), data, transferData);
     }
     
-    public Object nativeToJava(TransferData transferData){
-        Object o = null;
-        if(isSupportedType(transferData)){
-            byte[] bs = (byte[]) super.nativeToJava(transferData);
-            ByteArrayInputStream bis = new ByteArrayInputStream(bs);
-            ObjectInput in;
-            try {
-                in = new ObjectInputStream(bis);
-                o = in.readObject();
-                bis.close();
-                in.close();
-            } catch (OptionalDataException e){
-                getLog().error("Wrong data", e);
-            } catch (IOException e) {
-                getLog().error("Error while transfering dnd object back to java", e);
-            } catch (ClassNotFoundException e) {
-                getLog().error("Error while transfering dnd object back to java", e);
-            }
-        }
-        return o;
-    }
-    
     @Override
     protected Logger getLog() {
         if(log == null){
@@ -104,19 +76,6 @@ public final class ISO27kElementTransfer extends VeriniceElementTransfer {
     public boolean validateData(Object data) {
         return data instanceof IISO27kElement[] ||
                 data instanceof IISO27kElement;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer#
-     * doJavaToNative(byte[], org.eclipse.swt.dnd.TransferData)
-     */
-    @Override
-    public void doJavaToNative(byte[] byteArray, TransferData transferData) {
-
-        super.javaToNative(byteArray, transferData);
-
     }
 
 }

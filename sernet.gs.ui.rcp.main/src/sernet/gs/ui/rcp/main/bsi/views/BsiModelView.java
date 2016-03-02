@@ -75,7 +75,6 @@ import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.SearchViewElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
@@ -398,8 +397,7 @@ public class BsiModelView extends RightsEnabledView
 
         Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
                 BausteinUmsetzungTransfer.getInstance(),
-                IBSIStrukturElementTransfer.getInstance(),
-                SearchViewElementTransfer.getInstance() };
+                IBSIStrukturElementTransfer.getInstance() };
         Transfer[] dragTypes = new Transfer[] { IBSIStrukturElementTransfer.getInstance(),
                 BausteinUmsetzungTransfer.getInstance() };
 

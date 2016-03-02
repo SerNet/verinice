@@ -23,6 +23,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
@@ -31,11 +32,17 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
+ * Class for BSI and ISM "javaToNative"-methods to prevent code duplication
+ * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class TransferUtil {
 
     private static final Logger LOG = Logger.getLogger(TransferUtil.class);
+
+    private TransferUtil() {
+
+    }
 
     public static void iSO27KtoNative(VeriniceElementTransfer transfer, Object data,
             TransferData transferData) {
@@ -43,36 +50,14 @@ public class TransferUtil {
             return;
         }
         if (transfer.isSupportedType(transferData)) {
-            ArrayList<IISO27kElement> elements = new ArrayList<IISO27kElement>(0);
+            ArrayList<IISO27kElement> elements = new ArrayList<>();
             if (data instanceof IISO27kElement[]) {
-                IISO27kElement[] bausteinElements = (IISO27kElement[]) data;
-                for (IISO27kElement b : bausteinElements) {
-                    elements.add(b);
-                }
+                elements.addAll(Arrays.asList((IISO27kElement[]) data));
             } else if (data instanceof IISO27kElement) {
                 elements.add((IISO27kElement) data);
             }
-            ByteArrayOutputStream out = null;
-            ObjectOutputStream objectOut = null;
-            try {
-                out = new ByteArrayOutputStream();
-                objectOut = new ObjectOutputStream(out);
 
-                objectOut.writeObject(elements.toArray(new Object[elements.size()]));
-
-                transfer.doJavaToNative(out.toByteArray(), transferData);
-            } catch (IOException e) {
-                LOG.error("Error while serializing object for dnd", e);
-            } finally {
-                if (out != null && objectOut != null) {
-                    try {
-                        out.close();
-                        objectOut.close();
-                    } catch (IOException e) {
-                        LOG.error("Error while closing stream", e);
-                    }
-                }
-            }
+            write(transfer, transferData, elements);
         }
     }
 
@@ -82,36 +67,27 @@ public class TransferUtil {
             return;
         }
         if (transfer.isSupportedType(transferData)) {
-            ArrayList<IBSIStrukturElement> elements = new ArrayList<IBSIStrukturElement>(0);
+            ArrayList<IBSIStrukturElement> elements = new ArrayList<>();
             if (data instanceof IBSIStrukturElement[]) {
-                IBSIStrukturElement[] bsiElements = (IBSIStrukturElement[]) data;
-                for (IBSIStrukturElement b : bsiElements) {
-                    elements.add(b);
-                }
+                elements.addAll(Arrays.asList((IBSIStrukturElement[]) data));
             } else if (data instanceof IBSIStrukturElement) {
                 elements.add((IBSIStrukturElement) data);
             }
-            ByteArrayOutputStream out = null;
-            ObjectOutputStream objectOut = null;
-            try {
-                out = new ByteArrayOutputStream();
-                objectOut = new ObjectOutputStream(out);
+            write(transfer, transferData, elements);
+        }
+    }
 
-                objectOut.writeObject(elements.toArray(new Object[elements.size()]));
+    private static void write(VeriniceElementTransfer transfer, TransferData transferData,
+            ArrayList<?> elements) {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            ObjectOutputStream objectOut = new ObjectOutputStream(out);
 
-                transfer.doJavaToNative(out.toByteArray(), transferData);
-            } catch (IOException e) {
-                LOG.error("Error while serializing object for dnd", e);
-            } finally {
-                if (out != null && objectOut != null) {
-                    try {
-                        out.close();
-                        objectOut.close();
-                    } catch (IOException e) {
-                        LOG.error("Error while closing stream", e);
-                    }
-                }
-            }
+            objectOut.writeObject(elements.toArray(new Object[elements.size()]));
+
+            transfer.doJavaToNative(out.toByteArray(), transferData);
+        } catch (IOException e) {
+            LOG.error("Error while serializing object for dnd", e);
         }
     }
 

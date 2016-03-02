@@ -76,5 +76,7 @@ public abstract class VeriniceElementTransfer extends ByteArrayTransfer {
 
     public abstract boolean validateData(Object data);
 
-    public abstract void doJavaToNative(byte[] byteArray, TransferData transferData);
+    public void doJavaToNative(byte[] byteArray, TransferData transferData) {
+        super.javaToNative(byteArray, transferData);
+    }
 }

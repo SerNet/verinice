@@ -34,14 +34,17 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.iso27k.rcp.ISMView;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
+ * 
+ * Class for drag and drop between SearchView and {@link ISMView} /
+ * {@link BSIModelView}
+ * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class SearchViewDropListener extends ViewerDropAdapter
@@ -50,22 +53,19 @@ public class SearchViewDropListener extends ViewerDropAdapter
 
     private transient Logger log = Logger.getLogger(SearchViewDropListener.class);
 
+    private boolean isActive = false;
+    private Object target = null;
+
+    public SearchViewDropListener(TableViewer viewer) {
+        super(viewer);
+    }
+
     public Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(SearchViewDropListener.class);
         }
         return log;
     }
-    private boolean isActive = false;
-    private Object target = null;
-
-    private TableViewer viewer;
-
-    public SearchViewDropListener(TableViewer viewer) {
-        super(viewer);
-        this.viewer = viewer;
-    }
-
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#checkRights()
@@ -144,21 +144,18 @@ public class SearchViewDropListener extends ViewerDropAdapter
             getLog().debug("performDrop");
         }
         Object[] dataToDrop = (Object[]) toDrop;
-        Object firstone = dataToDrop[0];
-        if (firstone instanceof IBSIStrukturElement) {
-            return handleBSIDrop(dataToDrop);
-        } else if (firstone instanceof IISO27kElement) {
-            return handleIso27kDrop(dataToDrop);
-
+        Object firstObject = dataToDrop[0];
+        if (isActive()) {
+            return handleDrop(dataToDrop);
         } else {
             if (getLog().isDebugEnabled()) {
-                getLog().debug(firstone + " not supported element");
+                getLog().debug(firstObject + " not supported element");
             }
             return false;
         }
     }
 
-    private boolean handleBSIDrop(Object[] data) {
+    private boolean handleDrop(Object[] data) {
 
         if (getLog().isDebugEnabled()) {
             getLog().debug("BSI");
@@ -184,20 +181,6 @@ public class SearchViewDropListener extends ViewerDropAdapter
         LinkDropper dropper = new LinkDropper();
 
         return dropper.dropLink(toDrop, element);
-
-    }
-
-    private boolean handleIso27kDrop(Object[] data) {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("ISO27K");
-        }
-        boolean droppedAll = true;
-        // TODO rmotza Auto-generated method stub
-
-
-
-        return droppedAll;
-
     }
 
     /*
@@ -211,7 +194,6 @@ public class SearchViewDropListener extends ViewerDropAdapter
     public boolean performDrop(Object data, Object target, Viewer viewer) {
         return performDrop(data);
     }
-
 
     @Override
     public void drop(DropTargetEvent event) {
