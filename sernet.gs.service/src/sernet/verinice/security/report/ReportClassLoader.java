@@ -17,15 +17,12 @@
  * Contributors:
  *     Sebastian Hagedorn <sh[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.oda.driver.impl.security;
+package sernet.verinice.security.report;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-
-import bsh.Interpreter;
-import sernet.verinice.oda.driver.impl.Query;
 
 
 /**
@@ -38,33 +35,48 @@ import sernet.verinice.oda.driver.impl.Query;
 public class ReportClassLoader extends ClassLoader {
     
     
-    private final static Logger LOG = Logger.getLogger(ReportClassLoader.class);
+    private static final Logger LOG = Logger.getLogger(ReportClassLoader.class);
     
-    private static final Set<String> PREFIXES = new HashSet<String>();
+    private static final Set<String> PREFIXES = new HashSet<>();
     
     static{
         PREFIXES.add("sernet.");
+        PREFIXES.add("java.lang.Integer");
+        PREFIXES.add("java.lang.String"); // Covers java.lang.StringBuilder also
+        PREFIXES.add("java.lang.Double");
         PREFIXES.add("java.util.Arrays");
         PREFIXES.add("java.util.Collections");
         PREFIXES.add("java.util.List");
         PREFIXES.add("java.util.Set");
         PREFIXES.add("java.util.HashSet");
         PREFIXES.add("java.util.ArrayList");
-        PREFIXES.add("java.text.DateFormat");
-        PREFIXES.add("java.text.SimpleDateFormat");
         PREFIXES.add("java.util.regex");
         PREFIXES.add("java.util.Comparator");
+        PREFIXES.add("java.util.Map");
+        PREFIXES.add("java.text.DateFormat");
+        PREFIXES.add("java.text.SimpleDateFormat");
+        PREFIXES.add("java.math.BigDecimal");
+        PREFIXES.add("java.math.RoundingMode");
+        PREFIXES.add("org.apache.commons.lang.ArrayUtils");
+        
     }
     
     
     @SuppressWarnings("restriction")
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
+        if(name.startsWith("java.lang.System") || name.startsWith("java.lang.Runtime")){
+            this.hashCode();
+            
+        }
+        
       if (isTrustedClass(name)){
           return super.loadClass(name);
       } else {
-//          LOG.error("Prevent loading of class:\t" + name + " due to security restrictions");
-          throw new ClassNotFoundException("Prevent loading of class:\t" + name + " due to security restrictions");
+          ClassNotFoundException e = new ClassNotFoundException("Prevent loading of class:\t" + name + " due to security restrictions");
+//          ClassNotFoundException e = new ClassNotFoundException("Prevent loading of class:\t" + name + " due to security restrictions"); 
+          LOG.error("Could not load class", e);
+          throw e;
       }
     }
 

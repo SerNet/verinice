@@ -17,27 +17,41 @@
  * Contributors:
  *     Sebastian Hagedorn <sh[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.oda.driver.impl.security;
+package sernet.verinice.security.report;
+
+import java.net.URL;
+
+import sernet.verinice.interfaces.report.IReportOptions;
 
 /**
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
-public class ReportSecurityManager extends SecurityManager {
+public class ReportSecurityContext {
     
-    private Object secret;
-    public ReportSecurityManager(Object pass) { 
-        secret = pass; 
+    private IReportOptions reportOptions;
+    private URL rptDesignUrl;
+    private String logFileLocation;
+
+    /**
+     * @param reportOptions
+     * @param rptDesignUrl
+     * @param logFileLocation
+     */
+    public ReportSecurityContext(IReportOptions reportOptions, URL rptDesignUrl, String logFileLocation) {
+        this.reportOptions = reportOptions;
+        this.rptDesignUrl = rptDesignUrl;
+        this.logFileLocation = logFileLocation;
+    }
+    public IReportOptions getReportOptions() {
+        return reportOptions;
+    }
+    public URL getRptDesignUrl() {
+        return rptDesignUrl;
+    }
+    public String getLogFileLocation() {
+        return logFileLocation;
     }
     
-    private void disable(Object pass) {
-      if (pass == secret) secret = null;
-    }
-    // ... override checkXXX method(s) here.
-    // Always allow them to succeed when secret==null
     
-//    @Override
-//    public boolean checkExecute(){
-//        
-//    }
 
 }

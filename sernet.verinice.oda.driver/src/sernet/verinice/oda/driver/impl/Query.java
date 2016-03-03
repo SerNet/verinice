@@ -52,7 +52,7 @@ import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
-import sernet.verinice.oda.driver.impl.security.ReportClassLoader;
+import sernet.verinice.security.report.ReportClassLoader;
 
 
 
@@ -90,12 +90,14 @@ public class Query implements IQuery
         
     	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
     	
+    	ReportClassLoader securedClassLoader = new ReportClassLoader();
+    	
     	vnRootElement = rootElementId;
 
     	try {
     	    // "Setup" BSH environment:
     		setupInterpreter = new Interpreter();
-    		setupInterpreter.setClassLoader(Query.class.getClassLoader());
+    		setupInterpreter.setClassLoader(securedClassLoader);
     		
     		setupInterpreter.set("__columns", null);
     		setupInterpreter.eval("columns(c) { __columns = c; }");
@@ -106,9 +108,7 @@ public class Query implements IQuery
 
     		// BSH environment:
     		interpreter = new Interpreter();
-//    		interpreter.setClassLoader(Query.class.getClassLoader());
-    		ReportClassLoader reportClassLoader = new ReportClassLoader();
-    		interpreter.setClassLoader(reportClassLoader);
+    		interpreter.setClassLoader(securedClassLoader);
     		
     		
 			interpreter.set("_inpv", inParameterValues);

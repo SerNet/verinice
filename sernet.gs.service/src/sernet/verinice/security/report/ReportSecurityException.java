@@ -17,33 +17,20 @@
  * Contributors:
  *     Sebastian Hagedorn <sh[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.oda.driver.impl.security;
+package sernet.verinice.security.report;
 
 /**
+ * Exception gets thrown when a report tries do to something illegal due to our policies
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
-public class ReportExecutionThread extends Thread {
-    
-    private Object pass = new Object();
-    private ReportClassLoader loader = new ReportClassLoader();
-    private ReportSecurityManager sm = new ReportSecurityManager(pass);
-    public void run() {
-      SecurityManager old = System.getSecurityManager();
-      System.setSecurityManager(sm);
-      runUntrustedCode();
-//      sm.disable(pass);
-      System.setSecurityManager(old);
-    }
-    private void runUntrustedCode() {
-      try {
-        // run the custom class's main method for example:
-//        loader.loadClass("customclassname")
-//          .getMethod("main", String[].class)
-//          .invoke(null, new Object[]{...});
-          this.hashCode();
-      } catch (Throwable t) {
-          // LOG error
-      }
-    }
+public class ReportSecurityException extends SecurityException {
 
+    public ReportSecurityException(String message){
+        super(message);
+    }
+    
+    public ReportSecurityException(String message, Throwable rootCause){
+        super(message, rootCause);
+    }
+    
 }

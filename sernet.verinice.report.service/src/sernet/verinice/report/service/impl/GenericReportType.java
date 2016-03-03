@@ -34,6 +34,7 @@ import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.security.report.ReportSecurityContext;
 
 /**
  *
@@ -78,6 +79,7 @@ public class GenericReportType implements IReportType {
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.report.IReportType#createReport(sernet.verinice.interfaces.report.IReportOptions)
+     * has nothing to do with creating the report, this is just a setter for the options-attribute
      */
     @Override
     public void createReport(IReportOptions reportOptions) {
@@ -150,8 +152,14 @@ public class GenericReportType implements IReportType {
             LOG.debug("Trying to open report from template at:\t" + rptURL.toString());
         }
 
-        IRunAndRenderTask task = brs.createTask(rptURL);
-        brs.render(task, options);
+        try{
+            ReportSecurityContext reportSecurityContext = new ReportSecurityContext(options, rptURL, brs.getLogfile());
+            IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
+            task = brs.prepareTaskForRendering(task, options);
+            brs.performRenderTask(task, reportSecurityContext);
+        } catch (Throwable t){
+            LOG.error("Something went wrong on executing Report", t);
+        }
         // could be enhancement in logging
         // List errors = task.getErrors(); // returns list of engineexceptions
     }
