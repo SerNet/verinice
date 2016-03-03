@@ -187,6 +187,7 @@ public final class Messages extends NLS {
     public static String XMLImportDialog_17;
     public static String XMLImportDialog_18;
     public static String XMLImportDialog_19;
+    public static String XMLImportDialog_ARCHIV_IMPORT_ERROR;
     public static String KonsolidatorDialog_0;
     public static String KonsolidatorDialog_2;
     public static String KonsolidatorDialog_3;

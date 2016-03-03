@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,6 +70,8 @@ import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.service.sync.VnaSchemaException;
+import sernet.verinice.service.sync.VnaSchemaVersion;
 
 /**
  * Dialog to import VNA or XML files.
@@ -139,6 +142,7 @@ public class XMLImportDialog extends Dialog {
                 setDefaultFolder(dataFile.getAbsolutePath());
             }
             WorkspaceJob importJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
+                @SuppressWarnings("restriction")
                 @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
@@ -147,12 +151,31 @@ public class XMLImportDialog extends Dialog {
                         doImport(syncParameter);
                     } catch (PasswordException e) {
                         status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.XMLImportDialog_13, e); //$NON-NLS-1$
+                    } catch (IllegalStateException ex) {
+                        Throwable cause = ex.getCause();
+
+                        if (cause instanceof VnaSchemaException) {
+                            VnaSchemaException archiveException = (VnaSchemaException) cause;
+                            String vnaSchemaVersion = archiveException.getVnaSchemaVersion();
+                            String compatibleVersions = StringUtils.join(archiveException.getOfferedVnaSchemaVersions(), ", ");
+                            Object[] msgParams = new Object[] { vnaSchemaVersion, compatibleVersions };
+                            String msg = NLS.bind(Messages.XMLImportDialog_ARCHIV_IMPORT_ERROR, msgParams);
+                            status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", msg);
+                        } else {
+                            status = handleGenericError(ex);
+                        }
                     } catch (Exception e) {
-                        LOG.error("Error while importing data.", e); //$NON-NLS-1$
-                        status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.XMLImportDialog_17, e); //$NON-NLS-1$
+                        status = handleGenericError(e);
                     } finally {
                         monitor.done();
                     }
+                    return status;
+                }
+
+                private IStatus handleGenericError(Exception e) {
+                    IStatus status;
+                    LOG.error("Error while importing data.", e); //$NON-NLS-1$
+                    status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.XMLImportDialog_17, e); //$NON-NLS-1$
                     return status;
                 }
             };

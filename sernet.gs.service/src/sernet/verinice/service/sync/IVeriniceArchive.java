@@ -28,7 +28,7 @@ import de.sernet.sync.risk.Risk;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface IVeriniceArchive {
+public interface IVeriniceArchive extends VnaSchemaChecker {
 
     byte[] getVeriniceXml();
     
@@ -42,6 +42,7 @@ public interface IVeriniceArchive {
 
     String getSourceId();
 
+
     void setSourceId(String sourceId);
     
     void setSyncMapping(SyncMapping syncMapping);
@@ -53,5 +54,4 @@ public interface IVeriniceArchive {
     byte[] getFileData(String fileName);
     
     void clear();
-    
 }

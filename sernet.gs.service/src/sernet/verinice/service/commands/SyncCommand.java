@@ -48,6 +48,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.sync.IVeriniceArchive;
 import sernet.verinice.service.sync.PureXml;
 import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.service.sync.VnaSchemaVersion;
 import de.sernet.sync.sync.SyncRequest;
 
 @SuppressWarnings("serial")
@@ -80,6 +81,7 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
     private Set<CnATreeElement> elementSet = null;
     
     private transient IVeriniceArchive veriniceArchive = null;
+
 
     /**
      * Creates an instance of the SyncCommand where the {@link SyncRequest}
@@ -160,6 +162,9 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
                 fileData = null;
             }
             
+            VnaSchemaVersion vnaSchemaVersion = getCommandService().getVnaSchemaVersion();
+            veriniceArchive.checkVnaSchema(vnaSchemaVersion);
+                        
             doInsertAndUpdate();
             doDelete();
             
@@ -176,8 +181,8 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
         finally {
             clear();
         }
-
     }
+  
 
     private void logRuntime(long start) {
         if (getLog().isInfoEnabled()) {
