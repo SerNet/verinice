@@ -62,29 +62,18 @@ public class ReportClassLoader extends ClassLoader {
     }
     
     
-    @SuppressWarnings("restriction")
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
-        if(name.startsWith("java.lang.System") || name.startsWith("java.lang.Runtime")){
-            this.hashCode();
-            
-        }
-        
       if (isTrustedClass(name)){
           return super.loadClass(name);
       } else {
-          ClassNotFoundException e = new ClassNotFoundException("Prevent loading of class:\t" + name + " due to security restrictions");
-//          ClassNotFoundException e = new ClassNotFoundException("Prevent loading of class:\t" + name + " due to security restrictions"); 
+          ClassLoadingDeniedException e = new ClassLoadingDeniedException("Prevent loading of class:\t" + name + " due to security restrictions");
           LOG.error("Could not load class", e);
           throw e;
       }
     }
 
-    /** only classes of sernet namespace are allowed to being exexcuted
-     * implement a whitelist if more than sernet. namespace is needed here 
-     * @param name
-     * @return
-     */
+
     private boolean isTrustedClass(String name){
         if(name != null){
             return checkPrefixes(name);

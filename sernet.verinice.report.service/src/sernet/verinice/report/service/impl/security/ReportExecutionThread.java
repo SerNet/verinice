@@ -51,9 +51,17 @@ public class ReportExecutionThread extends Thread {
       SecurityManager old = System.getSecurityManager();
       System.setSecurityManager(reportSecurityManager);
       runUntrustedCode();
+      // without this, we cannot reset the securityManager, because
+      // that needs to be forbidden from within report excecution
       reportSecurityManager.setProtectionEnabled(false);
       System.setSecurityManager(old);
     }
+    
+    /**
+     * note that the so called "untrusted" code is not the line
+     * task.run()
+     * but the user-generated code, contained in datasets or javascript snippets within the template
+     */
     private void runUntrustedCode() {
       try {
           task.run();

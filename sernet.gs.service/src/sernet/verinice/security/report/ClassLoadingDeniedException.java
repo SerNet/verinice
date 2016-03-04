@@ -19,41 +19,19 @@
  ******************************************************************************/
 package sernet.verinice.security.report;
 
-import java.net.URL;
-
-import sernet.verinice.interfaces.report.IReportOptions;
-
 /**
- * wrap informations needed for executing / generating a report 
- * in a secure context ( sandbox)
+ * thrown when reporttemplates trying to load an unauthorized class
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
-public class ReportSecurityContext {
+public class ClassLoadingDeniedException extends ClassNotFoundException {
     
-    private IReportOptions reportOptions;
-    private URL rptDesignUrl;
-    private String logFileLocation;
-
-    /**
-     * @param reportOptions
-     * @param rptDesignUrl
-     * @param logFileLocation
-     */
-    public ReportSecurityContext(IReportOptions reportOptions, URL rptDesignUrl, String logFileLocation) {
-        this.reportOptions = reportOptions;
-        this.rptDesignUrl = rptDesignUrl;
-        this.logFileLocation = logFileLocation;
-    }
-    public IReportOptions getReportOptions() {
-        return reportOptions;
-    }
-    public URL getRptDesignUrl() {
-        return rptDesignUrl;
-    }
-    public String getLogFileLocation() {
-        return logFileLocation;
+    public ClassLoadingDeniedException(String message){
+        super(message);
     }
     
+    public ClassLoadingDeniedException(String message, Throwable rootCause){
+        super(message, rootCause);
+    }
     
 
 }
