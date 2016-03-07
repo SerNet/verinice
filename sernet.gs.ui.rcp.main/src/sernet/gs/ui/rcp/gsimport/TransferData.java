@@ -865,8 +865,6 @@ public class TransferData {
         String gefNr = translateGefaehrdungsNr(ragResult.getGefaehrdung());
         ownGefaehrdung.setId(gefNr);
         ownGefaehrdung.setExtId(GSVampire.generateGefaehrdungsUmsetzungExtid(String.valueOf(ragResult.getGefaehrdung().getId().getGefId()), String.valueOf(ragResult.getZielobjekt().getId().getZobId()), ragResult.getGefaehrdung().getGuid(), ragResult.getZielobjekt().getGuid()));
-        // ownGefaehrdung.setExtId(ragResult.getGefaehrdung().getId().getGefId()
-        // + "-" + );
         ownGefaehrdung.setTitel(ragResult.getGefaehrdungTxt().getName());
         ownGefaehrdung.setBeschreibung(convertClobToStringEncodingSave(ragResult.getGefaehrdungTxt().getBeschreibung(), GSScraperUtil.getInstance().getModel().getEncoding()));
     }

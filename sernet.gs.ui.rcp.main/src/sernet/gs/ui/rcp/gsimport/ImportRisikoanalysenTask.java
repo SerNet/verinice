@@ -256,8 +256,6 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
         GefaehrdungsUmsetzung gefaehrdungsUmsetzung = associateGefaehrdung.getGefaehrdungsUmsetzung();
         transferData.transferRAGefaehrdungsUmsetzung(gefaehrdungsUmsetzung, gefaehrdungenResult);
         gefaehrdungsUmsetzung.setExtId(GSVampire.generateGefaehrdungsUmsetzungExtid(String.valueOf(gefaehrdungenResult.getGefaehrdung().getId().getGefId()), String.valueOf(gefaehrdungenResult.getZielobjekt().getId().getZobId()), gefaehrdungenResult.getGefaehrdung().getGuid(), gefaehrdungenResult.getZielobjekt().getGuid()));
-        // gefaehrdungsUmsetzung.setExtId(gefaehrdungenResult.getGefaehrdung().getId().getGefId()
-        // + "-" + gefaehrdungenResult.getZielobjekt().getId().getZobId());
         CnAElementHome.getInstance().update(gefaehrdungsUmsetzung);
         assert (gefaehrdungsUmsetzung.getExtId() != null);
         return gefaehrdungsUmsetzung;
