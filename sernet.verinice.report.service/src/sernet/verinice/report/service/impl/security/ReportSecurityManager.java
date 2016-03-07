@@ -28,6 +28,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PropertyPermission;
 import java.util.logging.LoggingPermission;
 
@@ -53,33 +54,80 @@ public class ReportSecurityManager extends SecurityManager {
     
     private static final Logger LOG = Logger.getLogger(ReportSecurityManager.class);
     
-    private static Map<String, List<String>> allowedPermissionsAndActionsMap = new HashMap<>();
+    private static Map<String, List<String>> allowedPermissionsAndActionsMap;
+    private static Map<String, List<String>> authorizedRuntimeActions;
     
     private boolean protectionEnabled = true;
     
     private final static String SUN_LIBRARY_PATH = System.getProperty("sun.boot.library.path");
     
     static {
+        allowedPermissionsAndActionsMap = new HashMap<>();
         allowedPermissionsAndActionsMap.put(RuntimePermission.class.getCanonicalName(), Arrays.asList(new String[]{
-                "createClassLoader",
-                "getClassLoader",
-                "accessDeclaredMembers",
-                "accessClassInPackage.sun.util.resources",
-                "accessClassInPackage.sun.util.resources.de",
-                "accessClassInPackage.sun.misc",
-                "accessClassInPackage.sun.awt.resources",
-                "setContextClassLoader",
-                "loadLibrary.awt",
-                "loadLibrary.libawt_xawt.so",
-                "getenv.DISPLAY",
-                "getProtectionDomain"
+//                "createClassLoader",
+//                "getClassLoader",
+//                "accessDeclaredMembers",
+//                "accessClassInPackage.sun.util.resources",
+//                "accessClassInPackage.sun.util.resources.de",
+//                "accessClassInPackage.sun.misc",
+//                "accessClassInPackage.sun.awt.resources",
+//                "setContextClassLoader",
+//                "loadLibrary.awt",
+//                "loadLibrary.libawt_xawt.so",
+//                "getenv.DISPLAY"
+//                "getProtectionDomain"
         }));
         
-        allowedPermissionsAndActionsMap.put(ReflectPermission.class.getCanonicalName(), Arrays.asList(new String[]{"suppressAccessChecks"}));
+//        allowedPermissionsAndActionsMap.put(ReflectPermission.class.getCanonicalName(), Arrays.asList(new String[]{"suppressAccessChecks"}));
         allowedPermissionsAndActionsMap.put(LoggingPermission.class.getCanonicalName(), Arrays.asList(new String[]{"control"}));
         allowedPermissionsAndActionsMap.put(NetPermission.class.getCanonicalName(), Arrays.asList(new String[]{"specifyStreamHandler"}));
         allowedPermissionsAndActionsMap.put("org.eclipse.equinox.log.LogPermission", Arrays.asList(new String[]{"*"}));
         
+    }
+    
+    static{
+        authorizedRuntimeActions = new HashMap<String, List<String>>();
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.run", Arrays.asList(new String[]{
+                "createClassLoader",
+                "setContextClassLoader",
+                "getClassLoader",
+                "accessDeclaredMembers",
+                "getProtectionDomain",
+                "getenv.DISPLAY",
+                "loadLibrary.awt",
+                "loadLibrary.libawt_xawt.so",
+                "accessClassInPackage.sun.util.resources",
+                "accessClassInPackage.sun.util.resources.de",
+                "accessClassInPackage.sun.util.resources.en",
+                "accessClassInPackage.sun.misc",
+                "accessClassInPackage.sun.awt.resources",
+                "suppressAccessChecks",
+                "loadLibrary." + SUN_LIBRARY_PATH + File.separator + "libawt_xawt.so",
+                "loadLibrary."+SUN_LIBRARY_PATH}));
+        authorizedRuntimeActions.put("org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent", Arrays.asList(new String[]{
+                "getClassLoader",
+                "suppressAccessChecks"
+        }));
+        authorizedRuntimeActions.put("org.eclipse.osgi.framework.util.SecureAction.start", Arrays.asList(new String[]{
+                "suppressAccessChecks"
+        }));
+        authorizedRuntimeActions.put("org.apache.commons.logging.LogFactory.directGetContextClassLoader", Arrays.asList(new String[]{
+                "getClassLoader"
+        }));
+        authorizedRuntimeActions.put("org.eclipse.equinox.internal.util.impl.tpt.threadpool.Executor.run", Arrays.asList(new String[]{
+                "getClassLoader"
+        }));
+        authorizedRuntimeActions.put("sernet.gs.ui.rcp.main.service.TransactionLogWatcher.checkLog", Arrays.asList(new String[]{
+                "accessDeclaredMembers"
+        }));
+        authorizedRuntimeActions.put("org.springframework.util.ClassUtils.isCacheSafe", Arrays.asList(new String[]{
+                "getClassLoader"
+        }));
+        authorizedRuntimeActions.put("org.springframework.scheduling.quartz.QuartzJobBean.execute", Arrays.asList(new String[]{
+                "getClassLoader"
+        }));        
+        
+
     }
     
     private ReportSecurityContext reportSecurityContext;
@@ -107,9 +155,13 @@ public class ReportSecurityManager extends SecurityManager {
         if(!protectionEnabled){
             return;
         }
-        // enable loading of libraries from the jre
-        if(perm instanceof RuntimePermission && perm.getName().startsWith("loadLibrary."+SUN_LIBRARY_PATH)){
-            return;
+        // enabling reflextpermission("suppressAccessChecks") and several RuntimePermissions in authorized context only
+        if(perm instanceof ReflectPermission || perm instanceof RuntimePermission) {
+            if(!isAuthorizedStackTrace(perm.getName())){
+                throwSecurityException(perm);
+            } else {
+                return;
+            }
         // enable osgi-stuff
         }else if("org.osgi.framework.AdminPermission".equals(perm.getClass().getCanonicalName())){
             return;
@@ -125,15 +177,19 @@ public class ReportSecurityManager extends SecurityManager {
         } else if(allowedPermissionsAndActionsMap.containsKey(perm.getClass().getCanonicalName())){
             lookupPermissionMap(perm);
         } else { // default | everything else is not on the whitelist, so throw exception!
-            StringBuilder sb = new StringBuilder().append("Permission")
-                    .append("<").append(perm.getClass().getCanonicalName()).append(">")
-                    .append(":\t")
-                    .append(perm.getName())
-                    .append(" with action(s):\t")
-                    .append(perm.getActions())
-                    .append(" not allowed in verinice Report Context");
-            throw new ReportSecurityException(sb.toString());
+            throwSecurityException(perm);
         }
+    }
+
+    private void throwSecurityException(Permission perm) {
+        StringBuilder sb = new StringBuilder().append("Permission")
+                .append("<").append(perm.getClass().getCanonicalName()).append(">")
+                .append(":\t")
+                .append(perm.getName())
+                .append(" with action(s):\t")
+                .append(perm.getActions())
+                .append(" not allowed in verinice Report Context");
+        throw new ReportSecurityException(sb.toString());
     }
 
     /** checks if permission name in combination with permission action is whitelisted
@@ -147,13 +203,7 @@ public class ReportSecurityManager extends SecurityManager {
                 return;
             }
         }
-        StringBuilder sb = new StringBuilder().append("Permission:\t")
-                .append(perm.getName())
-                .append(" with action(s):\t")
-                .append(perm.getActions())
-                .append(" not allowed in verinice Report Context");
-        LOG.debug(sb.toString());
-        throw new ReportSecurityException(sb.toString());
+        throwSecurityException(perm);
     }
 
     /**
@@ -176,13 +226,7 @@ public class ReportSecurityManager extends SecurityManager {
             } else if(("file:" + filePermission.getName()).startsWith(System.getProperty("osgi.configuration.area"))){
                 return;
             } else {
-                StringBuilder sb = new StringBuilder().append("Permission")
-                        .append("<").append(perm.getClass().getCanonicalName()).append(">")
-                        .append(":\t").append(perm.getName())
-                        .append(" with action(s):\t")
-                        .append(perm.getActions())
-                        .append(" not allowed in verinice Report Context");
-                throw new ReportSecurityException(sb.toString()); 
+                throwSecurityException(perm); 
             }
         }
     }
@@ -197,5 +241,35 @@ public class ReportSecurityManager extends SecurityManager {
      */
     protected void setProtectionEnabled(boolean protectionEnabled){
         this.protectionEnabled = protectionEnabled;
+    }
+    
+    private boolean isAuthorizedStackTrace(String permissionName){
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        StringBuilder sb = new StringBuilder();
+        boolean authorizedCall = false;
+        for(Entry<String, List<String>> entry : authorizedRuntimeActions.entrySet()){
+            for(String value : entry.getValue()){
+                if(permissionName.equals(value)){
+                    for (int i = 0; i < stackTrace.length; i++){
+                        sb.append(stackTrace[i].toString()).append("\n");
+                        if(stackTrace[i].toString().startsWith(entry.getKey())){
+                            authorizedCall = true;
+                            break;
+                        }
+                    }
+                }
+                if(authorizedCall){
+                    break;
+                }
+            }
+            if(authorizedCall){
+                break;
+            }            
+        }
+        if(!authorizedCall){
+            System.out.println("Error checking Permission:\t" + permissionName);
+            System.out.println("Call from following stacktrace is unauthorized:\n" + sb.toString());
+        }
+        return authorizedCall;
     }
 }
