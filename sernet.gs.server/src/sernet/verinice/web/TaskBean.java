@@ -183,12 +183,16 @@ public class TaskBean {
                 handler.execute(getSelectedTask(), getOutcomeId());
             } else {
                 getTaskService().completeTask(getSelectedTask().getId(),getOutcomeId());
-                getTaskList().remove(getSelectedTask());
-                setSelectedTask(null);
-                getEditBean().clear();
+                resetSelectedTask();
                 Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));   //$NON-NLS-1$ //$NON-NLS-2$
             }
          }
+    }
+
+    public void resetSelectedTask() {
+        getTaskList().remove(getSelectedTask());
+        setSelectedTask(null);
+        getEditBean().clear();
     }
     
     public void completeAllTask() { 

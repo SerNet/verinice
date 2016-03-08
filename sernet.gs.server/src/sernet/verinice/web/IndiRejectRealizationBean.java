@@ -78,16 +78,12 @@ public class IndiRejectRealizationBean implements ICompleteWebHandler {
         }
         if (this.task != null) {
             getTaskService().completeTask(task.getId(), outcomeId, getParameter());
-            // TODO: save only new description
-            // getTaskService().completeTask(task.getId(), outcomeId);
             RequestContext context = RequestContext.getCurrentInstance();
             context.execute("indiRejectRealizationBean.hide();");
             Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted")); //$NON-NLS-1$ //$NON-NLS-2$
 
             if (taskBean != null) {
-                taskBean.getTaskList().remove(task);
-                taskBean.setSelectedTask(null);
-                taskBean.getEditBean().clear();
+                taskBean.resetSelectedTask();
             }
         }
     }
