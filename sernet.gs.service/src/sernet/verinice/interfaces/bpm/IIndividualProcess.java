@@ -49,4 +49,5 @@ public interface IIndividualProcess extends IGenericProcess {
     String TRANS_ASSIGNED = "indi.trans.assigned";
     String TRANS_ACCEPT = "indi.trans.accept";
     String TRANS_EXTENSION = "indi.trans.extension";
+    String TRANS_DECLINE = "indi.trans.decline";
 }
