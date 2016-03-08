@@ -24,7 +24,7 @@
 					    	<p:commandButton id="complete" 
 					    		action="#{task.completeTask}" 
 					    		value="#{outcome.value}" 
-					    		update=":tableForm,:editForm,:completeHandlerForm :indiRejectRealizationBeanForm">
+					    		update=":tableForm,:editForm,:completeHandlerForm, :indiRejectRealizationBeanForm, :indiExecuteExtensionBeanForm">
 					    		<f:setPropertyActionListener target="#{task.outcomeId}" value="#{outcome.key}" />					    		
 					    	</p:commandButton>						    
 					    </ui:repeat>
