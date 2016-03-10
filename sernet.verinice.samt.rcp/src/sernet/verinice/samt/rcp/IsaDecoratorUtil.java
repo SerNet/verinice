@@ -55,9 +55,6 @@ public class IsaDecoratorUtil {
     private static final BigDecimal GREEN_SCORE_COEFFICIENT = new BigDecimal("0.9");
     private static final BigDecimal YELLOW_SCORE_COEFFICIENT = new BigDecimal("0.7");
 
-    private static final int CONTROL_GROUP_COUNT_IN_SECURITY_ASSESSMENT = 15;
-    private static final int ISA_CONTROL_COUNT_IN_SECURITY_ASSESSMENT = 48;
-
     private static final int SCALE = 2;
 
     /**
@@ -248,29 +245,23 @@ public class IsaDecoratorUtil {
         return false;
     }
 
-    static boolean hasSecurityAssessmentStructure(Audit audit) {
+    /**
+     * Returns {@code true}, if the given {@code audit} has a ISA Control ({@code SamtTopic})
+     * grandchild.
+     * 
+     * @param  audit the Audit object to be tested
+     * @return {@code} true, if the given Audit object has a ISA Control child, {@code false} if
+     *         not.
+     */
+    static boolean hasIsaControlChild(Audit audit) {
 
-        Audit hydratedAudit = (Audit) Retriever.checkRetrieveChildren(audit);
-        ControlGroup topLevelControlGroup = hydratedAudit.getControlGroup();
+        ControlGroup topLevelControlGroup = audit.getControlGroup();
         topLevelControlGroup = (ControlGroup) Retriever.checkRetrieveChildren(topLevelControlGroup);
 
-        int controlGroupCount = 0;
-        int isaControlCount = 0;
-
-        isaControlCount += getChildrenOfTypeIsaControl(topLevelControlGroup).size();
-
         for (CnATreeElement child : topLevelControlGroup.getChildren()) {
-            if (child instanceof ControlGroup) {
-                controlGroupCount++;
-                ControlGroup controlGroup = (ControlGroup) Retriever
-                        .checkRetrieveElementAndChildren(child);
-                isaControlCount += getChildrenOfTypeIsaControl(controlGroup).size();
+            if (child instanceof SamtTopic) {
+                return true;
             }
-        }
-
-        if (isaControlCount == ISA_CONTROL_COUNT_IN_SECURITY_ASSESSMENT
-                && controlGroupCount == CONTROL_GROUP_COUNT_IN_SECURITY_ASSESSMENT) {
-            return true;
         }
 
         return false;

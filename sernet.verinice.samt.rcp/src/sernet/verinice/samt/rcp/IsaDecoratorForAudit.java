@@ -34,19 +34,18 @@ public class IsaDecoratorForAudit extends LabelProvider implements ILightweightL
 
         Audit audit = (Audit) Retriever.checkRetrieveChildren((CnATreeElement) element);
 
-        DecoratorColor color = IsaDecoratorUtil.decoratorColor(audit);
-        IsaDecoratorUtil.addOverlay(color, decoration);
+        if (IsaDecoratorUtil.hasIsaControlChild(audit)) {
 
-        BigDecimal score = IsaDecoratorUtil.resultScore(audit);
-        addSuffix(score, decoration);
+            DecoratorColor color = IsaDecoratorUtil.decoratorColor(audit);
+            IsaDecoratorUtil.addOverlay(color, decoration);
 
-        logger.debug("Score: " + score + ", audit uuid: " + audit.getUuid());
-    }
+            BigDecimal score = IsaDecoratorUtil.resultScore(audit);
 
-    private void addSuffix(BigDecimal score, IDecoration decoration) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(" [").append(String.format("%.2f", score)).append("]");
+            decoration.addSuffix(sb.toString());
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(" [").append(String.format("%.2f", score)).append("]");
-        decoration.addSuffix(sb.toString());
+            logger.debug("Score: " + score + ", audit uuid: " + audit.getUuid());
+        }
     }
 }
