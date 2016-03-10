@@ -47,13 +47,16 @@ import java.util.Set;
 @SuppressWarnings("restriction")
 public class IsaDecoratorUtil {
 
-    public enum DecoratorColor {
+    enum DecoratorColor {
         NULL, GREEN, YELLOW, RED
     }
 
     private static final BigDecimal MAX_SCORE = new BigDecimal("3.0");
     private static final BigDecimal GREEN_SCORE_COEFFICIENT = new BigDecimal("0.9");
     private static final BigDecimal YELLOW_SCORE_COEFFICIENT = new BigDecimal("0.7");
+
+    private static final int CONTROL_GROUP_COUNT_IN_SECURITY_ASSESSMENT = 15;
+    private static final int ISA_CONTROL_COUNT_IN_SECURITY_ASSESSMENT = 48;
 
     private static final int SCALE = 2;
 
@@ -63,7 +66,7 @@ public class IsaDecoratorUtil {
      * @param  isaControl the control for which the decorator color is requested
      * @return the decorator color for the control that was passed in
      */
-    public static DecoratorColor decoratorColor(SamtTopic isaControl) {
+    static DecoratorColor decoratorColor(SamtTopic isaControl) {
 
         int maturity = getMaturity(isaControl);
         int targetMaturity = getTargetMaturity(isaControl);
@@ -81,7 +84,7 @@ public class IsaDecoratorUtil {
      * @param  controlGroup the control group for which the decorator color is requested
      * @return the decorator color for the control group that was passed in
      */
-    public static DecoratorColor decoratorColor(ControlGroup controlGroup) {
+    static DecoratorColor decoratorColor(ControlGroup controlGroup) {
 
         ControlGroup hydratedControlGroup = (ControlGroup) Retriever
                 .checkRetrieveElement(controlGroup);
@@ -111,7 +114,7 @@ public class IsaDecoratorUtil {
      * @param  audit the audit for which the decorator color is requested
      * @return the decorator color for the audit that was passed in
      */
-    public static DecoratorColor decoratorColor(Audit audit) {
+    static DecoratorColor decoratorColor(Audit audit) {
 
         BigDecimal score = resultScore(audit);
 
@@ -123,11 +126,18 @@ public class IsaDecoratorUtil {
             return DecoratorColor.RED;
         }
     }
-    
+
     private static DecoratorColor computeDecoratorColor(int maturity, int targetMaturity) {
-        
+
+        assert maturity == Maturity.NOT_EDITED.value()
+                || maturity == Maturity.NOT_APPLICABLE.value()
+                || (maturity >= Maturity.MIN.value() && maturity <= Maturity.MAX.value());
+
+        assert targetMaturity >= TargetMaturity.MIN.value()
+                && targetMaturity <= TargetMaturity.MAX.value();
+
         DecoratorColor decoratorColor;
-        
+
         if (maturity == Maturity.NOT_EDITED.value) {
             decoratorColor = DecoratorColor.RED;
         } else if (maturity == Maturity.NOT_APPLICABLE.value()) {
@@ -140,11 +150,8 @@ public class IsaDecoratorUtil {
             decoratorColor = DecoratorColor.GREEN;
         } else {
             decoratorColor = DecoratorColor.NULL;
-            
-            // TODO: maybe it would be better to throw an exception instead of
-            // silently use a null return value as a fall back for unexpected conditions?
         }
-        
+
         return decoratorColor;
     }
 
@@ -159,7 +166,7 @@ public class IsaDecoratorUtil {
      *         requested
      * @return the result score for the given audit
      */
-    public static BigDecimal resultScore(Audit audit) {
+    static BigDecimal resultScore(Audit audit) {
 
         Audit hydratedAudit = (Audit) Retriever.checkRetrieveChildren(audit);
         ControlGroup topLevelControlGroup = hydratedAudit.getControlGroup();
@@ -194,6 +201,10 @@ public class IsaDecoratorUtil {
             }
         }
 
+        if (count == 0) {
+            return BigDecimal.ZERO;
+        }
+
         return BigDecimal.valueOf(accumulatedMaturity).divide(BigDecimal.valueOf(count), SCALE,
                 RoundingMode.HALF_UP);
     }
@@ -205,7 +216,7 @@ public class IsaDecoratorUtil {
      * @return {@code true} if {@code controlGroup} is the grandchild of an Audit object, {@code
      *         false} otherwise
      */
-    public static boolean isGrandchildOfAudit(ControlGroup controlGroup) {
+    static boolean isGrandchildOfAudit(ControlGroup controlGroup) {
 
         CnATreeElement parent = controlGroup.getParent();
         CnATreeElement grandparent = parent.getParent();
@@ -224,13 +235,41 @@ public class IsaDecoratorUtil {
      * @return {@code true} if {@code isaControl} is the grandchild of an Audit object, {@code
      *         false} otherwise
      */
-    public static boolean isGreatGrandchildOfAudit(SamtTopic isaControl) {
+    static boolean isGreatGrandchildOfAudit(SamtTopic isaControl) {
 
         CnATreeElement parent = isaControl.getParent();
         CnATreeElement grandparent = parent.getParent();
         CnATreeElement greatGrandparent = grandparent.getParent();
 
         if (greatGrandparent instanceof Audit) {
+            return true;
+        }
+
+        return false;
+    }
+
+    static boolean hasSecurityAssessmentStructure(Audit audit) {
+
+        Audit hydratedAudit = (Audit) Retriever.checkRetrieveChildren(audit);
+        ControlGroup topLevelControlGroup = hydratedAudit.getControlGroup();
+        topLevelControlGroup = (ControlGroup) Retriever.checkRetrieveChildren(topLevelControlGroup);
+
+        int controlGroupCount = 0;
+        int isaControlCount = 0;
+
+        isaControlCount += getChildrenOfTypeIsaControl(topLevelControlGroup).size();
+
+        for (CnATreeElement child : topLevelControlGroup.getChildren()) {
+            if (child instanceof ControlGroup) {
+                controlGroupCount++;
+                ControlGroup controlGroup = (ControlGroup) Retriever
+                        .checkRetrieveElementAndChildren(child);
+                isaControlCount += getChildrenOfTypeIsaControl(controlGroup).size();
+            }
+        }
+
+        if (isaControlCount == ISA_CONTROL_COUNT_IN_SECURITY_ASSESSMENT
+                && controlGroupCount == CONTROL_GROUP_COUNT_IN_SECURITY_ASSESSMENT) {
             return true;
         }
 
@@ -244,7 +283,7 @@ public class IsaDecoratorUtil {
      * @param color the {@code DecoratorColor} that the {@code IDecoration} object should get
      * @param decoration the {@code IDecoration} on which {@code addOverlay()} should be called
      */
-    public static void addOverlay(DecoratorColor color, IDecoration decoration) {
+    static void addOverlay(DecoratorColor color, IDecoration decoration) {
 
         ImageCache cache = ImageCache.getInstance();
 
@@ -403,4 +442,5 @@ public class IsaDecoratorUtil {
             return path;
         }
     }
+
 }
