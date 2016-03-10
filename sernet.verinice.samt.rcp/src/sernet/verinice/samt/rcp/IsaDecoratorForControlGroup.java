@@ -5,11 +5,10 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
-import sernet.verinice.iso27k.service.IsaDecoratorService;
-import sernet.verinice.iso27k.service.IsaDecoratorService.DecoratorColor;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ControlGroup;
+import sernet.verinice.samt.rcp.IsaDecoratorUtil.DecoratorColor;
 
 @SuppressWarnings("restriction")
 public class IsaDecoratorForControlGroup extends LabelProvider
@@ -33,9 +32,9 @@ public class IsaDecoratorForControlGroup extends LabelProvider
         ControlGroup controlGroup = (ControlGroup) Retriever
                 .checkRetrieveChildren((CnATreeElement) element);
 
-        if (IsaDecoratorService.isGrandchildOfAudit(controlGroup)) {
-            DecoratorColor color = IsaDecoratorService.decoratorColor(controlGroup);
-            IsaDecoratorService.addOverlay(color, decoration);
+        if (IsaDecoratorUtil.isGrandchildOfAudit(controlGroup)) {
+            DecoratorColor color = IsaDecoratorUtil.decoratorColor(controlGroup);
+            IsaDecoratorUtil.addOverlay(color, decoration);
         }
     }
 }

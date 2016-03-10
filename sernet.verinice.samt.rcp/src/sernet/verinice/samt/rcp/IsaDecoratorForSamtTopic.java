@@ -5,9 +5,8 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
-import sernet.verinice.iso27k.service.IsaDecoratorService;
-import sernet.verinice.iso27k.service.IsaDecoratorService.DecoratorColor;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.samt.rcp.IsaDecoratorUtil.DecoratorColor;
 
 @SuppressWarnings("restriction")
 public class IsaDecoratorForSamtTopic extends LabelProvider implements ILightweightLabelDecorator {
@@ -26,13 +25,13 @@ public class IsaDecoratorForSamtTopic extends LabelProvider implements ILightwei
         sernet.gs.ui.rcp.main.Activator.inheritVeriniceContextState();
         SamtTopic isaControl = (SamtTopic) element;
 
-        boolean isGreatGrandchildOfAudit = IsaDecoratorService.isGreatGrandchildOfAudit(isaControl);
+        boolean isGreatGrandchildOfAudit = IsaDecoratorUtil.isGreatGrandchildOfAudit(isaControl);
 
         if (!isGreatGrandchildOfAudit) {
             return;
         }
 
-        DecoratorColor color = IsaDecoratorService.decoratorColor(isaControl);
-        IsaDecoratorService.addOverlay(color, decoration);
+        DecoratorColor color = IsaDecoratorUtil.decoratorColor(isaControl);
+        IsaDecoratorUtil.addOverlay(color, decoration);
     }
 }

@@ -6,11 +6,10 @@ import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
-import sernet.verinice.iso27k.service.IsaDecoratorService;
-import sernet.verinice.iso27k.service.IsaDecoratorService.DecoratorColor;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.samt.rcp.IsaDecoratorUtil.DecoratorColor;
 
 import java.math.BigDecimal;
 
@@ -35,10 +34,10 @@ public class IsaDecoratorForAudit extends LabelProvider implements ILightweightL
 
         Audit audit = (Audit) Retriever.checkRetrieveChildren((CnATreeElement) element);
 
-        DecoratorColor color = IsaDecoratorService.decoratorColor(audit);
-        IsaDecoratorService.addOverlay(color, decoration);
+        DecoratorColor color = IsaDecoratorUtil.decoratorColor(audit);
+        IsaDecoratorUtil.addOverlay(color, decoration);
 
-        BigDecimal score = IsaDecoratorService.resultScore(audit);
+        BigDecimal score = IsaDecoratorUtil.resultScore(audit);
         addSuffix(score, decoration);
 
         logger.debug("Score: " + score + ", audit uuid: " + audit.getUuid());

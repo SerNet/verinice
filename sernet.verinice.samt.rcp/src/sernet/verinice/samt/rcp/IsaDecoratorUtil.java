@@ -17,11 +17,12 @@
  * along with Verinice. If not, see http://www.gnu.org/licenses/.
  */
 
-package sernet.verinice.iso27k.service;
+package sernet.verinice.samt.rcp;
 
 import org.eclipse.jface.viewers.IDecoration;
 
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
@@ -43,7 +44,8 @@ import java.util.Set;
  * 
  * @author Moritz Reiter
  */
-public class IsaDecoratorService {
+@SuppressWarnings("restriction")
+public class IsaDecoratorUtil {
 
     public enum DecoratorColor {
         NULL, GREEN, YELLOW, RED
