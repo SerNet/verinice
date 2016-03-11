@@ -14,11 +14,14 @@
 					"lowercase",
 					"german_normalization",					
 					"german_stemmer"
-				]
-				
-			}
-			
-		}
-		
+				]			
+			},
+			"analyzer_keyword":{
+        "tokenizer":"keyword",
+        "filter":[
+					"lowercase"
+				]	
+      }		
+		}	
 	}
 }
