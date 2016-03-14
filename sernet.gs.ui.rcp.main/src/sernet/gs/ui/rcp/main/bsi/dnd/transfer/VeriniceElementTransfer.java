@@ -19,17 +19,16 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd.transfer;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.OptionalDataException;
+import java.io.*;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
 /**
+ * Abstract to provide a nativeToJava method which is not different between the
+ * ElementTransfer classes.
+ * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public abstract class VeriniceElementTransfer extends ByteArrayTransfer {

@@ -27,6 +27,9 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
+ * Class to support drag and drop bbetween SearchView and
+ * BSIModelView/ISMModelView
+ * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class SearchViewElementTransfer extends VeriniceElementTransfer {

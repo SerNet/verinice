@@ -19,8 +19,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd;
 
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -28,12 +27,13 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.dnd.DragSourceEvent;
 import org.eclipse.swt.dnd.DragSourceListener;
 
+import sernet.gs.service.RetrieveInfo;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.SearchViewElementTransfer;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
-import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.commands.LoadElementsByUuid;
 
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>
@@ -86,18 +86,20 @@ public class SearchViewDragListener implements DragSourceListener {
     private CnATreeElement[] getElements(IStructuredSelection selection) {
 
         HashSet<CnATreeElement> elements = new HashSet<>();
-        LoadElementByUuid<CnATreeElement> command;
+        LoadElementsByUuid<CnATreeElement> command;
+        ArrayList<String> uuidList = new ArrayList<>();
         for (Object object : selection.toList()) {
             if (object instanceof VeriniceSearchResultRow) {
                 VeriniceSearchResultRow resultRow = (VeriniceSearchResultRow) object;
-                command = new LoadElementByUuid<>(resultRow.getIdentifier());
-                try {
-                    command = ServiceFactory.lookupCommandService().executeCommand(command);
-                    elements.add(command.getElement());
-                } catch (CommandException e) {
-                    LOG.error("Error while loading element " + resultRow.getIdentifier(), e);
-                }
+                uuidList.add(resultRow.getIdentifier());
             }
+        }
+        command = new LoadElementsByUuid<>(uuidList, RetrieveInfo.getPropertyInstance());
+        try {
+            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            elements = (HashSet<CnATreeElement>) command.getElements();
+        } catch (CommandException e) {
+            LOG.error("Error while loading elements.", e);
         }
         return elements.toArray(new CnATreeElement[elements.size()]);
     }
