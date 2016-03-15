@@ -757,10 +757,11 @@
             id="sernet.gs.ui.rcp.main.auditreport"
             objectClass="sernet.verinice.model.iso27k.Audit">
          <action
-               class="sernet.gs.ui.rcp.main.actions.AuditReportAction"
+               class="sernet.verinice.report.actions.AuditReportAction"
+               
                enablesFor="+"
                icon="icons/report.png"
-               id="sernet.gs.ui.rcp.main.actions.AuditReportAction.action"
+               id="sernet.verinice.report.actions.AuditReportAction.action"
                label="%action.label.27"
                menubarPath="special"
                style="push"

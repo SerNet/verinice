@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.osgi.util.NLS;
 
 
 /**
@@ -37,40 +38,75 @@ public class ReportClassLoader extends ClassLoader {
     
     private static final Logger LOG = Logger.getLogger(ReportClassLoader.class);
     
-    private static final Set<String> PREFIXES = new HashSet<>();
+    private static final Set<String> AUTHORIZED_FOR_EXTERNAL_USE = new HashSet<>();
+    
+    private ClassLoader parentClassLoader;
     
     static{
-        PREFIXES.add("sernet.");
-        PREFIXES.add("java.lang.Integer");
-        PREFIXES.add("java.lang.String"); // Covers java.lang.StringBuilder also
-        PREFIXES.add("java.lang.Double");
-        PREFIXES.add("java.util.Arrays");
-        PREFIXES.add("java.util.Collections");
-        PREFIXES.add("java.util.List");
-        PREFIXES.add("java.util.Set");
-        PREFIXES.add("java.util.HashSet");
-        PREFIXES.add("java.util.ArrayList");
-        PREFIXES.add("java.util.regex");
-        PREFIXES.add("java.util.Comparator");
-        PREFIXES.add("java.util.Map");
-        PREFIXES.add("java.text.DateFormat");
-        PREFIXES.add("java.text.SimpleDateFormat");
-        PREFIXES.add("java.math.BigDecimal");
-        PREFIXES.add("java.math.RoundingMode");
-        PREFIXES.add("org.apache.commons.lang.ArrayUtils");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("sernet.");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.lang.Integer");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.lang.String"); // Covers java.lang.StringBuilder also
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.lang.Double");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Arrays");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Collections");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.List");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Set");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.HashSet");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.ArrayList");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.regex");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Comparator");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Map");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.text.DateFormat");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.text.SimpleDateFormat");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.math.BigDecimal");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.math.RoundingMode");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("org.apache.commons.lang.ArrayUtils");
         
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.lang.Thread");
+        
+    }
+    
+    public ReportClassLoader (ClassLoader parentClassloader){
+        super();
+        this.parentClassLoader = parentClassloader;
     }
     
     
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
       if (isTrustedClass(name)){
-          return super.loadClass(name);
+          return parentClassLoader.loadClass(name);
       } else {
-          ClassLoadingDeniedException e = new ClassLoadingDeniedException("Prevent loading of class:\t" + name + " due to security restrictions");
-          LOG.error("Could not load class", e);
-          throw e;
+          if(!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
+              String qualifiedName = tryGuessingQualifiedClassname(name);
+              if(!name.equals(qualifiedName)){
+                  return parentClassLoader.loadClass(qualifiedName);
+              } else {
+                  throw getSecurityClassLoadingException(name);   
+              }
+              
+          } else {
+              parentClassLoader.loadClass(name);
+          }
       }
+      
+      throw getSecurityClassLoadingException(name);
+    }
+
+
+    private ClassLoadingDeniedException getSecurityClassLoadingException(String name) {
+        ClassLoadingDeniedException e = new ClassLoadingDeniedException(NLS.bind(Messages.CLASSLOADING_DENIED_EXCEPTION_0, name));
+        LOG.error("Could not load class due to verinice security policies", e);
+        return e;
+    }
+    
+    private String tryGuessingQualifiedClassname(String name){
+        for(String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
+            if(qualifiedName.contains(name)){
+                return qualifiedName;
+            }
+        }
+        return name;
     }
 
 
@@ -82,7 +118,7 @@ public class ReportClassLoader extends ClassLoader {
     }
 
     private boolean checkPrefixes(String name) {
-        for(String prefix : PREFIXES){
+        for(String prefix : AUTHORIZED_FOR_EXTERNAL_USE){
             if(name.startsWith(prefix)){
                 return true;
             }

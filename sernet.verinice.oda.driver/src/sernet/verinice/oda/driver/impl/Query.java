@@ -90,7 +90,7 @@ public class Query implements IQuery
         
     	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
     	
-    	ReportClassLoader securedClassLoader = new ReportClassLoader();
+    	ReportClassLoader securedClassLoader = new ReportClassLoader(this.getClass().getClassLoader());
     	
     	vnRootElement = rootElementId;
 
@@ -334,6 +334,11 @@ public class Query implements IQuery
         	ByteArrayOutputStream bos = new ByteArrayOutputStream();
         	ImageIO.write(im, "png", bos);
         	return bos.toByteArray();
+        }
+        
+        public Object arraycopy(Object sourceArray, int sourcePosition, Object destinationArray, int destinationPosition, int length){
+            System.arraycopy(sourceArray, sourcePosition, destinationArray, destinationPosition, length);
+            return destinationArray;
         }
         
     }

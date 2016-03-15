@@ -58,8 +58,9 @@ import sernet.verinice.model.report.AbstractOutputFormat;
 import sernet.verinice.oda.driver.impl.VeriniceOdaDriver;
 import sernet.verinice.report.service.Activator;
 import sernet.verinice.report.service.impl.security.ReportExecutionThread;
+import sernet.verinice.report.service.impl.security.ReportSecurityManager;
 import sernet.verinice.security.report.ReportClassLoader;
-import sernet.verinice.security.report.ReportSecurityContext;
+import sernet.verinice.security.report.ReportSecurityException;
 
 public class BIRTReportService {
 	
@@ -78,10 +79,12 @@ public class BIRTReportService {
     private VeriniceOdaDriver odaDriver;
     
     private ReportClassLoader secureClassLoader;
+    
+    private ReportSecurityManager secureExecutionManager;
 
 	public BIRTReportService() {
 	    
-	    secureClassLoader = new ReportClassLoader();
+	    secureClassLoader = new ReportClassLoader(this.getClass().getClassLoader());
 	    
         final int logMaxBackupIndex = 10;
         final int logRollingSize = 3000000; // equals 3MB
@@ -136,6 +139,7 @@ public class BIRTReportService {
 		
 		HashMap hm = config.getAppContext();
 		hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, secureClassLoader);
+//		hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
 		
 		config.setAppContext(hm);
 		
@@ -352,20 +356,27 @@ public class BIRTReportService {
 		return task;
 	}
 
-    public void performRenderTask(IRunAndRenderTask task, ReportSecurityContext reportSecurityContext) {
+    public void performRenderTask(IRunAndRenderTask task, ReportSecurityManager secureReportExecutionManager) throws ReportSecurityException {
         try {
 		    long startTime = System.currentTimeMillis();
 		    
 		    // secure only this, this is entry to birt report engine,after that we have no influence anymore
-            ReportExecutionThread reportExecutionThread = new ReportExecutionThread(task, reportSecurityContext);
+		    
+            ReportExecutionThread reportExecutionThread = new ReportExecutionThread(task, secureReportExecutionManager);
+            reportExecutionThread.setContextClassLoader(secureClassLoader);
             reportExecutionThread.run();
 			if(log.isDebugEnabled()){
 			    long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
 			    log.debug("RunAndRenderTask lasts " + duration + " seconds");
 			}
+        } catch (ReportSecurityException r){
+            throw r;
 		} catch (Exception e) {
 		    log.error("Could not render design: ", e);
 			throw new IllegalStateException(e);
+		} catch (Throwable t){
+		    log.error("Could not render design: ", t);
+            throw new IllegalStateException(t);
 		} finally{
 		    // ensure .log file is released again (.lck file will be removed)
 		    destroyEngine();

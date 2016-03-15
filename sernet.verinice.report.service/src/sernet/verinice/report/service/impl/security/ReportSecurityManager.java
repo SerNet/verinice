@@ -33,6 +33,7 @@ import java.util.PropertyPermission;
 import java.util.logging.LoggingPermission;
 
 import org.apache.log4j.Logger;
+import org.eclipse.osgi.util.NLS;
 
 import sernet.verinice.security.report.ReportSecurityContext;
 import sernet.verinice.security.report.ReportSecurityException;
@@ -60,6 +61,7 @@ public class ReportSecurityManager extends SecurityManager {
     private boolean protectionEnabled = true;
     
     private final static String SUN_LIBRARY_PATH = System.getProperty("sun.boot.library.path");
+    private final static String VERINICE_RUN_QUERY_METHOD = "org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.run";
     
     static {
         allowedPermissionsAndActionsMap = new HashMap<>();
@@ -137,13 +139,6 @@ public class ReportSecurityManager extends SecurityManager {
         this.reportSecurityContext = reportSecurityContext;
     }
     
-    /**
-     * preventes use of Runtime.getRuntime().exec("rm -rf");
-     */
-    @Override
-    public void checkExec(String cmd) {
-        throw new ReportSecurityException("Execution of code not allowed within verinice Report-Context in general");
-    }
     
 
     
@@ -152,44 +147,54 @@ public class ReportSecurityManager extends SecurityManager {
      */
     @Override
     public void checkPermission(Permission perm){
-        if(!protectionEnabled){
-            return;
+        if(perm instanceof RuntimePermission){
+            "exec".hashCode();
         }
-        // enabling reflextpermission("suppressAccessChecks") and several RuntimePermissions in authorized context only
-        if(perm instanceof ReflectPermission || perm instanceof RuntimePermission) {
-            if(!isAuthorizedStackTrace(perm.getName())){
-                throwSecurityException(perm);
-            } else {
+        // do the stacktrace / caller inspection for javascript also and we are done here,aren't we?
+        if(isCalledByRunQuery()){
+            if(!protectionEnabled){
                 return;
             }
-        // enable osgi-stuff
-        }else if("org.osgi.framework.AdminPermission".equals(perm.getClass().getCanonicalName())){
-            return;
-        } else if("org.osgi.framework.ServicePermission".equals(perm.getClass().getCanonicalName())) {
-            return;
-        // enable reading, writing and deleting of all(!) properties
-        } else if (perm instanceof PropertyPermission ){
-            return; // RunAndRenderTask.setReportRunnable(..) requires ("java.util.PropertyPermission" "*" "read,write")
-        // enable reading, writing, deleting of files on some custom defined places
-        }else if(perm instanceof FilePermission){
-            handleFilePermission(perm);
-        // allow some more (static) actions on RuntimePermissions and 4 other permissions
-        } else if(allowedPermissionsAndActionsMap.containsKey(perm.getClass().getCanonicalName())){
-            lookupPermissionMap(perm);
-        } else { // default | everything else is not on the whitelist, so throw exception!
-            throwSecurityException(perm);
+            // enabling reflextpermission("suppressAccessChecks") and several RuntimePermissions in authorized context only
+            if(perm instanceof ReflectPermission || perm instanceof RuntimePermission) {
+                if(!isAuthorizedStackTrace(perm.getName())){
+                    throwSecurityException(perm);
+                } else {
+                    return;
+                }
+            // enable osgi-stuff
+            }else if("org.osgi.framework.AdminPermission".equals(perm.getClass().getCanonicalName())){
+                return;
+            } else if("org.osgi.framework.ServicePermission".equals(perm.getClass().getCanonicalName())) {
+                return;
+            // enable reading, writing and deleting of all(!) properties
+            } else if (perm instanceof PropertyPermission ){
+                return; // RunAndRenderTask.setReportRunnable(..) requires ("java.util.PropertyPermission" "*" "read,write")
+            // enable reading, writing, deleting of files on some custom defined places
+            }else if(perm instanceof FilePermission){
+                handleFilePermission(perm);
+            // allow some more (static) actions on RuntimePermissions and 4 other permissions
+            } else if(allowedPermissionsAndActionsMap.containsKey(perm.getClass().getCanonicalName())){
+                lookupPermissionMap(perm);
+            } else { // default | everything else is not on the whitelist, so throw exception!
+                throwSecurityException(perm);
+            }
         }
     }
 
+    /**
+     * preventes use of Runtime.getRuntime().exec("rm -rf");
+     */
+      @Override
+      public void checkExec(String cmd){
+          if(isCalledByRunQuery()){
+              throw new ReportSecurityException(Messages.UNAUTHORIZED_EXECUTION_CALL_DETECTED);
+          } 
+      }
+
+
     private void throwSecurityException(Permission perm) {
-        StringBuilder sb = new StringBuilder().append("Permission")
-                .append("<").append(perm.getClass().getCanonicalName()).append(">")
-                .append(":\t")
-                .append(perm.getName())
-                .append(" with action(s):\t")
-                .append(perm.getActions())
-                .append(" not allowed in verinice Report Context");
-        throw new ReportSecurityException(sb.toString());
+        throw new ReportSecurityException(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_0, new Object[]{perm.getClass().getCanonicalName(), perm.getName(), perm.getActions()}));
     }
 
     /** checks if permission name in combination with permission action is whitelisted
@@ -225,6 +230,8 @@ public class ReportSecurityManager extends SecurityManager {
                 return;
             } else if(("file:" + filePermission.getName()).startsWith(System.getProperty("osgi.configuration.area"))){
                 return;
+            } else if((filePermission.getName()).startsWith(System.getProperty("java.io.tmpdir"))){
+                return;
             } else {
                 throwSecurityException(perm); 
             }
@@ -239,7 +246,7 @@ public class ReportSecurityManager extends SecurityManager {
      * its needed here because of .. 
      * @param protectionEnabled
      */
-    protected void setProtectionEnabled(boolean protectionEnabled){
+    protected synchronized void setProtectionEnabled(boolean protectionEnabled){
         this.protectionEnabled = protectionEnabled;
     }
     
@@ -267,9 +274,17 @@ public class ReportSecurityManager extends SecurityManager {
             }            
         }
         if(!authorizedCall){
-            System.out.println("Error checking Permission:\t" + permissionName);
-            System.out.println("Call from following stacktrace is unauthorized:\n" + sb.toString());
+            LOG.debug(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_1, new Object[]{permissionName, sb.toString()}));
         }
         return authorizedCall;
+    }
+    
+    private boolean isCalledByRunQuery(){
+        for(StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()){
+            if(stackTraceElement.toString().startsWith(VERINICE_RUN_QUERY_METHOD)){
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -19,11 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.report.service.impl.security;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.EngineException;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
+import org.eclipse.osgi.util.NLS;
 
-import sernet.verinice.security.report.ReportSecurityContext;
+import sernet.verinice.security.report.ReportSecurityException;
 
 /**
  * this thread passes a prepared {@link IRunAndRenderTask} (representing a verinice-report)
@@ -37,20 +39,24 @@ public class ReportExecutionThread extends Thread {
     private static final Logger LOG = Logger.getLogger(ReportExecutionThread.class);
     
     private ReportSecurityManager reportSecurityManager ;
-    private ReportSecurityContext reportSecurityContext;
     private IRunAndRenderTask task;
     
-    public ReportExecutionThread(IRunAndRenderTask task, ReportSecurityContext reportSecurityContext){
+    public ReportExecutionThread(IRunAndRenderTask task, ReportSecurityManager secureReportExecutionManager){
         this.task = task;
-        this.reportSecurityContext = reportSecurityContext;
-        reportSecurityManager = new ReportSecurityManager(reportSecurityContext);
+        this.reportSecurityManager = secureReportExecutionManager;
     }
     
     @Override
-    public void run() {
+    public void run() throws ReportSecurityException{
       SecurityManager old = System.getSecurityManager();
       System.setSecurityManager(reportSecurityManager);
-      runUntrustedCode();
+      // just to ensure, everything works as expected, switch on security
+      reportSecurityManager.setProtectionEnabled(true);
+      try{
+          runUntrustedCode();
+      } catch (ReportSecurityException e){
+          throw e;
+      }
       // without this, we cannot reset the securityManager, because
       // that needs to be forbidden from within report excecution
       reportSecurityManager.setProtectionEnabled(false);
@@ -60,14 +66,36 @@ public class ReportExecutionThread extends Thread {
     /**
      * note that the so called "untrusted" code is not the line
      * task.run()
-     * but the user-generated code, contained in datasets or javascript snippets within the template
+     * but the user-generated code, contained in datasets (via beanshell )
+     *  or javascript snippets within the template
      */
-    private void runUntrustedCode() {
+    private void runUntrustedCode() throws ReportSecurityException{
       try {
           task.run();
+          if(!task.getErrors().isEmpty()){
+              handleExceptionsFromTask();
+          }
       } catch (EngineException t) {
-          LOG.error("Something went wrong on executing the report:\t" + reportSecurityContext.getRptDesignUrl(), t);
+          LOG.error(NLS.bind(Messages.REPORT_RENDER_EXCEPTION_0, task.getReportRunnable().getDesignInstance().getReport().getQualifiedName()), t);
+      } catch (ReportSecurityException r){
+          /* throw this, to handle it in ui to inform user about prevented
+           * execution of unauthorized code  
+           */
+          throw r;
       }
+    }
+
+    private void handleExceptionsFromTask() throws ReportSecurityException, EngineException {
+        for(Object error : task.getErrors()){
+              if(error instanceof EngineException){
+                  EngineException ee = (EngineException)error;
+                  Throwable rootCause = ExceptionUtils.getRootCause(ee);
+                  if(rootCause instanceof ReportSecurityException){
+                      throw (ReportSecurityException)rootCause;
+                  }
+                  throw ee;
+              }
+          }
     }
 
 }

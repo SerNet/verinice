@@ -43,6 +43,7 @@ import sernet.verinice.model.report.ODTOutputFormat;
 import sernet.verinice.model.report.PDFOutputFormat;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.WordOutputFormat;
+import sernet.verinice.report.service.impl.security.ReportSecurityManager;
 import sernet.verinice.security.report.ReportSecurityContext;
 
 /**
@@ -121,6 +122,7 @@ public class UserReportType implements IReportType {
         if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
         {
             ReportSecurityContext reportSecurityContext = new ReportSecurityContext(reportOptions, reportDesign, brs.getLogfile());
+            ReportSecurityManager secureReportExecutionManager = new ReportSecurityManager(reportSecurityContext);
             IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
             task = brs.prepareTaskForRendering(task, reportOptions);
             int iterations = getEngineIterations(task);
@@ -128,7 +130,7 @@ public class UserReportType implements IReportType {
                 LOG.debug("EngineIterations for UserTypeReport:\t" + iterations);
             }
             for(int i = 0;i < iterations; i++){
-                brs.performRenderTask(task, reportSecurityContext);
+                brs.performRenderTask(task, secureReportExecutionManager);
             }
 
 		    // just in case a toc was generated, the next toc should start emtpy again
