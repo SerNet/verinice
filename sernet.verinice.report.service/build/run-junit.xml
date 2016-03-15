@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ======================================================================
+     2016-03-02
+
+     verinice
+     ant buildfile to run JUnit-tests
+
+     author: Daniel Murygin - dm[at]sernet[dot]de
+     ====================================================================== -->
+<project name="verinice" default="coverage" basedir="../" xmlns:jacoco="antlib:org.jacoco.ant">
+    <description>ant buildfile to run JUnit-tests</description>
+
+	<taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+	    <classpath path="${basedir}/lib/jacocoant.jar"/>
+	</taskdef>
+
+	<property name="reports" location="${basedir}/build/reports" />
+	<property name="coverage-reports" location="${basedir}/build/coverage-reports" />
+	<property name="src.tests" location="testSrc" />
+	<property name="target-platform.plugins" location="${basedir}/../target-platform/verinice-tp-eclipse-3.7/plugins" />
+
+	<path id="classpath.base">
+		<pathelement location="${basedir}/bin" />
+		<pathelement location="${target-platform.plugins}/com.springsource.antlr-2.7.6.jar" />
+		<pathelement location="${target-platform.plugins}/com.springsource.org.apache.log4j-1.2.15.jar" />
+	</path>
+	<path id="classpath.test">
+		<pathelement location="${target-platform.plugins}/com.springsource.org.junit-4.4.0.jar" />
+		<path refid="classpath.base" />
+	</path>
+
+	<target name="coverage" description="Creates coverage reports">
+		<mkdir dir="${coverage-reports}"/>
+		<mkdir dir="${reports}"/>
+		<jacoco:coverage destfile="${coverage-reports}/jacoco.exec">
+		    <junit fork="true" forkmode="once" printsummary="yes" haltonfailure="no">
+					<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
+				  <classpath refid="classpath.test" />
+				  <formatter type="xml"/>
+					<batchtest fork="true" todir="${reports}">
+						<fileset dir="${src.tests}">
+							<include name="**/*Test*.java"/>
+						</fileset>
+					</batchtest>
+		    </junit>
+		</jacoco:coverage>
+	</target>
+
+	<target name="test" description="runs JUnit tests">
+		<mkdir dir="${reports}"/>
+		<junit printsummary="yes" haltonfailure="no">
+			<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
+			<classpath refid="classpath.test" />
+			<formatter type="xml"/>
+			<batchtest fork="yes" todir="${reports}">
+				<fileset dir="${src.tests}">
+					<include name="**/*Test*.java"/>
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+
+
+</project>

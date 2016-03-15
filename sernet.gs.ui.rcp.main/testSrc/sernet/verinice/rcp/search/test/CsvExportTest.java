@@ -40,11 +40,13 @@ import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.preferences.SearchPreferencePage;
 import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.model.search.VeriniceSearchResultRow;
-import sernet.verinice.rcp.search.CsvExport;
-import sernet.verinice.rcp.search.CsvExportException;
-import sernet.verinice.rcp.search.ICsvExport;
+import sernet.verinice.rcp.search.SearchResultTableConverter;
+import sernet.verinice.rcp.search.column.ColumnStore;
 import sernet.verinice.rcp.search.column.IColumn;
 import sernet.verinice.rcp.search.column.IColumnStore;
+import sernet.verinice.service.csv.CsvExport;
+import sernet.verinice.service.csv.CsvExportException;
+import sernet.verinice.service.csv.ICsvExport;
 
 import com.opencsv.CSVReader;
 
@@ -70,14 +72,14 @@ public class CsvExportTest {
         for (int i = 0; i < 100; i++) {
             String phrase = LOREM.randomWord();
             VeriniceSearchResultTable result = SearchResultGenerator.createResult(phrase);
-            IColumnStore columnStore = CsvExport.createColumnStore(result);
+            IColumnStore columnStore = ColumnStore.createColumnStore(result);
             setInvisibleColumns(columnStore);
             //assertTrue("No visible column", columnStore.getColumns().size()>0);
             ICsvExport exporter = new CsvExport();
             exporter.setFilePath(getFilePath());
             exporter.setSeperator(SearchPreferencePage.SEMICOLON.charAt(0));
             exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
-            exporter.exportToFile(result, columnStore);
+            exporter.exportToFile(SearchResultTableConverter.convertTable(result, columnStore));
             checkExportFile(result, columnStore);
         }
     }
@@ -88,10 +90,10 @@ public class CsvExportTest {
         exporter.setFilePath("/diesen/ordner/gibt/es/nicht/export.csv");
         String phrase = LOREM.randomWord();
         VeriniceSearchResultTable result = SearchResultGenerator.createResult(phrase);
-        IColumnStore columnStore = CsvExport.createColumnStore(result);
+        IColumnStore columnStore = ColumnStore.createColumnStore(result);
         exporter.setSeperator(SearchPreferencePage.SEMICOLON.charAt(0));
         exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
-        exporter.exportToFile(result, columnStore);      
+        exporter.exportToFile(SearchResultTableConverter.convertTable(result, columnStore));
     }
     
     @Test()
@@ -100,10 +102,10 @@ public class CsvExportTest {
         exporter.setFilePath(getFilePath());
         String phrase = LOREM.randomWord();
         VeriniceSearchResultTable result = new VeriniceSearchResultTable(phrase, phrase, new String[]{});
-        IColumnStore columnStore = CsvExport.createColumnStore(result);
+        IColumnStore columnStore = ColumnStore.createColumnStore(result);
         exporter.setSeperator(SearchPreferencePage.SEMICOLON.charAt(0));
         exporter.setCharset(VeriniceCharset.CHARSET_DEFAULT);
-        exporter.exportToFile(result, columnStore);  
+        exporter.exportToFile(SearchResultTableConverter.convertTable(result, columnStore));
         checkExportFile(result, columnStore);
     }
     

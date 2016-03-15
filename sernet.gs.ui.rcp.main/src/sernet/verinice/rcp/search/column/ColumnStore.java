@@ -19,10 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.rcp.search.column;
 
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.model.search.VeriniceSearchResultRow;
+import sernet.verinice.model.search.VeriniceSearchResultTable;
 
 /**
  * This implementation of {@link IColumnStore} is based on two {@link TreeSet}s
@@ -144,5 +147,19 @@ public class ColumnStore implements IColumnStore {
     @Override
     public void setWidth(IColumn column, int width) {
 
+    }
+
+    public static IColumnStore createColumnStore(VeriniceSearchResultTable result) {
+        IColumnStore columnStore = new ColumnStore(new ColumnComparator());
+        Set<VeriniceSearchResultRow> rows = result.getAllResults();
+        for (VeriniceSearchResultRow row : rows) {
+            Set<String> types = row.getPropertyTypes();
+            for (String id : types ) {
+                PropertyType type = new PropertyType();
+                type.setId(id);
+                columnStore.setVisible(IColumnFactory.getPropertyTypeColumn(type, columnStore), true);
+            }
+        }
+        return columnStore;
     }
 }

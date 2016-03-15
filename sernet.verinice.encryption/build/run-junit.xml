@@ -22,7 +22,7 @@
 		<pathelement location="${basedir}/lib/el-api.jar" />
 		<pathelement location="${basedir}/bin" />
 		<pathelement location="${basedir}/../sernet.gs.service/bin" />
-		<pathelement location="${basedir}/../../../gs.server/plugins/sernet.gs.server/WebContent/WEB-INF/lib/com.springsource.org.apache.commons.lang-2.4.0.jar" />
+		<pathelement location="${basedir}/../sernet.gs.server/WebContent/WEB-INF/lib/com.springsource.org.apache.commons.lang-2.4.0.jar" />
 	</path>
 	<path id="classpath.test">
 		<pathelement location="${basedir}/lib/com.springsource.org.apache.log4j-1.2.15.jar" />	
@@ -30,21 +30,23 @@
 		<pathelement location="${basedir}/lib/spring-test-2.5.6.jar" />	
 		<pathelement location="${basedir}/lib/bouncycastle/bcprov-jdk16-146.jar" />	
 		<pathelement location="${basedir}/lib/bouncycastle/bcmail-jdk16-146.jar" />
-		<pathelement location="${basedir}/../../../gs.server/plugins/sernet.gs.server/WebContent/WEB-INF/lib/com.springsource.javax.mail-1.4.1.jar" />
+		<pathelement location="${basedir}/../sernet.gs.server/WebContent/WEB-INF/lib/com.springsource.javax.mail-1.4.1.jar" />
 		<path refid="classpath.base" />
 	</path>
 	
 	<target name="coverage" description="Creates coverage reports">
+		<mkdir dir="${coverage-reports}"/>
+		<mkdir dir="${reports}"/>
 		<jacoco:coverage destfile="${coverage-reports}/jacoco.exec">
 		    <junit fork="true" forkmode="once" printsummary="yes" haltonfailure="no">
-				<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
-			  	<classpath refid="classpath.test" />
-			  	<formatter type="xml"/>
-				<batchtest fork="true" todir="${reports}">
-					<fileset dir="${src.tests}">
-						<include name="**/*Test*.java"/>
-					</fileset>
-				</batchtest>
+					<jvmarg value="-Dlog4j.configuration=log4j-test.xml" />
+				  <classpath refid="classpath.test" />
+				  <formatter type="xml"/>
+					<batchtest fork="true" todir="${reports}">
+						<fileset dir="${src.tests}">
+							<include name="**/*Test*.java"/>
+						</fileset>
+					</batchtest>
 		    </junit>
 		</jacoco:coverage>
 	</target>

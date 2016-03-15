@@ -19,16 +19,16 @@
         
         <profile name="admin-default-profile" origin="default">
             <!-- missing actions:
-		"accountsettings"
-		"accesscontrol"
+		            "accountsettings"
+		            "accesscontrol"
                 "creategreenbonetasks"
                 "createindividualtasks"
                 "createisatasks"
-	            "editprofile"
+	              "editprofile"
                 "taskchangeassignee"
                 "taskchangeduedate"
-	            "taskdelete" 
-	            "taskshowall" 
+	              "taskdelete"
+	              "taskshowall"
                 "importldap"
                 "reportdeposit"
                 "reportdepositadd"
@@ -52,7 +52,7 @@
 	        <action id="bsimassnahmen" />
 	        <action id="bsimodelview" />
 	        <action id="bulkedit" />
-            <action id="changeicon" />
+          <action id="changeicon" />
 	        <action id="deletecatalog" />
 	        <action id="deletefile" />
 	        <action id="deleteitem" />
@@ -60,10 +60,11 @@
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
+          <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
-            <action id="groupbytag"/>
+          <action id="groupbytag"/>
 	        <action id="gsnotesimport" />
 	        <action id="gstoolimport" />
 	        <action id="importcsv" />
@@ -71,22 +72,22 @@
 	        <action id="ismcopy" />
 	        <action id="ismcut" />
 	        <action id="ismview" />
-            <action id="ismviewweb" /> 
+          <action id="ismviewweb" />
 	        <action id="konsolidator" />
 	        <action id="naturalize" />
 	        <action id="notes" />
 	        <action id="relations" />
 	        <action id="riskanalysis" />
 	        <action id="samtview" />
-            <action id="searchexport" />
-            <action id="searchreindex" />
+          <action id="searchexport" />
+          <action id="searchreindex" />
 	        <action id="searchview" />
 	        <action id="showchartview" />
 	        <action id="showpreferences" />
 	        <action id="simpleauditview" />
 	        <action id="taskview" />
 	        <action id="todo"/>
-            <action id="unify" />
+          <action id="unify" />
 	        <action id="xmlexport"/>
 	        <action id="xmlimport"/>
 	        <action id="cnavalidation" />
