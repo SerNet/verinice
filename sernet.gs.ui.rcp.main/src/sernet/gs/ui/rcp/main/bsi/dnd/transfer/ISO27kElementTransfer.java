@@ -17,17 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd.transfer;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
-import java.util.ArrayList;
-
 import org.apache.log4j.Logger;
-import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -35,12 +25,10 @@ import sernet.verinice.model.iso27k.IISO27kElement;
 /**
  *
  */
-public final class ISO27kElementTransfer extends ByteArrayTransfer {
+public final class ISO27kElementTransfer extends VeriniceElementTransfer {
     
     private static final String TYPENAME_ISOELEMENT = "isoElement";
     private static final int TYPEID_ISOELEMENT = registerType(TYPENAME_ISOELEMENT);
-    
-    private static Logger log = Logger.getLogger(ISO27kElementTransfer.class);
     
     private static ISO27kElementTransfer instance = new ISO27kElementTransfer();
     
@@ -67,73 +55,27 @@ public final class ISO27kElementTransfer extends ByteArrayTransfer {
     }
     
     public void javaToNative (Object data, TransferData transferData){
-        if (data == null || !(validateData(data))) {return;}
-        if (isSupportedType(transferData)) {
-            ArrayList<IISO27kElement> elements = new ArrayList<IISO27kElement>(0);
-            if(data instanceof IISO27kElement[]){
-                IISO27kElement[] bausteinElements = (IISO27kElement[]) data;
-                for(IISO27kElement b : bausteinElements){
-                    elements.add(b);
-                }
-            } else if (data instanceof IISO27kElement){
-                elements.add((IISO27kElement)data);
-            }
-            ByteArrayOutputStream out = null;
-            ObjectOutputStream objectOut = null;
-            try{
-                out = new ByteArrayOutputStream();
-                objectOut = new ObjectOutputStream(out);
-                
-                objectOut.writeObject(elements.toArray(new Object[elements.size()]));
-                
-                super.javaToNative(out.toByteArray(), transferData);
-            } catch (IOException e){
-                getLog().error("Error while serializing object for dnd", e);
-            } finally {
-                if(out != null && objectOut != null){
-                    try {
-                        out.close();
-                        objectOut.close();
-                    } catch (IOException e) {
-                        getLog().error("Error while closing stream", e);
-                    }
-                }
-            }
-        }
+        TransferUtil.iSO27KtoNative(getInstance(), data, transferData);
     }
     
-    public Object nativeToJava(TransferData transferData){
-        Object o = null;
-        if(isSupportedType(transferData)){
-            byte[] bs = (byte[]) super.nativeToJava(transferData);
-            ByteArrayInputStream bis = new ByteArrayInputStream(bs);
-            ObjectInput in;
-            try {
-                in = new ObjectInputStream(bis);
-                o = in.readObject();
-                bis.close();
-                in.close();
-            } catch (OptionalDataException e){
-                getLog().error("Wrong data", e);
-            } catch (IOException e) {
-                getLog().error("Error while transfering dnd object back to java", e);
-            } catch (ClassNotFoundException e) {
-                getLog().error("Error while transfering dnd object back to java", e);
-            }
-        }
-        return o;
-    }
-    
-    private boolean validateData(Object data){
-        return (data instanceof IISO27kElement[]||
-                data instanceof IISO27kElement);
-    }
-    
-    private Logger getLog(){
+    @Override
+    protected Logger getLog() {
         if(log == null){
             log = Logger.getLogger(ISO27kElementTransfer.class);
         }
         return log;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer#
+     * validateData(java.lang.Object)
+     */
+    @Override
+    public boolean validateData(Object data) {
+        return data instanceof IISO27kElement[] ||
+                data instanceof IISO27kElement;
     }
 
 }
