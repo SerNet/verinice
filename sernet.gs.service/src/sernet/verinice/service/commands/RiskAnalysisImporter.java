@@ -178,6 +178,9 @@ public class RiskAnalysisImporter {
         scenario.setId(syncScenario.getNumber());
         scenario.setTitel(syncScenario.getName());
         scenario.setUuid(syncScenario.getUuid());
+        if(syncScenario.getCategory()!=null && !syncScenario.getCategory().isEmpty()) {
+            scenario.setOwnkategorie(syncScenario.getCategory());
+        }
         ownGefaehrdungDao.merge(scenario);       
     }
     
