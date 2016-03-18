@@ -165,7 +165,7 @@ public abstract class ReportAction extends RightsEnabledActionDelegate implement
             dialog.getReportType().createReport(dialog.getReportMetaData());
             setGenerationSuccessful(true);
         }catch (ReportSecurityException e){
-            ExceptionUtil.log(e, "Execution of unauthorized code detected in reporttemplate");
+            ExceptionUtil.log(e, Messages.GenerateReportDialog_34);
             setGenerationSuccessful(false);
         } finally {
             monitor.done();
