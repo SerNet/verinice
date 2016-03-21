@@ -332,13 +332,18 @@ This variant:
 		xml data of the export, so whenever the schema is changed, the property "vnaSchemaVersion"
 		should be increased. Also the list to which versions the schema is compatible
 		should be extended if possible. -->
-	<bean name="vnaSchemaVersion" class="sernet.verinice.service.sync.VnaSchemaVersion">
-		<property name="vnaSchemaVersion" value="vna-1.0" />
-		<property name="compatibleSchemaVersions">
+	<bean name="vnaSchemaVersion" class="sernet.verinice.service.sync.VnaSchemaVersion"
+		factory-method="createVnaSchemaVersion">
+		<constructor-arg>
+			<!-- The current schema which is written into the xml date export -->
+			<value>vna-1.0</value>
+		</constructor-arg>
+		<constructor-arg>
+			<!-- This list to which vna versions the current schema is compatible -->
 			<list>
 				<value>vna-1.0</value>
 			</list>
-		</property>
+		</constructor-arg>
 	</bean>
    
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->

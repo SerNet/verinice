@@ -155,11 +155,20 @@ public class XMLImportDialog extends Dialog {
                         Throwable cause = ex.getCause();
 
                         if (cause instanceof VnaSchemaException) {
+                            
                             VnaSchemaException archiveException = (VnaSchemaException) cause;
                             String vnaSchemaVersion = archiveException.getVnaSchemaVersion();
                             String compatibleVersions = StringUtils.join(archiveException.getOfferedVnaSchemaVersions(), ", ");
                             Object[] msgParams = new Object[] { vnaSchemaVersion, compatibleVersions };
-                            String msg = NLS.bind(Messages.XMLImportDialog_ARCHIV_IMPORT_ERROR, msgParams);
+                            
+                            String msg = null;
+                            
+                            if (archiveException.getOfferedVnaSchemaVersions().size() > 1) {
+                                msg = NLS.bind(Messages.XMLImportDialog_ARCHIV_IMPORT_ERROR_MULTI_VERSION, msgParams);
+                            } else {
+                                msg = NLS.bind(Messages.XMLImportDialog_ARCHIV_IMPORT_ERROR_SINGLE_VERSION, msgParams);                                        
+                            }
+                            
                             status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", msg);
                         } else {
                             status = handleGenericError(ex);

@@ -163,7 +163,7 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
             }
             
             VnaSchemaVersion vnaSchemaVersion = getCommandService().getVnaSchemaVersion();
-            veriniceArchive.checkVnaSchema(vnaSchemaVersion);
+            veriniceArchive.isCompatible(vnaSchemaVersion);
                         
             doInsertAndUpdate();
             doDelete();

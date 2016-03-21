@@ -19,11 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import static sernet.verinice.service.sync.VnaSchemaVersion.createVnaSchemaVersion;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -40,63 +40,72 @@ import sernet.verinice.service.sync.VnaSchemaVersion;
  *
  */
 public class VnaSchemaCheckerTest extends CommandServiceProvider {
-    
-    
+
+    private static final String VNA_1_1 = "vna-1.1";
+    private static final String VNA_1_0 = "vna-1.0";
     private static final String IMPORT_LEGACY_VNA = "import_legacy_version.vna";
     private static final String IMPORT_WITHOUT_SCHEMA_VNA = "import_no_version.vna";
     private static final String IMPORT_NEW_SCHEMA_VNA = "import_new_version.vna";
     private static final String IMPORT_NO_COMPATIBLE_SCHEMA_VNA = "import_no_compatible_version.vna";
-
+    private static final String IMPORT_WITHOUT_COMPATIBLE_LIST_VNA = "import_no_compatible_list.vna";
 
     @Test
     public void testLegacyImport() throws IOException {
-        
+
         VnaSchemaChecker vnaSchemaChecker = initVNA(IMPORT_LEGACY_VNA);
-        
-        VnaSchemaVersion vnaSchemaVersion = commandService.getVnaSchemaVersion();
-        vnaSchemaVersion.setVnaSchemaVersion("vna-1.1");
-        vnaSchemaVersion.setCompatibleSchemaVersions(Arrays.asList(new String[]{"vna-1.0", "vna-1.1"}));
-        vnaSchemaChecker.checkVnaSchema(vnaSchemaVersion);        
+        VnaSchemaVersion vnaSchemaVersion = createVnaSchemaVersion(VNA_1_1,
+                Arrays.asList(new String[] { VNA_1_0, VNA_1_1 }));
+
+        vnaSchemaChecker.isCompatible(vnaSchemaVersion);
     }
-    
+
     @Test
-    public void importNewSchema() throws IOException{
-        
-        VnaSchemaChecker vnaSchemaChecker = initVNA(IMPORT_NEW_SCHEMA_VNA);        
-        VnaSchemaVersion vnaSchemaVersion = new VnaSchemaVersion();
-        vnaSchemaVersion.setVnaSchemaVersion("vna-1.0");
-        vnaSchemaVersion.setCompatibleSchemaVersions(Arrays.asList(new String[]{"vna-1.0"}));
-        vnaSchemaChecker.checkVnaSchema(vnaSchemaVersion);
+    public void importNewSchema() throws IOException {
+
+        VnaSchemaChecker vnaSchemaChecker = initVNA(IMPORT_NEW_SCHEMA_VNA);
+        VnaSchemaVersion vnaSchemaVersion = createVnaSchemaVersion(VNA_1_0,
+                Arrays.asList(new String[] { VNA_1_0 }));
+
+        vnaSchemaChecker.isCompatible(vnaSchemaVersion);
     }
-    
+
     /**
      * VNA import should work if no schema is available.
      */
     @Test
-    public void testImportWithoutSchemaInforamtion() throws IOException{
-        
+    public void testImportWithoutSchemaInforamtion() throws IOException {
+
         VnaSchemaChecker vnaSchemaChecker = initVNA(IMPORT_WITHOUT_SCHEMA_VNA);
         VnaSchemaVersion vnaSchemaVersion = commandService.getVnaSchemaVersion();
-        vnaSchemaChecker.checkVnaSchema(vnaSchemaVersion);        
+        vnaSchemaChecker.isCompatible(vnaSchemaVersion);
     }
-    
-    
-    @Test(expected=VnaSchemaException.class)
-    public void testImportNoCompatibleSchemaInformation() throws IOException{
-        
+
+    /**
+     * VNA import should work if no schema is available.
+     */
+    @Test
+    public void testImportWithoutCompatibleList() throws IOException {
+
+        VnaSchemaChecker vnaSchemaChecker = initVNA(IMPORT_WITHOUT_COMPATIBLE_LIST_VNA);
+        VnaSchemaVersion vnaSchemaVersion = createVnaSchemaVersion(VNA_1_0, null);
+
+        vnaSchemaChecker.isCompatible(vnaSchemaVersion);
+    }
+
+    @Test(expected = VnaSchemaException.class)
+    public void testImportNoCompatibleSchemaInformation() throws IOException {
+
         VnaSchemaChecker vnaSchemaChecker = initVNA(IMPORT_NO_COMPATIBLE_SCHEMA_VNA);
-        VnaSchemaVersion vnaSchemaVersion = commandService.getVnaSchemaVersion();
-        vnaSchemaVersion.setVnaSchemaVersion("1.0");
-        
-        vnaSchemaChecker.checkVnaSchema(vnaSchemaVersion);        
+        VnaSchemaVersion vnaSchemaVersion = createVnaSchemaVersion(VNA_1_0, null);
+
+        vnaSchemaChecker.isCompatible(vnaSchemaVersion);
     }
-    
+
     private VnaSchemaChecker initVNA(String fileName) throws IOException {
         String path = this.getClass().getResource(fileName).getPath();
         byte[] fileData = FileUtils.readFileToByteArray(new File(path));
         VnaSchemaChecker vnaSchemaChecker = new VeriniceArchive(fileData);
         return vnaSchemaChecker;
     }
-    
-    
+
 }

@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.sync;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Provides some additional information like the schema version which where
@@ -32,9 +32,9 @@ public class VnaSchemaException extends VeriniceArchiveNotValidException {
 
     private static final long serialVersionUID = 1L;
     private String vnaSchemaVersion;
-    private List<String> offeredVnaSchemaVersions;
+    private Set<String> offeredVnaSchemaVersions;
 
-    public VnaSchemaException(String msg, String vnaSchemaVersion, List<String> offeredVnaSchemaVersions) {
+    public VnaSchemaException(String msg, String vnaSchemaVersion, Set<String> offeredVnaSchemaVersions) {
         super(msg);
         this.vnaSchemaVersion = vnaSchemaVersion;
         this.offeredVnaSchemaVersions = offeredVnaSchemaVersions;
@@ -44,7 +44,7 @@ public class VnaSchemaException extends VeriniceArchiveNotValidException {
         return vnaSchemaVersion;
     }
 
-    public List<String> getOfferedVnaSchemaVersions() {
+    public Set<String> getOfferedVnaSchemaVersions() {
         return offeredVnaSchemaVersions;
     }
 

@@ -20,7 +20,11 @@
 package sernet.verinice.service.sync;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import de.sernet.sync.sync.SyncRequest.SyncVnaSchemaVersion;
 
 /**
  * Represents the schema version, which is supported by this verinice version
@@ -30,27 +34,48 @@ import java.util.List;
  * @author Benjamin Weißenfels <bw@sernet.de>
  *
  */
-public class VnaSchemaVersion implements Serializable {
+public final class VnaSchemaVersion implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String vnaSchemaVersion;
+    private final String vnaSchemaVersion;
 
-    private List<String> compatibleSchemaVersions;
+    final private Set<String> compatibleSchemaVersions;
+
+    private VnaSchemaVersion(String vnaSchemaVersion, List<String> compatibleSchemaVersions) {
+
+        this.vnaSchemaVersion = vnaSchemaVersion;
+        this.compatibleSchemaVersions = new HashSet<>();
+
+        if(compatibleSchemaVersions != null) {
+            this.compatibleSchemaVersions.addAll(compatibleSchemaVersions);
+        }
+
+        // Schema is always compatible to itself, so put it into the list.
+        this.compatibleSchemaVersions.add(vnaSchemaVersion);
+    }
 
     public String getVnaSchemaVersion() {
         return vnaSchemaVersion;
     }
 
-    public void setVnaSchemaVersion(String schemaVersion) {
-        this.vnaSchemaVersion = schemaVersion;
-    }
-
-    public List<String> getCompatibleSchemaVersions() {
+    public Set<String> getCompatibleSchemaVersions() {
         return compatibleSchemaVersions;
     }
 
-    public void setCompatibleSchemaVersions(List<String> compatibleSchemaVersions) {
-        this.compatibleSchemaVersions = compatibleSchemaVersions;
+
+    public static VnaSchemaVersion createVnaSchemaVersion(
+            SyncVnaSchemaVersion syncVnaSchemaVersion) {
+        if (syncVnaSchemaVersion == null) {
+            throw new IllegalArgumentException("sync schema may not be null");
+        }
+
+        return new VnaSchemaVersion(syncVnaSchemaVersion.getVnaSchemaVersion(),
+                syncVnaSchemaVersion.getCompatibleVersions());
+    }
+
+    public static VnaSchemaVersion createVnaSchemaVersion(String vnaSchemaVersion,
+            List<String> compatibleSchemaVersions) {
+        return new VnaSchemaVersion(vnaSchemaVersion, compatibleSchemaVersions);
     }
 }
