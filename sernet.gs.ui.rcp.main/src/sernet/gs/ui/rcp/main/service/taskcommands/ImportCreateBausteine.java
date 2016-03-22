@@ -49,7 +49,6 @@ import sernet.gs.ui.rcp.gsimport.ImportKostenUtil;
 import sernet.gs.ui.rcp.gsimport.TransferData;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.IBSIConfig;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.common.model.CnATreeElementBuildException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.CreateBaustein;
@@ -60,6 +59,7 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.gstoolimport.GefaehrdungsUmsetzungFactory;
 import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**
@@ -285,8 +285,8 @@ public class ImportCreateBausteine extends GenericCommand {
      */
     @SuppressWarnings("unchecked")
     private void transferGefForUDBst(Baustein baustein, BausteinUmsetzung bausteinUmsetzung) throws SQLException, IOException, CommandException {
-        for(Gefaehrdung g : baustein.getGefaehrdungen()){
-            getDaoFactory().getDAO(GefaehrdungsUmsetzung.TYPE_ID).saveOrUpdate(createGefaehrdung((OwnGefaehrdung)g, bausteinUmsetzung));
+        for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
+            getDaoFactory().getDAO(GefaehrdungsUmsetzung.TYPE_ID).saveOrUpdate(createGefaehrdung((OwnGefaehrdung) gefaehrdung, bausteinUmsetzung));
         }
     }
 
@@ -359,6 +359,7 @@ public class ImportCreateBausteine extends GenericCommand {
                     gefaehrdung.setStand(gefaehrdungInformation.getStand());
                     gefaehrdung.setTitel(gefaehrdungInformation.getTitel());
                     gefaehrdung.setBeschreibung(gefaehrdungInformation.getDescription());
+                    gefaehrdung.setExtId(gefaehrdungInformation.getExtId());
                     gefaehrdungenList.add(gefaehrdung);
                 }
             }
@@ -563,11 +564,11 @@ public class ImportCreateBausteine extends GenericCommand {
         alleMassnahmen.put(vorlage.obm, massnahmenUmsetzung);
     }
 
-    private GefaehrdungsUmsetzung createGefaehrdung(OwnGefaehrdung oGef, BausteinUmsetzung bstUms) throws SQLException, IOException, CommandException {
+    private GefaehrdungsUmsetzung createGefaehrdung(OwnGefaehrdung ownGefaehrdung, BausteinUmsetzung bausteinUmsetzung) throws SQLException, IOException, CommandException {
 
-        GefaehrdungsUmsetzung gefUms = GefaehrdungsUmsetzungFactory.build(bstUms, oGef, GSScraper.CATALOG_LANGUAGE_GERMAN);
-
-        return gefUms;
+        GefaehrdungsUmsetzung gefaehrdungsUmsetzung = GefaehrdungsUmsetzungFactory.build(bausteinUmsetzung, ownGefaehrdung, GSScraper.CATALOG_LANGUAGE_GERMAN);
+        gefaehrdungsUmsetzung.setExtId(ownGefaehrdung.getExtId());
+        return gefaehrdungsUmsetzung;
     }
 
     public Map<MbBaust, BausteinUmsetzung> getAlleBausteineToBausteinUmsetzungMap() {

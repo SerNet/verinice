@@ -15,7 +15,7 @@
  * Contributors:
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.bsi.risikoanalyse.model;
+package sernet.verinice.service.gstoolimport;
 
 import sernet.gs.model.Gefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -42,5 +42,6 @@ public class GefaehrdungsUmsetzungFactory {
 		}
 		return gefaehrdungsUmsetzung;
 	}
+
 
 }
