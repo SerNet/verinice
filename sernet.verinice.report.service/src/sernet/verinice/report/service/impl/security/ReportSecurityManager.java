@@ -89,26 +89,30 @@ public class ReportSecurityManager extends SecurityManager {
     
     static{
         authorizedRuntimeActions = new HashMap<String, List<String>>();
-        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.run", Arrays.asList(new String[]{
-                "createClassLoader",
-                "setContextClassLoader",
-                "getClassLoader",
-                "accessDeclaredMembers",
-                "getProtectionDomain",
-                "getenv.DISPLAY",
-                "loadLibrary.awt",
-                "loadLibrary.libawt_xawt.so",
-                "accessClassInPackage.sun.util.resources",
-                "accessClassInPackage.sun.util.resources.de",
-                "accessClassInPackage.sun.util.resources.en",
-                "accessClassInPackage.sun.misc",
-                "accessClassInPackage.sun.awt.resources",
-                "suppressAccessChecks",
-                "loadLibrary." + SUN_LIBRARY_PATH + File.separator + "libawt_xawt.so",
-                "loadLibrary."+SUN_LIBRARY_PATH}));
+        // allowing permission for RunAndRenderTask.run does not make sense, since it enables the user to use these permissions
+//        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.run", Arrays.asList(new String[]{
+//                "createClassLoader",
+//                "setContextClassLoader",
+//                "getClassLoader",
+//                "accessDeclaredMembers",
+//                "getProtectionDomain",
+//                "getenv.DISPLAY",
+//                "loadLibrary.awt",
+//                "loadLibrary.libawt_xawt.so",
+//                "accessClassInPackage.sun.util.resources",
+//                "accessClassInPackage.sun.util.resources.de",
+//                "accessClassInPackage.sun.util.resources.en",
+//                "accessClassInPackage.sun.misc",
+//                "accessClassInPackage.sun.awt.resources",
+//                "suppressAccessChecks",
+//                "loadLibrary.fontmanager",
+//                "loadLibrary." + SUN_LIBRARY_PATH + File.separator + "libawt_xawt.so",
+//                "loadLibrary."+SUN_LIBRARY_PATH}));
         authorizedRuntimeActions.put("org.eclipse.osgi.framework.eventmgr.EventManager.dispatchEvent", Arrays.asList(new String[]{
                 "getClassLoader",
-                "suppressAccessChecks"
+                "readFileDescriptor",
+                "suppressAccessChecks",
+                "accessDeclaredMembers"
         }));
         authorizedRuntimeActions.put("org.eclipse.osgi.framework.util.SecureAction.start", Arrays.asList(new String[]{
                 "suppressAccessChecks"
@@ -127,9 +131,141 @@ public class ReportSecurityManager extends SecurityManager {
         }));
         authorizedRuntimeActions.put("org.springframework.scheduling.quartz.QuartzJobBean.execute", Arrays.asList(new String[]{
                 "getClassLoader"
-        }));        
+        }));  
+        authorizedRuntimeActions.put("org.eclipse.osgi.util.NLS.initializeMessages", 
+                Arrays.asList(new String[]{"accessDeclaredMembers", "getClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.core.framework.eclipse.EclipsePlatform.enterPlatformContext",
+                Arrays.asList(new String[]{"setContextClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.api.impl.EngineTask.createContentEmitter", 
+                Arrays.asList(new String[]{"createClassLoader" ,"getClassLoader", "accessDeclaredMembers",
+                        "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.api.impl.EngineTask.switchToOsgiClassLoader",
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.api.impl.EngineTask.switchClassLoaderBack", 
+                Arrays.asList(new String[]{"setContextClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.reportitem.i18n.Messages.<clinit>", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.executor.ExecutionContext.getReport",
+                Arrays.asList(new String[]{"createClassLoader", "getClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.executor.ExecutionContext.getDataEngine"
+                , Arrays.asList(new String[]{"getClassLoader", "suppressAccessChecks",
+                        "createClassLoader", "getProtectionDomain"}));
+        authorizedRuntimeActions.put("org.eclipse.osgi.baseadaptor.BaseData.createClassLoader", 
+                Arrays.asList(new String[]{"createClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.osgi.internal.loader.BundleLoader.getParentPrivileged",
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.core.script.ScriptContext.compile", 
+                Arrays.asList(new String[]{"createClassLoader", "getProtectionDomain",
+                        "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.internal.util.BundleVersionUtil.getBundleVersion",
+                Arrays.asList(new String[]{"getProtectionDomain"}));
+        authorizedRuntimeActions.put("java.util.ResourceBundle.loadBundle",
+                Arrays.asList(new String[]{"accessClassInPackage.sun.util.resources.de",
+                        "accessClassInPackage.sun.util.resources",
+                        "suppressAccessChecks", "accessClassInPackage.sun.awt.resources"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.core.i18n.ResourceHandle.<init>", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.data.engine.odaconsumer.Driver.createNewDriverHelper", 
+                Arrays.asList(new String[]{"getClassLoader", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.eclipse.core.runtime.internal.adaptor.ContextFinder.basicFindClassLoaders", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.osgi.framework.internal.core.BundleContextImpl.setContextFinder", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.datatools.connectivity.oda.consumer.helper.OdaConnection.incrOrDecrOpenedConnectionCountMap",
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.datatools.connectivity.oda.consumer.util.manifest.PropertyProviderManifest.createProvider(PropertyProviderManifest",
+                Arrays.asList("suppressAccessChecks"));
+        authorizedRuntimeActions.put("sernet.verinice.security.report.ReportClassLoader.<init>", 
+                Arrays.asList(new String[]{"createClassLoader"}));
+        authorizedRuntimeActions.put("sernet.verinice.oda.driver.impl.Query.<init>",
+                Arrays.asList("suppressAccessChecks", "getClassLoader"));
+        authorizedRuntimeActions.put("bsh.classpath.ClassManagerImpl.classForName", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.springframework.remoting.httpinvoker.AbstractHttpInvokerRequestExecutor.doWriteRemoteInvocation",
+                Arrays.asList(new String[]{"accessDeclaredMembers", "createClassLoader", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.apache.xerces.parsers.SecuritySupport.getContextClassLoader", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.apache.xerces.parsers.SecuritySupport.getSystemClassLoader", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.apache.xerces.parsers.SecuritySupport.getParentClassLoader",
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.apache.xerces.impl.dv.SecuritySupport.getContextClassLoader", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.apache.xerces.impl.dv.SecuritySupport.getSystemClassLoader", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.apache.xerces.impl.dv.SecuritySupport.getParentClassLoader",
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.apache.xerces.impl.dv.ObjectFactory.newInstance", 
+                Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.apache.xerces.parsers.ObjectFactory.newInstance",
+                Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.registerJavaFonts",
+                Arrays.asList(new String[]{"suppressAccessChecks", "accessClassInPackage.sun.misc"}));
+        authorizedRuntimeActions.put("javax.xml.parsers.FactoryFinder.findServiceProvider",
+                Arrays.asList(new String[]{"suppressAccessChecks", "createClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.registerFontPath",
+                Arrays.asList(new String[]{"suppressAccessChecks", "accessClassInPackage.sun.misc"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.createFont",
+                Arrays.asList(new String[]{"getClassLoader", "suppressAccessChecks", "accessClassInPackage.sun.misc"}));
+        authorizedRuntimeActions.put("com.ibm.icu.text.BreakIterator.getLineInstance",
+                Arrays.asList(new String[]{"suppressAccessChecks"}));
+        authorizedRuntimeActions.put("java.awt.Toolkit.loadLibraries",
+                Arrays.asList(new String[]{"loadLibrary.awt", "getenv.DISPLAY", "loadLibrary." + System.getProperty("sun.boot.library.path") +  "/libawt_xawt.so"}));
+        authorizedRuntimeActions.put("org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension", 
+                Arrays.asList(new String[]{"suppressAccessChecks", "createClassLoader"}));
+        authorizedRuntimeActions.put("org.apache.log4j.Category.error",
+                Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.data.engine.executor.cache.ResultObjectUtil.readData", 
+                Arrays.asList(new String[]{"suppressAccessChecks", "accessDeclaredMembers"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.data.engine.impl.PreparedDummyQuery$QueryResults.getResultIterator",
+                Arrays.asList(new String[]{"createClassLoader", "getProtectionDomain", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("bsh.Interpreter.initRootSystemObject", 
+                Arrays.asList(new String[]{"createClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.data.engine.impl.QueryResults.getResultIterator",
+                Arrays.asList(new String[]{"createClassLoader", "getProtectionDomain", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.reportitem.ChartReportItemGenerationImpl.serialize",
+                Arrays.asList(new String[]{"accessDeclaredMembers", "suppressAccessChecks", "createClassLoader"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.reportitem.ChartReportItemPresentationBase.deserialize",
+                Arrays.asList(new String[]{"accessDeclaredMembers"}));
+        authorizedRuntimeActions.put("java.awt.GraphicsEnvironment.createGE", 
+                Arrays.asList(new String[]{"loadLibrary.awt", "loadLibrary.fontmanager"}));
+        authorizedRuntimeActions.put("sun.java2d.SunGraphicsEnvironment.getFontManagerForSGE",
+                Arrays.asList(new String[]{"accessClassInPackage.sun.awt", "loadLibrary.awt", 
+                        "modifyThreadGroup", "accessDeclaredMembers", "modifyThread", "setContextClassLoader",
+                        "getenv.JAVA2D_USEPLATFORMFONT"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.util.SecurityUtil.getClassLoader",
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("java.awt.event.NativeLibLoader.loadLibraries", 
+                Arrays.asList(new String[]{"loadLibrary.awt"}));
+        authorizedRuntimeActions.put("sun.awt.AppContext.initMainAppContext", 
+                Arrays.asList(new String[]{"modifyThreadGroup"}));
+        authorizedRuntimeActions.put("sun.awt.image.NativeLibLoader.loadLibraries", 
+                Arrays.asList(new String[]{"loadLibrary.awt"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.device.util.ChartTextMetrics.reuse",
+                Arrays.asList(new String[]{"loadLibrary.t2k"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.device.svg.SVGRendererImpl.writeDocumentToOutputStream",
+                Arrays.asList(new String[]{"suppressAccessChecks", "charsetProvider"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.core.script.JavascriptEvalUtil.getCompiledScript",
+                Arrays.asList(new String[]{"createClassLoader","getProtectionDomain", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.apache.batik.dom.ExtensibleDOMImplementation.getDomExtensions", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.xml.sax.helpers.XMLReaderFactory.createXMLReader", 
+                Arrays.asList(new String[]{"suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.apache.batik.dom.svg.SVGDOMImplementation.createDocument", 
+                Arrays.asList(new String[]{"getClassLoader"}));
+        authorizedRuntimeActions.put("org.apache.batik.util.CleanerThread.getReferenceQueue", 
+                Arrays.asList(new String[]{"accessDeclaredMembers"}));
+        authorizedRuntimeActions.put("org.apache.batik.util.Service.providers", 
+                Arrays.asList(new String[]{"getClassLoader", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.apache.batik.dom.ExtensibleDOMImplementation.createCSSEngine", 
+                Arrays.asList(new String[]{"suppressAccessChecks"}));
+        authorizedRuntimeActions.put("java.awt.BasicStroke.createStrokedShape", 
+                Arrays.asList(new String[]{"loadLibrary.dcpr"}));
+        authorizedRuntimeActions.put("org.mozilla.javascript.MemberBox.invoke",
+                Arrays.asList(new String[]{"getClassLoader", "createClassLoader", "suppressAccessChecks"})); // TOOD: inspect this one in details
+        authorizedRuntimeActions.put("sernet.verinice.oda.driver.impl.Query$Helper.execute",
+                Arrays.asList(new String[]{"readFileDescriptor"}));
         
-
     }
     
     private ReportSecurityContext reportSecurityContext;
@@ -218,6 +354,10 @@ public class ReportSecurityManager extends SecurityManager {
      */
     private void handleFilePermission(Permission perm) throws ReportSecurityException{
         FilePermission filePermission = (FilePermission)perm;
+        
+        if(perm.getName().contains("verinice-client.log")){
+            "".hashCode();
+        }
 
         if(filePermission.getActions().contains("delete") || filePermission.getActions().contains("write")){
             if(perm.getName().startsWith(reportSecurityContext.getLogFileLocation())){
@@ -226,11 +366,15 @@ public class ReportSecurityManager extends SecurityManager {
                 return;
             } else if(("file:" + filePermission.getName()).equals(System.getProperty("osgi.instance.area") + "log")){
                 return;
+            } else if (("file:" + filePermission.getName()).startsWith(System.getProperty("osgi.instance.area") + "log")){
+                return;
             } else if(filePermission.getName().equals(System.getProperty("osgi.instance.area") + File.separator + ".metadata" + File.separator + ".log")){
                 return;
             } else if(("file:" + filePermission.getName()).startsWith(System.getProperty("osgi.configuration.area"))){
                 return;
             } else if((filePermission.getName()).startsWith(System.getProperty("java.io.tmpdir"))){
+                return;
+            } else if((filePermission.getName()).startsWith(System.getProperty("user.home") + File.separator + ".java" + File.separator + "fonts")) {
                 return;
             } else {
                 throwSecurityException(perm); 
@@ -252,9 +396,10 @@ public class ReportSecurityManager extends SecurityManager {
     
     private boolean isAuthorizedStackTrace(String permissionName){
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        StringBuilder sb = new StringBuilder();
         boolean authorizedCall = false;
+        StringBuilder sb = new StringBuilder();
         for(Entry<String, List<String>> entry : authorizedRuntimeActions.entrySet()){
+            sb.setLength(0); // reset stacktrace logging
             for(String value : entry.getValue()){
                 if(permissionName.equals(value)){
                     for (int i = 0; i < stackTrace.length; i++){
@@ -264,7 +409,7 @@ public class ReportSecurityManager extends SecurityManager {
                             break;
                         }
                     }
-                }
+                } 
                 if(authorizedCall){
                     break;
                 }
@@ -274,7 +419,7 @@ public class ReportSecurityManager extends SecurityManager {
             }            
         }
         if(!authorizedCall){
-            LOG.debug(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_1, new Object[]{permissionName, sb.toString()}));
+            LOG.error(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_1, new Object[]{permissionName, sb.toString()}));
         }
         return authorizedCall;
     }
