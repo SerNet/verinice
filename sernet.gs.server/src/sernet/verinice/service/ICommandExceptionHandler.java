@@ -21,6 +21,6 @@ import sernet.verinice.interfaces.CommandException;
 
 public interface ICommandExceptionHandler {
 
-    void handle(Exception e) throws CommandException;
-
+	void handle(Exception e) throws CommandException;
+	
 }

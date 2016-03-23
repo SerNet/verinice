@@ -184,7 +184,7 @@ public class PureXml implements IVeriniceArchive {
      * @see sernet.verinice.service.sync.VnaSchemaChecker#checkVnaSchema()
      */
     @Override
-    public boolean isCompatible(VnaSchemaVersion vnaSchemaVersion) throws VnaSchemaException {
+    public boolean isCompatible(VnaSchemaVersion vnaSchemaVersion) {
 
         if (syncRequest == null) {
             unmarshal();
@@ -199,6 +199,7 @@ public class PureXml implements IVeriniceArchive {
             LOG.warn("VNA file has no version number. The import is continued anyway.");
             return true;
         }
+
 
         importedVnaSchemaVersion = VnaSchemaVersion.createVnaSchemaVersion(syncVnaSchemaVersion);
         String schemaVersion = vnaSchemaVersion.getVnaSchemaVersion();
