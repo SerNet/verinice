@@ -49,11 +49,13 @@ public class PureXml implements IVeriniceArchive {
 
     private SyncMapping syncMapping;
 
-    private SyncRequest sr;
+    private SyncRequest syncRequest;
 
     private SyncVnaSchemaVersion syncVnaSchemaVersion;
 
     private VnaSchemaVersion importedVnaSchemaVersion;
+
+    private Exception error;
 
     public PureXml(byte[] veriniceXml) {
         super();
@@ -118,10 +120,10 @@ public class PureXml implements IVeriniceArchive {
     }
 
     private void unmarshal() {
-        sr = JAXB.unmarshal(new ByteArrayInputStream(getVeriniceXml()), SyncRequest.class);
-        sourceId = sr.getSourceId();
-        syncData = sr.getSyncData();
-        syncMapping = sr.getSyncMapping();
+        syncRequest = JAXB.unmarshal(new ByteArrayInputStream(getVeriniceXml()), SyncRequest.class);
+        sourceId = syncRequest.getSourceId();
+        syncData = syncRequest.getSyncData();
+        syncMapping = syncRequest.getSyncMapping();
     }
 
     /*
@@ -182,20 +184,20 @@ public class PureXml implements IVeriniceArchive {
      * @see sernet.verinice.service.sync.VnaSchemaChecker#checkVnaSchema()
      */
     @Override
-    public void isCompatible(VnaSchemaVersion vnaSchemaVersion) throws VnaSchemaException {
+    public boolean isCompatible(VnaSchemaVersion vnaSchemaVersion) throws VnaSchemaException {
 
-        if (sr == null) {
+        if (syncRequest == null) {
             unmarshal();
         }
 
-        syncVnaSchemaVersion = sr.getSyncVnaSchemaVersion();
+        syncVnaSchemaVersion = syncRequest.getSyncVnaSchemaVersion();
 
         // verinice versions which are older than 1.13 does not export schema
         // information. In order to support imports from older verinice versions
         // we skip the schema check.
         if (syncVnaSchemaVersion == null) {
             LOG.warn("VNA file has no version number. The import is continued anyway.");
-            return;
+            return true;
         }
 
         importedVnaSchemaVersion = VnaSchemaVersion.createVnaSchemaVersion(syncVnaSchemaVersion);
@@ -203,7 +205,7 @@ public class PureXml implements IVeriniceArchive {
 
         // Every schema is compatible to itself:
         if(schemaVersion.equals(importedVnaSchemaVersion.getVnaSchemaVersion())) {
-            return;
+            return true;
         }
 
         // lookup if the current verinice schema is listed in the compatible
@@ -211,7 +213,7 @@ public class PureXml implements IVeriniceArchive {
         Set<String> compatibleVersions = importedVnaSchemaVersion.getCompatibleSchemaVersions();
         for (String compatibleVersion : compatibleVersions) {
             if (schemaVersion.equals(compatibleVersion))
-                return;
+                return true;
         }
 
         // lookup if the compatible schemas of the current verinice is listed in
@@ -219,12 +221,20 @@ public class PureXml implements IVeriniceArchive {
         for(String compatibleSchemaVersion : vnaSchemaVersion.getCompatibleSchemaVersions()){
             for(String syncSchemaVersion : importedVnaSchemaVersion.getCompatibleSchemaVersions()){
                 if (compatibleSchemaVersion.equals(syncSchemaVersion))
-                    return;                
+                    return true;
             }
         }
 
-        throw new VnaSchemaException("No compatible version found!", 
+        error = new VnaSchemaException("No compatible version found!",
                 vnaSchemaVersion.getVnaSchemaVersion(), 
                 importedVnaSchemaVersion.getCompatibleSchemaVersions());
+
+        return false;
+    }
+
+
+    @Override
+    public Exception getErrorCause() {
+        return error;
     }
 }

@@ -54,4 +54,6 @@ public interface IVeriniceArchive extends VnaSchemaChecker {
     byte[] getFileData(String fileName);
     
     void clear();
+
+    Exception getErrorCause();
 }

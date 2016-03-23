@@ -82,6 +82,11 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
     
     private transient IVeriniceArchive veriniceArchive = null;
 
+    private Status status = Status.OK;
+
+    private Exception errorCause;
+
+    public enum Status {OK, FAILED};
 
     /**
      * Creates an instance of the SyncCommand where the {@link SyncRequest}
@@ -163,17 +168,26 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
             }
             
             VnaSchemaVersion vnaSchemaVersion = getCommandService().getVnaSchemaVersion();
-            veriniceArchive.isCompatible(vnaSchemaVersion);
+
+            if (!veriniceArchive.isCompatible(vnaSchemaVersion)){
+                status = Status.FAILED;
+                errorCause = veriniceArchive.getErrorCause();
+                return;
+            }
                         
             doInsertAndUpdate();
             doDelete();
             
             logRuntime(start);
         } catch (RuntimeException e) {
+            status = Status.FAILED;
+            errorCause = e;
             log.error("Error while importing", e);
             errors.add("Insert/Update failed.");
             throw e;
         } catch (Exception e) {
+            status = Status.FAILED;
+            errorCause = e;
             log.error("Error while importing", e);
             errors.add("Insert/Update failed.");
             throw new RuntimeCommandException(e);
@@ -337,4 +351,20 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
         }
     }
 
+    /**
+     * If import is aborted or an exception occurred this is set to failed.
+     *
+     */
+    public Status getStatus() {
+        return status;
+    }
+
+    /**
+     * Encapsulates exception.
+     *
+     * @return Returns null if {@link #getStatus()} returns OK.
+     */
+    public Exception getErrorCause() {
+        return errorCause;
+    }
 }

@@ -39,6 +39,6 @@ public interface VnaSchemaChecker {
      *             Is thrown if schema is not compatible with this verinice
      *             version.
      */
-    public void isCompatible(VnaSchemaVersion vnaSchemaVersion1)
+    public boolean isCompatible(VnaSchemaVersion vnaSchemaVersion1)
             throws VnaSchemaException;
 }
