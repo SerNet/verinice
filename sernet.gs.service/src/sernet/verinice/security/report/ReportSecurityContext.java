@@ -33,16 +33,18 @@ public class ReportSecurityContext {
     private IReportOptions reportOptions;
     private URL rptDesignUrl;
     private String logFileLocation;
+    private String reportOutputName;
 
     /**
      * @param reportOptions
      * @param rptDesignUrl
      * @param logFileLocation
      */
-    public ReportSecurityContext(IReportOptions reportOptions, URL rptDesignUrl, String logFileLocation) {
+    public ReportSecurityContext(IReportOptions reportOptions, URL rptDesignUrl, String logFileLocation, String reportName) {
         this.reportOptions = reportOptions;
         this.rptDesignUrl = rptDesignUrl;
         this.logFileLocation = logFileLocation;
+        this.reportOutputName = reportName;
     }
     public IReportOptions getReportOptions() {
         return reportOptions;
@@ -52,6 +54,10 @@ public class ReportSecurityContext {
     }
     public String getLogFileLocation() {
         return logFileLocation;
+    }
+    
+    public String getOutputName(){
+        return reportOutputName;
     }
     
     

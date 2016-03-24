@@ -28,8 +28,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
 
@@ -90,7 +93,7 @@ public class Query implements IQuery
         
     	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
     	
-    	ReportClassLoader securedClassLoader = new ReportClassLoader(this.getClass().getClassLoader());
+    	ReportClassLoader securedClassLoader = new ReportClassLoader(Query.class.getClassLoader());
     	
     	vnRootElement = rootElementId;
 
@@ -400,10 +403,12 @@ public class Query implements IQuery
 	
 	private Object runQuery() throws OdaException
 	{
+	    
 		runSetupQuery();
 		
 		try {
 			result = interpreter.eval(queryText);
+			
 		} catch (EvalError e) {
 			result = "Exception while executing query: ";
 			if(e.getMessage() != null){
@@ -416,6 +421,7 @@ public class Query implements IQuery
 				result = result + ", " + e.getCause().getMessage();
 			}
 			log.error("Error evaluating the query: " + queryText + "\n\n" + result, e);
+
 		}
 		
 		return result;
@@ -680,6 +686,19 @@ public class Query implements IQuery
     public void cancel() throws OdaException
     {
     	result = null;
+    }
+    
+    private Set<String> getImportsFromQuery(String query){
+        Set<String> imports = new HashSet<String>();
+        StringTokenizer tokenizer = new StringTokenizer(query, ";");
+        while(tokenizer.hasMoreTokens()){
+            String token = tokenizer.nextToken();
+            if(token.trim().startsWith("import")){
+                String importPath = token.substring(token.lastIndexOf(" "));
+                imports.add(importPath.trim());
+            }
+        }
+        return imports;
     }
     
 }

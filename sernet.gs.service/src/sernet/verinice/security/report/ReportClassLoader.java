@@ -74,22 +74,26 @@ public class ReportClassLoader extends ClassLoader {
     
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
-      if (isTrustedClass(name)){
-          return parentClassLoader.loadClass(name);
-      } else {
-          if(!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
-              String qualifiedName = tryGuessingQualifiedClassname(name);
+        if (isTrustedClass(name)){
+            try{
+                Class<?> trustedClass = parentClassLoader.loadClass(name);
+                return trustedClass;
+            }catch (ClassNotFoundException e){
+                // do nothing
+            } finally{
+                return null;
+            }
+        } else if(!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
+            String qualifiedName = tryGuessingQualifiedClassname(name);
               if(!name.equals(qualifiedName)){
                   return parentClassLoader.loadClass(qualifiedName);
               } else {
                   throw getSecurityClassLoadingException(name);   
               }
-              
-          } else {
-              parentClassLoader.loadClass(name);
-          }
-      }
-      
+
+      } 
+
+
       throw getSecurityClassLoadingException(name);
     }
 
@@ -106,6 +110,13 @@ public class ReportClassLoader extends ClassLoader {
                 return qualifiedName;
             }
         }
+
+        for(String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
+            if(qualifiedName.endsWith(getPathFreeClassName(name))){
+                return qualifiedName;
+            }
+        }
+
         return name;
     }
 
@@ -124,6 +135,13 @@ public class ReportClassLoader extends ClassLoader {
             }
         }
         return false;
+    }
+    
+    private String getPathFreeClassName(String classname){
+        if(classname != null && classname.contains(".")){
+            classname = classname.substring(classname.lastIndexOf(".") + 1);
+        }
+        return classname;
     }
 
 }

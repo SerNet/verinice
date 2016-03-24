@@ -22,6 +22,7 @@ package sernet.verinice.report.service.impl.security;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.EngineException;
+import org.eclipse.birt.report.engine.api.IEngineTask;
 import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.osgi.util.NLS;
 
@@ -71,6 +72,7 @@ public class ReportExecutionThread extends Thread {
      */
     private void runUntrustedCode() throws ReportSecurityException{
       try {
+          task.setErrorHandlingOption(IEngineTask.CANCEL_ON_ERROR);
           task.run();
           if(!task.getErrors().isEmpty()){
               handleExceptionsFromTask();
@@ -82,8 +84,12 @@ public class ReportExecutionThread extends Thread {
            * execution of unauthorized code  
            */
           throw r;
+      } finally {
+          task.close();
       }
     }
+    
+
 
     private void handleExceptionsFromTask() throws ReportSecurityException, EngineException {
         for(Object error : task.getErrors()){
