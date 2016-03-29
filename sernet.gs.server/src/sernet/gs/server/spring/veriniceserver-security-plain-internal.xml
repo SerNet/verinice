@@ -105,9 +105,13 @@
 		<property name="allowIfAllAbstainDecisions" value="false" />
 		<property name="decisionVoters">
 			<list>
-				<bean class="org.springframework.security.vote.RoleVoter" />
+				<bean class="veriniceActionIdVoter" />
 			</list>
 		</property>
+	</bean>
+
+	<bean id="veriniceActionIdVoter" class="sernet.gs.server.security.VeriniceActionIdVoter">
+		<property name="rightsService" ref="rightsService" />
 	</bean>
 
 </beans>

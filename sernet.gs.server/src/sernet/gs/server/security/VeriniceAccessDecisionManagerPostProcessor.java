@@ -52,7 +52,7 @@ public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProce
         if (isDefaultAccessManagerBean(bean, beanName)) {
             AffirmativeBased affirmativeBased = (AffirmativeBased) bean;
             List decisionVoters = affirmativeBased.getDecisionVoters();
-            decisionVoters.add(new VeriniceAccessDecisionVoter());
+            decisionVoters.add(new VeriniceActionIdVoter());
         }
 
         return bean;
