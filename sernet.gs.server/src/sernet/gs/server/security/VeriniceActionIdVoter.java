@@ -25,11 +25,10 @@ import java.util.Iterator;
 import org.springframework.security.Authentication;
 import org.springframework.security.ConfigAttribute;
 import org.springframework.security.ConfigAttributeDefinition;
-import org.springframework.security.vote.AccessDecisionVoter;
 import org.springframework.security.vote.RoleVoter;
 
-import sernet.verinice.interfaces.IRightsService;
-import sernet.verinice.model.auth.Profiles;
+import sernet.verinice.interfaces.IRightsServerHandler;
+
 
 /**
  * @author Benjamin Weißenfels <bw@sernet.de>
@@ -39,7 +38,7 @@ public class VeriniceActionIdVoter extends RoleVoter {
 
     private String rolePrefix;
 
-    private IRightsService rightsService;
+    private IRightsServerHandler rightsServerHandler;
 
 
     public String getRolePrefix() {
@@ -61,26 +60,29 @@ public class VeriniceActionIdVoter extends RoleVoter {
     public int vote(Authentication authentication, Object object, ConfigAttributeDefinition config) {
 
         String name = authentication.getName();
-        Collection <ConfigAttribute>configAttributes = config.getConfigAttributes();
-        Iterator<ConfigAttribute> iterator = configAttributes.iterator();
 
+        @SuppressWarnings("unchecked")
+        Collection <ConfigAttribute>configAttributes = config.getConfigAttributes();
+
+        Iterator<ConfigAttribute> iterator = configAttributes.iterator();
         while(iterator.hasNext()) {
-            ConfigAttribute configAttribute = iterator.next();
-            String attribute = configAttribute.getAttribute();
+            ConfigAttribute attribute = iterator.next();
+            if(getRightsServerHandler().isEnabled(name, attribute.getAttribute())){
+                return ACCESS_GRANTED;
+            }
         }
 
-        return 1;
-
+        return ACCESS_ABSTAIN;
     }
 
 
-    public IRightsService getRightsService() {
-        return rightsService;
+    public IRightsServerHandler getRightsServerHandler() {
+        return rightsServerHandler;
     }
 
 
-    public void setRightsService(IRightsService rightsService) {
-        this.rightsService = rightsService;
+    public void setRightsServerHandler(IRightsServerHandler rightsServerHandler) {
+        this.rightsServerHandler = rightsServerHandler;
     }
 
 }
