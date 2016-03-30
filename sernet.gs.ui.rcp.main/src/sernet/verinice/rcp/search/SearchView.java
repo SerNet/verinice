@@ -49,6 +49,7 @@ import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.model.search.*;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.search.tables.TableMenuListener;
+import sernet.verinice.service.csv.CsvExportException;
 
 /**
  * Provides input fields for searching the verinice databases and renders the

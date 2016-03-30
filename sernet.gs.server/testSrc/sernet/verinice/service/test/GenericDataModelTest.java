@@ -22,9 +22,6 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.net.URL;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -35,40 +32,23 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.bpm.ProzessExecution;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
-import sernet.verinice.interfaces.graph.IGraphElementLoader;
-import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
-import sernet.verinice.model.common.ChangeLogEntry;
-import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetGroup;
 import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.iso27k.ProcessGroup;
-import sernet.verinice.model.iso27k.Threat;
-import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.report.service.impl.dynamictable.GenericDataModel;
-import sernet.verinice.service.commands.CreateLink;
 import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
-import sernet.verinice.service.commands.LoadCnAElementByExternalID;
 import sernet.verinice.service.commands.LoadElementByUuid;
-import sernet.verinice.service.commands.RemoveElement;
-import sernet.verinice.service.commands.RemoveLink;
-import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.commands.UpdateElementEntity;
+import sernet.verinice.service.linktable.GenericDataModel;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**
@@ -84,8 +64,6 @@ public class GenericDataModelTest extends BeforeEachVNAImportHelper {
     private static final String EXT_ID_ORG = "ENTITY_15063";
     private static final String EXT_ID_PROCESS_GROUP = "ENTITY_24086";
     private static final String EXT_ID_CONTROL_GROUP = "ENTITY_17875";
-    
-
     
     @Resource(name="cnaTreeElementDao")
     protected IBaseDao<CnATreeElement, Long> elementDao;
@@ -202,8 +180,6 @@ public class GenericDataModelTest extends BeforeEachVNAImportHelper {
         processGroup = loadCommand.getElement();
         return processGroup;
     }
-    
-    
     
     @Override
     protected String getFilePath() {

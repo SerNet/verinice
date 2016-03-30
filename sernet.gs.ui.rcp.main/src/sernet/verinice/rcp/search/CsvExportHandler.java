@@ -21,6 +21,7 @@ package sernet.verinice.rcp.search;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -39,6 +40,9 @@ import sernet.gs.ui.rcp.main.preferences.SearchPreferencePage;
 import sernet.verinice.model.search.VeriniceSearchResultTable;
 import sernet.verinice.rcp.search.column.ColumnStoreFactory;
 import sernet.verinice.rcp.search.column.IColumnStore;
+import sernet.verinice.service.csv.CsvExport;
+import sernet.verinice.service.csv.CsvExportException;
+import sernet.verinice.service.csv.ICsvExport;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -47,6 +51,7 @@ public class CsvExportHandler {
     
     private static final Logger LOG = Logger.getLogger(CsvExportHandler.class);
     private static final String CSV = ".csv";
+    public static final String FILE_NAME_DEFAULT = "verinice-search-result.csv";
     
     Shell shell;
     VeriniceSearchResultTable result;
@@ -76,13 +81,14 @@ public class CsvExportHandler {
     private void export(String filePath) throws CsvExportException {    
         // Selected columns
         IColumnStore columnStore = ColumnStoreFactory.getColumnStore(result.getEntityTypeId());
-        // All columns:
-        // IColumnStore columnStore = CsvExport.createColumnStore(result);
+
+        List<String[]> simpleTable = SearchResultTableConverter.convertTable(result, columnStore);
+
         ICsvExport exporter = new CsvExport();
         exporter.setFilePath(filePath);
         exporter.setSeperator(getSeperator());
         exporter.setCharset(getCharset());
-        exporter.exportToFile(result, columnStore);
+        exporter.exportToFile(simpleTable);
     }
     
     private Charset getCharset() {
@@ -114,7 +120,7 @@ public class CsvExportHandler {
         dialog.setText("Export to CSV file");
         try {   
             dialog.setFilterPath(getDirectory());
-            dialog.setFileName(ICsvExport.FILE_PATH_DEFAULT);                      
+            dialog.setFileName(FILE_NAME_DEFAULT);
         } catch (Exception e1) {
             LOG.debug("Error with file path: " + getDirectory(), e1);
             dialog.setFileName(""); //$NON-NLS-1$
