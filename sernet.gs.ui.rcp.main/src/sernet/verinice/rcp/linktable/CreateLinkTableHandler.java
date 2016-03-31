@@ -28,6 +28,10 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
  */
 public class CreateLinkTableHandler extends LinkTableHandler {
 
+    public CreateLinkTableHandler() {
+        super();
+    }
+
     /* (non-Javadoc)
      * @see sernet.verinice.rcp.linktable.LinkTableHandler#createLinkTable()
      */

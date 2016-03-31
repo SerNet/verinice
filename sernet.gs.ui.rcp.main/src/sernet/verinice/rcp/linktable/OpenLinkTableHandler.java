@@ -31,6 +31,10 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public class OpenLinkTableHandler extends LinkTableHandler {
+    
+    public OpenLinkTableHandler() {
+        super();
+    }
 
     @Override
     protected VeriniceLinkTable createLinkTable() {

@@ -49,6 +49,10 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
     private Shell shell = null;
     private static ISchedulingRule iSchedulingRule = new Mutex();
 
+    public ExportLinkTableHandler() {
+        super(false);
+     }
+    
     /*
      * (non-Javadoc)
      * 
