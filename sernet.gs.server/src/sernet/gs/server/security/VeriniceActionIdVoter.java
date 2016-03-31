@@ -25,6 +25,7 @@ import java.util.Iterator;
 import org.springframework.security.Authentication;
 import org.springframework.security.ConfigAttribute;
 import org.springframework.security.ConfigAttributeDefinition;
+import org.springframework.security.vote.AccessDecisionVoter;
 import org.springframework.security.vote.RoleVoter;
 
 import sernet.verinice.interfaces.IRightsServerHandler;
@@ -34,27 +35,11 @@ import sernet.verinice.interfaces.IRightsServerHandler;
  * @author Benjamin Weißenfels <bw@sernet.de>
  *
  */
-public class VeriniceActionIdVoter extends RoleVoter {
+public class VeriniceActionIdVoter implements AccessDecisionVoter {
 
-    private String rolePrefix;
+    private String actionIdPrefix = "ACTION_ID_";
 
     private IRightsServerHandler rightsServerHandler;
-
-
-    public String getRolePrefix() {
-        return rolePrefix;
-    }
-
-
-    public void setRolePrefix(String rolePrefix) {
-        this.rolePrefix = rolePrefix;
-
-    }
-
-    @Override
-    public boolean supports(Class clazz) {
-       return true;
-    }
 
     @Override
     public int vote(Authentication authentication, Object object, ConfigAttributeDefinition config) {
@@ -66,13 +51,22 @@ public class VeriniceActionIdVoter extends RoleVoter {
 
         Iterator<ConfigAttribute> iterator = configAttributes.iterator();
         while(iterator.hasNext()) {
+
             ConfigAttribute attribute = iterator.next();
-            if(getRightsServerHandler().isEnabled(name, attribute.getAttribute())){
+            String actionId = extractActionId(attribute.getAttribute());
+
+            if(getRightsServerHandler().isEnabled(name, actionId)){
                 return ACCESS_GRANTED;
             }
         }
 
         return ACCESS_ABSTAIN;
+    }
+
+    private String extractActionId(String attribute) {
+        String upperCase = attribute.toUpperCase();
+        String actionId = upperCase.substring(getActionIdPrefix().length());
+        return actionId;
     }
 
 
@@ -83,6 +77,30 @@ public class VeriniceActionIdVoter extends RoleVoter {
 
     public void setRightsServerHandler(IRightsServerHandler rightsServerHandler) {
         this.rightsServerHandler = rightsServerHandler;
+    }
+
+
+    @Override
+    public boolean supports(ConfigAttribute attribute) {
+        if ((attribute.getAttribute() != null) && attribute.getAttribute().startsWith(getActionIdPrefix())) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public String getActionIdPrefix() {
+        return actionIdPrefix;
+    }
+
+    public void setActionIdPrefix(String actionIdPrefix) {
+        this.actionIdPrefix = actionIdPrefix;
+    }
+
+    @Override
+    public boolean supports(Class clazz) {
+       return true;
     }
 
 }
