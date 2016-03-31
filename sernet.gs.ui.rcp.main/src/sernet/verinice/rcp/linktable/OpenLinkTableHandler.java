@@ -22,6 +22,8 @@ package sernet.verinice.rcp.linktable;
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -33,9 +35,11 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.iso27k.rcp.action.Messages;
 import sernet.verinice.rcp.RightsEnabledHandler;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
@@ -49,6 +53,10 @@ public class OpenLinkTableHandler extends RightsEnabledHandler {
 
     private static final Logger LOG = Logger.getLogger(OpenLinkTableHandler.class);
     private static final String VLT = ".vlt"; //$NON-NLS-1$
+    
+    public OpenLinkTableHandler() {
+       super(false);
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
@@ -63,10 +71,16 @@ public class OpenLinkTableHandler extends RightsEnabledHandler {
      */
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
-        final String filePath = createFilePath();
-        VeriniceLinkTable veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
-        veriniceLinkTable.setId(filePath);
-        EditorFactory.getInstance().updateAndOpenObject(veriniceLinkTable);
+        if(checkRights()){
+            final String filePath = createFilePath();
+            VeriniceLinkTable veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
+            veriniceLinkTable.setId(filePath);
+            EditorFactory.getInstance().updateAndOpenObject(veriniceLinkTable);
+        } else {
+            setBaseEnabled(false);
+            MessageDialog.openError(HandlerUtil.getActiveShell(event), "Error", "You don't have the permission to perform this action.");
+        }
+        
         return null;
     }
 
