@@ -64,8 +64,8 @@ public class VeriniceActionIdVoter implements AccessDecisionVoter {
     }
 
     private String extractActionId(String attribute) {
-        String upperCase = attribute.toUpperCase();
-        String actionId = upperCase.substring(getActionIdPrefix().length());
+        String lowerCase = attribute.toLowerCase();
+        String actionId = lowerCase.substring(getActionIdPrefix().length());
         return actionId;
     }
 
