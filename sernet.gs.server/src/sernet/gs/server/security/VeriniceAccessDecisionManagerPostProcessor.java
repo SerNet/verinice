@@ -38,9 +38,13 @@ import sernet.verinice.interfaces.IRightsServerHandler;
  * @author Benjamin Weißenfels <bw@sernet.de>
  *
  */
-public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProcessor, ApplicationContextAware {
+public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProcessor,
+        ApplicationContextAware {
+
+    private static final String VERINICE_ACTION_ID_VOTER_BEAN_NAME = "veriniceActionIdVoter";
 
     private final String DEFAULT_ACCESS_MANAGER_BEAN_NAME = "_accessManager";
+
     private ApplicationContext applicationContext;
 
     /*
@@ -53,8 +57,6 @@ public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProce
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName)
             throws BeansException {
-
-
 
         return bean;
     }
@@ -79,18 +81,20 @@ public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProce
             List decisionVoters = affirmativeBased.getDecisionVoters();
 
             // initialize voter by hand
-            VeriniceActionIdVoter veriniceActionIdVoter = new VeriniceActionIdVoter();
-            IRightsServerHandler rightsServerHandler = (IRightsServerHandler) applicationContext.getBean("rightsServerHandler");
-            veriniceActionIdVoter.setRightsServerHandler(rightsServerHandler);
-
+            VeriniceActionIdVoter veriniceActionIdVoter = (VeriniceActionIdVoter) applicationContext
+                    .getBean(VERINICE_ACTION_ID_VOTER_BEAN_NAME);
             decisionVoters.add(veriniceActionIdVoter);
         }
 
         return bean;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.springframework.context.ApplicationContextAware#setApplicationContext
+     * (org.springframework.context.ApplicationContext)
      */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
