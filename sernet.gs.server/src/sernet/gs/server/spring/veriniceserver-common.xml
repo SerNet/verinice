@@ -21,6 +21,8 @@ This variant:
 
 -->
 
+	<security:global-method-security access-decision-manager-ref="accessDecisionManager" />
+
 	<!-- BEGIN Server settings ========================================================================= -->
 
 	<bean id="serverInitializer" class="sernet.gs.service.ServerInitializer" init-method="initialize">
@@ -316,6 +318,10 @@ This variant:
     	<property name="configurationService" ref="configurationService" />
     	<property name="rightsServerHandler" ref="rightsServerHandler" />
 	    <property name="permissionDao" ref="permissionDAO" />
+
+		<security:intercept-methods>
+            <security:protect method="sernet.verinice.service.AccountService.findAccounts" access="ACTION_ID_ACCOUNTSETTINGS" />
+        </security:intercept-methods>
     </bean>
     
      <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
