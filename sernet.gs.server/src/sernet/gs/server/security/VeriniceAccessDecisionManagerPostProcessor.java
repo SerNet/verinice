@@ -23,9 +23,13 @@ import java.util.List;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.security.AccessDecisionManager;
 import org.springframework.security.vote.AffirmativeBased;
 import org.springframework.security.vote.RoleVoter;
+
+import sernet.verinice.interfaces.IRightsServerHandler;
 
 /**
  * The default {@link AccessDecisionManager} is always initialized with the
@@ -34,9 +38,10 @@ import org.springframework.security.vote.RoleVoter;
  * @author Benjamin Weißenfels <bw@sernet.de>
  *
  */
-public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProcessor {
+public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProcessor, ApplicationContextAware {
 
     private final String DEFAULT_ACCESS_MANAGER_BEAN_NAME = "_accessManager";
+    private ApplicationContext applicationContext;
 
     /*
      * (non-Javadoc)
@@ -49,11 +54,7 @@ public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProce
     public Object postProcessBeforeInitialization(Object bean, String beanName)
             throws BeansException {
 
-        if (isDefaultAccessManagerBean(bean, beanName)) {
-            AffirmativeBased affirmativeBased = (AffirmativeBased) bean;
-            List decisionVoters = affirmativeBased.getDecisionVoters();
-            decisionVoters.add(new VeriniceActionIdVoter());
-        }
+
 
         return bean;
     }
@@ -72,6 +73,28 @@ public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProce
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName)
             throws BeansException {
+
+        if (isDefaultAccessManagerBean(bean, beanName)) {
+            AffirmativeBased affirmativeBased = (AffirmativeBased) bean;
+            List decisionVoters = affirmativeBased.getDecisionVoters();
+
+            // initialize voter by hand
+            VeriniceActionIdVoter veriniceActionIdVoter = new VeriniceActionIdVoter();
+            IRightsServerHandler rightsServerHandler = (IRightsServerHandler) applicationContext.getBean("rightsServerHandler");
+            veriniceActionIdVoter.setRightsServerHandler(rightsServerHandler);
+
+            decisionVoters.add(veriniceActionIdVoter);
+        }
+
         return bean;
+    }
+
+    /* (non-Javadoc)
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+
     }
 }
