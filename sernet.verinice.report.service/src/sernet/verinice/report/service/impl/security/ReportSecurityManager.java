@@ -22,7 +22,10 @@ package sernet.verinice.report.service.impl.security;
 import java.io.File;
 import java.io.FilePermission;
 import java.lang.reflect.ReflectPermission;
+import java.net.InetAddress;
 import java.net.NetPermission;
+import java.net.SocketPermission;
+import java.net.UnknownHostException;
 import java.security.Permission;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -186,12 +189,12 @@ public class ReportSecurityManager extends SecurityManager {
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.executor.cache.ResultObjectUtil.readData", 
                 Arrays.asList(new String[]{"suppressAccessChecks", "accessDeclaredMembers"}));
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.impl.PreparedDummyQuery$QueryResults.getResultIterator",
-                Arrays.asList(new String[]{"createClassLoader", "getProtectionDomain", "suppressAccessChecks"}));
+                Arrays.asList(new String[]{"createClassLoader", "getProtectionDomain", "suppressAccessChecks", "getClassLoader"}));
         authorizedRuntimeActions.put("bsh.Interpreter.initRootSystemObject", 
                 Arrays.asList(new String[]{"createClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.impl.QueryResults.getResultIterator",
                 Arrays.asList(new String[]{"createClassLoader", "getProtectionDomain",
-                        "suppressAccessChecks", "accessDeclaredMembers", "writeFileDescriptor"}));
+                        "suppressAccessChecks", "accessDeclaredMembers", "writeFileDescriptor", "getClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.reportitem.ChartReportItemGenerationImpl.serialize",
                 Arrays.asList(new String[]{"accessDeclaredMembers", "suppressAccessChecks", "createClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.reportitem.ChartReportItemPresentationBase.deserialize",
@@ -201,7 +204,7 @@ public class ReportSecurityManager extends SecurityManager {
         authorizedRuntimeActions.put("sun.java2d.SunGraphicsEnvironment.getFontManagerForSGE",
                 Arrays.asList(new String[]{"accessClassInPackage.sun.awt", "loadLibrary.awt", 
                         "modifyThreadGroup", "accessDeclaredMembers", "modifyThread", "setContextClassLoader",
-                        "getenv.JAVA2D_USEPLATFORMFONT"}));
+                        "getenv.JAVA2D_USEPLATFORMFONT", "getProtectionDomain"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.util.SecurityUtil.getClassLoader",
                 Arrays.asList(new String[]{"getClassLoader"}));
         authorizedRuntimeActions.put("java.awt.event.NativeLibLoader.loadLibraries", 
@@ -260,7 +263,7 @@ public class ReportSecurityManager extends SecurityManager {
                 Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.executor.DataSourceQuery.prepareColumns",
                 Arrays.asList(new String[]{"accessDeclaredMembers", "createClassLoader", 
-                        "suppressAccessChecks", "writeFileDescriptor"}));
+                        "suppressAccessChecks", "writeFileDescriptor", "getClassLoader"}));
         authorizedRuntimeActions.put("org.mozilla.javascript.NativeJavaClass.construct",
                 Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
         authorizedRuntimeActions.put("org.mozilla.javascript.NativeJavaMethod.call",
@@ -269,6 +272,10 @@ public class ReportSecurityManager extends SecurityManager {
                 Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
         authorizedRuntimeActions.put("org.mozilla.javascript.JavaMembers.put", 
                 Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.data.engine.odaconsumer.PreparedStatement.getProjectedColumns",
+                Arrays.asList(new String[]{"accessDeclaredMembers", "createClassLoader", "suppressAccessChecks", "getClassLoader", "writeFileDescriptor"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.emitter.excel.layout.ExcelContext.parseSheetName",
+                Arrays.asList(new String[]{"suppressAccessChecks"}));
     }
     
     private ReportSecurityContext reportSecurityContext;
@@ -294,33 +301,60 @@ public class ReportSecurityManager extends SecurityManager {
             if(!protectionEnabled){
                 return;
             }
-            // enabling reflextpermission("suppressAccessChecks") and several RuntimePermissions in authorized context only
-            if(perm instanceof ReflectPermission || perm instanceof RuntimePermission) {
-                if(!isAuthorizedStackTrace(perm.getName())){
-                    throwSecurityException(perm);
-                } else {
-                    return;
-                }
-            // enable osgi-stuff
-            }else if("org.osgi.framework.AdminPermission".equals(perm.getClass().getCanonicalName())){
-                return;
-            } else if("org.osgi.framework.ServicePermission".equals(perm.getClass().getCanonicalName())) {
-                return;
-            // enable reading, writing and deleting of all(!) properties
-            } else if (perm instanceof PropertyPermission ){
-                return; // RunAndRenderTask.setReportRunnable(..) requires ("java.util.PropertyPermission" "*" "read,write")
-            // enable reading, writing, deleting of files on some custom defined places
-            }else if(perm instanceof FilePermission){
-                handleFilePermission(perm);
-            // allow some more (static) actions on RuntimePermissions and 4 other permissions
-            } else if(allowedPermissionsAndActionsMap.containsKey(perm.getClass().getCanonicalName())){
-                lookupPermissionMap(perm);
-            } else { // default | everything else is not on the whitelist, so throw exception!
-                throwSecurityException(perm);
-            }
+            permissionSpecificHandling(perm);
         }
     }
 
+
+
+
+    private void permissionSpecificHandling(Permission perm) {
+        // enabling reflextpermission("suppressAccessChecks") and several RuntimePermissions in authorized context only
+        if(perm instanceof ReflectPermission || perm instanceof RuntimePermission) {
+            if(!isAuthorizedStackTrace(perm.getName())){
+                throwSecurityException(perm);
+            } else {
+                return;
+            }
+        // enable osgi-stuff
+        } else if(perm.getClass().getCanonicalName().startsWith("org.osgi.framework")){
+            handleOSGIPermission(perm);
+        // enable reading, writing and deleting of all(!) properties
+        } else if (perm instanceof PropertyPermission ){
+            return; // RunAndRenderTask.setReportRunnable(..) requires ("java.util.PropertyPermission" "*" "read,write")
+        // enable reading, writing, deleting of files on some custom defined places
+        }else if(perm instanceof FilePermission){
+            handleFilePermission(perm);
+        } else if (perm instanceof SocketPermission){
+            handleSocketPermission(perm);
+        } else if(perm instanceof NetPermission){
+            handleNetPermission(perm);
+        // allow some more (static) actions on RuntimePermissions and 4 other permissions
+        } else if(allowedPermissionsAndActionsMap.containsKey(perm.getClass().getCanonicalName())){
+            lookupPermissionMap(perm);
+        } else { // default | everything else is not on the whitelist, so throw exception!
+            throwSecurityException(perm);
+        }
+    }
+
+
+
+
+    private void handleSocketPermission(Permission perm) {
+        try {
+            if(perm.getName().equals(InetAddress.getLocalHost().getHostName()) && perm.getActions().equals("resolve")){
+                return;
+            } else if(perm.getName().startsWith("localhost") || perm.getName().startsWith("127.0.0.1")){
+                return;
+            } else {
+                throwSecurityException(perm);
+            }
+        } catch (UnknownHostException e) {
+            LOG.error("Unable to determine local machines hostname", e);
+            throwSecurityException(perm);
+        }
+    }
+    
     /**
      * preventes use of Runtime.getRuntime().exec("rm -rf");
      */
@@ -349,7 +383,71 @@ public class ReportSecurityManager extends SecurityManager {
         }
         throwSecurityException(perm);
     }
+    
+    private void handleNetPermission(Permission perm){
+        if(perm.getName().equals("getProxySelector")){
+            if(stacktraceContains("org.eclipse.birt.data.engine.odaconsumer.PreparedStatement.getProjectedColumns")||
+                    stacktraceContains("org.eclipse.birt.data.engine.impl.QueryResults.getResultIterator")){
+                return;
+            }
+        } else if(perm.getName().equals("specifyStreamHandler")){
+           if(stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask$2.visitScalarParameter") ||
+                   stacktraceContains("org.eclipse.birt.report.data.adapter.api.DataRequestSession.newSession") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.emitter.excel.layout.ExcelContext.parseSheetName") ||
+                   stacktraceContains("org.eclipse.osgi.util.NLS.load")){
+               return;
+           }
+        }
+        throwSecurityException(perm);
+    }
 
+    private void handleOSGIPermission(Permission perm) throws ReportSecurityException{
+        if("org.osgi.framework.AdminPermission".equals(perm.getClass().getCanonicalName())){
+            if(stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask.createContentEmitter") ||
+                    stacktraceContains("org.eclipse.birt.core.script.ScriptContext.getScriptEngine") ||
+                    stacktraceContains("org.eclipse.birt.report.engine.executor.ExecutionContext.getDataEngine") ||
+                    stacktraceContains("org.eclipse.birt.data.engine.odaconsumer.Driver.createNewDriverHelper") ||
+                    stacktraceContains("org.eclipse.birt.data.engine.odaconsumer.ConnectionManager.openConnection") ||
+                    stacktraceContains("org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass") ||
+                    stacktraceContains("org.eclipse.birt.data.engine.odaconsumer.PreparedStatement.setParameterValue") ||
+                    stacktraceContains("org.eclipse.birt.data.engine.odaconsumer.PreparedStatement.getProjectedColumns") ||
+                    stacktraceContains("org.eclipse.birt.data.engine.impl.QueryResults.getResultIterator") ||
+                    stacktraceContains("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.getEmbededFontPath") ||
+                    stacktraceContains("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.getFontMappingManager") ||
+                    stacktraceContains("org.eclipse.birt.report.engine.data.dte.ReportQueryBuilder$QueryBuilderVisitor.visitExtendedItem") ||
+                    stacktraceContains("org.eclipse.birt.report.engine.executor.ReportExecutor.getNextChild") ||
+                    stacktraceContains("org.eclipse.birt.report.engine.presentation.LocalizedContentVisitor.processExtendedContent") || 
+                    stacktraceContains("org.apache.batik.transcoder.print.PrintTranscoder.print") ||
+                    stacktraceContains("org.eclipse.birt.report.engine.executor.ExecutorManager$ExecutorFactory.visitExtendedItem") ||
+                    stacktraceContains("org.eclipse.birt.data.engine.api.aggregation.AggregationManager.populateAggregations")){
+                return;
+            } else {
+                throwSecurityException(perm);
+            }
+        } else if("org.osgi.framework.ServicePermission".equals(perm.getClass().getCanonicalName())) { 
+            if(stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask.createContentEmitter") ||
+                    stacktraceContains("org.eclipse.birt.core.plugin.BIRTPlugin.start")){
+                return;
+            } else {
+                throwSecurityException(perm);
+            }
+        } else {
+            throwSecurityException(perm);
+        }
+        
+    }
+    
+    private boolean stacktraceContains(String qualifiedClassname){
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        for (int i = 0; i < stackTrace.length; i++){
+            if(stackTrace[i].toString().startsWith(qualifiedClassname)){
+                return true;
+            }
+        }
+        return false;
+        
+    }
+    
     /**
      *  allow writing && deleting files on some custom defined places
      * @param perm
@@ -398,20 +496,11 @@ public class ReportSecurityManager extends SecurityManager {
     }
     
     private boolean isAuthorizedStackTrace(String permissionName){
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         boolean authorizedCall = false;
-        StringBuilder sb = new StringBuilder();
         for(Entry<String, List<String>> entry : authorizedRuntimeActions.entrySet()){
-            sb.setLength(0); // reset stacktrace logging
             for(String value : entry.getValue()){
                 if(permissionName.equals(value)){
-                    for (int i = 0; i < stackTrace.length; i++){
-                        sb.append(stackTrace[i].toString()).append("\n");
-                        if(stackTrace[i].toString().startsWith(entry.getKey())){
-                            authorizedCall = true;
-                            break;
-                        }
-                    }
+                    authorizedCall = stacktraceContains(entry.getKey());
                 } 
                 if(authorizedCall){
                     break;
@@ -422,7 +511,7 @@ public class ReportSecurityManager extends SecurityManager {
             }            
         }
         if(!authorizedCall){
-            LOG.error(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_1, new Object[]{permissionName, sb.toString()}));
+            LOG.error(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_1, new Object[]{permissionName,""}));
         }
         return authorizedCall;
     }
