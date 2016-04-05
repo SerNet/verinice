@@ -288,6 +288,17 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		}
 	}
 	
+	public Integer getNumericValue(String propertyType) {
+	    try
+	      {
+	         return Integer.valueOf(getSimpleValue(propertyType));
+	      }
+	      catch (NumberFormatException ex)
+	      {
+	         return null;
+	      }
+    }
+	
 	public void setNumericValue(PropertyType type, int value) {
 	    setSimpleValue(type, Integer.toString(value));
 	}
