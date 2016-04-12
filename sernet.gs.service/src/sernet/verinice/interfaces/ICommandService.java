@@ -19,6 +19,8 @@ package sernet.verinice.interfaces;
 
 import java.util.Properties;
 
+import sernet.verinice.service.sync.VnaSchemaVersion;
+
 /**
  * Service to execute commands. 
  * 
@@ -49,4 +51,6 @@ public interface ICommandService {
 	public void discardUserData();
 	
 	public Properties getProperties();
+	
+	public VnaSchemaVersion getVnaSchemaVersion();
 }

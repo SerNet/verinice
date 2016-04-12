@@ -65,11 +65,13 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.service.sync.StreamFactory;
 import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.service.sync.VnaSchemaVersion;
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 import de.sernet.sync.sync.SyncRequest;
+import de.sernet.sync.sync.SyncRequest.SyncVnaSchemaVersion;
 
 /**
  * Creates an VNA or XML representation for the given list of
@@ -216,6 +218,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         
         getCache().removeAll();
         
+        SyncVnaSchemaVersion formatVersion = createVersionData();
+        
 		SyncData syncData = new SyncData();
 		ExportTransaction exportTransaction = new ExportTransaction();
 	
@@ -238,12 +242,27 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 		SyncRequest syncRequest = new SyncRequest();
         syncRequest.setSourceId(sourceId);
         syncRequest.setSyncData(syncData);
-        syncRequest.setSyncMapping(syncMapping);		
+        syncRequest.setSyncMapping(syncMapping);
+        syncRequest.setSyncVnaSchemaVersion(formatVersion);
+        
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ExportFactory.marshal(syncRequest, bos);
 		return bos.toByteArray();
     }
     
+    private SyncVnaSchemaVersion createVersionData() {
+        
+        VnaSchemaVersion vnaSchemaVersion = getCommandService().getVnaSchemaVersion();
+        SyncVnaSchemaVersion formatVersion = new SyncVnaSchemaVersion();
+        
+        // Initialize the data transfer object
+        formatVersion.setVnaSchemaVersion(vnaSchemaVersion.getVnaSchemaVersion());
+        List<String> compatibleVersion = formatVersion.getCompatibleVersions();
+        compatibleVersion.addAll(vnaSchemaVersion.getCompatibleSchemaVersions());
+        
+        return formatVersion;        
+    }
+
     private byte[] exportRiskAnalyses() {
         if(!isRiskAnalysis()) {
             return null;

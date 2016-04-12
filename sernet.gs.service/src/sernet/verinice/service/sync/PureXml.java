@@ -20,13 +20,17 @@
 package sernet.verinice.service.sync;
 
 import java.io.ByteArrayInputStream;
+import java.util.Set;
 
 import javax.xml.bind.JAXB;
+
+import org.apache.log4j.Logger;
 
 import de.sernet.sync.data.SyncData;
 import de.sernet.sync.mapping.SyncMapping;
 import de.sernet.sync.risk.Risk;
 import de.sernet.sync.sync.SyncRequest;
+import de.sernet.sync.sync.SyncRequest.SyncVnaSchemaVersion;
 
 /**
  *
@@ -35,14 +39,24 @@ import de.sernet.sync.sync.SyncRequest;
  */
 public class PureXml implements IVeriniceArchive {
 
+    private static Logger LOG = Logger.getLogger(PureXml.class);
+
     private byte[] veriniceXml;
-    
+
     private String sourceId;
-    
+
     private SyncData syncData;
-    
+
     private SyncMapping syncMapping;
-    
+
+    private SyncRequest syncRequest;
+
+    private SyncVnaSchemaVersion syncVnaSchemaVersion;
+
+    private VnaSchemaVersion importedVnaSchemaVersion;
+
+    private Exception error;
+
     public PureXml(byte[] veriniceXml) {
         super();
         setVeriniceXml(veriniceXml);
@@ -52,7 +66,9 @@ public class PureXml implements IVeriniceArchive {
         super();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.service.sync.IPureXml#getVeriniceXml()
      */
     @Override
@@ -61,12 +77,12 @@ public class PureXml implements IVeriniceArchive {
     }
 
     public void setVeriniceXml(byte[] veriniceXml) {
-        this.veriniceXml = (veriniceXml!=null) ? veriniceXml.clone() : null;
+        this.veriniceXml = (veriniceXml != null) ? veriniceXml.clone() : null;
     }
-    
+
     @Override
     public String getSourceId() {
-        if(sourceId==null) {
+        if (sourceId == null) {
             unmarshal();
         }
         return sourceId;
@@ -79,7 +95,7 @@ public class PureXml implements IVeriniceArchive {
 
     @Override
     public SyncData getSyncData() {
-        if(syncData==null) {
+        if (syncData == null) {
             unmarshal();
         }
         return syncData;
@@ -89,42 +105,48 @@ public class PureXml implements IVeriniceArchive {
     public void setSyncData(SyncData syncData) {
         this.syncData = syncData;
     }
-    
+
     @Override
     public SyncMapping getSyncMapping() {
-        if(syncMapping==null) {
+        if (syncMapping == null) {
             unmarshal();
         }
         return syncMapping;
     }
-    
+
     @Override
     public void setSyncMapping(SyncMapping syncMapping) {
         this.syncMapping = syncMapping;
     }
 
     private void unmarshal() {
-        SyncRequest sr = JAXB.unmarshal(new ByteArrayInputStream(getVeriniceXml()), SyncRequest.class);
-        sourceId = sr.getSourceId();
-        syncData = sr.getSyncData();
-        syncMapping = sr.getSyncMapping();
+        syncRequest = JAXB.unmarshal(new ByteArrayInputStream(getVeriniceXml()), SyncRequest.class);
+        sourceId = syncRequest.getSourceId();
+        syncData = syncRequest.getSyncData();
+        syncMapping = syncRequest.getSyncMapping();
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.sync.IVeriniceArchive#getFileData(java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.sync.IVeriniceArchive#getFileData(java.lang.String
+     * )
      */
     @Override
     public byte[] getFileData(String fileName) {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.service.sync.IVeriniceArchive#clear()
      */
     @Override
     public void clear() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -132,24 +154,88 @@ public class PureXml implements IVeriniceArchive {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.service.sync.IVeriniceArchive#getSyncRiskAnalysis()
      */
     @Override
     public Risk getSyncRiskAnalysis() {
-        // always return null because risk analysis data is stored in a seperate 
+        // always return null because risk analysis data is stored in a seperate
         // file in a VNA
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.verinice.service.sync.IVeriniceArchive#getRiskAnalysisXml()
      */
     @Override
     public byte[] getRiskAnalysisXml() {
-     // always return null because risk analysis data is stored in a seperate 
+        // always return null because risk analysis data is stored in a seperate
         // file in a VNA
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.service.sync.VnaSchemaChecker#checkVnaSchema()
+     */
+    @Override
+    public boolean isCompatible(VnaSchemaVersion vnaSchemaVersion) {
+
+        if (syncRequest == null) {
+            unmarshal();
+        }
+
+        syncVnaSchemaVersion = syncRequest.getSyncVnaSchemaVersion();
+
+        // verinice versions which are older than 1.13 does not export schema
+        // information. In order to support imports from older verinice versions
+        // we skip the schema check.
+        if (syncVnaSchemaVersion == null) {
+            LOG.warn("VNA file has no version number. The import is continued anyway.");
+            return true;
+        }
+
+
+        importedVnaSchemaVersion = VnaSchemaVersion.createVnaSchemaVersion(syncVnaSchemaVersion);
+        String schemaVersion = vnaSchemaVersion.getVnaSchemaVersion();
+
+        // Every schema is compatible to itself:
+        if(schemaVersion.equals(importedVnaSchemaVersion.getVnaSchemaVersion())) {
+            return true;
+        }
+
+        // lookup if the current verinice schema is listed in the compatible
+        // versions.
+        Set<String> compatibleVersions = importedVnaSchemaVersion.getCompatibleSchemaVersions();
+        for (String compatibleVersion : compatibleVersions) {
+            if (schemaVersion.equals(compatibleVersion))
+                return true;
+        }
+
+        // lookup if the compatible schemas of the current verinice is listed in
+        // the compatible versions of the vna.
+        for(String compatibleSchemaVersion : vnaSchemaVersion.getCompatibleSchemaVersions()){
+            for(String syncSchemaVersion : importedVnaSchemaVersion.getCompatibleSchemaVersions()){
+                if (compatibleSchemaVersion.equals(syncSchemaVersion))
+                    return true;
+            }
+        }
+
+        error = new VnaSchemaException("No compatible version found!",
+                vnaSchemaVersion.getVnaSchemaVersion(), 
+                importedVnaSchemaVersion.getCompatibleSchemaVersions());
+
+        return false;
+    }
+
+
+    @Override
+    public Exception getErrorCause() {
+        return error;
+    }
 }

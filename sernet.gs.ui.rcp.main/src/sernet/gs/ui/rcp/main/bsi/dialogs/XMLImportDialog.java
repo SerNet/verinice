@@ -21,6 +21,7 @@ import java.io.File;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -69,6 +70,8 @@ import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.service.sync.VnaSchemaException;
+import sernet.verinice.service.sync.VnaSchemaVersion;
 
 /**
  * Dialog to import VNA or XML files.
@@ -119,6 +122,8 @@ public class XMLImportDialog extends Dialog {
     private static final int CERTIFICATE_INDEX = 3;
     private static final int NOCRYPT_INDEX = 0;
 
+    private SyncCommand syncCommand;
+
     public XMLImportDialog(Shell shell) {
         super(shell);
     }
@@ -139,20 +144,62 @@ public class XMLImportDialog extends Dialog {
                 setDefaultFolder(dataFile.getAbsolutePath());
             }
             WorkspaceJob importJob = new WorkspaceJob(Messages.XMLImportDialog_4) {
+                @SuppressWarnings("restriction")
                 @Override
                 public IStatus runInWorkspace(final IProgressMonitor monitor) {
                     IStatus status = Status.OK_STATUS;
                     try {
                         monitor.beginTask(NLS.bind(Messages.XMLImportDialog_5, new Object[] { dataFile.getName() }), IProgressMonitor.UNKNOWN);
-                        doImport(syncParameter);
+                        SyncCommand.Status importStatus = doImport(syncParameter);
+
+                        if(importStatus == SyncCommand.Status.FAILED){
+                            status = handleImportError();
+                        }
+
                     } catch (PasswordException e) {
                         status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.XMLImportDialog_13, e); //$NON-NLS-1$
                     } catch (Exception e) {
-                        LOG.error("Error while importing data.", e); //$NON-NLS-1$
-                        status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.XMLImportDialog_17, e); //$NON-NLS-1$
+                        status = handleGenericError(e);
                     } finally {
                         monitor.done();
                     }
+                    return status;
+                }
+
+                private IStatus handleImportError() {
+
+                    Exception errorCause = XMLImportDialog.this.syncCommand.getErrorCause();
+
+                    // no error can be detected
+                    if(errorCause == null) {
+                        return Status.OK_STATUS;
+                    }
+
+                    if (errorCause instanceof VnaSchemaException) {
+
+                        VnaSchemaException archiveException = (VnaSchemaException) errorCause;
+                        String vnaSchemaVersion = archiveException.getVnaSchemaVersion();
+                        String compatibleVersions = StringUtils.join(archiveException.getOfferedVnaSchemaVersions(), ", ");
+                        Object[] msgParams = new Object[] { vnaSchemaVersion, compatibleVersions };
+
+                        String msg = null;
+
+                        if (archiveException.getOfferedVnaSchemaVersions().size() > 1) {
+                            msg = NLS.bind(Messages.XMLImportDialog_ARCHIV_IMPORT_ERROR_MULTI_VERSION, msgParams);
+                        } else {
+                            msg = NLS.bind(Messages.XMLImportDialog_ARCHIV_IMPORT_ERROR_SINGLE_VERSION, msgParams);
+                        }
+
+                        return new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", msg);
+                    }
+
+                    return Status.OK_STATUS;
+                }
+
+                private IStatus handleGenericError(Exception e) {
+                    IStatus status;
+                    LOG.error("Error while importing data.", e); //$NON-NLS-1$
+                    status = new Status(IStatus.ERROR, "sernet.gs.ui.rcp.main", Messages.XMLImportDialog_17, e); //$NON-NLS-1$
                     return status;
                 }
             };
@@ -653,11 +700,10 @@ public class XMLImportDialog extends Dialog {
         return delete;
     }
 
-    private void doImport(SyncParameter parameter) {
+    private SyncCommand.Status doImport(SyncParameter parameter) {
         Activator.inheritVeriniceContextState();
         byte[] fileData = null;
 
-        SyncCommand command;
         IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
         try {
             if (selectedEncryptionMethod != null) {
@@ -676,17 +722,17 @@ public class XMLImportDialog extends Dialog {
                 // data is encrypted, guess format
                 format = guessFormat(fileData);
                 parameter.setFormat(format);
-                command = new SyncCommand(parameter, fileData);
+                syncCommand = new SyncCommand(parameter, fileData);
             } else {
                 if (Activator.getDefault().isStandalone()) {
                     String path = dataFile.getPath();
-                    command = new SyncCommand(parameter, path);
+                    syncCommand = new SyncCommand(parameter, path);
                 } else {
                     fileData = FileUtils.readFileToByteArray(dataFile);
-                    command = new SyncCommand(parameter, fileData);
+                    syncCommand = new SyncCommand(parameter, fileData);
                 }
             }
-            command = ServiceFactory.lookupCommandService().executeCommand(command);
+            syncCommand = ServiceFactory.lookupCommandService().executeCommand(syncCommand);
             // clear memory
             fileData = null;
         } catch (PasswordException e) {
@@ -699,7 +745,8 @@ public class XMLImportDialog extends Dialog {
             throw new IllegalStateException(e);
         }
 
-        updateModelAndValidate(command);
+        updateModelAndValidate(syncCommand);
+        return syncCommand.getStatus();
     }
 
     private byte[] decryptWithGenericSalt(byte[] fileData, IEncryptionService service) throws PasswordException {

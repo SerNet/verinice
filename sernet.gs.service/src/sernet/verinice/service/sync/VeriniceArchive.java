@@ -35,9 +35,7 @@ import javax.xml.bind.JAXB;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
-import de.sernet.sync.data.SyncData;
 import de.sernet.sync.risk.Risk;
-import de.sernet.sync.sync.SyncRequest;
 
 /**
  * Class to read the content of a verinice archive.
