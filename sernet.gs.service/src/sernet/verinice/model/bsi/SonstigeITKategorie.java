@@ -21,7 +21,9 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class SonstigeITKategorie extends CnATreeElement 
 	implements IBSIStrukturKategorie {
-	public static final String TYPE_ID = "sonstitkategorie"; //$NON-NLS-1$
+
+    private static final long serialVersionUID = 1L;
+    public static final String TYPE_ID = "sonstitkategorie"; //$NON-NLS-1$
 
 	public SonstigeITKategorie(CnATreeElement parent) {
 		super(parent);
@@ -33,7 +35,7 @@ public class SonstigeITKategorie extends CnATreeElement
 
 	@Override
 	public String getTitle() {
-		return Messages.SonstigeITKategorie_0; 
+        return getTypeFactory().getMessage(TYPE_ID);
 	}
 	
 	@Override

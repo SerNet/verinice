@@ -21,7 +21,9 @@ import sernet.verinice.model.common.CnATreeElement;
 
 
 public class NKKategorie extends CnATreeElement implements IBSIStrukturKategorie {
-	public static final String TYPE_ID = "netzkategorie"; //$NON-NLS-1$
+
+    private static final long serialVersionUID = 1L;
+    public static final String TYPE_ID = "netzkategorie"; //$NON-NLS-1$
 	
 
 	public NKKategorie(CnATreeElement model) {
@@ -33,7 +35,7 @@ public class NKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 	}
 	@Override
 	public String getTitle() {
-		return Messages.NKKategorie_0;
+        return getTypeFactory().getMessage(TYPE_ID);
 	}
 	
 	@Override

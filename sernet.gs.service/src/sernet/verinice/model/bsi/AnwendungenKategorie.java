@@ -35,7 +35,7 @@ public class AnwendungenKategorie extends CnATreeElement
 	
 	@Override
 	public String getTitle() {
-		return Messages.AnwendungenKategorie_0;
+        return getTypeFactory().getMessage(TYPE_ID);
 	}
 	
 	@Override

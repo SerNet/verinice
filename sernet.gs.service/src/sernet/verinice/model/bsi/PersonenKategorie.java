@@ -21,7 +21,8 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class PersonenKategorie extends CnATreeElement implements IBSIStrukturKategorie {
 	
-	public static final String TYPE_ID = "personkategorie"; //$NON-NLS-1$
+    private static final long serialVersionUID = 1L;
+    public static final String TYPE_ID = "personkategorie"; //$NON-NLS-1$
 	public static final String TYPE_ID_HIBERNATE = "personen-kategorie"; //$NON-NLS-1$
 
 	public PersonenKategorie(CnATreeElement model) {
@@ -33,7 +34,7 @@ public class PersonenKategorie extends CnATreeElement implements IBSIStrukturKat
 	}
 	@Override
 	public String getTitle() {
-		return Messages.PersonenKategorie_0;
+        return getTypeFactory().getMessage(TYPE_ID);
 	}
 	
 	
