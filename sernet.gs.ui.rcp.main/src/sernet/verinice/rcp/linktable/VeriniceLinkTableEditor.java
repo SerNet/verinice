@@ -22,26 +22,27 @@ package sernet.verinice.rcp.linktable;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.*;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.internal.handlers.WizardHandler.New;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
 import org.eclipse.ui.part.EditorPart;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
+import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableFieldListener;
 import sernet.verinice.service.csv.CsvExport;
 import sernet.verinice.service.csv.ICsvExport;
+import sernet.verinice.service.linktable.HUIObjectModelService;
 import sernet.verinice.service.linktable.LinkTableService;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
@@ -60,13 +61,21 @@ public class VeriniceLinkTableEditor extends EditorPart {
     private VeriniceLinkTable veriniceLinkTable;
     private LinkTableService linkTableService = new LinkTableService();
     private ICsvExport csvExportHandler = new CsvExport();
+    private boolean isDirty = false;
+
+    private VeriniceLinkTableFieldListener contentObserver;
+
+    private static ISchedulingRule iSchedulingRule = new Mutex();
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
-        // TODO Auto-generated method stub
+
+        VeriniceLinkTableIO.write(veriniceLinkTable);
+        isDirty = false;
+        firePropertyChange(IEditorPart.PROP_DIRTY);
 
     }
 
@@ -87,8 +96,10 @@ public class VeriniceLinkTableEditor extends EditorPart {
         if (! (input instanceof VeriniceLinkTableEditorInput)) {
             throw new PartInitException("Input is not an instance of " + VeriniceLinkTableEditorInput.class.getSimpleName());
         }
+
         VeriniceLinkTableEditorInput vltEditorInput = (VeriniceLinkTableEditorInput) input;
         veriniceLinkTable=vltEditorInput.getInput();
+
         setSite(site);
         setInput(vltEditorInput);
         setPartName(veriniceLinkTable.getName());
@@ -99,7 +110,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public boolean isDirty() {
-        return false;
+        return isDirty;
     }
 
     /* (non-Javadoc)
@@ -115,7 +126,26 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public void createPartControl(Composite parent) {
-        Button exportButton = new Button(parent, SWT.PUSH);
+        Composite container = new Composite(parent, SWT.NONE);
+        VeriniceLinkTableComposite ltr = new VeriniceLinkTableComposite(veriniceLinkTable,
+                HUIObjectModelService.getInstance(),
+                container,
+                SWT.NONE);
+
+        contentObserver = new VeriniceLinkTableFieldListener() {
+
+            @Override
+            public void fieldValueChanged() {
+                isDirty = true;
+                firePropertyChange(IEditorPart.PROP_DIRTY);
+
+            }
+        };
+        ltr.addListener(contentObserver);
+
+        GridLayoutFactory.swtDefaults().applyTo(ltr);
+
+        Button exportButton = new Button(container, SWT.PUSH);
         exportButton.setText("Export CSV");
         exportButton.setToolTipText("Export this link table to a CSV file");
         exportButton.addSelectionListener(new SelectionListener() {
@@ -130,13 +160,39 @@ public class VeriniceLinkTableEditor extends EditorPart {
                 widgetSelected(e);
             }
         });
+
+        GridLayoutFactory.swtDefaults().generateLayout(container);
     }
 
     private void exportToCsv() {
-        List<List<String>> table = linkTableService.createTable(VeriniceLinkTableIO.createLinkTableConfiguration(veriniceLinkTable));
+
         String filePath = createFilePath();
         csvExportHandler.setFilePath(filePath);
-        csvExportHandler.exportToFile(csvExportHandler.convert(table));
+
+        WorkspaceJob exportJob = new WorkspaceJob("Exporting...") {
+            @Override
+            public IStatus runInWorkspace(final IProgressMonitor monitor) {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask("export LinkTableReport", IProgressMonitor.UNKNOWN); // $NON-NLS-1$
+
+                    List<List<String>> table = linkTableService
+                            .createTable(VeriniceLinkTableIO
+                                    .createLinkTableConfiguration(veriniceLinkTable));
+
+                    csvExportHandler.exportToFile(csvExportHandler.convert(table));
+                } catch (Exception e) {
+                    LOG.error("Error while exporting data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.verinice.samt.rcp",
+                            "Error while exporting data.", e);
+                } finally {
+                    monitor.done();
+                    this.done(status);
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleJob(exportJob, iSchedulingRule);
     }
 
     private static String createFilePath() {

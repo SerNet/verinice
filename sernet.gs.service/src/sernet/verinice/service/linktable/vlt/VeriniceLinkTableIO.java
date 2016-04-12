@@ -76,6 +76,17 @@ public abstract class VeriniceLinkTableIO {
     }
 
     /**
+     * Writes a {@link VeriniceLinkTable} to disk as a JSON file. For the path
+     * the id is used.
+     *
+     * @param vlt
+     *            A link table configuration
+     */
+    public static void write(VeriniceLinkTable vlt) {
+        write(vlt, vlt.getId());
+    }
+
+    /**
      * Writes a {@link VeriniceLinkTable} to disk as a JSON file.
      *
      * @param vlt A link table configuration

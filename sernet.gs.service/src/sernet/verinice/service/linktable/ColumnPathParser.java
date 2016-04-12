@@ -20,18 +20,13 @@
 package sernet.verinice.service.linktable;
 
 import java.io.StringReader;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
-import antlr.CommonAST;
-import antlr.RecognitionException;
-import antlr.TokenStreamException;
+import antlr.*;
 import antlr.collections.AST;
-import sernet.verinice.service.linktable.antlr.VqlLexer;
-import sernet.verinice.service.linktable.antlr.VqlParser;
-import sernet.verinice.service.linktable.antlr.VqlParserTokenTypes;
+import sernet.verinice.service.linktable.antlr.*;
 
 /**
  * Parser for column pathes of Link Tables.
@@ -197,6 +192,27 @@ public abstract class ColumnPathParser {
         IPathElement pathElement = PathElementFactory.getElement(element.getType());
         pathElement.setTypeId(next.getText());
         return pathElement;
+    }
+
+    public static List<String> getColumnPathAsList(String columnPath) {
+        VqlLexer lexer = new VqlLexer(new StringReader(columnPath));
+        VqlParser parser = new VqlParser(lexer);
+        try {
+            parser.expr();
+        } catch (RecognitionException | TokenStreamException e) {
+            String message = "Error while parsing VQL column path: " + columnPath;
+            LOG.error(message, e);
+            throw new ColumnPathParseException(message, e);
+        }
+        AST parseTree = parser.getAST();
+        ArrayList<String> list = new ArrayList<>();
+        while(parseTree != null){
+
+            list.add(parseTree.getText());
+            parseTree = parseTree.getNextSibling();
+        }
+        return list;
+        
     }
 
 }
