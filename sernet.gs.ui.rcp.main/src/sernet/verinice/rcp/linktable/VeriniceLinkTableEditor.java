@@ -42,10 +42,10 @@ import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableFieldListener;
 import sernet.verinice.service.csv.CsvExport;
 import sernet.verinice.service.csv.ICsvExport;
-import sernet.verinice.service.linktable.HUIObjectModelService;
 import sernet.verinice.service.linktable.LinkTableService;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
+import sernet.verinice.service.model.HUIObjectModelService;
 
 /**
  *

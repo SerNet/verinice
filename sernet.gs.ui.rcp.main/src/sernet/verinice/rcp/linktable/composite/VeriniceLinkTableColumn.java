@@ -31,7 +31,7 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import sernet.verinice.rcp.linktable.composite.combo.VeriniceLinkTableElementComboViewer;
-import sernet.verinice.service.linktable.IObjectModelService;
+import sernet.verinice.service.model.IObjectModelService;
 
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>

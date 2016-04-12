@@ -36,8 +36,8 @@ import org.eclipse.swt.widgets.Composite;
 
 import sernet.verinice.rcp.linktable.composite.multiselectiondialog.VeriniceLinkTableMultiSelectionControl;
 import sernet.verinice.service.linktable.ColumnPathParser;
-import sernet.verinice.service.linktable.IObjectModelService;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
+import sernet.verinice.service.model.IObjectModelService;
 
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>

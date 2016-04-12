@@ -17,7 +17,7 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.linktable;
+package sernet.verinice.service.model;
 
 import java.util.*;
 
