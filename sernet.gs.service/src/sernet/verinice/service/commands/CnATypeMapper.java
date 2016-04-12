@@ -20,69 +20,12 @@ package sernet.verinice.service.commands;
 import java.util.HashMap;
 import java.util.Map;
 
-import sernet.verinice.model.bsi.Anwendung;
-import sernet.verinice.model.bsi.AnwendungenKategorie;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.Client;
-import sernet.verinice.model.bsi.ClientsKategorie;
-import sernet.verinice.model.bsi.Gebaeude;
-import sernet.verinice.model.bsi.GebaeudeKategorie;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.bsi.NKKategorie;
-import sernet.verinice.model.bsi.NetzKomponente;
-import sernet.verinice.model.bsi.Person;
-import sernet.verinice.model.bsi.PersonenKategorie;
-import sernet.verinice.model.bsi.RaeumeKategorie;
-import sernet.verinice.model.bsi.Raum;
-import sernet.verinice.model.bsi.Server;
-import sernet.verinice.model.bsi.ServerKategorie;
-import sernet.verinice.model.bsi.SonstIT;
-import sernet.verinice.model.bsi.SonstigeITKategorie;
-import sernet.verinice.model.bsi.TKKategorie;
-import sernet.verinice.model.bsi.TelefonKomponente;
+import sernet.verinice.model.bsi.*;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.ds.Datenverarbeitung;
-import sernet.verinice.model.ds.Personengruppen;
-import sernet.verinice.model.ds.StellungnahmeDSB;
-import sernet.verinice.model.ds.VerantwortlicheStelle;
-import sernet.verinice.model.ds.Verarbeitungsangaben;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.AssetGroup;
-import sernet.verinice.model.iso27k.Audit;
-import sernet.verinice.model.iso27k.AuditGroup;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.ControlGroup;
-import sernet.verinice.model.iso27k.Document;
-import sernet.verinice.model.iso27k.DocumentGroup;
-import sernet.verinice.model.iso27k.Evidence;
-import sernet.verinice.model.iso27k.EvidenceGroup;
-import sernet.verinice.model.iso27k.ExceptionGroup;
-import sernet.verinice.model.iso27k.Finding;
-import sernet.verinice.model.iso27k.FindingGroup;
-import sernet.verinice.model.iso27k.Incident;
-import sernet.verinice.model.iso27k.IncidentGroup;
-import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.IncidentScenarioGroup;
-import sernet.verinice.model.iso27k.Interview;
-import sernet.verinice.model.iso27k.InterviewGroup;
-import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.model.iso27k.PersonGroup;
-import sernet.verinice.model.iso27k.PersonIso;
-import sernet.verinice.model.iso27k.ProcessGroup;
-import sernet.verinice.model.iso27k.Record;
-import sernet.verinice.model.iso27k.RecordGroup;
-import sernet.verinice.model.iso27k.Requirement;
-import sernet.verinice.model.iso27k.RequirementGroup;
-import sernet.verinice.model.iso27k.Response;
-import sernet.verinice.model.iso27k.ResponseGroup;
-import sernet.verinice.model.iso27k.Threat;
-import sernet.verinice.model.iso27k.ThreatGroup;
-import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.model.iso27k.VulnerabilityGroup;
+import sernet.verinice.model.ds.*;
+import sernet.verinice.model.iso27k.*;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -97,9 +40,9 @@ import sernet.verinice.model.samt.SamtTopic;
  *
  */
 public class CnATypeMapper {
-    private static Map<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<String, Class<? extends CnATreeElement>>();
+    private static Map<String, Class<? extends CnATreeElement>> typeIdClass = new HashMap<>();
     
-    private static Map<String, String> descriptionPropertyMap = new HashMap<String, String>();
+    private static Map<String, String> descriptionPropertyMap = new HashMap<>();
 
   
 
@@ -130,12 +73,8 @@ public class CnATypeMapper {
         typeIdClass.put(VerantwortlicheStelle.TYPE_ID, VerantwortlicheStelle.class);
         typeIdClass.put(StellungnahmeDSB.TYPE_ID, StellungnahmeDSB.class);
         typeIdClass.put(Datenverarbeitung.TYPE_ID, Datenverarbeitung.class);
+        typeIdClass.put(Zweckbestimmung.TYPE_ID, Zweckbestimmung.class);
         
-        // BSI Risk analyses will not be imported or exported(Bug 194)
-        // typeIdClass.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.class);
-        // typeIdClass.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.class);
-        // typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID, RisikoMassnahmenUmsetzung.class);
-
         typeIdClass.put(ResponseGroup.TYPE_ID, ResponseGroup.class);
         typeIdClass.put(ExceptionGroup.TYPE_ID, ExceptionGroup.class);
         typeIdClass.put(VulnerabilityGroup.TYPE_ID, VulnerabilityGroup.class);
@@ -177,8 +116,9 @@ public class CnATypeMapper {
         
         typeIdClass.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.class);
         typeIdClass.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.class);
+        // typeIdClass.put(RisikoMassnahmenUmsetzung.TYPE_ID,
+        // RisikoMassnahmenUmsetzung.class);
 
-        
         // map for description properties:
         descriptionPropertyMap.put(Client.TYPE_ID, Client.PROP_ERLAEUTERUNG);
         descriptionPropertyMap.put(Gebaeude.TYPE_ID, Gebaeude.PROP_ERLAEUTERUNG);
@@ -194,7 +134,6 @@ public class CnATypeMapper {
     }
     
  // this is necessary because hibernate returns proxy objects that will not implement the marker interface IBSIStrukturelement
-    // TODO akoderman change marker interface to object composition: add adaptable interface for strukturelements to model classes
     private static final String[] STRUKTUR_ELEMENT_TYPES = new String[] {
         Anwendung.TYPE_ID,
         BSIModel.TYPE_ID,

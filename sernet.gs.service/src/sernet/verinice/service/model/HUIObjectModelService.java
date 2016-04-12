@@ -19,23 +19,53 @@
  ******************************************************************************/
 package sernet.verinice.service.model;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+
+import org.apache.log4j.Logger;
 
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.verinice.model.bsi.*;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
+import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class HUIObjectModelService implements IObjectModelService {
 
+    private static final Logger LOG = Logger.getLogger(HUIObjectModelService.class);
     private static HUIObjectModelService instance = null;
     private static HUITypeFactory huiTypeFactory = null;
 
+    private Set<String> allTypeIds;
+    private Map<String, Set<String>> possibleChildren;
+    private Map<String, Set<String>> possibleParents;
+
     private HUIObjectModelService() {
+
         ServerInitializer.inheritVeriniceContextState();
         huiTypeFactory = HUITypeFactory.getInstance();
+        allTypeIds = new HashSet<>(huiTypeFactory.getAllTypeIds());
+        addAllBSIGroups();
+    }
+
+    private void addAllBSIGroups() {
+        
+        allTypeIds.add(AnwendungenKategorie.TYPE_ID);
+        allTypeIds.add(GebaeudeKategorie.TYPE_ID);
+        allTypeIds.add(ClientsKategorie.TYPE_ID);
+        allTypeIds.add(ServerKategorie.TYPE_ID);
+        allTypeIds.add(SonstigeITKategorie.TYPE_ID);
+        allTypeIds.add(TKKategorie.TYPE_ID);
+        allTypeIds.add(PersonenKategorie.TYPE_ID);
+        allTypeIds.add(NKKategorie.TYPE_ID);
+        allTypeIds.add(RaeumeKategorie.TYPE_ID);
+        
     }
 
     /*
@@ -95,7 +125,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getAllTypeIDs() {
-        return huiTypeFactory.getAllTypeIds();
+        return allTypeIds;
     }
 
     /*
@@ -153,43 +183,90 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getPossibleChildren(String typeID) {
-        // TODO rmotza adapt
-        HashMap<String, HashSet<String>> dummytypes = new HashMap<>();
-        
-        String[] children = new String[] { "raeumekategorie", "serverkategorie",
-                "tkkategorie",
-                "netzkategorie",
-                "clientskategorie", "sonstitkategorie", "personkategorie", "gebaeudekategorie",
-                "anwendungenkategorie"
-        };
-        dummytypes.put("itverbund", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "raum" };
-        dummytypes.put("raeumekategorie", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "server" };
-        dummytypes.put("serverkategorie", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "tkkomponente" };
-        dummytypes.put(
-                "tkkategorie", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "netzkomponente" };
-        dummytypes.put(
-                "netzkategorie", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "client" };
-        dummytypes.put(
-                "clientskategorie", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "sonstit" };
-        dummytypes.put("sonstitkategorie", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "person" };
-        dummytypes.put("personkategorie", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "gebaeude" };
-        dummytypes.put("gebaeudekategorie", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "anwendung" };
-        dummytypes.put(
-                "anwendungenkategorie", new HashSet<>(Arrays.asList(children)));
-        if (dummytypes.get(typeID) != null) 
-            return dummytypes.get(typeID);
-        
-        return new HashSet<>();
+        if (possibleChildren == null) {
+            try {
+                fillPossibleChildrenMap();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException
+                    | NoSuchMethodException e) {
+                LOG.error("getting possible Children went wrong", e);
+                possibleChildren = null;
+                return new HashSet<>();
+            }
+        }
+        Set<String> set = possibleChildren.get(typeID);
+        if (set == null) {
+            set = new HashSet<>();
+        }
+        return set;
 
+    }
+
+    private void fillPossibleChildrenMap() throws InstantiationException, IllegalAccessException,
+            InvocationTargetException, NoSuchMethodException {
+
+        possibleChildren = new HashMap<>();
+        CnATreeElement parentInstance;
+        CnATreeElement childInstance;
+        Class<? extends CnATreeElement> parentClass;
+        Class<? extends CnATreeElement> childClass;
+        HashSet<String> possibleChildrenSet;
+
+        for (String typeIdParent : allTypeIds) {
+
+            try {
+            parentClass = CnATypeMapper.getClassFromTypeId(typeIdParent);
+            } catch (IllegalStateException e) {
+                LOG.error("ParentClass for possible Children is not mapped", e);
+                continue;
+            }
+            parentInstance = createInstance(parentClass, typeIdParent);
+            possibleChildrenSet = new HashSet<>();
+            for (String typeIdChild : allTypeIds) {
+
+                try {
+                    childClass = CnATypeMapper.getClassFromTypeId(typeIdChild);
+                } catch (IllegalStateException e) {
+                    LOG.error("ChildClass for possible Children is not mapped", e);
+                    continue;
+                }
+                childInstance = createInstance(childClass, typeIdChild);
+                if (parentInstance.canContain(childInstance)) {
+                    possibleChildrenSet.add(typeIdChild);
+                }
+            }
+            possibleChildren.put(typeIdParent, possibleChildrenSet);
+
+        }
+        
+    }
+
+    private CnATreeElement createInstance(Class<? extends CnATreeElement> clazz, String typeId)
+            throws InstantiationException, IllegalAccessException, InvocationTargetException,
+            NoSuchMethodException {
+
+        CnATreeElement container = null;
+        CnATreeElement element;
+        boolean createChildren = false;
+        if (isOrganization(clazz, typeId)) {
+            element = (CnATreeElement) Organization.class
+                    .getConstructor(CnATreeElement.class, boolean.class)
+                    .newInstance(container, createChildren);
+        } else if (isAudit(clazz, typeId)) {
+            element = (CnATreeElement) Audit.class
+                    .getConstructor(CnATreeElement.class, boolean.class)
+                    .newInstance(container, createChildren);
+        } else {
+            element = clazz.getConstructor(CnATreeElement.class).newInstance(container);
+        }
+        return element;
+    }
+
+    private boolean isOrganization(Class<? extends CnATreeElement> clazz, String typeId) {
+        return Organization.class.equals(clazz) || Organization.TYPE_ID.equals(typeId);
+    }
+
+    private boolean isAudit(Class<? extends CnATreeElement> clazz, String typeId) {
+        return Audit.class.equals(clazz) || Audit.TYPE_ID.equals(typeId);
     }
 
     /*
@@ -201,33 +278,59 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getPossibleParents(String typeID) {
-        // TODO rmotza adapt
-        HashMap<String, HashSet<String>> dummytypes = new HashMap<>();
 
-        dummytypes.put("itverbund", new HashSet<String>());
-        String[] children = new String[] { "raeumekategorie" };
-        dummytypes.put("raum", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "serverkategorie" };
-        dummytypes.put("server", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "tkkategorie" };
-        dummytypes.put("tkkomponente", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "netzkategorie" };
-        dummytypes.put("netzkomponente", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "clientskategorie" };
-        dummytypes.put("client", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "sonstitkategorie" };
-        dummytypes.put("sonstit", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "personkategorie" };
-        dummytypes.put("person", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "gebaeudekategorie" };
-        dummytypes.put("gebaeude", new HashSet<>(Arrays.asList(children)));
-        children = new String[] { "anwendungenkategorie" };
-        dummytypes.put("anwendung", new HashSet<>(Arrays.asList(children)));
-        if (dummytypes.get(typeID) != null)
-            return dummytypes.get(typeID);
 
-        return new HashSet<>();
+        if (possibleParents == null) {
+            try {
+                fillPossibleParentsMap();
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException
+                    | NoSuchMethodException e) {
+                LOG.error("getting possible parents went wrong", e);
+                possibleParents = null;
+                return new HashSet<>();
+            }
+        }
+        Set<String> set = possibleParents.get(typeID);
+        if(set == null){
+            set = new HashSet<>();
+        }
+        return set;
 
+    }
+
+    private void fillPossibleParentsMap() throws InstantiationException, IllegalAccessException,
+            InvocationTargetException, NoSuchMethodException {
+
+        possibleParents = new HashMap<>();
+        CnATreeElement childInstance;
+        Class<? extends CnATreeElement> childClass;
+        Class<? extends CnATreeElement> parentClass;
+        HashSet<String> possibleParentsSet;
+        for (String typeIChild : allTypeIds) {
+
+            try {
+                childClass = CnATypeMapper.getClassFromTypeId(typeIChild);
+            } catch (IllegalStateException e) {
+                LOG.error("ChildClass for possible parents is not mapped", e);
+                continue;
+            }
+            childInstance = createInstance(childClass, typeIChild);
+            possibleParentsSet = new HashSet<>();
+            for (String typeIdParent : allTypeIds) {
+                try {
+                    parentClass = CnATypeMapper.getClassFromTypeId(typeIdParent);
+                } catch (IllegalStateException e) {
+                    LOG.error("ParentClass for possible Parents is not mapped", e);
+                    continue;
+                }
+                CnATreeElement parentInsance = createInstance(parentClass, typeIdParent);
+                if (parentInsance.canContain(childInstance)) {
+                    possibleParentsSet.add(typeIdParent);
+                }
+            }
+            possibleParents.put(typeIChild, possibleParentsSet);
+
+        }
     }
     
 
