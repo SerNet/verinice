@@ -20,9 +20,7 @@ package sernet.hui.common.connect;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
@@ -175,9 +173,6 @@ public class HitroUtil {
 					resolverFactory.createResolvers(typeFactory);
 				} catch (DBException e) {
 					LOG_0.error("Unable to reach document: " + url, e);
-					
-					// TODO rschuster: Provide a message which is informative
-					// to the user.
 				}
 			}
 		}
@@ -189,6 +184,16 @@ public class HitroUtil {
 		    return typeFactory;
 		}
 		
+        /*
+         * (non-Javadoc)
+         * 
+         * @see sernet.hui.common.connect.HUITypeFactory#getAllTypeIds()
+         */
+        @Override
+        public Set<String> getAllTypeIds() {
+            return getTypeFactory().getAllTypeIds();
+        }
+
 		@Override
         public EntityType getEntityType(String id) {
 			return getTypeFactory().getEntityType(id);

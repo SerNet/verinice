@@ -24,7 +24,6 @@ import java.util.*;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.model.bsi.*;
@@ -48,7 +47,6 @@ public class HUIObjectModelService implements IObjectModelService {
 
     private HUIObjectModelService() {
 
-        ServerInitializer.inheritVeriniceContextState();
         huiTypeFactory = HUITypeFactory.getInstance();
         allTypeIds = new HashSet<>(huiTypeFactory.getAllTypeIds());
         addAllBSIGroups();
