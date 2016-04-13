@@ -66,16 +66,19 @@ public class VeriniceLinkTableComposite extends Composite {
     private VeriniceLinkTableMultiSelectionControl multiControl;
     private Button[] scopeRadios;
 
-    public VeriniceLinkTableComposite(IObjectModelService contentService, Composite parent, int style) {
+    public VeriniceLinkTableComposite(IObjectModelService contentService, Composite parent,
+            int style) {
         this(contentService, parent, style, SWT.FULL_SELECTION);
     }
 
-    public VeriniceLinkTableComposite(IObjectModelService contentService, Composite parent, int style,
+    public VeriniceLinkTableComposite(IObjectModelService contentService, Composite parent,
+            int style,
             int labelStyle) {
         this(null, contentService, parent, style);
     }
 
-    public VeriniceLinkTableComposite(VeriniceLinkTable ltrContent, IObjectModelService contentService,
+    public VeriniceLinkTableComposite(VeriniceLinkTable ltrContent,
+            IObjectModelService contentService,
             Composite parent, int style) {
 
         super(parent, style);
@@ -84,6 +87,7 @@ public class VeriniceLinkTableComposite extends Composite {
         this.style = style;
         this.ltrContent = ltrContent;
         createContent();
+
     }
 
     private void createContent() {
@@ -115,7 +119,7 @@ public class VeriniceLinkTableComposite extends Composite {
 
         scopeRadios[1] = new Button(scopeButtons, SWT.RADIO);
         scopeRadios[1].setText(Messages.VeriniceLinkTableComposite_1);
-        
+
         SelectionAdapter listener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
@@ -125,6 +129,7 @@ public class VeriniceLinkTableComposite extends Composite {
                 }
 
                 useAllScopes = selected == scopeRadios[0];
+                updateVeriniceContent();
 
             }
         };
@@ -282,6 +287,7 @@ public class VeriniceLinkTableComposite extends Composite {
             path = column.getColumnPath();
             columnPaths.add(path);
         }
+        ltrContent.setAllScopes(useAllScopes);
         ltrContent.setColumnPaths(columnPaths);
         ltrContent.setRelationIds(new ArrayList<>(multiControl.getSelectedRelationIDs()));
         ltrContent.setAllScopes(useAllScopes);
@@ -325,7 +331,8 @@ public class VeriniceLinkTableComposite extends Composite {
                     LOG.debug("Clone last Column");
                 }
                 VeriniceLinkTableColumn lastColumn = columns.get(columns.size() - 1);
-                VeriniceLinkTableColumn duplicatedColumn = new VeriniceLinkTableColumn(contentService, lastColumn, ++numCols);
+                VeriniceLinkTableColumn duplicatedColumn = new VeriniceLinkTableColumn(
+                        contentService, lastColumn, ++numCols);
                 columns.add(duplicatedColumn);
                 addDeleteButtonListener(duplicatedColumn);
                 handleMoreThanOneColumn(false);
@@ -404,7 +411,6 @@ public class VeriniceLinkTableComposite extends Composite {
         refresh(true);
 
     }
-
 
     public void moveColumnDown(VeriniceLinkTableColumn column) {
         int index = columns.indexOf(column);
