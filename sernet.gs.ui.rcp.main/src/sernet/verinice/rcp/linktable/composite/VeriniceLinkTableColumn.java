@@ -146,9 +146,9 @@ public class VeriniceLinkTableColumn {
         // layoutColumn.marginWidth = 0;
         // column.setLayout(layoutColumn);
 
-        upButton = new Button(ddComposite, style);
+        upButton = new Button(ddComposite, SWT.ARROW | SWT.UP);
         upButton.setText("+");
-        GridDataFactory.swtDefaults().hint(40, 20).applyTo(upButton);
+        GridDataFactory.swtDefaults().hint(30, 20).applyTo(upButton);
         upButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
@@ -161,9 +161,9 @@ public class VeriniceLinkTableColumn {
             }
         });
 
-        downButton = new Button(ddComposite, style);
+        downButton = new Button(ddComposite, SWT.ARROW | SWT.DOWN);
         downButton.setText("-");
-        GridDataFactory.swtDefaults().hint(40, 20).applyTo(downButton);
+        GridDataFactory.swtDefaults().hint(30, 20).applyTo(downButton);
         downButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
