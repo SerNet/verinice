@@ -107,6 +107,11 @@ public class ReportClassLoader extends ClassLoader {
     }
     
     private String tryGuessingQualifiedClassname(String name){
+        if("Entry".equals(name)){
+            return "java.util.Map$Entry";
+        } else if("Date".equals(name)){
+            return "java.util.Date";
+        }
         for(String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
             if(qualifiedName.contains(name)){
                 return qualifiedName;
@@ -119,9 +124,6 @@ public class ReportClassLoader extends ClassLoader {
             }
         }
         
-        if("Entry".equals(name)){
-            return "java.util.Map$Entry";
-        }
         
         return name;
     }

@@ -436,7 +436,8 @@ public class ReportSecurityManager extends SecurityManager {
                    stacktraceContains("org.eclipse.birt.report.engine.layout.emitter.AbstractPage.drawImage") ||
                    stacktraceContains("org.eclipse.birt.data.engine.i18n.DataResourceHandle.getInstance") ||
                    stacktraceContains("org.eclipse.birt.data.aggregation.i18n.Messages.<clinit>") ||
-                   stacktraceContains("org.eclipse.birt.report.model.core.ModuleImpl.getMessage")){
+                   stacktraceContains("org.eclipse.birt.report.model.core.ModuleImpl.getMessage") ||
+                   stacktraceContains("org.eclipse.birt.core.data.DataTypeUtil.toInteger")){
                return;
            }
         }
