@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
@@ -128,6 +129,24 @@ public class VeriniceLinkTableEditor extends EditorPart {
     public void createPartControl(Composite parent) {
         Activator.inheritVeriniceContextState();
         Composite container = new Composite(parent, SWT.NONE);
+
+        Button exportButton = new Button(container, SWT.PUSH);
+        exportButton.setText("Export CSV");
+        exportButton.setToolTipText("Export this link table to a CSV file");
+        GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(exportButton);
+        exportButton.addSelectionListener(new SelectionListener() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                exportToCsv();
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+
         VeriniceLinkTableComposite ltr = new VeriniceLinkTableComposite(veriniceLinkTable,
                 ServiceFactory.lookupObjectModelService(),
                 container,
@@ -145,23 +164,6 @@ public class VeriniceLinkTableEditor extends EditorPart {
         ltr.addListener(contentObserver);
 
         GridLayoutFactory.swtDefaults().applyTo(ltr);
-
-        Button exportButton = new Button(container, SWT.PUSH);
-        exportButton.setText("Export CSV");
-        exportButton.setToolTipText("Export this link table to a CSV file");
-        exportButton.addSelectionListener(new SelectionListener() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                exportToCsv();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-                widgetSelected(e);
-            }
-        });
-
         GridLayoutFactory.swtDefaults().generateLayout(container);
     }
 
