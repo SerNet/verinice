@@ -143,6 +143,18 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
+    
+	<bean id="objectModelService" 
+          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/objectModelServiceHttpInvoker</value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.service.model.IObjectModelService</value>         
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+	</bean>
+    
     <bean id="accountService"
           class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
@@ -307,6 +319,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             <entry key="reportdepositService" value-ref="reportdepositService" />
             <entry key="reportHQLService" value-ref="reportHQLService" />
             <entry key="searchService" value-ref="searchService" />
+			<entry key="objectModelService" value-ref="objectModelService" />
 		</map>
 	</property>
 	</bean>

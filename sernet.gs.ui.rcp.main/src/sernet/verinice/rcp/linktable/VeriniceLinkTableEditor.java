@@ -36,6 +36,7 @@ import org.eclipse.ui.part.EditorPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
@@ -45,7 +46,6 @@ import sernet.verinice.service.csv.ICsvExport;
 import sernet.verinice.service.linktable.LinkTableService;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
-import sernet.verinice.service.model.HUIObjectModelService;
 
 /**
  *
@@ -126,9 +126,10 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public void createPartControl(Composite parent) {
+        Activator.inheritVeriniceContextState();
         Composite container = new Composite(parent, SWT.NONE);
         VeriniceLinkTableComposite ltr = new VeriniceLinkTableComposite(veriniceLinkTable,
-                HUIObjectModelService.getInstance(),
+                ServiceFactory.lookupObjectModelService(),
                 container,
                 SWT.NONE);
 
