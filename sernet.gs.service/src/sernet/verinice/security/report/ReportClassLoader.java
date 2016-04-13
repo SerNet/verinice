@@ -100,7 +100,9 @@ public class ReportClassLoader extends ClassLoader {
 
     private ClassLoadingDeniedException getSecurityClassLoadingException(String name) {
         ClassLoadingDeniedException e = new ClassLoadingDeniedException(NLS.bind(Messages.CLASSLOADING_DENIED_EXCEPTION_0, name));
-        LOG.error("Could not load class due to verinice security policies", e);
+        if(LOG.isDebugEnabled()){
+            LOG.error("Could not load class due to verinice security policies", e);
+        }
         return e;
     }
     
@@ -116,7 +118,11 @@ public class ReportClassLoader extends ClassLoader {
                 return qualifiedName;
             }
         }
-
+        
+        if("Entry".equals(name)){
+            return "java.util.Map$Entry";
+        }
+        
         return name;
     }
 

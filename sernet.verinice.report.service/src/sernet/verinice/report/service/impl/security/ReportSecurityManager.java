@@ -133,7 +133,9 @@ public class ReportSecurityManager extends SecurityManager {
                 Arrays.asList(new String[]{"accessClassInPackage.sun.util.resources.de",
                         "accessClassInPackage.sun.util.resources",
                         "suppressAccessChecks", "accessClassInPackage.sun.awt.resources",
-                        "accessClassInPackage.sun.util.resources.en"}));
+                        "accessClassInPackage.sun.util.resources.en",
+                        "accessClassInPackage.sun.text.resources.de",
+                        "accessClassInPackage.sun.text.resources.en"}));
         authorizedRuntimeActions.put("org.eclipse.birt.core.i18n.ResourceHandle.<init>", 
                 Arrays.asList(new String[]{"getClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.odaconsumer.Driver.createNewDriverHelper", 
@@ -189,12 +191,14 @@ public class ReportSecurityManager extends SecurityManager {
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.executor.cache.ResultObjectUtil.readData", 
                 Arrays.asList(new String[]{"suppressAccessChecks", "accessDeclaredMembers"}));
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.impl.PreparedDummyQuery$QueryResults.getResultIterator",
-                Arrays.asList(new String[]{"createClassLoader", "getProtectionDomain", "suppressAccessChecks", "getClassLoader"}));
+                Arrays.asList(new String[]{"createClassLoader", "getProtectionDomain", "suppressAccessChecks",
+                        "getClassLoader", "readFileDescriptor"}));
         authorizedRuntimeActions.put("bsh.Interpreter.initRootSystemObject", 
                 Arrays.asList(new String[]{"createClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.impl.QueryResults.getResultIterator",
                 Arrays.asList(new String[]{"createClassLoader", "getProtectionDomain",
-                        "suppressAccessChecks", "accessDeclaredMembers", "writeFileDescriptor", "getClassLoader"}));
+                        "suppressAccessChecks", "accessDeclaredMembers", "writeFileDescriptor",
+                        "getClassLoader", "readFileDescriptor"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.reportitem.ChartReportItemGenerationImpl.serialize",
                 Arrays.asList(new String[]{"accessDeclaredMembers", "suppressAccessChecks", "createClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.reportitem.ChartReportItemPresentationBase.deserialize",
@@ -214,6 +218,8 @@ public class ReportSecurityManager extends SecurityManager {
         authorizedRuntimeActions.put("sun.awt.image.NativeLibLoader.loadLibraries", 
                 Arrays.asList(new String[]{"loadLibrary.awt"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.device.util.ChartTextMetrics.reuse",
+                Arrays.asList(new String[]{"loadLibrary.t2k"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.device.swing.SwingTextMetrics.reuse", 
                 Arrays.asList(new String[]{"loadLibrary.t2k"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.device.svg.SVGRendererImpl.writeDocumentToOutputStream",
                 Arrays.asList(new String[]{"suppressAccessChecks", "charsetProvider"}));
@@ -272,10 +278,24 @@ public class ReportSecurityManager extends SecurityManager {
                 Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
         authorizedRuntimeActions.put("org.mozilla.javascript.JavaMembers.put", 
                 Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.mozilla.javascript.JavaMembers.get", 
+                Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
+        
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.odaconsumer.PreparedStatement.getProjectedColumns",
-                Arrays.asList(new String[]{"accessDeclaredMembers", "createClassLoader", "suppressAccessChecks", "getClassLoader", "writeFileDescriptor"}));
+                Arrays.asList(new String[]{"accessDeclaredMembers", "createClassLoader", "suppressAccessChecks",
+                        "getClassLoader", "writeFileDescriptor", "readFileDescriptor"}));
         authorizedRuntimeActions.put("org.eclipse.birt.report.engine.emitter.excel.layout.ExcelContext.parseSheetName",
                 Arrays.asList(new String[]{"suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.emitter.ods.OdsEmitter.parseSheetName", 
+                Arrays.asList("suppressAccessChecks"));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.factory.Generator.render", 
+                Arrays.asList("loadLibrary.dcpr"));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.reportitem.ChartReportItemPresentationBase.renderToImageFile",
+                Arrays.asList("createClassLoader", "suppressAccessChecks"));
+        authorizedRuntimeActions.put("org.eclipse.birt.data.engine.impl.DataEngineSession.cancel",
+                Arrays.asList("accessDeclaredMembers"));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.computation.LabelLimiter.limitLabelSize",
+                Arrays.asList("suppressAccessChecks"));
     }
     
     private ReportSecurityContext reportSecurityContext;
@@ -394,7 +414,29 @@ public class ReportSecurityManager extends SecurityManager {
            if(stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask$2.visitScalarParameter") ||
                    stacktraceContains("org.eclipse.birt.report.data.adapter.api.DataRequestSession.newSession") ||
                    stacktraceContains("org.eclipse.birt.report.engine.emitter.excel.layout.ExcelContext.parseSheetName") ||
-                   stacktraceContains("org.eclipse.osgi.util.NLS.load")){
+                   stacktraceContains("org.eclipse.osgi.util.NLS.load") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.emitter.html.HTMLReportEmitter.outputHtmlText") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.emitter.excel.ExcelEmitter.startForeign") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.emitter.ods.OdsEmitter.startForeign") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.emitter.ods.OdsEmitter.parseSheetName") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.emitter.odt.OdtEmitter.startForeign") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.emitter.wpml.DocEmitterImpl.startForeign") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.createFont") ||
+                   stacktraceContains("org.eclipse.birt.chart.reportitem.i18n.Messages.<clinit>") ||
+                   stacktraceContains("org.eclipse.birt.chart.engine.i18n.Messages.<clinit>") ||
+                   stacktraceContains("org.eclipse.birt.data.aggregation.impl.TotalSum.getParameterDefn") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.parser.HTMLTextParser.<clinit>") ||
+                   stacktraceContains("org.w3c.tidy.Tidy.parseDOM")||
+                   stacktraceContains("javax.xml.parsers.DocumentBuilderFactory.newInstance") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.layout.pdf.text.BidiSplitter.createBidi") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.layout.pdf.WordRecognizerWrapper.<init>") ||
+                   stacktraceContains("org.eclipse.birt.chart.device.extension.i18n.Messages.<clinit>") ||
+                   stacktraceContains("org.eclipse.birt.chart.computation.withaxes.PlotWith2DAxes.computeCommon") ||
+                   stacktraceContains("org.eclipse.birt.chart.factory.Generator.render") ||
+                   stacktraceContains("org.eclipse.birt.report.engine.layout.emitter.AbstractPage.drawImage") ||
+                   stacktraceContains("org.eclipse.birt.data.engine.i18n.DataResourceHandle.getInstance") ||
+                   stacktraceContains("org.eclipse.birt.data.aggregation.i18n.Messages.<clinit>") ||
+                   stacktraceContains("org.eclipse.birt.report.model.core.ModuleImpl.getMessage")){
                return;
            }
         }
@@ -419,7 +461,8 @@ public class ReportSecurityManager extends SecurityManager {
                     stacktraceContains("org.eclipse.birt.report.engine.presentation.LocalizedContentVisitor.processExtendedContent") || 
                     stacktraceContains("org.apache.batik.transcoder.print.PrintTranscoder.print") ||
                     stacktraceContains("org.eclipse.birt.report.engine.executor.ExecutorManager$ExecutorFactory.visitExtendedItem") ||
-                    stacktraceContains("org.eclipse.birt.data.engine.api.aggregation.AggregationManager.populateAggregations")){
+                    stacktraceContains("org.eclipse.birt.data.engine.api.aggregation.AggregationManager.populateAggregations")
+                    ){
                 return;
             } else {
                 throwSecurityException(perm);
