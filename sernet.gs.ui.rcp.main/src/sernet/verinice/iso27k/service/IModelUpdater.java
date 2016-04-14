@@ -32,7 +32,7 @@ public interface IModelUpdater {
      * @param group
      * @param element
      */
-    void childAdded(Group group, CnATreeElement element);
+    void childAdded(CnATreeElement group, CnATreeElement element);
 
     void reload();
 }

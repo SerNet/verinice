@@ -18,6 +18,7 @@
 package sernet.gs.ui.rcp.main.bsi.dnd;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -53,8 +54,12 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.iso27k.rcp.RcpModelUpdater;
 import sernet.verinice.iso27k.rcp.action.DropPerformer;
+import sernet.verinice.iso27k.service.IModelUpdater;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
@@ -62,8 +67,10 @@ import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
+import sernet.verinice.service.commands.SaveElement;
 import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**
@@ -79,9 +86,14 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
 
     private Object target = null;
 
+    private IAuthService authService;
+    private ICommandService commandService;
+    private IModelUpdater modelUpdater;
+
     public BSIModelViewDropListener(TreeViewer viewer) {
         super(viewer);
         this.viewer = viewer;
+        modelUpdater = new RcpModelUpdater();
     }
 
     /*
@@ -133,7 +145,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                         list.add((Massnahme) object);
                     }
                 }
-                return dropMassnahmen((BausteinUmsetzung) target, viewer, list.toArray(new Massnahme[list.size()]));
+                return dropControls((BausteinUmsetzung) target, viewer, list.toArray(new Massnahme[list.size()]));
             } else if (firstOne != null && (firstOne instanceof IBSIStrukturElement || firstOne instanceof BausteinUmsetzung || firstOne instanceof IISO27kElement || firstOne instanceof IMassnahmeUmsetzung)) {
                 CnATreeElement element = (CnATreeElement) target;
                 LinkDropper dropper = new LinkDropper();
@@ -167,7 +179,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         if (LOG.isDebugEnabled()) {
             LOG.debug("validateDrop, target: " + target != null ? target.toString() : "no target set" + ", transfer type class: " + transferType.getClass().getName() + ", transfer-type-id: " + transferType.type);
         }
-        if(!checkRights()){
+        if (!checkRights()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("ChechRights() failed  ... return false");
             }
@@ -334,7 +346,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         CnAElementFactory.getLoadedModel().childAdded(target, saveNew);
     }
 
-    private boolean dropMassnahmen(final BausteinUmsetzung target, Viewer viewer, final Massnahme[] massnahmen) {
+    private boolean dropControls(final BausteinUmsetzung target, Viewer viewer, final Massnahme[] massnahmen) {
         if (!CnAElementHome.getInstance().isNewChildAllowed(target)) {
             return false;
         }
@@ -346,7 +358,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                     Activator.inheritVeriniceContextState();
 
                     try {
-                        addMassnahmeToBausteinUmsetzung(massnahmen, target);
+                        addControlsToModule(massnahmen, target);
                     } catch (Exception e) {
                         Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
                         return Status.CANCEL_STATUS;
@@ -364,22 +376,40 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         return true;
     }
 
-    private void addMassnahmeToBausteinUmsetzung(Massnahme[] toDrop, BausteinUmsetzung target) throws CnATreeElementBuildException, CommandException {
-        CnATreeElement massnahmeUmsetzung = null;
-        for (Massnahme massnahme : toDrop) {
-            if (target.containsMassnahmenUmsetzung(massnahme.getId())) {
+    private void addControlsToModule(Massnahme[] controlsToDrop, BausteinUmsetzung target) throws CnATreeElementBuildException, CommandException {
+        for (Massnahme controlToDrop : controlsToDrop) {
+            if (target.containsControl(controlToDrop.getId())) {
                 GetElementPathCommand pathLoader = new GetElementPathCommand(target.getUuid(), target.getTypeId());
                 String elementPath = ServiceFactory.lookupCommandService().executeCommand(pathLoader).getResult();
-                LOG.error("ElementContainer:\t" + elementPath + "(" + target.getDbId() + ")" + "\twith TypeId:\t" + target.getTypeId() + " contains already a massnahmen with id:\t" + massnahme.getId() + "\t" + massnahme.getTitel() + " is skipped because of this");
-                return;
+                LOG.error("ElementContainer:\t" + elementPath + "(" + target.getDbId() + ")" + "\twith TypeId:\t" + target.getTypeId() + " contains already a massnahmen with id:\t" + controlToDrop.getId() + "\t" + controlToDrop.getTitel() + " is skipped because of this");
+                continue;
             }
+            addControlToModule(controlToDrop, target);
+        }
+    }
 
-            MassnahmenFactory mFactory = new MassnahmenFactory();
-            massnahmeUmsetzung = mFactory.createMassnahmenUmsetzung(target, massnahme, BSIKatalogInvisibleRoot.getInstance().getLanguage());
-            massnahmeUmsetzung = CnAElementHome.getInstance().update(massnahmeUmsetzung);
+    private CnATreeElement addControlToModule(Massnahme controlToDrop, BausteinUmsetzung target) {
+        CnATreeElement control = null;
+        MassnahmenFactory mFactory = new MassnahmenFactory();
+        control = mFactory.createMassnahmenUmsetzung(target, controlToDrop, BSIKatalogInvisibleRoot.getInstance().getLanguage());
+        control.setParentAndScope(target);
+        SaveElement<CnATreeElement> command = null;
+        try {
+            HashSet<Permission> newperms = new HashSet<Permission>();
+            newperms.add(Permission.createPermission(control, getAuthService().getUsername(), true, true));
+            control.setPermissions(newperms);
+            command = new SaveElement<CnATreeElement>(control);
+            command = getCommandService().executeCommand(command);
+            control = command.getElement();
+            control.setParentAndScope(target);
+            target.addChild(control);
+        } catch (CommandException e) {
+            LOG.error("Error while inserting control", e); //$NON-NLS-1$
+            throw new RuntimeException("Error while inserting control", e); //$NON-NLS-1$
         }
         // notifying for the last element is sufficient to update all views:
-        CnAElementFactory.getLoadedModel().childAdded(target, massnahmeUmsetzung);
+        modelUpdater.childAdded(target, control);
+        return control;
     }
 
     @Override
@@ -404,4 +434,25 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         return performDrop(data);
     }
 
+    private IAuthService getAuthService() {
+        if (authService == null) {
+            authService = createAuthService();
+        }
+        return authService;
+    }
+
+    private IAuthService createAuthService() {
+        return ServiceFactory.lookupAuthService();
+    }
+
+    private ICommandService getCommandService() {
+        if (commandService == null) {
+            commandService = createCommandServive();
+        }
+        return commandService;
+    }
+
+    private ICommandService createCommandServive() {
+        return ServiceFactory.lookupCommandService();
+    }
 }

@@ -404,18 +404,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         return false;
     }
 
-    public boolean containsMassnahmenUmsetzung(String kapitel) {
-        for (CnATreeElement elmt : getChildren()) {
-            if (elmt instanceof MassnahmenUmsetzung) {
-                MassnahmenUmsetzung mu = (MassnahmenUmsetzung) elmt;
-                if (mu.getKapitel().equals(kapitel)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     /**
      * dependant in linksDown is this {@link CnATreeElement}
      *

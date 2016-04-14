@@ -224,6 +224,18 @@ public class BausteinUmsetzung extends CnATreeElement {
         }
         return null;
     }
+    
+    public boolean containsControl(String chapter) {
+        for (CnATreeElement child : getChildren()) {
+            if (child instanceof MassnahmenUmsetzung) {
+                MassnahmenUmsetzung control = (MassnahmenUmsetzung) child;
+                if (control.getKapitel().equals(chapter)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public String getStand() {
         return getEntity().getSimpleValue(P_STAND);
