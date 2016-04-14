@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -40,6 +41,7 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
+import sernet.verinice.rcp.FileDialogUtil;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableFieldListener;
 import sernet.verinice.service.csv.CsvExport;
@@ -69,27 +71,6 @@ public class VeriniceLinkTableEditor extends EditorPart {
     private static ISchedulingRule iSchedulingRule = new Mutex();
 
     /* (non-Javadoc)
-     * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public void doSave(IProgressMonitor monitor) {
-
-        VeriniceLinkTableIO.write(veriniceLinkTable);
-        isDirty = false;
-        firePropertyChange(IEditorPart.PROP_DIRTY);
-
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.EditorPart#doSaveAs()
-     */
-    @Override
-    public void doSaveAs() {
-        // TODO Auto-generated method stub
-
-    }
-
-    /* (non-Javadoc)
      * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
      */
     @Override
@@ -105,23 +86,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
         setInput(vltEditorInput);
         setPartName(veriniceLinkTable.getName());
     }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.EditorPart#isDirty()
-     */
-    @Override
-    public boolean isDirty() {
-        return isDirty;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
-     */
-    @Override
-    public boolean isSaveAsAllowed() {
-        return false;
-    }
-
+    
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
@@ -166,10 +131,63 @@ public class VeriniceLinkTableEditor extends EditorPart {
         GridLayoutFactory.swtDefaults().applyTo(ltr);
         GridLayoutFactory.swtDefaults().generateLayout(container);
     }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
+     */
+    @Override
+    public void doSave(IProgressMonitor monitor) {
+        executeSave(getFilePath(veriniceLinkTable));
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.part.EditorPart#doSaveAs()
+     */
+    @Override
+    public void doSaveAs() {
+        executeSave(createLtrFilePath());
+    }
+    
+    private void executeSave(String filePath) {
+        VeriniceLinkTableIO.write(veriniceLinkTable, filePath);
+        isDirty = false;
+        firePropertyChange(IEditorPart.PROP_DIRTY);
+    }
+
+    /**
+     * @param veriniceLinkTable
+     * @return
+     */
+    private String getFilePath(VeriniceLinkTable veriniceLinkTable) { 
+        String filePath = LinkTableFileRegistry.getFilePath(veriniceLinkTable.getId());
+        if(filePath==null) {
+            filePath = createLtrFilePath();          
+            veriniceLinkTable.setName(new File(filePath).getName());
+            setPartName(veriniceLinkTable.getName());
+            LinkTableFileRegistry.add(veriniceLinkTable.getId(),filePath);
+        }
+        return filePath;
+    }  
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.part.EditorPart#isDirty()
+     */
+    @Override
+    public boolean isDirty() {
+        return isDirty;
+    }
+
+    /* (non-Javadoc)
+     * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
+     */
+    @Override
+    public boolean isSaveAsAllowed() {
+        return false;
+    }
 
     private void exportToCsv() {
 
-        String filePath = createFilePath();
+        String filePath = createCsvFilePath();
         csvExportHandler.setFilePath(filePath);
 
         WorkspaceJob exportJob = new WorkspaceJob("Exporting...") {
@@ -198,31 +216,20 @@ public class VeriniceLinkTableEditor extends EditorPart {
         JobScheduler.scheduleJob(exportJob, iSchedulingRule);
     }
 
-    private static String createFilePath() {
-        FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.SAVE);
-        dialog.setText("Export link table to CSV (.csv) table");
-        try {
-            dialog.setFilterPath(getDirectory());
-        } catch (Exception e1) {
-            LOG.debug("Error with file path: " + getDirectory(), e1);
-            dialog.setFileName(""); //$NON-NLS-1$
-        }
-        dialog.setFilterExtensions(new String[] {"*" + ICsvExport.CSV_FILE_SUFFIX}); //$NON-NLS-1$
-        dialog.setFilterNames(new String[] {"CSV table (.csv)"});
-        dialog.setFilterIndex(0);
-        return dialog.open();
+    private static String createCsvFilePath() {
+        return new FileDialogUtil.Builder(SWT.SAVE, "Export link table to CSV (.csv) table")
+        .setDefaultFolderPreference(PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT)
+        .setFileSuffix(ICsvExport.CSV_FILE_SUFFIX)
+        .setFileTypeLabel("CSV table (.csv)")
+        .open();     
     }
-
-    private static String getDirectory() {
-        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-        String dir = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT);
-        if(dir==null || dir.isEmpty()) {
-            dir = System.getProperty("user.home");
-        }
-        if (!dir.endsWith(System.getProperty("file.separator"))) {
-            dir = dir + System.getProperty("file.separator");
-        }
-        return dir;
+    
+    private static String createLtrFilePath() {
+        return new FileDialogUtil.Builder(SWT.SAVE, "Save query to .ltr file")
+        .setDefaultFolderPreference(PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT)
+        .setFileSuffix(VeriniceLinkTable.VLT)
+        .setFileTypeLabel("Query (.vlt)")
+        .open();     
     }
 
     /* (non-Javadoc)

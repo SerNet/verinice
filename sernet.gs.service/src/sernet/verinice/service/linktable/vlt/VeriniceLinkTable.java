@@ -36,6 +36,8 @@ import sernet.verinice.service.linktable.LinkTableConfiguration;
  */
 public class VeriniceLinkTable {
 
+    public static final String VLT = ".vlt"; //$NON-NLS-1$
+    
     private String id;
     private String name;
     private boolean useAllScopes;

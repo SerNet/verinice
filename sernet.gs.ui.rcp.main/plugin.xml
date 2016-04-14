@@ -317,6 +317,12 @@
             id="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
             name="Load link table">
       </command>
+	    <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Create a link table and open it in an editor"
+            id="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+            name="Create link table">
+      </command>
 
    </extension>
    <extension point="org.eclipse.ui.bindings">
@@ -1226,11 +1232,18 @@
                tooltip="%Assign a person for this task"/>  
         </menuContribution>
       <menuContribution locationURI="menu:org.eclipse.ui.main.menu">
-	<menu id="file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap" label="%menu.file">
-            <command commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
-                  label="Open link table..."
+				 <menu id="file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap" label="%menu.file">
+            <command commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+                  label="Create query..."
                   style="push"
-                  tooltip="Open a link table in an editor">
+                  tooltip="Create a new query">
+            </command>
+         </menu>
+         <menu id="file?after=sernet.verinice.rcp.linktable.CreateLinkTableHandler" label="%menu.file">
+            <command commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
+                  label="Open query..."
+                  style="push"
+                  tooltip="Open a query">
             </command>
          </menu>
 		 </menuContribution>
@@ -1876,9 +1889,10 @@
         	</with>
 		 </enabledWhen>
       </handler>
-      <handler
-		class="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
+      <handler class="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
           commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler" />
+      <handler class="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+          commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler" />
    </extension>
    <extension point="org.eclipse.core.expressions.propertyTesters">
 	   <propertyTester

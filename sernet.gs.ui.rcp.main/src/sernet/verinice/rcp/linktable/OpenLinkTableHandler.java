@@ -20,27 +20,13 @@
 package sernet.verinice.rcp.linktable;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.commands.ExecutionEvent;
-import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.ErrorDialog;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.handlers.HandlerUtil;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.action.Messages;
-import sernet.verinice.rcp.RightsEnabledHandler;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 
@@ -49,41 +35,18 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class OpenLinkTableHandler extends RightsEnabledHandler {
+public class OpenLinkTableHandler extends LinkTableHandler {
 
     private static final Logger LOG = Logger.getLogger(OpenLinkTableHandler.class);
-    private static final String VLT = ".vlt"; //$NON-NLS-1$
+   
+    @Override
+    protected VeriniceLinkTable createLinkTable() {
+        final String filePath = createFilePath();
+        VeriniceLinkTable veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
+        LinkTableFileRegistry.add(veriniceLinkTable.getId(),filePath);
+        return veriniceLinkTable;
+    }
     
-    public OpenLinkTableHandler() {
-       super(false);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.RightEnabledUserInteraction#getRightID()
-     */
-    @Override
-    public String getRightID() {
-        return ActionRightIDs.EXPORT_LINK_TABLE;
-    }
-
-    /* (non-Javadoc)
-     * @see org.eclipse.core.commands.IHandler#execute(org.eclipse.core.commands.ExecutionEvent)
-     */
-    @Override
-    public Object execute(ExecutionEvent event) throws ExecutionException {
-        if(checkRights()){
-            final String filePath = createFilePath();
-            VeriniceLinkTable veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
-            veriniceLinkTable.setId(filePath);
-            EditorFactory.getInstance().updateAndOpenObject(veriniceLinkTable);
-        } else {
-            setBaseEnabled(false);
-            MessageDialog.openError(HandlerUtil.getActiveShell(event), "Error", "You don't have the permission to perform this action.");
-        }
-        
-        return null;
-    }
-
     private String createFilePath() {
         FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.OPEN);
         dialog.setText("Load verinice link table (.vlt) file");
@@ -93,12 +56,13 @@ public class OpenLinkTableHandler extends RightsEnabledHandler {
             LOG.debug("Error with file path: " + getDirectory(), e1);
             dialog.setFileName(""); //$NON-NLS-1$
         }
-        dialog.setFilterExtensions(new String[] {"*" + VLT}); //$NON-NLS-1$
+        dialog.setFilterExtensions(new String[] {"*" + VeriniceLinkTable.VLT}); //$NON-NLS-1$
         dialog.setFilterNames(new String[] {"verinice link table (.vlt)"});
         dialog.setFilterIndex(0);
         String filePath = dialog.open();
         return filePath;
     }
+    
 
     private String getDirectory() {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
@@ -111,5 +75,4 @@ public class OpenLinkTableHandler extends RightsEnabledHandler {
         }
         return dir;
     }
-
 }

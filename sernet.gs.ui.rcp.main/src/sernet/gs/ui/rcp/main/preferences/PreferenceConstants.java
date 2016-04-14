@@ -131,7 +131,7 @@ public class PreferenceConstants {
     public static final String DEFAULT_FOLDER_CSV_EXPORT = "default_folder_csv_export";
     public static final String DEFAULT_TEMPLATE_FOLDER_REPORT = "default_template_folder_report";
     public static final String DEFAULT_FOLDER_ADDFILE = "default_folder_addfile";
-
+    public static final String DEFAULT_FOLDER_DIALOG = "default_folder_dialog";
     // additional gui preferences
     public static final String SWITCH_PERSPECTIVE = "switch_perspective";
     public static final String DONT_ASK_BEFORE_SWITCH_PERSPECTIVE = "switch_perspective_dont_ask";
