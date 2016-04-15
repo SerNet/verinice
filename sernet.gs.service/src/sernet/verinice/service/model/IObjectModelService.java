@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.model;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -26,6 +27,8 @@ import java.util.Set;
  */
 public interface IObjectModelService {
 
+
+    void init();
 
     Set<String> getRelations(String fromEntityTypeID, String toEntityTypeID);
 
@@ -42,5 +45,11 @@ public interface IObjectModelService {
     Set<String> getPossibleChildren(String typeID);
 
     Set<String> getPossibleParents(String typeID);
+
+    Map<String, Set<String>> getAllPossibleChildren();
+
+    Map<String, Set<String>> getAllPossibleParents();
+
+    ObjectModelContainer loadAll();
 
 }

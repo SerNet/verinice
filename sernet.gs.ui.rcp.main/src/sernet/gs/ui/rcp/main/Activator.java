@@ -18,20 +18,13 @@
 package sernet.gs.ui.rcp.main;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.net.proxy.IProxyData;
 import org.eclipse.core.net.proxy.IProxyService;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Preferences;
-import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.equinox.internal.p2.ui.ProvUI;
@@ -43,40 +36,25 @@ import org.eclipse.equinox.p2.ui.ProvisioningUI;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.*;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.framework.ServiceReference;
+import org.osgi.framework.*;
 import org.osgi.util.tracker.ServiceTracker;
 
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
+import sernet.gs.ui.rcp.main.common.model.*;
 import sernet.gs.ui.rcp.main.logging.LoggerInitializer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.security.VeriniceSecurityProvider;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.migrationcommands.DbVersion;
 import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.ICommandService;
-import sernet.verinice.interfaces.IInternalServer;
-import sernet.verinice.interfaces.IInternalServerStartListener;
-import sernet.verinice.interfaces.ILogPathService;
-import sernet.verinice.interfaces.IMain;
-import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
-import sernet.verinice.interfaces.IVersionConstants;
+import sernet.verinice.interfaces.*;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.rcp.ReportTemplateSync;
-import sernet.verinice.rcp.StartupImporter;
-import sernet.verinice.rcp.StatusResult;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.*;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -266,11 +244,63 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         ReportTemplateSync.sync();
 
+
         // Log the system and application configuration
         ConfigurationLogger.logSystemProperties();
         ConfigurationLogger.logApplicationProperties();
         ConfigurationLogger.logProxyPreferences();
+        if (CnAElementFactory.isModelLoaded() || CnAElementFactory.isIsoModelLoaded()) {
 
+        } else {
+            IModelLoadListener loadListener = new IModelLoadListener() {
+
+                @Override
+                public void loaded(ISO27KModel model) {
+                    initObjectModelService();
+
+                }
+
+                @Override
+                public void loaded(BSIModel model) {
+                    initObjectModelService();
+
+                }
+
+                @Override
+                public void closed(BSIModel model) {
+                    // do nothing
+
+                }
+            };
+            CnAElementFactory.getInstance().addLoadListener(loadListener);
+        }
+
+    }
+
+    private void initObjectModelService() {
+
+        WorkspaceJob job = new WorkspaceJob("load objectModelService") {
+            @Override
+            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+                IStatus status = Status.OK_STATUS;
+                try {
+                    monitor.beginTask("load objectModelService", IProgressMonitor.UNKNOWN);
+                    long time = System.currentTimeMillis();
+                    ServiceFactory.lookupObjectModelService().init();
+                    LOG.info("took " + (System.currentTimeMillis() - time)
+                            + " msec to load Service");
+                } catch (Exception e) {
+                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
+                            "load objectModelService",
+                            e);
+                } finally {
+                    monitor.done();
+                }
+                return status;
+            }
+        };
+        JobScheduler.scheduleInitJob(job);
     }
 
     private void checkPKCS11Support(Preferences prefs) {

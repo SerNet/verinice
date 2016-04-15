@@ -40,12 +40,17 @@ public class HUIObjectModelService implements IObjectModelService {
     private static final Logger LOG = Logger.getLogger(HUIObjectModelService.class);
     private HUITypeFactory huiTypeFactory;
 
-    private Set<String> allTypeIds;
+    private Map<String, Set<String>> allRelationPartners = null;
+    private Map<String, Set<String>> allPossibleProperties = null;
+    private Map<String, String> allLabels = null;
+    private Map<String, String> allRelationLabels = null;
 
-    private Map<String, Set<String>> possibleChildren;
-    private Map<String, Set<String>> possibleParents;
+    private Set<String> allTypeIds = null;
 
-    public static HUIObjectModelService getInstance() {
+    private Map<String, Set<String>> possibleChildren = null;
+    private Map<String, Set<String>> possibleParents = null;
+
+    public static IObjectModelService getInstance() {
 
         return (HUIObjectModelService) VeriniceContext
                 .get(VeriniceContext.OBJECT_MODEL_SERVICE);
@@ -79,6 +84,12 @@ public class HUIObjectModelService implements IObjectModelService {
     //
     // }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.service.model.IObjectModelService#init()
+     */
+    @Override
     public void init() {
         fillAllTypeIds();
         fillPossibleChildrenMap();
@@ -144,6 +155,9 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     public Set<String> getAllTypeIDs() {
+        if (allTypeIds == null) {
+            fillAllTypeIds();
+        }
         return allTypeIds;
     }
 
@@ -352,6 +366,104 @@ public class HUIObjectModelService implements IObjectModelService {
             possibleParents.put(typeIChild, possibleParentsSet);
 
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.model.IObjectModelService#getAllPossibleChildren(
+     * )
+     */
+    @Override
+    public Map<String, Set<String>> getAllPossibleChildren() {
+        return possibleChildren;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.service.model.IObjectModelService#getAllPossibleParents()
+     */
+    @Override
+    public Map<String, Set<String>> getAllPossibleParents() {
+        return possibleParents;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.service.model.IObjectModelService#loadAll()
+     */
+    @Override
+    public ObjectModelContainer loadAll() {
+        ObjectModelContainer container = new ObjectModelContainer();
+
+        container.setAllLabels(getAllLabels());
+        container.setAllPossibleProperties(getAllPossibleProperties());
+        container.setAllRelationLabels(getAllRelationLabels());
+        container.setAllRelationPartners(getAllRelationPartners());
+        container.setAllTypeIds(getAllTypeIDs());
+        container.setPossibleChildren(getAllPossibleChildren());
+        container.setPossibleParents(getAllPossibleParents());
+
+        return container;
+    }
+
+    private Map<String, Set<String>> getAllRelationPartners() {
+        if (allRelationPartners == null) {
+            allRelationPartners = new HashMap<>();
+            for (String id : getAllTypeIDs()) {
+                allRelationPartners.put(id, getPossibleRelationPartners(id));
+            }
+        }
+        return allRelationPartners;
+    }
+
+    private Map<String, String> getAllRelationLabels() {
+
+        if(allRelationLabels == null){
+            allRelationLabels = new HashMap<>();
+            Set<HuiRelation> allRelationIDs = new HashSet<>();
+            for(String typeId : getAllTypeIDs()){
+                
+                allRelationIDs.addAll(huiTypeFactory.getPossibleRelationsFrom(typeId));
+                
+            }
+            for (HuiRelation relation : allRelationIDs) {
+                allRelationLabels.put(relation.getId(), getRelationLabel(relation.getId()));
+
+            }
+            
+        }
+        return allRelationLabels;
+    }
+
+    private Map<String, Set<String>> getAllPossibleProperties() {
+
+        if (allPossibleProperties == null) {
+            allPossibleProperties = new HashMap<>();
+            for (String typeId : getAllTypeIDs()) {
+                allPossibleProperties.put(typeId, getPossibleProperties(typeId));
+            }
+        }
+        return allPossibleProperties;
+    }
+
+    private Map<String, String> getAllLabels() {
+        if (allLabels == null) {
+            allLabels = new HashMap<>();
+            for (String typeId : getAllTypeIDs()) {
+                
+                allLabels.put(typeId, getLabel(typeId));
+                for (String propertyId : getPossibleProperties(typeId)) {
+                    allLabels.put(propertyId, getLabel(propertyId));
+                }
+
+            }
+        }
+        return allLabels;
     }
 
 }
