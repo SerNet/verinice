@@ -49,6 +49,5 @@
         </property>
     </bean>
 
-    <bean id="veriniceAccessManagerPostProcessor" class="sernet.gs.server.security.VeriniceAccessDecisionManagerPostProcessor" />
 
 </beans>

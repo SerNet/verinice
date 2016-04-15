@@ -21,9 +21,12 @@ This variant:
 
 -->
 
-	<security:global-method-security access-decision-manager-ref="accessDecisionManager" />
-
 	<!-- BEGIN Server settings ========================================================================= -->
+
+
+
+	<security:global-method-security access-decision-manager-ref="accessDecisionManager" />
+	 <bean id="veriniceAccessManagerPostProcessor" class="sernet.gs.server.security.VeriniceAccessDecisionManagerPostProcessor" />
 
 	<bean id="serverInitializer" class="sernet.gs.service.ServerInitializer" init-method="initialize">
 		<property name="workObjects" ref="workObjects" />
