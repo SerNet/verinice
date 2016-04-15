@@ -22,11 +22,13 @@ import org.eclipse.osgi.util.NLS;
 public class Messages extends NLS{
 
     private static final String BUNDLE_NAME = "sernet.verinice.rcp.linktable.composite.messages"; //$NON-NLS-1$
-    
 
     public static String MultiSelectionControl_0;
     public static String MultiSelectionControl_1;
     public static String MultiSelectionControl_2;
+    public static String MultiSelectionControl_3;
+    public static String MultiSelectionControl_4;
+    public static String MultiSelectionControl_5;
     public static String MultiSelectionDialog_0;
     public static String MultiSelectionList_0;
     public static String VeriniceLinkTableOperationType_00;
@@ -42,6 +44,8 @@ public class Messages extends NLS{
     public static String VeriniceLinkTableColumn_0;
     public static String VeriniceLinkTableComposite_0;
     public static String VeriniceLinkTableComposite_1;
+    public static String VeriniceLinkTableComposite_2;
+    public static String VeriniceLinkTableComposite_3;
 
     
     static {

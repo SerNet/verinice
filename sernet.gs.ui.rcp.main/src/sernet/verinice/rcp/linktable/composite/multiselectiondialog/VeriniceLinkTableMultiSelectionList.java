@@ -36,33 +36,19 @@ import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
  */
 public class VeriniceLinkTableMultiSelectionList {
 
-    private VeriniceLinkTableMultiSelectionDialog parent;
-
-    private Composite list;
-
-    private Group group;
-
-    private Map<String, Button> checkboxes = new HashMap<>();
-
-    private Set<String> options;
-
-    private boolean contextMenuPresent = false;
-
-    private Button allRelations;
-
-    private SelectionListener allRelationIDsListener;
-
     private static final Logger LOG = Logger.getLogger(VeriniceLinkTableMultiSelectionList.class);
+
+    private VeriniceLinkTableMultiSelectionDialog parent;
+    private Composite list;
+    private Group group;
+    private Map<String, Button> checkboxes = new HashMap<>();
+    private Set<String> options;
+    private Button allRelations;
 
     public VeriniceLinkTableMultiSelectionList(VeriniceLinkTableMultiSelectionDialog parent) {
         this.parent = parent;
         create();
     }
-
-    public boolean isContextMenuPresent() {
-        return contextMenuPresent;
-    }
-
 
     public void refresh() {
         list.getParent().dispose();
@@ -101,13 +87,9 @@ public class VeriniceLinkTableMultiSelectionList {
         boolean useAllRelationIds = parent.getLTRMultiSelectionControl().useAllRelationIds();
         allRelations = new Button(parent.getDialogShell(), SWT.CHECK | SWT.LEFT);
         allRelations.setText(Messages.MultiSelectionControl_2);
-        allRelationIDsListener = new SelectionListener() {
+        SelectionListener allRelationIDsListener = new SelectionListener() {
 
             public void widgetSelected(SelectionEvent event) {
-                widgetSelected();
-            }
-
-            public void widgetSelected() {
 
                 LOG.debug(allRelations.getText() + " selected: " + allRelations.getSelection());
                 parent.getLTRMultiSelectionControl()
@@ -120,7 +102,7 @@ public class VeriniceLinkTableMultiSelectionList {
             }
 
             public void widgetDefaultSelected(SelectionEvent event) {
-                widgetSelected();
+                widgetSelected(event);
             }
         };
         allRelations.addSelectionListener(allRelationIDsListener);

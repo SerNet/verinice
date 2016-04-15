@@ -40,8 +40,6 @@ public class VeriniceLinkTableMultiSelectionControl {
 	
 	private Composite parent;
 	private Text text;
-    private Label label;
-    private boolean editable = true;
     private VeriniceLinkTableMultiSelectionDialog dialog;
     private VeriniceLinkTableComposite ltrParent;
     private Set<String> selectedItems = new HashSet<>();
@@ -60,9 +58,9 @@ public class VeriniceLinkTableMultiSelectionControl {
     }
 
     private void create() {
-		label = new Label(parent, SWT.NULL);
+        Label label = new Label(parent, SWT.NULL);
 
-        label.setText("Relations");
+        label.setText(Messages.MultiSelectionControl_5);
 		
         Composite container = new Composite(parent, SWT.NULL);
         GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(container);
@@ -83,8 +81,9 @@ public class VeriniceLinkTableMultiSelectionControl {
 		
 		Button editBtn = new Button(container, SWT.PUSH);
         editBtn.setText(Messages.MultiSelectionControl_0);
-        editBtn.setEnabled(editable);
+        editBtn.setEnabled(true);
 		editBtn.addSelectionListener(new SelectionListener() {
+
 			public void widgetSelected(SelectionEvent arg0) {
 				showSelectionDialog();
 			}
@@ -100,55 +99,20 @@ public class VeriniceLinkTableMultiSelectionControl {
 	public void writeToTextField() {
 
         if (useAllRelations) {
-
-            text.setText("Use all relations");
+            text.setText(Messages.MultiSelectionControl_3);
         } else {
-            text.setText("Use selected relations");
+            text.setText(Messages.MultiSelectionControl_4);
 
         }
-
-        // writeOptionsToTextField();
 	}
 
-    // /**
-    // * Writes the names of all selected options in the text field.
-    // *
-    // * @param propertyValue
-    // * @param b
-    // * @throws AssertException
-    // */
-    // private void writeOptionsToTextField() {
-    // StringBuilder names = new StringBuilder("");
-    // if (dialog != null) {
-    //
-    // if (useAllRelations) {
-    // //
-    // text.setText(dialog.getLTRMultiSelectionList().getAllRelationsButton().getText());
-    // return;
-    // }
-    //
-    // for (String id : getSelectedRelationIDs()) {
-    //
-    // String optionName = ltrParent.getContentService().getLabel(id);
-    // if (names.length() == 0) {
-    // names.append(optionName);
-    // } else {
-    // names.append(" / ");
-    // names.append(optionName);
-    // }
-    // }
-    // }
-    // text.setText(names.toString());
-    //
-    // }
-	
     public void showSelectionDialog() {
 		Display display = Display.getDefault();
         Shell shell = new Shell(display);
         if (dialog == null) {
             dialog = new VeriniceLinkTableMultiSelectionDialog(shell, this, SWT.NULL);
         }
-            dialog.open();
+        dialog.open();
 	}
 
 	public void setFocus() {

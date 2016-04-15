@@ -34,6 +34,8 @@ import sernet.verinice.rcp.linktable.composite.combo.VeriniceLinkTableElementCom
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
+ * Container for all widgets needed for a vlt-table column
+ * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class VeriniceLinkTableColumn {
@@ -47,45 +49,41 @@ public class VeriniceLinkTableColumn {
     private String name;
     private Button deleteButton;
     private Composite column;
-    private VeriniceLinkTableElementComboViewer firstCombo;
-    private IObjectModelService contentService;
-    private Composite dragAndDropArea;
+    
     private Button upButton;
     private Button downButton;
 
-    public VeriniceLinkTableColumn(IObjectModelService contentService, VeriniceLinkTableColumn copy, int number) {
+    private IObjectModelService contentService;
+    private VeriniceLinkTableElementComboViewer firstCombo;
+
+    public VeriniceLinkTableColumn(VeriniceLinkTableColumn copy, int number) {
         this.ltrParent = copy.ltrParent;
         this.style = copy.style;
         this.colNumber = number;
-        this.contentService = contentService;
+        this.contentService = copy.getContentService();
         createColumn();
         firstCombo = (VeriniceLinkTableElementComboViewer) copy.getFirstCombo().copy(null, column, columName);
         refresh();
     }
 
-    public VeriniceLinkTableColumn(IObjectModelService contentService, VeriniceLinkTableComposite parent, int style,
+    public VeriniceLinkTableColumn(VeriniceLinkTableComposite parent, int style,
             int number) {
+
         this.ltrParent = parent;
         this.style = style;
         this.colNumber = number;
-        this.contentService = contentService;
+        this.contentService = parent.getContentService();
         createColumn();
         addFirstCombo();
     }
 
-    /**
-     * @param path
-     * @param contentService2
-     * @param ltrComposite
-     * @param style2
-     * @param i
-     */
-    public VeriniceLinkTableColumn(List<String> path, IObjectModelService contentService,
-            VeriniceLinkTableComposite parent, int style, int number) {
+    public VeriniceLinkTableColumn(List<String> path,
+            VeriniceLinkTableComposite parent, int number) {
+
         this.ltrParent = parent;
-        this.style = style;
+        this.style = parent.getStyle();
         this.colNumber = number;
-        this.contentService = contentService;
+        this.contentService = parent.getContentService();
 
         createColumn();
 
@@ -116,7 +114,7 @@ public class VeriniceLinkTableColumn {
         layoutColumn.marginWidth = 0;
         column.setLayout(layoutColumn);
 
-        dragAndDropArea = addDragAndDropButtons();
+        Composite dragAndDropArea = addDragAndDropButtons();
         FormData dragAndDropAreaData = new FormData();
         dragAndDropAreaData.left = new FormAttachment(0);
         dragAndDropArea.setLayoutData(dragAndDropAreaData);
@@ -126,6 +124,7 @@ public class VeriniceLinkTableColumn {
         FormData deleteButtonData = new FormData();
         deleteButtonData.left = new FormAttachment(dragAndDropArea, DEFAULT_GAP);
         deleteButtonData.top = new FormAttachment(dragAndDropArea, 0, SWT.CENTER);
+        deleteButtonData.height = 45; // height of buttons * 2 + margin
         deleteButton.setLayoutData(deleteButtonData);
 
         columName = new Label(column, style);
@@ -141,14 +140,10 @@ public class VeriniceLinkTableColumn {
     private Composite addDragAndDropButtons() {
 
         Composite ddComposite = new Composite(column, style);
-        // FormLayout layoutColumn = new FormLayout();
-        // layoutColumn.marginHeight = 0;
-        // layoutColumn.marginWidth = 0;
-        // column.setLayout(layoutColumn);
 
         upButton = new Button(ddComposite, SWT.ARROW | SWT.UP);
         upButton.setText("+");
-        GridDataFactory.swtDefaults().hint(30, 20).applyTo(upButton);
+        GridDataFactory.swtDefaults().span(0, 0).hint(30, 20).applyTo(upButton);
         upButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
@@ -163,7 +158,7 @@ public class VeriniceLinkTableColumn {
 
         downButton = new Button(ddComposite, SWT.ARROW | SWT.DOWN);
         downButton.setText("-");
-        GridDataFactory.swtDefaults().hint(30, 20).applyTo(downButton);
+        GridDataFactory.swtDefaults().span(0, 0).hint(30, 20).applyTo(downButton);
         downButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent event) {
@@ -174,7 +169,7 @@ public class VeriniceLinkTableColumn {
 
             }
         });
-        GridLayoutFactory.swtDefaults().generateLayout(ddComposite);
+        GridLayoutFactory.swtDefaults().margins(0, 0).generateLayout(ddComposite);
         return ddComposite;
 
 

@@ -40,6 +40,9 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
+ * Composite to edit or create ltr-columns.
+ * 
+ * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class VeriniceLinkTableComposite extends Composite {
@@ -47,44 +50,27 @@ public class VeriniceLinkTableComposite extends Composite {
     private static final Logger LOG = Logger.getLogger(VeriniceLinkTableComposite.class);
 
     private List<VeriniceLinkTableFieldListener> listeners = new ArrayList<>();
-    private int style;
     private static final Point DEFAULT_MARGIN = new Point(5, 5);
-    private Composite rootContainer;
     private Composite columnsContainer;
     private Composite body;
     private Composite bodyBody;
-    private boolean useAllScopes;
-    private ArrayList<VeriniceLinkTableColumn> columns = new ArrayList<>();
-    private FormLayout layout;
     private ScrolledComposite c2;
-    private Button addEmptyColumn;
-    private Button cloneColumn;
-    private int numCols = 0;
-    private IObjectModelService contentService;
     private Composite buttons;
-    private VeriniceLinkTable ltrContent = null;
     private VeriniceLinkTableMultiSelectionControl multiControl;
-    private Button[] scopeRadios;
 
-    public VeriniceLinkTableComposite(IObjectModelService contentService, Composite parent,
-            int style) {
-        this(contentService, parent, style, SWT.FULL_SELECTION);
-    }
+    private int numCols = 0;
+    private ArrayList<VeriniceLinkTableColumn> columns = new ArrayList<>();
 
-    public VeriniceLinkTableComposite(IObjectModelService contentService, Composite parent,
-            int style,
-            int labelStyle) {
-        this(null, contentService, parent, style);
-    }
+    private IObjectModelService contentService;
+    private boolean useAllScopes;
+    private VeriniceLinkTable ltrContent = null;
 
     public VeriniceLinkTableComposite(VeriniceLinkTable ltrContent,
             IObjectModelService contentService,
             Composite parent, int style) {
 
         super(parent, style);
-        // TODO rmotza maybe move?
         this.contentService = contentService;
-        this.style = style;
         this.ltrContent = ltrContent;
         createContent();
 
@@ -92,27 +78,27 @@ public class VeriniceLinkTableComposite extends Composite {
 
     private void createContent() {
 
-        layout = new FormLayout();
+        FormLayout layout = new FormLayout();
         layout.marginHeight = DEFAULT_MARGIN.y;
         layout.marginWidth = DEFAULT_MARGIN.x;
 
-        rootContainer = new Composite(this, style);
+        Composite rootContainer = new Composite(this, getStyle());
 
-        setHead();
+        setHead(rootContainer);
 
-        setBody();
+        setBody(rootContainer);
 
         rootContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN).generateLayout(rootContainer);
 
     }
 
-    private void setHead() {
+    private void setHead(Composite parent) {
 
-        Composite head = new Composite(rootContainer, style);
+        Composite head = new Composite(parent, getStyle());
 
-        Composite scopeButtons = new Composite(head, style);
-        scopeRadios = new Button[2];
+        Composite scopeButtons = new Composite(head, getStyle());
+        final Button[] scopeRadios = new Button[2];
         scopeRadios[0] = new Button(scopeButtons, SWT.RADIO);
         scopeRadios[0].setSelection(true);
         scopeRadios[0].setText(Messages.VeriniceLinkTableComposite_0);
@@ -139,7 +125,7 @@ public class VeriniceLinkTableComposite extends Composite {
 
         GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN).numColumns(1)
                 .generateLayout(scopeButtons);
-        Composite multiControlContainer = new Composite(head, style);
+        Composite multiControlContainer = new Composite(head, getStyle());
         multiControl = new VeriniceLinkTableMultiSelectionControl(multiControlContainer,
                 this);
 
@@ -150,19 +136,18 @@ public class VeriniceLinkTableComposite extends Composite {
 
     }
 
-    private void setBody() {
-        c2 = new ScrolledComposite(rootContainer,
-                SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+    private void setBody(Composite parent) {
+        c2 = new ScrolledComposite(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 
-        body = new Composite(c2, style);
+        body = new Composite(c2, getStyle());
         c2.setContent(body);
         c2.setExpandHorizontal(true);
         c2.setExpandVertical(true);
         c2.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        bodyBody = new Composite(body, style);
+        bodyBody = new Composite(body, getStyle());
 
-        columnsContainer = new Composite(bodyBody, style);
+        columnsContainer = new Composite(bodyBody, getStyle());
         GridLayoutFactory.swtDefaults().generateLayout(columnsContainer);
         addButtons(bodyBody);
         if (ltrContent != null) {
@@ -193,9 +178,9 @@ public class VeriniceLinkTableComposite extends Composite {
         VeriniceLinkTableColumn column;
         boolean isNewColumn = true;
         if (path == null) {
-            column = new VeriniceLinkTableColumn(contentService, this, style, ++numCols);
+            column = new VeriniceLinkTableColumn(this, getStyle(), ++numCols);
         } else {
-            column = new VeriniceLinkTableColumn(path, contentService, this, style, ++numCols);
+            column = new VeriniceLinkTableColumn(path, this, ++numCols);
             isNewColumn = false;
 
         }
@@ -300,10 +285,10 @@ public class VeriniceLinkTableComposite extends Composite {
 
     private void addButtons(Composite parent) {
 
-        buttons = new Composite(parent, style);
+        buttons = new Composite(parent, getStyle());
         GridDataFactory.swtDefaults().applyTo(buttons);
 
-        addEmptyColumn = new Button(buttons, SWT.PUSH);
+        Button addEmptyColumn = new Button(buttons, SWT.PUSH);
         addEmptyColumn.setText("Add Empty Column");
 
         addEmptyColumn.addSelectionListener(new SelectionAdapter() {
@@ -311,7 +296,7 @@ public class VeriniceLinkTableComposite extends Composite {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Adding empty column");
+                    LOG.debug(Messages.VeriniceLinkTableComposite_2);
                 }
                 addColumn(null);
                 refresh(true);
@@ -320,8 +305,8 @@ public class VeriniceLinkTableComposite extends Composite {
 
         });
 
-        cloneColumn = new Button(buttons, SWT.PUSH);
-        cloneColumn.setText("Duplicate Last Column");
+        Button cloneColumn = new Button(buttons, SWT.PUSH);
+        cloneColumn.setText(Messages.VeriniceLinkTableComposite_3);
 
         cloneColumn.addSelectionListener(new SelectionAdapter() {
 
@@ -332,7 +317,7 @@ public class VeriniceLinkTableComposite extends Composite {
                 }
                 VeriniceLinkTableColumn lastColumn = columns.get(columns.size() - 1);
                 VeriniceLinkTableColumn duplicatedColumn = new VeriniceLinkTableColumn(
-                        contentService, lastColumn, ++numCols);
+                        lastColumn, ++numCols);
                 columns.add(duplicatedColumn);
                 addDeleteButtonListener(duplicatedColumn);
                 handleMoreThanOneColumn(false);
