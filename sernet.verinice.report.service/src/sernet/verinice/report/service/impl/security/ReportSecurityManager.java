@@ -500,14 +500,10 @@ public class ReportSecurityManager extends SecurityManager {
     private void handleFilePermission(Permission perm) throws ReportSecurityException{
         FilePermission filePermission = (FilePermission)perm;
         
-        if(perm.getName().contains("verinice-client.log")){
-            "".hashCode();
-        }
-
         if(filePermission.getActions().contains("delete") || filePermission.getActions().contains("write")){
             if(perm.getName().startsWith(reportSecurityContext.getLogFileLocation())){
                 return;
-            } else if (reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath().equals(perm.getName())) {
+            } else if (reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath().equals(perm.getName())) {// this wont work on windows, needs to be debuged
                 return;
             } else if(("file:" + filePermission.getName()).equals(System.getProperty("osgi.instance.area") + "log")){
                 return;
@@ -522,6 +518,8 @@ public class ReportSecurityManager extends SecurityManager {
             } else if((filePermission.getName()).startsWith(System.getProperty("user.home") + File.separator + ".java" + File.separator + "fonts")) {
                 return;
             } else {
+                LOG.error("FilePermission:\t" + perm.getName() + " with actions:\t" + perm.getActions());
+                LOG.error("reportOptionsOutputfileNameAbsolutPath:\t" + reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath());
                 throwSecurityException(perm); 
             }
         }
@@ -570,6 +568,6 @@ public class ReportSecurityManager extends SecurityManager {
     }
     
     protected String getReportOutputName(){
-        return this.reportSecurityContext.getOutputName();
+        return this.reportSecurityContext.getTemplateMetaData().getOutputname();
     }
 }

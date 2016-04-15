@@ -155,7 +155,7 @@ public class GenericReportType implements IReportType {
         }
 
         try{
-            ReportSecurityContext reportSecurityContext = new ReportSecurityContext(options, rptURL, brs.getLogfile(), metadata.getOutputname());
+            ReportSecurityContext reportSecurityContext = new ReportSecurityContext(options, rptURL, brs.getLogfile(), metadata);
             ReportSecurityManager secureReportExecutionManager = new ReportSecurityManager(reportSecurityContext);
             IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
             task = brs.prepareTaskForRendering(task, options);

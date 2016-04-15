@@ -121,7 +121,7 @@ public class UserReportType implements IReportType {
 
         if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
         {
-            ReportSecurityContext reportSecurityContext = new ReportSecurityContext(reportOptions, reportDesign, brs.getLogfile(), "userDefinedReport");
+            ReportSecurityContext reportSecurityContext = new ReportSecurityContext(reportOptions, reportDesign, brs.getLogfile(), null);
             ReportSecurityManager secureReportExecutionManager = new ReportSecurityManager(reportSecurityContext);
             IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
             task = brs.prepareTaskForRendering(task, reportOptions);

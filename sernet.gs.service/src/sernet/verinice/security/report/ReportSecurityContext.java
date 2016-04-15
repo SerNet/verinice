@@ -22,6 +22,7 @@ package sernet.verinice.security.report;
 import java.net.URL;
 
 import sernet.verinice.interfaces.report.IReportOptions;
+import sernet.verinice.model.report.ReportTemplateMetaData;
 
 /**
  * wrap informations needed for executing / generating a report 
@@ -33,18 +34,18 @@ public class ReportSecurityContext {
     private IReportOptions reportOptions;
     private URL rptDesignUrl;
     private String logFileLocation;
-    private String reportOutputName;
+    private ReportTemplateMetaData metaData;
 
     /**
      * @param reportOptions
      * @param rptDesignUrl
      * @param logFileLocation
      */
-    public ReportSecurityContext(IReportOptions reportOptions, URL rptDesignUrl, String logFileLocation, String reportName) {
+    public ReportSecurityContext(IReportOptions reportOptions, URL rptDesignUrl, String logFileLocation, ReportTemplateMetaData reportMetaData) {
         this.reportOptions = reportOptions;
         this.rptDesignUrl = rptDesignUrl;
         this.logFileLocation = logFileLocation;
-        this.reportOutputName = reportName;
+        this.metaData = reportMetaData;
     }
     public IReportOptions getReportOptions() {
         return reportOptions;
@@ -56,8 +57,8 @@ public class ReportSecurityContext {
         return logFileLocation;
     }
     
-    public String getOutputName(){
-        return reportOutputName;
+    public ReportTemplateMetaData getTemplateMetaData(){
+        return this.metaData;
     }
     
     
