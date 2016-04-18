@@ -19,13 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable;
 
-import org.apache.log4j.Logger;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
@@ -37,42 +32,17 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
  */
 public class OpenLinkTableHandler extends LinkTableHandler {
 
-    private static final Logger LOG = Logger.getLogger(OpenLinkTableHandler.class);
-   
     @Override
     protected VeriniceLinkTable createLinkTable() {
-        final String filePath = createFilePath();
-        VeriniceLinkTable veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
-        LinkTableFileRegistry.add(veriniceLinkTable.getId(),filePath);
+        final String filePath = VeriniceLinkTableUtil.createFilePath(
+                Display.getCurrent().getActiveShell(), "Load verinice link table (.vlt) file",
+                PreferenceConstants.DEFAULT_FOLDER_VLT,
+                VeriniceLinkTableUtil.getVltExtensions());
+        VeriniceLinkTable veriniceLinkTable = null;
+        if (filePath != null) {
+            veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
+            LinkTableFileRegistry.add(veriniceLinkTable.getId(), filePath);
+        }
         return veriniceLinkTable;
-    }
-    
-    private String createFilePath() {
-        FileDialog dialog = new FileDialog(Display.getCurrent().getActiveShell(), SWT.OPEN);
-        dialog.setText("Load verinice link table (.vlt) file");
-        try {
-            dialog.setFilterPath(getDirectory());
-        } catch (Exception e1) {
-            LOG.debug("Error with file path: " + getDirectory(), e1);
-            dialog.setFileName(""); //$NON-NLS-1$
-        }
-        dialog.setFilterExtensions(new String[] {"*" + VeriniceLinkTable.VLT}); //$NON-NLS-1$
-        dialog.setFilterNames(new String[] {"verinice link table (.vlt)"});
-        dialog.setFilterIndex(0);
-        String filePath = dialog.open();
-        return filePath;
-    }
-    
-
-    private String getDirectory() {
-        IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
-        String dir = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT);
-        if(dir==null || dir.isEmpty()) {
-            dir = System.getProperty("user.home");
-        }
-        if (!dir.endsWith(System.getProperty("file.separator"))) {
-            dir = dir + System.getProperty("file.separator");
-        }
-        return dir;
     }
 }

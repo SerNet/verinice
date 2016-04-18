@@ -61,7 +61,6 @@ public class HUIObjectModelLoader implements IObjectModelService {
 
         if (oneFieldUninitialized()) {
 
-            LOG.info("init HUITypeFactory");
             ObjectModelContainer object = loadAll();
             allTypeIds = object.getAllTypeIds();
             possibleChildren = object.getPossibleChildren();

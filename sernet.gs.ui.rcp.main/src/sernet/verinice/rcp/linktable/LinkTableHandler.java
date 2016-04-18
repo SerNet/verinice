@@ -22,27 +22,15 @@ package sernet.verinice.rcp.linktable;
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.jface.dialogs.ErrorDialog;
+import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.handlers.HandlerUtil;
+import org.eclipse.ui.progress.UIJob;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.action.Messages;
 import sernet.verinice.rcp.RightsEnabledHandler;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
-import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 
 /**
  *
@@ -71,8 +59,41 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         if(checkRights()){
-            VeriniceLinkTable veriniceLinkTable = createLinkTable();
-            EditorFactory.getInstance().updateAndOpenObject(veriniceLinkTable);
+            final VeriniceLinkTable veriniceLinkTable = createLinkTable();
+            if (veriniceLinkTable != null) {
+
+                UIJob job = new UIJob("open vlt file") {
+
+                    @Override
+                    public IStatus runInUIThread(IProgressMonitor monitor) {
+                        IStatus status = Status.OK_STATUS;
+
+                        try {
+                            monitor.beginTask("open vlt file",
+                                    IProgressMonitor.UNKNOWN);
+                            EditorFactory.getInstance().updateAndOpenObject(veriniceLinkTable);
+                        } catch (Exception e) {
+                            LOG.error("Error while running job " + this.getName(), e); //$NON-NLS-1$
+                            status = new Status(Status.ERROR, "sernet.verinice.samt.rcp", //$NON-NLS-1$
+                                    "Error while open vlt-file", e);
+                        } finally {
+                            monitor.done();
+                            this.done(status);
+                        }
+                        return status;
+                    }
+                };
+                job.schedule();
+                // VeriniceWorkspaceJob("Open vlt file",
+                // "error while opening vlt-file") {
+                //
+                // @Override
+                // protected void doRunInWorkspace() {
+                // Activator.inheritVeriniceContextState();
+                // }
+                // };
+
+            }
         } else {
             setBaseEnabled(false);
             MessageDialog.openError(HandlerUtil.getActiveShell(event), "Error", "You don't have the permission to perform this action.");

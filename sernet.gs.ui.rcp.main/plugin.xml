@@ -319,6 +319,12 @@
       </command>
 	    <command
             categoryId="sernet.gs.ui.rcp.commands"
+            description="Export vlt file to csv"
+            id="sernet.verinice.rcp.linktable.ExportLinkTableHandler"
+            name="Export query">
+      </command>
+	    <command
+            categoryId="sernet.gs.ui.rcp.commands"
             description="Create a link table and open it in an editor"
             id="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
             name="Create link table">
@@ -1231,7 +1237,30 @@
                label="%command.label.duedate"
                tooltip="%Assign a person for this task"/>  
         </menuContribution>
-      <menuContribution locationURI="menu:org.eclipse.ui.main.menu">
+        
+        <menuContribution
+		  locationURI="menu:file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap">
+			<menu id="test"
+			    label="Query Builder ...">
+			    <command commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+                  label="Create Query..."
+                  style="push"
+                  tooltip="Create a new Query">
+            	</command>
+            	<command commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
+                  label="Open Query..."
+                  style="push"
+                  tooltip="Open a query">
+            	</command>
+            	<command commandId="sernet.verinice.rcp.linktable.ExportLinkTableHandler"
+                  label="Run Query (CSV)..."
+                  style="push"
+                  tooltip="Export Data to CSV via Query Builder...">
+            	</command>
+			</menu>
+		</menuContribution>
+		
+		<!--<menuContribution locationURI="menu:org.eclipse.ui.main.menu">
 				 <menu id="file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap" label="%menu.file">
             <command commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
                   label="Create query..."
@@ -1246,7 +1275,54 @@
                   tooltip="Open a query">
             </command>
          </menu>
-		 </menuContribution>
+		 </menuContribution>-->
+        
+       <!-- <menuContribution locationURI="menu:org.eclipse.ui.main.menu">
+	         <menu
+	               id="file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap"
+	               label="New">
+	            <command
+	                  commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+	                  label="Connection Profile"
+	                  style="push">
+	            </command>
+	         </menu>
+      	</menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="popup:file?after=sernet.verinice.rcp.linktable.CreateLinkTableHandler">
+         <command
+               commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
+               label="Table"
+               style="push">
+         </command>
+      </menuContribution>
+        
+        
+	<menuContribution locationURI="menu:org.eclipse.ui.main.menu">
+		<menu label="Query Builder" 
+		
+               id="sernet.verinice.samt.rcp.menu.queryBuilder?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap"
+               path="file/vn_menu_file">
+            <groupMarker
+                  name="queryBuilder">
+            </groupMarker>
+        </menu>
+            <command commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+                  label="Create Query..."
+                  tooltip="Create a new query"
+               menubarPath="file/sernet.verinice.samt.rcp.menu.queryBuilder/queryBuilder"
+               style="push">
+            </command>
+        </menu>
+        <menu id="file?after=sernet.verinice.rcp.linktable.CreateLinkTableHandler" label="Query Builder">
+            <command commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
+                  label="Open Query..."
+                  style="push"
+               menubarPath="file/sernet.verinice.samt.rcp.menu1/queryBuilder"
+                  tooltip="Open a Query">
+            </command>
+	</menuContribution>-->
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -1891,6 +1967,8 @@
       </handler>
       <handler class="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
           commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler" />
+      <handler class="sernet.verinice.rcp.linktable.ExportLinkTableHandler"
+          commandId="sernet.verinice.rcp.linktable.ExportLinkTableHandler" />
       <handler class="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
           commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler" />
    </extension>

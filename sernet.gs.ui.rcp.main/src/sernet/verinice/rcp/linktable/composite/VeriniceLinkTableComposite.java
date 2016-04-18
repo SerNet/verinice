@@ -150,7 +150,7 @@ public class VeriniceLinkTableComposite extends Composite {
         columnsContainer = new Composite(bodyBody, getStyle());
         GridLayoutFactory.swtDefaults().generateLayout(columnsContainer);
         addButtons(bodyBody);
-        if (ltrContent != null) {
+        if (ltrContent.getColumnPaths() != null && !ltrContent.getColumnPaths().isEmpty()) {
             addColumnsWithContent();
         } else {
             addColumn(null);

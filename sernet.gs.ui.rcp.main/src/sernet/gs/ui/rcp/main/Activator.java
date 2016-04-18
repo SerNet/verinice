@@ -55,6 +55,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.*;
+import sernet.verinice.service.model.IObjectModelService;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -285,8 +286,24 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 IStatus status = Status.OK_STATUS;
                 try {
                     monitor.beginTask("load objectModelService", IProgressMonitor.UNKNOWN);
+                    IObjectModelService objectModelService = null;
+                    while (objectModelService == null) {
+                        try {
+                            objectModelService = ServiceFactory.lookupObjectModelService();
+                        } catch (IllegalStateException e) {
+                            if (LOG.isDebugEnabled()) {
+                                LOG.debug(
+                                        "ObjectModelService not yet initialized, objectmodelService = "
+                                                + objectModelService,
+                                        e);
+                            }
+                            inheritVeriniceContextState();
+                        }
+
+                    }
+
                     long time = System.currentTimeMillis();
-                    ServiceFactory.lookupObjectModelService().init();
+                    objectModelService.init();
                     LOG.info("took " + (System.currentTimeMillis() - time)
                             + " msec to load Service");
                 } catch (Exception e) {

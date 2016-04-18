@@ -28,11 +28,11 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.EditorPart;
 
@@ -96,8 +96,8 @@ public class VeriniceLinkTableEditor extends EditorPart {
         Composite container = new Composite(parent, SWT.NONE);
 
         Button exportButton = new Button(container, SWT.PUSH);
-        exportButton.setText("Export CSV");
-        exportButton.setToolTipText("Export this link table to a CSV file");
+        exportButton.setText("Run Query (CSV)...");
+        exportButton.setToolTipText("Export data after this link table query to a CSV file");
         GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(exportButton);
         exportButton.addSelectionListener(new SelectionListener() {
 
