@@ -311,20 +311,6 @@ This variant:
         <property name="cnaLinkDao" ref="cnaLinkDao" />
     </bean>
     
-    <!-- A service to handle user accounts and groups -->
-	<bean id="accountService" class="sernet.verinice.service.AccountService">
-	    <property name="accountGroupDao" ref="accountGroupDao" />
-		<property name="configurationDao" ref="configurationDao" />
-    	<property name="commandService" ref="commandService" />
-    	<property name="configurationService" ref="configurationService" />
-    	<property name="rightsServerHandler" ref="rightsServerHandler" />
-	    <property name="permissionDao" ref="permissionDAO" />
-
-		<security:intercept-methods>
-            <security:protect method="sernet.verinice.service.AccountService.findAccounts" access="ACTION_ID_ACCOUNTSETTINGS" />
-        </security:intercept-methods>
-    </bean>
-    
      <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
      
      <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">

@@ -11,7 +11,7 @@
     http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
 	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
 
-	<bean id="rightsClientService" class="sernet.verinice.service.XmlRightsSecuredService">
+	<bean id="rightsServiceClient" class="sernet.verinice.service.XmlRightsSecuredService">
         <property name="authConfigurationDefault" value="/WEB-INF/verinice-auth-default.xml"/>
 		<property name="authConfiguration" value="/WEB-INF/verinice-auth.xml"/>
 		<property name="authConfigurationSchema" value="/WEB-INF/verinice-auth.xsd"/>
