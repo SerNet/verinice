@@ -139,13 +139,13 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                 }
                 return dropBaustein((CnATreeElement) target, viewer, list.toArray(new Baustein[list.size()]));
             } else if (firstOne instanceof Massnahme && target instanceof BausteinUmsetzung) {
-                ArrayList<Massnahme> list = new ArrayList<Massnahme>(0);
+                ArrayList<Massnahme> list = Lists.newArrayList();
                 for (Object object : items) {
                     if (object instanceof Massnahme) {
                         list.add((Massnahme) object);
                     }
                 }
-                return dropControls((BausteinUmsetzung) target, viewer, list.toArray(new Massnahme[list.size()]));
+                return dropControls((BausteinUmsetzung) target, viewer, list);
             } else if (firstOne != null && (firstOne instanceof IBSIStrukturElement || firstOne instanceof BausteinUmsetzung || firstOne instanceof IISO27kElement || firstOne instanceof IMassnahmeUmsetzung)) {
                 CnATreeElement element = (CnATreeElement) target;
                 LinkDropper dropper = new LinkDropper();
@@ -346,19 +346,19 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         CnAElementFactory.getLoadedModel().childAdded(target, saveNew);
     }
 
-    private boolean dropControls(final BausteinUmsetzung target, Viewer viewer, final Massnahme[] massnahmen) {
-        if (!CnAElementHome.getInstance().isNewChildAllowed(target)) {
+    private boolean dropControls(final BausteinUmsetzung targetModule, Viewer viewer, final List<Massnahme> massnahmen) {
+        if (!CnAElementHome.getInstance().isNewChildAllowed(targetModule)) {
             return false;
         }
 
         try {
-            Job dropJob = new Job(Messages.getString("BSIModelViewDropListener.3")) { //$NON-NLS-1$
+            Job dropJob = new Job(Messages.getString("BSIModelViewDropListener.6")) { //$NON-NLS-1$
                 @Override
                 protected IStatus run(IProgressMonitor monitor) {
                     Activator.inheritVeriniceContextState();
 
                     try {
-                        addControlsToModule(massnahmen, target);
+                        addControlsToModule(massnahmen, targetModule);
                     } catch (Exception e) {
                         Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
                         return Status.CANCEL_STATUS;
@@ -376,40 +376,45 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         return true;
     }
 
-    private void addControlsToModule(Massnahme[] controlsToDrop, BausteinUmsetzung target) throws CnATreeElementBuildException, CommandException {
+    private void addControlsToModule(List<Massnahme> controlsToDrop, BausteinUmsetzung targetModule) throws CnATreeElementBuildException, CommandException {
         for (Massnahme controlToDrop : controlsToDrop) {
-            if (target.containsControl(controlToDrop.getId())) {
-                GetElementPathCommand pathLoader = new GetElementPathCommand(target.getUuid(), target.getTypeId());
+            if (targetModule.containsControl(controlToDrop.getId())) {
+                GetElementPathCommand pathLoader = new GetElementPathCommand(targetModule.getUuid(), targetModule.getTypeId());
                 String elementPath = ServiceFactory.lookupCommandService().executeCommand(pathLoader).getResult();
-                LOG.error("ElementContainer:\t" + elementPath + "(" + target.getDbId() + ")" + "\twith TypeId:\t" + target.getTypeId() + " contains already a massnahmen with id:\t" + controlToDrop.getId() + "\t" + controlToDrop.getTitel() + " is skipped because of this");
+                LOG.error("ElementContainer:\t" + elementPath + "(" + targetModule.getDbId() + ")" + "\twith TypeId:\t" + targetModule.getTypeId() + " contains already a control with id:\t" + controlToDrop.getId() + "\t" + controlToDrop.getTitel() + " is skipped because of this");
                 continue;
             }
-            addControlToModule(controlToDrop, target);
+            addControlToModule(controlToDrop, targetModule);
         }
     }
 
-    private CnATreeElement addControlToModule(Massnahme controlToDrop, BausteinUmsetzung target) {
-        CnATreeElement control = null;
+    private CnATreeElement addControlToModule(Massnahme controlToDrop, BausteinUmsetzung targetModule) {
         MassnahmenFactory mFactory = new MassnahmenFactory();
-        control = mFactory.createMassnahmenUmsetzung(target, controlToDrop, BSIKatalogInvisibleRoot.getInstance().getLanguage());
-        control.setParentAndScope(target);
-        SaveElement<CnATreeElement> command = null;
-        try {
-            HashSet<Permission> newperms = new HashSet<Permission>();
-            newperms.add(Permission.createPermission(control, getAuthService().getUsername(), true, true));
-            control.setPermissions(newperms);
-            command = new SaveElement<CnATreeElement>(control);
-            command = getCommandService().executeCommand(command);
-            control = command.getElement();
-            control.setParentAndScope(target);
-            target.addChild(control);
-        } catch (CommandException e) {
-            LOG.error("Error while inserting control", e); //$NON-NLS-1$
-            throw new RuntimeException("Error while inserting control", e); //$NON-NLS-1$
-        }
+        CnATreeElement control = mFactory.createMassnahmenUmsetzung(targetModule, controlToDrop, BSIKatalogInvisibleRoot.getInstance().getLanguage());
+        setNewPermissions(control);
+        control = saveElementAndAddToModule(targetModule, control);
         // notifying for the last element is sufficient to update all views:
-        modelUpdater.childAdded(target, control);
+        modelUpdater.childAdded(targetModule, control);
         return control;
+    }
+    private void setNewPermissions(CnATreeElement element) {
+        HashSet<Permission> newperms = new HashSet<Permission>();
+        newperms.add(Permission.createPermission(element, getAuthService().getUsername(), true, true));
+        element.setPermissions(newperms);
+    }
+
+    private CnATreeElement saveElementAndAddToModule(BausteinUmsetzung targetModule, CnATreeElement element) {
+        try {
+            SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(element);
+            command = getCommandService().executeCommand(command);
+            element = command.getElement();
+            element.setParentAndScope(targetModule);
+            targetModule.addChild(element);
+        } catch (CommandException e) {
+            LOG.error("Error while inserting scenario", e); //$NON-NLS-1$
+            throw new RuntimeException("Error while inserting scenario", e); //$NON-NLS-1$
+        }
+        return element;
     }
 
     @Override
