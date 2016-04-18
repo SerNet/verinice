@@ -177,7 +177,7 @@ public class ZIPGSSource implements IGSSource {
             return parseDocument(zf.getInputStream(entry), getVintage().equals(IGSSource.VINTAGE_2009) ? "utf-8" : "iso-8859-1");
 
         } catch (Exception e) {
-            Logger.getLogger(ZIPGSSource.class).warn("Fehler beim Parsen eines Bausteins.");
+            log.error("Fehler beim Parsen eines Bausteins.", e);
             throw new GSServiceException("Fehler beim Parsen eines Bausteins (ZIP).", e);
         }
 

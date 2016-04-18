@@ -154,4 +154,15 @@ public class Baustein implements IGSModel{
 		this.gefaehrdungen = gefaehrdungen;
 	}
 
+    public boolean hasSafequards() {
+        return getMassnahmen() != null && getMassnahmen().size() > 0;
+    }
+
+    public boolean hasThreats() {
+        return getGefaehrdungen() != null && getGefaehrdungen().size() > 0;
+    }
+    
+    public boolean hasSafequardsOrThreats() {
+        return hasSafequards() || hasThreats();
+    }
 }

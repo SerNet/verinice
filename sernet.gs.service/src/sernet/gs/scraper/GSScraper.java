@@ -49,6 +49,7 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
 import sernet.gs.service.GSServiceException;
+import sernet.verinice.model.bsi.BSIModel;
 
 /**
  * Scraper to extract modules and safeguards from BSI's HTML Files using XQuery
@@ -75,6 +76,15 @@ public class GSScraper {
     public static final String TITLE_OF_FIRST_BAUSTEIN_GERMAN = "Sicherheitsmanagement";
     public static final String TITLE_OF_FIRST_BAUSTEIN_ENGLISH = "Security management";
     public static final String FIRST_BAUSTEIN_ID = "B 1.0";
+
+    public static final String CATALOG_MODULE_B00 = "b00"; //$NON-NLS-1$
+    public static final String CATALOG_MODULE_B01 = "b01"; //$NON-NLS-1$
+    public static final String CATALOG_MODULE_B02 = "b02"; //$NON-NLS-1$
+    public static final String CATALOG_MODULE_B03 = "b03"; //$NON-NLS-1$
+    public static final String CATALOG_MODULE_B04 = "b04"; //$NON-NLS-1$
+    public static final String CATALOG_MODULE_B05 = "b05"; //$NON-NLS-1$
+
+    public static final String CATALOG_MODULE_B00000 = "b00000"; //$NON-NLS-1$
 
     public static final String CATALOG_LANGUAGE_ENGLISH = "EN";
     public static final String CATALOG_LANGUAGE_GERMAN = "DE";
@@ -229,7 +239,8 @@ public class GSScraper {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(e.getMessage());
             }
-            if (!kapitel.equals("b00")) {
+            if (!kapitel.equals(CATALOG_MODULE_B00)) {
+                LOG.error("No module for chapter" + kapitel + " found.", e);
                 throw e;
             }
         }
@@ -351,7 +362,8 @@ public class GSScraper {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(e.getMessage());
             }
-            if (!baustein.equals("b00000")) {
+            if (!baustein.equals(CATALOG_MODULE_B00000)) {
+                LOG.error("No safequards for module " + baustein + " found.", e);
                 throw e;
             }
         }

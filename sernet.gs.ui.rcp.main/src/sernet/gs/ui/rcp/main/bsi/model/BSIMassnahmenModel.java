@@ -147,12 +147,12 @@ public class BSIMassnahmenModel {
             mon.beginTask(Messages.BSIMassnahmenModel_3, maxTaskSteps);
             List<Baustein> alleBst = new ArrayList<Baustein>();
 
-            processBausteinLayer(mon, alleBst, "b01", 0);
-            processBausteinLayer(mon, alleBst, "b02", 1);
-            processBausteinLayer(mon, alleBst, "b03", 2);
-            processBausteinLayer(mon, alleBst, "b04", 3);
-            processBausteinLayer(mon, alleBst, "b05", 4);
-            processBausteinLayer(mon, alleBst, "b00", 5);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B01, 0);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B02, 1);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B03, 2);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B04, 3);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B05, 4);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B00, 5);
 
             this.language = scrape.getLanguage();
 

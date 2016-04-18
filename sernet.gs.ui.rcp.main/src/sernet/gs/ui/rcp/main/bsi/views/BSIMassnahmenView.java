@@ -360,7 +360,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
             // Catalog View.
             if (parent instanceof Baustein) {
                 Baustein baustein = (Baustein) parent;
-                return baustein.getMassnahmen().size() > 0 || baustein.getGefaehrdungen() != null ? baustein.getGefaehrdungen().size() > 0 : false;
+                return baustein.hasSafequardsOrThreats();
             } else if (parent instanceof BSIKatalogInvisibleRoot) {
                 return ((BSIKatalogInvisibleRoot) parent).getBausteine().size() > 0;
             }
