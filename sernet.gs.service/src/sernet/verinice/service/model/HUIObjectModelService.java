@@ -56,8 +56,25 @@ public class HUIObjectModelService implements IObjectModelService {
                 .get(VeriniceContext.OBJECT_MODEL_SERVICE);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.verinice.service.model.IObjectModelService#init()
+     */
+    @Override
+    public void init() {
+        fillAllTypeIds();
+        fillPossibleChildrenMap();
+        fillPossibleParentsMap();
+
+        LOG.debug("init objectModelService finished");
+    }
+
     private void fillAllTypeIds() {
 
+        if (allTypeIds != null) {
+            return;
+        }
         allTypeIds = new HashSet<>(getHuiTypeFactory().getAllTypeIds());
 
         // TODO rmotza better way!
@@ -65,7 +82,7 @@ public class HUIObjectModelService implements IObjectModelService {
         allTypeIds.remove("role");
         allTypeIds.remove("configuration");
         allTypeIds.remove("attachment");
-        // addAllBSIGroups();
+            // addAllBSIGroups();
     }
 
     // TODO rmotza to be commented in as soon as the LTR can work with BSI
@@ -83,18 +100,6 @@ public class HUIObjectModelService implements IObjectModelService {
     // allTypeIds.add(RaeumeKategorie.TYPE_ID);
     //
     // }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.service.model.IObjectModelService#init()
-     */
-    @Override
-    public void init() {
-        fillAllTypeIds();
-        fillPossibleChildrenMap();
-        fillPossibleParentsMap();
-    }
 
     /*
      * (non-Javadoc)
@@ -233,6 +238,9 @@ public class HUIObjectModelService implements IObjectModelService {
             } catch (IllegalStateException e) {
                 LOG.info(
                         "ParentClass for possible Children is not mapped" + ": " + e.getMessage());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(e);
+                }
                 continue;
             }
             try {
@@ -241,6 +249,9 @@ public class HUIObjectModelService implements IObjectModelService {
                     | NoSuchMethodException e) {
                 LOG.info("something went wrong while creating " + parentClass.getSimpleName() + ": "
                         + e.getMessage());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(e);
+                }
                 continue;
             }
             possibleChildrenSet = new HashSet<>();
@@ -251,6 +262,9 @@ public class HUIObjectModelService implements IObjectModelService {
                 } catch (IllegalStateException e) {
                     LOG.info("ChildClass for possible Children is not mapped" + ": "
                             + e.getMessage());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(e);
+                    }
                     continue;
                 }
 
@@ -260,6 +274,9 @@ public class HUIObjectModelService implements IObjectModelService {
                         | NoSuchMethodException e) {
                     LOG.warn("something went wrong while creating " + childClass.getSimpleName()
                             + ": " + e.getMessage());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(e);
+                    }
                     continue;
                 }
                 if (parentInstance.canContain(childInstance)) {
@@ -332,6 +349,9 @@ public class HUIObjectModelService implements IObjectModelService {
                 childClass = CnATypeMapper.getClassFromTypeId(typeIChild);
             } catch (IllegalStateException e) {
                 LOG.info("ChildClass for possible parents is not mapped" + ": " + e.getMessage());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(e);
+                }
                 continue;
             }
             try {
@@ -340,6 +360,9 @@ public class HUIObjectModelService implements IObjectModelService {
                     | NoSuchMethodException e) {
                 LOG.warn("something went wrong while creating " + childClass.getSimpleName() + ": "
                         + e.getMessage());
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(e);
+                }
                 continue;
             }
             possibleParentsSet = new HashSet<>();
@@ -349,6 +372,9 @@ public class HUIObjectModelService implements IObjectModelService {
                 } catch (IllegalStateException e) {
                     LOG.info("ParentClass for possible Parents is not mapped" + ": "
                             + e.getMessage());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(e);
+                    }
                     continue;
                 }
                 try {
@@ -360,6 +386,9 @@ public class HUIObjectModelService implements IObjectModelService {
                         | NoSuchMethodException e) {
                     LOG.warn("something went wrong while creating " + parentClass.getSimpleName()
                             + ": " + e.getMessage());
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(e);
+                    }
                     continue;
                 }
             }
@@ -398,6 +427,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public ObjectModelContainer loadAll() {
+        init();
         ObjectModelContainer container = new ObjectModelContainer();
 
         container.setAllLabels(getAllLabels());

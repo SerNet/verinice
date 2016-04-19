@@ -289,7 +289,7 @@ public class VeriniceLinkTableComposite extends Composite {
         GridDataFactory.swtDefaults().applyTo(buttons);
 
         Button addEmptyColumn = new Button(buttons, SWT.PUSH);
-        addEmptyColumn.setText("Add Empty Column");
+        addEmptyColumn.setText(Messages.VeriniceLinkTableComposite_2);
 
         addEmptyColumn.addSelectionListener(new SelectionAdapter() {
 
