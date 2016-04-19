@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.*;
@@ -123,6 +124,7 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
                     protected void doRunInWorkspace() {
 
                         if (filePath != null) {
+                            Activator.inheritVeriniceContextState();
                             csvExportHandler.setFilePath(filePath);
                             List<List<String>> table = linkTableService
                                     .createTable(VeriniceLinkTableIO

@@ -258,12 +258,14 @@ public class Activator extends AbstractUIPlugin implements IMain {
                 @Override
                 public void loaded(ISO27KModel model) {
                     initObjectModelService();
+                    CnAElementFactory.getInstance().removeLoadListener(this);
 
                 }
 
                 @Override
                 public void loaded(BSIModel model) {
                     initObjectModelService();
+                    CnAElementFactory.getInstance().removeLoadListener(this);
 
                 }
 
@@ -304,8 +306,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
                     long time = System.currentTimeMillis();
                     objectModelService.init();
-                    LOG.info("took " + (System.currentTimeMillis() - time)
-                            + " msec to load Service");
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("took " + (System.currentTimeMillis() - time)
+                                + " msec to load Service");
+                    }
                 } catch (Exception e) {
                     LOG.error("Error while loading data.", e); //$NON-NLS-1$
                     status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$

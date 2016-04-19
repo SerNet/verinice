@@ -72,6 +72,7 @@ public class VeriniceLinkTableComposite extends Composite {
         super(parent, style);
         this.contentService = contentService;
         this.ltrContent = ltrContent;
+        useAllScopes = ltrContent.useAllScopes();
         createContent();
 
     }
@@ -100,11 +101,13 @@ public class VeriniceLinkTableComposite extends Composite {
         Composite scopeButtons = new Composite(head, getStyle());
         final Button[] scopeRadios = new Button[2];
         scopeRadios[0] = new Button(scopeButtons, SWT.RADIO);
-        scopeRadios[0].setSelection(true);
+        final Button useAllScopesButton = scopeRadios[0];
         scopeRadios[0].setText(Messages.VeriniceLinkTableComposite_0);
 
         scopeRadios[1] = new Button(scopeButtons, SWT.RADIO);
-        scopeRadios[1].setText(Messages.VeriniceLinkTableComposite_1);
+
+        final Button useSelectedScopes = scopeRadios[1];
+        useSelectedScopes.setText(Messages.VeriniceLinkTableComposite_1);
 
         SelectionAdapter listener = new SelectionAdapter() {
             @Override
@@ -114,14 +117,16 @@ public class VeriniceLinkTableComposite extends Composite {
                     LOG.debug(selected.getText() + " is selected");
                 }
 
-                useAllScopes = selected == scopeRadios[0];
+                useAllScopes = selected == useAllScopesButton;
                 updateVeriniceContent();
 
             }
         };
 
-        scopeRadios[0].addSelectionListener(listener);
-        scopeRadios[1].addSelectionListener(listener);
+        useAllScopesButton.addSelectionListener(listener);
+        useSelectedScopes.addSelectionListener(listener);
+        useAllScopesButton.setSelection(useAllScopes);
+        useSelectedScopes.setSelection(!useAllScopes);
 
         GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN).numColumns(1)
                 .generateLayout(scopeButtons);

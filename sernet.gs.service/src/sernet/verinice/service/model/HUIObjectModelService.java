@@ -63,9 +63,15 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public void init() {
-        fillAllTypeIds();
-        fillPossibleChildrenMap();
-        fillPossibleParentsMap();
+        if (allTypeIds == null || allTypeIds.isEmpty()) {
+            fillAllTypeIds();
+        }
+        if (possibleChildren == null || possibleChildren.isEmpty()) {
+            fillPossibleChildrenMap();
+        }
+        if (possibleParents == null || possibleParents.isEmpty()) {
+            fillPossibleParentsMap();
+        }
 
         LOG.debug("init objectModelService finished");
     }

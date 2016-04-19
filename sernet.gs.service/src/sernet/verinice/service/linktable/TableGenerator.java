@@ -19,14 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import sernet.gs.service.NumericStringComparator;
 
@@ -58,10 +51,12 @@ public final class TableGenerator {
      * @return A table with all data
      */
     public static final List<List<String>> createTable(Map<String, String[]> allRowMap) {
+        Map<String, String[]> allRowMapClean = new HashMap<>();
         GenericDataModel.log(allRowMap);
-        Map<String, String[]> allRowMapClean = cleanUpRows(allRowMap);
-        GenericDataModel.log(allRowMapClean);
-
+        if (allRowMap != null && !allRowMap.isEmpty()) {
+            allRowMapClean = cleanUpRows(allRowMap);
+            GenericDataModel.log(allRowMapClean);
+        }
         List<List<String>> resultTable = new LinkedList<>();
         List<String> keyList =  new LinkedList<>(allRowMapClean.keySet());
         Collections.sort(keyList);

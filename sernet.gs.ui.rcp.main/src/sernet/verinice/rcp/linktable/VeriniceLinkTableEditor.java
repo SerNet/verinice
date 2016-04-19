@@ -182,7 +182,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public boolean isSaveAsAllowed() {
-        return false;
+        return true;
     }
 
     private void exportToCsv() {
@@ -197,6 +197,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
                 try {
                     monitor.beginTask("export LinkTableReport", IProgressMonitor.UNKNOWN); // $NON-NLS-1$
 
+                    Activator.inheritVeriniceContextState();
                     List<List<String>> table = linkTableService
                             .createTable(VeriniceLinkTableIO
                                     .createLinkTableConfiguration(veriniceLinkTable));
