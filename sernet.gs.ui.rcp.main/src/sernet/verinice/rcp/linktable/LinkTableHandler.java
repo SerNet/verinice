@@ -84,14 +84,6 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
                     }
                 };
                 job.schedule();
-                // VeriniceWorkspaceJob("Open vlt file",
-                // "error while opening vlt-file") {
-                //
-                // @Override
-                // protected void doRunInWorkspace() {
-                // Activator.inheritVeriniceContextState();
-                // }
-                // };
 
             }
         } else {

@@ -30,7 +30,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.*;
 import sernet.verinice.rcp.RightsEnabledHandler;
@@ -89,10 +88,8 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
     protected VeriniceLinkTable createLinkTable() {
 
         setShell();
-        final String filePath = VeriniceLinkTableUtil.createFilePath(shell,
-                "Load verinice link table (.vlt) file",
-                PreferenceConstants.DEFAULT_FOLDER_VLT,
-                VeriniceLinkTableUtil.getVltExtensions());
+        final String filePath = VeriniceLinkTableUtil.createVltFilePath(shell,
+                "Load verinice link table (.vlt) file");
         VeriniceLinkTable veriniceLinkTable = null;
         if (filePath != null) {
             veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
@@ -112,10 +109,8 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
 
         final VeriniceLinkTable veriniceLinkTable = createLinkTable();
         if (veriniceLinkTable != null) {
-            final String filePath = VeriniceLinkTableUtil.createFilePath(shell,
-                    "Export link table to CSV (.csv) table",
-                    PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT,
-                    VeriniceLinkTableUtil.getCsvExtensions());
+            final String filePath = VeriniceLinkTableUtil.createCsvFilePath(shell,
+                    "Export link table to CSV (.csv) table");
             if (filePath != null) {
                 VeriniceWorkspaceJob job = new VeriniceWorkspaceJob("Export CSV-File",
                         "Error while exporting link table") {
@@ -135,26 +130,6 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
                 };
 
                 JobScheduler.scheduleJob(job, iSchedulingRule);
-
-                // TODO rmotza the information about sucessful export does not
-                // work yet
-                // job.addJobChangeListener(new JobChangeAdapter() {
-                // /*
-                // * (non-Javadoc)
-                // *
-                // * @see
-                // * org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.
-                // * eclipse.core.runtime.jobs.IJobChangeEvent)
-                // */
-                // @Override
-                // public void done(IJobChangeEvent event) {
-                // if (Status.OK_STATUS.equals(event.getResult())) {
-                // Shell parent = Display.getCurrent().getActiveShell();
-                // MessageDialog.openInformation(parent, "Csv Export", "Export
-                // finished");
-                // }
-                // }
-                // });
             }
         }
     }

@@ -290,17 +290,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     monitor.beginTask("load objectModelService", IProgressMonitor.UNKNOWN);
                     IObjectModelService objectModelService = null;
                     while (objectModelService == null) {
-                        try {
-                            objectModelService = ServiceFactory.lookupObjectModelService();
-                        } catch (IllegalStateException e) {
-                            if (LOG.isDebugEnabled()) {
-                                LOG.debug(
-                                        "ObjectModelService not yet initialized, objectmodelService = "
-                                                + objectModelService,
-                                        e);
-                            }
-                            inheritVeriniceContextState();
-                        }
+                        objectModelService = initializeObjectModelService(objectModelService);
 
                     }
 
@@ -319,6 +309,22 @@ public class Activator extends AbstractUIPlugin implements IMain {
                     monitor.done();
                 }
                 return status;
+            }
+
+            public IObjectModelService initializeObjectModelService(
+                    IObjectModelService objectModelService) {
+                try {
+                    objectModelService = ServiceFactory.lookupObjectModelService();
+                } catch (IllegalStateException e) {
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug(
+                                "ObjectModelService not yet initialized, objectmodelService = "
+                                        + objectModelService,
+                                e);
+                    }
+                    inheritVeriniceContextState();
+                }
+                return objectModelService;
             }
         };
         JobScheduler.scheduleInitJob(job);

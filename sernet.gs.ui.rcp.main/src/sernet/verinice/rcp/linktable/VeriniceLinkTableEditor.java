@@ -22,26 +22,19 @@ package sernet.verinice.rcp.linktable;
 import java.io.File;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.*;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.EditorPart;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.rcp.Mutex;
-import sernet.verinice.rcp.FileDialogUtil;
+import sernet.verinice.iso27k.rcp.*;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableFieldListener;
 import sernet.verinice.service.csv.CsvExport;
@@ -57,8 +50,6 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
  */
 public class VeriniceLinkTableEditor extends EditorPart {
 
-    private static final Logger LOG = Logger.getLogger(VeriniceLinkTableEditor.class);
-
     public static final String EDITOR_ID = VeriniceLinkTableEditor.class.getName();
 
     private VeriniceLinkTable veriniceLinkTable;
@@ -67,8 +58,6 @@ public class VeriniceLinkTableEditor extends EditorPart {
     private boolean isDirty = false;
 
     private VeriniceLinkTableFieldListener contentObserver;
-
-    private static ISchedulingRule iSchedulingRule = new Mutex();
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -137,7 +126,10 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
-        executeSave(getFilePath(veriniceLinkTable));
+        String filePath = getFilePath(veriniceLinkTable);
+        if (filePath != null) {
+            executeSave(filePath);
+        }
     }
     
     /* (non-Javadoc)
@@ -145,7 +137,8 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public void doSaveAs() {
-        executeSave(createLtrFilePath());
+        executeSave(VeriniceLinkTableUtil.createVltFilePath(Display.getCurrent().getActiveShell(),
+                "Save query to .vlt file"));
     }
     
     private void executeSave(String filePath) {
@@ -154,14 +147,11 @@ public class VeriniceLinkTableEditor extends EditorPart {
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }
 
-    /**
-     * @param veriniceLinkTable
-     * @return
-     */
     private String getFilePath(VeriniceLinkTable veriniceLinkTable) { 
         String filePath = LinkTableFileRegistry.getFilePath(veriniceLinkTable.getId());
         if(filePath==null) {
-            filePath = createLtrFilePath();          
+            filePath = VeriniceLinkTableUtil.createVltFilePath(
+                    Display.getCurrent().getActiveShell(), "Save query to .vlt file");
             veriniceLinkTable.setName(new File(filePath).getName());
             setPartName(veriniceLinkTable.getName());
             LinkTableFileRegistry.add(veriniceLinkTable.getId(),filePath);
@@ -187,58 +177,40 @@ public class VeriniceLinkTableEditor extends EditorPart {
 
     private void exportToCsv() {
 
-        String filePath = createCsvFilePath();
+        String filePath = VeriniceLinkTableUtil.createCsvFilePath(
+                Display.getCurrent().getActiveShell(),
+                "Export link table to CSV (.csv) table");
+        if (filePath == null) {
+            return;
+        }
         csvExportHandler.setFilePath(filePath);
 
-        WorkspaceJob exportJob = new WorkspaceJob("Exporting...") {
+        VeriniceWorkspaceJob exportJob = new VeriniceWorkspaceJob("Exporting...", "Error while exporting data.") {
+
             @Override
-            public IStatus runInWorkspace(final IProgressMonitor monitor) {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask("export LinkTableReport", IProgressMonitor.UNKNOWN); // $NON-NLS-1$
+            protected void doRunInWorkspace() {
 
-                    Activator.inheritVeriniceContextState();
-                    List<List<String>> table = linkTableService
-                            .createTable(VeriniceLinkTableIO
-                                    .createLinkTableConfiguration(veriniceLinkTable));
+                Activator.inheritVeriniceContextState();
+                List<List<String>> table = linkTableService
+                        .createTable(VeriniceLinkTableIO
+                                .createLinkTableConfiguration(veriniceLinkTable));
 
-                    csvExportHandler.exportToFile(csvExportHandler.convert(table));
-                } catch (Exception e) {
-                    LOG.error("Error while exporting data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.verinice.samt.rcp",
-                            "Error while exporting data.", e);
-                } finally {
-                    monitor.done();
-                    this.done(status);
-                }
-                return status;
+                csvExportHandler.exportToFile(csvExportHandler.convert(table));
+
             }
         };
-        JobScheduler.scheduleJob(exportJob, iSchedulingRule);
+        JobScheduler.scheduleJob(exportJob, new Mutex());
     }
 
-    private static String createCsvFilePath() {
-        return new FileDialogUtil.Builder(SWT.SAVE, "Export link table to CSV (.csv) table")
-        .setDefaultFolderPreference(PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT)
-        .setFileSuffix(ICsvExport.CSV_FILE_SUFFIX)
-        .setFileTypeLabel("CSV table (.csv)")
-        .open();     
-    }
-    
-    private static String createLtrFilePath() {
-        return new FileDialogUtil.Builder(SWT.SAVE, "Save query to .ltr file")
-        .setDefaultFolderPreference(PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT)
-        .setFileSuffix(VeriniceLinkTable.VLT)
-        .setFileTypeLabel("Query (.vlt)")
-        .open();     
-    }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
      */
     @Override
     public void setFocus() {
-        // TODO Auto-generated method stub
+        // nothing to do
 
     }
 

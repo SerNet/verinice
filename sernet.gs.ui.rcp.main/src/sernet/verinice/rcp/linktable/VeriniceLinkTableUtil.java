@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.service.csv.ICsvExport;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
@@ -39,13 +40,6 @@ public class VeriniceLinkTableUtil {
     private static HashMap<String, String> vltExtensions = null;
     private static HashMap<String, String> csvExtensions = null;
 
-    public static Map<String, String> getCsvExtensions() {
-        return csvExtensions;
-    }
-
-    public static Map<String, String> getVltExtensions() {
-        return vltExtensions;
-    }
 
     static {
         if (vltExtensions == null) {
@@ -59,7 +53,15 @@ public class VeriniceLinkTableUtil {
     }
 
     private VeriniceLinkTableUtil() {
-        // to prevent instantiating
+        // to prevent instantiation
+    }
+
+    public static Map<String, String> getCsvExtensions() {
+        return csvExtensions;
+    }
+
+    public static Map<String, String> getVltExtensions() {
+        return vltExtensions;
     }
 
     public static String createFilePath(Shell shell, String text, String defaultFolderPreference,
@@ -72,7 +74,9 @@ public class VeriniceLinkTableUtil {
         dialog.setFilterNames(filterExtensions.values().toArray(new String[] {}));
         dialog.setFilterIndex(0);
         String filePath = dialog.open();
-        Activator.getDefault().getPreferenceStore().setValue(defaultFolderPreference, filePath);
+        if (filePath != null) {
+            Activator.getDefault().getPreferenceStore().setValue(defaultFolderPreference, filePath);
+        }
         return filePath;
     }
 
@@ -86,6 +90,15 @@ public class VeriniceLinkTableUtil {
             dir = dir + System.getProperty("file.separator");
         }
         return dir;
+    }
+
+    public static String createVltFilePath(Shell shell, String text) {
+        return createFilePath(shell, text, PreferenceConstants.DEFAULT_FOLDER_VLT, vltExtensions);
+    }
+
+    public static String createCsvFilePath(Shell shell, String text) {
+        return createFilePath(shell, text, PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT,
+                csvExtensions);
     }
 
 }
