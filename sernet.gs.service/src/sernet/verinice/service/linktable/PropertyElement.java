@@ -40,6 +40,11 @@ import sernet.verinice.model.common.CnATreeElement;
  * @see GenericDataModel
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+/**
+ *
+ *
+ * @author Daniel Murygin <dm{a}sernet{dot}de>
+ */
 public class PropertyElement implements IPathElement {
 
     private static final Logger LOG = Logger.getLogger(PropertyElement.class);
@@ -121,25 +126,19 @@ public class PropertyElement implements IPathElement {
     }
 
     private String getPropertyValue(CnATreeElement element, String propertyId) {
-        String value = element.getEntity().getSimpleValue(propertyId);
-        PropertyType propertyType = getPropertyType(element.getTypeId(), propertyId);
-        if(propertyType!=null && propertyType.isURL()) {
-            value = URLUtil.getHref(value);
-        }
-        return value;
+        IPropertyAdapter<CnATreeElement> adapter = PropertyAdapterFactory.getAdapter(element);
+        return adapter.getPropertyValue(element, propertyId);
     }
 
-    private PropertyType getPropertyType(String elementId, String propertyId) {
-        return getEntityType(elementId).getPropertyType(propertyId);
-    }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.linktable.IPathElement#getTypeId()
+     */
+    @Override
     public String getTypeId() {
         return propertyTypeId;
     }
 
-    private EntityType getEntityType(String elementId) {
-        return HUITypeFactory.getInstance().getEntityType(elementId);
-    }
 
     /**
      * @return the propertyValue

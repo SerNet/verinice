@@ -86,18 +86,10 @@ public class GenericDataModel {
         this.configuration = configuration;
     }
 
-    public void init() {
-        try {
-           doInit();
-        } catch( Exception e) {
-            LOG.error("Error while creating data model", e);
-        }
-    }
-
-    private void doInit()  {
+    public void init() {      
         createColumnPaths();
         loadData();
-        createResultTable();
+        createResultTable();  
     }
 
     private void createColumnPaths() {
