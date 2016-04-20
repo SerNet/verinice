@@ -880,13 +880,13 @@ for(Asset asset : assetSet){
 	impactI = valueAdapter.getIntegritaet();
 	impactA = valueAdapter.getVerfuegbarkeit();
 
-	true = "1";
+	trueString = "1";
 	propertyValue = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue();
-	isCRelevant = propertyValue == null || true.equals(propertyValue);
+	isCRelevant = propertyValue == null || trueString.equals(propertyValue);
 	propertyValue = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue();
-    isIRelevant =  propertyValue == null || true.equals(propertyValue);
+    isIRelevant =  propertyValue == null || trueString.equals(propertyValue);
     propertyValue = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue();
-    isARelevant =  propertyValue == null || true.equals(propertyValue);
+    isARelevant =  propertyValue == null || trueString.equals(propertyValue);
              
 
 	reducedImpact = ras.applyControlsToImpact(IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
