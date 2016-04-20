@@ -19,26 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.vlt;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 
-import sernet.verinice.service.linktable.ILinkTableConfiguration;
-import sernet.verinice.service.linktable.LinkTableConfiguration;
-import sernet.verinice.service.linktable.LinkTableException;
+import sernet.verinice.service.linktable.*;
 
 /**
  * VeriniceLinkTableIO (de-)serialize Link Table configuration
@@ -56,7 +44,7 @@ public abstract class VeriniceLinkTableIO {
 
     private static final Logger LOG = Logger.getLogger(VeriniceLinkTableIO.class);
 
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     private VeriniceLinkTableIO() {
         // Do not instantiate this class, use public static methods.

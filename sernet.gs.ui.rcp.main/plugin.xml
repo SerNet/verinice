@@ -1240,22 +1240,22 @@
         
         <menuContribution
 		  locationURI="menu:file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap">
-			<menu id="test"
-			    label="Query Builder ...">
+			<menu id="queryBuilder"
+			    label="%reportQueryBuilder.name">
 			    <command commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
-                  label="Create Query..."
+                  label="%reportQueryBuilder.create"
                   style="push"
-                  tooltip="Create a new Query">
+                  tooltip="%reportQueryBuilder.create.tt">
             	</command>
             	<command commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
-                  label="Open Query..."
+                  label="%reportQueryBuilder.open"
                   style="push"
-                  tooltip="Open a query">
+                  tooltip="%reportQueryBuilder.open.tt">
             	</command>
             	<command commandId="sernet.verinice.rcp.linktable.ExportLinkTableHandler"
-                  label="Run Query (CSV)..."
+                  label="%reportQueryBuilder.run"
                   style="push"
-                  tooltip="Export Data to CSV via Query Builder...">
+                  tooltip="%reportQueryBuilder.run.tt">
             	</command>
 			</menu>
 		</menuContribution>

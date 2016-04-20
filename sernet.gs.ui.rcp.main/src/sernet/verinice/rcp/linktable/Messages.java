@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Daniel Murygin <dm{a}sernet{dot}de>.
+ * Copyright (c) 2016 Ruth Motza.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,29 +15,29 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.rcp.linktable;
 
-import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
+import org.eclipse.osgi.util.NLS;
 
 /**
- *
- *
- * @author Daniel Murygin <dm{a}sernet{dot}de>
+ * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class CreateLinkTableHandler extends LinkTableHandler {
-
-    public CreateLinkTableHandler() {
-        super();
+public class Messages extends NLS {
+    private static final String BUNDLE_NAME = "sernet.verinice.rcp.linktable.messages"; //$NON-NLS-1$
+    public static String CreateLinkTableHandler_0;
+    public static String VeriniceLinkTableEditor_1;
+    public static String VeriniceLinkTableEditor_2;
+    public static String VeriniceLinkTableEditor_3;
+    public static String VeriniceLinkTableEditor_4;
+    public static String VeriniceLinkTableEditor_5;
+    public static String VeriniceLinkTableEditor_6;
+    static {
+        // initialize resource bundle
+        NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.linktable.LinkTableHandler#createLinkTable()
-     */
-    @Override
-    protected VeriniceLinkTable createLinkTable() {
-        return new VeriniceLinkTable.Builder(Messages.CreateLinkTableHandler_0).build();
+    private Messages() {
     }
-
 }

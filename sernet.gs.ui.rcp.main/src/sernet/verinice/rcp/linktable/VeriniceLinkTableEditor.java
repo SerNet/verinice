@@ -65,7 +65,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
         if (! (input instanceof VeriniceLinkTableEditorInput)) {
-            throw new PartInitException("Input is not an instance of " + VeriniceLinkTableEditorInput.class.getSimpleName());
+            throw new PartInitException("Input is not an instance of " + VeriniceLinkTableEditorInput.class.getSimpleName()); //$NON-NLS-1$
         }
 
         VeriniceLinkTableEditorInput vltEditorInput = (VeriniceLinkTableEditorInput) input;
@@ -85,8 +85,8 @@ public class VeriniceLinkTableEditor extends EditorPart {
         Composite container = new Composite(parent, SWT.NONE);
 
         Button exportButton = new Button(container, SWT.PUSH);
-        exportButton.setText("Run Query (CSV)...");
-        exportButton.setToolTipText("Export data after this link table query to a CSV file");
+        exportButton.setText(Messages.VeriniceLinkTableEditor_1);
+        exportButton.setToolTipText(Messages.VeriniceLinkTableEditor_2);
         GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(exportButton);
         exportButton.addSelectionListener(new SelectionListener() {
 
@@ -138,7 +138,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
     @Override
     public void doSaveAs() {
         executeSave(VeriniceLinkTableUtil.createVltFilePath(Display.getCurrent().getActiveShell(),
-                "Save query to .vlt file"));
+                Messages.VeriniceLinkTableEditor_3));
     }
     
     private void executeSave(String filePath) {
@@ -151,7 +151,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
         String filePath = LinkTableFileRegistry.getFilePath(veriniceLinkTable.getId());
         if(filePath==null) {
             filePath = VeriniceLinkTableUtil.createVltFilePath(
-                    Display.getCurrent().getActiveShell(), "Save query to .vlt file");
+                    Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4);
             veriniceLinkTable.setName(new File(filePath).getName());
             setPartName(veriniceLinkTable.getName());
             LinkTableFileRegistry.add(veriniceLinkTable.getId(),filePath);
@@ -179,13 +179,13 @@ public class VeriniceLinkTableEditor extends EditorPart {
 
         String filePath = VeriniceLinkTableUtil.createCsvFilePath(
                 Display.getCurrent().getActiveShell(),
-                "Export link table to CSV (.csv) table");
+                Messages.VeriniceLinkTableEditor_5);
         if (filePath == null) {
             return;
         }
         csvExportHandler.setFilePath(filePath);
 
-        VeriniceWorkspaceJob exportJob = new VeriniceWorkspaceJob("Exporting...", "Error while exporting data.") {
+        VeriniceWorkspaceJob exportJob = new VeriniceWorkspaceJob(Messages.VeriniceLinkTableEditor_6, "Error while exporting data.") { //$NON-NLS-2$
 
             @Override
             protected void doRunInWorkspace() {
