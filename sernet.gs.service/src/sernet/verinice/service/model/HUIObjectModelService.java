@@ -27,6 +27,8 @@ import org.apache.log4j.Logger;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
+import sernet.verinice.model.bsi.*;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
@@ -46,6 +48,7 @@ public class HUIObjectModelService implements IObjectModelService {
     private Map<String, String> allRelationLabels = null;
 
     private Set<String> allTypeIds = null;
+    private Set<String> allBSIElements = null;
 
     private Map<String, Set<String>> possibleChildren = null;
     private Map<String, Set<String>> possibleParents = null;
@@ -88,24 +91,26 @@ public class HUIObjectModelService implements IObjectModelService {
         allTypeIds.remove("role");
         allTypeIds.remove("configuration");
         allTypeIds.remove("attachment");
-            // addAllBSIGroups();
+        addAllBSIElements();
     }
 
-    // TODO rmotza to be commented in as soon as the LTR can work with BSI
     // categories
-    // private void addAllBSIGroups() {
-    //
-    // allTypeIds.add(AnwendungenKategorie.TYPE_ID);
-    // allTypeIds.add(GebaeudeKategorie.TYPE_ID);
-    // allTypeIds.add(ClientsKategorie.TYPE_ID);
-    // allTypeIds.add(ServerKategorie.TYPE_ID);
-    // allTypeIds.add(SonstigeITKategorie.TYPE_ID);
-    // allTypeIds.add(TKKategorie.TYPE_ID);
-    // allTypeIds.add(PersonenKategorie.TYPE_ID);
-    // allTypeIds.add(NKKategorie.TYPE_ID);
-    // allTypeIds.add(RaeumeKategorie.TYPE_ID);
-    //
-    // }
+    private void addAllBSIElements() {
+        allBSIElements = new HashSet<>();
+        allBSIElements.add(AnwendungenKategorie.TYPE_ID);
+        allBSIElements.add(GebaeudeKategorie.TYPE_ID);
+        allBSIElements.add(ClientsKategorie.TYPE_ID);
+        allBSIElements.add(ServerKategorie.TYPE_ID);
+        allBSIElements.add(SonstigeITKategorie.TYPE_ID);
+        allBSIElements.add(TKKategorie.TYPE_ID);
+        allBSIElements.add(PersonenKategorie.TYPE_ID);
+        allBSIElements.add(NKKategorie.TYPE_ID);
+        allBSIElements.add(RaeumeKategorie.TYPE_ID);
+        allBSIElements.add(FinishedRiskAnalysis.TYPE_ID);
+
+        allTypeIds.addAll(allBSIElements);
+    
+     }
 
     /*
      * (non-Javadoc)
@@ -149,7 +154,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getPossibleRelationPartners(String typeID) {
-        if (getHuiTypeFactory().getEntityType(typeID) == null) {
+        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSIElement(typeID)) {
             return new HashSet<>();
         }
         HashSet<String> possiblePartners = new HashSet<>();
@@ -163,6 +168,11 @@ public class HUIObjectModelService implements IObjectModelService {
             possiblePartners.add(relation.getFrom());
         }
         return possiblePartners;
+    }
+
+    private boolean isBSIElement(String typeID) {
+        return allBSIElements.contains(typeID);
+
     }
 
     public Set<String> getAllTypeIDs() {
@@ -180,6 +190,11 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getPossibleProperties(String typeID) {
+        if (isBSIElement(typeID)) {
+            HashSet<String> set = new HashSet<>();
+            set.add("title");
+            return set;
+        }
         if (getHuiTypeFactory().getEntityType(typeID) == null) {
             return new HashSet<>();
         }
@@ -463,8 +478,9 @@ public class HUIObjectModelService implements IObjectModelService {
             allRelationLabels = new HashMap<>();
             Set<HuiRelation> allRelationIDs = new HashSet<>();
             for(String typeId : getAllTypeIDs()){
-                
-                allRelationIDs.addAll(huiTypeFactory.getPossibleRelationsFrom(typeId));
+                if (!isBSIElement(typeId)) {
+                    allRelationIDs.addAll(huiTypeFactory.getPossibleRelationsFrom(typeId));
+                }
                 
             }
             for (HuiRelation relation : allRelationIDs) {
@@ -501,5 +517,6 @@ public class HUIObjectModelService implements IObjectModelService {
         }
         return allLabels;
     }
+
 
 }
