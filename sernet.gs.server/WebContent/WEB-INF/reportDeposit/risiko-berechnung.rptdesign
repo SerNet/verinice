@@ -880,9 +880,13 @@ for(Asset asset : assetSet){
 	impactI = valueAdapter.getIntegritaet();
 	impactA = valueAdapter.getVerfuegbarkeit();
 
-	isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
-        isIRelevant = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue().equals("1");
-        isARelevant = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue().equals("1");
+	true = "1";
+	propertyValue = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue();
+	isCRelevant = propertyValue == null || true.equals(propertyValue);
+	propertyValue = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue();
+    isIRelevant =  propertyValue == null || true.equals(propertyValue);
+    propertyValue = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue();
+    isARelevant =  propertyValue == null || true.equals(propertyValue);
              
 
 	reducedImpact = ras.applyControlsToImpact(IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
@@ -913,9 +917,6 @@ for(Asset asset : assetSet){
                     treatedRiskA = 0;
                 }
 
-	//treatedRiskC = probabilityWithControls + impactC;
-	//treatedRiskI = probabilityWithControls + impactI;
-	//treatedRiskA = probabilityWithControls + impactA;
 
 	/** Get risk values for planned controls */
 	impactAllC = valueAdapter.getVertraulichkeit();
@@ -952,9 +953,6 @@ for(Asset asset : assetSet){
                 }
 
 
-	//treatedRiskAllC = probabilityWithAllControls + impactAllC;
-	//treatedRiskAllI = probabilityWithAllControls + impactAllI;
-	//treatedRiskAllA = probabilityWithAllControls + impactAllA;
 
 	// feed the result table
 	assetScenarioResult.add(asset.getTitle());
