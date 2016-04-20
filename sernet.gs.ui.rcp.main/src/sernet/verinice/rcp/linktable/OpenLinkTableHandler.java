@@ -38,7 +38,7 @@ public class OpenLinkTableHandler extends LinkTableHandler {
     @Override
     protected VeriniceLinkTable createLinkTable() {
         final String filePath = VeriniceLinkTableUtil.createVltFilePath(
-                Display.getCurrent().getActiveShell(), "Load verinice link table (.vlt) file");
+                Display.getCurrent().getActiveShell(), Messages.OpenLinkTableHandler_0);
         VeriniceLinkTable veriniceLinkTable = null;
         if (filePath != null) {
             veriniceLinkTable = VeriniceLinkTableIO.read(filePath);

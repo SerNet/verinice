@@ -77,9 +77,8 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
 
             exportToCsv();
         } else {
-            setBaseEnabled(false);
-            MessageDialog.openError(HandlerUtil.getActiveShell(event), "Error",
-                    "You don't have the permission to perform this action.");
+            MessageDialog.openError(HandlerUtil.getActiveShell(event), "Error", //$NON-NLS-1$
+                    Messages.ExportLinkTableHandler_1);
         }
 
         return null;
@@ -89,7 +88,7 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
 
         setShell();
         final String filePath = VeriniceLinkTableUtil.createVltFilePath(shell,
-                "Load verinice link table (.vlt) file");
+                Messages.ExportLinkTableHandler_2);
         VeriniceLinkTable veriniceLinkTable = null;
         if (filePath != null) {
             veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
@@ -110,10 +109,10 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
         final VeriniceLinkTable veriniceLinkTable = createLinkTable();
         if (veriniceLinkTable != null) {
             final String filePath = VeriniceLinkTableUtil.createCsvFilePath(shell,
-                    "Export link table to CSV (.csv) table");
+                    Messages.ExportLinkTableHandler_3);
             if (filePath != null) {
-                VeriniceWorkspaceJob job = new VeriniceWorkspaceJob("Export CSV-File",
-                        "Error while exporting link table") {
+                VeriniceWorkspaceJob job = new VeriniceWorkspaceJob(Messages.ExportLinkTableHandler_4,
+                        Messages.ExportLinkTableHandler_5) {
 
                     @Override
                     protected void doRunInWorkspace() {

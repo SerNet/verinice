@@ -62,20 +62,20 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
             final VeriniceLinkTable veriniceLinkTable = createLinkTable();
             if (veriniceLinkTable != null) {
 
-                UIJob job = new UIJob("open vlt file") {
+                UIJob job = new UIJob(Messages.LinkTableHandler_0) {
 
                     @Override
                     public IStatus runInUIThread(IProgressMonitor monitor) {
                         IStatus status = Status.OK_STATUS;
 
                         try {
-                            monitor.beginTask("open vlt file",
+                            monitor.beginTask(Messages.LinkTableHandler_0, // $NON-NLS-1$
                                     IProgressMonitor.UNKNOWN);
                             EditorFactory.getInstance().updateAndOpenObject(veriniceLinkTable);
                         } catch (Exception e) {
                             LOG.error("Error while running job " + this.getName(), e); //$NON-NLS-1$
                             status = new Status(Status.ERROR, "sernet.verinice.samt.rcp", //$NON-NLS-1$
-                                    "Error while open vlt-file", e);
+                                    "Error opening vlt-file", e); //$NON-NLS-1$
                         } finally {
                             monitor.done();
                             this.done(status);
@@ -87,8 +87,8 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
 
             }
         } else {
-            setBaseEnabled(false);
-            MessageDialog.openError(HandlerUtil.getActiveShell(event), "Error", "You don't have the permission to perform this action.");
+            MessageDialog.openError(HandlerUtil.getActiveShell(event), "Error", //$NON-NLS-1$
+                    Messages.ExportLinkTableHandler_1);
         }
         
         return null;
