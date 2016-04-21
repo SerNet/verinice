@@ -35,6 +35,8 @@ import java.util.Map.Entry;
 import java.util.PropertyPermission;
 import java.util.logging.LoggingPermission;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.osgi.util.NLS;
 
@@ -203,12 +205,10 @@ public class ReportSecurityManager extends SecurityManager {
                 Arrays.asList(new String[]{"accessDeclaredMembers", "suppressAccessChecks", "createClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.reportitem.ChartReportItemPresentationBase.deserialize",
                 Arrays.asList(new String[]{"accessDeclaredMembers"}));
-        authorizedRuntimeActions.put("java.awt.GraphicsEnvironment.createGE", 
-                Arrays.asList(new String[]{"loadLibrary.awt", "loadLibrary.fontmanager"}));
         authorizedRuntimeActions.put("sun.java2d.SunGraphicsEnvironment.getFontManagerForSGE",
-                Arrays.asList(new String[]{"accessClassInPackage.sun.awt", "loadLibrary.awt", 
+                Arrays.asList(new String[]{"accessClassInPackage.sun.awt", "accessClassInPackage.sun.font", "loadLibrary.awt", 
                         "modifyThreadGroup", "accessDeclaredMembers", "modifyThread", "setContextClassLoader",
-                        "getenv.JAVA2D_USEPLATFORMFONT", "getProtectionDomain"}));
+                        "getenv.JAVA2D_USEPLATFORMFONT", "getProtectionDomain", "loadLibrary.fontmanager"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.util.SecurityUtil.getClassLoader",
                 Arrays.asList(new String[]{"getClassLoader"}));
         authorizedRuntimeActions.put("java.awt.event.NativeLibLoader.loadLibraries", 
@@ -218,7 +218,7 @@ public class ReportSecurityManager extends SecurityManager {
         authorizedRuntimeActions.put("sun.awt.image.NativeLibLoader.loadLibraries", 
                 Arrays.asList(new String[]{"loadLibrary.awt"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.device.util.ChartTextMetrics.reuse",
-                Arrays.asList(new String[]{"loadLibrary.t2k"}));
+                Arrays.asList(new String[]{"loadLibrary.t2k", "suppressAccessChecks", "modifyThreadGroup", "modifyThread", "setContextClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.device.swing.SwingTextMetrics.reuse", 
                 Arrays.asList(new String[]{"loadLibrary.t2k"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.device.svg.SVGRendererImpl.writeDocumentToOutputStream",
@@ -258,7 +258,8 @@ public class ReportSecurityManager extends SecurityManager {
         authorizedRuntimeActions.put("java.awt.GraphicsEnvironment.createGE", 
                 Arrays.asList(new String[]{"getenv.DISPLAY", "loadLibrary.awt", 
                         "loadLibrary." + System.getProperty("sun.boot.library.path") +  "/libawt_xawt.so",
-                        "loadLibrary.fontmanager"}));
+                        "loadLibrary.fontmanager",
+                        "loadLibrary." + System.getProperty("java.home") + File.separatorChar + "lib" + File.separatorChar + "libawt_lwawt.dylib"}));
         authorizedRuntimeActions.put("org.eclipse.birt.report.engine.executor.StyledItemExecutor.createHighlightStyle",
                 Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
         authorizedRuntimeActions.put("value)org.eclipse.birt.data.engine.impl.DataEngineSession.cancel", 
@@ -287,15 +288,23 @@ public class ReportSecurityManager extends SecurityManager {
         authorizedRuntimeActions.put("org.eclipse.birt.report.engine.emitter.excel.layout.ExcelContext.parseSheetName",
                 Arrays.asList(new String[]{"suppressAccessChecks"}));
         authorizedRuntimeActions.put("org.eclipse.birt.report.engine.emitter.ods.OdsEmitter.parseSheetName", 
-                Arrays.asList("suppressAccessChecks"));
+                Arrays.asList(new String[]{"suppressAccessChecks"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.factory.Generator.render", 
-                Arrays.asList("loadLibrary.dcpr"));
+                Arrays.asList(new String[]{"loadLibrary.dcpr"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.reportitem.ChartReportItemPresentationBase.renderToImageFile",
-                Arrays.asList("createClassLoader", "suppressAccessChecks"));
+                Arrays.asList(new String[]{"createClassLoader", "suppressAccessChecks"}));
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.impl.DataEngineSession.cancel",
-                Arrays.asList("accessDeclaredMembers"));
+                Arrays.asList(new String[]{"accessDeclaredMembers"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.computation.LabelLimiter.limitLabelSize",
-                Arrays.asList("suppressAccessChecks"));
+                Arrays.asList(new String[]{"suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.nLayout.area.impl.TextAreaLayout.buildTextStyle",
+                Arrays.asList(new String[]{"suppressAccessChecks", "getenv.DISPLAY", 
+                        "loadLibrary." + System.getProperty("java.home") + File.separatorChar + "lib" + File.separatorChar + "libawt_lwawt.dylib",
+                        "modifyThreadGroup"}));
+        authorizedRuntimeActions.put("sun.java2d.HeadlessGraphicsEnvironment.getAvailableFontFamilyNames",
+                Arrays.asList(new String[]{"loadLibrary.awt", "loadLibrary.fontmanager"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.chart.device.swing.SwingDisplayServer.getGraphicsContext",
+                Arrays.asList(new String[]{"loadLibrary.awt", "suppressAccessChecks"}));
     }
     
     private ReportSecurityContext reportSecurityContext;
@@ -313,9 +322,6 @@ public class ReportSecurityManager extends SecurityManager {
      */
     @Override
     public void checkPermission(Permission perm){
-        if(perm instanceof RuntimePermission){
-            "exec".hashCode();
-        }
         // do the stacktrace / caller inspection for javascript also and we are done here,aren't we?
         if(isCalledByRunQuery()){
             if(!protectionEnabled){
@@ -330,9 +336,15 @@ public class ReportSecurityManager extends SecurityManager {
 
     private void permissionSpecificHandling(Permission perm) {
         // enabling reflextpermission("suppressAccessChecks") and several RuntimePermissions in authorized context only
+        if(!protectionEnabled){
+            return;
+        }
         if(perm instanceof ReflectPermission || perm instanceof RuntimePermission) {
             if(!isAuthorizedStackTrace(perm.getName())){
                 throwSecurityException(perm);
+                if(LOG.isDebugEnabled()){
+                    LOG.debug(Arrays.toString(Thread.currentThread().getStackTrace()));
+                }
             } else {
                 return;
             }
@@ -361,6 +373,10 @@ public class ReportSecurityManager extends SecurityManager {
 
 
     private void handleSocketPermission(Permission perm) {
+        if(!protectionEnabled){
+            return;
+        }
+        
         try {
             if(perm.getName().equals(InetAddress.getLocalHost().getHostName()) && perm.getActions().equals("resolve")){
                 return;
@@ -371,7 +387,7 @@ public class ReportSecurityManager extends SecurityManager {
             }
         } catch (UnknownHostException e) {
             LOG.error("Unable to determine local machines hostname", e);
-            throwSecurityException(perm);
+            throwSecurityException(perm, e);
         }
     }
     
@@ -380,6 +396,9 @@ public class ReportSecurityManager extends SecurityManager {
      */
       @Override
       public void checkExec(String cmd){
+          if(!protectionEnabled){
+              return;
+          }
           if(isCalledByRunQuery()){
               throw new ReportSecurityException(Messages.UNAUTHORIZED_EXECUTION_CALL_DETECTED);
           } 
@@ -387,7 +406,13 @@ public class ReportSecurityManager extends SecurityManager {
 
 
     private void throwSecurityException(Permission perm) {
-        throw new ReportSecurityException(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_0, new Object[]{perm.getClass().getCanonicalName(), perm.getName(), perm.getActions()}));
+        throw new ReportSecurityException(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_0, 
+                new Object[]{perm.getClass().getCanonicalName(), perm.getName(), perm.getActions()}));
+    }
+    
+    private void throwSecurityException(Permission perm, Throwable rootCause){
+        throw new ReportSecurityException(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_0, 
+                new Object[]{perm.getClass().getCanonicalName(), perm.getName(), perm.getActions()}), rootCause);
     }
 
     /** checks if permission name in combination with permission action is whitelisted
@@ -405,6 +430,9 @@ public class ReportSecurityManager extends SecurityManager {
     }
     
     private void handleNetPermission(Permission perm){
+        if(!protectionEnabled){
+            return;
+        }
         if(perm.getName().equals("getProxySelector")){
             if(stacktraceContains("org.eclipse.birt.data.engine.odaconsumer.PreparedStatement.getProjectedColumns")||
                     stacktraceContains("org.eclipse.birt.data.engine.impl.QueryResults.getResultIterator")){
@@ -437,7 +465,9 @@ public class ReportSecurityManager extends SecurityManager {
                    stacktraceContains("org.eclipse.birt.data.engine.i18n.DataResourceHandle.getInstance") ||
                    stacktraceContains("org.eclipse.birt.data.aggregation.i18n.Messages.<clinit>") ||
                    stacktraceContains("org.eclipse.birt.report.model.core.ModuleImpl.getMessage") ||
-                   stacktraceContains("org.eclipse.birt.core.data.DataTypeUtil.toInteger")){
+                   stacktraceContains("org.eclipse.birt.core.data.DataTypeUtil.toInteger") ||
+                   stacktraceContains("org.mozilla.javascript.ScriptRuntime.getMessage") ||
+                   stacktraceContains("com.ibm.icu.impl.ICULocaleService$ICUResourceBundleFactory.getSupportedIDs")){
                return;
            }
         }
@@ -445,6 +475,9 @@ public class ReportSecurityManager extends SecurityManager {
     }
 
     private void handleOSGIPermission(Permission perm) throws ReportSecurityException{
+        if(!protectionEnabled){
+            return;
+        }
         if("org.osgi.framework.AdminPermission".equals(perm.getClass().getCanonicalName())){
             if(stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask.createContentEmitter") ||
                     stacktraceContains("org.eclipse.birt.core.script.ScriptContext.getScriptEngine") ||
@@ -498,6 +531,10 @@ public class ReportSecurityManager extends SecurityManager {
      * @throws ReportSecurityException
      */
     private void handleFilePermission(Permission perm) throws ReportSecurityException{
+        if(!protectionEnabled){
+            return;
+        }
+        
         FilePermission filePermission = (FilePermission)perm;
         
         if(filePermission.getActions().contains("delete") || filePermission.getActions().contains("write")){
@@ -517,10 +554,13 @@ public class ReportSecurityManager extends SecurityManager {
                 return;
             } else if((filePermission.getName()).startsWith(System.getProperty("user.home") + File.separator + ".java" + File.separator + "fonts")) {
                 return;
+            } else if(filePermission.getName().startsWith(FilenameUtils.getFullPath(reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath()))){
+                return; // needed by win32, cause path there looks like c:\$path\.\reportOutput.pdf
+            } else if(SystemUtils.IS_OS_MAC_OSX && filePermission.getName().startsWith("/private/var/folders/")){
+                return; // handling osx tmp folder
             } else {
-                LOG.error("FilePermission:\t" + perm.getName() + " with actions:\t" + perm.getActions());
-                LOG.error("reportOptionsOutputfileNameAbsolutPath:\t" + reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath());
-                throwSecurityException(perm); 
+                throwSecurityException(perm);
+                
             }
         }
     }
@@ -530,7 +570,7 @@ public class ReportSecurityManager extends SecurityManager {
      * System.setSecurityManager(null)
      * so call with caution!
      * 
-     * its needed here because of .. 
+     * its needed here because of report security is switchable by user and needs to be turned of again when report creation is finished 
      * @param protectionEnabled
      */
     protected synchronized void setProtectionEnabled(boolean protectionEnabled){

@@ -42,17 +42,16 @@ public class ReportExecutionThread extends Thread {
     private ReportSecurityManager reportSecurityManager ;
     private IRunAndRenderTask task;
     
-    public ReportExecutionThread(IRunAndRenderTask task, ReportSecurityManager secureReportExecutionManager){
+    public ReportExecutionThread(IRunAndRenderTask task, ReportSecurityManager secureReportExecutionManager, boolean sandboxEnabled){
         this.task = task;
         this.reportSecurityManager = secureReportExecutionManager;
+        reportSecurityManager.setProtectionEnabled(sandboxEnabled);
     }
     
     @Override
     public void run() throws ReportSecurityException{
       SecurityManager old = System.getSecurityManager();
       System.setSecurityManager(reportSecurityManager);
-      // just to ensure, everything works as expected, switch on security
-      reportSecurityManager.setProtectionEnabled(true);
       try{
           runUntrustedCode();
       } catch (ReportSecurityException e){

@@ -30,5 +30,8 @@ public class PreferenceConstants {
     public static final String REPORT_LOG_FILE = "report_log_file";
     public static final String REPORT_USE_CACHE = "report_use_cache";
     public static final String REPORT_LOCAL_TEMPLATE_DIRECTORY = "local_report_template_dir";
+    public static final String REPORT_USE_SANDBOX = "report_use_sandbox";
+    public static final String REPORT_USE_SANDBOX_YES = "report_use_sandbox_yes";
+    public static final String REPORT_USE_SANDBOX_NO = "report_use_sandbox_no";
 
 }
