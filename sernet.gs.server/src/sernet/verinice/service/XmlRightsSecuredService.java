@@ -20,6 +20,18 @@
 package sernet.verinice.service;
 
 /**
+ * Provides a rights management in verinice based on a xml configuration.
+ *
+ * This class is exposed via spring remote to the client. That's why we cannot
+ * trust that the client behaves nicely and does not arbitrary override the
+ * configuration without legitimation. For that the
+ * {@link XmlRightsService#updateConfiguration(sernet.verinice.model.auth.Auth)}
+ * method is secured via spring security.
+ *
+ * The server side {@link RightsServerHandler} uses the unsecured
+ * {@link XmlRightsService}.
+ *
+ *
  * @author Benjamin Weißenfels <bw@sernet.de>
  *
  */
