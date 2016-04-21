@@ -145,8 +145,10 @@ public class BausteinUmsetzung extends CnATreeElement {
                 // should never happen:
                 Logger.getLogger(this.getClass()).error(obj.getClass());
                 return '0';
+            } else if (obj instanceof GefaehrdungsUmsetzung) {
+                Logger.getLogger(this.getClass()).error(obj.getClass());
+                return '0';
             }
-
             MassnahmenUmsetzung mn = (MassnahmenUmsetzung) obj;
             // prüfe nicht umgesetzte Massnahmen:
             if (mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_NEIN) || mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE) || mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET)) {
