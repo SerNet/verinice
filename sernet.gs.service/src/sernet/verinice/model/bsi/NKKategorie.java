@@ -24,6 +24,7 @@ public class NKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 
     private static final long serialVersionUID = 1L;
     public static final String TYPE_ID = "netzkategorie"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "nk-kategorie"; //$NON-NLS-1$
 	
 
 	public NKKategorie(CnATreeElement model) {

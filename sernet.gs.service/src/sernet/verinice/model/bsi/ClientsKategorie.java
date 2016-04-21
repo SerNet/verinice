@@ -25,6 +25,7 @@ public class ClientsKategorie extends CnATreeElement
 
     private static final long serialVersionUID = 1L;
     public static final String TYPE_ID = "clientskategorie"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "clients-kategorie"; //$NON-NLS-1$
 
 	public ClientsKategorie(CnATreeElement parent) {
 		super(parent);

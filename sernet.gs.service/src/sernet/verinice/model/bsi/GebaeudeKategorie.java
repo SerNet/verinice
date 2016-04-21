@@ -24,6 +24,7 @@ public class GebaeudeKategorie extends CnATreeElement implements IBSIStrukturKat
 
     private static final long serialVersionUID = 1L;
     public static final String TYPE_ID = "gebaeudekategorie"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "gebaeude-kategorie"; //$NON-NLS-1$
 	
 	public GebaeudeKategorie(CnATreeElement parent) {
 		super(parent);	

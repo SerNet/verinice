@@ -24,6 +24,7 @@ public class ServerKategorie extends CnATreeElement implements IBSIStrukturKateg
 
     private static final long serialVersionUID = 1L;
     public static final String TYPE_ID = "serverkategorie"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "server-kategorie"; //$NON-NLS-1$
 	
 	public ServerKategorie(CnATreeElement model) {
 		super(model);

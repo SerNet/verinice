@@ -24,6 +24,7 @@ public class RaeumeKategorie extends CnATreeElement implements IBSIStrukturKateg
 
     private static final long serialVersionUID = 1L;
     public static final String TYPE_ID = "raeumekategorie"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "raeume-kategorie"; //$NON-NLS-1$
 	
 	public RaeumeKategorie(CnATreeElement model) {
 		super(model);

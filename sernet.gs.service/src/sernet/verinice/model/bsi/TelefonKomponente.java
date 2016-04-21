@@ -28,6 +28,8 @@ public class TelefonKomponente extends CnATreeElement
 	
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID 		= "tkkomponente"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "telefon-komponente"; //$NON-NLS-1$
+    
 	public static final String PROP_NAME 		= "tkkomponente_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL	= "tkkomponente_kuerzel"; //$NON-NLS-1$
 	@Deprecated

@@ -24,7 +24,8 @@ public class SonstigeITKategorie extends CnATreeElement
 
     private static final long serialVersionUID = 1L;
     public static final String TYPE_ID = "sonstitkategorie"; //$NON-NLS-1$
-
+    public static final String TYPE_ID_HIBERNATE = "sonstige-it-kategorie"; //$NON-NLS-1$
+    
 	public SonstigeITKategorie(CnATreeElement parent) {
 		super(parent);
 	}

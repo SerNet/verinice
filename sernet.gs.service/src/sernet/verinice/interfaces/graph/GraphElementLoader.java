@@ -47,14 +47,14 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
     
     private Integer[] scopeIds;
     
-    private String[] typeIds;
+    private String[] hibernateTypeIds;
     
     private IElementFilter elementFilter;
     
     private transient IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
 
     /* (non-Javadoc)
-     * @see sernet.verinice.graph.IGraphElementLoader#loadElements()
+     * @see sernet.verinice.graph.IGraphElementLoadeTr#loadElements()
      */
     @Override
     public List<CnATreeElement> loadElements() {
@@ -110,12 +110,27 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
     }
     
     public String[] getTypeIds() {
-        return (typeIds != null) ? typeIds.clone() : null;
+        return (hibernateTypeIds != null) ? hibernateTypeIds.clone() : null;
     }
 
+    /**
+     * Set the type ids for this loader.
+     * The type ids from SNCA.xml are replaced by the hibernate type ids from
+     * *.hbm.xml mapping file if hibernate id is nor the same.
+     * 
+     * @param typeIds Type ids from SNCA.xml
+     * @see sernet.verinice.interfaces.graph.IGraphElementLoader#setTypeIds(java.lang.String[])
+     */
     @Override
     public void setTypeIds(String[] typeIds) {
-        this.typeIds = (typeIds != null) ? typeIds.clone() : null;
+        if(typeIds!=null) {
+            this.hibernateTypeIds = new String[typeIds.length];
+            for (int i = 0; i < typeIds.length; i++) {
+                this.hibernateTypeIds[i] = HibernateTypeIdManager.getHibernateTypeId(typeIds[i]);
+            } 
+        } else {
+            this.hibernateTypeIds = null; 
+        }
     }
     
     public IElementFilter getElementFilter() {

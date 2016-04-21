@@ -24,6 +24,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class AnwendungenKategorie extends CnATreeElement
 	implements IBSIStrukturKategorie {
 	public static final String TYPE_ID = "anwendungenkategorie"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "anwendungen-kategorie"; //$NON-NLS-1$
 	
 	public AnwendungenKategorie(CnATreeElement parent) {
 		super(parent);
