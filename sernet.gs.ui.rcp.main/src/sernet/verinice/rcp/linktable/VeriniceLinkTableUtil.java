@@ -19,16 +19,19 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.*;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.verinice.rcp.linktable.composite.CsvExportDialog;
 import sernet.verinice.service.csv.ICsvExport;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
@@ -37,8 +40,10 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
  */
 public class VeriniceLinkTableUtil {
 
+    private static final Logger LOG = Logger.getLogger(VeriniceLinkTableUtil.class);
     private static HashMap<String, String> vltExtensions = null;
     private static HashMap<String, String> csvExtensions = null;
+    private static CsvExportDialog csvDialog;
 
 
     static {
@@ -75,7 +80,10 @@ public class VeriniceLinkTableUtil {
         dialog.setFilterIndex(0);
         String filePath = dialog.open();
         if (filePath != null) {
-            Activator.getDefault().getPreferenceStore().setValue(defaultFolderPreference, filePath);
+
+            File file = new File(filePath);
+            String dir = file.getParent();
+            Activator.getDefault().getPreferenceStore().setValue(defaultFolderPreference, dir);
         }
         return filePath;
     }
@@ -99,6 +107,19 @@ public class VeriniceLinkTableUtil {
     public static String createCsvFilePath(Shell shell, String text) {
         return createFilePath(shell, text, PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT,
                 csvExtensions);
+    }
+
+    public static String createCsvFilePathAndHandleScopes(Shell shell, String text,
+            VeriniceLinkTable veriniceLinkTable) {
+
+        csvDialog = new CsvExportDialog(Display.getCurrent().getActiveShell(), text,
+                veriniceLinkTable);
+        if (csvDialog.open() == Dialog.OK) {
+            return csvDialog.getFilePath();
+        }
+
+        return null;
+
     }
 
 }

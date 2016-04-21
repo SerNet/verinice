@@ -20,8 +20,10 @@
 package sernet.verinice.rcp.linktable;
 
 import java.io.File;
-import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -34,12 +36,8 @@ import org.eclipse.ui.part.EditorPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.iso27k.rcp.*;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableFieldListener;
-import sernet.verinice.service.csv.CsvExport;
-import sernet.verinice.service.csv.ICsvExport;
-import sernet.verinice.service.linktable.LinkTableService;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 
@@ -52,9 +50,8 @@ public class VeriniceLinkTableEditor extends EditorPart {
 
     public static final String EDITOR_ID = VeriniceLinkTableEditor.class.getName();
 
+    private static final Logger LOG = Logger.getLogger(VeriniceLinkTableEditor.class);
     private VeriniceLinkTable veriniceLinkTable;
-    private LinkTableService linkTableService = new LinkTableService();
-    private ICsvExport csvExportHandler = new CsvExport();
     private boolean isDirty = false;
 
     private VeriniceLinkTableFieldListener contentObserver;
@@ -84,15 +81,23 @@ public class VeriniceLinkTableEditor extends EditorPart {
         Activator.inheritVeriniceContextState();
         Composite container = new Composite(parent, SWT.NONE);
 
-        Button exportButton = new Button(container, SWT.PUSH);
+        Composite buttonContainer = new Composite(container, SWT.NONE);
+        Button exportButton = new Button(buttonContainer, SWT.PUSH);
         exportButton.setText(Messages.VeriniceLinkTableEditor_1);
         exportButton.setToolTipText(Messages.VeriniceLinkTableEditor_2);
-        GridDataFactory.swtDefaults().align(SWT.RIGHT, SWT.TOP).applyTo(exportButton);
+        GridDataFactory.swtDefaults().applyTo(exportButton);
         exportButton.addSelectionListener(new SelectionListener() {
 
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                exportToCsv();
+            public void widgetSelected(SelectionEvent event) {
+
+                ExportLinkTableHandler exportHandler = new ExportLinkTableHandler(true,
+                        veriniceLinkTable);
+                try {
+                    exportHandler.execute(new ExecutionEvent());
+                } catch (ExecutionException e) {
+                    LOG.error("Error while exporting data", e);
+                }
             }
 
             @Override
@@ -117,7 +122,9 @@ public class VeriniceLinkTableEditor extends EditorPart {
         };
         ltr.addListener(contentObserver);
 
-        GridLayoutFactory.swtDefaults().applyTo(ltr);
+        GridLayoutFactory.swtDefaults().generateLayout(ltr);
+        GridLayoutFactory.swtDefaults().extendedMargins(9, 0, 30, 0)
+                .generateLayout(buttonContainer);
         GridLayoutFactory.swtDefaults().generateLayout(container);
     }
     
@@ -174,34 +181,6 @@ public class VeriniceLinkTableEditor extends EditorPart {
     public boolean isSaveAsAllowed() {
         return true;
     }
-
-    private void exportToCsv() {
-
-        String filePath = VeriniceLinkTableUtil.createCsvFilePath(
-                Display.getCurrent().getActiveShell(),
-                Messages.VeriniceLinkTableEditor_5);
-        if (filePath == null) {
-            return;
-        }
-        csvExportHandler.setFilePath(filePath);
-
-        VeriniceWorkspaceJob exportJob = new VeriniceWorkspaceJob(Messages.VeriniceLinkTableEditor_6, "Error while exporting data.") { //$NON-NLS-2$
-
-            @Override
-            protected void doRunInWorkspace() {
-
-                Activator.inheritVeriniceContextState();
-                List<List<String>> table = linkTableService
-                        .createTable(VeriniceLinkTableIO
-                                .createLinkTableConfiguration(veriniceLinkTable));
-
-                csvExportHandler.exportToFile(csvExportHandler.convert(table));
-
-            }
-        };
-        JobScheduler.scheduleJob(exportJob, new Mutex());
-    }
-
 
     /*
      * (non-Javadoc)

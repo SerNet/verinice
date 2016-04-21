@@ -85,6 +85,9 @@ public class VeriniceLinkTable {
     }
 
     public void addScopeId(Integer scopeId) {
+        if (scopeIds == null) {
+            scopeIds = new ArrayList<>();
+        }
         this.scopeIds.add(scopeId);
     }
 

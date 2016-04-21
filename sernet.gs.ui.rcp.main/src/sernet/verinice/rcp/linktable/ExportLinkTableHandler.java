@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -47,10 +46,18 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
     private LinkTableService linkTableService = new LinkTableService();
     private ICsvExport csvExportHandler = new CsvExport();
     private Shell shell = null;
-    private static ISchedulingRule iSchedulingRule = new Mutex();
+    private boolean fromEditor;
+    private VeriniceLinkTable veriniceLinkTable;
+    private String csvFilePath;
 
     public ExportLinkTableHandler() {
+        this(false, null);
+    }
+
+    public ExportLinkTableHandler(boolean fromEditor, VeriniceLinkTable veriniceLinkTable) {
         super(false);
+        this.fromEditor = fromEditor;
+        this.veriniceLinkTable = veriniceLinkTable;
      }
     
     /*
@@ -74,7 +81,6 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
     public Object execute(ExecutionEvent event) throws ExecutionException {
 
         if (checkRights()) {
-
             exportToCsv();
         } else {
             MessageDialog.openError(HandlerUtil.getActiveShell(event), "Error", //$NON-NLS-1$
@@ -89,12 +95,12 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
         setShell();
         final String filePath = VeriniceLinkTableUtil.createVltFilePath(shell,
                 Messages.ExportLinkTableHandler_2);
-        VeriniceLinkTable veriniceLinkTable = null;
+        VeriniceLinkTable veriniceLinkTableTemp = null;
         if (filePath != null) {
-            veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
-            LinkTableFileRegistry.add(veriniceLinkTable.getId(), filePath);
+            veriniceLinkTableTemp = VeriniceLinkTableIO.read(filePath);
+            LinkTableFileRegistry.add(veriniceLinkTableTemp.getId(), filePath);
         }
-        return veriniceLinkTable;
+        return veriniceLinkTableTemp;
     }
 
 
@@ -105,32 +111,47 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
     }
 
     private void exportToCsv() {
-
-        final VeriniceLinkTable veriniceLinkTable = createLinkTable();
-        if (veriniceLinkTable != null) {
-            final String filePath = VeriniceLinkTableUtil.createCsvFilePath(shell,
-                    Messages.ExportLinkTableHandler_3);
-            if (filePath != null) {
-                VeriniceWorkspaceJob job = new VeriniceWorkspaceJob(Messages.ExportLinkTableHandler_4,
-                        Messages.ExportLinkTableHandler_5) {
-
-                    @Override
-                    protected void doRunInWorkspace() {
-
-                        if (filePath != null) {
-                            Activator.inheritVeriniceContextState();
-                            csvExportHandler.setFilePath(filePath);
-                            List<List<String>> table = linkTableService
-                                    .createTable(VeriniceLinkTableIO
-                                            .createLinkTableConfiguration(veriniceLinkTable));
-                            csvExportHandler.exportToFile(csvExportHandler.convert(table));
-                        }
-                    }
-                };
-
-                JobScheduler.scheduleJob(job, iSchedulingRule);
-            }
+        setShell();
+        if (!fromEditor) {
+            veriniceLinkTable = createLinkTable();
         }
+        if (veriniceLinkTable == null) {
+            return;
+        }
+
+
+        if(veriniceLinkTable.useAllScopes()){
+            csvFilePath = VeriniceLinkTableUtil.createCsvFilePath(shell,
+                    Messages.ExportLinkTableHandler_3);
+        } else{
+            csvFilePath = VeriniceLinkTableUtil.createCsvFilePathAndHandleScopes(shell,
+                    Messages.ExportLinkTableHandler_3, veriniceLinkTable);
+        }
+
+        if (csvFilePath != null) {
+            VeriniceWorkspaceJob job = new VeriniceWorkspaceJob(Messages.ExportLinkTableHandler_4,
+                    Messages.ExportLinkTableHandler_5) {
+
+                @Override
+                protected void doRunInWorkspace() {
+
+                    if (csvFilePath != null) {
+                        Activator.inheritVeriniceContextState();
+                        csvExportHandler.setFilePath(csvFilePath);
+                        List<List<String>> table = linkTableService
+                                .createTable(VeriniceLinkTableIO
+                                        .createLinkTableConfiguration(veriniceLinkTable));
+                        // TODO rmotza add headers of columns
+                        // List<String> list = new ArrayList<>();
+                        // table.add(0, list);
+                        csvExportHandler.exportToFile(csvExportHandler.convert(table));
+                    }
+                }
+            };
+
+            JobScheduler.scheduleJob(job, new Mutex());
+        }
+
     }
 
 

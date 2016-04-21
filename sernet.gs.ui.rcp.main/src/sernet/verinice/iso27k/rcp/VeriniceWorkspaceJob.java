@@ -45,7 +45,7 @@ public abstract class VeriniceWorkspaceJob extends WorkspaceJob {
         IStatus status = Status.OK_STATUS;
 
         try {
-            monitor.beginTask("Running Task" + this.getName(),
+            monitor.beginTask("Running Task \"" + this.getName() + "\"",
                     IProgressMonitor.UNKNOWN);
             doRunInWorkspace();
         } catch (Exception e) {
