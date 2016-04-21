@@ -21,30 +21,24 @@ package sernet.verinice.service.linktable;
 
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  *
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public abstract class PropertyAdapterFactory {
+public class RiskAnalysisPropertyAdapter implements IPropertyAdapter<FinishedRiskAnalysis> {
 
-    private PropertyAdapterFactory() {
+    public RiskAnalysisPropertyAdapter() {
         super();
     }
 
-    public static <T> IPropertyAdapter<T> getAdapter(T element) {
-        if(element instanceof IBSIStrukturKategorie) {
-            return (IPropertyAdapter<T>) new ItbpGroupPropertyAdapter();
-        }
-        if(element instanceof FinishedRiskAnalysis) {
-            return (IPropertyAdapter<T>) new RiskAnalysisPropertyAdapter();
-        }
-        if(element instanceof CnATreeElement) {
-            return (IPropertyAdapter<T>) new EntityPropertyAdapter();
-        }   
-        return null;
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.linktable.IPropertyAdapter#getPropertyValue(java.lang.Object, java.lang.String)
+     */
+    @Override
+    public String getPropertyValue(FinishedRiskAnalysis element, String propertyId) {
+        return element.getTitle();
     }
-    
+
 }

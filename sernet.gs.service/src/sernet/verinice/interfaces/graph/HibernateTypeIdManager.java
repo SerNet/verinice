@@ -33,10 +33,12 @@ import sernet.verinice.model.bsi.NetzKomponente;
 import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.bsi.RaeumeKategorie;
 import sernet.verinice.model.bsi.ServerKategorie;
+import sernet.verinice.model.bsi.SonstIT;
 import sernet.verinice.model.bsi.SonstigeITKategorie;
 import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 
 /**
@@ -68,9 +70,11 @@ public abstract class HibernateTypeIdManager {
         TYPE_HIBERNATE_TYPE_MAP.put(RaeumeKategorie.TYPE_ID, RaeumeKategorie.TYPE_ID_HIBERNATE);
         TYPE_HIBERNATE_TYPE_MAP.put(TKKategorie.TYPE_ID, TKKategorie.TYPE_ID_HIBERNATE);
         
+        TYPE_HIBERNATE_TYPE_MAP.put(SonstIT.TYPE_ID, SonstIT.TYPE_ID_HIBERNATE);
         TYPE_HIBERNATE_TYPE_MAP.put(TelefonKomponente.TYPE_ID, TelefonKomponente.TYPE_ID_HIBERNATE);
         TYPE_HIBERNATE_TYPE_MAP.put(NetzKomponente.TYPE_ID, NetzKomponente.TYPE_ID_HIBERNATE);
         
+        TYPE_HIBERNATE_TYPE_MAP.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.HIBERNATE_TYPE_ID);  
         TYPE_HIBERNATE_TYPE_MAP.put(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.HIBERNATE_TYPE_ID);  
         TYPE_HIBERNATE_TYPE_MAP.put(RisikoMassnahmenUmsetzung.TYPE_ID, RisikoMassnahmenUmsetzung.HIBERNATE_TYPE_ID);
         TYPE_HIBERNATE_TYPE_MAP.put(BausteinUmsetzung.TYPE_ID, BausteinUmsetzung.HIBERNATE_TYPE_ID);

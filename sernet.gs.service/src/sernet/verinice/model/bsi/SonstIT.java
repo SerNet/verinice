@@ -28,6 +28,7 @@ public class SonstIT extends CnATreeElement
 	
 	// ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "sonstit"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "sonst-it"; //$NON-NLS-1$
 	public static final String PROP_NAME = "sonstit_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "sonstit_kuerzel"; //$NON-NLS-1$
 	@Deprecated
