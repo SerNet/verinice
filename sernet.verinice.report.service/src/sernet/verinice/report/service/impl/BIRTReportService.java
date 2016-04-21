@@ -137,14 +137,19 @@ public class BIRTReportService {
 			
 		};
 		
+		odaDriver = (VeriniceOdaDriver)Activator.getDefault().getOdaDriver();
+		boolean useReportLogging = odaDriver.getReportLoggingState();
+
 		HashMap hm = config.getAppContext();
-		hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, secureClassLoader);
-//		hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
+		boolean sandBoxEnabled = odaDriver.isSandboxEnabled();
+		if(odaDriver.isSandboxEnabled()){
+		    hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, secureClassLoader);
+		} else {
+		    hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
+		}
 		
 		config.setAppContext(hm);
 		
-		odaDriver = (VeriniceOdaDriver)Activator.getDefault().getOdaDriver();
-		boolean useReportLogging = odaDriver.getReportLoggingState();
 		
 		if(useReportLogging){
 		    String pref = odaDriver.getLogFile();
@@ -362,8 +367,10 @@ public class BIRTReportService {
 		    
 		    // secure only this, this is entry to birt report engine,after that we have no influence anymore
 		    
-            ReportExecutionThread reportExecutionThread = new ReportExecutionThread(task, secureReportExecutionManager);
-            reportExecutionThread.setContextClassLoader(secureClassLoader);
+            ReportExecutionThread reportExecutionThread = new ReportExecutionThread(task, secureReportExecutionManager, odaDriver.isSandboxEnabled());
+            if(odaDriver.isSandboxEnabled()){
+                reportExecutionThread.setContextClassLoader(secureClassLoader);
+            }
             reportExecutionThread.run();
 			if(log.isDebugEnabled()){
 			    long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
