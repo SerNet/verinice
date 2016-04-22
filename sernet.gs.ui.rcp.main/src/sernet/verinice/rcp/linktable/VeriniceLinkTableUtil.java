@@ -126,9 +126,13 @@ public class VeriniceLinkTableUtil {
     public static List<String> getTableHeaders(VeriniceLinkTable veriniceLinkTable) {
         ArrayList<String> headers = new ArrayList<>();
         for (String element : veriniceLinkTable.getColumnPaths()) {
-            int propertyBeginning = element
-                    .lastIndexOf(VeriniceLinkTableOperationType.PROPERTY.getOutput());
-            headers.add(element.substring(propertyBeginning + 1));
+            if (element.contains(VeriniceLinkTableOperationType.RELATION.getOutput())) {
+                headers.add(Messages.VeriniceLinkTableUtil_0);
+            } else {
+                int propertyBeginning = element
+                        .lastIndexOf(VeriniceLinkTableOperationType.PROPERTY.getOutput());
+                headers.add(element.substring(propertyBeginning + 1));
+            }
         }
 
         return headers;

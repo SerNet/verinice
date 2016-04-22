@@ -251,7 +251,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         ConfigurationLogger.logApplicationProperties();
         ConfigurationLogger.logProxyPreferences();
         if (CnAElementFactory.isModelLoaded() || CnAElementFactory.isIsoModelLoaded()) {
-
+            initObjectModelService();
         } else {
             IModelLoadListener loadListener = new IModelLoadListener() {
 

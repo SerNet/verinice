@@ -319,8 +319,7 @@ This variant:
     
      <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
      
-	<bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService" 
-	init-method="init">
+	<bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
 		<property name="huiTypeFactory" ref="huiTypeFactory" />
 	</bean>
      

@@ -24,7 +24,6 @@ import java.util.*;
 
 import org.apache.log4j.Logger;
 
-import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.model.bsi.*;
@@ -46,18 +45,13 @@ public class HUIObjectModelService implements IObjectModelService {
     private Map<String, Set<String>> allPossibleProperties = null;
     private Map<String, String> allLabels = null;
     private Map<String, String> allRelationLabels = null;
+    private Map<String, CnATreeElement> allTypeInstances = null;
 
     private Set<String> allTypeIds = null;
     private Set<String> allBSIElements = null;
 
     private Map<String, Set<String>> possibleChildren = null;
     private Map<String, Set<String>> possibleParents = null;
-
-    public static IObjectModelService getInstance() {
-
-        return (HUIObjectModelService) VeriniceContext
-                .get(VeriniceContext.OBJECT_MODEL_SERVICE);
-    }
 
     /*
      * (non-Javadoc)
@@ -69,14 +63,48 @@ public class HUIObjectModelService implements IObjectModelService {
         if (allTypeIds == null || allTypeIds.isEmpty()) {
             fillAllTypeIds();
         }
+        if (allTypeInstances == null || allTypeInstances.isEmpty()) {
+            fillAllTypeInstances();
+        }
         if (possibleChildren == null || possibleChildren.isEmpty()) {
             fillPossibleChildrenMap();
         }
         if (possibleParents == null || possibleParents.isEmpty()) {
             fillPossibleParentsMap();
         }
+        if (LOG.isDebugEnabled()) {
 
-        LOG.debug("init objectModelService finished");
+            LOG.debug("init objectModelService finished");
+        }
+    }
+
+    private void fillAllTypeInstances() {
+
+        allTypeInstances = new HashMap<>();
+        CnATreeElement parentInstance;
+        Class<? extends CnATreeElement> clazz;
+        for (String typeId : getAllTypeIDs()) {
+                clazz = CnATypeMapper.getClassFromTypeId(typeId);
+            if (clazz != null) {
+                try {
+                    parentInstance = createInstance(clazz, typeId);
+                } catch (InstantiationException | IllegalAccessException
+                        | InvocationTargetException | NoSuchMethodException e) {
+                    // TODO rmotza Auto-generated catch block
+                    LOG.error(e);
+                    throw new IllegalStateException(e);
+                    }
+
+                LOG.error(parentInstance);
+                if (parentInstance != null) {
+                    allTypeInstances.put(typeId, parentInstance);
+                }
+            }
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("typeIDs instantiated");
+        }
+
     }
 
     private void fillAllTypeIds() {
@@ -94,7 +122,6 @@ public class HUIObjectModelService implements IObjectModelService {
         addAllBSIElements();
     }
 
-    // categories
     private void addAllBSIElements() {
         allBSIElements = new HashSet<>();
         allBSIElements.add(AnwendungenKategorie.TYPE_ID);
@@ -211,6 +238,10 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public String getLabel(String id) {
+        // TODO rmotza tidy up workaround
+        if (id.contains(" ")) {
+            return id;
+        }
         return getHuiTypeFactory().getMessage(id);
     }
 
@@ -247,67 +278,29 @@ public class HUIObjectModelService implements IObjectModelService {
 
         possibleChildren = new HashMap<>();
         CnATreeElement parentInstance;
-        CnATreeElement childInstance;
-        Class<? extends CnATreeElement> parentClass;
-        Class<? extends CnATreeElement> childClass;
-        HashSet<String> possibleChildrenSet;
+        Set<String> possibleChildrenSet;
 
         for (String typeIdParent : getAllTypeIDs()) {
-
-            try {
-                parentClass = CnATypeMapper.getClassFromTypeId(typeIdParent);
-            } catch (IllegalStateException e) {
-                LOG.info(
-                        "ParentClass for possible Children is not mapped" + ": " + e.getMessage());
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(e);
-                }
-                continue;
-            }
-            try {
-                parentInstance = createInstance(parentClass, typeIdParent);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                    | NoSuchMethodException e) {
-                LOG.info("something went wrong while creating " + parentClass.getSimpleName() + ": "
-                        + e.getMessage());
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(e);
-                }
-                continue;
-            }
-            possibleChildrenSet = new HashSet<>();
-            for (String typeIdChild : getAllTypeIDs()) {
-
-                try {
-                    childClass = CnATypeMapper.getClassFromTypeId(typeIdChild);
-                } catch (IllegalStateException e) {
-                    LOG.info("ChildClass for possible Children is not mapped" + ": "
-                            + e.getMessage());
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(e);
-                    }
-                    continue;
-                }
-
-                try {
-                    childInstance = createInstance(childClass, typeIdChild);
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                        | NoSuchMethodException e) {
-                    LOG.warn("something went wrong while creating " + childClass.getSimpleName()
-                            + ": " + e.getMessage());
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(e);
-                    }
-                    continue;
-                }
-                if (parentInstance.canContain(childInstance)) {
-                    possibleChildrenSet.add(typeIdChild);
+            parentInstance = allTypeInstances.get(typeIdParent);
+            if (parentInstance != null) {
+                possibleChildrenSet = getPossibleChildren(parentInstance);
+                if (possibleChildrenSet != null) {
+                    possibleChildren.put(typeIdParent, possibleChildrenSet);
                 }
             }
-            possibleChildren.put(typeIdParent, possibleChildrenSet);
-
         }
+    }
 
+    public Set<String> getPossibleChildren(CnATreeElement parentInstance) {
+        CnATreeElement childInstance;
+        HashSet<String> possibleChildrenSet = new HashSet<>();
+        for (String typeIdChild : getAllTypeIDs()) {
+            childInstance = allTypeInstances.get(typeIdChild);
+            if (childInstance != null && parentInstance.canContain(childInstance)) {
+                possibleChildrenSet.add(typeIdChild);
+            }
+        }
+        return possibleChildrenSet;
     }
 
     private CnATreeElement createInstance(Class<? extends CnATreeElement> clazz, String typeId)
@@ -361,61 +354,30 @@ public class HUIObjectModelService implements IObjectModelService {
 
         possibleParents = new HashMap<>();
         CnATreeElement childInstance;
-        Class<? extends CnATreeElement> childClass;
-        Class<? extends CnATreeElement> parentClass;
-        HashSet<String> possibleParentsSet;
-        for (String typeIChild : getAllTypeIDs()) {
+        Set<String> possibleParentsSet;
+        for (String typeIdChild : getAllTypeIDs()) {
 
-            try {
-                childClass = CnATypeMapper.getClassFromTypeId(typeIChild);
-            } catch (IllegalStateException e) {
-                LOG.info("ChildClass for possible parents is not mapped" + ": " + e.getMessage());
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(e);
-                }
-                continue;
-            }
-            try {
-                childInstance = createInstance(childClass, typeIChild);
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                    | NoSuchMethodException e) {
-                LOG.warn("something went wrong while creating " + childClass.getSimpleName() + ": "
-                        + e.getMessage());
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(e);
-                }
-                continue;
-            }
-            possibleParentsSet = new HashSet<>();
-            for (String typeIdParent : getAllTypeIDs()) {
-                try {
-                    parentClass = CnATypeMapper.getClassFromTypeId(typeIdParent);
-                } catch (IllegalStateException e) {
-                    LOG.info("ParentClass for possible Parents is not mapped" + ": "
-                            + e.getMessage());
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(e);
-                    }
-                    continue;
-                }
-                try {
-                    CnATreeElement parentInsance = createInstance(parentClass, typeIdParent);
-                    if (parentInsance.canContain(childInstance)) {
-                        possibleParentsSet.add(typeIdParent);
-                    }
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException
-                        | NoSuchMethodException e) {
-                    LOG.warn("something went wrong while creating " + parentClass.getSimpleName()
-                            + ": " + e.getMessage());
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(e);
-                    }
-                    continue;
+            childInstance = allTypeInstances.get(typeIdChild);
+            if (childInstance != null) {
+                possibleParentsSet = getPossibleParents(childInstance);
+                if (possibleParentsSet != null) {
+                    possibleParents.put(typeIdChild, possibleParentsSet);
                 }
             }
-            possibleParents.put(typeIChild, possibleParentsSet);
 
         }
+    }
+
+    public Set<String> getPossibleParents(CnATreeElement childInstance) {
+        HashSet<String> possibleParentsSet;
+        possibleParentsSet = new HashSet<>();
+        for (String typeIdParent : getAllTypeIDs()) {
+            CnATreeElement parentInsance = allTypeInstances.get(typeIdParent);
+            if (parentInsance != null && parentInsance.canContain(childInstance)) {
+                    possibleParentsSet.add(typeIdParent);
+                }
+        }
+        return possibleParentsSet;
     }
 
     /*
