@@ -155,19 +155,34 @@ public class VeriniceGraph implements Serializable{
     }
     
     /**
-     * Returns the children of an element.
+     * Returns all children of an element.
      * If no children are found an empty Set is returned.
      * 
      * @param element A verinice element
      * @return The children of the element
      */
     public Set<CnATreeElement> getChildren(CnATreeElement element) {
-        Set<CnATreeElement> children = new HashSet<CnATreeElement>();
+        return getChildren(element, null);
+    }
+    
+    /**
+     * Returns the children of an element.
+     * Returned children are of type "elementTypeId".
+     * If no children are found an empty Set is returned.
+     * 
+     * @param element A verinice element
+     * @param elementTypeId Type of returned children
+     * @return The children of the element
+     */
+    public Set<CnATreeElement> getChildren(CnATreeElement element, String elementTypeId) {
+        Set<CnATreeElement> children = new HashSet<>();
         int parentId = element.getParentId();
         Set<CnATreeElement> relatives = getLinkTargets(element, Edge.RELATIVES);
         for (CnATreeElement parentOrChild : relatives) {
             if(parentId != parentOrChild.getDbId()) {
-                children.add(parentOrChild);
+                if(elementTypeId==null || elementTypeId.equals(parentOrChild.getTypeId())) {
+                    children.add(parentOrChild);
+                }
             }
         }
         return children;
@@ -246,12 +261,12 @@ public class VeriniceGraph implements Serializable{
             getLog().debug("Returning link targets of element: " + source.getTitle() + ", link type is: " + linkTypeId + "...");
         }
         Set<Edge> edgeList = getGraph().edgesOf(source);
-        Set<CnATreeElement> linkTargets = new HashSet<CnATreeElement>();       
+        Set<CnATreeElement> linkTargets = new HashSet<>();       
         for (Edge edge : edgeList) {
             if(linkTypeId==null || linkTypeId.equals(edge.getType())) {
                 CnATreeElement edgeSource = edge.getSource();
                 CnATreeElement edgeTarget = edge.getTarget();
-                CnATreeElement target = (edgeSource.equals(source)) ? edgeTarget : edgeSource;
+                CnATreeElement target = edgeSource.equals(source) ? edgeTarget : edgeSource;
                 linkTargets.add(target);
                 if (getLog().isDebugEnabled()) {
                     getLog().debug("Link found, source: " + source.getTitle() + ", target: " + target.getTitle() + ", link type: " + linkTypeId);
@@ -275,11 +290,11 @@ public class VeriniceGraph implements Serializable{
             getLog().debug("Returning edges of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
         }
         Set<Edge> allEdgeSet = getGraph().edgesOf(source);
-        Set<Edge> edgeSet = new HashSet<Edge>();       
+        Set<Edge> edgeSet = new HashSet<>();       
         for (Edge edge : allEdgeSet) {        
             CnATreeElement edgeSource = edge.getSource();
             CnATreeElement edgeTarget = edge.getTarget();
-            CnATreeElement target = (edgeSource.equals(source)) ? edgeTarget : edgeSource;
+            CnATreeElement target = edgeSource.equals(source) ? edgeTarget : edgeSource;
             if(elementTypeId==null || elementTypeId.equals(target.getTypeId())) {
                 edgeSet.add(edge);
                 if (getLog().isDebugEnabled()) {
@@ -304,11 +319,11 @@ public class VeriniceGraph implements Serializable{
             getLog().debug("Returning link targets of element: " + source.getTitle() + ", target type is: " + elementTypeId + "...");
         }
         Set<Edge> edgeList = getGraph().edgesOf(source);
-        Set<CnATreeElement> linkTargets = new HashSet<CnATreeElement>();       
+        Set<CnATreeElement> linkTargets = new HashSet<>();       
         for (Edge edge : edgeList) {        
             CnATreeElement edgeSource = edge.getSource();
             CnATreeElement edgeTarget = edge.getTarget();
-            CnATreeElement target = (edgeSource.equals(source)) ? edgeTarget : edgeSource;
+            CnATreeElement target = edgeSource.equals(source) ? edgeTarget : edgeSource;
             if(elementTypeId==null || elementTypeId.equals(target.getTypeId())) {
                 linkTargets.add(target);
                 if (getLog().isDebugEnabled()) {

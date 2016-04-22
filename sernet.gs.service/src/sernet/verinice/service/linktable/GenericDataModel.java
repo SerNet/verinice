@@ -145,9 +145,15 @@ public class GenericDataModel {
                 allRowMap.put(key + COLUMN_SEPERATOR + columnPath.getNumber(), row);
             }
         }
-        GenericDataModel.log(allRowMap);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Rows: ");
+            GenericDataModel.log(allRowMap);
+        }
         fillEmptyRows(allRowMap);
-        GenericDataModel.log(allRowMap);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Rows filled up: ");
+            GenericDataModel.log(allRowMap);
+        }
         return allRowMap;
     }
 
@@ -293,13 +299,11 @@ public class GenericDataModel {
     }
 
     public static void log(Map<String, String[]> valueMap) {
-        if (LOG.isDebugEnabled()) {
-            List<String> keyList =  new LinkedList<>(valueMap.keySet());
-
-            Collections.sort(keyList);
-            for (String key : keyList) {
-                LOG.debug(key + ":" + Arrays.toString(valueMap.get(key)));
-            }
+        List<String> keyList =  new LinkedList<>(valueMap.keySet());
+    
+        Collections.sort(keyList);
+        for (String key : keyList) {
+            LOG.debug(key + ":" + Arrays.toString(valueMap.get(key)));
         }
     }
 

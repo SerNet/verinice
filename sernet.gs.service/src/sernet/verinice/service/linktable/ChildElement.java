@@ -50,7 +50,7 @@ public class ChildElement extends BaseElement {
         }
         String parentId = String.valueOf(parent.getDbId());
         Map<String, Object> result = new HashMap<String, Object>();
-        Set<CnATreeElement> elements = graph.getChildren(parent);
+        Set<CnATreeElement> elements = graph.getChildren(parent,getElementTypeId());
         for (CnATreeElement element : elements) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(element.getTitle() + "  loaded");

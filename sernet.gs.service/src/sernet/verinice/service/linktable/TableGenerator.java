@@ -21,6 +21,8 @@ package sernet.verinice.service.linktable;
 
 import java.util.*;
 
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.NumericStringComparator;
 
 /**
@@ -34,6 +36,8 @@ import sernet.gs.service.NumericStringComparator;
  */
 public final class TableGenerator {
 
+    private static final Logger LOG = Logger.getLogger(TableGenerator.class);
+    
     private TableGenerator() {
         // do not instantiate this class, use public static methods
     }
@@ -52,10 +56,14 @@ public final class TableGenerator {
      */
     public static final List<List<String>> createTable(Map<String, String[]> allRowMap) {
         Map<String, String[]> allRowMapClean = new HashMap<>();
-        GenericDataModel.log(allRowMap);
+        if (LOG.isDebugEnabled()) {
+            GenericDataModel.log(allRowMap);
+        }
         if (allRowMap != null && !allRowMap.isEmpty()) {
             allRowMapClean = cleanUpRows(allRowMap);
-            GenericDataModel.log(allRowMapClean);
+            if (LOG.isDebugEnabled()) {
+                GenericDataModel.log(allRowMap);
+            }
         }
         List<List<String>> resultTable = new LinkedList<>();
         List<String> keyList =  new LinkedList<>(allRowMapClean.keySet());
