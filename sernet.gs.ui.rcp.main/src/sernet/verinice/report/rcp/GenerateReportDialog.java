@@ -742,7 +742,13 @@ public class GenerateReportDialog extends TitleAreaDialog {
             MessageDialog.openError(getShell(), "Error", "An error occurred while creating report.");
             return;
         }
-        super.okPressed();
+        if(!LOG.isTraceEnabled()){
+            if(MessageDialog.openConfirm(getShell(), Messages.GenerateReportDialog_35, Messages.GenerateReportDialog_36)){
+                super.okPressed();
+            }
+        } else {
+            super.okPressed();
+        }
     }
 
     @Override
