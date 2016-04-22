@@ -141,9 +141,7 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
                         List<List<String>> table = linkTableService
                                 .createTable(VeriniceLinkTableIO
                                         .createLinkTableConfiguration(veriniceLinkTable));
-                        // TODO rmotza add headers of columns
-                        // List<String> list = new ArrayList<>();
-                        // table.add(0, list);
+                        table.add(0, VeriniceLinkTableUtil.getTableHeaders(veriniceLinkTable));
                         csvExportHandler.exportToFile(csvExportHandler.convert(table));
                     }
                 }

@@ -192,7 +192,7 @@ public class HUIObjectModelService implements IObjectModelService {
     public Set<String> getPossibleProperties(String typeID) {
         if (isBSIElement(typeID)) {
             HashSet<String> set = new HashSet<>();
-            set.add("title");
+            set.add(typeID + "_name");
             return set;
         }
         if (getHuiTypeFactory().getEntityType(typeID) == null) {

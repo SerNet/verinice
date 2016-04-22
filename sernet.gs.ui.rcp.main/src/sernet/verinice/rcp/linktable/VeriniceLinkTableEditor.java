@@ -144,8 +144,12 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public void doSaveAs() {
-        executeSave(VeriniceLinkTableUtil.createVltFilePath(Display.getCurrent().getActiveShell(),
-                Messages.VeriniceLinkTableEditor_3));
+        String vltFilePath = VeriniceLinkTableUtil.createVltFilePath(
+                Display.getCurrent().getActiveShell(),
+                Messages.VeriniceLinkTableEditor_3);
+        if (vltFilePath != null) {
+            executeSave(vltFilePath);
+        }
     }
     
     private void executeSave(String filePath) {
@@ -159,9 +163,11 @@ public class VeriniceLinkTableEditor extends EditorPart {
         if(filePath==null) {
             filePath = VeriniceLinkTableUtil.createVltFilePath(
                     Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4);
-            veriniceLinkTable.setName(new File(filePath).getName());
-            setPartName(veriniceLinkTable.getName());
-            LinkTableFileRegistry.add(veriniceLinkTable.getId(),filePath);
+            if (filePath != null) {
+                veriniceLinkTable.setName(new File(filePath).getName());
+                setPartName(veriniceLinkTable.getName());
+                LinkTableFileRegistry.add(veriniceLinkTable.getId(), filePath);
+            }
         }
         return filePath;
     }  

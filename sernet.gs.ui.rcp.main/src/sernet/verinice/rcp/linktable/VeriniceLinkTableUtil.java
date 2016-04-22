@@ -20,8 +20,8 @@
 package sernet.verinice.rcp.linktable;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.*;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.rcp.linktable.composite.CsvExportDialog;
+import sernet.verinice.rcp.linktable.composite.combo.VeriniceLinkTableOperationType;
 import sernet.verinice.service.csv.ICsvExport;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
@@ -119,6 +120,18 @@ public class VeriniceLinkTableUtil {
         }
 
         return null;
+
+    }
+
+    public static List<String> getTableHeaders(VeriniceLinkTable veriniceLinkTable) {
+        ArrayList<String> headers = new ArrayList<>();
+        for (String element : veriniceLinkTable.getColumnPaths()) {
+            int propertyBeginning = element
+                    .lastIndexOf(VeriniceLinkTableOperationType.PROPERTY.getOutput());
+            headers.add(element.substring(propertyBeginning + 1));
+        }
+
+        return headers;
 
     }
 
