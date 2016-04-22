@@ -22,7 +22,7 @@
         <property name="authService" ref="authService" />
 
         <security:intercept-methods>
-            <security:protect method="sernet.verinice.service.XmlRightsService.updateConfiguration" access="ACTION_ID_EDITPROFILE" />
+            <security:protect method="sernet.verinice.service.XmlRightsSecuredService.updateConfiguration" access="ACTION_ID_EDITPROFILE" />
         </security:intercept-methods>
 	</bean>
 
