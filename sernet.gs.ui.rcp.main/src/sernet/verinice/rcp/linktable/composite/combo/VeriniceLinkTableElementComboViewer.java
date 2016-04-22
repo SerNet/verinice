@@ -207,7 +207,7 @@ public class VeriniceLinkTableElementComboViewer extends VeriniceLinkTableComboV
     protected Set<String> doGetAllRelationTypes() {
 
         HashSet<String> relationIDs = new HashSet<>(); 
-        if(operationType == VeriniceLinkTableOperationType.RELATION){
+        if (VeriniceLinkTableOperationType.isRelation(operationType)) {
             relationIDs.addAll(
                     ltrColumn.getContentService().getRelations(relatedID, getCurrentSelection()));
         }

@@ -41,7 +41,7 @@ import sernet.verinice.service.model.IObjectModelService;
 public class VeriniceLinkTableColumn {
 
     private static final Logger LOG = Logger.getLogger(VeriniceLinkTableColumn.class);
-    private static final int DEFAULT_GAP = 5;
+    public static final int DEFAULT_GAP = 6;
     private int style;
     private VeriniceLinkTableComposite ltrParent;
     private Label columName;
@@ -120,7 +120,7 @@ public class VeriniceLinkTableColumn {
         dragAndDropArea.setLayoutData(dragAndDropAreaData);
 
         deleteButton = new Button(column, style);
-        deleteButton.setText("--");
+        deleteButton.setText("-");
         FormData deleteButtonData = new FormData();
         deleteButtonData.left = new FormAttachment(dragAndDropArea, DEFAULT_GAP);
         deleteButtonData.top = new FormAttachment(dragAndDropArea, 0, SWT.CENTER);

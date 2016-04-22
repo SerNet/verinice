@@ -32,6 +32,7 @@ public interface IVeriniceLinkTableOperationType {
 
     // TODO rmotza insert method --> wait for java8
     // public static ILTR_OPERATION_TYPE getOperationType(String value);
+    // public static boolean isRelation(IVeriniceLinkTableOperationType type);w
 
     @Override
     public String toString();

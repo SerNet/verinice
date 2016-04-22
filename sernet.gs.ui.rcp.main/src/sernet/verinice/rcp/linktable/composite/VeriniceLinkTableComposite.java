@@ -51,6 +51,7 @@ public class VeriniceLinkTableComposite extends Composite {
 
     private List<VeriniceLinkTableFieldListener> listeners = new ArrayList<>();
     private static final Point DEFAULT_MARGIN = new Point(5, 5);
+    private static final Point DEFAULT_MARGIN_CONTENT = new Point(10, 10);
     private Composite columnsContainer;
     private Composite body;
     private Composite bodyBody;
@@ -163,7 +164,7 @@ public class VeriniceLinkTableComposite extends Composite {
 
         GridLayoutFactory.swtDefaults().margins(0, 0).generateLayout(bodyBody);
         GridLayoutFactory.swtDefaults().margins(0, 0).generateLayout(body);
-        GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN).generateLayout(c2);
+        GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN_CONTENT).generateLayout(c2);
     }
 
     private void addColumnsWithContent() {

@@ -79,4 +79,8 @@ public enum VeriniceLinkTableOperationType implements IVeriniceLinkTableOperatio
         throw new IllegalArgumentException("unsupported value " + value);
     }
 
+    public static boolean isRelation(IVeriniceLinkTableOperationType type) {
+        return type == RELATION || type == RELATION_OBJECT;
+    }
+
 }

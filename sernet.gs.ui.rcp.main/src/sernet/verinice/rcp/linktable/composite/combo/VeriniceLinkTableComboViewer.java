@@ -35,7 +35,6 @@ import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableColumn;
 public abstract class VeriniceLinkTableComboViewer extends ComboViewer
         implements IStructuredContentProvider, ISelectionChangedListener {
 
-    protected static final int DEFAULT_GAP = 10;
     protected VeriniceLinkTableColumn ltrColumn;
     protected VeriniceLinkTableComboViewer rightCombo = null;
     protected VeriniceLinkTableComboViewer leftCombo = null;
@@ -156,7 +155,7 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
 
     protected FormData getDefaultFormData(Control formerElement) {
         FormData comboData = new FormData();
-        comboData.left = new FormAttachment(formerElement, DEFAULT_GAP);
+        comboData.left = new FormAttachment(formerElement, VeriniceLinkTableColumn.DEFAULT_GAP);
         comboData.top = new FormAttachment(formerElement, 0, SWT.CENTER);
         return comboData;
     }
