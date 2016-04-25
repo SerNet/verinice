@@ -75,8 +75,13 @@ public abstract class HibernateTypeIdManager {
         TYPE_HIBERNATE_TYPE_MAP.put(NetzKomponente.TYPE_ID, NetzKomponente.TYPE_ID_HIBERNATE);
         
         TYPE_HIBERNATE_TYPE_MAP.put(GefaehrdungsUmsetzung.TYPE_ID, GefaehrdungsUmsetzung.HIBERNATE_TYPE_ID);  
+        
+        // There are 2 different Hibernate ids for MassnahmenUmsetzung.TYPE_ID: 
+        // MassnahmenUmsetzung.HIBERNATE_TYPE_ID and
+        // RisikoMassnahmenUmsetzung.HIBERNATE_TYPE_ID
+        // This ugly exception is handled in GraphElementLoader.setTypeIds(..)
         TYPE_HIBERNATE_TYPE_MAP.put(MassnahmenUmsetzung.TYPE_ID, MassnahmenUmsetzung.HIBERNATE_TYPE_ID);  
-        TYPE_HIBERNATE_TYPE_MAP.put(RisikoMassnahmenUmsetzung.TYPE_ID, RisikoMassnahmenUmsetzung.HIBERNATE_TYPE_ID);
+
         TYPE_HIBERNATE_TYPE_MAP.put(BausteinUmsetzung.TYPE_ID, BausteinUmsetzung.HIBERNATE_TYPE_ID);
         
         TYPE_HIBERNATE_TYPE_MAP.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.TYPE_ID_HIBERNATE);

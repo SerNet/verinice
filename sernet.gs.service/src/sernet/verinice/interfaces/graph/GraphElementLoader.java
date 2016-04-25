@@ -21,6 +21,7 @@ package sernet.verinice.interfaces.graph;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -31,6 +32,8 @@ import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -123,14 +126,19 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
      */
     @Override
     public void setTypeIds(String[] typeIds) {
+        List<String> hibernateTypeIdList = new LinkedList<>();
         if(typeIds!=null) {
-            this.hibernateTypeIds = new String[typeIds.length];
             for (int i = 0; i < typeIds.length; i++) {
-                this.hibernateTypeIds[i] = HibernateTypeIdManager.getHibernateTypeId(typeIds[i]);
+                hibernateTypeIdList.add(HibernateTypeIdManager.getHibernateTypeId(typeIds[i]));
+                // There are 2 different Hibernate ids for MassnahmenUmsetzung.TYPE_ID: 
+                // MassnahmenUmsetzung.HIBERNATE_TYPE_ID and
+                // RisikoMassnahmenUmsetzung.HIBERNATE_TYPE_ID
+                if(MassnahmenUmsetzung.TYPE_ID.equals(typeIds[i])) {
+                    hibernateTypeIdList.add(RisikoMassnahmenUmsetzung.HIBERNATE_TYPE_ID);
+                }
             } 
-        } else {
-            this.hibernateTypeIds = null; 
-        }
+        } 
+        this.hibernateTypeIds = hibernateTypeIdList.toArray(new String[hibernateTypeIdList.size()]);
     }
     
     public IElementFilter getElementFilter() {
