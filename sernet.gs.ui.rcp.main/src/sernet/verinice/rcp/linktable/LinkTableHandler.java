@@ -106,12 +106,12 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
             if (!VeriniceLinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable)) {
                 MessageDialog confirmInvalidInput = new MessageDialog(
                         Display.getCurrent().getActiveShell(),
-                        "Be careful!",
+                        Messages.LinkTableHandler_1,
                         null,
-                        "The vlt file is not valid and therefore cannot be displayed correctly.\n "
-                                + "Do you really want to continue?",
+                        Messages.LinkTableHandler_2
+                                + Messages.LinkTableHandler_3,
                         MessageDialog.QUESTION,
-                        new String[] { "Yes", "No" }, 0);
+                        new String[] { Messages.LinkTableHandler_4, Messages.LinkTableHandler_5 }, 0);
 
                 int open = confirmInvalidInput.open();
                 if (open != 0) {

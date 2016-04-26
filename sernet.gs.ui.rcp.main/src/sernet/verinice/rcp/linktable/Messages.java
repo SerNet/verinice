@@ -33,6 +33,11 @@ public class Messages extends NLS {
     public static String ExportLinkTableHandler_4;
     public static String ExportLinkTableHandler_5;
     public static String LinkTableHandler_0;
+    public static String LinkTableHandler_1;
+    public static String LinkTableHandler_2;
+    public static String LinkTableHandler_3;
+    public static String LinkTableHandler_4;
+    public static String LinkTableHandler_5;
     public static String OpenLinkTableHandler_0;
     public static String VeriniceLinkTableEditor_1;
     public static String VeriniceLinkTableEditor_2;
