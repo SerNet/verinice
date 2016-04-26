@@ -869,6 +869,16 @@ for(Asset asset : assetSet){
 	    integ = linkResults.get(0).getRiskIntegrity();
 	    avail = linkResults.get(0).getRiskAvailability();
 	}
+	
+	if(conf == null){
+		conf = 0;
+	}
+	if(integ == null){
+		integ = 0;
+	}
+	if(avail == null){
+		avail = 0;
+	}
 
 
 
@@ -879,14 +889,15 @@ for(Asset asset : assetSet){
 	impactC = valueAdapter.getVertraulichkeit();
 	impactI = valueAdapter.getIntegritaet();
 	impactA = valueAdapter.getVerfuegbarkeit();
-
-	trueString = "1";
-	propertyValue = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue();
-	isCRelevant = propertyValue == null || trueString.equals(propertyValue);
-	propertyValue = scenario.getEntity().getProperties("scenario_value_method_integrity").getProperty(0).getPropertyValue();
-    isIRelevant =  propertyValue == null || trueString.equals(propertyValue);
-    propertyValue = scenario.getEntity().getProperties("scenario_value_method_availability").getProperty(0).getPropertyValue();
-    isARelevant =  propertyValue == null || trueString.equals(propertyValue);
+	if(scenario != null && scenario.getEntity() != null){
+		trueString = "1";
+		propertyValue = scenario.getEntity().getProperties("scenario_value_method_confidentiality");
+		isCRelevant = propertyValue == null || trueString.equals(propertyValue.getProperty(0).getPropertyValue());
+		propertyValue = scenario.getEntity().getProperties("scenario_value_method_integrity");
+	    isIRelevant =  propertyValue == null || trueString.equals(propertyValue.getProperty(0).getPropertyValue());
+	    propertyValue = scenario.getEntity().getProperties("scenario_value_method_availability");
+	    isARelevant =  propertyValue == null || trueString.equals(propertyValue.getProperty(0).getPropertyValue());
+    }
              
 
 	reducedImpact = ras.applyControlsToImpact(IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
