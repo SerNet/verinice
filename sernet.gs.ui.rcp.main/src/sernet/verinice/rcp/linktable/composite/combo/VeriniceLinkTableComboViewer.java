@@ -62,7 +62,7 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
 
             @Override
             public String getText(Object element) {
-                return getLabelText(element);
+                return getLabelText(element).replaceAll("\n", "");
             }
 
         });

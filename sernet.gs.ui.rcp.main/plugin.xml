@@ -1259,70 +1259,6 @@
             	</command>
 			</menu>
 		</menuContribution>
-		
-		<!--<menuContribution locationURI="menu:org.eclipse.ui.main.menu">
-				 <menu id="file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap" label="%menu.file">
-            <command commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
-                  label="Create query..."
-                  style="push"
-                  tooltip="Create a new query">
-            </command>
-         </menu>
-         <menu id="file?after=sernet.verinice.rcp.linktable.CreateLinkTableHandler" label="%menu.file">
-            <command commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
-                  label="Open query..."
-                  style="push"
-                  tooltip="Open a query">
-            </command>
-         </menu>
-		 </menuContribution>-->
-        
-       <!-- <menuContribution locationURI="menu:org.eclipse.ui.main.menu">
-	         <menu
-	               id="file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap"
-	               label="New">
-	            <command
-	                  commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
-	                  label="Connection Profile"
-	                  style="push">
-	            </command>
-	         </menu>
-      	</menuContribution>
-      <menuContribution
-            allPopups="false"
-            locationURI="popup:file?after=sernet.verinice.rcp.linktable.CreateLinkTableHandler">
-         <command
-               commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
-               label="Table"
-               style="push">
-         </command>
-      </menuContribution>
-        
-        
-	<menuContribution locationURI="menu:org.eclipse.ui.main.menu">
-		<menu label="Query Builder" 
-		
-               id="sernet.verinice.samt.rcp.menu.queryBuilder?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap"
-               path="file/vn_menu_file">
-            <groupMarker
-                  name="queryBuilder">
-            </groupMarker>
-        </menu>
-            <command commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
-                  label="Create Query..."
-                  tooltip="Create a new query"
-               menubarPath="file/sernet.verinice.samt.rcp.menu.queryBuilder/queryBuilder"
-               style="push">
-            </command>
-        </menu>
-        <menu id="file?after=sernet.verinice.rcp.linktable.CreateLinkTableHandler" label="Query Builder">
-            <command commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
-                  label="Open Query..."
-                  style="push"
-               menubarPath="file/sernet.verinice.samt.rcp.menu1/queryBuilder"
-                  tooltip="Open a Query">
-            </command>
-	</menuContribution>-->
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -2113,6 +2049,18 @@
              state="true">
           <enablement>
             <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
+          </enablement>
+       </decorator>
+       <decorator
+             adaptable="true"
+             class="sernet.verinice.rcp.linktable.ValidationDecorator"
+             id="sernet.verinice.rcp.linktable.ValidationDecorator"
+             label="ValidationDecorator"
+             lightweight="true"
+             location="BOTTOM_LEFT"
+             state="true">
+          <enablement>
+            <objectClass name="sernet.verinice.rcp.linktable.VeriniceLinkTableEditor"/>
           </enablement>
        </decorator>
    </extension>
