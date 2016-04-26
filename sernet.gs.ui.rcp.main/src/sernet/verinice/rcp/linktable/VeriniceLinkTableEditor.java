@@ -105,7 +105,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
                 try {
                     exportHandler.execute(new ExecutionEvent());
                 } catch (ExecutionException e) {
-                    LOG.error("Error while exporting data", e);
+                    LOG.error("Error while exporting data", e); //$NON-NLS-1$
                 }
             }
 
@@ -123,7 +123,14 @@ public class VeriniceLinkTableEditor extends EditorPart {
         contentObserver = new VeriniceLinkTableFieldListener() {
 
             @Override
-            public void fieldValueChanged(boolean isValid) {
+            public void fieldValueChanged() {
+                isDirty = true;
+                firePropertyChange(IEditorPart.PROP_DIRTY);
+
+            }
+
+            @Override
+            public void validated(boolean isValid) {
                 if (isValid) {
                     Image defaultImage = ImageCache.getInstance().getImage(ImageCache.TOOL);
                     setTitleImage(defaultImage);
@@ -132,12 +139,12 @@ public class VeriniceLinkTableEditor extends EditorPart {
                 } else {
                     Image warningImage = ImageCache.getInstance().getImage(ImageCache.WARNING);
                     setTitleImage(warningImage);
-                    setPartName("INVALID_QUERY");
-                    toolTip = "The query is not valid and therefore cannot be saved.";
-
+                    setPartName(veriniceLinkTable.getName() + Messages.VeriniceLinkTableEditor_7);
+                    toolTip = Messages.VeriniceLinkTableEditor_8;
+                    isDirty = false;
+                    firePropertyChange(IEditorPart.PROP_DIRTY);
                 }
-                isDirty = isValid;
-                firePropertyChange(IEditorPart.PROP_DIRTY);
+
 
             }
         };
@@ -147,8 +154,8 @@ public class VeriniceLinkTableEditor extends EditorPart {
         GridLayoutFactory.swtDefaults().extendedMargins(9, 0, 30, 0)
                 .generateLayout(buttonContainer);
         GridLayoutFactory.swtDefaults().generateLayout(container);
-        contentObserver.fieldValueChanged(
-                VeriniceLinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable));
+        contentObserver
+                .validated(VeriniceLinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable));
     }
     
     /* (non-Javadoc)
@@ -184,9 +191,6 @@ public class VeriniceLinkTableEditor extends EditorPart {
         String vltFilePath = getFilePath(veriniceLinkTable);
         if (vltFilePath != null) {
             veriniceLinkTable.setNewId();
-            String name = vltFilePath.substring(vltFilePath.lastIndexOf(File.separator) + 1,
-                    vltFilePath.length() - 1);
-            veriniceLinkTable.setName(name);
             executeSave(vltFilePath);
         }
     }
@@ -203,7 +207,9 @@ public class VeriniceLinkTableEditor extends EditorPart {
             filePath = VeriniceLinkTableUtil.createVltFilePath(
                     Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4);
             if (filePath != null) {
-                veriniceLinkTable.setName(new File(filePath).getName());
+                String name = filePath.substring(filePath.lastIndexOf(File.separator) + 1,
+                        filePath.length());
+                veriniceLinkTable.setName(name);
                 setPartName(veriniceLinkTable.getName());
                 LinkTableFileRegistry.add(veriniceLinkTable.getId(), filePath);
             }

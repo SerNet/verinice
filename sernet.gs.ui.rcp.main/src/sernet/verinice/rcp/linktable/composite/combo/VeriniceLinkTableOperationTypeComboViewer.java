@@ -51,6 +51,7 @@ public class VeriniceLinkTableOperationTypeComboViewer extends VeriniceLinkTable
         if (!isCopy) {
             selectFirstElement(true);
         }
+        getCombo().setToolTipText(VeriniceLinkTableOperationType.toolTip());
 
     }
 
@@ -134,7 +135,7 @@ public class VeriniceLinkTableOperationTypeComboViewer extends VeriniceLinkTable
     @Override
     protected String getLabelText(Object element) {
         if (element instanceof VeriniceLinkTableOperationType) {
-            return ((VeriniceLinkTableOperationType) element).getLabel();
+            return ((VeriniceLinkTableOperationType) element).getOutput();
         } else {
             return element.toString();
         }

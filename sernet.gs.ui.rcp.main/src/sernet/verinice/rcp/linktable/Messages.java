@@ -45,6 +45,8 @@ public class Messages extends NLS {
     public static String VeriniceLinkTableEditor_4;
     public static String VeriniceLinkTableEditor_5;
     public static String VeriniceLinkTableEditor_6;
+    public static String VeriniceLinkTableEditor_7;
+    public static String VeriniceLinkTableEditor_8;
     public static String VeriniceLinkTableUtil_0;
     static {
         // initialize resource bundle

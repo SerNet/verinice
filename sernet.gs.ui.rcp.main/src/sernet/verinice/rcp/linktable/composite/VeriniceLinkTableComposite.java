@@ -91,6 +91,8 @@ public class VeriniceLinkTableComposite extends Composite {
 
         setBody(rootContainer);
 
+        refresh(false);
+
         rootContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN).generateLayout(rootContainer);
 
@@ -137,7 +139,7 @@ public class VeriniceLinkTableComposite extends Composite {
                 this);
 
         GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(multiControlContainer);
-        GridData multiControlContainerData = new GridData(GridData.VERTICAL_ALIGN_CENTER);
+        GridData multiControlContainerData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
         multiControlContainer.setLayoutData(multiControlContainerData);
         GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(head);
 
@@ -178,7 +180,6 @@ public class VeriniceLinkTableComposite extends Composite {
             }
             addColumn(path);
         }
-        refresh(true);
 
     }
 
@@ -270,7 +271,7 @@ public class VeriniceLinkTableComposite extends Composite {
             }
             updateVeriniceContent();
         }
-
+        fireValidationEvent(VeriniceLinkTableUtil.isValidVeriniceLinkTable(ltrContent));
     }
 
     public void updateVeriniceContent() {
@@ -285,21 +286,30 @@ public class VeriniceLinkTableComposite extends Composite {
             path = column.getColumnPath();
             columnPaths.add(path);
         }
-        ltrContent.setAllScopes(useAllScopes);
-        if (useAllScopes) {
-            ltrContent.getScopeIds().clear();
+        boolean updated = false;
+        if (ltrContent.useAllScopes() != useAllScopes) {
+            ltrContent.setAllScopes(useAllScopes);
+            if (useAllScopes) {
+                ltrContent.getScopeIds().clear();
+            }
+            updated = true;
         }
-        ltrContent.setColumnPaths(columnPaths);
-        ltrContent.setRelationIds(new ArrayList<>(multiControl.getSelectedRelationIDs()));
+        if (!ltrContent.getColumnPaths().equals(columnPaths)) {
+            ltrContent.setColumnPaths(columnPaths);
+            updated = true;
+        }
+        ArrayList<String> relationIds = new ArrayList<>(multiControl.getSelectedRelationIDs());
+        if (!ltrContent.getRelationIds().equals(relationIds)) {
+            ltrContent.setRelationIds(relationIds);
+            updated = true;
+        }
         if (LOG.isDebugEnabled()) {
             LOG.debug(columnPaths.size() + " columns");
         }
-        fireEvent("updateVeriniceLinkTable", ltrContent, isValidVeriniceLinkTable());
+        if (updated) {
+            fireFieldChangedEvent();
+        }
 
-    }
-
-    private boolean isValidVeriniceLinkTable() {
-        return VeriniceLinkTableUtil.isValidVeriniceLinkTable(ltrContent);
     }
 
     private void addButtons(Composite parent) {
@@ -378,9 +388,15 @@ public class VeriniceLinkTableComposite extends Composite {
             listeners.add(l);
     }
 
-    public void fireEvent(String fieldName, Object newValue, boolean isValid) {
+    public void fireFieldChangedEvent() {
         for (VeriniceLinkTableFieldListener l : listeners) {
-            l.fieldValueChanged(isValid);
+            l.fieldValueChanged();
+        }
+    }
+
+    public void fireValidationEvent(boolean isValid) {
+        for (VeriniceLinkTableFieldListener l : listeners) {
+            l.validated(isValid);
         }
     }
 

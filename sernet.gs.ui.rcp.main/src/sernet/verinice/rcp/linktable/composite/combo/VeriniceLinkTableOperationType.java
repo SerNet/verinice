@@ -87,4 +87,12 @@ public enum VeriniceLinkTableOperationType implements IVeriniceLinkTableOperatio
         return type.equals(RELATION_OBJECT.getOutput()) || type.equals(RELATION.getOutput());
     }
 
+    public static String toolTip(){
+        StringBuilder builder = new StringBuilder();
+        for (VeriniceLinkTableOperationType type : values()) {
+            builder.append(type.getLabel() + "\n");
+        }
+        return builder.toString();
+    }
+
 }

@@ -24,6 +24,8 @@ package sernet.verinice.rcp.linktable.composite;
  */
 public interface VeriniceLinkTableFieldListener {
 
-    public void fieldValueChanged(boolean isValid);
+    public void fieldValueChanged();
+
+    public void validated(boolean isValid);
 
 }

@@ -69,6 +69,7 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
 
         this.setInput(new Object());
         refreshCombo();
+
     }
 
     protected abstract String getLabelText(Object element);
