@@ -22,14 +22,12 @@ package sernet.verinice.service.model;
 import java.util.*;
 
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.HUITypeFactory;
 
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class HUIObjectModelLoader implements IObjectModelService {
 
-    private HUITypeFactory huiTypeFactory;
     private IObjectModelService objectModelService;
 
     private Map<String, Set<String>> allRelationPartners = null;
@@ -83,13 +81,6 @@ public class HUIObjectModelLoader implements IObjectModelService {
         return false;
     }
 
-    public HUITypeFactory getHuiTypeFactory() {
-        return huiTypeFactory;
-    }
-
-    public void setHuiTypeFactory(HUITypeFactory huiTypeFactory) {
-        this.huiTypeFactory = huiTypeFactory;
-    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.service.model.IObjectModelService#getRelations(java.lang.String, java.lang.String)

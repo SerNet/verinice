@@ -55,6 +55,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.*;
+import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
@@ -250,7 +251,6 @@ public class Activator extends AbstractUIPlugin implements IMain {
         ConfigurationLogger.logSystemProperties();
         ConfigurationLogger.logApplicationProperties();
         ConfigurationLogger.logProxyPreferences();
-        // TODO rmotza change Listener to better suited one
         if (CnAElementFactory.isModelLoaded() || CnAElementFactory.isIsoModelLoaded()) {
             initObjectModelService();
         } else {
@@ -258,8 +258,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
                 @Override
                 public void loaded(ISO27KModel model) {
-                    initObjectModelService();
-                    CnAElementFactory.getInstance().removeLoadListener(this);
+                    // do nothing
 
                 }
 
@@ -283,49 +282,21 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private void initObjectModelService() {
 
-        WorkspaceJob job = new WorkspaceJob("load objectModelService") {
+        VeriniceWorkspaceJob job = new VeriniceWorkspaceJob("Load objectModelService",
+                "error while loading objectModelService") {
+
             @Override
-            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-                IStatus status = Status.OK_STATUS;
-                try {
-                    monitor.beginTask("load objectModelService", IProgressMonitor.UNKNOWN);
-                    IObjectModelService objectModelService = null;
-                    while (objectModelService == null) {
-                        objectModelService = initializeObjectModelService(objectModelService);
+            protected void doRunInWorkspace() {
 
-                    }
-
-                    long time = System.currentTimeMillis();
-                    objectModelService.init();
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("took " + (System.currentTimeMillis() - time)
-                                + " msec to load Service");
-                    }
-                } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
-                    status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", //$NON-NLS-1$
-                            "load objectModelService",
-                            e);
-                } finally {
-                    monitor.done();
+                inheritVeriniceContextState();
+                IObjectModelService objectModelService = ServiceFactory.lookupObjectModelService();
+                long time = System.currentTimeMillis();
+                objectModelService.init();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("took " + (System.currentTimeMillis() - time)
+                            + " msec to load Service");
                 }
-                return status;
-            }
 
-            public IObjectModelService initializeObjectModelService(
-                    IObjectModelService objectModelService) {
-                try {
-                    objectModelService = ServiceFactory.lookupObjectModelService();
-                } catch (IllegalStateException e) {
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug(
-                                "ObjectModelService not yet initialized, objectmodelService = "
-                                        + objectModelService,
-                                e);
-                    }
-                    inheritVeriniceContextState();
-                }
-                return objectModelService;
             }
         };
         JobScheduler.scheduleInitJob(job);

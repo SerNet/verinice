@@ -156,7 +156,6 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 		        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
 			</bean>
           </property>
-          <property name="huiTypeFactory" ref="huiTypeFactory" />
 	</bean>
     
     <bean id="accountService"
