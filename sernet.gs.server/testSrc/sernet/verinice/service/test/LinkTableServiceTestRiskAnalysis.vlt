@@ -1,0 +1,18 @@
+{
+  "id": "29af2a6c-103c-4f9c-8120-78971f5d7e56",
+  "name": "ra.vlt",
+  "useAllScopes": false,
+  "scopeIds": [
+    884736,
+    373362
+  ],
+  "columnPaths": [
+    "riskanalysis<raum.raum_name",
+    "riskanalysis<client.client_name",
+    "riskanalysis.riskanalysis_name",
+    "riskanalysis>gefaehrdungsumsetzung.gefaehrdungsumsetzung_titel",
+    "riskanalysis>gefaehrdungsumsetzung>mnums.mnums_id",
+    "riskanalysis>gefaehrdungsumsetzung>mnums.mnums_name"
+  ],
+  "relationIds": []
+}

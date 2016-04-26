@@ -87,7 +87,9 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
         command = commandService.executeCommand(command);
         List<CnATreeElement> assetList = command.getElements();
 
-        assertEquals("Result table has not " + assetList + " rows", assetList.size(), resultTable.size());
+        int expectedSize = resultTable.size() + 2;
+        
+        assertEquals("Result table has not " + assetList.size() + " rows", assetList.size(), expectedSize);
 
         for (CnATreeElement asset : assetList) {
             assertTrue("Asset: " + asset.getTitle() + " not in result list",assetNames.contains(asset.getTitle()));

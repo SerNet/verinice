@@ -1,0 +1,30 @@
+{
+  "id": "c355edbb-f60e-4297-914d-d47f5d5c7b1f",
+  "name": "IT-Verbund-alles.vlt",
+  "useAllScopes": false,
+  "scopeIds": [
+    884736
+  ],
+  "columnPaths": [
+    "itverbund.itverbund_name",
+    "itverbund>anwendungenkategorie.anwendungenkategorie_name",
+    "itverbund>anwendungenkategorie>anwendung.anwendung_name",
+    "itverbund>gebaeudekategorie.gebaeudekategorie_name",
+    "itverbund>gebaeudekategorie>gebaeude.gebaeude_name",
+    "itverbund>clientskategorie.clientskategorie_name",
+    "itverbund>clientskategorie>client.client_name",
+    "itverbund>sonstitkategorie.sonstitkategorie_name",
+    "itverbund>sonstitkategorie>sonstit.sonstit_name",
+    "itverbund>serverkategorie.serverkategorie_name",
+    "itverbund>serverkategorie>server.server_name",
+    "itverbund>tkkategorie.tkkategorie_name",
+    "itverbund>tkkategorie>tkkomponente.tkkomponente_name",
+    "itverbund>personkategorie.personkategorie_name",
+    "itverbund>personkategorie>person.nachname",
+    "itverbund>netzkategorie.netzkategorie_name",
+    "itverbund>netzkategorie>netzkomponente.netzkomponente_name",
+    "itverbund>raeumekategorie.raeumekategorie_name",
+    "itverbund>raeumekategorie>raum.raum_name"
+  ],
+  "relationIds": []
+}
