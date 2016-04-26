@@ -24,6 +24,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -63,7 +65,6 @@ public class VeriniceLinkTableColumn {
         this.contentService = copy.getContentService();
         createColumn();
         firstCombo = (VeriniceLinkTableElementComboViewer) copy.getFirstCombo().copy(null, column, columName);
-        refresh();
     }
 
     public VeriniceLinkTableColumn(VeriniceLinkTableComposite parent, int style,
@@ -90,8 +91,29 @@ public class VeriniceLinkTableColumn {
         addFirstCombo();
         firstCombo.setInput(new Object());
         firstCombo.setColumnPath(path);
-        refresh();
 
+    }
+
+    /**
+     * @param selection
+     * @param path
+     * @param veriniceLinkTableComposite
+     * @param i
+     */
+    public VeriniceLinkTableColumn(ISelection selection, List<String> path,
+            VeriniceLinkTableComposite parent, int number) {
+
+        this.ltrParent = parent;
+        this.style = parent.getStyle();
+        this.colNumber = number;
+        this.contentService = parent.getContentService();
+
+        createColumn();
+
+        addFirstCombo();
+        firstCombo.setInput(new Object());
+        StructuredSelection element = (StructuredSelection) selection;
+        firstCombo.setColumnPath(element.getFirstElement().toString(), path);
     }
 
     private void addFirstCombo() {
@@ -268,8 +290,10 @@ public class VeriniceLinkTableColumn {
     }
 
     public void refresh() {
-        column.pack(true);
-        column.layout(true);
+        if (!column.isDisposed()) {
+            column.pack(true);
+            column.layout(true);
+        }
         ltrParent.refresh(true);
     }
 

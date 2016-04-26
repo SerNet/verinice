@@ -68,6 +68,10 @@ public class VeriniceLinkTable {
         this.id = id;
     }
 
+    public void setNewId() {
+        this.id = UUID.randomUUID().toString();
+    }
+
     public String getName() {
         return name;
     }
@@ -198,6 +202,7 @@ public class VeriniceLinkTable {
             this.relationIds.add(relationId);
             return this;
         }
+
 
     }
 

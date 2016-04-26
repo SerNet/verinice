@@ -250,6 +250,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         ConfigurationLogger.logSystemProperties();
         ConfigurationLogger.logApplicationProperties();
         ConfigurationLogger.logProxyPreferences();
+        // TODO rmotza change Listener to better suited one
         if (CnAElementFactory.isModelLoaded() || CnAElementFactory.isIsoModelLoaded()) {
             initObjectModelService();
         } else {

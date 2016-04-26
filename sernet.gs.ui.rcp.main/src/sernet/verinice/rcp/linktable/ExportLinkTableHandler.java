@@ -32,6 +32,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.*;
 import sernet.verinice.rcp.RightsEnabledHandler;
+import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
 import sernet.verinice.service.csv.CsvExport;
 import sernet.verinice.service.csv.ICsvExport;
 import sernet.verinice.service.linktable.LinkTableService;

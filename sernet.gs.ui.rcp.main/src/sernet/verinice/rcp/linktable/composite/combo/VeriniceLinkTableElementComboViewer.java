@@ -93,7 +93,7 @@ public class VeriniceLinkTableElementComboViewer extends VeriniceLinkTableComboV
     public Object[] getElements(Object inputElement) {
         IObjectModelService objectService = ltrColumn.getContentService();
         String[] typeIDs;
-        if (leftCombo == null) {
+        if (leftCombo == null || relatedID.isEmpty()) {
             typeIDs = new ArrayList<>(objectService.getAllTypeIDs()).toArray(new String[0]);
         } else {
             switch (operationType) {

@@ -17,7 +17,7 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.rcp;
+package sernet.verinice.rcp.jobs;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;

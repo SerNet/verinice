@@ -21,7 +21,6 @@ package sernet.verinice.rcp.linktable.composite.combo;
 
 import java.util.*;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -33,8 +32,6 @@ import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableColumn;
  */
 public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableComboViewer {
 
-    private static final Logger LOG = Logger.getLogger(VeriniceLinkTablePropertyComboViewer.class);
-    
     public VeriniceLinkTablePropertyComboViewer(VeriniceLinkTableComboViewer leftCombo, String relatedID,
             VeriniceLinkTableOperationType operationType,
             VeriniceLinkTableColumn ltrParent, Composite parent, int style) {
@@ -54,7 +51,7 @@ public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableCombo
     public Object[] getElements(Object inputElement) {
 
         ArrayList<String> list = new ArrayList<>();
-        if (relatedID != null) {
+        if (relatedID != null && !relatedID.isEmpty()) {
             list.addAll(ltrColumn.getContentService().getPossibleProperties(relatedID));
         }
         return sortElementsByLabel(list.toArray(new String[0]));

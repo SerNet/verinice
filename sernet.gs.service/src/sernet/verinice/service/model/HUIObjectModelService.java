@@ -84,18 +84,16 @@ public class HUIObjectModelService implements IObjectModelService {
         CnATreeElement parentInstance;
         Class<? extends CnATreeElement> clazz;
         for (String typeId : getAllTypeIDs()) {
-                clazz = CnATypeMapper.getClassFromTypeId(typeId);
+            clazz = CnATypeMapper.getClassFromTypeId(typeId);
             if (clazz != null) {
                 try {
                     parentInstance = createInstance(clazz, typeId);
                 } catch (InstantiationException | IllegalAccessException
                         | InvocationTargetException | NoSuchMethodException e) {
-                    // TODO rmotza Auto-generated catch block
                     LOG.error(e);
                     throw new IllegalStateException(e);
-                    }
+                }
 
-                LOG.error(parentInstance);
                 if (parentInstance != null) {
                     allTypeInstances.put(typeId, parentInstance);
                 }

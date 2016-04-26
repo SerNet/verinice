@@ -113,7 +113,7 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
             rightCombo.selectionChanged(event);
         } else {
             Composite newComposite = createRightCombo();
-            refresh();
+            refreshViewer();
             ltrColumn.getLtrParent().showComposite(newComposite);
         }
     }
@@ -149,7 +149,6 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
             newViewer.rightCombo = rightCombo.copy(newViewer, newParentComposite, newViewer.getCombo());
             newViewer.rightCombo.leftCombo = newViewer;
         }
-        refresh();
         return newViewer;
     }
 
@@ -174,14 +173,7 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
                 ? selection.getFirstElement().toString() : "";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.viewers.StructuredViewer#refresh()
-     */
-    @Override
-    public void refresh() {
-
+    public void refreshViewer() {
         super.refresh();
         getCombo().pack(true);
         if (parentComposite != null && !parentComposite.isDisposed()) {
@@ -255,12 +247,26 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
 
     public void setColumnPath(List<String> path) {
         
-        select(path.get(0));
-        if (path.size() > 1) {
-            selectionChanged(null);
-            rightCombo.setColumnPath(path.subList(1, path.size()));
+        if (!path.isEmpty()) {
+            select(path.get(0));
+            if (path.size() > 1) {
+                selectionChanged(null);
+                rightCombo.setColumnPath(path.subList(1, path.size()));
+            }
         }
         
+    }
+
+    public void setColumnPath(String firstElement, List<String> path) {
+
+        if (!path.isEmpty()) {
+            select(firstElement);
+            if (path.size() > 1) {
+                selectionChanged(null);
+                rightCombo.setColumnPath(path.subList(1, path.size()));
+            }
+        }
+
     }
 
     protected abstract void select(String string);

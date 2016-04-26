@@ -79,6 +79,19 @@ public abstract class ColumnPathParser {
      * @return A {@link IPathElement} for the columns path
      */
     public static IPathElement getPathElement(String columnPath) {
+        VqlParser parser = parse(columnPath);
+        CommonAST parseTree = (CommonAST)parser.getAST();
+        IPathElement rootPathElement = createRootPathElement(parseTree);
+        addChild(rootPathElement,parseTree.getNextSibling());
+        rootPathElement.setAlias(getAlias(parseTree));
+        return rootPathElement;
+    }
+
+    public static void throwExceptionIfInvalid(String columnPath) throws ColumnPathParseException {
+            parse(columnPath);
+    }
+
+    public static VqlParser parse(String columnPath) {
         VqlLexer lexer = new VqlLexer(new StringReader(columnPath));
         VqlParser parser = new VqlParser(lexer);
         try {
@@ -88,11 +101,7 @@ public abstract class ColumnPathParser {
             LOG.error(message, e);
             throw new ColumnPathParseException(message, e);
         }
-        CommonAST parseTree = (CommonAST)parser.getAST();
-        IPathElement rootPathElement = createRootPathElement(parseTree);
-        addChild(rootPathElement,parseTree.getNextSibling());
-        rootPathElement.setAlias(getAlias(parseTree));
-        return rootPathElement;
+        return parser;
     }
 
     /**
@@ -195,15 +204,7 @@ public abstract class ColumnPathParser {
     }
 
     public static List<String> getColumnPathAsList(String columnPath) {
-        VqlLexer lexer = new VqlLexer(new StringReader(columnPath));
-        VqlParser parser = new VqlParser(lexer);
-        try {
-            parser.expr();
-        } catch (RecognitionException | TokenStreamException e) {
-            String message = "Error while parsing VQL column path: " + columnPath;
-            LOG.error(message, e);
-            throw new ColumnPathParseException(message, e);
-        }
+        VqlParser parser = parse(columnPath);
         AST parseTree = parser.getAST();
         ArrayList<String> list = new ArrayList<>();
         while(parseTree != null){
@@ -214,5 +215,4 @@ public abstract class ColumnPathParser {
         return list;
         
     }
-
 }

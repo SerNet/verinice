@@ -21,8 +21,6 @@ package sernet.verinice.service.model;
 
 import java.util.*;
 
-import org.apache.log4j.Logger;
-
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HUITypeFactory;
 
@@ -31,7 +29,6 @@ import sernet.hui.common.connect.HUITypeFactory;
  */
 public class HUIObjectModelLoader implements IObjectModelService {
 
-    private static final Logger LOG = Logger.getLogger(HUIObjectModelLoader.class);
     private HUITypeFactory huiTypeFactory;
     private IObjectModelService objectModelService;
 
@@ -110,8 +107,12 @@ public class HUIObjectModelLoader implements IObjectModelService {
     public Set<String> getPossibleRelationPartners(String typeID) {
         init();
         Set<String> possibleRelationPartners = allRelationPartners.get(typeID);
+//        if (possibleRelationPartners == null) {
+//            possibleRelationPartners = new HashSet<>();
+//        }
         return possibleRelationPartners;
     }
+
 
     /* (non-Javadoc)
      * @see sernet.verinice.service.model.IObjectModelService#getAllTypeIDs()
@@ -129,6 +130,9 @@ public class HUIObjectModelLoader implements IObjectModelService {
     public Set<String> getPossibleProperties(String typeID) {
         init();
         Set<String> possibleProperties = allPossibleProperties.get(typeID);
+//        if (possibleProperties == null) {
+//            possibleProperties = new HashSet<>();
+//        }
         return possibleProperties;
     }
 
@@ -152,8 +156,7 @@ public class HUIObjectModelLoader implements IObjectModelService {
     @Override
     public String getRelationLabel(String id) {
         init();
-        String label = allRelationLabels.get(id);
-        return label;
+        return allRelationLabels.get(id);
     }
 
     /* (non-Javadoc)
@@ -222,6 +225,14 @@ public class HUIObjectModelLoader implements IObjectModelService {
     @Override
     public ObjectModelContainer loadAll() {
         return objectModelService.loadAll();
+    }
+
+    public boolean isValidTypeId(String typeID) {
+        return allLabels.containsKey(typeID);
+    }
+
+    public boolean isValidRelationId(String relationID) {
+        return allRelationLabels.containsKey(relationID);
     }
 }
 

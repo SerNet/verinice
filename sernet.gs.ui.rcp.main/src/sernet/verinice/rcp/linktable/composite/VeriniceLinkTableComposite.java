@@ -34,6 +34,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
+import sernet.verinice.rcp.linktable.VeriniceLinkTableUtil;
 import sernet.verinice.rcp.linktable.composite.multiselectiondialog.VeriniceLinkTableMultiSelectionControl;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
@@ -63,7 +64,7 @@ public class VeriniceLinkTableComposite extends Composite {
     private ArrayList<VeriniceLinkTableColumn> columns = new ArrayList<>();
 
     private IObjectModelService contentService;
-    private boolean useAllScopes;
+    private boolean useAllScopes = true;
     private VeriniceLinkTable ltrContent = null;
 
     public VeriniceLinkTableComposite(VeriniceLinkTable ltrContent,
@@ -162,9 +163,9 @@ public class VeriniceLinkTableComposite extends Composite {
             addColumn(null);
         }
 
-        GridLayoutFactory.swtDefaults().margins(0, 0).generateLayout(bodyBody);
+        GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN_CONTENT).generateLayout(bodyBody);
         GridLayoutFactory.swtDefaults().margins(0, 0).generateLayout(body);
-        GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN_CONTENT).generateLayout(c2);
+        GridLayoutFactory.swtDefaults().margins(0, 0).generateLayout(c2);
     }
 
     private void addColumnsWithContent() {
@@ -177,6 +178,7 @@ public class VeriniceLinkTableComposite extends Composite {
             }
             addColumn(path);
         }
+        refresh(true);
 
     }
 
@@ -186,14 +188,19 @@ public class VeriniceLinkTableComposite extends Composite {
         if (path == null) {
             column = new VeriniceLinkTableColumn(this, getStyle(), ++numCols);
         } else {
-            column = new VeriniceLinkTableColumn(path, this, ++numCols);
+            if (columns.isEmpty()) {
+                column = new VeriniceLinkTableColumn(path, this, ++numCols);
+            } else {
+
+                column = new VeriniceLinkTableColumn(columns.get(0).getFirstCombo().getSelection(),
+                        path, this, ++numCols);
+            }
             isNewColumn = false;
 
         }
         columns.add(column);
         addDeleteButtonListener(column);
         handleMoreThanOneColumn(isNewColumn);
-        refresh(isNewColumn);
     }
 
     private void handleMoreThanOneColumn(boolean isNewColumn) {
@@ -279,14 +286,20 @@ public class VeriniceLinkTableComposite extends Composite {
             columnPaths.add(path);
         }
         ltrContent.setAllScopes(useAllScopes);
+        if (useAllScopes) {
+            ltrContent.getScopeIds().clear();
+        }
         ltrContent.setColumnPaths(columnPaths);
         ltrContent.setRelationIds(new ArrayList<>(multiControl.getSelectedRelationIDs()));
-        ltrContent.setAllScopes(useAllScopes);
         if (LOG.isDebugEnabled()) {
             LOG.debug(columnPaths.size() + " columns");
         }
-        fireEvent("updateVeriniceLinkTable", ltrContent);
+        fireEvent("updateVeriniceLinkTable", ltrContent, isValidVeriniceLinkTable());
 
+    }
+
+    private boolean isValidVeriniceLinkTable() {
+        return VeriniceLinkTableUtil.isValidVeriniceLinkTable(ltrContent);
     }
 
     private void addButtons(Composite parent) {
@@ -301,9 +314,6 @@ public class VeriniceLinkTableComposite extends Composite {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug(Messages.VeriniceLinkTableComposite_2);
-                }
                 addColumn(null);
                 refresh(true);
 
@@ -318,9 +328,6 @@ public class VeriniceLinkTableComposite extends Composite {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Clone last Column");
-                }
                 VeriniceLinkTableColumn lastColumn = columns.get(columns.size() - 1);
                 VeriniceLinkTableColumn duplicatedColumn = new VeriniceLinkTableColumn(
                         lastColumn, ++numCols);
@@ -371,9 +378,9 @@ public class VeriniceLinkTableComposite extends Composite {
             listeners.add(l);
     }
 
-    public void fireEvent(String fieldName, Object newValue) {
+    public void fireEvent(String fieldName, Object newValue, boolean isValid) {
         for (VeriniceLinkTableFieldListener l : listeners) {
-            l.fieldValueChanged();
+            l.fieldValueChanged(isValid);
         }
     }
 

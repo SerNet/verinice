@@ -24,6 +24,8 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.progress.UIJob;
 
@@ -71,8 +73,10 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
                         try {
                             monitor.beginTask(Messages.LinkTableHandler_0, // $NON-NLS-1$
                                     IProgressMonitor.UNKNOWN);
-                            EditorFactory.getInstance().updateAndOpenObject(veriniceLinkTable);
+                            validateInputAndOpenEditor(veriniceLinkTable);
+
                         } catch (Exception e) {
+
                             LOG.error("Error while running job " + this.getName(), e); //$NON-NLS-1$
                             status = new Status(Status.ERROR, "sernet.verinice.samt.rcp", //$NON-NLS-1$
                                     "Error opening vlt-file", e); //$NON-NLS-1$
@@ -82,6 +86,7 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
                         }
                         return status;
                     }
+
                 };
                 job.schedule();
 
@@ -94,6 +99,38 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
         return null;
     }
 
+    private void validateInputAndOpenEditor(
+            final VeriniceLinkTable veriniceLinkTable) {
+        try {
+
+            if (!VeriniceLinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable)) {
+                MessageDialog confirmInvalidInput = new MessageDialog(
+                        Display.getCurrent().getActiveShell(),
+                        "Be careful!",
+                        null,
+                        "The vlt file is not valid and therefore cannot be displayed correctly.\n "
+                                + "Do you really want to continue?",
+                        MessageDialog.QUESTION,
+                        new String[] { "Yes", "No" }, 0);
+
+                int open = confirmInvalidInput.open();
+                if (open != 0) {
+
+                    return;
+                }
+            }
+            EditorFactory.getInstance().updateAndOpenObject(veriniceLinkTable);
+        } catch (Exception e) {
+            if (e.getCause() instanceof EditorCloseException) {
+
+                EditorCloseException ex = (EditorCloseException) e.getCause();
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow()
+                        .getActivePage().closeEditor(ex.getEditor(), true);
+            } else {
+                throw e;
+            }
+        }
+    }
     protected abstract VeriniceLinkTable createLinkTable();
 
 }

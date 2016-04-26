@@ -17,13 +17,31 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite;
+package sernet.verinice.rcp.linktable;
+
+import org.eclipse.ui.IEditorPart;
 
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public interface VeriniceLinkTableFieldListener {
+public class EditorCloseException extends Exception {
 
-    public void fieldValueChanged(boolean isValid);
+    private static final long serialVersionUID = 1L;
+    private final IEditorPart editor;
+
+    public EditorCloseException(IEditorPart editor, String message) {
+        super(message);
+        this.editor = editor;
+    }
+
+    public EditorCloseException(IEditorPart editor) {
+        super();
+        this.editor = editor;
+    }
+
+    public IEditorPart getEditor() {
+        return editor;
+    }
+
 
 }

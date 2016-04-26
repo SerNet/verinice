@@ -21,20 +21,28 @@ package sernet.verinice.rcp.linktable;
 
 import java.io.File;
 import java.util.*;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
+import java.util.Map.Entry;
+
+import javax.xml.bind.ValidationException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.*;
+import org.elasticsearch.common.collect.Sets;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.rcp.linktable.composite.CsvExportDialog;
 import sernet.verinice.rcp.linktable.composite.combo.VeriniceLinkTableOperationType;
 import sernet.verinice.service.csv.ICsvExport;
+import sernet.verinice.service.linktable.ColumnPathParseException;
+import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
+import sernet.verinice.service.model.HUIObjectModelLoader;
 
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>
@@ -45,9 +53,11 @@ public class VeriniceLinkTableUtil {
     private static HashMap<String, String> vltExtensions = null;
     private static HashMap<String, String> csvExtensions = null;
     private static CsvExportDialog csvDialog;
+    private static HUIObjectModelLoader loader;
 
 
     static {
+        loader = (HUIObjectModelLoader) HUIObjectModelLoader.getInstance();
         if (vltExtensions == null) {
             vltExtensions = new HashMap<>();
             vltExtensions.put("*" + VeriniceLinkTable.VLT, "verinice link table (.vlt)");
@@ -124,6 +134,7 @@ public class VeriniceLinkTableUtil {
     }
 
     public static List<String> getTableHeaders(VeriniceLinkTable veriniceLinkTable) {
+
         ArrayList<String> headers = new ArrayList<>();
         for (String element : veriniceLinkTable.getColumnPaths()) {
             if (element.contains(VeriniceLinkTableOperationType.RELATION.getOutput())) {
@@ -139,4 +150,108 @@ public class VeriniceLinkTableUtil {
 
     }
 
+    public static boolean isValidVeriniceLinkTable(VeriniceLinkTable veriniceLinkTable) {
+
+        try {
+            validateColumnPathsElements(veriniceLinkTable.getColumnPaths());
+            validateRelationIds(veriniceLinkTable.getRelationIds());
+            validateRelations(veriniceLinkTable.getColumnPaths());
+        } catch (ValidationException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(e);
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+    private static void validateRelations(List<String> columnPaths) throws ValidationException {
+
+        Set<Entry<String, String>> relations = getRelations(columnPaths);
+        for (Entry<String, String> relation : relations) {
+            Set<String> possibleRelationPartners = loader
+                    .getPossibleRelationPartners(relation.getKey());
+            if (!possibleRelationPartners.contains(relation.getValue())) {
+                throw new ValidationException("Relation " + relation.toString() + " not found");
+            }
+        }
+        
+    }
+
+    private static void validateColumnPathsElements(List<String> list) throws ValidationException {
+
+        try {
+            for (String path : list) {
+                validateColumnPath(path);
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Syntax valid");
+            }
+
+        } catch (Exception e) {
+            throw new ValidationException(e);
+        }
+
+    }
+
+    public static void validateColumnPath(String path) throws ValidationException {
+        try {
+            ColumnPathParser.throwExceptionIfInvalid(path);
+        } catch (ColumnPathParseException e) {
+            throw new ValidationException(path + " is no valid column path", e);
+        }
+        Set<String> objectTypeIds = ColumnPathParser
+                .getObjectTypeIds(Sets.newHashSet(path));
+        for (String id : objectTypeIds) {
+
+            boolean validTypeId = loader.isValidTypeId(id);
+            if (!validTypeId) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(id + " is no typeId");
+                }
+                throw new ValidationException(validTypeId + " is no valid type ID");
+            }
+        }
+    }
+
+    /**
+     * Returns a set of all relations with key- value pairs, where the key is
+     * the* first typeID and the value the second.**
+     * 
+     * @param columnPathes
+     * @return
+     */
+    public static Set<Entry<String, String>> getRelations(List<String> columnPathes) {
+
+       Set<Entry<String, String>> relations = new HashSet<>();
+
+       for (String path : columnPathes) {
+            List<String> pathElements = ColumnPathParser.getColumnPathAsList(path);
+            int index = 0;
+            for (String element : pathElements) {
+                if (VeriniceLinkTableOperationType.isRelation(element)) {
+                    relations.add(new SimpleEntry<String, String>(pathElements.get(index - 1),
+                            pathElements.get(index + 1)));
+
+                }
+                index++;
+            }
+
+       }
+
+       return relations;
+   }
+
+    private static void validateRelationIds(List<String> list) throws ValidationException {
+
+        for(String id : list){
+            if (!loader.isValidRelationId(id)) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(id + " is no RelationID");
+                }
+                throw new ValidationException(id + " is no valid relation id");
+            }
+        }
+    }
 }

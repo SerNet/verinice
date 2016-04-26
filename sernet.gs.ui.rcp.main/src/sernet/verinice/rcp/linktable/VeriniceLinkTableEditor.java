@@ -30,11 +30,13 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.*;
 import org.eclipse.ui.part.EditorPart;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableFieldListener;
@@ -55,7 +57,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
     private boolean isDirty = false;
 
     private VeriniceLinkTableFieldListener contentObserver;
-
+    private String toolTip = null;
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
      */
@@ -78,7 +80,12 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public void createPartControl(Composite parent) {
+
         Activator.inheritVeriniceContextState();
+        createEditor(parent);
+    }
+
+    public void createEditor(Composite parent) {
         Composite container = new Composite(parent, SWT.NONE);
 
         Composite buttonContainer = new Composite(container, SWT.NONE);
@@ -86,10 +93,12 @@ public class VeriniceLinkTableEditor extends EditorPart {
         exportButton.setText(Messages.VeriniceLinkTableEditor_1);
         exportButton.setToolTipText(Messages.VeriniceLinkTableEditor_2);
         GridDataFactory.swtDefaults().applyTo(exportButton);
+
         exportButton.addSelectionListener(new SelectionListener() {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
+
 
                 ExportLinkTableHandler exportHandler = new ExportLinkTableHandler(true,
                         veriniceLinkTable);
@@ -114,8 +123,20 @@ public class VeriniceLinkTableEditor extends EditorPart {
         contentObserver = new VeriniceLinkTableFieldListener() {
 
             @Override
-            public void fieldValueChanged() {
-                isDirty = true;
+            public void fieldValueChanged(boolean isValid) {
+                if (isValid) {
+                    Image defaultImage = ImageCache.getInstance().getImage(ImageCache.TOOL);
+                    setTitleImage(defaultImage);
+                    setPartName(veriniceLinkTable.getName());
+                    toolTip = getPartName();
+                } else {
+                    Image warningImage = ImageCache.getInstance().getImage(ImageCache.WARNING);
+                    setTitleImage(warningImage);
+                    setPartName("INVALID_QUERY");
+                    toolTip = "The query is not valid and therefore cannot be saved.";
+
+                }
+                isDirty = isValid;
                 firePropertyChange(IEditorPart.PROP_DIRTY);
 
             }
@@ -126,6 +147,8 @@ public class VeriniceLinkTableEditor extends EditorPart {
         GridLayoutFactory.swtDefaults().extendedMargins(9, 0, 30, 0)
                 .generateLayout(buttonContainer);
         GridLayoutFactory.swtDefaults().generateLayout(container);
+        contentObserver.fieldValueChanged(
+                VeriniceLinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable));
     }
     
     /* (non-Javadoc)
@@ -139,15 +162,31 @@ public class VeriniceLinkTableEditor extends EditorPart {
         }
     }
     
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.part.EditorPart#getTitleToolTip()
+     */
+    @Override
+    public String getTitleToolTip() {
+        return toolTip == null? getPartName():toolTip;
+
+    }
+
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.ui.part.EditorPart#doSaveAs()
      */
     @Override
     public void doSaveAs() {
-        String vltFilePath = VeriniceLinkTableUtil.createVltFilePath(
-                Display.getCurrent().getActiveShell(),
-                Messages.VeriniceLinkTableEditor_3);
+        String vltFilePath = getFilePath(veriniceLinkTable);
         if (vltFilePath != null) {
+            veriniceLinkTable.setNewId();
+            String name = vltFilePath.substring(vltFilePath.lastIndexOf(File.separator) + 1,
+                    vltFilePath.length() - 1);
+            veriniceLinkTable.setName(name);
             executeSave(vltFilePath);
         }
     }
@@ -187,6 +226,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
     public boolean isSaveAsAllowed() {
         return true;
     }
+
 
     /*
      * (non-Javadoc)

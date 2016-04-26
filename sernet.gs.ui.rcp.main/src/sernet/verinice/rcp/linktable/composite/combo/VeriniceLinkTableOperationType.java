@@ -83,4 +83,8 @@ public enum VeriniceLinkTableOperationType implements IVeriniceLinkTableOperatio
         return type == RELATION || type == RELATION_OBJECT;
     }
 
+    public static boolean isRelation(String type) {
+        return type.equals(RELATION_OBJECT.getOutput()) || type.equals(RELATION.getOutput());
+    }
+
 }
