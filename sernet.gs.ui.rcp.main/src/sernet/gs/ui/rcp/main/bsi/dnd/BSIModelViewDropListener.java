@@ -34,6 +34,8 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.gs.model.Baustein;
+import sernet.gs.model.Gefaehrdung;
+import sernet.gs.model.IGSModel;
 import sernet.gs.model.Massnahme;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dialogs.SanityCheckDialog;
@@ -64,13 +66,12 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.bsi.Raum;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.service.commands.SaveElement;
+import sernet.verinice.service.gstoolimport.GefaehrdungsUmsetzungFactory;
 import sernet.verinice.service.gstoolimport.MassnahmenFactory;
 
 /**
@@ -138,14 +139,18 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                     }
                 }
                 return dropBaustein((CnATreeElement) target, viewer, list.toArray(new Baustein[list.size()]));
-            } else if (firstOne instanceof Massnahme && target instanceof BausteinUmsetzung) {
-                ArrayList<Massnahme> list = Lists.newArrayList();
+            } else if (firstOne instanceof IGSModel && target instanceof BausteinUmsetzung) {
+
+                List<Gefaehrdung> gefaehrdungen = new ArrayList<Gefaehrdung>(0);
+                List<Massnahme> massnahmen = new ArrayList<Massnahme>(0);
                 for (Object object : items) {
-                    if (object instanceof Massnahme) {
-                        list.add((Massnahme) object);
+                    if (object instanceof Gefaehrdung) {
+                        gefaehrdungen.add((Gefaehrdung) object);
+                    } else if (object instanceof Massnahme) {
+                        massnahmen.add((Massnahme) object);
                     }
                 }
-                return dropControls((BausteinUmsetzung) target, viewer, list);
+                return dropScenarios((BausteinUmsetzung) target, viewer, gefaehrdungen) && dropControls((BausteinUmsetzung) target, viewer, massnahmen);
             } else if (firstOne != null && (firstOne instanceof IBSIStrukturElement || firstOne instanceof BausteinUmsetzung || firstOne instanceof IISO27kElement || firstOne instanceof IMassnahmeUmsetzung)) {
                 CnATreeElement element = (CnATreeElement) target;
                 LinkDropper dropper = new LinkDropper();
@@ -397,6 +402,59 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         modelUpdater.childAdded(targetModule, control);
         return control;
     }
+
+    private boolean dropScenarios(final BausteinUmsetzung targetModule, Viewer viewer, final List<Gefaehrdung> scenarios) {
+        if (!CnAElementHome.getInstance().isNewChildAllowed(targetModule)) {
+            return false;
+        }
+
+        try {
+            Job dropJob = new Job(Messages.getString("BSIModelViewDropListener.7")) { //$NON-NLS-1$
+                @Override
+                protected IStatus run(IProgressMonitor monitor) {
+                    Activator.inheritVeriniceContextState();
+
+                    try {
+                        addScenariosToModule(scenarios, targetModule);
+                    } catch (Exception e) {
+                        Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
+                        return Status.CANCEL_STATUS;
+                    }
+                    return Status.OK_STATUS;
+                }
+            };
+            dropJob.setUser(true);
+            dropJob.setSystem(false);
+            dropJob.schedule();
+        } catch (Exception e) {
+            LOG.error(Messages.getString("BSIModelViewDropListener.5"), e); //$NON-NLS-1$
+            return false;
+        }
+        return true;
+    }
+
+    private void addScenariosToModule(List<Gefaehrdung> scenariosToDrop, BausteinUmsetzung targetModule) throws CnATreeElementBuildException, CommandException {
+        for (Gefaehrdung scenarioToDrop : scenariosToDrop) {
+            if (targetModule.containsScenario(scenarioToDrop.getId())) {
+                GetElementPathCommand pathLoader = new GetElementPathCommand(targetModule.getUuid(), targetModule.getTypeId());
+                String elementPath = ServiceFactory.lookupCommandService().executeCommand(pathLoader).getResult();
+                LOG.error("ElementContainer:\t" + elementPath + "(" + targetModule.getDbId() + ")" + "\twith TypeId:\t" + targetModule.getTypeId() + " contains already a scenario with id:\t" + scenarioToDrop.getId() + "\t" + scenarioToDrop.getTitel() + " is skipped because of this");
+                continue;
+            }
+            addScenarioToModule(scenarioToDrop, targetModule);
+        }
+    }
+
+    private CnATreeElement addScenarioToModule(Gefaehrdung scenarioToDrop, BausteinUmsetzung targetModule) {
+        CnATreeElement scenario = GefaehrdungsUmsetzungFactory.createScenario(targetModule, scenarioToDrop, BSIKatalogInvisibleRoot.getInstance().getLanguage());
+        setNewPermissions(scenario);
+        scenario = saveElementAndAddToModule(targetModule, scenario);
+
+        // notifying for the last element is sufficient to update all views:
+        modelUpdater.childAdded(targetModule, scenario);
+        return scenario;
+    }
+
     private void setNewPermissions(CnATreeElement element) {
         HashSet<Permission> newperms = new HashSet<Permission>();
         newperms.add(Permission.createPermission(element, getAuthService().getUsername(), true, true));

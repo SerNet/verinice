@@ -145,7 +145,9 @@ public class BausteinUmsetzung extends CnATreeElement {
                 // should never happen:
                 Logger.getLogger(this.getClass()).error(obj.getClass());
                 return '0';
-            } else if (obj instanceof GefaehrdungsUmsetzung) {
+            } 
+            
+            if (obj instanceof GefaehrdungsUmsetzung) {
                 Logger.getLogger(this.getClass()).error(obj.getClass());
                 return '0';
             }
@@ -232,6 +234,18 @@ public class BausteinUmsetzung extends CnATreeElement {
             if (child instanceof MassnahmenUmsetzung) {
                 MassnahmenUmsetzung control = (MassnahmenUmsetzung) child;
                 if (control.getKapitel().equals(chapter)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean containsScenario(String id) {
+        for (CnATreeElement child : getChildren()) {
+            if (child instanceof GefaehrdungsUmsetzung) {
+                GefaehrdungsUmsetzung scenario = (GefaehrdungsUmsetzung) child;
+                if (scenario.getId().equals(id)) {
                     return true;
                 }
             }

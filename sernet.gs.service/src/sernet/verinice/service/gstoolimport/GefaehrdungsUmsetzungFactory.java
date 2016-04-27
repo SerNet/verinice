@@ -18,6 +18,7 @@
 package sernet.verinice.service.gstoolimport;
 
 import sernet.gs.model.Gefaehrdung;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.common.CnATreeElement;
@@ -43,5 +44,13 @@ public class GefaehrdungsUmsetzungFactory {
 		return gefaehrdungsUmsetzung;
 	}
 
-
+    /**
+     * Create GefaehrdungsUmsetzung (control instance).
+     * @param module
+     * @param gef
+     */
+    public static GefaehrdungsUmsetzung createScenario(BausteinUmsetzung module, Gefaehrdung gef, String language) {
+        GefaehrdungsUmsetzung scenario = build(module, gef, language);
+        return scenario;
+    }
 }
