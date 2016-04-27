@@ -34,7 +34,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
-import sernet.verinice.rcp.linktable.VeriniceLinkTableUtil;
 import sernet.verinice.rcp.linktable.composite.multiselectiondialog.VeriniceLinkTableMultiSelectionControl;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
@@ -122,7 +121,7 @@ public class VeriniceLinkTableComposite extends Composite {
                 }
 
                 useAllScopes = selected == useAllScopesButton;
-                updateVeriniceContent();
+                updateAndValidateVeriniceContent();
 
             }
         };
@@ -266,15 +265,11 @@ public class VeriniceLinkTableComposite extends Composite {
         columnsContainer.layout(true);
         c2.layout(true);
         if (updateVeriniceLinkTable) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("update veriniceLinkTable");
-            }
-            updateVeriniceContent();
+            updateAndValidateVeriniceContent();
         }
-        fireValidationEvent(VeriniceLinkTableUtil.isValidVeriniceLinkTable(ltrContent));
     }
 
-    public void updateVeriniceContent() {
+    public void updateAndValidateVeriniceContent() {
 
         if (ltrContent == null) {
             ltrContent = new VeriniceLinkTable.Builder("new").build();
@@ -287,6 +282,7 @@ public class VeriniceLinkTableComposite extends Composite {
             columnPaths.add(path);
         }
         boolean updated = false;
+        boolean contentToValidateUpdated = false;
         if (ltrContent.useAllScopes() != useAllScopes) {
             ltrContent.setAllScopes(useAllScopes);
             if (useAllScopes) {
@@ -296,12 +292,12 @@ public class VeriniceLinkTableComposite extends Composite {
         }
         if (!ltrContent.getColumnPaths().equals(columnPaths)) {
             ltrContent.setColumnPaths(columnPaths);
-            updated = true;
+            contentToValidateUpdated = updated = true;
         }
         ArrayList<String> relationIds = new ArrayList<>(multiControl.getSelectedRelationIDs());
         if (!ltrContent.getRelationIds().equals(relationIds)) {
             ltrContent.setRelationIds(relationIds);
-            updated = true;
+            contentToValidateUpdated = updated = true;
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug(columnPaths.size() + " columns");
@@ -309,6 +305,10 @@ public class VeriniceLinkTableComposite extends Composite {
         if (updated) {
             fireFieldChangedEvent();
         }
+        if (contentToValidateUpdated) {
+            fireValidationEvent();
+        }
+
 
     }
 
@@ -365,7 +365,7 @@ public class VeriniceLinkTableComposite extends Composite {
 
     public VeriniceLinkTable getContent() {
 
-        updateVeriniceContent();
+        updateAndValidateVeriniceContent();
         return ltrContent;
     }
 
@@ -394,9 +394,9 @@ public class VeriniceLinkTableComposite extends Composite {
         }
     }
 
-    public void fireValidationEvent(boolean isValid) {
+    public void fireValidationEvent() {
         for (VeriniceLinkTableFieldListener l : listeners) {
-            l.validated(isValid);
+            l.validate();
         }
     }
 

@@ -215,6 +215,7 @@ public final class ImageCache {
     public static final String PRIORITY_HIGH = "priority-1.gif";
     
     public static final String SEARCH = "search.png";
+    public static final String VLT = "document-table.png";
 
 	/* ************************************************************************************************** */
 	// ISO 27000 icons - ISM Tree View:
@@ -250,7 +251,7 @@ public final class ImageCache {
 	
 	public static final String REPORT_DEPOSIT           = "folder_table.png";
 	
-    public static final String WARNING = "warning.png";
+    public static final String ERROR_DECORATOR = "overlays/error_co.gif";
 
 	// ISO 27k icons - other:
 	public static final String ISO27K_RISK = "sweetie-verinice/png/16-paper-calculate-percent.png";

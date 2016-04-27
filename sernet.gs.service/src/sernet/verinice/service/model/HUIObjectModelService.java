@@ -24,6 +24,7 @@ import java.util.*;
 
 import org.apache.log4j.Logger;
 
+import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.model.bsi.*;
@@ -34,6 +35,9 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CnATypeMapper;
 
 /**
+ * Server implementation of {@link IObjectModelService}
+ * 
+ * @see HUIObjectModelLoader
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class HUIObjectModelService implements IObjectModelService {
@@ -60,6 +64,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public void init() {
+        ServerInitializer.inheritVeriniceContextState();
         if (allTypeIds == null || allTypeIds.isEmpty()) {
             fillAllTypeIds();
         }
@@ -102,7 +107,6 @@ public class HUIObjectModelService implements IObjectModelService {
         if (LOG.isDebugEnabled()) {
             LOG.debug("typeIDs instantiated");
         }
-
     }
 
     private void fillAllTypeIds() {
@@ -111,13 +115,15 @@ public class HUIObjectModelService implements IObjectModelService {
             return;
         }
         allTypeIds = new HashSet<>(getHuiTypeFactory().getAllTypeIds());
+        removeNonCnaTreeElementTypeIDs();
+        addAllBSIElements();
+    }
 
-        // TODO rmotza better way!
+    public void removeNonCnaTreeElementTypeIDs() {
         allTypeIds.remove("note");
         allTypeIds.remove("role");
         allTypeIds.remove("configuration");
         allTypeIds.remove("attachment");
-        addAllBSIElements();
     }
 
     private void addAllBSIElements() {
@@ -146,6 +152,7 @@ public class HUIObjectModelService implements IObjectModelService {
     @Override
     public Set<String> getRelations(String fromEntityTypeID, String toEntityTypeID) {
 
+        ServerInitializer.inheritVeriniceContextState();
         if (getHuiTypeFactory().getEntityType(fromEntityTypeID) == null
                 || getHuiTypeFactory().getEntityType(toEntityTypeID) == null) {
             return new HashSet<>();
@@ -179,6 +186,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getPossibleRelationPartners(String typeID) {
+        ServerInitializer.inheritVeriniceContextState();
         if (getHuiTypeFactory().getEntityType(typeID) == null || isBSIElement(typeID)) {
             return new HashSet<>();
         }
@@ -215,6 +223,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getPossibleProperties(String typeID) {
+        ServerInitializer.inheritVeriniceContextState();
         if (isBSIElement(typeID)) {
             HashSet<String> set = new HashSet<>();
             set.add(typeID + "_name");
@@ -236,11 +245,14 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public String getLabel(String id) {
-        // TODO rmotza tidy up workaround
-        if (id.contains(" ")) {
+        if (isDefaultMessage(id)) {
             return id;
         }
         return getHuiTypeFactory().getMessage(id);
+    }
+
+    private boolean isDefaultMessage(String id) {
+        return id.contains(" ");
     }
 
     /*
@@ -252,6 +264,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public String getRelationLabel(String id) {
+        ServerInitializer.inheritVeriniceContextState();
         return getHuiTypeFactory().getMessage(id + "_name");
     }
 
@@ -290,6 +303,7 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     public Set<String> getPossibleChildren(CnATreeElement parentInstance) {
+        ServerInitializer.inheritVeriniceContextState();
         CnATreeElement childInstance;
         HashSet<String> possibleChildrenSet = new HashSet<>();
         for (String typeIdChild : getAllTypeIDs()) {
@@ -408,6 +422,8 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public ObjectModelContainer loadAll() {
+
+        ServerInitializer.inheritVeriniceContextState();
         init();
         ObjectModelContainer container = new ObjectModelContainer();
 

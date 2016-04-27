@@ -27,6 +27,9 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.viewers.DecorationOverlayIcon;
+import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -130,20 +133,33 @@ public class VeriniceLinkTableEditor extends EditorPart {
             }
 
             @Override
-            public void validated(boolean isValid) {
-                if (isValid) {
-                    Image defaultImage = ImageCache.getInstance().getImage(ImageCache.TOOL);
+            public void validate() {
+
+                VeriniceLinkTableValidationResult validationResult = VeriniceLinkTableUtil
+                        .isValidVeriniceLinkTable(veriniceLinkTable);
+
+                Image defaultImage = ImageCache.getInstance().getImage(ImageCache.VLT);
+
+                if (validationResult.isValid()) {
                     setTitleImage(defaultImage);
                     setPartName(veriniceLinkTable.getName());
                     toolTip = getPartName();
                 } else {
-                    Image warningImage = ImageCache.getInstance().getImage(ImageCache.WARNING);
-                    setTitleImage(warningImage);
+                    ImageDescriptor[] descriptors = new ImageDescriptor[5];
+                    Image warningImage = ImageCache.getInstance().getImage(ImageCache.ERROR_DECORATOR);
+
+                    descriptors[IDecoration.BOTTOM_LEFT] = ImageDescriptor
+                            .createFromImage(warningImage);
+                    Image decorated = new DecorationOverlayIcon(defaultImage, descriptors)
+                            .createImage();
+
+                    setTitleImage(decorated);
                     setPartName(veriniceLinkTable.getName() + Messages.VeriniceLinkTableEditor_7);
-                    toolTip = Messages.VeriniceLinkTableEditor_8;
                     isDirty = false;
+                    toolTip = validationResult.getMessage();
                     firePropertyChange(IEditorPart.PROP_DIRTY);
                 }
+                firePropertyChange(IEditorPart.PROP_TITLE);
 
 
             }
@@ -155,7 +171,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
                 .generateLayout(buttonContainer);
         GridLayoutFactory.swtDefaults().generateLayout(container);
         contentObserver
-                .validated(VeriniceLinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable));
+                .validate();
     }
     
     /* (non-Javadoc)
@@ -163,7 +179,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
-        String filePath = getFilePath(veriniceLinkTable);
+        String filePath = getFilePath(veriniceLinkTable, false);
         if (filePath != null) {
             executeSave(filePath);
         }
@@ -188,7 +204,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public void doSaveAs() {
-        String vltFilePath = getFilePath(veriniceLinkTable);
+        String vltFilePath = getFilePath(veriniceLinkTable, true);
         if (vltFilePath != null) {
             veriniceLinkTable.setNewId();
             executeSave(vltFilePath);
@@ -201,16 +217,16 @@ public class VeriniceLinkTableEditor extends EditorPart {
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }
 
-    private String getFilePath(VeriniceLinkTable veriniceLinkTable) { 
+    private String getFilePath(VeriniceLinkTable veriniceLinkTable, boolean isSaveAs) {
         String filePath = LinkTableFileRegistry.getFilePath(veriniceLinkTable.getId());
-        if(filePath==null) {
+        if (isSaveAs || filePath == null) {
             filePath = VeriniceLinkTableUtil.createVltFilePath(
                     Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4);
             if (filePath != null) {
                 String name = filePath.substring(filePath.lastIndexOf(File.separator) + 1,
                         filePath.length());
                 veriniceLinkTable.setName(name);
-                setPartName(veriniceLinkTable.getName());
+                setPartName(name);
                 LinkTableFileRegistry.add(veriniceLinkTable.getId(), filePath);
             }
         }

@@ -150,8 +150,11 @@ public class VeriniceLinkTableUtil {
 
     }
 
-    public static boolean isValidVeriniceLinkTable(VeriniceLinkTable veriniceLinkTable) {
+    public static VeriniceLinkTableValidationResult isValidVeriniceLinkTable(
+            VeriniceLinkTable veriniceLinkTable) {
 
+        VeriniceLinkTableValidationResult result = new VeriniceLinkTableValidationResult();
+        result.setValid(true);
         try {
             validateColumnPathsElements(veriniceLinkTable.getColumnPaths());
             validateRelationIds(veriniceLinkTable.getRelationIds());
@@ -160,10 +163,12 @@ public class VeriniceLinkTableUtil {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(e);
             }
-            return false;
+            result.setValid(false);
+            result.setMessage(e.getMessage());
+
         }
 
-        return true;
+        return result;
     }
 
     private static void validateRelations(List<String> columnPaths) throws ValidationException {
@@ -181,16 +186,12 @@ public class VeriniceLinkTableUtil {
 
     private static void validateColumnPathsElements(List<String> list) throws ValidationException {
 
-        try {
-            for (String path : list) {
+        for (String path : list) {
+            try {
                 validateColumnPath(path);
+            } catch (Exception e) {
+                throw new ValidationException(path + " is no valid column path", e);
             }
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Syntax valid");
-            }
-
-        } catch (Exception e) {
-            throw new ValidationException(e);
         }
 
     }
@@ -199,6 +200,9 @@ public class VeriniceLinkTableUtil {
         try {
             ColumnPathParser.throwExceptionIfInvalid(path);
         } catch (ColumnPathParseException e) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(e);
+            }
             throw new ValidationException(path + " is no valid column path", e);
         }
         Set<String> objectTypeIds = ColumnPathParser

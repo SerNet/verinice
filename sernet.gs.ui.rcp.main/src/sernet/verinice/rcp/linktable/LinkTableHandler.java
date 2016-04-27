@@ -36,7 +36,6 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
 /**
  *
- *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public abstract class LinkTableHandler extends RightsEnabledHandler {
@@ -64,22 +63,23 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
             final VeriniceLinkTable veriniceLinkTable = createLinkTable();
             if (veriniceLinkTable != null) {
 
-                UIJob job = new UIJob(Messages.LinkTableHandler_0) {
+                UIJob job = new UIJob(PlatformUI.getWorkbench().getDisplay(),
+                        Messages.LinkTableHandler_0) {
 
                     @Override
                     public IStatus runInUIThread(IProgressMonitor monitor) {
                         IStatus status = Status.OK_STATUS;
 
                         try {
-                            monitor.beginTask(Messages.LinkTableHandler_0, // $NON-NLS-1$
+                            monitor.beginTask(Messages.LinkTableHandler_0,
                                     IProgressMonitor.UNKNOWN);
                             validateInputAndOpenEditor(veriniceLinkTable);
 
                         } catch (Exception e) {
 
-                            LOG.error("Error while running job " + this.getName(), e); //$NON-NLS-1$
-                            status = new Status(Status.ERROR, "sernet.verinice.samt.rcp", //$NON-NLS-1$
-                                    "Error opening vlt-file", e); //$NON-NLS-1$
+                            LOG.error("Error while running job " + this.getName(), e);
+                            status = new Status(Status.ERROR, "sernet.verinice.samt.rcp",
+                                    "Error opening vlt-file", e);
                         } finally {
                             monitor.done();
                             this.done(status);
@@ -102,8 +102,7 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
     private void validateInputAndOpenEditor(
             final VeriniceLinkTable veriniceLinkTable) {
         try {
-
-            if (!VeriniceLinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable)) {
+            if (!VeriniceLinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable).isValid()) {
                 MessageDialog confirmInvalidInput = new MessageDialog(
                         Display.getCurrent().getActiveShell(),
                         Messages.LinkTableHandler_1,

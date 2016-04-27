@@ -1284,7 +1284,7 @@
       <editor
             class="sernet.verinice.rcp.linktable.VeriniceLinkTableEditor"
             default="false"
-            icon="icons/24-tool-a.png"
+            icon="icons/document-table.png"
             id="sernet.verinice.rcp.linktable.VeriniceLinkTableEditor"
             name="LInk table editor"/>
    </extension>

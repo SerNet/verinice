@@ -47,8 +47,7 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
             VeriniceLinkTableOperationType operationType, VeriniceLinkTableColumn ltrParent,
             Composite parent, int style) {
 
-        super(parent, style);
-
+        super(new VeriniceCombo(parent, style));
         this.parentComposite = parent;
         this.ltrColumn = ltrParent;
         this.setContentProvider(this);

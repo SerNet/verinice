@@ -17,15 +17,41 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite;
+package sernet.verinice.rcp.linktable;
 
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public interface VeriniceLinkTableFieldListener {
+public class VeriniceLinkTableValidationResult {
 
-    public void fieldValueChanged();
+    private boolean isValid;
+    private String message;
 
-    public void validate();
+
+    public VeriniceLinkTableValidationResult(boolean isValid, String message) {
+        super();
+        this.isValid = isValid;
+        this.message = message;
+    }
+
+    public VeriniceLinkTableValidationResult() {
+        // default constructor
+    }
+
+    public boolean isValid() {
+        return isValid;
+    }
+
+    public void setValid(boolean isValid) {
+        this.isValid = isValid;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
 }

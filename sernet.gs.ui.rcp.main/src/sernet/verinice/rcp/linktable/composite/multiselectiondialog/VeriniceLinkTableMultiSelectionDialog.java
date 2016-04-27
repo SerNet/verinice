@@ -100,7 +100,7 @@ public class VeriniceLinkTableMultiSelectionDialog extends org.eclipse.swt.widge
 	}
 	
 	void close() {
-        ltrMultiSelectionControl.getLtrParent().updateVeriniceContent();
+        ltrMultiSelectionControl.getLtrParent().updateAndValidateVeriniceContent();
         dialogShell.dispose();
 	}
 

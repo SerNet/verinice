@@ -24,6 +24,10 @@ import java.util.*;
 import sernet.hui.common.VeriniceContext;
 
 /**
+ * 
+ * Client implementation of {@link IObjectModelService}
+ * 
+ * @see HUIObjectModelService
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class HUIObjectModelLoader implements IObjectModelService {
