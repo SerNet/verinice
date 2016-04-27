@@ -76,25 +76,34 @@ public class ReportClassLoader extends ClassLoader {
     public Class<?> loadClass(String name) throws ClassNotFoundException {
         if (isTrustedClass(name)){
             try{
+                LOG.debug("loading authorized class:\t" + name);
                 Class<?> trustedClass = parentClassLoader.loadClass(name);
                 return trustedClass;
             }catch (ClassNotFoundException e){
-                // do nothing
+                LOG.debug("Class not found, trying next way", e);
+                if(!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
+                    String qualifiedName = tryGuessingQualifiedClassname(name);
+                    if(!name.equals(qualifiedName)){
+                        LOG.debug("loading class:\t" + qualifiedName + " for input:\t" + name);
+                        return parentClassLoader.loadClass(qualifiedName);
+                    } else {
+                        throw getSecurityClassLoadingException(name);   
+                    }
+                } 
             } finally{
                 return null;
             }
         } else if(!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
             String qualifiedName = tryGuessingQualifiedClassname(name);
-              if(!name.equals(qualifiedName)){
-                  return parentClassLoader.loadClass(qualifiedName);
-              } else {
-                  throw getSecurityClassLoadingException(name);   
-              }
-
-      } 
-
-
-      throw getSecurityClassLoadingException(name);
+            if(!name.equals(qualifiedName)){
+                LOG.debug("loading class:\t" + qualifiedName + " for input:\t" + name);
+                return parentClassLoader.loadClass(qualifiedName);
+            } else {
+                throw getSecurityClassLoadingException(name);   
+            }
+        } 
+        
+        throw getSecurityClassLoadingException(name);
     }
 
 
@@ -111,6 +120,18 @@ public class ReportClassLoader extends ClassLoader {
             return "java.util.Map$Entry";
         } else if("Date".equals(name)){
             return "java.util.Date";
+        } else if("Object".equals(name)){
+            return "java.lang.Object";
+        } else if("String".equals(name)){
+            return "java.lang.String";
+        } else if("List".equals(name)){
+            return "java.util.List";
+        } else if("Collections".equals(name)){
+            return "java.util.Collections";
+        } else if("Comparator".equals(name)){
+            return "java.util.Comparator";
+        } else if("Integer".equals(name)){
+            return "java.lang.Integer";
         }
         for(String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
             if(qualifiedName.contains(name)){

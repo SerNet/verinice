@@ -41,7 +41,8 @@ public class ReportSecurityContext {
      * @param rptDesignUrl
      * @param logFileLocation
      */
-    public ReportSecurityContext(IReportOptions reportOptions, URL rptDesignUrl, String logFileLocation, ReportTemplateMetaData reportMetaData) {
+    public ReportSecurityContext(IReportOptions reportOptions, URL rptDesignUrl,
+            String logFileLocation, ReportTemplateMetaData reportMetaData) {
         this.reportOptions = reportOptions;
         this.rptDesignUrl = rptDesignUrl;
         this.logFileLocation = logFileLocation;
@@ -60,7 +61,5 @@ public class ReportSecurityContext {
     public ReportTemplateMetaData getTemplateMetaData(){
         return this.metaData;
     }
-    
-    
 
 }

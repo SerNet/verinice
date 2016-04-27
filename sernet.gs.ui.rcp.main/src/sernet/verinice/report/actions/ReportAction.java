@@ -39,6 +39,7 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
 import sernet.verinice.interfaces.report.IOutputFormat;
@@ -133,6 +134,8 @@ public abstract class ReportAction extends RightsEnabledActionDelegate implement
             public Integer[] getRootElements(){return rootElmts;}
             @Override
             public void setRootElements(Integer[] rootElements) { this.rootElmts = rootElements;}
+            @Override
+            public String getServerURL(){ return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.VNSERVER_URI);}
         };
         if(dialog.getRootElement() != null){
             ro.setRootElement(dialog.getRootElement());

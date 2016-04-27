@@ -25,6 +25,8 @@ import java.lang.reflect.ReflectPermission;
 import java.net.InetAddress;
 import java.net.NetPermission;
 import java.net.SocketPermission;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.security.Permission;
 import java.util.Arrays;
@@ -141,7 +143,7 @@ public class ReportSecurityManager extends SecurityManager {
         authorizedRuntimeActions.put("org.eclipse.birt.core.i18n.ResourceHandle.<init>", 
                 Arrays.asList(new String[]{"getClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.data.engine.odaconsumer.Driver.createNewDriverHelper", 
-                Arrays.asList(new String[]{"getClassLoader", "suppressAccessChecks"}));
+                Arrays.asList(new String[]{"getClassLoader", "suppressAccessChecks", "createClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.core.runtime.internal.adaptor.ContextFinder.basicFindClassLoaders", 
                 Arrays.asList(new String[]{"getClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.osgi.framework.internal.core.BundleContextImpl.setContextFinder", 
@@ -179,7 +181,7 @@ public class ReportSecurityManager extends SecurityManager {
         authorizedRuntimeActions.put("javax.xml.parsers.FactoryFinder.findServiceProvider",
                 Arrays.asList(new String[]{"suppressAccessChecks", "createClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.registerFontPath",
-                Arrays.asList(new String[]{"suppressAccessChecks", "accessClassInPackage.sun.misc"}));
+                Arrays.asList(new String[]{"suppressAccessChecks", "accessClassInPackage.sun.misc", "createClassLoader"}));
         authorizedRuntimeActions.put("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.createFont",
                 Arrays.asList(new String[]{"getClassLoader", "suppressAccessChecks", "accessClassInPackage.sun.misc"}));
         authorizedRuntimeActions.put("com.ibm.icu.text.BreakIterator.getLineInstance",
@@ -287,6 +289,8 @@ public class ReportSecurityManager extends SecurityManager {
                         "getClassLoader", "writeFileDescriptor", "readFileDescriptor"}));
         authorizedRuntimeActions.put("org.eclipse.birt.report.engine.emitter.excel.layout.ExcelContext.parseSheetName",
                 Arrays.asList(new String[]{"suppressAccessChecks"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.emitter.excel.layout.Page.needOutputInMasterPage", 
+                Arrays.asList(new String[]{"suppressAccessChecks"}));
         authorizedRuntimeActions.put("org.eclipse.birt.report.engine.emitter.ods.OdsEmitter.parseSheetName", 
                 Arrays.asList(new String[]{"suppressAccessChecks"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.factory.Generator.render", 
@@ -300,12 +304,20 @@ public class ReportSecurityManager extends SecurityManager {
         authorizedRuntimeActions.put("org.eclipse.birt.report.engine.nLayout.area.impl.TextAreaLayout.buildTextStyle",
                 Arrays.asList(new String[]{"suppressAccessChecks", "getenv.DISPLAY", 
                         "loadLibrary." + System.getProperty("java.home") + File.separatorChar + "lib" + File.separatorChar + "libawt_lwawt.dylib",
-                        "modifyThreadGroup"}));
+                        "modifyThreadGroup", "getProtectionDomain"}));
         authorizedRuntimeActions.put("sun.java2d.HeadlessGraphicsEnvironment.getAvailableFontFamilyNames",
                 Arrays.asList(new String[]{"loadLibrary.awt", "loadLibrary.fontmanager"}));
         authorizedRuntimeActions.put("org.eclipse.birt.chart.device.swing.SwingDisplayServer.getGraphicsContext",
                 Arrays.asList(new String[]{"loadLibrary.awt", "suppressAccessChecks"}));
-    }
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.emitter.excel.StyleBuilder.populateColor",
+                Arrays.asList(new String[]{"getProtectionDomain", "suppressAccessChecks", "getenv.DISPLAY"}));
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.emitter.odt.OdtEmitter.end",
+                Arrays.asList(new String[]{"suppressAccessChecks", "accessClassInPackage.sun.util.logging.resources"}));
+        authorizedRuntimeActions.put("org.mozilla.javascript.ScriptRuntime.checkRegExpProxy", // needed to execute regexes within datasets
+                Arrays.asList(new String[]{"suppressAccessChecks"})); 
+        authorizedRuntimeActions.put("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.loadFontMappingConfig",
+                Arrays.asList(new String[]{"accessClassInPackage.sun.util.logging.resources"}));
+        }
     
     private ReportSecurityContext reportSecurityContext;
     
@@ -378,9 +390,14 @@ public class ReportSecurityManager extends SecurityManager {
         }
         
         try {
-            if(perm.getName().equals(InetAddress.getLocalHost().getHostName()) && perm.getActions().equals("resolve")){
+            String serverHost = reportSecurityContext.getReportOptions().getServerURL().trim();
+            URI serverHostURI = new URI(serverHost);
+
+            if(perm.getName().equals(InetAddress.getLocalHost().getHostName())){
                 return;
             } else if(perm.getName().startsWith("localhost") || perm.getName().startsWith("127.0.0.1")){
+                return;
+            } else if(perm.getName().startsWith(serverHostURI.getHost() + ":" + serverHostURI.getPort()) ){
                 return;
             } else {
                 throwSecurityException(perm);
@@ -388,6 +405,8 @@ public class ReportSecurityManager extends SecurityManager {
         } catch (UnknownHostException e) {
             LOG.error("Unable to determine local machines hostname", e);
             throwSecurityException(perm, e);
+        } catch (URISyntaxException e){
+            LOG.error("ServerURI is not a valid uri", e);
         }
     }
     
@@ -406,8 +425,10 @@ public class ReportSecurityManager extends SecurityManager {
 
 
     private void throwSecurityException(Permission perm) {
-        throw new ReportSecurityException(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_0, 
+        ReportSecurityException exception = new ReportSecurityException(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_0, 
                 new Object[]{perm.getClass().getCanonicalName(), perm.getName(), perm.getActions()}));
+        LOG.debug("throwing the following exception:\t", exception);
+        throw exception;
     }
     
     private void throwSecurityException(Permission perm, Throwable rootCause){
