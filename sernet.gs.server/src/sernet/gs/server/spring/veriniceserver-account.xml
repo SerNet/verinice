@@ -17,7 +17,7 @@
 
 		<security:intercept-methods>
 			<security:protect
-				method="sernet.verinice.service.AccountService.findAccounts" access="ACTION_ID_ACCOUNTSETTINGS" />
+				method="sernet.verinice.service.AccountService.*" access="ACTION_ID_ACCOUNTSETTINGS" />
 		</security:intercept-methods>
 	</bean>
 </beans>
