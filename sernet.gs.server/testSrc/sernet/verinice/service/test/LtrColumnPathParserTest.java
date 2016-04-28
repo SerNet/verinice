@@ -58,7 +58,7 @@ public class LtrColumnPathParserTest {
     private static final String[] COLUMN_PATHES_ARRAY  = {
             "auditgroup>audit.audit_name AS " + ALIAS1,
             "incident_scenario/threat.threat_name",
-            "asset:person-iso AS " + ALIAS2,
+            "asset:person-iso.name AS " + ALIAS2,
             "samt_topic<controlgroup.controlgroup_name",
             "threat.threat_name",
             "incident_scenario/asset/control/person-iso.person-iso_name AS " + ALIAS3

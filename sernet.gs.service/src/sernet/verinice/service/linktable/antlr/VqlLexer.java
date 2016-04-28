@@ -162,7 +162,7 @@ tryAgain:
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = WS;
 		int _saveIndex;
-
+		
 		{
 		int _cnt21=0;
 		_loop21:
@@ -218,12 +218,12 @@ tryAgain:
 		}
 		_returnToken = _token;
 	}
-
+	
 	public final void mLINK(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = LINK;
 		int _saveIndex;
-
+		
 		match('/');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -231,12 +231,12 @@ tryAgain:
 		}
 		_returnToken = _token;
 	}
-
+	
 	public final void mCHILD(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = CHILD;
 		int _saveIndex;
-
+		
 		match('>');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -244,12 +244,12 @@ tryAgain:
 		}
 		_returnToken = _token;
 	}
-
+	
 	public final void mPARENT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = PARENT;
 		int _saveIndex;
-
+		
 		match('<');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -257,12 +257,12 @@ tryAgain:
 		}
 		_returnToken = _token;
 	}
-
+	
 	public final void mPROP(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = PROP;
 		int _saveIndex;
-
+		
 		match('.');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -270,12 +270,12 @@ tryAgain:
 		}
 		_returnToken = _token;
 	}
-
+	
 	public final void mLT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = LT;
 		int _saveIndex;
-
+		
 		match(':');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
 			_token = makeToken(_ttype);
@@ -283,12 +283,12 @@ tryAgain:
 		}
 		_returnToken = _token;
 	}
-
+	
 	public final void mAlphanumeric(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = Alphanumeric;
 		int _saveIndex;
-
+		
 		{
 		int _cnt29=0;
 		_loop29:
@@ -347,7 +347,7 @@ tryAgain:
 		}
 		_returnToken = _token;
 	}
-
-
-
+	
+	
+	
 	}

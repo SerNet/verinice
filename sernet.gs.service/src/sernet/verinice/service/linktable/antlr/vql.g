@@ -2,9 +2,13 @@ header {
 package sernet.verinice.service.linktable.antlr;
 }
 class VqlParser extends Parser;
-options { buildAST=true; }
+options { 
+buildAST=true;
+defaultErrorHandler=false; 
+}
 
-expr : typeName (linkedType|parentType|childType)* (linkType|property) (alias)?;
+
+expr : typeName (linkedType|parentType|childType)* (linkType)? property (alias)?;
 
 as : "AS"|"as";
 
