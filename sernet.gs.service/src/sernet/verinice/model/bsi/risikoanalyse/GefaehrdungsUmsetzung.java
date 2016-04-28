@@ -29,8 +29,6 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdungsBaumElement, ITypedElement {
 
-    private static final long serialVersionUID = -8778503394169834062L;
-
     private static final long serialVersionUID = 20160216153414L;
 
     private IGefaehrdungsBaumElement gefaehrdungsParent;
