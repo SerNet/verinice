@@ -56,11 +56,6 @@ public class CsvExportDialog extends TitleAreaDialog {
 
     private static final String DEFAULT_ORGANIZATION_TITLE = "organization";
 
-    /**
-     * Indicates if the output should be encrypted.
-     */
-    private boolean encryptOutput = false;
-    private boolean reImport = false;
     private ITreeSelection selection;
     private CnATreeElement selectedElement;
     private String filePath;
@@ -315,13 +310,6 @@ public class CsvExportDialog extends TitleAreaDialog {
         return filePath;
     }
 
-    public boolean getEncryptOutput() {
-        return encryptOutput;
-    }
-
-    public boolean getReImport() {
-        return reImport;
-    }
     public String getSourceId() {
         return sourceId;
     }
