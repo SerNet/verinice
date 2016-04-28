@@ -562,7 +562,7 @@ public class GSVampire {
             LOG.error("Error parsing clob to String", e);
             gefaehrdungInformation.setDescription("Description not parseable from CLOB");
         }
-        gefaehrdungInformation.setId(String.valueOf(gefaehrdungNr));
+        gefaehrdungInformation.setId(String.valueOf("bG " + gefaehrdungKapitelId + "." + gefaehrdungNr));
         gefaehrdungInformation.setTitel(gefaehrdungName);
         return gefaehrdungInformation;
     }
