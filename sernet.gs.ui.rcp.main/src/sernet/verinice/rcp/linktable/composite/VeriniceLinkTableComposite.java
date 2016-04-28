@@ -191,7 +191,6 @@ public class VeriniceLinkTableComposite extends Composite {
             if (columns.isEmpty()) {
                 column = new VeriniceLinkTableColumn(path, this, ++numCols);
             } else {
-
                 column = new VeriniceLinkTableColumn(columns.get(0).getFirstCombo().getSelection(),
                         path, this, ++numCols);
             }

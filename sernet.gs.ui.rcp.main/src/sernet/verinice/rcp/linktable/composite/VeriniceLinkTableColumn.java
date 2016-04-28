@@ -164,7 +164,6 @@ public class VeriniceLinkTableColumn {
         Composite ddComposite = new Composite(column, style);
 
         upButton = new Button(ddComposite, SWT.ARROW | SWT.UP);
-        upButton.setText("+");
         GridDataFactory.swtDefaults().span(0, 0).hint(30, 20).applyTo(upButton);
         upButton.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -179,7 +178,6 @@ public class VeriniceLinkTableColumn {
         });
 
         downButton = new Button(ddComposite, SWT.ARROW | SWT.DOWN);
-        downButton.setText("-");
         GridDataFactory.swtDefaults().span(0, 0).hint(30, 20).applyTo(downButton);
         downButton.addSelectionListener(new SelectionAdapter() {
             @Override
