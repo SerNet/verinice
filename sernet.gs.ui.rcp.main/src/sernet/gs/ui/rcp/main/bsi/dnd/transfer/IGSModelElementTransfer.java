@@ -17,17 +17,12 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.dnd.transfer;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OptionalDataException;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
-import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.gs.model.IGSModel;
@@ -35,12 +30,10 @@ import sernet.gs.model.IGSModel;
 /**
  *
  */
-public final class IGSModelElementTransfer extends ByteArrayTransfer {
+public final class IGSModelElementTransfer extends VeriniceElementTransfer {
 
     private static final String TYPENAME_IGSMODELELEMENT = "igsModelElement";
     private static final int TYPEID_IGSMODELELEMENT = registerType(TYPENAME_IGSMODELELEMENT);
-    
-    private static Logger log = Logger.getLogger(IGSModelElementTransfer.class);
     
     private static IGSModelElementTransfer instance = new IGSModelElementTransfer();
     
@@ -102,34 +95,20 @@ public final class IGSModelElementTransfer extends ByteArrayTransfer {
         }
     }
     
-    public Object nativeToJava(TransferData transferData){
-        Object o = null;
-        if(isSupportedType(transferData)){
-            byte[] bs = (byte[]) super.nativeToJava(transferData);
-            ByteArrayInputStream bis = new ByteArrayInputStream(bs);
-            ObjectInput in;
-            try {
-                in = new ObjectInputStream(bis);
-                o = in.readObject();
-                bis.close();
-                in.close();
-            } catch (OptionalDataException e){
-                getLog().error("Wrong data", e);
-            } catch (IOException e) {
-                getLog().error("Error while transfering dnd object back to java", e);
-            } catch (ClassNotFoundException e) {
-                getLog().error("Error while transfering dnd object back to java", e);
-            }
-        }
-        return o;
-    }
-    
-    private boolean validateData(Object data){
+    /*
+     * (non-Javadoc)
+     * 
+     * @see sernet.gs.ui.rcp.main.bsi.dnd.transfer.VeriniceElementTransfer#
+     * validateData(java.lang.Object)
+     */
+    @Override
+    public boolean validateData(Object data){
         return (data instanceof IGSModel[]||
                 data instanceof IGSModel);
     }
 
-    private static Logger getLog() {
+    @Override
+    protected Logger getLog() {
         if(log == null){
             log = Logger.getLogger(IGSModelElementTransfer.class);
         }

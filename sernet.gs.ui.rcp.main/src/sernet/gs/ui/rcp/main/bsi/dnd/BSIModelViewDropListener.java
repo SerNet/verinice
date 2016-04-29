@@ -114,8 +114,12 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
             if (LOG.isDebugEnabled()) {
                 LOG.debug("data is null - setting to selected Object");
             }
-
             selectedData = ((IStructuredSelection) this.getViewer().getSelection()).toArray();
+        } else if (data instanceof Object[] && ((Object[]) data).length == 0) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No items in drag list"); //$NON-NLS-1$
+            }
+            return false;
         } else {
             selectedData = data;
         }
