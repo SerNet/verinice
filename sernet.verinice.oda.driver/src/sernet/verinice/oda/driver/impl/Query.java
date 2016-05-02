@@ -167,7 +167,7 @@ public class Query implements IQuery
          * @param propertyNames
          * @return
          */
-        public List<List<String>> retrieveEntityValues(String typeId, String[] propertyNames)
+        public List<List<Object>> retrieveEntityValues(String typeId, String[] propertyNames)
         {
         	return retrieveEntityValues(typeId, propertyNames, new Class[0]);
         }
@@ -185,7 +185,7 @@ public class Query implements IQuery
          * @param classes
          * @return
          */
-        public List<List<String>> retrieveEntityValues(String typeId, String[] propertyNames, Class<?>[] classes)
+        public List<List<Object>> retrieveEntityValues(String typeId, String[] propertyNames, Class<?>[] classes)
         {
     		LoadEntityValues command = new LoadEntityValues(typeId, propertyNames, classes );
 
@@ -214,7 +214,7 @@ public class Query implements IQuery
             return props;
         }
       
-        public List<List<String>> map(List<CnATreeElement> input, String[] props)
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props)
         {
         	return map(input, props, new Class<?>[0]);
         }
@@ -229,10 +229,10 @@ public class Query implements IQuery
          * @param addDbId optionally add database ID of the element at the end of each result
          * @return
          */
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId)
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId)
         {
             if (input == null || input.size()==0){
-                return new ArrayList<List<String>>();
+                return new ArrayList<List<Object>>();
             }
        
            	MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(), reduceToIDs(input), props, classes, addDbId);
@@ -240,9 +240,9 @@ public class Query implements IQuery
         	return cmd.getResult();
         }
         
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId, boolean mapNumericalOptionValues){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId, boolean mapNumericalOptionValues){
             if (input == null || input.size()==0){
-                return new ArrayList<List<String>>();
+                return new ArrayList<List<Object>>();
             }
 
             MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(), reduceToIDs(input), props, classes, addDbId, mapNumericalOptionValues);
@@ -290,15 +290,15 @@ public class Query implements IQuery
             return result_0;
         }
 
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, boolean withDbId){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, boolean withDbId){
             return map(input, props, new Class<?>[0], withDbId);
         }
 
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes){
             return map(input, props, classes, false);
         }
         
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, boolean withDbId, boolean mapNumericalValues){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, boolean withDbId, boolean mapNumericalValues){
             return map(input, props, new Class<?>[0], withDbId, mapNumericalValues);
         }
         
