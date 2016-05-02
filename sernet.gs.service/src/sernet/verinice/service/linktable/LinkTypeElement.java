@@ -25,8 +25,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.hui.common.connect.HitroUtil;
-import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
@@ -41,25 +39,9 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class LinkTypeElement implements IPathElement {
+public class LinkTypeElement extends BaseElement<CnATreeElement,Edge> {
 
     private static final Logger LOG = Logger.getLogger(LinkTypeElement.class);
-
-    private String targetTypeId;
-
-    private Map<String,Map<String, Object>> result;
-
-    private String alias;
-
-    public LinkTypeElement() {
-        super();
-        result = new HashMap<>();
-    }
-
-    public LinkTypeElement(String targetTypeId) {
-        this();
-        this.targetTypeId = targetTypeId;
-    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#load(sernet.verinice.model.common.CnATreeElement, sernet.verinice.interfaces.graph.VeriniceGraph)
@@ -67,125 +49,47 @@ public class LinkTypeElement implements IPathElement {
     @Override
     public void load(CnATreeElement parent, VeriniceGraph graph) {
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Loading links of " + parent.getTitle() + ", type id: " + getTargetTypeId() + "...");
+            LOG.debug("Loading links of " + parent.getTitle() + ", type id: " + getElementTypeId() + "...");
         }
         String parentId = String.valueOf(parent.getDbId());
         Map<String, Object> result = new HashMap<>();
-        Set<Edge> edgeSet = graph.getEdgesByElementType(parent, getTargetTypeId());
+        Set<Edge> edgeSet = graph.getEdgesByElementType(parent, getElementTypeId());
+        defineDirection(parent, edgeSet);
         for (Edge edge : edgeSet) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Edge loaded, type: " + edge.getType());
             }
+            /*
             CnATreeElement target = getTarget(parent, edge);
             String id = String.valueOf(target.getDbId());
             String label = getLabel(edge.getType(), isDownward(parent, edge));
-            result.put(id, label);
+            result.put(id, label);  
+            */         
+            getChild().setDirection(getDirection());
+            getChild().load(edge,graph);
+            String id = String.valueOf(edge.getSource().getDbId());
+            if(Direction.OUTGOING.equals(getDirection())) {
+                id = String.valueOf(edge.getTarget().getDbId());
+            }
+            result.put(id, getChild().getResult());
+  
         }
         getResult().put(parentId, result);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#createResultMap(java.util.Map, java.lang.String)
-     */
-    @Override
-    public Map<String, String> createResultMap(Map<String, String> map, String dbIds) {
-        Set<String> childKeySet = getResult().keySet();
-        for (String childKey : childKeySet) {
-            if(dbIds==null || dbIds.endsWith(childKey)) {
-                Map<String,Object> resultMap = getResult().get(childKey);
-                Set<String> resultKeySet = resultMap.keySet();
-                for (String resultKey : resultKeySet) {
-                    String newKey = (dbIds==null) ? resultKey : dbIds + RESULT_KEY_SEPERATOR + resultKey;
-                    String label = (String) resultMap.get(resultKey);
-                    map.put(newKey, label);
-                }
-            }
+    protected void defineDirection(CnATreeElement element, Set<Edge> edgeSet) {
+        if(edgeSet!=null && !edgeSet.isEmpty()) {
+            setDirection(isOutgoing(element,edgeSet.iterator().next()) ? Direction.OUTGOING : Direction.INCOMING);
+        } else {
+            setDirection(null);
         }
-        return map;
     }
 
-
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#getResult()
-     */
-    @Override
-    public Map<String, Map<String, Object>> getResult() {
-        return result;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#setTypeId(java.lang.String)
-     */
-    @Override
-    public void setTypeId(String typeId) {
-        this.targetTypeId = typeId;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#getChild()
-     */
-    @Override
-    public IPathElement getChild() {
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#setChild(sernet.verinice.report.service.impl.dynamictable.IPathElement)
-     */
-    @Override
-    public void setChild(IPathElement nextElement) {
-        // LinkTypeElements never have childs
-    }
-
-    public String getTargetTypeId() {
-        return targetTypeId;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPathElement#getTypeId()
-     */
-    @Override
-    public String getTypeId() {
-        return getTargetTypeId();
-    }
-
-    private static CnATreeElement getTarget(CnATreeElement source, Edge edge) {
-        CnATreeElement edgeSource = edge.getSource();
-        CnATreeElement edgeTarget = edge.getTarget();
-        return edgeSource.equals(source) ? edgeTarget : edgeSource;
-    }
-
-    private static boolean isDownward(CnATreeElement source, Edge edge) {
+    private static boolean isOutgoing(CnATreeElement source, Edge edge) {
         return edge.getSource().equals(source);
     }
 
-    private static String getLabel(String linkType, boolean isDownward) {
-        HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(linkType);
-        if(relation==null) {
-            return linkType;
-        }
-        return (isDownward) ? relation.getName() : relation.getReversename();
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPathElement#getAlias()
-     */
-    @Override
-    public String getAlias() {
-        return alias;
-    }
-
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPathElement#setAlias(java.lang.String)
-     */
-    @Override
-    public void setAlias(String alias) {
-        this.alias = alias;
-        if(getChild()!=null) {
-            getChild().setAlias(alias);
-        }
-    }
+    
+  
 
 }

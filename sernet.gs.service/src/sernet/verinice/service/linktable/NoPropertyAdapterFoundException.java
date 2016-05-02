@@ -19,25 +19,30 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-
 /**
  *
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class RiskAnalysisPropertyAdapter implements IPropertyAdapter<FinishedRiskAnalysis> {
+public class NoPropertyAdapterFoundException extends LinkTableRuntimeException {
 
-    public RiskAnalysisPropertyAdapter() {
-        super();
-    }
+    private Class<?> affectedClass;
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPropertyAdapter#getPropertyValue(java.lang.Object, java.lang.String)
+    /**
+     * @param string
      */
-    @Override
-    public String getPropertyValue(FinishedRiskAnalysis element, String propertyId) {
-        return element.getTitle();
+    public NoPropertyAdapterFoundException(String message, Class<?> affectedClass) {
+        super(message);
+        this.affectedClass = affectedClass;
     }
 
+    public Class<?> getAffectedClass() {
+        return affectedClass;
+    }
+
+    public void setAffectedClass(Class<?> affectedClass) {
+        this.affectedClass = affectedClass;
+    }
+    
+ 
 }

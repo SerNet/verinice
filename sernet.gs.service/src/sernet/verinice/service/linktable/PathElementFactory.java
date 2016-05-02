@@ -33,7 +33,7 @@ public final class PathElementFactory {
     /**
      * @param delimiter
      */
-    public static IPathElement getElement(String delimiter) {
+    public static IPathElement<?,?> getElement(String delimiter) {
         switch (delimiter.toCharArray()[0]) {
         case IPathElement.DELIMITER_LINK:
             return new LinkElement();
@@ -44,24 +44,30 @@ public final class PathElementFactory {
         case IPathElement.DELIMITER_PARENT:
             return new ParentElement();
         case IPathElement.DELIMITER_PROPERTY:
-            return new PropertyElement();
+            return new ElementPropertyElement();
         default:
             return null;
         }
     }
 
-    public static IPathElement getElement(int antlrTokenType) {
+    @SuppressWarnings("unchecked")
+    public static <P, E, C> IPathElement<E,C> getElement(IPathElement<P, E> parent, int antlrTokenType) {
         switch (antlrTokenType) {
         case VqlParserTokenTypes.LINK:
-            return new LinkElement();
+            return (IPathElement<E, C>) new LinkElement();
         case VqlParserTokenTypes.LT:
-            return new LinkTypeElement();
+            return (IPathElement<E, C>) new LinkTypeElement();
         case VqlParserTokenTypes.CHILD:
-            return new ChildElement();
+            return (IPathElement<E, C>) new ChildElement();
         case VqlParserTokenTypes.PARENT:
-            return new ParentElement();
-        case  VqlParserTokenTypes.PROP:
-            return new PropertyElement();
+            return (IPathElement<E, C>) new ParentElement();
+        case  VqlParserTokenTypes.PROP: {
+            if(parent instanceof LinkTypeElement) {
+                return (IPathElement<E, C>) new LinkPropertyElement();
+            } else {
+                return (IPathElement<E, C>) new ElementPropertyElement();
+            }
+        }
         default:
             return null;
         }

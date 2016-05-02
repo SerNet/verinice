@@ -32,7 +32,7 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class RootElement extends BaseElement {
+public class RootElement extends BaseElement<CnATreeElement,CnATreeElement> {
 
     private static final Logger LOG = Logger.getLogger(RootElement.class);
 

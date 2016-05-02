@@ -35,16 +35,16 @@ public abstract class PropertyAdapterFactory {
     }
 
     public static <T> IPropertyAdapter<T> getAdapter(T element) {
-        if(element instanceof IBSIStrukturKategorie) {
+        if (element instanceof IBSIStrukturKategorie) {
             return (IPropertyAdapter<T>) new ItbpGroupPropertyAdapter();
         }
-        if(element instanceof FinishedRiskAnalysis) {
+        if (element instanceof FinishedRiskAnalysis) {
             return (IPropertyAdapter<T>) new RiskAnalysisPropertyAdapter();
         }
-        if(element instanceof CnATreeElement) {
+        if (element instanceof CnATreeElement) {
             return (IPropertyAdapter<T>) new EntityPropertyAdapter();
-        }   
-        return null;
+        }
+        throw new NoPropertyAdapterFoundException("No property adapter found for element class: " + element.getClass().getName(), element.getClass());
     }
-    
+
 }

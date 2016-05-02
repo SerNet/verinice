@@ -38,7 +38,7 @@ import sernet.verinice.service.linktable.IPathElement;
 import sernet.verinice.service.linktable.LinkElement;
 import sernet.verinice.service.linktable.LinkTypeElement;
 import sernet.verinice.service.linktable.ParentElement;
-import sernet.verinice.service.linktable.PropertyElement;
+import sernet.verinice.service.linktable.ElementPropertyElement;
 import sernet.verinice.service.linktable.RootElement;
 
 /**
@@ -148,7 +148,7 @@ public class LtrColumnPathParserTest {
         case IPathElement.DELIMITER_PARENT:
             return ParentElement.class;
         case IPathElement.DELIMITER_PROPERTY:
-            return PropertyElement.class;
+            return ElementPropertyElement.class;
         default:
             return null;
         }

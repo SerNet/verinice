@@ -241,7 +241,7 @@ public class GenericDataModel {
         if(pathElement.getChild() instanceof ParentElement) {
             return isFollowedByPropertyOrParent(pathElement.getChild());
         }
-        return pathElement.getChild() instanceof PropertyElement;
+        return pathElement.getChild() instanceof ElementPropertyElement;
     }
 
     /**

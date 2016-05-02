@@ -20,13 +20,21 @@
 package sernet.verinice.service.linktable;
 
 import java.io.StringReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import antlr.*;
+import antlr.CommonAST;
+import antlr.RecognitionException;
+import antlr.TokenStreamException;
 import antlr.collections.AST;
-import sernet.verinice.service.linktable.antlr.*;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.linktable.antlr.VqlLexer;
+import sernet.verinice.service.linktable.antlr.VqlParser;
+import sernet.verinice.service.linktable.antlr.VqlParserTokenTypes;
 
 /**
  * Parser for column pathes of Link Tables.
@@ -141,11 +149,11 @@ public abstract class ColumnPathParser {
         }
     }
 
-    private static IPathElement createRootPathElement(CommonAST element) {
+    private static IPathElement<CnATreeElement,CnATreeElement> createRootPathElement(CommonAST element) {
         return new RootElement(element.getText());
     }
 
-    private static void addChild(IPathElement pathElement, AST element) {
+    private static <C> void addChild(IPathElement<?,C> pathElement, AST element) {
         if(isChild(element)) {
             AST next = element.getNextSibling();
             if(!isChild(next)) {
@@ -153,7 +161,7 @@ public abstract class ColumnPathParser {
                 LOG.error(message);
                 throw new ColumnPathParseException(message);
             }
-            IPathElement child = createPathElement(element, next);
+            IPathElement<C,?> child = createPathElement(pathElement, element, next);
             pathElement.setChild(child);
             addChild(child, next.getNextSibling());
         }
@@ -197,8 +205,8 @@ public abstract class ColumnPathParser {
         return current.getType()==VqlParserTokenTypes.LITERAL_as||current.getType()==VqlParserTokenTypes.LITERAL_AS;
     }
 
-    private static IPathElement createPathElement(AST element, AST next) {
-        IPathElement pathElement = PathElementFactory.getElement(element.getType());
+    private static <P,E,C> IPathElement<E,C> createPathElement(IPathElement<P, E> parent, AST element, AST next) {
+        IPathElement<E,C> pathElement = PathElementFactory.getElement(parent, element.getType());
         pathElement.setTypeId(next.getText());
         return pathElement;
     }

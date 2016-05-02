@@ -21,7 +21,6 @@ package sernet.verinice.service.linktable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -29,38 +28,45 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Path element in a column path definition which loads the links of an element.
- * Delimiter for this path element is: IPathElement.DELIMITER_LINK (/)
+ * Path element in a column path definition which loads a property of an element.
+ * Delimiter for this path element is: IPathElement.DELIMITER_PROPERTY (.)
  * See GenericDataModel for a description of column path definitions.
  *
  * @see GenericDataModel
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class LinkElement extends BaseElement<CnATreeElement,CnATreeElement> {
+public class ElementPropertyElement extends PropertyElement implements IPathElement<CnATreeElement,EndOfPathElement> {
 
-    private static final Logger LOG = Logger.getLogger(LinkElement.class);
-    
+    private static final Logger LOG = Logger.getLogger(ElementPropertyElement.class);
+
+    public ElementPropertyElement() {
+        super();
+        result = new HashMap<>();
+    }
+
+    public ElementPropertyElement(String propertyTypeId) {
+        this.propertyTypeId = propertyTypeId;
+        result = new HashMap<>();
+    }
+
     /* (non-Javadoc)
      * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#load(sernet.verinice.model.common.CnATreeElement, sernet.verinice.interfaces.graph.VeriniceGraph)
      */
     @Override
-    public void load(CnATreeElement parent, VeriniceGraph graph) {
+    public void load(CnATreeElement element, VeriniceGraph graph) {
+        String parentId = String.valueOf(element.getDbId());
+        propertyValue = getPropertyValue(element);
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put(parentId, propertyValue);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Loading links of " + parent.getTitle() + ", type id: " + getElementTypeId() + "...");
+            LOG.debug(element.getTitle() + "(" + parentId + ")." + propertyTypeId + " = " + propertyValue + " loaded");
         }
-        String parentId = String.valueOf(parent.getDbId());
-        Map<String, Object> result = new HashMap<String, Object>();
-        Set<CnATreeElement> elements = graph.getLinkTargetsByElementType(parent, getElementTypeId());
-        for (CnATreeElement element : elements) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(element.getTitle() + "  loaded");
-            }
-            getChild().load(element,graph);
-            String id = String.valueOf(element.getDbId());
-            result.put(id, getChild().getResult());
-        }
-        getResult().put(parentId, result);
+        getResult().put(parentId, resultMap);
     }
-
+    
+    protected String getPropertyValue(CnATreeElement element) {
+        IPropertyAdapter<CnATreeElement> adapter = PropertyAdapterFactory.getAdapter(element);
+        return adapter.getPropertyValue(element, propertyTypeId);
+    }
 
 }

@@ -28,13 +28,14 @@ import java.util.Set;
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public abstract class BaseElement implements IPathElement {
+public abstract class BaseElement<E,C> implements IPathElement<E,C> {
 
     private String elementTypeId;
-    private IPathElement child;
+    private IPathElement<C,?> child;
     private Map<String,Map<String, Object>> result;
     private String alias;
-
+    private Direction direction;
+    
     public BaseElement() {
         super();
         result = new HashMap<String,Map<String, Object>>();
@@ -71,11 +72,11 @@ public abstract class BaseElement implements IPathElement {
     /* (non-Javadoc)
      * @see sernet.verinice.report.service.impl.dynamictable.IParentPathElement#getChild()
      */
-    public IPathElement getChild() {
+    public IPathElement<C,?> getChild() {
         return child;
     }
 
-    public void setChild(IPathElement child) {
+    public void setChild(IPathElement<C,?> child) {
         this.child = child;
     }
 
@@ -117,6 +118,14 @@ public abstract class BaseElement implements IPathElement {
         if(getChild()!=null) {
             getChild().setAlias(alias);
         }
+    }
+    
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
 }

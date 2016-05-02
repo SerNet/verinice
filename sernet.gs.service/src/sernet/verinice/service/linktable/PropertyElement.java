@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015 Daniel Murygin.
+ * Copyright (c) 2016 Daniel Murygin <dm{a}sernet{dot}de>.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,91 +15,35 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
+ *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import sernet.verinice.service.linktable.IPathElement.Direction;
 
-import sernet.hui.common.connect.EntityType;
-import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyType;
-import sernet.hui.common.connect.URLUtil;
-import sernet.verinice.interfaces.graph.VeriniceGraph;
-import sernet.verinice.model.common.CnATreeElement;
-
-/**
- * Path element in a column path definition which loads a property of an element.
- * Delimiter for this path element is: IPathElement.DELIMITER_PROPERTY (.)
- * See GenericDataModel for a description of column path definitions.
- *
- * @see GenericDataModel
- * @author Daniel Murygin <dm[at]sernet[dot]de>
- */
 /**
  *
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class PropertyElement implements IPathElement {
+public class PropertyElement {
 
-    private static final Logger LOG = Logger.getLogger(PropertyElement.class);
-
-    private String propertyTypeId;
-    private String propertyValue;
-    private Map<String,Map<String, Object>> result;
+    protected String propertyTypeId;
+    protected String propertyValue;
+    protected Map<String,Map<String, Object>> result;
     private String alias;
+    private Direction direction;
 
     public PropertyElement() {
         super();
-        result = new HashMap<>();
     }
-
-    public PropertyElement(String propertyTypeId) {
-        this.propertyTypeId = propertyTypeId;
-        result = new HashMap<>();
-    }
-
-    public String getPropertyTypeId() {
-        return propertyTypeId;
-    }
-
-    public void setPropertyTypeId(String propertyTypeId) {
-        this.propertyTypeId = propertyTypeId;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#setTypeId(java.lang.String)
-     */
-    @Override
-    public void setTypeId(String typeId) {
-        propertyTypeId = typeId;
-
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#load(sernet.verinice.model.common.CnATreeElement, sernet.verinice.interfaces.graph.VeriniceGraph)
-     */
-    @Override
-    public void load(CnATreeElement element, VeriniceGraph graph) {
-        String parentId = String.valueOf(element.getDbId());
-        propertyValue = getPropertyValue(element, propertyTypeId);
-        Map<String, Object> resultMap = new HashMap<>();
-        resultMap.put(parentId, propertyValue);
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(element.getTitle() + "(" + parentId + ")." + propertyTypeId + " = " + propertyValue + " loaded");
-        }
-        getResult().put(parentId, resultMap);
-    }
-
+    
     /* (non-Javadoc)
      * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#createValueMap(java.util.Map, java.lang.String)
      */
-    @Override
     public Map<String, String> createResultMap(Map<String, String> map, String key) {
         Set<String> childKeySet = getResult().keySet();
         for (String childKey : childKeySet) {
@@ -117,32 +61,27 @@ public class PropertyElement implements IPathElement {
         return map;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#getResult()
-     */
-    @Override
-    public Map<String,Map<String, Object>> getResult() {
-        return result;
+    public String getPropertyTypeId() {
+        return propertyTypeId;
     }
 
-    private String getPropertyValue(CnATreeElement element, String propertyId) {
-        IPropertyAdapter<CnATreeElement> adapter = PropertyAdapterFactory.getAdapter(element);
-        return adapter.getPropertyValue(element, propertyId);
+    public void setPropertyTypeId(String propertyTypeId) {
+        this.propertyTypeId = propertyTypeId;
     }
-
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPathElement#getTypeId()
-     */
-    @Override
+    
     public String getTypeId() {
         return propertyTypeId;
     }
 
+    public void setTypeId(String typeId) {
+        propertyTypeId = typeId;
+    
+    }
 
-    /**
-     * @return the propertyValue
-     */
+    public Map<String,Map<String, Object>> getResult() {
+        return result;
+    }
+  
     public String getPropertyValue() {
         return propertyValue;
     }
@@ -154,39 +93,31 @@ public class PropertyElement implements IPathElement {
         this.propertyValue = propertyValue;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#getChild()
-     */
-    @Override
-    public IPathElement getChild() {
+    public IPathElement<EndOfPathElement,?> getChild() {
+        // A property element never has childs
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#setChild(sernet.verinice.report.service.impl.dynamictable.IPathElement)
-     */
-    @Override
-    public void setChild(IPathElement child) {
-        // A property element never has childs
+ 
+    public void setChild(IPathElement<EndOfPathElement,?> child) {
+     // A property element never has childs
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPathElement#getAlias()
-     */
-    @Override
+   
     public String getAlias() {
         return alias;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPathElement#setAlias(java.lang.String)
-     */
-    @Override
     public void setAlias(String alias) {
         this.alias = alias;
-        if(getChild()!=null) {
-            getChild().setAlias(alias);
-        }
+    }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
     }
 
 }

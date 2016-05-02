@@ -48,7 +48,7 @@ public class Edge implements Serializable {
         this.target = target;
         this.type = type;
     }
-   
+
     public CnATreeElement getSource() {
         return source;
     }
@@ -72,5 +72,9 @@ public class Edge implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Edge " + source + "->" + target + " (" + type + ")";
+    } 
 }

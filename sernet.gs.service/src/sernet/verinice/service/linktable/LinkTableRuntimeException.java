@@ -19,25 +19,21 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-
 /**
- *
+ * Base exception class for runtime exceptions
+ * in the context of link table creation.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class RiskAnalysisPropertyAdapter implements IPropertyAdapter<FinishedRiskAnalysis> {
+public class LinkTableRuntimeException extends RuntimeException {
 
-    public RiskAnalysisPropertyAdapter() {
-        super();
+    private static final long serialVersionUID = 975673728003650149L;
+
+    public LinkTableRuntimeException(String message) {
+        super(message);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPropertyAdapter#getPropertyValue(java.lang.Object, java.lang.String)
-     */
-    @Override
-    public String getPropertyValue(FinishedRiskAnalysis element, String propertyId) {
-        return element.getTitle();
+    public LinkTableRuntimeException(String message, Exception cause) {
+        super(message,cause);
     }
-
 }

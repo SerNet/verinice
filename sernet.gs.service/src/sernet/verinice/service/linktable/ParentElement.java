@@ -35,9 +35,14 @@ import sernet.verinice.model.common.CnATreeElement;
  * @see GenericDataModel
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class ParentElement extends BaseElement {
+public class ParentElement extends BaseElement<CnATreeElement,CnATreeElement> {
 
     private static final Logger LOG = Logger.getLogger(ParentElement.class);
+
+    public ParentElement() {
+        super();
+        setDirection(Direction.INCOMING);
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#load(sernet.verinice.model.common.CnATreeElement, sernet.verinice.interfaces.graph.VeriniceGraph)

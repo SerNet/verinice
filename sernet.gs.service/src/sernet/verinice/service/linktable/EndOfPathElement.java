@@ -19,25 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-
 /**
- *
+ * Dummy class for the end of a column path in link table reports.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class RiskAnalysisPropertyAdapter implements IPropertyAdapter<FinishedRiskAnalysis> {
-
-    public RiskAnalysisPropertyAdapter() {
-        super();
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPropertyAdapter#getPropertyValue(java.lang.Object, java.lang.String)
-     */
-    @Override
-    public String getPropertyValue(FinishedRiskAnalysis element, String propertyId) {
-        return element.getTitle();
-    }
+public class EndOfPathElement {
 
 }

@@ -19,26 +19,18 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import antlr.ANTLRException;
-
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class ColumnPathParseException extends RuntimeException {
+public class ColumnPathParseException extends LinkTableRuntimeException {
 
-    private static final long serialVersionUID = -7546153758299262077L;
+    private static final long serialVersionUID = 2540079179728181202L;
 
     public ColumnPathParseException(String message) {
         super(message);
     }
 
-    /**
-     * @param message
-     * @param e
-     */
     public ColumnPathParseException(String message, Exception cause) {
         super(message, cause);
     }
-
-
 }

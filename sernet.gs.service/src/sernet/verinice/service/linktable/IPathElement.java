@@ -22,7 +22,6 @@ package sernet.verinice.service.linktable;
 import java.util.Map;
 
 import sernet.verinice.interfaces.graph.VeriniceGraph;
-import sernet.verinice.model.common.CnATreeElement;
 
 /**
  * A IPathElement is an element in a ColumnPath.
@@ -32,7 +31,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * @see GenericDataModel
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface IPathElement {
+public interface IPathElement<E,C> {
 
     public static final char DELIMITER_LINK = '/';
     public static final char DELIMITER_LINK_TYPE = ':';
@@ -41,6 +40,8 @@ public interface IPathElement {
     public static final char DELIMITER_PROPERTY = '.';
 
     public static final String RESULT_KEY_SEPERATOR = ".";
+    
+    public enum Direction { INCOMING, OUTGOING };
 
     /**
      * Loads the data of this path element from the verinice graph
@@ -49,7 +50,7 @@ public interface IPathElement {
      * @param parent The parent element
      * @param graph The verinice graph with all relevant elements
      */
-    void load(CnATreeElement parent, VeriniceGraph graph);
+    void load(E parent, VeriniceGraph graph);
 
     /**
      * Creates the result map for this path element,
@@ -89,14 +90,14 @@ public interface IPathElement {
     /**
      * @return The next element in the path
      */
-    IPathElement getChild();
+    IPathElement<C,?> getChild();
 
     /**
      * Sets the next element in the path
      *
      * @param nextElement The next path element
      */
-    void setChild(IPathElement nextElement);
+    void setChild(IPathElement<C,?> nextElement);
 
     /**
      * Return the alias (or name) of an element. The alias is an optional field
@@ -113,5 +114,10 @@ public interface IPathElement {
      * @param alias The alias (or name) of an element
      */
     void setAlias(String alias);
+    
+    Direction getDirection();
+    
+    void setDirection(Direction direction);
+   
 
 }
