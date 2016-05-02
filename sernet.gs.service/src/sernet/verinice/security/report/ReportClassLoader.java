@@ -47,6 +47,7 @@ public class ReportClassLoader extends ClassLoader {
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.lang.Integer");
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.lang.String"); // Covers java.lang.StringBuilder also
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.lang.Double");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.lang.Object");
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Arrays");
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Collections");
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.List");
@@ -56,11 +57,14 @@ public class ReportClassLoader extends ClassLoader {
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.regex");
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Comparator");
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Map");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Map$Entry");
+        AUTHORIZED_FOR_EXTERNAL_USE.add("java.util.Date");
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.text.DateFormat");
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.text.SimpleDateFormat");
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.math.BigDecimal");
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.math.RoundingMode");
         AUTHORIZED_FOR_EXTERNAL_USE.add("org.apache.commons.lang.ArrayUtils");
+        
         
         AUTHORIZED_FOR_EXTERNAL_USE.add("java.lang.Thread");
         
@@ -74,35 +78,42 @@ public class ReportClassLoader extends ClassLoader {
     
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
+        name = guessByStandardMapping(name);
         if (isTrustedClass(name)){
             try{
-                LOG.debug("loading authorized class:\t" + name);
                 Class<?> trustedClass = parentClassLoader.loadClass(name);
+                LOG.debug("authorized class:\t" + name + " loaded via parent classloader");
                 return trustedClass;
             }catch (ClassNotFoundException e){
-                LOG.debug("Class not found, trying next way", e);
+                LOG.debug("Class " + name + " not found, trying next way");
                 if(!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
                     String qualifiedName = tryGuessingQualifiedClassname(name);
                     if(!name.equals(qualifiedName)){
-                        LOG.debug("loading class:\t" + qualifiedName + " for input:\t" + name);
-                        return parentClassLoader.loadClass(qualifiedName);
+                        Class<?> trustedClass =  parentClassLoader.loadClass(qualifiedName);
+                        LOG.debug("class:\t" + qualifiedName + " for input:\t" + name + " successfully loaded by parentclassloader");
+                        return trustedClass;
                     } else {
                         throw getSecurityClassLoadingException(name);   
                     }
-                } 
+                } else {
+                    LOG.debug("[block1]can not determine class for name:\t" + name);
+                }
             } finally{
+                LOG.debug("reached finally block, returning null");
                 return null;
             }
         } else if(!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
             String qualifiedName = tryGuessingQualifiedClassname(name);
             if(!name.equals(qualifiedName)){
+                Class<?> trustedClass = parentClassLoader.loadClass(qualifiedName);
                 LOG.debug("loading class:\t" + qualifiedName + " for input:\t" + name);
-                return parentClassLoader.loadClass(qualifiedName);
+                return trustedClass;
             } else {
+                LOG.debug("[block2]can not determine class for name:\t" + name);
                 throw getSecurityClassLoadingException(name);   
             }
         } 
-        
+        LOG.debug("[block3]can not determine class for name:\t" + name);
         throw getSecurityClassLoadingException(name);
     }
 
@@ -116,6 +127,31 @@ public class ReportClassLoader extends ClassLoader {
     }
     
     private String tryGuessingQualifiedClassname(String name){
+        String mappedName = guessByStandardMapping(name);
+        if(!mappedName.equals(name)){
+            return mappedName;
+        }
+        for(String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
+            if(qualifiedName.contains(name)){
+                return qualifiedName;
+            }
+        }
+
+        for(String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
+            if(qualifiedName.endsWith(getPathFreeClassName(name))){
+                return qualifiedName;
+            }
+        }
+        
+        
+        return name;
+    }
+
+
+    /**
+     * @param name
+     */
+    private String guessByStandardMapping(String name) {
         if("Entry".equals(name)){
             return "java.util.Map$Entry";
         } else if("Date".equals(name)){
@@ -132,21 +168,7 @@ public class ReportClassLoader extends ClassLoader {
             return "java.util.Comparator";
         } else if("Integer".equals(name)){
             return "java.lang.Integer";
-        }
-        for(String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
-            if(qualifiedName.contains(name)){
-                return qualifiedName;
-            }
-        }
-
-        for(String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
-            if(qualifiedName.endsWith(getPathFreeClassName(name))){
-                return qualifiedName;
-            }
-        }
-        
-        
-        return name;
+        } else return name;
     }
 
 
