@@ -70,6 +70,16 @@ public interface ICompleteServerHandler {
     String getOutcomeId();
     
     /**
+     * @return The parameter of a task
+     */
+    Map<String, Object> getTaskParameter();
+    
+    /**
+     * @param taskParameter The parameter of a task
+     */
+    void setTaskParameter(Map<String, Object> taskParameter);
+    
+    /**
      * Called before task with taskId is completed.
      * Param parameter is passed from {@link ITaskService} completeTask methods.
      * 

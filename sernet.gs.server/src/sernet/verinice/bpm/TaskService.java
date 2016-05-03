@@ -639,7 +639,9 @@ public class TaskService implements ITaskService {
     private void completeTask(Task task, String outcomeId, Map<String, Object> parameter) {     
         ICompleteServerHandler handler = getHandler(task.getName(),outcomeId);
         if(handler!=null) {
+            handler.setTaskParameter(getVariables(task.getId()));
             handler.execute(task.getId(),parameter);
+            setVariables(task.getId(), handler.getTaskParameter()); 
         }
         getTaskService().completeTask(task.getId(),outcomeId);
     }
