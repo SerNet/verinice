@@ -49,8 +49,8 @@ public class GefaehrdungsUmsetzungFactory {
      * @param module
      * @param gef
      */
-    public static GefaehrdungsUmsetzung createScenario(BausteinUmsetzung module, Gefaehrdung gef, String language) {
-        GefaehrdungsUmsetzung scenario = build(module, gef, language);
+    public static GefaehrdungsUmsetzung createScenario(BausteinUmsetzung parent, Gefaehrdung gef, String language) {
+        GefaehrdungsUmsetzung scenario = build(parent, gef, language);
         return scenario;
     }
 }

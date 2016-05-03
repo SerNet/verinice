@@ -145,16 +145,16 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                 return dropBaustein((CnATreeElement) target, viewer, list.toArray(new Baustein[list.size()]));
             } else if (firstOne instanceof IGSModel && target instanceof BausteinUmsetzung) {
 
-                List<Gefaehrdung> gefaehrdungen = new ArrayList<Gefaehrdung>(0);
-                List<Massnahme> massnahmen = new ArrayList<Massnahme>(0);
+                List<Gefaehrdung> scenarios = new ArrayList<Gefaehrdung>(0);
+                List<Massnahme> controls = new ArrayList<Massnahme>(0);
                 for (Object object : items) {
                     if (object instanceof Gefaehrdung) {
-                        gefaehrdungen.add((Gefaehrdung) object);
+                        scenarios.add((Gefaehrdung) object);
                     } else if (object instanceof Massnahme) {
-                        massnahmen.add((Massnahme) object);
+                        controls.add((Massnahme) object);
                     }
                 }
-                return dropScenarios((BausteinUmsetzung) target, viewer, gefaehrdungen) && dropControls((BausteinUmsetzung) target, viewer, massnahmen);
+                return dropScenarios((BausteinUmsetzung) target, viewer, scenarios) && dropControls((BausteinUmsetzung) target, viewer, controls);
             } else if (firstOne != null && (firstOne instanceof IBSIStrukturElement || firstOne instanceof BausteinUmsetzung || firstOne instanceof IISO27kElement || firstOne instanceof IMassnahmeUmsetzung)) {
                 CnATreeElement element = (CnATreeElement) target;
                 LinkDropper dropper = new LinkDropper();
@@ -355,7 +355,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         CnAElementFactory.getLoadedModel().childAdded(target, saveNew);
     }
 
-    private boolean dropControls(final BausteinUmsetzung targetModule, Viewer viewer, final List<Massnahme> massnahmen) {
+    private boolean dropControls(final BausteinUmsetzung targetModule, Viewer viewer, final List<Massnahme> controls) {
         if (!CnAElementHome.getInstance().isNewChildAllowed(targetModule)) {
             return false;
         }
@@ -367,7 +367,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
                     Activator.inheritVeriniceContextState();
 
                     try {
-                        addControlsToModule(massnahmen, targetModule);
+                        addControlsToModule(controls, targetModule);
                     } catch (Exception e) {
                         Logger.getLogger(this.getClass()).error("Drop failed", e); //$NON-NLS-1$
                         return Status.CANCEL_STATUS;
@@ -453,7 +453,6 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
         CnATreeElement scenario = GefaehrdungsUmsetzungFactory.createScenario(targetModule, scenarioToDrop, BSIKatalogInvisibleRoot.getInstance().getLanguage());
         setNewPermissions(scenario);
         scenario = saveElementAndAddToModule(targetModule, scenario);
-
         // notifying for the last element is sufficient to update all views:
         modelUpdater.childAdded(targetModule, scenario);
         return scenario;
