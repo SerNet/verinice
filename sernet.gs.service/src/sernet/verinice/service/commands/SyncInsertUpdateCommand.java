@@ -23,15 +23,20 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
 import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
@@ -43,6 +48,8 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 import de.sernet.sync.risk.Risk;
 import de.sernet.sync.risk.SyncRiskAnalysis;
+import de.sernet.sync.risk.SyncScenario;
+import de.sernet.sync.risk.SyncScenarioList;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
@@ -67,7 +74,9 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.common.CnALink;
@@ -273,6 +282,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
 
         Class clazz = CnATypeMapper.getClassFromTypeId(veriniceObjectType);
+        if(clazz == GefaehrdungsUmsetzung.class){
+            clazz.hashCode();
+        }
         IBaseDao<CnATreeElement, Serializable> dao = getDao(clazz);
 
         parent = (parent == null) ? accessContainer(clazz) : parent;
@@ -391,6 +403,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private CnATreeElement createElement(CnATreeElement parent, Class clazz) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         CnATreeElement child;
+        if(GefaehrdungsUmsetzung.class.equals(clazz)){
+            "".hashCode();
+        }
         // get constructor with parent-parameter and create new object:
         if (clazz.equals(Organization.class)) {
             child = (CnATreeElement) clazz.getConstructor(CnATreeElement.class, boolean.class).newInstance(parent, false);
@@ -594,7 +609,73 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         riskAnalysisImporter.setElementDao( getDaoFactory().getDAO(CnATreeElement.class));
         riskAnalysisImporter.setExtIdElementMap(idElementMap);
         riskAnalysisImporter.run();
+        
+        reZombiefyAssociatedGefaehrdungen(filterOrphanElements());
+        
     }
+
+    /**
+     * computes set of instances of {@link GefaehrdungsUmsetzung} that belongs to a {@link FinishedRiskAnalysis}
+     * that are not shown in the treeview, because they only appear on page one (checked) and two (unchecked)
+     * of the riskAnalysisWizard. The method returns a list that removes all instances of {@link GefaehrdungsUmsetzung}
+     * that are referenced in page 3 (or 4) of the wizard from the set that is shown on page 2.
+     * 
+     * The returned elements are going to have 
+     * 
+     * scope_id and parent unset (set to null)
+     * 
+     * which makes them some kind of an orphan element (and leads to the invisibelity in the treeview)
+     * @return
+     */
+    private Set<String> filterOrphanElements() {
+        Set<String> extIdsToZombiefy = new HashSet<>();
+        
+        for (SyncRiskAnalysis syncRiskAnalysis : risk.getAnalysis()) {
+            extIdsToZombiefy.addAll(syncRiskAnalysis.getScenarios().getExtId());
+        }
+        
+        for(SyncRiskAnalysis syncRiskAnalysis : risk.getAnalysis()){
+            for(String extIdToKeep : syncRiskAnalysis.getScenariosNotTreated().getExtId()){
+                if(extIdsToZombiefy.contains(extIdToKeep)){
+                    extIdsToZombiefy.remove(extIdToKeep);
+                }
+            }
+        }
+        return extIdsToZombiefy;
+    }
+    
+    
+    /**
+     * (un-)sets scopeId and parent for list of elements (given by their extId) to null
+     * which is needed to restore state of page 1 and 2 of the riskanalysiswizard.
+     * all instances of {@link GefaehrdungsUmsetzung} that are not part of page 3 and 4
+     * should not be displayed (/existant from the users perspective) in the treeview. 
+     * unsetting scopeId and parent (id) leads to this behaviour 
+     * @param orphanList
+     */
+    private void reZombiefyAssociatedGefaehrdungen(Set orphanList) {
+      if(orphanList.size() > 0){
+          StringBuilder sb = new StringBuilder();
+          sb.append("(");
+          Iterator<String> iter = orphanList.iterator();
+          while(iter.hasNext()){
+              sb.append("'").append(iter.next()).append("'").append(", ");
+          }
+          String parameterList = sb.toString().trim().substring(0, sb.length() - 2) + ")";
+          getDaoFactory().getDAO(CnATreeElement.class).executeCallback(new HibernateCallback() {                    
+              @Override
+              public Object doInHibernate(Session s) throws SQLException {
+                  s.flush();
+                  StringBuilder sb = new StringBuilder();
+                  sb.append("UPDATE cnatreeelement SET parent = null, scope_id = null");
+                  sb.append(" WHERE extid IN ").append(parameterList);
+                  Query q = s.createSQLQuery(sb.toString());
+                  return q.executeUpdate();
+              }
+          });
+          getDaoFactory().getDAO(CnATreeElement.class).flush();
+      }
+  }
 
     private MapObjectType getMap(String extObjectType) {
         for (MapObjectType mot : syncMapping.getMapObjectType()) {

@@ -38,6 +38,7 @@ import de.sernet.sync.risk.SyncScenario;
 import de.sernet.sync.risk.SyncScenarioList;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
@@ -62,6 +63,7 @@ public class RiskAnalysisImporter {
     private List<SyncControl> syncControlList;
     private Map<String, CnATreeElement> extIdElementMap;
     private IBaseDao<FinishedRiskAnalysisLists, Serializable> finishedRiskAnalysisListsDao;
+    private IBaseDao<FinishedRiskAnalysis, Serializable> finishedRiskAnalysesDao;
     private IBaseDao<OwnGefaehrdung, Serializable> ownGefaehrdungDao;
     private IBaseDao<RisikoMassnahme, Serializable> risikoMassnahmeDao;
     private IBaseDao<CnATreeElement, Serializable> elementDao;
@@ -82,10 +84,10 @@ public class RiskAnalysisImporter {
     public void run() {
         importOwnSzenarios();
         importOwnControls();
-        importRiskAnalysises();
+        importRiskAnalyses();
     }
 
-    private void importRiskAnalysises() {
+    private void importRiskAnalyses() {
         for (SyncRiskAnalysis syncRiskAnalysis : syncRiskAnalysisList) {
             importRiskAnalysis(syncRiskAnalysis);
         }
@@ -120,7 +122,7 @@ public class RiskAnalysisImporter {
        
        changeControlTypes(scenarioNotOk);
     }
-    
+
     /**
      * Changes the type of the control which are childs of
      * a risk analysis to RisikoMassnahmenUmsetzung.HIBERNATE_TYPE_ID.

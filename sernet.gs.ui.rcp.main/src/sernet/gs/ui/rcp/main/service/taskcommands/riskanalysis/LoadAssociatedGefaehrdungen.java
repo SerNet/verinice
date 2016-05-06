@@ -18,17 +18,22 @@
 package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.springframework.orm.hibernate3.HibernateCallback;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.FinishedRiskAnalysisListsHome;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportLinkedElements;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 import sernet.verinice.interfaces.CommandException;
@@ -38,6 +43,8 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.common.CnATreeElement;
@@ -75,7 +82,7 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
     public LoadAssociatedGefaehrdungen(CnATreeElement cnaElement) {
         this.cnaElement = cnaElement;
     }
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -96,16 +103,19 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
 
     private void loadAssociatedGefaehrdungen() throws CommandException {
         associatedGefaehrdungen = new ArrayList<>();
+        Set<GefaehrdungsUmsetzung> unifiedCollection = new HashSet<>();
 
         /*
          * look for associated Gefaehrdung via children of cnaelement
          */
-        associatedGefaehrdungen.addAll(getAssociatedGefaehrdungenViaChildren());
+        unifiedCollection.addAll(getAssociatedGefaehrdungenViaChildren());
 
         /*
          * look for associated Gefaehrdung via downlinks of cnaelement
          */
-        associatedGefaehrdungen.addAll(getAssociatedGefaehrdungenViaLinks());
+        unifiedCollection.addAll(getAssociatedGefaehrdungenViaLinks());
+        
+        associatedGefaehrdungen.addAll(unifiedCollection);
     }
 
     private Set<GefaehrdungsUmsetzung> getAssociatedGefaehrdungenViaLinks() throws CommandException {
@@ -160,6 +170,7 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
     }
 
     private Baustein findBausteinForId(String id) {
+        // FIXME: load only the baustein for the given id, not all!
         if (alleBausteine == null) {
             LoadBausteine bstsCommand = new LoadBausteine();
             try {
@@ -194,7 +205,9 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
     }
 
     public List<GefaehrdungsUmsetzung> getAssociatedGefaehrdungen() {
-        return associatedGefaehrdungen;
+        List<GefaehrdungsUmsetzung> list = new ArrayList<>(associatedGefaehrdungen.size());
+        list.addAll(associatedGefaehrdungen);
+        return list;
     }
 
     /*
