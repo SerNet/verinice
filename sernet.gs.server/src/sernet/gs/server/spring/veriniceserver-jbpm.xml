@@ -4,7 +4,10 @@
 <!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration                     -->
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
 
     <bean id="springHelper" class="org.jbpm.pvm.internal.processengine.SpringHelper">
         <property name="jbpmCfg" value="sernet/verinice/bpm/jbpm.cfg.xml" />
@@ -202,6 +205,12 @@
                 <value>indi.task.execute.loop</value>
             </set>
         </property>
+
+		<security:intercept-methods>
+			<security:protect
+				method="sernet.verinice.interfaces.bpm.ITaskService.cancelTask"
+				access="ACTION_ID_TASKDELETE" />
+		</security:intercept-methods>
     </bean>
     
     <bean id="defaultCompleteServerHandler" class="sernet.verinice.bpm.DefaultCompleteServerHandler" />     
