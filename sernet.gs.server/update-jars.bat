@@ -1,14 +1,17 @@
  set webinflib=WebContent\WEB-INF\lib
- SET PATH=%PATH%;c:\programme\java\jdk1.6.0_18\bin
-  
- jar cf %webinflib%\sernet.gs.ehcache.fragment.jar -C ..\sernet.gs.ehcache.fragment\bin .
- jar cf %webinflib%\sernet.hui.common.jar -C ..\sernet.hui.common\bin .
- jar cf %webinflib%\sernet.hui.swtclient.jar -C ..\sernet.hui.swtclient\bin . 
- jar cf %webinflib%\sernet.hui.server.jar -C ..\sernet.hui.server\bin . 
- jar cf %webinflib%\sernet.gs.ui.rcp.main.jar -C ..\sernet.gs.ui.rcp.main\bin . 
- jar cf %webinflib%\sernet.gs.service.jar -C ..\sernet.gs.service\bin .
- jar cf %webinflib%\sernet.gs.reveng.jar -C ..\sernet.gs.reveng\bin .
- jar cf %webinflib%\sernet.verinice.samt.service.jar -C ..\sernet.verinice.samt.service\bin .
- jar cf %webinflib%\sernet.verinice.fei.service.jar -C ..\sernet.verinice.fei.service\bin .
+ 
+call:jar_cmd sernet.gs.ehcache.fragment
+call:jar_cmd sernet.hui.common
+call:jar_cmd sernet.hui.swtclient
+call:jar_cmd sernet.hui.server
+call:jar_cmd sernet.gs.ui.rcp.main
+call:jar_cmd sernet.gs.service
+call:jar_cmd sernet.gs.reveng
+call:jar_cmd sernet.verinice.samt.service
+call:jar_cmd sernet.verinice.oda.driver
+call:jar_cmd sernet.verinice.report.service
+call:jar_cmd sernet.verinice.fei.service
+goto:eof
 
-
+:jar_cmd    - here starts my function identified by it's label
+jar cf %webinflib%\%~1.jar -C ..\%~1\bin .
