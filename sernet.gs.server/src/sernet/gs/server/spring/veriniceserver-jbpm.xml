@@ -204,17 +204,9 @@
         </property>
     </bean>
     
-    <bean id="defaultCompleteServerHandler" class="sernet.verinice.bpm.DefaultCompleteServerHandler">
-        <property name="taskService" ref="taskService" />
-    </bean>
-      
-    <bean id="isaQmSetAssigneeHandler" class="sernet.verinice.bpm.qm.IsaQmSetAssigneeHandler">
-        <property name="taskService" ref="taskService" />
-    </bean>
-    
-    <bean id="indiExtensionHandler" class="sernet.verinice.bpm.indi.IndiExtensionHandler">
-        <property name="taskService" ref="taskService" />
-    </bean>
+    <bean id="defaultCompleteServerHandler" class="sernet.verinice.bpm.DefaultCompleteServerHandler" />     
+    <bean id="isaQmSetAssigneeHandler" class="sernet.verinice.bpm.qm.IsaQmSetAssigneeHandler" />   
+    <bean id="indiExtensionHandler" class="sernet.verinice.bpm.indi.IndiExtensionHandler" />
    
     <bean id="defaultDescriptionHandler" class="sernet.verinice.bpm.DefaultTaskDescriptionHandler" />
     <bean id="setAssigneeDescriptionHandler" class="sernet.verinice.bpm.qm.SetAssigneeDescriptionHandler" />
