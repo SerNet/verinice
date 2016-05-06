@@ -38,21 +38,22 @@ public class VeriniceLinkTableElementComboViewer extends VeriniceLinkTableComboV
 
     private boolean isDefault;
 
-    public VeriniceLinkTableElementComboViewer(VeriniceLinkTableColumn ltrParent, Composite parent, int style) {
-        this(null, null, null, ltrParent, parent, style);
+    public VeriniceLinkTableElementComboViewer(VeriniceLinkTableColumn ltrParent,
+            Composite parent) {
+        this(null, null, null, ltrParent, parent);
 
     }
 
     public VeriniceLinkTableElementComboViewer(VeriniceLinkTableComboViewer leftCombo, String relatedID,
             VeriniceLinkTableOperationType operationType,
-            VeriniceLinkTableColumn ltrParent, Composite parent, int style) {
-        this(leftCombo, relatedID, operationType, ltrParent, parent, style, false);
+            VeriniceLinkTableColumn ltrParent, Composite parent) {
+        this(leftCombo, relatedID, operationType, ltrParent, parent, false);
     }
 
     public VeriniceLinkTableElementComboViewer(VeriniceLinkTableComboViewer leftCombo, String relatedID,
             VeriniceLinkTableOperationType operationType,
-            VeriniceLinkTableColumn ltrParent, Composite parent, int style, boolean isFirstElement) {
-        super(leftCombo, relatedID, operationType, ltrParent, parent, style);
+            VeriniceLinkTableColumn ltrParent, Composite parent, boolean isFirstElement) {
+        super(leftCombo, relatedID, operationType, ltrParent, parent);
 
         if (isFirstElement || isDefault) {
             selectFirstElement(!isDefault);
@@ -76,8 +77,7 @@ public class VeriniceLinkTableElementComboViewer extends VeriniceLinkTableComboV
         } else {
             return new VeriniceLinkTableOperationTypeComboViewer(this, getCurrentSelection(), operationType,
                     ltrColumn,
-                    parent,
-                    getCombo().getStyle());
+                    parent);
         }
 
     }
@@ -133,11 +133,10 @@ public class VeriniceLinkTableElementComboViewer extends VeriniceLinkTableComboV
      */
     @Override
     public VeriniceLinkTableComboViewer createCopy(VeriniceLinkTableComboViewer leftCombo, VeriniceLinkTableColumn ltrParent,
-            Composite newParent,
-            int style) {
+            Composite newParent) {
 
         return new VeriniceLinkTableElementComboViewer(leftCombo, relatedID, operationType, ltrParent,
-                newParent, style, false);
+                newParent, false);
     }
 
 

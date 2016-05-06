@@ -34,8 +34,8 @@ public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableCombo
 
     public VeriniceLinkTablePropertyComboViewer(VeriniceLinkTableComboViewer leftCombo, String relatedID,
             VeriniceLinkTableOperationType operationType,
-            VeriniceLinkTableColumn ltrParent, Composite parent, int style) {
-        super(leftCombo, relatedID, operationType, ltrParent, parent, style);
+            VeriniceLinkTableColumn ltrParent, Composite parent) {
+        super(leftCombo, relatedID, operationType, ltrParent, parent);
 
 
     }
@@ -64,11 +64,10 @@ public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableCombo
      */
     @Override
     public VeriniceLinkTableComboViewer createCopy(VeriniceLinkTableComboViewer leftCombo, VeriniceLinkTableColumn ltrParent,
-            Composite newParent,
-            int style) {
+            Composite newParent) {
 
         return new VeriniceLinkTablePropertyComboViewer(leftCombo, relatedID, operationType, ltrParent,
-                newParent, style);
+                newParent);
     }
 
     /*

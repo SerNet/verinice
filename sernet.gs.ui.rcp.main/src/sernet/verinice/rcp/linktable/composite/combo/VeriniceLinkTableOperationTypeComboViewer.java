@@ -39,14 +39,14 @@ public class VeriniceLinkTableOperationTypeComboViewer extends VeriniceLinkTable
 
     public VeriniceLinkTableOperationTypeComboViewer(VeriniceLinkTableComboViewer leftCombo, String relatedID,
             VeriniceLinkTableOperationType operationType,
-            VeriniceLinkTableColumn ltrParent, Composite parent, int style) {
-        this(leftCombo, relatedID, operationType, ltrParent, parent, style, false);
+            VeriniceLinkTableColumn ltrParent, Composite parent) {
+        this(leftCombo, relatedID, operationType, ltrParent, parent, false);
     }
 
     public VeriniceLinkTableOperationTypeComboViewer(VeriniceLinkTableComboViewer leftCombo, String relatedID,
             VeriniceLinkTableOperationType operationType,
-            VeriniceLinkTableColumn ltrParent, Composite parent, int style, boolean isCopy) {
-        super(leftCombo, relatedID, operationType, ltrParent, parent, style);
+            VeriniceLinkTableColumn ltrParent, Composite parent, boolean isCopy) {
+        super(leftCombo, relatedID, operationType, ltrParent, parent);
 
         if (!isCopy) {
             selectFirstElement(true);
@@ -60,12 +60,10 @@ public class VeriniceLinkTableOperationTypeComboViewer extends VeriniceLinkTable
 
         if (getSelectedElement() == VeriniceLinkTableOperationType.PROPERTY) {
             return new VeriniceLinkTablePropertyComboViewer(this, relatedID, getSelectedElement(), ltrColumn,
-                    parent,
-                    getCombo().getStyle());
+                    parent);
         } else {
             return new VeriniceLinkTableElementComboViewer(this, relatedID, getSelectedElement(), ltrColumn,
-                    parent,
-                    getCombo().getStyle());
+                    parent);
         }
     }
 
@@ -88,12 +86,11 @@ public class VeriniceLinkTableOperationTypeComboViewer extends VeriniceLinkTable
      */
     @Override
     public VeriniceLinkTableComboViewer createCopy(VeriniceLinkTableComboViewer leftCombo, VeriniceLinkTableColumn ltrParent,
-            Composite newParent,
-            int style) {
+            Composite newParent) {
 
         return new VeriniceLinkTableOperationTypeComboViewer(leftCombo, relatedID, getSelectedElement(),
                 ltrParent,
-                newParent, style, true);
+                newParent, true);
 
     }
 

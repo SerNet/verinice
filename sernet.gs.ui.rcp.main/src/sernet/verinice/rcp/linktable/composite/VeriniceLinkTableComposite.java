@@ -20,6 +20,7 @@
 package sernet.verinice.rcp.linktable.composite;
 
 import java.util.*;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -31,8 +32,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.*;
 
 import sernet.verinice.rcp.linktable.composite.multiselectiondialog.VeriniceLinkTableMultiSelectionControl;
 import sernet.verinice.service.linktable.ColumnPathParser;
@@ -357,7 +357,7 @@ public class VeriniceLinkTableComposite extends Composite {
         return columnsContainer;
     }
 
-    public void showComposite(Composite composite) {
+    public void showComposite(Control composite) {
         c2.showControl(composite);
 
     }

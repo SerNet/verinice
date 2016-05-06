@@ -44,7 +44,6 @@ public class VeriniceLinkTableColumn {
 
     private static final Logger LOG = Logger.getLogger(VeriniceLinkTableColumn.class);
     public static final int DEFAULT_GAP = 6;
-    private int style;
     private VeriniceLinkTableComposite ltrParent;
     private Label columName;
     private int colNumber;
@@ -60,7 +59,6 @@ public class VeriniceLinkTableColumn {
 
     public VeriniceLinkTableColumn(VeriniceLinkTableColumn copy, int number) {
         this.ltrParent = copy.ltrParent;
-        this.style = copy.style;
         this.colNumber = number;
         this.contentService = copy.getContentService();
         createColumn();
@@ -71,7 +69,6 @@ public class VeriniceLinkTableColumn {
             int number) {
 
         this.ltrParent = parent;
-        this.style = style;
         this.colNumber = number;
         this.contentService = parent.getContentService();
         createColumn();
@@ -82,7 +79,6 @@ public class VeriniceLinkTableColumn {
             VeriniceLinkTableComposite parent, int number) {
 
         this.ltrParent = parent;
-        this.style = parent.getStyle();
         this.colNumber = number;
         this.contentService = parent.getContentService();
 
@@ -104,7 +100,6 @@ public class VeriniceLinkTableColumn {
             VeriniceLinkTableComposite parent, int number) {
 
         this.ltrParent = parent;
-        this.style = parent.getStyle();
         this.colNumber = number;
         this.contentService = parent.getContentService();
 
@@ -117,8 +112,7 @@ public class VeriniceLinkTableColumn {
     }
 
     private void addFirstCombo() {
-        firstCombo = new VeriniceLinkTableElementComboViewer(this, column,
-                style | SWT.READ_ONLY);
+        firstCombo = new VeriniceLinkTableElementComboViewer(this, column);
         FormData comboData = new FormData();
         comboData.left = new FormAttachment(columName, DEFAULT_GAP);
         comboData.top = new FormAttachment(columName, 0, SWT.CENTER);
@@ -130,7 +124,7 @@ public class VeriniceLinkTableColumn {
 
     private void createColumn() {
 
-        column = new Composite(ltrParent.getColumnsContainer(), style);
+        column = new Composite(ltrParent.getColumnsContainer(), SWT.NONE);
         FormLayout layoutColumn = new FormLayout();
         layoutColumn.marginHeight = 0;
         layoutColumn.marginWidth = 0;
@@ -141,7 +135,7 @@ public class VeriniceLinkTableColumn {
         dragAndDropAreaData.left = new FormAttachment(0);
         dragAndDropArea.setLayoutData(dragAndDropAreaData);
 
-        deleteButton = new Button(column, style);
+        deleteButton = new Button(column, SWT.NONE);
         deleteButton.setText("-");
         FormData deleteButtonData = new FormData();
         deleteButtonData.left = new FormAttachment(dragAndDropArea, DEFAULT_GAP);
@@ -149,7 +143,7 @@ public class VeriniceLinkTableColumn {
         deleteButtonData.height = 45; // height of buttons * 2 + margin
         deleteButton.setLayoutData(deleteButtonData);
 
-        columName = new Label(column, style);
+        columName = new Label(column, SWT.NONE);
         setColumnName();
         FormData columNameData = new FormData();
         columNameData.left = new FormAttachment(deleteButton, DEFAULT_GAP);
@@ -161,7 +155,7 @@ public class VeriniceLinkTableColumn {
 
     private Composite addDragAndDropButtons() {
 
-        Composite ddComposite = new Composite(column, style);
+        Composite ddComposite = new Composite(column, SWT.NONE);
 
         upButton = new Button(ddComposite, SWT.ARROW | SWT.UP);
         GridDataFactory.swtDefaults().span(0, 0).hint(30, 20).applyTo(upButton);
@@ -243,7 +237,6 @@ public class VeriniceLinkTableColumn {
         result = prime * result + ((deleteButton == null) ? 0 : deleteButton.hashCode());
         result = prime * result + ((ltrParent == null) ? 0 : ltrParent.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + style;
         return result;
     }
 
@@ -277,8 +270,6 @@ public class VeriniceLinkTableColumn {
             if (other.name != null)
                 return false;
         } else if (!name.equals(other.name))
-            return false;
-        if (style != other.style)
             return false;
         return true;
     }

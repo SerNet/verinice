@@ -45,9 +45,9 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
 
     public VeriniceLinkTableComboViewer(VeriniceLinkTableComboViewer leftCombo, String relatedID,
             VeriniceLinkTableOperationType operationType, VeriniceLinkTableColumn ltrParent,
-            Composite parent, int style) {
+            Composite parent) {
 
-        super(new VeriniceCombo(parent, style));
+        super(new VeriniceCombo(parent, SWT.NONE | SWT.READ_ONLY));
         this.parentComposite = parent;
         this.ltrColumn = ltrParent;
         this.setContentProvider(this);
@@ -112,17 +112,21 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
         if (rightCombo != null) {
             rightCombo.selectionChanged(event);
         } else {
-            Composite newComposite = createRightCombo();
+            Control newComposite = createRightCombo();
             refreshViewer();
             ltrColumn.getLtrParent().showComposite(newComposite);
         }
     }
 
-    private Composite createRightCombo() {
-        Composite newParent = new Composite(parentComposite, getCombo().getStyle());
+    private Control createRightCombo() {
+
+        Composite newParent = new Composite(parentComposite,
+                SWT.NONE);
         newParent.setLayout(new FormLayout());
         newParent.setLayoutData(getDefaultFormData(getCombo()));
         rightCombo = createChild(newParent);
+        newParent.pack(true);
+        newParent.layout(true);
         return newParent;
     }
 
@@ -136,13 +140,13 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
     public VeriniceLinkTableComboViewer copy(VeriniceLinkTableComboViewer leftCombo, Composite newParent,
             Control formerElement) {
 
-        Composite newParentComposite = new Composite(newParent, getCombo().getStyle());
+        Composite newParentComposite = new Composite(newParent, SWT.NONE);
         newParentComposite.setLayout(new FormLayout());
         newParentComposite.setLayoutData(getDefaultFormData(formerElement));
         
         
         VeriniceLinkTableComboViewer newViewer = createCopy(leftCombo, ltrColumn,
-                newParentComposite, getCombo().getStyle());
+                newParentComposite);
 
         newViewer.getCombo().select(this.getCombo().getSelectionIndex());
         if (rightCombo != null) {
@@ -160,8 +164,7 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
     }
 
     protected abstract VeriniceLinkTableComboViewer createCopy(VeriniceLinkTableComboViewer leftCombo, VeriniceLinkTableColumn ltrParent2,
-            Composite newParent,
-            int style);
+            Composite newParent);
 
     public String getValue() {
         return getCombo().getText();
