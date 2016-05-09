@@ -48,6 +48,7 @@ public class Messages extends NLS {
     public static String VeriniceLinkTableEditor_7;
     public static String VeriniceLinkTableEditor_8;
     public static String VeriniceLinkTableUtil_0;
+    public static String VeriniceLinkTableUtil_1;
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

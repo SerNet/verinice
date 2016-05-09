@@ -60,11 +60,11 @@ public class VeriniceLinkTableUtil {
         loader = (HUIObjectModelLoader) HUIObjectModelLoader.getInstance();
         if (vltExtensions == null) {
             vltExtensions = new HashMap<>();
-            vltExtensions.put("*" + VeriniceLinkTable.VLT, "verinice link table (.vlt)");
+            vltExtensions.put("*" + VeriniceLinkTable.VLT, "verinice link table (.vlt)"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (csvExtensions == null) {
             csvExtensions = new HashMap<>();
-            csvExtensions.put("*" + ICsvExport.CSV_FILE_SUFFIX, "CSV table (.csv)");
+            csvExtensions.put("*" + ICsvExport.CSV_FILE_SUFFIX, "CSV table (.csv)"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
@@ -81,20 +81,31 @@ public class VeriniceLinkTableUtil {
     }
 
     public static String createFilePath(Shell shell, String text, String defaultFolderPreference,
-            Map<String, String> filterExtensions) {
-        FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+            Map<String, String> filterExtensions, int style) {
+        FileDialog dialog = new FileDialog(shell, style);
+
+        String extension = filterExtensions.keySet().iterator().next().substring(1);
         dialog.setText(text);
         dialog.setFilterPath(getDirectory(defaultFolderPreference));
 
-        dialog.setFilterExtensions(filterExtensions.keySet().toArray(new String[] {})); // $NON-NLS-1$
-        dialog.setFilterNames(filterExtensions.values().toArray(new String[] {}));
+        ArrayList<String> extensions = new ArrayList<>(filterExtensions.keySet());
+        extensions.add("*.*"); //$NON-NLS-1$
+        dialog.setFilterExtensions(extensions.toArray(new String[] {})); // $NON-NLS-1$
+        ArrayList<String> extensionNames = new ArrayList<>(filterExtensions.values());
+        extensionNames.add(Messages.VeriniceLinkTableUtil_1);
+        dialog.setFilterNames(extensionNames.toArray(new String[] {}));
         dialog.setFilterIndex(0);
+        dialog.setOverwrite(true);
+
         String filePath = dialog.open();
         if (filePath != null) {
 
             File file = new File(filePath);
             String dir = file.getParent();
             Activator.getDefault().getPreferenceStore().setValue(defaultFolderPreference, dir);
+        }
+        if (filePath != null && !filePath.endsWith(extension)) {
+            filePath += extension;
         }
         return filePath;
     }
@@ -103,21 +114,22 @@ public class VeriniceLinkTableUtil {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         String dir = prefs.getString(defaultFolderPreference);
         if (dir == null || dir.isEmpty()) {
-            dir = System.getProperty("user.home");
+            dir = System.getProperty("user.home"); //$NON-NLS-1$
         }
-        if (!dir.endsWith(System.getProperty("file.separator"))) {
-            dir = dir + System.getProperty("file.separator");
+        if (!dir.endsWith(System.getProperty("file.separator"))) { //$NON-NLS-1$
+            dir = dir + System.getProperty("file.separator"); //$NON-NLS-1$
         }
         return dir;
     }
 
-    public static String createVltFilePath(Shell shell, String text) {
-        return createFilePath(shell, text, PreferenceConstants.DEFAULT_FOLDER_VLT, vltExtensions);
+    public static String createVltFilePath(Shell shell, String text, int style) {
+        return createFilePath(shell, text, PreferenceConstants.DEFAULT_FOLDER_VLT, vltExtensions,
+                style);
     }
 
     public static String createCsvFilePath(Shell shell, String text) {
         return createFilePath(shell, text, PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT,
-                csvExtensions);
+                csvExtensions, SWT.SAVE);
     }
 
     public static String createCsvFilePathAndHandleScopes(Shell shell, String text,
@@ -142,7 +154,8 @@ public class VeriniceLinkTableUtil {
             } else {
                 int propertyBeginning = element
                         .lastIndexOf(VeriniceLinkTableOperationType.PROPERTY.getOutput());
-                headers.add(element.substring(propertyBeginning + 1));
+                String propertyId = element.substring(propertyBeginning + 1);
+                headers.add(loader.getLabel(propertyId));
             }
         }
 
@@ -178,7 +191,7 @@ public class VeriniceLinkTableUtil {
             Set<String> possibleRelationPartners = loader
                     .getPossibleRelationPartners(relation.getKey());
             if (!possibleRelationPartners.contains(relation.getValue())) {
-                throw new ValidationException("Relation " + relation.toString() + " not found");
+                throw new ValidationException("Relation " + relation.toString() + " not found"); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
         
@@ -190,7 +203,7 @@ public class VeriniceLinkTableUtil {
             try {
                 validateColumnPath(path);
             } catch (Exception e) {
-                throw new ValidationException(path + " is no valid column path", e);
+                throw new ValidationException(path + " is no valid column path", e); //$NON-NLS-1$
             }
         }
 
@@ -203,7 +216,7 @@ public class VeriniceLinkTableUtil {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(e);
             }
-            throw new ValidationException(path + " is no valid column path", e);
+            throw new ValidationException(path + " is no valid column path", e); //$NON-NLS-1$
         }
         Set<String> objectTypeIds = ColumnPathParser
                 .getObjectTypeIds(Sets.newHashSet(path));
@@ -212,9 +225,9 @@ public class VeriniceLinkTableUtil {
             boolean validTypeId = loader.isValidTypeId(id);
             if (!validTypeId) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(id + " is no typeId");
+                    LOG.debug(id + " is no typeId"); //$NON-NLS-1$
                 }
-                throw new ValidationException(validTypeId + " is no valid type ID");
+                throw new ValidationException(validTypeId + " is no valid type ID"); //$NON-NLS-1$
             }
         }
     }
@@ -252,9 +265,9 @@ public class VeriniceLinkTableUtil {
         for(String id : list){
             if (!loader.isValidRelationId(id)) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(id + " is no RelationID");
+                    LOG.debug(id + " is no RelationID"); //$NON-NLS-1$
                 }
-                throw new ValidationException(id + " is no valid relation id");
+                throw new ValidationException(id + " is no valid relation id"); //$NON-NLS-1$
             }
         }
     }

@@ -221,7 +221,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
         String filePath = LinkTableFileRegistry.getFilePath(veriniceLinkTable.getId());
         if (isSaveAs || filePath == null) {
             filePath = VeriniceLinkTableUtil.createVltFilePath(
-                    Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4);
+                    Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4, SWT.SAVE);
             if (filePath != null) {
                 String name = filePath.substring(filePath.lastIndexOf(File.separator) + 1,
                         filePath.length());

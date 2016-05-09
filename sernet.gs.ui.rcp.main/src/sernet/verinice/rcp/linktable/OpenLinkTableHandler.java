@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
@@ -38,7 +39,7 @@ public class OpenLinkTableHandler extends LinkTableHandler {
     @Override
     protected VeriniceLinkTable createLinkTable() {
         final String filePath = VeriniceLinkTableUtil.createVltFilePath(
-                Display.getCurrent().getActiveShell(), Messages.OpenLinkTableHandler_0);
+                Display.getCurrent().getActiveShell(), Messages.OpenLinkTableHandler_0, SWT.OPEN);
         VeriniceLinkTable veriniceLinkTable = null;
         if (filePath != null) {
             veriniceLinkTable = VeriniceLinkTableIO.read(filePath);

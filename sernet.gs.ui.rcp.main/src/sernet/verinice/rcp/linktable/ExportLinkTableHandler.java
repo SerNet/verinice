@@ -24,6 +24,7 @@ import java.util.List;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -95,7 +96,7 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
 
         setShell();
         final String filePath = VeriniceLinkTableUtil.createVltFilePath(shell,
-                Messages.ExportLinkTableHandler_2);
+                Messages.ExportLinkTableHandler_2, SWT.SAVE);
         VeriniceLinkTable veriniceLinkTableTemp = null;
         if (filePath != null) {
             veriniceLinkTableTemp = VeriniceLinkTableIO.read(filePath);
