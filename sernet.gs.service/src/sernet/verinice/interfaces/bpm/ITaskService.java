@@ -52,7 +52,7 @@ public interface ITaskService {
      * 
      * @return the task list for current user
      */
-    List<ITask> getTaskList();
+    List<ITask> getCurrentUserTaskList();
     
     /**
      * Returns tasks created after a date for user with name username.

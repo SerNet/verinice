@@ -28,6 +28,7 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportHQLService;
+import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.interfaces.bpm.IGsmService;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
@@ -159,6 +160,10 @@ public abstract class ServiceFactory {
 	    return (ISearchService)VeriniceContext.get(VeriniceContext.SEARCH_SERVICE);
 	}
 	
+	public static IRightsServiceClient lookupRightsServiceClient(){
+		return (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+	}
+
 	/**
 	 * Retrieves the work objects that have been configured for the client.
 	 * 

@@ -210,6 +210,9 @@
 			<security:protect
 				method="sernet.verinice.interfaces.bpm.ITaskService.cancelTask"
 				access="ACTION_ID_TASKDELETE" />
+			<security:protect
+				method="sernet.verinice.bpm.TaskService.getTaskList"
+				access="ACTION_ID_TASKSHOWALL" />
 		</security:intercept-methods>
     </bean>
     
