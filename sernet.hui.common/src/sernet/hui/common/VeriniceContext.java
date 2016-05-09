@@ -124,7 +124,7 @@ public final class VeriniceContext {
     
     private static String serverUrl = null;
 
-	private ThreadLocal<Map<String, Object>> threadLocal = new ThreadLocal<Map<String, Object>>();
+	private ThreadLocal<Map<String, Object>> threadLocal = new InheritableThreadLocal<Map<String, Object>>();
 
 	private static VeriniceContext instance;
 
