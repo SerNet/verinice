@@ -59,6 +59,10 @@ public class VeriniceLinkTableOperationTypeComboViewer extends VeriniceLinkTable
     public VeriniceLinkTableComboViewer createChild(Composite parent) {
 
         if (getSelectedElement() == VeriniceLinkTableOperationType.PROPERTY) {
+            if(leftCombo.operationType ==VeriniceLinkTableOperationType.RELATION){
+                return new VeriniceLinkTableRelationPropertyComboViewer(this, relatedID,
+                        getSelectedElement(), ltrColumn, parent);
+            }
             return new VeriniceLinkTablePropertyComboViewer(this, relatedID, getSelectedElement(), ltrColumn,
                     parent);
         } else {
@@ -159,7 +163,6 @@ public class VeriniceLinkTableOperationTypeComboViewer extends VeriniceLinkTable
      */
     @Override
     protected Set<String> doGetAllRelationTypes() {
-
         return Collections.emptySet();
     }
 

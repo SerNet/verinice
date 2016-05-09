@@ -71,9 +71,18 @@ public class VeriniceLinkTableElementComboViewer extends VeriniceLinkTableComboV
     @Override
     public VeriniceLinkTableComboViewer createChild(Composite parent) {
 
-        if (operationType == VeriniceLinkTableOperationType.PROPERTY
-                || operationType == VeriniceLinkTableOperationType.RELATION) {
+        if (operationType == VeriniceLinkTableOperationType.PROPERTY) {
             return null;
+        } else if (operationType == VeriniceLinkTableOperationType.RELATION) {
+            VeriniceLinkTableOperationTypeComboViewer opType = new VeriniceLinkTableOperationTypeComboViewer(
+                    this, getCurrentSelection(), operationType,
+                    ltrColumn,
+                    parent);
+            opType.select(VeriniceLinkTableOperationType.PROPERTY.getOutput());
+            opType.getCombo().setEnabled(false);
+            opType.selectionChanged(null);
+            return opType.rightCombo;
+
         } else {
             return new VeriniceLinkTableOperationTypeComboViewer(this, getCurrentSelection(), operationType,
                     ltrColumn,

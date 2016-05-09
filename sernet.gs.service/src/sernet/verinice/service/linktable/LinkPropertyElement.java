@@ -19,8 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
@@ -134,5 +133,17 @@ public class LinkPropertyElement extends PropertyElement implements IPathElement
             s = String.valueOf(i);
         }
         return s;
+    }
+
+    public static List<String> getAllProperties() {
+        ArrayList<String> list = new ArrayList<>();
+        list.add(TYPE_DESCRIPTION);
+        list.add(TYPE_RISK_VALUE_A);
+        list.add(TYPE_RISK_VALUE_C);
+        list.add(TYPE_RISK_VALUE_I);
+        list.add(TYPE_TITLE);
+
+        return list;
+
     }
 }
