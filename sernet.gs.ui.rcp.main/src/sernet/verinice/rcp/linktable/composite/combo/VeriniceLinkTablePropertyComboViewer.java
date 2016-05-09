@@ -51,7 +51,9 @@ public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableCombo
     public Object[] getElements(Object inputElement) {
 
         ArrayList<String> list = new ArrayList<>();
-        if (relatedID != null && !relatedID.isEmpty()) {
+        if (leftCombo.leftCombo.operationType == VeriniceLinkTableOperationType.RELATION) {
+
+        } else if (relatedID != null && !relatedID.isEmpty()) {
             list.addAll(ltrColumn.getContentService().getPossibleProperties(relatedID));
         }
         return sortElementsByLabel(list.toArray(new String[0]));

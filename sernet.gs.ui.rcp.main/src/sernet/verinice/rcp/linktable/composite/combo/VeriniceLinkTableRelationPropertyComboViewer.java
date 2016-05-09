@@ -60,6 +60,7 @@ public class VeriniceLinkTableRelationPropertyComboViewer
      */
     @Override
     public Object[] getElements(Object inputElement) {
+
         return LinkPropertyElement.getAllProperties().toArray(new String[0]);
     }
 

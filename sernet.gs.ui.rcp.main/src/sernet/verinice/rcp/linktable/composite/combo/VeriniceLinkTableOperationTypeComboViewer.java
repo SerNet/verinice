@@ -59,7 +59,7 @@ public class VeriniceLinkTableOperationTypeComboViewer extends VeriniceLinkTable
     public VeriniceLinkTableComboViewer createChild(Composite parent) {
 
         if (getSelectedElement() == VeriniceLinkTableOperationType.PROPERTY) {
-            if(leftCombo.operationType ==VeriniceLinkTableOperationType.RELATION){
+            if(leftCombo.operationType == VeriniceLinkTableOperationType.RELATION){
                 return new VeriniceLinkTableRelationPropertyComboViewer(this, relatedID,
                         getSelectedElement(), ltrColumn, parent);
             }

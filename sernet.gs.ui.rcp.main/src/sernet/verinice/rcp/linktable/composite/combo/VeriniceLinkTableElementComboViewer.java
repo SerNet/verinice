@@ -81,7 +81,7 @@ public class VeriniceLinkTableElementComboViewer extends VeriniceLinkTableComboV
             opType.select(VeriniceLinkTableOperationType.PROPERTY.getOutput());
             opType.getCombo().setEnabled(false);
             opType.selectionChanged(null);
-            return opType.rightCombo;
+            return opType;
 
         } else {
             return new VeriniceLinkTableOperationTypeComboViewer(this, getCurrentSelection(), operationType,

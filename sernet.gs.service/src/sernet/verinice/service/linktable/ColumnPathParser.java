@@ -20,21 +20,14 @@
 package sernet.verinice.service.linktable;
 
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
-import antlr.CommonAST;
-import antlr.RecognitionException;
-import antlr.TokenStreamException;
+import antlr.*;
 import antlr.collections.AST;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.linktable.antlr.VqlLexer;
-import sernet.verinice.service.linktable.antlr.VqlParser;
-import sernet.verinice.service.linktable.antlr.VqlParserTokenTypes;
+import sernet.verinice.service.linktable.antlr.*;
 
 /**
  * Parser for column pathes of Link Tables.
@@ -106,7 +99,6 @@ public abstract class ColumnPathParser {
             parser.expr();
         } catch (RecognitionException | TokenStreamException e) {
             String message = "Error while parsing VQL column path: " + columnPath;
-            LOG.error(message, e);
             throw new ColumnPathParseException(message, e);
         }
         return parser;
