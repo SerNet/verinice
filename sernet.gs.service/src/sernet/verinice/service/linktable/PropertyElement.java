@@ -25,14 +25,14 @@ import java.util.Set;
 import sernet.verinice.service.linktable.IPathElement.Direction;
 
 /**
- *
+ * Abstract base class for property elements in a column path.
+ * A column path is a description of a report column in GenericDataModel.
+ * See GenericDataModel for a description of column path definitions.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class PropertyElement {
+public abstract class PropertyElement {
 
-    protected String propertyTypeId;
-    protected String propertyValue;
     protected Map<String,Map<String, Object>> result;
     private String alias;
     private Direction direction;
@@ -81,17 +81,6 @@ public class PropertyElement {
     public Map<String,Map<String, Object>> getResult() {
         return result;
     }
-  
-    public String getPropertyValue() {
-        return propertyValue;
-    }
-
-    /**
-     * @param propertyValue the propertyValue to set
-     */
-    public void setPropertyValue(String propertyValue) {
-        this.propertyValue = propertyValue;
-    }
 
     public IPathElement<EndOfPathElement,?> getChild() {
         // A property element never has childs
@@ -111,6 +100,8 @@ public class PropertyElement {
     public void setAlias(String alias) {
         this.alias = alias;
     }
+
+    protected String propertyTypeId;
 
     public Direction getDirection() {
         return direction;

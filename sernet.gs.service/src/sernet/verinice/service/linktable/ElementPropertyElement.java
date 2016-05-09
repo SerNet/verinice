@@ -54,9 +54,11 @@ public class ElementPropertyElement extends PropertyElement implements IPathElem
      */
     @Override
     public void load(CnATreeElement element, VeriniceGraph graph) {
-        String parentId = String.valueOf(element.getDbId());
-        propertyValue = getPropertyValue(element);
+        String propertyValue = getPropertyValue(element);
         Map<String, Object> resultMap = new HashMap<>();
+        
+        String parentId = String.valueOf(element.getDbId());
+        
         resultMap.put(parentId, propertyValue);
         if (LOG.isDebugEnabled()) {
             LOG.debug(element.getTitle() + "(" + parentId + ")." + propertyTypeId + " = " + propertyValue + " loaded");

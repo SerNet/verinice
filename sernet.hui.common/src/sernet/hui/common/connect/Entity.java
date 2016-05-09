@@ -180,11 +180,14 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	}
 	
 	/**
-	 * Convenience method to return a Sring representation of the
-	 * given propertyType
+	 * Convenience method to return a String representation of the
+	 * given propertyType. If there is no value with the propertyType
+	 * in the database an empty String is returned.
 	 * 
-	 * @param propertyType
-	 * @return
+	 * See SNCA.xml for valid propertyTypes.
+	 * 
+	 * @param propertyType The type id of the property.
+	 * @return The value of the property or an empty String if there is no value in the database
 	 */
 	public String getSimpleValue(String propertyType) {
 		PropertyList propertyList = typedPropertyLists.get(propertyType);

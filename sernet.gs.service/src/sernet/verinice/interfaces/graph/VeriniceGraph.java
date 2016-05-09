@@ -61,12 +61,8 @@ public class VeriniceGraph implements Serializable{
         getGraph().addVertex(element);       
     }
 
-    public void addEdge(CnATreeElement parent, CnATreeElement childWithProperties) {
-        getGraph().addEdge(parent, childWithProperties, new Edge(parent, childWithProperties));     
-    }
-    
-    public void addEdge(CnATreeElement parent, CnATreeElement childWithProperties, String typeId) {
-        getGraph().addEdge(parent, childWithProperties, new Edge(parent, childWithProperties,typeId));     
+    public void addEdge(Edge edge) {
+        getGraph().addEdge(edge.getSource(),edge.getTarget(),edge);
     }
     
     /**
@@ -370,4 +366,5 @@ public class VeriniceGraph implements Serializable{
     public Graph<CnATreeElement, Edge> getGraph() {
         return graph;
     }
+
 }

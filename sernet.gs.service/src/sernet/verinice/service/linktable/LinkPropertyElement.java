@@ -38,6 +38,12 @@ public class LinkPropertyElement extends PropertyElement implements IPathElement
 
     private static final Logger LOG = Logger.getLogger(LinkPropertyElement.class);
 
+    public static final String TYPE_TITLE = "title";
+    public static final String TYPE_DESCRIPTION = "description";
+    public static final String TYPE_RISK_VALUE_C = "risk-value-c";
+    public static final String TYPE_RISK_VALUE_I = "risk-value-i";
+    public static final String TYPE_RISK_VALUE_A = "risk-value-a";
+    
     public LinkPropertyElement() {
         super();
         result = new HashMap<>();
@@ -55,27 +61,78 @@ public class LinkPropertyElement extends PropertyElement implements IPathElement
         String propertyValue = getPropertyValue(link);
         Map<String, Object> resultMap = new HashMap<>();
 
-        String id = String.valueOf(link.getSource().getDbId());
+        
+        String parentId = String.valueOf(link.hashCode());
+        
+        /*
+        String parentId = String.valueOf(link.getSource().getDbId());
         if (Direction.OUTGOING.equals(getDirection())) {
-            id = String.valueOf(link.getTarget().getDbId());
+            parentId = String.valueOf(link.getTarget().getDbId());
         }
-
-        resultMap.put(id, propertyValue);
+        */
+        
+        resultMap.put(parentId, propertyValue);
         if (LOG.isDebugEnabled()) {
             LOG.debug(link + "." + propertyTypeId + " = " + propertyValue + " loaded");
         }
-        getResult().put(id, resultMap);
+        getResult().put(parentId, resultMap);
     }
 
     private String getPropertyValue(Edge link) {
-        return getLabel(link.getType(), getDirection());
+        String value = null;
+        String propertyTypeId = getTypeId();
+        switch (propertyTypeId) {
+        case TYPE_TITLE:
+            value = getTitle(link, getDirection());
+            break;
+        case TYPE_DESCRIPTION:
+            value = getDescription(link);
+            break;
+        case TYPE_RISK_VALUE_C:
+            value = getRiskConfidentiality(link);
+            break;
+        case TYPE_RISK_VALUE_I:
+            value = getRiskIntegrity(link);
+            break;
+        case TYPE_RISK_VALUE_A:
+            value = getRiskAvailability(link);
+            break;
+        default:
+            break;
+        }
+        return value;
     }
 
-    private static String getLabel(String linkType, Direction direction) {
+    private static String getTitle(Edge link, Direction direction) {
+        String linkType = link.getType();
         HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(linkType);
         if (relation == null) {
             return linkType;
         }
         return (direction.equals(Direction.OUTGOING)) ? relation.getName() : relation.getReversename();
+    }
+    
+    private static String getDescription(Edge link) {
+        return link.getDescription();
+    }
+    
+    private static String getRiskConfidentiality(Edge link) {
+        return convertToString(link.getRiskConfidentiality());
+    }
+    
+    private static String getRiskIntegrity(Edge link) {
+        return convertToString(link.getRiskIntegrity());
+    }
+    
+    private static String getRiskAvailability(Edge link) {
+        return convertToString(link.getRiskAvailability());
+    }
+    
+    private static String convertToString(Integer i) {
+        String s = "";
+        if(i!=null) {
+            s = String.valueOf(i);
+        }
+        return s;
     }
 }

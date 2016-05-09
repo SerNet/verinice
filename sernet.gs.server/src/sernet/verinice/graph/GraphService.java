@@ -34,6 +34,7 @@ import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.IGraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
@@ -111,16 +112,20 @@ public class GraphService implements IGraphService {
         for (CnATreeElement parent : elementList) {
             Set<CnATreeElement> children = parent.getChildren();
             for (CnATreeElement child : children) {
-                CnATreeElement childWithProperties = uuidMap.get(child.getUuid());
-                if(childWithProperties!=null) {
-                    graph.addEdge(parent, childWithProperties);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("Edge added: " + parent.getTitle() + " - " + childWithProperties.getTitle() + ", relatives" );
-                    }
-                } else if (LOG.isDebugEnabled()) {
-                    LOG.debug("No Edge added, child was not found. Child type / uuid: " + child.getTypeId() + " / " + child.getUuid() + ", Parent is: " + parent.getTitle() );
-                }
+                createParentChildEdge(parent, child);
             }
+        }
+    }
+
+    protected void createParentChildEdge(CnATreeElement parent, CnATreeElement child) {
+        CnATreeElement childWithProperties = uuidMap.get(child.getUuid());
+        if(childWithProperties!=null) {
+            graph.addEdge(new Edge(parent, childWithProperties));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Edge added: " + parent.getTitle() + " - " + childWithProperties.getTitle() + ", relatives" );
+            }
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug("No Edge added, child was not found. Child type / uuid: " + child.getTypeId() + " / " + child.getUuid() + ", Parent is: " + parent.getTitle() );
         }
     }
 
@@ -139,13 +144,30 @@ public class GraphService implements IGraphService {
         for (CnALink link : linkList) {
             CnATreeElement source = uuidMap.get(link.getDependant().getUuid());
             CnATreeElement target = uuidMap.get(link.getDependency().getUuid());
-            if(source!=null && target!=null) {
-                graph.addEdge(source, target, link.getRelationId());
+            Edge edge = createEdge(link);
+            if(edge!=null) {
+                
+                graph.addEdge(edge);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Edge added: " + source.getTitle() + " - " + target.getTitle() + ", " + link.getRelationId());
                 }
             }
         }
+    }
+
+    private Edge createEdge(CnALink link) {
+        CnATreeElement source = uuidMap.get(link.getDependant().getUuid());
+        CnATreeElement target = uuidMap.get(link.getDependency().getUuid());
+        Edge edge = null;
+        if(source!=null && target!=null) {
+            edge = new Edge(source, target);
+            edge.setType(link.getRelationId());
+            edge.setDescription(link.getComment());
+            edge.setRiskAvailability(link.getRiskAvailability());
+            edge.setRiskConfidentiality(link.getRiskConfidentiality());
+            edge.setRiskIntegrity(link.getRiskIntegrity());
+        }
+        return edge;
     }
 
     @Override

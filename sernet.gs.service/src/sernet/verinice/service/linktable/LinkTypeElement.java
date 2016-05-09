@@ -59,18 +59,19 @@ public class LinkTypeElement extends BaseElement<CnATreeElement,Edge> {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Edge loaded, type: " + edge.getType());
             }
-            /*
-            CnATreeElement target = getTarget(parent, edge);
-            String id = String.valueOf(target.getDbId());
-            String label = getLabel(edge.getType(), isDownward(parent, edge));
-            result.put(id, label);  
-            */         
+             
             getChild().setDirection(getDirection());
             getChild().load(edge,graph);
+            
+            String id = String.valueOf(edge.hashCode());
+            
+            /*
             String id = String.valueOf(edge.getSource().getDbId());
             if(Direction.OUTGOING.equals(getDirection())) {
                 id = String.valueOf(edge.getTarget().getDbId());
             }
+            */
+            
             result.put(id, getChild().getResult());
   
         }
