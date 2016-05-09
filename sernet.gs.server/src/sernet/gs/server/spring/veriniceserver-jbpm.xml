@@ -213,6 +213,12 @@
 			<security:protect
 				method="sernet.verinice.bpm.TaskService.getTaskList"
 				access="ACTION_ID_TASKSHOWALL" />
+			<security:protect
+				method="sernet.verinice.bpm.TaskService.setAssignee"
+				access="ACTION_ID_TASKCHANGEASSIGNEE"/>
+			<security:protect
+				method="sernet.verinice.bpm.TaskService.setDuedate"
+				access="ACTION_ID_TASKCHANGEDUEDATE" />
 		</security:intercept-methods>
     </bean>
     
