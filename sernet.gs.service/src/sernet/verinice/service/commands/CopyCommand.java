@@ -261,14 +261,9 @@ public class CopyCommand extends GenericCommand {
      */
     private Attachment createAttachmentCopy(final CnATreeElement destinationElement, final Attachment sourceAttachment) {
         final Attachment newAttachmentEntity = new Attachment();
+        newAttachmentEntity.getEntity().copyEntity(sourceAttachment.getEntity());
         newAttachmentEntity.setCnATreeElementId(destinationElement.getDbId());
         newAttachmentEntity.setCnAElementTitel(destinationElement.getTitle());
-        newAttachmentEntity.setTitel(sourceAttachment.getTitel());
-        newAttachmentEntity.setDate(sourceAttachment.getDate());
-        newAttachmentEntity.setFileSize(sourceAttachment.getFileSize());
-        newAttachmentEntity.setFileName(sourceAttachment.getFileName());
-        newAttachmentEntity.setText(sourceAttachment.getText());
-        newAttachmentEntity.setMimeType(sourceAttachment.getMimeType());
         return newAttachmentEntity;
     }
     

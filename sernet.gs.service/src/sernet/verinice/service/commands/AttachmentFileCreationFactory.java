@@ -21,7 +21,6 @@ package sernet.verinice.service.commands;
 
 import java.io.IOException;
 
-import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
@@ -42,7 +41,6 @@ public class AttachmentFileCreationFactory {
      * @param dbIdOfDataSource defines the content of the new entity 
      **/
     public static void createAttachmentFile(Attachment hostAttachment, byte[] fileData) throws IOException, CommandException{
-        ServerInitializer.inheritVeriniceContextState();
         AttachmentFile newFileAttachment = new AttachmentFile();
         if(fileData != null && fileData.length > 0){
             newFileAttachment.setFileData(fileData);
