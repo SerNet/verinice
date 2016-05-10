@@ -33,7 +33,7 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class LinkPropertyElement extends PropertyElement implements IPathElement<Edge, EndOfPathElement> {
+public class LinkPropertyElement extends PropertyElement<Edge> {
 
     private static final Logger LOG = Logger.getLogger(LinkPropertyElement.class);
 

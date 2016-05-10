@@ -30,12 +30,12 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Path element in a column path definition which loads the types
- * of the links of an element.
+ * Path element in a column path definition which loads links of an element.
+ * 
  * Delimiter for this path element is: IPathElement.DELIMITER_LINK_TYPE (:)
- * See GenericDataModel for a description of column path definitions.
+ * See LinkTableDataModel for a description of column path definitions.
  *
- * @see GenericDataModel
+ * @see LinkTableDataModel
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -43,8 +43,13 @@ public class LinkTypeElement extends BaseElement<CnATreeElement,Edge> {
 
     private static final Logger LOG = Logger.getLogger(LinkTypeElement.class);
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#load(sernet.verinice.model.common.CnATreeElement, sernet.verinice.interfaces.graph.VeriniceGraph)
+
+    /**
+     * Loads the result of this path element from a verinice graph
+     * and a given parent element.
+     * 
+     * @param parent
+     * @param graph
      */
     @Override
     public void load(CnATreeElement parent, VeriniceGraph graph) {

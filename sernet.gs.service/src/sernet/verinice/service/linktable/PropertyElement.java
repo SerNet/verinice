@@ -22,16 +22,14 @@ package sernet.verinice.service.linktable;
 import java.util.Map;
 import java.util.Set;
 
-import sernet.verinice.service.linktable.IPathElement.Direction;
-
 /**
  * Abstract base class for property elements in a column path.
- * A column path is a description of a report column in GenericDataModel.
- * See GenericDataModel for a description of column path definitions.
+ * A column path is a description of a report column in LinkTableDataModel.
+ * See LinkTableDataModel for a description of column path definitions.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public abstract class PropertyElement {
+public abstract class PropertyElement<E> implements IPathElement<E,EndOfPathElement> {
 
     protected Map<String,Map<String, Object>> result;
     private String alias;
@@ -39,23 +37,27 @@ public abstract class PropertyElement {
 
     public PropertyElement() {
         super();
-    }
+    }  
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#createValueMap(java.util.Map, java.lang.String)
+    /**
+     * Iterate over all result, find the result which fits
+     * and put it in the map.
+     * 
+     * @param map The map with all results
+     * @param key The key of the result
+     * @return The map with all results
      */
-    public Map<String, String> createResultMap(Map<String, String> map, String key) {
+    @Override
+    public Map<String, String> addResultToMap(Map<String, String> map, String key) {
+        // Iterate over all result
         Set<String> childKeySet = getResult().keySet();
         for (String childKey : childKeySet) {
+            // Find the result which fits
             if(key.endsWith(childKey)) {
+                // Put the result in the map
                 Map<String,Object> resultMap = getResult().get(childKey);
-                Set<String> resultKeySet = getResult().keySet();
-                for (String resultKey : resultKeySet) {
-                    if(key.endsWith(resultKey)) {
-                        String value = (String) resultMap.get(resultKey);
-                        map.put(key, value);
-                    }
-                }
+                String value = (String) resultMap.get(childKey);
+                map.put(key, value);             
             }
         }
         return map;

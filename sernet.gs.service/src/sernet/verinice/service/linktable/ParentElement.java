@@ -30,9 +30,9 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * Path element in a column path definition which loads the parent of an element.
  * Delimiter for this path element is: IPathElement.DELIMITER_PARENT (<)
- * See GenericDataModel for a description of column path definitions.
+ * See LinkTableDataModel for a description of column path definitions.
  *
- * @see GenericDataModel
+ * @see LinkTableDataModel
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class ParentElement extends BaseElement<CnATreeElement,CnATreeElement> {

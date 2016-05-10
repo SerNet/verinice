@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Base class for path element Link-, Child and ParentElement
+ * Abstract base class for for all path elements except property elements.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -46,20 +46,35 @@ public abstract class BaseElement<E,C> implements IPathElement<E,C> {
         this.elementTypeId = elementTypeId;
     }
 
-    public Map<String, String> createResultMap(Map<String, String> map, String key) {
+    /**
+     * Add a single result to the map with all results:
+     * - Iterate over all results
+     * - Find the result which fits
+     * - Iterate over the results of the results
+     * - Expand the key and delegate processing to the child element
+     * 
+     * @param map A map with all results
+     * @param key The key of the result
+     * @return A map with all results including the single result
+     */
+    @Override
+    public Map<String, String> addResultToMap(Map<String, String> map, String key) {
+        // Iterate over all results
         Set<String> childKeySet = getResult().keySet();
         for (String childKey : childKeySet) {
+            // Find the result which fits
             if(key==null || key.endsWith(childKey)) {
+                // Iterate over the results of the results
                 Set<String> resultKeySet = getResult().get(childKey).keySet();
                 for (String resultKey : resultKeySet) {
+                    // Expand the key and delegate processing to the child element
                     String newKey = (key==null) ? resultKey : key + RESULT_KEY_SEPERATOR + resultKey;
-                    child.createResultMap(map,  newKey);
+                    child.addResultToMap(map, newKey);
                 }
             }
         }
         return map;
     }
-
 
     /* (non-Javadoc)
      * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#setTypeId(java.lang.String)
@@ -69,17 +84,17 @@ public abstract class BaseElement<E,C> implements IPathElement<E,C> {
         setElementTypeId(typeId);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IParentPathElement#getChild()
-     */
+    @Override
     public IPathElement<C,?> getChild() {
         return child;
     }
 
+    @Override
     public void setChild(IPathElement<C,?> child) {
         this.child = child;
     }
 
+    @Override
     public String getTypeId() {
         return getElementTypeId();
     }
@@ -93,25 +108,16 @@ public abstract class BaseElement<E,C> implements IPathElement<E,C> {
     }
 
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.IPathElement#getResult()
-     */
     @Override
     public Map<String,Map<String, Object>> getResult() {
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPathElement#getAlias()
-     */
     @Override
     public String getAlias() {
         return alias;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPathElement#setAlias(java.lang.String)
-     */
     @Override
     public void setAlias(String alias) {
         this.alias = alias;
@@ -120,10 +126,12 @@ public abstract class BaseElement<E,C> implements IPathElement<E,C> {
         }
     }
     
+    @Override
     public Direction getDirection() {
         return direction;
     }
 
+    @Override
     public void setDirection(Direction direction) {
         this.direction = direction;
     }

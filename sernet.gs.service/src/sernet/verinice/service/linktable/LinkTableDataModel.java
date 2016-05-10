@@ -44,18 +44,18 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
  *
  * To create a link table with this data model call:
  *
- * GenericDataModel dm = new GenericDataModel(veriniceGraph, linkTableConfiguration);
+ * LinkTableDataModel dm = new LinkTableDataModel(veriniceGraph, linkTableConfiguration);
  * dm.init();
  * List<List<String>> table = dm.getResult();
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
  */
-public class GenericDataModel {
+public class LinkTableDataModel {
 
     static final String COLUMN_SEPERATOR = "#";
 
-    private static final Logger LOG = Logger.getLogger(GenericDataModel.class);
+    private static final Logger LOG = Logger.getLogger(LinkTableDataModel.class);
 
     private VeriniceGraph graph;
     private ILinkTableConfiguration configuration;
@@ -70,7 +70,7 @@ public class GenericDataModel {
      * @deprecated Use {@link LinkTableConfiguration} to create instances
      */
     @Deprecated
-    public GenericDataModel(VeriniceGraph graph, String[] columnPathes) {
+    public LinkTableDataModel(VeriniceGraph graph, String[] columnPathes) {
         super();
         this.graph = graph;
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
@@ -80,7 +80,7 @@ public class GenericDataModel {
         this.configuration = builder.build();
     }
 
-    public GenericDataModel(VeriniceGraph graph, ILinkTableConfiguration configuration) {
+    public LinkTableDataModel(VeriniceGraph graph, ILinkTableConfiguration configuration) {
         super();
         this.graph = graph;
         this.configuration = configuration;
@@ -121,61 +121,66 @@ public class GenericDataModel {
     }
 
     /**
-     * Creates a map with all data in the list of {@link ColumnPath}s: columnPaths.
+     * Creates a map with all data in the link table.
      * Each entry of the map holds the data of one cell of the result table.
      * The key of the map is a path of db-ids followed by the index of the column:
      *
      * <DB-ID>[.<DB-ID>]#<COLUMN-INDEX>
      *
-     * If you have the following object path in a report template for column 4:
+     * e.g.
+     * You have the following VQL path in a LTR file:
      * "incident_scenario/asset/person-iso.person-iso_surname"
-     * One entry in the map for this path would be:
-     * 589839.589837.589828#3
+     * The key of one entry in the would be:
+     * <incident_scenario-id>.<asset-id>.<person-iso-id>#3
      *
-     * @return A map with all data
+     * @return A map with all data in the link table
      */
     private Map<String, String[]> createResultMap() {
-        Map<String, String[]> allRowMap = new HashMap<>();
+        Map<String, String[]> resultMap = new HashMap<>();
+        // Iterate over all column pathes
         for (ColumnPath columnPath : columnPaths) {
-            Map<String, String> valueMap = columnPath.getValueMap();
-            Set<String> keySet = valueMap.keySet();
+            Map<String, String> columnPathResults = columnPath.createResultMap();  
+            // Iterate over results of the column path
+            Set<String> keySet = columnPathResults.keySet();
             for (String key : keySet) {
+                // Add the result to the map
                 String[] row = new String[columnPaths.size()];
-                row[columnPath.getNumber()] = valueMap.get(key);
-                allRowMap.put(key + COLUMN_SEPERATOR + columnPath.getNumber(), row);
+                row[columnPath.getNumber()] = columnPathResults.get(key);
+                resultMap.put(key + COLUMN_SEPERATOR + columnPath.getNumber(), row);
             }
         }
+        // Fill up empty rows
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Rows: ");
-            GenericDataModel.log(allRowMap);
+            LOG.debug("Rows before fill up: ");
+            LinkTableDataModel.log(LOG, resultMap);
         }
-        fillEmptyRows(allRowMap);
+        fillEmptyRows(resultMap);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Rows filled up: ");
-            GenericDataModel.log(allRowMap);
+            LOG.debug("Rows after fill up: ");
+            LinkTableDataModel.log(LOG, resultMap);
         }
-        return allRowMap;
+        return resultMap;
     }
 
     /**
      * Fills empty columns in rows with data of linked objects
      * from other rows.
      *
-     * @param allRowMap A map with all rows
+     * @param resultMap A map with all rows
      */
-    private void fillEmptyRows(Map<String, String[]> allRowMap) {
+    private void fillEmptyRows(Map<String, String[]> resultMap) {
         for (int i = 0; i < columnPaths.size(); i++) {
             // find non-empty values for this row
-            Set<String> keys = allRowMap.keySet();
+            Set<String> keys = resultMap.keySet();
             for (String key : keys) {
-                String value = allRowMap.get(key)[i];
+                String value = resultMap.get(key)[i];
                 if((value)!=null) {
                     // fill rows with found values if needed
-                    fillEmptyRows(allRowMap, i, removeRowNumber(key), value);
+                    fillEmptyRows(resultMap, i, removeRowNumber(key), value);
                 }
             }
         }
-        fillEmptyOfParentElements(allRowMap);
+        fillEmptyOfParentElements(resultMap);
     }
 
     private void fillEmptyOfParentElements(Map<String, String[]> allRowMap) {
@@ -197,7 +202,7 @@ public class GenericDataModel {
 
     /**
      * Returns the key of the path from the beginning
-     * to the first occurence of a parent delimiter '<'.
+     * to the first occurrence of a parent delimiter '<'.
      * If there is parent delimiter null is returned.
      *
      * If the path is: "samt_topic<controlgroup.controlgroup_name"
@@ -291,19 +296,19 @@ public class GenericDataModel {
     }
 
     public static String removeRowNumber(String key) {
-        int i = key.indexOf(GenericDataModel.COLUMN_SEPERATOR);
+        int i = key.indexOf(LinkTableDataModel.COLUMN_SEPERATOR);
         if(i==-1) {
             return key;
         }
         return key.substring(0, i);
     }
 
-    public static void log(Map<String, String[]> valueMap) {
+    public static void log(Logger logger, Map<String, String[]> valueMap) {
         List<String> keyList =  new LinkedList<>(valueMap.keySet());
     
         Collections.sort(keyList);
         for (String key : keyList) {
-            LOG.debug(key + ":" + Arrays.toString(valueMap.get(key)));
+            logger.debug(key + ":" + Arrays.toString(valueMap.get(key)));
         }
     }
 

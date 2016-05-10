@@ -64,12 +64,14 @@ public final class TableGenerator {
     public static final List<List<String>> createTable(Map<String, String[]> allRowMap) {
         Map<String, String[]> allRowMapClean = new HashMap<>();
         if (LOG.isDebugEnabled()) {
-            GenericDataModel.log(allRowMap);
+            LOG.debug("Rows before merge: ");
+            LinkTableDataModel.log(LOG, allRowMap);
         }
         if (allRowMap != null && !allRowMap.isEmpty()) {
             allRowMapClean = cleanUpRows(allRowMap);
             if (LOG.isDebugEnabled()) {
-                GenericDataModel.log(allRowMap);
+                LOG.debug("Rows after merge: ");
+                LinkTableDataModel.log(LOG, allRowMapClean);
             }
         }
         List<List<String>> resultTable = new LinkedList<>();
@@ -129,8 +131,8 @@ public final class TableGenerator {
     }
 
     private static boolean startsWith(String key2, String key1) {
-        String keyClean2 = GenericDataModel.removeRowNumber(key2);
-        String keyClean1 = GenericDataModel.removeRowNumber(key1);
+        String keyClean2 = LinkTableDataModel.removeRowNumber(key2);
+        String keyClean1 = LinkTableDataModel.removeRowNumber(key1);
         return keyClean2.startsWith(keyClean1);
     }
 

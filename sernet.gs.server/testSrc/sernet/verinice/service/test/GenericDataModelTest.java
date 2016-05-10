@@ -48,7 +48,7 @@ import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 import sernet.verinice.service.commands.LoadElementByUuid;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
-import sernet.verinice.service.linktable.GenericDataModel;
+import sernet.verinice.service.linktable.LinkTableDataModel;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
 /**
@@ -77,7 +77,7 @@ public class GenericDataModelTest extends BeforeEachVNAImportHelper {
                 new String[]{Asset.TYPE_ID,AssetGroup.TYPE_ID},
                 new String[]{});
         
-        GenericDataModel dm = new GenericDataModel(graph, new String[]{
+        LinkTableDataModel dm = new LinkTableDataModel(graph, new String[]{
                 "asset<assetgroup.assetgroup_name",
                 "asset.asset_name"});
         dm.init();
@@ -108,7 +108,7 @@ public class GenericDataModelTest extends BeforeEachVNAImportHelper {
                 new String[]{ProcessGroup.TYPE_ID,Process.TYPE_ID},
                 new String[]{});
         
-        GenericDataModel dm = new GenericDataModel(graph, new String[]{
+        LinkTableDataModel dm = new LinkTableDataModel(graph, new String[]{
                 "process_group.process_group_name",
                 "process_group>process.process_name"});
         dm.init();
@@ -135,7 +135,7 @@ public class GenericDataModelTest extends BeforeEachVNAImportHelper {
                 new String[]{Audit.TYPE_ID,ControlGroup.TYPE_ID},
                 new String[]{Audit.REL_AUDIT_CONTROLGROUP,Audit.REL_AUDIT_CONTROL});
         
-        GenericDataModel dm = new GenericDataModel(graph, new String[]{
+        LinkTableDataModel dm = new LinkTableDataModel(graph, new String[]{
                 "audit.audit_name",
                 "audit/controlgroup.controlgroup_name"});
         dm.init();

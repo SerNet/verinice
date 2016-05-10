@@ -88,7 +88,7 @@ public class LinkTableService implements ILinkTableService {
     private List<List<String>> doCreateTable(ILinkTableConfiguration configuration) throws CommandException {
         GraphCommand command = createCommand(configuration);
         command = getCommandService().executeCommand(command);
-        GenericDataModel dm = new GenericDataModel(command.getGraph(), configuration);
+        LinkTableDataModel dm = new LinkTableDataModel(command.getGraph(), configuration);
         dm.init();
         return dm.getResult();
     }

@@ -24,11 +24,10 @@ import java.util.Map;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 
 /**
- * A IPathElement is an element in a column path.
- * A column path is a description of a report column in GenericDataModel.
- * See GenericDataModel for a description of column path definitions.
+ * A IPathElement represents on element in a column path.
+ * A column path is a description of a column in a link table.
  *
- * @see GenericDataModel
+ * @see LinkTableDataModel
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * @param <P> The type of the parent object represented by this element in the path
  * @param <C> The type of the child object represented by this element in the path
@@ -46,8 +45,8 @@ public interface IPathElement<P,C> {
     public enum Direction { INCOMING, OUTGOING };
 
     /**
-     * Loads the data of this path element from the verinice graph
-     * for a given parent element.
+     * Loads the result of this path element from a verinice graph
+     * and a given parent element.
      *
      * @param parent The object represented by this element
      * @param graph The verinice graph with all relevant elements
@@ -55,22 +54,16 @@ public interface IPathElement<P,C> {
     void load(P parent, VeriniceGraph graph);
 
     /**
-     * Creates the result map for this path element,
-     * adds it to the given map and returns it.
+     * Add a single result to the map with all results
      *
-     * @param map A map with the results of the ancestors
-     * @param dbIds Db ids aof all elements in the path linked with dots
-     * @return The result map
+     * @param map A map with all results
+     * @param key The key of the result
+     * @return A map with all results including the single result
      */
-    Map<String, String> createResultMap(Map<String, String> map, String dbIds);
+    Map<String, String> addResultToMap(Map<String, String> map, String key);
 
     /**
-     * Returns the all results for this path in a map.
-     * Key of the map ist the db-id of the parent element.
-     * Value of the map is an inner map.
-     *
-     * Key of the inner map is the db-id of an element, value
-     * of the inner map are the results for the db-id.
+     * Returns all results for this path in a map.
      *
      * @return All results for this path
      */
@@ -117,8 +110,16 @@ public interface IPathElement<P,C> {
      */
     void setAlias(String alias);
     
+    /**
+     * @return The direction of the path element (relevant for links)
+     */
     Direction getDirection();
     
+    /**
+     * Sets the direction of the path element (relevant for links)
+     * 
+     * @param direction
+     */
     void setDirection(Direction direction);
    
 
