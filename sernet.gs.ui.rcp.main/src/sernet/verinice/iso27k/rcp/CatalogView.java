@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.verinice.iso27k.rcp;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -75,15 +76,14 @@ import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.iso27k.IItem;
 import sernet.verinice.iso27k.rcp.action.ControlDragListener;
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.service.commands.AttachmentFileCreationFactory;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
 import sernet.verinice.service.commands.LoadBSIModel;
-import sernet.verinice.service.commands.SaveAttachment;
 import sernet.verinice.service.commands.SaveNote;
 import sernet.verinice.service.iso27k.ImportCatalog;
 import sernet.verinice.service.iso27k.Item;
@@ -302,7 +302,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 	 * @throws CommandException 
 	 * 
 	 */
-	private Attachment saveFile(ImportCatalog importCatalog) throws CommandException {
+	private Attachment saveFile(ImportCatalog importCatalog) throws CommandException, IOException {
 		CsvFile csvFile = importCatalog.getCsvFile();
 		Attachment attachment = null;
 		if(csvFile!=null) {			
@@ -319,12 +319,7 @@ public class CatalogView extends RightsEnabledView implements IAttachedToPerspec
 			command = getCommandService().executeCommand(command);
 			attachment = (Attachment) command.getAddition();
 			
-			AttachmentFile attachmentFile = new AttachmentFile();
-			attachmentFile.setDbId(attachment.getDbId());
-			attachmentFile.setFileData(csvFile.getFileContent());
-			SaveAttachment saveAttachmentFile = new SaveAttachment(attachmentFile);
-			getCommandService().executeCommand(saveAttachmentFile);
-			saveAttachmentFile.clear();
+			AttachmentFileCreationFactory.createAttachmentFile(attachment, csvFile.getFileContent());
 		}
 		return attachment;
 	}

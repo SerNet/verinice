@@ -39,9 +39,9 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.AttachmentFileCreationFactory;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachmentsUserFiltered;
-import sernet.verinice.service.commands.SaveAttachment;
 import sernet.verinice.service.commands.SaveNote;
 
 /**
@@ -65,7 +65,7 @@ public class AttachmentBean {
         attachments = loadAttachments();  
     }
 
-    public void handleFileUpload(FileUploadEvent event) throws CommandException {
+    public void handleFileUpload(FileUploadEvent event) throws CommandException, IOException {
         UploadedFile item = event.getFile();
         Attachment attachment = new Attachment();
         attachment.setCnATreeElementId(getElement().getDbId());
@@ -81,12 +81,7 @@ public class AttachmentBean {
         command = getCommandService().executeCommand(command);
         attachment = (Attachment) command.getAddition();
         
-        AttachmentFile attachmentFile = new AttachmentFile();
-        attachmentFile.setFileData(item.getContents());
-        SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
-        attachmentFile.setDbId(attachment.getDbId());
-        saveFileCommand = getCommandService().executeCommand(saveFileCommand);
-        saveFileCommand.clear();
+        AttachmentFileCreationFactory.createAttachmentFile(attachment, item.getContents());
         
         attachments.add(attachment);
         Collections.sort(attachments);

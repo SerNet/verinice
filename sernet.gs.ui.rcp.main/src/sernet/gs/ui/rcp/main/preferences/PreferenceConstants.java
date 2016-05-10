@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+import sernet.verinice.rcp.search.SearchView;
+
 /**
  * Constant definitions for plug-in preferences
  */
@@ -136,6 +138,7 @@ public class PreferenceConstants {
     public static final String DONT_ASK_BEFORE_SWITCH_PERSPECTIVE = "switch_perspective_dont_ask";
     public static final String LINK_TO_EDITOR = "link_to_editor";
     public static final String CUT_INHERIT_PERMISSIONS = "cut_inherit_permissions";
+    public static final String COPY_ATTACHMENTS_WITH_OBJECTS = "copy_attachments_with_objects";
 
     // catalog import preferences
     public static final String CHARSET_CATALOG = "org.verinice.iso27k.rcp.charset";
@@ -177,7 +180,7 @@ public class PreferenceConstants {
      *            a view class
      * @return DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name
      */
-    public static String getDontAskBeforeSwitch(@SuppressWarnings("rawtypes") Class clazz) {
+    public static String getDontAskBeforeSwitch(@SuppressWarnings("rawtypes") final Class clazz) {
         return new StringBuilder(clazz.getName()).append("_").append(PreferenceConstants.DONT_ASK_BEFORE_SWITCH_PERSPECTIVE).toString();
     }
 
@@ -189,7 +192,7 @@ public class PreferenceConstants {
      * @return DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name
      */
     @SuppressWarnings("rawtypes")
-    public static String getSwitch(Class clazz) {
+    public static String getSwitch(final Class clazz) {
         return new StringBuilder(clazz.getName()).append("_").append(PreferenceConstants.SWITCH_PERSPECTIVE).toString();
     }
 
