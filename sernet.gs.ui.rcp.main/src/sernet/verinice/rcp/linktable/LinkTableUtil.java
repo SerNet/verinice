@@ -36,8 +36,8 @@ import org.elasticsearch.common.collect.Sets;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.verinice.rcp.linktable.composite.CsvExportDialog;
-import sernet.verinice.rcp.linktable.composite.combo.VeriniceLinkTableOperationType;
+import sernet.verinice.rcp.linktable.ui.CsvExportDialog;
+import sernet.verinice.rcp.linktable.ui.combo.LinkTableOperationType;
 import sernet.verinice.service.csv.ICsvExport;
 import sernet.verinice.service.linktable.ColumnPathParseException;
 import sernet.verinice.service.linktable.ColumnPathParser;
@@ -47,9 +47,9 @@ import sernet.verinice.service.model.HUIObjectModelLoader;
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class VeriniceLinkTableUtil {
+public class LinkTableUtil {
 
-    private static final Logger LOG = Logger.getLogger(VeriniceLinkTableUtil.class);
+    private static final Logger LOG = Logger.getLogger(LinkTableUtil.class);
     private static HashMap<String, String> vltExtensions = null;
     private static HashMap<String, String> csvExtensions = null;
     private static CsvExportDialog csvDialog;
@@ -67,7 +67,7 @@ public class VeriniceLinkTableUtil {
         }
     }
 
-    private VeriniceLinkTableUtil() {
+    private LinkTableUtil() {
         // to prevent instantiation
     }
 
@@ -149,9 +149,9 @@ public class VeriniceLinkTableUtil {
         ArrayList<String> headers = new ArrayList<>();
         for (String element : veriniceLinkTable.getColumnPaths()) {
             int propertyBeginning = element
-                    .lastIndexOf(VeriniceLinkTableOperationType.PROPERTY.getOutput());
+                    .lastIndexOf(LinkTableOperationType.PROPERTY.getOutput());
             String propertyId = element.substring(propertyBeginning + 1);
-            if (element.contains(VeriniceLinkTableOperationType.RELATION.getOutput())) {
+            if (element.contains(LinkTableOperationType.RELATION.getOutput())) {
                 headers.add(Messages.getString(propertyId));
             } else {
 
@@ -163,10 +163,10 @@ public class VeriniceLinkTableUtil {
 
     }
 
-    public static VeriniceLinkTableValidationResult isValidVeriniceLinkTable(
+    public static LinkTableValidationResult isValidVeriniceLinkTable(
             VeriniceLinkTable veriniceLinkTable) {
 
-        VeriniceLinkTableValidationResult result = new VeriniceLinkTableValidationResult();
+        LinkTableValidationResult result = new LinkTableValidationResult();
         result.setValid(true);
         try {
             validateColumnPathsElements(veriniceLinkTable.getColumnPaths());
@@ -247,7 +247,7 @@ public class VeriniceLinkTableUtil {
             List<String> pathElements = ColumnPathParser.getColumnPathAsList(path);
             int index = 0;
             for (String element : pathElements) {
-                if (VeriniceLinkTableOperationType.isRelation(element)) {
+                if (LinkTableOperationType.isRelation(element)) {
                     relations.add(new SimpleEntry<String, String>(pathElements.get(index - 1),
                             pathElements.get(index + 1)));
 

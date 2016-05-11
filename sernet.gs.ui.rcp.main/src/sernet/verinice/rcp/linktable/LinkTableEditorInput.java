@@ -32,13 +32,13 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class VeriniceLinkTableEditorInput implements IEditorInput {
+public class LinkTableEditorInput implements IEditorInput {
 
     public static final String NAME_DEFAULT = "verinice link table";
 
     private VeriniceLinkTable veriniceLinkTable;
 
-    public VeriniceLinkTableEditorInput(VeriniceLinkTable veriniceLinkTable) {
+    public LinkTableEditorInput(VeriniceLinkTable veriniceLinkTable) {
         super();
         this.veriniceLinkTable = veriniceLinkTable;
     }

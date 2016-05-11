@@ -89,8 +89,8 @@ import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
-import sernet.verinice.rcp.linktable.VeriniceLinkTableEditor;
-import sernet.verinice.rcp.linktable.VeriniceLinkTableEditorInput;
+import sernet.verinice.rcp.linktable.LinkTableEditor;
+import sernet.verinice.rcp.linktable.LinkTableEditorInput;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
 /**
@@ -299,8 +299,8 @@ public final class EditorFactory {
             public void openEditorFor(Object o) throws PartInitException {
                 // replace element with new instance from DB:
                 VeriniceLinkTable selection = (VeriniceLinkTable) o;
-                VeriniceLinkTableEditorInput input = new VeriniceLinkTableEditorInput(selection);
-                openEditor(String.valueOf(input.getId()), input, VeriniceLinkTableEditor.EDITOR_ID);
+                LinkTableEditorInput input = new LinkTableEditorInput(selection);
+                openEditor(String.valueOf(input.getId()), input, LinkTableEditor.EDITOR_ID);
             }
         };
         typedFactories.put(VeriniceLinkTable.class, vlrEditorFactory);

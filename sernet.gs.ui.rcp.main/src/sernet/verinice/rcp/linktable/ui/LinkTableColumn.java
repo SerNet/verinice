@@ -17,7 +17,7 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite;
+package sernet.verinice.rcp.linktable.ui;
 
 import java.util.List;
 
@@ -32,40 +32,43 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
-import sernet.verinice.rcp.linktable.composite.combo.VeriniceLinkTableElementComboViewer;
+import sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer;
+import sernet.verinice.rcp.linktable.ui.combo.LinkTableElementComboViewer;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
  * Container for all widgets needed for a vlt-table column
  * 
+ * 
+ * @see LinkTableComboViewer
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class VeriniceLinkTableColumn {
+public class LinkTableColumn {
 
-    private static final Logger LOG = Logger.getLogger(VeriniceLinkTableColumn.class);
+    private static final Logger LOG = Logger.getLogger(LinkTableColumn.class);
     public static final int DEFAULT_GAP = 6;
-    private VeriniceLinkTableComposite ltrParent;
+    private LinkTableComposite ltrParent;
     private Label columName;
     private int colNumber;
     private String name;
     private Button deleteButton;
-    private Composite column;
+    private Composite columnContainer;
     
     private Button upButton;
     private Button downButton;
 
     private IObjectModelService contentService;
-    private VeriniceLinkTableElementComboViewer firstCombo;
+    private LinkTableElementComboViewer firstCombo;
 
-    public VeriniceLinkTableColumn(VeriniceLinkTableColumn copy, int number) {
+    public LinkTableColumn(LinkTableColumn copy, int number) {
         this.ltrParent = copy.ltrParent;
         this.colNumber = number;
         this.contentService = copy.getContentService();
         createColumn();
-        firstCombo = (VeriniceLinkTableElementComboViewer) copy.getFirstCombo().copy(null, column, columName);
+        firstCombo = (LinkTableElementComboViewer) copy.getFirstCombo().copy(null, columnContainer, columName);
     }
 
-    public VeriniceLinkTableColumn(VeriniceLinkTableComposite parent, int style,
+    public LinkTableColumn(LinkTableComposite parent, int style,
             int number) {
 
         this.ltrParent = parent;
@@ -75,8 +78,8 @@ public class VeriniceLinkTableColumn {
         addFirstCombo();
     }
 
-    public VeriniceLinkTableColumn(List<String> path,
-            VeriniceLinkTableComposite parent, int number) {
+    public LinkTableColumn(List<String> path,
+            LinkTableComposite parent, int number) {
 
         this.ltrParent = parent;
         this.colNumber = number;
@@ -90,14 +93,8 @@ public class VeriniceLinkTableColumn {
 
     }
 
-    /**
-     * @param selection
-     * @param path
-     * @param veriniceLinkTableComposite
-     * @param i
-     */
-    public VeriniceLinkTableColumn(ISelection selection, List<String> path,
-            VeriniceLinkTableComposite parent, int number) {
+    public LinkTableColumn(ISelection selection, List<String> path,
+            LinkTableComposite parent, int number) {
 
         this.ltrParent = parent;
         this.colNumber = number;
@@ -112,30 +109,30 @@ public class VeriniceLinkTableColumn {
     }
 
     private void addFirstCombo() {
-        firstCombo = new VeriniceLinkTableElementComboViewer(this, column);
+        firstCombo = new LinkTableElementComboViewer(this, columnContainer);
         FormData comboData = new FormData();
         comboData.left = new FormAttachment(columName, DEFAULT_GAP);
         comboData.top = new FormAttachment(columName, 0, SWT.CENTER);
         firstCombo.getCombo().setLayoutData(comboData);
-        column.layout(true);
+        columnContainer.layout(true);
 
     }
 
 
     private void createColumn() {
 
-        column = new Composite(ltrParent.getColumnsContainer(), SWT.NONE);
+        columnContainer = new Composite(ltrParent.getColumnsContainer(), SWT.NONE);
         FormLayout layoutColumn = new FormLayout();
         layoutColumn.marginHeight = 0;
         layoutColumn.marginWidth = 0;
-        column.setLayout(layoutColumn);
+        columnContainer.setLayout(layoutColumn);
 
         Composite dragAndDropArea = addDragAndDropButtons();
         FormData dragAndDropAreaData = new FormData();
         dragAndDropAreaData.left = new FormAttachment(0);
         dragAndDropArea.setLayoutData(dragAndDropAreaData);
 
-        deleteButton = new Button(column, SWT.NONE);
+        deleteButton = new Button(columnContainer, SWT.NONE);
         deleteButton.setText("-");
         FormData deleteButtonData = new FormData();
         deleteButtonData.left = new FormAttachment(dragAndDropArea, DEFAULT_GAP);
@@ -143,7 +140,7 @@ public class VeriniceLinkTableColumn {
         deleteButtonData.height = 45; // height of buttons * 2 + margin
         deleteButton.setLayoutData(deleteButtonData);
 
-        columName = new Label(column, SWT.NONE);
+        columName = new Label(columnContainer, SWT.NONE);
         setColumnName();
         FormData columNameData = new FormData();
         columNameData.left = new FormAttachment(deleteButton, DEFAULT_GAP);
@@ -155,7 +152,7 @@ public class VeriniceLinkTableColumn {
 
     private Composite addDragAndDropButtons() {
 
-        Composite ddComposite = new Composite(column, SWT.NONE);
+        Composite ddComposite = new Composite(columnContainer, SWT.NONE);
 
         upButton = new Button(ddComposite, SWT.ARROW | SWT.UP);
         GridDataFactory.swtDefaults().span(0, 0).hint(30, 20).applyTo(upButton);
@@ -164,7 +161,7 @@ public class VeriniceLinkTableColumn {
             public void widgetSelected(SelectionEvent event) {
                 if (LOG.isDebugEnabled()) {
 
-                    LOG.debug("column " + colNumber + " up");
+                    LOG.debug("columnContainer " + colNumber + " up");
                 }
                 moveUp();
 
@@ -177,7 +174,7 @@ public class VeriniceLinkTableColumn {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("column " + colNumber + " down");
+                    LOG.debug("columnContainer " + colNumber + " down");
                 }
                 moveDown();
 
@@ -204,8 +201,8 @@ public class VeriniceLinkTableColumn {
     protected void setColumnName() {
         name = Messages.VeriniceLinkTableColumn_0 + " " + colNumber + ":";
         columName.setText(name);
-        column.pack(true);
-        column.layout(true);
+        columnContainer.pack(true);
+        columnContainer.layout(true);
 
     }
 
@@ -248,7 +245,7 @@ public class VeriniceLinkTableColumn {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        VeriniceLinkTableColumn other = (VeriniceLinkTableColumn) obj;
+        LinkTableColumn other = (LinkTableColumn) obj;
         if (colNumber != other.colNumber)
             return false;
         if (columName == null) {
@@ -275,18 +272,18 @@ public class VeriniceLinkTableColumn {
     }
 
     public Composite getColumn() {
-        return column;
+        return columnContainer;
     }
 
     public void refresh() {
-        if (!column.isDisposed()) {
-            column.pack(true);
-            column.layout(true);
+        if (!columnContainer.isDisposed()) {
+            columnContainer.pack(true);
+            columnContainer.layout(true);
         }
-        ltrParent.refresh(UpdateElements.COLUMN_PATHS);
+        ltrParent.refresh(UpdateLinkTable.COLUMN_PATHS);
     }
 
-    public VeriniceLinkTableElementComboViewer getFirstCombo() {
+    public LinkTableElementComboViewer getFirstCombo() {
         return firstCombo;
     }
 
@@ -298,7 +295,7 @@ public class VeriniceLinkTableColumn {
         return contentService;
     }
 
-    public VeriniceLinkTableComposite getLtrParent() {
+    public LinkTableComposite getLtrParent() {
         return ltrParent;
     }
 

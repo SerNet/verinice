@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Daniel Murygin <dm{a}sernet{dot}de>.
+ * Copyright (c) 2016 Ruth Motza.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,29 +15,17 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable;
-
-import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
+package sernet.verinice.rcp.linktable.ui;
 
 /**
- *
- *
- * @author Daniel Murygin <dm{a}sernet{dot}de>
+ * Possible parts of {@link LinkTable} to be updated.
+ * 
+ * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class CreateLinkTableHandler extends LinkTableHandler {
+public enum UpdateLinkTable {
 
-    public CreateLinkTableHandler() {
-        super();
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.linktable.LinkTableHandler#createLinkTable()
-     */
-    @Override
-    protected VeriniceLinkTable createLinkTable() {
-        return new VeriniceLinkTable.Builder(Messages.CreateLinkTableHandler_0).build();
-    }
+    RELATION_IDS, USE_ALL_SCOPES, COLUMN_PATHS
 
 }

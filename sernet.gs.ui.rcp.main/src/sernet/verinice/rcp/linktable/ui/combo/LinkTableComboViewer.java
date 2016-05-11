@@ -17,37 +17,46 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite.combo;
+package sernet.verinice.rcp.linktable.ui.combo;
 
 import java.util.*;
+import java.util.List;
 
 import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.*;
 
-import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableColumn;
+import sernet.verinice.rcp.linktable.ui.LinkTableColumn;
 
 /**
+ * 
+ * Base class for the different Combo-tpes of a vlt column.
+ * 
+ * 
+ * @see LinkTableColumn
+ * @see LinkTableOperationTypeComboViewer
+ * @see LinkTableElementComboViewer
+ * @see LinkTablePropertyComboViewer
+ * @see LinkTableRelationPropertyComboViewer
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public abstract class VeriniceLinkTableComboViewer extends ComboViewer
+public abstract class LinkTableComboViewer extends ComboViewer
         implements IStructuredContentProvider, ISelectionChangedListener {
 
-    protected VeriniceLinkTableColumn ltrColumn;
-    protected VeriniceLinkTableComboViewer rightCombo = null;
-    protected VeriniceLinkTableComboViewer leftCombo = null;
+    protected LinkTableColumn ltrColumn;
+    protected LinkTableComboViewer rightCombo = null;
+    protected LinkTableComboViewer leftCombo = null;
     Composite parentComposite = null;
 
     protected String relatedID;
-    protected VeriniceLinkTableOperationType operationType;
+    protected LinkTableOperationType operationType;
 
-    public VeriniceLinkTableComboViewer(VeriniceLinkTableComboViewer leftCombo, String relatedID,
-            VeriniceLinkTableOperationType operationType, VeriniceLinkTableColumn ltrParent,
+    public LinkTableComboViewer(LinkTableComboViewer leftCombo, String relatedID,
+            LinkTableOperationType operationType, LinkTableColumn ltrParent,
             Composite parent) {
 
-        super(new VeriniceCombo(parent, SWT.NONE | SWT.READ_ONLY));
+        super(new Combo(parent, SWT.NONE | SWT.READ_ONLY));
         this.parentComposite = parent;
         this.ltrColumn = ltrParent;
         this.setContentProvider(this);
@@ -132,12 +141,12 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
 
     protected abstract void doSelectionChanged();
 
-    protected VeriniceLinkTableComboViewer createChild(Composite parent) {
+    protected LinkTableComboViewer createChild(Composite parent) {
 
         return null;
     }
 
-    public VeriniceLinkTableComboViewer copy(VeriniceLinkTableComboViewer leftCombo, Composite newParent,
+    public LinkTableComboViewer copy(LinkTableComboViewer leftCombo, Composite newParent,
             Control formerElement) {
 
         Composite newParentComposite = new Composite(newParent, SWT.NONE);
@@ -145,7 +154,7 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
         newParentComposite.setLayoutData(getDefaultFormData(formerElement));
         
         
-        VeriniceLinkTableComboViewer newViewer = createCopy(leftCombo, ltrColumn,
+        LinkTableComboViewer newViewer = createCopy(leftCombo, ltrColumn,
                 newParentComposite);
 
         newViewer.getCombo().select(this.getCombo().getSelectionIndex());
@@ -158,12 +167,12 @@ public abstract class VeriniceLinkTableComboViewer extends ComboViewer
 
     protected FormData getDefaultFormData(Control formerElement) {
         FormData comboData = new FormData();
-        comboData.left = new FormAttachment(formerElement, VeriniceLinkTableColumn.DEFAULT_GAP);
+        comboData.left = new FormAttachment(formerElement, LinkTableColumn.DEFAULT_GAP);
         comboData.top = new FormAttachment(formerElement, 0, SWT.CENTER);
         return comboData;
     }
 
-    protected abstract VeriniceLinkTableComboViewer createCopy(VeriniceLinkTableComboViewer leftCombo, VeriniceLinkTableColumn ltrParent2,
+    protected abstract LinkTableComboViewer createCopy(LinkTableComboViewer leftCombo, LinkTableColumn ltrParent2,
             Composite newParent);
 
     public String getValue() {

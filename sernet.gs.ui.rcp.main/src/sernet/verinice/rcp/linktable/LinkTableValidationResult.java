@@ -22,19 +22,19 @@ package sernet.verinice.rcp.linktable;
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class VeriniceLinkTableValidationResult {
+public class LinkTableValidationResult {
 
     private boolean isValid;
     private String message;
 
 
-    public VeriniceLinkTableValidationResult(boolean isValid, String message) {
+    public LinkTableValidationResult(boolean isValid, String message) {
         super();
         this.isValid = isValid;
         this.message = message;
     }
 
-    public VeriniceLinkTableValidationResult() {
+    public LinkTableValidationResult() {
         // default constructor
     }
 

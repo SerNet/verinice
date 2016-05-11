@@ -17,7 +17,7 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite;
+package sernet.verinice.rcp.linktable.ui;
 
 import java.util.*;
 import java.util.List;
@@ -30,50 +30,50 @@ import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 import org.elasticsearch.common.collect.Sets;
 
-import sernet.verinice.rcp.linktable.composite.multiselectiondialog.VeriniceLinkTableMultiSelectionControl;
+import sernet.verinice.rcp.linktable.ui.multiselectiondialog.LinkTableMultiSelectionControl;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
- * Composite to edit or create ltr-columns.
+ * Composite to edit or create vlt-files.
  * 
  * 
+ * @see LinkTableColumn
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class VeriniceLinkTableComposite extends Composite {
+public class LinkTableComposite extends Composite {
 
-    private static final Logger LOG = Logger.getLogger(VeriniceLinkTableComposite.class);
+    private static final Logger LOG = Logger.getLogger(LinkTableComposite.class);
 
-    private List<VeriniceLinkTableFieldListener> listeners = new ArrayList<>();
-    private static final Point DEFAULT_MARGIN = new Point(5, 5);
+    private List<LinkTableFieldListener> listeners = new ArrayList<>();
+    private static final Point DEFAULT_MARGIN = new Point(10, 10);
     private static final Point DEFAULT_MARGIN_CONTENT = new Point(10, 10);
     private Composite columnsContainer;
-    private Composite body;
-    private Composite bodyBody;
-    private ScrolledComposite c2;
+    private Composite mainBody;
+    private Composite subBody;
+    private ScrolledComposite scrolledBody;
     private Composite buttons;
-    private VeriniceLinkTableMultiSelectionControl multiControl;
+    private LinkTableMultiSelectionControl multiControl;
     private boolean fireUpdate = false;
     private boolean fireValidation = false;
 
     private int numCols = 0;
-    private ArrayList<VeriniceLinkTableColumn> columns = new ArrayList<>();
+    private ArrayList<LinkTableColumn> columns = new ArrayList<>();
 
     private IObjectModelService objectModelService;
     private boolean useAllScopes = true;
     private VeriniceLinkTable vltContent = null;
 
-    public VeriniceLinkTableComposite(VeriniceLinkTable vltContent,
+    public LinkTableComposite(VeriniceLinkTable vltContent,
             IObjectModelService objectModelService,
-            Composite parent, int style) {
+            Composite parent) {
 
-        super(parent, style);
+        super(parent, SWT.NONE);
         this.objectModelService = objectModelService;
         this.vltContent = vltContent;
         useAllScopes = vltContent.useAllScopes();
@@ -83,11 +83,7 @@ public class VeriniceLinkTableComposite extends Composite {
 
     private void createContent() {
 
-        FormLayout layout = new FormLayout();
-        layout.marginHeight = DEFAULT_MARGIN.y;
-        layout.marginWidth = DEFAULT_MARGIN.x;
-
-        Composite rootContainer = new Composite(this, getStyle());
+        Composite rootContainer = new Composite(this, SWT.BORDER);
 
         setHead(rootContainer);
 
@@ -96,13 +92,17 @@ public class VeriniceLinkTableComposite extends Composite {
         refresh();
 
         rootContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
-        GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN).generateLayout(rootContainer);
+        getDefaultLayoutFactory().generateLayout(rootContainer);
 
+    }
+
+    public GridLayoutFactory getDefaultLayoutFactory() {
+        return GridLayoutFactory.fillDefaults();
     }
 
     private void setHead(Composite parent) {
 
-        Composite head = new Composite(parent, getStyle());
+        Composite head = new Composite(parent, SWT.NONE);
 
         Composite scopeButtons = new Composite(head, getStyle());
         final Button[] scopeRadios = new Button[2];
@@ -123,7 +123,7 @@ public class VeriniceLinkTableComposite extends Composite {
                 }
 
                 useAllScopes = selected == useAllScopesButton;
-                updateAndValidateVeriniceContent(UpdateElements.USE_ALL_SCOPES);
+                updateAndValidateVeriniceContent(UpdateLinkTable.USE_ALL_SCOPES);
 
             }
         };
@@ -133,42 +133,47 @@ public class VeriniceLinkTableComposite extends Composite {
         useAllScopesButton.setSelection(useAllScopes);
         useSelectedScopes.setSelection(!useAllScopes);
 
-        GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN).numColumns(1)
+        getDefaultLayoutFactory().margins(DEFAULT_MARGIN).numColumns(1)
                 .generateLayout(scopeButtons);
         Composite multiControlContainer = new Composite(head, getStyle());
-        multiControl = new VeriniceLinkTableMultiSelectionControl(multiControlContainer,
+        multiControl = new LinkTableMultiSelectionControl(multiControlContainer,
                 this);
 
-        GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(multiControlContainer);
+        getDefaultLayoutFactory().numColumns(2).generateLayout(multiControlContainer);
         GridData multiControlContainerData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
         multiControlContainer.setLayoutData(multiControlContainerData);
-        GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(head);
+        getDefaultLayoutFactory().numColumns(2).margins(DEFAULT_MARGIN).generateLayout(head);
 
     }
 
+    /**
+     * To ensure functionality of the scrolledComposite the body of the
+     * LinkTableComposite must be wrapped twice.
+     */
     private void setBody(Composite parent) {
-        c2 = new ScrolledComposite(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 
-        body = new Composite(c2, getStyle());
-        c2.setContent(body);
-        c2.setExpandHorizontal(true);
-        c2.setExpandVertical(true);
-        c2.setLayoutData(new GridData(GridData.FILL_BOTH));
+        scrolledBody = new ScrolledComposite(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 
-        bodyBody = new Composite(body, getStyle());
+        mainBody = new Composite(scrolledBody, getStyle());
+        scrolledBody.setContent(mainBody);
+        scrolledBody.setExpandHorizontal(true);
+        scrolledBody.setExpandVertical(true);
+        scrolledBody.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        columnsContainer = new Composite(bodyBody, getStyle());
-        GridLayoutFactory.swtDefaults().generateLayout(columnsContainer);
-        addButtons(bodyBody);
+        subBody = new Composite(mainBody, getStyle());
+
+        columnsContainer = new Composite(subBody, getStyle());
+        getDefaultLayoutFactory().generateLayout(columnsContainer);
+        addButtons(subBody);
         if (vltContent.getColumnPaths() != null && !vltContent.getColumnPaths().isEmpty()) {
             addColumnsWithContent();
         } else {
             addColumn(null);
         }
 
-        GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN_CONTENT).generateLayout(bodyBody);
-        GridLayoutFactory.swtDefaults().margins(0, 0).generateLayout(body);
-        GridLayoutFactory.swtDefaults().margins(0, 0).generateLayout(c2);
+        getDefaultLayoutFactory().margins(DEFAULT_MARGIN_CONTENT).generateLayout(subBody);
+        getDefaultLayoutFactory().margins(0, 0).generateLayout(mainBody);
+        getDefaultLayoutFactory().margins(DEFAULT_MARGIN).generateLayout(scrolledBody);
     }
 
     private void addColumnsWithContent() {
@@ -185,15 +190,15 @@ public class VeriniceLinkTableComposite extends Composite {
     }
 
     private void addColumn(List<String> path) {
-        VeriniceLinkTableColumn column;
+        LinkTableColumn column;
         boolean isNewColumn = true;
         if (path == null) {
-            column = new VeriniceLinkTableColumn(this, getStyle(), ++numCols);
+            column = new LinkTableColumn(this, getStyle(), ++numCols);
         } else {
             if (columns.isEmpty()) {
-                column = new VeriniceLinkTableColumn(path, this, ++numCols);
+                column = new LinkTableColumn(path, this, ++numCols);
             } else {
-                column = new VeriniceLinkTableColumn(columns.get(0).getFirstCombo().getSelection(),
+                column = new LinkTableColumn(columns.get(0).getFirstCombo().getSelection(),
                         path, this, ++numCols);
             }
             isNewColumn = false;
@@ -206,11 +211,11 @@ public class VeriniceLinkTableComposite extends Composite {
 
     private void handleMoreThanOneColumn(boolean isNewColumn) {
         boolean oneClumn = columns.size() <= 1;
-        VeriniceLinkTableColumn firstColumn = columns.get(0);
+        LinkTableColumn firstColumn = columns.get(0);
         firstColumn.getDeleteButton().setEnabled(!oneClumn);
         firstColumn.getFirstCombo().getCombo().setEnabled(oneClumn);
         if (!oneClumn) {
-            VeriniceLinkTableColumn lastColumn = columns.get(columns.size() - 1);
+            LinkTableColumn lastColumn = columns.get(columns.size() - 1);
             lastColumn.getFirstCombo().getCombo().setEnabled(false);
             if (isNewColumn) {
                 lastColumn.getFirstCombo().getCombo()
@@ -227,7 +232,7 @@ public class VeriniceLinkTableComposite extends Composite {
 
     }
 
-    private void addDeleteButtonListener(final VeriniceLinkTableColumn column) {
+    private void addDeleteButtonListener(final LinkTableColumn column) {
 
         column.getDeleteButton().addSelectionListener(new SelectionAdapter() {
             @Override
@@ -241,7 +246,7 @@ public class VeriniceLinkTableComposite extends Composite {
                 column.getColumn().dispose();
                 numCols = columns.size();
                 renameColumns();
-                refresh(UpdateElements.COLUMN_PATHS);
+                refresh(UpdateLinkTable.COLUMN_PATHS);
             }
         });
 
@@ -249,39 +254,39 @@ public class VeriniceLinkTableComposite extends Composite {
 
     protected void renameColumns() {
         int i = 1;
-        for (VeriniceLinkTableColumn column : columns) {
+        for (LinkTableColumn column : columns) {
             column.setColumnNumber(i++);
         }
 
     }
 
-    public void refresh(UpdateElements... updateVeriniceLinkTable) {
+    public void refresh(UpdateLinkTable... updateVeriniceLinkTable) {
         columnsContainer.pack(true);
-        bodyBody.pack(true);
-        body.pack(true);
-        c2.setMinSize(bodyBody.getClientArea().width, bodyBody.getClientArea().height);
-        c2.showControl(buttons);
-        body.layout(true);
-        bodyBody.layout(true);
+        subBody.pack(true);
+        mainBody.pack(true);
+        scrolledBody.setMinSize(subBody.getClientArea().width, subBody.getClientArea().height);
+        scrolledBody.showControl(buttons);
+        mainBody.layout(true);
+        subBody.layout(true);
         columnsContainer.layout(true);
-        c2.layout(true);
+        scrolledBody.layout(true);
         updateAndValidateVeriniceContent(updateVeriniceLinkTable);
     }
 
-    public void updateAndValidateVeriniceContent(UpdateElements... updateVeriniceLinkTable) {
+    public void updateAndValidateVeriniceContent(UpdateLinkTable... updateVeriniceLinkTable) {
 
-        Set<UpdateElements> set = Sets.newHashSet(updateVeriniceLinkTable);
+        Set<UpdateLinkTable> set = Sets.newHashSet(updateVeriniceLinkTable);
         if (vltContent == null) {
             vltContent = new VeriniceLinkTable.Builder("new").build();
         }
         fireUpdate = fireValidation = false;
-        if (set.contains(UpdateElements.USE_ALL_SCOPES)) {
+        if (set.contains(UpdateLinkTable.USE_ALL_SCOPES)) {
             updateUseAllScopes();
         }
-        if (set.contains(UpdateElements.RELATION_IDS)) {
+        if (set.contains(UpdateLinkTable.RELATION_IDS)) {
             updateRelationIds();
         }
-        if (set.contains(UpdateElements.USE_ALL_SCOPES)) {
+        if (set.contains(UpdateLinkTable.USE_ALL_SCOPES)) {
             updateColumnPaths();
         }
         if (fireUpdate) {
@@ -295,7 +300,7 @@ public class VeriniceLinkTableComposite extends Composite {
     private void updateColumnPaths() {
         ArrayList<String> columnPaths = new ArrayList<>(columns.size());
         String path;
-        for (VeriniceLinkTableColumn column : columns) {
+        for (LinkTableColumn column : columns) {
 
             path = column.getColumnPath();
             columnPaths.add(path);
@@ -331,7 +336,7 @@ public class VeriniceLinkTableComposite extends Composite {
     private void addButtons(Composite parent) {
 
         buttons = new Composite(parent, getStyle());
-        GridDataFactory.swtDefaults().applyTo(buttons);
+        GridDataFactory.fillDefaults().applyTo(buttons);
 
         Button addEmptyColumn = new Button(buttons, SWT.PUSH);
         addEmptyColumn.setText(Messages.VeriniceLinkTableComposite_2);
@@ -341,7 +346,7 @@ public class VeriniceLinkTableComposite extends Composite {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 addColumn(null);
-                refresh(UpdateElements.COLUMN_PATHS);
+                refresh(UpdateLinkTable.COLUMN_PATHS);
 
             }
 
@@ -354,18 +359,18 @@ public class VeriniceLinkTableComposite extends Composite {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
-                VeriniceLinkTableColumn lastColumn = columns.get(columns.size() - 1);
-                VeriniceLinkTableColumn duplicatedColumn = new VeriniceLinkTableColumn(
+                LinkTableColumn lastColumn = columns.get(columns.size() - 1);
+                LinkTableColumn duplicatedColumn = new LinkTableColumn(
                         lastColumn, ++numCols);
                 columns.add(duplicatedColumn);
                 addDeleteButtonListener(duplicatedColumn);
                 handleMoreThanOneColumn(false);
-                refresh(UpdateElements.COLUMN_PATHS);
+                refresh(UpdateLinkTable.COLUMN_PATHS);
 
             }
         });
 
-        GridLayoutFactory.swtDefaults().margins(DEFAULT_MARGIN).numColumns(2)
+        getDefaultLayoutFactory().margins(DEFAULT_MARGIN).numColumns(2)
                 .generateLayout(buttons);
 
     }
@@ -375,7 +380,7 @@ public class VeriniceLinkTableComposite extends Composite {
     }
 
     public void showComposite(Control composite) {
-        c2.showControl(composite);
+        scrolledBody.showControl(composite);
 
     }
 
@@ -386,7 +391,7 @@ public class VeriniceLinkTableComposite extends Composite {
     public Set<String> getAllUsedRelationIds() {
         HashSet<String> relationIDs = new HashSet<>();
 
-        for (VeriniceLinkTableColumn column : columns) {
+        for (LinkTableColumn column : columns) {
             relationIDs.addAll(column.getFirstCombo().getAllUsedRelationIds());
         }
 
@@ -397,26 +402,26 @@ public class VeriniceLinkTableComposite extends Composite {
         return objectModelService;
     }
 
-    public void addListener(VeriniceLinkTableFieldListener l) {
+    public void addListener(LinkTableFieldListener l) {
         if (l != null)
             listeners.add(l);
     }
 
     public void fireFieldChangedEvent() {
-        for (VeriniceLinkTableFieldListener l : listeners) {
+        for (LinkTableFieldListener l : listeners) {
             l.fieldValueChanged();
         }
         fireUpdate = false;
     }
 
     public void fireValidationEvent() {
-        for (VeriniceLinkTableFieldListener l : listeners) {
+        for (LinkTableFieldListener l : listeners) {
             l.validate();
         }
         fireValidation = false;
     }
 
-    public void moveColumnUp(VeriniceLinkTableColumn column) {
+    public void moveColumnUp(LinkTableColumn column) {
         int index = columns.indexOf(column);
 
         if (index < 0) {
@@ -432,17 +437,17 @@ public class VeriniceLinkTableComposite extends Composite {
             }
             return;
         }
-        VeriniceLinkTableColumn prevElement = columns.get(index - 1);
+        LinkTableColumn prevElement = columns.get(index - 1);
         columns.set(index - 1, column);
         columns.set(index, prevElement);
         column.getColumn().moveAbove(prevElement.getColumn());
 
         renameColumns();
-        refresh(UpdateElements.COLUMN_PATHS);
+        refresh(UpdateLinkTable.COLUMN_PATHS);
 
     }
 
-    public void moveColumnDown(VeriniceLinkTableColumn column) {
+    public void moveColumnDown(LinkTableColumn column) {
         int index = columns.indexOf(column);
 
         if (index < 0) {
@@ -458,13 +463,13 @@ public class VeriniceLinkTableComposite extends Composite {
             }
             return;
         }
-        VeriniceLinkTableColumn nextElement = columns.get(index + 1);
+        LinkTableColumn nextElement = columns.get(index + 1);
         columns.set(index + 1, column);
         columns.set(index, nextElement);
         column.getColumn().moveBelow(nextElement.getColumn());
 
         renameColumns();
-        refresh(UpdateElements.COLUMN_PATHS);
+        refresh(UpdateLinkTable.COLUMN_PATHS);
 
     }
 

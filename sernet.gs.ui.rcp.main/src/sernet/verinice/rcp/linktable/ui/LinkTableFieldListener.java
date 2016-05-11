@@ -17,23 +17,15 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite.combo;
+package sernet.verinice.rcp.linktable.ui;
 
 /**
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public interface IVeriniceLinkTableOperationType {
+public interface LinkTableFieldListener {
 
-    public String getLabel();
+    public void fieldValueChanged();
 
-    public String getOutput();
+    public void validate();
 
-    public String getDefaultMessage();
-
-    // TODO rmotza insert method --> wait for java8
-    // public static ILTR_OPERATION_TYPE getOperationType(String value);
-    // public static boolean isRelation(IVeriniceLinkTableOperationType type);w
-
-    @Override
-    public String toString();
 }

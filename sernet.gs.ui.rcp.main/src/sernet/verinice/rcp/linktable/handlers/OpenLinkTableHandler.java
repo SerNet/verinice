@@ -17,11 +17,12 @@
  * Contributors:
  *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable;
+package sernet.verinice.rcp.linktable.handlers;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.verinice.rcp.linktable.*;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 
@@ -38,7 +39,7 @@ public class OpenLinkTableHandler extends LinkTableHandler {
 
     @Override
     protected VeriniceLinkTable createLinkTable() {
-        final String filePath = VeriniceLinkTableUtil.createVltFilePath(
+        final String filePath = LinkTableUtil.createVltFilePath(
                 Display.getCurrent().getActiveShell(), Messages.OpenLinkTableHandler_0, SWT.OPEN);
         VeriniceLinkTable veriniceLinkTable = null;
         if (filePath != null) {

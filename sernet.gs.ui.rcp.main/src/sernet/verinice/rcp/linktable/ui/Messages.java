@@ -15,13 +15,13 @@
  * Contributors:
  *     Sebastian Hagedorn <sh[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite;
+package sernet.verinice.rcp.linktable.ui;
 
 import org.eclipse.osgi.util.NLS;
 
 public class Messages extends NLS{
 
-    private static final String BUNDLE_NAME = "sernet.verinice.rcp.linktable.composite.messages"; //$NON-NLS-1$
+    private static final String BUNDLE_NAME = "sernet.verinice.rcp.linktable.ui.messages"; //$NON-NLS-1$
 
     public static String MultiSelectionControl_0;
     public static String MultiSelectionControl_1;

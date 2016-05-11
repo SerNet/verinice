@@ -17,7 +17,7 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable;
+package sernet.verinice.rcp.linktable.handlers;
 
 import java.util.List;
 
@@ -35,6 +35,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.rcp.RightsEnabledHandler;
 import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
+import sernet.verinice.rcp.linktable.*;
 import sernet.verinice.service.csv.CsvExport;
 import sernet.verinice.service.csv.ICsvExport;
 import sernet.verinice.service.linktable.LinkTableService;
@@ -96,7 +97,7 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
     protected VeriniceLinkTable createLinkTable() {
 
         setShell();
-        final String filePath = VeriniceLinkTableUtil.createVltFilePath(shell,
+        final String filePath = LinkTableUtil.createVltFilePath(shell,
                 Messages.ExportLinkTableHandler_2, SWT.OPEN);
         VeriniceLinkTable veriniceLinkTableTemp = null;
         if (filePath != null) {
@@ -124,10 +125,10 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
 
 
         if(veriniceLinkTable.useAllScopes()){
-            csvFilePath = VeriniceLinkTableUtil.createCsvFilePath(shell,
+            csvFilePath = LinkTableUtil.createCsvFilePath(shell,
                     Messages.ExportLinkTableHandler_3);
         } else{
-            csvFilePath = VeriniceLinkTableUtil.createCsvFilePathAndHandleScopes(shell,
+            csvFilePath = LinkTableUtil.createCsvFilePathAndHandleScopes(shell,
                     Messages.ExportLinkTableHandler_3, veriniceLinkTable);
         }
 
@@ -144,7 +145,7 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
                         List<List<String>> table = linkTableService
                                 .createTable(VeriniceLinkTableIO
                                         .createLinkTableConfiguration(veriniceLinkTable));
-                        table.add(0, VeriniceLinkTableUtil.getTableHeaders(veriniceLinkTable));
+                        table.add(0, LinkTableUtil.getTableHeaders(veriniceLinkTable));
                         csvExportHandler.exportToFile(csvExportHandler.convert(table));
                     }
                 }

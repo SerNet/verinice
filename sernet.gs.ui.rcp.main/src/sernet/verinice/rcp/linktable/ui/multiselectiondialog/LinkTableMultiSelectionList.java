@@ -16,7 +16,7 @@
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  *     Ruth Motza <rm[at]sernet[dot]de> - adapion of copied class
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite.multiselectiondialog;
+package sernet.verinice.rcp.linktable.ui.multiselectiondialog;
 
 import java.util.*;
 import java.util.List;
@@ -33,31 +33,32 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
-import sernet.verinice.rcp.linktable.composite.Messages;
-import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
+import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
+import sernet.verinice.rcp.linktable.ui.Messages;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
+ * @see LinkTableMultiSelectionControl
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class VeriniceLinkTableMultiSelectionList {
+public class LinkTableMultiSelectionList {
 
-    private static final Logger LOG = Logger.getLogger(VeriniceLinkTableMultiSelectionList.class);
+    private static final Logger LOG = Logger.getLogger(LinkTableMultiSelectionList.class);
 
-    private VeriniceLinkTableMultiSelectionDialog parent;
+    private LinkTableMultiSelectionDialog parent;
     private Composite list;
     private Group group;
     private Map<String, Button> checkboxes = new HashMap<>();
     private Set<String> allUsedRelationIds;
     private Button allRelations;
 
-    private VeriniceLinkTableMultiSelectionControl vltMultiSelectionControl;
+    private LinkTableMultiSelectionControl vltMultiSelectionControl;
 
-    private VeriniceLinkTableComposite vltComposite;
+    private LinkTableComposite vltComposite;
 
     private List<String> selectedRelations;
 
-    public VeriniceLinkTableMultiSelectionList(VeriniceLinkTableMultiSelectionDialog parent) {
+    public LinkTableMultiSelectionList(LinkTableMultiSelectionDialog parent) {
         this.parent = parent;
         vltMultiSelectionControl = parent.getLTRMultiSelectionControl();
         vltComposite = vltMultiSelectionControl.getVltParent();

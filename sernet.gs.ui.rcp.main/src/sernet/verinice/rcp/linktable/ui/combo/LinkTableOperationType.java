@@ -17,11 +17,11 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite.combo;
+package sernet.verinice.rcp.linktable.ui.combo;
 
-import sernet.verinice.rcp.linktable.composite.Messages;
+import sernet.verinice.rcp.linktable.ui.Messages;
 
-public enum VeriniceLinkTableOperationType implements IVeriniceLinkTableOperationType {
+public enum LinkTableOperationType implements ILinkTableOperationType {
 
     PROPERTY(".", Messages.VeriniceLinkTableOperationType_00,
             Messages.VeriniceLinkTableOperationType_01),
@@ -43,7 +43,7 @@ public enum VeriniceLinkTableOperationType implements IVeriniceLinkTableOperatio
     private final String label;
     private final String defaultMessage;
 
-    VeriniceLinkTableOperationType(String output, String label, String defaultMessage) {
+    LinkTableOperationType(String output, String label, String defaultMessage) {
         this.output = output;
         this.label = label;
         this.defaultMessage = defaultMessage;
@@ -69,8 +69,8 @@ public enum VeriniceLinkTableOperationType implements IVeriniceLinkTableOperatio
         return getOutput();
     }
 
-    public static VeriniceLinkTableOperationType getOperationType(String value) {
-        for (VeriniceLinkTableOperationType type : VeriniceLinkTableOperationType.values()) {
+    public static LinkTableOperationType getOperationType(String value) {
+        for (LinkTableOperationType type : LinkTableOperationType.values()) {
 
             if (type.output.equalsIgnoreCase(value)) {
                 return type;
@@ -79,7 +79,7 @@ public enum VeriniceLinkTableOperationType implements IVeriniceLinkTableOperatio
         throw new IllegalArgumentException("unsupported value " + value);
     }
 
-    public static boolean isRelation(IVeriniceLinkTableOperationType type) {
+    public static boolean isRelation(ILinkTableOperationType type) {
         return type == RELATION || type == RELATION_OBJECT;
     }
 
@@ -89,7 +89,7 @@ public enum VeriniceLinkTableOperationType implements IVeriniceLinkTableOperatio
 
     public static String toolTip(){
         StringBuilder builder = new StringBuilder();
-        for (VeriniceLinkTableOperationType type : values()) {
+        for (LinkTableOperationType type : values()) {
             builder.append(type.getLabel() + "\n");
         }
         return builder.toString();

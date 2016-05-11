@@ -1282,10 +1282,10 @@
             name="%editor.name.1">
       </editor>
       <editor
-            class="sernet.verinice.rcp.linktable.VeriniceLinkTableEditor"
+            class="sernet.verinice.rcp.linktable.LinkTableEditor"
             default="false"
             icon="icons/document-table.png"
-            id="sernet.verinice.rcp.linktable.VeriniceLinkTableEditor"
+            id="sernet.verinice.rcp.linktable.LinkTableEditor"
             name="LInk table editor"/>
    </extension>
    <extension
@@ -1901,11 +1901,11 @@
         	</with>
 		 </enabledWhen>
       </handler>
-      <handler class="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
+      <handler class="sernet.verinice.rcp.linktable.handlers.OpenLinkTableHandler"
           commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler" />
-      <handler class="sernet.verinice.rcp.linktable.ExportLinkTableHandler"
+      <handler class="sernet.verinice.rcp.linktable.handlers.ExportLinkTableHandler"
           commandId="sernet.verinice.rcp.linktable.ExportLinkTableHandler" />
-      <handler class="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+      <handler class="sernet.verinice.rcp.linktable.handlers.CreateLinkTableHandler"
           commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler" />
    </extension>
    <extension point="org.eclipse.core.expressions.propertyTesters">
@@ -2060,7 +2060,7 @@
              location="BOTTOM_LEFT"
              state="true">
           <enablement>
-            <objectClass name="sernet.verinice.rcp.linktable.VeriniceLinkTableEditor"/>
+            <objectClass name="sernet.verinice.rcp.linktable.LinkTableEditor"/>
           </enablement>
        </decorator>
    </extension>

@@ -16,7 +16,7 @@
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  *     Ruth Motza <rm[at]sernet[dot]de> - adapion of new class
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite.multiselectiondialog;
+package sernet.verinice.rcp.linktable.ui.multiselectiondialog;
 
 import java.util.Set;
 
@@ -31,22 +31,22 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
-import sernet.verinice.rcp.linktable.composite.Messages;
-import sernet.verinice.rcp.linktable.composite.UpdateElements;
+import sernet.verinice.rcp.linktable.ui.Messages;
+import sernet.verinice.rcp.linktable.ui.UpdateLinkTable;
 
 /**
- * 
+ * @see LinkTableMultiSelectionControl
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class VeriniceLinkTableMultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
+public class LinkTableMultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 
 	private Shell dialogShell;
-    private VeriniceLinkTableMultiSelectionList mList = null;
-    private VeriniceLinkTableMultiSelectionControl ltrMultiSelectionControl;
+    private LinkTableMultiSelectionList mList = null;
+    private LinkTableMultiSelectionControl ltrMultiSelectionControl;
 
-    private static final Logger LOG = Logger.getLogger(VeriniceLinkTableMultiSelectionDialog.class);
+    private static final Logger LOG = Logger.getLogger(LinkTableMultiSelectionDialog.class);
 
-    public VeriniceLinkTableMultiSelectionDialog(Shell parent, VeriniceLinkTableMultiSelectionControl ltrMultiSelectionControl,
+    public LinkTableMultiSelectionDialog(Shell parent, LinkTableMultiSelectionControl ltrMultiSelectionControl,
             int style) {
 		super(parent, style);
         this.ltrMultiSelectionControl = ltrMultiSelectionControl;
@@ -59,7 +59,7 @@ public class VeriniceLinkTableMultiSelectionDialog extends org.eclipse.swt.widge
 
             GridLayoutFactory.swtDefaults().margins(20, 20).generateLayout(dialogShell);
             dialogShell.setText(Messages.MultiSelectionDialog_0);
-            mList = new VeriniceLinkTableMultiSelectionList(this);
+            mList = new LinkTableMultiSelectionList(this);
 			
 			Composite buttons = new Composite(dialogShell, SWT.NULL);
             GridLayoutFactory.swtDefaults().spacing(5, 5).numColumns(2).equalWidth(false)
@@ -108,16 +108,16 @@ public class VeriniceLinkTableMultiSelectionDialog extends org.eclipse.swt.widge
         ltrMultiSelectionControl.setSelectedItems(selectedItems);
 
         ltrMultiSelectionControl.getVltParent()
-                .updateAndValidateVeriniceContent(UpdateElements.RELATION_IDS);
+                .updateAndValidateVeriniceContent(UpdateLinkTable.RELATION_IDS);
         ltrMultiSelectionControl.getVltParent().fireValidationEvent();
         dialogShell.dispose();
 	}
 
-    public VeriniceLinkTableMultiSelectionList getLTRMultiSelectionList() {
+    public LinkTableMultiSelectionList getLTRMultiSelectionList() {
         return mList;
     }
 
-    public VeriniceLinkTableMultiSelectionControl getLTRMultiSelectionControl() {
+    public LinkTableMultiSelectionControl getLTRMultiSelectionControl() {
         return ltrMultiSelectionControl;
     }
 

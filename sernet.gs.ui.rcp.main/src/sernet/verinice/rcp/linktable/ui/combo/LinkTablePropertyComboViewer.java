@@ -17,7 +17,7 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite.combo;
+package sernet.verinice.rcp.linktable.ui.combo;
 
 import java.util.*;
 
@@ -25,16 +25,18 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Composite;
 
-import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableColumn;
+import sernet.verinice.rcp.linktable.ui.LinkTableColumn;
+import sernet.verinice.service.model.IObjectModelService;
 
 /**
+ * @see IObjectModelService
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableComboViewer {
+public class LinkTablePropertyComboViewer extends LinkTableComboViewer {
 
-    public VeriniceLinkTablePropertyComboViewer(VeriniceLinkTableComboViewer leftCombo, String relatedID,
-            VeriniceLinkTableOperationType operationType,
-            VeriniceLinkTableColumn ltrParent, Composite parent) {
+    public LinkTablePropertyComboViewer(LinkTableComboViewer leftCombo, String relatedID,
+            LinkTableOperationType operationType,
+            LinkTableColumn ltrParent, Composite parent) {
         super(leftCombo, relatedID, operationType, ltrParent, parent);
 
 
@@ -51,7 +53,7 @@ public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableCombo
     public Object[] getElements(Object inputElement) {
 
         ArrayList<String> list = new ArrayList<>();
-        if (leftCombo.leftCombo.operationType == VeriniceLinkTableOperationType.RELATION) {
+        if (leftCombo.leftCombo.operationType == LinkTableOperationType.RELATION) {
 
         } else if (relatedID != null && !relatedID.isEmpty()) {
             list.addAll(ltrColumn.getContentService().getPossibleProperties(relatedID));
@@ -62,20 +64,20 @@ public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableCombo
     /*
      * (non-Javadoc)
      * 
-     * @see sernet.verinice.rcp.linktable.composite.combo.LTRComboViewer#copy()
+     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#copy()
      */
     @Override
-    public VeriniceLinkTableComboViewer createCopy(VeriniceLinkTableComboViewer leftCombo, VeriniceLinkTableColumn ltrParent,
+    public LinkTableComboViewer createCopy(LinkTableComboViewer leftCombo, LinkTableColumn ltrParent,
             Composite newParent) {
 
-        return new VeriniceLinkTablePropertyComboViewer(leftCombo, relatedID, operationType, ltrParent,
+        return new LinkTablePropertyComboViewer(leftCombo, relatedID, operationType, ltrParent,
                 newParent);
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see sernet.verinice.rcp.linktable.composite.combo.LTRComboViewer#doSelectionChanged()
+     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#doSelectionChanged()
      */
     @Override
     protected void doSelectionChanged() {
@@ -85,7 +87,7 @@ public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableCombo
     /*
      * (non-Javadoc)
      * 
-     * @see sernet.verinice.rcp.linktable.composite.combo.LTRComboViewer#getLabelText(java.lang.
+     * @see sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#getLabelText(java.lang.
      * Object)
      */
     @Override
@@ -101,7 +103,7 @@ public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableCombo
      * (non-Javadoc)
      * 
      * @see
-     * sernet.verinice.rcp.linktable.composite.combo.LTRComboViewer#select(java.lang.String)
+     * sernet.verinice.rcp.linktable.ui.combo.LTRComboViewer#select(java.lang.String)
      */
     @Override
     protected void select(String string) {
@@ -114,8 +116,8 @@ public class VeriniceLinkTablePropertyComboViewer extends VeriniceLinkTableCombo
     /*
      * (non-Javadoc)
      * 
-     * @see sernet.verinice.rcp.linktable.composite.combo.
-     * VeriniceLinkTableComboViewer#doGetAllRelationTypes()
+     * @see sernet.verinice.rcp.linktable.ui.combo.
+     * LinkTableComboViewer#doGetAllRelationTypes()
      */
     @Override
     protected Set<String> doGetAllRelationTypes() {

@@ -41,8 +41,9 @@ import org.eclipse.ui.part.EditorPart;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
-import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableFieldListener;
+import sernet.verinice.rcp.linktable.handlers.ExportLinkTableHandler;
+import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
+import sernet.verinice.rcp.linktable.ui.LinkTableFieldListener;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 
@@ -51,15 +52,15 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class VeriniceLinkTableEditor extends EditorPart {
+public class LinkTableEditor extends EditorPart {
 
-    public static final String EDITOR_ID = VeriniceLinkTableEditor.class.getName();
+    public static final String EDITOR_ID = LinkTableEditor.class.getName();
 
-    private static final Logger LOG = Logger.getLogger(VeriniceLinkTableEditor.class);
+    private static final Logger LOG = Logger.getLogger(LinkTableEditor.class);
     private VeriniceLinkTable veriniceLinkTable;
     private boolean isDirty = false;
 
-    private VeriniceLinkTableFieldListener contentObserver;
+    private LinkTableFieldListener contentObserver;
     private String toolTip = null;
 
     /* (non-Javadoc)
@@ -67,11 +68,11 @@ public class VeriniceLinkTableEditor extends EditorPart {
      */
     @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-        if (! (input instanceof VeriniceLinkTableEditorInput)) {
-            throw new PartInitException("Input is not an instance of " + VeriniceLinkTableEditorInput.class.getSimpleName()); //$NON-NLS-1$
+        if (! (input instanceof LinkTableEditorInput)) {
+            throw new PartInitException("Input is not an instance of " + LinkTableEditorInput.class.getSimpleName()); //$NON-NLS-1$
         }
 
-        VeriniceLinkTableEditorInput vltEditorInput = (VeriniceLinkTableEditorInput) input;
+        LinkTableEditorInput vltEditorInput = (LinkTableEditorInput) input;
         veriniceLinkTable=vltEditorInput.getInput();
 
         setSite(site);
@@ -119,12 +120,11 @@ public class VeriniceLinkTableEditor extends EditorPart {
             }
         });
 
-        VeriniceLinkTableComposite ltr = new VeriniceLinkTableComposite(veriniceLinkTable,
+        LinkTableComposite ltr = new LinkTableComposite(veriniceLinkTable,
                 ServiceFactory.lookupObjectModelService(),
-                container,
-                SWT.NONE);
+                container);
 
-        contentObserver = new VeriniceLinkTableFieldListener() {
+        contentObserver = new LinkTableFieldListener() {
 
             @Override
             public void fieldValueChanged() {
@@ -136,7 +136,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
             @Override
             public void validate() {
 
-                VeriniceLinkTableValidationResult validationResult = VeriniceLinkTableUtil
+                LinkTableValidationResult validationResult = LinkTableUtil
                         .isValidVeriniceLinkTable(veriniceLinkTable);
 
                 Image defaultImage = ImageCache.getInstance().getImage(ImageCache.VLT);
@@ -167,12 +167,11 @@ public class VeriniceLinkTableEditor extends EditorPart {
         };
         ltr.addListener(contentObserver);
 
-        GridLayoutFactory.swtDefaults().generateLayout(ltr);
-        GridLayoutFactory.swtDefaults().extendedMargins(9, 0, 30, 0)
+        GridLayoutFactory.fillDefaults().generateLayout(ltr);
+        GridLayoutFactory.fillDefaults().extendedMargins(0, 0, 20, 0)
                 .generateLayout(buttonContainer);
-        GridLayoutFactory.swtDefaults().generateLayout(container);
-        contentObserver
-                .validate();
+        GridLayoutFactory.fillDefaults().margins(10, 10).generateLayout(container);
+        contentObserver.validate();
     }
     
     /* (non-Javadoc)
@@ -221,7 +220,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
     private String getFilePath(VeriniceLinkTable veriniceLinkTable, boolean isSaveAs) {
         String filePath = LinkTableFileRegistry.getFilePath(veriniceLinkTable.getId());
         if (isSaveAs || filePath == null) {
-            filePath = VeriniceLinkTableUtil.createVltFilePath(
+            filePath = LinkTableUtil.createVltFilePath(
                     Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4, SWT.SAVE);
             if (filePath != null) {
                 String name = filePath.substring(filePath.lastIndexOf(File.separator) + 1,

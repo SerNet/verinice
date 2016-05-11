@@ -17,31 +17,33 @@
  * Contributors:
  *     Ruth Motza <rm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite.combo;
+package sernet.verinice.rcp.linktable.ui.combo;
 
 import org.eclipse.swt.widgets.Composite;
 
 import sernet.verinice.rcp.linktable.Messages;
-import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableColumn;
+import sernet.verinice.rcp.linktable.ui.LinkTableColumn;
 import sernet.verinice.service.linktable.LinkPropertyElement;
+import sernet.verinice.service.model.IObjectModelService;
 
 /**
+ * @see IObjectModelService
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class VeriniceLinkTableRelationPropertyComboViewer
-        extends VeriniceLinkTablePropertyComboViewer {
+public class LinkTableRelationPropertyComboViewer
+        extends LinkTablePropertyComboViewer {
 
-    public VeriniceLinkTableRelationPropertyComboViewer(VeriniceLinkTableComboViewer leftCombo,
-            String relatedID, VeriniceLinkTableOperationType operationType,
-            VeriniceLinkTableColumn ltrParent, Composite parent) {
+    public LinkTableRelationPropertyComboViewer(LinkTableComboViewer leftCombo,
+            String relatedID, LinkTableOperationType operationType,
+            LinkTableColumn ltrParent, Composite parent) {
         super(leftCombo, relatedID, operationType, ltrParent, parent);
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see sernet.verinice.rcp.linktable.composite.combo.
-     * VeriniceLinkTablePropertyComboViewer#getLabelText(java.lang.Object)
+     * @see sernet.verinice.rcp.linktable.ui.combo.
+     * LinkTablePropertyComboViewer#getLabelText(java.lang.Object)
      */
     @Override
     protected String getLabelText(Object element) {

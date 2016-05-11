@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable;
+package sernet.verinice.rcp.linktable.handlers;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionEvent;
@@ -32,6 +32,7 @@ import org.eclipse.ui.progress.UIJob;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.rcp.RightsEnabledHandler;
+import sernet.verinice.rcp.linktable.*;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
 /**
@@ -102,7 +103,7 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
     private void validateInputAndOpenEditor(
             final VeriniceLinkTable veriniceLinkTable) {
         try {
-            if (!VeriniceLinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable).isValid()) {
+            if (!LinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable).isValid()) {
                 MessageDialog confirmInvalidInput = new MessageDialog(
                         Display.getCurrent().getActiveShell(),
                         Messages.LinkTableHandler_1,

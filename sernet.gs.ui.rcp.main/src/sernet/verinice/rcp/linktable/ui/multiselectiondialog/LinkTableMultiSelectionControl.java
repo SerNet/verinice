@@ -16,7 +16,7 @@
  *     Alexander Koderman <ak[at]sernet[dot]de> - initial API and implementation
  *     Ruth Motza <rm[at]sernet[dot]de> - adapion of new class
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite.multiselectiondialog;
+package sernet.verinice.rcp.linktable.ui.multiselectiondialog;
 
 
 import java.util.HashSet;
@@ -30,25 +30,31 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.*;
 
-import sernet.verinice.rcp.linktable.composite.Messages;
-import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableComposite;
+import sernet.hui.swt.widgets.multiselectionlist.MultiSelectionControl;
+import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
+import sernet.verinice.rcp.linktable.ui.Messages;
 
 /**
+ * 
+ * Multi selection control to select the RelationIDs to be used in the LTR.
+ * 
+ * 
+ * @see MultiSelectionControl
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
-public class VeriniceLinkTableMultiSelectionControl {
+public class LinkTableMultiSelectionControl {
 	
 	
 	private Composite parent;
 	private Text text;
-    private VeriniceLinkTableMultiSelectionDialog dialog;
-    private VeriniceLinkTableComposite vltComposite;
+    private LinkTableMultiSelectionDialog dialog;
+    private LinkTableComposite vltComposite;
 
     private Set<String> selectedItems = new HashSet<>();
     private boolean useAllRelations = false;
 
-    public VeriniceLinkTableMultiSelectionControl(Composite parent,
-            VeriniceLinkTableComposite vltParent) {
+    public LinkTableMultiSelectionControl(Composite parent,
+            LinkTableComposite vltParent) {
         this.parent = parent;
         this.vltComposite = vltParent;
         this.useAllRelations = vltParent.getContent() == null
@@ -108,7 +114,7 @@ public class VeriniceLinkTableMultiSelectionControl {
         Display display = Display.getDefault();
         Shell shell = new Shell(display);
         if (dialog == null) {
-            dialog = new VeriniceLinkTableMultiSelectionDialog(
+            dialog = new LinkTableMultiSelectionDialog(
                     shell, this, SWT.NULL);
         }
         dialog.open();
@@ -118,7 +124,7 @@ public class VeriniceLinkTableMultiSelectionControl {
 		this.text.setFocus();
 	}
 
-    public VeriniceLinkTableComposite getVltParent() {
+    public LinkTableComposite getVltParent() {
         return vltComposite;
     }
 

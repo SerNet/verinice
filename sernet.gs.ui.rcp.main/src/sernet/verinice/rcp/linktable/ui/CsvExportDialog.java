@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.rcp.linktable.composite;
+package sernet.verinice.rcp.linktable.ui;
 
 import java.util.Set;
 
@@ -40,7 +40,7 @@ import sernet.verinice.iso27k.rcp.ElementMultiselectWidget;
 import sernet.verinice.iso27k.rcp.Messages;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.rcp.linktable.VeriniceLinkTableUtil;
+import sernet.verinice.rcp.linktable.LinkTableUtil;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.csv.ICsvExport;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
@@ -164,7 +164,7 @@ public class CsvExportDialog extends TitleAreaDialog {
                 @Override
                 public void widgetSelected(SelectionEvent e) {
 
-                    filePath = VeriniceLinkTableUtil.createCsvFilePath(getShell(), label);
+                    filePath = LinkTableUtil.createCsvFilePath(getShell(), label);
                     txtLocation.setText(filePath);
                 }
 
