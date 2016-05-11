@@ -13,8 +13,7 @@ Require-Bundle: sernet.gs.ui.rcp.main,
  org.eclipse.core.resources;bundle-version="3.5.2",
  com.springsource.org.apache.log4j;bundle-version="1.2.15",
  org.eclipse.ui.intro;bundle-version="3.3.2",
- org.eclipse.ui.cheatsheets,
- com.springsource.org.junit
+ org.eclipse.ui.cheatsheets
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-Vendor: %Bundle-Vendor
@@ -23,5 +22,4 @@ Import-Package: org.apache.commons.io,
  org.eclipse.core.runtime.jobs,
  org.eclipse.osgi.util,
  org.osgi.framework,
- org.osgi.service.component,
- sernet.verinice.service.test.helper.vnaimport
+ org.osgi.service.component
