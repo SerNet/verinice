@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable;
 
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import org.eclipse.osgi.util.NLS;
 
 /**
@@ -49,11 +52,23 @@ public class Messages extends NLS {
     public static String VeriniceLinkTableEditor_8;
     public static String VeriniceLinkTableUtil_0;
     public static String VeriniceLinkTableUtil_1;
+
+    private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
+            .getBundle(BUNDLE_NAME);
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);
     }
 
     private Messages() {
+    }
+
+    public static String getString(String key) {
+        try {
+            return RESOURCE_BUNDLE.getString(key);
+        } catch (MissingResourceException e) {
+            return '!' + key + '!';
+        }
     }
 }

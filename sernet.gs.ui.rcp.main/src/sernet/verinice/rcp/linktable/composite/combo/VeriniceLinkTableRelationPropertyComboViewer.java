@@ -21,6 +21,7 @@ package sernet.verinice.rcp.linktable.composite.combo;
 
 import org.eclipse.swt.widgets.Composite;
 
+import sernet.verinice.rcp.linktable.Messages;
 import sernet.verinice.rcp.linktable.composite.VeriniceLinkTableColumn;
 import sernet.verinice.service.linktable.LinkPropertyElement;
 

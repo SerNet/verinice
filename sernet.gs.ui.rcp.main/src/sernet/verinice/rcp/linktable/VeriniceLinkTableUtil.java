@@ -55,7 +55,6 @@ public class VeriniceLinkTableUtil {
     private static CsvExportDialog csvDialog;
     private static HUIObjectModelLoader loader;
 
-
     static {
         loader = (HUIObjectModelLoader) HUIObjectModelLoader.getInstance();
         if (vltExtensions == null) {
@@ -149,12 +148,13 @@ public class VeriniceLinkTableUtil {
 
         ArrayList<String> headers = new ArrayList<>();
         for (String element : veriniceLinkTable.getColumnPaths()) {
+            int propertyBeginning = element
+                    .lastIndexOf(VeriniceLinkTableOperationType.PROPERTY.getOutput());
+            String propertyId = element.substring(propertyBeginning + 1);
             if (element.contains(VeriniceLinkTableOperationType.RELATION.getOutput())) {
-                headers.add(Messages.VeriniceLinkTableUtil_0);
+                headers.add(Messages.getString(propertyId));
             } else {
-                int propertyBeginning = element
-                        .lastIndexOf(VeriniceLinkTableOperationType.PROPERTY.getOutput());
-                String propertyId = element.substring(propertyBeginning + 1);
+
                 headers.add(loader.getLabel(propertyId));
             }
         }
@@ -194,7 +194,7 @@ public class VeriniceLinkTableUtil {
                 throw new ValidationException("Relation " + relation.toString() + " not found"); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
-        
+
     }
 
     private static void validateColumnPathsElements(List<String> list) throws ValidationException {
@@ -241,9 +241,9 @@ public class VeriniceLinkTableUtil {
      */
     public static Set<Entry<String, String>> getRelations(List<String> columnPathes) {
 
-       Set<Entry<String, String>> relations = new HashSet<>();
+        Set<Entry<String, String>> relations = new HashSet<>();
 
-       for (String path : columnPathes) {
+        for (String path : columnPathes) {
             List<String> pathElements = ColumnPathParser.getColumnPathAsList(path);
             int index = 0;
             for (String element : pathElements) {
@@ -255,14 +255,14 @@ public class VeriniceLinkTableUtil {
                 index++;
             }
 
-       }
+        }
 
-       return relations;
-   }
+        return relations;
+    }
 
     private static void validateRelationIds(List<String> list) throws ValidationException {
 
-        for(String id : list){
+        for (String id : list) {
             if (!loader.isValidRelationId(id)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(id + " is no RelationID"); //$NON-NLS-1$
