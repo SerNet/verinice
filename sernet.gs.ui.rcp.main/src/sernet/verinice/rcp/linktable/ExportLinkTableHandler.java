@@ -31,7 +31,8 @@ import org.eclipse.ui.handlers.HandlerUtil;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.*;
+import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.rcp.RightsEnabledHandler;
 import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
 import sernet.verinice.service.csv.CsvExport;
@@ -96,7 +97,7 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
 
         setShell();
         final String filePath = VeriniceLinkTableUtil.createVltFilePath(shell,
-                Messages.ExportLinkTableHandler_2, SWT.SAVE);
+                Messages.ExportLinkTableHandler_2, SWT.OPEN);
         VeriniceLinkTable veriniceLinkTableTemp = null;
         if (filePath != null) {
             veriniceLinkTableTemp = VeriniceLinkTableIO.read(filePath);
