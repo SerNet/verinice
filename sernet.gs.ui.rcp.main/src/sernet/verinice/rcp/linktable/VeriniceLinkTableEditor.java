@@ -61,6 +61,7 @@ public class VeriniceLinkTableEditor extends EditorPart {
 
     private VeriniceLinkTableFieldListener contentObserver;
     private String toolTip = null;
+
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
      */

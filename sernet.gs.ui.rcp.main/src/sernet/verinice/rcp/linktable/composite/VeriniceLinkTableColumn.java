@@ -283,7 +283,7 @@ public class VeriniceLinkTableColumn {
             column.pack(true);
             column.layout(true);
         }
-        ltrParent.refresh(true);
+        ltrParent.refresh(UpdateElements.COLUMN_PATHS);
     }
 
     public VeriniceLinkTableElementComboViewer getFirstCombo() {

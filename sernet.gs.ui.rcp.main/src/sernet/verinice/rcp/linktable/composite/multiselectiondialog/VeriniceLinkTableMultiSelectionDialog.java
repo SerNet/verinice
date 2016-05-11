@@ -18,15 +18,21 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.composite.multiselectiondialog;
 
+import java.util.Set;
+
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import sernet.verinice.rcp.linktable.composite.Messages;
+import sernet.verinice.rcp.linktable.composite.UpdateElements;
 
 /**
  * 
@@ -40,7 +46,6 @@ public class VeriniceLinkTableMultiSelectionDialog extends org.eclipse.swt.widge
 
     private static final Logger LOG = Logger.getLogger(VeriniceLinkTableMultiSelectionDialog.class);
 
-
     public VeriniceLinkTableMultiSelectionDialog(Shell parent, VeriniceLinkTableMultiSelectionControl ltrMultiSelectionControl,
             int style) {
 		super(parent, style);
@@ -49,44 +54,42 @@ public class VeriniceLinkTableMultiSelectionDialog extends org.eclipse.swt.widge
 
 	public void open() {
 		try {
-			Shell parent = getParent();
-			dialogShell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
 
-			dialogShell.setLayout(new GridLayout(1, false));
-			dialogShell.setSize(400, 300);
+			dialogShell = new Shell(getParent(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.RESIZE);
+
+            GridLayoutFactory.swtDefaults().margins(20, 20).generateLayout(dialogShell);
             dialogShell.setText(Messages.MultiSelectionDialog_0);
             mList = new VeriniceLinkTableMultiSelectionList(this);
-            GridData scrolledComposite1LData = new GridData();
-            scrolledComposite1LData.grabExcessVerticalSpace = true;
-            scrolledComposite1LData.horizontalAlignment = GridData.FILL;
-            scrolledComposite1LData.verticalAlignment = GridData.FILL;
-            scrolledComposite1LData.grabExcessHorizontalSpace = true;
-            mList.setLayoutData(scrolledComposite1LData);
-			
-
 			
 			Composite buttons = new Composite(dialogShell, SWT.NULL);
-			GridLayout contLayout = new GridLayout(2, false);
-			contLayout.horizontalSpacing = 5;
-			buttons.setLayout(contLayout);
+            GridLayoutFactory.swtDefaults().spacing(5, 5).numColumns(2).equalWidth(false)
+                    .generateLayout(buttons);
 			
-			GridData containerLData = new GridData();
-			containerLData.horizontalAlignment = GridData.END;
-			buttons.setLayoutData(containerLData);
+            GridDataFactory.swtDefaults().align(GridData.END, GridData.CENTER).applyTo(buttons);
 			
 			Button okayBtn = new Button(buttons, SWT.PUSH);
 			okayBtn.setText(Messages.MultiSelectionControl_1);
 			okayBtn.addSelectionListener(new SelectionListener() {
-				public void widgetSelected(SelectionEvent arg0) {
-					close();
+                public void widgetSelected(SelectionEvent event) {
+                    if (mList.getSelectedItems().isEmpty()
+                            && !ltrMultiSelectionControl.useAllRelationIds()) {
+                        MessageDialog.openError(dialogShell, "no relation selected",
+                                "no relation selected");
+                    } else {
+                        close();
+                    }
 				}
 				
-				public void widgetDefaultSelected(SelectionEvent arg0) {
-					close();
+                public void widgetDefaultSelected(SelectionEvent event) {
+                    widgetSelected(event);
 				}
 			});
-			
-			dialogShell.layout();
+
+            Point computeSize = dialogShell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+            int width = computeSize.x + 10;
+            int height = Math.min(computeSize.y, 300);
+            dialogShell.setSize(width, height);
+            dialogShell.layout(true);
 			dialogShell.open();
 			Display display = dialogShell.getDisplay();
 			while (!dialogShell.isDisposed()) {
@@ -95,12 +98,18 @@ public class VeriniceLinkTableMultiSelectionDialog extends org.eclipse.swt.widge
 				}
 			}
 		} catch (Exception e) {
-			Logger.getLogger(VeriniceLinkTableMultiSelectionDialog.class).error("Exception while opening dialog", e);
+            LOG.error("Exception while opening dialog", e);
 		}
 	}
 	
 	void close() {
-        ltrMultiSelectionControl.getLtrParent().updateAndValidateVeriniceContent();
+
+        Set<String> selectedItems = mList.getSelectedItems();
+        ltrMultiSelectionControl.setSelectedItems(selectedItems);
+
+        ltrMultiSelectionControl.getVltParent()
+                .updateAndValidateVeriniceContent(UpdateElements.RELATION_IDS);
+        ltrMultiSelectionControl.getVltParent().fireValidationEvent();
         dialogShell.dispose();
 	}
 
@@ -115,7 +124,4 @@ public class VeriniceLinkTableMultiSelectionDialog extends org.eclipse.swt.widge
     public Shell getDialogShell(){
         return dialogShell;
     }
-
-
-
 }

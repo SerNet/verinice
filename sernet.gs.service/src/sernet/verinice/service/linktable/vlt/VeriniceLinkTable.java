@@ -128,6 +128,13 @@ public class VeriniceLinkTable {
     }
 
 
+    @Override
+    public String toString() {
+        return "VeriniceLinkTable [id=" + id + ", name=" + name + ", useAllScopes=" + useAllScopes
+                + ", scopeIds=" + scopeIds + ", columnPaths=" + columnPaths + ", relationIds="
+                + relationIds + "]";
+    }
+
     public static class Builder {
         private String name;
         private boolean allScopes;

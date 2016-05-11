@@ -22,6 +22,7 @@ package sernet.verinice.rcp.linktable.composite.multiselectiondialog;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -41,42 +42,33 @@ public class VeriniceLinkTableMultiSelectionControl {
 	private Composite parent;
 	private Text text;
     private VeriniceLinkTableMultiSelectionDialog dialog;
-    private VeriniceLinkTableComposite ltrParent;
-    private Set<String> selectedItems = new HashSet<>();
-    private boolean useAllRelations = true;
-	
+    private VeriniceLinkTableComposite vltComposite;
 
-    /**
-     * @param multiControlContainer
-     * @param veriniceLinkTableComposite
-     */
+    private Set<String> selectedItems = new HashSet<>();
+    private boolean useAllRelations = false;
+
     public VeriniceLinkTableMultiSelectionControl(Composite parent,
-            VeriniceLinkTableComposite ltrParent) {
+            VeriniceLinkTableComposite vltParent) {
         this.parent = parent;
-        this.ltrParent = ltrParent;
+        this.vltComposite = vltParent;
+        this.useAllRelations = vltParent.getContent() == null
+                || vltParent.getContent().getRelationIds().isEmpty();
         create();
     }
 
     private void create() {
-        Label label = new Label(parent, SWT.NULL);
-
-        label.setText(Messages.MultiSelectionControl_5);
+        Label header = new Label(parent, SWT.NULL);
+        header.setText(Messages.MultiSelectionControl_5);
 		
         Composite container = new Composite(parent, SWT.NULL);
         GridLayoutFactory.swtDefaults().numColumns(2).generateLayout(container);
-		
-		GridData containerLData = new GridData();
-		containerLData.horizontalAlignment = GridData.FILL;
-		containerLData.grabExcessHorizontalSpace = true;
-		container.setLayoutData(containerLData);
-		
-		
+        GridDataFactory.swtDefaults().align(GridData.FILL, GridData.CENTER).grab(true, false)
+                .applyTo(container);
+
 		text = new Text(container, SWT.BORDER);
 		text.setEditable(false);
-        text.setToolTipText("Relations");
 		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         text.getBackground();
-        text.setSize(1000, SWT.DEFAULT);
         text.getForeground();
 		
 		Button editBtn = new Button(container, SWT.PUSH);
@@ -92,7 +84,6 @@ public class VeriniceLinkTableMultiSelectionControl {
 				showSelectionDialog();
 			}
 		});
-		
         writeToTextField();
 	}
 
@@ -104,13 +95,21 @@ public class VeriniceLinkTableMultiSelectionControl {
             text.setText(Messages.MultiSelectionControl_4);
 
         }
+        refresh();
 	}
 
+    private void refresh() {
+        text.pack();
+        parent.pack(true);
+        parent.layout(true);
+    }
+
     public void showSelectionDialog() {
-		Display display = Display.getDefault();
+        Display display = Display.getDefault();
         Shell shell = new Shell(display);
         if (dialog == null) {
-            dialog = new VeriniceLinkTableMultiSelectionDialog(shell, this, SWT.NULL);
+            dialog = new VeriniceLinkTableMultiSelectionDialog(
+                    shell, this, SWT.NULL);
         }
         dialog.open();
 	}
@@ -119,12 +118,8 @@ public class VeriniceLinkTableMultiSelectionControl {
 		this.text.setFocus();
 	}
 
-    public VeriniceLinkTableComposite getLtrParent() {
-        return ltrParent;
-    }
-
-    public Set<String> getSelectedItems() {
-        return selectedItems;
+    public VeriniceLinkTableComposite getVltParent() {
+        return vltComposite;
     }
 
     public Set<String> getSelectedRelationIDs() {
@@ -140,5 +135,9 @@ public class VeriniceLinkTableMultiSelectionControl {
 
     public void setUseAllRelationIds(boolean useAllRelationIds) {
         useAllRelations = useAllRelationIds;
+    }
+
+    public void setSelectedItems(Set<String> selectedItems) {
+        this.selectedItems = selectedItems;
     }
 }
