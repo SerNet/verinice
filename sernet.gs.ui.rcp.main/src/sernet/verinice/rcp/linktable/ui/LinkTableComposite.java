@@ -286,7 +286,7 @@ public class LinkTableComposite extends Composite {
         if (set.contains(UpdateLinkTable.RELATION_IDS)) {
             updateRelationIds();
         }
-        if (set.contains(UpdateLinkTable.USE_ALL_SCOPES)) {
+        if (set.contains(UpdateLinkTable.COLUMN_PATHS)) {
             updateColumnPaths();
         }
         if (fireUpdate) {
