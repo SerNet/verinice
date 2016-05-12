@@ -20,6 +20,8 @@
 package sernet.verinice.rcp.linktable.ui;
 
 /**
+ * Listener to use for detecting changes in {@link LinkTableComposite}
+ * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public interface LinkTableFieldListener {

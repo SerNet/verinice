@@ -41,6 +41,7 @@ import sernet.verinice.service.model.IObjectModelService;
  * 
  * 
  * @see LinkTableComboViewer
+ * @see LinkTableComposite
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class LinkTableColumn {

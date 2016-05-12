@@ -16,6 +16,7 @@
  *
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
+ *     Ruth Motza <rm[at]sernet[dot]de> - adaption from copied class
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.ui;
 
@@ -47,6 +48,10 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.sync.VeriniceArchive;
 
 /**
+ * 
+ * Dialog which opens when "selected scopes" is chosen in
+ * {@link LinkTableComposite}. It contains every scope in the database.
+ * 
  * @author Daniel Murygin <dm@sernet.de>
  */
 public class CsvExportDialog extends TitleAreaDialog {

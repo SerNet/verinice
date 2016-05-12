@@ -37,6 +37,7 @@ import org.elasticsearch.common.collect.Sets;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.rcp.linktable.ui.CsvExportDialog;
+import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableOperationType;
 import sernet.verinice.service.csv.ICsvExport;
 import sernet.verinice.service.linktable.ColumnPathParseException;
@@ -45,6 +46,8 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.model.HUIObjectModelLoader;
 
 /**
+ * Util class for {@link LinkTableComposite}
+ * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class LinkTableUtil {
