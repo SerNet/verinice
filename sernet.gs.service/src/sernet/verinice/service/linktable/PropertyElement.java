@@ -22,6 +22,8 @@ package sernet.verinice.service.linktable;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 /**
  * Abstract base class for property elements in a column path.
  * A column path is a description of a report column in LinkTableDataModel.
@@ -31,6 +33,7 @@ import java.util.Set;
  */
 public abstract class PropertyElement<E> implements IPathElement<E,EndOfPathElement> {
 
+    private static final Logger LOG = Logger.getLogger(PropertyElement.class);
     protected Map<String,Map<String, Object>> result;
     private String alias;
     private Direction direction;
@@ -56,7 +59,14 @@ public abstract class PropertyElement<E> implements IPathElement<E,EndOfPathElem
             if(key.endsWith(childKey)) {
                 // Put the result in the map
                 Map<String,Object> resultMap = getResult().get(childKey);
-                String value = (String) resultMap.get(childKey);
+                Object object = resultMap.get(childKey);
+                String value;
+                if (object instanceof LinkTableResult) {
+                    LinkTableResult ltResult = (LinkTableResult) object;
+                    value = String.valueOf(ltResult.getResult());
+                } else {
+                    value = (String) object;
+                }
                 map.put(key, value);             
             }
         }

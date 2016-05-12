@@ -19,15 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
@@ -143,10 +135,11 @@ public class LinkTableDataModel {
             // Iterate over results of the column path
             Set<String> keySet = columnPathResults.keySet();
             for (String key : keySet) {
-                // Add the result to the map
+                String newKey = adaptColumnIdIfNeeded(columnPath, columnPathResults, key);
+
                 String[] row = new String[columnPaths.size()];
                 row[columnPath.getNumber()] = columnPathResults.get(key);
-                resultMap.put(key + COLUMN_SEPERATOR + columnPath.getNumber(), row);
+                resultMap.put(newKey + COLUMN_SEPERATOR + columnPath.getNumber(), row);
             }
         }
         // Fill up empty rows
@@ -160,6 +153,39 @@ public class LinkTableDataModel {
             LinkTableDataModel.log(LOG, resultMap);
         }
         return resultMap;
+    }
+
+    private String adaptColumnIdIfNeeded(ColumnPath columnPath,
+            Map<String, String> columnPathResults, String key) {
+        Map<String, Object> result = columnPath.getResult().get("ROOT");
+        // Add the result to the map
+        String[] split = key.split("\\" + IPathElement.RESULT_KEY_SEPERATOR);
+        ArrayList<String> asList = new ArrayList<>(Arrays.asList(split));
+        String id;
+        String newKey = key;
+        while(!asList.isEmpty()){
+            id = asList.remove(0);
+
+            Object object = result.get(id);
+            if (object instanceof Map<?, ?>) {
+                while (result.get(id) instanceof Map<?, ?> && result.containsKey(id)) {
+                    result = (Map<String, Object>) result.get(id);
+                }
+            } else if (object instanceof LinkTableResult) {
+                LinkTableResult res = (LinkTableResult) object;
+
+                newKey = newKey.replace(String.valueOf(res.getElementId()),
+                        String.valueOf(res.getEdgeId()));
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("colNum: " + columnPath.getNumber() + ", columnPathEntry: "
+                            + columnPathResults.get(key) + ", edgeId:"
+                            + res.getEdgeId() + ", elementId: "
+                            + res.getElementId() + ", old key:" + key + ", new key:"
+                            + newKey);
+                }
+            }
+        }
+        return newKey;
     }
 
     /**

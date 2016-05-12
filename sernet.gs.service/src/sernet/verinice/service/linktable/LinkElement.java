@@ -19,12 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -49,16 +48,35 @@ public class LinkElement extends BaseElement<CnATreeElement,CnATreeElement> {
             LOG.debug("Loading links of " + parent.getTitle() + ", type id: " + getElementTypeId() + "...");
         }
         String parentId = String.valueOf(parent.getDbId());
-        Map<String, Object> result = new HashMap<String, Object>();
-        Set<CnATreeElement> elements = graph.getLinkTargetsByElementType(parent, getElementTypeId());
-        for (CnATreeElement element : elements) {
+        Map<String, Object> result = new HashMap<>();
+
+        Set<Edge> edgeSet = graph.getEdgesByElementType(parent, getElementTypeId());
+        for (Edge edge : edgeSet) {
+
+            int edgeId = edge.hashCode();
             if (LOG.isDebugEnabled()) {
-                LOG.debug(element.getTitle() + "  loaded");
+                LOG.debug(
+                        "edge: " + edgeId + ", source: " + parent.equals(edge.getSource())
+                                + ", target: " + parent.equals(edge.getTarget()));
             }
-            getChild().load(element,graph);
+            CnATreeElement element = edge.getSource();
+            if (parent.equals(element)) {
+                element = edge.getTarget();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("target needed for edge " + edge.hashCode());
+                }
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(element.getTitle() + " loaded");
+            }
+
+            Object ltResult = new LinkTableResult(edgeId, element.getDbId(),
+                    getChild().getResult());
+            getChild().load(element, graph);
             String id = String.valueOf(element.getDbId());
-            result.put(id, getChild().getResult());
+            result.put(id, ltResult);
         }
+
         getResult().put(parentId, result);
     }
 
