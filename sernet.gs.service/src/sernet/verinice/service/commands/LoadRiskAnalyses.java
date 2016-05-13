@@ -70,7 +70,7 @@ public class LoadRiskAnalyses extends GenericCommand implements ICommand {
     @Override
     public void execute() {
         DetachedCriteria criteria = DetachedCriteria.forClass(FinishedRiskAnalysis.class);
-        if(!useParentId){
+        if (!useParentId){
             criteria.add(Restrictions.eq("scopeId", parentDbId));
         } else {
             criteria.add(Restrictions.eq("parentId", parentDbId));

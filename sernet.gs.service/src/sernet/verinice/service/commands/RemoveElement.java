@@ -113,7 +113,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
             IBaseDao dao = getDaoFactory().getDAOforTypedElement(element);
             element = (T) dao.findById(element.getDbId());
             
-            if(element instanceof IBSIStrukturElement || element instanceof IBSIStrukturKategorie){
+            if (element instanceof IBSIStrukturElement || element instanceof IBSIStrukturKategorie){
                 removeAllRiskAnalyses();
             }
 
@@ -194,9 +194,9 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     private void removeAllRiskAnalyses() throws CommandException {
-        if(ImportBsiGroup.TYPE_ID.equals(element.getTypeId())){
+        if (ImportBsiGroup.TYPE_ID.equals(element.getTypeId())){
             removeRiskAnalysisFromBSIImportGroup(element.getDbId());
-        } else if(ITVerbund.TYPE_ID.equals(element.getTypeId())){
+        } else if (ITVerbund.TYPE_ID.equals(element.getTypeId())){
             removeRiskAnalysisForScope(element.getScopeId());
         } else if (element instanceof IBSIStrukturKategorie){
             removeRiskAnalysesFromBSICategory();
@@ -206,13 +206,21 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
     }
 
     private void removeRiskAnalysesFromBSICategory() throws CommandException {
-        String hql = "select element.dbId from CnATreeElement element where element.scopeId = :scopeId and element.parentId = :parentId";
+        StringBuilder sb = new StringBuilder();
+        sb.append("select element.dbId from CnATreeElement element ");
+        sb.append("select element.dbId from CnATreeElement element where ");
+        sb.append("element.scopeId = :scopeId and element.parentId = :parentId");
+        String hql = sb.toString();
+
+        // since the values of the list will be ints, we can't parameterize the list 
         List deleteList = getDaoFactory().getDAO(CnATreeElement.class)
-                .findByQuery(hql, new String[]{"scopeId", "parentId"}, new Object[]{element.getScopeId(), element.getDbId()});
-        for(Object o : deleteList){
-            if(o instanceof Integer){
+                .findByQuery(hql, new String[]{"scopeId", "parentId"}, 
+                        new Object[]{element.getScopeId(), element.getDbId()});
+        for (Object o : deleteList) {
+            if (o instanceof Integer) {
                 LoadRiskAnalyses loadRiskAnalyses = new LoadRiskAnalyses((Integer)o, true);
-                List<FinishedRiskAnalysis> riskAnalysesList = getCommandService().executeCommand(loadRiskAnalyses).getRaList();
+                List<FinishedRiskAnalysis> riskAnalysesList = getCommandService().
+                        executeCommand(loadRiskAnalyses).getRaList();
                 for (FinishedRiskAnalysis finishedRiskAnalysis : riskAnalysesList) {
                     removeRiskAnalysis(finishedRiskAnalysis);
                 }
@@ -222,8 +230,10 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
 
     private void removeRiskAnalysisFromBSIImportGroup(Integer groupDbId ) throws CommandException {
         String hql = "from CnATreeElement itv where itv.objectType = 'it-verbund' and itv.parentId = (" +
-                " select importbsigroup.dbId from CnATreeElement importbsigroup where importbsigroup.objectType = 'import-bsi' and importbsigroup.dbId = :dbId)";
-        List deleteList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(hql, new String[]{"dbId"}, new Object[]{groupDbId});
+                " select importbsigroup.dbId from CnATreeElement importbsigroup where "
+                + "importbsigroup.objectType = 'import-bsi' and importbsigroup.dbId = :dbId)";
+        List deleteList = getDaoFactory().getDAO(CnATreeElement.class).findByQuery(
+                hql, new String[]{"dbId"}, new Object[]{groupDbId});
         for(Object o : deleteList){
             if(o instanceof ITVerbund){
                 removeRiskAnalysisForScope(((ITVerbund)o).getScopeId());
@@ -242,7 +252,8 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
 
     private void removeRiskAnalysis(FinishedRiskAnalysis finishedRiskAnalysis) throws CommandException {
         removeChildren(finishedRiskAnalysis);
-        List<FinishedRiskAnalysisLists> list = getRaListDao().findByFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());
+        List<FinishedRiskAnalysisLists> list = getRaListDao().
+                findByFinishedRiskAnalysisId(finishedRiskAnalysis.getDbId());
         for (FinishedRiskAnalysisLists ra : list) {
             getRaListDao().delete(ra);
         }
