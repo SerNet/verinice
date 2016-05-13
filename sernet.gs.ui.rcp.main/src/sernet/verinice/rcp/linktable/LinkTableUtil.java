@@ -74,14 +74,21 @@ public class LinkTableUtil {
         // to prevent instantiation
     }
 
-    public static Map<String, String> getCsvExtensions() {
-        return csvExtensions;
-    }
-
-    public static Map<String, String> getVltExtensions() {
-        return vltExtensions;
-    }
-
+    /**
+     * 
+     * @param shell
+     *            - the shell for the {@link FileDialog}
+     * @param text
+     *            - the header for the {@link FileDialog}
+     * @param defaultFolderPreference
+     *            - the id of the defaultFolderpreferences to be updated for the
+     *            default directory
+     * @param filterExtensions
+     *            - the possible extensions to filter in the {@link FileDialog}
+     * @param style
+     *            - SWT.OPEN or SWT.SAVE
+     * @return the absolute filepath to the chosen location
+     */
     public static String createFilePath(Shell shell, String text, String defaultFolderPreference,
             Map<String, String> filterExtensions, int style) {
         FileDialog dialog = new FileDialog(shell, style);
@@ -124,16 +131,32 @@ public class LinkTableUtil {
         return dir;
     }
 
+    /**
+     * creating a filepath for vlt files
+     * 
+     * @see #createFilePath(Shell, String, String, Map, int)
+     */
     public static String createVltFilePath(Shell shell, String text, int style) {
         return createFilePath(shell, text, PreferenceConstants.DEFAULT_FOLDER_VLT, vltExtensions,
                 style);
     }
 
+    /**
+     * creating a filepath for vlt files
+     * 
+     * @see #createFilePath(Shell, String, String, Map, int)
+     */
     public static String createCsvFilePath(Shell shell, String text) {
         return createFilePath(shell, text, PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT,
                 csvExtensions, SWT.SAVE);
     }
 
+    /**
+     * Returns a filepath but in addition there are all scopes to be chosen for
+     * the CSV-Export.
+     * 
+     * @see CsvExportDialog
+     */
     public static String createCsvFilePathAndHandleScopes(Shell shell, String text,
             VeriniceLinkTable veriniceLinkTable) {
 
@@ -147,6 +170,13 @@ public class LinkTableUtil {
 
     }
 
+    /**
+     * Returns a list of labels for he
+     * {@link VeriniceLinkTable#getColumnPaths()}
+     * 
+     * @param veriniceLinkTable
+     * @return
+     */
     public static List<String> getTableHeaders(VeriniceLinkTable veriniceLinkTable) {
 
         ArrayList<String> headers = new ArrayList<>();
@@ -237,10 +267,8 @@ public class LinkTableUtil {
 
     /**
      * Returns a set of all relations with key- value pairs, where the key is
-     * the* first typeID and the value the second.**
+     * the first typeID and the value the second.
      * 
-     * @param columnPathes
-     * @return
      */
     public static Set<Entry<String, String>> getRelations(List<String> columnPathes) {
 

@@ -141,10 +141,7 @@ public abstract class LinkTableComboViewer extends ComboViewer
 
     protected abstract void doSelectionChanged();
 
-    protected LinkTableComboViewer createChild(Composite parent) {
-
-        return null;
-    }
+    protected abstract LinkTableComboViewer createChild(Composite parent);
 
     public LinkTableComboViewer copy(LinkTableComboViewer leftCombo, Composite newParent,
             Control formerElement) {

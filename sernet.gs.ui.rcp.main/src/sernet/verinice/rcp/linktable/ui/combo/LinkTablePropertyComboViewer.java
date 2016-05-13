@@ -124,4 +124,16 @@ public class LinkTablePropertyComboViewer extends LinkTableComboViewer {
 
         return Collections.emptySet();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer#createChild(
+     * org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected LinkTableComboViewer createChild(Composite parent) {
+        return null;
+    }
 }
