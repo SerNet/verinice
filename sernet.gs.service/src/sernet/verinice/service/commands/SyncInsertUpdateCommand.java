@@ -23,20 +23,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.springframework.orm.hibernate3.HibernateCallback;
 
 import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
@@ -48,18 +41,9 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 import de.sernet.sync.risk.Risk;
 import de.sernet.sync.risk.SyncRiskAnalysis;
-import de.sernet.sync.risk.SyncScenario;
-import de.sernet.sync.risk.SyncScenarioList;
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.HuiRelation;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -610,7 +594,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         riskAnalysisImporter.setExtIdElementMap(idElementMap);
         riskAnalysisImporter.run();
         
-        reZombiefyAssociatedGefaehrdungen(filterOrphanElements());
+        reOrphanizeAssociatedGefaehrdungen(filterOrphanElements());
         
     }
 
@@ -628,20 +612,20 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * @return
      */
     private Set<String> filterOrphanElements() {
-        Set<String> extIdsToZombiefy = new HashSet<>();
+        Set<String> extIdsToOrphanize = new HashSet<>();
         
         for (SyncRiskAnalysis syncRiskAnalysis : risk.getAnalysis()) {
-            extIdsToZombiefy.addAll(syncRiskAnalysis.getScenarios().getExtId());
+            extIdsToOrphanize.addAll(syncRiskAnalysis.getScenarios().getExtId());
         }
         
         for(SyncRiskAnalysis syncRiskAnalysis : risk.getAnalysis()){
             for(String extIdToKeep : syncRiskAnalysis.getScenariosNotTreated().getExtId()){
-                if(extIdsToZombiefy.contains(extIdToKeep)){
-                    extIdsToZombiefy.remove(extIdToKeep);
+                if(extIdsToOrphanize.contains(extIdToKeep)){
+                    extIdsToOrphanize.remove(extIdToKeep);
                 }
             }
         }
-        return extIdsToZombiefy;
+        return extIdsToOrphanize;
     }
     
     
@@ -653,29 +637,30 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * unsetting scopeId and parent (id) leads to this behaviour 
      * @param orphanList
      */
-    private void reZombiefyAssociatedGefaehrdungen(Set orphanList) {
-      if(orphanList.size() > 0){
-          StringBuilder sb = new StringBuilder();
-          sb.append("(");
-          Iterator<String> iter = orphanList.iterator();
-          while(iter.hasNext()){
-              sb.append("'").append(iter.next()).append("'").append(", ");
-          }
-          String parameterList = sb.toString().trim().substring(0, sb.length() - 2) + ")";
-          getDaoFactory().getDAO(CnATreeElement.class).executeCallback(new HibernateCallback() {                    
-              @Override
-              public Object doInHibernate(Session s) throws SQLException {
-                  s.flush();
-                  StringBuilder sb = new StringBuilder();
-                  sb.append("UPDATE cnatreeelement SET parent = null, scope_id = null");
-                  sb.append(" WHERE extid IN ").append(parameterList);
-                  Query q = s.createSQLQuery(sb.toString());
-                  return q.executeUpdate();
-              }
-          });
-          getDaoFactory().getDAO(CnATreeElement.class).flush();
-      }
-  }
+    private void reOrphanizeAssociatedGefaehrdungen(Set<String> orphanList) {
+        if (orphanList.size() > 0){
+            for (String extId : orphanList){
+                if (idElementMap.containsKey(extId)){
+                    setScopeIdAndParentNull(idElementMap.get(extId));
+                }
+            }
+        }
+    }
+
+    /**
+     * sets parent and scopeId to null, if typeId of parameter @param gefaehrdung equals GefaehrdungsUmsetzung.TYPE_ID 
+     * 
+     */
+    private void setScopeIdAndParentNull(CnATreeElement gefaehrdung) {
+        if (GefaehrdungsUmsetzung.TYPE_ID.equals(gefaehrdung.getTypeId())){
+            GefaehrdungsUmsetzung gUms = (GefaehrdungsUmsetzung) gefaehrdung;
+            gUms.setParent(null);
+            gUms.setScopeId(null);
+            @SuppressWarnings("unchecked")
+            IBaseDao<GefaehrdungsUmsetzung, Serializable> dao = (IBaseDao<GefaehrdungsUmsetzung, Serializable>) getDaoFactory().getDAO( gUms.getClass());
+            dao.saveOrUpdate(gUms);
+        }
+    }
 
     private MapObjectType getMap(String extObjectType) {
         for (MapObjectType mot : syncMapping.getMapObjectType()) {
