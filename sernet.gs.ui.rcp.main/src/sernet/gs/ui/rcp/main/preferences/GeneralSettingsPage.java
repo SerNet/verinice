@@ -68,55 +68,58 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	 */
 	@Override
 	public void createFieldEditors() {
-	    BooleanFieldEditor derbyWarning = new BooleanFieldEditor(PreferenceConstants.FIRSTSTART, Messages.getString("GeneralSettingsPage.1"), //$NON-NLS-1$
+	    final BooleanFieldEditor derbyWarning = new BooleanFieldEditor(PreferenceConstants.FIRSTSTART, Messages.getString("GeneralSettingsPage.1"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(derbyWarning);
 		
-		BooleanFieldEditor linkToEditor = new BooleanFieldEditor(PreferenceConstants.LINK_TO_EDITOR, Messages.getString("GeneralSettingsPage.4"),  //$NON-NLS-1$
+		final BooleanFieldEditor linkToEditor = new BooleanFieldEditor(PreferenceConstants.LINK_TO_EDITOR, Messages.getString("GeneralSettingsPage.4"),  //$NON-NLS-1$
                 getFieldEditorParent());
         addField(linkToEditor);
 
-        BooleanFieldEditor errorPopups = new BooleanFieldEditor(PreferenceConstants.ERRORPOPUPS, Messages.getString("GeneralSettingsPage.2"), //$NON-NLS-1$
+        final BooleanFieldEditor errorPopups = new BooleanFieldEditor(PreferenceConstants.ERRORPOPUPS, Messages.getString("GeneralSettingsPage.2"), //$NON-NLS-1$
 				getFieldEditorParent());
 		addField(errorPopups);
 
-		BooleanFieldEditor inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, Messages.getString("GeneralSettingsPage.3"), getFieldEditorParent()); //$NON-NLS-1$
+		final BooleanFieldEditor inputHelperHints = new BooleanFieldEditor(PreferenceConstants.INPUTHINTS, Messages.getString("GeneralSettingsPage.3"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(inputHelperHints);
 
-		BooleanFieldEditor showDBIDDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_DBID_DECORATOR, Messages.getString("GeneralSettingsPage.ShowDBIDDecorator"), getFieldEditorParent()); //$NON-NLS-1$
+		final BooleanFieldEditor showDBIDDecorator = new BooleanFieldEditor(PreferenceConstants.SHOW_DBID_DECORATOR, Messages.getString("GeneralSettingsPage.ShowDBIDDecorator"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(showDBIDDecorator);
 		
-        BooleanFieldEditor showGsmIsmDecorator = new BooleanFieldEditor(
+        final BooleanFieldEditor showGsmIsmDecorator = new BooleanFieldEditor(
                 PreferenceConstants.SHOW_GSMISM_DECORATOR,
                 Messages.getString("GeneralSettingsPage.ShowGsmIsmDecorator"), //$NON-NLS-1$
                 getFieldEditorParent()); //$NON-NLS-1$
         addField(showGsmIsmDecorator);
         
-        BooleanFieldEditor showRiskAnalysisDecorator = new BooleanFieldEditor(
+        final BooleanFieldEditor showRiskAnalysisDecorator = new BooleanFieldEditor(
                 PreferenceConstants.SHOW_RISK_ANALYSIS_DECORATOR,
                 Messages.getString("GeneralSettingsPage.ShowRiskAnalysisDecorator"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(showRiskAnalysisDecorator);
 		
-		BooleanFieldEditor useValidationGuiHints = new BooleanFieldEditor(PreferenceConstants.USE_VALIDATION_GUI_HINTS, Messages.getString("GeneralSettingsPage.UseValidationGuiHints"), getFieldEditorParent()); //$NON-NLS-1$
+		final BooleanFieldEditor useValidationGuiHints = new BooleanFieldEditor(PreferenceConstants.USE_VALIDATION_GUI_HINTS, Messages.getString("GeneralSettingsPage.UseValidationGuiHints"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(useValidationGuiHints);
 		
-		BooleanFieldEditor useAutomaticValidation = new BooleanFieldEditor(PreferenceConstants.USE_AUTOMATIC_VALIDATION, Messages.getString("GeneralSettingsPage.UseValidationAlways"), getFieldEditorParent()); //$NON-NLS-1$
+		final BooleanFieldEditor useAutomaticValidation = new BooleanFieldEditor(PreferenceConstants.USE_AUTOMATIC_VALIDATION, Messages.getString("GeneralSettingsPage.UseValidationAlways"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(useAutomaticValidation);
 		
-		BooleanFieldEditor inheritSpecialIcon = new BooleanFieldEditor(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON, Messages.getString("GeneralSettingsPage.InheritSpecialIcon"), getFieldEditorParent()); //$NON-NLS-1$
+		final BooleanFieldEditor inheritSpecialIcon = new BooleanFieldEditor(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON, Messages.getString("GeneralSettingsPage.InheritSpecialIcon"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(inheritSpecialIcon);
 		
-		BooleanFieldEditor cutInheritPermissions = new BooleanFieldEditor(PreferenceConstants.CUT_INHERIT_PERMISSIONS, Messages.getString("GeneralSettingsPage.CutInheritPermissions"), getFieldEditorParent()); //$NON-NLS-1$
+		final BooleanFieldEditor cutInheritPermissions = new BooleanFieldEditor(PreferenceConstants.CUT_INHERIT_PERMISSIONS, Messages.getString("GeneralSettingsPage.CutInheritPermissions"), getFieldEditorParent()); //$NON-NLS-1$
         addField(cutInheritPermissions);
-		
-		ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
+        
+        final BooleanFieldEditor copyAttachmentsWithObjects = new BooleanFieldEditor(PreferenceConstants.COPY_ATTACHMENTS_WITH_OBJECTS, Messages.getString("GeneralSettingsPage.CopyAttachmentsWithObjects"), getFieldEditorParent()); //$NON-NLS-1$
+		addField(copyAttachmentsWithObjects);
+        
+		final ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$
 				ENCODING_COMBO_VALUES, 
 				getFieldEditorParent());
         addField(encodingFieldEditor);
         
-        ComboFieldEditor thumbnailSizeEditor = new ComboFieldEditor(PreferenceConstants.THUMBNAIL_SIZE, 
+        final ComboFieldEditor thumbnailSizeEditor = new ComboFieldEditor(PreferenceConstants.THUMBNAIL_SIZE, 
                 Messages.getString("GeneralSettingsPage.7"),  //$NON-NLS-1$
                 THUMBNAIL_SIZE_VALUES, 
                 getFieldEditorParent());
@@ -125,7 +128,7 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	}
 
 	@Override
-	public void propertyChange(PropertyChangeEvent event) {
+	public void propertyChange(final PropertyChangeEvent event) {
 		super.propertyChange(event);
 		if (event.getProperty().equals(FieldEditor.VALUE)) {
 			checkState();
@@ -147,7 +150,8 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
 	 * @see
 	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
-	public void init(IWorkbench workbench) {
+	@Override
+    public void init(final IWorkbench workbench) {
 	}
 
 }

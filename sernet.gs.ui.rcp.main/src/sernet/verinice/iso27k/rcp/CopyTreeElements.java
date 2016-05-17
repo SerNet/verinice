@@ -40,17 +40,19 @@ public class CopyTreeElements implements IProgressRunnable {
 
 	private IProgressTask service;
 	
-	private CnATreeElement selectedGroup;
+	private final CnATreeElement selectedGroup;
 
-	private List<CnATreeElement> elements;
+	private final List<CnATreeElement> elements;
 	
 	private List<String> newElements;
 	
-	private boolean copyLinks;
+	private final boolean copyLinks;
+	
+	private boolean copyAttachments = false;
 	
 
 	@SuppressWarnings("unchecked")
-	public CopyTreeElements(CnATreeElement selectedGroup, List<CnATreeElement> elements, boolean copyLinks) {
+	public CopyTreeElements(final CnATreeElement selectedGroup, final List<CnATreeElement> elements, final boolean copyLinks) {
 		this.selectedGroup = selectedGroup;
 		this.elements = elements;
 		this.copyLinks = copyLinks;
@@ -61,9 +63,10 @@ public class CopyTreeElements implements IProgressRunnable {
 	 * @see org.eclipse.ui.actions.WorkspaceModifyOperation#execute(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-    public void run(IProgressMonitor monitor)  {	
-	    IProgressObserver progressObserver = new RcpProgressObserver(monitor);
+    public void run(final IProgressMonitor monitor)  {	
+	    final IProgressObserver progressObserver = new RcpProgressObserver(monitor);
 		service = new CopyService(progressObserver,this.selectedGroup, elements, copyLinks);
+		((CopyService)service).setCopyAttachments(isCopyAttachments());
 		service.run();
 		newElements = ((CopyService)service).getNewElements();
 	}
@@ -93,6 +96,22 @@ public class CopyTreeElements implements IProgressRunnable {
 
     public List<String> getNewElements() {
         return newElements;
+    }
+
+
+    /**
+     * @return the copyAttachments
+     */
+    public boolean isCopyAttachments() {
+        return copyAttachments;
+    }
+
+
+    /**
+     * @param copyAttachments the copyAttachments to set
+     */
+    public void setCopyAttachments(final boolean copyAttachments) {
+        this.copyAttachments = copyAttachments;
     }
 
 }

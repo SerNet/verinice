@@ -17,9 +17,11 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.editors;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
@@ -46,8 +48,7 @@ import sernet.snutils.DBException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.bsi.Addition.INoteChangedListener;
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.bsi.AttachmentFile;
-import sernet.verinice.service.commands.SaveAttachment;
+import sernet.verinice.service.commands.AttachmentFileCreationFactory;
 import sernet.verinice.service.commands.SaveNote;
 
 public class AttachmentEditor extends EditorPart {
@@ -115,16 +116,17 @@ public class AttachmentEditor extends EditorPart {
             attachment = (Attachment) command.getAddition();
             huiComposite.dispose();
             huiComposite = new HitroUIComposite(parent, false);
-            huiComposite.createView(attachment.getEntity(), true, true, new String[] {} , false, ServiceFactory.lookupValidationService().getPropertyTypesToValidate(attachment.getEntity(), attachment.getDbId()), Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
+            huiComposite.createView(attachment.getEntity(), true, true, new String[] {},
+                    false, ServiceFactory.lookupValidationService().
+                    getPropertyTypesToValidate(attachment.getEntity(), attachment.getDbId()), 
+                    Activator.getDefault().getPreferenceStore().
+                    getBoolean(PreferenceConstants.USE_VALIDATION_GUI_HINTS));
             parent.layout();
             // file-data is immutable, just save new file-data
             if (isNew) {
-                AttachmentFile attachmentFile = new AttachmentFile();
-                attachmentFile.readFileData(attachment.getFilePath());
-                SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
-                attachmentFile.setDbId(attachment.getDbId());
-                saveFileCommand = getCommandService().executeCommand(saveFileCommand);
-                saveFileCommand.clear();
+                AttachmentFileCreationFactory.createAttachmentFile(
+                        attachment, FileUtils.readFileToByteArray(
+                                new File(attachment.getFilePath())));
             }
         } catch (Exception e) {
             LOG.error("Error while saving file", e); //$NON-NLS-1$
