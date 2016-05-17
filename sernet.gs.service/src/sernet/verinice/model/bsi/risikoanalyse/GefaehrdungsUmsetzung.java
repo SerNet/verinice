@@ -29,10 +29,10 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdungsBaumElement, ITypedElement {
 
-    private static final long serialVersionUID = -8778503394169834062L;
+    private static final long serialVersionUID = 20160216153414L;
 
     private IGefaehrdungsBaumElement gefaehrdungsParent;
-
+    
     public static final String GEFAEHRDUNG_ALTERNATIVE_A = "A"; //$NON-NLS-1$
     public static final String GEFAEHRDUNG_ALTERNATIVE_B = "B"; //$NON-NLS-1$
     public static final String GEFAEHRDUNG_ALTERNATIVE_C = "C"; //$NON-NLS-1$
@@ -48,6 +48,8 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
     private static final String[] ALTERNATIVEN_TEXT = { GEFAEHRDUNG_ALTERNATIVE_TEXT_A, GEFAEHRDUNG_ALTERNATIVE_TEXT_B, GEFAEHRDUNG_ALTERNATIVE_TEXT_C, GEFAEHRDUNG_ALTERNATIVE_TEXT_D, };
 
     public static final String TYPE_ID = "gefaehrdungsumsetzung"; //$NON-NLS-1$
+    
+    public static final String HIBERNATE_TYPE_ID = "gefaehrdungs-umsetzung"; //$NON-NLS-1$
 
     public static final String PROP_ID = "gefaehrdungsumsetzung_id"; //$NON-NLS-1$
     public static final String PROP_TITEL = "gefaehrdungsumsetzung_titel"; //$NON-NLS-1$

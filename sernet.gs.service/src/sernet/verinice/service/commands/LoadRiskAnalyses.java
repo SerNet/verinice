@@ -41,7 +41,8 @@ public class LoadRiskAnalyses extends GenericCommand implements ICommand {
     private IBaseDao<FinishedRiskAnalysis, Serializable> raDao;
     private IFinishedRiskAnalysisListsDao raListDao;
     
-    private Integer scopeId;
+    private Integer parentDbId;
+    private boolean useParentId = false;
     
     private List<FinishedRiskAnalysis> raList;
     
@@ -49,16 +50,31 @@ public class LoadRiskAnalyses extends GenericCommand implements ICommand {
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
     /**
-     * @param dbId
+     * use this one, to delete all riskanalyses for a complete scope
+     * @param scopeId
      */
-    public LoadRiskAnalyses(Integer dbId) {
-        scopeId = dbId; 
+    public LoadRiskAnalyses(Integer scopeId) {
+        parentDbId = scopeId; 
+    }
+    
+    /**
+     * use this, to delete riskanalyes beneath a specified parent
+     * @param parentDbId
+     * @param useParent
+     */
+    public LoadRiskAnalyses(Integer parentDbId, boolean useParent){
+        this.parentDbId = parentDbId;
+        this.useParentId = useParent;
     }
 
     @Override
     public void execute() {
         DetachedCriteria criteria = DetachedCriteria.forClass(FinishedRiskAnalysis.class);
-        criteria.add(Restrictions.eq("scopeId", scopeId));
+        if (!useParentId){
+            criteria.add(Restrictions.eq("scopeId", parentDbId));
+        } else {
+            criteria.add(Restrictions.eq("parentId", parentDbId));
+        }
         raList = getRaDao().findByCriteria(criteria);
     }
 
