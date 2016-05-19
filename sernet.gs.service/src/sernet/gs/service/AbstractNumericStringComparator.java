@@ -55,7 +55,9 @@
 package sernet.gs.service;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.Comparator;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
@@ -68,13 +70,37 @@ import org.apache.log4j.Logger;
  * The comparison should be very performant as it only ever deals with 
  * issues at a character level and never tries to consider the 
  * numerics as numbers.
- *
+ * 
+ * @see Test class: sernet.verinice.service.test.NumericStringComparatorTest
  * @author bayard@generationjava.com
  */
 public abstract class AbstractNumericStringComparator<T> implements Comparator<T>, Serializable {
 
-    private static final long serialVersionUID = 5698825401054792475L;
     private transient Logger log = Logger.getLogger(AbstractNumericStringComparator.class);
+    private Logger getLog(){
+        if (log == null)
+            log = Logger.getLogger(NumericStringComparator.class);
+        return log;
+    }
+    
+    private transient Collator collator = Collator.getInstance(Locale.getDefault());   
+    /**
+     * Returns a collator for the default locale for this instance
+     * of the Java Virtual Machine.
+     * 
+     * For a German / Germany locale the sorting is done according to
+     * DIN 5007 Var.1. 
+     * See: https://de.wikipedia.org/wiki/Alphabetische_Sortierung#Deutschland
+     * for a definition of DIN 5007 Var.1
+     * 
+     * @see Test class: sernet.verinice.service.test.NumericStringComparatorTest
+     * @return A collator
+     */
+    private Collator getCollator(){
+        if (collator == null)
+            collator = Collator.getInstance(Locale.getDefault());
+        return collator;
+    }
 	
 	public AbstractNumericStringComparator() {
 	}
@@ -104,9 +130,10 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 		int idx1 = getFirstDigitIndex(s1);
 		int idx2 = getFirstDigitIndex(s2);
 
+		// no digits found, compare string the ordinary way 
 		if ((idx1 == -1) || (idx2 == -1)
 				|| (!s1.substring(0, idx1).equals(s2.substring(0, idx2)))) {
-			return s1.compareTo(s2);
+			return compareStringOrdinary(s1, s2);
 		}
 
 		// find the last digit
@@ -189,6 +216,10 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 		return 0;
     }
 
+    protected int compareStringOrdinary(String s1, String s2) {
+        return getCollator().compare(s1, s2);
+    }
+
 	private int getFirstDigitIndex(String str) {
 		return getFirstDigitIndex(str, 0);
 	}
@@ -238,12 +269,6 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 		}
 
 		return count;
-	}
-
-	private Logger getLog(){
-	    if (log == null)
-	        log = Logger.getLogger(NumericStringComparator.class);
-	    return log;
 	}
 
 }
