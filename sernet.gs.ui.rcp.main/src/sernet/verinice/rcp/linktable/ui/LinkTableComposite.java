@@ -180,7 +180,7 @@ public class LinkTableComposite extends Composite {
 
         for (String column : vltContent.getColumnPaths()) {
 
-            List<String> path = ColumnPathParser.getColumnPathAsList(column);
+            List<String> path = ColumnPathParser.getColumnPathAsList(column, true);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Element " + path);
             }

@@ -112,10 +112,10 @@ public abstract class ColumnPathParser {
      * by ANTLR.
      * 
      * Parse exceptions are ignored if parameter ignoreParseExceptions
-     * is true. Ignored means that the parse exception is logged via Log4j
+     * is true. Ignored means that a parse exception is logged via Log4j
      * but not rethrown.
      * 
-     * If parameter ignoreParseExceptions true parse exceptions are wrapped
+     * If parameter ignoreParseExceptions is true parse exceptions are wrapped
      * in a ColumnPathParseException and rethrown afterwards.
      * 
      * @param columnPath A link table (LTR) columnPath
@@ -241,12 +241,45 @@ public abstract class ColumnPathParser {
         return pathElement;
     }
 
+    /**
+     * Returns a list with all elements of a column path.
+     * 
+     * For path "asset<assetgroup.assetgroup_name" a
+     * list with the following elements is returned: 
+     * "asset", "<", "assetgroup", "." and "assetgroup_name"
+     * 
+     * If a parse error occurs a ColumnPathParseException is thrown.
+     * 
+     * @param columnPath A link table (LTR) columnPath
+     * @return A list with all elements of the path
+     */
     public static List<String> getColumnPathAsList(String columnPath) {
-        VqlParser parser = parse(columnPath);
+        return getColumnPathAsList(columnPath,false);        
+    }
+    
+    /**
+     * Returns a list with all elements of a column path.
+     * 
+     * For path "asset<assetgroup.assetgroup_name" a
+     * list with the following elements is returned: 
+     * "asset", "<", "assetgroup", "." and "assetgroup_name"
+     * 
+     * Parse exceptions are ignored if parameter ignoreParseExceptions
+     * is true. Ignored means that a parse exception is logged via Log4j
+     * but not rethrown.
+     * 
+     * If parameter ignoreParseExceptions is true parse exceptions are wrapped
+     * in a ColumnPathParseException and rethrown afterwards.
+     * 
+     * @param columnPath A link table (LTR) columnPath
+     * @param ignoreParseExceptions
+     * @return A list with all elements of the path
+     */
+    public static List<String> getColumnPathAsList(String columnPath, boolean ignoreParseExceptions) {
+        VqlParser parser = parse(columnPath, ignoreParseExceptions);
         AST parseTree = parser.getAST();
         ArrayList<String> list = new ArrayList<>();
         while(parseTree != null){
-
             list.add(parseTree.getText());
             parseTree = parseTree.getNextSibling();
         }
