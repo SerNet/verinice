@@ -86,9 +86,9 @@ public class ReportClassLoader extends ClassLoader {
                 return trustedClass;
             }catch (ClassNotFoundException e){
                 LOG.debug("Class " + name + " not found, trying next way");
-                if(!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
+                if (!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
                     String qualifiedName = tryGuessingQualifiedClassname(name);
-                    if(!name.equals(qualifiedName)){
+                    if (!name.equals(qualifiedName)){
                         Class<?> trustedClass =  parentClassLoader.loadClass(qualifiedName);
                         LOG.debug("class:\t" + qualifiedName + " for input:\t" + name + " successfully loaded by parentclassloader");
                         return trustedClass;
@@ -102,9 +102,9 @@ public class ReportClassLoader extends ClassLoader {
                 LOG.debug("reached finally block, returning null");
                 return null;
             }
-        } else if(!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
+        } else if (!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
             String qualifiedName = tryGuessingQualifiedClassname(name);
-            if(!name.equals(qualifiedName)){
+            if (!name.equals(qualifiedName)){
                 Class<?> trustedClass = parentClassLoader.loadClass(qualifiedName);
                 LOG.debug("loading class:\t" + qualifiedName + " for input:\t" + name);
                 return trustedClass;
@@ -128,21 +128,20 @@ public class ReportClassLoader extends ClassLoader {
     
     private String tryGuessingQualifiedClassname(String name){
         String mappedName = guessByStandardMapping(name);
-        if(!mappedName.equals(name)){
+        if (!mappedName.equals(name)){
             return mappedName;
         }
-        for(String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
-            if(qualifiedName.contains(name)){
+        for (String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
+            if (qualifiedName.contains(name)){
                 return qualifiedName;
             }
         }
 
-        for(String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
-            if(qualifiedName.endsWith(getPathFreeClassName(name))){
+        for (String qualifiedName : AUTHORIZED_FOR_EXTERNAL_USE){
+            if (qualifiedName.endsWith(getPathFreeClassName(name))){
                 return qualifiedName;
             }
         }
-        
         
         return name;
     }
@@ -154,34 +153,34 @@ public class ReportClassLoader extends ClassLoader {
     private String guessByStandardMapping(String name) {
         if("Entry".equals(name)){
             return "java.util.Map$Entry";
-        } else if("Date".equals(name)){
+        } else if ("Date".equals(name)){
             return "java.util.Date";
-        } else if("Object".equals(name)){
+        } else if ("Object".equals(name)){
             return "java.lang.Object";
-        } else if("String".equals(name)){
+        } else if ("String".equals(name)){
             return "java.lang.String";
-        } else if("List".equals(name)){
+        } else if ("List".equals(name)){
             return "java.util.List";
-        } else if("Collections".equals(name)){
+        } else if ("Collections".equals(name)){
             return "java.util.Collections";
-        } else if("Comparator".equals(name)){
+        } else if ("Comparator".equals(name)){
             return "java.util.Comparator";
-        } else if("Integer".equals(name)){
+        } else if ("Integer".equals(name)){
             return "java.lang.Integer";
         } else return name;
     }
 
 
     private boolean isTrustedClass(String name){
-        if(name != null){
+        if (name != null){
             return checkPrefixes(name);
         }
         return false;
     }
 
     private boolean checkPrefixes(String name) {
-        for(String prefix : AUTHORIZED_FOR_EXTERNAL_USE){
-            if(name.startsWith(prefix)){
+        for (String prefix : AUTHORIZED_FOR_EXTERNAL_USE){
+            if (name.startsWith(prefix)){
                 return true;
             }
         }
@@ -189,7 +188,7 @@ public class ReportClassLoader extends ClassLoader {
     }
     
     private String getPathFreeClassName(String classname){
-        if(classname != null && classname.contains(".")){
+        if (classname != null && classname.contains(".")){
             classname = classname.substring(classname.lastIndexOf(".") + 1);
         }
         return classname;

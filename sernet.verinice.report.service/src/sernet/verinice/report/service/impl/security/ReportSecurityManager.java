@@ -330,81 +330,84 @@ public class ReportSecurityManager extends SecurityManager {
 
     
     /**
+     * 
+     * check if permission is allowed to execute,
+     * return in case of positive result,
+     * otherwise throw exception
      * return
      */
     @Override
-    public void checkPermission(Permission perm){
-        // do the stacktrace / caller inspection for javascript also and we are done here,aren't we?
-        if(isCalledByRunQuery()){
-            if(!protectionEnabled){
+    public void checkPermission(Permission permission){
+        if (isCalledByRunQuery()){
+            if (!protectionEnabled){
                 return;
             }
-            permissionSpecificHandling(perm);
+            permissionSpecificHandling(permission);
         }
     }
 
 
 
 
-    private void permissionSpecificHandling(Permission perm) {
+    private void permissionSpecificHandling(Permission permission) {
         // enabling reflextpermission("suppressAccessChecks") and several RuntimePermissions in authorized context only
-        if(!protectionEnabled){
+        if (!protectionEnabled){
             return;
         }
-        if(perm instanceof ReflectPermission || perm instanceof RuntimePermission) {
-            if(!isAuthorizedStackTrace(perm.getName())){
-                throwSecurityException(perm);
-                if(LOG.isDebugEnabled()){
+        if (permission instanceof ReflectPermission || permission instanceof RuntimePermission) {
+            if (!isAuthorizedStackTrace(permission.getName())){
+                throwSecurityException(permission);
+                if (LOG.isDebugEnabled()){
                     LOG.debug(Arrays.toString(Thread.currentThread().getStackTrace()));
                 }
             } else {
                 return;
             }
         // enable osgi-stuff
-        } else if(perm.getClass().getCanonicalName().startsWith("org.osgi.framework")){
-            handleOSGIPermission(perm);
+        } else if (permission.getClass().getCanonicalName().startsWith("org.osgi.framework")){
+            handleOSGIPermission(permission);
         // enable reading, writing and deleting of all(!) properties
-        } else if (perm instanceof PropertyPermission ){
+        } else if (permission instanceof PropertyPermission ){
             return; // RunAndRenderTask.setReportRunnable(..) requires ("java.util.PropertyPermission" "*" "read,write")
         // enable reading, writing, deleting of files on some custom defined places
-        }else if(perm instanceof FilePermission){
-            handleFilePermission(perm);
-        } else if (perm instanceof SocketPermission){
-            handleSocketPermission(perm);
-        } else if(perm instanceof NetPermission){
-            handleNetPermission(perm);
+        }else if (permission instanceof FilePermission){
+            handleFilePermission(permission);
+        } else if (permission instanceof SocketPermission){
+            handleSocketPermission(permission);
+        } else if (permission instanceof NetPermission){
+            handleNetPermission(permission);
         // allow some more (static) actions on RuntimePermissions and 4 other permissions
-        } else if(allowedPermissionsAndActionsMap.containsKey(perm.getClass().getCanonicalName())){
-            lookupPermissionMap(perm);
+        } else if (allowedPermissionsAndActionsMap.containsKey(permission.getClass().getCanonicalName())){
+            lookupPermissionMap(permission);
         } else { // default | everything else is not on the whitelist, so throw exception!
-            throwSecurityException(perm);
+            throwSecurityException(permission);
         }
     }
 
 
 
 
-    private void handleSocketPermission(Permission perm) {
+    private void handleSocketPermission(Permission permission) {
         if(!protectionEnabled){
             return;
         }
         
         try {
-            String serverHost = reportSecurityContext.getReportOptions().getServerURL().trim();
-            URI serverHostURI = new URI(serverHost);
+            final String serverHost = reportSecurityContext.getReportOptions().getServerURL().trim();
+            final URI serverHostURI = new URI(serverHost);
 
-            if(perm.getName().equals(InetAddress.getLocalHost().getHostName())){
+            if (permission.getName().equals(InetAddress.getLocalHost().getHostName())){
                 return;
-            } else if(perm.getName().startsWith("localhost") || perm.getName().startsWith("127.0.0.1")){
+            } else if (permission.getName().startsWith("localhost") || permission.getName().startsWith("127.0.0.1")){
                 return;
-            } else if(perm.getName().startsWith(serverHostURI.getHost() + ":" + serverHostURI.getPort()) ){
+            } else if (permission.getName().startsWith(serverHostURI.getHost() + ":" + serverHostURI.getPort()) ){
                 return;
             } else {
-                throwSecurityException(perm);
+                throwSecurityException(permission);
             }
         } catch (UnknownHostException e) {
             LOG.error("Unable to determine local machines hostname", e);
-            throwSecurityException(perm, e);
+            throwSecurityException(permission, e);
         } catch (URISyntaxException e){
             LOG.error("ServerURI is not a valid uri", e);
         }
@@ -414,11 +417,11 @@ public class ReportSecurityManager extends SecurityManager {
      * preventes use of Runtime.getRuntime().exec("rm -rf");
      */
       @Override
-      public void checkExec(String cmd){
-          if(!protectionEnabled){
+      public void checkExec(String command){
+          if (!protectionEnabled){
               return;
           }
-          if(isCalledByRunQuery()){
+          if (isCalledByRunQuery()){
               throw new ReportSecurityException(Messages.UNAUTHORIZED_EXECUTION_CALL_DETECTED);
           } 
       }
@@ -442,8 +445,8 @@ public class ReportSecurityManager extends SecurityManager {
      */
     private void lookupPermissionMap(Permission perm) {
         List<String> allowedActions = allowedPermissionsAndActionsMap.get(perm.getClass().getCanonicalName());
-        for(String allowedAction : allowedActions){
-            if(allowedAction.equals(perm.getName())){
+        for (String allowedAction : allowedActions){
+            if (allowedAction.equals(perm.getName())){
                 return;
             }
         }
@@ -454,13 +457,13 @@ public class ReportSecurityManager extends SecurityManager {
         if(!protectionEnabled){
             return;
         }
-        if(perm.getName().equals("getProxySelector")){
-            if(stacktraceContains("org.eclipse.birt.data.engine.odaconsumer.PreparedStatement.getProjectedColumns")||
+        if (perm.getName().equals("getProxySelector")){
+            if (stacktraceContains("org.eclipse.birt.data.engine.odaconsumer.PreparedStatement.getProjectedColumns")||
                     stacktraceContains("org.eclipse.birt.data.engine.impl.QueryResults.getResultIterator")){
                 return;
             }
-        } else if(perm.getName().equals("specifyStreamHandler")){
-           if(stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask$2.visitScalarParameter") ||
+        } else if (perm.getName().equals("specifyStreamHandler")){
+           if (stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask$2.visitScalarParameter") ||
                    stacktraceContains("org.eclipse.birt.report.data.adapter.api.DataRequestSession.newSession") ||
                    stacktraceContains("org.eclipse.birt.report.engine.emitter.excel.layout.ExcelContext.parseSheetName") ||
                    stacktraceContains("org.eclipse.osgi.util.NLS.load") ||
@@ -496,11 +499,11 @@ public class ReportSecurityManager extends SecurityManager {
     }
 
     private void handleOSGIPermission(Permission perm) throws ReportSecurityException{
-        if(!protectionEnabled){
+        if (!protectionEnabled){
             return;
         }
-        if("org.osgi.framework.AdminPermission".equals(perm.getClass().getCanonicalName())){
-            if(stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask.createContentEmitter") ||
+        if ("org.osgi.framework.AdminPermission".equals(perm.getClass().getCanonicalName())){
+            if (stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask.createContentEmitter") ||
                     stacktraceContains("org.eclipse.birt.core.script.ScriptContext.getScriptEngine") ||
                     stacktraceContains("org.eclipse.birt.report.engine.executor.ExecutionContext.getDataEngine") ||
                     stacktraceContains("org.eclipse.birt.data.engine.odaconsumer.Driver.createNewDriverHelper") ||
@@ -522,8 +525,8 @@ public class ReportSecurityManager extends SecurityManager {
             } else {
                 throwSecurityException(perm);
             }
-        } else if("org.osgi.framework.ServicePermission".equals(perm.getClass().getCanonicalName())) { 
-            if(stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask.createContentEmitter") ||
+        } else if ("org.osgi.framework.ServicePermission".equals(perm.getClass().getCanonicalName())) { 
+            if (stacktraceContains("org.eclipse.birt.report.engine.api.impl.EngineTask.createContentEmitter") ||
                     stacktraceContains("org.eclipse.birt.core.plugin.BIRTPlugin.start")){
                 return;
             } else {
@@ -538,7 +541,7 @@ public class ReportSecurityManager extends SecurityManager {
     private boolean stacktraceContains(String qualifiedClassname){
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
         for (int i = 0; i < stackTrace.length; i++){
-            if(stackTrace[i].toString().startsWith(qualifiedClassname)){
+            if (stackTrace[i].toString().startsWith(qualifiedClassname)){
                 return true;
             }
         }
@@ -552,32 +555,32 @@ public class ReportSecurityManager extends SecurityManager {
      * @throws ReportSecurityException
      */
     private void handleFilePermission(Permission perm) throws ReportSecurityException{
-        if(!protectionEnabled){
+        if (!protectionEnabled){
             return;
         }
         
         FilePermission filePermission = (FilePermission)perm;
         
-        if(filePermission.getActions().contains("delete") || filePermission.getActions().contains("write")){
-            if(perm.getName().startsWith(reportSecurityContext.getLogFileLocation())){
+        if (filePermission.getActions().contains("delete") || filePermission.getActions().contains("write")){
+            if (perm.getName().startsWith(reportSecurityContext.getLogFileLocation())){
                 return;
             } else if (reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath().equals(perm.getName())) {// this wont work on windows, needs to be debuged
                 return;
-            } else if(("file:" + filePermission.getName()).equals(System.getProperty("osgi.instance.area") + "log")){
+            } else if (("file:" + filePermission.getName()).equals(System.getProperty("osgi.instance.area") + "log")){
                 return;
             } else if (("file:" + filePermission.getName()).startsWith(System.getProperty("osgi.instance.area") + "log")){
                 return;
-            } else if(filePermission.getName().equals(System.getProperty("osgi.instance.area") + File.separator + ".metadata" + File.separator + ".log")){
+            } else if (filePermission.getName().equals(System.getProperty("osgi.instance.area") + File.separator + ".metadata" + File.separator + ".log")){
                 return;
-            } else if(("file:" + filePermission.getName()).startsWith(System.getProperty("osgi.configuration.area"))){
+            } else if (("file:" + filePermission.getName()).startsWith(System.getProperty("osgi.configuration.area"))){
                 return;
-            } else if((filePermission.getName()).startsWith(System.getProperty("java.io.tmpdir"))){
+            } else if ((filePermission.getName()).startsWith(System.getProperty("java.io.tmpdir"))){
                 return;
-            } else if((filePermission.getName()).startsWith(System.getProperty("user.home") + File.separator + ".java" + File.separator + "fonts")) {
+            } else if ((filePermission.getName()).startsWith(System.getProperty("user.home") + File.separator + ".java" + File.separator + "fonts")) {
                 return;
-            } else if(filePermission.getName().startsWith(FilenameUtils.getFullPath(reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath()))){
+            } else if (filePermission.getName().startsWith(FilenameUtils.getFullPath(reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath()))){
                 return; // needed by win32, cause path there looks like c:\$path\.\reportOutput.pdf
-            } else if(SystemUtils.IS_OS_MAC_OSX && filePermission.getName().startsWith("/private/var/folders/")){
+            } else if (SystemUtils.IS_OS_MAC_OSX && filePermission.getName().startsWith("/private/var/folders/")){
                 return; // handling osx tmp folder
             } else {
                 throwSecurityException(perm);
@@ -600,28 +603,28 @@ public class ReportSecurityManager extends SecurityManager {
     
     private boolean isAuthorizedStackTrace(String permissionName){
         boolean authorizedCall = false;
-        for(Entry<String, List<String>> entry : authorizedRuntimeActions.entrySet()){
-            for(String value : entry.getValue()){
-                if(permissionName.equals(value)){
+        for (Entry<String, List<String>> entry : authorizedRuntimeActions.entrySet()){
+            for (String value : entry.getValue()){
+                if (permissionName.equals(value)){
                     authorizedCall = stacktraceContains(entry.getKey());
                 } 
-                if(authorizedCall){
+                if (authorizedCall){
                     break;
                 }
             }
-            if(authorizedCall){
+            if (authorizedCall){
                 break;
             }            
         }
-        if(!authorizedCall){
+        if (!authorizedCall){
             LOG.error(NLS.bind(Messages.REPORT_SECURITY_EXCEPTION_1, new Object[]{permissionName,""}));
         }
         return authorizedCall;
     }
     
     private boolean isCalledByRunQuery(){
-        for(StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()){
-            if(stackTraceElement.toString().startsWith(VERINICE_RUN_QUERY_METHOD)){
+        for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()){
+            if (stackTraceElement.toString().startsWith(VERINICE_RUN_QUERY_METHOD)){
                 return true;
             }
         }
