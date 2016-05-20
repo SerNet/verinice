@@ -18,6 +18,8 @@
 package sernet.hui.common.connect;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -66,6 +68,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     }
     
     public static final String TITLE = "ENTITY_";
+    private static final DateFormat DATE_FORMAT_ISO_8601 = new SimpleDateFormat("yyyy-MM-dd");
     
 	// map of "propertyTypeId : List of Properties"
     private Map<String, PropertyList> typedPropertyLists 
@@ -169,6 +172,14 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		return result;
 	}
 	
+	/**
+	 * Returns the property value as a Java date.
+	 * If the property value can not be converted to a date
+	 * an error message is logged an null is returned.
+	 * 
+	 * @param propertyType The type (respectively: id) of the property
+	 * @return The property value as a Java date or null if the value can not be converted to a date
+	 */
 	public Date getDate(String propertyType) {
 	    Date date = null;
 	    try {
@@ -177,6 +188,28 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             getLog().error("Error while returning date for property: " + propertyType, t);
         }
 	    return date;
+	}
+	
+	
+	/**
+	 * Returns the property value as a date (without the time) in ISO 8601 format.
+	 * 
+	 * e.g.: 1975-09-25 or 2004-05-24
+	 * 
+     * If the property value can not be converted to a date
+     * an error message is logged an null is returned.
+	 * 
+	 * @see https://en.wikipedia.org/wiki/ISO_8601
+	 * @param propertyType The type (respectively: id) of the property
+	 * @return The property value as a date in ISO 8601 format or null if the value can not be converted to a date
+	 */
+	public String getDateInISO8601(String propertyType) {
+	    String dateInISO8601 = null;
+	    Date date = getDate(propertyType);
+	    if(date!=null) {
+	        dateInISO8601 = DATE_FORMAT_ISO_8601.format(date);
+	    }
+	    return dateInISO8601;	    
 	}
 	
 	/**

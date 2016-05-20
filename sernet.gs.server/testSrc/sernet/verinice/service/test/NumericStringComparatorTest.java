@@ -49,35 +49,35 @@ public class NumericStringComparatorTest {
     
     @Test
     public void testCompareGermanUmlautO() {
-        String startsWithUmlautO = "öffi";
-        String startsWithP = "Peter";
-        String startsWithO = "Oben";
+        final String startsWithUmlautO = "öffi";
+        final String startsWithP = "Peter";
+        final String startsWithO = "Oben";
         isFirstLessThanSecond(startsWithUmlautO, startsWithP);
         isFirstLessThanSecond(startsWithO, startsWithUmlautO);
     }
     
     @Test
     public void testCompareGermanUmlautA() {      
-        String startsWithUmlautA = "Ähem";
-        String startsWithB = "Beer";
-        String startsWithA = "Adele";
+        final String startsWithUmlautA = "Ähem";
+        final String startsWithB = "Beer";
+        final String startsWithA = "Adele";
         isFirstLessThanSecond(startsWithUmlautA, startsWithB);
         isFirstLessThanSecond(startsWithA, startsWithUmlautA);
     }
      
     @Test
     public void testCompareGermanUmlautU() {       
-        String startsWithUmlautU = "über";
-        String startsWithV = "verinice";
-        String startsWithU = "Uber";
+        final String startsWithUmlautU = "über";
+        final String startsWithV = "verinice";
+        final  String startsWithU = "Uber";
         isFirstLessThanSecond(startsWithUmlautU, startsWithV);
         isFirstLessThanSecond(startsWithU, startsWithUmlautU);
     }
     
     @Test
     public void testCompareMueller() {       
-        String mueller = "Mueller";
-        String muellerWithUmlautU = "Müller";
+        final String mueller = "Mueller";
+        final String muellerWithUmlautU = "Müller";
         isFirstLessThanSecond(mueller, muellerWithUmlautU);
     }
     
@@ -87,41 +87,140 @@ public class NumericStringComparatorTest {
      */
     @Test
     public void testCompareDIN5007Var1() {
-        isFirstLessThanSecond("Göbel", "Goethe");
-        isFirstLessThanSecond("Goldmann", "Göthe");
-        isFirstLessThanSecond("Goethe", "Goldmann");
-        isFirstLessThanSecond("Göthe", "Götz");
+        final String goebel = "Göbel";
+        final String goethe = "Goethe";
+        final String goetheWithUmlautO = "Göthe";
+        final String goldmann = "Goldmann";
+        final String goetz = "Götz";
+        isFirstLessThanSecond(goebel, goethe);
+        isFirstLessThanSecond(goldmann, goetheWithUmlautO);
+        isFirstLessThanSecond(goethe, goldmann);
+        isFirstLessThanSecond(goetheWithUmlautO, goetz);
     }
        
     @Test
     public void testCompareGermanUmlautS() {
-        String startsWithUmlautS = "ßuper";
-        String startsWithT = "Tor";
-        String startsWithS = "Salat";
+        final String startsWithUmlautS = "ßuper";
+        final String startsWithT = "Tor";
+        final String startsWithS = "Salat";
         isFirstLessThanSecond(startsWithUmlautS, startsWithT);
         isFirstLessThanSecond(startsWithS,  startsWithUmlautS);
     }
     
     @Test
     public void testStringStartsWithNumber() {
-        String STARTS_with_1_0 = "1.0 Topic A";
-        String STARTS_with_1_1 = "1.1 Topic B";
+        final String STARTS_with_1_0 = "1.0 Topic A";
+        final String STARTS_with_1_1 = "1.1 Topic B";
         isFirstLessThanSecond(STARTS_with_1_0, STARTS_with_1_1);
         
-        String STARTS_with_9_0 = "9.0 Lorem";
-        String STARTS_with_10_0 = "10.0 Ipsum";
+        final String STARTS_with_9_0 = "9.0 Lorem";
+        final String STARTS_with_10_0 = "10.0 Ipsum";
         isFirstLessThanSecond(STARTS_with_9_0, STARTS_with_10_0);
     }
     
     @Test
     public void testStringWithNumberAndUmlauts() {
-        String STARTS_with_1_0 = "1.0 Göbel";
-        String STARTS_with_1_1 = "1.0 Goethe";
+        final String STARTS_with_1_0 = "1.0 Göbel";
+        final String STARTS_with_1_1 = "1.0 Goethe";
         isFirstLessThanSecond(STARTS_with_1_0, STARTS_with_1_1);
         
-        String STARTS_with_9_0 = "9.0 Lorem";
-        String STARTS_with_10_0 = "10.0 Ipsum";
+        final String STARTS_with_9_0 = "9.0 Lorem";
+        final String STARTS_with_10_0 = "10.0 Ipsum";
         isFirstLessThanSecond(STARTS_with_9_0, STARTS_with_10_0);
+    }
+    
+    @Test
+    public void testNumbers() {
+        String a = "2";
+        String b = "2.1";
+        aLtB(a, b);
+        
+        a = "5";
+        b = "2.1";
+        aGtB(a, b);
+        
+        a = "1";
+        b = "2.1";
+        aLtB(a, b);
+        
+        a = "2";
+        b = "2.a";
+        aLtB(a, b);
+        
+        a = "A";
+        b = "2";
+        aGtB(a, b);
+        
+        a = "A";
+        b = "2.1";
+        aGtB(a, b);
+        
+        
+        a = "A";
+        b = "A.1";
+        aLtB(a, b);
+        
+        a = "2.1";
+        b = "2.2";
+        aLtB(a, b);
+        
+        a = "2.1";
+        b = "2.1";
+        aEqB(a, b);
+        
+        a = "3.b.4";
+        b = "3.c.4";
+        aLtB(a, b);
+        
+        a = "2.4.a";
+        b = "2.4.b";
+        aLtB(a, b);
+        
+        a = "10.4876.B";
+        b = "10.4876.B";
+        aEqB(a, b);
+        
+        a = "10b";
+        b = "10a";
+        aGtB(a, b);
+        
+        a = "2.01";
+        b = "2.1";
+        aGtB(a, b);
+        
+        a = "2.01";
+        b = "2.6";
+        aLtB(a, b);
+        
+        a = "234.0002.1";
+        b = "234.2.1";
+        aGtB(a, b);
+        
+        a = "2.01";
+        b = "2.11";
+        aLtB(a, b);
+        
+    }
+    
+    private void aGtB(String a, String b) {
+        int result = NSC.compare(a, b);
+        assertEquals(a + " is greater than " + b + " (" + result + ")", true, result>0);
+        result = NSC.compare(b, a);
+        assertEquals(b + " is less than " + a + " (" + result + ")", true, result<0);
+    }
+    
+    private void aLtB(String a, String b) {
+        int result = NSC.compare(a, b);
+        assertEquals(a + " is less than " + b + " (" + result + ")", true, result<0);
+        result = NSC.compare(b, a);
+        assertEquals(b + " is graeter than " + a + " (" + result + ")", true, result>0);
+    }
+    
+    private void aEqB(String a, String b) {
+        int result = NSC.compare(a, b);
+        assertEquals(a + " is equal " + b + " (" + result + ")", true, result==0);
+        result = NSC.compare(b, a);
+        assertEquals(a + " is equal " + b + " (" + result + ")", true, result==0);
     }
 
     protected void isFirstLessThanSecond(String startsWithUmlautO, String startsWithZ) {

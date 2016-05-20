@@ -20,13 +20,29 @@ package sernet.hui.common.connect;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Utility class to handle HTML URLs (links).
+ *
+ * @author Alexander Koderman <ak[at]sernet[dot]de>
+ * @author Daniel Murygin <dm{a}sernet{dot}de>
+ */
 public abstract class URLUtil {
 	
 	private static Pattern pattern = Pattern.compile("<a href=\"(.*)\">(.*)</a>");
+	
+	/**
+	 * Do not instantiate this class use public static methods.
+	 */
+	private URLUtil() {
+        super();
+    }
 
-
-	public static String getHref(String url) {
-		Matcher matcher = pattern.matcher(url);
+    /**
+	 * @param aHtml A link in HTML format
+	 * @return The value of the href parameter
+	 */
+	public static String getHref(String aHtml) {
+		Matcher matcher = pattern.matcher(aHtml);
 		if (matcher.find()) {
 			return matcher.group(1);
 
@@ -34,14 +50,61 @@ public abstract class URLUtil {
 		return "";
 	}
 	
-	public static String getName(String url) {
-		Matcher matcher = pattern.matcher(url);
+	/**
+	 * @param aHtml A link in HTML format
+     * @return The text in the HTML a element
+	 */
+	public static String getName(String aHtml) {
+		Matcher matcher = pattern.matcher(aHtml);
 		if (matcher.find()) {
 			return matcher.group(2);
 
 		}
 		return "";
 	}
+	
+    /**
+     * Creates a link in this format    :
+     * =HYPERLINK("<URL>";"<TITLE>")
+     * 
+     * e.g.:
+     * =HYPERLINK("http://www.verinice.org";"verinice")
+     * 
+     * The link format is used in spreadsheet applications
+     * like Excel or LibreOffice calc.
+     * See: http://stackoverflow.com/questions/6563091/can-excel-interpret-the-urls-in-my-csv-as-hyperlinks
+     * 
+     * @param aHtml A link in HTML format
+     * @return A link in this format: =HYPERLINK("<URL>";"<TITLE>")
+     */
+    public static String createLinkForSpreadsheet(String aHtml) {
+        return URLUtil.createLinkForSpreadsheet(URLUtil.getHref(aHtml), URLUtil.getName(aHtml));
+    }
+	
+    /**
+     * Creates a link in this format    :
+     * =HYPERLINK("<URL>";"<TITLE>")
+     * 
+     * e.g.:
+     * =HYPERLINK("http://www.verinice.org";"verinice")
+     * 
+     * The link format is used in spreadsheet applications
+     * like Excel or LibreOffice calc.
+     * See: http://stackoverflow.com/questions/6563091/can-excel-interpret-the-urls-in-my-csv-as-hyperlinks
+     * 
+     * @param value A link in HTML format
+     * @return A link in this format: =HYPERLINK("<URL>";"<TITLE>")
+     */
+    public static String createLinkForSpreadsheet(String url, String title) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("=HYPERLINK(\"");
+        sb.append(url);
+        sb.append("\";\"");
+        sb.append(title);
+        sb.append("\")");
+        String getLinkForSpreadsheet = sb.toString();
+        return getLinkForSpreadsheet;
+    }
 	
 	
 }

@@ -20,11 +20,19 @@
 package sernet.verinice.service.linktable;
 
 /**
- *
+ * An IPropertyAdapter reads a properties from an element T.
+ * This interface is used in the context of link tables.
+ * 
+ * See ILinkTableService for an introduction to link tables.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public interface IPropertyAdapter<T> {
 
+    /**
+     * @param element An element with a property
+     * @param propertyId The is of a property
+     * @return The value of the property with id 'propertyId' from an element
+     */
     String getPropertyValue(T element, String propertyId);
 }

@@ -236,7 +236,7 @@ public class LinkTableUtil {
             try {
                 validateColumnPath(path);
             } catch (Exception e) {
-                throw new ValidationException(path + " is no valid column path", e); //$NON-NLS-1$
+                throw new ValidationException(path + " is no valid column path", e);
             }
         }
 

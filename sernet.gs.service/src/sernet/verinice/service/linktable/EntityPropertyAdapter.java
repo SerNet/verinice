@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
+import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyType;
@@ -26,7 +27,10 @@ import sernet.hui.common.connect.URLUtil;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- *
+ * An EntityPropertyAdapter reads properties from an CnATreeElement.
+ * This class is used in the context of link tables.
+ * 
+ * See ILinkTableService for an introduction to link tables.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -37,14 +41,37 @@ public class EntityPropertyAdapter implements IPropertyAdapter<CnATreeElement> {
      */
     @Override
     public String getPropertyValue(CnATreeElement element, String propertyId) {
-        String value = element.getEntity().getSimpleValue(propertyId);
+        if(element==null) {
+            return null;
+        }
+        Entity entity = element.getEntity();
+        if(entity==null) {
+            return null;
+        }
+        
+        String value = entity.getSimpleValue(propertyId);
         PropertyType propertyType = getPropertyType(element.getTypeId(), propertyId);
-        if(propertyType!=null && propertyType.isURL()) {
-            value = URLUtil.getHref(value);
+        if(isUrlAndNotEmpty(propertyType, value)) {
+            value = URLUtil.createLinkForSpreadsheet(value);
+        }
+        if(isDate(propertyType)) {
+            value = entity.getDateInISO8601(propertyId);
         }
         return value;
     }
 
+    protected boolean isUrlAndNotEmpty(PropertyType propertyType, String value) {
+        return propertyType!=null && propertyType.isURL() && isNotEmpty(value);
+    }
+
+    private boolean isDate(PropertyType propertyType) {
+        return propertyType!=null && propertyType.isDate();
+    }
+    
+    private boolean isNotEmpty(String value) {
+        return value!=null && !value.isEmpty();
+    }
+    
     private PropertyType getPropertyType(String elementId, String propertyId) {
         return getEntityType(elementId).getPropertyType(propertyId);
     }
