@@ -163,7 +163,6 @@ public class LinkTableEditor extends EditorPart {
 
                     setTitleImage(decorated);
                     setPartName(veriniceLinkTable.getName() + Messages.VeriniceLinkTableEditor_7);
-                    isDirty = false;
                     toolTip = validationResult.getMessage();
                     firePropertyChange(IEditorPart.PROP_DIRTY);
                 }
