@@ -25,8 +25,6 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map.Entry;
 
-import javax.xml.bind.ValidationException;
-
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -44,6 +42,7 @@ import sernet.verinice.service.linktable.ColumnPathParseException;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.model.HUIObjectModelLoader;
+import sernet.verinice.service.model.ObjectModelValidationException;
 
 /**
  * Util class for {@link LinkTableComposite}
@@ -205,7 +204,7 @@ public class LinkTableUtil {
             validateColumnPathsElements(veriniceLinkTable.getColumnPaths());
             validateRelationIds(veriniceLinkTable.getRelationIds());
             validateRelations(veriniceLinkTable.getColumnPaths());
-        } catch (ValidationException e) {
+        } catch (ObjectModelValidationException e) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(e);
             }
@@ -217,39 +216,39 @@ public class LinkTableUtil {
         return result;
     }
 
-    private static void validateRelations(List<String> columnPaths) throws ValidationException {
+    private static void validateRelations(List<String> columnPaths) throws ObjectModelValidationException {
 
         Set<Entry<String, String>> relations = getRelations(columnPaths);
         for (Entry<String, String> relation : relations) {
             Set<String> possibleRelationPartners = loader
                     .getPossibleRelationPartners(relation.getKey());
             if (!possibleRelationPartners.contains(relation.getValue())) {
-                throw new ValidationException("Relation " + relation.toString() + " not found"); //$NON-NLS-1$ //$NON-NLS-2$
+                throw new ObjectModelValidationException("Relation " + relation.toString() + " not found"); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
 
     }
 
-    private static void validateColumnPathsElements(List<String> list) throws ValidationException {
+    private static void validateColumnPathsElements(List<String> list) throws ObjectModelValidationException {
 
         for (String path : list) {
             try {
                 validateColumnPath(path);
             } catch (Exception e) {
-                throw new ValidationException(path + " is no valid column path", e);
+                throw new ObjectModelValidationException(path + " is no valid column path", e);
             }
         }
 
     }
 
-    public static void validateColumnPath(String path) throws ValidationException {
+    public static void validateColumnPath(String path) throws ObjectModelValidationException {
         try {
             ColumnPathParser.throwExceptionIfInvalid(path);
         } catch (ColumnPathParseException e) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(e);
             }
-            throw new ValidationException(path + " is no valid column path", e); //$NON-NLS-1$
+            throw new ObjectModelValidationException(path + " is no valid column path", e); //$NON-NLS-1$
         }
         Set<String> objectTypeIds = ColumnPathParser
                 .getObjectTypeIds(Sets.newHashSet(path));
@@ -260,7 +259,7 @@ public class LinkTableUtil {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(id + " is no typeId"); //$NON-NLS-1$
                 }
-                throw new ValidationException(validTypeId + " is no valid type ID"); //$NON-NLS-1$
+                throw new ObjectModelValidationException(validTypeId + " is no valid type ID"); //$NON-NLS-1$
             }
         }
     }
@@ -291,14 +290,14 @@ public class LinkTableUtil {
         return relations;
     }
 
-    private static void validateRelationIds(List<String> list) throws ValidationException {
+    private static void validateRelationIds(List<String> list) throws ObjectModelValidationException {
 
         for (String id : list) {
             if (!loader.isValidRelationId(id)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(id + " is no RelationID"); //$NON-NLS-1$
                 }
-                throw new ValidationException(id + " is no valid relation id"); //$NON-NLS-1$
+                throw new ObjectModelValidationException(id + " is no valid relation id"); //$NON-NLS-1$
             }
         }
     }

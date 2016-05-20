@@ -40,6 +40,8 @@ import org.eclipse.ui.part.EditorPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
+import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.rcp.linktable.handlers.ExportLinkTableHandler;
 import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
@@ -85,9 +87,14 @@ public class LinkTableEditor extends EditorPart {
      */
     @Override
     public void createPartControl(Composite parent) {
-
-        Activator.inheritVeriniceContextState();
-        createEditor(parent);
+        try {
+            Activator.inheritVeriniceContextState();
+            createEditor(parent);
+        } catch (RuntimeException e) {
+            // Log the exception via Log4j:
+            LOG.error("Could not create the editor part", e);
+            throw e;
+        }
     }
 
     public void createEditor(Composite parent) {
@@ -209,6 +216,12 @@ public class LinkTableEditor extends EditorPart {
             veriniceLinkTable.setNewId();
             executeSave(vltFilePath);
         }
+    }
+    
+    @Override
+    public void dispose() {
+        EditorRegistry.getInstance().closeEditor(((LinkTableEditorInput) getEditorInput()).getId());
+        super.dispose();
     }
     
     private void executeSave(String filePath) {

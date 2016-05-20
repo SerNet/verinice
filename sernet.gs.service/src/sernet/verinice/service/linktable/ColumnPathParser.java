@@ -89,19 +89,57 @@ public abstract class ColumnPathParser {
     }
 
     public static void throwExceptionIfInvalid(String columnPath) throws ColumnPathParseException {
-            parse(columnPath);
+        parse(columnPath);
     }
 
+    /**
+     * Parses a link table (LTR) columnPath and returns the path
+     * as an instance of class VqlParser. Class VqlParser is generated 
+     * by ANTLR.
+     * 
+     * If a parse error occurs a ColumnPathParseException is thrown.
+     * 
+     * @param columnPath A link table (LTR) columnPath
+     * @return Column path as an instance of class VqlParser
+     */
     public static VqlParser parse(String columnPath) {
+        return parse(columnPath,false);
+    }
+    
+    /**
+     * Parses a link table (LTR) columnPath and returns the path
+     * as an instance of class VqlParser. Class VqlParser is generated 
+     * by ANTLR.
+     * 
+     * Parse exceptions are ignored if parameter ignoreParseExceptions
+     * is true. Ignored means that the parse exception is logged via Log4j
+     * but not rethrown.
+     * 
+     * If parameter ignoreParseExceptions true parse exceptions are wrapped
+     * in a ColumnPathParseException and rethrown afterwards.
+     * 
+     * @param columnPath A link table (LTR) columnPath
+     * @param ignoreParseExceptions
+     * @return Column path as an instance of class VqlParser
+     */
+    public static VqlParser parse(String columnPath, boolean ignoreParseExceptions) {
         VqlLexer lexer = new VqlLexer(new StringReader(columnPath));
         VqlParser parser = new VqlParser(lexer);
         try {
             parser.expr();
         } catch (RecognitionException | TokenStreamException e) {
-            String message = "Error while parsing VQL column path: " + columnPath;
-            throw new ColumnPathParseException(message, e);
+            handleParseError(e, columnPath, ignoreParseExceptions);
         }
         return parser;
+    }
+
+    protected static void handleParseError(ANTLRException e, String columnPath, boolean ignoreParseExceptions) {
+        final String message = "Error while parsing VQL column path: " + columnPath;
+        if(ignoreParseExceptions) {
+            LOG.error(message, e);
+        } else {
+            throw new ColumnPathParseException(message, e);
+        }
     }
 
     /**
