@@ -65,7 +65,7 @@ public class TreeLabelProvider extends LabelProvider  {
     
     private Image getImage(IISO27kElement element) {
         Image image = CnAImageProvider.getCustomImage((CnATreeElement)element);
-        if(image!=null) {
+        if (image!=null) {
             return image;
         }
         if (element instanceof Group && !(element instanceof ImportIsoGroup)) {
@@ -74,10 +74,12 @@ public class TreeLabelProvider extends LabelProvider  {
             image = ImageCache.getInstance().getISO27kTypeImage(group.getChildTypes()[0]);
         } else if (element instanceof SamtTopic) {
               SamtTopic topic = (SamtTopic) element;
-              image = ImageCache.getInstance().getControlImplementationImage(maturityService.getIsaState(topic));
+              image = ImageCache.getInstance().
+                      getControlImplementationImage(maturityService.getIsaState(topic));
         } else if (element instanceof Control) {
             Control control = (Control) element;
-            image = ImageCache.getInstance().getControlImplementationImage(control.getImplementation());
+            image = ImageCache.getInstance().
+                    getControlImplementationImage(control.getImplementation());
             
         } else {
             // else return type icon:
@@ -85,7 +87,7 @@ public class TreeLabelProvider extends LabelProvider  {
             image = ImageCache.getInstance().getISO27kTypeImage(elmt.getTypeId());
         }
         
-        if(image==null) {
+        if (image==null) {
             image = ImageCache.getInstance().getImage(ImageCache.UNKNOWN);
         }
         return image;
@@ -99,28 +101,23 @@ public class TreeLabelProvider extends LabelProvider  {
             if (obj instanceof CnATreeElement) {
                 CnATreeElement element = (CnATreeElement) obj;
                 StringBuilder sb = new StringBuilder();
-                if(element instanceof Control) {
-                    String abbreviation = ((Control)element).getAbbreviation();
-                    if(abbreviation!=null && !abbreviation.isEmpty()) {
-                        sb.append(abbreviation).append(" ");
-                    }
-                }
 
-                if(element instanceof IISO27kElement) {
+                if (element instanceof IISO27kElement) {
                     String abbreviation = ((IISO27kElement)element).getAbbreviation();
-                    if(abbreviation!=null && !abbreviation.isEmpty()) {
+                    if (abbreviation!=null && !abbreviation.isEmpty()) {
                         sb.append(abbreviation).append(" ");
                     }
                 }
                 String title = element.getTitle();
-                if(title!=null && !title.isEmpty()) {
+                if (title!=null && !title.isEmpty()) {
                     sb.append(title);
                 }
-                if(sb.length()>0) {
+                if (sb.length()>0) {
                     text = ItemControlTransformer.truncate(sb.toString(),maxTextWidth) ;
                 }
                 if (LOG.isDebugEnabled()) {
-                    text = text + " (scope: " + element.getScopeId() + ", uu: " + element.getUuid() + ", ext: " + element.getExtId() + ")";
+                    text = text + " (scope: " + element.getScopeId() + ","
+                            + " uu: " + element.getUuid() + ", ext: " + element.getExtId() + ")";
                 }
 
             }
