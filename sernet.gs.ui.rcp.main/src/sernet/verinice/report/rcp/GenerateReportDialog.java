@@ -226,7 +226,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
             filterReportTypes();
         }
         setTitle(Messages.GenerateReportDialog_0);
-        setMessage(Messages.GenerateReportDialog_7);
+        StringBuilder dialogMessage = new StringBuilder();  
+        dialogMessage.append(Messages.GenerateReportDialog_7);
+        dialogMessage.append(" ");
+        dialogMessage.append(Messages.GenerateReportDialog_36);
+        setMessage(dialogMessage.toString());
 
         final Composite composite = (Composite) super.createDialogArea(parent);
         GridLayout layout = (GridLayout) composite.getLayout();
@@ -742,13 +746,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
             MessageDialog.openError(getShell(), "Error", "An error occurred while creating report.");
             return;
         }
-        if(!LOG.isTraceEnabled()){
-            if(MessageDialog.openConfirm(getShell(), Messages.GenerateReportDialog_35, Messages.GenerateReportDialog_36)){
-                super.okPressed();
-            }
-        } else {
-            super.okPressed();
-        }
+        super.okPressed();
     }
 
     @Override
