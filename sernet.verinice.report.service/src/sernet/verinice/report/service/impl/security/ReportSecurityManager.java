@@ -414,7 +414,7 @@ public class ReportSecurityManager extends SecurityManager {
     }
     
     /**
-     * preventes use of Runtime.getRuntime().exec("rm -rf");
+     * preventes use of Runtime.getRuntime().exec("rm -rf /");
      */
       @Override
       public void checkExec(String command){

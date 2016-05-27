@@ -56,11 +56,12 @@ public class ReportExecutionThread extends Thread {
           runUntrustedCode();
       } catch (ReportSecurityException e){
           throw e;
-      } 
-      // without this, we cannot reset the securityManager, because
-      // that needs to be forbidden from within report excecution
-      reportSecurityManager.setProtectionEnabled(false);
-      System.setSecurityManager(old);
+      } finally {
+          // without this, we cannot reset the securityManager, because
+          // that needs to be forbidden from within report excecution
+          reportSecurityManager.setProtectionEnabled(false);
+          System.setSecurityManager(old);
+      }
     }
     
     /**
