@@ -38,7 +38,6 @@ import de.sernet.sync.risk.SyncScenario;
 import de.sernet.sync.risk.SyncScenarioList;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
@@ -63,7 +62,6 @@ public class RiskAnalysisImporter {
     private List<SyncControl> syncControlList;
     private Map<String, CnATreeElement> extIdElementMap;
     private IBaseDao<FinishedRiskAnalysisLists, Serializable> finishedRiskAnalysisListsDao;
-    private IBaseDao<FinishedRiskAnalysis, Serializable> finishedRiskAnalysesDao;
     private IBaseDao<OwnGefaehrdung, Serializable> ownGefaehrdungDao;
     private IBaseDao<RisikoMassnahme, Serializable> risikoMassnahmeDao;
     private IBaseDao<CnATreeElement, Serializable> elementDao;

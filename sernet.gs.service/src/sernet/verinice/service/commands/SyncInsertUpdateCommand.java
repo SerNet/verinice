@@ -266,9 +266,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         }
 
         Class clazz = CnATypeMapper.getClassFromTypeId(veriniceObjectType);
-        if(clazz == GefaehrdungsUmsetzung.class){
-            clazz.hashCode();
-        }
         IBaseDao<CnATreeElement, Serializable> dao = getDao(clazz);
 
         parent = (parent == null) ? accessContainer(clazz) : parent;
@@ -387,9 +384,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private CnATreeElement createElement(CnATreeElement parent, Class clazz) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         CnATreeElement child;
-        if(GefaehrdungsUmsetzung.class.equals(clazz)){
-            "".hashCode();
-        }
         // get constructor with parent-parameter and create new object:
         if (clazz.equals(Organization.class)) {
             child = (CnATreeElement) clazz.getConstructor(CnATreeElement.class, boolean.class).newInstance(parent, false);
@@ -599,17 +593,20 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     /**
-     * computes set of instances of {@link GefaehrdungsUmsetzung} that belongs to a {@link FinishedRiskAnalysis}
-     * that are not shown in the treeview, because they only appear on page one (checked) and two (unchecked)
-     * of the riskAnalysisWizard. The method returns a list that removes all instances of {@link GefaehrdungsUmsetzung}
-     * that are referenced in page 3 (or 4) of the wizard from the set that is shown on page 2.
+     * computes set of instances of {@link GefaehrdungsUmsetzung} that belongs 
+     * to a {@link FinishedRiskAnalysis} that are not shown in the treeview,
+     * because they only appear on page one (checked) and two (unchecked)
+     * of the riskAnalysisWizard. The method returns a list that removes 
+     * all instances of {@link GefaehrdungsUmsetzung} that are referenced 
+     * in page 3 (or 4) of the wizard from the set that is shown on page 2.
      * 
      * The returned elements are going to have 
      * 
      * scope_id and parent unset (set to null)
      * 
-     * which makes them some kind of an orphan element (and leads to the invisibelity in the treeview)
-     * @return
+     * which makes them some kind of an orphan element 
+     * (and leads to the invisibility in the treeview)
+     * @return filtered set of elements that needs to be resetted
      */
     private Set<String> filterOrphanElements() {
         Set<String> extIdsToOrphanize = new HashSet<>();
@@ -618,9 +615,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             extIdsToOrphanize.addAll(syncRiskAnalysis.getScenarios().getExtId());
         }
         
-        for(SyncRiskAnalysis syncRiskAnalysis : risk.getAnalysis()){
-            for(String extIdToKeep : syncRiskAnalysis.getScenariosNotTreated().getExtId()){
-                if(extIdsToOrphanize.contains(extIdToKeep)){
+        for (SyncRiskAnalysis syncRiskAnalysis : risk.getAnalysis()){
+            for (String extIdToKeep : syncRiskAnalysis.getScenariosNotTreated().getExtId()){
+                if (extIdsToOrphanize.contains(extIdToKeep)){
                     extIdsToOrphanize.remove(extIdToKeep);
                 }
             }
@@ -635,7 +632,6 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      * all instances of {@link GefaehrdungsUmsetzung} that are not part of page 3 and 4
      * should not be displayed (/existant from the users perspective) in the treeview. 
      * unsetting scopeId and parent (id) leads to this behaviour 
-     * @param orphanList
      */
     private void reOrphanizeAssociatedGefaehrdungen(Set<String> orphanList) {
         if (orphanList.size() > 0){
@@ -648,7 +644,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
     }
 
     /**
-     * sets parent and scopeId to null, if typeId of parameter @param gefaehrdung equals GefaehrdungsUmsetzung.TYPE_ID 
+     * sets parent and scopeId to null, if typeId of parameter @param gefaehrdung 
+     * equals GefaehrdungsUmsetzung.TYPE_ID 
      * 
      */
     private void setScopeIdAndParentNull(CnATreeElement gefaehrdung) {
@@ -656,8 +653,12 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             GefaehrdungsUmsetzung gUms = (GefaehrdungsUmsetzung) gefaehrdung;
             gUms.setParent(null);
             gUms.setScopeId(null);
+            
             @SuppressWarnings("unchecked")
-            IBaseDao<GefaehrdungsUmsetzung, Serializable> dao = (IBaseDao<GefaehrdungsUmsetzung, Serializable>) getDaoFactory().getDAO( gUms.getClass());
+            IBaseDao<GefaehrdungsUmsetzung, Serializable> dao = 
+            (IBaseDao<GefaehrdungsUmsetzung, Serializable>) getDaoFactory().
+            getDAO( gUms.getClass());
+            
             dao.saveOrUpdate(gUms);
         }
     }

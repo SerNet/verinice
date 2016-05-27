@@ -132,11 +132,14 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     private transient IBaseDao<Permission, Serializable> permissionDao;
     private transient ExecutorService taskExecutor;
  
-    public ExportCommand( final List<CnATreeElement> elements, final String sourceId, final boolean reImport) {
+    public ExportCommand( final List<CnATreeElement> elements, 
+                final String sourceId, final boolean reImport) {
         this(elements, sourceId, reImport, SyncParameter.EXPORT_FORMAT_DEFAULT, null);
     }
     
-	public ExportCommand( final List<CnATreeElement> elements, final String sourceId, final boolean reImport, final Integer exportFormat) {
+	public ExportCommand( final List<CnATreeElement> elements, 
+	            final String sourceId, final boolean reImport, 
+	            final Integer exportFormat) {
 	    this(elements, sourceId, reImport, exportFormat, null);
 	}
 	
@@ -251,7 +254,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     
     private SyncVnaSchemaVersion createVersionData() {
         
-        final VnaSchemaVersion vnaSchemaVersion = getCommandService().getVnaSchemaVersion();
+        final VnaSchemaVersion vnaSchemaVersion 
+            = getCommandService().getVnaSchemaVersion();
         final SyncVnaSchemaVersion formatVersion = new SyncVnaSchemaVersion();
         
         // Initialize the data transfer object
@@ -287,7 +291,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         this.exportRiskAnalysis = exportRiskAnalysis;
     }
 
-    private void exportElement(final ExportTransaction exportTransaction) throws CommandException {
+    private void exportElement(final ExportTransaction exportTransaction) 
+                throws CommandException {
         final ExportThread thread = new ExportThread(exportTransaction);
         configureThread(thread);
         thread.export();
@@ -300,14 +305,16 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 		    CnATreeElement dependant  = link.getDependant();
 		    dependant = getFromCache(dependant);
 		    if(dependant==null) {
-		        log.warn("Dependant of link not found. Check access rights. " + link.getId());
+		        log.warn("Dependant of link not found. Check access rights. "
+		                + link.getId());
 		        continue;
 		    }
 		    link.setDependant(dependant);
 		    CnATreeElement dependency  = link.getDependency();
 		    dependency = getFromCache(dependency);
 		    if(dependency==null) {
-                log.warn("Dependency of link not found. Check access rights. " + link.getId());
+                log.warn("Dependency of link not found. Check access rights. "
+                        + link.getId());
                 continue;
             }
 		    link.setDependency(dependency);
@@ -315,7 +322,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 		}
     }
     
-    private void exportChildren(final ExportTransaction transaction) throws CommandException {      
+    private void exportChildren(final ExportTransaction transaction) 
+                throws CommandException {      
         final int timeOutFactor = 40;
         final CnATreeElement element = transaction.getElement();
         final Set<CnATreeElement> children = element.getChildren();
@@ -323,12 +331,14 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             children.addAll(getRiskAnalysisOrphanElements(element));
         }
         
-        final List<ExportTransaction> transactionList = new ArrayList<ExportTransaction>();
+        final List<ExportTransaction> transactionList 
+            = new ArrayList<ExportTransaction>();
         
         taskExecutor = Executors.newFixedThreadPool(getMaxNumberOfThreads());
         if(!children.isEmpty()) {
             for( final CnATreeElement child : children ) {
-                final ExportTransaction childTransaction = new ExportTransaction(child);
+                final ExportTransaction childTransaction 
+                    = new ExportTransaction(child);
                 transactionList.add(childTransaction);
                 final ExportThread thread = new ExportThread(childTransaction);
                 configureThread(thread);
@@ -340,7 +350,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                         final ExportThread exportThread = (ExportThread) thread;
                         synchronized(LOCK) {
                             if(exportThread.getSyncObject()!=null) {
-                                transaction.getTarget().getChildren().add(exportThread.getSyncObject());
+                                transaction.getTarget().getChildren()
+                                .add(exportThread.getSyncObject());
                             }
                             getValuesFromThread(exportThread);
                         }                 
@@ -364,16 +375,20 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
     }
     
     private boolean checkElement(final CnATreeElement element) {
-        return (getEntityTypesBlackList() == null || getEntityTypesBlackList().get(element.getTypeId()) == null)
-         && (getEntityClassBlackList() == null || getEntityClassBlackList().get(element.getClass()) == null);
+        return (getEntityTypesBlackList() == null || 
+                    getEntityTypesBlackList().get(element.getTypeId()) == null)
+                && (getEntityClassBlackList() == null 
+                    || getEntityClassBlackList().get(element.getClass()) == null);
     }
     
-    private Set<CnATreeElement> getRiskAnalysisOrphanElements(final CnATreeElement element) throws CommandException {
-        final Set<CnATreeElement> returnValue = new HashSet<CnATreeElement>();
-        FindRiskAnalysisListsByParentID loader = new FindRiskAnalysisListsByParentID(element.getDbId());
-        loader = getCommandService().executeCommand(loader);
-        returnValue.addAll(loader.getFoundLists().getAssociatedGefaehrdungen());
-        return returnValue;
+    private Set<CnATreeElement> getRiskAnalysisOrphanElements
+        (final CnATreeElement element) throws CommandException {
+            final Set<CnATreeElement> returnValue = new HashSet<CnATreeElement>();
+            FindRiskAnalysisListsByParentID loader 
+                = new FindRiskAnalysisListsByParentID(element.getDbId());
+            loader = getCommandService().executeCommand(loader);
+            returnValue.addAll(loader.getFoundLists().getAssociatedGefaehrdungen());
+            return returnValue;
     }
 
     /**
@@ -387,21 +402,32 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             final ByteArrayOutputStream byteOut = new ByteArrayOutputStream();        
             final ZipOutputStream zipOut = new ZipOutputStream(byteOut);     
             
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.VERINICE_XML, xmlData);
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.VERINICE_XML,
+                    xmlData);
             if(isRiskAnalysis()) {
-                ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XML, xmlDataRiskAnalysis);
+                ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XML,
+                        xmlDataRiskAnalysis);
             }
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.DATA_XSD, StreamFactory.getDataXsdAsStream());
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.MAPPING_XSD, StreamFactory.getMappingXsdAsStream());
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.SYNC_XSD, StreamFactory.getSyncXsdAsStream());
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XSD, StreamFactory.getRiskXsdAsStream());
-            ExportFactory.createZipEntry(zipOut, VeriniceArchive.README_TXT, StreamFactory.getReadmeAsStream());
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.DATA_XSD, 
+                    StreamFactory.getDataXsdAsStream());
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.MAPPING_XSD, 
+                    StreamFactory.getMappingXsdAsStream());
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.SYNC_XSD, 
+                    StreamFactory.getSyncXsdAsStream());
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.RISK_XSD, 
+                    StreamFactory.getRiskXsdAsStream());
+            ExportFactory.createZipEntry(zipOut, VeriniceArchive.README_TXT, 
+                    StreamFactory.getReadmeAsStream());
                      
             for (final Attachment attachment : getAttachmentSet()) {
-                LoadAttachmentFile command = new LoadAttachmentFile(attachment.getDbId(), true);      
+                LoadAttachmentFile command = 
+                        new LoadAttachmentFile(attachment.getDbId(), true);      
                 command = getCommandService().executeCommand(command);
-                if(command.getAttachmentFile()!=null && command.getAttachmentFile().getFileData()!=null) {
-                    ExportFactory.createZipEntry(zipOut, ExportFactory.createZipFileName(attachment), command.getAttachmentFile().getFileData());                  
+                if(command.getAttachmentFile()!=null 
+                        && command.getAttachmentFile().getFileData()!=null) {
+                    ExportFactory.createZipEntry(zipOut, ExportFactory
+                            .createZipFileName(attachment), 
+                            command.getAttachmentFile().getFileData());                  
                 }
                 command.setAttachmentFile(null);            
             }
@@ -425,10 +451,12 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         try {
             // Wait a while for existing tasks to terminate
             if (!taskExecutor.awaitTermination(timeout, TimeUnit.SECONDS)) {
-                getLog().error("Export executer timeout reached: " + timeout + "s. Terminating execution now.");
+                getLog().error("Export executer timeout reached: " 
+            + timeout + "s. Terminating execution now.");
                 taskExecutor.shutdownNow(); // Cancel currently executing tasks
                 // Wait a while for tasks to respond to being cancelled
-                if (!taskExecutor.awaitTermination(secondsUntilTimeOut, TimeUnit.SECONDS)) {
+                if (!taskExecutor.awaitTermination(secondsUntilTimeOut,
+                        TimeUnit.SECONDS)) {
                     getLog().error("Export executer did not terminate.");
                 }
             }
@@ -456,7 +484,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
                 mapObjectType.setIntId(entityType.getId());
                 mapObjectType.setExtId(entityType.getId());
                 
-                final List<MapAttributeType> mapAttributeTypes = mapObjectType.getMapAttributeType();
+                final List<MapAttributeType> mapAttributeTypes 
+                    = mapObjectType.getMapAttributeType();
                 for (final PropertyType propertyType : entityType.getAllPropertyTypes())
                 {
                     // Add <mapAttributeType> for this property type to current <mapObjectType>:
@@ -488,10 +517,12 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         if(cachedElement!=null) {
             element = (CnATreeElement) cachedElement.getValue();
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Element from cache: " + element.getTitle() + ", UUID: " + element.getUuid());
+                getLog().debug("Element from cache: " + element.getTitle() 
+                + ", UUID: " + element.getUuid());
             }
         } else {
-            element = getDao().retrieve(element.getDbId(), RetrieveInfo.getPropertyInstance());
+            element = getDao().retrieve(element.getDbId(), 
+                    RetrieveInfo.getPropertyInstance());
             if(element!=null) {
                 getCache().put(new Element(element.getUuid(), element));
             }
@@ -522,7 +553,8 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
         exportedTypes.addAll(exportThread.getExportedTypes());
         changedElements.addAll(exportThread.getChangedElementList());
         final CnATreeElement element = getElementFromThread(exportThread);
-        if (element != null && FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
+        if (element != null 
+                && FinishedRiskAnalysis.TYPE_ID.equals(element.getTypeId())) {
             riskAnalysisIdSet.add(element.getDbId());
         }
     }
@@ -602,7 +634,9 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
 	};
 	
 	private Cache getCache() { 	
-	    if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) || cache==null || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
+	    if(manager==null || Status.STATUS_SHUTDOWN.equals(manager.getStatus()) 
+	            || cache==null 
+	            || !Status.STATUS_ALIVE.equals(cache.getStatus())) {
 	        cache = createCache();
 	    } else {
 	        cache = getManager().getCache(cacheId);
@@ -697,7 +731,10 @@ public class ExportCommand extends ChangeLoggingCommand implements IChangeLoggin
             try {
                 number = Integer.valueOf((String) prop);
             } catch( final Exception e) {
-                getLog().error("Error while readind max number of thread from property: " + PROP_MAX_NUMBER_OF_THREADS + ", value is: " + prop, e);
+                getLog().error("Error while readind max number of "
+                        + "thread from property: " 
+                        + PROP_MAX_NUMBER_OF_THREADS 
+                        + ", value is: " + prop, e);
                 number = DEFAULT_NUMBER_OF_THREADS;
             }
         }
