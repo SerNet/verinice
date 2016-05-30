@@ -85,36 +85,55 @@ public class ReportClassLoader extends ClassLoader {
                 LOG.debug("authorized class:\t" + name + " loaded via parent classloader");
                 return trustedClass;
             }catch (ClassNotFoundException e){
-                LOG.debug("Class " + name + " not found, trying next way");
-                if (!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
-                    String qualifiedName = tryGuessingQualifiedClassname(name);
-                    if (!name.equals(qualifiedName)){
-                        Class<?> trustedClass =  parentClassLoader.loadClass(qualifiedName);
-                        LOG.debug("class:\t" + qualifiedName + " for input:\t" + name + " successfully loaded by parentclassloader");
-                        return trustedClass;
-                    } else {
-                        throw getSecurityClassLoadingException(name);   
-                    }
-                } else {
-                    LOG.debug("[block1]can not determine class for name:\t" + name);
-                }
-            } finally{
-                LOG.debug("reached finally block, returning null");
-                return null;
-            }
+                return tryAlternativClassloadingApproach(name);
+            } 
         } else if (!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
-            String qualifiedName = tryGuessingQualifiedClassname(name);
-            if (!name.equals(qualifiedName)){
-                Class<?> trustedClass = parentClassLoader.loadClass(qualifiedName);
-                LOG.debug("loading class:\t" + qualifiedName + " for input:\t" + name);
-                return trustedClass;
-            } else {
-                LOG.debug("[block2]can not determine class for name:\t" + name);
-                throw getSecurityClassLoadingException(name);   
-            }
+            return tryLoadingClassByGuessingItsName(name);
         } 
         LOG.debug("[block3]can not determine class for name:\t" + name);
         throw getSecurityClassLoadingException(name);
+    }
+
+
+    /**
+     * @param name
+     * @return
+     * @throws ClassNotFoundException
+     * @throws ClassLoadingDeniedException
+     */
+    private Class<?> tryLoadingClassByGuessingItsName(String name) throws ClassNotFoundException, ClassLoadingDeniedException {
+        String qualifiedName = tryGuessingQualifiedClassname(name);
+        if (!name.equals(qualifiedName)){
+            Class<?> trustedClass = parentClassLoader.loadClass(qualifiedName);
+            LOG.debug("loading class:\t" + qualifiedName + " for input:\t" + name);
+            return trustedClass;
+        } else {
+            LOG.debug("[block2]can not determine class for name:\t" + name);
+            throw getSecurityClassLoadingException(name);   
+        }
+    }
+
+
+    /**
+     * @param name
+     * @throws ClassNotFoundException
+     * @throws ClassLoadingDeniedException
+     */
+    private Class tryAlternativClassloadingApproach(String name) throws ClassNotFoundException, ClassLoadingDeniedException {
+        LOG.debug("Class " + name + " not found, trying next way");
+        if (!AUTHORIZED_FOR_EXTERNAL_USE.contains(name)){
+            String qualifiedName = tryGuessingQualifiedClassname(name);
+            if (!name.equals(qualifiedName)){
+                Class<?> trustedClass =  parentClassLoader.loadClass(qualifiedName);
+                LOG.debug("class:\t" + qualifiedName + " for input:\t" + name + " successfully loaded by parentclassloader");
+                return trustedClass;
+            } else {
+                throw getSecurityClassLoadingException(name);   
+            }
+        } else {
+            LOG.debug("[block1]can not determine class for name:\t" + name);
+        }
+        throw new ClassNotFoundException("Could not determine path of class:\t" + name + " within classpath");
     }
 
 

@@ -561,7 +561,14 @@ public class ReportSecurityManager extends SecurityManager {
         
         FilePermission filePermission = (FilePermission)perm;
         
+        
         if (filePermission.getActions().contains("delete") || filePermission.getActions().contains("write")){
+            if(("file:" + filePermission.getName()).startsWith(System.getProperty
+                    ("osgi.instance.area") + ".metadata" + File.separator 
+                    + ".plugins" + File.separator + "org.eclipse.core.runtime"
+                    + File.separator + ".settings")){
+                throwSecurityException(filePermission);
+            }
             if (perm.getName().startsWith(reportSecurityContext.getLogFileLocation())){
                 return;
             } else if (reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath().equals(perm.getName())) {// this wont work on windows, needs to be debuged
