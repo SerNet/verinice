@@ -74,6 +74,7 @@
         <mapping resource="sernet/gs/ui/rcp/hibernate/Addition.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/AttachmentFile.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/CnAValidation.hbm.xml"/>
+        <mapping resource="sernet/gs/ui/rcp/hibernate/LicenseManagamentEntry.hbm.xml"/>
   
         
         <!-- Workaround for Hibernate bug HHH-2146

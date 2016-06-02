@@ -91,6 +91,10 @@
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	
+	<bean id="licenseManagementDao" class="sernet.verinice.hibernate.LicenseManagementEntryDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>	
 
 	<!-- business object Dao definitions follow ================================================================== -->
 
@@ -618,13 +622,13 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
-    
 	<bean id="accountGroupDao" class="sernet.verinice.hibernate.HibernateDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.common.accountgroup.AccountGroup</value>
 		</constructor-arg>
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+    
     
     <bean id="finishedRiskAnalysisListsDao" class="sernet.verinice.hibernate.FinishedRiskAnalysisListsDao">
         <property name="sessionFactory" ref="sessionFactory" />

@@ -480,6 +480,10 @@ public interface IDAOFactory {
     
     void setFinishedRiskAnalysisListsDao(IFinishedRiskAnalysisListsDao dao);
     
+    void setLicenseManagementDao(ILicenseManagementEntryDao dao);
+    
+    ILicenseManagementEntryDao getLicenseManagementEntryDao();
+    
 	@SuppressWarnings("unchecked")
 	/**
 	 *  Tries to find a DAO by class.
