@@ -110,6 +110,8 @@ public final class Messages extends NLS {
     public static String CnATreeElementSelectionDialog_6;
     public static String CnATreeElementSelectionDialog_7;
     public static String CnATreeElementSelectionDialog_8;
+    public static String CnATreeElementSelectionDialog_9;
+    public static String CnATreeElementSelectionDialog_10;
     public static String EditBausteinVorgabeDialog_0;
     public static String EditBausteinVorgabeDialog_1;
     public static String EditBausteinVorgabeDialog_2;
