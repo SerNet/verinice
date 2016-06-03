@@ -67,8 +67,8 @@ public class ElementPropertyElement extends PropertyElement<CnATreeElement>  {
     }
     
     protected String getPropertyValue(CnATreeElement element) {
-        IPropertyAdapter<CnATreeElement> adapter = PropertyAdapterFactory.getAdapter(element);
-        return adapter.getPropertyValue(element, propertyTypeId);
+        IPropertyAdapter adapter = PropertyAdapterFactory.getAdapter(element);
+        return adapter.getPropertyValue(propertyTypeId);
     }
 
 }

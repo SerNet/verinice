@@ -34,13 +34,20 @@ import sernet.verinice.model.common.CnATreeElement;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class EntityPropertyAdapter implements IPropertyAdapter<CnATreeElement> {
+public class EntityPropertyAdapter implements IPropertyAdapter {
+
+
+    private final CnATreeElement element;
+
+    public EntityPropertyAdapter(CnATreeElement elment) {
+        this.element = elment;
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.service.linktable.IPropertyAdapter#getPropertyValue(java.lang.Object, java.lang.String)
      */
     @Override
-    public String getPropertyValue(CnATreeElement element, String propertyId) {
+    public String getPropertyValue(String propertyId) {
         if(element==null) {
             return null;
         }

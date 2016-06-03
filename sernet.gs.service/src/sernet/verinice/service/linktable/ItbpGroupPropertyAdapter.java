@@ -26,17 +26,19 @@ import sernet.verinice.model.bsi.IBSIStrukturKategorie;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class ItbpGroupPropertyAdapter implements IPropertyAdapter<IBSIStrukturKategorie> {
+public class ItbpGroupPropertyAdapter implements IPropertyAdapter {
 
-    public ItbpGroupPropertyAdapter() {
-        super();
+    private final IBSIStrukturKategorie element;
+
+    public ItbpGroupPropertyAdapter(IBSIStrukturKategorie element) {
+        this.element = element;
     }
 
     /* (non-Javadoc)
      * @see sernet.verinice.service.linktable.IPropertyAdapter#getPropertyValue(java.lang.Object, java.lang.String)
      */
     @Override
-    public String getPropertyValue(IBSIStrukturKategorie element, String propertyId) {
+    public String getPropertyValue(String propertyId) {
         return element.getTitle();
     }
 

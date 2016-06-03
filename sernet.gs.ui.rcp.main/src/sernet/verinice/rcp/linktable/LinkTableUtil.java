@@ -169,31 +169,6 @@ public class LinkTableUtil {
 
     }
 
-    /**
-     * Returns a list of labels for he
-     * {@link VeriniceLinkTable#getColumnPaths()}
-     * 
-     * @param veriniceLinkTable
-     * @return
-     */
-    public static List<String> getTableHeaders(VeriniceLinkTable veriniceLinkTable) {
-
-        ArrayList<String> headers = new ArrayList<>();
-        for (String element : veriniceLinkTable.getColumnPaths()) {
-            int propertyBeginning = element
-                    .lastIndexOf(LinkTableOperationType.PROPERTY.getOutput());
-            String propertyId = element.substring(propertyBeginning + 1);
-            if (element.contains(LinkTableOperationType.RELATION.getOutput())) {
-                headers.add(Messages.getString(propertyId));
-            } else {
-
-                headers.add(loader.getLabel(propertyId));
-            }
-        }
-
-        return headers;
-
-    }
 
     public static LinkTableValidationResult isValidVeriniceLinkTable(
             VeriniceLinkTable veriniceLinkTable) {

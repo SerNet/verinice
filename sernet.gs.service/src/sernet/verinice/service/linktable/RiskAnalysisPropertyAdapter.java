@@ -26,18 +26,17 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class RiskAnalysisPropertyAdapter implements IPropertyAdapter<FinishedRiskAnalysis> {
+public class RiskAnalysisPropertyAdapter implements IPropertyAdapter {
 
-    public RiskAnalysisPropertyAdapter() {
-        super();
+    private final FinishedRiskAnalysis finishedRiskAnalysis;
+
+    public RiskAnalysisPropertyAdapter(FinishedRiskAnalysis finishedRiskAnalysis) {
+        this.finishedRiskAnalysis = finishedRiskAnalysis;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.IPropertyAdapter#getPropertyValue(java.lang.Object, java.lang.String)
-     */
     @Override
-    public String getPropertyValue(FinishedRiskAnalysis element, String propertyId) {
-        return element.getTitle();
+    public String getPropertyValue(String propertyId) {
+        return finishedRiskAnalysis.getTitle();
     }
 
 }

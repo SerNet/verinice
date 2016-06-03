@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Daniel Murygin <dm{a}sernet{dot}de>.
+ * Copyright (c) 2016 Benjamin Weißenfels.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -15,24 +15,20 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  * Contributors:
- *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
+ *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.linktable;
+package sernet.verinice.service.linktable.generator.mergepath;
+
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * An IPropertyAdapter reads a properties from an element T.
- * This interface is used in the context of link tables.
- * 
- * See ILinkTableService for an introduction to link tables.
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de> 
  *
- * @author Daniel Murygin <dm{a}sernet{dot}de>
- * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public interface IPropertyAdapter {
-
+public interface PathElement {
+    
     /**
-     * @param propertyId The is of a property
-     * @return The value of the property with id 'propertyId' from an element
+     * Returns the type id of a {@link CnATreeElement}.
      */
-    String getPropertyValue(String propertyId);
+    String getTypeId();
 }

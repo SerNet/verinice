@@ -46,6 +46,7 @@ import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.ILinkTableService;
 import sernet.verinice.service.linktable.LinkTableConfiguration;
 import sernet.verinice.service.linktable.LinkTableService;
+import sernet.verinice.service.linktable.generator.GraphLinkedTableCreator;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 import sernet.verinice.service.test.helper.vnaimport.BeforeEachVNAImportHelper;
 
@@ -69,6 +70,7 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
 
     @Test
     public void testChildParentReport() throws CommandException {
+        service.setLinkTableCreator(new GraphLinkedTableCreator());
         CnATreeElement org = loadElement(SOURCE_ID, EXT_ID_ORG);
 
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
