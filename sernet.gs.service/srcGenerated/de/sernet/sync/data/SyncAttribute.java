@@ -10,6 +10,7 @@ package de.sernet.sync.data;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -39,13 +40,17 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "syncAttribute", propOrder = {
     "name",
-    "value"
+    "value",
+    "limitedLicense",
+    "licenseContentId"
 })
 public class SyncAttribute {
 
     @XmlElement(required = true)
     protected String name;
     protected List<String> value;
+    protected List<Boolean> limitedLicense;
+    protected List<String> licenseContentId;
 
     /**
      * Gets the value of the name property.
@@ -98,6 +103,40 @@ public class SyncAttribute {
             value = new ArrayList<String>();
         }
         return this.value;
+    }
+
+    /**
+     * @return the limitedLicense
+     */
+    public List<Boolean> getLimitedLicense() {
+        if(limitedLicense == null){
+            limitedLicense = new ArrayList<Boolean>();
+        }
+        return limitedLicense;
+    }
+
+    /**
+     * @param limitedLicense the limitedLicense to set
+     */
+    public void setLimitedLicense(List<Boolean> limitedLicense) {
+        this.limitedLicense = limitedLicense;
+    }
+
+    /**
+     * @return the licenseContentId
+     */
+    public List<String> getLicenseContentId() {
+        if(licenseContentId == null){
+            licenseContentId = new ArrayList<String>();
+        }
+        return licenseContentId;
+    }
+
+    /**
+     * @param licenseContentId the licenseContentId to set
+     */
+    public void setLicenseContentId(List<String> licenseContentId) {
+        this.licenseContentId = licenseContentId;
     }
 
 }

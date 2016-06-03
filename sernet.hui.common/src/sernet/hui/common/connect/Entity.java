@@ -356,7 +356,107 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	    setSimpleValue(type, Integer.toString(value));
 	}
 	
-    /**
+	/**
+	 * Sets the value for a given property.
+	 * 
+	 * <p>Since internally a property value is a multi-value this interface allows setting
+	 * these values in one row.</p>
+	 * 
+	 * <p>Note: Using this method is preferred over modifying a {@link PropertyList} object itself.</p>
+	 * 
+	 * <p>Note: The actual values that are imported have to be <em>untranslated</em> IOW should directly
+	 * represent the strings used in the SNCA.xml</p>
+	 * @param huiTypeFactory
+	 * @param propertyTypeId
+	 * @param foreignProperties
+	 */
+	public void importProperties(HUITypeFactory huiTypeFactory, 
+	        String propertyTypeId, List<String> foreignProperties, 
+	        List<Boolean> foreinLimitedLicense, 
+	        List<String> foreignLicenseContentId,
+	        boolean licenseManagement) {
+		PropertyList pl = typedPropertyLists.get(propertyTypeId);
+        if(pl==null) {
+            pl = new PropertyList();
+            typedPropertyLists.put(propertyTypeId,pl);
+        }
+		
+		// It would be possible to create a new list and make the PropertyList object
+		// use that but that causes problems with hibernate. As such the existing list
+		// is taken and cleared before use.
+		List<Property> properties = pl.getProperties();
+		if(properties==null) {
+		    properties = new LinkedList<Property>();
+		    pl.setProperties(properties);
+		} else {
+		    properties.clear();
+		}
+		
+		
+		
+		for (int i = 0; i < foreignProperties.size(); i++)
+		{
+		    String value = foreignProperties.get(i);
+		    PropertyType propertyType = huiTypeFactory.getPropertyType(this.entityType, propertyTypeId);
+		    Property p = new Property();
+		    
+		    if (propertyType == null) {
+		        getLog().warn("Property-type was not found in SNCA.xml: " + propertyTypeId + ", entity type: " + this.entityType);
+		    }
+		    
+		    if(propertyType!=null && propertyType.isSingleSelect() && value!=null) {
+		        List<IMLPropertyOption> optionList = propertyType.getOptions();
+		        boolean found = false;
+		        for (IMLPropertyOption option : optionList) {
+		            if(value.equals(option.getName())) {
+		                value = option.getId();
+		                found = true;
+		            } else if(value.equals(option.getId())) {
+		                found = true;
+		            }
+                }
+		        if(!found) {
+		            getLog().warn("No value found for option property: " + propertyTypeId + " of entity: " + this.entityType + ". Importing unmapped value: " + value);
+		        }
+		    } 		
+			p.setPropertyType(propertyTypeId);
+			p.setPropertyValue(value);
+			p.setParent(this);
+			if(licenseManagement){
+			    p.setLimitedLicense(foreinLimitedLicense.get(i));
+			    p.setLicenseContentId(foreignLicenseContentId.get(i));
+			}
+			properties.add(p);
+		}
+	}
+	
+	/**
+	 * Retrieves the raw, untranslated individual data values and stores them in a given
+	 * list.
+	 * 
+	 * <p>The return values denotes the amount of values exported and can be used to find
+	 * out whether any work was done.</p>
+	 *  
+	 * @param propertyType
+	 * @param foreignProperties
+	 * 
+	 * @return The amount of individual values exported.
+	 */
+	public int exportProperties(String propertyType, List<String> foreignProperties, List<Boolean> foreignIsLicenseLimited, List<String> foreinLicenseContentId) {
+		int amount = 0;
+		for (Property prop : getProperties(propertyType).getProperties())
+		{
+			foreignProperties.add(prop.getPropertyValue());
+			foreignIsLicenseLimited.add(prop.isLimitedLicense() != null ? prop.isLimitedLicense() : false);
+			foreinLicenseContentId.add(prop.getLicenseContentId() != null  ? prop.getLicenseContentId() : "");
+			amount++;
+		}
+		
+		return amount;
+	}
+	
+	
+	 /**
      * Copy all property values from given entity to this one
      * 
      * @param source The source entity for copying       

@@ -20,6 +20,12 @@
         <property name="propertyValue" type="java.lang.String" length="400000">
 			<column name="propertyValue" sql-type="NCLOB"/>
 		</property>
+		
+		<property name="licenseContentId"/>
+		
+		<property name="limitedLicense" type="java.lang.Boolean" >
+        	<column name="limitedlicense" not-null="false" default="0" />
+        </property>
 	
     </class>
 </hibernate-mapping>

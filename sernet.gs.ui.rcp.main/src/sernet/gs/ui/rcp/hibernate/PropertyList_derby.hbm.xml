@@ -48,7 +48,13 @@
 					class="Entity"
 					fetch="join"
 					 />
-				-->	 
+				-->
+				
+				<property name="licenseContentId" />
+
+				<property name="limitedLicense" type="boolean">
+					<column name="limitedlicense" not-null="false" default="0" />
+				</property>	 
 					 
 			</composite-element>
 				

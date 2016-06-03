@@ -339,7 +339,7 @@ This variant:
 		factory-method="createVnaSchemaVersion">
 		<constructor-arg>
 			<!-- The current schema which is written into the xml date export -->
-			<value>vna-1.0</value>
+			<value>vna-1.1</value>
 		</constructor-arg>
 		<constructor-arg>
 			<!-- This list to which vna versions the current schema is compatible -->
