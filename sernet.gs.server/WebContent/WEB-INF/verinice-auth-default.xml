@@ -180,7 +180,6 @@
         	"showallfiles" 
     		"addsecurityassessment"-->
            	<action id="accesscontrol" />
-	        <action id="accountsettings" />
 	        <action id="addbsielement" />
 	        <action id="addcatalog" />
 	        <action id="addfile" />
@@ -208,7 +207,6 @@
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
-          <action id="editprofile" />
           <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
