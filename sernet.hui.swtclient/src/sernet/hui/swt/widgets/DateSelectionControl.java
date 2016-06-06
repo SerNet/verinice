@@ -150,8 +150,9 @@ public class DateSelectionControl implements IHuiControl {
 		dateTime.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (!isSameDay(savedProp.getPropertyValue(), getDateInMillis())){				
-					savedProp.setPropertyValue(Long.toString(getDateInMillis()), true, dateTime);
+			    Calendar calendar = getCalendar();
+				if (!isSameDay(savedProp.getPropertyValue(), calendar.getTimeInMillis())){				
+					savedProp.setPropertyValue(calendar, true, dateTime);
 				}
 			}
 		});
@@ -217,11 +218,10 @@ public class DateSelectionControl implements IHuiControl {
 				.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 	}
 
-	protected long getDateInMillis() {
+	protected Calendar getCalendar() {
 		Calendar calendar = Calendar.getInstance();
-		calendar.set(dateTime.getYear(), dateTime.getMonth(),
-				dateTime.getDay());
-		return calendar.getTimeInMillis();
+		calendar.set(dateTime.getYear(), dateTime.getMonth(), dateTime.getDay());
+		return calendar;
 	}
 
 	public void setFocus() {

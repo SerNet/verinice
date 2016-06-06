@@ -31,6 +31,9 @@ import java.util.Locale;
  * @version $Id: FormInputParser.java,v 1.1 2005/12/27 16:41:18 aprack Exp $
  */
 public abstract class FormInputParser {
+    
+    public static final SimpleDateFormat DATE_FORMAT_DEFAULT = new SimpleDateFormat("EEE, dd.MM.yyyy"); //$NON-NLS-1$
+    
 	private static final boolean GROUPING = true;
 	private static NumberFormat numFmt;
 	private static NumberFormat priceFmt; 
@@ -40,6 +43,7 @@ public abstract class FormInputParser {
 		numFmt.setGroupingUsed(GROUPING);
 		priceFmt = NumberFormat.getCurrencyInstance(Locale.GERMANY);
 		priceFmt.setGroupingUsed(GROUPING);
+		DATE_FORMAT_DEFAULT.setLenient(true);
 	}
 	
 	public static float stringToCurrency(String fieldName, String s) throws DBException {
@@ -88,8 +92,7 @@ public abstract class FormInputParser {
 			if (date == null){
 				return ""; //$NON-NLS-1$
 			}
-			SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd.MM.yyyy"); //$NON-NLS-1$
-			return dateFormat.format(date);
+			return DATE_FORMAT_DEFAULT.format(date);
 		}
 		catch (IllegalArgumentException e) {
 			throw new AssertException("Falsches / fehlendes Datum: " + date.toString()); //$NON-NLS-1$
@@ -98,9 +101,7 @@ public abstract class FormInputParser {
 	
 	public static Date stringToDate(String string) throws AssertException {
 		try {
-			SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd.MM.yyyy"); //$NON-NLS-1$
-			dateFormat.setLenient(true);
-			return new Date(dateFormat.parse(string).getTime());
+			return new Date(DATE_FORMAT_DEFAULT.parse(string).getTime());
 		}
 		catch (IllegalArgumentException e) {
 			throw new AssertException("Falsches / fehlendes Datum: " + string); //$NON-NLS-1$

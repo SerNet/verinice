@@ -33,7 +33,13 @@ public final class PropertyFactory {
 		Property newProp = new Property(ent);
 		newProp.setPropertyType(type.getId());
 		newProp.setPropertyValue(value);
-		return newProp;
-    		
+		return newProp;   		
+    }
+
+    protected static Property create(String propertyType, String propertyValue, Entity ent) {
+        Property newProp = new Property(ent);
+        newProp.setPropertyType(propertyType);
+        newProp.setPropertyValue(propertyValue);
+        return newProp;
     }
 }
