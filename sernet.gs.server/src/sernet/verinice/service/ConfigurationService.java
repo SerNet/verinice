@@ -299,6 +299,20 @@ public class ConfigurationService implements IConfigurationService {
         this.authService = authService;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IConfigurationService#getLicensedContentIdAllocationCount(java.lang.String)
+     */
+    @Override
+    public int getLicensedContentIdAllocationCount(String licensedContentId) {
+        int count = 0;
+        for (Configuration configuration : configurationDao.findAll()){
+            if(configuration.getLicensedContentIds().contains(licensedContentId)){
+                count++;
+            }
+        };
+        return count;
+    }
+
 
 
     

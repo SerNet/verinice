@@ -41,6 +41,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         "classpath:/sernet/verinice/service/test/spring/veriniceserver-account.xml",
         "classpath:/sernet/gs/server/spring/veriniceserver-search-base.xml", //NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-search.xml", //NON-NLS-1$
+        "classpath:/sernet/gs/server/spring/veriniceserver-licensemanagement.xml", //NON-NLS-1$
         "classpath:/verinice-test.xml"
 })
 public abstract class ContextConfiguration  {

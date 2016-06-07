@@ -87,6 +87,7 @@ This variant:
                 <entry key="reportHQLService" value-ref="reportHQLService"/>
                 <entry key="configurationService" value-ref="configurationService"/>
 				<entry key="objectModelService" value-ref="objectModelService" />
+                <entry key="licenseManagementService" value-ref="licenseManagementService"/>
 			</map>
 		</property>
 	</bean>
@@ -239,7 +240,8 @@ This variant:
         <property name="unsecureIncidentScenarioDAO" ref="unsecureIncidentScenarioDAO" />
         
         
-        <property name="finishedRiskAnalysisListsDao" ref="finishedRiskAnalysisListsDao" /> 
+        <property name="finishedRiskAnalysisListsDao" ref="finishedRiskAnalysisListsDao" />
+        <property name="licenseManagementDao" ref="licenseManagementDao" /> 
 	</bean>
 
 	<bean id="txManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
@@ -348,7 +350,7 @@ This variant:
 			</list>
 		</constructor-arg>
 	</bean>
-   
+	
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
 	<!--<import resource="veriniceserver-debug.xml"/> -->
 

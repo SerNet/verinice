@@ -36,7 +36,12 @@ import java.io.Serializable;
  */
 public class LicenseManagementEntry implements Serializable {
 
-    private static final long serialVersionUID = 20160601113709L;
+    private static final long serialVersionUID = 20160606104209L;
+    
+    public static final String COLUMN_CONTENTID = "contentId";
+    public static final String COLUMN_LICENSEID = "licenseId";
+    public static final String COLUMN_VALIDUSERS = "validUsers";
+    public static final String COLUMN_VALIDUNTIL = "validUntil";
     
     // primary key for usage with hibernate
     private int dbId;

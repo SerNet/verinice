@@ -124,6 +124,8 @@ public final class VeriniceContext {
 
     public static final String OBJECT_MODEL_SERVICE = "objectModelService";
     
+    public static final String LICENSE_SERVICE = "licenseManagementService";
+    
     private static String serverUrl = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new InheritableThreadLocal<Map<String, Object>>();

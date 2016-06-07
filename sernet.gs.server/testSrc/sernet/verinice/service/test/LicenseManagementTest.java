@@ -19,14 +19,24 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.math.RandomUtils;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
+import sernet.verinice.interfaces.ILicenseManagementService;
 import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 
 /**
@@ -37,6 +47,76 @@ public class LicenseManagementTest extends ContextConfiguration{
     
     @Resource(name="licenseManagementDao")
     protected LicenseManagementEntryDao elementDao;
+    
+    @Resource(name="licenseManagementService")
+    ILicenseManagementService licenseManagementService;
+    
+    private final static String CONTENTID = "licenseTestContent";
+    
+    private final static int AMOUNT_OF_TESTDATA = 100;
+    
+    private final static List<String> CONTENTID_TESTDATA = new ArrayList<>();
+    
+    static {
+        CONTENTID_TESTDATA.add("ContentID1");
+        CONTENTID_TESTDATA.add("ContentID2");
+        CONTENTID_TESTDATA.add("ContentID3");
+        CONTENTID_TESTDATA.add("ContentID4");
+        CONTENTID_TESTDATA.add("ContentID5");
+    }
+
+    @Before
+    public void init(){
+        createTestData(AMOUNT_OF_TESTDATA);
+    }
+    
+    @After
+    public void cleanUp(){
+//        for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
+//            for(LicenseManagementEntry entry : elementDao.findByContentIdentifier(CONTENTID_TESTDATA.get(j))){
+//                elementDao.delete(entry);
+//            }
+//        }
+//        elementDao.flush();
+//        elementDao.clear();
+    }
+    
+    private void createTestData(final int amount){
+        for(int i = 0; i < amount; i++){
+            String licenseId = RandomStringUtils.randomAlphabetic(RandomUtils.nextInt(32));
+            String userPassword = RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(16));
+            String salt = RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(64));
+            Date validUntil = getRandomDate(2017, 2030);
+            int validUsers = RandomUtils.nextInt(20);
+            
+            LicenseManagementEntry entry = new LicenseManagementEntry();
+            entry.setContentIdentifier(CONTENTID_TESTDATA.get(RandomUtils.nextInt(CONTENTID_TESTDATA.size())));
+            entry.setLicenseID(licenseId);
+            entry.setSalt(salt);
+            entry.setUserPassword(userPassword);
+            entry.setValidUntil(String.valueOf(validUntil.getTime()));
+            entry.setValidUsers(String.valueOf(validUsers));
+            
+            elementDao.merge(entry);
+        }
+        
+        elementDao.flush();
+        
+    }
+    
+    private Date getRandomDate(int startYear, int endYear){
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.set(startYear, 01, 01, 0, 0, 0);
+        long offset = calendar.getTimeInMillis();
+        calendar.clear();
+        calendar.set(endYear, 01, 01, 0, 0, 0);
+        long end = calendar.getTimeInMillis();
+        long diff = end - offset + 1;
+        long randomDate = offset + (long)(Math.random() * diff);
+        calendar.clear();
+        calendar.setTimeInMillis(randomDate);
+        return calendar.getTime();
+    }
     
     @Test
     public void daoTest(){
@@ -52,7 +132,7 @@ public class LicenseManagementTest extends ContextConfiguration{
         entry.setLicenseID(licenseId);
         entry.setSalt(salt);
         entry.setUserPassword(userPassword);
-        entry.setValidUntil(validUntil.toString());
+        entry.setValidUntil(String.valueOf(validUntil.getTime()));
         entry.setValidUsers(String.valueOf(validUsers));
         
         elementDao.merge(entry);
@@ -71,6 +151,22 @@ public class LicenseManagementTest extends ContextConfiguration{
         elementDao.flush();
         
         Assert.assertNull(elementDao.findByLicenseId(licenseId));
+        
+        for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
+            Date maximalValid = licenseManagementService.getMaxValidUntil(CONTENTID_TESTDATA.get(j));
+            int sumOfValidUsers = licenseManagementService.getValidUsersForContentId(CONTENTID_TESTDATA.get(j));
+            System.out.println(CONTENTID_TESTDATA.get(j) + " is valid until:\t" + maximalValid.toString() + " and for " + String.valueOf(sumOfValidUsers) +" users" );
+        }
+        
+        
+    }
+    
+    @Test
+    public void serviceTest(){
+        Set<String> allIds = licenseManagementService.getAllContentIds();
+        for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
+            Assert.assertTrue(allIds.contains(CONTENTID_TESTDATA.get(j)));
+        }
         
     }
 

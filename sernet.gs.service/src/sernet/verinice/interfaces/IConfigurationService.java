@@ -39,5 +39,7 @@ public interface IConfigurationService {
     String getName(String user);
     
     void discardUserData();
+    
+    int getLicensedContentIdAllocationCount(String licensedContentId);
 
 }

@@ -62,6 +62,7 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	public static final String PROP_USERNAME = "configuration_benutzername"; //$NON-NLS-1$
 	public static final String PROP_PASSWORD = "configuration_passwort"; //$NON-NLS-1$
 	public static final String PROP_ROLES = "configuration_rolle"; //$NON-NLS-1$
+	public static final String PROP_LICENSED_CONTENT_IDS = "configuration_licensedcontent_ids"; //$NON-NLS-1$
 	
 	public static final String PROP_NOTIFICATION = "configuration_mailing_yesno"; //$NON-NLS-1$
 	public static final String PROP_NOTIFICATION_EMAIL = "configuration_mailing_email"; //$NON-NLS-1$
@@ -199,6 +200,22 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
             LOG.debug("Role " + name + " deleted from account.");
 		}
 		return true;
+	}
+	
+	public void addLicensedContentId(String licenseId){
+	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);
+	    entity.createNewProperty(type, licenseId);
+	    if (LOG.isDebugEnabled()) {
+	        LOG.debug("LicenseId " + licenseId + " added to account.");
+	    }
+	}
+	
+	public void removeLicensedContentId(String licenseId) {
+	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);
+	    entity.remove(type, licenseId);
+	    if (LOG.isDebugEnabled()) {
+	        LOG.debug("LicenseId " + licenseId + " deleted from account.");
+	    }
 	}
 	
 	public void setNotificationEnabled(boolean b) {
@@ -410,6 +427,31 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 			roles.add(getUser());
 		}
 		return roles;
+	}
+	
+	public Set<String> getLicensedContentIds(){
+	    List<Property> properties = entity.getProperties(Configuration.PROP_LICENSED_CONTENT_IDS).getProperties();
+	    
+	    Set<String> licenseIds = null;
+	    
+	    if (properties != null){
+	        licenseIds = new HashSet<>(properties.size());
+	        for (Property p : properties){
+	            licenseIds.add(p.getPropertyValue());
+	        }
+	    } else {
+	        licenseIds = new HashSet<>();
+	    }
+	    
+	    return licenseIds;
+	            
+	}
+	
+	public void removeAllLicenseContentIds(){
+	    Set<String> allLicenseIds = getLicensedContentIds();
+	    for (String licenseId : allLicenseIds){
+	        removeLicensedContentId(licenseId);
+	    }
 	}
 	
 	public Set<String> getRoles() {

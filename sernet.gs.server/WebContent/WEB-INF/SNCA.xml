@@ -118,6 +118,12 @@ the value between <param></param> will be used directly if no string is found fo
             name="Passwort"
             id="configuration_passwort" 
             visible="false" />
+
+	 <!-- Never set configuration_license_ids to visible=true! (encrypted value will be displayed) -->            
+     <huiproperty
+     		name="authorized Content Ids"
+     		id="configuration_licensedcontent_ids"
+     		visible="false" />
             
 	 <huiproperty
             name="Rollen"

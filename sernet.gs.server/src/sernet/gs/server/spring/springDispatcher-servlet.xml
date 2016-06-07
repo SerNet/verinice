@@ -170,5 +170,16 @@
 		</property>
 	</bean>
 	
+	<bean name="/licenseManagementServiceHttpInvoker"
+		class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+		lazy-init="false">
+		<property name="service">
+			<ref bean="licenseManagementService"/>
+		</property>
+		<property name="serviceInterface">
+			<value>sernet.verinice.interfaces.ILicenseManagementService</value>
+		</property>	
+	</bean>
+	
 </beans>
 

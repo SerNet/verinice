@@ -50,6 +50,7 @@
             classpath:sernet/gs/server/spring/veriniceserver-search-base.xml
             classpath:sernet/gs/server/spring/veriniceserver-search.xml
             classpath:sernet/gs/server/spring/veriniceserver-account.xml
+            classpath:sernet/gs/server/spring/veriniceserver-licensemanagement.xml
         </param-value>
 	</context-param>
 	

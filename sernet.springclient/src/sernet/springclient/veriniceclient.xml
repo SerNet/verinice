@@ -202,7 +202,18 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>    	
     </bean> 
     
-    
+    <bean id="licenseManagementService"
+    	class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+    	<property name="serviceUrl">
+    		<value>
+    			${verinice.serverURL}/service/licenseManagementServiceHttpInvoker
+    		</value>
+    	</property>
+    	<property name="serviceInterface">
+    		<value>sernet.verinice.interfaces.ILicenseManagementService</value>
+    	</property>
+    	<property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>	
+    </bean>
               
     <bean id="rightsServiceClient" class="sernet.springclient.RightsServiceClient">
     	<property name="authService" ref="authService" />
@@ -323,6 +334,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             <entry key="reportHQLService" value-ref="reportHQLService" />
             <entry key="searchService" value-ref="searchService" />
 			<entry key="objectModelService" value-ref="objectModelService" />
+            <entry key="licenseManagementService" value-ref="licenseManagementService" />
 		</map>
 	</property>
 	</bean>

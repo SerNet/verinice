@@ -20,6 +20,11 @@
 package sernet.verinice.interfaces;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+
+import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -27,12 +32,36 @@ import java.util.Date;
  */
 public interface ILicenseManagementService {
     
-  int getValidUsers(String licenseId);
+  int getValidUsersForContentId(String contentId);
   
-  Date getValidUntil(String licenseId);
+  Date getMaxValidUntil(String contentId);
   
   String getLicenseId(int dbId);
   
   Object getCryptoService();
+  
+  String getCurrentUser();
+  
+  boolean isCurrentUserValidForLicense(String user, String licenseId);
+  
+  boolean isCurrentUserAuthorizedForLicenseUsage(String user, String licenseid);
+  
+  boolean isUserAssignedLicenseStillValid(String user, String licenseId);
+  
+  boolean checkAssignedUsersForLicenseId(String licenseId);
+  
+  void removeAllUsersForLicense(String licenseId);
+  
+  // returns false, if user cannot be authorized / granted to license
+  boolean grantUserToLicense(Configuration user, String licenseId);
+  
+  Set<String> getAllLicenseIds();
+  
+  Set<String> getAllContentIds();
+  
+  Set<LicenseManagementEntry> getLicenseEntriesForLicenseId(String licenseId);
+  
+  Map<String, String> getPublicInformationForLicenseIdEntry(LicenseManagementEntry licenseEntry);
+
 
 }

@@ -26,6 +26,7 @@ import sernet.springclient.SpringClientPlugin;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.ILicenseManagementService;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportHQLService;
 import sernet.verinice.interfaces.IRightsServiceClient;
