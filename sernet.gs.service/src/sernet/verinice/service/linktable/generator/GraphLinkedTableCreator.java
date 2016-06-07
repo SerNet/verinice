@@ -39,6 +39,7 @@ import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.LinkedTableCreator;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
+import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
 import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
 
 /**
@@ -118,6 +119,15 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
                 columnHeader.add(n.getPathForProperty(propertyType));
             }
         }
+
+        Set<VqlEdge> matchedEdges = ast.getMatchedEdges();
+        for (VqlEdge e : matchedEdges){
+            for(String propertyType : e.getPropertyTypes()){
+                columnHeader.add(e.getPathforProperty(propertyType));
+            }
+        }
+
+
         return columnHeader;
     }
 

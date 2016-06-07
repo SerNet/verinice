@@ -19,38 +19,47 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.generator;
 
+import org.apache.log4j.Logger;
+
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.TraversalFilter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
 
 /**
- * @author Benjamin Weißenfels <bw[at]sernet[dot]de> 
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 final class LtrTraversalFilter implements TraversalFilter {
-    
-    final Path path;
-    
+
+    private static final Logger LOG = Logger.getLogger(LtrTraversalFilter.class);
+
+    private final Path path;
+
     public LtrTraversalFilter(Path path) {
         this.path = path;
     }
 
     @Override
     public boolean edgeFilter(Edge e, int depth) {
-        
-        if(depth >= path.getPathElements().size()){
+
+        LOG.debug("filter edge: " + e + " depth: " + depth);
+
+        if (depth >= path.getPathElements().size()) {
             return false;
         }
-        
-        if (isProperType(e, path)) {
-            return true;
-        }
 
-        return false;
-    }
+        // VqlNode n = path.getPathElements().get(depth);
+        // VqlEdge incomingEdge = path.getIncomingEdge(n);
+        //
+        // if(incomingEdge == null){
+        // return true;
+        // }
+        //
+        // boolean isLt = incomingEdge.getEdgeType() == EdgeType.LT;
+        // boolean isCnaLink = e.getType().equals(Edge.RELATIVES);
+        // return isCnaLink && isLt;
 
-    private boolean isProperType(Edge e, Path p) {
         return true;
     }
 
@@ -65,7 +74,7 @@ final class LtrTraversalFilter implements TraversalFilter {
         }
 
         String targetTypeId = target.getTypeId();
-        String pathElementTypeId = path.getPathElements().get(depth).getTypeId();
+        String pathElementTypeId = path.getPathElements().get(depth).node.getText();
 
         return targetTypeId.equals(pathElementTypeId);
     }

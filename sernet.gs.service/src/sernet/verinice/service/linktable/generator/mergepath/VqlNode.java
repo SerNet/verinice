@@ -28,7 +28,7 @@ import java.util.Set;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class VqlNode implements PathElement {
+public class VqlNode {
 
     private final String text;
     
@@ -122,11 +122,6 @@ public class VqlNode implements PathElement {
 
     public Set<String> getPropertyTypes() {
         return propertyTypes;
-    }
-
-    @Override
-    public String getTypeId() {
-        return text;
     }
 
 }

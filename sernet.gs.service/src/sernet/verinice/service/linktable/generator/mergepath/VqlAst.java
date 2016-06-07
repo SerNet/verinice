@@ -21,6 +21,7 @@ package sernet.verinice.service.linktable.generator.mergepath;
 
 import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.CHILD;
 import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.LINK;
+import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.LT;
 import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.PARENT;
 import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.PROP;
 
@@ -31,8 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import org.apache.commons.lang.NotImplementedException;
-import org.apache.log4j.Logger;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.event.ConnectedComponentTraversalEvent;
 import org.jgrapht.event.EdgeTraversalEvent;
@@ -46,6 +45,7 @@ import antlr.collections.AST;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.antlr.VqlParser;
+import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
 
 /**
@@ -54,8 +54,7 @@ import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
  */
 public class VqlAst {
 
-    private final static Logger LOG = Logger.getLogger(VqlAst.class);
-
+    private static final int NO_EDGE_TYPE = -1;
     private ILinkTableConfiguration linkTableConfiguration;
     private DirectedGraph<VqlNode, VqlEdge> vqlAst;
     private VqlNode root;
@@ -80,54 +79,68 @@ public class VqlAst {
             root = getNode(ast.getText(), ast.getText());
             vqlAst.addVertex(root);
 
-            traverseAst(ast.getNextSibling(), root);
+            traverseAst(ast.getNextSibling(), root, null, NO_EDGE_TYPE);
         }
     }
 
-    private void traverseAst(AST ast, VqlNode lastNode) {
+    private void traverseAst(AST sibling, VqlNode lastNode, VqlEdge incomingEdge, int lastEdgeType) {
 
-        if (ast == null) {
+        if (sibling == null) {
             return;
         }
 
         VqlNode currentNode = null;
         VqlEdge vqlEdge = null;
-        String text = ast.getNextSibling().getText();
+        String valueOfNextSibling = sibling.getNextSibling().getText();
 
-        if (PROP == ast.getType()) {
-            lastNode.addPropertyType(text);
-            System.out.println("add property: " + text);
+        if (PROP == sibling.getType()) {
+
+            if (lastEdgeType != NO_EDGE_TYPE && LT == lastEdgeType){
+                incomingEdge.addPropertyType(valueOfNextSibling);
+            } else {
+                lastNode.addPropertyType(valueOfNextSibling);
+            }
+
             return;
         }
 
-        if (LINK == ast.getType()) {
-            String path = lastNode.getPath() + "/" + text;
-            currentNode = getNode(ast.getNextSibling().getText(), path);
-            vqlEdge = getEdge(EdgeType.CHILD, lastNode.getPath(), lastNode, currentNode);
+        if (LT == sibling.getType()) {
+            String path = lastNode.getPath() + "/" + valueOfNextSibling;
+            currentNode = getNode(sibling.getNextSibling().getText(), path);
+            vqlEdge = getEdge(EdgeType.LINK, lastNode.getPath(), lastNode, currentNode);
+            lastEdgeType = LT;
         }
 
-        if (CHILD == ast.getType()) {
-            String path = lastNode.getPath() + ">" + text;
-            currentNode = getNode(ast.getNextSibling().getText(), path);
-            vqlEdge = getEdge(EdgeType.CHILD, lastNode.getPath(), lastNode, currentNode);
+        if (LINK == sibling.getType()) {
+            String path = lastNode.getPath() + "/" + valueOfNextSibling;
+            currentNode = getNode(sibling.getNextSibling().getText(), path);
+            vqlEdge = getEdge(EdgeType.LINK, lastNode.getPath(), lastNode, currentNode);
+            lastEdgeType = LINK;
         }
 
-        if (PARENT == ast.getType()) {
-            String path = lastNode.getPath() + "<" + text;
-            currentNode = getNode(ast.getNextSibling().getText(), path);
+        if (CHILD == sibling.getType()) {
+            String path = lastNode.getPath() + ">" + valueOfNextSibling;
+            currentNode = getNode(sibling.getNextSibling().getText(), path);
+            vqlEdge = getEdge(EdgeType.CHILD, lastNode.getPath(), lastNode, currentNode);
+            lastEdgeType = CHILD;
+        }
+
+        if (PARENT == sibling.getType()) {
+            String path = lastNode.getPath() + "<" + valueOfNextSibling;
+            currentNode = getNode(sibling.getNextSibling().getText(), path);
             vqlEdge = getEdge(EdgeType.PARENT, lastNode.getPath(), lastNode, currentNode);
+            lastEdgeType = PARENT;
         }
 
-        
-        if(!vqlAst.containsVertex(currentNode)){
+        if (!vqlAst.containsVertex(currentNode)) {
             vqlAst.addVertex(currentNode);
         }
-        
-        if(!vqlAst.containsEdge(vqlEdge)){
+
+        if (!vqlAst.containsEdge(vqlEdge)) {
             vqlAst.addEdge(lastNode, currentNode, vqlEdge);
         }
-        
-        traverseAst(ast.getNextSibling().getNextSibling(), currentNode);
+
+        traverseAst(sibling.getNextSibling().getNextSibling(), currentNode, vqlEdge, lastEdgeType);
     }
 
     Map<VqlNode, VqlNode> nodes = new HashMap<>();
@@ -145,7 +158,7 @@ public class VqlAst {
     Map<VqlEdge, VqlEdge> edges = new HashMap<>();
 
     private VqlEdge getEdge(EdgeType type, String path, VqlNode lastNode, VqlNode currentNode) {
-        VqlEdge vqlEdge = new VqlEdge(EdgeType.LINK, lastNode.getPath(), lastNode, currentNode);
+        VqlEdge vqlEdge = new VqlEdge(type, lastNode.getPath(), lastNode, currentNode);
         if (edges.containsKey(vqlEdge)) {
             return edges.get(vqlEdge);
         }
@@ -164,7 +177,9 @@ public class VqlAst {
 
     public Set<Path> getPaths() {
 
-        final Stack<VertexTraversalEvent<VqlNode>> stack = new Stack<>();
+
+        final Stack<PathElement> vqlStack = new Stack<>();
+        final Stack<EdgeTraversalEvent<VqlNode, VqlEdge>> edgeStack = new Stack<>();
         final Set<Path> paths = new HashSet<>();
 
         DepthFirstIterator<VqlNode, VqlEdge> iterator = new DepthFirstIterator<>(vqlAst, root);
@@ -173,22 +188,40 @@ public class VqlAst {
             @Override
             public void vertexTraversed(VertexTraversalEvent<VqlNode> e) {
 
-                stack.push(e);
+                VqlEdge edge = getEdge(e.getVertex());
+                vqlStack.push(new PathElement(e.getVertex(), edge));
 
                 if (isLeaf(e.getVertex())) {
-                    paths.add(createPath(stack));
+                    paths.add(createPath());
+                }
+            }
+
+            private VqlEdge getEdge(VqlNode vertex) {
+
+                Set<VqlEdge> incomingEdges = vqlAst.incomingEdgesOf(vertex);
+
+                assert(incomingEdges.size() <= 1);
+
+                if(incomingEdges.isEmpty()){
+                    return null;
+                } else {
+                    // extract the value
+                    return incomingEdges.iterator().next();
                 }
             }
 
             @Override
             public void vertexFinished(VertexTraversalEvent<VqlNode> e) {
-                stack.pop();
+
+                vqlStack.pop();
+
+                if (!edgeStack.isEmpty()) {
+                    edgeStack.pop();
+                }
             }
 
             @Override
             public void edgeTraversed(EdgeTraversalEvent<VqlNode, VqlEdge> e) {
-                // TODO Auto-generated method stub
-
             }
 
             @Override
@@ -203,14 +236,15 @@ public class VqlAst {
 
             }
 
-            private Path createPath(Stack<VertexTraversalEvent<VqlNode>> stack) {
+            private Path createPath() {
 
-                Iterator<VertexTraversalEvent<VqlNode>> pathIterator = stack.iterator();
+
                 Path path = new Path();
+                Iterator<PathElement> nodeIterator = vqlStack.iterator();
 
-                while (pathIterator.hasNext()) {
-                    VertexTraversalEvent<VqlNode> next = pathIterator.next();
-                    path.addPathElement((PathElement) next.getVertex());
+                while (nodeIterator.hasNext()) {
+                    PathElement pathElement = nodeIterator.next();
+                    path.addPathElement(pathElement.node, pathElement.edge);
                 }
 
                 return path;
@@ -243,5 +277,21 @@ public class VqlAst {
         }
 
         return matchingNodes;
+    }
+
+    /**
+     * Filter for edges with {@link EdgeType#LINK} and at least one property
+     * type.
+     *
+     */
+    public Set<VqlEdge> getMatchedEdges() {
+        Set<VqlEdge> matchingEdges = new HashSet<>();
+        for (VqlEdge e : vqlAst.edgeSet()) {
+            if (e.isMatch()) {
+                matchingEdges.add(e);
+            }
+        }
+
+        return matchingEdges;
     }
 }

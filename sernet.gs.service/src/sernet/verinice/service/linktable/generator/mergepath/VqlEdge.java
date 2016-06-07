@@ -19,18 +19,38 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.generator.mergepath;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
+ * Represents an edge between {@link VqlNode}.
+ *
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class VqlEdge implements PathElement {
+final public class VqlEdge {
 
+    private static final String DELIMITER = ":";
     private final EdgeType edgeType;
     private final String path;
     private VqlNode source;
     private VqlNode target;
+    private Set<String> propertyTypes;
 
-    enum EdgeType {
+    /**
+     * There is no LT-Type in the memory representation. From a technical point
+     * of view the LINK-Type is the same. The only difference between them, LT
+     * has a property.
+     *
+     * Every LT-Type is mapped to a an edge of type LINK with at least one
+     * property.
+     *
+     * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+     *
+     */
+    public enum EdgeType {
         LINK, PARENT, CHILD, PROP
     };
 
@@ -39,11 +59,56 @@ public class VqlEdge implements PathElement {
         this.path = path;
         this.source = source;
         this.target = target;
+
+        if (edgeType == EdgeType.LINK) {
+            propertyTypes = new HashSet<>();
+        }
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
+    public void addPropertyType(String propertyType) {
+        propertyTypes.add(propertyType);
+    }
+
+    public Set<String> getPropertyTypes(String propertyType) {
+
+        if (this.edgeType != EdgeType.LINK) {
+            return Collections.emptySet();
+        }
+
+        return new HashSet<>(propertyTypes);
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public EdgeType getEdgeType() {
+        return edgeType;
+    }
+
+    public Set<String> getPropertyTypes() {
+        return propertyTypes;
+    }
+
+    public String getPathforProperty(String propertyType) {
+        if (!isMatch()) {
+            throw new IllegalStateException("VqlEdge contains no properties: " + this);
+        }
+
+        if (!propertyTypes.contains(propertyType)) {
+            throw new IllegalStateException("VqlEdge does not contain this property type: " + propertyType);
+        }
+
+        return path + DELIMITER + propertyType;
+    }
+
+    /**
+     * Returns true if this is a link and property types are found.
      */
+    public boolean isMatch() {
+        return EdgeType.LINK == edgeType && !propertyTypes.isEmpty();
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -55,9 +120,6 @@ public class VqlEdge implements PathElement {
         return result;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -86,25 +148,10 @@ public class VqlEdge implements PathElement {
             return false;
         return true;
     }
-    
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
+
+
     @Override
     public String toString() {
-        return "VqlEdge [edgeType=" + edgeType + ", path=" + path + ", source=" + source + ", target=" + target + "]";
-    }
-
-
-    public String getPath() {
-        return path;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.service.linktable.mergevql.PathElement#getTypeId()
-     */
-    @Override
-    public String getTypeId() {
-        return "edge";
+        return "VqlEdge [edgeType=" + edgeType + ", path=" + path + ", source=" + source + ", target=" + target + ", propertyTypes=" + propertyTypes + "]";
     }
 }

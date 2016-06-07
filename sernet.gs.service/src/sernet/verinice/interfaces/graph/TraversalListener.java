@@ -22,7 +22,7 @@ package sernet.verinice.interfaces.graph;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Gets fired if a node is traversed or removed from the traversal.
+ * Gets fired if a node/edge is traversed or removed from the traversal.
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de> 
  *
@@ -32,5 +32,7 @@ public interface TraversalListener {
     void nodeTraversed(CnATreeElement node, int depth);
 
     void nodeFinished(CnATreeElement node, int depth);
+
+    void edgeTraversed(CnATreeElement source, CnATreeElement target, Edge edge, int depth);
 
 }
