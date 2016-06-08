@@ -62,7 +62,7 @@ public class VqlAst {
 
     public VqlAst(ILinkTableConfiguration linkTableConfiguration) {
         this.linkTableConfiguration = linkTableConfiguration;
-        this.setVqlAst(new DefaultDirectedGraph<>(VqlEdge.class));
+        this.setVqlAst(new DefaultDirectedGraph<VqlNode, VqlEdge>(VqlEdge.class));
         createQueryTree();
     }
 

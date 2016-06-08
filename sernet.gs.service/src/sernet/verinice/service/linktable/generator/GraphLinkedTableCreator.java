@@ -73,7 +73,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         this.ast = new VqlAst(conf);
         this.graph = veriniceGraph;
         VqlNode root = ast.getRoot();
-        String typeId = root.getPath();
+        final String typeId = root.getPath();
 
         columnHeader = getColumnHeader();
 
