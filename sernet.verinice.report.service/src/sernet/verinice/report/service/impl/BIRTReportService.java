@@ -139,7 +139,6 @@ public class BIRTReportService {
 		boolean useReportLogging = odaDriver.getReportLoggingState();
 
 		HashMap hm = config.getAppContext();
-		boolean sandBoxEnabled = odaDriver.isSandboxEnabled();
 		if(odaDriver.isSandboxEnabled()){
 		    hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, secureClassLoader);
 		} else {
@@ -359,7 +358,7 @@ public class BIRTReportService {
 		return task;
 	}
 
-    public void performRenderTask(IRunAndRenderTask task, ReportSecurityManager secureReportExecutionManager) throws ReportSecurityException {
+    public void performRenderTask(IRunAndRenderTask task, ReportSecurityManager secureReportExecutionManager)  {
         try {
 		    long startTime = System.currentTimeMillis();
 		    
@@ -381,7 +380,6 @@ public class BIRTReportService {
 			}
 			// EngineException (thrown by task.run() ) is handled within the thread
         } catch (ReportSecurityException r){
-            log.error("Cannot render report, due to security restrictons", r);
             throw r;
 		} finally{
 		    // ensure .log file is released again (.lck file will be removed)

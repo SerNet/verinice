@@ -42,7 +42,7 @@ public class ReportSecurityManager extends SecurityManager {
 
     private boolean protectionEnabled = true;
 
-    private final static String VERINICE_RUN_QUERY_METHOD = "org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.run";
+    private static final String VERINICE_RUN_QUERY_METHOD = "org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.run";
 
     private ReportSecurityContext reportSecurityContext;
     

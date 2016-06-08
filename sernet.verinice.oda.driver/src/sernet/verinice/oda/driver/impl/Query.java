@@ -47,6 +47,7 @@ import org.eclipse.datatools.connectivity.oda.spec.QuerySpecification;
 
 import bsh.EvalError;
 import bsh.Interpreter;
+import bsh.TargetError;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -56,6 +57,7 @@ import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
 import sernet.verinice.security.report.ReportClassLoader;
+import sernet.verinice.security.report.ReportSecurityException;
 
 
 
@@ -401,7 +403,7 @@ public class Query implements IQuery
 		}
 	}
 	
-	private Object runQuery() throws OdaException
+    private Object runQuery() throws OdaException
 	{
 	    
 		runSetupQuery();
@@ -421,6 +423,11 @@ public class Query implements IQuery
 				result = result + ", " + e.getCause().getMessage();
 			}
 			log.error("Error evaluating the query: " + queryText + "\n\n" + result, e);
+
+			Throwable t = ((TargetError)e).getTarget();
+			if(t instanceof ReportSecurityException){
+			    throw (ReportSecurityException)t;
+			}
 
 		}
 		

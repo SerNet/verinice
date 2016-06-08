@@ -77,6 +77,10 @@ public class ReportExecutionThread extends Thread {
           }
       } catch (EngineException t) {
           LOG.error(NLS.bind(Messages.REPORT_RENDER_EXCEPTION_0, task.getReportRunnable().getDesignInstance().getReport().getQualifiedName()), t);
+          Throwable cause = t.getCause();
+          if(cause instanceof ReportSecurityException){
+              throw (ReportSecurityException)cause;
+          }
       } finally {
           task.close();
       }
@@ -84,7 +88,7 @@ public class ReportExecutionThread extends Thread {
     
 
 
-    private void handleExceptionsFromTask() throws ReportSecurityException, EngineException {
+    private void handleExceptionsFromTask() throws EngineException {
         for(Object error : task.getErrors()){
               if(error instanceof EngineException){
                   EngineException ee = (EngineException)error;
