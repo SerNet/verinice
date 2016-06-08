@@ -80,8 +80,6 @@ public class BIRTReportService {
     
     private ReportClassLoader secureClassLoader;
     
-    private ReportSecurityManager secureExecutionManager;
-
 	public BIRTReportService() {
 	    
 	    secureClassLoader = new ReportClassLoader(this.getClass().getClassLoader());
@@ -365,7 +363,12 @@ public class BIRTReportService {
         try {
 		    long startTime = System.currentTimeMillis();
 		    
-		    // secure only this, this is entry to birt report engine,after that we have no influence anymore
+		    // report generation is handled by a thread here
+		    // which is not for reasons of concurrency 
+		    // BUT for reasons of security (this enables setting
+		    // specific classloader for executing the report
+		    // since concurrency is explicitly not wanted here,
+		    // we are using thread.run() instead of thread.start()
 		    
             ReportExecutionThread reportExecutionThread = new ReportExecutionThread(task, secureReportExecutionManager, odaDriver.isSandboxEnabled());
             if(odaDriver.isSandboxEnabled()){
@@ -376,14 +379,10 @@ public class BIRTReportService {
 			    long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
 			    log.debug("RunAndRenderTask lasts " + duration + " seconds");
 			}
+			// EngineException (thrown by task.run() ) is handled within the thread
         } catch (ReportSecurityException r){
+            log.error("Cannot render report, due to security restrictons", r);
             throw r;
-		} catch (Exception e) {
-		    log.error("Could not render design: ", e);
-			throw new IllegalStateException(e);
-		} catch (Throwable t){
-		    log.error("Could not render design: ", t);
-            throw new IllegalStateException(t);
 		} finally{
 		    // ensure .log file is released again (.lck file will be removed)
 		    destroyEngine();

@@ -49,19 +49,17 @@ public class ReportExecutionThread extends Thread {
     }
     
     @Override
-    public void run() throws ReportSecurityException{
+    public void run(){
       SecurityManager old = System.getSecurityManager();
       System.setSecurityManager(reportSecurityManager);
-      try{
-          runUntrustedCode();
-      } catch (ReportSecurityException e){
-          throw e;
-      } finally {
-          // without this, we cannot reset the securityManager, because
-          // that needs to be forbidden from within report excecution
-          reportSecurityManager.setProtectionEnabled(false);
-          System.setSecurityManager(old);
-      }
+      
+      runUntrustedCode();
+      
+      // without this, we cannot reset the securityManager, because
+      // that needs to be forbidden from within report excecution
+      reportSecurityManager.setProtectionEnabled(false);
+      
+      System.setSecurityManager(old);
     }
     
     /**
@@ -70,7 +68,7 @@ public class ReportExecutionThread extends Thread {
      * but the user-generated code, contained in datasets (via beanshell )
      *  or javascript snippets within the template
      */
-    private void runUntrustedCode() throws ReportSecurityException{
+    private void runUntrustedCode(){
       try {
           task.setErrorHandlingOption(IEngineTask.CANCEL_ON_ERROR);
           task.run();
@@ -79,11 +77,6 @@ public class ReportExecutionThread extends Thread {
           }
       } catch (EngineException t) {
           LOG.error(NLS.bind(Messages.REPORT_RENDER_EXCEPTION_0, task.getReportRunnable().getDesignInstance().getReport().getQualifiedName()), t);
-      } catch (ReportSecurityException r){
-          /* throw this, to handle it in ui to inform user about prevented
-           * execution of unauthorized code  
-           */
-          throw r;
       } finally {
           task.close();
       }
