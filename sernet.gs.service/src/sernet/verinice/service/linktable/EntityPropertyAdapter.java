@@ -56,7 +56,7 @@ public class EntityPropertyAdapter implements IPropertyAdapter {
             return null;
         }
         
-        String value = entity.getSimpleValue(propertyId);
+        String value = entity.getPropertyValue(propertyId);
         PropertyType propertyType = getPropertyType(element.getTypeId(), propertyId);
         if(isUrlAndNotEmpty(propertyType, value)) {
             value = URLUtil.createLinkForSpreadsheet(value);

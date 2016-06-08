@@ -88,7 +88,7 @@ public abstract class ColumnPathParser {
         return rootPathElement;
     }
 
-    public static void throwExceptionIfInvalid(String columnPath) throws ColumnPathParseException {
+    public static void throwExceptionIfInvalid(String columnPath) { // throws ColumnPathParseException
         parse(columnPath);
     }
 
@@ -143,19 +143,19 @@ public abstract class ColumnPathParser {
     }
 
     /**
-     * Returns all object type ids of one column path.
-     * object type ids are defined in file SNCA.xml.
+     * Returns all object type ids in a set of column paths.
+     * Object type ids are defined in file SNCA.xml.
      *
-     * @param columnPathes A column path
-     * @return All object type ids in the column path
+     * @param columnPaths A set of column paths
+     * @return All object type ids in the column path set
      */
-    public static Set<String> getObjectTypeIds(Set<String> columnPathes) {
-        IPathElement[] pathElements = getPathElements(columnPathes);
+    public static Set<String> getObjectTypeIds(Set<String> columnPaths) {
+        IPathElement[] pathElements = getPathElements(columnPaths);
         return getObjectTypeIds(pathElements);
     }
 
     /**
-     * Returns all object type ids of the path element array.
+     * Returns all object type ids in a path element array.
      * Object type ids are defined in file SNCA.xml.
      *
      * @param pathElements An array of pathElements
@@ -168,7 +168,7 @@ public abstract class ColumnPathParser {
         }
         return objectTypeIds;
     }
-
+    
     private static void addObjectTypeIds(IPathElement pathElement, Set<String> objectTypeIds) {
         if(pathElement instanceof LinkElement || pathElement instanceof ChildElement
            || pathElement instanceof ParentElement || pathElement instanceof RootElement) {
@@ -178,6 +178,44 @@ public abstract class ColumnPathParser {
             addObjectTypeIds(pathElement.getChild(), objectTypeIds);
         }
     }
+    
+    /**
+     * Returns all property type ids in a set of column paths.
+     * Property type ids are defined in file SNCA.xml.
+     *
+     * @param columnPaths A set of column paths
+     * @return All object type ids in the column path set
+     */
+    public static Set<String> getPropertyTypeIds(Set<String> columnPaths) {
+        IPathElement[] pathElements = getPathElements(columnPaths);
+        return getPropertyTypeIds(pathElements);
+    }
+    
+    /**
+     * Returns all property type ids in a path element array.
+     * Property type ids are defined in file SNCA.xml.
+     *
+     * @param columnPathes An array of pathElements
+     * @return All object type ids in the array of pathElements
+     */
+    public static Set<String> getPropertyTypeIds(IPathElement[] pathElements) {
+        Set<String> propertyTypeIds = new HashSet<>();
+        for (IPathElement pathElement : pathElements) {
+            addPropertyTypeIds(pathElement, propertyTypeIds);
+        }
+        return propertyTypeIds;
+    }
+
+    private static void addPropertyTypeIds(IPathElement pathElement, Set<String> propertyTypeIds) {
+        if(pathElement instanceof ElementPropertyElement ) {
+            propertyTypeIds.add(pathElement.getTypeId());
+        }
+        if(pathElement.getChild()!=null) {
+            addPropertyTypeIds(pathElement.getChild(), propertyTypeIds);
+        }
+    }
+
+    
 
     private static IPathElement<CnATreeElement,CnATreeElement> createRootPathElement(CommonAST element) {
         return new RootElement(element.getText());
@@ -286,4 +324,6 @@ public abstract class ColumnPathParser {
         return list;
         
     }
+
+
 }

@@ -16,10 +16,11 @@
  *     Alexander Koderman <ak[at]sernet[dot]de> - Initial API and implementation
  *     Daniel Murygin <dm{a}sernet{dot}de> - Refactoring
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.service.crudcommands;
+package sernet.verinice.service.commands;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,7 +42,6 @@ import sernet.verinice.interfaces.IBaseDao;
  * @author Alexander Koderman <ak[at]sernet[dot]de>
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-@SuppressWarnings("restriction")
 public class LoadEntitiesByIds extends GenericCommand {
 
     private static final long serialVersionUID = -8570078754663705003L;
@@ -55,13 +55,13 @@ public class LoadEntitiesByIds extends GenericCommand {
             "join fetch propertyList.properties as props " +
             "where entity.dbId in (:dbIds)"; //$NON-NLS-1$
 	
-	private final List<Integer> entityIds;
+	private final Collection<Integer> entityIds;
     private List<Entity> entities;
 
 	/**
 	 * @param entityIds Database ids of entities
 	 */
-	public LoadEntitiesByIds(List<Integer> entityIds) {
+	public LoadEntitiesByIds(Collection<Integer> entityIds) {
 	    if(entityIds==null) {
 	        this.entityIds = Collections.emptyList();
 	    } else {

@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import sernet.verinice.interfaces.graph.VeriniceGraph;
@@ -32,7 +33,7 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
  * @param <P> The type of the parent object represented by this element in the path
  * @param <C> The type of the child object represented by this element in the path
  */
-public interface IPathElement<P,C> {
+public interface IPathElement<P,C> extends Serializable {
 
     public static final char DELIMITER_LINK = '/';
     public static final char DELIMITER_LINK_TYPE = ':';

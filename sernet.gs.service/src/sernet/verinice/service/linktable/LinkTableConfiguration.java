@@ -80,6 +80,14 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
     public Set<String> getObjectTypeIds() {
         return ColumnPathParser.getObjectTypeIds(getPathElements());
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.linktable.ILinkTableConfiguration#getPropertyTypeIds()
+     */
+    @Override
+    public Set<String> getPropertyTypeIds() {
+        return ColumnPathParser.getPropertyTypeIds(getPathElements());
+    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.report.service.impl.dynamictable.ILinkTableConfiguration#getPathElements()
@@ -247,6 +255,5 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
             return false;
         return true;
     }
-
 
 }

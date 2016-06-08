@@ -58,7 +58,7 @@ public class LtrColumnPathParserTest {
     private static final String[] COLUMN_PATHES_ARRAY  = {
             "auditgroup>audit.audit_name AS " + ALIAS1,
             "incident_scenario/threat.threat_name",
-            "asset:person-iso.name AS " + ALIAS2,
+            "asset:person-iso.person-iso_name AS " + ALIAS2,
             "samt_topic<controlgroup.controlgroup_name",
             "threat.threat_name",
             "incident_scenario/asset/control/person-iso.person-iso_name AS " + ALIAS3
@@ -76,6 +76,13 @@ public class LtrColumnPathParserTest {
       "samt_topic",
       "threat"
     };
+    
+    private static final String[] EXPECTED_PROPERTY_TYPES = {
+            "audit_name",
+            "controlgroup_name",
+            "person-iso_name",
+            "threat_name"
+          };
 
     private static final Set<String> COLUMN_PATHES;
 
@@ -115,7 +122,12 @@ public class LtrColumnPathParserTest {
         List<String> objectTypeIds = new LinkedList<>(ColumnPathParser.getObjectTypeIds(COLUMN_PATHES));
         checkObjectTypes(objectTypeIds);
     }
-
+    
+    @Test
+    public void testGetPropertyTypeIds() {
+        List<String> propertyTypeIds = new LinkedList<>(ColumnPathParser.getPropertyTypeIds(COLUMN_PATHES));
+        checkPropertyTypes(propertyTypeIds);
+    }
 
     private void checkPath(IPathElement pathElement, String columnPath) {
         StringTokenizer st = new StringTokenizer(
@@ -135,6 +147,11 @@ public class LtrColumnPathParserTest {
     private void checkObjectTypes(List<String> objectTypeIds) {
         Collections.sort(objectTypeIds);
         assertArrayEquals(EXPECTED_OBJECT_TYPES, objectTypeIds.toArray());
+    }
+    
+    private void checkPropertyTypes(List<String> propertyTypeIds) {
+        Collections.sort(propertyTypeIds);
+        assertArrayEquals(EXPECTED_PROPERTY_TYPES, propertyTypeIds.toArray());
     }
 
     private Class<? extends IPathElement> getClassForDelimiter(String delimiter) {

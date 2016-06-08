@@ -65,15 +65,23 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
     private transient Logger log = Logger.getLogger(Entity.class);
 
-    // map of "propertyTypeId : List of Properties"
+    private String uuid;
+    private Integer dbId;
+    private String entityType;
+    
+    // key: propertyTypeId, value: PropertyList with propertyTypeId
     private Map<String, PropertyList> typedPropertyLists = new HashMap<>();
 
     private transient List<IEntityChangedListener> changeListeners;
 
-    private String entityType;
-    private Integer dbId;
-    private String uuid;
-
+    /**
+     * This map caches the values of properties which are defined 
+     * with input type "reference" in SNCA.xml.
+     * The map is used in method {@link #getValue(String)} and
+     * {@link #getValueOfReferenceProperty(PropertyType)} 
+     */
+    private Map<String, String> referenceValueCache;
+    
     protected Entity() {
         uuid = UUID.randomUUID().toString();
     }
@@ -149,7 +157,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 if (!firstProperty) {
                     sb.append(", ");
                 }
-
                 String value;
                 if (propertyType.isSingleSelect() || propertyType.isMultiselect()) {
                     value = getValueOfOptionProperty(propertyType, property);
@@ -162,7 +169,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 if (value != null) {
                     sb.append(value);
                 }
-
                 firstProperty = false;
             }
         }
@@ -174,19 +180,32 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         if (!type.isReference()) {
             throw new HuiRuntimeException("Type of property with type id " + propertyTypeId + " is not 'reference'");
         }
+        String value = getReferenceValueCache().get(propertyTypeId);
+        if(value==null) {
+            value = loadValueOfReferenceProperty(type);
+            getReferenceValueCache().put(propertyTypeId, value);        
+        } else if (getLog().isDebugEnabled()) {
+            getLog().debug("Reference value found in cache: " + value + ", property type id: " + propertyTypeId + ", entity db id: " + getDbId());
+        }
+        return value;
+    }
+
+    private String loadValueOfReferenceProperty(PropertyType type) {
+        String propertyTypeId = type.getId();
         StringBuilder sb = new StringBuilder();
         PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
         if (propertyList != null) {
             List<IMLPropertyOption> referencedEntities = type.getReferencedEntities(propertyList.getProperties());
-            for (Property reference : propertyList.getProperties()) {
-                for (IMLPropertyOption resolvedReference : referencedEntities) {
-                    if (resolvedReference.getId().equals(reference.getPropertyValue())) {
-                        sb.append(resolvedReference.getName());
-                    }
-                }
-                if (propertyList.getProperties().indexOf(reference) != propertyList.getProperties().size() - 1) {
+            boolean first = true;
+            for (IMLPropertyOption referenceEntity : referencedEntities) {
+                if(!first) {
                     sb.append(", ");
                 }
+                sb.append(referenceEntity.getName());
+                first = false;
+            } 
+            if (getLog().isDebugEnabled()) {
+                getLog().debug("Reference value loaded from db: " +  sb.toString() + ", property type id: " + propertyTypeId + ", entity db id: " + getDbId());
             }
         }
         return sb.toString();
@@ -198,15 +217,24 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     }
 
     private String getValueOfDateProperty(Property property) {
+        String date = null;
+        String propertyValue = property.getPropertyValue();
+        if(propertyValue==null) {
+            return date;
+        }
+        propertyValue = propertyValue.trim();
+        if(propertyValue.isEmpty()) {
+            return date;
+        }
         try {
-            return FormInputParser.dateToString(new java.sql.Date(Long.parseLong(property.getPropertyValue())));
+            date = FormInputParser.dateToString(new java.sql.Date(Long.parseLong(propertyValue)));
         } catch (NumberFormatException | AssertException e) {
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Exception while getting the values od adate property", e);
+                getLog().debug("Exception while getting the value of a date property", e);
             }
             // Skip this value and continue processing
         }
-        return null;
+        return date;
     }
     
     /**
@@ -766,8 +794,17 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         return propertyList;
     }
     
+    public void addToReferenceValueCache(String propertyTypeId, String value) {
+        getReferenceValueCache().put(propertyTypeId, value);
+    }
     
     
+    private Map<String, String> getReferenceValueCache() {
+        if(referenceValueCache==null) {
+            referenceValueCache = new HashMap<>();
+        }
+        return referenceValueCache;
+    }
 
     @Override
     public int hashCode() {
