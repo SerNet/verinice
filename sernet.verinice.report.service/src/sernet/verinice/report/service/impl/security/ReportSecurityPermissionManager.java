@@ -667,31 +667,47 @@ public class ReportSecurityPermissionManager {
      * switch-statement 
      */
     private PermissionClassname getClassType(Permission permission){
-        PermissionClassname classname;
-        classname = (ReflectPermission.class.getCanonicalName().
-                equals(permission.getClass().getCanonicalName())) 
-                ? PermissionClassname.REFLECT : PermissionClassname.NULL;
-        classname = (RuntimePermission.class.getCanonicalName().
-                equals(permission.getClass().getCanonicalName()))
-                ? PermissionClassname.RUNTIME : PermissionClassname.NULL;
-        classname = (permission.getClass().getCanonicalName().
-                startsWith("org.osgi.framework"))
-                ? PermissionClassname.OSGI : PermissionClassname.NULL;
-        classname = (PropertyPermission.class.getCanonicalName().
-                equals(permission.getClass().getCanonicalName()))
-                ? PermissionClassname.PROPERTY : PermissionClassname.NULL;
-        classname = (FilePermission.class.getCanonicalName().
-                equals(permission.getClass().getCanonicalName()))
-                ? PermissionClassname.FILE : PermissionClassname.NULL;
-        classname = (SocketPermission.class.getCanonicalName().
-                equals(permission.getClass().getCanonicalName()))
-                ? PermissionClassname.SOCKET : PermissionClassname.NULL;
-        classname = (NetPermission.class.getCanonicalName().
-                equals(permission.getClass().getCanonicalName()))
-                ? PermissionClassname.NET : PermissionClassname.NULL;
-        classname = (allowedPermissionsAndActionsMap.containsKey(
-                permission.getClass().getCanonicalName())) 
-                ? PermissionClassname.OTHER : PermissionClassname.NULL;
+        PermissionClassname classname = ReflectPermission.class.getCanonicalName().
+                equals(permission.getClass().getCanonicalName()) 
+                ? PermissionClassname.REFLECT : null;
+        if(classname == null){
+            classname = RuntimePermission.class.getCanonicalName().
+                    equals(permission.getClass().getCanonicalName())
+                    ? PermissionClassname.RUNTIME : null;
+        }
+        if(classname == null){
+        classname = permission.getClass().getCanonicalName().
+                startsWith("org.osgi.framework")
+                ? PermissionClassname.OSGI : null;
+        }
+        if(classname == null){
+        classname = PropertyPermission.class.getCanonicalName().
+                equals(permission.getClass().getCanonicalName())
+                ? PermissionClassname.PROPERTY : null;
+        }
+        if(classname == null){
+        classname = FilePermission.class.getCanonicalName().
+                equals(permission.getClass().getCanonicalName())
+                ? PermissionClassname.FILE : null;
+        }
+        if(classname == null){
+        classname = SocketPermission.class.getCanonicalName().
+                equals(permission.getClass().getCanonicalName())
+                ? PermissionClassname.SOCKET : null;
+        }
+        if(classname == null){
+        classname = NetPermission.class.getCanonicalName().
+                equals(permission.getClass().getCanonicalName())
+                ? PermissionClassname.NET : null;
+        }
+        if(classname == null){
+        classname = allowedPermissionsAndActionsMap.containsKey(
+                permission.getClass().getCanonicalName()) 
+                ? PermissionClassname.OTHER : null;
+        }
+        if(classname == null){
+            classname = PermissionClassname.NULL;
+        }
         return classname;
     }
 
