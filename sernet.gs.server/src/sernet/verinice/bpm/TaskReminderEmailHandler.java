@@ -33,6 +33,7 @@ import sernet.verinice.model.common.CnATreeElement;
 public class TaskReminderEmailHandler extends GenericEmailHandler implements IEmailHandler {
     
     private static final String TEMPLATE = "TaskReminder";
+    private static final String KEY_NAME = "name";
     
     @Override
     public void addParameter(String type, Map<String, Object> processVariables, String uuidElement,
@@ -63,7 +64,18 @@ public class TaskReminderEmailHandler extends GenericEmailHandler implements IEm
         emailParameter.put(TEMPLATE_TASK_DESCRIPTION, description);
 
         emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "verinice task reminder: " + taskTitle);
+
+        fixEncodingOfName(emailParameter);
     }
+
+    private void fixEncodingOfName(Map<String, String> emailParameter) {
+        String name = emailParameter.get(KEY_NAME);
+        if (name != null) {
+            name = replaceSpecialChars(name);
+            emailParameter.put(KEY_NAME, name);
+        }
+    }
+
 
     @Override
     public boolean isHtml() {
