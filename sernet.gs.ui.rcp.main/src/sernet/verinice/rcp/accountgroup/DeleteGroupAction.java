@@ -29,9 +29,9 @@ class DeleteGroupAction extends Action {
 
     private static final Logger LOG = Logger.getLogger(DeleteGroupAction.class);
     
-    private final GroupView groupView;
+    private final AccountGroupView groupView;
 
-    DeleteGroupAction(GroupView groupView) {
+    DeleteGroupAction(AccountGroupView groupView) {
         this.groupView = groupView;
     }
 
@@ -43,7 +43,7 @@ class DeleteGroupAction extends Action {
             return;
         }
 
-        GroupView.getDisplay().syncExec(new Runnable() {
+        AccountGroupView.getDisplay().syncExec(new Runnable() {
 
             @Override
             public void run() {
@@ -72,7 +72,7 @@ class DeleteGroupAction extends Action {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                GroupView.getDisplay().syncExec(new Runnable() {
+                AccountGroupView.getDisplay().syncExec(new Runnable() {
 
                     @Override
                     public void run() {

@@ -88,9 +88,9 @@ import sernet.verinice.rcp.account.AccountWizard;
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class GroupView extends RightsEnabledView implements SelectionListener, KeyListener, MouseListener, IModelLoadListener {
+public class AccountGroupView extends RightsEnabledView implements SelectionListener, KeyListener, MouseListener, IModelLoadListener {
 
-    private static final Logger LOG = Logger.getLogger(GroupView.class);  
+    private static final Logger LOG = Logger.getLogger(AccountGroupView.class);  
     private static final Collator COLLATOR = Collator.getInstance();
     
     public static final String ID = "sernet.verinice.rcp.accountgroup.GroupView";
@@ -127,7 +127,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
     private Action deleteGroup;
     private Action editGroup;
     
-    public GroupView(){
+    public AccountGroupView(){
         super();
         if(CnAElementFactory.isIsoModelLoaded()) {  
             initDataService();
@@ -526,7 +526,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         @Override
         public void run() {
-            NewGroupDialog newGroupDialog = new NewGroupDialog(GroupView.this, parent.getShell(), Messages.GroupView_18);
+            NewGroupDialog newGroupDialog = new NewGroupDialog(AccountGroupView.this, parent.getShell(), Messages.GroupView_18);
             newGroupDialog.open();
         }
     }
@@ -535,7 +535,7 @@ public class GroupView extends RightsEnabledView implements SelectionListener, K
 
         @Override
         public void run() {
-            EditGroupDialog dialog = new EditGroupDialog(GroupView.this, parent.getShell(), Messages.GroupView_19);
+            EditGroupDialog dialog = new EditGroupDialog(AccountGroupView.this, parent.getShell(), Messages.GroupView_19);
             dialog.open();
         }
     }

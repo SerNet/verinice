@@ -62,7 +62,7 @@
       <view
 	    allowMultiple="false"
             category="sernet.verinice.rcp.accountgroup"
-            class="sernet.verinice.rcp.accountgroup.GroupView"
+            class="sernet.verinice.rcp.accountgroup.AccountGroupView"
             icon="icons/group.png"
             id="sernet.verinice.rcp.accountgroup.GroupView"
             name="%view.name.14">

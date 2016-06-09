@@ -83,7 +83,7 @@ import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
 import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
-import sernet.verinice.rcp.accountgroup.GroupView;
+import sernet.verinice.rcp.accountgroup.AccountGroupView;
 import sernet.verinice.report.rcp.ReportDepositView;
 import sernet.verinice.validation.CnAValidationView;
 
@@ -224,7 +224,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.closeAllAction = ActionFactory.CLOSE_ALL.create(window);
         this.closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
         this.deleteAction = ActionFactory.DELETE.create(window);
-        this.openGroupViewAction = new OpenViewAction(window,Messages.ApplicationActionBarAdvisor_36, GroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.ACCOUNTSETTINGS); //$NON-NLS-1$
+        this.openGroupViewAction = new OpenViewAction(window,Messages.ApplicationActionBarAdvisor_36, AccountGroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.ACCOUNTSETTINGS); //$NON-NLS-1$
         this.openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
         this.openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
         this.openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);

@@ -65,14 +65,14 @@ public class AccountGroupDataService implements IAccountGroupViewDataService {
     
     private Map<String, String> prettyAccountNames;
     
-    private GroupView view;
+    private AccountGroupView view;
 
     public AccountGroupDataService() {
         accountService = ServiceFactory.lookupAccountService();
         loadAccountGroupData();
     }
     
-    public AccountGroupDataService(GroupView view){
+    public AccountGroupDataService(AccountGroupView view){
         this();
         this.view = view;
     }
