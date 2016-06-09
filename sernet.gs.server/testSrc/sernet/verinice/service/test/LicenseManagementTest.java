@@ -19,6 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +33,9 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.xml.bind.JAXB;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.junit.After;
@@ -37,7 +45,9 @@ import org.junit.Test;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.ILicenseManagementService;
-import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
+import sernet.verinice.model.licensemanagement.VNLMapper;
+import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
+import sernet.verinice.service.commands.ExportFactory;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -72,36 +82,39 @@ public class LicenseManagementTest extends ContextConfiguration{
     
     @After
     public void cleanUp(){
-//        for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
-//            for(LicenseManagementEntry entry : elementDao.findByContentIdentifier(CONTENTID_TESTDATA.get(j))){
-//                elementDao.delete(entry);
-//            }
-//        }
-//        elementDao.flush();
-//        elementDao.clear();
+        for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
+            for(LicenseManagementEntry entry : elementDao.findByContentIdentifier(CONTENTID_TESTDATA.get(j))){
+                elementDao.delete(entry);
+            }
+        }
+        elementDao.flush();
+        elementDao.clear();
     }
     
     private void createTestData(final int amount){
         for(int i = 0; i < amount; i++){
-            String licenseId = RandomStringUtils.randomAlphabetic(RandomUtils.nextInt(32));
-            String userPassword = RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(16));
-            String salt = RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(64));
-            Date validUntil = getRandomDate(2017, 2030);
-            int validUsers = RandomUtils.nextInt(20);
-            
-            LicenseManagementEntry entry = new LicenseManagementEntry();
-            entry.setContentIdentifier(CONTENTID_TESTDATA.get(RandomUtils.nextInt(CONTENTID_TESTDATA.size())));
-            entry.setLicenseID(licenseId);
-            entry.setSalt(salt);
-            entry.setUserPassword(userPassword);
-            entry.setValidUntil(String.valueOf(validUntil.getTime()));
-            entry.setValidUsers(String.valueOf(validUsers));
-            
+            LicenseManagementEntry entry = getSingleRandomInstance();
             elementDao.merge(entry);
         }
-        
         elementDao.flush();
+    }
+    
+    private LicenseManagementEntry getSingleRandomInstance(){
+        String licenseId = RandomStringUtils.randomAlphabetic(RandomUtils.nextInt(32));
+        String userPassword = RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(16));
+        String salt = RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(64));
+        Date validUntil = getRandomDate(2017, 2030);
+        int validUsers = RandomUtils.nextInt(20);
         
+        LicenseManagementEntry entry = new LicenseManagementEntry();
+        entry.setContentIdentifier(CONTENTID_TESTDATA.get(RandomUtils.nextInt(CONTENTID_TESTDATA.size())));
+        entry.setLicenseID(licenseId);
+        entry.setSalt(salt);
+        entry.setUserPassword(userPassword);
+        entry.setValidUntil(String.valueOf(validUntil.getTime()));
+        entry.setValidUsers(String.valueOf(validUsers));
+        
+        return entry;
     }
     
     private Date getRandomDate(int startYear, int endYear){
@@ -167,6 +180,62 @@ public class LicenseManagementTest extends ContextConfiguration{
         for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
             Assert.assertTrue(allIds.contains(CONTENTID_TESTDATA.get(j)));
         }
+        
+    }
+    
+    @Test
+    public void manualMarshallingTest(){
+        LicenseManagementEntry entry = new LicenseManagementEntry();
+        entry.setContentIdentifier(CONTENTID);
+        entry.setLicenseID("licenseIdBLA");
+        entry.setSalt("saltBLA");
+        entry.setUserPassword("passwordBLA");
+        entry.setValidUntil("validUntilBLA");
+        entry.setValidUsers("validUsersBLA");
+        
+        de.sernet.model.licensemanagement.LicenseManagementEntry xml = new de.sernet.model.licensemanagement.LicenseManagementEntry();
+        xml.setContentIdentifier(entry.getContentIdentifier());
+        xml.setLicenseID(entry.getLicenseID());
+        xml.setSalt(entry.getSalt());
+        xml.setUserPassword(entry.getUserPassword());
+        xml.setValidUntil(entry.getValidUntil());
+        xml.setValidUsers(entry.getValidUsers());
+        
+        OutputStream os = new ByteArrayOutputStream();
+        ExportFactory.marshal(xml, os);
+        File file = null;
+        try {
+            file = File.createTempFile("veriniceTest", "vnl");
+            file.deleteOnExit();
+            
+            FileUtils.writeByteArrayToFile(file, ((ByteArrayOutputStream)os).toByteArray());
+            os.close();
+            byte [] bytesFromHD = FileUtils.readFileToByteArray(file);
+            InputStream is = new ByteArrayInputStream(bytesFromHD);
+            de.sernet.model.licensemanagement.LicenseManagementEntry objectFromHD = JAXB.unmarshal(is, de.sernet.model.licensemanagement.LicenseManagementEntry.class);
+            
+            Assert.assertTrue(objectFromHD.getContentIdentifier().equals(entry.getContentIdentifier()));
+            Assert.assertTrue(objectFromHD.getLicenseID().equals(entry.getLicenseID()));
+            Assert.assertTrue(objectFromHD.getSalt().equals(entry.getSalt()));
+            Assert.assertTrue(objectFromHD.getUserPassword().equals(entry.getUserPassword()));
+            Assert.assertTrue(objectFromHD.getValidUntil().equals(entry.getValidUntil()));
+            Assert.assertTrue(objectFromHD.getValidUsers().equals(entry.getValidUsers()));
+            
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    
+    @Test
+    public void vnlMapperTest(){
+        LicenseManagementEntry entry = getSingleRandomInstance();
+        // dbid is not considered by marshaller and unmarshalling sets 0 
+        // as default for non-mapped property, so set it here also
+        entry.setDbId(0);
+        byte[] vnlData = VNLMapper.getInstance().marshalLicenseManagementEntry(entry);
+        LicenseManagementEntry serializedEntry = VNLMapper.getInstance().unmarshalXML(vnlData);
+        Assert.assertTrue(entry.equals(serializedEntry));
         
     }
 

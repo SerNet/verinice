@@ -6,7 +6,7 @@
 	LicenseManagement items.
 	@author Sebastian Hagedorn <sh[at]sernet.de>
  -->
-<hibernate-mapping package="sernet.verinice.model.licensemanagement">
+<hibernate-mapping package="sernet.verinice.model.licensemanagement.hibernate">
 	<class name="LicenseManagementEntry" table="licensemanagement">
 		
 		<id name="dbId" 

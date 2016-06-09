@@ -17,7 +17,7 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.model.licensemanagement;
+package sernet.verinice.model.licensemanagement.hibernate;
 
 import java.io.Serializable;
 
@@ -36,7 +36,7 @@ import java.io.Serializable;
  */
 public class LicenseManagementEntry implements Serializable {
 
-    private static final long serialVersionUID = 20160606104209L;
+    private static final long serialVersionUID = 2016060910229L;
     
     public static final String COLUMN_CONTENTID = "contentId";
     public static final String COLUMN_LICENSEID = "licenseId";

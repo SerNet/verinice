@@ -28,7 +28,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.ILicenseManagementEntryDao;
-import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
+import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de

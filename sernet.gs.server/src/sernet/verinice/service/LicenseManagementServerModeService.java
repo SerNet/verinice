@@ -29,7 +29,7 @@ import java.util.Set;
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.ILicenseManagementService;
 import sernet.verinice.model.common.configuration.Configuration;
-import sernet.verinice.model.licensemanagement.LicenseManagementEntry;
+import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
