@@ -48,19 +48,18 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.FileUtil;
+import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.rcp.MultiselectWidget;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.sync.VeriniceArchive;
 
 /**
  * @author Daniel Murygin <dm@sernet.de>
  */
-@SuppressWarnings("restriction")
 public class ExportDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(ExportDialog.class);
 
@@ -348,7 +347,7 @@ public class ExportDialog extends TitleAreaDialog {
             title = organizationWidget.getSelectedElement().getTitle();
         }
         if(title!=null) {
-            organizationTitle = convertToFileName(title);
+            organizationTitle = StringUtil.convertToFileName(title);
             //organizationTitle = title.replaceAll("[^a-zA-Z]", ""); //hier ist es das  Umlaute-Problem, die werden ersetzt und nicht ordentlich ausgeschrieben!!!
         } else {
             organizationTitle = DEFAULT_ORGANIZATION_TITLE;
@@ -382,7 +381,7 @@ public class ExportDialog extends TitleAreaDialog {
                 path = currentPath.substring(0,lastSlash);
             }
         }
-        if(!currentPath.equals(path)) {
+        if(currentPath!=null && !currentPath.equals(path)) {
             txtLocation.setText(path);
         }
         return path;        
@@ -409,29 +408,6 @@ public class ExportDialog extends TitleAreaDialog {
 		}
 	}
 
-	
-	
-	private static String convertToFileName(String label) {
-        String filename = ""; //$NON-NLS-1$
-        if(label!=null) {
-            filename = label.replace(' ', '_');
-            filename = filename.replace("ä", "\u00E4"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("ü", "\u00FC"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("ö", "\u00F6"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("Ä", "\u00C4"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("Ü", "\u00DC"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("Ö", "\u00D6"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("ß", "\u00DF"); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("<", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace(">", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            filename = filename.replace("|", ""); //$NON-NLS-1$ //$NON-NLS-2$
-           }
-        return filename;
-    }
-    
     /*
      * (non-Javadoc)
      * 
@@ -449,6 +425,7 @@ public class ExportDialog extends TitleAreaDialog {
                     test.delete();
                 }
             } catch (Exception e) {
+                LOG.error("Error in file name: " + filePath, e);
                 sb.append(Messages.SamtExportDialog_11);
             }
         }

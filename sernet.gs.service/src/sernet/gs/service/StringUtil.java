@@ -35,6 +35,13 @@ public abstract class StringUtil {
         // do not instantiate this class, use public static methods
     }
     
+    /**
+     * Convert a list of strings to one single string
+     * with all strings from the list separated by commas.
+     * 
+     * @param values A list of strings
+     * @return A string with all strings from the list separated by commas
+     */
     public static final String convertToCommaSeparatedString(List<String> values) {
         StringBuilder sb = new StringBuilder();
         boolean first = true;
@@ -46,5 +53,34 @@ public abstract class StringUtil {
             first = false;
         }
         return sb.toString();
+    }
+    
+    /**
+     * Convert a string to a string usable as a file name
+     * by replacing all special characters in the string which are
+     * illegal in file names.
+     * 
+     * @param s A String
+     * @return Converted string usable as a file name
+     */
+    public static String convertToFileName(String s) {
+        String filename = ""; //$NON-NLS-1$
+        if(s!=null) {
+            filename = s.replace(' ', '_');
+            filename = filename.replace("ä", "\u00E4"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("ü", "\u00FC"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("ö", "\u00F6"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("Ä", "\u00C4"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("Ü", "\u00DC"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("Ö", "\u00D6"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("ß", "\u00DF"); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace(":", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("\\", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace(";", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("<", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace(">", ""); //$NON-NLS-1$ //$NON-NLS-2$
+            filename = filename.replace("|", ""); //$NON-NLS-1$ //$NON-NLS-2$
+           }
+        return filename;
     }
 }
