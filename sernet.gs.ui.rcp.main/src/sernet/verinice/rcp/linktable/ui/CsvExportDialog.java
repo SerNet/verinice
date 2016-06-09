@@ -303,7 +303,7 @@ public class CsvExportDialog extends TitleAreaDialog {
             sb.append(Messages.SamtExportDialog_13);
             setMessage(sb.toString(), IMessageProvider.ERROR);
         } else {
-
+            veriniceLinkTable.clearScopeIds();
             for (CnATreeElement element : getSelectedElementSet()) {
                 veriniceLinkTable.addScopeId(element.getDbId());
             }

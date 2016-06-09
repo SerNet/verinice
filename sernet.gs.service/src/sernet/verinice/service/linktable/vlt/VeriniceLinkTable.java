@@ -94,6 +94,14 @@ public class VeriniceLinkTable {
         }
         this.scopeIds.add(scopeId);
     }
+    
+    public void clearScopeIds() {
+        if (scopeIds == null) {
+            scopeIds = new ArrayList<>();
+        } else {
+            this.scopeIds.clear();
+        }
+    }
 
     public List<String> getColumnPaths() {
         return columnPaths;
