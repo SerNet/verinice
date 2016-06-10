@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.gs.service;
 
-import java.util.List;
-
 /**
  * This class contains public static methods to handle
  * Strings.
@@ -33,26 +31,6 @@ public abstract class StringUtil {
 
     private StringUtil() {
         // do not instantiate this class, use public static methods
-    }
-    
-    /**
-     * Convert a list of strings to one single string
-     * with all strings from the list separated by commas.
-     * 
-     * @param values A list of strings
-     * @return A string with all strings from the list separated by commas
-     */
-    public static final String convertToCommaSeparatedString(List<String> values) {
-        StringBuilder sb = new StringBuilder();
-        boolean first = true;
-        for (String value : values) {
-            if(!first) {
-                sb.append(", ");
-            }
-            sb.append(value);
-            first = false;
-        }
-        return sb.toString();
     }
     
     /**

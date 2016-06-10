@@ -29,11 +29,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.service.StringUtil;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -127,27 +127,19 @@ public class LinkTableGraphCommand extends GraphCommand {
     }
 
     private void doExecute() throws CommandException {
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Collecting reference properties in link table configuration...");
-        }
+        getLog().debug("Collecting reference properties in link table configuration...");
         collectReferencePropertyTypeIds();
         if (referencePropertyTypeIds.isEmpty()) {
             // no reference properties in configuration, nothing to do
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("No reference properties found.");
-            }
+            getLog().debug("No reference properties found.");
             return;
         }
         
-        if (getLog().isDebugEnabled()) {
-            getLog().debug("Collecting reference ids in verinice graph...");
-        }
+        getLog().debug("Collecting reference ids in verinice graph...");
         collectReferencedEntityIds();
         if (referenceIds.isEmpty()) {
             // no reference properties in configuration, nothing to do
-            if (getLog().isDebugEnabled()) {
-                getLog().debug("No reference ids found.");
-            }
+            getLog().debug("No reference ids found.");
             return;
         }
         if (getLog().isDebugEnabled()) {
@@ -299,7 +291,7 @@ public class LinkTableGraphCommand extends GraphCommand {
 
     private String sortAndConvertListToString(List<String> values) {
         Collections.sort(values, NSC);
-        return StringUtil.convertToCommaSeparatedString(values);
+        return StringUtils.join(values, ",");
     }
 
     
