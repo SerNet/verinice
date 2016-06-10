@@ -94,6 +94,7 @@ public class LinkTableComposite extends Composite {
 
         setBody(rootContainer);
 
+        refresh();
         refresh(UpdateLinkTable.COLUMN_PATHS);
 
         rootContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
