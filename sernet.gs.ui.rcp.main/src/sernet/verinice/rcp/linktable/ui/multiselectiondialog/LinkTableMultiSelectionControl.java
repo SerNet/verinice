@@ -57,8 +57,8 @@ public class LinkTableMultiSelectionControl {
             LinkTableComposite vltParent) {
         this.parent = parent;
         this.vltComposite = vltParent;
-        this.useAllRelations = vltParent.getContent() == null
-                || vltParent.getContent().getRelationIds().isEmpty();
+        this.useAllRelations = vltParent.getVeriniceLinkTable() == null
+                || vltParent.getVeriniceLinkTable().getRelationIds().isEmpty();
         create();
     }
 

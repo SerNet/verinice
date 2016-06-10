@@ -216,9 +216,7 @@ public class LinkTableColumn {
         return deleteButton;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
+    /**
      * @see org.eclipse.swt.widgets.Widget#toString()
      */
     @Override

@@ -62,7 +62,7 @@ public class LinkTableMultiSelectionList {
         this.parent = parent;
         vltMultiSelectionControl = parent.getLTRMultiSelectionControl();
         vltComposite = vltMultiSelectionControl.getVltParent();
-        selectedRelations = vltComposite.getContent().getRelationIds();
+        selectedRelations = vltComposite.getVeriniceLinkTable().getRelationIds();
         create();
     }
 
@@ -108,7 +108,7 @@ public class LinkTableMultiSelectionList {
 
     private void createAllRelationsButton() {
 
-        boolean useAllRelationIds = vltComposite.getContent().getRelationIds().isEmpty();
+        boolean useAllRelationIds = vltComposite.getVeriniceLinkTable().getRelationIds().isEmpty();
         allRelations = new Button(parent.getDialogShell(), SWT.CHECK | SWT.LEFT);
         allRelations.setText(Messages.MultiSelectionControl_2);
         SelectionListener allRelationIDsListener = new SelectionListener() {
