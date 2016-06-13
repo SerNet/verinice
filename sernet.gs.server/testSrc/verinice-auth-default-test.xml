@@ -60,6 +60,7 @@
         <action id="documentview" />
         <action id="dsmodelview" />
         <action id="editlinks" />
+        <action id="exportlinktable" />
         <action id="files" />
         <action id="generateauditreport" />
         <action id="generateorgreport" />
@@ -136,6 +137,7 @@
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
+	        <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
@@ -207,6 +209,7 @@
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
             <action id="editprofile" />
+	        <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
@@ -280,6 +283,7 @@
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
             <action id="editprofile" />
+	        <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
