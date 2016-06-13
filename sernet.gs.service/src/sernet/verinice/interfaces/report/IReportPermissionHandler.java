@@ -26,6 +26,8 @@ import java.security.Permission;
  * report-security-management to decide how to handle
  * different kind of {@link Permission} inheriting classes
  *
+ * To implement this Interface please extend {@link AbstractPermissionHandler}
+ *
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */

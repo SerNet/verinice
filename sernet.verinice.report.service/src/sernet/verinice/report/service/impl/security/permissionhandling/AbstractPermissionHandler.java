@@ -34,6 +34,10 @@ import sernet.verinice.security.report.ReportSecurityContext;
 import sernet.verinice.security.report.ReportSecurityException;
 
 /**
+ * Class defines some constants (whitelists) and methods used by all 
+ * implementations of {@link IReportPermissionHandler}
+ * 
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
