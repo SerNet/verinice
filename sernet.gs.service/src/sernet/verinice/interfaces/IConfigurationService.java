@@ -40,6 +40,4 @@ public interface IConfigurationService {
     
     void discardUserData();
     
-    int getLicensedContentIdAllocationCount(String licensedContentId);
-
 }

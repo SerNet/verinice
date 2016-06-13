@@ -23,7 +23,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
-import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
@@ -52,16 +51,27 @@ public interface ILicenseManagementService {
   
   void removeAllUsersForLicense(String licenseId);
   
-  // returns false, if user cannot be authorized / granted to license
-  boolean grantUserToLicense(Configuration user, String licenseId);
+  void grantUserToLicense(String user, String licenseId);
   
   Set<String> getAllLicenseIds();
   
   Set<String> getAllContentIds();
   
-  Set<LicenseManagementEntry> getLicenseEntriesForLicenseId(String licenseId);
+  Set<LicenseManagementEntry> getLicenseEntriesForContentId(String licenseId);
   
   Map<String, String> getPublicInformationForLicenseIdEntry(LicenseManagementEntry licenseEntry);
+  
+  int getContentIdAllocationCount(String contentId);
+  
+  void addLicenseIdAuthorisation(String user, String contentId);
+  
+  void removeAllLicenseIdAssignments(String licenseId);
+  
+  void removeAllContentIdAssignments(String contentId);
+  
+  void removeContentIdUserAssignment(String user, String contentId);
+  
+  Set<String> getAuthorisedContentIdsByUser(String user);
 
 
 }

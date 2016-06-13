@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
+import sernet.verinice.hibernate.TreeElementDao;
 import sernet.verinice.interfaces.ILicenseManagementService;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
@@ -38,9 +40,9 @@ import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 public class LicenseManagementServerModeService 
     implements ILicenseManagementService {
     
-
-    
+    // injected by spring
     LicenseManagementEntryDao licenseManagementDao;
+    TreeElementDao<Configuration, Serializable> configurationDao;
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ILicenseManagementService#getValidUsers(java.lang.String)
@@ -120,11 +122,9 @@ public class LicenseManagementServerModeService
      * @see sernet.verinice.interfaces.ILicenseManagementService#isCurrentUserValidForLicense(java.lang.String, java.lang.String)
      */
     @Override
-    public boolean isCurrentUserValidForLicense(String user, String licenseId) {
-        // TODO Auto-generated method stub
-        // insert configurationservice via spring and ask for configuration for user
-        // 
-        return false;
+    public boolean isCurrentUserValidForLicense(String username, String licenseId) {
+        Configuration configuration = getConfigurationByUsername(username);
+        return configuration.getLicensedContentIds().contains(licenseId);
     }
 
     /* (non-Javadoc)
@@ -141,17 +141,46 @@ public class LicenseManagementServerModeService
      */
     @Override
     public boolean isUserAssignedLicenseStillValid(String user, String licenseId) {
-        // TODO Auto-generated method stub
-        return false;
+        Date validUntil = null;
+        String hql = "select validUntil from LicenseManagementEntry " +
+                "where licenseId = ?";
+        Object[] params = new Object[]{licenseId};
+        List hqlResult = licenseManagementDao.findByQuery(hql, params);
+        if(hqlResult.size() != 1){
+            return false;
+        } else {
+            return  Long.parseLong((String)hqlResult.get(0) ) > System.currentTimeMillis(); 
+        }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ILicenseManagementService#checkAssignedUsersForLicenseId(java.lang.String)
+    /**
+     * checks if the amount of authorised users fpr a given licenseId is 
+     * below the amount allowed at basis of db entries (licenses)
+     * @param licenseId
+     * @return
      */
     @Override
     public boolean checkAssignedUsersForLicenseId(String licenseId) {
-        // TODO Auto-generated method stub
-        return false;
+        int validUsers = 0;
+        int assignedUsers = 0;
+        String hql = "select validUsers from LicenseManagementEntry " +
+                        "where licenseId = ?";
+        Object[] params = new Object[]{licenseId};
+        List hqlResult = licenseManagementDao.findByQuery(hql, params);
+        if(hqlResult.size() != 1){
+            return false;
+        } else {
+            validUsers = Integer.parseInt((String)hqlResult.get(0));
+            assignedUsers = 0;
+            for(Configuration configuration : configurationDao.findAll()){
+                if(configuration.getLicensedContentIds().contains(licenseId)){
+                    assignedUsers++;
+                }
+            }
+        }
+        
+        return assignedUsers < validUsers; 
+        
     }
 
     /* (non-Javadoc)
@@ -159,7 +188,12 @@ public class LicenseManagementServerModeService
      */
     @Override
     public void removeAllUsersForLicense(String licenseId) {
-        // TODO Auto-generated method stub
+        for(Configuration configuration : configurationDao.findAll()){
+            if(configuration.getLicensedContentIds().contains(licenseId)){
+                configuration.removeLicensedContentId(licenseId);
+            }
+        configurationDao.saveOrUpdate(configuration);
+        }
 
     }
 
@@ -167,10 +201,9 @@ public class LicenseManagementServerModeService
      * @see sernet.verinice.interfaces.ILicenseManagementService#grantUserToLicense(java.lang.String, java.lang.String)
      */
     @Override
-    public boolean grantUserToLicense(Configuration configuration, String licenseId) {
+    public void grantUserToLicense(String user, String licenseId) {
         // TODO: after implementation of VN-1538 add decrypt here
-        configuration.addLicensedContentId(licenseId);
-        return false;
+        addLicenseIdAuthorisation(user, licenseId);
     }
 
     /* (non-Javadoc)
@@ -190,15 +223,31 @@ public class LicenseManagementServerModeService
      * @see sernet.verinice.interfaces.ILicenseManagementService#getLicenseEntriesForLicenseId(java.lang.String)
      */
     @Override
-    public Set<LicenseManagementEntry> getLicenseEntriesForLicenseId(String licenseId) {
+    public Set<LicenseManagementEntry> getLicenseEntriesForContentId(String contentId) {
         String hql = "from LicenseManagementEntry entry where "
-                + "entry.licenseID = :licenseId";
-        String[] names = new String[]{"licenseId"};
-        Object[] params = new Object[]{licenseId};
+                + "entry.contentID = :contentId";
+        String[] names = new String[]{"contentId"};
+        Object[] params = new Object[]{contentId};
         Set<LicenseManagementEntry> uniqueEntryCollection = new HashSet<>();
         uniqueEntryCollection.addAll(
                 licenseManagementDao.findByQuery(hql, names, params));
         return uniqueEntryCollection;
+    }
+    
+    private Set<String> getLicenseIdsForContentId(String contentId){
+        String hql = "select licenseId from LicenseManagementEntry entry where "
+                + "entry.contentID = :contentId";
+        String[] names = new String[]{"contentId"};
+        Object[] params = new Object[]{contentId};
+        Set<String> uniqueIds = new HashSet<>();
+        List hqlResult = licenseManagementDao.findByQuery(hql, names, params);
+        for(Object o : hqlResult){
+            if(o instanceof String){
+                uniqueIds.add((String)o);
+            }
+        }
+                
+        return uniqueIds;        
     }
 
     /* (non-Javadoc)
@@ -244,5 +293,134 @@ public class LicenseManagementServerModeService
                 allIds.addAll(allEntries);
         return allIds;
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.IConfigurationService#getLicensedContentIdAllocationCount(java.lang.String)
+     */
+    @Override
+    public int getContentIdAllocationCount(String licensedContentId) {
+        int count = 0;
+        for (Configuration configuration : configurationDao.findAll()){
+            if(configuration.getLicensedContentIds().contains(licensedContentId)){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ILicenseManagementService#addLicenseIdAuthorisation(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void addLicenseIdAuthorisation(String user, String licenseId) {
+        Configuration configuration = getConfigurationByUsername(user);
+        configuration.addLicensedContentId(licenseId);
+        configurationDao.saveOrUpdate(configuration);
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ILicenseManagementService#removeAllLicenseIdAssignments(java.lang.String)
+     */
+    @Override
+    public void removeAllLicenseIdAssignments(String licenseId) {
+        for(Configuration configuration : configurationDao.findAll()){
+            if(configuration.getLicensedContentIds().contains(licenseId)){
+                configuration.removeLicensedContentId(licenseId);
+            }
+            configurationDao.saveOrUpdate(configuration);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ILicenseManagementService#removeAllContentIdAssignments(java.lang.String)
+     */
+    @Override
+    public void removeAllContentIdAssignments(String contentId) {
+        Set<String> licenseIds = getLicenseIdsForContentId(contentId);
+        for(Configuration configuration : configurationDao.findAll()){
+            for(String licenseId : licenseIds){
+                if(configuration.getLicensedContentIds().contains(licenseId)){
+                    configuration.removeLicensedContentId(licenseId);
+                }
+            }
+            configurationDao.saveOrUpdate(configuration);
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ILicenseManagementService#removeContentIdUserAssignment(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void removeContentIdUserAssignment(String username, String contentId) {
+        Configuration configuration = getConfigurationByUsername(username);
+        for(LicenseManagementEntry entry : getLicenseEntriesForContentId(contentId)){
+            configuration.removeLicensedContentId(entry.getLicenseID());
+        }
+        configurationDao.saveOrUpdate(configuration);
+    }
+    
+    private Configuration getConfigurationByUsername(String username){
+        String hql = "from Configuration conf " + 
+                "inner join conf.entity as entity " + 
+                "inner join entity.typedPropertyLists as propertyList " +
+                "inner join propertyList.properties as props " +
+                "and props.propertyType = :userNameType" +
+                "and props.propertyValue = :userNameValue";
+        
+        String escaped = username.replace("\\", "\\\\");
+        String[] paramNames = new String[]{"userNameType", "userNameValue"};
+        Object[] params = new Object[]{Configuration.PROP_USERNAME, escaped};
+        List<Configuration> hqlResult = 
+                getConfigurationDao().findByQuery(hql, paramNames, params);
+        if(hqlResult.size() != 1){
+            return null;
+        } else {
+            return hqlResult.get(0);
+        }
+        
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ILicenseManagementService#getAuthorisedContentIdsByUser(java.lang.String)
+     */
+    @Override
+    public Set<String> getAuthorisedContentIdsByUser(String username) {
+        // select all ids that are authorised for the user
+        String hql = "select roleprops.propertyValue from Configuration as conf " + //$NON-NLS-1$
+                "inner join conf.entity as entity " + //$NON-NLS-1$
+                "inner join entity.typedPropertyLists as propertyList " + //$NON-NLS-1$
+                "inner join propertyList.properties as props " + //$NON-NLS-1$
+                "inner join conf.entity as entity2 " + //$NON-NLS-1$
+                "inner join entity2.typedPropertyLists as propertyList2 " + //$NON-NLS-1$
+                "inner join propertyList2.properties as roleprops " + //$NON-NLS-1$
+                "where props.propertyType = ? " + //$NON-NLS-1$
+                "and props.propertyValue like ? " + //$NON-NLS-1$
+                "and roleprops.propertyType = ?"; //$NON-NLS-1$
+        String escaped = username.replace("\\", "\\\\");
+        Object[] params = new Object[]{Configuration.PROP_USERNAME,escaped,Configuration.PROP_LICENSED_CONTENT_IDS};        
+        List hqlResult = getConfigurationDao().findByQuery(hql,params);
+        for(Object o : hqlResult){
+            o.hashCode();
+        }
+        
+        
+        return null;
+    }
+
+    /**
+     * @return the configurationDao
+     */
+    public TreeElementDao<Configuration, Serializable> getConfigurationDao() {
+        return configurationDao;
+    }
+
+    /**
+     * @param configurationDao the configurationDao to set
+     */
+    public void setConfigurationDao(TreeElementDao<Configuration, Serializable> configurationDao) {
+        this.configurationDao = configurationDao;
+    }
+
+
     
 }

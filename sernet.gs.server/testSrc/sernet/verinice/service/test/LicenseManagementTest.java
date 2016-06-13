@@ -206,7 +206,7 @@ public class LicenseManagementTest extends ContextConfiguration{
         File file = null;
         try {
             file = File.createTempFile("veriniceTest", "vnl");
-            file.deleteOnExit();
+//            file.deleteOnExit();
             
             FileUtils.writeByteArrayToFile(file, ((ByteArrayOutputStream)os).toByteArray());
             os.close();
@@ -227,7 +227,7 @@ public class LicenseManagementTest extends ContextConfiguration{
         }
     }
     
-    @Test
+//    @Test
     public void vnlMapperTest(){
         LicenseManagementEntry entry = getSingleRandomInstance();
         // dbid is not considered by marshaller and unmarshalling sets 0 
@@ -235,6 +235,16 @@ public class LicenseManagementTest extends ContextConfiguration{
         entry.setDbId(0);
         byte[] vnlData = VNLMapper.getInstance().marshalLicenseManagementEntry(entry);
         LicenseManagementEntry serializedEntry = VNLMapper.getInstance().unmarshalXML(vnlData);
+        
+        try {
+            vnlData = FileUtils.readFileToByteArray(new File("/tmp/veriniceTest4150224110772808346vnl"));
+            LicenseManagementEntry brokenEntry = VNLMapper.getInstance().unmarshalXML(vnlData);
+            brokenEntry.hashCode();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
         Assert.assertTrue(entry.equals(serializedEntry));
         
     }

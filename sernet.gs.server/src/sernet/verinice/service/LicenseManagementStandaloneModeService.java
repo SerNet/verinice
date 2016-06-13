@@ -25,7 +25,6 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ILicenseManagementService;
-import sernet.verinice.model.common.configuration.Configuration;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -117,10 +116,9 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      * @see sernet.verinice.interfaces.ILicenseManagementService#grantUserToLicense(java.lang.String, java.lang.String)
      */
     @Override
-    public boolean grantUserToLicense(Configuration configuration, String contentId) {
+    public void grantUserToLicense(String username, String contentId) {
         // should not be used in tier2, so always return true
         // since the tier2-user is always allowed to use a license, if its existant
-        return true;
     }
 
 }
