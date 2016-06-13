@@ -119,6 +119,8 @@ public class AccountGroupView extends RightsEnabledView
     private static final String LEFTWARDS_PAIRED_ARROWS = "⇇";
     private static final String RIGHTWARDS_PAIRED_ARROWS = "⇉";
     
+    private static final String EMPTY_STRING = "";
+
     Composite parent;
     private Composite container;
     private Text accountGroupsFilter;
@@ -129,7 +131,8 @@ public class AccountGroupView extends RightsEnabledView
     private Button addAllButton;
     private Button removeButton;
     private Button removeAllButton;
-    private Button editAccountButton;
+    private Button editAccountInAccountsListButton;
+    private Button editAccountInAccountsInGroupListButton;
     private Action newGroup;
     private Action deleteGroup;
     private Action editGroup;
@@ -233,6 +236,10 @@ public class AccountGroupView extends RightsEnabledView
         tableAccountsInGroup.setComparator(new AccountComparator());
         tableAccountsInGroup.refresh(true);
 
+        editAccountInAccountsInGroupListButton = new Button(accountsInGroupColumn, SWT.PUSH);
+        editAccountInAccountsInGroupListButton.setText(Messages.GroupView_9);
+        editAccountInAccountsInGroupListButton.addSelectionListener(this);
+
         GridLayoutFactory.fillDefaults().margins(MARGINS).spacing(SPACING)
                 .generateLayout(accountsInGroupColumn);
     }
@@ -283,9 +290,9 @@ public class AccountGroupView extends RightsEnabledView
         tableAccounts.setComparator(new AccountComparator());
         tableAccounts.refresh(true);
 
-        editAccountButton = new Button(accountsColumn, SWT.PUSH);
-        editAccountButton.setText(Messages.GroupView_9);
-        editAccountButton.addSelectionListener(this);
+        editAccountInAccountsListButton = new Button(accountsColumn, SWT.PUSH);
+        editAccountInAccountsListButton.setText(Messages.GroupView_9);
+        editAccountInAccountsListButton.addSelectionListener(this);
 
         GridLayoutFactory.fillDefaults().margins(MARGINS).spacing(SPACING)
                 .generateLayout(accountsColumn);
@@ -423,8 +430,9 @@ public class AccountGroupView extends RightsEnabledView
                 switchButtons(false);
             }
 
-            if (event.getSource() == editAccountButton) {
-                updateConfiguration();
+            if (event.getSource() == editAccountInAccountsListButton
+                    || event.getSource() == editAccountInAccountsInGroupListButton) {
+                initAccountWizard(event);
             }
         }
 
@@ -491,7 +499,7 @@ public class AccountGroupView extends RightsEnabledView
         addAllButton.setEnabled(enabled);
         removeButton.setEnabled(enabled);
         removeAllButton.setEnabled(enabled);
-        editAccountButton.setEnabled(enabled);
+        editAccountInAccountsListButton.setEnabled(enabled);
     }
     
     private void updateAllLists() {
@@ -680,12 +688,18 @@ public class AccountGroupView extends RightsEnabledView
         return ArrayUtils.contains(STANDARD_GROUPS, getSelectedGroup());
     }
     
-    private void updateConfiguration() {
+    private void initAccountWizard(EventObject event) {
 
-        String selectedAccountName = getSelectedAccount();
-        if (!"".equals(selectedAccountName)) {
+        String selectedAccountName = EMPTY_STRING;
+        if (event.getSource() == editAccountInAccountsListButton) {
+            selectedAccountName = getAccountSelectedInAccountsList();
+        } else if (event.getSource() == editAccountInAccountsInGroupListButton) {
+            selectedAccountName = getAccountSelectedInAccountsInGroupList();
+        }
 
-            Configuration configuration = accountService.getAccountByName(getSelectedAccount());
+        if (!selectedAccountName.isEmpty()) {
+
+            Configuration configuration = accountService.getAccountByName(selectedAccountName);
             WizardDialog accountDialog = createWizard(configuration);
 
             if (accountDialog.open() != Window.OK) {
@@ -711,20 +725,31 @@ public class AccountGroupView extends RightsEnabledView
         return new WizardDialog(getDisplay().getActiveShell(), wizard);
     }
 
-    private String getSelectedAccount() {
+    private String getAccountSelectedInAccountsList() {
+
+        IStructuredSelection selection;
 
         if (tableAccounts.getSelection() != null) {
-            IStructuredSelection selection = (IStructuredSelection) tableAccounts.getSelection();
-            List<?> selectionList = selection.toList();
-            if (!selectionList.isEmpty()) {
-                return (String) selectionList.get(0);
+            selection = (IStructuredSelection) tableAccounts.getSelection();
+            if (!selection.isEmpty()) {
+                return (String) selection.getFirstElement();
             }
-        } else if (!((StructuredSelection) tableAccountsInGroup.getSelection()).toList().isEmpty()
-                && !accountsInGroup.isEmpty()) {
-            return accountsInGroup.iterator().next();
+        }
+        return EMPTY_STRING;
+    }
+
+    private String getAccountSelectedInAccountsInGroupList() {
+
+        IStructuredSelection selection;
+
+        if (tableAccountsInGroup.getSelection() != null) {
+            selection = (IStructuredSelection) tableAccountsInGroup.getSelection();
+            if (!selection.isEmpty()) {
+                return (String) selection.getFirstElement();
+            }
         }
 
-        return "";
+        return EMPTY_STRING;
     }
 
     @Override
@@ -737,7 +762,7 @@ public class AccountGroupView extends RightsEnabledView
         }
 
         if (event.getSource() == tableAccounts || event.getSource() == tableAccountsInGroup) {
-            updateConfiguration();
+            initAccountWizard(event);
         }
     }
     
