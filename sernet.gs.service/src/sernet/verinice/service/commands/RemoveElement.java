@@ -207,7 +207,6 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
 
     private void removeRiskAnalysesFromBSICategory() throws CommandException {
         StringBuilder sb = new StringBuilder();
-        sb.append("select element.dbId from CnATreeElement element ");
         sb.append("select element.dbId from CnATreeElement element where ");
         sb.append("element.scopeId = :scopeId and element.parentId = :parentId");
         String hql = sb.toString();
