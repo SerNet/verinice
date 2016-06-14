@@ -57,4 +57,10 @@ public interface IReportOptions {
      */
     Integer[] getRootElements();
     
+    /**
+     * returns url of verinice server to communicate with
+     * @return
+     */
+    String getServerURL();
+    
 }

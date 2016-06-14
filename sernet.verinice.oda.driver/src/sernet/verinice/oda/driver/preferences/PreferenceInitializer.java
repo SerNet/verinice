@@ -49,5 +49,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.REPORT_LOGGING_LVL, Level.SEVERE.toString());
         store.setDefault(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY, IReportService.VERINICE_REPORTS_LOCAL);
         store.setDefault(PreferenceConstants.REPORT_USE_CACHE, true);
+        store.setDefault(PreferenceConstants.REPORT_USE_SANDBOX, PreferenceConstants.REPORT_USE_SANDBOX_YES);
     }
 }
