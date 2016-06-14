@@ -32,6 +32,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableElementComboViewer;
 import sernet.verinice.service.model.IObjectModelService;
@@ -60,6 +61,8 @@ public class LinkTableColumn {
 
     private IObjectModelService contentService;
     private LinkTableElementComboViewer firstCombo;
+
+    private static final String ALIAS_DELIMITER = " AS ";
 
     public LinkTableColumn(LinkTableColumn copy, int number) {
         this.ltrParent = copy.ltrParent;
@@ -299,7 +302,37 @@ public class LinkTableColumn {
     }
 
     public String getColumnPath() {
-        return firstCombo.getColumnPath();
+       String columnPath = firstCombo.getColumnPath();
+       return createAlias(columnPath);
+    }
+
+    private String createAlias(String columnPath) {
+        int propertyBeginning = columnPath.lastIndexOf(".");
+           String propertyId = columnPath.substring(propertyBeginning + 1);
+           if (columnPath.contains(":")) {
+               columnPath = columnPath + ALIAS_DELIMITER + getCnaLinkPropertyMessage(propertyId);
+           } else {
+               String message = HUITypeFactory.getInstance().getMessage(propertyId);
+               columnPath = columnPath + ALIAS_DELIMITER + message;
+           }
+        return columnPath;
+    }
+
+    public String getCnaLinkPropertyMessage(String cnaLinkProperty) {
+        switch (cnaLinkProperty) {
+        case "title":
+            return Messages.LinkTableColumn_CnaLink_Property_Title;
+        case "description":
+            return Messages.LinkTableColumn_CnaLink_Property_Description;
+        case "risk-value-c":
+            return Messages.LinkTableColumn_CnaLink_Property_C;
+        case "risk-value-i":
+            return Messages.LinkTableColumn_CnaLink_Property_I;
+        case "risk-value-a":
+            return Messages.LinkTableColumn_CnaLink_Property_A;
+        default:
+            return Messages.LinkTableColumn_CnaLink_Property_Unknown;
+        }
     }
 
 }
