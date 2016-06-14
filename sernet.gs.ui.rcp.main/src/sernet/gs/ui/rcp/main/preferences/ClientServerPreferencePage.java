@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditor;
@@ -26,6 +27,7 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
@@ -71,12 +73,18 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 
             @Override
             public void modifyText(ModifyEvent e) {
-                if (serverURI.getStringValue().contains(" ")) {
-                    serverURI.setStringValue(serverURI.getStringValue().replaceAll("\\s", ""));
+                String value = serverURI.getStringValue();
+                if (value.contains(" ")) {
+                Point cursorPosition = textControl.getSelection();
+                int numWhiteSpacesBeforeCursor = StringUtils.countMatches(value.substring(0, cursorPosition.x),
+                        " ");
+                cursorPosition.x = cursorPosition.x - numWhiteSpacesBeforeCursor;
+                cursorPosition.y = cursorPosition.y - numWhiteSpacesBeforeCursor;
+                    serverURI.setStringValue(value.replaceAll("\\s", ""));
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("text trimmed");
                     }
-                    textControl.setSelection(textControl.getText().length());
+                    textControl.setSelection(cursorPosition);
                 }
             }
         });
