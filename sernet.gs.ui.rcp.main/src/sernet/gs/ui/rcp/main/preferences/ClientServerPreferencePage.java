@@ -17,13 +17,17 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.internal.Workbench;
@@ -44,6 +48,8 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 	private String oldServerMode, newServerMode;
 	private String oldUrl, newUrl; 
 
+    private static final Logger LOG = Logger.getLogger(ClientServerPreferencePage.class);
+
 	public ClientServerPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
@@ -60,7 +66,21 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
 		createRadioGroup();
 
 		serverURI = new StringFieldEditor(PreferenceConstants.VNSERVER_URI, Messages.getString("ClientServerPreferencePage.1"), getFieldEditorParent()); //$NON-NLS-1$
-		addField(serverURI);
+        final Text textControl = serverURI.getTextControl(getFieldEditorParent());
+        textControl.addModifyListener(new ModifyListener() {
+
+            @Override
+            public void modifyText(ModifyEvent e) {
+                if (serverURI.getStringValue().contains(" ")) {
+                    serverURI.setStringValue(serverURI.getStringValue().replaceAll("\\s", ""));
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("text trimmed");
+                    }
+                    textControl.setSelection(textControl.getText().length());
+                }
+            }
+        });
+        addField(serverURI);
 
 	}
 
