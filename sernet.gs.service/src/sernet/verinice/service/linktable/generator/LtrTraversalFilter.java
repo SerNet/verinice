@@ -25,9 +25,6 @@ import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.TraversalFilter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
-import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
-import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
-import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>

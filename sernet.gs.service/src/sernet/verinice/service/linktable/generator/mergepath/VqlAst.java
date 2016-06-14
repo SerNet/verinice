@@ -97,14 +97,20 @@ public class VqlAst {
 
         if (PROP == sibling.getType()) {
 
-            if (lastEdgeType != NO_EDGE_TYPE && LT == lastEdgeType){
+            if (lastEdgeType != NO_EDGE_TYPE && LT == lastEdgeType) {
                 incomingEdge.addPropertyType(valueOfNextSibling);
+
+                if (hasAlias(sibling)) {
+                    incomingEdge.setAlias(valueOfNextSibling, getAlias(sibling));
+                }
+
             } else {
                 lastNode.addPropertyType(valueOfNextSibling);
-            }
 
-            if(hasAlias(sibling)){
-                lastNode.setAlias(valueOfNextSibling, getAlias(sibling));
+                if (hasAlias(sibling)) {
+                    lastNode.setAlias(valueOfNextSibling, getAlias(sibling));
+                }
+
             }
 
             return;

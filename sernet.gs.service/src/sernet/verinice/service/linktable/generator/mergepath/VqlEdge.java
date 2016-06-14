@@ -150,14 +150,19 @@ final public class VqlEdge {
     }
 
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
-        return "VqlEdge [edgeType=" + edgeType + ", path=" + path + ", source=" + source + ", "
-                + "target=" + target + ", propertyTypes=" + propertyType2Alias + "]";
+        return "VqlEdge [edgeType=" + edgeType + ", path=" + path + ", source=" + source + ", target=" + target + ", propertyType2Alias=" + propertyType2Alias + "]";
     }
-
 
     public String getAlias(String propertyType) {
         return propertyType2Alias.get(propertyType);
+    }
+
+    public void setAlias(String propertyType, String alias){
+        propertyType2Alias.put(propertyType, alias);
     }
 }
