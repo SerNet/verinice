@@ -25,6 +25,9 @@ import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.TraversalFilter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
+import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
+import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
+import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -48,17 +51,6 @@ final class LtrTraversalFilter implements TraversalFilter {
         if (depth >= path.getPathElements().size()) {
             return false;
         }
-
-        // VqlNode n = path.getPathElements().get(depth);
-        // VqlEdge incomingEdge = path.getIncomingEdge(n);
-        //
-        // if(incomingEdge == null){
-        // return true;
-        // }
-        //
-        // boolean isLt = incomingEdge.getEdgeType() == EdgeType.LT;
-        // boolean isCnaLink = e.getType().equals(Edge.RELATIVES);
-        // return isCnaLink && isLt;
 
         return true;
     }

@@ -24,6 +24,8 @@ import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.LINK;
 import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.LT;
 import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.PARENT;
 import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.PROP;
+import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.LITERAL_AS;
+import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.LITERAL_as;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -101,6 +103,10 @@ public class VqlAst {
                 lastNode.addPropertyType(valueOfNextSibling);
             }
 
+            if(hasAlias(sibling)){
+                lastNode.setAlias(valueOfNextSibling, getAlias(sibling));
+            }
+
             return;
         }
 
@@ -141,6 +147,16 @@ public class VqlAst {
         }
 
         traverseAst(sibling.getNextSibling().getNextSibling(), currentNode, vqlEdge, lastEdgeType);
+    }
+
+
+    private String getAlias(AST sibling) {
+        return sibling.getNextSibling().getNextSibling().getNextSibling().getText();
+    }
+
+    private boolean hasAlias(AST sibling) {
+        AST alias = sibling.getNextSibling().getNextSibling();
+        return alias != null && (alias.getType() == LITERAL_AS || alias.getType() == LITERAL_as);
     }
 
     Map<VqlNode, VqlNode> nodes = new HashMap<>();

@@ -21,7 +21,11 @@ package sernet.verinice.service.linktable.generator.mergepath;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Represents an edge between {@link VqlNode}.
@@ -37,7 +41,7 @@ final public class VqlEdge {
     private final String path;
     private VqlNode source;
     private VqlNode target;
-    private Set<String> propertyTypes;
+    private Map<String, String> propertyType2Alias;
 
     /**
      * There is no LT-Type in the memory representation. From a technical point
@@ -61,21 +65,21 @@ final public class VqlEdge {
         this.target = target;
 
         if (edgeType == EdgeType.LINK) {
-            propertyTypes = new HashSet<>();
+            propertyType2Alias = new TreeMap<>();
         }
     }
 
     public void addPropertyType(String propertyType) {
-        propertyTypes.add(propertyType);
+        propertyType2Alias.put(propertyType, StringUtils.EMPTY);
     }
 
-    public Set<String> getPropertyTypes(String propertyType) {
+    public Set<String> getPropertyTypes() {
 
         if (this.edgeType != EdgeType.LINK) {
             return Collections.emptySet();
         }
 
-        return new HashSet<>(propertyTypes);
+        return propertyType2Alias.keySet();
     }
 
     public String getPath() {
@@ -86,16 +90,12 @@ final public class VqlEdge {
         return edgeType;
     }
 
-    public Set<String> getPropertyTypes() {
-        return propertyTypes;
-    }
-
     public String getPathforProperty(String propertyType) {
         if (!isMatch()) {
             throw new IllegalStateException("VqlEdge contains no properties: " + this);
         }
 
-        if (!propertyTypes.contains(propertyType)) {
+        if (!propertyType2Alias.containsKey(propertyType)) {
             throw new IllegalStateException("VqlEdge does not contain this property type: " + propertyType);
         }
 
@@ -106,7 +106,7 @@ final public class VqlEdge {
      * Returns true if this is a link and property types are found.
      */
     public boolean isMatch() {
-        return EdgeType.LINK == edgeType && !propertyTypes.isEmpty();
+        return EdgeType.LINK == edgeType && !propertyType2Alias.keySet().isEmpty();
     }
 
     @Override
@@ -152,6 +152,12 @@ final public class VqlEdge {
 
     @Override
     public String toString() {
-        return "VqlEdge [edgeType=" + edgeType + ", path=" + path + ", source=" + source + ", target=" + target + ", propertyTypes=" + propertyTypes + "]";
+        return "VqlEdge [edgeType=" + edgeType + ", path=" + path + ", source=" + source + ", "
+                + "target=" + target + ", propertyTypes=" + propertyType2Alias + "]";
+    }
+
+
+    public String getAlias(String propertyType) {
+        return propertyType2Alias.get(propertyType);
     }
 }

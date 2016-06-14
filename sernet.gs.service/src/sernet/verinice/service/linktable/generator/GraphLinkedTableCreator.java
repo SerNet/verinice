@@ -27,8 +27,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.TreeMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
@@ -52,7 +53,7 @@ import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
  *
  * <ul>
  * <li>1. Find all possible potential points for a traversal.</li>
- * <li>2. Merge all column pathes to a AST ({@link VqlAst}.</li>
+ * <li>2. Merge all column pathes to a AST ({@link VqlAst}).</li>
  * <li>3. Extract all possible search pathes from the AST.</li>
  * <li>4. Iterate over potential starting points and filter all matching pathes
  * with the help of the search pathes from step 3.</li>
@@ -64,7 +65,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
 
     private VqlAst ast;
     private VeriniceGraph graph;
-    private Set<String> columnHeader;
+    private Map<String, String> columnHeader2Alias;
 
     private static final Logger LOG = Logger.getLogger(GraphLinkedTableCreator.class);
 
@@ -76,7 +77,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         VqlNode root = ast.getRoot();
         final String typeId = root.getPath();
 
-        columnHeader = getColumnHeader();
+        columnHeader2Alias = getColumnHeader();
 
         // get roots
         Set<CnATreeElement> roots = graph.filter(new VeriniceGraphFilter() {
@@ -99,7 +100,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
 
     private List<Map<String, String>> scanGraph(CnATreeElement potentialRoot, final Path p) {
 
-        LtrPrintRowsTraversalListener traversalListener = new LtrPrintRowsTraversalListener(p, getColumnHeader());
+        LtrPrintRowsTraversalListener traversalListener = new LtrPrintRowsTraversalListener(p, getColumnHeader().keySet());
         LtrTraversalFilter filter = new LtrTraversalFilter(p);
 
         traverse(graph, potentialRoot, filter, traversalListener);
@@ -107,28 +108,42 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         return traversalListener.result;
     }
 
-    private Set<String> getColumnHeader() {
+    private Map<String, String> getColumnHeader() {
 
-        if (columnHeader != null)
-            return columnHeader;
+        if (columnHeader2Alias != null) {
+            return columnHeader2Alias;
+        }
 
         Set<VqlNode> matchedNodes = ast.getMatchedNodes();
-        Set<String> columnHeader = new TreeSet<>(new NumericStringComparator());
+        Map<String, String> columnHeaderMap = new TreeMap<>(new NumericStringComparator());
         for (VqlNode n : matchedNodes) {
             for (String propertyType : n.getPropertyTypes()) {
-                columnHeader.add(n.getPathForProperty(propertyType));
+                columnHeaderMap.put(n.getPathForProperty(propertyType), n.getAlias(propertyType));
             }
         }
 
         Set<VqlEdge> matchedEdges = ast.getMatchedEdges();
         for (VqlEdge e : matchedEdges){
             for(String propertyType : e.getPropertyTypes()){
-                columnHeader.add(e.getPathforProperty(propertyType));
+                columnHeaderMap.put(e.getPathforProperty(propertyType), e.getAlias(propertyType));
             }
         }
 
+        return columnHeaderMap;
+    }
 
-        return columnHeader;
+    private List<String> getAliasHeader() {
+        if (columnHeader2Alias == null) {
+            getColumnHeader();
+        }
+
+        // replaces column pathes with aliases
+        List<String> aliasHeader = new LinkedList<>();
+        for(Map.Entry<String, String> e : columnHeader2Alias.entrySet()){
+            aliasHeader.add(e.getValue().equals(StringUtils.EMPTY) ? e.getKey() : e.getValue());
+        }
+
+        return aliasHeader;
     }
 
     private List<List<String>> convertToTable(List<Map<String, String>> table) {
@@ -139,7 +154,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
             LOG.debug("Add row to link table: " + values);
         }
 
-        stringTable.add(0, new LinkedList<>(getColumnHeader()));
+        stringTable.add(0, getAliasHeader());
         return stringTable;
     }
 }

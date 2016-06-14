@@ -19,8 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.generator.mergepath;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * 
@@ -31,27 +34,27 @@ import java.util.Set;
 public class VqlNode {
 
     private final String text;
-    
+
     private final String path;
 
-    private final Set<String> propertyTypes = new HashSet<String>();
-
+    private final Map<String, String> propertyType2Alias = new HashMap<>();
 
     public VqlNode(String text, String path) {
         this.text = text;
-        this.path = path;  
+        this.path = path;
     }
-    
+
     public VqlNode(String path) {
         this("matching node", path);
     }
 
     public void addPropertyType(String propertyType) {
-       propertyTypes.add(propertyType);
+        propertyType2Alias.put(propertyType, StringUtils.EMPTY);
     }
-    
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -92,36 +95,51 @@ public class VqlNode {
     public String getPath() {
         return new String(path);
     }
-    
+
     @Override
     public String toString() {
-        return "VqlNode [text=" + text + ", path=" + path + ", properties=" + propertyTypes + "]";
+        return "VqlNode [text=" + text + ", path=" + path + ", properties=" + propertyType2Alias + "]";
     }
 
     public String getText() {
         return new String(text);
     }
-    
-    public boolean isMatch(){
-        return this.propertyTypes != null && !this.propertyTypes.isEmpty();
+
+    public boolean isMatch() {
+        return !this.propertyType2Alias.keySet().isEmpty();
     }
-    
-    public String getPathForProperty(String propertyType){
-        
-        
-        if(!isMatch()){
+
+    public String getPathForProperty(String propertyType) {
+
+        if (!isMatch()) {
             throw new IllegalStateException("VqlNode contains no properties: " + this);
         }
-        
-        if(!propertyTypes.contains(propertyType)){
+
+        if (!propertyType2Alias.containsKey(propertyType)) {
             throw new IllegalStateException("VqlNode does not contain this property type: " + propertyType);
         }
-        
+
         return path + "." + propertyType;
     }
 
     public Set<String> getPropertyTypes() {
-        return propertyTypes;
+        return propertyType2Alias.keySet();
     }
 
+    /**
+     * Set an alias for the column path. Can be used as column header.
+     */
+    public void setAlias(String propertyType, String alias) {
+        propertyType2Alias.put(propertyType, alias);
+
+    }
+
+    /**
+     * Returns an alias for the column path. If no alias is set the column path
+     * is returned.
+     *
+     */
+    public String getAlias(String propertyType) {
+        return propertyType2Alias.get(propertyType);
+    }
 }
