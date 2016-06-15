@@ -23,6 +23,7 @@ import static sernet.verinice.interfaces.graph.DepthFirstConditionalSearchPathes
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,7 @@ import sernet.verinice.interfaces.graph.VeriniceGraphFilter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.LinkedTableCreator;
+import sernet.verinice.service.linktable.RowComparator;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
@@ -154,6 +156,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
             LOG.debug("Add row to link table: " + values);
         }
 
+        Collections.sort(stringTable, new RowComparator());
         stringTable.add(0, getAliasHeader());
         return stringTable;
     }
