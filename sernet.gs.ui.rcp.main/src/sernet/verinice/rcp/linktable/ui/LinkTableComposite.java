@@ -27,6 +27,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -197,8 +198,8 @@ public class LinkTableComposite extends Composite {
             if (columns.isEmpty()) {
                 column = new LinkTableColumn(path, this, ++numCols);
             } else {
-                column = new LinkTableColumn(columns.get(0).getFirstCombo().getSelection(),
-                        path, this, ++numCols);
+                ISelection selection = columns.get(0).getFirstCombo().getSelection();
+                column = new LinkTableColumn(selection, path, this, ++numCols);
             }
             isNewColumn = false;
 

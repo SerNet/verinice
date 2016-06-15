@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -93,8 +94,25 @@ public class LinkTableColumn {
 
         addFirstCombo();
         firstCombo.setInput(new Object());
-        firstCombo.setColumnPath(path);
+        firstCombo.setColumnPath(removeAlias(path));
 
+    }
+
+
+    private List<String> removeAlias(List<String> path) {
+
+        if (path.size() < 2) {
+            return path;
+        }
+
+        int toIndex = path.size() - 2;
+        String alias = path.get(toIndex);
+
+        if (alias.equalsIgnoreCase("as")) {
+            return path.subList(0, toIndex);
+        }
+
+        return path;
     }
 
     public LinkTableColumn(ISelection selection, List<String> path,
@@ -109,7 +127,7 @@ public class LinkTableColumn {
         addFirstCombo();
         firstCombo.setInput(new Object());
         StructuredSelection element = (StructuredSelection) selection;
-        firstCombo.setColumnPath(element.getFirstElement().toString(), path);
+        firstCombo.setColumnPath(element.getFirstElement().toString(), removeAlias(path));
     }
 
     private void addFirstCombo() {
