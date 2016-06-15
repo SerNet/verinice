@@ -57,7 +57,6 @@ public class PreferenceConstants {
     public static final String DB_DRIVER = "cna_driver"; //$NON-NLS-1$
     public static final String DB_DRIVER_DERBY = "org.apache.derby.jdbc.EmbeddedDriver"; //$NON-NLS-1$
     public static final String DB_DRIVER_POSTGRES = "org.postgresql.Driver"; //$NON-NLS-1$
-    public static final String DB_DRIVER_MYSQL = "org.gjt.mm.mysql.Driver"; //$NON-NLS-1$
     public static final String DB_DRIVER_ORACLE = "oracle.jdbc.OracleDriver"; //$NON-NLS-1$
 
     // Verinice DB:
@@ -67,12 +66,10 @@ public class PreferenceConstants {
     public static final String DB_URL = "cna_dburl"; //$NON-NLS-1$
     public static final String DB_URL_DERBY = "jdbc:derby:%s/verinicedb;create=true"; //$NON-NLS-1$
     public static final String DB_URL_POSTGRES = "jdbc:postgresql://127.0.0.1:5432/verinicedb"; //$NON-NLS-1$
-    public static final String DB_URL_MYSQL = "jdbc:mysql://127.0.0.1:3306/verinicedb"; //$NON-NLS-1$
 
     public static final String DB_DIALECT = "cna_dbdialect"; //$NON-NLS-1$
     public static final String DB_DIALECT_DERBY = "sernet.verinice.hibernate.ByteArrayDerbyDialect"; //$NON-NLS-1$
     public static final String DB_DIALECT_POSTGRE = "org.hibernate.dialect.PostgreSQLDialect"; //$NON-NLS-1$
-    public static final String DB_DIALECT_MYSQL = "org.hibernate.dialect.MySQLInnoDBDialect"; //$NON-NLS-1$
 
     // gstool db for import:
     public static final String GS_DB_USER = "gs_cna_dbuser"; //$NON-NLS-1$
