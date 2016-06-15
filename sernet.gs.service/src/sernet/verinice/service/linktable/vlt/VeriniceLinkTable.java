@@ -29,7 +29,7 @@ import sernet.verinice.service.linktable.LinkTableConfiguration;
  * VltSchema.json in this package.
  *
  * See {@link VeriniceLinkTableIO} for (de-)serialization. This class holds the
- * same dat as {@link LinkTableConfiguration} but is made for (de-)serialization
+ * same data as {@link LinkTableConfiguration} but is made for (de-)serialization
  * only.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
@@ -38,8 +38,6 @@ public class VeriniceLinkTable {
 
     public static final String VLT = ".vlt"; //$NON-NLS-1$
     
-    private String id;
-    private String name;
     private boolean useAllScopes;
     private List<Integer> scopeIds;
     private List<String> columnPaths;
@@ -47,37 +45,14 @@ public class VeriniceLinkTable {
 
     private VeriniceLinkTable() {
         super();
-        this.id = UUID.randomUUID().toString();
     }
 
     private VeriniceLinkTable(Builder builder) {
         super();
-        this.id = UUID.randomUUID().toString();
-        this.name = builder.getName();
         this.setAllScopes(builder.useAllScopes());
         this.scopeIds = builder.getScopeIds();
         this.columnPaths = builder.getColumnPaths();
         this.relationIds = builder.getRelationIds();
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setNewId() {
-        this.id = UUID.randomUUID().toString();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public List<Integer> getScopeIds() {
@@ -138,33 +113,22 @@ public class VeriniceLinkTable {
 
     @Override
     public String toString() {
-        return "VeriniceLinkTable [id=" + id + ", name=" + name + ", useAllScopes=" + useAllScopes
+        return "VeriniceLinkTable [useAllScopes=" + useAllScopes
                 + ", scopeIds=" + scopeIds + ", columnPaths=" + columnPaths + ", relationIds="
                 + relationIds + "]";
     }
 
     public static class Builder {
-        private String name;
         private boolean allScopes;
         private List<Integer> scopeIds = new LinkedList<>();
         private List<String> columnPaths = new LinkedList<>();
         private List<String> relationIds = new LinkedList<>();
 
-        public Builder(String name) {
-            this.name = name;
+        public Builder() {
         }
 
         public VeriniceLinkTable build() {
             return new VeriniceLinkTable(this);
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Builder setName(String name) {
-            this.name = name;
-            return this;
         }
 
         public boolean useAllScopes() {

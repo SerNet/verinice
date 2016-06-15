@@ -61,7 +61,7 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
     @Override
     public Object execute(ExecutionEvent event) throws ExecutionException {
         if(checkRights()){
-            final VeriniceLinkTable veriniceLinkTable = createLinkTable();
+            final LinkTableEditorInput veriniceLinkTable = createLinkTable();
             if (veriniceLinkTable != null) {
 
                 UIJob job = new UIJob(PlatformUI.getWorkbench().getDisplay(),
@@ -101,9 +101,9 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
     }
 
     private void validateInputAndOpenEditor(
-            final VeriniceLinkTable veriniceLinkTable) {
+            final LinkTableEditorInput veriniceLinkTable) {
         try {
-            if (!LinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable).isValid()) {
+            if (!LinkTableUtil.isValidVeriniceLinkTable(veriniceLinkTable.getInput()).isValid()) {
                 MessageDialog confirmInvalidInput = new MessageDialog(
                         Display.getCurrent().getActiveShell(),
                         Messages.LinkTableHandler_1,
@@ -131,6 +131,6 @@ public abstract class LinkTableHandler extends RightsEnabledHandler {
             }
         }
     }
-    protected abstract VeriniceLinkTable createLinkTable();
+    protected abstract LinkTableEditorInput createLinkTable();
 
 }

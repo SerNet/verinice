@@ -38,7 +38,6 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.rcp.RightsEnabledHandler;
 import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
-import sernet.verinice.rcp.linktable.LinkTableFileRegistry;
 import sernet.verinice.rcp.linktable.LinkTableUtil;
 import sernet.verinice.rcp.linktable.Messages;
 import sernet.verinice.service.csv.CsvExport;
@@ -73,7 +72,7 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
         this.veriniceLinkTable = veriniceLinkTable;
         this.linkTableService = new LinkTableService();
         linkedTableCreator = new GraphLinkedTableCreator();
-//        this.linkTableService.setLinkTableCreator(linkedTableCreator);
+        this.linkTableService.setLinkTableCreator(linkedTableCreator);
     }
 
     /*
@@ -113,7 +112,6 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
         VeriniceLinkTable veriniceLinkTableTemp = null;
         if (filePath != null) {
             veriniceLinkTableTemp = VeriniceLinkTableIO.read(filePath);
-            LinkTableFileRegistry.add(veriniceLinkTableTemp.getId(), filePath);
         }
         return veriniceLinkTableTemp;
     }

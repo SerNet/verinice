@@ -55,23 +55,11 @@ public abstract class VeriniceLinkTableIO {
      * {@link VeriniceLinkTable}. VeriniceLinkTable is saved as a JSON file.
      *
      * @param configuration A link table configuration
-     * @param name The name of the configuration
      * @param fullPath The full path to the file
      */
-    public static void write(ILinkTableConfiguration configuration, String name, String fullPath) {
-        VeriniceLinkTable vlt = createVeriniceLinkTable(configuration, name);
+    public static void write(ILinkTableConfiguration configuration, String fullPath) {
+        VeriniceLinkTable vlt = createVeriniceLinkTable(configuration);
         write(vlt, fullPath);
-    }
-
-    /**
-     * Writes a {@link VeriniceLinkTable} to disk as a JSON file. For the path
-     * the id is used.
-     *
-     * @param vlt
-     *            A link table configuration
-     */
-    public static void write(VeriniceLinkTable vlt) {
-        write(vlt, vlt.getId());
     }
 
     /**
@@ -84,7 +72,7 @@ public abstract class VeriniceLinkTableIO {
         try {
             doWrite(vlt, fullPath);
         } catch (JsonParseException e) {
-            String message = "Error while creating JSON for Link-Table configuration: " + vlt.getName();
+            String message = "Error while creating JSON for Link-Table configuration: " + fullPath;
             LOG.error(message, e);
             throw new LinkTableException(message, e);
         } catch (IOException e) {
@@ -152,8 +140,8 @@ public abstract class VeriniceLinkTableIO {
         writer.close();
     }
 
-    private static VeriniceLinkTable createVeriniceLinkTable(ILinkTableConfiguration configuration, String name) {
-        VeriniceLinkTable.Builder builder = new VeriniceLinkTable.Builder(name);
+    private static VeriniceLinkTable createVeriniceLinkTable(ILinkTableConfiguration configuration) {
+        VeriniceLinkTable.Builder builder = new VeriniceLinkTable.Builder();
         builder.setColumnPaths(new LinkedList<>(configuration.getColumnPathes()));
         builder.setRelationIds(new LinkedList<>(configuration.getLinkTypeIds()));
         builder.setScopeIds(Arrays.asList(configuration.getScopeIdArray()));

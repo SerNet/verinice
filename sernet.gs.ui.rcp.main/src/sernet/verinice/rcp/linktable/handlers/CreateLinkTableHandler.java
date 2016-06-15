@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.handlers;
 
-import sernet.verinice.rcp.linktable.Messages;
+import sernet.verinice.rcp.linktable.LinkTableEditorInput;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
 /**
@@ -37,8 +37,9 @@ public class CreateLinkTableHandler extends LinkTableHandler {
      * @see sernet.verinice.rcp.linktable.LinkTableHandler#createLinkTable()
      */
     @Override
-    protected VeriniceLinkTable createLinkTable() {
-        return new VeriniceLinkTable.Builder(Messages.CreateLinkTableHandler_0).build();
+    protected LinkTableEditorInput createLinkTable() {
+        VeriniceLinkTable linkTable = new VeriniceLinkTable.Builder().build();
+        return new LinkTableEditorInput(linkTable);
     }
 
 }

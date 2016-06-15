@@ -29,12 +29,12 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
     private static final String BUNDLE_NAME = "sernet.verinice.rcp.linktable.messages"; //$NON-NLS-1$
-    public static String CreateLinkTableHandler_0;
     public static String ExportLinkTableHandler_1;
     public static String ExportLinkTableHandler_2;
     public static String ExportLinkTableHandler_3;
     public static String ExportLinkTableHandler_4;
     public static String ExportLinkTableHandler_5;
+    public static String LinkTableEditor_0;
     public static String LinkTableHandler_0;
     public static String LinkTableHandler_1;
     public static String LinkTableHandler_2;

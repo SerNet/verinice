@@ -38,14 +38,15 @@ public class OpenLinkTableHandler extends LinkTableHandler {
     }
 
     @Override
-    protected VeriniceLinkTable createLinkTable() {
+    protected LinkTableEditorInput createLinkTable() {
         final String filePath = LinkTableUtil.createVltFilePath(
                 Display.getCurrent().getActiveShell(), Messages.OpenLinkTableHandler_0, SWT.OPEN);
-        VeriniceLinkTable veriniceLinkTable = null;
+        LinkTableEditorInput linkTableEditorInput = null;
         if (filePath != null) {
-            veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
-            LinkTableFileRegistry.add(veriniceLinkTable.getId(), filePath);
+            VeriniceLinkTable veriniceLinkTable = VeriniceLinkTableIO.read(filePath);
+            linkTableEditorInput = new LinkTableEditorInput(veriniceLinkTable);
+            linkTableEditorInput.setFilePath(filePath);
         }
-        return veriniceLinkTable;
+        return linkTableEditorInput;
     }
 }

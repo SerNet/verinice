@@ -131,7 +131,7 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
         changedConfiguration.addScopeId(org.getScopeId());
 
         String tempVltPath = File.createTempFile(this.getClass().getSimpleName(), ".vlt").getAbsolutePath();
-        VeriniceLinkTableIO.write(changedConfiguration, this.getClass().getSimpleName() + "Changed", tempVltPath);
+        VeriniceLinkTableIO.write(changedConfiguration, tempVltPath);
 
         List<List<String>> resultTable = service.createTable(tempVltPath);
         checkTable(resultTable);

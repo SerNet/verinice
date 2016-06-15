@@ -269,7 +269,7 @@ public class LinkTableComposite extends Composite {
     public void updateAndValidateVeriniceContent(UpdateLinkTable... updateVeriniceLinkTable) {
         Set<UpdateLinkTable> set = Sets.newHashSet(updateVeriniceLinkTable);
         if (veriniceLinkTable == null) {
-            veriniceLinkTable = new VeriniceLinkTable.Builder("new").build();
+            veriniceLinkTable = new VeriniceLinkTable.Builder().build();
         }
         fireUpdate = fireValidation = false;
         if (set.contains(UpdateLinkTable.USE_ALL_SCOPES)) {

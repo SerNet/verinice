@@ -85,7 +85,7 @@ public class LinkTableServiceTestItNetwork extends BeforeEachVNAImportHelper {
         changedConfiguration.addScopeId(org.getScopeId());
 
         String tempVltPath = File.createTempFile(this.getClass().getSimpleName(), ".vlt").getAbsolutePath();
-        VeriniceLinkTableIO.write(changedConfiguration, this.getClass().getSimpleName() + "Changed", tempVltPath);
+        VeriniceLinkTableIO.write(changedConfiguration, tempVltPath);
 
         List<List<String>> resultTable = service.createTable(tempVltPath);
         checkAllObjectsTable(resultTable);
@@ -98,7 +98,7 @@ public class LinkTableServiceTestItNetwork extends BeforeEachVNAImportHelper {
         changedConfiguration.addScopeId(org.getScopeId());
 
         String tempVltPath = File.createTempFile(this.getClass().getSimpleName(), ".vlt").getAbsolutePath();
-        VeriniceLinkTableIO.write(changedConfiguration, this.getClass().getSimpleName() + "Changed", tempVltPath);
+        VeriniceLinkTableIO.write(changedConfiguration, tempVltPath);
 
         List<List<String>> resultTable = service.createTable(tempVltPath);
         checkRiskAnalysisTable(resultTable);

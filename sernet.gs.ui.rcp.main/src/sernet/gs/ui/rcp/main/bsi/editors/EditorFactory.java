@@ -108,6 +108,8 @@ public final class EditorFactory {
     private static EditorFactory instance;
     private static Map<Class<?>, IEditorTypeFactory> typedFactories = new HashMap<>();
 
+    private IEditorTypeFactory linkTableEditorFactory = new LinkTableEditorFactory();
+    
     private interface IEditorTypeFactory {
         void openEditorFor(Object o) throws PartInitException;
     }
@@ -121,7 +123,7 @@ public final class EditorFactory {
         registerTodoViewItem();
         registerAttachment();
         registerNote();
-        registerVeriniceLinkTable();
+        typedFactories.put(LinkTableEditorInput.class, linkTableEditorFactory);
     }
 
     /**
@@ -164,8 +166,6 @@ public final class EditorFactory {
         EditorFactory.getInstance().openEditor(o);
     }
 
-
-
     private void registerNote() {
         IEditorTypeFactory noteEditorFactory = new IEditorTypeFactory() {
             @Override
@@ -199,8 +199,10 @@ public final class EditorFactory {
                 TodoViewItem selection = (TodoViewItem) o;
                 CnATreeElement element;
                 try {
-                    element = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID, selection.getDbId());
-                    openEditor(element.getId(), new BSIElementEditorInput(element), BSIElementEditor.EDITOR_ID);
+                    element = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID,
+                            selection.getDbId());
+                    openEditor(element.getId(), new BSIElementEditorInput(element),
+                            BSIElementEditor.EDITOR_ID);
                 } catch (CommandException e) {
                     log.error("Error while opening editor.", e); //$NON-NLS-1$
                     ExceptionUtil.log(e, Messages.EditorFactory_2);
@@ -293,20 +295,8 @@ public final class EditorFactory {
         typedFactories.put(SamtTopic.class, bsiEditorFactory);
     }
 
-    private void registerVeriniceLinkTable() {
-        IEditorTypeFactory vlrEditorFactory = new IEditorTypeFactory() {
-            @Override
-            public void openEditorFor(Object o) throws PartInitException {
-                // replace element with new instance from DB:
-                VeriniceLinkTable selection = (VeriniceLinkTable) o;
-                LinkTableEditorInput input = new LinkTableEditorInput(selection);
-                openEditor(String.valueOf(input.getId()), input, LinkTableEditor.EDITOR_ID);
-            }
-        };
-        typedFactories.put(VeriniceLinkTable.class, vlrEditorFactory);
-    }
-
-    private static void openEditor(String id, IEditorInput input, String editorId) throws PartInitException {
+    private static IEditorPart openEditor(String id, IEditorInput input, String editorId)
+            throws PartInitException {
         IEditorPart editor = EditorRegistry.getInstance().getOpenEditor(id);
         if (editor == null) {
             // open new editor:
@@ -316,16 +306,25 @@ public final class EditorFactory {
             // show existing editor:
             getPage().openEditor(editor.getEditorInput(), editorId);
         }
+        return editor;
     }
 
     private static IWorkbenchPage getPage() {
         IWorkbenchPage page = Activator.getActivePage();
-        if(page==null) {
+        if (page == null) {
             page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         }
         return page;
     }
 
+    private static class LinkTableEditorFactory implements IEditorTypeFactory {
 
+        @Override
+        public void openEditorFor(Object o) throws PartInitException {
+            LinkTableEditorInput input = (LinkTableEditorInput) o;
+            openEditor(input.getId(), input, LinkTableEditor.EDITOR_ID);
+        }
+
+    }
 
 }

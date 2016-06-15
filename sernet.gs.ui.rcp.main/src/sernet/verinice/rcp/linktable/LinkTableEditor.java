@@ -57,9 +57,10 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 public class LinkTableEditor extends EditorPart {
 
     public static final String EDITOR_ID = LinkTableEditor.class.getName();
-
+    public static final String TITLE_DEFAULT = Messages.LinkTableEditor_0;
     private static final Logger LOG = Logger.getLogger(LinkTableEditor.class);
-    private VeriniceLinkTable veriniceLinkTable;
+    
+    private LinkTableEditorInput linkTableEditorInput;
     private boolean isDirty = false;
 
     private LinkTableFieldListener contentObserver;
@@ -74,12 +75,10 @@ public class LinkTableEditor extends EditorPart {
             throw new PartInitException("Input is not an instance of " + LinkTableEditorInput.class.getSimpleName()); //$NON-NLS-1$
         }
 
-        LinkTableEditorInput vltEditorInput = (LinkTableEditorInput) input;
-        veriniceLinkTable=vltEditorInput.getInput();
+        linkTableEditorInput = (LinkTableEditorInput) input;
 
         setSite(site);
-        setInput(vltEditorInput);
-        setPartName(veriniceLinkTable.getName());
+        setInput(linkTableEditorInput);
     }
     
     /* (non-Javadoc)
@@ -92,7 +91,7 @@ public class LinkTableEditor extends EditorPart {
             createEditor(parent);
         } catch (RuntimeException e) {
             // Log the exception via Log4j:
-            LOG.error("Could not create the editor part", e);
+            LOG.error("Could not create the editor part", e); //$NON-NLS-1$
             throw e;
         }
     }
@@ -113,7 +112,7 @@ public class LinkTableEditor extends EditorPart {
 
 
                 ExportLinkTableHandler exportHandler = new ExportLinkTableHandler(true,
-                        veriniceLinkTable);
+                        linkTableEditorInput.getInput());
                 try {
                     exportHandler.execute(new ExecutionEvent());
                 } catch (ExecutionException e) {
@@ -127,7 +126,7 @@ public class LinkTableEditor extends EditorPart {
             }
         });
 
-        LinkTableComposite ltr = new LinkTableComposite(veriniceLinkTable,
+        LinkTableComposite ltr = new LinkTableComposite(linkTableEditorInput.getInput(),
                 ServiceFactory.lookupObjectModelService(),
                 container);
 
@@ -144,13 +143,13 @@ public class LinkTableEditor extends EditorPart {
             public void validate() {
 
                 LinkTableValidationResult validationResult = LinkTableUtil
-                        .isValidVeriniceLinkTable(veriniceLinkTable);
+                        .isValidVeriniceLinkTable(linkTableEditorInput.getInput());
 
                 Image defaultImage = ImageCache.getInstance().getImage(ImageCache.VLT);
 
                 if (validationResult.isValid()) {
                     setTitleImage(defaultImage);
-                    setPartName(veriniceLinkTable.getName());
+                    setPartName(linkTableEditorInput.getName());
                     toolTip = getPartName();
                 } else {
                     ImageDescriptor[] descriptors = new ImageDescriptor[5];
@@ -162,7 +161,7 @@ public class LinkTableEditor extends EditorPart {
                             .createImage();
 
                     setTitleImage(decorated);
-                    setPartName(veriniceLinkTable.getName() + Messages.VeriniceLinkTableEditor_7);
+                    setPartName(linkTableEditorInput.getName() + Messages.VeriniceLinkTableEditor_7);
                     toolTip = validationResult.getMessage();
                     firePropertyChange(IEditorPart.PROP_DIRTY);
                 }
@@ -180,41 +179,35 @@ public class LinkTableEditor extends EditorPart {
         contentObserver.validate();
     }
     
-    /* (non-Javadoc)
+    /* 
      * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
-        String filePath = getFilePath(veriniceLinkTable, false);
+        String filePath = getFilePath(linkTableEditorInput, false);
         if (filePath != null) {
             executeSave(filePath);
         }
     }
     
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.part.EditorPart#getTitleToolTip()
-     */
-    @Override
-    public String getTitleToolTip() {
-        return toolTip == null? getPartName():toolTip;
-
-    }
-
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.ui.part.EditorPart#doSaveAs()
      */
     @Override
     public void doSaveAs() {
-        String vltFilePath = getFilePath(veriniceLinkTable, true);
-        if (vltFilePath != null) {
-            veriniceLinkTable.setNewId();
-            executeSave(vltFilePath);
+        String filePath = getFilePath(linkTableEditorInput, true);
+        if (filePath != null) {
+            executeSave(filePath);         
         }
+    }
+    
+    public static String getEditorTitle(String filePath) {
+        String title = TITLE_DEFAULT;
+        if(filePath!=null) {
+            title = filePath.substring(filePath.lastIndexOf(File.separator) + 1,
+                    filePath.length());
+        }
+        return title;
     }
     
     @Override
@@ -224,22 +217,21 @@ public class LinkTableEditor extends EditorPart {
     }
     
     private void executeSave(String filePath) {
-        VeriniceLinkTableIO.write(veriniceLinkTable, filePath);
+        VeriniceLinkTableIO.write(linkTableEditorInput.getInput(), filePath);
+        setPartName(getEditorTitle(filePath));
         isDirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }
 
-    private String getFilePath(VeriniceLinkTable veriniceLinkTable, boolean isSaveAs) {
-        String filePath = LinkTableFileRegistry.getFilePath(veriniceLinkTable.getId());
+    private String getFilePath(LinkTableEditorInput linkTableEditorInput, boolean isSaveAs) {
+        String filePath = linkTableEditorInput.getFilePath();
         if (isSaveAs || filePath == null) {
             filePath = LinkTableUtil.createVltFilePath(
                     Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4, SWT.SAVE);
             if (filePath != null) {
-                String name = filePath.substring(filePath.lastIndexOf(File.separator) + 1,
-                        filePath.length());
-                veriniceLinkTable.setName(name);
-                setPartName(name);
-                LinkTableFileRegistry.add(veriniceLinkTable.getId(), filePath);
+                EditorRegistry.getInstance().closeEditor(linkTableEditorInput.getId());
+                linkTableEditorInput.setFilePath(filePath);
+                EditorRegistry.getInstance().registerOpenEditor(linkTableEditorInput.getId(), this);
             }
         }
         return filePath;
