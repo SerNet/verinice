@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.*;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableElementComboViewer;
+import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
@@ -94,26 +95,12 @@ public class LinkTableColumn {
 
         addFirstCombo();
         firstCombo.setInput(new Object());
-        firstCombo.setColumnPath(removeAlias(path));
+        firstCombo.setColumnPath(ColumnPathParser.removeAlias(path));
 
     }
 
 
-    private List<String> removeAlias(List<String> path) {
 
-        if (path.size() < 2) {
-            return path;
-        }
-
-        int toIndex = path.size() - 2;
-        String alias = path.get(toIndex);
-
-        if (alias.equalsIgnoreCase("as")) {
-            return path.subList(0, toIndex);
-        }
-
-        return path;
-    }
 
     public LinkTableColumn(ISelection selection, List<String> path,
             LinkTableComposite parent, int number) {
@@ -127,7 +114,7 @@ public class LinkTableColumn {
         addFirstCombo();
         firstCombo.setInput(new Object());
         StructuredSelection element = (StructuredSelection) selection;
-        firstCombo.setColumnPath(element.getFirstElement().toString(), removeAlias(path));
+        firstCombo.setColumnPath(element.getFirstElement().toString(), ColumnPathParser.removeAlias(path));
     }
 
     private void addFirstCombo() {
