@@ -33,50 +33,58 @@ import sernet.verinice.model.common.CnATreeElement;
 public class TaskReminderEmailHandler extends GenericEmailHandler implements IEmailHandler {
     
     private static final String TEMPLATE = "TaskReminder";
+    private static final String KEY_NAME = "name";
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.bpm.IEmailHandler#addParameter(java.lang.String, java.util.Map)
-     */
     @Override
-    public void addParameter(String type, Map<String, Object> processVariables, String uuidElement, Map<String, String> emailParameter) throws MissingParameterException {
-        CnATreeElement element = getRemindService().retrieveElement(uuidElement, RetrieveInfo.getPropertyInstance());
-        if(element==null) {
+    public void addParameter(String type, Map<String, Object> processVariables, String uuidElement,
+            Map<String, String> emailParameter) throws MissingParameterException {
+
+        CnATreeElement element = getRemindService().retrieveElement(uuidElement,
+                RetrieveInfo.getPropertyInstance());
+        if (element == null) {
             throw new MissingParameterException("Obejct was not found, UUID is: " + uuidElement);
         }
         String title = element.getTitle();
-        if(isHtml()) {
+        if (isHtml()) {
             title = replaceSpecialChars(title);
         }
         emailParameter.put(TEMPLATE_ELEMENT_TITLE, title);
+
         String taskTitle = getTaskService().loadTaskTitle(type, processVariables);
         String taskTitleHtml = taskTitle;
-        if(isHtml()) {
+        if (isHtml()) {
             taskTitleHtml = replaceSpecialChars(taskTitleHtml);
         }
         emailParameter.put(TEMPLATE_TASK_TITLE, taskTitleHtml);
+
         String description = getTaskService().loadTaskDescription(type, processVariables);
-        if(isHtml()) {
+        if (isHtml()) {
             description = replaceSpecialChars(description);
         }
-        emailParameter.put(TEMPLATE_TASK_DESCRIPTION, description);      
-        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "verinice task reminder: " + taskTitle); 
+        emailParameter.put(TEMPLATE_TASK_DESCRIPTION, description);
+
+        emailParameter.put(IRemindService.TEMPLATE_SUBJECT, "verinice task reminder: " + taskTitle);
+
+        fixEncodingOfName(emailParameter);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.bpm.GenericEmailHandler#isHtml()
-     */
+    private void fixEncodingOfName(Map<String, String> emailParameter) {
+        String name = emailParameter.get(KEY_NAME);
+        if (name != null) {
+            name = replaceSpecialChars(name);
+            emailParameter.put(KEY_NAME, name);
+        }
+    }
+
+
     @Override
     public boolean isHtml() {
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.bpm.IEmailHandler#getTemplate()
-     */
     @Override
     public String getTemplate() {
         return TEMPLATE;
     }
-    
- 
+
 }
