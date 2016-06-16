@@ -44,6 +44,11 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 public class LinkTableEditorInput implements IEditorInput {
 
     /**
+     * Default tool tip which is shown if tool tip is <code>null</code>. 
+     */
+    private static final String TOOL_TIP_DEFAULT = "";
+    
+    /**
      * The link table configuration, the content of a .vlt file
      */
     private VeriniceLinkTable veriniceLinkTable;
@@ -85,7 +90,11 @@ public class LinkTableEditorInput implements IEditorInput {
      */
     @Override
     public String getToolTipText() {
-        return getFilePath();
+        String toolTip = getFilePath();
+        if(toolTip==null) {
+            toolTip = TOOL_TIP_DEFAULT;
+        }
+        return toolTip;
     }
     
     /* (non-Javadoc)
