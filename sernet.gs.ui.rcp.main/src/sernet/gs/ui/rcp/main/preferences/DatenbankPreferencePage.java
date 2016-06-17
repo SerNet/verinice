@@ -182,11 +182,6 @@ public class DatenbankPreferencePage extends FieldEditorPreferencePage implement
             url.setStringValue(PreferenceConstants.DB_URL_POSTGRES);
             user.setStringValue(""); //$NON-NLS-1$
             pass.setStringValue(""); //$NON-NLS-1$
-        } else if (newValue.equals(PreferenceConstants.DB_DRIVER_MYSQL)) {
-            dialect.setStringValue(PreferenceConstants.DB_DIALECT_MYSQL);
-            url.setStringValue(PreferenceConstants.DB_URL_MYSQL);
-            user.setStringValue(""); //$NON-NLS-1$
-            pass.setStringValue(""); //$NON-NLS-1$
         }
 
     }

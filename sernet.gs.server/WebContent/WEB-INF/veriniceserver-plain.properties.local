@@ -8,7 +8,7 @@
 # have to merge veriniceserver-plain.properties after an update.
 
 
-# Location of the hibernate configuration for PostgreSQL / MySQL:
+# Location of the hibernate configuration for PostgreSQL:
 # hibernate.config.resource=classpath:/server_hibernate.cfg.xml
 
 # Location of the hibernate configuration for Oracle
@@ -29,14 +29,6 @@
 # jdbc.url=jdbc:oracle:thin:@localhost:1521:XE
 # jdbc.username=verinice
 # jdbc.password=geheim
-
-# Probably still works, but no longer officially supported: connection settings for MySQL
-# jdbc.driverClass=com.mysql.jdbc.Driver
-# jdbc.hibernate.dialect=org.hibernate.dialect.MySQLDialect
-# jdbc.url=jdbc:mysql://127.0.0.1:3307/verinicedb
-# jdbc.username=verinice
-# jdbc.password=verinice
-
 
 # The password entered here must be in the form of a HTTP digest "A1" hash.
 # To create one using for instance Apache's 'htdigest' tool, type:

@@ -10,7 +10,7 @@
 # Default location value of the resource specifying the SNCA.xml file
 snca.resource=/WEB-INF/SNCA.xml
 
-# Location of the hibernate configuration for PostgreSQL / MySQL:
+# Location of the hibernate configuration for PostgreSQL:
 hibernate.config.resource=classpath:/server_hibernate.cfg.xml
 
 # Location of the hibernate configuration for Oracle
