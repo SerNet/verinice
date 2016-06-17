@@ -22,11 +22,14 @@ package sernet.verinice.service.linktable.generator;
 import static sernet.verinice.interfaces.graph.DepthFirstConditionalSearchPathes.traverse;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -37,6 +40,7 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.interfaces.graph.VeriniceGraphFilter;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.LinkedTableCreator;
 import sernet.verinice.service.linktable.RowComparator;
@@ -68,6 +72,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
     private VqlAst ast;
     private VeriniceGraph graph;
     private Map<String, String> columnHeader2Alias;
+    private HashMap<String, Integer> columnPath2TablePosition;
 
     private static final Logger LOG = Logger.getLogger(GraphLinkedTableCreator.class);
 
@@ -79,7 +84,20 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         VqlNode root = ast.getRoot();
         final String typeId = root.getPath();
 
+
         columnHeader2Alias = getColumnHeader();
+
+        int position = 0;
+        columnPath2TablePosition = new HashMap<>();
+        for(String s : conf.getColumnPathes()){
+           List<String> columnPathAsList = ColumnPathParser.getColumnPathAsList(s);
+           List<String> removeAlias = ColumnPathParser.removeAlias(columnPathAsList);
+           String join = StringUtils.join(removeAlias, "");
+           columnPath2TablePosition.put(join, position);
+           position++;
+        }
+
+
 
         // get roots
         Set<CnATreeElement> roots = graph.filter(new VeriniceGraphFilter() {
@@ -116,11 +134,13 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
             return columnHeader2Alias;
         }
 
+
         Set<VqlNode> matchedNodes = ast.getMatchedNodes();
         Map<String, String> columnHeaderMap = new TreeMap<>(new NumericStringComparator());
         for (VqlNode n : matchedNodes) {
             for (String propertyType : n.getPropertyTypes()) {
-                columnHeaderMap.put(n.getPathForProperty(propertyType), n.getAlias(propertyType));
+                String pathForProperty = n.getPathForProperty(propertyType);
+                columnHeaderMap.put(pathForProperty, n.getAlias(propertyType));
             }
         }
 
@@ -135,25 +155,33 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
     }
 
     private List<String> getAliasHeader() {
-        if (columnHeader2Alias == null) {
-            getColumnHeader();
-        }
 
         // replaces column pathes with aliases
-        List<String> aliasHeader = new LinkedList<>();
+        String[] aliasHeader = new String[columnHeader2Alias.size()];
         for(Map.Entry<String, String> e : columnHeader2Alias.entrySet()){
-            aliasHeader.add(e.getValue().equals(StringUtils.EMPTY) ? e.getKey() : e.getValue());
+            int position = columnPath2TablePosition.get(e.getKey());
+            aliasHeader[position] = (e.getValue().equals(StringUtils.EMPTY) ? e.getKey() : e.getValue());
+
         }
 
-        return aliasHeader;
+        return Arrays.asList(aliasHeader);
     }
 
     private List<List<String>> convertToTable(List<Map<String, String>> table) {
+
         List<List<String>> stringTable = new LinkedList<>();
+
         for (Map<String, String> map : table) {
-            Collection<String> values = map.values();
-            stringTable.add(new ArrayList<>(values));
-            LOG.debug("Add row to link table: " + values);
+
+            String[] row = new String[map.size()];
+
+            for(Entry<String, String> e : map.entrySet()){
+                int position = columnPath2TablePosition.get(e.getKey());
+                row[position] = e.getValue();
+            }
+
+            stringTable.add(Arrays.asList(row));
+            LOG.debug("Add row to link table: " + row);
         }
 
         Collections.sort(stringTable, new RowComparator());
