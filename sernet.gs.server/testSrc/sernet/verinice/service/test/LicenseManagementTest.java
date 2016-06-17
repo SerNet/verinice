@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -67,6 +68,10 @@ public class LicenseManagementTest extends ContextConfiguration{
     
     private final static List<String> CONTENTID_TESTDATA = new ArrayList<>();
     
+    private final static String TEST_USERNAME = "dd";
+    
+    private final static List<String> ALL_USER_NAMES = Arrays.asList(new String[]{"bb", "cc", "dd", "ee"});
+    
     static {
         CONTENTID_TESTDATA.add("ContentID1");
         CONTENTID_TESTDATA.add("ContentID2");
@@ -99,12 +104,21 @@ public class LicenseManagementTest extends ContextConfiguration{
         elementDao.flush();
     }
     
+    private int getRandomNotNullInt(int intervall){
+        int random = 0;
+        while(random == 0){
+            random = RandomUtils.nextInt(intervall);
+        }
+        return random;
+        
+    }
+    
     private LicenseManagementEntry getSingleRandomInstance(){
-        String licenseId = RandomStringUtils.randomAlphabetic(RandomUtils.nextInt(32));
-        String userPassword = RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(16));
-        String salt = RandomStringUtils.randomAlphanumeric(RandomUtils.nextInt(64));
+        String licenseId = RandomStringUtils.randomAlphabetic(getRandomNotNullInt(32));
+        String userPassword = RandomStringUtils.randomAlphanumeric(getRandomNotNullInt(16));
+        String salt = RandomStringUtils.randomAlphanumeric(getRandomNotNullInt(64));
         Date validUntil = getRandomDate(2017, 2030);
-        int validUsers = RandomUtils.nextInt(20);
+        int validUsers = getRandomNotNullInt(20);
         
         LicenseManagementEntry entry = new LicenseManagementEntry();
         entry.setContentIdentifier(CONTENTID_TESTDATA.get(RandomUtils.nextInt(CONTENTID_TESTDATA.size())));
@@ -129,6 +143,111 @@ public class LicenseManagementTest extends ContextConfiguration{
         calendar.clear();
         calendar.setTimeInMillis(randomDate);
         return calendar.getTime();
+    }
+    
+    @Test
+    public void testIfUserIsValidForLicenseId(){
+        // check why this lasts so long (currently 192s )
+        Set<LicenseManagementEntry> licenseEntries = licenseManagementService.getLicenseEntriesForContentId(CONTENTID_TESTDATA.get(0));
+        
+        for(LicenseManagementEntry entry : licenseEntries){
+            String licenseId = entry.getLicenseID();
+            licenseManagementService.grantUserToLicense(TEST_USERNAME, licenseId);
+            
+            Assert.assertTrue(licenseManagementService.isCurrentUserValidForLicense(TEST_USERNAME, licenseId));
+            
+            Assert.assertTrue("user " + TEST_USERNAME 
+                    + " is no longer authorised to use content from :\t" 
+                    + entry.getContentIdentifier(), 
+                    licenseManagementService.
+                    isUserAssignedLicenseStillValid(TEST_USERNAME, licenseId));
+        }
+        
+    }
+    
+    @Test
+    public void testResetLicenseAssignments(){
+        
+        createTestData(20);
+        
+        String contentId = CONTENTID_TESTDATA.get(RandomUtils.nextInt(CONTENTID_TESTDATA.size() - 1));
+        
+        for (String licenseId : licenseManagementService.getLicenseIdsForContentId(contentId)){
+            licenseManagementService.grantUserToLicense(ALL_USER_NAMES.get(RandomUtils.nextInt(ALL_USER_NAMES.size() - 1)), licenseId);
+        }
+        
+        Assert.assertTrue(licenseManagementService.getContentIdAllocationCount(contentId) > 0);
+        
+        licenseManagementService.removeAllContentIdAssignments(contentId);
+        
+        Assert.assertTrue(licenseManagementService.getContentIdAllocationCount(contentId) == 0);
+    }
+    
+    @Test
+    public void testResetUserAssignmentsByContentId(){
+        
+        for (String licenseId : licenseManagementService.getLicenseIdsForContentId(CONTENTID)){
+            licenseManagementService.grantUserToLicense(TEST_USERNAME, licenseId);
+        }
+        
+        licenseManagementService.removeContentIdUserAssignment(TEST_USERNAME, CONTENTID);
+        
+        Assert.assertFalse(licenseManagementService.getAuthorisedContentIdsByUser(TEST_USERNAME).contains(CONTENTID));
+    }
+    
+    @Test
+    public void testRemovingUsersFromLicenseId(){
+        
+        
+        LicenseManagementEntry firstEntry = getSingleRandomInstance();
+        LicenseManagementEntry secondEntry = new LicenseManagementEntry();
+        
+        firstEntry.setValidUsers(String.valueOf(5));
+        firstEntry.setLicenseID("blubb");
+        
+        // ensure both entries do have the same contentid since this is what we need for the test 
+        secondEntry.setContentIdentifier(firstEntry.getContentIdentifier());
+        secondEntry.setLicenseID("bla");
+        secondEntry.setSalt(firstEntry.getSalt());
+        secondEntry.setUserPassword(firstEntry.getUserPassword());
+        secondEntry.setValidUntil(firstEntry.getValidUntil());
+        secondEntry.setValidUsers(firstEntry.getValidUsers());
+        
+        elementDao.merge(firstEntry);
+        elementDao.merge(secondEntry);
+        
+        for (String username : ALL_USER_NAMES){
+            licenseManagementService.addLicenseIdAuthorisation(username, firstEntry.getLicenseID());
+            licenseManagementService.addLicenseIdAuthorisation(username, secondEntry.getLicenseID());
+        }
+        
+        Assert.assertTrue(licenseManagementService.getAllLicenseIds().size() >= 2);
+        
+        Assert.assertTrue("more users assigned than allowed by licenseEntry", licenseManagementService.checkAssignedUsersForLicenseId(firstEntry.getLicenseID()));
+        Assert.assertTrue("more users assigned than allowed by licenseEntry", licenseManagementService.checkAssignedUsersForLicenseId(secondEntry.getLicenseID()));
+        
+        int countFor2 = licenseManagementService.getContentIdAllocationCount(firstEntry.getContentIdentifier());
+        
+        licenseManagementService.removeAllUsersForLicense(firstEntry.getLicenseID());
+        
+        int countFor1 = licenseManagementService.getContentIdAllocationCount(firstEntry.getContentIdentifier());
+        Assert.assertTrue("removing user assignments for licenseId " + firstEntry.getLicenseID() + " failed", countFor1 < countFor2);
+        
+    }
+    
+    @Test
+    public void testGetValidUsersForContentId(){
+        for(String contentId : CONTENTID_TESTDATA){
+            Assert.assertTrue("assigned users for " + contentId + " is 0", licenseManagementService.getValidUsersForContentId(contentId) > 0);
+        }
+    }
+    
+    @Test
+    public void testGetLicenseIdByDbId(){
+        for(LicenseManagementEntry entry : elementDao.findAll()){
+            String licenseId = licenseManagementService.getLicenseId(entry.getDbId());
+            Assert.assertTrue("entry has no licenseId", licenseId != null && !licenseId.equals(""));
+        }
     }
     
     @Test
@@ -205,8 +324,8 @@ public class LicenseManagementTest extends ContextConfiguration{
         ExportFactory.marshal(xml, os);
         File file = null;
         try {
-            file = File.createTempFile("veriniceTest", "vnl");
-//            file.deleteOnExit();
+            file = File.createTempFile("veriniceTest", ".vnl");
+            file.deleteOnExit();
             
             FileUtils.writeByteArrayToFile(file, ((ByteArrayOutputStream)os).toByteArray());
             os.close();
@@ -226,24 +345,75 @@ public class LicenseManagementTest extends ContextConfiguration{
             e.printStackTrace();
         }
     }
+   
+    @Test
+    public void removeAllTest(){
+        CONTENTID_TESTDATA.add("podolski");
+        CONTENTID_TESTDATA.add("blafasel");
+        CONTENTID_TESTDATA.add("blafasel23");
+        
+        for (String contentId : CONTENTID_TESTDATA){
+            for (String licenseId : licenseManagementService.getLicenseIdsForContentId(contentId)){
+                licenseManagementService.removeAllLicenseIdAssignments(licenseId);
+            }
+        }
+        
+        for(String contentId : CONTENTID_TESTDATA){
+            Assert.assertTrue (0 == licenseManagementService.getContentIdAllocationCount(contentId));
+        }
+    }
     
-//    @Test
+    @Test
+    public void testUserMgmtInService(){
+        
+        LicenseManagementEntry entry = getSingleRandomInstance();
+        entry = elementDao.merge(entry);
+        
+        String localLicenseId  = entry.getLicenseID();
+        
+        licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, localLicenseId);
+        licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, localLicenseId);
+        
+        Assert.assertTrue(licenseManagementService.isCurrentUserAuthorizedForLicenseUsage(TEST_USERNAME, localLicenseId));
+        
+        Set<String> idsFromDb = licenseManagementService.getAuthorisedContentIdsByUser(TEST_USERNAME);
+        Assert.assertEquals(1, licenseManagementService.getContentIdAllocationCount(entry.getContentIdentifier()));
+        
+        
+        Assert.assertTrue(idsFromDb.contains(localLicenseId));
+        
+        elementDao.delete(entry);
+    }
+    
+    @Test
     public void vnlMapperTest(){
         LicenseManagementEntry entry = getSingleRandomInstance();
         // dbid is not considered by marshaller and unmarshalling sets 0 
         // as default for non-mapped property, so set it here also
         entry.setDbId(0);
         byte[] vnlData = VNLMapper.getInstance().marshalLicenseManagementEntry(entry);
-        LicenseManagementEntry serializedEntry = VNLMapper.getInstance().unmarshalXML(vnlData);
         
+      
         try {
-            vnlData = FileUtils.readFileToByteArray(new File("/tmp/veriniceTest4150224110772808346vnl"));
-            LicenseManagementEntry brokenEntry = VNLMapper.getInstance().unmarshalXML(vnlData);
-            brokenEntry.hashCode();
+            File file = File.createTempFile("veriniceTest", ".vnl");
+            file.deleteOnExit();
+            FileUtils.writeByteArrayToFile(file, vnlData);
+            File file2 = new File(file.getAbsolutePath());
+            file2.deleteOnExit();
+            byte[] bytesFromDisk = FileUtils.readFileToByteArray(file2);
+            LicenseManagementEntry entryFromDisk = VNLMapper.getInstance().unmarshalXML(bytesFromDisk);
+            Assert.assertEquals(entry, entryFromDisk);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        
+        LicenseManagementEntry serializedEntry = VNLMapper.getInstance().unmarshalXML(vnlData);
+        
+        Assert.assertEquals(entry, serializedEntry);
+        
+        
+        
         
         Assert.assertTrue(entry.equals(serializedEntry));
         

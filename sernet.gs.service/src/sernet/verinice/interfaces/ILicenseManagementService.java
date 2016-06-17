@@ -57,7 +57,7 @@ public interface ILicenseManagementService {
   
   Set<String> getAllContentIds();
   
-  Set<LicenseManagementEntry> getLicenseEntriesForContentId(String licenseId);
+  Set<LicenseManagementEntry> getLicenseEntriesForContentId(String contentId);
   
   Map<String, String> getPublicInformationForLicenseIdEntry(LicenseManagementEntry licenseEntry);
   
@@ -72,6 +72,8 @@ public interface ILicenseManagementService {
   void removeContentIdUserAssignment(String user, String contentId);
   
   Set<String> getAuthorisedContentIdsByUser(String user);
+  
+  Set<String> getLicenseIdsForContentId(String contentId);
 
 
 }

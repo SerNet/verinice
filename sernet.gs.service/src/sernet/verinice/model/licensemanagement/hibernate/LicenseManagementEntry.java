@@ -39,7 +39,7 @@ public class LicenseManagementEntry implements Serializable {
     private static final long serialVersionUID = 2016060910229L;
     
     public static final String COLUMN_CONTENTID = "contentId";
-    public static final String COLUMN_LICENSEID = "licenseId";
+    public static final String COLUMN_LICENSEID = "licenseID";
     public static final String COLUMN_VALIDUSERS = "validUsers";
     public static final String COLUMN_VALIDUNTIL = "validUntil";
     
