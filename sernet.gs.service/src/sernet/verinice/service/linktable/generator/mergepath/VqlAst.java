@@ -24,21 +24,13 @@ import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.LINK;
 import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.LT;
 import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.PARENT;
 import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.PROP;
-import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.LITERAL_AS;
-import static sernet.verinice.service.linktable.antlr.VqlParserTokenTypes.LITERAL_as;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import org.jgrapht.DirectedGraph;
-import org.jgrapht.event.ConnectedComponentTraversalEvent;
-import org.jgrapht.event.EdgeTraversalEvent;
-import org.jgrapht.event.TraversalListener;
-import org.jgrapht.event.VertexTraversalEvent;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
 
@@ -47,10 +39,42 @@ import antlr.collections.AST;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.antlr.VqlParser;
-import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
+import sernet.verinice.service.linktable.antlr.VqlParserTokenTypes;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
 
 /**
+ * Merges all column pathes to tree, which is a kind of a VQL abstract syntax
+ * tree.
+ *
+ * <p>
+ * So this input of column pathes:
+ * </p>
+ *
+ * <pre>
+ *  assetgroup.title
+ *  assetgroup > asset.title
+ *  assetgroup > asset.description
+ *  assetgroup > asset:control.title
+ *  assetgroup > asset / control.title
+ * </pre>
+ *
+ * <p>
+ * Is converted to a tree with directed edges like this:
+ * </p>
+ *
+ * <pre>
+ *
+ *                    * assetgroup[title]
+ *                    |
+ *                    * asset[title, description]
+ *                   / \
+ *  CnaLink[title]  /   \
+ *                 /     \
+ * control[title] *       * person[name, surname]
+ * </pre>
+ *
+ *
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
@@ -58,15 +82,43 @@ public class VqlAst {
 
     private static final int NO_EDGE_TYPE = -1;
     private ILinkTableConfiguration linkTableConfiguration;
-    private DirectedGraph<VqlNode, VqlEdge> vqlAst;
+    private DirectedGraph<VqlNode, VqlEdge> vqlGraph;
     private VqlNode root;
 
+    // keep track of already created nodes.
+    Map<VqlEdge, VqlEdge> edges = new HashMap<>();
+    Map<VqlNode, VqlNode> nodes = new HashMap<>();
+
+    /**
+     * Creates a VQL-Ast.
+     *
+     * @param linkTableConfiguration
+     *            May not be null.
+     *
+     */
     public VqlAst(ILinkTableConfiguration linkTableConfiguration) {
         this.linkTableConfiguration = linkTableConfiguration;
-        this.setVqlAst(new DefaultDirectedGraph<VqlNode, VqlEdge>(VqlEdge.class));
+        this.vqlGraph = new DefaultDirectedGraph<VqlNode, VqlEdge>(VqlEdge.class);
         createQueryTree();
     }
 
+    /**
+     * Returns the root of the VqlQuery
+     *
+     * <pre>
+     *
+     *                    * assetgroup[title]
+     *                    |
+     *                    * asset[title, description]
+     *                   / \
+     *  CnaLink[title]  /   \
+     *                 /     \
+     * control[title] *       * person[name, surname]
+     * </pre>
+     *
+     * @return The root node of the VQL-AST. In the example above it would be
+     *         the assetgroup.
+     */
     public VqlNode getRoot() {
         return root;
     }
@@ -79,93 +131,98 @@ public class VqlAst {
             CommonAST ast = (CommonAST) parser.getAST();
 
             root = getNode(ast.getText(), ast.getText());
-            vqlAst.addVertex(root);
+            vqlGraph.addVertex(root);
 
-            traverseAst(ast.getNextSibling(), root, null, NO_EDGE_TYPE);
+            traverseColumnPathAst(ast.getNextSibling(), root, null, NO_EDGE_TYPE);
         }
     }
 
-    private void traverseAst(AST sibling, VqlNode lastNode, VqlEdge incomingEdge, int lastEdgeType) {
+    /**
+     * Creates a decorated abstracted syntax tree.
+     *
+     * <pre>
+     * assetgroup   >   assetgroup > asset / control . title
+     *      |       |       |
+     *   leftNode   op   rightNode
+     * </pre>
+     *
+     *
+     * @param op
+     *            Is the recursion anchor. If a {@link VqlParserTokenTypes#PROP}
+     *            is seen the end of the path is reached and the recursion
+     *            stops.
+     * @param leftNode
+     *            The node of the left side of the operator.
+     * @param incomingEdge
+     *            The incoming edge. In the example above it is not the dot
+     *            operator, it is the child operator. May be null.
+     * @param lastEdgeType
+     *            The type which is provided from the {@link ColumnPathParser}
+     *            of the last incoming edge. May be null.
+     */
+    private void traverseColumnPathAst(AST op, VqlNode leftNode, VqlEdge incomingEdge, int lastEdgeType) {
 
-        if (sibling == null) {
+        if (op == null) {
             return;
         }
 
-        VqlNode currentNode = null;
+        VqlNode rightNode = null;
         VqlEdge vqlEdge = null;
-        String valueOfNextSibling = sibling.getNextSibling().getText();
+        String valueOfNextSibling = op.getNextSibling().getText();
+        int nextEdgeType = NO_EDGE_TYPE;
 
-        if (PROP == sibling.getType()) {
+        if (PROP == op.getType()) {
 
             if (lastEdgeType != NO_EDGE_TYPE && LT == lastEdgeType) {
                 incomingEdge.addPropertyType(valueOfNextSibling);
-
-                if (hasAlias(sibling)) {
-                    incomingEdge.setAlias(valueOfNextSibling, getAlias(sibling));
-                }
-
             } else {
-                lastNode.addPropertyType(valueOfNextSibling);
-
-                if (hasAlias(sibling)) {
-                    lastNode.setAlias(valueOfNextSibling, getAlias(sibling));
-                }
-
+                leftNode.addPropertyType(valueOfNextSibling);
             }
 
             return;
         }
 
-        if (LT == sibling.getType()) {
-            String path = lastNode.getPath() + "/" + valueOfNextSibling;
-            currentNode = getNode(sibling.getNextSibling().getText(), path);
-            vqlEdge = getEdge(EdgeType.LINK, lastNode.getPath(), lastNode, currentNode);
-            lastEdgeType = LT;
+        if (LT == op.getType()) {
+            String path = leftNode.getPath() + ":" + valueOfNextSibling;
+            String nodePath = leftNode.getPath() + "/" + valueOfNextSibling;
+            rightNode = getNode(op.getNextSibling().getText(), nodePath);
+            vqlEdge = getEdge(EdgeType.LINK, path, leftNode, rightNode);
+            nextEdgeType = LT;
         }
 
-        if (LINK == sibling.getType()) {
-            String path = lastNode.getPath() + "/" + valueOfNextSibling;
-            currentNode = getNode(sibling.getNextSibling().getText(), path);
-            vqlEdge = getEdge(EdgeType.LINK, lastNode.getPath(), lastNode, currentNode);
-            lastEdgeType = LINK;
+        if (LINK == op.getType()) {
+            String edgePath = leftNode.getPath() + ":" + valueOfNextSibling;
+            String nodePath = leftNode.getPath() + "/" + valueOfNextSibling;
+            rightNode = getNode(op.getNextSibling().getText(), nodePath);
+            vqlEdge = getEdge(EdgeType.LINK, edgePath, leftNode, rightNode);
+            nextEdgeType = LINK;
         }
 
-        if (CHILD == sibling.getType()) {
-            String path = lastNode.getPath() + ">" + valueOfNextSibling;
-            currentNode = getNode(sibling.getNextSibling().getText(), path);
-            vqlEdge = getEdge(EdgeType.CHILD, lastNode.getPath(), lastNode, currentNode);
-            lastEdgeType = CHILD;
+        if (CHILD == op.getType()) {
+            String path = leftNode.getPath() + ">" + valueOfNextSibling;
+            rightNode = getNode(op.getNextSibling().getText(), path);
+            vqlEdge = getEdge(EdgeType.CHILD, leftNode.getPath(), leftNode, rightNode);
+            nextEdgeType = CHILD;
         }
 
-        if (PARENT == sibling.getType()) {
-            String path = lastNode.getPath() + "<" + valueOfNextSibling;
-            currentNode = getNode(sibling.getNextSibling().getText(), path);
-            vqlEdge = getEdge(EdgeType.PARENT, lastNode.getPath(), lastNode, currentNode);
-            lastEdgeType = PARENT;
+        if (PARENT == op.getType()) {
+            String path = leftNode.getPath() + "<" + valueOfNextSibling;
+            rightNode = getNode(op.getNextSibling().getText(), path);
+            vqlEdge = getEdge(EdgeType.PARENT, leftNode.getPath(), leftNode, rightNode);
+            nextEdgeType = PARENT;
         }
 
-        if (!vqlAst.containsVertex(currentNode)) {
-            vqlAst.addVertex(currentNode);
+        if (!vqlGraph.containsVertex(rightNode)) {
+            vqlGraph.addVertex(rightNode);
         }
 
-        if (!vqlAst.containsEdge(vqlEdge)) {
-            vqlAst.addEdge(lastNode, currentNode, vqlEdge);
+        if (!vqlGraph.containsEdge(vqlEdge)) {
+            vqlGraph.addEdge(leftNode, rightNode, vqlEdge);
         }
 
-        traverseAst(sibling.getNextSibling().getNextSibling(), currentNode, vqlEdge, lastEdgeType);
+        AST nextLeftNode = op.getNextSibling().getNextSibling();
+        traverseColumnPathAst(nextLeftNode, rightNode, vqlEdge, nextEdgeType);
     }
-
-
-    private String getAlias(AST sibling) {
-        return sibling.getNextSibling().getNextSibling().getNextSibling().getText();
-    }
-
-    private boolean hasAlias(AST sibling) {
-        AST alias = sibling.getNextSibling().getNextSibling();
-        return alias != null && (alias.getType() == LITERAL_AS || alias.getType() == LITERAL_as);
-    }
-
-    Map<VqlNode, VqlNode> nodes = new HashMap<>();
 
     private VqlNode getNode(String text, String path) {
         VqlNode node = new VqlNode(text, path);
@@ -177,10 +234,8 @@ public class VqlAst {
         return nodes.get(node);
     }
 
-    Map<VqlEdge, VqlEdge> edges = new HashMap<>();
-
     private VqlEdge getEdge(EdgeType type, String path, VqlNode lastNode, VqlNode currentNode) {
-        VqlEdge vqlEdge = new VqlEdge(type, lastNode.getPath(), lastNode, currentNode);
+        VqlEdge vqlEdge = new VqlEdge(type, path, lastNode, currentNode);
         if (edges.containsKey(vqlEdge)) {
             return edges.get(vqlEdge);
         }
@@ -189,99 +244,45 @@ public class VqlAst {
         return edges.get(vqlEdge);
     }
 
-    public DirectedGraph<VqlNode, VqlEdge> getVqlAst() {
-        return vqlAst;
-    }
+    /**
+     * Returns all possible pathes of the vql tree to the each leaf. So in this
+     * case:
+     *
+     *
+     * <pre>
+     *
+     *                    * assetgroup[title]
+     *                    |
+     *                    * asset[title, description]
+     *                   / \
+     *  CnaLink[title]  /   \ CnaLink
+     *                 /     \
+     * control[title] *       * person[name, surname]
+     * </pre>
+     *
+     * The method returns two pathes:
+     *
+     * <pre>
+     *      [
+     *          [(assetgroup, null), (asset, child), (control, link)],
+     *          [(assetgroup, null), (asset, child), (person, link)]
+     *      ]
+     * </pre>
+     *
+     * @return A list of all possible{@link Path} to each leaf.
+     */
+    public final Set<Path> getPaths() {
 
-    public void setVqlAst(DirectedGraph<VqlNode, VqlEdge> vqlAst) {
-        this.vqlAst = vqlAst;
-    }
+        DepthFirstIterator<VqlNode, VqlEdge> iterator = new DepthFirstIterator<>(vqlGraph, root);
+        FilterPathes filterPathes = new FilterPathes(this);
+        iterator.addTraversalListener(filterPathes);
 
-    public Set<Path> getPaths() {
-
-
-        final Stack<PathElement> vqlStack = new Stack<>();
-        final Stack<EdgeTraversalEvent<VqlNode, VqlEdge>> edgeStack = new Stack<>();
-        final Set<Path> paths = new HashSet<>();
-
-        DepthFirstIterator<VqlNode, VqlEdge> iterator = new DepthFirstIterator<>(vqlAst, root);
-        iterator.addTraversalListener(new TraversalListener<VqlNode, VqlEdge>() {
-
-            @Override
-            public void vertexTraversed(VertexTraversalEvent<VqlNode> e) {
-
-                VqlEdge edge = getEdge(e.getVertex());
-                vqlStack.push(new PathElement(e.getVertex(), edge));
-
-                if (isLeaf(e.getVertex())) {
-                    paths.add(createPath());
-                }
-            }
-
-            private VqlEdge getEdge(VqlNode vertex) {
-
-                Set<VqlEdge> incomingEdges = vqlAst.incomingEdgesOf(vertex);
-
-                assert(incomingEdges.size() <= 1);
-
-                if(incomingEdges.isEmpty()){
-                    return null;
-                } else {
-                    // extract the value
-                    return incomingEdges.iterator().next();
-                }
-            }
-
-            @Override
-            public void vertexFinished(VertexTraversalEvent<VqlNode> e) {
-
-                vqlStack.pop();
-
-                if (!edgeStack.isEmpty()) {
-                    edgeStack.pop();
-                }
-            }
-
-            @Override
-            public void edgeTraversed(EdgeTraversalEvent<VqlNode, VqlEdge> e) {
-            }
-
-            @Override
-            public void connectedComponentStarted(ConnectedComponentTraversalEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            @Override
-            public void connectedComponentFinished(ConnectedComponentTraversalEvent e) {
-                // TODO Auto-generated method stub
-
-            }
-
-            private Path createPath() {
-
-
-                Path path = new Path();
-                Iterator<PathElement> nodeIterator = vqlStack.iterator();
-
-                while (nodeIterator.hasNext()) {
-                    PathElement pathElement = nodeIterator.next();
-                    path.addPathElement(pathElement.node, pathElement.edge);
-                }
-
-                return path;
-            }
-
-            private boolean isLeaf(VqlNode vertex) {
-                return vqlAst.outgoingEdgesOf(vertex).size() == 0;
-            }
-        });
-
+        // iterate of the whole tree
         while (iterator.hasNext()) {
             iterator.next();
         }
 
-        return paths;
+        return filterPathes.getPaths();
     }
 
     /**
@@ -292,7 +293,7 @@ public class VqlAst {
      */
     public Set<VqlNode> getMatchedNodes() {
         Set<VqlNode> matchingNodes = new HashSet<>();
-        for (VqlNode n : vqlAst.vertexSet()) {
+        for (VqlNode n : vqlGraph.vertexSet()) {
             if (n.isMatch()) {
                 matchingNodes.add(n);
             }
@@ -308,12 +309,16 @@ public class VqlAst {
      */
     public Set<VqlEdge> getMatchedEdges() {
         Set<VqlEdge> matchingEdges = new HashSet<>();
-        for (VqlEdge e : vqlAst.edgeSet()) {
+        for (VqlEdge e : vqlGraph.edgeSet()) {
             if (e.isMatch()) {
                 matchingEdges.add(e);
             }
         }
 
         return matchingEdges;
+    }
+
+    public DirectedGraph<VqlNode, VqlEdge> getVqlGraph() {
+        return vqlGraph;
     }
 }

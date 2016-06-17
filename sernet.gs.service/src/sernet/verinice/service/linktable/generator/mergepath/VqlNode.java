@@ -26,7 +26,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * 
+ * Represents a node of column path within a {@link VqlAst}.
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *

@@ -48,18 +48,17 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-final public class DepthFirstConditionalSearchPathes {
+public final class DepthFirstConditionalSearchPathes {
 
     private static final Logger LOG = Logger.getLogger(DepthFirstConditionalSearchPathes.class);
 
-    final private Graph<CnATreeElement, Edge> g;
+    private final Graph<CnATreeElement, Edge> g;
 
     private TraversalFilter traversalFilter;
 
     private CnATreeElement root;
 
     private TraversalListener traversalListener;
-
 
     private DepthFirstConditionalSearchPathes(VeriniceGraph graph, CnATreeElement root, TraversalFilter filter, TraversalListener listener) {
         this.g = graph.getGraph();
@@ -86,9 +85,6 @@ final public class DepthFirstConditionalSearchPathes {
 
                     traversalListener.edgeTraversed(node, e.getTarget(), e, depth);
                     dfs(e.getTarget(), depth + 1);
-
-//                    traversalListener.edgeTraversed(e.getTarget(), node, e, depth);
-//                    dfs(e.getSource(), depth + 1);
                 }
             }
 
@@ -112,7 +108,7 @@ final public class DepthFirstConditionalSearchPathes {
 
         private Map<CnATreeElement, Boolean> initMarkedVertices() {
             Set<CnATreeElement> vertexSet = g.vertexSet();
-            Map<CnATreeElement, Boolean> marked = new HashMap<>();
+            marked = new HashMap<>();
             for (CnATreeElement e : vertexSet) {
                 marked.put(e, false);
             }

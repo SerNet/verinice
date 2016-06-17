@@ -23,7 +23,6 @@ import static sernet.verinice.interfaces.graph.DepthFirstConditionalSearchPathes
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -31,12 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.interfaces.graph.VeriniceGraphFilter;
 import sernet.verinice.model.common.CnATreeElement;
@@ -46,7 +43,6 @@ import sernet.verinice.service.linktable.LinkedTableCreator;
 import sernet.verinice.service.linktable.RowComparator;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
-import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
 import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
 
 /**
@@ -72,9 +68,11 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
     private VqlAst ast;
     private VeriniceGraph graph;
     private Map<String, String> columnHeader2Alias;
-    private HashMap<String, Integer> columnPath2TablePosition;
+    private Map<String, Integer> columnPath2TablePosition;
 
     private static final Logger LOG = Logger.getLogger(GraphLinkedTableCreator.class);
+    private LtrPrintRowsTraversalListener traversalListener;
+    private LtrTraversalFilter filter;
 
     @Override
     public List<List<String>> createTable(VeriniceGraph veriniceGraph, ILinkTableConfiguration conf) {
@@ -84,87 +82,46 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         VqlNode root = ast.getRoot();
         final String typeId = root.getPath();
 
+        storeColumnHeaderOrderAndAlias(conf);
 
-        columnHeader2Alias = getColumnHeader();
+        Set<CnATreeElement> roots = filterRootNodes(typeId);
 
-        int position = 0;
-        columnPath2TablePosition = new HashMap<>();
-        for(String s : conf.getColumnPathes()){
-           List<String> columnPathAsList = ColumnPathParser.getColumnPathAsList(s);
-           List<String> removeAlias = ColumnPathParser.removeAlias(columnPathAsList);
-           String join = StringUtils.join(removeAlias, "");
-           columnPath2TablePosition.put(join, position);
-           position++;
-        }
+        List<Map<String, String>> table = createLTRTable(roots);
+
+        return convertToTable(table);
+    }
 
 
-
-        // get roots
+    private Set<CnATreeElement> filterRootNodes(final String typeId) {
         Set<CnATreeElement> roots = graph.filter(new VeriniceGraphFilter() {
             @Override
             public boolean filter(CnATreeElement node) {
                 return typeId.equals(node.getTypeId());
             }
         });
+        return roots;
+    }
 
+    private List<Map<String, String>> createLTRTable(Set<CnATreeElement> roots) {
         List<Map<String, String>> table = new ArrayList<>();
         for (CnATreeElement potentialRoot : roots) {
             for (Path p : ast.getPaths()) {                
-                List<Map<String, String>> rows = scanGraph(potentialRoot, p);
+                List<Map<String, String>> rows = scanVeriniceGraph(potentialRoot, p);
                 table.addAll(rows);
             }
         }
-
-        return convertToTable(table);
+        return table;
     }
 
-    private List<Map<String, String>> scanGraph(CnATreeElement potentialRoot, final Path p) {
 
-        LtrPrintRowsTraversalListener traversalListener = new LtrPrintRowsTraversalListener(p, getColumnHeader().keySet());
-        LtrTraversalFilter filter = new LtrTraversalFilter(p);
+
+    private List<Map<String, String>> scanVeriniceGraph(CnATreeElement potentialRoot, final Path p) {
+
+        traversalListener = new LtrPrintRowsTraversalListener(p, getLTRHeaderColumnPathes());
+        filter = new LtrTraversalFilter(p);
 
         traverse(graph, potentialRoot, filter, traversalListener);
-
-        return traversalListener.result;
-    }
-
-    private Map<String, String> getColumnHeader() {
-
-        if (columnHeader2Alias != null) {
-            return columnHeader2Alias;
-        }
-
-
-        Set<VqlNode> matchedNodes = ast.getMatchedNodes();
-        Map<String, String> columnHeaderMap = new TreeMap<>(new NumericStringComparator());
-        for (VqlNode n : matchedNodes) {
-            for (String propertyType : n.getPropertyTypes()) {
-                String pathForProperty = n.getPathForProperty(propertyType);
-                columnHeaderMap.put(pathForProperty, n.getAlias(propertyType));
-            }
-        }
-
-        Set<VqlEdge> matchedEdges = ast.getMatchedEdges();
-        for (VqlEdge e : matchedEdges){
-            for(String propertyType : e.getPropertyTypes()){
-                columnHeaderMap.put(e.getPathforProperty(propertyType), e.getAlias(propertyType));
-            }
-        }
-
-        return columnHeaderMap;
-    }
-
-    private List<String> getAliasHeader() {
-
-        // replaces column pathes with aliases
-        String[] aliasHeader = new String[columnHeader2Alias.size()];
-        for(Map.Entry<String, String> e : columnHeader2Alias.entrySet()){
-            int position = columnPath2TablePosition.get(e.getKey());
-            aliasHeader[position] = (e.getValue().equals(StringUtils.EMPTY) ? e.getKey() : e.getValue());
-
-        }
-
-        return Arrays.asList(aliasHeader);
+        return traversalListener.getResult();
     }
 
     private List<List<String>> convertToTable(List<Map<String, String>> table) {
@@ -188,4 +145,38 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         stringTable.add(0, getAliasHeader());
         return stringTable;
     }
+
+    private void storeColumnHeaderOrderAndAlias(ILinkTableConfiguration conf) {
+        int position = 0;
+        columnHeader2Alias = new HashMap<>();
+        columnPath2TablePosition = new HashMap<>();
+        for(String s : conf.getColumnPathes()){
+           List<String> columnPathAsList = ColumnPathParser.getColumnPathAsList(s);
+           List<String> removeAlias = ColumnPathParser.removeAlias(columnPathAsList);
+           String join = StringUtils.join(removeAlias, "");
+           columnPath2TablePosition.put(join, position);
+           columnHeader2Alias.put(join, ColumnPathParser.extractAlias(columnPathAsList));
+           position++;
+        }
+    }
+
+    private Set<String> getLTRHeaderColumnPathes() {
+        return columnHeader2Alias.keySet();
+    }
+
+
+    private List<String> getAliasHeader() {
+
+        // replaces column pathes with aliases
+        String[] aliasHeader = new String[columnHeader2Alias.size()];
+        for(Map.Entry<String, String> e : columnHeader2Alias.entrySet()){
+            int position = columnPath2TablePosition.get(e.getKey());
+            aliasHeader[position] = (e.getValue().equals(StringUtils.EMPTY) ? e.getKey() : e.getValue());
+
+        }
+
+        return Arrays.asList(aliasHeader);
+    }
+
+
 }

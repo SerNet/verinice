@@ -21,11 +21,7 @@ package sernet.verinice.service.linktable.generator.mergepath;
 
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Represents an edge between {@link VqlNode}.
@@ -34,14 +30,14 @@ import org.apache.commons.lang.StringUtils;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-final public class VqlEdge {
+public final class VqlEdge {
 
-    private static final String DELIMITER = ":";
+    private static final String DELIMITER = ".";
     private final EdgeType edgeType;
     private final String path;
     private VqlNode source;
     private VqlNode target;
-    private Map<String, String> propertyType2Alias;
+    private Set<String> propertyTypes;
 
     /**
      * There is no LT-Type in the memory representation. From a technical point
@@ -56,7 +52,7 @@ final public class VqlEdge {
      */
     public enum EdgeType {
         LINK, PARENT, CHILD, PROP
-    };
+    }
 
     VqlEdge(EdgeType edgeType, String path, VqlNode source, VqlNode target) {
         this.edgeType = edgeType;
@@ -65,12 +61,17 @@ final public class VqlEdge {
         this.target = target;
 
         if (edgeType == EdgeType.LINK) {
-            propertyType2Alias = new TreeMap<>();
+            propertyTypes = new HashSet<>();
         }
     }
 
+    /**
+     * Add a property type to graph
+     *
+     * @param propertyType
+     */
     public void addPropertyType(String propertyType) {
-        propertyType2Alias.put(propertyType, StringUtils.EMPTY);
+        propertyTypes.add(propertyType);
     }
 
     public Set<String> getPropertyTypes() {
@@ -79,7 +80,7 @@ final public class VqlEdge {
             return Collections.emptySet();
         }
 
-        return propertyType2Alias.keySet();
+        return propertyTypes;
     }
 
     public String getPath() {
@@ -95,7 +96,7 @@ final public class VqlEdge {
             throw new IllegalStateException("VqlEdge contains no properties: " + this);
         }
 
-        if (!propertyType2Alias.containsKey(propertyType)) {
+        if (!propertyTypes.contains(propertyType)) {
             throw new IllegalStateException("VqlEdge does not contain this property type: " + propertyType);
         }
 
@@ -106,7 +107,7 @@ final public class VqlEdge {
      * Returns true if this is a link and property types are found.
      */
     public boolean isMatch() {
-        return EdgeType.LINK == edgeType && !propertyType2Alias.keySet().isEmpty();
+        return EdgeType.LINK == edgeType && !propertyTypes.isEmpty();
     }
 
     @Override
@@ -150,19 +151,8 @@ final public class VqlEdge {
     }
 
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
-        return "VqlEdge [edgeType=" + edgeType + ", path=" + path + ", source=" + source + ", target=" + target + ", propertyType2Alias=" + propertyType2Alias + "]";
-    }
-
-    public String getAlias(String propertyType) {
-        return propertyType2Alias.get(propertyType);
-    }
-
-    public void setAlias(String propertyType, String alias){
-        propertyType2Alias.put(propertyType, alias);
+        return "VqlEdge [edgeType=" + edgeType + ", path=" + path + ", source=" + source + ", target=" + target + ", propertyTypes=" + propertyTypes + "]";
     }
 }

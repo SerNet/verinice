@@ -19,17 +19,23 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import java.util.List;
-
-import sernet.verinice.interfaces.graph.VeriniceGraph;
+import sernet.verinice.model.common.CnALink;
+import sernet.verinice.service.linktable.antlr.VqlParserTokenTypes;
 
 /**
- * Creates from a given {@link VeriniceGraph} and
- * {@link ILinkTableConfiguration} a table.
- * 
+ *
+ * Defines constants for property values of the {@link VqlParserTokenTypes} ":"
+ * which represents a {@link CnALink}.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public interface LinkedTableCreator {
-    List<List<String>> createTable(VeriniceGraph veriniceGraph, ILinkTableConfiguration conf);
+public interface CnaLinkPropertyConstants {
+
+    String TYPE_TITLE = "title";
+    String TYPE_DESCRIPTION = "description";
+    String TYPE_RISK_VALUE_C = "risk-value-c";
+    String TYPE_RISK_VALUE_I = "risk-value-i";
+    String TYPE_RISK_VALUE_A = "risk-value-a";
+
 }

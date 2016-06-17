@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.*;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableElementComboViewer;
+import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.model.IObjectModelService;
 
@@ -325,15 +326,15 @@ public class LinkTableColumn {
 
     public String getCnaLinkPropertyMessage(String cnaLinkProperty) {
         switch (cnaLinkProperty) {
-        case "title":
+        case CnaLinkPropertyConstants.TYPE_TITLE:
             return Messages.LinkTableColumn_CnaLink_Property_Title;
-        case "description":
+        case CnaLinkPropertyConstants.TYPE_DESCRIPTION:
             return Messages.LinkTableColumn_CnaLink_Property_Description;
-        case "risk-value-c":
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C:
             return Messages.LinkTableColumn_CnaLink_Property_C;
-        case "risk-value-i":
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I:
             return Messages.LinkTableColumn_CnaLink_Property_I;
-        case "risk-value-a":
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
             return Messages.LinkTableColumn_CnaLink_Property_A;
         default:
             return Messages.LinkTableColumn_CnaLink_Property_Unknown;

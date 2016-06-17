@@ -24,15 +24,15 @@ import java.util.List;
 
 /**
  * A Path describes a traversal through a {@link VqlAst} graph. It is composed
- * of a node and an incoming edge. The first node has no incoming edge, so this
- * value is null.
+ * of list of {@link PathElement} which consist of a node and an incoming edge.
+ * The first node has no incoming edge, so this value is null.
  *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 public class Path {
 
-    final private List<PathElement> pathElements;
+    private final List<PathElement> pathElements;
 
     public Path() {
         pathElements = new LinkedList<>();
@@ -55,16 +55,19 @@ public class Path {
         return pathElements.size();
     }
 
-
     public static class PathElement {
 
-        public VqlNode node;
-        public VqlEdge edge;
+        public final VqlNode node;
+        public final VqlEdge edge;
 
         public PathElement(VqlNode node, VqlEdge e) {
             this.node = node;
             this.edge = e;
         }
 
+        @Override
+        public String toString() {
+            return "PathElement [node=" + node + ", edge=" + edge + "]";
+        }
     }
 }

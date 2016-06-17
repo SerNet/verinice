@@ -37,12 +37,6 @@ public class LinkPropertyElement extends PropertyElement<Edge> {
 
     private static final Logger LOG = Logger.getLogger(LinkPropertyElement.class);
 
-    public static final String TYPE_TITLE = "title";
-    public static final String TYPE_DESCRIPTION = "description";
-    public static final String TYPE_RISK_VALUE_C = "risk-value-c";
-    public static final String TYPE_RISK_VALUE_I = "risk-value-i";
-    public static final String TYPE_RISK_VALUE_A = "risk-value-a";
-    
     public LinkPropertyElement() {
         super();
         result = new HashMap<>();
@@ -81,19 +75,19 @@ public class LinkPropertyElement extends PropertyElement<Edge> {
         String value = null;
         String propertyTypeId = getTypeId();
         switch (propertyTypeId) {
-        case TYPE_TITLE:
+        case CnaLinkPropertyConstants.TYPE_TITLE:
             value = getTitle(link, getDirection());
             break;
-        case TYPE_DESCRIPTION:
+        case CnaLinkPropertyConstants.TYPE_DESCRIPTION:
             value = getDescription(link);
             break;
-        case TYPE_RISK_VALUE_C:
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C:
             value = getRiskConfidentiality(link);
             break;
-        case TYPE_RISK_VALUE_I:
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I:
             value = getRiskIntegrity(link);
             break;
-        case TYPE_RISK_VALUE_A:
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
             value = getRiskAvailability(link);
             break;
         default:
@@ -137,11 +131,11 @@ public class LinkPropertyElement extends PropertyElement<Edge> {
 
     public static List<String> getAllProperties() {
         ArrayList<String> list = new ArrayList<>();
-        list.add(TYPE_DESCRIPTION);
-        list.add(TYPE_RISK_VALUE_A);
-        list.add(TYPE_RISK_VALUE_C);
-        list.add(TYPE_RISK_VALUE_I);
-        list.add(TYPE_TITLE);
+        list.add(CnaLinkPropertyConstants.TYPE_DESCRIPTION);
+        list.add(CnaLinkPropertyConstants.TYPE_RISK_VALUE_A);
+        list.add(CnaLinkPropertyConstants.TYPE_RISK_VALUE_C);
+        list.add(CnaLinkPropertyConstants.TYPE_RISK_VALUE_I);
+        list.add(CnaLinkPropertyConstants.TYPE_TITLE);
 
         return list;
 

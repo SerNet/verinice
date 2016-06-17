@@ -27,6 +27,9 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
 
 /**
+ * Controls a traversal, so that only egdes and nodes are traversed which follow
+ * a given {@link Path}.
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
