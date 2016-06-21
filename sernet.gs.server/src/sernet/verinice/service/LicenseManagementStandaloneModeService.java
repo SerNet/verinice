@@ -21,9 +21,7 @@ package sernet.verinice.service;
 
 import java.util.List;
 
-import sernet.hui.common.VeriniceContext;
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
-import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ILicenseManagementService;
 
 /**
@@ -46,14 +44,6 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
 
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ILicenseManagementService#getCurrentUser()
-     */
-    @Override
-    public String getCurrentUser() {
-        return ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getAdminUsername();
-    }
-
-    /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ILicenseManagementService#isCurrentUserValidForLicense(java.lang.String, java.lang.String)
      */
     @Override
@@ -61,14 +51,6 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
         // user does not bother in tier2, so check only valid interval for license
         return isUserAssignedLicenseStillValid(user, licenseId) &&
                 checkAssignedUsersForLicenseId(licenseId);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ILicenseManagementService#isCurrentUserAuthorizedForLicenseUsage(java.lang.String, java.lang.String)
-     */
-    @Override
-    public boolean isCurrentUserAuthorizedForLicenseUsage(String user, String licenseid) {
-        return licenseManagementDao.findByLicenseId(licenseid) != null;
     }
 
     /* (non-Javadoc)

@@ -39,11 +39,7 @@ public interface ILicenseManagementService {
   
   Object getCryptoService();
   
-  String getCurrentUser();
-  
   boolean isCurrentUserValidForLicense(String user, String licenseId);
-  
-  boolean isCurrentUserAuthorizedForLicenseUsage(String user, String licenseid);
   
   boolean isUserAssignedLicenseStillValid(String user, String licenseId);
   

@@ -374,8 +374,6 @@ public class LicenseManagementTest extends ContextConfiguration{
         licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, localLicenseId);
         licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, localLicenseId);
         
-        Assert.assertTrue(licenseManagementService.isCurrentUserAuthorizedForLicenseUsage(TEST_USERNAME, localLicenseId));
-        
         Set<String> idsFromDb = licenseManagementService.getAuthorisedContentIdsByUser(TEST_USERNAME);
         Assert.assertEquals(1, licenseManagementService.getContentIdAllocationCount(entry.getContentIdentifier()));
         

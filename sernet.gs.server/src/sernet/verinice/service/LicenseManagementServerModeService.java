@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.LazyInitializationException;
+
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ILicenseManagementService;
@@ -43,12 +45,9 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     LicenseManagementEntryDao licenseManagementDao;
     IBaseDao<Configuration, Serializable> configurationDao;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.ILicenseManagementService#getValidUsers(java.
-     * lang.String)
+    /**
+     * @param contentId - id of content to inspect
+     * @return amount of authorised users for a given contentId 
      */
     @Override
     public int getValidUsersForContentId(String contentId) {
@@ -66,12 +65,13 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
 
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      * 
-     * @see
-     * sernet.verinice.interfaces.ILicenseManagementService#getValidUntil(java.
-     * lang.String)
+     * iterates over all {@link LicenseManagementEntry} for a given contentId
+     * to return to maximum validUntil-Date
+     * 
+     * @param contentId - id of content to inspect
+     * @return the maximal date a content is valid to  
      */
     @Override
     public Date getMaxValidUntil(String contentId) {
@@ -90,11 +90,11 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         return new Date(longestValidDate);
     }
 
-    /*
-     * (non-Javadoc)
+    /**
      * 
-     * @see
-     * sernet.verinice.interfaces.ILicenseManagementService#getLicenseId(int)
+     * @param dbId - dbId of a {@link LicenseManagementEntry}
+     * @return returns a licenseId for a {@link LicenseManagementEntry} to 
+     * a given dbId
      */
     @Override
     public String getLicenseId(int dbId) {
@@ -104,11 +104,8 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         return (String) idList.get(0);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.ILicenseManagementService#getCryptoService()
+    /**
+     * TODO: needs to be implemented with VN-1538
      */
     @Override
     public Object getCryptoService() {
@@ -117,48 +114,21 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.ILicenseManagementService#getCurrentUser()
-     */
-    @Override
-    public String getCurrentUser() {
-        // TODO Auto-generated method stub
-        // shouldnt be necessary, use configurationservice before calling
-        // methods of this one
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.ILicenseManagementService#
-     * isCurrentUserValidForLicense(java.lang.String, java.lang.String)
+    /**
+     * checks if a given username is authorised for the usage of a given
+     * {@link LicenseManagementEntry} by licenseId
      */
     @Override
     public boolean isCurrentUserValidForLicense(String username, String licenseId) {
         return getAuthorisedContentIdsByUser(username).contains(licenseId); 
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * checks if a given licenseId for a given user is invalid by time
+     * @param user - username (login) to check
+     * @parm licenseId - licenseId (not contentId!) to check
      * 
-     * @see sernet.verinice.interfaces.ILicenseManagementService#
-     * isCurrentUserAuthorizedForLicenseUsage(java.lang.String,
-     * java.lang.String)
-     */
-    @Override
-    public boolean isCurrentUserAuthorizedForLicenseUsage(String user, String licenseid) {
-        return getAuthorisedContentIdsByUser(user).contains(licenseid);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.ILicenseManagementService#
-     * isUserAssignedLicenseStillValid(java.lang.String, java.lang.String)
+     * @return status of validation
      */
     @Override
     public boolean isUserAssignedLicenseStillValid(String user, String licenseId) {
@@ -177,8 +147,8 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      * checks if the amount of authorised users for a given licenseId is below
      * the amount allowed at basis of db entries (licenses)
      * 
-     * @param licenseId
-     * @return
+     * @param licenseId - licenseId (not contentId) to check for
+     * @return are there free slots to be assigned for a given licenseId
      */
     @Override
     public boolean checkAssignedUsersForLicenseId(String licenseId) {
@@ -204,7 +174,9 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     }
 
     /**
-     * removes all user assignments for a given  @param licenseId 
+     * removes all user assignments for a given licenseId
+     * 
+     * @param licenseId - id of licenseEntry (not contentId!) that should be cleared 
      */
     @Override
     public void removeAllUsersForLicense(String licenseId) {
@@ -217,12 +189,12 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.ILicenseManagementService#grantUserToLicense(
-     * java.lang.String, java.lang.String)
+    /**
+     * add given licenseId to userproperties, which allows the user to use the
+     * contentId of the {@link LicenseManagementEntry} referenced 
+     * by the licenseId
+     * @param user - username (login) of user to authorise for license usage
+     * @param licenseId - id (not contentId!) of {@link LicenseManagementEntry} 
      */
     @Override
     public void grantUserToLicense(String user, String licenseId) {
@@ -230,11 +202,9 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         addLicenseIdAuthorisation(user, licenseId);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.ILicenseManagementService#getAllLicenseIds()
+    /**
+     * @return licenceIds (not contentIds!) of all 
+     * {@link LicenseManagementEntry} available the db
      */
     @Override
     public Set<String> getAllLicenseIds() {
@@ -245,11 +215,11 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         return allIds;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * @return all instances of {@link LicenseManagementEntry} referencing 
+     * the contentId (not licenseId!) given by parameter.
      * 
-     * @see sernet.verinice.interfaces.ILicenseManagementService#
-     * getLicenseEntriesForLicenseId(java.lang.String)
+     * @param contentId - the id of the content to search for
      */
     @Override
     public Set<LicenseManagementEntry> getLicenseEntriesForContentId(String contentId) {
@@ -261,6 +231,10 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         return uniqueEntryCollection;
     }
 
+    /**
+     * @return all licenseIds for a given contentId
+     * @param contentID - the contentId to search for
+     */
     @Override
     public Set<String> getLicenseIdsForContentId(String contentId) {
         String hql = "select licenseID from LicenseManagementEntry entry where " + "entry.contentIdentifier = :contentId";
@@ -277,12 +251,9 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         return uniqueIds;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.ILicenseManagementService#
-     * getPublicInformationForLicenseIdEntry(sernet.verinice.model.
-     * licensemanagement.LicenseManagementEntry)
+    /**
+     * returns (decrypted) values of a given {@link LicenseManagementEntry} that
+     * should be displayed in the licenseManagement-UI-Element 
      */
     @Override
     public Map<String, String> getPublicInformationForLicenseIdEntry(LicenseManagementEntry licenseEntry) {
@@ -315,11 +286,8 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         this.licenseManagementDao = licenseManagementDao;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.interfaces.ILicenseManagementService#getAllContentIds()
+    /**
+     * @return all contentIds 
      */
     @Override
     public Set<String> getAllContentIds() {
@@ -349,11 +317,17 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         return count;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see sernet.verinice.interfaces.ILicenseManagementService#
-     * addLicenseIdAuthorisation(java.lang.String, java.lang.String)
+    /**
+     *  adds licenseId (not contentId!) to an instance of {@link Configuration}
+     *  that is referenced by a given username. User will get authorised 
+     *  for usage of that licenseId by this.
+     *  
+     *  Attention: this method does not(!) validate if the license
+     *  has any free slots for another user
+     *  
+     *  @param user - username to authorise
+     *  @param licenseId - licenseId (not contentId!) the will 
+     *  get authorised for
      */
     @Override
     public void addLicenseIdAuthorisation(String user, String licenseId) {
@@ -363,11 +337,11 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         configurationDao.flush();
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * removes all user assignments for a given licenseId (not contentId!)
      * 
-     * @see sernet.verinice.interfaces.ILicenseManagementService#
-     * removeAllLicenseIdAssignments(java.lang.String)
+     * @param licenseId - licenseId (not contentId!) that should be dereferenced
+     * by all users
      */
     @Override
     public void removeAllLicenseIdAssignments(String licenseId) {
@@ -380,11 +354,12 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * remove all assignments for a given contentId (not licenseId!)
      * 
-     * @see sernet.verinice.interfaces.ILicenseManagementService#
-     * removeAllContentIdAssignments(java.lang.String)
+     * 
+     * @param contentId - contentId (not licenseId) that should be 
+     * dereferenced by all users
      */
     @Override
     public void removeAllContentIdAssignments(String contentId) {
@@ -400,11 +375,12 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * remove a single user assignment from a given contentId
      * 
-     * @see sernet.verinice.interfaces.ILicenseManagementService#
-     * removeContentIdUserAssignment(java.lang.String, java.lang.String)
+     * 
+     * @param username - user that should be forbidden to use content
+     * @param contentId - content that should be dereferenced from username
      */
     @Override
     public void removeContentIdUserAssignment(String username, String contentId) {
@@ -415,9 +391,19 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         configurationDao.saveOrUpdate(configuration);
     }
 
+    /**
+     * load all instances of {@link Configuration} via hql
+     * including their properties via join to avoid 
+     * {@link LazyInitializationException} when iterating them 
+     * 
+     * @return a set of all instances of {@link Configuration}
+     */
     private Set<Configuration> getAllConfigurations() {
         Set<Configuration> configurations = new HashSet<>();
-        String hql = "from Configuration conf " + "inner join fetch conf.entity as entity " + "inner join fetch entity.typedPropertyLists as propertyList " + "inner join fetch propertyList.properties as props ";
+        String hql = "from Configuration conf " + 
+                "inner join fetch conf.entity as entity " + 
+                "inner join fetch entity.typedPropertyLists as propertyList " + 
+                "inner join fetch propertyList.properties as props ";
 
         Object[] params = new Object[] {};
         List hqlResult = getConfigurationDao().findByQuery(hql, params);
@@ -429,6 +415,12 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         return configurations;
     }
 
+    /**
+     * load a Configuration referenced by a username
+     * 
+     * @param username - username that identifies a {@link Configuration}
+     * @return a {@link Configuration} that is identified by username
+     */
     private Configuration getConfigurationByUsername(String username) {
         for (Configuration c : getAllConfigurations()) {
             if (username.equals(c.getUser())) {
@@ -439,11 +431,13 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
 
     }
 
-    /*
-     * (non-Javadoc)
+    
+    /**
+     * get all contentIds (not licenseIds!) that a given user is
+     * allowed to use
      * 
-     * @see sernet.verinice.interfaces.ILicenseManagementService#
-     * getAuthorisedContentIdsByUser(java.lang.String)
+     * @param username - username to check ids for
+     * @return all ids the user is allowed to see content for
      */
     @Override
     public Set<String> getAuthorisedContentIdsByUser(String username) {
