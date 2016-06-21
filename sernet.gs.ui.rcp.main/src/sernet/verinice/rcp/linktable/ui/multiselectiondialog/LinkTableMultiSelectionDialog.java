@@ -73,8 +73,8 @@ public class LinkTableMultiSelectionDialog extends org.eclipse.swt.widgets.Dialo
                 public void widgetSelected(SelectionEvent event) {
                     if (mList.getSelectedItems().isEmpty()
                             && !ltrMultiSelectionControl.useAllRelationIds()) {
-                        MessageDialog.openError(dialogShell, "no relation selected",
-                                "no relation selected");
+                        MessageDialog.openError(dialogShell, Messages.LinkTableMultiSelectionDialog_0,
+                                Messages.LinkTableMultiSelectionDialog_0);
                     } else {
                         close();
                     }

@@ -87,7 +87,7 @@ public class LinkTableMultiSelectionList {
             allRelations.setSelection(true);
             allRelations.setEnabled(false);
             new Label(parent.getDialogShell(), SWT.NONE)
-                    .setText("No Relations available");
+                    .setText(Messages.LinkTableMultiSelectionList_0);
         } else {
 
             group = createGroup();
