@@ -20,14 +20,27 @@
 package sernet.verinice.service.model;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.ServerInitializer;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HuiRelation;
-import sernet.verinice.model.bsi.*;
+import sernet.hui.common.connect.PropertyGroup;
+import sernet.verinice.model.bsi.AnwendungenKategorie;
+import sernet.verinice.model.bsi.ClientsKategorie;
+import sernet.verinice.model.bsi.GebaeudeKategorie;
+import sernet.verinice.model.bsi.NKKategorie;
+import sernet.verinice.model.bsi.PersonenKategorie;
+import sernet.verinice.model.bsi.RaeumeKategorie;
+import sernet.verinice.model.bsi.ServerKategorie;
+import sernet.verinice.model.bsi.SonstigeITKategorie;
+import sernet.verinice.model.bsi.TKKategorie;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
@@ -486,7 +499,7 @@ public class HUIObjectModelService implements IObjectModelService {
                 
                 allLabels.put(typeId, getLabel(typeId));
                 for (String propertyId : getPossibleProperties(typeId)) {
-                    allLabels.put(propertyId, getLabel(propertyId));
+                    allLabels.put(propertyId, getPropertyLabel(typeId, propertyId));
                 }
 
             }
@@ -494,5 +507,19 @@ public class HUIObjectModelService implements IObjectModelService {
         return allLabels;
     }
 
+    private String getPropertyLabel(String entityId, String propertyId) {
+
+        ServerInitializer.inheritVeriniceContextState();
+        StringBuilder label = new StringBuilder();
+
+        PropertyGroup propertyGroup = getHuiTypeFactory().getPropertyGroup(entityId, propertyId);
+        if (propertyGroup != null) {
+            label.append(getLabel(propertyGroup.getId()));
+            label.append(": ");
+        }
+        label.append(getLabel(propertyId));
+
+        return  label.toString();
+    }
 
 }

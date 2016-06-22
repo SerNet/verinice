@@ -20,7 +20,9 @@ package sernet.hui.common.connect;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -260,6 +262,18 @@ public class HitroUtil {
 		public String getMessage(String key) {
 		    return getTypeFactory().getMessage(key);
 		}
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.hui.common.connect.HUITypeFactory#getPropertyGroup(java.lang.
+         * String, java.lang.String)
+         */
+        @Override
+        public PropertyGroup getPropertyGroup(String entityId, String propertyId) {
+            return getTypeFactory().getPropertyGroup(entityId, propertyId);
+        }
 	}
 
 }

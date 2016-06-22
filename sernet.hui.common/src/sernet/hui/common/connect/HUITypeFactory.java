@@ -682,4 +682,33 @@ public class HUITypeFactory {
         
     }
 
+    /**
+     * Returns the group the propertyId belongs to.
+     * 
+     * @param entityId
+     *            - the id of entity the property belongs to
+     * @param propertyId
+     *            - the id of the property
+     * @return - null if no Group is found
+     */
+    public PropertyGroup getPropertyGroup(String entityId, String propertyId) {
+
+        EntityType entityType = getEntityType(entityId);
+        if (entityType == null) {
+            return null;
+        }
+        List<PropertyGroup> propertyGroups = entityType.getPropertyGroups();
+        if (propertyGroups == null) {
+            return null;
+        }
+        for (PropertyGroup group : propertyGroups) {
+            if (group.getPropertyType(propertyId) != null) {
+                return group;
+            }
+        }
+        
+        return null;
+        
+    }
+
 }
