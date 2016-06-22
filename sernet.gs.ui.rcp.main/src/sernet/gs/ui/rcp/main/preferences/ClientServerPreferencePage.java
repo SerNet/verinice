@@ -75,11 +75,12 @@ public class ClientServerPreferencePage extends FieldEditorPreferencePage implem
             public void modifyText(ModifyEvent e) {
                 String value = serverURI.getStringValue();
                 if (value.contains(" ")) {
-                Point cursorPosition = textControl.getSelection();
-                int numWhiteSpacesBeforeCursor = StringUtils.countMatches(value.substring(0, cursorPosition.x),
-                        " ");
-                cursorPosition.x = cursorPosition.x - numWhiteSpacesBeforeCursor;
-                cursorPosition.y = cursorPosition.y - numWhiteSpacesBeforeCursor;
+                    Point cursorPosition = textControl.getSelection();
+                    int numWhiteSpacesBeforeCursor = StringUtils.countMatches(
+                            value.substring(0, cursorPosition.x),
+                            " ");
+                    cursorPosition.x = cursorPosition.x - numWhiteSpacesBeforeCursor;
+                    cursorPosition.y = cursorPosition.y - numWhiteSpacesBeforeCursor;
                     serverURI.setStringValue(value.replaceAll("\\s", ""));
                     if (LOG.isDebugEnabled()) {
                         LOG.debug("text trimmed");
