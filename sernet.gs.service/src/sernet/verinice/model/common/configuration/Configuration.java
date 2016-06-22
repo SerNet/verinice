@@ -470,7 +470,7 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	public Set<String> getLicensedContentIds(){
 	    List<Property> properties = entity.getProperties(Configuration.PROP_LICENSED_CONTENT_IDS).getProperties();
 	    
-	    Set<String> licenseIds = null;
+	    Set<String> licenseIds;
 	    
 	    if (properties != null){
 	        licenseIds = new HashSet<>(properties.size());

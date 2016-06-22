@@ -48,7 +48,7 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
         int sum = 0;
         for (Object o : idList) {
             if (o instanceof String) {
-                int validUsers = Integer.parseInt(((String) o));
+                int validUsers = Integer.parseInt((String) o);
                 sum += validUsers;
             }
         }

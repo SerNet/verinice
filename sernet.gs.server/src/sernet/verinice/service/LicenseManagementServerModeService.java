@@ -57,7 +57,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         int sum = 0;
         for (Object o : idList) {
             if (o instanceof String) {
-                int validUsers = Integer.parseInt(((String) o));
+                int validUsers = Integer.parseInt((String) o);
                 sum += validUsers;
             }
         }
@@ -109,7 +109,6 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public Object getCryptoService() {
-        // TODO Auto-generated method stub
         // implement on VN-1538
         return null;
     }
@@ -136,7 +135,6 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public boolean isUserAssignedLicenseStillValid(String user, String licenseId) {
-        Date validUntil = null;
         String hql = "select validUntil from LicenseManagementEntry " + "where licenseID = ?";
         Object[] params = new Object[] { licenseId };
         List hqlResult = licenseManagementDao.findByQuery(hql, params);
@@ -156,8 +154,8 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public boolean checkAssignedUsersForLicenseId(String licenseId) {
-        int validUsers = 0;
-        int assignedUsers = 0;
+        int validUsers;
+        int assignedUsers;
         String hql = "select validUsers from LicenseManagementEntry " + "where licenseID = ?";
         Object[] params = new Object[] { licenseId };
         List hqlResult = licenseManagementDao.findByQuery(hql, params);
@@ -261,7 +259,6 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public Map<String, String> getPublicInformationForLicenseIdEntry(LicenseManagementEntry licenseEntry) {
-     // TODO needs to be unittested
         Map<String, String> map = new HashMap<String, String>();
         // TODO: use decryption here, when VN-1538 is done
         // like
