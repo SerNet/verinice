@@ -23,6 +23,7 @@ import java.util.List;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.ILicenseManagementService;
+import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -33,28 +34,35 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
     
     LicenseManagementEntryDao licenseManagementDao;
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ILicenseManagementService#getValidUsers(java.lang.String)
+    /**
+     * if any entries in db referencing the given contentId, return 1 since 
+     * in standalone mode there is no second user, otherwise return 0
+     * 
+     * @param contentId - contentId (not licenseId!) to check for
      */
     @Override
     public int getValidUsersForContentId(String contentId) {
-        // in standalone mode, there is always only 1 user
-        return 1;
+        String hql = "select validUsers from LicenseManagementEntry " + "where contentIdentifier = ?";
+        Object[] params = new Object[] { contentId };
+        List idList = licenseManagementDao.findByQuery(hql, params);
+        int sum = 0;
+        for (Object o : idList) {
+            if (o instanceof String) {
+                int validUsers = Integer.parseInt(((String) o));
+                sum += validUsers;
+            }
+        }
+        if(sum>0){
+            return 1;
+        }
+        return sum;
     }
 
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ILicenseManagementService#isCurrentUserValidForLicense(java.lang.String, java.lang.String)
-     */
-    @Override
-    public boolean isCurrentUserValidForLicense(String user, String licenseId) {
-        // user does not bother in tier2, so check only valid interval for license
-        return isUserAssignedLicenseStillValid(user, licenseId) &&
-                checkAssignedUsersForLicenseId(licenseId);
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ILicenseManagementService#isUserAssignedLicenseStillValid(java.lang.String, java.lang.String)
+    /**
+     * checks if the {@link LicenseManagementEntry} is valid at the current date
+     * and ignores the username, since in standalone mode username does not bother
+     * 
+     * @param licenseId - licenseId (not contentId!) to validate time for 
      */
     @Override
     public boolean isUserAssignedLicenseStillValid(String user, String licenseId) {
@@ -70,8 +78,16 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
         return false;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ILicenseManagementService#checkAssignedUsersForLicenseId(java.lang.String)
+    /**
+     * checks if there are any free slots for assigning another user to allow
+     * him the usage of the content referenced by licenseId
+     * in standalone, the existance of an {@link LicenseManagementEntry}
+     * (and a validUser count > 0) allows the (singlemode) user to use
+     * the content, so we do not have to check for any free slots, since 
+     * there is only 1 slot we can use. so just check for slotsize > 0
+     * 
+     * @param licenseId - the licenseId (not contentId!) to validate
+     * 
      */
     @Override
     public boolean checkAssignedUsersForLicenseId(String licenseId) {
@@ -85,8 +101,14 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
         return true;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ILicenseManagementService#removeAllUsersForLicense(java.lang.String)
+    /**
+     * removes all user assignments to a given {@link LicenseManagementEntry} 
+     * (referenced by licenseId) in server-mode. In standalone mode, 
+     * the existance of a {@link LicenseManagementEntry} for a contentId
+     * allows the user to use a license, no need for assignments here
+     * 
+     * so the method should to nothing in this mode
+     * 
      */
     @Override
     public void removeAllUsersForLicense(String licenseId) {
@@ -94,11 +116,20 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
         
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.ILicenseManagementService#grantUserToLicense(java.lang.String, java.lang.String)
-     */
+    /**
+     * assigns a user to a {@link LicenseManagementEntry} (referenced
+     * by licenseId) to allow him to use the content referenced in that
+     * entry. 
+     * 
+     * In standalone mode, 
+     * the existance of a {@link LicenseManagementEntry} for a contentId
+     * allows the user to use a license, no need for assignments here
+     * 
+     * so the method should to nothing in this mode
+     * 
+     */    
     @Override
-    public void grantUserToLicense(String username, String contentId) {
+    public void grantUserToLicense(String username, String licenseId) {
         // should not be used in tier2, so always return true
         // since the tier2-user is always allowed to use a license, if its existant
     }

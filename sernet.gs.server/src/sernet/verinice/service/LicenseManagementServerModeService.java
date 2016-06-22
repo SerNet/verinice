@@ -116,11 +116,15 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
 
     /**
      * checks if a given username is authorised for the usage of a given
-     * {@link LicenseManagementEntry} by licenseId
+     * {@link LicenseManagementEntry} by licenseId by date and by assignment
+     * 
+     * @param username - login of user to check for
+     * @param licenseId - licenseId (not contentId!) that should be looked up 
      */
     @Override
     public boolean isCurrentUserValidForLicense(String username, String licenseId) {
-        return getAuthorisedContentIdsByUser(username).contains(licenseId); 
+        return isUserAssignedLicenseStillValid(username, licenseId) &&
+                checkAssignedUsersForLicenseId(licenseId);
     }
 
     /**

@@ -38,6 +38,7 @@ import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
  * Configuration item. Actual configuration values are saved in Entity.
@@ -203,6 +204,19 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 		return true;
 	}
 	
+	/**
+	 * adds licenseId assignment to this user. this allows the user to work with
+	 * the content covered by a license represented by a {@link LicenseManagementEntry}
+	 * that is referenced via the paramater licenseId.
+	 * 
+	 * To prevent confusion with duplicate database entries, (which could 
+	 * result in unauthorized content access) in this special case,
+	 * the property list is checked for property existance before adding 
+	 * a new property
+	 * 
+	 * 
+	 * @param licenseId - the licenseId that should be assigned to this user
+	 */
 	public void addLicensedContentId(String licenseId){
 	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);
 	    List<Property> propertyList = getEntity().getProperties(type.getId()).getProperties();
@@ -223,6 +237,11 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	    }
 	}
 	
+	/**
+	 * removes one licenseId assignment from this user, given by paramater 
+	 * licenseId
+	 * @param licenseId - the id to remove
+	 */
 	public void removeLicensedContentId(String licenseId) {
 	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);
 	    entity.remove(type, licenseId);
@@ -442,6 +461,12 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 		return roles;
 	}
 	
+	/**
+	 * gets all licenseIds the user is allowed to use
+	 * one licenseId references a {@link LicenseManagementEntry} that
+	 * defines the access to content that is covered by special license
+	 * @return set of strings representing the ids assigned to this user
+	 */
 	public Set<String> getLicensedContentIds(){
 	    List<Property> properties = entity.getProperties(Configuration.PROP_LICENSED_CONTENT_IDS).getProperties();
 	    
@@ -460,6 +485,10 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	            
 	}
 	
+	
+	/**
+	 * removes all licenseId assignments from this user
+	 */
 	public void removeAllLicenseContentIds(){
 	    Set<String> allLicenseIds = getLicensedContentIds();
 	    for (String licenseId : allLicenseIds){
