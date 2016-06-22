@@ -108,6 +108,7 @@ public class PasswordDialog extends Dialog {
                     text2.setText(""); //$NON-NLS-1$
                     text.setFocus();
                 }
+
             }
             
             @Override
@@ -142,7 +143,7 @@ public class PasswordDialog extends Dialog {
      */
     @Override
     protected void okPressed() {
-        if (text.getText().equals(text2.getText())) {
+        if (!text.getText().isEmpty() && text.getText().equals(text2.getText())) {
             password = text.getText();
             super.okPressed();
         } 
