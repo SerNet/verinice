@@ -264,6 +264,11 @@ public class LinkTableComposite extends Composite {
         columnsContainer.layout(true);
         scrolledBody.layout(true);
         updateAndValidateVeriniceContent(updateVeriniceLinkTable);
+        enableShortcuts();
+    }
+
+    private void enableShortcuts() {
+        columnsContainer.setFocus();
     }
 
     public void updateAndValidateVeriniceContent(UpdateLinkTable... updateVeriniceLinkTable) {
