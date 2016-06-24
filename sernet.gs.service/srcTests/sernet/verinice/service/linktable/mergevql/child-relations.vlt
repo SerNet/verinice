@@ -1,0 +1,16 @@
+{
+  "id": "12bbab61-3e61-496c-8a57-d8c71b487987",
+  "name": "hlma_suggestion.vlt",
+  "useAllScopes": false,
+  "scopeIds": [],
+  "columnPaths": [
+    "auditgroup.auditgroup_name AS Title",
+    "auditgroup>auditgroup.auditgroup_name AS Title",
+    "auditgroup>auditgroup>audit.audit_name AS Title",
+    "auditgroup>auditgroup>audit>controlgroup.controlgroup_name AS Title",
+    "auditgroup>auditgroup>audit>controlgroup>control.control_name AS Title",
+    "auditgroup>auditgroup>audit>controlgroup>controlgroup.controlgroup_name AS Title",
+    "auditgroup>auditgroup>audit>controlgroup>controlgroup>control.control_name AS Title"
+  ],
+  "relationIds": []
+}
