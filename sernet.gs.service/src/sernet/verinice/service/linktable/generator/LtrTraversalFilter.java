@@ -19,6 +19,10 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.generator;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.graph.Edge;

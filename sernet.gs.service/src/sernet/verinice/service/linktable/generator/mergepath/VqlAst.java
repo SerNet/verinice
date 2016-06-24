@@ -168,47 +168,47 @@ public class VqlAst {
 
         VqlNode rightNode = null;
         VqlEdge vqlEdge = null;
-        String valueOfNextSibling = op.getNextSibling().getText();
+        String valueOfRightNode = op.getNextSibling().getText();
         int nextEdgeType = NO_EDGE_TYPE;
 
         if (PROP == op.getType()) {
 
             if (lastEdgeType != NO_EDGE_TYPE && LT == lastEdgeType) {
-                incomingEdge.addPropertyType(valueOfNextSibling);
+                incomingEdge.addPropertyType(valueOfRightNode);
             } else {
-                leftNode.addPropertyType(valueOfNextSibling);
+                leftNode.addPropertyType(valueOfRightNode);
             }
 
             return;
         }
 
         if (LT == op.getType()) {
-            String path = leftNode.getPath() + ":" + valueOfNextSibling;
-            String nodePath = leftNode.getPath() + "/" + valueOfNextSibling;
+            String nodePath = leftNode.getPath() + "/" + valueOfRightNode;
+            String edgePath = (incomingEdge == null ? leftNode.getPath() : incomingEdge.getPath()) + ":" + valueOfRightNode;
             rightNode = getNode(op.getNextSibling().getText(), nodePath);
-            vqlEdge = getEdge(EdgeType.LINK, path, leftNode, rightNode);
+            vqlEdge = getEdge(EdgeType.LINK, edgePath, leftNode, rightNode);
             nextEdgeType = LT;
         }
 
         if (LINK == op.getType()) {
-            String edgePath = leftNode.getPath() + ":" + valueOfNextSibling;
-            String nodePath = leftNode.getPath() + "/" + valueOfNextSibling;
+            String nodePath = leftNode.getPath() + "/" + valueOfRightNode;
+            String edgePath = (incomingEdge == null ? leftNode.getPath() : incomingEdge.getPath()) + ":" + valueOfRightNode;
             rightNode = getNode(op.getNextSibling().getText(), nodePath);
             vqlEdge = getEdge(EdgeType.LINK, edgePath, leftNode, rightNode);
             nextEdgeType = LINK;
         }
 
         if (CHILD == op.getType()) {
-            String path = leftNode.getPath() + ">" + valueOfNextSibling;
+            String path = leftNode.getPath() + ">" + valueOfRightNode;
             rightNode = getNode(op.getNextSibling().getText(), path);
-            vqlEdge = getEdge(EdgeType.CHILD, leftNode.getPath(), leftNode, rightNode);
+            vqlEdge = getEdge(EdgeType.CHILD, path, leftNode, rightNode);
             nextEdgeType = CHILD;
         }
 
         if (PARENT == op.getType()) {
-            String path = leftNode.getPath() + "<" + valueOfNextSibling;
+            String path = leftNode.getPath() + "<" + valueOfRightNode;
             rightNode = getNode(op.getNextSibling().getText(), path);
-            vqlEdge = getEdge(EdgeType.PARENT, leftNode.getPath(), leftNode, rightNode);
+            vqlEdge = getEdge(EdgeType.PARENT, path, leftNode, rightNode);
             nextEdgeType = PARENT;
         }
 

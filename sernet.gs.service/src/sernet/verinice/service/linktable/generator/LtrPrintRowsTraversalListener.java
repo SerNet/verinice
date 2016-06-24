@@ -19,6 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.generator;
 
+import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_DESCRIPTION;
+import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_VALUE_A;
+import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_VALUE_C;
+import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_VALUE_I;
+import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_TITLE;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,7 +41,6 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
-import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.*;
 import sernet.verinice.service.linktable.IPropertyAdapter;
 import sernet.verinice.service.linktable.PropertyAdapterFactory;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
