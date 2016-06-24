@@ -82,9 +82,8 @@ public final class DepthFirstConditionalSearchPathes {
                 LOG.debug("found edge: " + e);
 
                 if (traversalFilter.edgeFilter(e, depth)) {
-
                     traversalListener.edgeTraversed(node, e.getTarget(), e, depth);
-                    dfs(e.getTarget(), depth + 1);
+                    dfs(e.getSource() == node? e.getTarget() : e.getSource(), depth + 1);
                 }
             }
 
