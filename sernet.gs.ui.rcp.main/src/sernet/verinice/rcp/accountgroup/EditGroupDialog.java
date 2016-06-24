@@ -31,10 +31,10 @@ class EditGroupDialog extends CRUDAccountGroupDialog {
 
     private static final Logger LOG = Logger.getLogger(EditGroupDialog.class);
     
-    private final GroupView groupView;
+    private final AccountGroupView groupView;
     private String selection;
 
-    public EditGroupDialog(GroupView groupView, Shell parent, String title) {
+    public EditGroupDialog(AccountGroupView groupView, Shell parent, String title) {
 
         super(groupView, parent, title);
         this.groupView = groupView;

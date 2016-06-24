@@ -30,9 +30,9 @@ class NewGroupDialog extends CRUDAccountGroupDialog {
 
     private static final Logger LOG = Logger.getLogger(NewGroupDialog.class);
     
-    private final GroupView groupView;
+    private final AccountGroupView groupView;
 
-    public NewGroupDialog(GroupView groupView, Shell parent, String title) {
+    public NewGroupDialog(AccountGroupView groupView, Shell parent, String title) {
         super(groupView, parent, title);
         this.groupView = groupView;
     }
