@@ -93,13 +93,12 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
 
 
     private Set<CnATreeElement> filterRootNodes(final String typeId) {
-        Set<CnATreeElement> roots = graph.filter(new VeriniceGraphFilter() {
+       return graph.filter(new VeriniceGraphFilter() {
             @Override
             public boolean filter(CnATreeElement node) {
                 return typeId.equals(node.getTypeId());
             }
         });
-        return roots;
     }
 
     private List<Map<String, String>> createLTRTable(Set<CnATreeElement> roots) {
@@ -171,7 +170,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         String[] aliasHeader = new String[columnHeader2Alias.size()];
         for(Map.Entry<String, String> e : columnHeader2Alias.entrySet()){
             int position = columnPath2TablePosition.get(e.getKey());
-            aliasHeader[position] = (e.getValue().equals(StringUtils.EMPTY) ? e.getKey() : e.getValue());
+            aliasHeader[position] = e.getValue().equals(StringUtils.EMPTY) ? e.getKey() : e.getValue();
 
         }
 
