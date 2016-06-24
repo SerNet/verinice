@@ -19,7 +19,11 @@ package sernet.verinice.service.linktable.mergevql;
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 
+import static org.junit.Assert.assertTrue;
 import static sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO.readLinkTableConfiguration;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.traverse.BreadthFirstIterator;
@@ -30,17 +34,19 @@ import sernet.verinice.service.linktable.generator.mergepath.Path;
 import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
+import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
 import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
 
 /**
- * Not really a test. Prints only the {@link VqlAst} to the stdout for analyzing purposes.
- *
+ * Not really a test. Prints only the {@link VqlAst} to the stdout for analyzing
+ * purposes.
+ * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 public class VqlAstTest {
 
-
+    private static final String ROOT_ELEMENT = "auditgroup";
     private final String TEST_VLT_FILE = "child-relations.vlt";
 
     @Test
@@ -55,9 +61,34 @@ public class VqlAstTest {
         BreadthFirstIterator<VqlNode, VqlEdge> breadthFirstIterator = new BreadthFirstIterator<>(vqlAst, root);
         while (breadthFirstIterator.hasNext()){
             VqlNode next = breadthFirstIterator.next();
-            System.out.println(next);
-            for(VqlEdge edge : vqlAst.outgoingEdgesOf(next))
-                System.out.println("\t" + edge);
+            assertTrue(next.getPath().contains(ROOT_ELEMENT));
+            testForRoot(vqlAst, next);
+            assertTrue("was " + next.getPropertyTypes().size() + " for " + next,
+                    next.getPropertyTypes().size() == 1);
+            Set<String> pathes = new HashSet<>();
+            assertProperty(next);
+            for (VqlEdge edge : vqlAst.outgoingEdgesOf(next)) {
+                assertUniquePath(pathes, edge);
+                assertTrue("was type " + edge.getEdgeType(), edge.getEdgeType() == EdgeType.CHILD);
+                assertTrue(edge.getPath().contains(ROOT_ELEMENT));
+
+            }
+        }
+    }
+
+    private void assertUniquePath(Set<String> pathes, VqlEdge edge) {
+        assertTrue("path " + edge.getPath() + " already inserted, path must be unique",
+                pathes.add(edge.getPath()));
+    }
+
+    private void assertProperty(VqlNode next) {
+        String property = next.getPropertyTypes().toArray(new String[1])[0];
+        assertTrue("text must be part of propertyId", property.contains(next.getText()));
+    }
+
+    private void testForRoot(DirectedGraph<VqlNode, VqlEdge> vqlAst, VqlNode next) {
+        if (next.getPath().equals(ROOT_ELEMENT)) {
+            assertTrue(vqlAst.outgoingEdgesOf(next).size() == 1);
         }
     }
 
@@ -71,13 +102,21 @@ public class VqlAstTest {
         ILinkTableConfiguration conf = readLinkTableConfiguration(getFilePath(TEST_VLT_FILE));
         VqlAst mergedVqlAst = new VqlAst(conf);
 
+        assertTrue(mergedVqlAst.getPaths().size() == 2);
         for(Path p : mergedVqlAst.getPaths()){
-            for(PathElement pElement : p.getPathElements()){
-                System.out.print(pElement.node + " <----- ");
-                System.out.print(pElement.edge);
-                System.out.println("\n");
+            Set<String> pathes = new HashSet<>();
+            for (PathElement pElement : p.getPathElements()) {
+                VqlEdge edge = pElement.edge;
+                if (edge != null) {
+                    assertUniquePath(pathes, edge);
+                    assertTrue("was type " + edge.getEdgeType(),
+                            edge.getEdgeType() == EdgeType.CHILD);
+                    assertTrue(edge.getPath().contains(ROOT_ELEMENT));
+                } else {
+                    assertTrue(pElement.node.getPath().equals(ROOT_ELEMENT));
+                }
+
             }
-            System.out.println("");
         }
 
     }

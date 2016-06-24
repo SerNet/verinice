@@ -35,8 +35,6 @@ public final class VqlEdge {
     private static final String DELIMITER = ".";
     private final EdgeType edgeType;
     private final String path;
-    private VqlNode source;
-    private VqlNode target;
     private Set<String> propertyTypes;
 
     /**
@@ -57,8 +55,6 @@ public final class VqlEdge {
     VqlEdge(EdgeType edgeType, String path, VqlNode source, VqlNode target) {
         this.edgeType = edgeType;
         this.path = path;
-        this.source = source;
-        this.target = target;
 
         if (edgeType == EdgeType.LINK) {
             propertyTypes = new HashSet<>();
@@ -116,8 +112,6 @@ public final class VqlEdge {
         int result = 1;
         result = prime * result + ((edgeType == null) ? 0 : edgeType.hashCode());
         result = prime * result + ((path == null) ? 0 : path.hashCode());
-        result = prime * result + ((source == null) ? 0 : source.hashCode());
-        result = prime * result + ((target == null) ? 0 : target.hashCode());
         return result;
     }
 
@@ -137,22 +131,13 @@ public final class VqlEdge {
                 return false;
         } else if (!path.equals(other.path))
             return false;
-        if (source == null) {
-            if (other.source != null)
-                return false;
-        } else if (!source.equals(other.source))
-            return false;
-        if (target == null) {
-            if (other.target != null)
-                return false;
-        } else if (!target.equals(other.target))
-            return false;
         return true;
     }
 
 
     @Override
     public String toString() {
-        return "VqlEdge [edgeType=" + edgeType + ", path=" + path + ", source=" + source + ", target=" + target + ", propertyTypes=" + propertyTypes + "]";
+        return "VqlEdge [edgeType=" + edgeType + ", path=" + path + ", propertyTypes="
+                + propertyTypes + "]";
     }
 }
