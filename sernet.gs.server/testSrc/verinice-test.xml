@@ -29,5 +29,14 @@
         <property name="rightsService" ref="rightsServiceTest" />
     </bean>
     
+    <bean id="roadDataObjectFactory" class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+	<property name="targetBeanName">
+		<idref local="loadData" />
+         </property>
+    </bean>
+
+    <bean id="loadData" class="sernet.verinice.service.test.LoadData" />
+
+
     <tx:annotation-driven transaction-manager="txManager"/>
 </beans>
