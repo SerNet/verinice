@@ -29,7 +29,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import sernet.verinice.rcp.linktable.ui.Messages;
 import sernet.verinice.rcp.linktable.ui.UpdateLinkTable;
@@ -74,7 +77,7 @@ public class LinkTableMultiSelectionDialog extends org.eclipse.swt.widgets.Dialo
                     if (mList.getSelectedItems().isEmpty()
                             && !ltrMultiSelectionControl.useAllRelationIds()) {
                         MessageDialog.openError(dialogShell, Messages.LinkTableMultiSelectionDialog_0,
-                                Messages.LinkTableMultiSelectionDialog_0);
+                                Messages.LinkTableMultiSelectionDialog_1);
                     } else {
                         close();
                     }
