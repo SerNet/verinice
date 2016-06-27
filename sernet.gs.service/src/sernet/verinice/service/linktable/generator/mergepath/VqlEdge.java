@@ -36,6 +36,8 @@ public final class VqlEdge {
     private final EdgeType edgeType;
     private final String path;
     private Set<String> propertyTypes;
+    private VqlNode source;
+    private VqlNode target;
 
     /**
      * There is no LT-Type in the memory representation. From a technical point
@@ -55,6 +57,8 @@ public final class VqlEdge {
     VqlEdge(EdgeType edgeType, String path, VqlNode source, VqlNode target) {
         this.edgeType = edgeType;
         this.path = path;
+        this.source = source;
+        this.target = target;
 
         if (edgeType == EdgeType.LINK) {
             propertyTypes = new HashSet<>();
@@ -106,15 +110,23 @@ public final class VqlEdge {
         return EdgeType.LINK == edgeType && !propertyTypes.isEmpty();
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((edgeType == null) ? 0 : edgeType.hashCode());
         result = prime * result + ((path == null) ? 0 : path.hashCode());
+        result = prime * result + ((source == null) ? 0 : source.hashCode());
+        result = prime * result + ((target == null) ? 0 : target.hashCode());
         return result;
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -131,9 +143,18 @@ public final class VqlEdge {
                 return false;
         } else if (!path.equals(other.path))
             return false;
+        if (source == null) {
+            if (other.source != null)
+                return false;
+        } else if (!source.equals(other.source))
+            return false;
+        if (target == null) {
+            if (other.target != null)
+                return false;
+        } else if (!target.equals(other.target))
+            return false;
         return true;
     }
-
 
     @Override
     public String toString() {
