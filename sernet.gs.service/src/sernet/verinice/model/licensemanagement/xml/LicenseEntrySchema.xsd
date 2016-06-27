@@ -5,10 +5,10 @@
     <xs:sequence>
       <xs:element name="contentIdentifier" type="xs:string" minOccurs="1" />
       <xs:element name="licenseID" type="xs:string" minOccurs="1" />
-      <xs:element name="salt" type="xs:string" minOccurs="0" />
-      <xs:element name="userPassword" type="xs:string" minOccurs="0" />
-      <xs:element name="validUntil" type="xs:string" minOccurs="0" />
-      <xs:element name="validUsers" type="xs:string" minOccurs="0" />
+      <xs:element name="salt" type="xs:string" minOccurs="1" />
+      <xs:element name="userPassword" type="xs:string" minOccurs="1" />
+      <xs:element name="validUntil" type="xs:string" minOccurs="1" />
+      <xs:element name="validUsers" type="xs:string" minOccurs="1" />
     </xs:sequence>
   </xs:complexType>
 </xs:schema>

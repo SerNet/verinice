@@ -327,9 +327,9 @@ public class SyncInsertUpdateCommand extends GenericCommand
             // <syncObject>...
             HUITypeFactory huiTypeFactory = getHuiTypeFactory();
             boolean licenseManagement = isLicenseManagementSupported(so);
-            for (SyncAttribute sa : so.getSyncAttribute()) {
-                String attrExtId = sa.getName();
-                List<String> attrValues = sa.getValue();
+            for (SyncAttribute syncaAttribute : so.getSyncAttribute()) {
+                String attrExtId = syncaAttribute.getName();
+                List<String> attrValues = syncaAttribute.getValue();
 
                 MapAttributeType mat = getMapAttribute(mot, attrExtId);
 
@@ -344,21 +344,11 @@ public class SyncInsertUpdateCommand extends GenericCommand
                     attrIntId = mat.getIntId();
                 }
 
-                boolean licenseListCardinality 
-                    = checkEqualCardinalityOfLists(sa);
-                boolean licenseManagementValid = licenseManagement 
-                        && licenseListCardinality;
-                
-                if(licenseManagement && !licenseListCardinality){
-                        throw new RuntimeException("count of attributes and "
-                                + "licenseinformation is not equal, "
-                                + "skipping importing properties");
-                    
-                }
-                importReferenceTypes.trackReferences(elementInDB, sa, attrIntId);
+                boolean licenseManagementValid = validateInformation(licenseManagement, syncaAttribute);
+                importReferenceTypes.trackReferences(elementInDB, syncaAttribute, attrIntId);
                 elementInDB.getEntity().importProperties(huiTypeFactory, 
-                        attrIntId, attrValues, sa.getLimitedLicense(), 
-                        sa.getLicenseContentId(), licenseManagementValid);
+                        attrIntId, attrValues, syncaAttribute.getLimitedLicense(), 
+                        syncaAttribute.getLicenseContentId(), licenseManagementValid);
                 addElement(elementInDB);
             } // for <syncAttribute>
             elementInDB = dao.merge(elementInDB);
@@ -400,6 +390,25 @@ public class SyncInsertUpdateCommand extends GenericCommand
             }
             importObject(elementInDB, child);
         }
+    }
+
+    /**
+     * validates licenseManagementData, returns validation result and throws 
+     * RuntimeException in case of unvalid data
+     */
+    private boolean validateInformation(boolean licenseManagement, SyncAttribute sa) {
+        boolean licenseListCardinality 
+            = checkEqualCardinalityOfLists(sa);
+        boolean licenseManagementValid = licenseManagement 
+                && licenseListCardinality;
+        
+        if(licenseManagement && !licenseListCardinality){
+                throw new RuntimeException("count of attributes and "
+                        + "licenseinformation is not equal, "
+                        + "skipping importing properties");
+            
+        }
+        return licenseManagementValid;
     }
     
     /**

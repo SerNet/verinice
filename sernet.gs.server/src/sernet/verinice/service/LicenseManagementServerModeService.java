@@ -41,9 +41,8 @@ import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
  */
 public class LicenseManagementServerModeService implements ILicenseManagementService {
 
-    // injected by spring
-    LicenseManagementEntryDao licenseManagementDao;
-    IBaseDao<Configuration, Serializable> configurationDao;
+    private LicenseManagementEntryDao licenseManagementDao;
+    private IBaseDao<Configuration, Serializable> configurationDao;
 
     /**
      * @param contentId - id of content to inspect
@@ -51,7 +50,12 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public int getValidUsersForContentId(String contentId) {
-        String hql = "select validUsers from LicenseManagementEntry " + "where contentIdentifier = ?";
+        String hql = "select validUsers from LicenseManagementEntry " 
+                    + "where contentIdentifier = ?";
+        // if somethings wrong with the hql-parameter contentId (e.g.
+        // it does not exist in db) the result list will be empty
+        // or the result entries will not be strings that pass 
+        // a parse to an integer
         Object[] params = new Object[] { contentId };
         List idList = licenseManagementDao.findByQuery(hql, params);
         int sum = 0;
