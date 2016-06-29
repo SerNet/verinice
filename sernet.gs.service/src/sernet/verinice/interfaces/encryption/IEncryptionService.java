@@ -51,6 +51,10 @@ public interface IEncryptionService {
 	 *             if a problem occured during the encryption process
 	 */
 	byte[] encrypt(byte[] unencryptedByteData, char[] password) throws EncryptionException;
+	
+	String encrypt(String plainText, char[] password, String salt) throws EncryptionException;
+	
+	String decrypt(String cypherText, char[] password, String salt) throws EncryptionException;
 
     byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException;
 

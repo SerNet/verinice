@@ -33,7 +33,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.interfaces.IElementEntityDao;
 import sernet.verinice.interfaces.IFinishedRiskAnalysisListsDao;
-import sernet.verinice.interfaces.ILicenseManagementEntryDao;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementEntryDao;
 import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Anwendung;
 import sernet.verinice.model.bsi.AnwendungenKategorie;

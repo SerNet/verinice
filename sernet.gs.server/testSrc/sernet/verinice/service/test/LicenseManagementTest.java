@@ -39,13 +39,13 @@ import javax.xml.bind.JAXB;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
-import sernet.verinice.interfaces.ILicenseManagementService;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.service.commands.ExportFactory;
@@ -56,11 +56,14 @@ import sernet.verinice.service.commands.ExportFactory;
  */
 public class LicenseManagementTest extends ContextConfiguration{
     
-    @Resource(name="licenseManagementDao")
+    @Resource(name = "licenseManagementDao")
     protected LicenseManagementEntryDao elementDao;
     
-    @Resource(name="licenseManagementService")
+    @Resource(name = "licenseManagementService")
     ILicenseManagementService licenseManagementService;
+    
+    @Resource(name = "encryptionService")
+    IEncryptionService cryptoService;
     
     private final static String CONTENTID = "licenseTestContent";
     
@@ -71,6 +74,15 @@ public class LicenseManagementTest extends ContextConfiguration{
     private final static String TEST_USERNAME = "dd";
     
     private final static List<String> ALL_USER_NAMES = Arrays.asList(new String[]{"bb", "cc", "dd", "ee"});
+    
+    private final static String ENCODING = "UTF-8";
+    
+    private final static String CRYPTO_CONTENT_ID = "ISO27k1-Risk-Catalogue-2016";
+    private final static String CRYPTO_LICENSE_ID = "sernetIso27k1-License";
+    private final static String cryptoSalt = new String(new byte[]{0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48});
+    private final static String cryptoPassword = "superSecretPassword";
+    private final static Date CRYPTO_VALID_UNTIL = new Date();
+    private final static int CRYPTO_VALID_USERS = 5;
     
     static {
         CONTENTID_TESTDATA.add("ContentID1");
@@ -85,8 +97,9 @@ public class LicenseManagementTest extends ContextConfiguration{
         createTestData(AMOUNT_OF_TESTDATA);
     }
     
-    @After
+//    @After
     public void cleanUp(){
+        // regarding to crypto usage, this wont work anymore
         for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
             for(LicenseManagementEntry entry : elementDao.findByContentIdentifier(CONTENTID_TESTDATA.get(j))){
                 elementDao.delete(entry);
@@ -98,7 +111,7 @@ public class LicenseManagementTest extends ContextConfiguration{
     
     private void createTestData(final int amount){
         for(int i = 0; i < amount; i++){
-            LicenseManagementEntry entry = getSingleRandomInstance();
+            LicenseManagementEntry entry = getSingleCryptedEntry();
             elementDao.merge(entry);
         }
         elementDao.flush();
@@ -127,6 +140,20 @@ public class LicenseManagementTest extends ContextConfiguration{
         entry.setUserPassword(userPassword);
         entry.setValidUntil(String.valueOf(validUntil.getTime()));
         entry.setValidUsers(String.valueOf(validUsers));
+        
+        return entry;
+    }
+    
+    private LicenseManagementEntry getSingleCryptedEntry(){
+
+        
+        LicenseManagementEntry entry = new LicenseManagementEntry();
+        entry.setContentIdentifier(cryptoService.encrypt(CRYPTO_CONTENT_ID, cryptoPassword.toCharArray(), cryptoSalt));
+        entry.setLicenseID(cryptoService.encrypt(CRYPTO_LICENSE_ID, cryptoPassword.toCharArray(), cryptoSalt));
+        entry.setSalt(cryptoSalt);
+        entry.setUserPassword(cryptoPassword);
+        entry.setValidUntil(cryptoService.encrypt(String.valueOf(CRYPTO_VALID_UNTIL.getTime()), cryptoPassword.toCharArray(), cryptoSalt));
+        entry.setValidUsers(cryptoService.encrypt(String.valueOf(CRYPTO_VALID_USERS), cryptoPassword.toCharArray(), cryptoSalt));
         
         return entry;
     }
@@ -199,7 +226,7 @@ public class LicenseManagementTest extends ContextConfiguration{
     public void testRemovingUsersFromLicenseId(){
         
         
-        LicenseManagementEntry firstEntry = getSingleRandomInstance();
+        LicenseManagementEntry firstEntry = getSingleCryptedEntry();
         LicenseManagementEntry secondEntry = new LicenseManagementEntry();
         
         firstEntry.setValidUsers(String.valueOf(5));
@@ -252,26 +279,26 @@ public class LicenseManagementTest extends ContextConfiguration{
     
     @Test
     public void daoTest(){
-        String contentIdentifier = "content123";
-        String licenseId = "uniqueLicenseId";
+        String plainContentIdentifier = "content123";
+        String plainLicenseId = "uniqueLicenseId";
         String userPassword = "secretPassword";
-        String salt = "saltyMcSaltFace";
-        Date validUntil = new Date();
-        int validUsers = 5;
-        Assert.assertNull(elementDao.findByLicenseId(licenseId));
+        String salt = cryptoSalt;
+        Date plainValidUntil = new Date();
+        int plainValidUsers = 5;
+        Assert.assertNull(elementDao.findByLicenseId(plainLicenseId));
         LicenseManagementEntry entry = new LicenseManagementEntry();
-        entry.setContentIdentifier(contentIdentifier);
-        entry.setLicenseID(licenseId);
+        entry.setContentIdentifier(cryptoService.encrypt(plainContentIdentifier, userPassword.toCharArray(), salt));
+        entry.setLicenseID( plainLicenseId);
         entry.setSalt(salt);
         entry.setUserPassword(userPassword);
-        entry.setValidUntil(String.valueOf(validUntil.getTime()));
-        entry.setValidUsers(String.valueOf(validUsers));
+        entry.setValidUntil(String.valueOf(plainValidUntil.getTime()));
+        entry.setValidUsers(String.valueOf(plainValidUsers));
         
         elementDao.merge(entry);
         
         elementDao.flush();
         
-        LicenseManagementEntry persistedObject = elementDao.findByLicenseId(licenseId);
+        LicenseManagementEntry persistedObject = elementDao.findByLicenseId(plainLicenseId);
         Assert.assertEquals(entry.getContentIdentifier(), persistedObject.getContentIdentifier());
         Assert.assertEquals(entry.getLicenseID(), persistedObject.getLicenseID());
         Assert.assertEquals(entry.getSalt(), persistedObject.getSalt());
@@ -282,8 +309,8 @@ public class LicenseManagementTest extends ContextConfiguration{
         elementDao.delete(persistedObject);
         elementDao.flush();
         
-        Assert.assertNull(elementDao.findByLicenseId(licenseId));
-        
+        Assert.assertNull(elementDao.findByLicenseId(plainLicenseId));
+        // contentID_testdata needs to be encrypted here as well, obviously
         for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
             Date maximalValid = licenseManagementService.getMaxValidUntil(CONTENTID_TESTDATA.get(j));
             int sumOfValidUsers = licenseManagementService.getValidUsersForContentId(CONTENTID_TESTDATA.get(j));
@@ -341,8 +368,8 @@ public class LicenseManagementTest extends ContextConfiguration{
             Assert.assertTrue(objectFromHD.getValidUsers().equals(entry.getValidUsers()));
             
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+
+            
         }
     }
    
@@ -366,7 +393,7 @@ public class LicenseManagementTest extends ContextConfiguration{
     @Test
     public void testUserMgmtInService(){
         
-        LicenseManagementEntry entry = getSingleRandomInstance();
+        LicenseManagementEntry entry = getSingleCryptedEntry();
         entry = elementDao.merge(entry);
         
         String localLicenseId  = entry.getLicenseID();
@@ -385,7 +412,7 @@ public class LicenseManagementTest extends ContextConfiguration{
     
     @Test
     public void vnlMapperTest(){
-        LicenseManagementEntry entry = getSingleRandomInstance();
+        LicenseManagementEntry entry = getSingleCryptedEntry();
         // dbid is not considered by marshaller and unmarshalling sets 0 
         // as default for non-mapped property, so set it here also
         entry.setDbId(0);
@@ -402,7 +429,6 @@ public class LicenseManagementTest extends ContextConfiguration{
             LicenseManagementEntry entryFromDisk = VNLMapper.getInstance().unmarshalXML(bytesFromDisk);
             Assert.assertEquals(entry, entryFromDisk);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         
@@ -410,11 +436,53 @@ public class LicenseManagementTest extends ContextConfiguration{
         
         Assert.assertEquals(entry, serializedEntry);
         
+        Assert.assertEquals(CRYPTO_CONTENT_ID, cryptoService.decrypt(
+                serializedEntry.getContentIdentifier(),
+                serializedEntry.getUserPassword().toCharArray(),
+                serializedEntry.getSalt()));
         
+        Assert.assertEquals(CRYPTO_LICENSE_ID, cryptoService.decrypt(
+                serializedEntry.getLicenseID(),
+                serializedEntry.getUserPassword().toCharArray(),
+                serializedEntry.getSalt()));
+
+        Assert.assertEquals(CRYPTO_VALID_UNTIL, new Date(Long.parseLong(cryptoService.decrypt(
+                serializedEntry.getValidUntil(),
+                serializedEntry.getUserPassword().toCharArray(),
+                serializedEntry.getSalt()))));
         
-        
+        Assert.assertEquals(CRYPTO_VALID_USERS, Integer.parseInt(cryptoService.decrypt(
+                serializedEntry.getValidUsers(),
+                serializedEntry.getUserPassword().toCharArray(),
+                serializedEntry.getSalt())));
+
         Assert.assertTrue(entry.equals(serializedEntry));
         
+    }
+    
+    @Test
+    public void cryptoServiceTest(){
+        testPlainCryptoFunctionality();
+//        LicenseManagementEntry cryptedEntry = getSingleCryptedEntry();
+        
+    }
+
+    /**
+     * 
+     */
+    private void testPlainCryptoFunctionality() {
+        final String plainText = "Sometimes you are the dog, sometimes you are the tree";
+        int passwordAndSaltLength = 8;
+        while(passwordAndSaltLength == 0){
+            passwordAndSaltLength = RandomUtils.nextInt(8);
+        }
+        String salt = RandomStringUtils.randomAlphanumeric(passwordAndSaltLength);
+        String password = RandomStringUtils.randomAlphanumeric(passwordAndSaltLength);
+        String cypherText = cryptoService.encrypt(plainText, password.toCharArray(), salt);
+        
+        String decryptedText = cryptoService.decrypt(cypherText, password.toCharArray(), salt);
+        
+        Assert.assertEquals(plainText, decryptedText);
     }
 
 }

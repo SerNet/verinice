@@ -19,7 +19,6 @@
 package sernet.verinice.model.common.configuration;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -220,9 +219,7 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	public void addLicensedContentId(String licenseId){
 	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);
 	    List<Property> propertyList = getEntity().getProperties(type.getId()).getProperties();
-	    if(propertyList == null){
-	        propertyList = new ArrayList<Property>(1);
-	    }
+
 	    for(Property p : propertyList){
 	        if(licenseId.equals(p.getPropertyValue())){
 	            return;

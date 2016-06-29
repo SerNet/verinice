@@ -8,6 +8,7 @@
   <bean id="licenseManagementService" class="sernet.verinice.service.LicenseManagementServerModeService">
     <property name="licenseManagementDao" ref="licenseManagementDao" />
     <property name="configurationDao" ref="configurationDao" />
+    <property name="cryptoService" ref="encryptionService" />
   </bean>
 
 </beans>

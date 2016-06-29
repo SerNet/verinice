@@ -167,6 +167,21 @@ public class LicenseManagementEntry implements Serializable {
     public void setValidUntil(String validUntil) {
         this.validUntil = validUntil;
     }
+    
+    public String getPropertyByType(String propertyType){
+        switch(propertyType){
+            case COLUMN_CONTENTID: 
+                return getContentIdentifier();
+            case COLUMN_LICENSEID: 
+                return getLicenseID();
+            case COLUMN_VALIDUNTIL: 
+                return getValidUntil();
+            case COLUMN_VALIDUSERS: 
+                return getValidUsers();
+            default: 
+                return "";
+        }
+    }
 
     /* (non-Javadoc)
      * @see java.lang.Object#hashCode()

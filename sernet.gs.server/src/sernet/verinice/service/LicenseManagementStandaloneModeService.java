@@ -22,7 +22,7 @@ package sernet.verinice.service;
 import java.util.List;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
-import sernet.verinice.interfaces.ILicenseManagementService;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**

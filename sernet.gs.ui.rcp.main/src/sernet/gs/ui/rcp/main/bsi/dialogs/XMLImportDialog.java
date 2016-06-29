@@ -52,7 +52,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ServiceComponent;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -71,7 +70,6 @@ import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.sync.VeriniceArchive;
 import sernet.verinice.service.sync.VnaSchemaException;
-import sernet.verinice.service.sync.VnaSchemaVersion;
 
 /**
  * Dialog to import VNA or XML files.
@@ -704,7 +702,7 @@ public class XMLImportDialog extends Dialog {
         Activator.inheritVeriniceContextState();
         byte[] fileData = null;
 
-        IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
+        IEncryptionService service = ServiceFactory.lookupEncryptionService();
         try {
             if (selectedEncryptionMethod != null) {
                 fileData = FileUtils.readFileToByteArray(dataFile);

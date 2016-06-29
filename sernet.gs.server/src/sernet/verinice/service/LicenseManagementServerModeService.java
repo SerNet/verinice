@@ -31,9 +31,11 @@ import org.hibernate.LazyInitializationException;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.ILicenseManagementService;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
+import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConverter;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -43,6 +45,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
 
     private LicenseManagementEntryDao licenseManagementDao;
     private IBaseDao<Configuration, Serializable> configurationDao;
+    private IEncryptionService cryptoService;
 
     /**
      * @param contentId - id of content to inspect
@@ -50,20 +53,17 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public int getValidUsersForContentId(String contentId) {
-        String hql = "select validUsers from LicenseManagementEntry " 
+        String hql = "from LicenseManagementEntry " 
                     + "where contentIdentifier = ?";
         // if somethings wrong with the hql-parameter contentId (e.g.
         // it does not exist in db) the result list will be empty
-        // or the result entries will not be strings that pass 
-        // a parse to an integer
         Object[] params = new Object[] { contentId };
-        List idList = licenseManagementDao.findByQuery(hql, params);
+        List<LicenseManagementEntry> entryList = licenseManagementDao.findByQuery(hql, params);
         int sum = 0;
-        for (Object o : idList) {
-            if (o instanceof String) {
-                int validUsers = Integer.parseInt((String) o);
+        for (LicenseManagementEntry entry : entryList) {
+                int validUsers = decrypt(
+                        entry, LicenseManagementEntry.COLUMN_VALIDUSERS);
                 sum += validUsers;
-            }
         }
         return sum;
 
@@ -79,19 +79,21 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public Date getMaxValidUntil(String contentId) {
-        long longestValidDate = 0L;
-        String hql = "select validUntil from LicenseManagementEntry " + "where contentIdentifier = ?";
+        Date longestValidDate = new Date(System.currentTimeMillis());
+        String hql = "from LicenseManagementEntry " 
+                + "where contentIdentifier = ?";
         Object[] params = new Object[] { contentId };
-        List dateList = licenseManagementDao.findByQuery(hql, params);
-        for (Object o : dateList) {
-            if (o instanceof String) {
-                long current = Long.parseLong((String) o);
-                if (current > longestValidDate) {
-                    longestValidDate = current;
-                }
+        List<LicenseManagementEntry> entryList 
+            = licenseManagementDao.findByQuery(hql, params);
+        for (LicenseManagementEntry entry : entryList) {
+            Date current = decrypt(
+                    entry,
+                    LicenseManagementEntry.COLUMN_VALIDUNTIL);
+            if (current.after(longestValidDate)) {
+                longestValidDate = current;
             }
         }
-        return new Date(longestValidDate);
+        return longestValidDate;
     }
 
     /**
@@ -102,20 +104,19 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public String getLicenseId(int dbId) {
-        String hql = "select licenseID from LicenseManagementEntry " + "where dbId = ?";
+        String hql = "from LicenseManagementEntry " + "where dbId = ?";
         Object[] params = new Object[] { dbId };
-        List idList = licenseManagementDao.findByQuery(hql, params);
-        return (String) idList.get(0);
+        List<LicenseManagementEntry> entryList 
+            = licenseManagementDao.findByQuery(hql, params);
+        if(entryList.size() == 1){
+            LicenseManagementEntry entry = entryList.get(0);
+            return cryptoService.decrypt(entry.getLicenseID(), 
+                    entry.getUserPassword().toCharArray(), 
+                    entry.getSalt());
+        }
+        return "";
     }
 
-    /**
-     * TODO: needs to be implemented with VN-1538
-     */
-    @Override
-    public Object getCryptoService() {
-        // implement on VN-1538
-        return null;
-    }
 
     /**
      * checks if a given username is authorised for the usage of a given
@@ -139,13 +140,17 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public boolean isUserAssignedLicenseStillValid(String user, String licenseId) {
-        String hql = "select validUntil from LicenseManagementEntry " + "where licenseID = ?";
+        String hql = "from LicenseManagementEntry " + "where licenseID = ?";
         Object[] params = new Object[] { licenseId };
-        List hqlResult = licenseManagementDao.findByQuery(hql, params);
-        if (hqlResult.size() != 1) {
+        List<LicenseManagementEntry> entryList = licenseManagementDao.findByQuery(hql, params);
+        if (entryList.size() != 1) {
             return false;
         } else {
-            return Long.parseLong((String) hqlResult.get(0)) > System.currentTimeMillis();
+            LicenseManagementEntry entry = entryList.get(0);
+            return Long.parseLong(cryptoService.decrypt(
+                    entry.getValidUntil(),
+                    entry.getUserPassword().toCharArray(),
+                    entry.getSalt())) > System.currentTimeMillis();
         }
     }
 
@@ -160,13 +165,18 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     public boolean checkAssignedUsersForLicenseId(String licenseId) {
         int validUsers;
         int assignedUsers;
-        String hql = "select validUsers from LicenseManagementEntry " + "where licenseID = ?";
+        String hql = "from LicenseManagementEntry " + "where licenseID = ?";
         Object[] params = new Object[] { licenseId };
-        List hqlResult = licenseManagementDao.findByQuery(hql, params);
-        if (hqlResult.size() != 1) {
+        List<LicenseManagementEntry> entryList = licenseManagementDao.findByQuery(hql, params);
+        if (entryList.size() != 1) {
             return false;
         } else {
-            validUsers = Integer.parseInt((String) hqlResult.get(0));
+            LicenseManagementEntry entry = entryList.get(0);
+            validUsers = Integer.parseInt(
+                    cryptoService.decrypt(entry.getValidUsers(),
+                            entry.getUserPassword().toCharArray(),
+                            entry.getSalt()
+                            ));
             assignedUsers = 0;
             for (Configuration configuration : getAllConfigurations()) {
                 if (getAuthorisedContentIdsByUser(configuration.getUser()).contains(licenseId)) {
@@ -229,6 +239,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public Set<LicenseManagementEntry> getLicenseEntriesForContentId(String contentId) {
+        // unless contentId is crypted with pw and salt, this returns an empty set
         String hql = "from LicenseManagementEntry entry where " + "entry.contentIdentifier = :contentId";
         String[] names = new String[] { "contentId" };
         Object[] params = new Object[] { contentId };
@@ -243,6 +254,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public Set<String> getLicenseIdsForContentId(String contentId) {
+        // unless contentId is crypted with pw and salt, this returns an empty set
         String hql = "select licenseID from LicenseManagementEntry entry where " + "entry.contentIdentifier = :contentId";
         String[] names = new String[] { "contentId" };
         Object[] params = new Object[] { contentId };
@@ -269,10 +281,10 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         // map.put(LicenseManagementEntry.COLUMN_CONTENTID,
         // getCryptoService().decrypt(licenseEntry.getContentIdentifier(),
         // licenseEntry.getUserPassword);
-        map.put(LicenseManagementEntry.COLUMN_CONTENTID, licenseEntry.getContentIdentifier());
-        map.put(LicenseManagementEntry.COLUMN_LICENSEID, licenseEntry.getLicenseID());
-        map.put(LicenseManagementEntry.COLUMN_VALIDUNTIL, licenseEntry.getValidUntil());
-        map.put(LicenseManagementEntry.COLUMN_VALIDUSERS, licenseEntry.getValidUsers());
+        map.put(LicenseManagementEntry.COLUMN_CONTENTID, String.valueOf(decrypt(licenseEntry, LicenseManagementEntry.COLUMN_CONTENTID)));
+        map.put(LicenseManagementEntry.COLUMN_LICENSEID, String.valueOf(decrypt(licenseEntry, LicenseManagementEntry.COLUMN_LICENSEID)));
+        map.put(LicenseManagementEntry.COLUMN_VALIDUNTIL, String.valueOf(decrypt(licenseEntry, LicenseManagementEntry.COLUMN_VALIDUNTIL)));
+        map.put(LicenseManagementEntry.COLUMN_VALIDUSERS, String.valueOf(decrypt(licenseEntry, LicenseManagementEntry.COLUMN_VALIDUSERS)));
         return map;
     }
 
@@ -297,9 +309,12 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     @Override
     public Set<String> getAllContentIds() {
         Set<String> allIds = new HashSet<String>();
-        String hql = "select contentIdentifier from LicenseManagementEntry";
-        List allEntries = licenseManagementDao.findByQuery(hql, new Object[] {});
-        allIds.addAll(allEntries);
+        String hql = "from LicenseManagementEntry";
+        List<LicenseManagementEntry> allEntries = licenseManagementDao.findByQuery(hql, new Object[] {});
+        for(LicenseManagementEntry entry : allEntries){
+            allIds.add((String)decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID));
+            
+        }
         return allIds;
     }
 
@@ -463,5 +478,43 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     public void setConfigurationDao(IBaseDao<Configuration, Serializable> configurationDao) {
         this.configurationDao = configurationDao;
     }
+
+    /**
+     * @param cryptoService the cryptoService to set
+     */
+    public void setCryptoService(IEncryptionService cryptoService) {
+        this.cryptoService = cryptoService;
+    }
+    /**
+     * TODO: needs to be implemented with VN-1538
+     */
+    @Override
+    public IEncryptionService getCryptoService() {
+        return cryptoService;
+    }
+    
+    @Override
+    public <T extends Object> T  decrypt(LicenseManagementEntry entry, String propertyType){
+        T returnValue;
+        PropertyConverter converter = new PropertyConverter();
+        switch(propertyType){
+            case LicenseManagementEntry.COLUMN_CONTENTID:
+                returnValue = (T)converter.convertToString(propertyType);
+                break;
+            case LicenseManagementEntry.COLUMN_LICENSEID:
+                returnValue = (T)converter.convertToString(propertyType);
+                break;
+            case LicenseManagementEntry.COLUMN_VALIDUNTIL:
+                returnValue = (T)converter.convertToDate(propertyType);
+                break;
+            case LicenseManagementEntry.COLUMN_VALIDUSERS:
+                returnValue = (T)converter.convertToInteger(propertyType);              
+                break;
+             default:
+                 returnValue = (T)entry.getPropertyByType(propertyType);
+        }
+        return returnValue; 
+    }
+    
 
 }

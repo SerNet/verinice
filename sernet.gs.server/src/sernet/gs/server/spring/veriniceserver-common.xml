@@ -88,6 +88,7 @@ This variant:
                 <entry key="configurationService" value-ref="configurationService"/>
 				<entry key="objectModelService" value-ref="objectModelService" />
                 <entry key="licenseManagementService" value-ref="licenseManagementService"/>
+                <entry key="encryptionService" value-ref="encryptionService" />
 			</map>
 		</property>
 	</bean>
@@ -312,6 +313,8 @@ This variant:
     	<property name="huiTypeFactory" ref="huiTypeFactory" />
     </bean>
     
+    <bean id="encryptionService" class="sernet.verinice.service.EncryptionService" />
+    
     <!-- A service to load and analyse the element network of verinice with JGraphT. -->
     <!-- JGraphT is a free Java graph library that provides mathematical graph-theory objects and algorithms. -->
     <bean id="graphService" class="sernet.verinice.graph.GraphService" scope="prototype">  
@@ -354,4 +357,14 @@ This variant:
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
 	<!--<import resource="veriniceserver-debug.xml"/> -->
 
+    <bean id="loadBcProvider"
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod"
+                  value="java.security.Security.addProvider"/>
+        <property name="arguments">
+            <list>
+                <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
+            </list>
+        </property>
+    </bean> 
 </beans>

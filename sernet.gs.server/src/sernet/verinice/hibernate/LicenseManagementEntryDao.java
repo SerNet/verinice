@@ -27,7 +27,7 @@ import java.util.Set;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
-import sernet.verinice.interfaces.ILicenseManagementEntryDao;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementEntryDao;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
