@@ -29,21 +29,24 @@ import org.springframework.security.AccessDecisionManager;
 import org.springframework.security.vote.AffirmativeBased;
 import org.springframework.security.vote.RoleVoter;
 
-import sernet.verinice.interfaces.IRightsServerHandler;
-
 /**
  * The default {@link AccessDecisionManager} is always initialized with the
- * {@link RoleVoter}, which does not understand our ACTION_ID modell.
+ * {@link RoleVoter}, which does not understand our ACTION_ID model.
+ * 
+ * <p>
+ * This bean must be available before the spring security chain is initialized,
+ * otherwise spring throws an exception that beans which are annotated with
+ * action ids are unknown roles.
+ * </p>
  *
  * @author Benjamin Weißenfels <bw@sernet.de>
  *
  */
-public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProcessor,
-        ApplicationContextAware {
+public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProcessor, ApplicationContextAware {
 
     private static final String VERINICE_ACTION_ID_VOTER_BEAN_NAME = "veriniceActionIdVoter";
 
-    private final String DEFAULT_ACCESS_MANAGER_BEAN_NAME = "_accessManager";
+    private static final String DEFAULT_ACCESS_MANAGER_BEAN_NAME = "_accessManager";
 
     private ApplicationContext applicationContext;
 
@@ -55,15 +58,13 @@ public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProce
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName)
-            throws BeansException {
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 
         return bean;
     }
 
     private boolean isDefaultAccessManagerBean(Object bean, String beanName) {
-        return (bean instanceof AffirmativeBased)
-                && DEFAULT_ACCESS_MANAGER_BEAN_NAME.equals(beanName);
+        return (bean instanceof AffirmativeBased) && DEFAULT_ACCESS_MANAGER_BEAN_NAME.equals(beanName);
     }
 
     /*
@@ -73,16 +74,14 @@ public class VeriniceAccessDecisionManagerPostProcessor implements BeanPostProce
      * postProcessAfterInitialization(java.lang.Object, java.lang.String)
      */
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName)
-            throws BeansException {
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
         if (isDefaultAccessManagerBean(bean, beanName)) {
             AffirmativeBased affirmativeBased = (AffirmativeBased) bean;
             List decisionVoters = affirmativeBased.getDecisionVoters();
 
             // initialize voter by hand
-            VeriniceActionIdVoter veriniceActionIdVoter = (VeriniceActionIdVoter) applicationContext
-                    .getBean(VERINICE_ACTION_ID_VOTER_BEAN_NAME);
+            VeriniceActionIdVoter veriniceActionIdVoter = (VeriniceActionIdVoter) applicationContext.getBean(VERINICE_ACTION_ID_VOTER_BEAN_NAME);
             decisionVoters.add(veriniceActionIdVoter);
         }
 
