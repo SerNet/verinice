@@ -81,7 +81,7 @@ public final class DepthFirstConditionalSearchPathes {
 
                 LOG.debug("found edge: " + e);
 
-                if (traversalFilter.edgeFilter(e, depth)) {
+                if (traversalFilter.edgeFilter(e, node, depth)) {
                     CnATreeElement target = e.getSource() == node? e.getTarget() : e.getSource();
                     CnATreeElement source = e.getSource() != node? e.getTarget() : e.getSource();
 
@@ -119,7 +119,7 @@ public final class DepthFirstConditionalSearchPathes {
         }
 
         @Override
-        public boolean edgeFilter(Edge e, int depth) {
+        public boolean edgeFilter(Edge e, CnATreeElement node, int depth) {
             return true;
         }
 

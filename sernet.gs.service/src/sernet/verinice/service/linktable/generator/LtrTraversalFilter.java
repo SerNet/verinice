@@ -19,16 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.generator;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.TraversalFilter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
+import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
+import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
+import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
 
 /**
  * Controls a traversal, so that only egdes and nodes are traversed which follow
@@ -48,12 +47,31 @@ final class LtrTraversalFilter implements TraversalFilter {
     }
 
     @Override
-    public boolean edgeFilter(Edge e, int depth) {
+    public boolean edgeFilter(Edge e, CnATreeElement node, int depth) {
 
         LOG.debug("filter edge: " + e + " depth: " + depth);
 
         if (depth >= path.getPathElements().size()) {
             return false;
+        }
+
+        if(Edge.RELATIVES.equals(e.getType())){
+
+            if(path.getPathElements().size() < depth + 2){
+                return false;
+            }
+
+            PathElement pathElement = path.getPathElements().get(depth + 1);
+            VqlEdge vqlEdge = pathElement.edge;
+
+            if(EdgeType.CHILD == vqlEdge.getEdgeType()){
+                return e.getSource() == node;
+            } else if(EdgeType.PARENT == vqlEdge.getEdgeType()){
+                return e.getTarget() == node;
+            } else {
+                return true;
+            }
+
         }
 
         return true;
