@@ -23,6 +23,9 @@ This variant:
 
 	<!-- BEGIN Server settings ========================================================================= -->
 
+
+	<bean id="veriniceAccessManagerPostProcessor" class="sernet.gs.server.security.VeriniceAccessDecisionManagerPostProcessor" />
+
 	<bean id="serverInitializer" class="sernet.gs.service.ServerInitializer" init-method="initialize">
 		<property name="workObjects" ref="workObjects" />
 		<property name="hibernateCommandService" ref="hibernateCommandService" />
@@ -306,16 +309,6 @@ This variant:
     <bean id="graphService" class="sernet.verinice.graph.GraphService" scope="prototype">  
         <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
         <property name="cnaLinkDao" ref="cnaLinkDao" />
-    </bean>
-    
-    <!-- A service to handle user accounts and groups -->
-	<bean id="accountService" class="sernet.verinice.service.AccountService">
-	    <property name="accountGroupDao" ref="accountGroupDao" />
-		<property name="configurationDao" ref="configurationDao" />
-    	<property name="commandService" ref="commandService" />
-    	<property name="configurationService" ref="configurationService" />
-    	<property name="rightsServerHandler" ref="rightsServerHandler" />
-	    <property name="permissionDao" ref="permissionDAO" />
     </bean>
     
      <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
