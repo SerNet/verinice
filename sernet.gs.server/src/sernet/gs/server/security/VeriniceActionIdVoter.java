@@ -25,13 +25,26 @@ import java.util.Iterator;
 import org.springframework.security.Authentication;
 import org.springframework.security.ConfigAttribute;
 import org.springframework.security.ConfigAttributeDefinition;
+import org.springframework.security.intercept.method.aopalliance.MethodSecurityInterceptor;
 import org.springframework.security.vote.AccessDecisionVoter;
-import org.springframework.security.vote.RoleVoter;
 
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IRightsServerHandler;
-
+import sernet.verinice.service.RightsServerHandler;
 
 /**
+ * Handles access to verinice services, which are secured by action ids (@link
+ * {@link ActionRightIDs}).
+ * 
+ * <p>
+ * It uses the user name which is provided by spring security and checks with
+ * the help of {@link RightsServerHandler} if the use is allowed to use a
+ * specific mehtod of an object.</p>
+ * 
+ * @see MethodSecurityInterceptor
+ * @see RightsServerHandler
+ * @see Authentication
+ * 
  * @author Benjamin Weißenfels <bw@sernet.de>
  *
  */
@@ -47,15 +60,15 @@ public class VeriniceActionIdVoter implements AccessDecisionVoter {
         String name = authentication.getName();
 
         @SuppressWarnings("unchecked")
-        Collection <ConfigAttribute>configAttributes = config.getConfigAttributes();
+        Collection<ConfigAttribute> configAttributes = config.getConfigAttributes();
 
         Iterator<ConfigAttribute> iterator = configAttributes.iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
 
             ConfigAttribute attribute = iterator.next();
             String actionId = extractActionId(attribute.getAttribute());
 
-            if(getRightsServerHandler().isEnabled(name, actionId)){
+            if (getRightsServerHandler().isEnabled(name, actionId)) {
                 return ACCESS_GRANTED;
             }
         }
@@ -65,29 +78,20 @@ public class VeriniceActionIdVoter implements AccessDecisionVoter {
 
     private String extractActionId(String attribute) {
         String lowerCase = attribute.toLowerCase();
-        String actionId = lowerCase.substring(getActionIdPrefix().length());
-        return actionId;
+        return lowerCase.substring(getActionIdPrefix().length());
     }
-
 
     public IRightsServerHandler getRightsServerHandler() {
         return rightsServerHandler;
     }
 
-
     public void setRightsServerHandler(IRightsServerHandler rightsServerHandler) {
         this.rightsServerHandler = rightsServerHandler;
     }
 
-
     @Override
     public boolean supports(ConfigAttribute attribute) {
-        if ((attribute.getAttribute() != null) && attribute.getAttribute().startsWith(getActionIdPrefix())) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (attribute.getAttribute() != null) && attribute.getAttribute().startsWith(getActionIdPrefix());
     }
 
     public String getActionIdPrefix() {
@@ -100,7 +104,7 @@ public class VeriniceActionIdVoter implements AccessDecisionVoter {
 
     @Override
     public boolean supports(Class clazz) {
-       return true;
+        return true;
     }
 
 }
