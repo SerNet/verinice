@@ -43,7 +43,7 @@ public class LinkTableCreateTest extends ContextConfiguration{
     @Test
     public void testChildRelation() throws Exception{
         List<List<String>> table = loadTestData("child-relation.vlt", "child-relation.vna", "42b6e1", "ENTITY_1107624");
-        int expectedTableSize = 4;
+        int expectedTableSize = 7;
         Assert.assertEquals(expectedTableSize, table.size());
     }
 
@@ -56,7 +56,7 @@ public class LinkTableCreateTest extends ContextConfiguration{
 
     @Test
     public void testParentRelation() throws Exception{
-        List<List<String>> table = loadTestData("parent-relation.vlt", "parent-relation.vna", "c22fd7", "ENTITY_1109509");
+        List<List<String>> table = loadTestData("parent-relation.vlt", "parent-relation.vna", "42b6e1", "ENTITY_1109509");
         int expectedTableSize = 4;
         Assert.assertEquals(expectedTableSize, table.size());
     }
