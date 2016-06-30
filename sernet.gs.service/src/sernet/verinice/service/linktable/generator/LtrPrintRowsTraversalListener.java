@@ -38,16 +38,21 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
+import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.HitroUtil;
+import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.IPropertyAdapter;
 import sernet.verinice.service.linktable.PropertyAdapterFactory;
+import sernet.verinice.service.linktable.IPathElement.Direction;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
 import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
+import sernet.verinice.service.model.HUIObjectModelService;
 import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
 
 /**
@@ -68,7 +73,6 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
     final List<Map<String, String>> result = new ArrayList<>();
 
     private Set<String> columnHeader;
-
 
     /**
      * Flatten a {@VeriniceGraph} path to a list. The result is available with
@@ -96,7 +100,7 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
 
         LOG.debug("finished node: " + node.getTitle() + ":" + node.getTypeId());
 
-        if(isLeaf(node, depth)){
+        if (isLeaf(node, depth)) {
             printRow();
         }
 
@@ -107,7 +111,7 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
     private boolean isLeaf(CnATreeElement node, int depth) {
 
         Set<Edge> edgesOf = dataGraph.getGraph().edgesOf(node);
-        if(path.getPathElements().size() < depth + 2){
+        if (path.getPathElements().size() < depth + 2) {
             return depth == path.getPathElements().size() - 1;
         }
 
@@ -117,19 +121,19 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
         boolean isLeaf = true;
         for (Edge edge : edgesOf) {
             String type = edge.getType();
-            if(Edge.RELATIVES.equals(type)){
-                if(edgeType == EdgeType.CHILD && edge.getSource() == node){
+            if (Edge.RELATIVES.equals(type)) {
+                if (edgeType == EdgeType.CHILD && edge.getSource() == node) {
                     return false;
                 }
 
-                if(edgeType == EdgeType.PARENT && edge.getTarget() == node){
+                if (edgeType == EdgeType.PARENT && edge.getTarget() == node) {
                     return false;
                 }
-            }else {
-               if(edgeType == EdgeType.LINK){
-                   CnATreeElement target = edge.getTarget() == node ? edge.getSource() : edge.getTarget();
-                   return !target.getTypeId().equals(pathElement.node.getText());
-               }
+            } else {
+                if (edgeType == EdgeType.LINK) {
+                    CnATreeElement target = edge.getTarget() == node ? edge.getSource() : edge.getTarget();
+                    return !target.getTypeId().equals(pathElement.node.getText());
+                }
             }
         }
 
@@ -190,7 +194,9 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
                 }
 
                 else if (TYPE_TITLE.equals(propertyType)) {
-                    row.put(pathforProperty, edge.getType());
+                    Direction direction = getDirection(edge, node);
+                    String edgeTitle = getEdgeTitle(edge, direction);
+                    row.put(pathforProperty, edgeTitle);
                 }
             }
         }
@@ -238,13 +244,32 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
      * The map containes a key, which is the column path header:
      *
      * <pre>
-     *  1. (assetgroup > asset.title -> Computer 1,  assetgroup.title -> IT,)
-     *  2. (assetgroup > asset.title -> Computer 2,  assetgroup.title -> IT,)
-     * <pre>
+     * 1. (assetgroup > asset.title -> Computer 1, assetgroup.title -> IT)
+     * 2. (assetgroup > asset.title -> Computer 2, assetgroup.title -> IT)
+     * </pre>
      *
      */
     public List<Map<String, String>> getResult() {
         return result;
+    }
+
+    enum Direction {INCOMING, OUTCOMING};
+
+    private Direction getDirection(Edge link, CnATreeElement node){
+        if(link.getSource() == node){
+            return Direction.INCOMING;
+        }
+
+        return Direction.OUTCOMING;
+    }
+
+    private String getEdgeTitle(Edge link, Direction direction) {
+        String linkType = link.getType();
+        HuiRelation relation = HitroUtil.getInstance().getTypeFactory().getRelation(linkType);
+        if (relation == null) {
+            return linkType;
+        }
+        return (direction.equals(Direction.OUTCOMING)) ? relation.getName() : relation.getReversename();
     }
 
 }
