@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.service.test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.After;
@@ -40,25 +42,52 @@ public class LinkTableCreateTest extends ContextConfiguration{
     ObjectFactory loadDataFactory;
     private LoadData loadData;
 
+    
     @Test
     public void testChildRelation() throws Exception{
+        
+        List<List<String>> expectedList = new ArrayList<>();
+        expectedList.add(Arrays.asList(new String[]{"Titel", "Titel", "Titel"}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "","Asset 3"}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "","Asset 4"}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "Asset 1",""}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "Asset 2",""}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset 3",""}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset 4",""}));
+        
         List<List<String>> table = loadTestData("child-relation.vlt", "child-relation.vna", "42b6e1", "ENTITY_1107624");
-        int expectedTableSize = 7;
-        Assert.assertEquals(expectedTableSize, table.size());
+        Assert.assertEquals(expectedList, table);
     }
 
     @Test
     public void testCnaLinkRelation() throws Exception{
+        
+        List<List<String>> expectedList = new ArrayList<>();
+        expectedList.add(Arrays.asList(new String[]{"Titel", "Titel", "Titel", "Titel", "Beschreibung"}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "","Asset 2", "Asset 1", "This asset is important for another asset"}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "Asset 1", "", "", ""}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset 2", "", "", ""}));
+        
+        
         List<List<String>> table = loadTestData("cnalink-relation.vlt", "cnalink-relation.vna", "3a6c5f", "ENTITY_1108858");
-        int expectedTableSize = 4;
-        Assert.assertEquals(expectedTableSize, table.size());
+        Assert.assertEquals(expectedList, table);
     }
 
     @Test
     public void testParentRelation() throws Exception{
+        
+        List<List<String>> expectedList = new ArrayList<>();
+        expectedList.add(Arrays.asList(new String[]{"Titel", "Titel", "Titel"}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "",""}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "",""}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset Group 1","Asset 1"}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset Group 1","Asset 1"}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset Group 1", "Asset 2"}));
+        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset Group 1", "Asset 2"}));
+        
+        
         List<List<String>> table = loadTestData("parent-relation.vlt", "parent-relation.vna", "42b6e1", "ENTITY_1109509");
-        int expectedTableSize = 4;
-        Assert.assertEquals(expectedTableSize, table.size());
+        Assert.assertEquals(expectedList, table);
     }
 
 
