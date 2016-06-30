@@ -116,7 +116,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
 
     private List<Map<String, String>> scanVeriniceGraph(CnATreeElement potentialRoot, final Path p) {
 
-        traversalListener = new LtrPrintRowsTraversalListener(p, getLTRHeaderColumnPathes());
+        traversalListener = new LtrPrintRowsTraversalListener(p, graph, getLTRHeaderColumnPathes());
         filter = new LtrTraversalFilter(p);
 
         traverse(graph, potentialRoot, filter, traversalListener);

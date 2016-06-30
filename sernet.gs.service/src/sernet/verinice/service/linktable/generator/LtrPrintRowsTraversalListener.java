@@ -46,7 +46,9 @@ import sernet.verinice.service.linktable.PropertyAdapterFactory;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
+import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
 import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
+import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
 
 /**
  * Flatten a {@VeriniceGraph} path to a list.
@@ -62,9 +64,11 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
     private Queue<CnATreeElement> cnaTreeElementQueue = new LinkedList<>();
     private Map<CnATreeElement, Edge> incomingEdges = new HashMap<>();
     private Path path;
+    private final VeriniceGraph dataGraph;
     final List<Map<String, String>> result = new ArrayList<>();
 
     private Set<String> columnHeader;
+
 
     /**
      * Flatten a {@VeriniceGraph} path to a list. The result is available with
@@ -75,21 +79,16 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
      * @param columnHeader
      *            A list of all header of a LTR-Table
      */
-    LtrPrintRowsTraversalListener(Path path, Set<String> columnHeader) {
+    LtrPrintRowsTraversalListener(Path path, VeriniceGraph graph, Set<String> columnHeader) {
         this.path = path;
+        this.dataGraph = graph;
         this.columnHeader = columnHeader;
     }
 
     @Override
     public void nodeTraversed(CnATreeElement node, int depth) {
-
         LOG.debug("traversed node: " + node.getTitle() + ":" + node.getTypeId());
-
         cnaTreeElementQueue.add(node);
-
-        if (isLeaf(node, depth)) {
-            printRow();
-        }
     }
 
     @Override
@@ -97,15 +96,49 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
 
         LOG.debug("finished node: " + node.getTitle() + ":" + node.getTypeId());
 
+        if(isLeaf(node, depth)){
+            printRow();
+        }
+
         cnaTreeElementQueue.remove(node);
         incomingEdges.remove(node);
     }
 
     private boolean isLeaf(CnATreeElement node, int depth) {
-        return depth == path.getPathElements().size() - 1;
+
+        Set<Edge> edgesOf = dataGraph.getGraph().edgesOf(node);
+        if(path.getPathElements().size() < depth + 2){
+            return depth == path.getPathElements().size() - 1;
+        }
+
+        PathElement pathElement = path.getPathElements().get(depth + 1);
+        EdgeType edgeType = pathElement.edge.getEdgeType();
+
+        boolean isLeaf = true;
+        for (Edge edge : edgesOf) {
+            String type = edge.getType();
+            if(Edge.RELATIVES.equals(type)){
+                if(edgeType == EdgeType.CHILD && edge.getSource() == node){
+                    return false;
+                }
+
+                if(edgeType == EdgeType.PARENT && edge.getTarget() == node){
+                    return false;
+                }
+            }else {
+               if(edgeType == EdgeType.LINK){
+                   CnATreeElement target = edge.getTarget() == node ? edge.getSource() : edge.getTarget();
+                   return !target.getTypeId().equals(pathElement.node.getText());
+               }
+            }
+        }
+
+        return isLeaf;
     }
 
     void printRow() {
+
+        LOG.debug("is printed: " + path);
 
         Map<String, String> row = initRow();
         Iterator<CnATreeElement> iterator = cnaTreeElementQueue.iterator();
