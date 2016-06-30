@@ -34,6 +34,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+import sernet.verinice.interfaces.graph.DepthFirstConditionalSearchPathes;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.interfaces.graph.VeriniceGraphFilter;
 import sernet.verinice.model.common.CnATreeElement;
@@ -54,19 +55,48 @@ import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
  * </p>
  *
  * <ul>
- * <li>1. Find all possible potential points for a traversal.</li>
- * <li>2. Merge all column pathes to a AST ({@link VqlAst}).</li>
- * <li>3. Extract all possible search pathes from the AST.</li>
- * <li>4. Iterate over potential starting points and filter all matching pathes
- * with the help of the search pathes from step 3.</li>
+ * <li>1. Merge all column paths to a AST ({@link VqlAst}).</li>
+ * <li>2. Find all possible potential points for a traversal.</li>
+ * <li>3. Extract all possible search paths from the AST.</li>
+ * <li>4. Iterate over potential starting points and filter all matching paths
+ * with the help of the search paths from step 3.</li>
+ *
+ * <p>
+ * All the steps in detail:
+ * </p>
+ *
+ * <h2>Potential starting points</h2>
+ *
+ * <p>
+ * Every {@link VqlAst} has a root, because it is a tree. This root node has an
+ * specific type id. The verinice graph is filtered for all nodes which have
+ * this type id.
+ * </p>
+ *
+ * <h2>Search pathes</h2>
+ *
+ * <p>
+ * After creating the {@link VqlAst} we can extract all paths from the root node
+ * to every leaf. This set of paths is used to traverse the
+ * {@link VeriniceGraph}
+ * </p>
+ *
+ * <h2>Traversal</h2>
+ *
+ * <p>
+ * After extracting paths and starting nodes we start a
+ * {@link DepthFirstConditionalSearchPathes} traversal on the verinice graph.
+ * The path is used to determine if edges and nodes in the verinice graph are valid.
+ * </p>
+ *
  * 
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 public class GraphLinkedTableCreator implements LinkedTableCreator {
 
-    private VqlAst ast;
-    private VeriniceGraph graph;
+    private VqlAst vqlAst;
+    private VeriniceGraph veriniceDataGraph;
     private Map<String, String> columnHeader2Alias;
     private Map<String, Integer> columnPath2TablePosition;
 
@@ -77,23 +107,22 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
     @Override
     public List<List<String>> createTable(VeriniceGraph veriniceGraph, ILinkTableConfiguration conf) {
 
-        this.ast = new VqlAst(conf);
-        this.graph = veriniceGraph;
-        VqlNode root = ast.getRoot();
+        this.vqlAst = new VqlAst(conf);
+        this.veriniceDataGraph = veriniceGraph;
+        VqlNode root = vqlAst.getRoot();
         final String typeId = root.getPath();
 
         storeColumnHeaderOrderAndAlias(conf);
 
-        Set<CnATreeElement> roots = filterRootNodes(typeId);
+        Set<CnATreeElement> roots = getRootNodes(typeId);
 
-        List<Map<String, String>> table = createLTRTable(roots);
+        List<Map<String, String>> table = doCreateTable(roots);
 
         return convertToTable(table);
     }
 
-
-    private Set<CnATreeElement> filterRootNodes(final String typeId) {
-       return graph.filter(new VeriniceGraphFilter() {
+    private Set<CnATreeElement> getRootNodes(final String typeId) {
+        return veriniceDataGraph.filter(new VeriniceGraphFilter() {
             @Override
             public boolean filter(CnATreeElement node) {
                 return typeId.equals(node.getTypeId());
@@ -101,10 +130,10 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         });
     }
 
-    private List<Map<String, String>> createLTRTable(Set<CnATreeElement> roots) {
+    private List<Map<String, String>> doCreateTable(Set<CnATreeElement> roots) {
         List<Map<String, String>> table = new ArrayList<>();
         for (CnATreeElement potentialRoot : roots) {
-            for (Path p : ast.getPaths()) {                
+            for (Path p : vqlAst.getPaths()) {
                 List<Map<String, String>> rows = scanVeriniceGraph(potentialRoot, p);
                 table.addAll(rows);
             }
@@ -112,14 +141,12 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         return table;
     }
 
-
-
     private List<Map<String, String>> scanVeriniceGraph(CnATreeElement potentialRoot, final Path p) {
 
-        traversalListener = new LtrPrintRowsTraversalListener(p, graph, getLTRHeaderColumnPathes());
+        traversalListener = new LtrPrintRowsTraversalListener(p, veriniceDataGraph, getLTRHeaderColumnPathes());
         filter = new LtrTraversalFilter(p);
 
-        traverse(graph, potentialRoot, filter, traversalListener);
+        traverse(veriniceDataGraph, potentialRoot, filter, traversalListener);
         return traversalListener.getResult();
     }
 
@@ -131,7 +158,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
 
             String[] row = new String[map.size()];
 
-            for(Entry<String, String> e : map.entrySet()){
+            for (Entry<String, String> e : map.entrySet()) {
                 int position = columnPath2TablePosition.get(e.getKey());
                 row[position] = e.getValue();
             }

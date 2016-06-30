@@ -88,7 +88,7 @@ final class LtrTraversalFilter implements TraversalFilter {
         }
 
         String targetTypeId = target.getTypeId();
-        String pathElementTypeId = path.getPathElements().get(depth).node.getText();
+        String pathElementTypeId = path.getPathElements().get(depth).node.getTypeId();
 
         return targetTypeId.equals(pathElementTypeId);
     }

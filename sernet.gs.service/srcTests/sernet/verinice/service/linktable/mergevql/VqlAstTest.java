@@ -83,7 +83,7 @@ public class VqlAstTest {
 
     private void assertProperty(VqlNode next) {
         String property = next.getPropertyTypes().toArray(new String[1])[0];
-        assertTrue("text must be part of propertyId", property.contains(next.getText()));
+        assertTrue("text must be part of propertyId", property.contains(next.getTypeId()));
     }
 
     private void testForRoot(DirectedGraph<VqlNode, VqlEdge> vqlAst, VqlNode next) {

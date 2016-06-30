@@ -38,7 +38,6 @@ import java.util.TreeMap;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
-import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.graph.Edge;
@@ -46,14 +45,12 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.IPropertyAdapter;
 import sernet.verinice.service.linktable.PropertyAdapterFactory;
-import sernet.verinice.service.linktable.IPathElement.Direction;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
+import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
 import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
-import sernet.verinice.service.model.HUIObjectModelService;
-import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
 
 /**
  * Flatten a {@VeriniceGraph} path to a list.
@@ -132,7 +129,7 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
             } else {
                 if (edgeType == EdgeType.LINK) {
                     CnATreeElement target = edge.getTarget() == node ? edge.getSource() : edge.getTarget();
-                    return !target.getTypeId().equals(pathElement.node.getText());
+                    return !target.getTypeId().equals(pathElement.node.getTypeId());
                 }
             }
         }
