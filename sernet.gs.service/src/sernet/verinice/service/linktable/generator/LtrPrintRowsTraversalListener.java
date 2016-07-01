@@ -126,11 +126,9 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
                 if (edgeType == EdgeType.PARENT && edge.getTarget() == node) {
                     return false;
                 }
-            } else {
-                if (edgeType == EdgeType.LINK) {
-                    CnATreeElement target = edge.getTarget() == node ? edge.getSource() : edge.getTarget();
-                    return !target.getTypeId().equals(pathElement.node.getTypeId());
-                }
+            } else if (edgeType == EdgeType.LINK) {
+                CnATreeElement target = edge.getTarget() == node ? edge.getSource() : edge.getTarget();
+                isLeaf = isLeaf && !target.getTypeId().equals(pathElement.node.getTypeId());
             }
         }
 

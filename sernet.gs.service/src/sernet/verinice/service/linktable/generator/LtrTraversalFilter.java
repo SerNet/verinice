@@ -49,30 +49,33 @@ final class LtrTraversalFilter implements TraversalFilter {
     @Override
     public boolean edgeFilter(Edge e, CnATreeElement node, int depth) {
 
-        LOG.debug("filter edge: " + e + " depth: " + depth);
+//        LOG.debug("filter edge: " + e + " depth: " + depth);
 
         if (depth >= path.getPathElements().size()) {
             return false;
         }
 
+        if(path.getPathElements().size() < depth + 2){
+            return false;
+        }
+
+        PathElement pathElement = path.getPathElements().get(depth + 1);
+        VqlEdge vqlEdge = pathElement.edge;
+
         if(Edge.RELATIVES.equals(e.getType())){
-
-            if(path.getPathElements().size() < depth + 2){
-                return false;
-            }
-
-            PathElement pathElement = path.getPathElements().get(depth + 1);
-            VqlEdge vqlEdge = pathElement.edge;
 
             if(EdgeType.CHILD == vqlEdge.getEdgeType()){
                 return e.getSource() == node;
-            } else if(EdgeType.PARENT == vqlEdge.getEdgeType()){
-                return e.getTarget() == node;
-            } else {
-                return true;
             }
 
+            if(EdgeType.PARENT == vqlEdge.getEdgeType()){
+                return e.getTarget() == node;
+            }
+        } else {
+            CnATreeElement target = e.getTarget() == node ? e.getSource() : e.getTarget();
+            return target.getTypeId().equals(pathElement.node.getTypeId());
         }
+
 
         return true;
     }
