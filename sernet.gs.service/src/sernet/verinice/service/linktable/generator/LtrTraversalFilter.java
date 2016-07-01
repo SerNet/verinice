@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.generator;
 
-import org.apache.log4j.Logger;
-
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.TraversalFilter;
 import sernet.verinice.model.common.CnATreeElement;
@@ -38,10 +36,9 @@ import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
  */
 final class LtrTraversalFilter implements TraversalFilter {
 
-    private static final Logger LOG = Logger.getLogger(LtrTraversalFilter.class);
-
     private final Path path;
 
+    
     public LtrTraversalFilter(Path path) {
         this.path = path;
     }
@@ -49,17 +46,11 @@ final class LtrTraversalFilter implements TraversalFilter {
     @Override
     public boolean edgeFilter(Edge e, CnATreeElement node, int depth) {
 
-//        LOG.debug("filter edge: " + e + " depth: " + depth);
-
-        if (depth >= path.getPathElements().size()) {
+        if(hasNextElementInPath(depth)){
             return false;
         }
 
-        if(path.getPathElements().size() < depth + 2){
-            return false;
-        }
-
-        PathElement pathElement = path.getPathElements().get(depth + 1);
+        PathElement pathElement = getNextElementInQueryPath(depth);
         VqlEdge vqlEdge = pathElement.edge;
 
         if(Edge.RELATIVES.equals(e.getType())){
@@ -76,8 +67,19 @@ final class LtrTraversalFilter implements TraversalFilter {
             return target.getTypeId().equals(pathElement.node.getTypeId());
         }
 
-
         return true;
+    }
+
+    private boolean hasNextElementInPath(int depth) {
+        return path.getPathElements().size() < depth + 2;
+    }
+
+    private boolean reachedEndOfPath(int depth) {
+        return depth >= path.getPathElements().size();
+    }
+
+    private PathElement getNextElementInQueryPath(int depth) {
+        return path.getPathElements().get(depth + 1);
     }
 
     @Override
@@ -86,7 +88,7 @@ final class LtrTraversalFilter implements TraversalFilter {
     }
 
     private boolean isProperNode(CnATreeElement target, int depth) {
-        if (depth >= path.getPathElements().size()) {
+        if (reachedEndOfPath(depth)) {
             return false;
         }
 
