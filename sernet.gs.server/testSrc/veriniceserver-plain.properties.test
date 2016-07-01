@@ -17,7 +17,7 @@ hibernate.config.resource=classpath:/server_hibernate.cfg.xml
 # Please adjust host, port, database name, user and pass according to your database.
 jdbc.driverClass=org.postgresql.Driver
 jdbc.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-jdbc.url=jdbc:postgresql://127.0.0.1:5432/verinicedb
+jdbc.url=jdbc:postgresql://127.0.0.1:5432/junit-test
 jdbc.username=verinice
 jdbc.password=verinice
 

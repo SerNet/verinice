@@ -36,62 +36,61 @@ import sernet.verinice.interfaces.CommandException;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class LinkTableCreateTest extends ContextConfiguration{
+public class LinkTableCreateTest extends ContextConfiguration {
 
     @Autowired
     ObjectFactory loadDataFactory;
+    
     private LoadData loadData;
 
-    
     @Test
-    public void testChildRelation() throws Exception{
-        
+    public void testChildRelation() throws Exception {
+
         List<List<String>> expectedList = new ArrayList<>();
-        expectedList.add(Arrays.asList(new String[]{"Titel", "Titel", "Titel"}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "","Asset 3"}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "","Asset 4"}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "Asset 1",""}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "Asset 2",""}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset 3",""}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset 4",""}));
-        
+        expectedList.add(Arrays.asList(new String[] { "Titel", "Titel", "Titel" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 1", "", "Asset 3" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 1", "", "Asset 4" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 1", "Asset 1", "" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 1", "Asset 2", "" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 2", "Asset 3", "" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 2", "Asset 4", "" }));
+
         List<List<String>> table = loadTestData("child-relation.vlt", "child-relation.vna", "42b6e1", "ENTITY_1107624");
         Assert.assertEquals(expectedList, table);
     }
 
     @Test
-    public void testCnaLinkRelation() throws Exception{
-        
+    public void testCnaLinkRelation() throws Exception {
+
         List<List<String>> expectedList = new ArrayList<>();
-        expectedList.add(Arrays.asList(new String[]{"Titel", "Titel", "Titel", "Titel", "Beschreibung"}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "","Asset 2", "Asset 1", "This asset is important for another asset"}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "Asset 1", "", "", ""}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset 2", "", "", ""}));
-        
-        
-        List<List<String>> table = loadTestData("cnalink-relation.vlt", "cnalink-relation.vna", "3a6c5f", "ENTITY_1108858");
+        expectedList.add(Arrays.asList(new String[] { "Titel", "Titel", "Titel", "Titel", "Beschreibung", "Titel" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 1", "", "Asset 2", "", "", "Asset 1" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 1", "", "Asset 2", "Control 1", "Does something", "" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 1", "", "Asset 2", "Control 2", "Does something else", "" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 1", "Asset 1", "", "", "", "" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 2", "Asset 2", "", "", "", "" }));
+
+        List<List<String>> table = loadTestData("cnalink-relation.vlt", "cnalink-relation.vna", "434455", "ENTITY_1180214");
         Assert.assertEquals(expectedList, table);
     }
 
     @Test
-    public void testParentRelation() throws Exception{
-        
+    public void testParentRelation() throws Exception {
+
         List<List<String>> expectedList = new ArrayList<>();
-        expectedList.add(Arrays.asList(new String[]{"Titel", "Titel", "Titel"}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "",""}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 1", "",""}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset Group 1","Asset 1"}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset Group 1","Asset 1"}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset Group 1", "Asset 2"}));
-        expectedList.add(Arrays.asList(new String[]{"Asset Group 2", "Asset Group 1", "Asset 2"}));
-        
-        
+        expectedList.add(Arrays.asList(new String[] { "Titel", "Titel", "Titel" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 1", "", "" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 1", "", "" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 2", "Asset Group 1", "Asset 1" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 2", "Asset Group 1", "Asset 1" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 2", "Asset Group 1", "Asset 2" }));
+        expectedList.add(Arrays.asList(new String[] { "Asset Group 2", "Asset Group 1", "Asset 2" }));
+
         List<List<String>> table = loadTestData("parent-relation.vlt", "parent-relation.vna", "42b6e1", "ENTITY_1109509");
         Assert.assertEquals(expectedList, table);
     }
 
-
-    public List<List<String>> loadTestData(String vltFile, String vnaFile, String sourceId, String extId) throws Exception{
+    public List<List<String>> loadTestData(String vltFile, String vnaFile, String sourceId, String extId) throws Exception {
         loadData = (LoadData) loadDataFactory.getObject();
         loadData.setVltFile(vltFile);
         loadData.setVnaFile(vnaFile);
@@ -102,7 +101,7 @@ public class LinkTableCreateTest extends ContextConfiguration{
     }
 
     @After
-    public void deleteTestData() throws CommandException{
+    public void deleteTestData() throws CommandException {
         loadData.tearDown();
     }
 }
