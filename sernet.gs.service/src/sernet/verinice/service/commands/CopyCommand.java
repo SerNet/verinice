@@ -188,13 +188,6 @@ public class CopyCommand extends GenericCommand {
         return elementCopy;
     }
 
-    // <<<<<<< a9dfdfe586b1203620dcf348d671e89d73789cc0
-    // private CnATreeElement saveCopy(final CnATreeElement toGroup,
-    // CnATreeElement copyElement) throws CommandException, IOException {
-    // ||||||| merged common ancestors
-    // private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement
-    // copyElement) throws CommandException {
-    // =======
     private CnATreeElement copyRiskAnalysis(CnATreeElement group, CnATreeElement finishedRiskAnalysis,
             Map<String, String> sourceDestMap) throws CommandException, IOException {
 
@@ -285,7 +278,6 @@ public class CopyCommand extends GenericCommand {
 
     private CnATreeElement saveCopy(CnATreeElement toGroup, CnATreeElement copyElement)
             throws CommandException, IOException {
-        // >>>>>>> Resolve wrong canContain of FinishedRiskAnalysis
         copyElement = getDao().initializeAndUnproxy(copyElement);
         CnATreeElement newElement = saveNew(toGroup, copyElement);
         if(newElement.getEntity()!=null) {

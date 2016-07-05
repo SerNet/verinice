@@ -52,16 +52,18 @@ public class TreeViewerUpdater {
             return;
         }
 
-        if (Display.getCurrent() != null) {
-            viewer.add(parent, child);
-        } else {
-            Display.getDefault().asyncExec(new Runnable() {
-                @Override
-                public void run() {
-                    viewer.add(parent, child);
-                }
-            });
+         if (parent != null && child != null) {
+            if (Display.getCurrent() != null) {
+                viewer.add(parent, child);
+            } else {
+                Display.getDefault().asyncExec(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewer.add(parent, child);
+                    }
+                });
 
+            }
         }
 
     }
