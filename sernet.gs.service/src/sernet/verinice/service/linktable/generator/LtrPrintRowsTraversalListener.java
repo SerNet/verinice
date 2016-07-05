@@ -127,7 +127,9 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
     private boolean validOutcominEdges(CnATreeElement node, int depth, Set<Edge> edgesOf) {
         boolean isLeaf = true;
         for (Edge edge : edgesOf) {
-            isLeaf &= !filter.edgeFilter(edge, node, depth);
+            CnATreeElement target = edge.getSource() == node? edge.getTarget() : edge.getSource();
+            CnATreeElement source = edge.getSource() != node? edge.getTarget() : edge.getSource();
+            isLeaf &= !filter.edgeFilter(edge, source, target, depth);
         }
 
         return isLeaf;

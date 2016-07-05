@@ -44,7 +44,7 @@ final class LtrTraversalFilter implements TraversalFilter {
     }
 
     @Override
-    public boolean edgeFilter(Edge e, CnATreeElement node, int depth) {
+    public boolean edgeFilter(Edge e, CnATreeElement source, CnATreeElement target, int depth) {
 
         if(hasNextElementInPath(depth)){
             return false;
@@ -56,14 +56,13 @@ final class LtrTraversalFilter implements TraversalFilter {
         if(Edge.RELATIVES.equals(e.getType())){
 
             if(EdgeType.CHILD == vqlEdge.getEdgeType()){
-                return e.getSource() == node;
+                return e.getSource() == source;
             }
 
             if(EdgeType.PARENT == vqlEdge.getEdgeType()){
-                return e.getTarget() == node;
+                return e.getTarget() == source;
             }
         } else {
-            CnATreeElement target = e.getTarget() == node ? e.getSource() : e.getTarget();
             return target.getTypeId().equals(pathElement.node.getTypeId());
         }
 

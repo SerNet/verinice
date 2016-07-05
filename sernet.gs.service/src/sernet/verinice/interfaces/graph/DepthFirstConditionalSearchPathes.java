@@ -81,10 +81,11 @@ public final class DepthFirstConditionalSearchPathes {
 
                 LOG.debug("found edge: " + e);
 
-                if (traversalFilter.edgeFilter(e, node, depth)) {
-                    CnATreeElement target = e.getSource() == node? e.getTarget() : e.getSource();
-                    CnATreeElement source = e.getSource() != node? e.getTarget() : e.getSource();
+                // determine the next target node
+                CnATreeElement target = e.getSource() == node? e.getTarget() : e.getSource();
+                CnATreeElement source = e.getSource() != node? e.getTarget() : e.getSource();
 
+                if (traversalFilter.edgeFilter(e, source, target, depth)) {
                     traversalListener.edgeTraversed(source, target, e, depth);
                     dfs(target, depth + 1);
                 }
@@ -119,13 +120,13 @@ public final class DepthFirstConditionalSearchPathes {
         }
 
         @Override
-        public boolean edgeFilter(Edge e, CnATreeElement node, int depth) {
+        public boolean edgeFilter(Edge e, CnATreeElement source, CnATreeElement target, int depth) {
             return true;
         }
 
         @Override
         public boolean nodeFilter(CnATreeElement target, int depth) {
-            if (isVisited(target)) {
+            if (!isVisited(target)) {
                 marked.put(target, true);
                 return true;
             }
@@ -134,7 +135,7 @@ public final class DepthFirstConditionalSearchPathes {
         }
 
         private boolean isVisited(CnATreeElement target) {
-            return !marked.get(target);
+            return marked.get(target);
         }
     }
 

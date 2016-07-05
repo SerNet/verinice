@@ -29,7 +29,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public interface TraversalFilter {
 
-    boolean edgeFilter(Edge e, CnATreeElement node, int depth);
+    boolean edgeFilter(Edge e, CnATreeElement source, CnATreeElement target, int depth);
 
     boolean nodeFilter(CnATreeElement target, int depth);
 }
