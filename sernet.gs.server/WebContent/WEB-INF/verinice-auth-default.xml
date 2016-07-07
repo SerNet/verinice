@@ -180,7 +180,6 @@
         	"showallfiles" 
     		"addsecurityassessment"-->
            	<action id="accesscontrol" />
-	        <action id="accountsettings" />
 	        <action id="addbsielement" />
 	        <action id="addcatalog" />
 	        <action id="addfile" />
@@ -208,16 +207,12 @@
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
-          <action id="editprofile" />
           <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
           <action id="groupbytag"/>
-	        <action id="gsnotesimport" />
-	        <action id="gstoolimport" />
 	        <action id="importcsv" />
-	        <action id="importldap" />
 	        <action id="ismcatalog" />
 	        <action id="ismcopy" />
 	        <action id="ismcut" />
@@ -242,7 +237,6 @@
           <action id="taskchangeassignee" />
           <action id="taskchangeduedate" />
 	        <action id="taskdelete" />
-	        <action id="taskshowall" />
 	        <action id="taskview" />
 	        <action id="todo"/>
           <action id="unify" />
