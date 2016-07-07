@@ -24,10 +24,18 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * Filters the graph for specific nodes.
  * 
- * @author Benjamin Weißenfels <bw[at]sernet[dot]de> 
+ *
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 public interface VeriniceGraphFilter {
 
+    /**
+     * Filters a verinice graph for specific nodes.
+     *
+     * @param The
+     *            node which the filter should be applied to.
+     * @return If true the node is returned.
+     */
     boolean filter(CnATreeElement node);
 }

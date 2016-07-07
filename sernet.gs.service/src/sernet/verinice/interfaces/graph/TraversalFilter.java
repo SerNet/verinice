@@ -24,12 +24,56 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * Filters subtree of {@link VeriniceGraph}.
  * 
- * @author Benjamin Weißenfels <bw[at]sernet[dot]de> 
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 public interface TraversalFilter {
 
-    boolean edgeFilter(Edge e, CnATreeElement source, CnATreeElement target, int depth);
+    /**
+     * Filter edges within a {@link DepthFirstConditionalSearchPathes}
+     * traversal.
+     *
+     * If this method returns false the edge is not followed, which means that
+     * {@link TraversalListener#edgeTraversed(CnATreeElement, CnATreeElement, Edge, int)}
+     * is never called for this edge.
+     *
+     * @param edge
+     *            The edge which connects source and target.
+     * @param source
+     *            The source node. Actually this is not the source node of the
+     *            edge parameter. It is the source where the traversal is
+     *            started from, means that:
+     *
+     *            <pre>
+     *             {@link Edge#getTarget()} == source
+     *            </pre>
+     *
+     *            and the other way around is possible.
+     * @param target
+     *            The source node. Actually this is not the source node of the
+     *            edge parameter. It is the source where the traversal is
+     *            started from, means that the {@link Edge#getTarget()} ==
+     *            source is possible.
+     * @param depth
+     *            This is the depth of the traversal. Since the traversal starts
+     *            from a specific root node this is also the distances to this
+     *            root node.
+     * @return If returns true this edge is traversed.
+     */
+    boolean edgeFilter(Edge edge, CnATreeElement source, CnATreeElement target, int depth);
 
+    /**
+     * If this method returns false the node is not traversed, which means that
+     * {@link TraversalListener#nodeTraversed(CnATreeElement, int)} is never
+     * called for this node.
+     *
+     * @param target
+     *            The currently traversed node.
+     * @param depth
+     *            This is the depth of the traversal. Since the traversal starts
+     *            from a specific root node this is also the distances to this
+     *            root node.
+     * @return If returns true this node is traversed.
+     */
     boolean nodeFilter(CnATreeElement target, int depth);
 }

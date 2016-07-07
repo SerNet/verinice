@@ -35,6 +35,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.graph.DepthFirstConditionalSearchPathes;
+import sernet.verinice.interfaces.graph.TraversalFilter;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.interfaces.graph.VeriniceGraphFilter;
 import sernet.verinice.model.common.CnATreeElement;
@@ -43,6 +44,7 @@ import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.LinkedTableCreator;
 import sernet.verinice.service.linktable.RowComparator;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
+import sernet.verinice.service.linktable.generator.mergepath.TraverserVqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
 
