@@ -47,9 +47,7 @@ import static sernet.gs.ui.rcp.main.preferences.PreferenceConstants.*;
 public class ClientPropertyPlaceholderConfigurer extends
 		PropertyPlaceholderConfigurer {
 	
-	/**
-     *
-     */
+	// port can be configured via jvm parameter
     private static final String ORG_OSGI_SERVICE_HTTP_PORT = "org.osgi.service.http.port";
 
     private static final Logger LOG = Logger.getLogger(ClientPropertyPlaceholderConfigurer.class);
