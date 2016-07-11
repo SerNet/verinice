@@ -106,7 +106,7 @@ public class LinkTableService implements ILinkTableService {
     private void createHeaderRow(ILinkTableConfiguration configuration, List<List<String>> table) {
         ArrayList<String> headers = new ArrayList<>();
 
-        for (String element : configuration.getColumnPathes()) {
+        for (String element : configuration.getColumnPaths()) {
             int propertyBeginning = element.lastIndexOf(".");
             String propertyId = element.substring(propertyBeginning + 1);
             if (element.contains(":")) {

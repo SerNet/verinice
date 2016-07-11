@@ -61,14 +61,14 @@ import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-final class FilterPathes implements TraversalListener<VqlNode, VqlEdge> {
+final class FilterPaths implements TraversalListener<VqlNode, VqlEdge> {
 
     private final VqlAst vqlAst;
     private final Deque<PathElement> vqlStack = new LinkedList<>();
     private final Deque<EdgeTraversalEvent<VqlNode, VqlEdge>> edgeStack = new ArrayDeque<>();
     private final Set<Path> paths = new HashSet<>();
 
-    FilterPathes(VqlAst vqlAst) {
+    FilterPaths(VqlAst vqlAst) {
         this.vqlAst = vqlAst;
     }
 

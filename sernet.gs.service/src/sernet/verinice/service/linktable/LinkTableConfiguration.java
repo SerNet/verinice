@@ -66,7 +66,7 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
      * @see sernet.verinice.report.service.impl.dynamictable.ILinkTableConfiguration#getColumnPathes()
      */
     @Override
-    public Set<String> getColumnPathes() {
+    public Set<String> getColumnPaths() {
         if(columnPathes==null) {
             columnPathes = new HashSet<>();
         }
@@ -135,7 +135,7 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
     }
 
     public void addColumnPath(String columnPath) {
-        getColumnPathes().add(columnPath);
+        getColumnPaths().add(columnPath);
     }
 
     public String[] getObjectTypeIdArray() {

@@ -87,7 +87,7 @@ public class LinkTableDataModel {
     private void createColumnPaths() {
         columnPaths = new LinkedList<>();
         int n = 0;
-        Iterator<String> columnStringIterator = configuration.getColumnPathes().iterator();
+        Iterator<String> columnStringIterator = configuration.getColumnPaths().iterator();
         for (IPathElement pathElement : configuration.getPathElements()) {
             ColumnPath path = new ColumnPath(n, columnStringIterator.next());
             path.setPathElements(pathElement);

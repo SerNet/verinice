@@ -35,7 +35,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.verinice.interfaces.graph.DepthFirstConditionalSearchPathes;
-import sernet.verinice.interfaces.graph.TraversalFilter;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.interfaces.graph.VeriniceGraphFilter;
 import sernet.verinice.model.common.CnATreeElement;
@@ -44,7 +43,6 @@ import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.LinkedTableCreator;
 import sernet.verinice.service.linktable.RowComparator;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
-import sernet.verinice.service.linktable.generator.mergepath.TraverserVqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
 
@@ -62,6 +60,7 @@ import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
  * <li>3. Extract all possible search paths from the AST.</li>
  * <li>4. Iterate over potential starting points and filter all matching paths
  * with the help of the search paths from step 3.</li>
+ * </ul>
  *
  * <p>
  * All the steps in detail:
@@ -179,7 +178,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         int position = 0;
         columnHeader2Alias = new HashMap<>();
         columnPath2TablePosition = new HashMap<>();
-        for(String s : conf.getColumnPathes()){
+        for(String s : conf.getColumnPaths()){
            List<String> columnPathAsList = ColumnPathParser.getColumnPathAsList(s);
            List<String> removeAlias = ColumnPathParser.removeAlias(columnPathAsList);
            String join = StringUtils.join(removeAlias, "");

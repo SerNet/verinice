@@ -67,7 +67,7 @@ class LoadData extends AbstractVNAImportHelper{
 
     private LinkTableConfiguration cloneConfiguration(ILinkTableConfiguration configuration) {
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
-        builder.setColumnPathes(configuration.getColumnPathes())
+        builder.setColumnPathes(configuration.getColumnPaths())
         .setLinkTypeIds(configuration.getLinkTypeIds());
         if(configuration.getScopeIdArray()!=null) {
             builder.setScopeIds(new HashSet<>(Arrays.asList(configuration.getScopeIdArray())));

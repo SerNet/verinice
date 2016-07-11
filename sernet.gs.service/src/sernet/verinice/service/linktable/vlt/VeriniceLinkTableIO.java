@@ -142,7 +142,7 @@ public abstract class VeriniceLinkTableIO {
 
     private static VeriniceLinkTable createVeriniceLinkTable(ILinkTableConfiguration configuration) {
         VeriniceLinkTable.Builder builder = new VeriniceLinkTable.Builder();
-        builder.setColumnPaths(new LinkedList<>(configuration.getColumnPathes()));
+        builder.setColumnPaths(new LinkedList<>(configuration.getColumnPaths()));
         builder.setRelationIds(new LinkedList<>(configuration.getLinkTypeIds()));
         builder.setScopeIds(Arrays.asList(configuration.getScopeIdArray()));
         return builder.build();

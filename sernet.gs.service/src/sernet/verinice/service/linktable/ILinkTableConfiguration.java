@@ -33,7 +33,7 @@ public interface ILinkTableConfiguration extends Serializable {
     /**
      * @return The VQL column paths for the Link Table
      */
-    Set<String> getColumnPathes();
+    Set<String> getColumnPaths();
 
     /**
      * @return An array of path elements with one element for each VQL column path

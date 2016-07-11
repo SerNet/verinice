@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jgrapht.DirectedGraph;
-import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
 
 import antlr.CommonAST;
@@ -43,11 +42,11 @@ import sernet.verinice.service.linktable.antlr.VqlParserTokenTypes;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
 
 /**
- * Merges all column pathes to tree, which is a kind of a VQL abstract syntax
+ * Merges all column path to tree, which is a kind of a VQL abstract syntax
  * tree.
  *
  * <p>
- * So this input of column pathes:
+ * So this input of column path:
  * </p>
  *
  * <pre>
@@ -98,23 +97,11 @@ public class VqlAst {
      */
     public VqlAst(ILinkTableConfiguration linkTableConfiguration) {
         this.linkTableConfiguration = linkTableConfiguration;
-        this.vqlGraph = new DefaultDirectedGraph<VqlNode, VqlEdge>(VqlEdge.class);
         createQueryTree();
     }
 
     /**
      * Returns the root of the VqlQuery
-     *
-     * <pre>
-     *
-     *                    * assetgroup[title]
-     *                    |
-     *                    * asset[title, description]
-     *                   / \
-     *  CnaLink[title]  /   \
-     *                 /     \
-     * control[title] *       * person[name, surname]
-     * </pre>
      *
      * @return The root node of the VQL-AST. In the example above it would be
      *         the assetgroup.
@@ -125,7 +112,7 @@ public class VqlAst {
 
     private void createQueryTree() {
 
-        for (String columnPath : linkTableConfiguration.getColumnPathes()) {
+        for (String columnPath : linkTableConfiguration.getColumnPaths()) {
 
             VqlParser parser = ColumnPathParser.parse(columnPath);
             CommonAST ast = (CommonAST) parser.getAST();
@@ -245,7 +232,7 @@ public class VqlAst {
     }
 
     /**
-     * Returns all possible pathes of the vql tree to the each leaf. So in this
+     * Returns all possible paths of the vql tree to the each leaf. So in this
      * case:
      *
      *
@@ -260,7 +247,7 @@ public class VqlAst {
      * control[title] *       * person[name, surname]
      * </pre>
      *
-     * The method returns two pathes:
+     * The method returns two path:
      *
      * <pre>
      *      [
@@ -274,15 +261,15 @@ public class VqlAst {
     public final Set<Path> getPaths() {
 
         DepthFirstIterator<VqlNode, VqlEdge> iterator = new DepthFirstIterator<>(vqlGraph, root);
-        FilterPathes filterPathes = new FilterPathes(this);
-        iterator.addTraversalListener(filterPathes);
+        FilterPaths filterpath = new FilterPaths(this);
+        iterator.addTraversalListener(filterpath);
 
         // iterate of the whole tree
         while (iterator.hasNext()) {
             iterator.next();
         }
 
-        return filterPathes.getPaths();
+        return filterpath.getPaths();
     }
 
     /**
