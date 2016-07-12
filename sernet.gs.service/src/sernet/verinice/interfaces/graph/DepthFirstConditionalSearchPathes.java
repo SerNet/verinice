@@ -67,6 +67,23 @@ public final class DepthFirstConditionalSearchPathes {
         this.traversalListener = listener == null ? new DefaultTraversalListener() : listener;
     }
 
+    /**
+     * Starts a depth first search on a {@link VeriniceGraph}.
+     *
+     * @param graph
+     *            The graph may not be null.
+     * @param root
+     *            The starting point for the traversal.
+     * @param filter
+     *            If null a default implementation is used.
+     * @param listener
+     *            If null a default implemention is used.
+     */
+    public static void traverse(VeriniceGraph graph, CnATreeElement root, TraversalFilter filter, TraversalListener listener) {
+        DepthFirstConditionalSearchPathes depthFirst = new DepthFirstConditionalSearchPathes(graph, root, filter, listener);
+        depthFirst.dfs();
+    }
+
     private void dfs() {
         dfs(root, 0);
     }
@@ -164,22 +181,5 @@ public final class DepthFirstConditionalSearchPathes {
         public void edgeTraversed(CnATreeElement source, CnATreeElement target, Edge edge, int depth) {
             LOG.info("traversed edge: " + edge + " depth: " + depth);
         }
-    }
-
-    /**
-     * Starts a depth first search on a {@link VeriniceGraph}.
-     *
-     * @param graph
-     *            The graph may not be null.
-     * @param root
-     *            The starting point for the traversal.
-     * @param filter
-     *            If null a default implementation is used.
-     * @param listener
-     *            If null a default implemention is used.
-     */
-    public static void traverse(VeriniceGraph graph, CnATreeElement potentialRoot, TraversalFilter filter, TraversalListener listener) {
-        DepthFirstConditionalSearchPathes depthFirst = new DepthFirstConditionalSearchPathes(graph, potentialRoot, filter, listener);
-        depthFirst.dfs();
     }
 }
