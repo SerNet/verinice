@@ -20,11 +20,11 @@
  */
 package sernet.verinice.model.bsi.risikoanalyse;
 
+import java.util.Collections;
 import java.util.List;
 
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.ITypedElement;
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
@@ -32,9 +32,9 @@ import sernet.verinice.model.common.CnATreeElement;
  * @author ahanekop[at]sernet[dot]de
  * 
  */
-@SuppressWarnings("serial")
 public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IGefaehrdungsBaumElement, ITypedElement {
 
+    private static final long serialVersionUID = -4960629485177128430L;
     private GefaehrdungsUmsetzung parent;
     private RisikoMassnahme massnahme;
 
@@ -57,6 +57,15 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
         this.parent = myParent;
     }
 
+    public RisikoMassnahmenUmsetzung(CnATreeElement parent) {
+        super();
+        // use the same entity as in MassnahmenUmsetzung
+        setEntity(new Entity(MassnahmenUmsetzung.TYPE_ID));
+        if (parent instanceof GefaehrdungsUmsetzung) {
+            this.parent = (GefaehrdungsUmsetzung) parent;
+        }
+    }
+
     RisikoMassnahmenUmsetzung() {
         // hibernate constructor
     }
@@ -75,12 +84,12 @@ public class RisikoMassnahmenUmsetzung extends MassnahmenUmsetzung implements IG
      * Must be implemented due to Interface IGefaehrdungsBaumElement.
      * 
      * A RisikoMassnahmenUmsetzung never has children, therefore always returns
-     * null.
+     * and empty list.
      * 
-     * @return - null
+     * @return - empty List
      */
     public List<IGefaehrdungsBaumElement> getGefaehrdungsBaumChildren() {
-        return null;
+        return Collections.emptyList();
     }
 
     /**

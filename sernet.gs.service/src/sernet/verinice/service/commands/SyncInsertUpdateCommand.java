@@ -818,10 +818,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     protected void addElement(CnATreeElement element) {
         if (elementSet == null) {
-            elementSet = new HashSet<CnATreeElement>();
+            elementSet = new HashSet<>();
         }
-        // load the parent
-        element.getParent().getTitle();
         elementSet.add(element);
     }
 
