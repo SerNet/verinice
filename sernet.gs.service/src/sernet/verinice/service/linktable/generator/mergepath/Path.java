@@ -43,7 +43,7 @@ public class Path {
     }
 
     public List<PathElement> getPathElements() {
-        return new LinkedList<>(pathElements);
+        return pathElements;
     }
 
     @Override
