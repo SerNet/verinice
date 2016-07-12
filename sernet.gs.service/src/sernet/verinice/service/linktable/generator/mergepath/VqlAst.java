@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jgrapht.DirectedGraph;
+import org.jgrapht.graph.DefaultDirectedGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
 
 import antlr.CommonAST;
@@ -38,7 +39,6 @@ import antlr.collections.AST;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.antlr.VqlParser;
-import sernet.verinice.service.linktable.antlr.VqlParserTokenTypes;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
 
 /**
@@ -97,6 +97,7 @@ public class VqlAst {
      */
     public VqlAst(ILinkTableConfiguration linkTableConfiguration) {
         this.linkTableConfiguration = linkTableConfiguration;
+        this.vqlGraph = new DefaultDirectedGraph<>(VqlEdge.class);
         createQueryTree();
     }
 
@@ -120,95 +121,106 @@ public class VqlAst {
             root = getNode(ast.getText(), ast.getText());
             vqlGraph.addVertex(root);
 
-            traverseColumnPathAst(ast.getNextSibling(), root, null, NO_EDGE_TYPE);
+            traverseColumnPathAst(ast.getNextSibling());
         }
     }
 
     /**
      * Creates a decorated abstracted syntax tree.
      *
-     * <pre>
-     * assetgroup   >   assetgroup > asset / control . title
-     *      |       |       |
-     *   leftNode   op   rightNode
-     * </pre>
      *
-     *
-     * @param op
-     *            Is the recursion anchor. If a {@link VqlParserTokenTypes#PROP}
-     *            is seen the end of the path is reached and the recursion
-     *            stops.
-     * @param leftNode
-     *            The node of the left side of the operator.
-     * @param incomingEdge
-     *            The incoming edge. In the example above it is not the dot
-     *            operator, it is the child operator. May be null.
-     * @param lastEdgeType
-     *            The type which is provided from the {@link ColumnPathParser}
-     *            of the last incoming edge. May be null.
+     * @param ast
+     *            It is the first operator of a column path, e.g. ('>' | '<' |
+     *            '.').
      */
-    private void traverseColumnPathAst(AST op, VqlNode leftNode, VqlEdge incomingEdge, int lastEdgeType) {
+    private void traverseColumnPathAst(AST ast) {
 
-        if (op == null) {
-            return;
-        }
-
+        // Short overview over the algorithm:
+        // <pre>
+        // assetgroup > assetgroup > asset / control . title
+        // | | |
+        // leftNode op rightNode
+        // </pre>
+        VqlNode leftNode = root;
+        AST op = ast;
         VqlNode rightNode = null;
-        VqlEdge vqlEdge = null;
-        String valueOfRightNode = op.getNextSibling().getText();
-        int nextEdgeType = NO_EDGE_TYPE;
+        VqlEdge incomingEdge = null;
 
-        if (PROP == op.getType()) {
+        // The edge type from antlr. We need this to make the decision if a
+        // property belongs to hui relation.
+        int lastEdgeType = NO_EDGE_TYPE;
 
-            if (lastEdgeType != NO_EDGE_TYPE && LT == lastEdgeType) {
-                incomingEdge.addPropertyType(valueOfRightNode);
-            } else {
-                leftNode.addPropertyType(valueOfRightNode);
+        while (op != null) {
+
+            String valueOfRightNode = op.getNextSibling().getText();
+
+            if (PROP == op.getType()) {
+                handleProperty(leftNode, incomingEdge, lastEdgeType, valueOfRightNode);
+                break;
             }
 
-            return;
-        }
+            if (LT == op.getType()) {
+                String nodePath = leftNode.getPath() + "/" + valueOfRightNode;
+                String edgePath = getEdgePathForLink(leftNode, incomingEdge, valueOfRightNode);
+                rightNode = getNode(op.getNextSibling().getText(), nodePath);
+                incomingEdge = getEdge(EdgeType.LINK, edgePath, leftNode, rightNode);
+                lastEdgeType = LT;
+            }
 
-        if (LT == op.getType()) {
-            String nodePath = leftNode.getPath() + "/" + valueOfRightNode;
-            String edgePath = (incomingEdge == null ? leftNode.getPath() : incomingEdge.getPath()) + ":" + valueOfRightNode;
-            rightNode = getNode(op.getNextSibling().getText(), nodePath);
-            vqlEdge = getEdge(EdgeType.LINK, edgePath, leftNode, rightNode);
-            nextEdgeType = LT;
-        }
+            if (LINK == op.getType()) {
+                String nodePath = leftNode.getPath() + "/" + valueOfRightNode;
+                String edgePath = getEdgePathForLink(leftNode, incomingEdge, valueOfRightNode);
+                rightNode = getNode(op.getNextSibling().getText(), nodePath);
+                incomingEdge = getEdge(EdgeType.LINK, edgePath, leftNode, rightNode);
+                lastEdgeType = LINK;
+            }
 
-        if (LINK == op.getType()) {
-            String nodePath = leftNode.getPath() + "/" + valueOfRightNode;
-            String edgePath = (incomingEdge == null ? leftNode.getPath() : incomingEdge.getPath()) + ":" + valueOfRightNode;
-            rightNode = getNode(op.getNextSibling().getText(), nodePath);
-            vqlEdge = getEdge(EdgeType.LINK, edgePath, leftNode, rightNode);
-            nextEdgeType = LINK;
-        }
+            if (CHILD == op.getType()) {
+                String path = leftNode.getPath() + ">" + valueOfRightNode;
+                rightNode = getNode(op.getNextSibling().getText(), path);
+                incomingEdge = getEdge(EdgeType.CHILD, path, leftNode, rightNode);
+                lastEdgeType = CHILD;
+            }
 
-        if (CHILD == op.getType()) {
-            String path = leftNode.getPath() + ">" + valueOfRightNode;
-            rightNode = getNode(op.getNextSibling().getText(), path);
-            vqlEdge = getEdge(EdgeType.CHILD, path, leftNode, rightNode);
-            nextEdgeType = CHILD;
-        }
+            if (PARENT == op.getType()) {
+                String path = leftNode.getPath() + "<" + valueOfRightNode;
+                rightNode = getNode(op.getNextSibling().getText(), path);
+                incomingEdge = getEdge(EdgeType.PARENT, path, leftNode, rightNode);
+                lastEdgeType = PARENT;
+            }
 
-        if (PARENT == op.getType()) {
-            String path = leftNode.getPath() + "<" + valueOfRightNode;
-            rightNode = getNode(op.getNextSibling().getText(), path);
-            vqlEdge = getEdge(EdgeType.PARENT, path, leftNode, rightNode);
-            nextEdgeType = PARENT;
-        }
+            addNodeToGraph(rightNode);
+            addEdgeToGraph(leftNode, rightNode, incomingEdge);
 
-        if (!vqlGraph.containsVertex(rightNode)) {
-            vqlGraph.addVertex(rightNode);
+            // shift to next triple: node op node
+            leftNode = rightNode;
+            op = op.getNextSibling().getNextSibling();
         }
+    }
 
+    private String getEdgePathForLink(VqlNode leftNode, VqlEdge incomingEdge, String valueOfRightNode) {
+        String edgePath = (incomingEdge == null ? leftNode.getPath() : incomingEdge.getPath()) + ":" + valueOfRightNode;
+        return edgePath;
+    }
+
+    private void handleProperty(VqlNode leftNode, VqlEdge incomingEdge, int lastEdgeType, String valueOfRightNode) {
+        if (lastEdgeType != NO_EDGE_TYPE && LT == lastEdgeType) {
+            incomingEdge.addPropertyType(valueOfRightNode);
+        } else {
+            leftNode.addPropertyType(valueOfRightNode);
+        }
+    }
+
+    private void addEdgeToGraph(VqlNode leftNode, VqlNode rightNode, VqlEdge vqlEdge) {
         if (!vqlGraph.containsEdge(vqlEdge)) {
             vqlGraph.addEdge(leftNode, rightNode, vqlEdge);
         }
+    }
 
-        AST nextLeftNode = op.getNextSibling().getNextSibling();
-        traverseColumnPathAst(nextLeftNode, rightNode, vqlEdge, nextEdgeType);
+    private void addNodeToGraph(VqlNode rightNode) {
+        if (!vqlGraph.containsVertex(rightNode)) {
+            vqlGraph.addVertex(rightNode);
+        }
     }
 
     private VqlNode getNode(String text, String path) {
