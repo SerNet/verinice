@@ -148,8 +148,8 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
             CnATreeElement next = iterator.next();
             VqlNode pathElement = path.getPathElements().get(i).node;
             VqlEdge incomingEdge = path.getPathElements().get(i).edge;
-            storeInRow(row, next, pathElement);
-            storeInRow(row, next, incomingEdge);
+            printRow(row, next, pathElement);
+            printRow(row, next, incomingEdge);
 
             i++;
         }
@@ -157,7 +157,7 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
         result.add(row);
     }
 
-    private void storeInRow(Map<String, String> row, CnATreeElement node, VqlEdge incominVqlgEdge) {
+    private void printRow(Map<String, String> row, CnATreeElement node, VqlEdge incominVqlgEdge) {
 
         if (incominVqlgEdge != null && incominVqlgEdge.isMatch()) {
 
@@ -201,7 +201,7 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
         row.put(pathforProperty, edgeTitle);
     }
 
-    private void storeInRow(Map<String, String> row, CnATreeElement element, VqlNode pathElement) {
+    private void printRow(Map<String, String> row, CnATreeElement element, VqlNode pathElement) {
         if (pathElement.isMatch()) {
             for (String propertyType : pathElement.getPropertyTypes()) {
                 IPropertyAdapter adapter = PropertyAdapterFactory.getAdapter(element);
