@@ -90,8 +90,9 @@ public final class DNDHelper {
     /**
      * creates an array of one of the types contained in classes,
      * so transferclasses can check for correct type of dnd'ed array
+     * 
      * @param source
-     * @return
+     * @return an array instance of specific type or if source contains multiple types an empty array.
      */
     public static Object[] castDataArray(Object[] source){
         List<?> dest = null;
@@ -121,10 +122,11 @@ public final class DNDHelper {
                     LOG.error(STD_ERR_MSG, e);
                 }
             } else {
+                LOG.warn("DND source contains multiple types. Return an empty array");
                 return new Object[0];
             }
         }
-        
+
         return dest.toArray((Object[])Array.newInstance(type, dest.size()));
     }
     

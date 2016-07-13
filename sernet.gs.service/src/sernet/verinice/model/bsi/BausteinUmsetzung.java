@@ -145,8 +145,12 @@ public class BausteinUmsetzung extends CnATreeElement {
                 // should never happen:
                 Logger.getLogger(this.getClass()).error(obj.getClass());
                 return '0';
+            } 
+            
+            if (obj instanceof GefaehrdungsUmsetzung) {
+                Logger.getLogger(this.getClass()).error(obj.getClass());
+                return '0';
             }
-
             MassnahmenUmsetzung mn = (MassnahmenUmsetzung) obj;
             // prüfe nicht umgesetzte Massnahmen:
             if (mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_NEIN) || mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE) || mn.getUmsetzung().equals(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET)) {
@@ -224,6 +228,30 @@ public class BausteinUmsetzung extends CnATreeElement {
         }
         return null;
     }
+    
+    public boolean containsControl(String chapter) {
+        for (CnATreeElement child : getChildren()) {
+            if (child instanceof MassnahmenUmsetzung) {
+                MassnahmenUmsetzung control = (MassnahmenUmsetzung) child;
+                if (control.getKapitel().equals(chapter)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean containsScenario(String id) {
+        for (CnATreeElement child : getChildren()) {
+            if (child instanceof GefaehrdungsUmsetzung) {
+                GefaehrdungsUmsetzung scenario = (GefaehrdungsUmsetzung) child;
+                if (scenario.getId().equals(id)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     public String getStand() {
         return getEntity().getSimpleValue(P_STAND);
@@ -241,6 +269,10 @@ public class BausteinUmsetzung extends CnATreeElement {
 
     public String getDescription() {
         return getEntity().getSimpleValue(P_BAUSTEIN_BESCHREIBUNG);
+    }
+
+    public boolean isOwnModule() {
+        return this.getUrl() == null || this.getUrl().isEmpty() || this.getUrl().equals("null");
     }
 
 }
