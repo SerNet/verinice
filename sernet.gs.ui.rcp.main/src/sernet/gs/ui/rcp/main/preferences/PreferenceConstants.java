@@ -100,7 +100,9 @@ public class PreferenceConstants {
     public static final String OPERATION_MODE_REMOTE_SERVER = "gs_cna_operationmode_withserver";
 
     public static final String VNSERVER_URI = "gs_cna_vnserver_uri";
-    public static final String VNSERVER_URI_INTERNAL = "http://localhost:8800";
+    public static final String VNSERVER_URI_INTERNAL_PORT= "8080";
+    public static final String VNSERVER_HOST_INTERNAL ="localhost";
+    public static final String VNSERVER_SCHEME_INTERNAL ="http";
     public static final String VNSERVER_URI_DEFAULT = "http://localhost:8080/veriniceserver";
     public static final String VNSERVER_USER = "gs_cna_serveruser";
     public static final String VNSERVER_PASS = "gs_cna_serverpass";
