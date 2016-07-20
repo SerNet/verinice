@@ -20,12 +20,15 @@ package sernet.gs.server.security;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.Authentication;
 import org.springframework.security.BadCredentialsException;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
+import org.springframework.security.ldap.LdapUserSearch;
+import org.springframework.security.ldap.search.FilterBasedLdapUserSearch;
 import org.springframework.security.providers.ldap.LdapAuthenticator;
 import org.springframework.security.ui.digestauth.DigestProcessingFilter;
 import org.springframework.security.userdetails.UsernameNotFoundException;
@@ -57,6 +60,12 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     // injected by spring
     private String passwordRealm ="";
 
+    // injected by spring
+    private String groupFilter;
+
+    private String filter = "uid={0}";
+
+
     /**
      * @param passwordRealm the passwordRealm to set
      */
@@ -81,11 +90,15 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     // injected by spring
     private String adminpass = "";
 
+    private LdapUserSearch ldapUserSearch;
+
     /* (non-Javadoc)
      * @see org.springframework.security.providers.ldap.LdapAuthenticator#authenticate(org.springframework.security.Authentication)
      */
     @Override
     public DirContextOperations authenticate(Authentication authentication) {
+
+
         // Grab the username and password out of the authentication object.
         String username = authentication.getName();
         
@@ -111,12 +124,21 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
                 return defaultAdministrator(); 
             }
             
-            // authenticate against LDAP:
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Authenticating against AD or LDAP, user-dn: \"" + principal + "\"");
-            }
             try {
-                contextFactory.getReadWriteContext(principal, password);
+
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("Authenticating against AD or LDAP, user-dn: \"" + username + "\"");
+                }
+
+                if (isGroupFilterActive()) {
+                    ldapUserSearch = new FilterBasedLdapUserSearch(groupFilter, filter, contextFactory);
+                    DirContextOperations dnUser = ldapUserSearch.searchForUser(username);
+                    String userDn = dnUser != null ? dnUser.getDn().toString() : username;
+                    contextFactory.getReadWriteContext(userDn, password);
+                } else {
+                    contextFactory.getReadWriteContext(username, password);
+                }
+
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("AD or LDAP authentication was successful");
                 }
@@ -180,6 +202,10 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
             }
             throw new BadCredentialsException("Blank username and/or password!");
         }
+    }
+
+    private boolean isGroupFilterActive() {
+        return groupFilter != null && !groupFilter.equals(StringUtils.EMPTY);
     }
 
     /**
@@ -317,5 +343,13 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
 
     public void setPrincipalSuffix(String principalSuffix) {
         this.principalSuffix = principalSuffix;
+    }
+
+    public String getGroupFilter() {
+        return groupFilter;
+    }
+
+    public void setGroupFilter(String groupFilter) {
+        this.groupFilter = groupFilter;
     }
 }
