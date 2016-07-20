@@ -161,7 +161,7 @@ public class VqlAst {
 
             if (LT == op.getType()) {
                 String nodePath = leftNode.getPath() + "/" + valueOfRightNode;
-                String edgePath = getEdgePathForLink(leftNode, incomingEdge, valueOfRightNode);
+                String edgePath = getEdgePathForLinkType(leftNode, incomingEdge, valueOfRightNode);
                 rightNode = getNode(op.getNextSibling().getText(), nodePath);
                 incomingEdge = getEdge(EdgeType.LINK, edgePath, leftNode, rightNode);
                 lastEdgeType = LT;
@@ -198,8 +198,15 @@ public class VqlAst {
         }
     }
 
+    private String getEdgePathForLinkType(VqlNode leftNode, VqlEdge incomingEdge,
+            String valueOfRightNode) {
+        String edgePath = (incomingEdge == null ? leftNode.getPath() : incomingEdge.getPath()) + ":"
+                + valueOfRightNode;
+        return edgePath;
+    }
     private String getEdgePathForLink(VqlNode leftNode, VqlEdge incomingEdge, String valueOfRightNode) {
-        String edgePath = (incomingEdge == null ? leftNode.getPath() : incomingEdge.getPath()) + ":" + valueOfRightNode;
+        String edgePath = (incomingEdge == null ? leftNode.getPath() : incomingEdge.getPath()) + "/"
+                + valueOfRightNode;
         return edgePath;
     }
 
