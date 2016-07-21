@@ -63,7 +63,8 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
     // injected by spring
     private String groupFilter;
 
-    private String filter = "uid={0}";
+    // injected by spring
+    private String userFilter;
 
 
     /**
@@ -130,13 +131,10 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
                     LOG.debug("Authenticating against AD or LDAP, user-dn: \"" + username + "\"");
                 }
 
-                if (isGroupFilterActive()) {
-                    ldapUserSearch = new FilterBasedLdapUserSearch(groupFilter, filter, contextFactory);
-                    DirContextOperations dnUser = ldapUserSearch.searchForUser(username);
-                    String userDn = dnUser != null ? dnUser.getDn().toString() : username;
-                    contextFactory.getReadWriteContext(userDn, password);
+                if (isGroupFilterActive() && isUserFilterActive()) {
+                    authenticateByLdapSearch(username, password);
                 } else {
-                    contextFactory.getReadWriteContext(username, password);
+                    contextFactory.getReadWriteContext(principal, password);
                 }
 
                 if (LOG.isDebugEnabled()) {
@@ -204,8 +202,28 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
         }
     }
 
+    private void authenticateByLdapSearch(String username, String password) {
+        ldapUserSearch = new FilterBasedLdapUserSearch(groupFilter, userFilter, contextFactory);
+        DirContextOperations dnUser = ldapUserSearch.searchForUser(username);
+
+        // ldap is using the userPrincipalName as logon name
+        String userPrincipalName = dnUser.getStringAttribute("userPrincipalName");
+
+        // if the principal name is null try the DN which is used by open ldap
+        if(userPrincipalName != null){
+            contextFactory.getReadWriteContext(userPrincipalName, password);
+        } else {
+            String userDn = dnUser.getDn().toString();
+            contextFactory.getReadWriteContext(userDn, password);
+        }
+    }
+
     private boolean isGroupFilterActive() {
-        return groupFilter != null && !groupFilter.equals(StringUtils.EMPTY);
+        return !StringUtils.isEmpty(groupFilter);
+    }
+
+    private boolean isUserFilterActive() {
+        return !StringUtils.isEmpty(userFilter);
     }
 
     /**
@@ -351,5 +369,13 @@ public class LdapAuthenticatorImpl extends UserLoader implements LdapAuthenticat
 
     public void setGroupFilter(String groupFilter) {
         this.groupFilter = groupFilter;
+    }
+
+    public String getUserFilter() {
+        return userFilter;
+    }
+
+    public void setUserFilter(String userFilter) {
+        this.userFilter = userFilter;
     }
 }
