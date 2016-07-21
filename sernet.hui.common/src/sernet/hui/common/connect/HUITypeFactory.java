@@ -54,7 +54,6 @@ import sernet.snutils.DBException;
  * Parses XML file with defined properties and creates appropriate
  * <code>PropertyType </code> objects.
  * 
- * 
  */
 public class HUITypeFactory {
     private static final Logger LOG = Logger.getLogger(HUITypeFactory.class);
@@ -79,6 +78,8 @@ public class HUITypeFactory {
     private Set<String> allTags = new HashSet<>();
 
     private Map<String, EntityType> allEntities = null;
+
+    private Map<String, String> defaultMessages = new HashMap<>();
 
     // loads translated messages for HUI entities from resource bundles
     private SNCAMessages messages;
@@ -184,7 +185,9 @@ public class HUITypeFactory {
             entityObj.setId(id);
 
             // labels are loaded from SNCAMessages (resource bundles)
-            entityObj.setName(getMessage(id, entityEl.getAttribute(ATTRIBUTE_NAME)));
+            String name = entityEl.getAttribute(ATTRIBUTE_NAME);
+            defaultMessages.put(id, name);
+            entityObj.setName(getMessage(id));
 
             this.allEntities.put(entityEl.getAttribute(ATTRIBUTE_ID), entityObj);
             readChildElements(entityObj, null);
@@ -264,8 +267,14 @@ public class HUITypeFactory {
         final String id = child.getAttribute(ATTRIBUTE_ID);
         // name, reversename and tooltip are loaded from SNCAMessages (resource bundles)
         // key is: [id]_name, [id]_reversename, [id]_tooltip 
-        relation.setName(getMessage(getKey(id,ATTRIBUTE_NAME), child.getAttribute(ATTRIBUTE_NAME), false));
-        relation.setReversename(getMessage(getKey(id,ATTRIBUTE_REVERSENAME), child.getAttribute(ATTRIBUTE_REVERSENAME), false));
+        final String keyName = getKey(id,ATTRIBUTE_NAME);
+        final String name = child.getAttribute(ATTRIBUTE_NAME);
+        final String keyReversename = getKey(id,ATTRIBUTE_REVERSENAME);
+        final String reverseName = child.getAttribute(ATTRIBUTE_REVERSENAME);
+        defaultMessages.put(keyName, name);
+        defaultMessages.put(keyReversename, reverseName);
+        relation.setName(getMessage(keyName));
+        relation.setReversename(getMessage(keyReversename));
         relation.setTooltip(getMessage(getKey(id,ATTRIBUTE_TOOLTIP), child.getAttribute(ATTRIBUTE_TOOLTIP), true));
         
         relation.setTo(child.getAttribute("to"));
@@ -296,7 +305,9 @@ public class HUITypeFactory {
 
         // name and tooltip are loaded from SNCAMessages (resource bundles)
         // key is: [id]_name, [id]_tooltip 
-        propObj.setName(getMessage(id, prop.getAttribute(ATTRIBUTE_NAME)));
+        final String name = prop.getAttribute(ATTRIBUTE_NAME);
+        defaultMessages.put(id, name);
+        propObj.setName(getMessage(id));
         propObj.setTooltiptext(getMessage(getKey(id, ATTRIBUTE_TOOLTIP), prop.getAttribute(ATTRIBUTE_TOOLTIP), true));
 
         propObj.setTags(prop.getAttribute(ATTRIBUTE_TAGS));
@@ -384,10 +395,11 @@ public class HUITypeFactory {
         if (group == null) {
             return null;
         }
-
         PropertyGroup groupObj = new PropertyGroup();
-        groupObj.setId(group.getAttribute(ATTRIBUTE_ID));
-        groupObj.setName( getMessage(id, group.getAttribute(ATTRIBUTE_NAME)) );
+        groupObj.setId(id);
+        final String name = group.getAttribute(ATTRIBUTE_NAME);
+        defaultMessages.put(id, name);
+        groupObj.setName(getMessage(id));
         groupObj.setTags(group.getAttribute(ATTRIBUTE_TAGS));
         addToTagList(group.getAttribute(ATTRIBUTE_TAGS));
 
@@ -591,7 +603,7 @@ public class HUITypeFactory {
      * @return a translated message or (if not found) "[key] (!)"
      */
     public String getMessage(String key) {
-        return getMessage(key, null, false);
+        return getMessage(key, defaultMessages.get(key), false);
     }
     
     /**
@@ -671,6 +683,8 @@ public class HUITypeFactory {
                 return key + " (!)";
             }
         } else {
+
+            defaultMessages.put(key, defaultMessage);
 
             if (LOG.isDebugEnabled()) {
                 LOG.debug("returning message from SNCA.XML: " + defaultMessage + ", key: " + key);
