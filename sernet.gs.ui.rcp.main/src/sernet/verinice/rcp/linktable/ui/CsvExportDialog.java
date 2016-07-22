@@ -21,10 +21,12 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.ui;
 
+import java.io.File;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ITreeSelection;
@@ -67,7 +69,7 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 public class CsvExportDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(CsvExportDialog.class);
 
-    private static final String DEFAULT_ORGANIZATION_TITLE = "organization";
+    private static final String DEFAULT_ORGANIZATION_TITLE = "organization"; //$NON-NLS-1$
 
     private ITreeSelection selection;
     private CnATreeElement selectedElement;
@@ -224,10 +226,10 @@ public class CsvExportDialog extends TitleAreaDialog {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT);
         if(defaultFolder==null || defaultFolder.isEmpty()) {
-            defaultFolder = System.getProperty("user.home");
+            defaultFolder = System.getProperty("user.home"); //$NON-NLS-1$
         }
-        if (!defaultFolder.endsWith(System.getProperty("file.separator"))) {
-            defaultFolder = defaultFolder + System.getProperty("file.separator");
+        if (!defaultFolder.endsWith(System.getProperty("file.separator"))) { //$NON-NLS-1$
+            defaultFolder = defaultFolder + System.getProperty("file.separator"); //$NON-NLS-1$
         }
         return defaultFolder;
     }
@@ -247,7 +249,26 @@ public class CsvExportDialog extends TitleAreaDialog {
         if (errorMessage!=null && !errorMessage.isEmpty()) {
             showErrorMessage(errorMessage);
         } else {
-            saveScopeIdsAndCloseDialog();
+            checkIfFileExistAndSave();
+        }
+    }
+
+    private void checkIfFileExistAndSave() {
+        File file = new File(filePath);
+        if(file.exists() && !file.isDirectory()) { 
+            MessageDialog mDialog = new MessageDialog(
+                    getShell(),
+                    Messages.CsvExportDialog_9 + file.getName()
+                            + Messages.CsvExportDialog_11,
+                    null,
+                    Messages.CsvExportDialog_14 + file.getParentFile().getName()
+                            + Messages.CsvExportDialog_15,
+                    MessageDialog.WARNING,
+                    new String[] { Messages.CsvExportDialog_16, Messages.CsvExportDialog_17 }, 0);
+            int result = mDialog.open();
+            if (result == 0) {
+                saveScopeIdsAndCloseDialog();
+            }
         }
     }
 
@@ -272,7 +293,7 @@ public class CsvExportDialog extends TitleAreaDialog {
     
     private void showErrorMessage(String message) {
         StringBuilder sb = new StringBuilder(message);
-        sb.append("\n");
+        sb.append("\n"); //$NON-NLS-1$
         sb.append(Messages.CsvExportDialog_13);
         setMessage(sb.toString(), IMessageProvider.ERROR); 
     }
