@@ -21,7 +21,7 @@ package sernet.verinice.rcp.linktable.ui.combo;
 
 import org.eclipse.swt.widgets.Composite;
 
-import sernet.verinice.rcp.linktable.Messages;
+import sernet.verinice.rcp.linktable.LinkTableUtil;
 import sernet.verinice.rcp.linktable.ui.LinkTableColumn;
 import sernet.verinice.service.linktable.LinkPropertyElement;
 import sernet.verinice.service.model.IObjectModelService;
@@ -48,7 +48,7 @@ public class LinkTableRelationPropertyComboViewer
     @Override
     protected String getLabelText(Object element) {
         if (element instanceof String) {
-            return Messages.getString((String) element);
+            return LinkTableUtil.getCnaLinkPropertyMessage((String) element);
         } else {
             return ltrColumn.getContentService().getLabel(element.toString());
         }

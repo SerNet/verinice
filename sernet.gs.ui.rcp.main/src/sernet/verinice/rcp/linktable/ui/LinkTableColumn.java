@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.ui;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,13 +29,16 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
-import sernet.hui.common.connect.HUITypeFactory;
+import sernet.verinice.rcp.linktable.LinkTableUtil;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableElementComboViewer;
-import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.model.IObjectModelService;
 
@@ -316,29 +318,14 @@ public class LinkTableColumn {
         int propertyBeginning = columnPath.lastIndexOf(".");
            String propertyId = columnPath.substring(propertyBeginning + 1);
            if (columnPath.contains(":")) {
-               columnPath = columnPath + ALIAS_DELIMITER + getCnaLinkPropertyMessage(propertyId);
+            columnPath = columnPath + ALIAS_DELIMITER
+                    + LinkTableUtil.getCnaLinkPropertyMessage(propertyId);
            } else {
-               String message = HUITypeFactory.getInstance().getMessage(propertyId);
+            String message = contentService.getLabel(propertyId);
                columnPath = columnPath + ALIAS_DELIMITER + message;
            }
         return columnPath;
     }
 
-    public String getCnaLinkPropertyMessage(String cnaLinkProperty) {
-        switch (cnaLinkProperty) {
-        case CnaLinkPropertyConstants.TYPE_TITLE:
-            return Messages.LinkTableColumn_CnaLink_Property_Title;
-        case CnaLinkPropertyConstants.TYPE_DESCRIPTION:
-            return Messages.LinkTableColumn_CnaLink_Property_Description;
-        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C:
-            return Messages.LinkTableColumn_CnaLink_Property_C;
-        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I:
-            return Messages.LinkTableColumn_CnaLink_Property_I;
-        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
-            return Messages.LinkTableColumn_CnaLink_Property_A;
-        default:
-            return Messages.LinkTableColumn_CnaLink_Property_Unknown;
-        }
-    }
 
 }

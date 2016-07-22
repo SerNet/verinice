@@ -20,16 +20,22 @@
 package sernet.verinice.rcp.linktable;
 
 import java.io.File;
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.elasticsearch.common.collect.Sets;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -38,6 +44,7 @@ import sernet.verinice.rcp.linktable.ui.CsvExportDialog;
 import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableOperationType;
 import sernet.verinice.service.csv.ICsvExport;
+import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
 import sernet.verinice.service.linktable.ColumnPathParseException;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
@@ -274,6 +281,23 @@ public class LinkTableUtil {
                 }
                 throw new ObjectModelValidationException(id + " is no valid relation id"); //$NON-NLS-1$
             }
+        }
+    }
+
+    public static String getCnaLinkPropertyMessage(String cnaLinkProperty) {
+        switch (cnaLinkProperty) {
+        case CnaLinkPropertyConstants.TYPE_TITLE:
+            return Messages.LinkTableColumn_CnaLink_Property_Title;
+        case CnaLinkPropertyConstants.TYPE_DESCRIPTION:
+            return Messages.LinkTableColumn_CnaLink_Property_Description;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C:
+            return Messages.LinkTableColumn_CnaLink_Property_C;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I:
+            return Messages.LinkTableColumn_CnaLink_Property_I;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
+            return Messages.LinkTableColumn_CnaLink_Property_A;
+        default:
+            return Messages.LinkTableColumn_CnaLink_Property_Unknown;
         }
     }
 }

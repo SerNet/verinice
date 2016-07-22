@@ -72,12 +72,6 @@ public class Messages extends NLS{
     public static String VeriniceLinkTableComposite_2;
     public static String VeriniceLinkTableComposite_3;
 
-    public static String LinkTableColumn_CnaLink_Property_Title;
-    public static String LinkTableColumn_CnaLink_Property_Description;
-    public static String LinkTableColumn_CnaLink_Property_C;
-    public static String LinkTableColumn_CnaLink_Property_I;
-    public static String LinkTableColumn_CnaLink_Property_A;
-    public static String LinkTableColumn_CnaLink_Property_Unknown;
     
     static {
         // initialize resource bundle

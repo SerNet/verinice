@@ -54,6 +54,12 @@ public class Messages extends NLS {
     public static String VeriniceLinkTableEditor_8;
     public static String VeriniceLinkTableUtil_0;
     public static String VeriniceLinkTableUtil_1;
+    public static String LinkTableColumn_CnaLink_Property_Title;
+    public static String LinkTableColumn_CnaLink_Property_Description;
+    public static String LinkTableColumn_CnaLink_Property_C;
+    public static String LinkTableColumn_CnaLink_Property_I;
+    public static String LinkTableColumn_CnaLink_Property_A;
+    public static String LinkTableColumn_CnaLink_Property_Unknown;
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
             .getBundle(BUNDLE_NAME);
