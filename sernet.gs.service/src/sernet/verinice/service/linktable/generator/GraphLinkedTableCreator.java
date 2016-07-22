@@ -166,7 +166,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
             }
 
             stringTable.add(Arrays.asList(row));
-            LOG.debug("Add row to link table: " + row);
+            LOG.debug("Add row to link table: [" + StringUtils.join(row, ", ") + "]");
         }
 
         Collections.sort(stringTable, new RowComparator());
