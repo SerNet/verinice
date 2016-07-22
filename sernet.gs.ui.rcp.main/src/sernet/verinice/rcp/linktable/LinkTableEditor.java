@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -34,19 +35,22 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.*;
-import org.eclipse.ui.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorRegistry;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.rcp.linktable.handlers.ExportLinkTableHandler;
 import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
 import sernet.verinice.rcp.linktable.ui.LinkTableFieldListener;
-import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 
 /**
@@ -65,6 +69,7 @@ public class LinkTableEditor extends EditorPart {
 
     private LinkTableFieldListener contentObserver;
     private String toolTip = null;
+    private boolean validQuery = false;
 
     /* (non-Javadoc)
      * @see org.eclipse.ui.part.EditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
@@ -151,6 +156,7 @@ public class LinkTableEditor extends EditorPart {
                     setTitleImage(defaultImage);
                     setPartName(linkTableEditorInput.getName());
                     toolTip = getPartName();
+                    validQuery = true;
                 } else {
                     ImageDescriptor[] descriptors = new ImageDescriptor[5];
                     Image warningImage = ImageCache.getInstance().getImage(ImageCache.ERROR_DECORATOR);
@@ -164,6 +170,7 @@ public class LinkTableEditor extends EditorPart {
                     setPartName(linkTableEditorInput.getName() + Messages.VeriniceLinkTableEditor_7);
                     toolTip = validationResult.getMessage();
                     firePropertyChange(IEditorPart.PROP_DIRTY);
+                    validQuery = false;
                 }
                 firePropertyChange(IEditorPart.PROP_TITLE);
 
@@ -184,9 +191,11 @@ public class LinkTableEditor extends EditorPart {
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
-        String filePath = getFilePath(linkTableEditorInput, false);
-        if (filePath != null) {
-            executeSave(filePath);
+        if (wantSaveEvenIfInvalid()) {
+            String filePath = getFilePath(linkTableEditorInput, false);
+            if (filePath != null) {
+                executeSave(filePath);
+            }
         }
     }
     
@@ -195,12 +204,31 @@ public class LinkTableEditor extends EditorPart {
      */
     @Override
     public void doSaveAs() {
-        String filePath = getFilePath(linkTableEditorInput, true);
-        if (filePath != null) {
-            executeSave(filePath);         
+        if (wantSaveEvenIfInvalid()) {
+            String filePath = getFilePath(linkTableEditorInput, true);
+            if (filePath != null) {
+                executeSave(filePath);
+            }
         }
     }
     
+    private boolean wantSaveEvenIfInvalid() {
+
+        if (!validQuery) {
+            MessageDialog confirmInvalidInput = new MessageDialog(
+                    Display.getCurrent().getActiveShell(),
+                    Messages.LinkTableHandler_1,
+                    null,
+                    Messages.LinkTableHandler_2
+                            + Messages.LinkTableHandler_3,
+                    MessageDialog.WARNING,
+                    new String[] { Messages.LinkTableEditor_1, Messages.LinkTableEditor_2 }, 0);
+
+            return confirmInvalidInput.open() == 0;
+        }
+        return true;
+    }
+
     public static String getEditorTitle(String filePath) {
         String title = TITLE_DEFAULT;
         if(filePath!=null) {
@@ -221,6 +249,7 @@ public class LinkTableEditor extends EditorPart {
         setPartName(getEditorTitle(filePath));
         isDirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
+        contentObserver.validate();
     }
 
     private String getFilePath(LinkTableEditorInput linkTableEditorInput, boolean isSaveAs) {
