@@ -18,9 +18,13 @@
  ******************************************************************************/
 package sernet.verinice.rcp.linktable.ui.multiselectiondialog;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -31,7 +35,10 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 
 import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
 import sernet.verinice.rcp.linktable.ui.Messages;
@@ -156,7 +163,7 @@ public class LinkTableMultiSelectionList {
         for (String id : allUsedRelationIds) {
             ++i;
             Button checkbox = new Button(list, SWT.CHECK | SWT.LEFT);
-            checkbox.setText(modelService.getRelationLabel(id));
+            checkbox.setText(id + " (" + modelService.getRelationLabel(id) + ")");
             checkbox.setData(id);
             checkbox.pack();
 
