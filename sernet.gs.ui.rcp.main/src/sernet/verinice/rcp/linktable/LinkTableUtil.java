@@ -93,16 +93,27 @@ public class LinkTableUtil {
      *            - the possible extensions to filter in the {@link FileDialog}
      * @param style
      *            - SWT.OPEN or SWT.SAVE
+     * @param defaultFileName
+     *            - the default filename to be used, just considered if the
+     *            style is SWT.SAVE
      * @return the absolute filepath to the chosen location
      */
     public static String createFilePath(Shell shell, String text, String defaultFolderPreference,
-            Map<String, String> filterExtensions, int style) {
+            Map<String, String> filterExtensions, int style, String defaultFileName) {
         FileDialog dialog = new FileDialog(shell, style);
 
         String extension = filterExtensions.keySet().iterator().next().substring(1);
         dialog.setText(text);
         dialog.setFilterPath(getDirectory(defaultFolderPreference));
 
+        String filename;
+        if (defaultFileName != null && style == SWT.SAVE) {
+            filename = defaultFileName;
+        } else {
+            filename = "File" + extension;
+        }
+        filename = addExtensionIfMissing(extension, filename);
+        dialog.setFileName(filename);
         ArrayList<String> extensions = new ArrayList<>(filterExtensions.keySet());
         extensions.add("*.*"); //$NON-NLS-1$
         dialog.setFilterExtensions(extensions.toArray(new String[] {})); // $NON-NLS-1$
@@ -119,10 +130,35 @@ public class LinkTableUtil {
             String dir = file.getParent();
             Activator.getDefault().getPreferenceStore().setValue(defaultFolderPreference, dir);
         }
+        filePath = addExtensionIfMissing(extension, filePath);
+        return filePath;
+    }
+
+    private static String addExtensionIfMissing(String extension, String filePath) {
         if (filePath != null && !filePath.endsWith(extension)) {
-            filePath += extension;
+            return filePath+= extension;
         }
         return filePath;
+    }
+
+    /**
+     * 
+     * @param shell
+     *            - the shell for the {@link FileDialog}
+     * @param text
+     *            - the header for the {@link FileDialog}
+     * @param defaultFolderPreference
+     *            - the id of the defaultFolderpreferences to be updated for the
+     *            default directory
+     * @param filterExtensions
+     *            - the possible extensions to filter in the {@link FileDialog}
+     * @param style
+     *            - SWT.OPEN or SWT.SAVE
+     * @return the absolute filepath to the chosen location
+     */
+    public static String createFilePath(Shell shell, String text, String defaultFolderPreference,
+            Map<String, String> filterExtensions, int style) {
+        return createFilePath(shell, text, defaultFolderPreference, filterExtensions, style, null);
     }
 
     private static String getDirectory(String defaultFolderPreference) {
@@ -142,9 +178,10 @@ public class LinkTableUtil {
      * 
      * @see #createFilePath(Shell, String, String, Map, int)
      */
-    public static String createVltFilePath(Shell shell, String text, int style) {
+    public static String createVltFilePath(Shell shell, String text, int style,
+            String defaultFileName) {
         return createFilePath(shell, text, PreferenceConstants.DEFAULT_FOLDER_VLT, vltExtensions,
-                style);
+                style, defaultFileName);
     }
 
     /**
@@ -152,9 +189,9 @@ public class LinkTableUtil {
      * 
      * @see #createFilePath(Shell, String, String, Map, int)
      */
-    public static String createCsvFilePath(Shell shell, String text) {
+    public static String createCsvFilePath(Shell shell, String text, String defaultFileName) {
         return createFilePath(shell, text, PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT,
-                csvExtensions, SWT.SAVE);
+                csvExtensions, SWT.SAVE, defaultFileName);
     }
 
     /**

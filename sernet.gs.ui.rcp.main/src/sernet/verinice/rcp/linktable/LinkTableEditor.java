@@ -256,7 +256,8 @@ public class LinkTableEditor extends EditorPart {
         String filePath = linkTableEditorInput.getFilePath();
         if (isSaveAs || filePath == null) {
             filePath = LinkTableUtil.createVltFilePath(
-                    Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4, SWT.SAVE);
+                    Display.getCurrent().getActiveShell(), Messages.VeriniceLinkTableEditor_4,
+                    SWT.SAVE, linkTableEditorInput.getName());
             if (filePath != null) {
                 EditorRegistry.getInstance().closeEditor(linkTableEditorInput.getId());
                 linkTableEditorInput.setFilePath(filePath);

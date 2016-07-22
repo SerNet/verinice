@@ -108,7 +108,8 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
     protected VeriniceLinkTable createLinkTable() {
 
         setShell();
-        final String filePath = LinkTableUtil.createVltFilePath(shell, Messages.ExportLinkTableHandler_2, SWT.OPEN);
+        final String filePath = LinkTableUtil.createVltFilePath(shell,
+                Messages.ExportLinkTableHandler_2, SWT.OPEN, null);
         VeriniceLinkTable veriniceLinkTableTemp = null;
         if (filePath != null) {
             veriniceLinkTableTemp = VeriniceLinkTableIO.read(filePath);
@@ -134,7 +135,7 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
 
 
         if(veriniceLinkTable.useAllScopes()){
-            csvFilePath = createCsvFilePath(shell, Messages.ExportLinkTableHandler_3);
+            csvFilePath = createCsvFilePath(shell, Messages.ExportLinkTableHandler_3, null);
         } else{
             csvFilePath = LinkTableUtil.createCsvFilePathAndHandleScopes(shell,
                     Messages.ExportLinkTableHandler_3, veriniceLinkTable);

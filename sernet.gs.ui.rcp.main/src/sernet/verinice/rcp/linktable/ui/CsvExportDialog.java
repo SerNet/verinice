@@ -164,7 +164,7 @@ public class CsvExportDialog extends TitleAreaDialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
 
-                filePath = LinkTableUtil.createCsvFilePath(getShell(), label);
+                filePath = LinkTableUtil.createCsvFilePath(getShell(), label, organizationTitle);
                 txtLocation.setText(filePath);
             }
 
