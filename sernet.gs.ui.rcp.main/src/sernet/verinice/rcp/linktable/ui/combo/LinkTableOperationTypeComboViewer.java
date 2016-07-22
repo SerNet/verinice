@@ -25,7 +25,10 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import sernet.verinice.rcp.linktable.ui.LinkTableColumn;
 import sernet.verinice.service.model.IObjectModelService;
@@ -167,6 +170,38 @@ public class LinkTableOperationTypeComboViewer extends LinkTableComboViewer {
     @Override
     protected Set<String> doGetAllRelationTypes() {
         return Collections.emptySet();
+    }
+
+    @Override
+    public LinkTableComboViewer copy(LinkTableComboViewer leftCombo, Composite newParent,
+            Control formerElement) {
+
+        if (operationType == LinkTableOperationType.RELATION) {
+
+            Composite newParentComposite = new Composite(newParent, SWT.NONE);
+            newParentComposite.setLayout(new FormLayout());
+            newParentComposite.setLayoutData(getDefaultFormData(formerElement));
+
+            LinkTableComboViewer newViewer = createCopy(leftCombo, ltrColumn,
+                    newParentComposite);
+
+            newViewer.getCombo().select(this.getCombo().getSelectionIndex());
+            if (rightCombo != null) {
+
+                newViewer.selectionChanged(null);
+                newViewer.rightCombo.getCombo()
+                        .select(this.rightCombo.getCombo().getSelectionIndex());
+                newViewer.rightCombo.selectionChanged(null);
+                LinkTableComboViewer relationPropertyViewer = newViewer.rightCombo.rightCombo.rightCombo;
+                int selectesRelationProperty = this.rightCombo.rightCombo.rightCombo.getCombo()
+                        .getSelectionIndex();
+                relationPropertyViewer.getCombo().select(selectesRelationProperty);
+            }
+            return newViewer;
+        } else {
+            return super.copy(leftCombo, newParent, formerElement);
+        }
+
     }
 
 }
