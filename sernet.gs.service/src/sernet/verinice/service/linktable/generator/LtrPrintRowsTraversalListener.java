@@ -25,11 +25,9 @@ import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RI
 import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_VALUE_I;
 import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_TITLE;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -66,7 +64,7 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
     private Map<CnATreeElement, Edge> incomingEdges = new HashMap<>();
     private Path path;
     private final VeriniceGraph dataGraph;
-    final List<Map<String, String>> result = new ArrayList<>();
+    private VeriniceGraphResult result = new VeriniceGraphResult();
 
     private Set<String> columnHeader;
 
@@ -88,11 +86,13 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
      * @param columnHeader
      *            A list of all header of a LTR-Table
      */
-    LtrPrintRowsTraversalListener(Path path, TraversalFilter filter, VeriniceGraph graph, Set<String> columnHeader) {
+    LtrPrintRowsTraversalListener(Path path, TraversalFilter filter, VeriniceGraph graph,
+            Set<String> columnHeader, VeriniceGraphResult result) {
         this.path = path;
         this.filter = filter;
         this.dataGraph = graph;
         this.columnHeader = columnHeader;
+        this.result = result;
     }
 
     @Override
@@ -106,27 +106,28 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
 
         LOG.debug("finished node: " + node.getTitle() + ":" + node.getTypeId());
 
-        if (isLeaf(node, depth)) {
-            printRow();
+        if (isPathLeaf(depth)) {
+            buildRow();
+
+            result.getCompletelyTraversedRows().add(buildRow());
+        } else {
+            if (isLeafForElement(node, depth)) {
+                result.getPartlyTraversedRows().add(buildRow());
+            }
         }
 
         cnaTreeElementQueue.remove(node);
         incomingEdges.remove(node);
     }
 
-    private boolean isLeaf(CnATreeElement node, int depth) {
-
-        Set<Edge> allEdges = dataGraph.getGraph().edgesOf(node);
-        if (path.getPathElements().size() < depth + 2) {
-            return depth == path.getPathElements().size() - 1;
-        }
-
-        return validOutcominEdges(node, depth, allEdges);
+    private boolean isPathLeaf(int depth) {
+        return depth == path.getPathElements().size() - 1;
     }
 
-    private boolean validOutcominEdges(CnATreeElement node, int depth, Set<Edge> edgesOf) {
+    private boolean isLeafForElement(CnATreeElement node, int depth) {
+        Set<Edge> allEdges = dataGraph.getGraph().edgesOf(node);
         boolean isLeaf = true;
-        for (Edge edge : edgesOf) {
+        for (Edge edge : allEdges) {
             CnATreeElement target = edge.getSource() == node? edge.getTarget() : edge.getSource();
             CnATreeElement source = edge.getSource() != node? edge.getTarget() : edge.getSource();
             isLeaf &= !filter.edgeFilter(edge, source, target, depth);
@@ -135,7 +136,7 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
         return isLeaf;
     }
 
-    void printRow() {
+    private Map<String, String> buildRow() {
 
         LOG.debug("is printed: " + path);
 
@@ -144,7 +145,6 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
         int i = 0;
 
         while (iterator.hasNext()) {
-
             CnATreeElement next = iterator.next();
             VqlNode pathElement = path.getPathElements().get(i).node;
             VqlEdge incomingEdge = path.getPathElements().get(i).edge;
@@ -153,8 +153,8 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
 
             i++;
         }
+        return row;
 
-        result.add(row);
     }
 
     private void printRow(Map<String, String> row, CnATreeElement node, VqlEdge incominVqlgEdge) {
@@ -248,7 +248,7 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
      * </pre>
      *
      */
-    public List<Map<String, String>> getResult() {
+    public VeriniceGraphResult getResult() {
         return result;
     }
 

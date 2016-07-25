@@ -23,6 +23,7 @@ import static sernet.verinice.interfaces.graph.DepthFirstConditionalSearchPathes
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -134,18 +135,56 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
     private List<Map<String, String>> doCreateTable(Set<CnATreeElement> roots) {
         List<Map<String, String>> table = new ArrayList<>();
         for (CnATreeElement potentialRoot : roots) {
+            VeriniceGraphResult resultSet = new VeriniceGraphResult();
             for (Path p : vqlAst.getPaths()) {
-                List<Map<String, String>> rows = scanVeriniceGraph(potentialRoot, p);
-                table.addAll(rows);
+                scanVeriniceGraph(potentialRoot, p, resultSet);
             }
+            table.addAll(mergeRows(resultSet));
         }
         return table;
     }
 
-    private List<Map<String, String>> scanVeriniceGraph(CnATreeElement potentialRoot, final Path p) {
+    private Collection<? extends Map<String, String>> mergeRows(VeriniceGraphResult resultSet) {
+
+        List<Map<String, String>> completelyTraversedRows = resultSet.getCompletelyTraversedRows();
+        List<Map<String, String>> mergedRows = new ArrayList<>(completelyTraversedRows);
+        List<Map<String, String>> partlyTraversedRows = new ArrayList<>(
+                resultSet.getPartlyTraversedRows());
+        Map<String, String> partRow;
+        while (!partlyTraversedRows.isEmpty()) {
+            partRow = partlyTraversedRows.remove(0);
+            boolean isIncluded = false;
+            for (Map<String, String> completeTraversedRow : completelyTraversedRows) {
+                if (isAlreadyIncluded(partRow, completeTraversedRow)) {
+                    isIncluded = true;
+                    break;
+                }
+            }
+            if (!isIncluded) {
+                mergedRows.add(partRow);
+            }
+        }
+        return mergedRows;
+    }
+
+    private boolean isAlreadyIncluded(Map<String, String> partRow,
+            Map<String, String> completeTraversedRow) {
+        boolean isAlreadyIncluded = true;
+        for (Entry<String, String> cell : partRow.entrySet()) {
+            if (!cell.getValue().isEmpty()
+                    && !completeTraversedRow.entrySet().contains(cell)) {
+                isAlreadyIncluded = false;
+                break;
+            }
+        }
+        return isAlreadyIncluded;
+    }
+
+    private VeriniceGraphResult scanVeriniceGraph(CnATreeElement potentialRoot, final Path p,
+            VeriniceGraphResult resultSet) {
 
         filter = new LtrTraversalFilter(p);
-        traversalListener = new LtrPrintRowsTraversalListener(p, filter, veriniceDataGraph, getLTRHeaderColumnPathes());
+        traversalListener = new LtrPrintRowsTraversalListener(p, filter, veriniceDataGraph, getLTRHeaderColumnPathes(), resultSet);
 
 
         traverse(veriniceDataGraph, potentialRoot, filter, traversalListener);
