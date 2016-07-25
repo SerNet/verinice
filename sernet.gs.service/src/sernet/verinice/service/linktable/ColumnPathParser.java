@@ -20,15 +20,23 @@
 package sernet.verinice.service.linktable;
 
 import java.io.StringReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import antlr.*;
+import antlr.ANTLRException;
+import antlr.CommonAST;
+import antlr.RecognitionException;
+import antlr.TokenStreamException;
 import antlr.collections.AST;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.linktable.antlr.*;
+import sernet.verinice.service.linktable.antlr.VqlLexer;
+import sernet.verinice.service.linktable.antlr.VqlParser;
+import sernet.verinice.service.linktable.antlr.VqlParserTokenTypes;
 
 /**
  * Parser for column pathes of Link Tables.
@@ -376,7 +384,9 @@ public abstract class ColumnPathParser {
         String alias = path.get(toIndex);
 
         if (alias.equalsIgnoreCase("as")) {
-            return path.get(path.size() - 1);
+            String aliasValue = path.get(path.size() - 1);
+            aliasValue = aliasValue.replace("__", " ");
+            return aliasValue;
         }
 
         return StringUtils.EMPTY;

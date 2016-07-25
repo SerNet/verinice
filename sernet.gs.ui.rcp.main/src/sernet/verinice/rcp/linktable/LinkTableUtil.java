@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -63,6 +64,8 @@ public class LinkTableUtil {
     private static HashMap<String, String> csvExtensions = null;
     private static CsvExportDialog csvDialog;
     private static HUIObjectModelLoader loader;
+
+    private static final String ALIAS_DELIMITER = " AS ";
 
     static {
         loader = (HUIObjectModelLoader) HUIObjectModelLoader.getInstance();
@@ -337,4 +340,40 @@ public class LinkTableUtil {
             return Messages.LinkTableColumn_CnaLink_Property_Unknown;
         }
     }
+
+    public static String createAlias(String columnPath) {
+        String[] columnPathElements = columnPath.split("\\.|\\<|\\>|\\/|\\:");
+        int lastElement = columnPathElements.length - 1;
+        String propertyId;
+        String message;
+        try {
+            propertyId = columnPathElements[lastElement];
+            String element = columnPathElements[lastElement - 1];
+            LOG.debug(columnPath);
+            LOG.debug("Element:" + columnPathElements[lastElement - 1]);
+            LOG.debug("Property:" + propertyId);
+            if (columnPath.contains(LinkTableOperationType.RELATION.getOutput())) {
+                message = LinkTableUtil.getCnaLinkPropertyMessage(propertyId);
+            } else {
+                message = loader.getLabel(propertyId) + " ("
+                        + loader.getLabel(element) + ")";
+            }
+        } catch (IndexOutOfBoundsException e) {
+            LOG.error("String-split did not work, using old way", e);
+            int propertyBeginning = columnPath
+                    .lastIndexOf(LinkTableOperationType.PROPERTY.getOutput());
+            propertyId = columnPath.substring(propertyBeginning + 1);
+            if (columnPath.contains(":")) {
+                message = LinkTableUtil.getCnaLinkPropertyMessage(propertyId);
+            } else {
+                message = loader.getLabel(propertyId);
+            }
+        }
+        message = StringUtils.replaceEachRepeatedly(message,
+                new String[] { "/", ":", ".", "<", ">" }, new String[] { "", "", "", "", "" });
+        message = message.replaceAll(" ", "__");
+
+        return columnPath + ALIAS_DELIMITER + message;
+    }
+
 }

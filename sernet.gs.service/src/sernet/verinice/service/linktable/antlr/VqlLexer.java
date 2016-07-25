@@ -3,28 +3,10 @@
 package sernet.verinice.service.linktable.antlr;
 
 import java.io.InputStream;
-import antlr.TokenStreamException;
-import antlr.TokenStreamIOException;
-import antlr.TokenStreamRecognitionException;
-import antlr.CharStreamException;
-import antlr.CharStreamIOException;
-import antlr.ANTLRException;
 import java.io.Reader;
 import java.util.Hashtable;
-import antlr.CharScanner;
-import antlr.InputBuffer;
-import antlr.ByteBuffer;
-import antlr.CharBuffer;
-import antlr.Token;
-import antlr.CommonToken;
-import antlr.RecognitionException;
-import antlr.NoViableAltForCharException;
-import antlr.MismatchedCharException;
-import antlr.TokenStream;
-import antlr.ANTLRHashString;
-import antlr.LexerSharedInputState;
-import antlr.collections.impl.BitSet;
-import antlr.SemanticException;
+
+import antlr.*;
 
 public class VqlLexer extends antlr.CharScanner implements VqlParserTokenTypes, TokenStream
  {
@@ -104,7 +86,9 @@ tryAgain:
 				case 'k':  case 'l':  case 'm':  case 'n':
 				case 'o':  case 'p':  case 'q':  case 'r':
 				case 's':  case 't':  case 'u':  case 'v':
-				case 'w':  case 'x':  case 'y':  case 'z':
+                case 'w':  case 'x':  case 'y':  case 'z':
+                case 'ä':  case 'ö':  case 'ü':  case 'Ä':
+                case 'Ö':  case 'Ü':  case '(':  case ')':
 				{
 					mAlphanumeric(true);
 					theRetToken=_returnToken;
@@ -161,7 +145,6 @@ tryAgain:
 	protected final void mWS(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = WS;
-		int _saveIndex;
 		
 		{
 		int _cnt21=0;
@@ -222,7 +205,6 @@ tryAgain:
 	public final void mLINK(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = LINK;
-		int _saveIndex;
 		
 		match('/');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -235,7 +217,6 @@ tryAgain:
 	public final void mCHILD(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = CHILD;
-		int _saveIndex;
 		
 		match('>');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -248,7 +229,6 @@ tryAgain:
 	public final void mPARENT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = PARENT;
-		int _saveIndex;
 		
 		match('<');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -261,7 +241,6 @@ tryAgain:
 	public final void mPROP(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = PROP;
-		int _saveIndex;
 		
 		match('.');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -274,7 +253,6 @@ tryAgain:
 	public final void mLT(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
 		int _ttype; Token _token=null; int _begin=text.length();
 		_ttype = LT;
-		int _saveIndex;
 		
 		match(':');
 		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
@@ -283,71 +261,146 @@ tryAgain:
 		}
 		_returnToken = _token;
 	}
-	
-	public final void mAlphanumeric(boolean _createToken) throws RecognitionException, CharStreamException, TokenStreamException {
-		int _ttype; Token _token=null; int _begin=text.length();
-		_ttype = Alphanumeric;
-		int _saveIndex;
-		
-		{
-		int _cnt29=0;
-		_loop29:
-		do {
-			switch ( LA(1)) {
-			case '_':
-			{
-				match('_');
-				break;
-			}
-			case '-':
-			{
-				match('-');
-				break;
-			}
-			case '0':  case '1':  case '2':  case '3':
-			case '4':  case '5':  case '6':  case '7':
-			case '8':  case '9':
-			{
-				matchRange('0','9');
-				break;
-			}
-			case 'A':  case 'B':  case 'C':  case 'D':
-			case 'E':  case 'F':  case 'G':  case 'H':
-			case 'I':  case 'J':  case 'K':  case 'L':
-			case 'M':  case 'N':  case 'O':  case 'P':
-			case 'Q':  case 'R':  case 'S':  case 'T':
-			case 'U':  case 'V':  case 'W':  case 'X':
-			case 'Y':  case 'Z':
-			{
-				matchRange('A','Z');
-				break;
-			}
-			case 'a':  case 'b':  case 'c':  case 'd':
-			case 'e':  case 'f':  case 'g':  case 'h':
-			case 'i':  case 'j':  case 'k':  case 'l':
-			case 'm':  case 'n':  case 'o':  case 'p':
-			case 'q':  case 'r':  case 's':  case 't':
-			case 'u':  case 'v':  case 'w':  case 'x':
-			case 'y':  case 'z':
-			{
-				matchRange('a','z');
-				break;
-			}
-			default:
-			{
-				if ( _cnt29>=1 ) { break _loop29; } else {throw new NoViableAltForCharException((char)LA(1), getFilename(), getLine(), getColumn());}
-			}
-			}
-			_cnt29++;
-		} while (true);
-		}
-		if ( _createToken && _token==null && _ttype!=Token.SKIP ) {
-			_token = makeToken(_ttype);
-			_token.setText(new String(text.getBuffer(), _begin, text.length()-_begin));
-		}
-		_returnToken = _token;
-	}
-	
-	
-	
+
+    public final void mAlphanumeric(boolean _createToken)
+            throws RecognitionException, CharStreamException, TokenStreamException {
+        int _ttype;
+        Token _token = null;
+        int _begin = text.length();
+        _ttype = Alphanumeric;
+
+        {
+            int _cnt29 = 0;
+            _loop29: do {
+                switch (LA(1)) {
+                case '_': {
+                    match('_');
+                    break;
+                }
+                case '-': {
+                    match('-');
+                    break;
+                }
+                case '(': {
+                    match('(');
+                    break;
+                }
+                case ')': {
+                    match(')');
+                    break;
+                }
+                case 'ä': {
+                    match('ä');
+                    break;
+                }
+                case 'ö': {
+                    match('ö');
+                    break;
+                }
+                case 'ü': {
+                    match('ü');
+                    break;
+                }
+                case 'Ä': {
+                    match('Ä');
+                    break;
+                }
+                case 'Ö': {
+                    match('Ö');
+                    break;
+                }
+                case 'Ü': {
+                    match('Ü');
+                    break;
+                }
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9': {
+                    matchRange('0', '9');
+                    break;
+                }
+                case 'A':
+                case 'B':
+                case 'C':
+                case 'D':
+                case 'E':
+                case 'F':
+                case 'G':
+                case 'H':
+                case 'I':
+                case 'J':
+                case 'K':
+                case 'L':
+                case 'M':
+                case 'N':
+                case 'O':
+                case 'P':
+                case 'Q':
+                case 'R':
+                case 'S':
+                case 'T':
+                case 'U':
+                case 'V':
+                case 'W':
+                case 'X':
+                case 'Y':
+                case 'Z': {
+                    matchRange('A', 'Z');
+                    break;
+                }
+                case 'a':
+                case 'b':
+                case 'c':
+                case 'd':
+                case 'e':
+                case 'f':
+                case 'g':
+                case 'h':
+                case 'i':
+                case 'j':
+                case 'k':
+                case 'l':
+                case 'm':
+                case 'n':
+                case 'o':
+                case 'p':
+                case 'q':
+                case 'r':
+                case 's':
+                case 't':
+                case 'u':
+                case 'v':
+                case 'w':
+                case 'x':
+                case 'y':
+                case 'z': {
+                    matchRange('a', 'z');
+                    break;
+                }
+                default: {
+                    if (_cnt29 >= 1) {
+                        break _loop29;
+                    } else {
+                        throw new NoViableAltForCharException((char) LA(1), getFilename(),
+                                getLine(), getColumn());
+                    }
+                }
+                }
+                _cnt29++;
+            } while (true);
+        }
+        if (_createToken && _token == null && _ttype != Token.SKIP) {
+            _token = makeToken(_ttype);
+            _token.setText(new String(text.getBuffer(), _begin, text.length() - _begin));
+        }
+        _returnToken = _token;
+    }
+
 	}

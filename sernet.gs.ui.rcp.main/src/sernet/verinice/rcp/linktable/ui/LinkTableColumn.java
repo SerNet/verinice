@@ -67,7 +67,7 @@ public class LinkTableColumn {
     private IObjectModelService contentService;
     private LinkTableElementComboViewer firstCombo;
 
-    private static final String ALIAS_DELIMITER = " AS ";
+
 
     public LinkTableColumn(LinkTableColumn copy, int number) {
         this.ltrParent = copy.ltrParent;
@@ -311,20 +311,7 @@ public class LinkTableColumn {
 
     public String getColumnPath() {
        String columnPath = firstCombo.getColumnPath();
-       return createAlias(columnPath);
-    }
-
-    private String createAlias(String columnPath) {
-        int propertyBeginning = columnPath.lastIndexOf(".");
-           String propertyId = columnPath.substring(propertyBeginning + 1);
-           if (columnPath.contains(":")) {
-            columnPath = columnPath + ALIAS_DELIMITER
-                    + LinkTableUtil.getCnaLinkPropertyMessage(propertyId);
-           } else {
-            String message = contentService.getLabel(propertyId);
-               columnPath = columnPath + ALIAS_DELIMITER + message;
-           }
-        return columnPath;
+        return LinkTableUtil.createAlias(columnPath);
     }
 
 

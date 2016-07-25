@@ -515,7 +515,7 @@ public class HUIObjectModelService implements IObjectModelService {
         PropertyGroup propertyGroup = getHuiTypeFactory().getPropertyGroup(entityId, propertyId);
         if (propertyGroup != null) {
             label.append(getLabel(propertyGroup.getId()));
-            label.append(": ");
+            label.append(" - ");
         }
         label.append(getLabel(propertyId));
 

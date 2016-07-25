@@ -2,24 +2,15 @@
 
 package sernet.verinice.service.linktable.antlr;
 
-import antlr.TokenBuffer;
-import antlr.TokenStreamException;
-import antlr.TokenStreamIOException;
-import antlr.ANTLRException;
-import antlr.LLkParser;
-import antlr.Token;
-import antlr.TokenStream;
-import antlr.RecognitionException;
-import antlr.NoViableAltException;
-import antlr.MismatchedTokenException;
-import antlr.SemanticException;
-import antlr.ParserSharedInputState;
-import antlr.collections.impl.BitSet;
-import antlr.collections.AST;
-import java.util.Hashtable;
 import antlr.ASTFactory;
 import antlr.ASTPair;
-import antlr.collections.impl.ASTArray;
+import antlr.NoViableAltException;
+import antlr.ParserSharedInputState;
+import antlr.RecognitionException;
+import antlr.TokenBuffer;
+import antlr.TokenStream;
+import antlr.TokenStreamException;
+import antlr.collections.AST;
 
 public class VqlParser extends antlr.LLkParser       implements VqlParserTokenTypes
  {
@@ -311,7 +302,7 @@ public VqlParser(ParserSharedInputState state) {
 		AST tmp11_AST = null;
 		tmp11_AST = astFactory.create(LT(1));
 		astFactory.addASTChild(currentAST, tmp11_AST);
-		match(Alphanumeric);
+        match(Alphanumeric);
 		aliasName_AST = (AST)currentAST.root;
 		returnAST = aliasName_AST;
 	}
