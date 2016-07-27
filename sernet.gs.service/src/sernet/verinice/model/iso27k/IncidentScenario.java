@@ -34,6 +34,7 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
     private static final Logger LOG = Logger.getLogger(IncidentScenario.class);
     
 	public static final String TYPE_ID = "incident_scenario";  //$NON-NLS-1$
+	public static final String UNSECURE_TYPE_ID = "unsecureIncidentScenarioDAO"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "incident_scenario_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "incident_scenario_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "incident_scenario_tag"; //$NON-NLS-1$

@@ -45,7 +45,6 @@ public class RunRiskAnalysisAction extends RightsEnabledAction {
     public RunRiskAnalysisAction(IWorkbenchWindow window) {
         setText(Messages.RunRiskAnalysisAction_0);
         setId(ID);
-        //setActionDefinitionId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_RISK));
         setRightID(ActionRightIDs.RISKANALYSIS);
         if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
