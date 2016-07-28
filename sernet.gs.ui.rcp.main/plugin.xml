@@ -13,7 +13,8 @@
    </extension>
    <extension
          point="org.eclipse.ui.perspectives">
-      <perspective
+         <!-- GS-perspective -->
+      <perspective 
             class="sernet.gs.ui.rcp.main.Perspective"
             icon="icons/gs.png"
             id="sernet.gs.ui.rcp.main.perspective"
