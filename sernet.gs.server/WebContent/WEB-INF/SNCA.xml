@@ -3302,6 +3302,10 @@ the value between <param></param> will be used directly if no string is found fo
             focus="true"
             required="true"
             tags="Basic,VDA-ISA, VDA_ISA_Audit" />
+        <huiproperty
+            name="Abbreviation"
+            id="org_abbr"
+            tags="Basic" />
                     
         <huiproperty
             name="Description"
@@ -3338,10 +3342,6 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
 	       name="Contact email" id="org_isa_contmail" 
            tags="VDA-ISA" />
-        <huiproperty
-            name="Abbreviation"
-            id="org_abbr"
-            tags="Risk" />
         <huiproperty
             id="org_tag"
             name="Tags"
