@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Wrapper for the rows built by {@link LtrPrintRowsTraversalListener}.
+ * They have to be seperated to prevent row duplications.
+ * 
  * @author Ruth Motza <rm[at]sernet[dot]de>
  */
 public class VeriniceGraphResult {

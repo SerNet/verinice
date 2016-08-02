@@ -341,6 +341,9 @@ public class LinkTableUtil {
         }
     }
 
+    /**
+     * create an alias for a columnPath to improve headers in csv-file.
+     */
     public static String createAlias(String columnPath) {
         String[] columnPathElements = columnPath.split("\\.|\\<|\\>|\\/|\\:");
         int lastElement = columnPathElements.length - 1;
@@ -359,7 +362,7 @@ public class LinkTableUtil {
                         + loader.getLabel(element) + ")";
             }
         } catch (IndexOutOfBoundsException e) {
-            LOG.error("String-split did not work, using old way", e);
+            LOG.warn("String-split did not work, using old way", e);
             int propertyBeginning = columnPath
                     .lastIndexOf(LinkTableOperationType.PROPERTY.getOutput());
             propertyId = columnPath.substring(propertyBeginning + 1);

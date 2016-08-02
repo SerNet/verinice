@@ -195,6 +195,8 @@ public class LinkTableEditor extends EditorPart {
             String filePath = getFilePath(linkTableEditorInput, false);
             if (filePath != null) {
                 executeSave(filePath);
+            } else {
+                LOG.error("filePath is null!!!");
             }
         }
     }
@@ -208,6 +210,8 @@ public class LinkTableEditor extends EditorPart {
             String filePath = getFilePath(linkTableEditorInput, true);
             if (filePath != null) {
                 executeSave(filePath);
+            } else {
+                LOG.error("filePath is null!!!");
             }
         }
     }

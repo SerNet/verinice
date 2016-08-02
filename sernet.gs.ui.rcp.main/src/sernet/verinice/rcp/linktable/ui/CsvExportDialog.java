@@ -30,6 +30,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -66,6 +67,7 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
  * @author Ruth Motza <rm[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@SuppressWarnings("restriction")
 public class CsvExportDialog extends TitleAreaDialog {
     private static final Logger LOG = Logger.getLogger(CsvExportDialog.class);
 
@@ -257,12 +259,9 @@ public class CsvExportDialog extends TitleAreaDialog {
         File file = new File(filePath);
         if(file.exists() && !file.isDirectory()) { 
             MessageDialog mDialog = new MessageDialog(
-                    getShell(),
-                    Messages.CsvExportDialog_9 + file.getName()
-                            + Messages.CsvExportDialog_11,
+                    getShell(), NLS.bind(Messages.CsvExportDialog_9, file.getName()),
                     null,
-                    Messages.CsvExportDialog_14 + file.getParentFile().getName()
-                            + Messages.CsvExportDialog_15,
+                    NLS.bind(Messages.CsvExportDialog_14, file.getParentFile().getName()),
                     MessageDialog.WARNING,
                     new String[] { Messages.CsvExportDialog_16, Messages.CsvExportDialog_17 }, 0);
             int result = mDialog.open();

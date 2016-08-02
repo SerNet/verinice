@@ -18,7 +18,6 @@ childType : CHILD typeName;
 
 linkType :  LT linkTypeName;
 property : PROP propertyName;
-
 alias : as aliasName ;
 typeName : Alphanumeric;
 linkTypeName : Alphanumeric;

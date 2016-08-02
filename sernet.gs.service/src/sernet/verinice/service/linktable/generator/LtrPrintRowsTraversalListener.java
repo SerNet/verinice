@@ -124,10 +124,13 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
         return depth == path.getPathElements().size() - 1;
     }
 
+    /**
+     * Returns wether the element-node has any outgoing edges left.
+     */
     private boolean isLeafForElement(CnATreeElement node, int depth) {
-        Set<Edge> allEdges = dataGraph.getGraph().edgesOf(node);
+        Set<Edge> allEdgesOfNode = dataGraph.getGraph().edgesOf(node);
         boolean isLeaf = true;
-        for (Edge edge : allEdges) {
+        for (Edge edge : allEdgesOfNode) {
             CnATreeElement target = edge.getSource() == node? edge.getTarget() : edge.getSource();
             CnATreeElement source = edge.getSource() != node? edge.getTarget() : edge.getSource();
             isLeaf &= !filter.edgeFilter(edge, source, target, depth);

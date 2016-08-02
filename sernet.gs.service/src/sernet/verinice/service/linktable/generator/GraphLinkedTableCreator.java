@@ -144,6 +144,11 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         return table;
     }
 
+    /**
+     * Removes the problem with the duplicated lines
+     * It adds all the partly filled rows just if there is no other row already
+     * containing everything inside
+     */
     private Collection<? extends Map<String, String>> mergeRows(VeriniceGraphResult resultSet) {
 
         List<Map<String, String>> completelyTraversedRows = resultSet.getCompletelyTraversedRows();
@@ -184,7 +189,8 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
             VeriniceGraphResult resultSet) {
 
         filter = new LtrTraversalFilter(p);
-        traversalListener = new LtrPrintRowsTraversalListener(p, filter, veriniceDataGraph, getLTRHeaderColumnPathes(), resultSet);
+        traversalListener = new LtrPrintRowsTraversalListener(p, filter, veriniceDataGraph,
+                getLTRHeaderColumnPathes(), resultSet);
 
 
         traverse(veriniceDataGraph, potentialRoot, filter, traversalListener);

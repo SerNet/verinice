@@ -38,13 +38,10 @@ public class Messages extends NLS{
     public static String CsvExportDialog_7;
     public static String CsvExportDialog_10;
 
-    public static String CsvExportDialog_11;
     public static String CsvExportDialog_12;
     public static String CsvExportDialog_13;
 
     public static String CsvExportDialog_14;
-
-    public static String CsvExportDialog_15;
 
     public static String CsvExportDialog_16;
 
