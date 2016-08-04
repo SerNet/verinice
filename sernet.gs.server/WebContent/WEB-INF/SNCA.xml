@@ -3327,6 +3327,9 @@ the value between <param></param> will be used directly if no string is found fo
 	       name="Website" id="org_isa_web" 
            tags="VDA-ISA" />
         <huiproperty
+           name="E-Mail" id="org_isa_email" 
+           tags="VDA-ISA" />
+        <huiproperty
 	       name="Short company description" id="org_isa_compdesc"
            inputtype="text" 
            tags="VDA-ISA" />
@@ -6283,7 +6286,8 @@ Wurden bereits weitere Stellen informiert?
 
         </huipropertygroup>
     
-        <huipropertygroup tags="Privacy" id="process_pg_group_betroffene" name="Personen">
+    
+        <huipropertygroup tags="Privacy" id="process_pg_group_betroffene" name="Zugriffsberechtigte Personen (-gruppen)">
             <depends option="process_privacy_yesno" value="1" />
             <huiproperty tags="Privacy" id="process_pg_ber_konzept" name="Berechtigungskonzept vorhanden" inputtype="booleanoption" />
             <huiproperty tags="Privacy" id="process_pg_ber_konzept_desc" name="Beschreibung des Berechtigungskonzepts" inputtype="text" />
@@ -6568,13 +6572,17 @@ Wurden bereits weitere Stellen informiert?
         <huipropertygroup tags="Privacy" id="process_dv_group_loesch" name="Löschfristen">
             <depends option="process_privacy_yesno" value="1" />
             <huiproperty tags="Privacy" id="process_dv_loeschfrist" name="Fristabhängige Löschung" inputtype="singleoption">
-                <option id="process_dv_loeschfrist_1" name="&lt; 1 Woche" />
-                <option id="process_dv_loeschfrist_2" name="&lt; 1 Monat" />
-                <option id="process_dv_loeschfrist_3" name="&lt; 6 Monate" />
-                <option id="process_dv_loeschfrist_4" name="&lt; 1 Jahr" />
-                <option id="process_dv_loeschfrist_5" name="&lt; 10 Jahre" />
-                <option id="process_dv_loeschfrist_6" name="Keine" />
-                <option id="process_dv_loeschfrist_7" name="Sonstige" />
+                <option id="process_dv_loeschfrist_1" name="1 Woche" />
+                <option id="process_dv_loeschfrist_2" name="1 Monat" />
+                <option id="process_dv_loeschfrist_3" name="3 Monate" />
+                <option id="process_dv_loeschfrist_4" name="6 Monate" />
+                <option id="process_dv_loeschfrist_5" name="1 Jahr" />
+                <option id="process_dv_loeschfrist_6" name="2 Jahre" />
+                <option id="process_dv_loeschfrist_7" name="3 Jahre" />
+                <option id="process_dv_loeschfrist_8" name="6 Jahre" />
+                <option id="process_dv_loeschfrist_9" name="10 Jahre" />
+                <option id="process_dv_loeschfrist_10" name="Sonstige" />
+                <option id="process_dv_loeschfrist_11" name="Keine" />
             </huiproperty>
             <huiproperty tags="Privacy" id="process_dv_loeschfrist_sonst" name="Sonstige Frist">
                 <depends option="process_dv_loeschfrist" value="process_dv_loeschfrist_7" />
@@ -6593,7 +6601,9 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_stellungnahmedsb_vorpruefung_1" name="Ja" />
                 <option id="process_stellungnahmedsb_vorpruefung_2" name="Nein" />
             </huiproperty>
-            <huiproperty id="process_dsb_rechtm" name="Rechtmäßigkeit der Verarbeitung" inputtype="text" />
+             </huipropertygroup> 
+            
+       <huipropertygroup tags="Privacy" id="process_rechtmäßigkeit_group" name="Rechtmäßigkeit der Verarbeitung">
             <huiproperty id="process_dsb_risiken" name="Risiken und Feststellungen" inputtype="text" />
             <huiproperty id="process_dsb_votum" name="Votum" inputtype="text" />
         </huipropertygroup>
