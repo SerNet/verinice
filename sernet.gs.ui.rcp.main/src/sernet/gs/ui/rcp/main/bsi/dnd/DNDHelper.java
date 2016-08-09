@@ -38,6 +38,7 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.service.iso27k.Item;
 
@@ -53,6 +54,7 @@ public final class DNDHelper {
                                              Gefaehrdung.class,
                                              IBSIStrukturElement.class,
                                              IISO27kElement.class,
+                                             IMassnahmeUmsetzung.class,
                                              Item.class};
     
     private static Class<?> transferClasses[] = new Class[]{ BausteinElementTransfer.class,

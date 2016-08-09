@@ -97,8 +97,8 @@ public class SearchViewDropListener extends ViewerDropAdapter
     public boolean validateDrop(Object target, int operation, TransferData transferType) {
         if (getLog().isDebugEnabled()) {
             getLog().debug(
-                    "validateDrop, transfer type class: " + transferType.getClass().getName() +
-                    ", transfer-type-id: " + transferType.type);
+                    "validateDrop, \n\t transfer type class: " + transferType.getClass().getName() +
+                            ", \n\t transfer-type-id: " + transferType.type);
         }
         if (!checkRights()) {
             return false;
@@ -135,11 +135,14 @@ public class SearchViewDropListener extends ViewerDropAdapter
      */
     @Override
     public boolean performDrop(Object toDrop) {
-
+        Object[] dataToDrop = (Object[]) toDrop;
+        if (dataToDrop == null || dataToDrop.length == 0) {
+            getLog().error("data missing");
+            return false;
+        }
         if (getLog().isDebugEnabled()) {
             getLog().debug("performDrop");
         }
-        Object[] dataToDrop = (Object[]) toDrop;
         Object firstObject = dataToDrop[0];
         if (isActive()) {
             return handleDrop(dataToDrop);
@@ -193,7 +196,7 @@ public class SearchViewDropListener extends ViewerDropAdapter
 
     @Override
     public void drop(DropTargetEvent event) {
-        getLog().debug("entered drop(DropTargetEvent event)");
+        getLog().debug("entered drop(DropTargetEvent event) with event:" + event.toString());
         target = determineTarget(event);
         super.drop(event);
     }

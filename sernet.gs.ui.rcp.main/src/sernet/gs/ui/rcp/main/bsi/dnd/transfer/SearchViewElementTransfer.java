@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IISO27kElement;
 
@@ -102,7 +103,8 @@ public class SearchViewElementTransfer extends VeriniceElementTransfer {
         return data instanceof IBSIStrukturElement[] ||
                 data instanceof IBSIStrukturElement ||
                 data instanceof IISO27kElement[] ||
-                data instanceof IISO27kElement;
+                data instanceof IISO27kElement || data instanceof IMassnahmeUmsetzung
+                || data instanceof IMassnahmeUmsetzung[];
     }
 
     /*

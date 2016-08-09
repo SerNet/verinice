@@ -40,8 +40,8 @@ import sernet.verinice.service.commands.LoadElementsByUuid;
  */
 public class SearchViewDragListener implements DragSourceListener {
 
-    TableViewer viewer;
     private static final Logger LOG = Logger.getLogger(SearchViewDragListener.class);
+    TableViewer viewer;
 
     public SearchViewDragListener(TableViewer viewer) {
         this.viewer = viewer;
@@ -97,7 +97,7 @@ public class SearchViewDragListener implements DragSourceListener {
         command = new LoadElementsByUuid<>(uuidList, RetrieveInfo.getPropertyInstance());
         try {
             command = ServiceFactory.lookupCommandService().executeCommand(command);
-            elements = (HashSet<CnATreeElement>) command.getElements();
+            elements.addAll(command.getElements());
         } catch (CommandException e) {
             LOG.error("Error while loading elements.", e);
         }

@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.iso27k.IISO27kElement;
 
 /**
@@ -72,10 +73,19 @@ public class TransferUtil {
             ArrayList<IBSIStrukturElement> elements = new ArrayList<>();
             if (data instanceof IBSIStrukturElement[]) {
                 elements.addAll(Arrays.asList((IBSIStrukturElement[]) data));
+                write(transfer, transferData, elements);
             } else if (data instanceof IBSIStrukturElement) {
                 elements.add((IBSIStrukturElement) data);
+                write(transfer, transferData, elements);
             }
-            write(transfer, transferData, elements);
+            ArrayList<IMassnahmeUmsetzung> massnahmen = new ArrayList<>();
+            if (data instanceof IMassnahmeUmsetzung[]) {
+                massnahmen.addAll(Arrays.asList((IMassnahmeUmsetzung[]) data));
+                write(transfer, transferData, massnahmen);
+            } else if (data instanceof IMassnahmeUmsetzung) {
+                massnahmen.add((IMassnahmeUmsetzung) data);
+                write(transfer, transferData, massnahmen);
+            }
         }
     }
 
