@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
 
 import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 
 public final class IBSIStrukturElementTransfer extends VeriniceElementTransfer {
     
@@ -73,7 +74,8 @@ public final class IBSIStrukturElementTransfer extends VeriniceElementTransfer {
     @Override
     public boolean validateData(Object data) {
         return data instanceof IBSIStrukturElement ||
-                data instanceof IBSIStrukturElement[];
+                data instanceof IBSIStrukturElement[] || data instanceof IMassnahmeUmsetzung
+                || data instanceof IMassnahmeUmsetzung[];
     }
 
 }

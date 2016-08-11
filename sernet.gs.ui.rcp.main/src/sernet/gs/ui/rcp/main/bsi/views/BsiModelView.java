@@ -345,7 +345,8 @@ public class BsiModelView extends RightsEnabledView
         Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
                 BausteinUmsetzungTransfer.getInstance(),
                 IBSIStrukturElementTransfer.getInstance(),
-                SearchViewElementTransfer.getInstance() };
+                SearchViewElementTransfer.getInstance(),
+                ISO27kElementTransfer.getInstance() };
         Transfer[] dragTypes = new Transfer[] { IBSIStrukturElementTransfer.getInstance(),
                 BausteinUmsetzungTransfer.getInstance() };
 
