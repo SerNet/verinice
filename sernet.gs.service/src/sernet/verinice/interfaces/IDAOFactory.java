@@ -101,6 +101,7 @@ import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.UpdateElementEntity;
 
 public interface IDAOFactory {
 
@@ -364,6 +365,8 @@ public interface IDAOFactory {
 	void setAssetGroupDAO(IBaseDao<AssetGroup, Integer> daoToSet);
 
 	void setAssetDAO(IBaseDao<Asset, Integer> daoToSet);
+	
+	void setUnsecureAssetDAO(IBaseDao<Asset, Integer> daoToSet);
 
 	void setControlGroupDAO(
 			IBaseDao<ControlGroup, Integer> daoToSet);
@@ -400,6 +403,8 @@ public interface IDAOFactory {
 
 	void setIncidentScenarioDAO(
 			IBaseDao<IncidentScenario, Integer> daoToSet);
+	
+	void setUnsecureIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet);
 
 	void setResponseGroupDAO(
 			IBaseDao<ResponseGroup, Integer> daoToSet);

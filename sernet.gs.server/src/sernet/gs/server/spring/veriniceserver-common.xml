@@ -233,6 +233,11 @@ This variant:
         <property name="importBsiDAO" ref="importBsiDAO" />   
         <property name="elementEntityDao" ref="elementEntityDao" /> 
         
+        <!-- unsecure daos (does not respect access rights or scope only restrictions -->
+        <property name="unsecureAssetDAO" ref="unsecureAssetDAO" />
+        <property name="unsecureIncidentScenarioDAO" ref="unsecureIncidentScenarioDAO" />
+        
+        
         <property name="finishedRiskAnalysisListsDao" ref="finishedRiskAnalysisListsDao" /> 
 	</bean>
 

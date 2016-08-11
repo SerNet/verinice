@@ -567,6 +567,16 @@ public class DAOFactory implements IDAOFactory {
     	daosByTypeID.put(Asset.TYPE_ID, daoToSet);
     }
     
+    @Override 
+    public void setUnsecureAssetDAO(IBaseDao<Asset, Integer> daoToSet){
+        daosByTypeID.put(Asset.UNSECURE_TYPE_ID, daoToSet);
+    }
+    
+    @Override 
+    public void setUnsecureIncidentScenarioDAO(IBaseDao<IncidentScenario, Integer> daoToSet){
+        daosByTypeID.put(IncidentScenario.UNSECURE_TYPE_ID, daoToSet);
+    }
+    
     @Override
     public void setControlGroupDAO(IBaseDao<ControlGroup, Integer> daoToSet) {
     	daosByClass.put(ControlGroup.class, daoToSet);

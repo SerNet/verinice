@@ -386,6 +386,13 @@
 		</constructor-arg>
 	</bean>
 	
+	<bean id="unsecureAssetDAO" parent="treeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.iso27k.Asset</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />	
+	</bean>
+	
 	<bean id="controlGroupDAO" parent="secureDao">
 		<constructor-arg>
 			<value>sernet.verinice.model.iso27k.ControlGroup</value>
@@ -462,6 +469,15 @@
 			<value>sernet.verinice.model.iso27k.IncidentScenario</value>
 		</constructor-arg>
 	</bean>
+
+	<bean id="unsecureIncidentScenarioDAO" parent="treeElementDao">
+		<constructor-arg>
+			<value>sernet.verinice.model.iso27k.IncidentScenario</value>
+		</constructor-arg>
+		<property name="sessionFactory" ref="sessionFactory" />	
+	</bean>
+	
+	
 	
 	<bean id="responseGroupDAO" parent="secureDao">
 		<constructor-arg>

@@ -33,6 +33,7 @@ import sernet.verinice.model.common.ILinkChangeListener;
 public class Asset extends CnATreeElement implements IISO27kElement, IISO27kGroup {
 
 	public static final String TYPE_ID = "asset"; //$NON-NLS-1$
+	public static final String UNSECURE_TYPE_ID = "unsecureAssetDAO"; //$NON-NLS-1$
 	public static final String PROP_ABBR = "asset_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "asset_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "asset_tag"; //$NON-NLS-1$
