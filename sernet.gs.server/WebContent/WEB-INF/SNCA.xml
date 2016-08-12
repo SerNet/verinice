@@ -6599,7 +6599,7 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
             <huiproperty tags="Privacy" id="process_dv_loeschfrist_sonst" name="Sonstige Frist">
 <!--                 <depends option="process_privacy_yesno" value="1" /> -->
-                <depends option="process_dv_loeschfrist" value="process_dv_loeschfrist_7" />
+                <depends option="process_dv_loeschfrist" value="process_dv_loeschfrist_10" />
             </huiproperty>
             <huiproperty id="process_empf_gew_loesch" name="Beschreibung des Löschverfahrens" inputtype="text" >
                 <depends option="process_privacy_yesno" value="1" />
