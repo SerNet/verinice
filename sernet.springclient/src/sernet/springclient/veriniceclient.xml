@@ -35,14 +35,14 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
-    <bean id="executerFactory" class="sernet.springclient.ExecuterFactoryBean" />
-    
-    <bean name="veriniceCommonsExecuter" factory-bean="executerFactory" factory-method="getExecuter">
-        <!-- Request-timeout in ms 24h = 24*60*60*1000 = 86.400.000-->
+    <bean id="executerFactory" class="sernet.springclient.ExecuterFactoryBean" >
+        <!-- Request-timeout in ms, 24h = 24*60*60*1000 = 86.400.000 -->
         <property name="readTimeout" value="86400000"/>
-        <!-- Connection-timeout in ms -->
+        <!-- Connection-timeout in ms, 10s = 10.000 -->
         <property name="connectionTimeout" value="10000"/>
     </bean>
+    
+    <bean name="veriniceCommonsExecuter" factory-bean="executerFactory" factory-method="getExecuter" />
 
      <bean id="authService"
           class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">

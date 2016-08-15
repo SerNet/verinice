@@ -32,23 +32,46 @@ import sernet.verinice.service.auth.KerberosStatusService;
  * @see {@linkplain KerberosExecuter}
  * @see {@linkplain CommonsExecuter}
  * 
- * @author Benjamin Weiﬂenfels <bw[at]sernet[dot]de>
+ * @author Benjamin Weissenfels <bw[at]sernet[dot]de>
  *
  */
 public class ExecuterFactoryBean {
 
+    
+    public static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS = 1000;
+    public static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = 30 * 60 * 1000;
+
+    private int readTimeout = DEFAULT_READ_TIMEOUT_MILLISECONDS;
+    private int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS;
+    
     public AbstractExecuter getExecuter() throws Exception {
         KerberosStatusService kerberosStatusService = SpringClientPlugin.getDefault().getKerberosStatusService();
 
         if (kerberosStatusService != null && kerberosStatusService.isActive()) {
-            KerberosExecuter executer = new KerberosExecuter();
+            KerberosExecuter executer = new KerberosExecuter(connectionTimeout, readTimeout);
             executer.init();
             return executer;
         } else {
-            CommonsExecuter commonsExecuter = new CommonsExecuter();
+            CommonsExecuter commonsExecuter = new CommonsExecuter(connectionTimeout, readTimeout);
             commonsExecuter.init();
             return commonsExecuter;
         }
+    }
+    
+    public int getReadTimeout() {
+        return readTimeout;
+    }
+
+    public void setReadTimeout(int readTimeout) {
+        this.readTimeout = readTimeout;
+    }
+
+    public int getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
     }
 
 }
