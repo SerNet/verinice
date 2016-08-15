@@ -6336,7 +6336,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_empf_int_zweck" name="Zweck des Datentransfers" >
                 <depends option="process_privacy_yesno" value="1" />
             </huiproperty>
-            <huiproperty id="process_empf_int_erläuterung" name="Erläuterung" inputtype="text">
+            <huiproperty id="process_empf_int_erlaeuterung" name="Erläuterung" inputtype="text">
                 <depends option="process_privacy_yesno" value="1" />
             </huiproperty>
         </huipropertygroup>
@@ -6386,7 +6386,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_empf_ext_zweck" name="Zweck des Datentransfers" >
                 <depends option="process_privacy_yesno" value="1" />
             </huiproperty>
-            <huiproperty id="process_empf_ext_erläuterung" name="Erläuterung" inputtype="text">
+            <huiproperty id="process_empf_ext_erlaeuterung" name="Erläuterung" inputtype="text">
                 <depends option="process_privacy_yesno" value="1" />
             </huiproperty>
             <huiproperty name="Dokument" id="empfaenger_ext_dokument" isURL="true" />
@@ -6437,7 +6437,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_empf_dienstl_zweck" name="Zweck des Datentransfers" >
                 <depends option="process_privacy_yesno" value="1" />
             </huiproperty>
-            <huiproperty id="process_empf_dienstl_erläuterung" name="Erläuterung" inputtype="text">
+            <huiproperty id="process_empf_dienstl_erlaeuterung" name="Erläuterung" inputtype="text">
                 <depends option="process_privacy_yesno" value="1" />
             </huiproperty>
             <huiproperty name="Dokument" id="empfaenger_dienstl_dokument" isURL="true"/>
@@ -6622,7 +6622,7 @@ Wurden bereits weitere Stellen informiert?
             </huiproperty>
              </huipropertygroup> 
             
-       <huipropertygroup tags="Privacy" id="process_rechtmäßigkeit_group" name="Rechtmäßigkeit der Verarbeitung">
+       <huipropertygroup tags="Privacy" id="process_rechtmaessigkeit_group" name="Rechtmäßigkeit der Verarbeitung">
             <huiproperty id="process_dsb_risiken" name="Risiken und Feststellungen" inputtype="text" >
                 <depends option="process_privacy_yesno" value="1" />
             </huiproperty>
@@ -6794,7 +6794,7 @@ Wurden bereits weitere Stellen informiert?
 	
 	 <huipropertygroup id="record_Fortb"  tags="Privacy" name="Fortbildung">
 
-	<huiproperty name="Fortbildungsmaßnahme" id="record_Fortb_maß" inputtype="multioption" >
+	<huiproperty name="Fortbildungsmaßnahme" id="record_Fortb_mass" inputtype="multioption" >
 
 		 <option id="fortbildungsart_1" name="Seminar" />
                 <option id="fortbildungsart_2" name="Workshop" />
