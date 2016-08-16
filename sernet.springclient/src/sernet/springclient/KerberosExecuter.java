@@ -15,7 +15,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
+ *     Benjamin Weiï¿½enfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
 package sernet.springclient;
 
@@ -36,12 +36,18 @@ public class KerberosExecuter extends AbstractExecuter {
 
     private String clientToken;
 
-    private boolean isClientTokenInit;
-
     private KerberosTicketService kerberosTicketService;
 
     public KerberosExecuter() {
         super();
+    }
+    
+    /**
+     * @param connectionTimeout The time to wait for a new connection
+     * @param readTimeout The time to wait for the result of a connection
+     */
+    public KerberosExecuter(int connectionTimeout, int readTimeout) {
+        super(connectionTimeout, readTimeout);
     }
 
     public void init() {

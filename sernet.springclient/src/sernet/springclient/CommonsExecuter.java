@@ -34,14 +34,26 @@ public class CommonsExecuter extends AbstractExecuter {
 
     /**
      * Create a new CommonsHttpInvokerRequestExecutor with a default HttpClient
-     * that uses a default MultiThreadedHttpConnectionManager. Sets the socket
-     * read timeout to {@link #DEFAULT_READ_TIMEOUT_MILLISECONDS}.
+     * that uses a default MultiThreadedHttpConnectionManager.
      * 
      * @see org.apache.commons.httpclient.HttpClient
      * @see org.apache.commons.httpclient.MultiThreadedHttpConnectionManager
      */
     public CommonsExecuter() {
         super();
+    }
+    
+    /**
+     * Create a new CommonsHttpInvokerRequestExecutor with a default HttpClient
+     * that uses a default MultiThreadedHttpConnectionManager. 
+
+     * @param connectionTimeout The time to wait for a new connection
+     * @param readTimeout The time to wait for the result of a connection
+     * @see org.apache.commons.httpclient.HttpClient
+     * @see org.apache.commons.httpclient.MultiThreadedHttpConnectionManager
+     */
+    public CommonsExecuter(int connectionTimeout, int readTimeout) {
+        super(connectionTimeout, readTimeout);
     }
 
     @Override
