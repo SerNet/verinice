@@ -47,7 +47,11 @@ public class IndividualTaskDescriptionHandler implements ITaskDescriptionHandler
             description = (String) value;
         }
         if(getDescriptionKey()!=null) {
-            return Messages.getString(getDescriptionKey(), description); 
+            if(varMap.containsKey(getDeclineDescriptionVar())) {
+                return Messages.getString(getDeclineDescriptionKey(), description); 
+            } else {
+                return Messages.getString(getDescriptionKey(), description); 
+            }
         } else {
             return description;
         }
@@ -77,12 +81,20 @@ public class IndividualTaskDescriptionHandler implements ITaskDescriptionHandler
         return IIndividualProcess.VAR_DESCRIPTION;
     }
     
+    protected String getDeclineDescriptionVar() {
+        return IIndividualProcess.TRANS_DECLINE;
+    }
+    
     protected String getTitleVar() {
         return IIndividualProcess.VAR_TITLE;
     }
     
     protected String getDescriptionKey() {
         return IIndividualProcess.TASK_EXECUTE + ITaskService.DESCRIPTION_SUFFIX;
+    }
+    
+    protected String getDeclineDescriptionKey() {
+        return IIndividualProcess.TRANS_DECLINE + ITaskService.DESCRIPTION_SUFFIX;
     }
     
     protected String getTitleKey() {

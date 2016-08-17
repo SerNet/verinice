@@ -53,6 +53,7 @@ public class IndiRejectRealizationHandler implements ICompleteServerHandler {
             if (description != null) {
                 getTaskParameter().put(IIndividualProcess.VAR_DESCRIPTION, description);
             }
+            getTaskParameter().put(IIndividualProcess.TRANS_DECLINE, Boolean.TRUE);
         }
     }
 
