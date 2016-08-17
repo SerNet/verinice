@@ -26,7 +26,7 @@ import org.hibernate.persister.entity.EntityPersister;
 
 /**
  * Workaround for Hibernate Bug HHH-2146, see
- * http://opensource.atlassian.com/projects/hibernate/browse/HHH-2146?page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#action_26488
+ * https://hibernate.atlassian.net/browse/HHH-2146
  * 
  * @author koderman[at]sernet[dot]de
  * @version $Rev$ $LastChangedDate$ $LastChangedBy$

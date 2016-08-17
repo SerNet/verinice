@@ -6,11 +6,11 @@
       provider-name="sernet.de"
       plugin="sernet.gs.ui.rcp.main">
 
-   <description url="http://verinice.org">
+   <description url="http://verinice.com">
       The Verinice Open Source ISMS Tool.
    </description>
 
-   <copyright url="http://www.verinice.org/">
+   <copyright url="http://www.verinice.com/">
       Copyright 1997 - 2016 SerNet GmbH and others.
    </copyright>
 

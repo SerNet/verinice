@@ -116,7 +116,7 @@ import sernet.verinice.service.iso27k.LoadModel;
  * 
  * To add new model types see:
  * 
- * http://www.verinice.org/priv/mediawiki-1.6.12/index.php/Entities
+ * https://wiki.sernet.private/wiki/Verinice/Entities
  * 
  * - add new class with new type-id (String) 
  * - add  type-id to Hitro-UI XML Config (SNCA.xml) 

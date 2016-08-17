@@ -147,7 +147,7 @@ public class MigrateDbTo0_94 extends DbMigration {
 				 * We would like to use Hibernate SQL query mechanism but
 				 * this does not work due to a bug in Hibernate caused by
 				 * a memory leak.
-				 * see http://opensource.atlassian.com/projects/hibernate/browse/HHH-2470
+				 * https://hibernate.atlassian.net/browse/HHH-2470
 
 				Query query = session.createSQLQuery(
 						"update " + table + " "
