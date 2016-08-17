@@ -19,16 +19,11 @@
  ******************************************************************************/
 package sernet.gs.server.security;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.springframework.security.GrantedAuthority;
 import org.springframework.security.GrantedAuthorityImpl;
 import org.springframework.security.providers.UsernamePasswordAuthenticationToken;
 
 import sernet.gs.common.ApplicationRoles;
-import sernet.verinice.interfaces.ActionRightIDs;
 
 @SuppressWarnings("serial")
 public final class DummyAuthentication extends UsernamePasswordAuthenticationToken {
@@ -41,14 +36,22 @@ public final class DummyAuthentication extends UsernamePasswordAuthenticationTok
     public DummyAuthentication(String username) {
         super(
                 new VeriniceUserDetails(username, "$dummypwd$"), 
-                "$notused$", getRolesAndActionRightIds());
+                "$notused$", 
+                new GrantedAuthority[] { 
+                        new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER), 
+                        new GrantedAuthorityImpl(ApplicationRoles.ROLE_WEB),
+                        new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN)});
         setAuthenticated(true);
     }
     
     public DummyAuthentication() {
         super(
                 new VeriniceUserDetails(INTERNAL_USER, "$dummypwd$"),
-                "$notused$", getRolesAndActionRightIds());
+                "$notused$",
+                new GrantedAuthority[] { 
+                        new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER), 
+                        new GrantedAuthorityImpl(ApplicationRoles.ROLE_WEB),
+                        new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN)});
         setAuthenticated(true);
     }
 
@@ -60,32 +63,5 @@ public final class DummyAuthentication extends UsernamePasswordAuthenticationTok
         if (b && t.length >= 1 && InternalAuthenticationProvider.class.getName().equals(t[1].getClassName()) && "authenticate".equals(t[1].getMethodName())) { //$NON-NLS-1$
             super.setAuthenticated(true);
         }
-    }
-
-    private static GrantedAuthority[] getRolesAndActionRightIds(){
-        List<GrantedAuthority> userRoles = Arrays.asList(getUserRoles());
-        List<GrantedAuthority> actionRightsIds = Arrays.asList(addActionRightIds());
-        List<GrantedAuthority> allRoles = new ArrayList<>(userRoles.size() + actionRightsIds.size());
-        allRoles.addAll(userRoles);
-        allRoles.addAll(actionRightsIds);
-
-        return allRoles.toArray(new GrantedAuthority[allRoles.size()]);
-    }
-
-    private static GrantedAuthority[] addActionRightIds(){
-        String[] allRightIDs = ActionRightIDs.getAllRightIDs();
-        GrantedAuthority[] authorities = new GrantedAuthorityImpl[allRightIDs.length];
-        for (int i = 0; i < allRightIDs.length; i++) {
-            authorities[i] = new GrantedAuthorityImpl(allRightIDs[i]);
-        }
-
-        return authorities;
-    }
-
-    private static GrantedAuthority[] getUserRoles(){
-        return new GrantedAuthority[] {
-                new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER),
-                new GrantedAuthorityImpl(ApplicationRoles.ROLE_WEB),
-                new GrantedAuthorityImpl(ApplicationRoles.ROLE_ADMIN)};
     }
 }
