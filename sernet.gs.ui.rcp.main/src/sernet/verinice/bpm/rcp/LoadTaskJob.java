@@ -65,6 +65,9 @@ final class LoadTaskJob extends NotifyingThread {
     }
     
     public void loadTasks() {
+
+        Activator.inheritVeriniceContextState();
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Loading tasks...");
         }

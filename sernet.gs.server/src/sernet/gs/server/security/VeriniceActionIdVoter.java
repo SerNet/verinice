@@ -59,6 +59,11 @@ public class VeriniceActionIdVoter implements AccessDecisionVoter {
 
         String name = authentication.getName();
 
+        // authorize internal calls to do everything they want to do.
+        if(DummyAuthentication.INTERNAL_USER.equals(name)) {
+            return ACCESS_GRANTED;
+        }
+
         @SuppressWarnings("unchecked")
         Collection<ConfigAttribute> configAttributes = config.getConfigAttributes();
 

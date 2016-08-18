@@ -27,8 +27,12 @@ import sernet.gs.common.ApplicationRoles;
 
 @SuppressWarnings("serial")
 public final class DummyAuthentication extends UsernamePasswordAuthenticationToken {
-
     
+    /**
+     * If called not from outside the verinice server this user should be set.
+     */
+    static final String INTERNAL_USER = "$internaluser$";
+
     public DummyAuthentication(String username) {
         super(
                 new VeriniceUserDetails(username, "$dummypwd$"), 
@@ -42,8 +46,8 @@ public final class DummyAuthentication extends UsernamePasswordAuthenticationTok
     
     public DummyAuthentication() {
         super(
-                new VeriniceUserDetails("$internaluser$", "$dummypwd$"), 
-                "$notused$", 
+                new VeriniceUserDetails(INTERNAL_USER, "$dummypwd$"),
+                "$notused$",
                 new GrantedAuthority[] { 
                         new GrantedAuthorityImpl(ApplicationRoles.ROLE_USER), 
                         new GrantedAuthorityImpl(ApplicationRoles.ROLE_WEB),
