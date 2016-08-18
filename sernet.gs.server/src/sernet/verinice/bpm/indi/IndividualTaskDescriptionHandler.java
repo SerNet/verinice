@@ -47,7 +47,7 @@ public class IndividualTaskDescriptionHandler implements ITaskDescriptionHandler
             description = (String) value;
         }
         if(getDescriptionKey()!=null) {
-            if(varMap.containsKey(getDeclineDescriptionVar())) {
+            if(varMap.containsKey(getDeclineDescriptionVar()) && taskId == IIndividualProcess.TASK_EXECUTE) {
                 return Messages.getString(getDeclineDescriptionKey(), description); 
             } else {
                 return Messages.getString(getDescriptionKey(), description); 
