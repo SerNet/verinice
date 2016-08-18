@@ -309,6 +309,8 @@ public final class ImageCache {
     public static final String USER_DISABLED = "user_disabled.png";
 
     public static final String OK_DISABLED = "ok-disabled.png";
+    
+    public static final String UPDATE_SITE = "update-site.png";
 	
 	private static ImageCache instance;
 
