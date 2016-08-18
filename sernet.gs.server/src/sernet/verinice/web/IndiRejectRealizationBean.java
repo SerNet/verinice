@@ -91,6 +91,7 @@ public class IndiRejectRealizationBean implements ICompleteWebHandler {
     private Map<String, Object> getParameter() {
         Map<String, Object> parameter = new Hashtable<String, Object>();
         parameter.put(IIndividualProcess.VAR_DESCRIPTION, getDescription());
+        parameter.put(IIndividualProcess.TRANS_DECLINE, Boolean.TRUE);
         return parameter;
     }
 
