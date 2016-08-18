@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Preferences;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FileFieldEditor;
@@ -31,6 +33,8 @@ import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.IWorkbench;
@@ -52,6 +56,8 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 	private FileFieldEditor zipfilePath;
 	private FileFieldEditor datenschutzZipPath;
 
+    private Composite fieldEditorParent;
+
 	public KatalogePreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
@@ -64,23 +70,42 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
-	    final Link link = new Link(parent, SWT.NONE);
-        link.setText(Messages.getString("KatalogePreferencePage.0")); //$NON-NLS-1$
-        link.addListener(SWT.Selection, new Listener() {
-            public void handleEvent(Event event) {
-                Program.launch(event.text);
-            }
-        });
-	    final Link link2 = new Link(parent, SWT.NONE);
-	    link2.setText(Messages.getString("KatalogePreferencePage.11") + //$NON-NLS-1$
-				Messages.getString("KatalogePreferencePage.14")); //$NON-NLS-1$
-	    link2.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				Program.launch(event.text);
-			}
-		});
-		return super.createContents(parent);
+
+        String opmode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
+        boolean isStandalone = opmode
+                .equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+
+        if (!isStandalone) {
+            GridLayoutFactory.fillDefaults().applyTo(parent);
+            Label servermode = new Label(parent, SWT.NONE);
+            servermode.setText(Messages.getString("KatalogePreferencePage.22"));//$NON-NLS-1$
+            fieldEditorParent = new Composite(parent, SWT.NULL);
+        } else {
+            Link generalTextLink = new Link(parent, SWT.NONE);
+        fieldEditorParent = new Composite(parent, SWT.NULL);
+        GridLayoutFactory.swtDefaults().numColumns(1).margins(5, 0)
+                .generateLayout(fieldEditorParent);
+        fieldEditorParent.setFont(parent.getFont());
+            generalTextLink.setText(Messages.getString("KatalogePreferencePage.0")); //$NON-NLS-1$
+            generalTextLink.addListener(SWT.Selection, new KatalogPreferenceLinkListener());
+        createFieldEditors();
+        }
+        initialize();
+        checkState();
+        return fieldEditorParent;
+
 	}
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.preference.FieldEditorPreferencePage#
+     * getFieldEditorParent()
+     */
+    @Override
+    protected Composite getFieldEditorParent() {
+        return fieldEditorParent;
+    }
 
 	/**
 	 * Creates the field editors. Field editors are abstractions of the common
@@ -90,13 +115,35 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 	@Override
 	public void createFieldEditors() {
 
-		zipfilePath = new FileFieldEditor(PreferenceConstants.BSIZIPFILE, Messages.getString("KatalogePreferencePage.8"), //$NON-NLS-1$
-				getFieldEditorParent());
-		zipfilePath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
-		addField(zipfilePath);
+        Group catalogComposite = new Group(getFieldEditorParent(), SWT.FILL);
+        catalogComposite.setText(Messages.getString("KatalogePreferencePage.24")); //$NON-NLS-1$
+        GridLayoutFactory.fillDefaults().margins(5, 10).numColumns(1)
+                .generateLayout(catalogComposite);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(catalogComposite);
+        Link calatogLink = new Link(catalogComposite, SWT.NONE);
+        calatogLink.setText(Messages.getString("KatalogePreferencePage.11")); //$NON-NLS-1$
+        calatogLink.addListener(SWT.Selection, new KatalogPreferenceLinkListener());
+        Composite catalogEditorParent = new Composite(catalogComposite, SWT.FILL);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(catalogEditorParent);
+        zipfilePath = new FileFieldEditor(PreferenceConstants.BSIZIPFILE,
+                Messages.getString("KatalogePreferencePage.8"), //$NON-NLS-1$
+                catalogEditorParent);
+        zipfilePath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
+        addField(zipfilePath);
 
-		datenschutzZipPath = new FileFieldEditor(PreferenceConstants.DSZIPFILE, Messages.getString("KatalogePreferencePage.10"), //$NON-NLS-1$
-				getFieldEditorParent());
+        Group datenschutzZipComposite = new Group(getFieldEditorParent(), SWT.FILL);
+        datenschutzZipComposite.setText(Messages.getString("KatalogePreferencePage.26")); //$NON-NLS-1$
+        GridLayoutFactory.fillDefaults().margins(5, 10).numColumns(1)
+                .generateLayout(datenschutzZipComposite);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(datenschutzZipComposite);
+        Link datenschutzZipLink = new Link(datenschutzZipComposite, SWT.NONE);
+        datenschutzZipLink.setText(Messages.getString("KatalogePreferencePage.14")); //$NON-NLS-1$
+        datenschutzZipLink.addListener(SWT.Selection, new KatalogPreferenceLinkListener());
+        Composite datenSchutzZipPathParent = new Composite(datenschutzZipComposite, SWT.FILL);
+        GridDataFactory.fillDefaults().grab(true, false).applyTo(datenSchutzZipPathParent);
+        datenschutzZipPath = new FileFieldEditor(PreferenceConstants.DSZIPFILE,
+                Messages.getString("KatalogePreferencePage.10"), //$NON-NLS-1$
+                datenSchutzZipPathParent);
 		datenschutzZipPath.setFileExtensions(new String[] { "*.zip;*.ZIP", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$
 		addField(datenschutzZipPath);
 		
@@ -146,34 +193,26 @@ public class KatalogePreferencePage extends FieldEditorPreferencePage implements
 	}
 
 	@Override
-	public void setVisible(boolean visible) {
-		super.setVisible(visible);
-		// only editable when server is not used, client has direct access to GS
-		// catalogues
-		// otherwise server is used to access gs catalogue data to ensure that
-		// all clients are
-		// working on the same data
-		if (visible) {
-			String opmode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
-			setEnabledFields(opmode.equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER));
-		}
-	}
-
-	private void setEnabledFields(boolean enable) {
-		datenschutzZipPath.setEnabled(enable, getFieldEditorParent());
-		zipfilePath.setEnabled(enable, getFieldEditorParent());
-
-		if (enable) {
-			setMessage(null);
-		} else {
-			setMessage(Messages.getString("KatalogePreferencePage.22")); //$NON-NLS-1$
-		}
-	}
-
-	@Override
 	public boolean isValid() {
 		// always allow user to navigate away from page:
 		return true;
 	}
+
+    private class KatalogPreferenceLinkListener implements Listener {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * org.eclipse.swt.widgets.Listener#handleEvent(org.eclipse.swt.widgets.
+         * Event)
+         */
+        @Override
+        public void handleEvent(Event event) {
+            Program.launch(event.text);
+
+        }
+
+    }
 
 }

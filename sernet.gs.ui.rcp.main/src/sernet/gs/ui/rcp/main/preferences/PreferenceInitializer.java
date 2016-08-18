@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
-import java.io.File;
-
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -46,11 +44,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				PreferenceConstants.GSACCESS_ZIP);
 
 		store.setDefault(PreferenceConstants.BSIDIR, CnAWorkspace.getInstance().getWorkdir());
-
-		store.setDefault(PreferenceConstants.BSIZIPFILE, CnAWorkspace.getInstance()
-				.getWorkdir()
-				+ File.separator + "it-grundschutz_el13_html_de.zip"); //$NON-NLS-1$
-
 
 		store.setDefault(PreferenceConstants.ERRORPOPUPS, true);
 		store.setDefault(PreferenceConstants.FIRSTSTART, true);
