@@ -268,6 +268,8 @@ public class CsvExportDialog extends TitleAreaDialog {
             if (result == 0) {
                 saveScopeIdsAndCloseDialog();
             }
+        } else {
+            saveScopeIdsAndCloseDialog();
         }
     }
 
