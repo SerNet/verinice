@@ -2618,7 +2618,28 @@ the value between <param></param> will be used directly if no string is found fo
                 </defaultRule>
             </huiproperty>
 		</huipropertygroup>
-		
+    
+    <huipropertygroup name="KIX" id="mnums_kix_group" tags="kix" >
+      <huiproperty name="KIX ticket 1" id="mnums_kix_ticket1" isURL="true"/>
+      <huiproperty name="KIX ticket 2" id="mnums_kix_ticket2" isURL="true"/>
+      <huiproperty name="KIX ticket 3" id="mnums_kix_ticket3" isURL="true"/>
+      <huiproperty name="KIX ticket 4" id="mnums_kix_ticket4" isURL="true"/>
+      <huiproperty name="KIX ticket 5" id="mnums_kix_ticket5" isURL="true"/>
+      <huiproperty name="KIX ticket 6" id="mnums_kix_ticket6" isURL="true"/>
+      <huiproperty name="KIX ticket 7" id="mnums_kix_ticket7" isURL="true"/>
+      <huiproperty name="KIX ticket 8" id="mnums_kix_ticket8" isURL="true"/>
+      <huiproperty name="KIX ticket 9" id="mnums_kix_ticket9" isURL="true"/>
+      <huiproperty name="KIX ticket 10" id="mnums_kix_ticket10" isURL="true"/>
+      <huiproperty id="mnums_kix_workflow_status" name="KIX workflow status" tags="KIX" 
+          inputtype="singleoption" >
+          <option id="mnums_kix_workflow_status_not_requested" name="Not requested"/>
+          <option id="mnums_kix_workflow_status_start" name="Start workflow"/>
+          <option id="mnums_kix_workflow_status_running" name="Running"/>
+          <option id="mnums_kix_workflow_status_finished" name="Finished"/>
+          <option id="mnums_kix_workflow_status_failure" name="Failure"/>
+      </huiproperty>
+    </huipropertygroup>
+      
 	</huientity>
 
     <huientity
