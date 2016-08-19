@@ -340,7 +340,7 @@ public class HitroUIView implements IEntityChangedListener   {
                 LOG.error("Depends on control not find, id: " + depends.getPropertyId());
                 continue;
             }      
-            DependsBehavior behavior = BehaviorFactory.createBehaviorForControl(controlDependsOn.getControl());
+            DependsBehavior behavior = BehaviorFactory.createBehaviorForControl(controlDependsOn);
             behavior.setControl(control.getControl());
             behavior.setInverse(depends.isInverse());
             behavior.setValueDependsOn(depends.getPropertyValue());
