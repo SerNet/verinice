@@ -4530,6 +4530,27 @@ the value between <param></param> will be used directly if no string is found fo
                 <huiproperty id="gsm_ism_control_tag" name="GSM Tag" tags="Greenbone_GSM" editable="false"/>              
                 <huiproperty id="gsm_ism_control_cpe" name="GSM CPE" tags="Greenbone_GSM" editable="false" />
             </huipropertygroup>
+
+        <huipropertygroup name="KIX" id="control_kix_group" tags="kix" >
+            <huiproperty name="KIX ticket 1" id="control_kix_ticket1" isURL="true"/>
+            <huiproperty name="KIX ticket 2" id="control_kix_ticket2" isURL="true"/>
+            <huiproperty name="KIX ticket 3" id="control_kix_ticket3" isURL="true"/>
+            <huiproperty name="KIX ticket 4" id="control_kix_ticket4" isURL="true"/>
+            <huiproperty name="KIX ticket 5" id="control_kix_ticket5" isURL="true"/>
+            <huiproperty name="KIX ticket 6" id="control_kix_ticket6" isURL="true"/>
+            <huiproperty name="KIX ticket 7" id="control_kix_ticket7" isURL="true"/>
+            <huiproperty name="KIX ticket 8" id="control_kix_ticket8" isURL="true"/>
+            <huiproperty name="KIX ticket 9" id="control_kix_ticket9" isURL="true"/>
+            <huiproperty name="KIX ticket 10" id="control_kix_ticket10" isURL="true"/>
+            <huiproperty id="control_kix_workflow_status" name="KIX workflow status" tags="KIX" 
+                inputtype="singleoption" >
+                <option id="control_kix_workflow_status_not_requested" name="Not requested"/>
+                <option id="control_kix_workflow_status_start" name="Start workflow"/>
+                <option id="control_kix_workflow_status_running" name="Running"/>
+                <option id="control_kix_workflow_status_finished" name="Finished"/>
+                <option id="control_kix_workflow_status_failure" name="Failure"/>
+            </huiproperty>
+        </huipropertygroup>
         
          <!-- Risk analysis, values must match those defined for asset CIA and scenario probability  -->
     <huipropertygroup name="Control Strength" id="control_effectivenessgroup" tags="Risk">
