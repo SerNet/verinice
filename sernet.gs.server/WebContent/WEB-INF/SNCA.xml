@@ -3853,6 +3853,16 @@ the value between <param></param> will be used directly if no string is found fo
              tags="Risk"
 				name="Explanation" id="asset_risktreatexpl" inputtype="text" />
 		</huipropertygroup>
+		
+		<huipropertygroup name="Privacy" id="asset_privacygroup" tags="Privacy">
+			<huiproperty id="asset_privacy_retention_period" 
+				name="Retention Period"/>
+			<huiproperty id="asset_privacy_basis_for_retention" 
+				name="Legal basis for rentention"/>
+			<huiproperty id="asset_privacy_deletion_procedure" 
+				name="Deletion procedure"/>
+			
+		</huipropertygroup>
     </huientity>
     
     <huientity
