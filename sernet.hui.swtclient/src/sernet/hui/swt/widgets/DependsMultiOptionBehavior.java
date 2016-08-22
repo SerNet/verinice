@@ -23,6 +23,16 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
 /**
+ * Behavior for controls which depends on the input of a multioption-field.
+ * Control is enabled if text input is 'valueDependsOn' or vice versa if inverse is true.
+ * 
+ * This class is used by HitroUIView to implement 'depends' elements from
+ * SNCA.xml
+ * 
+ * Class extends {@link DependsTextBehavior} to just overwrite 
+ * the method that checks if the value to depend on is part of the selection
+ * in the multiselection control
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
