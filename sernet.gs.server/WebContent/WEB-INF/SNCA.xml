@@ -630,9 +630,30 @@ the value between <param></param> will be used directly if no string is found fo
 				name="Entscheidung bis"
 				inputtype="date">
 				<defaultRule class="Today"/>
-			</huiproperty>
-			
-		</huipropertygroup>   
+			</huiproperty>		
+      </huipropertygroup>
+      
+      <huipropertygroup name="KIX" id="server_kix_group" tags="kix" >
+        <huiproperty name="KIX ticket 1" id="server_kix_ticket1" isURL="true"/>
+        <huiproperty name="KIX ticket 2" id="server_kix_ticket2" isURL="true"/>
+        <huiproperty name="KIX ticket 3" id="server_kix_ticket3" isURL="true"/>
+        <huiproperty name="KIX ticket 4" id="server_kix_ticket4" isURL="true"/>
+        <huiproperty name="KIX ticket 5" id="server_kix_ticket5" isURL="true"/>
+        <huiproperty name="KIX ticket 6" id="server_kix_ticket6" isURL="true"/>
+        <huiproperty name="KIX ticket 7" id="server_kix_ticket7" isURL="true"/>
+        <huiproperty name="KIX ticket 8" id="server_kix_ticket8" isURL="true"/>
+        <huiproperty name="KIX ticket 9" id="server_kix_ticket9" isURL="true"/>
+        <huiproperty name="KIX ticket 10" id="server_kix_ticket10" isURL="true"/>
+        <huiproperty id="server_kix_workflow_status" name="KIX workflow status" tags="KIX" 
+            inputtype="singleoption" >
+            <option id="server_kix_workflow_status_not_requested" name="Not requested"/>
+            <option id="server_kix_workflow_status_start" name="Start workflow"/>
+            <option id="server_kix_workflow_status_running" name="Running"/>
+            <option id="server_kix_workflow_status_finished" name="Finished"/>
+            <option id="server_kix_workflow_status_failure" name="Failure"/>
+        </huiproperty>
+      </huipropertygroup>
+      
     </huientity>
 
     <huientity
@@ -1401,6 +1422,27 @@ the value between <param></param> will be used directly if no string is found fo
 			</huiproperty>
 			</huipropertygroup>
 		
+      <huipropertygroup name="KIX" id="client_kix_group" tags="kix" >
+        <huiproperty name="KIX ticket 1" id="client_kix_ticket1" isURL="true"/>
+        <huiproperty name="KIX ticket 2" id="client_kix_ticket2" isURL="true"/>
+        <huiproperty name="KIX ticket 3" id="client_kix_ticket3" isURL="true"/>
+        <huiproperty name="KIX ticket 4" id="client_kix_ticket4" isURL="true"/>
+        <huiproperty name="KIX ticket 5" id="client_kix_ticket5" isURL="true"/>
+        <huiproperty name="KIX ticket 6" id="client_kix_ticket6" isURL="true"/>
+        <huiproperty name="KIX ticket 7" id="client_kix_ticket7" isURL="true"/>
+        <huiproperty name="KIX ticket 8" id="client_kix_ticket8" isURL="true"/>
+        <huiproperty name="KIX ticket 9" id="client_kix_ticket9" isURL="true"/>
+        <huiproperty name="KIX ticket 10" id="client_kix_ticket10" isURL="true"/>
+        <huiproperty id="client_kix_workflow_status" name="KIX workflow status" tags="KIX" 
+            inputtype="singleoption" >
+            <option id="client_kix_workflow_status_not_requested" name="Not requested"/>
+            <option id="client_kix_workflow_status_start" name="Start workflow"/>
+            <option id="client_kix_workflow_status_running" name="Running"/>
+            <option id="client_kix_workflow_status_finished" name="Finished"/>
+            <option id="client_kix_workflow_status_failure" name="Failure"/>
+        </huiproperty>
+      </huipropertygroup>
+       
     </huientity>
     
      <huientity
@@ -1633,6 +1675,28 @@ the value between <param></param> will be used directly if no string is found fo
 			</huiproperty>
 								
 			</huipropertygroup>
+      
+      <huipropertygroup name="KIX" id="sonstit_kix_group" tags="kix" >
+        <huiproperty name="KIX ticket 1" id="sonstit_kix_ticket1" isURL="true"/>
+        <huiproperty name="KIX ticket 2" id="sonstit_kix_ticket2" isURL="true"/>
+        <huiproperty name="KIX ticket 3" id="sonstit_kix_ticket3" isURL="true"/>
+        <huiproperty name="KIX ticket 4" id="sonstit_kix_ticket4" isURL="true"/>
+        <huiproperty name="KIX ticket 5" id="sonstit_kix_ticket5" isURL="true"/>
+        <huiproperty name="KIX ticket 6" id="sonstit_kix_ticket6" isURL="true"/>
+        <huiproperty name="KIX ticket 7" id="sonstit_kix_ticket7" isURL="true"/>
+        <huiproperty name="KIX ticket 8" id="sonstit_kix_ticket8" isURL="true"/>
+        <huiproperty name="KIX ticket 9" id="sonstit_kix_ticket9" isURL="true"/>
+        <huiproperty name="KIX ticket 10" id="sonstit_kix_ticket10" isURL="true"/>
+        <huiproperty id="sonstit_kix_workflow_status" name="KIX workflow status" tags="KIX" 
+            inputtype="singleoption" >
+            <option id="sonstit_kix_workflow_status_not_requested" name="Not requested"/>
+            <option id="sonstit_kix_workflow_status_start" name="Start workflow"/>
+            <option id="sonstit_kix_workflow_status_running" name="Running"/>
+            <option id="sonstit_kix_workflow_status_finished" name="Finished"/>
+            <option id="sonstit_kix_workflow_status_failure" name="Failure"/>
+        </huiproperty>
+      </huipropertygroup>
+      
     </huientity>
 
 	<huientity
@@ -2554,7 +2618,28 @@ the value between <param></param> will be used directly if no string is found fo
                 </defaultRule>
             </huiproperty>
 		</huipropertygroup>
-		
+    
+    <huipropertygroup name="KIX" id="mnums_kix_group" tags="kix" >
+      <huiproperty name="KIX ticket 1" id="mnums_kix_ticket1" isURL="true"/>
+      <huiproperty name="KIX ticket 2" id="mnums_kix_ticket2" isURL="true"/>
+      <huiproperty name="KIX ticket 3" id="mnums_kix_ticket3" isURL="true"/>
+      <huiproperty name="KIX ticket 4" id="mnums_kix_ticket4" isURL="true"/>
+      <huiproperty name="KIX ticket 5" id="mnums_kix_ticket5" isURL="true"/>
+      <huiproperty name="KIX ticket 6" id="mnums_kix_ticket6" isURL="true"/>
+      <huiproperty name="KIX ticket 7" id="mnums_kix_ticket7" isURL="true"/>
+      <huiproperty name="KIX ticket 8" id="mnums_kix_ticket8" isURL="true"/>
+      <huiproperty name="KIX ticket 9" id="mnums_kix_ticket9" isURL="true"/>
+      <huiproperty name="KIX ticket 10" id="mnums_kix_ticket10" isURL="true"/>
+      <huiproperty id="mnums_kix_workflow_status" name="KIX workflow status" tags="KIX" 
+          inputtype="singleoption" >
+          <option id="mnums_kix_workflow_status_not_requested" name="Not requested"/>
+          <option id="mnums_kix_workflow_status_start" name="Start workflow"/>
+          <option id="mnums_kix_workflow_status_running" name="Running"/>
+          <option id="mnums_kix_workflow_status_finished" name="Finished"/>
+          <option id="mnums_kix_workflow_status_failure" name="Failure"/>
+      </huiproperty>
+    </huipropertygroup>
+      
 	</huientity>
 
     <huientity
@@ -3792,7 +3877,28 @@ the value between <param></param> will be used directly if no string is found fo
             <huiproperty id="gsm_scan_started" name="Scan start" inputtype="line" tags="Greenbone_GSM" editable="false" />
             <huiproperty id="gsm_scan_ended" name="Scan end" inputtype="line" tags="Greenbone_GSM" editable="false" />
         </huipropertygroup>		
-	
+
+        <huipropertygroup name="KIX" id="asset_kix_group" tags="kix" >
+            <huiproperty name="KIX ticket 1" id="asset_kix_ticket1" isURL="true"/>
+            <huiproperty name="KIX ticket 2" id="asset_kix_ticket2" isURL="true"/>
+            <huiproperty name="KIX ticket 3" id="asset_kix_ticket3" isURL="true"/>
+            <huiproperty name="KIX ticket 4" id="asset_kix_ticket4" isURL="true"/>
+            <huiproperty name="KIX ticket 5" id="asset_kix_ticket5" isURL="true"/>
+            <huiproperty name="KIX ticket 6" id="asset_kix_ticket6" isURL="true"/>
+            <huiproperty name="KIX ticket 7" id="asset_kix_ticket7" isURL="true"/>
+            <huiproperty name="KIX ticket 8" id="asset_kix_ticket8" isURL="true"/>
+            <huiproperty name="KIX ticket 9" id="asset_kix_ticket9" isURL="true"/>
+            <huiproperty name="KIX ticket 10" id="asset_kix_ticket10" isURL="true"/>
+            <huiproperty id="asset_kix_workflow_status" name="KIX workflow status" tags="KIX" 
+                inputtype="singleoption" >
+                <option id="asset_kix_workflow_status_not_requested" name="Not requested"/>
+                <option id="asset_kix_workflow_status_start" name="Start workflow"/>
+                <option id="asset_kix_workflow_status_running" name="Running"/>
+                <option id="asset_kix_workflow_status_finished" name="Finished"/>
+                <option id="asset_kix_workflow_status_failure" name="Failure"/>
+            </huiproperty>
+        </huipropertygroup>
+
 		<huipropertygroup name="Calculated Total Risk" id="asset_riskgroup" tags="Risk">
 			<huiproperty
              tags="Risk"
@@ -4509,6 +4615,27 @@ the value between <param></param> will be used directly if no string is found fo
                 <huiproperty id="gsm_ism_control_tag" name="GSM Tag" tags="Greenbone_GSM" editable="false"/>              
                 <huiproperty id="gsm_ism_control_cpe" name="GSM CPE" tags="Greenbone_GSM" editable="false" />
             </huipropertygroup>
+
+        <huipropertygroup name="KIX" id="control_kix_group" tags="kix" >
+            <huiproperty name="KIX ticket 1" id="control_kix_ticket1" isURL="true"/>
+            <huiproperty name="KIX ticket 2" id="control_kix_ticket2" isURL="true"/>
+            <huiproperty name="KIX ticket 3" id="control_kix_ticket3" isURL="true"/>
+            <huiproperty name="KIX ticket 4" id="control_kix_ticket4" isURL="true"/>
+            <huiproperty name="KIX ticket 5" id="control_kix_ticket5" isURL="true"/>
+            <huiproperty name="KIX ticket 6" id="control_kix_ticket6" isURL="true"/>
+            <huiproperty name="KIX ticket 7" id="control_kix_ticket7" isURL="true"/>
+            <huiproperty name="KIX ticket 8" id="control_kix_ticket8" isURL="true"/>
+            <huiproperty name="KIX ticket 9" id="control_kix_ticket9" isURL="true"/>
+            <huiproperty name="KIX ticket 10" id="control_kix_ticket10" isURL="true"/>
+            <huiproperty id="control_kix_workflow_status" name="KIX workflow status" tags="KIX" 
+                inputtype="singleoption" >
+                <option id="control_kix_workflow_status_not_requested" name="Not requested"/>
+                <option id="control_kix_workflow_status_start" name="Start workflow"/>
+                <option id="control_kix_workflow_status_running" name="Running"/>
+                <option id="control_kix_workflow_status_finished" name="Finished"/>
+                <option id="control_kix_workflow_status_failure" name="Failure"/>
+            </huiproperty>
+        </huipropertygroup>
         
          <!-- Risk analysis, values must match those defined for asset CIA and scenario probability  -->
     <huipropertygroup name="Control Strength" id="control_effectivenessgroup" tags="Risk">
