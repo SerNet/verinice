@@ -151,6 +151,7 @@ public class HitroUIView implements IEntityChangedListener   {
 		try {
 			keyStroke = KeyStroke.getInstance("ARROW_DOWN");
 		} catch (ParseException e) {
+		    LOG.warn("Parsing error", e);
 		}
 		ContentProposalAdapter adapter = new ContentProposalAdapter(
 				control, 
@@ -334,20 +335,22 @@ public class HitroUIView implements IEntityChangedListener   {
         for (DependsType depends : type.getDependencies()) {
             IHuiControl controlDependsOn = fields.get(depends.getPropertyId());
             PropertyType typeDependsOn = entityType.getPropertyType(depends.getPropertyId());
+            
             if(controlDependsOn==null || controlDependsOn.getControl()==null) {
                 LOG.error("Depends on control not find, id: " + depends.getPropertyId());
                 continue;
             }      
-            DependsBehavior behavior = BehaviorFactory.createBehaviorForControl(controlDependsOn.getControl());
+            DependsBehavior behavior = BehaviorFactory.createBehaviorForControl(controlDependsOn);
             behavior.setControl(control.getControl());
             behavior.setInverse(depends.isInverse());
             behavior.setValueDependsOn(depends.getPropertyValue());
-            if(typeDependsOn.isSingleSelect() || typeDependsOn.isNumericSelect()) {
+            if(typeDependsOn.isSingleSelect() || typeDependsOn.isNumericSelect() 
+                    || typeDependsOn.isMultiselect()) {
                 PropertyOption option = typeDependsOn.getOption(depends.getPropertyValue());
                 if(option!=null) {
                     behavior.setValueDependsOn(option.getName());
                 }
-            }
+            } 
             if(currentBehavior==null) {             
                 currentBehavior = behavior;
                 mainBehavior = behavior;
