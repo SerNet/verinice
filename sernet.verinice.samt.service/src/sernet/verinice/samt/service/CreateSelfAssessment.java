@@ -63,7 +63,7 @@ import sernet.verinice.service.iso27k.ItemControlTransformer;
  * 
  * Controls are imported from a CSV-file while creating the SAMT.
  * See wiki for more information about the CSV file:
- * http://www.verinice.org/priv/mediawiki-1.6.12/index.php/Control_Import
+ * https://wiki.sernet.private/wiki/Verinice/Control_Import
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */

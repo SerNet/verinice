@@ -19,24 +19,12 @@
     </description>
   </item>
 
-  <item title="Download control catalog">
-    <description>
-      First you need to download a control catalog. Some free catalogs are available from the verinice
-      website. You can also create your own catalogs using Excel or OpenOffice and import them into verinice.
-      <br /><br />
-      Download the catalog "Implementation Guidance for ISO 27001" from the Section "CATALOGS
-      AND MORE" at <b>www.verinice.org/en/download/</b>.
-      <br /><br />
-      Save the file to your hard drive.
-    </description>
-  </item>
-
   <item title="Import control catalog">
     <description>
-      Now you have to import the catalog file. On the left-hand side of the verinice workbench you will find
+      First you need to import a control catalog. You have to import the catalog file. On the left-hand side of the verinice workbench you will find
       the "Catalogs" view. Click the leftmost button ("Import catalog...").
       <br /><br />
-      Choose your downloaded catalog file and click <b>OK</b>.
+      Choose your downloaded or manually created (e.g. using Excel or OpenOffice) catalog file and click <b>OK</b>.
     </description>
   </item>
 
