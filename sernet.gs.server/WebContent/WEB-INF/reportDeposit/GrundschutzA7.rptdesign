@@ -1099,15 +1099,10 @@ for(int i = 0; i < typeIds.length; i++){
 childLoader = new LoadReportElements(elmt, root);
 elements.addAll(helper.execute(childLoader).getElements());
 
-// we only want to show tables for bausteine that has children of type massnahme that has an umsetzungsstatus that not equals "ja" or "entbehrlich", 
-// so bausteine that contains massnahmen of only that umsetzungsstatus should not result in a table. so they are computed here to take them out of the 
-// result of the dataset
-
-// count amount of children of baustein of type massnahme independent to umsetzungstatus
 countAllHQL = "select count(mnums.dbId) from CnATreeElement mnums where " +
 				"mnums.objectType = :typeIdMnums AND mnums.parentId = :bstId";
 
-// count amount of children of baustein of type massnahme with umsetzungstatus of "ja" or "entbehrlich"
+
 bstCountHQL = "select count(massnahme.dbId) from CnATreeElement as massnahme " +
 				"inner join massnahme.entity as entity " + 
 				"inner join entity.typedPropertyLists as propertyList " + 
@@ -1119,7 +1114,7 @@ bstCountHQL = "select count(massnahme.dbId) from CnATreeElement as massnahme " +
 //values that are not shown in the table
 propList = Arrays.asList(new String[]{"mnums_umsetzung_entbehrlich", "mnums_umsetzung_ja"});
 																		
-// fill new result list with elements that does not produce empty tables
+
 elementsToShow = new ArrayList();
 for(CnATreeElement bst : elements){
 
@@ -1129,6 +1124,7 @@ for(CnATreeElement bst : elements){
 	firstHqlExecuter = new ExecuteHQLInReportCommand(countAllHQL, paramNames0, params0, CnATreeElement.class);
 	totalMnumsSum = helper.execute(firstHqlExecuter).getResult();
 	totalCount = 0L;
+	TocHelper2.log("Size of totalSum hqlResult:\t" + totalMnumsSum.size());
 	if(totalMnumsSum.size() == 1){
 		totalCount = totalMnumsSum.get(0);
 	} else {
@@ -1141,13 +1137,13 @@ for(CnATreeElement bst : elements){
 	secondHqlExecuter = new ExecuteHQLInReportCommand(bstCountHQL, paramNames, params, CnATreeElement.class);
 	hiddenMnumsCount = helper.execute(secondHqlExecuter).getResult();
 	hiddenCount = 0L;
+	TocHelper2.log("Size of hiddenSum hqlResult:\t" + hiddenMnumsCount.size());
 	if(hiddenMnumsCount.size() == 1){
 		hiddenCount = hiddenMnumsCount.get(0);
 	} else {
 		TocHelper2.log("More than one hiddenCount result for bst:\t" + bst.getDbId());
 	}
 
-	// if difference of first result minus second result is greater than 0 (massnahmen that needs to be shown exists), add baustein to resultlist
 	if((totalCount - hiddenCount) > 0){
 		elementsToShow.add(bst);
 	}
