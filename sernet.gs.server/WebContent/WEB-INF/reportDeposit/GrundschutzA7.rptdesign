@@ -30,6 +30,7 @@
             <simple-property-list name="defaultValue">
                 <value type="constant">-1</value>
             </simple-property-list>
+            <list-property name="selectionList"/>
             <property name="paramType">simple</property>
             <property name="controlType">text-box</property>
             <structure name="format">
@@ -1045,6 +1046,10 @@ import java.util.Map.Entry;
 import java.util.HashSet;
 import java.util.ArrayList;
 import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
+import sernet.verinice.report.service.impl.TocHelper2;
+
 
 // set top level element for report:
 root = helper.getRoot();
@@ -1094,11 +1099,61 @@ for(int i = 0; i < typeIds.length; i++){
 childLoader = new LoadReportElements(elmt, root);
 elements.addAll(helper.execute(childLoader).getElements());
 
+countAllHQL = "select count(mnums.dbId) from CnATreeElement mnums where " +
+				"mnums.objectType = :typeIdMnums AND mnums.parentId = :bstId";
+
+
+bstCountHQL = "select count(massnahme.dbId) from CnATreeElement as massnahme " +
+				"inner join massnahme.entity as entity " + 
+				"inner join entity.typedPropertyLists as propertyList " + 
+		        	"inner join propertyList.properties as props " + 
+				"where massnahme.objectType = :typeIdMnums AND " + 
+				"massnahme.parentId = :bstId AND props.propertyType = :propUmsetzung " +
+				"and props.propertyValue in (:umsList)";
+
+//values that are not shown in the table
+propList = Arrays.asList(new String[]{"mnums_umsetzung_entbehrlich", "mnums_umsetzung_ja"});
+																		
+
+elementsToShow = new ArrayList();
+for(CnATreeElement bst : elements){
+
+	// first query setup 
+	paramNames0 = new String[]{"typeIdMnums", "bstId"};
+	params0 = new Object[]{MassnahmenUmsetzung.HIBERNATE_TYPE_ID, bst.getDbId()};
+	firstHqlExecuter = new ExecuteHQLInReportCommand(countAllHQL, paramNames0, params0, CnATreeElement.class);
+	totalMnumsSum = helper.execute(firstHqlExecuter).getResult();
+	totalCount = 0L;
+	TocHelper2.log("Size of totalSum hqlResult:\t" + totalMnumsSum.size());
+	if(totalMnumsSum.size() == 1){
+		totalCount = totalMnumsSum.get(0);
+	} else {
+		TocHelper2.log("More than one totalCount result for bst:\t" + bst.getDbId());
+	}
+
+	// second query setup
+	paramNames = new String[]{"typeIdMnums", "bstId", "propUmsetzung", "umsList"};
+	params = new Object[]{MassnahmenUmsetzung.HIBERNATE_TYPE_ID, bst.getDbId(), MassnahmenUmsetzung.P_UMSETZUNG, propList};
+	secondHqlExecuter = new ExecuteHQLInReportCommand(bstCountHQL, paramNames, params, CnATreeElement.class);
+	hiddenMnumsCount = helper.execute(secondHqlExecuter).getResult();
+	hiddenCount = 0L;
+	TocHelper2.log("Size of hiddenSum hqlResult:\t" + hiddenMnumsCount.size());
+	if(hiddenMnumsCount.size() == 1){
+		hiddenCount = hiddenMnumsCount.get(0);
+	} else {
+		TocHelper2.log("More than one hiddenCount result for bst:\t" + bst.getDbId());
+	}
+
+	if((totalCount - hiddenCount) > 0){
+		elementsToShow.add(bst);
+	}
+
+}
 
 cols = helper.getAllPropertyTypes(elmt);
 
 return helper.map(
-	elements,
+	elementsToShow,
 	cols,
 	true
 );
@@ -4185,14 +4240,14 @@ columns(cols);</value>
                     <text-property name="heading">mnums_gsaudit_votum</text-property>
                 </structure>
                 <structure>
-                    <property name="columnName">mnums_umsetzung</property>
-                    <text-property name="displayName">mnums_umsetzung</text-property>
-                    <text-property name="heading">mnums_umsetzung</text-property>
-                </structure>
-                <structure>
                     <property name="columnName">mnums_erlaeuterung</property>
                     <text-property name="displayName">mnums_erlaeuterung</text-property>
                     <text-property name="heading">mnums_erlaeuterung</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">mnums_umsetzung</property>
+                    <text-property name="displayName">mnums_umsetzung</text-property>
+                    <text-property name="heading">mnums_umsetzung</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">mnums_umsetzungbis</property>
@@ -4263,6 +4318,12 @@ columns(cols);</value>
                     <property name="columnName">mnums_naechsterevisionam</property>
                     <text-property name="displayName">mnums_naechsterevisionam</text-property>
                     <text-property name="heading">mnums_naechsterevisionam</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">dbid</property>
+                    <property name="analysis">dimension</property>
+                    <text-property name="displayName">dbid</text-property>
+                    <text-property name="heading">dbid</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -4397,12 +4458,12 @@ columns(cols);</value>
                     </structure>
                     <structure>
                         <property name="position">24</property>
-                        <property name="name">mnums_umsetzung</property>
+                        <property name="name">mnums_erlaeuterung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">25</property>
-                        <property name="name">mnums_erlaeuterung</property>
+                        <property name="name">mnums_umsetzung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
@@ -4473,6 +4534,11 @@ columns(cols);</value>
                     <structure>
                         <property name="position">39</property>
                         <property name="name">mnums_naechsterevisionam</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">40</property>
+                        <property name="name">dbid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                 </list-property>
@@ -4642,15 +4708,15 @@ columns(cols);</value>
                 </structure>
                 <structure>
                     <property name="position">24</property>
-                    <property name="name">mnums_umsetzung</property>
-                    <property name="nativeName">mnums_umsetzung</property>
+                    <property name="name">mnums_erlaeuterung</property>
+                    <property name="nativeName">mnums_erlaeuterung</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
                     <property name="position">25</property>
-                    <property name="name">mnums_erlaeuterung</property>
-                    <property name="nativeName">mnums_erlaeuterung</property>
+                    <property name="name">mnums_umsetzung</property>
+                    <property name="nativeName">mnums_umsetzung</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
@@ -4752,6 +4818,13 @@ columns(cols);</value>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
+                <structure>
+                    <property name="position">40</property>
+                    <property name="name">dbid</property>
+                    <property name="nativeName">dbid</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElementWithChildren;
@@ -4812,7 +4885,7 @@ if(elements.size() > 0){
 		")";
 		c2 = new ExecuteHQLInReportCommand(personNameHql, new Object[]{root, "massnahmen-umsetzung", Integer.parseInt(dbid)}, Person.TYPE_ID);
 		persons = helper.execute(c2).getResult();		
-		if(persons != null && persons.size() > 0){		
+		if(persons != null &amp;&amp; persons.size() > 0){		
 			for(Object[] oArr : persons){
 				for(Object o : oArr){
 					if(o instanceof Person){
@@ -5423,7 +5496,7 @@ bestehende Risiken</text-property>
             <property name="pageBreakBefore">always</property>
             <property name="pageBreakInside">auto</property>
             <structure name="toc"/>
-            <text-property name="text">Aufstellung nicht umgesetzter oder nur teilweise umgesetzter Grundschutzmaßnahmen</text-property>
+            <text-property name="text">Aufstellung nicht umgesetzter oder nur teilweise umgesetzer Grundschutzmaßnahmen</text-property>
         </label>
         <table id="1573">
             <property name="marginTop">0pt</property>
@@ -6346,6 +6419,22 @@ bestehende Risiken</text-property>
                                                 <expression name="key" type="javascript">row["mnums_umsetzung"]</expression>
                                                 <property name="direction">asc</property>
                                                 <property name="strength">-1</property>
+                                            </structure>
+                                        </list-property>
+                                        <list-property name="filter">
+                                            <structure>
+                                                <property name="operator">ne</property>
+                                                <expression name="expr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                <simple-property-list name="value1">
+                                                    <value>"Ja"</value>
+                                                </simple-property-list>
+                                            </structure>
+                                            <structure>
+                                                <property name="operator">ne</property>
+                                                <expression name="expr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                <simple-property-list name="value1">
+                                                    <value>"Entbehrlich"</value>
+                                                </simple-property-list>
                                             </structure>
                                         </list-property>
                                         <column id="1908">
@@ -7585,6 +7674,22 @@ bestehende Risiken</text-property>
                                                     <expression name="key" type="javascript">row["mnums_umsetzung"]</expression>
                                                     <property name="direction">asc</property>
                                                     <property name="strength">-1</property>
+                                                </structure>
+                                            </list-property>
+                                            <list-property name="filter">
+                                                <structure>
+                                                    <property name="operator">ne</property>
+                                                    <expression name="expr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                    <simple-property-list name="value1">
+                                                        <value>"Ja"</value>
+                                                    </simple-property-list>
+                                                </structure>
+                                                <structure>
+                                                    <property name="operator">ne</property>
+                                                    <expression name="expr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                    <simple-property-list name="value1">
+                                                        <value>"Entbehrlich"</value>
+                                                    </simple-property-list>
                                                 </structure>
                                             </list-property>
                                             <column id="3322">
