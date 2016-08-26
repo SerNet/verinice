@@ -2,15 +2,15 @@
   "name": "VeriniceLinkTableTest",
   "columnPaths": [
     "incident_scenario.incident_scenario_name",
-    "incident_scenario:person-iso.name",
+    "incident_scenario:person-iso.title",
     "incident_scenario/person-iso.person-iso_name",
     "incident_scenario/person-iso.person-iso_surname",
     "incident_scenario/asset.asset_name",
-    "incident_scenario/asset:person-iso.name",
+    "incident_scenario/asset:person-iso.title",
     "incident_scenario/asset/person-iso.person-iso_name",
     "incident_scenario/asset/person-iso.person-iso_surname",
     "incident_scenario/control.control_name",
-    "incident_scenario/control:person-iso.name",
+    "incident_scenario/control:person-iso.title",
     "incident_scenario/control/person-iso.person-iso_name",
     "incident_scenario/control/person-iso.person-iso_surname"
   ]

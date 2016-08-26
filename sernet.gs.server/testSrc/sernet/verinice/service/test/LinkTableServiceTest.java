@@ -167,7 +167,7 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
         command = commandService.executeCommand(command);
         List<CnATreeElement> assetList = command.getElements();
 
-        int expectedSize = resultTable.size();
+        int expectedSize = resultTable.size() - 1;
         
         assertEquals("Result table has not " + assetList.size() + " rows", expectedSize, assetList.size());
 
@@ -185,15 +185,15 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
         builder.addScopeId(org.getScopeId())
         .addColumnPath("incident_scenario.incident_scenario_name")
-        .addColumnPath("incident_scenario:person-iso.name")
+        .addColumnPath("incident_scenario:person-iso.title")
         .addColumnPath("incident_scenario/person-iso.person-iso_name")
         .addColumnPath("incident_scenario/person-iso.person-iso_surname")
         .addColumnPath("incident_scenario/asset.asset_name")
-        .addColumnPath("incident_scenario/asset:person-iso.name")
+        .addColumnPath("incident_scenario/asset:person-iso.title")
         .addColumnPath("incident_scenario/asset/person-iso.person-iso_name")
         .addColumnPath("incident_scenario/asset/person-iso.person-iso_surname")
         .addColumnPath("incident_scenario/control.control_name")
-        .addColumnPath("incident_scenario/control:person-iso.name")
+        .addColumnPath("incident_scenario/control:person-iso.title")
         .addColumnPath("incident_scenario/control/person-iso.person-iso_name")
         .addColumnPath("incident_scenario/control/person-iso.person-iso_surname");
 
@@ -222,34 +222,34 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
         //assertEquals(325, resultTable.size());
         assertEquals(12, resultTable.get(0).size());
 
-        assertEquals("Abuse of rights possible due to well-known software flaws", resultTable.get(21).get(0));
-        assertEquals("modelliert durch", resultTable.get(21).get(1));
-        assertEquals("Thomas", resultTable.get(21).get(2));
-        assertEquals("Test", resultTable.get(21).get(3));
+        assertEquals("Abuse of rights possible due to well-known software flaws", resultTable.get(28).get(0));
+        assertEquals("modelliert durch", resultTable.get(28).get(1));
+        assertEquals("Thomas", resultTable.get(28).get(2));
+        assertEquals("Test", resultTable.get(28).get(3));
 
-        assertEquals("Break-down of air conditioning", resultTable.get(29).get(0));
-        assertEquals("Air-conditioners", resultTable.get(29).get(4));
-        assertEquals("verantwortlich", resultTable.get(29).get(5));
-        assertEquals("Janet", resultTable.get(29).get(6));
-        assertEquals("Junit", resultTable.get(29).get(7));
+        assertEquals("Break-down of air conditioning", resultTable.get(32).get(0));
+        assertEquals("Air-conditioners", resultTable.get(32).get(4));
+        assertEquals("verantwortlich", resultTable.get(32).get(5));
+        assertEquals("Janet", resultTable.get(32).get(6));
+        assertEquals("Junit", resultTable.get(32).get(7));
 
-        assertEquals("Configuration error", resultTable.get(44).get(0));
-        assertEquals("12.5.1 Change control procedures", resultTable.get(44).get(8));
-        assertEquals("zuständig", resultTable.get(44).get(9));
-        assertEquals("Thomas", resultTable.get(44).get(10));
-        assertEquals("Test", resultTable.get(44).get(11));
+        assertEquals("Configuration error", resultTable.get(42).get(0));
+        assertEquals("12.5.1 Change control procedures", resultTable.get(42).get(8));
+        assertEquals("zuständig", resultTable.get(42).get(9));
+        assertEquals("Thomas", resultTable.get(42).get(10));
+        assertEquals("Test", resultTable.get(42).get(11));
+
+        assertEquals("Leak of information over networks", resultTable.get(155).get(0));
+        assertEquals("12.5.4 Information leakage", resultTable.get(155).get(8));
+        assertEquals("implementiert von", resultTable.get(155).get(9));
+        assertEquals("Anna", resultTable.get(155).get(10));
+        assertEquals("Assert", resultTable.get(155).get(11));
 
         assertEquals("Leak of information over networks", resultTable.get(156).get(0));
         assertEquals("12.5.4 Information leakage", resultTable.get(156).get(8));
-        assertEquals("implementiert von", resultTable.get(156).get(9));
-        assertEquals("Anna", resultTable.get(156).get(10));
-        assertEquals("Assert", resultTable.get(156).get(11));
-
-        assertEquals("Leak of information over networks", resultTable.get(157).get(0));
-        assertEquals("12.5.4 Information leakage", resultTable.get(157).get(8));
-        assertEquals("zuständig", resultTable.get(157).get(9));
-        assertEquals("Thomas", resultTable.get(157).get(10));
-        assertEquals("Test", resultTable.get(157).get(11));
+        assertEquals("zuständig", resultTable.get(156).get(9));
+        assertEquals("Thomas", resultTable.get(156).get(10));
+        assertEquals("Test", resultTable.get(156).get(11));
     }
 
     private LinkTableConfiguration cloneConfiguration(ILinkTableConfiguration configuration) {
