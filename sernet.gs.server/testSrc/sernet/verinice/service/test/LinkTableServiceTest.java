@@ -22,12 +22,17 @@ package sernet.verinice.service.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import static org.junit.Assert.*; 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -62,12 +67,85 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
 
     private static final String SOURCE_ID = "dm_20160303";
     private static final String EXT_ID_ORG = "ENTITY_37737";
+    
+    private static String ALIAS1 = "auditgroup-name"; 
+    private static String ALIAS2 = "person_relation"; 
+    private static String ALIAS3 = "controlPerson"; 
 
     @Resource(name="cnaTreeElementDao")
     protected IBaseDao<CnATreeElement, Long> elementDao;
 
     ILinkTableService service = new LinkTableService();
 
+    
+    private static final String[] COLUMN_PATHES_ARRAY  = { 
+            "auditgroup>audit.audit_name AS " + ALIAS1, 
+            "incident_scenario/threat.threat_name", 
+            "asset:person-iso.person-iso_name AS " + ALIAS2, 
+            "samt_topic<controlgroup.controlgroup_name", 
+            "threat.threat_name", 
+            "incident_scenario/asset/control/person-iso.person-iso_name AS " + ALIAS3 
+    }; 
+ 
+ 
+    private static final String[] EXPECTED_OBJECT_TYPES = { 
+      "asset", 
+      "audit", 
+      "auditgroup", 
+      "control", 
+      "controlgroup", 
+      "incident_scenario", 
+      "person-iso", 
+      "samt_topic", 
+      "threat" 
+    }; 
+     
+    private static final String[] EXPECTED_PROPERTY_TYPES = { 
+            "audit_name", 
+            "controlgroup_name", 
+            "person-iso_name", 
+            "threat_name" 
+          }; 
+ 
+    private static final Set<String> COLUMN_PATHES; 
+ 
+    static { 
+        COLUMN_PATHES = new LinkedHashSet<>(Arrays.asList(COLUMN_PATHES_ARRAY)); 
+    } 
+    
+    @Test
+    public void testGetElementTypes() {
+        LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
+        for (String path : COLUMN_PATHES) {
+            builder.addColumnPath(path);
+        }
+        LinkTableConfiguration configuration = builder.build();
+        checkObjectTypes(new LinkedList<>(configuration.getObjectTypeIds()));
+    }
+    
+    @Test
+    public void testGetPropertyTypes() {
+        LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
+        for (String path : COLUMN_PATHES) {
+            builder.addColumnPath(path);
+        }
+        LinkTableConfiguration configuration = builder.build();
+        checkPropertyTypes(new LinkedList<>(configuration.getPropertyTypeIds()));
+    }
+    
+    private void checkObjectTypes(List<String> objectTypeIds) { 
+        Collections.sort(objectTypeIds); 
+        assertArrayEquals(EXPECTED_OBJECT_TYPES, objectTypeIds.toArray()); 
+    } 
+     
+    private void checkPropertyTypes(List<String> propertyTypeIds) { 
+        Collections.sort(propertyTypeIds); 
+        assertArrayEquals(EXPECTED_PROPERTY_TYPES, propertyTypeIds.toArray()); 
+    } 
+
+    
+    
+    
     @Test
     public void testChildParentReport() throws CommandException {
         service.setLinkTableCreator(new GraphLinkedTableCreator());
@@ -97,6 +175,8 @@ public class LinkTableServiceTest extends BeforeEachVNAImportHelper {
             assertTrue("Asset: " + asset.getTitle() + " not in result list",assetNames.contains(asset.getTitle()));
         }
     }
+    
+    
 
     @Test
     public void testSzenarioReport() throws CommandException {

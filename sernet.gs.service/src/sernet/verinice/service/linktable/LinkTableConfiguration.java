@@ -21,6 +21,7 @@ package sernet.verinice.service.linktable;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -38,8 +39,10 @@ import java.util.Set;
  */
 public class LinkTableConfiguration implements ILinkTableConfiguration {
 
+
+    private static final long serialVersionUID = 5296374920424255723L;
+    
     private Set<String> columnPathes;
-    private IPathElement[] pathElements;
     private Set<String> linkTypeIds;
     private Set<Integer> scopeIds;
 
@@ -78,7 +81,11 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
      */
     @Override
     public Set<String> getObjectTypeIds() {
-        return ColumnPathParser.getObjectTypeIds(getPathElements());
+        Set<String> objectTypeIds = new HashSet<>();
+        for (String columnPath : getColumnPathArray()) {
+            objectTypeIds.addAll(ColumnPathParser.getObjectTypeIds(columnPath));
+        }
+        return objectTypeIds;
     }
     
     /* (non-Javadoc)
@@ -86,19 +93,17 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
      */
     @Override
     public Set<String> getPropertyTypeIds() {
-        return ColumnPathParser.getPropertyTypeIds(getPathElements());
+        Set<String> propertyTypeIds = new HashSet<>();
+        for(String columnPath : getColumnPathArray()){
+            List<String> pathElements = ColumnPathParser.getColumnPathAsList(columnPath);
+            pathElements = ColumnPathParser.removeAlias(pathElements);
+            if(!pathElements.contains(":")) {
+                propertyTypeIds.add(pathElements.get(pathElements.size()-1));
+            }    
+        }
+        return propertyTypeIds;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.report.service.impl.dynamictable.ILinkTableConfiguration#getPathElements()
-     */
-    @Override
-    public IPathElement[] getPathElements() {
-        if(pathElements==null) {
-            pathElements = ColumnPathParser.getPathElements(columnPathes);
-        }
-        return pathElements;
-    }
 
     /* (non-Javadoc)
      * @see sernet.verinice.report.service.impl.dynamictable.ILinkTableConfiguration#getLinkTypeIds()

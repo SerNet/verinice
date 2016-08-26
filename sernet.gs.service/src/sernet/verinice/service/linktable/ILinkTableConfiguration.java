@@ -36,11 +36,6 @@ public interface ILinkTableConfiguration extends Serializable {
     Set<String> getColumnPaths();
 
     /**
-     * @return An array of path elements with one element for each VQL column path
-     */
-    IPathElement[] getPathElements();
-
-    /**
      * Object types are defined in SNCA.xml.
      * 
      * @return A set with all objects type ids in this link table configuration

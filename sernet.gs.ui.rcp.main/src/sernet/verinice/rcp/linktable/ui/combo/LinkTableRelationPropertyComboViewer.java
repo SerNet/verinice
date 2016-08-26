@@ -23,7 +23,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import sernet.verinice.rcp.linktable.LinkTableUtil;
 import sernet.verinice.rcp.linktable.ui.LinkTableColumn;
-import sernet.verinice.service.linktable.LinkPropertyElement;
+import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
@@ -64,7 +64,7 @@ public class LinkTableRelationPropertyComboViewer
     @Override
     public Object[] getElements(Object inputElement) {
 
-        return LinkPropertyElement.getAllProperties().toArray(new String[0]);
+        return CnaLinkPropertyConstants.ALL_PROPERTIES;
     }
 
 }

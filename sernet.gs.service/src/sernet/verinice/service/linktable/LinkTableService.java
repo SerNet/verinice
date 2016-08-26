@@ -19,19 +19,18 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
+import sernet.verinice.service.linktable.generator.GraphLinkedTableCreator;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 
 /**
@@ -52,21 +51,7 @@ public class LinkTableService implements ILinkTableService {
     ICommandService commandService;
 
     /** Default implementation of link creator */
-    private LinkedTableCreator linkedTableCreator = new LinkedTableCreator() {
-
-        @Override
-        public List<List<String>> createTable(VeriniceGraph veriniceGraph, ILinkTableConfiguration conf) {
-            try {
-                return doCreateTable(veriniceGraph, conf);
-            } catch (RuntimeException e) {
-                LOG.error("RuntimeException while creating link table", e);
-                throw e;
-            } catch (Exception e) {
-                LOG.error("Error while creating link table", e);
-                throw new LinkTableException("Error while creating link table: " + e.getMessage(), e);
-            }
-        }
-    };
+    private LinkedTableCreator linkedTableCreator = new GraphLinkedTableCreator();
 
     @Override
     public List<List<String>> createTable(ILinkTableConfiguration configuration) {
@@ -91,32 +76,6 @@ public class LinkTableService implements ILinkTableService {
     public List<List<String>> createTable(String vltFilePath) {
         ILinkTableConfiguration conf = VeriniceLinkTableIO.readLinkTableConfiguration(vltFilePath);
         return createTable(conf);
-    }
-
-    private List<List<String>> doCreateTable(VeriniceGraph veriniceGraph, ILinkTableConfiguration configuration) throws CommandException {
-
-        LinkTableDataModel dm = new LinkTableDataModel(veriniceGraph, configuration);
-        dm.init();
-        List<List<String>> table = dm.getResult();
-        createHeaderRow(configuration, table);
-
-        return table;
-    }
-
-    private void createHeaderRow(ILinkTableConfiguration configuration, List<List<String>> table) {
-        ArrayList<String> headers = new ArrayList<>();
-
-        for (String element : configuration.getColumnPaths()) {
-            int propertyBeginning = element.lastIndexOf(".");
-            String propertyId = element.substring(propertyBeginning + 1);
-            if (element.contains(":")) {
-                headers.add(propertyId);
-            } else {
-                headers.add(HUITypeFactory.getInstance().getMessage(propertyId));
-            }
-        }
-
-        table.add(0, headers);
     }
 
     protected GraphCommand createCommand(ILinkTableConfiguration configuration) {

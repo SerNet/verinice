@@ -272,8 +272,7 @@ public class LinkTableUtil {
             }
             throw new ObjectModelValidationException(path + " is no valid column path", e); //$NON-NLS-1$
         }
-        Set<String> objectTypeIds = ColumnPathParser
-                .getObjectTypeIds(Sets.newHashSet(path));
+        Set<String> objectTypeIds = ColumnPathParser.getObjectTypeIds(path);
         for (String id : objectTypeIds) {
 
             boolean validTypeId = loader.isValidTypeId(id);
