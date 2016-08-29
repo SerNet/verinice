@@ -352,33 +352,6 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	    setSimpleValue(type, Integer.toString(value));
 	}
 	
-	/**
-	 * Sets the value for a given property.
-	 * 
-	 * <p>Since internally a property value is a multi-value this interface allows setting
-	 * these values in one row.</p>
-	 * 
-	 * <p>Note: Using this method is preferred over modifying a {@link PropertyList} object itself.</p>
-	 * 
-	 * <p>Note: The actual values that are imported have to be <em>untranslated</em> IOW should directly
-	 * represent the strings used in the SNCA.xml</p>
-	 * @param huiTypeFactory
-	 * @param propertyTypeId
-	 * @param foreignProperties
-	 */
-	public void importProperties(HUITypeFactory huiTypeFactory, String propertyTypeId, List<String> foreignProperties) {
-		PropertyList pl = typedPropertyLists.get(propertyTypeId);
-        if(pl==null) {
-            pl = new PropertyList();
-            typedPropertyLists.put(propertyTypeId,pl);
-        }
-    }
-
-    public void setNumericValue(PropertyType type, int value) {
-        setSimpleValue(type, Integer.toString(value));
-    }
-
-
     /**
      * Copy all property values from given entity to this one
      * 
