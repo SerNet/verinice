@@ -32,7 +32,9 @@ import java.util.Set;
  */
 public final class VqlEdge {
 
-    private static final String DELIMITER = ".";
+    private static final String EDGE_TYPE_DELIMTER = ":";
+    private static final String PATH_DELIMITER = "/";
+    private static final String PROPERTY_DELIMITER = ".";
     private final EdgeType edgeType;
     private final String path;
     private Set<String> propertyTypes;
@@ -100,7 +102,10 @@ public final class VqlEdge {
             throw new IllegalStateException("VqlEdge does not contain this property type: " + propertyType);
         }
 
-        return path + DELIMITER + propertyType;
+        // map the path back. In vql the pathes to an edge property always contains ":"
+        int lastIndexOf  = path.lastIndexOf(PATH_DELIMITER);
+        String originalPath = path.substring(0, lastIndexOf) + EDGE_TYPE_DELIMTER + path.substring(lastIndexOf + 1);
+        return originalPath + PROPERTY_DELIMITER + propertyType;
     }
 
     /**

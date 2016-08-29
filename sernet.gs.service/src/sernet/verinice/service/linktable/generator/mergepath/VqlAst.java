@@ -199,7 +199,7 @@ public class VqlAst {
     }
 
     private String getEdgePathForLink(VqlNode leftNode, VqlEdge incomingEdge, String valueOfRightNode) {
-        String edgePath = (incomingEdge == null ? leftNode.getPath() : incomingEdge.getPath()) + ":" + valueOfRightNode;
+        String edgePath = (incomingEdge == null ? leftNode.getPath() : incomingEdge.getPath()) + "/" + valueOfRightNode;
         return edgePath;
     }
 
