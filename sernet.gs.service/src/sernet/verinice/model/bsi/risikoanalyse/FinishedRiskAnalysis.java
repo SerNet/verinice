@@ -22,7 +22,8 @@ import sernet.verinice.model.common.CnATreeElement;
 
 public class FinishedRiskAnalysis extends CnATreeElement  {
 
-	public static final String TYPE_ID = "riskanalysis";
+	public static final String TYPE_ID = "riskanalysis"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "finished-risk-analysis"; //$NON-NLS-1$
 	
 	
 	public FinishedRiskAnalysis(CnATreeElement cnaElement) {

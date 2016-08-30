@@ -57,7 +57,11 @@ public class FolderPreferencePage extends FieldEditorPreferencePage implements I
         addField(new DirectoryFieldEditor(PreferenceConstants.DEFAULT_FOLDER_REPORT,
             Messages.getString("FolderPreferencePage.2"), fep)); //$NON-NLS-1$
         addField(new DirectoryFieldEditor(PreferenceConstants.DEFAULT_TEMPLATE_FOLDER_REPORT,
-            Messages.getString("FolderPreferencePage.3"), fep)); //$NON-NLS-1$
+                Messages.getString("FolderPreferencePage.3"), fep)); //$NON-NLS-1$
+        addField(new DirectoryFieldEditor(PreferenceConstants.DEFAULT_FOLDER_CSV_EXPORT,
+                Messages.getString("FolderPreferencePage.5"), fep)); //$NON-NLS-1$
+        addField(new DirectoryFieldEditor(PreferenceConstants.DEFAULT_FOLDER_VLT,
+                Messages.getString("FolderPreferencePage.6"), fep)); //$NON-NLS-1$
     }
     
     @Override

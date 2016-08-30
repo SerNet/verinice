@@ -29,6 +29,8 @@ public class NetzKomponente extends CnATreeElement
 
     // ID must correspond to entity definition in XML description
 	public static final String TYPE_ID = "netzkomponente"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "netz-komponente"; //$NON-NLS-1$
+    
 	public static final String PROP_NAME = "netzkomponente_name"; //$NON-NLS-1$
 	public static final String PROP_KUERZEL = "netzkomponente_kuerzel"; //$NON-NLS-1$
 	public static final String PROP_TAG			= "netzkomponente_tag"; //$NON-NLS-1$

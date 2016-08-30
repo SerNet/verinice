@@ -37,6 +37,7 @@ import sernet.verinice.service.linktable.antlr.VqlParser;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
+@SuppressWarnings("restriction")
 public class LtrParserTest {
 
     private static final String COMPLEX_FILE = "complex.vql";
@@ -53,7 +54,7 @@ public class LtrParserTest {
         String fileName = ALIAS_FILE;
         CommonAST parseTree = parseFile(fileName);
         // incident_scenario/asset/control/person-iso.person-iso_name
-        checkPath(parseTree, new String[]{"incident_scenario","/","asset","/","control","/","person-iso",".","person-iso_name","AS","this-is_an-ALIAS"});
+        checkPath(parseTree, new String[] { "incident_scenario", "/", "asset", "/", "control", "/", "person-iso", ".", "person-iso_name", "AS", "this-is_an-ALIAS" });
     }
 
     @Test
@@ -61,7 +62,7 @@ public class LtrParserTest {
         String fileName = ALIAS_LOWER_FILE;
         CommonAST parseTree = parseFile(fileName);
         // incident_scenario/threat.threat_name
-        checkPath(parseTree, new String[]{"incident_scenario","/","threat",".","threat_name","as","threat_name"});
+        checkPath(parseTree, new String[] { "incident_scenario", "/", "threat", ".", "threat_name", "as", "threat_name" });
     }
 
     @Test
@@ -69,7 +70,7 @@ public class LtrParserTest {
         String fileName = CHILD_DELIMITER_FILE;
         CommonAST parseTree = parseFile(fileName);
         // assetgroup>assetgroup.assetgroup_name
-        checkPath(parseTree, new String[]{"assetgroup",">","assetgroup",".","assetgroup_name"});
+        checkPath(parseTree, new String[] { "assetgroup", ">", "assetgroup", ".", "assetgroup_name" });
     }
 
     @Test
@@ -77,7 +78,7 @@ public class LtrParserTest {
         String fileName = LINK_DELIMITER_FILE;
         CommonAST parseTree = parseFile(fileName);
         // incident_scenario/threat.threat_name
-        checkPath(parseTree, new String[]{"incident_scenario","/","threat",".","threat_name"});
+        checkPath(parseTree, new String[] { "incident_scenario", "/", "threat", ".", "threat_name" });
     }
 
     @Test
@@ -85,7 +86,7 @@ public class LtrParserTest {
         String fileName = LINKTYPE_DELIMITER_FILE;
         CommonAST parseTree = parseFile(fileName);
         // incident_scenario/threat.threat_name
-        checkPath(parseTree, new String[]{"asset",":","person-iso"});
+        checkPath(parseTree, new String[] { "asset", ":", "person-iso" });
     }
 
     @Test
@@ -93,7 +94,7 @@ public class LtrParserTest {
         String fileName = PARENT_DELIMITER_FILE;
         CommonAST parseTree = parseFile(fileName);
         // samt_topic<controlgroup.controlgroup_name
-        checkPath(parseTree, new String[]{"samt_topic","<","controlgroup",".","controlgroup_name"});
+        checkPath(parseTree, new String[] { "samt_topic", "<", "controlgroup", ".", "controlgroup_name" });
     }
 
     @Test
@@ -101,7 +102,7 @@ public class LtrParserTest {
         String fileName = PROPERTY_DELIMITER_FILE;
         CommonAST parseTree = parseFile(fileName);
         // threat.threat_name
-        checkPath(parseTree, new String[]{"threat",".","threat_name"});
+        checkPath(parseTree, new String[] { "threat", ".", "threat_name" });
     }
 
     @Test
@@ -109,12 +110,12 @@ public class LtrParserTest {
         String fileName = COMPLEX_FILE;
         CommonAST parseTree = parseFile(fileName);
         // incident_scenario/asset/control/person-iso.person-iso_name
-        checkPath(parseTree, new String[]{"incident_scenario","/","asset","/","control","/","person-iso",".","person-iso_name"});
+        checkPath(parseTree, new String[] { "incident_scenario", "/", "asset", "/", "control", "/", "person-iso", ".", "person-iso_name" });
     }
 
     private void checkPath(AST element, String[] names) {
         for (String name : names) {
-            assertEquals(element.getText(),name);
+            assertEquals(name, element.getText());
             element = element.getNextSibling();
         }
     }
@@ -124,7 +125,7 @@ public class LtrParserTest {
         VqlLexer lexer = new VqlLexer(input);
         VqlParser parser = new VqlParser(lexer);
         parser.expr();
-        CommonAST parseTree = (CommonAST)parser.getAST();
+        CommonAST parseTree = (CommonAST) parser.getAST();
         return parseTree;
     }
 

@@ -2,9 +2,13 @@ header {
 package sernet.verinice.service.linktable.antlr;
 }
 class VqlParser extends Parser;
-options { buildAST=true; }
+options { 
+buildAST=true;
+defaultErrorHandler=false; 
+}
 
-expr : typeName (linkedType|parentType|childType)* (linkType|property) (alias)?;
+
+expr : typeName (linkedType|parentType|childType)* (linkType)? property (alias)?;
 
 as : "AS"|"as";
 
@@ -14,9 +18,7 @@ childType : CHILD typeName;
 
 linkType :  LT linkTypeName;
 property : PROP propertyName;
-
-alias : as aliasName;
-
+alias : as aliasName ;
 typeName : Alphanumeric;
 linkTypeName : Alphanumeric;
 propertyName : Alphanumeric;
@@ -36,4 +38,5 @@ CHILD     : '>' ;
 PARENT    : '<' ;
 PROP      : '.' ;
 LT        : ':' ;
-Alphanumeric : ('_' | '-' | '0'..'9' | 'A'..'Z' | 'a'..'z')+ ;
+Alphanumeric : ('_' | '-' | '0'..'9' | 'A'..'Z' | 'a'..'z' | 'Ä' | 'Ö' | 'Ü' | 'ä' | 'ö' | 'ü'| '(' | ')')+ ;
+

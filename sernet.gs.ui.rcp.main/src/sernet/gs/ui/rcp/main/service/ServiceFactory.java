@@ -37,6 +37,7 @@ import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.interfaces.validation.IValidationService;
+import sernet.verinice.service.model.IObjectModelService;
 
 @SuppressWarnings("restriction")
 public abstract class ServiceFactory {
@@ -143,10 +144,14 @@ public abstract class ServiceFactory {
 		}
 		return permissionHandlingNeeded;
 	}
-	
-	public static IValidationService lookupValidationService(){
-	    return (IValidationService)VeriniceContext.get(VeriniceContext.VALIDATION_SERVICE);
-	}
+
+    public static IValidationService lookupValidationService() {
+        return (IValidationService) VeriniceContext.get(VeriniceContext.VALIDATION_SERVICE);
+    }
+
+    public static IObjectModelService lookupObjectModelService() {
+        return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
+    }
 	
 	public static IReportDepositService lookupReportDepositService(){
 	    return (IReportDepositService)VeriniceContext.get(VeriniceContext.REPORT_DEPOSIT_SERVICE);

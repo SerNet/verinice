@@ -86,6 +86,7 @@ This variant:
                 <entry key="reportdepositService" value-ref="reportdepositService" />
                 <entry key="reportHQLService" value-ref="reportHQLService"/>
                 <entry key="configurationService" value-ref="configurationService"/>
+				<entry key="objectModelService" value-ref="objectModelService" />
 			</map>
 		</property>
 	</bean>
@@ -317,6 +318,10 @@ This variant:
     </bean>
     
      <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
+     
+	<bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
+		<property name="huiTypeFactory" ref="huiTypeFactory" />
+	</bean>
      
      <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
         <property name="loadScopeTitlesCommand" ref="loadScopeTitlesCommand" />

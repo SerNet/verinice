@@ -32,7 +32,7 @@ public class GefaehrdungsUmsetzung extends CnATreeElement implements IGefaehrdun
     private static final long serialVersionUID = 20160216153414L;
 
     private IGefaehrdungsBaumElement gefaehrdungsParent;
-    
+
     public static final String GEFAEHRDUNG_ALTERNATIVE_A = "A"; //$NON-NLS-1$
     public static final String GEFAEHRDUNG_ALTERNATIVE_B = "B"; //$NON-NLS-1$
     public static final String GEFAEHRDUNG_ALTERNATIVE_C = "C"; //$NON-NLS-1$

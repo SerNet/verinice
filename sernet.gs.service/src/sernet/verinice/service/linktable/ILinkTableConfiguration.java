@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -27,25 +28,31 @@ import java.util.Set;
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public interface ILinkTableConfiguration {
+public interface ILinkTableConfiguration extends Serializable {
 
     /**
      * @return The VQL column paths for the Link Table
      */
-    Set<String> getColumnPathes();
+    Set<String> getColumnPaths();
 
     /**
-     * @return An array of path elements with one element for each VQL column path
-     */
-    IPathElement[] getPathElements();
-
-    /**
-     * @return A set of objects type ids for the Link Table. See SNCA.xml for all object types.
+     * Object types are defined in SNCA.xml.
+     * 
+     * @return A set with all objects type ids in this link table configuration
      */
     Set<String> getObjectTypeIds();
+    
+    /**
+     * Property types are defined in SNCA.xml.
+     * 
+     * @return A set with all property type ids in this link table configuration
+     */
+    Set<String> getPropertyTypeIds();
 
     /**
-     * @return A set of relation ids for the Link Table. See SNCA.xml for all relation ids.
+     * Link types are defined in SNCA.xml.
+     * 
+     * @return A set with all link (or relation) ids in this link table configuration
      */
     Set<String> getLinkTypeIds();
 

@@ -317,6 +317,18 @@
             id="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
             name="Load link table">
       </command>
+	    <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Export vlt file to csv"
+            id="sernet.verinice.rcp.linktable.ExportLinkTableHandler"
+            name="Export query">
+      </command>
+	    <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Create a link table and open it in an editor"
+            id="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+            name="Create link table">
+      </command>
 
    </extension>
    <extension point="org.eclipse.ui.bindings">
@@ -1225,15 +1237,28 @@
                label="%command.label.duedate"
                tooltip="%Assign a person for this task"/>  
         </menuContribution>
-      <menuContribution locationURI="menu:org.eclipse.ui.main.menu">
-	<menu id="file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap" label="%menu.file">
-            <command commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
-                  label="Open link table..."
+        
+        <menuContribution
+		  locationURI="menu:file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap">
+			<menu id="queryBuilder"
+			    label="%reportQueryBuilder.name">
+			    <command commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+                  label="%reportQueryBuilder.create"
                   style="push"
-                  tooltip="Open a link table in an editor">
-            </command>
-         </menu>
-		 </menuContribution>
+                  tooltip="%reportQueryBuilder.create.tt">
+            	</command>
+            	<command commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
+                  label="%reportQueryBuilder.open"
+                  style="push"
+                  tooltip="%reportQueryBuilder.open.tt">
+            	</command>
+            	<command commandId="sernet.verinice.rcp.linktable.ExportLinkTableHandler"
+                  label="%reportQueryBuilder.run"
+                  style="push"
+                  tooltip="%reportQueryBuilder.run.tt">
+            	</command>
+			</menu>
+		</menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -1257,10 +1282,10 @@
             name="%editor.name.1">
       </editor>
       <editor
-            class="sernet.verinice.rcp.linktable.VeriniceLinkTableEditor"
+            class="sernet.verinice.rcp.linktable.LinkTableEditor"
             default="false"
-            icon="icons/24-tool-a.png"
-            id="sernet.verinice.rcp.linktable.VeriniceLinkTableEditor"
+            icon="icons/document-table.png"
+            id="sernet.verinice.rcp.linktable.LinkTableEditor"
             name="LInk table editor"/>
    </extension>
    <extension
@@ -1876,9 +1901,12 @@
         	</with>
 		 </enabledWhen>
       </handler>
-      <handler
-		class="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
+      <handler class="sernet.verinice.rcp.linktable.handlers.OpenLinkTableHandler"
           commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler" />
+      <handler class="sernet.verinice.rcp.linktable.handlers.ExportLinkTableHandler"
+          commandId="sernet.verinice.rcp.linktable.ExportLinkTableHandler" />
+      <handler class="sernet.verinice.rcp.linktable.handlers.CreateLinkTableHandler"
+          commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler" />
    </extension>
    <extension point="org.eclipse.core.expressions.propertyTesters">
 	   <propertyTester
@@ -2021,6 +2049,18 @@
              state="true">
           <enablement>
             <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
+          </enablement>
+       </decorator>
+       <decorator
+             adaptable="true"
+             class="sernet.verinice.rcp.linktable.ValidationDecorator"
+             id="sernet.verinice.rcp.linktable.ValidationDecorator"
+             label="ValidationDecorator"
+             lightweight="true"
+             location="BOTTOM_LEFT"
+             state="true">
+          <enablement>
+            <objectClass name="sernet.verinice.rcp.linktable.LinkTableEditor"/>
           </enablement>
        </decorator>
    </extension>

@@ -18,6 +18,7 @@
 package sernet.hui.common.connect;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 
 
@@ -79,10 +80,14 @@ public class Property implements Serializable, ITypedElement {
 			parent.firePropertyChanged(this, source);
 		}
 	}
-	
-	public void setPropertyValue(String propertyValue, boolean fireChange) {
+
+    public void setPropertyValue(String propertyValue, boolean fireChange) {
 		setPropertyValue(propertyValue, fireChange, null);
 	}
+    
+    public void setPropertyValue(Calendar calendar, boolean fireChange, Object source) {
+        setPropertyValue(convertCalendarToString(calendar), fireChange, source);
+    }
 	
 	/**
 	 * @param propertyValue The propertyValue to set.
@@ -125,6 +130,10 @@ public class Property implements Serializable, ITypedElement {
         property.setPropertyValue(getPropertyValue(), false);
         return property;
 	}
+	
+	public static final String convertCalendarToString(Calendar calendar) {
+        return Long.toString(calendar.getTimeInMillis());
+    }
 
     /* (non-Javadoc)
      * @see java.lang.Object#hashCode()

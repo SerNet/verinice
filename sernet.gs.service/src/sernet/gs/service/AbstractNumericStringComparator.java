@@ -55,7 +55,9 @@
 package sernet.gs.service;
 
 import java.io.Serializable;
+import java.text.Collator;
 import java.util.Comparator;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 
@@ -68,13 +70,42 @@ import org.apache.log4j.Logger;
  * The comparison should be very performant as it only ever deals with 
  * issues at a character level and never tries to consider the 
  * numerics as numbers.
- *
+ * 
+ * @see Test class: sernet.verinice.service.test.NumericStringComparatorTest
  * @author bayard@generationjava.com
+ * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public abstract class AbstractNumericStringComparator<T> implements Comparator<T>, Serializable {
 
-    private static final long serialVersionUID = 5698825401054792475L;
+    private static final long serialVersionUID = -9196544676244562514L;
+    
     private transient Logger log = Logger.getLogger(AbstractNumericStringComparator.class);
+    private Logger getLog(){
+        if (log == null)
+            log = Logger.getLogger(NumericStringComparator.class);
+        return log;
+    }
+    
+    // Collator for basic string comparison
+    private transient Collator collator = Collator.getInstance(Locale.getDefault()); 
+    
+    /**
+     * Returns a collator for the default locale for this instance
+     * of the Java Virtual Machine.
+     * 
+     * For a German / Germany locale the sorting is done according to
+     * DIN 5007 Var.1. 
+     * See: https://de.wikipedia.org/wiki/Alphabetische_Sortierung#Deutschland
+     * for a definition of DIN 5007 Var.1
+     * 
+     * @see Test class: sernet.verinice.service.test.NumericStringComparatorTest
+     * @return A collator
+     */
+    private Collator getCollator(){
+        if (collator == null)
+            collator = Collator.getInstance(Locale.getDefault());
+        return collator;
+    }
 	
 	public AbstractNumericStringComparator() {
 	}
@@ -96,36 +127,37 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 		return compareString(s1, s2);
 	}
 
-    private int compareString(String s1, String s2) {
-        s1 = s1.toLowerCase();
-        s2 = s2.toLowerCase();
+    private int compareString(String string1, String string2) {
+        string1 = string1.toLowerCase();
+        string2 = string2.toLowerCase();
         
 		// find the first digit.
-		int idx1 = getFirstDigitIndex(s1);
-		int idx2 = getFirstDigitIndex(s2);
+		int idx1 = getFirstDigitIndex(string1);
+		int idx2 = getFirstDigitIndex(string2);
 
+		// no digits found, compare string the ordinary way 
 		if ((idx1 == -1) || (idx2 == -1)
-				|| (!s1.substring(0, idx1).equals(s2.substring(0, idx2)))) {
-			return s1.compareTo(s2);
+				|| (!string1.substring(0, idx1).equals(string2.substring(0, idx2)))) {
+			return compareStringOrdinary(string1, string2);
 		}
 
 		// find the last digit
-		int edx1 = getLastDigitIndex(s1, idx1);
-		int edx2 = getLastDigitIndex(s2, idx2);
+		int edx1 = getLastDigitIndex(string1, idx1);
+		int edx2 = getLastDigitIndex(string2, idx2);
 
 		String sub1 = null;
 		String sub2 = null;
 
 		if (edx1 == -1) {
-			sub1 = s1.substring(idx1);
+			sub1 = string1.substring(idx1);
 		} else {
-			sub1 = s1.substring(idx1, edx1);
+			sub1 = string1.substring(idx1, edx1);
 		}
 
 		if (edx2 == -1) {
-			sub2 = s2.substring(idx2);
+			sub2 = string2.substring(idx2);
 		} else {
-			sub2 = s2.substring(idx2, edx2);
+			sub2 = string2.substring(idx2, edx2);
 		}
 
 		// deal with zeros at start of each number
@@ -149,12 +181,12 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 				if(edx2 > -1) {
 					// TODO ak the next line sometimes produces an ArrayOutOfBounds exception
 					try {
-						int comp = compareString(s1.substring(edx1), s2.substring(edx2));
+						int comp = compareString(string1.substring(edx1), string2.substring(edx2));
 						if (comp != 0) {
 							ret = comp;
 						}
 					} catch (Exception e) {
-						getLog().error("Fehler bei Stringvergleich: " + s1 + " : " + s2,e);
+						getLog().error("Fehler bei Stringvergleich: " + string1 + " : " + string2,e);
 					}
 				} else {
 					ret = 1;
@@ -187,6 +219,21 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 		}
 
 		return 0;
+    }
+
+    /**
+     * Compares string1 to string2 according to the
+     * collation rules for the Collator. See the Collator
+     * class description for more details.
+     * 
+     * @param string1
+     * @param string2
+     * @return Returns an integer less than, equal to or greater than zero 
+     * depending on whether string1 is less than, equal to or greater 
+     * than string2.
+     */
+    protected int compareStringOrdinary(String string1, String string2) {
+        return getCollator().compare(string1, string2);
     }
 
 	private int getFirstDigitIndex(String str) {
@@ -238,12 +285,6 @@ public abstract class AbstractNumericStringComparator<T> implements Comparator<T
 		}
 
 		return count;
-	}
-
-	private Logger getLog(){
-	    if (log == null)
-	        log = Logger.getLogger(NumericStringComparator.class);
-	    return log;
 	}
 
 }

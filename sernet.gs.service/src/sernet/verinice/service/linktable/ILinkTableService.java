@@ -99,5 +99,12 @@ public interface ILinkTableService {
      * @return A Link Table
      */
     List<List<String>> createTable(String vltFilePath);
+    
+    /**
+     * Sets strategy for calculating the linked table.
+     * 
+     * Must be called before {@link #createTable()};
+     */
+    void setLinkTableCreator(LinkedTableCreator linkedTableCreator);
 
 }

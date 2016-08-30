@@ -21,6 +21,7 @@ package sernet.verinice.interfaces.graph;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -31,6 +32,8 @@ import org.hibernate.criterion.Restrictions;
 
 import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -47,14 +50,14 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
     
     private Integer[] scopeIds;
     
-    private String[] typeIds;
+    private String[] hibernateTypeIds;
     
     private IElementFilter elementFilter;
     
     private transient IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
 
     /* (non-Javadoc)
-     * @see sernet.verinice.graph.IGraphElementLoader#loadElements()
+     * @see sernet.verinice.graph.IGraphElementLoadeTr#loadElements()
      */
     @Override
     public List<CnATreeElement> loadElements() {
@@ -110,12 +113,32 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
     }
     
     public String[] getTypeIds() {
-        return (typeIds != null) ? typeIds.clone() : null;
+        return (hibernateTypeIds != null) ? hibernateTypeIds.clone() : null;
     }
 
+    /**
+     * Set the type ids for this loader.
+     * The type ids from SNCA.xml are replaced by the hibernate type ids from
+     * *.hbm.xml mapping file if hibernate id is nor the same.
+     * 
+     * @param typeIds Type ids from SNCA.xml
+     * @see sernet.verinice.interfaces.graph.IGraphElementLoader#setTypeIds(java.lang.String[])
+     */
     @Override
     public void setTypeIds(String[] typeIds) {
-        this.typeIds = (typeIds != null) ? typeIds.clone() : null;
+        List<String> hibernateTypeIdList = new LinkedList<>();
+        if(typeIds!=null) {
+            for (int i = 0; i < typeIds.length; i++) {
+                hibernateTypeIdList.add(HibernateTypeIdManager.getHibernateTypeId(typeIds[i]));
+                // There are 2 different Hibernate ids for MassnahmenUmsetzung.TYPE_ID: 
+                // MassnahmenUmsetzung.HIBERNATE_TYPE_ID and
+                // RisikoMassnahmenUmsetzung.HIBERNATE_TYPE_ID
+                if(MassnahmenUmsetzung.TYPE_ID.equals(typeIds[i])) {
+                    hibernateTypeIdList.add(RisikoMassnahmenUmsetzung.HIBERNATE_TYPE_ID);
+                }
+            } 
+        } 
+        this.hibernateTypeIds = hibernateTypeIdList.toArray(new String[hibernateTypeIdList.size()]);
     }
     
     public IElementFilter getElementFilter() {

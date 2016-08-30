@@ -19,26 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.vlt;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 
 import org.apache.log4j.Logger;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 
-import sernet.verinice.service.linktable.ILinkTableConfiguration;
-import sernet.verinice.service.linktable.LinkTableConfiguration;
-import sernet.verinice.service.linktable.LinkTableException;
+import sernet.verinice.service.linktable.*;
 
 /**
  * VeriniceLinkTableIO (de-)serialize Link Table configuration
@@ -56,7 +44,7 @@ public abstract class VeriniceLinkTableIO {
 
     private static final Logger LOG = Logger.getLogger(VeriniceLinkTableIO.class);
 
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     private VeriniceLinkTableIO() {
         // Do not instantiate this class, use public static methods.
@@ -67,11 +55,10 @@ public abstract class VeriniceLinkTableIO {
      * {@link VeriniceLinkTable}. VeriniceLinkTable is saved as a JSON file.
      *
      * @param configuration A link table configuration
-     * @param name The name of the configuration
      * @param fullPath The full path to the file
      */
-    public static void write(ILinkTableConfiguration configuration, String name, String fullPath) {
-        VeriniceLinkTable vlt = createVeriniceLinkTable(configuration, name);
+    public static void write(ILinkTableConfiguration configuration, String fullPath) {
+        VeriniceLinkTable vlt = createVeriniceLinkTable(configuration);
         write(vlt, fullPath);
     }
 
@@ -85,7 +72,7 @@ public abstract class VeriniceLinkTableIO {
         try {
             doWrite(vlt, fullPath);
         } catch (JsonParseException e) {
-            String message = "Error while creating JSON for Link-Table configuration: " + vlt.getName();
+            String message = "Error while creating JSON for Link-Table configuration: " + fullPath;
             LOG.error(message, e);
             throw new LinkTableException(message, e);
         } catch (IOException e) {
@@ -153,9 +140,9 @@ public abstract class VeriniceLinkTableIO {
         writer.close();
     }
 
-    private static VeriniceLinkTable createVeriniceLinkTable(ILinkTableConfiguration configuration, String name) {
-        VeriniceLinkTable.Builder builder = new VeriniceLinkTable.Builder(name);
-        builder.setColumnPaths(new LinkedList<>(configuration.getColumnPathes()));
+    private static VeriniceLinkTable createVeriniceLinkTable(ILinkTableConfiguration configuration) {
+        VeriniceLinkTable.Builder builder = new VeriniceLinkTable.Builder();
+        builder.setColumnPaths(new LinkedList<>(configuration.getColumnPaths()));
         builder.setRelationIds(new LinkedList<>(configuration.getLinkTypeIds()));
         builder.setScopeIds(Arrays.asList(configuration.getScopeIdArray()));
         return builder.build();

@@ -57,7 +57,7 @@ public class VeriniceLinkTableTest {
         .addLinkTypeId("rel_control_incscen")
         .addLinkTypeId("rel_person_incscen_modl");
         LinkTableConfiguration before = builder.build();
-        VeriniceLinkTableIO.write(before, NAME, getFilePath());
+        VeriniceLinkTableIO.write(before, getFilePath());
         ILinkTableConfiguration after = VeriniceLinkTableIO.readLinkTableConfiguration(getFilePath());
         assertTrue(before.equals(after));
     }
