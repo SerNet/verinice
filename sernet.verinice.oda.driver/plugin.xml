@@ -78,6 +78,15 @@
                odaScalarDataType="JavaObject">
          </dataTypeMapping>
       </dataSet>
+      <dataSet
+            defaultDisplayName="verinice Link Table Data Set"
+            id="verinice.oda.linktable.driver.dataSet.id">
+         <dataTypeMapping
+               nativeDataTypeCode="1"
+               odaScalarDataType="String"
+               nativeDataType="String">
+         </dataTypeMapping>     
+      </dataSet>
    </extension>
    <extension
          point="org.eclipse.datatools.connectivity.connectionProfile">
@@ -109,6 +118,6 @@
    <extension
          point="org.eclipse.core.runtime.preferences">
       <initializer class="sernet.verinice.oda.driver.preferences.PreferenceInitializer"/>
-   </extension>  
+   </extension>
 
 </plugin>

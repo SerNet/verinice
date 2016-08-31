@@ -65,6 +65,23 @@
                id="verinice.oda.driver.dataSet.id.page1">
          </dataSetPage>
       </dataSetUI>
+      <dataSetUI
+            supportsOutParameters="false"
+            supportsInParameters="true"
+            initialPageId="verinice.lt.oda.driver.dataSet.id.page1"
+            id="verinice.oda.linktable.driver.dataSet.id">
+         <dataSetWizard
+               class="org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizard"
+               windowTitle="%wizard.data.set.window.title">
+         </dataSetWizard>
+         <dataSetPage
+               displayName="%wizard.data.set.page.title"
+               icon="icons/datasetpage.ico"
+               wizardPageClass="sernet.verinice.oda.linktable.driver.designer.impl.LinktableDataSetWizardPage"
+               path="/"
+               id="verinice.lt.oda.driver.dataSet.id.page1">
+         </dataSetPage>
+      </dataSetUI>
    </extension>
 
 </plugin>

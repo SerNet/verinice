@@ -87,29 +87,35 @@ public class Connection implements IConnection {
 	 * org.eclipse.datatools.connectivity.oda.IConnection#newQuery(java.lang
 	 * .String)
 	 */
-	@SuppressWarnings("unchecked")
-	public IQuery newQuery(String dataSetType) throws OdaException {
-		// assumes that this driver supports only one type of data set,
-		// ignores the specified dataSetType
+	public IQuery newQuery(String dataSetType) throws OdaException {	
+		Integer[] rootElementIds = getRootElementIds();
+		IQuery query = null;
 		
-		Integer rootElementId = null;
-		Integer[] rootElementIds = null;
-		if (appContext != null)
-		{
+		if(Query.ODA_DATA_SOURCE_ID.equals(dataSetType)) {
+		    query = new Query(rootElementIds);
+		}
+		if (sernet.verinice.oda.linktable.driver.impl.Query.ODA_DATA_SOURCE_ID.equals(dataSetType)) {
+		    query = new sernet.verinice.oda.linktable.driver.impl.Query(rootElementIds);
+        }
+		
+		return query;
+	}
+
+    private Integer[] getRootElementIds() {
+        Integer[] rootElementIds = null;
+		if (appContext != null) {
 			// Retrieves the root element's id from the appContext. Find the corresponding part of this
 			// code by looking up the references to the used name.
 			Map ctx = (Map) appContext;
-			if(ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME) != null){
-				rootElementId = (Integer) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME);
-				return new Query(rootElementId);
-			}
-			else if(ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME) != null && ((Integer[])ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME)).length > 0){
+			if(ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME) != null) {
+			    rootElementIds = new Integer[1];
+			    rootElementIds[0] = (Integer) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_ID_NAME);
+			} else if(ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME) != null && ((Integer[])ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME)).length > 0) {
 				rootElementIds = (Integer[]) ctx.get(IVeriniceOdaDriver.ROOT_ELEMENT_IDS_NAME);
-				return new Query(rootElementIds);
 			}
 		}
-		return new Query(rootElementId);
-	}
+        return rootElementIds;
+    }
 
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IConnection#getMaxQueries()
