@@ -103,6 +103,23 @@ public abstract class VeriniceLinkTableIO {
         }
 
     }
+    
+    /**
+     * Reads a link table configuration from a String.
+     *
+     * @param vltContent The content of a VLT JSON file
+     * @return A link table configuration
+     */
+    public static VeriniceLinkTable readContent(String vltContent) {
+        try {
+            return gson.fromJson(vltContent, VeriniceLinkTable.class);
+        } catch (JsonParseException e) {
+            String message = "Parse error while reading JSON file for Link-Table configuration: " + vltContent;
+            LOG.error(message, e);
+            throw new LinkTableException(message, e);
+        } 
+
+    }
 
     /**
      * Reads a link table configuration from a VLT JSON file.

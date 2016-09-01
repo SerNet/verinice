@@ -87,6 +87,7 @@ public class Connection implements IConnection {
 	 * org.eclipse.datatools.connectivity.oda.IConnection#newQuery(java.lang
 	 * .String)
 	 */
+	@Override
 	public IQuery newQuery(String dataSetType) throws OdaException {	
 		Integer[] rootElementIds = getRootElementIds();
 		IQuery query = null;

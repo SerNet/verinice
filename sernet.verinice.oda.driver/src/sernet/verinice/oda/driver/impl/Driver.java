@@ -84,11 +84,11 @@ public class Driver implements IDriver
      * @return                  corresponding native data type name
      * @throws OdaException     if lookup fails
      */
-    static String getNativeDataTypeName( int nativeDataTypeCode ) 
+    public static String getNativeDataTypeName( int nativeDataTypeCode, String dataSetType ) 
         throws OdaException
     {
         DataTypeMapping typeMapping = 
-                            getManifest().getDataSetType( null )
+                            getManifest().getDataSetType( dataSetType )
                                 .getDataTypeMapping( nativeDataTypeCode );
         if( typeMapping != null ){
             return typeMapping.getNativeType();

@@ -23,6 +23,8 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.eclipse.datatools.connectivity.oda.IParameterMetaData;
 import org.eclipse.datatools.connectivity.oda.IQuery;
@@ -32,30 +34,45 @@ import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.oda.SortSpec;
 import org.eclipse.datatools.connectivity.oda.spec.QuerySpecification;
 
+import sernet.verinice.service.linktable.ColumnPathParser;
+import sernet.verinice.service.linktable.ILinkTableConfiguration;
+import sernet.verinice.service.linktable.LinkTableService;
+import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
+import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
+
 /**
- *
+ * A query to build a BIRT data set for a link table
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
 public class Query implements IQuery {
 
+    public static final String ODA_DATA_SOURCE_ID = "verinice.oda.linktable.driver.dataSet.id";  //$NON-NLS-1$
+
+    private static final int DEFAULT_MAX_ROWS = 1000;
     
-    public static final String ODA_DATA_SOURCE_ID = "verinice.oda.driver.dataSource.id";  //$NON-NLS-1$
+    private String vlt = null;
+    
+    private List<String> columnList;
+    
+    private IResultSetMetaData resultSetMetaData;
+    
+    private Integer[] scopeIds;
     
     /**
      * @param rootElementIds
      */
     public Query(Integer[] rootElementIds) {
-        // TODO Auto-generated constructor stub
+        columnList = new LinkedList<String>();
+        this.scopeIds = rootElementIds;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#cancel()
      */
     @Override
-    public void cancel() throws OdaException, UnsupportedOperationException {
-        // TODO Auto-generated method stub
-        
+    public void cancel() throws OdaException {
+        // nothing to do
     }
 
     /* (non-Javadoc)
@@ -63,8 +80,7 @@ public class Query implements IQuery {
      */
     @Override
     public void clearInParameters() throws OdaException {
-        // TODO Auto-generated method stub
-        
+        // nothing to do
     }
 
     /* (non-Javadoc)
@@ -72,8 +88,7 @@ public class Query implements IQuery {
      */
     @Override
     public void close() throws OdaException {
-        // TODO Auto-generated method stub
-        
+        this.vlt = null;  
     }
 
     /* (non-Javadoc)
@@ -81,8 +96,28 @@ public class Query implements IQuery {
      */
     @Override
     public IResultSet executeQuery() throws OdaException {
-        // TODO Auto-generated method stub
-        return null;
+        return new LinkTableResultSet(createTable(), resultSetMetaData);
+    }
+    
+    private List<List<String>> createTable() {
+        LinkTableService linkTableService = new LinkTableService();
+        List<List<String>> table = linkTableService.createTable(createLinkTableConfiguration());
+        // Remove the heading line of the table 
+        table.remove(0);
+        return table;
+    }
+
+    public ILinkTableConfiguration createLinkTableConfiguration() {
+        VeriniceLinkTable vltFile = VeriniceLinkTableIO.readContent(vlt);
+        ILinkTableConfiguration linkTableConfiguration = VeriniceLinkTableIO.createLinkTableConfiguration(vltFile);
+        if(scopeIds==null || scopeIds.length == 0) {
+            linkTableConfiguration.removeAllScopeIds();
+        } else {
+            for (Integer scopeId : scopeIds) {
+                linkTableConfiguration.addScopeId(scopeId);
+            }
+        }
+        return linkTableConfiguration;
     }
 
     /* (non-Javadoc)
@@ -90,8 +125,7 @@ public class Query implements IQuery {
      */
     @Override
     public int findInParameter(String arg0) throws OdaException {
-        // TODO Auto-generated method stub
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     /* (non-Javadoc)
@@ -99,17 +133,15 @@ public class Query implements IQuery {
      */
     @Override
     public String getEffectiveQueryText() {
-        // TODO Auto-generated method stub
-        return null;
+        return vlt;
     }
 
     /* (non-Javadoc)
      * @see org.eclipse.datatools.connectivity.oda.IQuery#getMaxRows()
      */
     @Override
-    public int getMaxRows() throws OdaException {
-        // TODO Auto-generated method stub
-        return 0;
+    public int getMaxRows() throws OdaException {   
+        return DEFAULT_MAX_ROWS;
     }
 
     /* (non-Javadoc)
@@ -117,8 +149,7 @@ public class Query implements IQuery {
      */
     @Override
     public IResultSetMetaData getMetaData() throws OdaException {
-        // TODO Auto-generated method stub
-        return null;
+        return resultSetMetaData;
     }
 
     /* (non-Javadoc)
@@ -126,7 +157,7 @@ public class Query implements IQuery {
      */
     @Override
     public IParameterMetaData getParameterMetaData() throws OdaException {
-        // TODO Auto-generated method stub
+        
         return null;
     }
 
@@ -152,235 +183,145 @@ public class Query implements IQuery {
      * @see org.eclipse.datatools.connectivity.oda.IQuery#prepare(java.lang.String)
      */
     @Override
-    public void prepare(String queryText) throws OdaException {
-        
-        
+    public void prepare(String queryText) throws OdaException {    
+        this.vlt = queryText;
+        columnList = getColumnList(this.vlt);
+        resultSetMetaData = new ResultSetMetaData(columnList.toArray(new String[columnList.size()]));
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setAppContext(java.lang.Object)
-     */
+    public static List<String> getColumnList(String queryText) {
+        List<String> columnList = new LinkedList<String>();
+        VeriniceLinkTable vltFile = VeriniceLinkTableIO.readContent(queryText);
+        ILinkTableConfiguration linkTableConfiguration = VeriniceLinkTableIO.createLinkTableConfiguration(vltFile);
+        for (String columnPath : linkTableConfiguration.getColumnPaths()) {
+            columnList.add(ColumnPathParser.extractAlias(columnPath));
+        }
+        return columnList;
+    }
+
     @Override
     public void setAppContext(Object arg0) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setBigDecimal(java.lang.String, java.math.BigDecimal)
-     */
     @Override
     public void setBigDecimal(String arg0, BigDecimal arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setBigDecimal(int, java.math.BigDecimal)
-     */
     @Override
     public void setBigDecimal(int arg0, BigDecimal arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setBoolean(java.lang.String, boolean)
-     */
     @Override
     public void setBoolean(String arg0, boolean arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setBoolean(int, boolean)
-     */
     @Override
     public void setBoolean(int arg0, boolean arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setDate(java.lang.String, java.sql.Date)
-     */
     @Override
     public void setDate(String arg0, Date arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setDate(int, java.sql.Date)
-     */
     @Override
     public void setDate(int arg0, Date arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setDouble(java.lang.String, double)
-     */
     @Override
     public void setDouble(String arg0, double arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setDouble(int, double)
-     */
     @Override
     public void setDouble(int arg0, double arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setInt(java.lang.String, int)
-     */
     @Override
     public void setInt(String arg0, int arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setInt(int, int)
-     */
-    @Override
     public void setInt(int arg0, int arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setMaxRows(int)
-     */
     @Override
     public void setMaxRows(int arg0) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setNull(java.lang.String)
-     */
     @Override
     public void setNull(String arg0) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setNull(int)
-     */
     @Override
     public void setNull(int arg0) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setObject(java.lang.String, java.lang.Object)
-     */
     @Override
     public void setObject(String arg0, Object arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setObject(int, java.lang.Object)
-     */
     @Override
     public void setObject(int arg0, Object arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setProperty(java.lang.String, java.lang.String)
-     */
     @Override
     public void setProperty(String arg0, String arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setSortSpec(org.eclipse.datatools.connectivity.oda.SortSpec)
-     */
     @Override
     public void setSortSpec(SortSpec arg0) throws OdaException {
-        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException();
         
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setSpecification(org.eclipse.datatools.connectivity.oda.spec.QuerySpecification)
-     */
     @Override
     public void setSpecification(QuerySpecification arg0)
             throws OdaException, UnsupportedOperationException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();       
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setString(java.lang.String, java.lang.String)
-     */
     @Override
     public void setString(String arg0, String arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setString(int, java.lang.String)
-     */
     @Override
     public void setString(int arg0, String arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setTime(java.lang.String, java.sql.Time)
-     */
     @Override
     public void setTime(String arg0, Time arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setTime(int, java.sql.Time)
-     */
     @Override
     public void setTime(int arg0, Time arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setTimestamp(java.lang.String, java.sql.Timestamp)
-     */
     @Override
     public void setTimestamp(String arg0, Timestamp arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.datatools.connectivity.oda.IQuery#setTimestamp(int, java.sql.Timestamp)
-     */
     @Override
     public void setTimestamp(int arg0, Timestamp arg1) throws OdaException {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException();
     }
-
 }

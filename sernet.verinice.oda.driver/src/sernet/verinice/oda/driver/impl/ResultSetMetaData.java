@@ -170,7 +170,7 @@ public class ResultSetMetaData implements IResultSetMetaData {
 	 */
 	public String getColumnTypeName(int index) throws OdaException {
 		int nativeTypeCode = getColumnType(index);
-		return Driver.getNativeDataTypeName(nativeTypeCode);
+		return Driver.getNativeDataTypeName(nativeTypeCode, Query.ODA_DATA_SOURCE_ID);
 	}
 
 	/*
