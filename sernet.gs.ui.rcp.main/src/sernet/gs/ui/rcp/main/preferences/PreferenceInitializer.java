@@ -104,6 +104,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.DEFAULT_FOLDER_ADDFILE, System.getProperty("user.home"));
         
         store.setDefault(PreferenceConstants.EXPORT_RISK_ANALYSIS, true);
+        
+        store.setDefault(PreferenceConstants.SHOW_UPDATE_NEWS_DIALOG, false);
 	}
 
 }

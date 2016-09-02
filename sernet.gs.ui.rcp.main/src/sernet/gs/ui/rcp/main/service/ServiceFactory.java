@@ -36,6 +36,7 @@ import sernet.verinice.interfaces.bpm.IIsaQmService;
 import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.search.ISearchService;
+import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.interfaces.validation.IValidationService;
 
 @SuppressWarnings("restriction")
@@ -162,6 +163,10 @@ public abstract class ServiceFactory {
 	
 	public static IRightsServiceClient lookupRightsServiceClient(){
 		return (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+	}
+	
+	public static IUpdateNewsService lookupUpdateNewsService(){
+	    return (IUpdateNewsService) VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE);
 	}
 
 	/**

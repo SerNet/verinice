@@ -158,5 +158,16 @@
 		</property>
 	</bean>
 	
+	<bean name="/updateNewsServiceHttpInvoker"
+		class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+		lazy-init="false">
+		<property name="service">
+			<ref bean="updateNewsService"/>
+		</property>
+		<property name="serviceInterface">
+			<value>sernet.verinice.interfaces.updatenews.IUpdateNewsService</value>
+		</property>
+	</bean>
+	
 </beans>
 

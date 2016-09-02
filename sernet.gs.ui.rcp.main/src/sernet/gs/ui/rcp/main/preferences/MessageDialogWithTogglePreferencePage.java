@@ -54,6 +54,11 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
      */
     @Override
     protected void createFieldEditors() {
+        
+        String opmode = getPreferenceStore().getString(PreferenceConstants.OPERATION_MODE);
+        boolean isStandalone = opmode
+                .equals(PreferenceConstants.OPERATION_MODE_INTERNAL_SERVER);
+        
         BooleanFieldEditor infoDialogTransformCatalogItems = new BooleanFieldEditor(PreferenceConstants.INFO_CONTROLS_ADDED, Messages.getString("GeneralSettingsPage.InfoControlsAdded"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogTransformCatalogItems);
@@ -95,8 +100,13 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
         BooleanFieldEditor showValidationGsmProcessWarning = new BooleanFieldEditor(PreferenceConstants.INFO_PROCESS_VALIDATE, Messages.getString("GeneralSettingsPage.ShowValidationProcessWarning"), getFieldEditorParent()); //$NON-NLS-1$
         addField(showValidationGsmProcessWarning);
         
-        BooleanFieldEditor infoDialogSearchElementNotFound = new BooleanFieldEditor(PreferenceConstants.INFO_SEARCH_ELEMENT_NOT_FOUND, Messages.getString("GeneralSettingsPage.SearchElementNotFound"), getFieldEditorParent());
+        BooleanFieldEditor infoDialogSearchElementNotFound = new BooleanFieldEditor(PreferenceConstants.INFO_SEARCH_ELEMENT_NOT_FOUND, Messages.getString("GeneralSettingsPage.SearchElementNotFound"), getFieldEditorParent()); //$NON-NLS-1$
         addField(infoDialogSearchElementNotFound);
+        
+        if(isStandalone){
+            BooleanFieldEditor updateNewsDialog = new BooleanFieldEditor(PreferenceConstants.SHOW_UPDATE_NEWS_DIALOG, Messages.getString("GeneralSettingsPage.ShowUpdateNewsDialog"), getFieldEditorParent()); //$NON-NLS-1$
+            addField(updateNewsDialog);
+        }
     }
     
     @Override

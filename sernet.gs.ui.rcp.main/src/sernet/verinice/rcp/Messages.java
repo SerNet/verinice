@@ -79,6 +79,18 @@ public class Messages extends NLS {
     public static String StartupImporter_0;
     public static String StartupImporter_1;
     public static String StartupImporter_2;
+    public static String UpdateNewsDialog_0;
+    public static String UpdateNewsDialog_1;
+    public static String UpdateNewsDialog_10;
+    public static String UpdateNewsDialog_11;
+    public static String UpdateNewsDialog_2;
+    public static String UpdateNewsDialog_3;
+    public static String UpdateNewsDialog_4;
+    public static String UpdateNewsDialog_5;
+    public static String UpdateNewsDialog_6;
+    public static String UpdateNewsDialog_7;
+    public static String UpdateNewsDialog_8;
+    public static String UpdateNewsDialog_9;
     public static String UserprofileDialog_0;
     public static String UserprofileDialog_1;
     public static String UserprofileDialog_10;

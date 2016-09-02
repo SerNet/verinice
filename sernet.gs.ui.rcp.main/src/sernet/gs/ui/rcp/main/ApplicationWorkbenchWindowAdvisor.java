@@ -19,6 +19,8 @@ package sernet.gs.ui.rcp.main;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.util.Locale;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -31,6 +33,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewPart;
@@ -55,7 +58,9 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
+import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
+import sernet.verinice.rcp.UpdateNewsDialog;
 
 /**
  * Workbench Window advisor.
@@ -141,8 +146,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             initPerspective();
         }
         closeUnallowedViews();
+        showUpdateNews();
     }
-
+    
     private void preloadDBMapper() {
         WorkspaceJob job = new WorkspaceJob(Messages.ApplicationWorkbenchWindowAdvisor_2) {
             @Override
@@ -224,12 +230,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         for(IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()){
             openViews.add(ref.getId());
             final IViewPart part = ref.getView(true);
-            if(part!=null) {
-                for(Method m : part.getClass().getDeclaredMethods()){
-                    if(m.getName().equals("getRightID")){
+            if (part!=null) {
+                for (Method m : part.getClass().getDeclaredMethods()){
+                    if (m.getName().equals("getRightID")){
                         try {
                             Object o = m.invoke(part, null);
-                            if(o instanceof String){
+                            if (o instanceof String){
                                 rightID = (String)o;
                                 chosenRef = ref;
                                 break;
@@ -246,36 +252,76 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             }
             final String rID = rightID;
             final IViewReference rRef = chosenRef;
-            if(Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()){
+            if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()){
                 IInternalServerStartListener listener = new IInternalServerStartListener(){
                     @Override
                     public void statusChanged(InternalServerEvent e) {
-                        if(e.isStarted()){
-                            Activator.inheritVeriniceContextState();
-                            if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(rID)){
-                                Display.getDefault().asyncExec(new Runnable() { // execute in ui thread
-                                    @Override
-                                    public void run() {
-                                        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                                        if(page.isPartVisible(part)) {
-                                            page.hideView(rRef);
-                                        }
-                                    }
-                                });
-                            }
+                        if (e.isStarted()){
+                            hideView(part, rID, rRef);
                         }
                     }
                 };
                 Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
             }  else {
-                Activator.inheritVeriniceContextState();
-                if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(rID)){
-                    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                    if(page.isPartVisible(part)) {
-                        page.hideView(rRef);
+                hideView(part, rID, rRef);
+            }
+        }
+    }
+
+    private void hideView(final IViewPart part, final String actionId, final IViewReference viewReference) {
+        Activator.inheritVeriniceContextState();
+        if (!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(actionId)){
+            IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            if (page.isPartVisible(part)) {
+                page.hideView(viewReference);
+            }
+        }
+    }
+    
+    private void showUpdateNews(){
+        boolean showNewsDialog = !Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.SHOW_UPDATE_NEWS_DIALOG);
+        if(showNewsDialog){
+            handleOpenDialogByServerStatus();
+        }
+    }
+
+    /**
+     * 
+     */
+    private void handleOpenDialogByServerStatus() {
+        if (Activator.getDefault().isStandalone() 
+                && !Activator.getDefault().getInternalServer().isRunning()){
+            IInternalServerStartListener listener = new IInternalServerStartListener() {
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if (e.isStarted()){
+                        openNewsDialogAsync();
                     }
                 }
-            }
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else {
+            openNewsDialogAsync();
+        }
+    }
+    
+    private void openNewsDialogAsync(){
+        Activator.inheritVeriniceContextState();
+        IUpdateNewsService updateNewsService =(IUpdateNewsService)VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE); 
+        if(updateNewsService.isUpdateNecessary()){
+            final String text = updateNewsService.getCurrentNewsMessage(Locale.getDefault());
+            final URL updateSiteURL = updateNewsService.getUpdateSite();
+            Display.getDefault().asyncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
+                    UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell,
+                            text, updateSiteURL);
+                    newsDialog.open();
+                }
+            });
         }
     }
 
