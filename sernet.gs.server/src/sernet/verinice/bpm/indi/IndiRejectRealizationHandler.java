@@ -24,13 +24,11 @@ import java.util.Map;
 
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
-import sernet.verinice.interfaces.bpm.ITaskService;
 
 /**
  * This task complete server handler reads param
- * IIndividualProcess.VAR_DESCRIPTION and adds it's value as
- * process/task var IIndividualProcess.VAR_DESCRIPTION to task with
- * id taskId.
+ * IIndividualProcess.VAR_DESCRIPTION and adds it's value as process/task var
+ * IIndividualProcess.VAR_DESCRIPTION to task with id taskId.
  * 
  * Configured in veriniceserver-jbpm.xml as a property of Spring bean
  * taskService.
@@ -49,12 +47,13 @@ public class IndiRejectRealizationHandler implements ICompleteServerHandler {
     @Override
     public void execute(String taskId, Map<String, Object> parameter) {
         if (parameter != null) {
-            String description = (String) parameter.get(IIndividualProcess.VAR_DESCRIPTION);
-            if (description != null) {
-                getTaskParameter().put(IIndividualProcess.VAR_DESCRIPTION, description);
+            for (Map.Entry<String, Object> entry : parameter.entrySet()) {
+                if(entry.getValue() != null){
+                    taskParameter.put(entry.getKey(), entry.getValue());
+                }
             }
-            getTaskParameter().put(IIndividualProcess.TRANS_DECLINE, Boolean.TRUE);
         }
+        getTaskParameter().put(IIndividualProcess.TRANS_DECLINE, Boolean.TRUE);
     }
 
     /*
@@ -77,19 +76,26 @@ public class IndiRejectRealizationHandler implements ICompleteServerHandler {
         return IIndividualProcess.TRANS_DECLINE;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.ICompleteServerHandler#getTaskParameter()
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.ICompleteServerHandler#getTaskParameter()
      */
     @Override
     public Map<String, Object> getTaskParameter() {
-        if(taskParameter==null) {
+        if (taskParameter == null) {
             taskParameter = new HashMap<String, Object>();
         }
         return taskParameter;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.bpm.ICompleteServerHandler#setTaskParameter(java.util.Map)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * sernet.verinice.interfaces.bpm.ICompleteServerHandler#setTaskParameter(
+     * java.util.Map)
      */
     @Override
     public void setTaskParameter(Map<String, Object> taskParameter) {

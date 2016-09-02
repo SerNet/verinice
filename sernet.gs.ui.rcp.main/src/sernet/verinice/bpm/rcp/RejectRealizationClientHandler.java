@@ -19,19 +19,27 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.util.Hashtable;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.bpm.ICompleteClientHandler;
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
+import sernet.verinice.model.bsi.Person;
+import sernet.verinice.rcp.NonModalWizardDialog;
 
 /**
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
@@ -49,20 +57,36 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
      * @see sernet.verinice.bpm.ICompleteClientHandler#execute()
      */
     @Override
-    public Map<String, Object> execute(ITask task) {
-        Map<String, Object> parameter = new Hashtable<String, Object>();
+    public Map<String, Object> execute(final ITask task) {
+        Map<String, Object> taskVariables = getTaskService().getVariables(task.getId());
+        Map<String, Object> parameter = new HashMap<String, Object>();
+
+        final IndividualServiceParameter individualServiceParameter = new IndividualServiceParameter();
+        individualServiceParameter.setDueDate((Date) taskVariables.get(IIndividualProcess.VAR_DUEDATE));
+        individualServiceParameter.setReminderPeriodDays((Integer) taskVariables.get(IIndividualProcess.VAR_REMINDER_DAYS));
+        individualServiceParameter.setAssignee((String) taskVariables.get(IIndividualProcess.VAR_ASSIGNEE_NAME));
+        individualServiceParameter.setAssigneeRelationId((String) taskVariables.get(IIndividualProcess.VAR_RELATION_ID));
+        individualServiceParameter.setProperties((Set<String>) taskVariables.get(IIndividualProcess.VAR_PROPERTY_TYPES));
+        individualServiceParameter.setTitle((String) taskVariables.get(IIndividualProcess.VAR_TITLE));
+        individualServiceParameter.setDescription((String) taskVariables.get(IIndividualProcess.VAR_DESCRIPTION));
+
         try {
-            final DescriptionDialog dialog = new DescriptionDialog(shell);
-            String oldDescription = (String) getTaskService().getVariables(task.getId()).get(IIndividualProcess.VAR_DESCRIPTION);
-            dialog.setDescription(oldDescription);
+            final IndividualProcessWizard wizard = new IndividualProcessWizard(Collections.singletonList(task.getUuid()), task.getElementTitle(), task.getElementType());
+            // TODO: check if isGrundschutzElement?
+            wizard.setPersonTypeId(Person.TYPE_ID);
             Display.getDefault().syncExec(new Runnable() {
                 @Override
                 public void run() {
-                    dialogStatus = dialog.open();
+                    WizardDialog wizardDialog = new NonModalWizardDialog(shell, wizard);
+                    wizardDialog.create();
+                    wizard.setTemplate(individualServiceParameter);
+                    dialogStatus = wizardDialog.open();
                 }
             });
+
             if (dialogStatus == Window.OK) {
-                parameter = getParameterFromDialog(dialog);
+                wizard.saveTemplate();
+                parameter.putAll(ServiceFactory.lookupIndividualService().createParameterMap(wizard.getParameter()));
             } else {
                 throw new CompletionAbortedException("Canceled by user.");
             }
@@ -71,12 +95,6 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
         } catch (Exception e) {
             LOG.error("Error while apply for extension.", e);
         }
-        return parameter;
-    }
-
-    private Map<String, Object> getParameterFromDialog(DescriptionDialog dialog) {
-        Map<String, Object> parameter = new Hashtable<String, Object>();
-        parameter.put(IIndividualProcess.VAR_DESCRIPTION, dialog.getDescription());
         return parameter;
     }
 
@@ -90,7 +108,7 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
     public void setShell(Shell shell) {
         this.shell = shell;
     }
-    
+
     private ITaskService getTaskService() {
         return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
     }
