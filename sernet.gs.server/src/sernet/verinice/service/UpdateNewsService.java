@@ -100,7 +100,7 @@ public class UpdateNewsService implements IUpdateNewsService {
         String installedVersion = getCurrentInstalledVersion();
         String availableVersion = getCurrentNewsVersion();
         // is availableVersion > installedVersion
-        return ncs.compare(availableVersion, installedVersion) == 1;
+        return ncs.compare(installedVersion, availableVersion) == 1;
     }
 
     /* (non-Javadoc)

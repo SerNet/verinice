@@ -213,12 +213,16 @@ public class UpdateNewsDialog extends Dialog {
      * @param operation
      */
     private void createAndExecuteUpdateJob(UpdateOperation operation) {
-        final ProvisioningJob provisioningJob = operation.getProvisioningJob(null);
-        if (provisioningJob != null) {
-            performUpdate(provisioningJob); 
-        }
-        else {
-            handleUpdateError(operation);
+        try{
+            final ProvisioningJob provisioningJob = operation.getProvisioningJob(null);
+            if (provisioningJob != null) {
+                performUpdate(provisioningJob); 
+            }
+            else {
+                handleUpdateError(operation);
+            }
+        } catch (Exception e){
+            LOG.error("Error executing update", e);
         }
     }
 
