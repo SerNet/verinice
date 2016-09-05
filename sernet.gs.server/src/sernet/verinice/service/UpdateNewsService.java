@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -27,7 +28,6 @@ import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -38,7 +38,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -61,10 +60,21 @@ public class UpdateNewsService implements IUpdateNewsService {
      */
     @Override
     public String getCurrentInstalledVersion() {
-        Bundle bundle = Platform.getBundle("sernet.gs.ui.rcp.main.feature");
-        java.net.URL fileURL = bundle.getEntry("/oc.product");
-        java.io.File file = null;
         try {
+            Bundle bundle = Platform.getBundle("sernet.gs.ui.rcp.main.feature");
+            if (bundle == null) {
+                LOG.warn("verinice server bundle is not available. Assuming it is started separately."); //$NON-NLS-1$
+            } else if (bundle.getState() == Bundle.INSTALLED || bundle.getState() == Bundle.RESOLVED) {
+                LOG.debug("Manually starting GS rcp.main.feature"); //$NON-NLS-1$
+                bundle.start();
+            }
+            URL fileURL = bundle.getEntry("/oc.product");
+            
+            if(fileURL == null){
+                throw new FileNotFoundException("Couldnt load oc.product");
+            }
+            
+            java.io.File file = null;
             file = new java.io.File(FileLocator.resolve(fileURL).toURI());
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder parser = factory.newDocumentBuilder();
@@ -80,16 +90,18 @@ public class UpdateNewsService implements IUpdateNewsService {
                 }
             };
 
-        } catch (java.net.URISyntaxException e1) {
-            e1.printStackTrace();
-        } catch (java.io.IOException e1) {
-            e1.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (SAXException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+//        } catch (java.net.URISyntaxException e1) {
+//            e1.printStackTrace();
+//        } catch (java.io.IOException e1) {
+//            e1.printStackTrace();
+//        } catch (ParserConfigurationException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        } catch (SAXException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+        } catch (Exception e){
+            LOG.error("Unable to determine version of running client:\t", e);
         }
 
         return null;
