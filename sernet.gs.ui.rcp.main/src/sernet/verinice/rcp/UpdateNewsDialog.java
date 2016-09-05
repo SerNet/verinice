@@ -178,6 +178,8 @@ public class UpdateNewsDialog extends Dialog {
         // create update operation
         UpdateOperation operation = new UpdateOperation(ProvUIActivator.getDefault().getProvisioningUI().getSession());
        
+        updateUpdateSite(updateSiteURL);
+        
         // check if updates are available
         IStatus status = operation.resolveModal(null);
         if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
@@ -188,7 +190,6 @@ public class UpdateNewsDialog extends Dialog {
             return;
         }
         
-        updateUpdateSite(updateSiteURL);
         
         createAndExecuteUpdateJob(operation);
         
