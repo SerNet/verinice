@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" >
+
+
+  <bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
+    <property name="huiTypeFactory" ref="huiTypeFactory" />
+  </bean>
+  
+  <bean id="huiTypeFactory" class="sernet.hui.common.connect.HUITypeFactory">
+    <constructor-arg value="sernet.gs.server" />
+    <constructor-arg value="WebContent/WEB-INF/SNCA.xml" />
+  </bean>
+
+  <bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
+    <property name="map">
+        <map>
+          <entry key="huiTypeFactory" value-ref="huiTypeFactory" /> 
+        </map>
+    </property>
+  </bean>
+  
+  <bean id="serverInitializer" class="sernet.gs.service.ServerInitializer" init-method="initialize">
+    <property name="workObjects" ref="workObjects" />
+  </bean>
+
+</beans>

@@ -81,6 +81,17 @@ public abstract class VeriniceLinkTableIO {
             throw new LinkTableException(message, e);
         }
     }
+    
+    /**
+     * Returns the content of a {@link VeriniceLinkTable} as a JSON string.
+     *
+     * @param vlt A link table configuration
+     * @param fullPath Returns the content of the VLT as a JSON string
+     */
+    public static String getContent(VeriniceLinkTable vlt) {
+            return gson.toJson(vlt);       
+    }
+    
 
     /**
      * Reads a link table configuration from a VLT JSON file.
@@ -151,9 +162,8 @@ public abstract class VeriniceLinkTableIO {
     }
 
     private static void doWrite(VeriniceLinkTable vlt, String fullPath) throws IOException, JsonParseException {
-        String json = gson.toJson(vlt);
         FileWriter writer = new FileWriter(fullPath);
-        writer.write(json);
+        writer.write(getContent(vlt));
         writer.close();
     }
 

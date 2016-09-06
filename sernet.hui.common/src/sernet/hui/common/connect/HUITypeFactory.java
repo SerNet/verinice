@@ -35,6 +35,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.osgi.framework.Bundle;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -91,6 +95,16 @@ public class HUITypeFactory {
     public HUITypeFactory(Resource resource) throws DBException, IOException {
         this(resource.getURL());
     }
+    
+    public HUITypeFactory(String bundleId, String pathToSnca) throws DBException, IOException {
+        init(getUrl(bundleId, pathToSnca));
+    }
+
+    private URL getUrl(String bundleId, String pathToSnca) {
+        Bundle bundle = Platform.getBundle(bundleId);
+        Path path = new Path(pathToSnca);
+        return FileLocator.findEntries(bundle, path)[0];
+    }
 
     /**
      * Create new validating parser with schema support.
@@ -98,8 +112,10 @@ public class HUITypeFactory {
      * @throws DBException
      */
     private HUITypeFactory(URL xmlFile) throws DBException {
-        
+        init(xmlFile);
+    }
 
+    private void init(URL xmlFile) throws DBException {
         if (xmlFile == null) {
             throw new DBException("Pfad für XML Systemdefinition nicht initialisiert. Config File korrekt?");
         }

@@ -30,22 +30,29 @@ import org.eclipse.datatools.connectivity.oda.design.ResultSetColumns;
 import org.eclipse.datatools.connectivity.oda.design.ResultSetDefinition;
 import org.eclipse.datatools.connectivity.oda.design.ui.designsession.DesignSessionUtil;
 import org.eclipse.datatools.connectivity.oda.design.ui.wizards.DataSetWizardPage;
+import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Display;
 
+import sernet.verinice.oda.driver.designer.ServiceFactory;
 import sernet.verinice.oda.linktable.driver.impl.Query;
 import sernet.verinice.oda.linktable.driver.impl.ResultSetMetaData;
+import sernet.verinice.rcp.linktable.LinkTableUtil;
+import sernet.verinice.rcp.linktable.LinkTableValidationResult;
+import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
+import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
+import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 
 /**
- *
+ * Wizard page for vDesigner to edit a link table data set.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -53,42 +60,23 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
 
     private static final Logger LOG = Logger.getLogger(LinktableDataSetWizardPage.class);
 
-    private static final String DEFAULT_MESSAGE = "Create a report query";
+    private static final String DEFAULT_MESSAGE = Messages.LinktableDataSetWizardPage_0;
+    
+    Composite composite;
+    LinkTableComposite linkTableComposite;
 
-    private Text queryText;
 
-    private String vlt;
-
-    /**
-     * Constructor
-     * 
-     * @param pageName
-     */
     public LinktableDataSetWizardPage(String pageName) {
         super(pageName);
         setTitle(pageName);
         setMessage(DEFAULT_MESSAGE);
     }
 
-    /**
-     * Constructor
-     * 
-     * @param pageName
-     * @param title
-     * @param titleImage
-     */
     public LinktableDataSetWizardPage(String pageName, String title, ImageDescriptor titleImage) {
         super(pageName, title, titleImage);
         setMessage(DEFAULT_MESSAGE);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.datatools.connectivity.oda.design.ui.wizards.
-     * DataSetWizardPage
-     * #createPageCustomControl(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     public void createPageCustomControl(Composite parent) {
         setControl(createPageControl(parent));
@@ -99,59 +87,55 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
      * Creates custom control for user-defined query text.
      */
     private Control createPageControl(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        composite.setLayout(new GridLayout(2, false));
-        GridData gridData = new GridData(
-                GridData.HORIZONTAL_ALIGN_FILL | GridData.VERTICAL_ALIGN_FILL);
+        composite = new Composite(parent, SWT.NONE);
+        composite.setLayout(new GridLayout(1, false));
+        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | 
+                GridData.VERTICAL_ALIGN_FILL);
         composite.setLayoutData(gridData);
 
-        Label fieldLabel = new Label(composite, SWT.NONE);
-        fieldLabel.setText("VLT file content:");
-
-        queryText = new Text(composite, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
-
-        GridData data = new GridData(GridData.FILL_BOTH);
-        data = new GridData(GridData.FILL_BOTH);
-        data.heightHint = 100;
-        queryText.setLayoutData(data);
-        queryText.addModifyListener(new ModifyListener() {
-            public void modifyText(ModifyEvent e) {
-                vlt = queryText.getText();
-            }
-        });
-
+        addButtonComposite(composite);      
+        Composite ltComposite = addLinkTableComposite(composite);
+        
+        GridData data = new GridData(GridData.FILL_BOTH); 
+        data.heightHint = 100; 
+        ltComposite.setLayoutData(data);
+        
         return composite;
     }
-    
+
     private void initializeControl() {
-        /*
-         * To optionally restore the designer state of the previous design
-         * session, use getInitializationDesignerState();
-         */
-
-        // Restores the last saved data set design
-        DataSetDesign dataSetDesign = getInitializationDesign();
-        if (dataSetDesign == null)
-            return; // nothing to initialize
-
-        String query = dataSetDesign.getQueryText();
-        
-
-        if (query != null) {    
-            queryText.setText((query == null ? "" : query));
-        }
         validateData();
         setMessage(DEFAULT_MESSAGE);
     }
+    
+    private Composite addLinkTableComposite(Composite composite) { 
+        VeriniceLinkTable linkTable;
+        String query = getQueryFromDataSet();
+        if(query!=null) {
+            linkTable = VeriniceLinkTableIO.readContent(query);
+        } else {
+            linkTable = new VeriniceLinkTable.Builder().build();
+        }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.datatools.connectivity.oda.design.ui.wizards.
-     * DataSetWizardPage
-     * #collectDataSetDesign(org.eclipse.datatools.connectivity.oda.design.
-     * DataSetDesign)
-     */
+        linkTableComposite = new LinkTableComposite(linkTable, 
+                ServiceFactory.getInstance().getObjectModelService(), 
+                composite); 
+        GridLayoutFactory.fillDefaults().generateLayout(linkTableComposite); 
+        return linkTableComposite;
+    }
+    
+    private String getQueryFromDataSet() {
+        DataSetDesign dataSetDesign = getInitializationDesign();
+        if (dataSetDesign == null) {
+            return null;
+        }
+        String query = dataSetDesign.getQueryText();
+        if(query!=null && query.isEmpty()) {
+            query = null;
+        }
+        return query;
+    }
+
     @Override
     protected DataSetDesign collectDataSetDesign(DataSetDesign design) {
         if (getControl() == null) {
@@ -162,8 +146,8 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         }
         try {
             updateDesign(design);
-        } catch (OdaException e) {
-            LOG.error("Error while creating data set design.", e);
+        } catch (Exception e) {
+            LOG.error("Error while creating data set design.", e); //$NON-NLS-1$
         }
         return design;
     }
@@ -174,6 +158,7 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
      * @throws OdaException
      */
     private void updateDesign(DataSetDesign dataSetDesign) throws OdaException {
+        String vlt = VeriniceLinkTableIO.getContent(linkTableComposite.getVeriniceLinkTable());
         dataSetDesign.setQueryText(vlt);
         List<String> columnList = Query.getColumnList(dataSetDesign.getQueryText());
         IResultSetMetaData md = new ResultSetMetaData(
@@ -182,7 +167,6 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         ResultSetColumns columns = DesignSessionUtil.toResultSetColumnsDesign(md);
 
         ResultSetDefinition resultSetDefn = DesignFactory.eINSTANCE.createResultSetDefinition();
-        // resultSetDefn.setName( value ); // result set name
         resultSetDefn.setResultSetColumns(columns);
 
         // no exception in conversion; go ahead and assign to specified
@@ -190,7 +174,68 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
         dataSetDesign.setPrimaryResultSet(resultSetDefn);
         dataSetDesign.getResultSets().setDerivedMetaData(true);
     }
+    
+    private void addButtonComposite(Composite composite) {
+        
+        Composite buttonComposite = new Composite(composite, SWT.NONE);
+        buttonComposite.setLayout(new GridLayout(2, false));
+        GridData gridData = new GridData(GridData.HORIZONTAL_ALIGN_FILL | 
+                GridData.VERTICAL_ALIGN_FILL);
+        buttonComposite.setLayoutData(gridData); 
+        
+        Button loadButton = createButton(buttonComposite, Messages.LinktableDataSetWizardPage_2, 
+                Messages.LinktableDataSetWizardPage_3, true);  
+        
+        loadButton.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+                loadVltFile();
+            }
+            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
+        
+        Button saveButton = createButton(buttonComposite, Messages.LinktableDataSetWizardPage_4, 
+                Messages.LinktableDataSetWizardPage_5, false);
+        saveButton.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent event) {
+                saveVltFile();
+            }    
 
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }    
+        });
+    }
+    
+    public void loadVltFile() {
+        final String filePath = LinkTableUtil.createVltFilePath(
+                Display.getCurrent().getActiveShell(), 
+                Messages.LinktableDataSetWizardPage_6, 
+                SWT.OPEN, 
+                null);
+        if (filePath != null) { 
+            linkTableComposite.setVeriniceLinkTable(VeriniceLinkTableIO.read(filePath));
+            linkTableComposite.refresh();
+        }
+    }
+    
+    public void saveVltFile() {
+        final String filePath = LinkTableUtil.createVltFilePath(
+                Display.getCurrent().getActiveShell(), 
+                Messages.LinktableDataSetWizardPage_7, 
+                SWT.SAVE, 
+                null);
+        if (filePath != null) {
+            VeriniceLinkTableIO.write(linkTableComposite.getVeriniceLinkTable(),filePath);         
+        }
+    }
+   
     /**
      * Indicates whether the custom page has valid data to proceed with defining
      * a data set.
@@ -206,15 +251,26 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
      * blank text. Set page message accordingly.
      */
     private void validateData() {
-        boolean isValid = true;
-
+        LinkTableValidationResult validationResult = LinkTableUtil.isValidVeriniceLinkTable(linkTableComposite.getVeriniceLinkTable());
+        boolean isValid = validationResult.isValid();
         if (isValid) {
             setMessage(DEFAULT_MESSAGE);
         } else {
-            setMessage("Requires input value.", ERROR);
+            setMessage(Messages.LinktableDataSetWizardPage_8, ERROR);
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Query is invalid: " + validationResult.getMessage()); //$NON-NLS-1$
+            }
         }
-
-        setPageComplete(isValid);
+        setPageComplete(true);
     }
+    
+    public Button createButton(Composite buttonComposite, String title, String toolTip, boolean grabExcessHorizontalSpace) {
+        Button loadButton = new Button(buttonComposite, SWT.PUSH);
+        loadButton.setText(title);
+        loadButton.setToolTipText(toolTip);
+        loadButton.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, grabExcessHorizontalSpace, true));
+        return loadButton;
+    }
+    
 
 }

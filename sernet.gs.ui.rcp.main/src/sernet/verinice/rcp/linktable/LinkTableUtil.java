@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -37,7 +36,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.elasticsearch.common.collect.Sets;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -45,11 +43,11 @@ import sernet.verinice.rcp.linktable.ui.CsvExportDialog;
 import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableOperationType;
 import sernet.verinice.service.csv.ICsvExport;
-import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
 import sernet.verinice.service.linktable.ColumnPathParseException;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 import sernet.verinice.service.model.HUIObjectModelLoader;
+import sernet.verinice.service.model.IObjectModelService;
 import sernet.verinice.service.model.ObjectModelValidationException;
 
 /**
@@ -63,12 +61,9 @@ public class LinkTableUtil {
     private static HashMap<String, String> vltExtensions = null;
     private static HashMap<String, String> csvExtensions = null;
     private static CsvExportDialog csvDialog;
-    private static HUIObjectModelLoader loader;
+    private static IObjectModelService loader;
 
-    private static final String ALIAS_DELIMITER = " AS ";
-
-    static {
-        loader = (HUIObjectModelLoader) HUIObjectModelLoader.getInstance();
+    static {    
         if (vltExtensions == null) {
             vltExtensions = new HashMap<>();
             vltExtensions.put("*" + VeriniceLinkTable.VLT, "verinice link table (.vlt)"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -113,7 +108,7 @@ public class LinkTableUtil {
         if (defaultFileName != null && style == SWT.SAVE) {
             filename = defaultFileName;
         } else {
-            filename = "File" + extension;
+            filename = Messages.LinkTableUtil_1 + extension;
         }
         filename = addExtensionIfMissing(extension, filename);
         dialog.setFileName(filename);
@@ -242,7 +237,7 @@ public class LinkTableUtil {
 
         Set<Entry<String, String>> relations = getRelations(columnPaths);
         for (Entry<String, String> relation : relations) {
-            Set<String> possibleRelationPartners = loader
+            Set<String> possibleRelationPartners = getLoader()
                     .getPossibleRelationPartners(relation.getKey());
             if (!possibleRelationPartners.contains(relation.getValue())) {
                 throw new ObjectModelValidationException("Relation " + relation.toString() + " not found"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -257,7 +252,7 @@ public class LinkTableUtil {
             try {
                 validateColumnPath(path);
             } catch (Exception e) {
-                throw new ObjectModelValidationException(path + " is no valid column path", e);
+                throw new ObjectModelValidationException(path + Messages.LinkTableUtil_2, e);
             }
         }
 
@@ -275,7 +270,7 @@ public class LinkTableUtil {
         Set<String> objectTypeIds = ColumnPathParser.getObjectTypeIds(path);
         for (String id : objectTypeIds) {
 
-            boolean validTypeId = loader.isValidTypeId(id);
+            boolean validTypeId = getLoader().isValidTypeId(id);
             if (!validTypeId) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(id + " is no typeId"); //$NON-NLS-1$
@@ -314,7 +309,7 @@ public class LinkTableUtil {
     private static void validateRelationIds(List<String> list) throws ObjectModelValidationException {
 
         for (String id : list) {
-            if (!loader.isValidRelationId(id)) {
+            if (!getLoader().isValidRelationId(id)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug(id + " is no RelationID"); //$NON-NLS-1$
                 }
@@ -322,60 +317,16 @@ public class LinkTableUtil {
             }
         }
     }
-
-    public static String getCnaLinkPropertyMessage(String cnaLinkProperty) {
-        switch (cnaLinkProperty) {
-        case CnaLinkPropertyConstants.TYPE_TITLE:
-            return Messages.LinkTableColumn_CnaLink_Property_Title;
-        case CnaLinkPropertyConstants.TYPE_DESCRIPTION:
-            return Messages.LinkTableColumn_CnaLink_Property_Description;
-        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C:
-            return Messages.LinkTableColumn_CnaLink_Property_C;
-        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I:
-            return Messages.LinkTableColumn_CnaLink_Property_I;
-        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
-            return Messages.LinkTableColumn_CnaLink_Property_A;
-        default:
-            return Messages.LinkTableColumn_CnaLink_Property_Unknown;
+    
+    public static IObjectModelService getLoader() {
+        if(loader==null) {
+            loader = createLoader();
         }
+        return loader;
     }
-
-    /**
-     * create an alias for a columnPath to improve headers in csv-file.
-     */
-    public static String createAlias(String columnPath) {
-        String[] columnPathElements = columnPath.split("\\.|\\<|\\>|\\/|\\:");
-        int lastElement = columnPathElements.length - 1;
-        String propertyId;
-        String message;
-        try {
-            propertyId = columnPathElements[lastElement];
-            String element = columnPathElements[lastElement - 1];
-            LOG.debug(columnPath);
-            LOG.debug("Element:" + columnPathElements[lastElement - 1]);
-            LOG.debug("Property:" + propertyId);
-            if (columnPath.contains(LinkTableOperationType.RELATION.getOutput())) {
-                message = LinkTableUtil.getCnaLinkPropertyMessage(propertyId);
-            } else {
-                message = loader.getLabel(propertyId) + " ("
-                        + loader.getLabel(element) + ")";
-            }
-        } catch (IndexOutOfBoundsException e) {
-            LOG.warn("String-split did not work, using old way", e);
-            int propertyBeginning = columnPath
-                    .lastIndexOf(LinkTableOperationType.PROPERTY.getOutput());
-            propertyId = columnPath.substring(propertyBeginning + 1);
-            if (columnPath.contains(":")) {
-                message = LinkTableUtil.getCnaLinkPropertyMessage(propertyId);
-            } else {
-                message = loader.getLabel(propertyId);
-            }
-        }
-        message = StringUtils.replaceEachRepeatedly(message,
-                new String[] { "/", ":", ".", "<", ">" }, new String[] { "", "", "", "", "" });
-        message = message.replaceAll(" ", "__");
-
-        return columnPath + ALIAS_DELIMITER + message;
+    
+    private static IObjectModelService createLoader() {
+        return loader = (IObjectModelService) HUIObjectModelLoader.getInstance();
     }
 
 }

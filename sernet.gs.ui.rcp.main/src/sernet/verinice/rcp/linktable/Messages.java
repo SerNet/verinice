@@ -43,6 +43,9 @@ public class Messages extends NLS {
     public static String LinkTableHandler_3;
     public static String LinkTableHandler_4;
     public static String LinkTableHandler_5;
+    public static String LinkTableUtil_0;
+    public static String LinkTableUtil_1;
+    public static String LinkTableUtil_2;
     public static String OpenLinkTableHandler_0;
     public static String VeriniceLinkTableEditor_1;
     public static String VeriniceLinkTableEditor_2;
@@ -54,13 +57,6 @@ public class Messages extends NLS {
     public static String VeriniceLinkTableEditor_8;
     public static String VeriniceLinkTableUtil_0;
     public static String VeriniceLinkTableUtil_1;
-    public static String LinkTableColumn_CnaLink_Property_Title;
-    public static String LinkTableColumn_CnaLink_Property_Description;
-    public static String LinkTableColumn_CnaLink_Property_C;
-    public static String LinkTableColumn_CnaLink_Property_I;
-    public static String LinkTableColumn_CnaLink_Property_A;
-    public static String LinkTableColumn_CnaLink_Property_Unknown;
-
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
             .getBundle(BUNDLE_NAME);
 
