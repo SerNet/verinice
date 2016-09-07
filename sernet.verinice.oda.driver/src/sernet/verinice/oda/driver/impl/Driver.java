@@ -31,6 +31,7 @@ import org.eclipse.datatools.connectivity.oda.util.manifest.ManifestExplorer;
 public class Driver implements IDriver
 {
     
+    private static final String ODA_DATA_SOURCE_ID = "verinice.oda.driver.dataSource.id";  //$NON-NLS-1$
     
 	/*
 	 * @see org.eclipse.datatools.connectivity.oda.IDriver#getConnection(java.lang.String)
@@ -74,7 +75,7 @@ public class Driver implements IDriver
         throws OdaException
     {
         return ManifestExplorer.getInstance()
-                .getExtensionManifest( Query.ODA_DATA_SOURCE_ID );
+                .getExtensionManifest( ODA_DATA_SOURCE_ID );
     }
     
     /**

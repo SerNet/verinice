@@ -92,12 +92,11 @@ public class Connection implements IConnection {
 		Integer[] rootElementIds = getRootElementIds();
 		IQuery query = null;
 		
-		if(Query.ODA_DATA_SOURCE_ID.equals(dataSetType)) {
+		if (sernet.verinice.oda.linktable.driver.impl.Query.ODA_DATA_SET_ID.equals(dataSetType)) {
+		    query = new sernet.verinice.oda.linktable.driver.impl.Query(rootElementIds);
+		} else {
 		    query = new Query(rootElementIds);
 		}
-		if (sernet.verinice.oda.linktable.driver.impl.Query.ODA_DATA_SOURCE_ID.equals(dataSetType)) {
-		    query = new sernet.verinice.oda.linktable.driver.impl.Query(rootElementIds);
-        }
 		
 		return query;
 	}

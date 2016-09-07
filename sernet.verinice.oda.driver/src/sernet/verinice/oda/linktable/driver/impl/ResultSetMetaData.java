@@ -74,7 +74,7 @@ public class ResultSetMetaData implements IResultSetMetaData {
     @Override
     public String getColumnTypeName(int index) throws OdaException {
         int nativeTypeCode = getColumnType(index);
-        return Driver.getNativeDataTypeName(nativeTypeCode, Query.ODA_DATA_SOURCE_ID);
+        return Driver.getNativeDataTypeName(nativeTypeCode, Query.ODA_DATA_SET_ID);
     }
 
     @Override

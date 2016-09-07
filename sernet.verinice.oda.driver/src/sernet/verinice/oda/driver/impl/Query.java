@@ -64,6 +64,7 @@ import sernet.verinice.security.report.ReportSecurityException;
 public class Query implements IQuery
 {
     public static final String ODA_DATA_SOURCE_ID = "verinice.oda.driver.dataSource.id";  //$NON-NLS-1$
+    public static final String ODA_DATA_SET_ID = "verinice.oda.driver.dataSet.id";  //$NON-NLS-1$
     
 	private Logger log = Logger.getLogger(Query.class);
 	
@@ -96,6 +97,12 @@ public class Query implements IQuery
         	vnRootElements = (rootElementIds != null) ? rootElementIds.clone() : null;
         }
     	init();
+    }
+    
+    Query(Integer rootElementId) {
+        vnRootElement = rootElementId; 
+        vnRootElements = null;
+        init();
     }
 
     private void init() {

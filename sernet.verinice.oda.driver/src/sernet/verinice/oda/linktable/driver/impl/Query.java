@@ -47,7 +47,7 @@ import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
  */
 public class Query implements IQuery {
 
-    public static final String ODA_DATA_SOURCE_ID = "verinice.oda.linktable.driver.dataSet.id";  //$NON-NLS-1$
+    public static final String ODA_DATA_SET_ID = "verinice.oda.linktable.driver.dataSet.id";  //$NON-NLS-1$
 
     private static final int DEFAULT_MAX_ROWS = 1000;
     
