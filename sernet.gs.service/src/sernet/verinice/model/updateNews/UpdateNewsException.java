@@ -17,21 +17,25 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces.updatenews;
-
-import sernet.verinice.model.updateNews.UpdateNewsException;
-import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
+package sernet.verinice.model.updateNews;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public interface IUpdateNewsService {
+public class UpdateNewsException extends Exception {
     
-    String getCurrentInstalledVersion();
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 20160907150045L;
+
+    public UpdateNewsException(String message){
+        super(message);
+    }
     
-    UpdateNewsMessageEntry getNewsFromRepository(String newsRepository) throws UpdateNewsException;
-    
-    boolean isUpdateNecessary(String installedVersion) throws UpdateNewsException;
-    
+    public UpdateNewsException(String message, Throwable t){
+        super(message, t);
+    }
+
 }

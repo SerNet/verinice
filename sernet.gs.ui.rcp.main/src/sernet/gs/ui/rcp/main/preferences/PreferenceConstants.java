@@ -171,6 +171,9 @@ public class PreferenceConstants {
     public static final String SEARCH_DISABLE = "search_disable";
     
     public static final String EXPORT_RISK_ANALYSIS = "export_risk_analysis";
+    
+    public static final String STANDALONE_UPDATENEWS_URL = 
+            "standalone_updatenews_url";
 
     /**
      * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view

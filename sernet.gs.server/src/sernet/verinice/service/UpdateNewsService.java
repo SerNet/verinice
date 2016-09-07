@@ -21,9 +21,7 @@ package sernet.verinice.service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,11 +36,35 @@ import org.w3c.dom.NodeList;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
+import sernet.verinice.model.updateNews.UpdateNewsException;
+import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
 
 /**
+ * 
+ * service to provide functionallity to parse a json-message 
+ * hosted on a server, that provides information about an available
+ * software-update for verinice. Messages on a server has to look like this:
+ * 
+ * {
+ *    "version" : "1.13.0",
+ *    "message" : "<h1> Update News Headline </h1>Some text
+ *              that describes the Update and informs <p> the user</p>",
+ *    "message_de" : "<h1> Update News Überschrift </h1>Text
+ *              der das Update beschreibt und den 
+ *              <p>Benutzer informiert</p>",
+ *    "updatesite" : "http://path_to/updateSite"          
+ *           
+ * }
+ * 
+ * the html within the message will be interpreted by an instance of
+ * org.eclipse.swt.browser.Browser, javascript is turned off.
+ * 
+ * 
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
@@ -51,28 +73,35 @@ public class UpdateNewsService implements IUpdateNewsService {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     
     private static final Logger LOG = Logger.getLogger(UpdateNewsService.class);
+    
+    // valid for one session to cache the entry
+    private UpdateNewsMessageEntry sessionNewsEntry;
+    
+    // cache the news location
+    private String newsLocation;
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getCurrentInstalledVersion()
+    /**
+     * Parses (using a xml-parser) the value of the attribute version out 
+     * of applications "oc.prodcut".
+     * 
+     * Since sernet.gs.ui.rcp.main.feature is not available as a bundle on
+     * OSGI-platform we can't use: 
+     * 
+     * Platform.getBundle("sernet.gs.ui.rcp.main.feature").getEntry("/oc.product");
+     * 
+     * Instead of this the instance of the file is loaded via an url 
+     * formatted as "platform:/plugin/.."
+     * 
+     * 
+     * The information is needed to compare the version of the current
+     * installed client to the one of the offered update
+     * 
      */
     @Override
     public String getCurrentInstalledVersion() {
         try {
-//            Bundle bundle = Platform.getBundle("sernet.gs.ui.rcp.main.feature");
             
             URL fileURL = new URL("platform:/plugin/sernet.gs.ui.rcp.main.feature/oc.product");
-            
-//            if (bundle == null) {
-//                LOG.warn("verinice server bundle is not available. Assuming it is started separately."); //$NON-NLS-1$
-//            } else if (bundle.getState() == Bundle.INSTALLED || bundle.getState() == Bundle.RESOLVED) {
-//                LOG.debug("Manually starting GS rcp.main.feature"); //$NON-NLS-1$
-//                bundle.start();
-//            }
-//            URL fileURL = bundle.getEntry("/oc.product");
-            
-//            if(fileURL == null){
-//                throw new FileNotFoundException("Couldnt load oc.product");
-//            }
             
             java.io.File file = null;
             file = new java.io.File(FileLocator.resolve(fileURL).toURI());
@@ -90,16 +119,6 @@ public class UpdateNewsService implements IUpdateNewsService {
                 }
             };
 
-//        } catch (java.net.URISyntaxException e1) {
-//            e1.printStackTrace();
-//        } catch (java.io.IOException e1) {
-//            e1.printStackTrace();
-//        } catch (ParserConfigurationException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        } catch (SAXException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
         } catch (Exception e){
             LOG.error("Unable to determine version of running client:\t", e);
         }
@@ -107,100 +126,63 @@ public class UpdateNewsService implements IUpdateNewsService {
         return null;
     }
     
-    public boolean isUpdateNecessary(){
-        NumericStringComparator ncs = new NumericStringComparator();
-        String installedVersion = getCurrentInstalledVersion();
-        String availableVersion = getCurrentNewsVersion();
-        // is availableVersion > installedVersion
-        return ncs.compare(installedVersion, availableVersion) == 1;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getCurrentNewsMessage()
+    /**
+     * compares version string configured in applications oc.product
+     * to the one that is configured in the news message (formatted as json)
+     * using an instance of the {@link NumericStringComparator}
+     * 
+     * ncs.compare(installedVersion, availableVersion) == 1
+     * 
+     * means, that installedVersion is smaller than availableVersion
+     * 
      */
     @Override
-    public String getCurrentNewsMessage(Locale locale) {
-        return parseNewsEntry(getLatestNewsFromRepository()).getMessage(locale);
-    }
-    
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getCurrentNewsVersion()
-     */
-    @Override
-    public String getCurrentNewsVersion() {
-        return parseNewsEntry(getLatestNewsFromRepository()).getVersion();
-    }
-    
-    
-    @Override
-    public URL getUpdateSite(){
-        try {
-            return new URL(parseNewsEntry(getLatestNewsFromRepository()).getUpdateSite());
-        } catch (MalformedURLException e) {
-            LOG.error("URL of updatesite to contact was not formed well", e);
+    public boolean isUpdateNecessary(String installedVersion) throws UpdateNewsException{
+        if(this.newsLocation == null){
+            return false;
         }
-        return null;
-    }
-    
-    private UpdateNewsMessageEntry parseNewsEntry(String newsEntry){
-        return gson.fromJson(newsEntry, UpdateNewsMessageEntry.class);
+        NumericStringComparator ncs = new NumericStringComparator();
+        String availableVersion = getNewsFromRepository(
+                this.newsLocation).getVersion();
+        int result = ncs.compare( availableVersion, installedVersion); 
+        LOG.debug("Compare " + installedVersion + "(installed) with " + availableVersion
+                + "(available) = " + result);
+        return result == 1;
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getNewsRepository()
+
+
+    private UpdateNewsMessageEntry parseNewsEntry(String newsEntry) throws UpdateNewsException{
+        try{
+            return gson.fromJson(newsEntry, UpdateNewsMessageEntry.class);
+        } catch (JsonSyntaxException e){
+            LOG.error("Error parsing json", e);
+            throw new UpdateNewsException("Error parsing json document", e);
+        }
+    }
+
+    /**
+     * loads the latest news entry from the configured server as plain text 
+     * (plain json)
+     * and returns it as a string
+     * TODO: make news location configurable
      */
     @Override
-    public String getLatestNewsFromRepository() {
+    public  UpdateNewsMessageEntry getNewsFromRepository(String newsRepository) throws UpdateNewsException {
+        this.newsLocation = newsRepository;
+        if(this.sessionNewsEntry != null){
+            return this.sessionNewsEntry;
+        }
         try {
-            URL repositoryURL = new URL("http://localhost:8081/verinicenews/news.txt");
+            URL repositoryURL = new URL(newsRepository);
             InputStream in = repositoryURL.openStream();
-            return IOUtils.toString(in);
+            this.sessionNewsEntry = parseNewsEntry(IOUtils.toString(in));
         } catch (IOException e) {
             LOG.error("Error reading the update news", e);
+            throw new UpdateNewsException("Error reading the update news", e);
         } 
-        return "";
+        return this.sessionNewsEntry;
         
     }
-    
-    
-    /**
-     * representation of a update news message, which needs to be
-     * formatted like this (in json):
-     * 
-     * {
-     *    "version" : "1.13.0",
-     *    "message" : "<h1> Update News Headline </h1>Some text
-     *              that describes the Update and informs <p> the user</p>",
-     *    "message_de" : "<h1> Update News Überschrift </h1>Text
-     *              der das Update beschreibt und den 
-     *              <p>Benutzer informiert</p>",
-     *    "updatesite" : "http://path_to/updateSite"          
-     *           
-     * }
-     *
-     * @author Sebastian Hagedorn sh[at]sernet.de
-     *
-     */
-    static class UpdateNewsMessageEntry {
-        private String version;
-        private String message;
-        private String message_de;
-        private String updatesite;
-        
-        public String getVersion(){return version;}
-        public String getMessage(Locale locale){
-            if(Locale.GERMAN.equals(locale) || Locale.GERMANY.equals(locale)){
-                return message_de;
-            } else {
-                return message;
-            }
-
-        }
-        public String getMessageDE(){return message_de;}
-        public String getUpdateSite(){return updatesite;}
-    }
-
-    
-
 
 }

@@ -19,11 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
 import org.eclipse.equinox.p2.operations.ProvisioningJob;
@@ -32,6 +34,7 @@ import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -49,6 +52,12 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
+ * 
+ * A dialog that informs the user that there is a new update available and
+ * offers actions to update now or later. Displaying the dialog is optional
+ * via preference. Dialog will be shown only once per client-session,
+ * on startup time, when internal server is ready. 
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
@@ -69,19 +78,21 @@ public class UpdateNewsDialog extends Dialog {
         this.updateSite = updateSite;
         setShellStyle(SWT.CLOSE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
         setBlockOnOpen(true);
-        Display display = parent.getDisplay();
-        while (!parent.isDisposed()) {
+        Display display = Display.getCurrent();
+        Shell shell = parent;
+        while (!shell.isDisposed()) {
             if (!display.readAndDispatch()){
                 display.sleep();
             }
         }
     }
-    
+
     @Override
     protected Control createDialogArea(Composite parent) {
         Composite container = (Composite) super.createDialogArea(parent);
         container.setLayout(new GridLayout(1, false));
         GridData gridData = new GridData(GridData.FILL_BOTH | GridData.GRAB_VERTICAL | GridData.GRAB_HORIZONTAL);
+        gridData.heightHint = 300;
         container.setLayoutData(gridData);
         createContent(container);
         container.getParent().pack();
@@ -99,7 +110,7 @@ public class UpdateNewsDialog extends Dialog {
      */
     protected Button createButton(Composite arg0, int arg1, String arg2, boolean arg3) 
     {
-        //Retrun null so that no default buttons like 'OK' and 'Cancel' will be created
+        //Return null so that no default buttons like 'OK' and 'Cancel' will be created
         return null;
     }
     
@@ -113,8 +124,9 @@ public class UpdateNewsDialog extends Dialog {
         Browser browser = new Browser(dialogComposite, SWT.RESIZE);
         gridData = new GridData(
                 GridData.FILL_BOTH | GridData.GRAB_VERTICAL | GridData.GRAB_HORIZONTAL);
-//        gridData = new GridData(GridData.BEGINNING, GridData.BEGINNING, true, true);
         gridData.horizontalSpan = 4;
+        gridData.verticalSpan = 4;
+        gridData.minimumHeight = (int)parent.getClientArea().height / 2;
         browser.setLayoutData(gridData);
         browser.setText(message);
         browser.setJavascriptEnabled(false);
@@ -132,16 +144,16 @@ public class UpdateNewsDialog extends Dialog {
         gridData.horizontalSpan = 4;
         showAgainCheck.setLayoutData(gridData);
         
-        Composite buttonComposite = new Composite(dialogComposite, SWT.BORDER);
-        buttonComposite.setLayout(new GridLayout(2, false));
-        gridData = new GridData(GridData.END, GridData.END, false, false);
+        Composite buttonComposite = new Composite(dialogComposite, SWT.NONE);
+        buttonComposite.setLayout(new GridLayout(3, false));
+        gridData = new GridData(GridData.END, GridData.END, true, false);
         gridData.horizontalSpan = 4;
         buttonComposite.setLayoutData(gridData);
         
         Button updateLater = new Button(buttonComposite, SWT.PUSH );
         updateLater.setText(Messages.UpdateNewsDialog_2);
         gridData = new GridData();
-        gridData.horizontalSpan = 1;
+        gridData.horizontalSpan = 2;
         updateLater.setLayoutData(gridData);
         updateLater.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent event) {
@@ -151,7 +163,9 @@ public class UpdateNewsDialog extends Dialog {
         
         Button updateNow = new Button(buttonComposite, SWT.PUSH );
         updateNow.setText(Messages.UpdateNewsDialog_3);
-        updateNow.setLayoutData(gridData);
+        gridData = new GridData();
+        gridData.horizontalSpan = 1;
+        updateLater.setLayoutData(gridData);
         updateNow.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent event) {
                 try{
@@ -174,6 +188,9 @@ public class UpdateNewsDialog extends Dialog {
         return Activator.getDefault().getPluginPreferences().getBoolean(PreferenceConstants.SHOW_UPDATE_NEWS_DIALOG);
     }
     
+    /**
+     * button "Update now" is clicked by the user
+     */
     private void triggerUpdate(URL updateSiteURL) throws URISyntaxException{
         // create update operation
         UpdateOperation operation = new UpdateOperation(ProvUIActivator.getDefault().getProvisioningUI().getSession());
@@ -190,15 +207,11 @@ public class UpdateNewsDialog extends Dialog {
             return;
         }
         
-        
         createAndExecuteUpdateJob(operation);
-        
-    
-        restartApplication();
     }
 
     /**
-     * 
+     * restarts the application after successful update 
      */
     private void restartApplication() {
         // restart application
@@ -211,13 +224,16 @@ public class UpdateNewsDialog extends Dialog {
     }
 
     /**
-     * @param operation
+     * asks the p2-api for an instance of org.eclipse.runtime.jobs.Job that
+     * is able to perform the update operation and hands that to an
+     * execution method. afterwards the application will be restarted
      */
     private void createAndExecuteUpdateJob(UpdateOperation operation) {
         try{
             final ProvisioningJob provisioningJob = operation.getProvisioningJob(null);
             if (provisioningJob != null) {
-                performUpdate(provisioningJob); 
+                performUpdate(provisioningJob);
+                restartApplication();
             }
             else {
                 handleUpdateError(operation);
@@ -227,9 +243,6 @@ public class UpdateNewsDialog extends Dialog {
         }
     }
 
-    /**
-     * @param operation
-     */
     private void handleUpdateError(UpdateOperation operation) {
         if (operation.hasResolved()) {
             MessageDialog.openError(null, 
@@ -242,27 +255,40 @@ public class UpdateNewsDialog extends Dialog {
     }
 
     /**
-     * @param provisioningJob
+     * executes the p2-update job in a modal way, so the user is
+     * not able to interrupt it or do something else while updating
      */
     private void performUpdate(final ProvisioningJob provisioningJob) {
-        Display.getCurrent().syncExec(new Runnable() {
-
+        
+        IRunnableWithProgress runnable = new IRunnableWithProgress() {
+            
             @Override
-            public void run() {
+            public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
                 boolean performUpdate = MessageDialog.openQuestion(
                         null,
                         Messages.UpdateNewsDialog_10,
                         Messages.UpdateNewsDialog_11);
                 if (performUpdate) {
-                    provisioningJob.schedule();
+                    provisioningJob.runModal(arg0);
                 }
             }
-        });
+        };
+        
+        try {
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
+        } catch (InvocationTargetException e) {
+            LOG.error("Error executing the job for updating the client", e);
+        } catch (InterruptedException e) {
+            LOG.error("Job for updating the client was interupted", e);
+        }
+        
+        
     }
 
     /**
-     * @param updateSiteURL
-     * @throws URISyntaxException
+     * sets the updateSite configured in the news message as the
+     * only one in the system, to ensure the update is taken from this one
+     * 
      */
     private void updateUpdateSite(URL updateSiteURL) throws URISyntaxException {
         // set the updatesite
@@ -271,6 +297,9 @@ public class UpdateNewsDialog extends Dialog {
         Activator.getDefault().getArtifactRepositoryManager().addRepository(updateSiteURL.toURI());
     }
     
+    /**
+     * clears systems updateSite-Settings
+     */
     private void removeAllUpdateSites(){
         IArtifactRepositoryManager artifactRepoManager = Activator.getDefault().getArtifactRepositoryManager();
         IMetadataRepositoryManager metaRepoManager =  Activator.getDefault().getMetadataRepositoryManager();

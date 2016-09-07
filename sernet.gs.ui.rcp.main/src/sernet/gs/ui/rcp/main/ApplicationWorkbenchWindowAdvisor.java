@@ -19,14 +19,20 @@ package sernet.gs.ui.rcp.main;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -60,6 +66,7 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
+import sernet.verinice.model.updateNews.UpdateNewsException;
 import sernet.verinice.rcp.UpdateNewsDialog;
 
 /**
@@ -301,28 +308,83 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                 }
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else {
-            openNewsDialogAsync();
+        } else if(Activator.getDefault().getInternalServer().isRunning()){
+                openNewsDialogAsync();
         }
     }
     
     private void openNewsDialogAsync(){
         Activator.inheritVeriniceContextState();
-        IUpdateNewsService updateNewsService =(IUpdateNewsService)VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE); 
-        if(updateNewsService.isUpdateNecessary()){
-            final String text = updateNewsService.getCurrentNewsMessage(Locale.getDefault());
-            final URL updateSiteURL = updateNewsService.getUpdateSite();
-            Display.getDefault().asyncExec(new Runnable() {
-
-                @Override
-                public void run() {
-                    Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
-                    UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell,
-                            text, updateSiteURL);
-                    newsDialog.open();
+        IUpdateNewsService updateNewsService =(IUpdateNewsService)VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE);
+        try{
+            final String text = updateNewsService.getNewsFromRepository(getNewsRepository()).getMessage(Locale.getDefault());
+            String installedVersion = getApplicationVersionFromAboutText();
+            if(StringUtils.isNotEmpty(installedVersion) && updateNewsService.isUpdateNecessary(installedVersion)){
+                final URL updateSiteURL;
+                try{
+                    updateSiteURL = new URL(updateNewsService.getNewsFromRepository(getNewsRepository()).getUpdateSite());
+                } catch (MalformedURLException e){
+                    LOG.error("Updatesite not parseable", e);
+                    throw new UpdateNewsException("Malformed URL of updatesite", e);
                 }
-            });
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
+                        UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell,
+                                text, updateSiteURL);
+                        newsDialog.open();
+                    }
+                });
+            }
+        } catch (UpdateNewsException e){
+            LOG.error("Problem occured during loading the verinice-update-news", e);
+            ExceptionUtil.log(e, Messages.ApplicationActionBarAdvisor_23);
         }
+    }
+    
+    /**
+     * this reads a hardcoded preferencevalue (from the preferencestore
+     * or from the preferenceInitializer if it is not existant already)
+     * if its not replaced by the user manually.
+     * 
+     * To replace / change it manually add the following line to the
+     * end of the file verinice.ini:
+     * 
+     * -Dstandalone_updatenews_url=http://url.of/your/choice.txt
+     * 
+     */
+    private String getNewsRepository(){
+        String repo = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.STANDALONE_UPDATENEWS_URL); 
+        String repoSetBySystem = System.getProperty(PreferenceConstants.STANDALONE_UPDATENEWS_URL);
+        if(StringUtils.isNotEmpty(repoSetBySystem)){
+            repo = repoSetBySystem;
+        }
+        return repo;
+    }
+    
+    /**
+     * @param parent
+     * @return
+     */
+    private String getApplicationVersionFromAboutText() {
+        IProduct product = Platform.getProduct();
+        String aboutText = product.getProperty("aboutText");
+        String version = "";
+        if(aboutText!=null) {
+            String lines[] = aboutText.split("\\r?\\n");
+            if(lines!=null && lines.length>0) {
+                String firstLine = lines[0];
+                String pattern = "\\b\\d{1}?[\\.]\\d{2}[\\.]\\d{1}\\b";
+                Pattern p = Pattern.compile(pattern);
+                Matcher matcher = p.matcher(firstLine);
+                if(matcher.find()){
+                    version = matcher.group();
+                }
+            }
+        }
+        return version;
     }
 
 }

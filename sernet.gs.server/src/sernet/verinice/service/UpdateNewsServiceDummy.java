@@ -19,12 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
-import java.net.URL;
-import java.util.Locale;
-
 import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
+import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
 
 /**
+ * this implementation is used when running verinice.PRO.
+ * verinice.PRO has a different update-strategy than the standalone
+ * version, and there is (currently) no need for a serious implementation
+ * of this functionality. 
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
@@ -42,42 +45,18 @@ public class UpdateNewsServiceDummy implements IUpdateNewsService {
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getCurrentNewsMessage()
-     */
-    @Override
-    public String getCurrentNewsMessage(Locale locale) {
-        return DUMMY_NEWS_MESSAGE;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getCurrentNewsVersion()
-     */
-    @Override
-    public String getCurrentNewsVersion() {
-        return DUMMY_VERSION_NUMBER;
-    }
-
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getLatestNewsFromRepository()
-     */
-    @Override
-    public String getLatestNewsFromRepository() {
-        return DUMMY_NEWS_MESSAGE;
-    }
-
-    /* (non-Javadoc)
      * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#isUpdateNecessary()
      */
     @Override
-    public boolean isUpdateNecessary() {
+    public boolean isUpdateNecessary(String installedVersion) {
         return false;
     }
 
     /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getUpdateSite()
+     * @see sernet.verinice.interfaces.updatenews.IUpdateNewsService#getNewsFromRepository(java.lang.String)
      */
     @Override
-    public URL getUpdateSite() {
+    public UpdateNewsMessageEntry getNewsFromRepository(String newsRepository) {
         return null;
     }
 
