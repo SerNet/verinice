@@ -79,7 +79,7 @@
          </dataTypeMapping>
       </dataSet>
       <dataSet
-            defaultDisplayName="verinice Link Table Data Set"
+            defaultDisplayName="%linktable.data.set.name"
             id="verinice.oda.linktable.driver.dataSet.id">
          <dataTypeMapping
                nativeDataTypeCode="1"
