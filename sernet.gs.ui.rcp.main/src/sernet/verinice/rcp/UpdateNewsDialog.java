@@ -193,6 +193,7 @@ public class UpdateNewsDialog extends Dialog {
      */
     private void triggerUpdate(URL updateSiteURL) throws URISyntaxException{
         // create update operation
+        LOG.debug("Update against updatesite:\t" + updateSiteURL.toString() + " requested") ;
         UpdateOperation operation = new UpdateOperation(ProvUIActivator.getDefault().getProvisioningUI().getSession());
        
         updateUpdateSite(updateSiteURL);
@@ -200,6 +201,7 @@ public class UpdateNewsDialog extends Dialog {
         // check if updates are available
         IStatus status = operation.resolveModal(null);
         if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
+            LOG.debug("detected there is nothing to update today");
             MessageDialog.openInformation(
                     null, 
                     Messages.UpdateNewsDialog_5, 
@@ -219,6 +221,7 @@ public class UpdateNewsDialog extends Dialog {
                 Messages.UpdateNewsDialog_6,
                 Messages.UpdateNewsDialog_7);
             if (restart) {
+                LOG.debug("Restarting application manually requested after update");
                 PlatformUI.getWorkbench().restart();
             }
     }
@@ -230,12 +233,14 @@ public class UpdateNewsDialog extends Dialog {
      */
     private void createAndExecuteUpdateJob(UpdateOperation operation) {
         try{
+            LOG.debug("creating provisioningJob from p2-api");
             final ProvisioningJob provisioningJob = operation.getProvisioningJob(null);
             if (provisioningJob != null) {
+                LOG.debug("performing update using provisioning job");
                 performUpdate(provisioningJob);
-                restartApplication();
             }
             else {
+                LOG.debug("provisioning job was null");
                 handleUpdateError(operation);
             }
         } catch (Exception e){
@@ -260,22 +265,24 @@ public class UpdateNewsDialog extends Dialog {
      */
     private void performUpdate(final ProvisioningJob provisioningJob) {
         
-        IRunnableWithProgress runnable = new IRunnableWithProgress() {
-            
-            @Override
-            public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
-                boolean performUpdate = MessageDialog.openQuestion(
-                        null,
-                        Messages.UpdateNewsDialog_10,
-                        Messages.UpdateNewsDialog_11);
-                if (performUpdate) {
-                    provisioningJob.runModal(arg0);
-                }
-            }
-        };
-        
         try {
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(runnable);
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+                
+                @Override
+                public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
+                    boolean performUpdate = MessageDialog.openQuestion(
+                            null,
+                            Messages.UpdateNewsDialog_10,
+                            Messages.UpdateNewsDialog_11);
+                    if (performUpdate) {
+                        LOG.debug("Running update job modal");
+                        provisioningJob.runModal(arg0);
+                    }
+                    restartApplication();
+                }
+            });
+            
+            
         } catch (InvocationTargetException e) {
             LOG.error("Error executing the job for updating the client", e);
         } catch (InterruptedException e) {
@@ -292,7 +299,9 @@ public class UpdateNewsDialog extends Dialog {
      */
     private void updateUpdateSite(URL updateSiteURL) throws URISyntaxException {
         // set the updatesite
+        LOG.debug("setting updatesite from verinice-news");
         removeAllUpdateSites();
+        LOG.debug("adding updatesite:\t" + updateSiteURL.toString() + " to repositories");
         Activator.getDefault().getMetadataRepositoryManager().addRepository(updateSiteURL.toURI());
         Activator.getDefault().getArtifactRepositoryManager().addRepository(updateSiteURL.toURI());
     }
@@ -301,9 +310,11 @@ public class UpdateNewsDialog extends Dialog {
      * clears systems updateSite-Settings
      */
     private void removeAllUpdateSites(){
+        LOG.debug("removing all existant updatesites");
         IArtifactRepositoryManager artifactRepoManager = Activator.getDefault().getArtifactRepositoryManager();
         IMetadataRepositoryManager metaRepoManager =  Activator.getDefault().getMetadataRepositoryManager();
         for(URI repository : Activator.getDefault().getArtifactRepositoryManager().getKnownRepositories(IArtifactRepositoryManager.REPOSITORIES_ALL)){
+            LOG.debug("Removing repository:\t" + repository.toASCIIString());
             artifactRepoManager.removeRepository(repository);
             metaRepoManager.removeRepository(repository);
         }
