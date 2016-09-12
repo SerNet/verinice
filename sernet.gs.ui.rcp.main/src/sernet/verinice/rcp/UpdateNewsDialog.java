@@ -19,14 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.jobs.IJobChangeEvent;
+import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
 import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
@@ -34,7 +35,6 @@ import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -65,6 +65,8 @@ public class UpdateNewsDialog extends Dialog {
     
     private String message;
     private URL updateSite;
+    
+    private Job updateJob;
     
     private static final Logger LOG = Logger.getLogger(UpdateNewsDialog.class);
 
@@ -235,6 +237,7 @@ public class UpdateNewsDialog extends Dialog {
         try{
             LOG.debug("creating provisioningJob from p2-api");
             final ProvisioningJob provisioningJob = operation.getProvisioningJob(null);
+            this.updateJob = provisioningJob;
             if (provisioningJob != null) {
                 LOG.debug("performing update using provisioning job");
                 performUpdate(provisioningJob);
@@ -265,32 +268,80 @@ public class UpdateNewsDialog extends Dialog {
      */
     private void performUpdate(final ProvisioningJob provisioningJob) {
         
-        try {
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                
-                @Override
-                public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
-                    boolean performUpdate = MessageDialog.openQuestion(
-                            null,
-                            Messages.UpdateNewsDialog_10,
-                            Messages.UpdateNewsDialog_11);
-                    if (performUpdate) {
-                        LOG.debug("Running update job modal");
-                        provisioningJob.runModal(arg0);
+        Display.getCurrent().syncExec(new Runnable() {
+            
+            @Override
+            public void run() {
+                boolean performUpdate = MessageDialog.openQuestion(
+                        null,
+                        Messages.UpdateNewsDialog_10,
+                        Messages.UpdateNewsDialog_11);
+              if (performUpdate) {
+                  LOG.debug("Running update job modal");
+                  provisioningJob.schedule();
+                  provisioningJob.addJobChangeListener(new IJobChangeListener() {
+                    
+                    @Override
+                    public void sleeping(IJobChangeEvent arg0) {
+                        // TODO Auto-generated method stub
+                        
                     }
-                    restartApplication();
-                }
-            });
-            
-            
-        } catch (InvocationTargetException e) {
-            LOG.error("Error executing the job for updating the client", e);
-        } catch (InterruptedException e) {
-            LOG.error("Job for updating the client was interupted", e);
-        }
+                    
+                    @Override
+                    public void scheduled(IJobChangeEvent arg0) {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                    
+                    @Override
+                    public void running(IJobChangeEvent arg0) {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                    
+                    @Override
+                    public void done(IJobChangeEvent arg0) {
+                        restartApplication();
+                        
+                    }
+                    
+                    @Override
+                    public void awake(IJobChangeEvent arg0) {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                    
+                    @Override
+                    public void aboutToRun(IJobChangeEvent arg0) {
+                        // TODO Auto-generated method stub
+                        
+                    }
+                });
+              }
+              
+
+            }
+        });
+        restartApplication();
         
+        //            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
+//                
+//                @Override
+//                public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
+//                    boolean performUpdate = MessageDialog.openQuestion(
+//                            null,
+//                            Messages.UpdateNewsDialog_10,
+//                            Messages.UpdateNewsDialog_11);
+//                    if (performUpdate) {
+//                        LOG.debug("Running update job modal");
+//                        provisioningJob.runModal(arg0);
+//                    }
+//                    restartApplication();
+//                }
+//            });
+//            
+    }            
         
-    }
 
     /**
      * sets the updateSite configured in the news message as the
