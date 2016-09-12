@@ -29,6 +29,7 @@
                 "taskchangeduedate"
 	              "taskdelete"
 	              "taskshowall"
+	              "taskwithreleaseprocess"
                 "importldap"
                 "reportdeposit"
                 "reportdepositadd"

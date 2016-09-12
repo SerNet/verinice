@@ -28,6 +28,7 @@
             "taskshowall"
             "taskchangeassignee"
             "taskchangeduedate"
+            "taskwithreleaseprocess"
             "searchreindex"
             "showallfiles" -->
         <action id="addbsielement" />
@@ -104,6 +105,7 @@
             "taskshowall"
             "taskchangeassignee"
             "taskchangeduedate"
+            "taskwithreleaseprocess"
             "addismorg"
             "additverbund"
             "xmlimport" 
@@ -236,6 +238,7 @@
 	        <action id="simpleauditview" />
           <action id="taskchangeassignee" />
           <action id="taskchangeduedate" />
+          <action id="taskwithreleaseprocess" />
 	        <action id="taskdelete" />
 	        <action id="taskview" />
 	        <action id="todo"/>
@@ -309,6 +312,7 @@
 	        <action id="simpleauditview" />
           <action id="taskchangeassignee" />
           <action id="taskchangeduedate" />
+          <action id="taskwithreleaseprocess" />
 	        <action id="taskdelete" />
 	        <action id="taskshowall" />
 	        <action id="taskview" />
