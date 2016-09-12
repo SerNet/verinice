@@ -278,45 +278,47 @@ public class UpdateNewsDialog extends Dialog {
                         Messages.UpdateNewsDialog_11);
               if (performUpdate) {
                   LOG.debug("Running update job modal");
-                  provisioningJob.schedule();
                   provisioningJob.addJobChangeListener(new IJobChangeListener() {
-                    
-                    @Override
-                    public void sleeping(IJobChangeEvent arg0) {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                    
-                    @Override
-                    public void scheduled(IJobChangeEvent arg0) {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                    
-                    @Override
-                    public void running(IJobChangeEvent arg0) {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                    
-                    @Override
-                    public void done(IJobChangeEvent arg0) {
-                        restartApplication();
-                        
-                    }
-                    
-                    @Override
-                    public void awake(IJobChangeEvent arg0) {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                    
-                    @Override
-                    public void aboutToRun(IJobChangeEvent arg0) {
-                        // TODO Auto-generated method stub
-                        
-                    }
-                });
+                      
+                      @Override
+                      public void sleeping(IJobChangeEvent arg0) {
+                          // TODO Auto-generated method stub
+                          LOG.debug("Update-Job sleeping");
+                      }
+                      
+                      @Override
+                      public void scheduled(IJobChangeEvent arg0) {
+                          // TODO Auto-generated method stub
+                          LOG.debug("Update-Job scheduled");
+                      }
+                      
+                      @Override
+                      public void running(IJobChangeEvent arg0) {
+                          // TODO Auto-generated method stub
+                          LOG.debug("Update-Job running");
+                      }
+                      
+                      @Override
+                      public void done(IJobChangeEvent arg0) {
+                          LOG.debug("Update-Job done");
+                          restartApplication();
+                          
+                      }
+                      
+                      @Override
+                      public void awake(IJobChangeEvent arg0) {
+                          // TODO Auto-generated method stub
+                          LOG.debug("Update-Job awake");
+                      }
+                      
+                      @Override
+                      public void aboutToRun(IJobChangeEvent arg0) {
+                          // TODO Auto-generated method stub
+                          LOG.debug("Update-Job about to run");
+                          
+                      }
+                  });
+                  provisioningJob.schedule();
               }
               
 
