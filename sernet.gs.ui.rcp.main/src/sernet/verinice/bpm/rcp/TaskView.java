@@ -124,12 +124,9 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private static final Logger LOG = Logger.getLogger(TaskView.class);
     static final NumericStringComparator NSC = new NumericStringComparator();
 
-    static final ComboModelNumericStringComparator<CnATreeElement> COMPARATOR_CNA_TREE_ELEMENT =
-                    new ComboModelNumericStringComparator<CnATreeElement>();
-    static final ComboModelNumericStringComparator<Configuration> COMPARATOR_CONFIGURATION =
-                    new ComboModelNumericStringComparator<Configuration>();
-    static final ComboModelNumericStringComparator<KeyMessage> COMPARATOR_KEY_MESSAGE =
-                    new ComboModelNumericStringComparator<KeyMessage>();
+    static final ComboModelNumericStringComparator<CnATreeElement> COMPARATOR_CNA_TREE_ELEMENT = new ComboModelNumericStringComparator<CnATreeElement>();
+    static final ComboModelNumericStringComparator<Configuration> COMPARATOR_CONFIGURATION = new ComboModelNumericStringComparator<Configuration>();
+    static final ComboModelNumericStringComparator<KeyMessage> COMPARATOR_KEY_MESSAGE = new ComboModelNumericStringComparator<KeyMessage>();
 
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView"; //$NON-NLS-1$
 
@@ -384,7 +381,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                 dataLoader.loadAudits();
             }
         });
-        
+
         comboModelScope = new ComboModel<CnATreeElement>(new GroupLabelProvider());
         filterScope = new RegexComboModelFilter();
         comboModelScope.setFilter(filterScope);
@@ -582,8 +579,12 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
                         LoadAncestors loadControl = new LoadAncestors(task.getElementType(), task.getUuid(), ri);
                         loadControl = getCommandService().executeCommand(loadControl);
-                        if (loadControl.getElement() != null) {
-                            EditorFactory.getInstance().updateAndOpenObject(loadControl.getElement());
+                        CnATreeElement element = loadControl.getElement();
+                        if (element != null) {
+                            if (task.isWithAReleaseProcess()) {
+                                element.setTask(task);
+                            }
+                            EditorFactory.getInstance().updateAndOpenObject(element);
                         } else {
                             showError("Error", Messages.TaskView_25); //$NON-NLS-1$
                         }

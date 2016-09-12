@@ -87,6 +87,7 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
         map.put(IIndividualProcess.VAR_TITLE, parameter.getTitle());
         map.put(IGenericProcess.VAR_TYPE_ID, parameter.getTypeId());
         map.put(IIndividualProcess.VAR_PROPERTY_TYPES, parameter.getProperties());
+        map.put(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS, parameter.isWithAReleaseProcess());
         return map;
     }
 

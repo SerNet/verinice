@@ -129,6 +129,7 @@ public class IndividualProcessWizard extends Wizard {
         propertyPage.setPropertyIds(template.getProperties());
         descriptionPage.setTaskTitle(template.getTitle());
         descriptionPage.setTaskDescription(template.getDescription());
+        descriptionPage.setReleaseProcessSelected(template.isWithAReleaseProcess());
     }
     
     public IndividualServiceParameter getParameter() {
@@ -146,6 +147,7 @@ public class IndividualProcessWizard extends Wizard {
         parameter.setReminderPeriodDays(getPeriod());
         parameter.setProperties(getProperties());
         parameter.setPropertyNames(getPropertyNames());
+        parameter.setWithAReleaseProcess(isWithAReleaseProcess());
         return parameter;
     }
     
@@ -202,6 +204,10 @@ public class IndividualProcessWizard extends Wizard {
     
     public boolean overwriteTemplate() {
         return descriptionPage.isOverwriteTemplate();
+    }
+    
+    public boolean isWithAReleaseProcess() {
+        return descriptionPage.isWithAReleaseProcess();
     }
 
     public String getElementType() {

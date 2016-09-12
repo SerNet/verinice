@@ -69,6 +69,7 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
         individualServiceParameter.setProperties((Set<String>) taskVariables.get(IIndividualProcess.VAR_PROPERTY_TYPES));
         individualServiceParameter.setTitle((String) taskVariables.get(IIndividualProcess.VAR_TITLE));
         individualServiceParameter.setDescription((String) taskVariables.get(IIndividualProcess.VAR_DESCRIPTION));
+        individualServiceParameter.setWithAReleaseProcess((boolean) taskVariables.get(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS));
 
         try {
             final IndividualProcessWizard wizard = new IndividualProcessWizard(Collections.singletonList(task.getUuid()), task.getElementTitle(), task.getElementType());

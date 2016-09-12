@@ -32,6 +32,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -130,6 +131,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	private boolean childrenLoaded = false;
 	
 	private Set<Attachment> files = new HashSet<Attachment>(1);
+	
+	private TaskInformation task;
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -787,4 +790,18 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
 
+
+    /**
+     * @return the task
+     */
+    public TaskInformation getTask() {
+        return task;
+    }
+
+    /**
+     * @param task the task to set
+     */
+    public void setTask(TaskInformation task) {
+        this.task = task;
+    }
 }

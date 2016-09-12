@@ -420,7 +420,8 @@ public class TaskService implements ITaskService {
         String typeId = (String) varMap.get(IGenericProcess.VAR_TYPE_ID); 
         taskInformation.setElementType(typeId);
         taskInformation.setDueDate(task.getDuedate());   
-        taskInformation.setProcessName(getProcessName(task));      
+        taskInformation.setProcessName(getProcessName(task));
+        taskInformation.setWithAReleaseProcess((boolean) varMap.get(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS));
         if (log.isDebugEnabled()) {
             log.debug("map finished"); //$NON-NLS-1$
         }
