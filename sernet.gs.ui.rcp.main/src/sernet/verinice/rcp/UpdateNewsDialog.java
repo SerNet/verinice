@@ -324,7 +324,6 @@ public class UpdateNewsDialog extends Dialog {
 
             }
         });
-        restartApplication();
         
         //            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
 //                
