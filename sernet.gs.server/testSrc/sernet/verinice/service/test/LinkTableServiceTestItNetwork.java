@@ -107,35 +107,47 @@ public class LinkTableServiceTestItNetwork extends BeforeEachVNAImportHelper {
     
 
     private void checkAllObjectsTable(List<List<String>> resultTable) {
-        assertEquals(78, resultTable.size());
+        assertEquals(79, resultTable.size());
         assertEquals(19, resultTable.get(0).size());
         
-        assertEquals("RECPLAST", resultTable.get(8).get(0));
-        assertEquals("Anwendungen", resultTable.get(8).get(1));
-        assertEquals("Internet-Recherche", resultTable.get(8).get(2));
+        assertEquals("RECPLAST", resultTable.get(9).get(0));
+        assertEquals("Anwendungen", resultTable.get(9).get(1));
+        assertEquals("Internet-Recherche", resultTable.get(9).get(2));
 
-        assertEquals("RECPLAST", resultTable.get(15).get(0));
-        assertEquals("Gebäude", resultTable.get(15).get(3));
-        assertEquals("Produktionshalle", resultTable.get(15).get(4));
+        assertEquals("RECPLAST", resultTable.get(16).get(0));
+        assertEquals("Gebäude", resultTable.get(16).get(3));
+        assertEquals("Produktionshalle", resultTable.get(16).get(4));
 
-        assertEquals("RECPLAST", resultTable.get(33).get(0));
-        assertEquals("IT-Systeme: Server", resultTable.get(33).get(9));
-        assertEquals("Datei- und Druckserver", resultTable.get(33).get(10));
+        assertEquals("RECPLAST", resultTable.get(34).get(0));
+        assertEquals("IT-Systeme: Server", resultTable.get(34).get(9));
+        assertEquals("Datei- und Druckserver", resultTable.get(34).get(10));
 
-        assertEquals("RECPLAST", resultTable.get(42).get(0));
-        assertEquals("Mitarbeiter", resultTable.get(42).get(13));
-        assertEquals("A. Admin", resultTable.get(42).get(14));
+        assertEquals("RECPLAST", resultTable.get(43).get(0));
+        assertEquals("Mitarbeiter", resultTable.get(43).get(13));
+        assertEquals("A. Admin", resultTable.get(43).get(14));
     }
     
     private void checkRiskAnalysisTable(List<List<String>> resultTable) {
-        assertEquals(21, resultTable.size());
+        if (LOG.isDebugEnabled()) {
+            int i = 0;
+            for (List<String> list : resultTable) {
+                StringBuffer sb = new StringBuffer();
+                sb.append(i).append(" - ");
+                for (String cell : list) {
+                    sb.append(cell).append(", ");
+                }
+                LOG.debug(sb);
+                i++;
+            }
+        }
+        assertEquals(22, resultTable.size());
         assertEquals(6, resultTable.get(0).size());
         
-        assertEquals("Clients Entwicklungsabteilung", resultTable.get(0).get(1));
-        assertEquals("Risikoanalyse", resultTable.get(0).get(2));
-        assertEquals("Abhören der elektromagnetischen Abstrahlung von IT-Komponenten", resultTable.get(0).get(3));
-        assertEquals("bM 1.99", resultTable.get(0).get(4));        
-        assertEquals("Verringerung der elektromagnetischen Abstrahlung von IT-Geräten", resultTable.get(0).get(5));        
+        assertEquals("Clients Entwicklungsabteilung", resultTable.get(20).get(1));
+        assertEquals("Risikoanalyse", resultTable.get(20).get(2));
+        assertEquals("Abhören der elektromagnetischen Abstrahlung von IT-Komponenten", resultTable.get(8).get(3));
+        assertEquals("bM 1.99", resultTable.get(8).get(4));        
+        assertEquals("Verringerung der elektromagnetischen Abstrahlung von IT-Geräten", resultTable.get(8).get(5));        
      
     }
 
