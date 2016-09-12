@@ -82,7 +82,7 @@ public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
 
     @Override
     public String getKategorieAsString(String language) {
-        if(ownkategorie.isEmpty() || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_DE) || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_EN)){
+        if(ownkategorie==null || ownkategorie.isEmpty() || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_DE) || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_EN)){
             return getCategory(this.getKategorie());
         }else{
             return ownkategorie;
