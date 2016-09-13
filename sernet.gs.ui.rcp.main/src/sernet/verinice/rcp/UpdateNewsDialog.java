@@ -27,7 +27,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
 import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
@@ -66,8 +65,6 @@ public class UpdateNewsDialog extends Dialog {
     private String message;
     private URL updateSite;
     
-    private Job updateJob;
-    
     private static final Logger LOG = Logger.getLogger(UpdateNewsDialog.class);
 
     /**
@@ -80,7 +77,7 @@ public class UpdateNewsDialog extends Dialog {
         this.updateSite = updateSite;
         setShellStyle(SWT.CLOSE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
         setBlockOnOpen(true);
-        Display display = Display.getCurrent();
+        Display display = getDisplay();
         Shell shell = parent;
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()){
@@ -218,7 +215,7 @@ public class UpdateNewsDialog extends Dialog {
      * restarts the application after successful update 
      */
     private void restartApplication() {
-        Display.getCurrent().syncExec(new Runnable() {
+        getDisplay().syncExec(new Runnable() {
             
             @Override
             public void run() {
@@ -243,7 +240,6 @@ public class UpdateNewsDialog extends Dialog {
         try{
             LOG.debug("creating provisioningJob from p2-api");
             final ProvisioningJob provisioningJob = operation.getProvisioningJob(null);
-            this.updateJob = provisioningJob;
             if (provisioningJob != null) {
                 LOG.debug("performing update using provisioning job");
                 performUpdate(provisioningJob);
@@ -274,7 +270,7 @@ public class UpdateNewsDialog extends Dialog {
      */
     private void performUpdate(final ProvisioningJob provisioningJob) {
         
-        Display.getCurrent().syncExec(new Runnable() {
+        getDisplay().syncExec(new Runnable() {
             
             @Override
             public void run() {
@@ -360,6 +356,13 @@ public class UpdateNewsDialog extends Dialog {
             artifactRepoManager.removeRepository(repository);
             metaRepoManager.removeRepository(repository);
         }
+    }
+    
+    private Display getDisplay(){
+        if(Display.getCurrent() == null){
+            return Display.getDefault();
+        }
+        return Display.getCurrent();
     }
 
 
