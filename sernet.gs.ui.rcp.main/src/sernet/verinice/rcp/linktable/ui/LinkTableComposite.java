@@ -94,7 +94,7 @@ public class LinkTableComposite extends Composite {
         if(rootContainer==null) {
             rootContainer = new Composite(this, SWT.BORDER);
         }
-        
+        numCols = 0;
         clearComposite(rootContainer);
         
         setHead(rootContainer);
