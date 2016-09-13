@@ -218,14 +218,20 @@ public class UpdateNewsDialog extends Dialog {
      * restarts the application after successful update 
      */
     private void restartApplication() {
-        // restart application
-        boolean restart = MessageDialog.openQuestion(null,
-                Messages.UpdateNewsDialog_6,
-                Messages.UpdateNewsDialog_7);
-            if (restart) {
-                LOG.debug("Restarting application manually requested after update");
-                PlatformUI.getWorkbench().restart();
+        Display.getCurrent().syncExec(new Runnable() {
+            
+            @Override
+            public void run() {
+                //  restart application
+                boolean restart = MessageDialog.openQuestion(null,
+                        Messages.UpdateNewsDialog_6,
+                        Messages.UpdateNewsDialog_7);
+                if (restart) {
+                    LOG.debug("Restarting application manually requested after update");
+                    PlatformUI.getWorkbench().restart();
+                }
             }
+        });
     }
 
     /**
@@ -324,23 +330,7 @@ public class UpdateNewsDialog extends Dialog {
 
             }
         });
-        
-        //            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-//                
-//                @Override
-//                public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
-//                    boolean performUpdate = MessageDialog.openQuestion(
-//                            null,
-//                            Messages.UpdateNewsDialog_10,
-//                            Messages.UpdateNewsDialog_11);
-//                    if (performUpdate) {
-//                        LOG.debug("Running update job modal");
-//                        provisioningJob.runModal(arg0);
-//                    }
-//                    restartApplication();
-//                }
-//            });
-//            
+             
     }            
         
 
