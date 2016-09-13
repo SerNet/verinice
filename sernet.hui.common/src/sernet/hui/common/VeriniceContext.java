@@ -263,7 +263,7 @@ public final class VeriniceContext {
 	 */
 	public static void setState(State s) {
 	    if(s==null) {
-	        LOG.error("Connot set state in thread local. State is null.");
+	        LOG.error("Can not set state in thread local. State is null.");
 	        return;
 	    }
 		instance().threadLocal.set(s.getMap());

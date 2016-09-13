@@ -326,7 +326,7 @@ public class LinkTableColumn {
             propertyId = columnPathElements[lastElement];
             String element = columnPathElements[lastElement - 1];
             LOG.debug(columnPath);
-            LOG.debug("Element:" + columnPathElements[lastElement - 1]);
+            LOG.debug("Element:" + element);
             LOG.debug("Property:" + propertyId);
             if (columnPath.contains(LinkTableOperationType.RELATION.getOutput())) {
                 message = HUIObjectModelService.getCnaLinkPropertyMessage(propertyId);
