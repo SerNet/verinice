@@ -61,7 +61,6 @@ import sernet.hui.common.connect.PropertyChangedEvent;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
-import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -187,10 +186,7 @@ public class BSIElementEditor extends EditorPart {
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, Object> variables = getTaskService().getVariables(cnAElement.getTask().getId());
-        if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
-            @SuppressWarnings("unchecked")
-            Map<String, String> changedElementProperties = (Map<String, String>) variables.get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);
+        Map<String, String> changedElementProperties = (Map<String, String>) getTaskService().loadChangedElementPropertiesFromTask(cnAElement.getTask().getId());
             for (Entry<String, String> entry : changedElementProperties.entrySet()) {
                 cnAElement.setSimpleProperty(entry.getKey(), entry.getValue());
             }
@@ -198,7 +194,6 @@ public class BSIElementEditor extends EditorPart {
             this.setPartName(cnAElement.getTitle());
             this.setTitleToolTip(cnAElement.getTitle());
             LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
-        }
     }
 
     @Override
@@ -276,17 +271,7 @@ public class BSIElementEditor extends EditorPart {
 
     private void updateTaskWithChangedElementProperties() {
         if (!changedElementProperties.isEmpty()) {
-            ITaskService taskService = getTaskService();
-            Map<String, Object> variables = taskService.getVariables(cnAElement.getTask().getId());
-            if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
-                @SuppressWarnings("unchecked")
-                Map<String, String> changedElementProperties = (Map<String, String>) variables.get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);
-                changedElementProperties.putAll(changedElementProperties);
-                variables.put(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES, changedElementProperties);
-            } else {
-                variables.put(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES, changedElementProperties);
-            }
-            taskService.setVariables(cnAElement.getTask().getId(), variables);
+            getTaskService().updateTaskWithChangedElementProperties(cnAElement.getTask().getId(), changedElementProperties);
             changedElementProperties.clear();
             LOG.info("Updated task: saved changes in element properties."); //$NON-NLS-1$
         }

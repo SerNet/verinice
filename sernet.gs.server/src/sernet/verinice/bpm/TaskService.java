@@ -775,7 +775,32 @@ public class TaskService implements ITaskService {
         }
         return variables;
     }
-
+    
+    @Override
+    public void updateTaskWithChangedElementProperties(String taskId, Map<String, String> changedElementProperties) {
+        if (!changedElementProperties.isEmpty()) {
+            Map<String, Object> variables = getVariables(taskId);
+            if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
+                @SuppressWarnings("unchecked")
+                Map<String, String> oldChangedElementProperties = (Map<String, String>) variables.get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);
+                oldChangedElementProperties.putAll(changedElementProperties);
+                variables.put(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES, oldChangedElementProperties);
+            } else {
+                variables.put(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES, changedElementProperties);
+            }
+            setVariables(taskId, variables);
+        }
+    }
+    
+    @Override
+    public Map<String, String> loadChangedElementPropertiesFromTask(String taskId) {
+        Map<String, Object> variables = getVariables(taskId);
+        if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
+            return (Map<String, String>) variables.get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);
+        }
+        return Collections.emptyMap();
+    }
+    
     public org.jbpm.api.TaskService getTaskService() {
         return getProcessEngine().getTaskService();
     }

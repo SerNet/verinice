@@ -124,4 +124,12 @@ public class TaskServiceDummy implements ITaskService {
         return null;
     }
 
+    @Override
+    public void updateTaskWithChangedElementProperties(String taskId, Map<String, String> changedElementProperties) {
+    }
+    
+    @Override
+    public Map<String, String> loadChangedElementPropertiesFromTask(String taskId) {
+        return Collections.emptyMap();
+    }
 }

@@ -129,4 +129,22 @@ public interface ITaskService {
     String loadTaskTitle(String taskId, Map<String, Object> varMap);
 
     Set<String> getTaskReminderBlacklist();
+    
+    /**
+     * @param taskId
+     * @param changedElementProperties
+     * 
+     * Set changed element properties to tasks.
+     * 
+     */
+    void updateTaskWithChangedElementProperties(String taskId, Map<String, String> changedElementProperties);
+    
+    /**
+     * @param taskId
+     * 
+     * Returns changed element properties from tasks.
+     * If no tasks exists an empty map is returned.
+     * 
+     */
+    Map<String, String> loadChangedElementPropertiesFromTask(String taskId);
 }
