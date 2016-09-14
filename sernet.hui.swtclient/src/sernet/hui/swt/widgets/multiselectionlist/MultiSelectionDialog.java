@@ -61,7 +61,7 @@ public class MultiSelectionDialog extends org.eclipse.swt.widgets.Dialog {
 
 			dialogShell.setLayout(new GridLayout(1, false));
 			dialogShell.setSize(400, 300);
-			dialogShell.setText("Optionen für Feld: " + propertyType.getName());
+			dialogShell.setText(Messages.MultiSelectionControl_7 + propertyType.getName());
 			
 			MultiSelectionList mList = new MultiSelectionList(entity, propertyType, dialogShell, referencesEntities);
 			mList.create();
