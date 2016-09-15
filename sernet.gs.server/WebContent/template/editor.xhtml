@@ -15,7 +15,7 @@
     <p:outputPanel id="editPanel" rendered="#{edit.element!=null}">
       <div class="csc-header csc-header-n1" style="height: 40px;">
         <h1>
-          <h:outputText value="#{edit.title}" />
+          <h:outputText id="title" value="#{edit.title}"  />
         </h1>
       </div>
       <p:outputPanel styleClass="#{edit.saveButtonClass}">

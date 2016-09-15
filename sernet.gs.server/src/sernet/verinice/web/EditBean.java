@@ -22,14 +22,22 @@ package sernet.verinice.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
+import javax.faces.component.UIInput;
+import javax.faces.event.ValueChangeEvent;
+
 import org.apache.log4j.Logger;
+import org.primefaces.event.DateSelectEvent;
+import org.primefaces.event.SelectEvent;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.GSServiceException;
@@ -45,9 +53,13 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
+import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.ITask;
+import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -116,14 +128,21 @@ public class EditBean {
         
     private MassnahmenUmsetzung massnahmenUmsetzung;
     
+    private TaskInformation task;
+    private Map<String, String> changedElementProperties = new HashMap<>();
+    
     public void init() {
+        init(null);
+    }
+    
+    public void init(ITask task) {
         long start = 0;
         if (LOG.isDebugEnabled()) {
             start = System.currentTimeMillis();
             LOG.debug("init() called ..."); //$NON-NLS-1$
         }
         try {
-            doInit();
+            doInit(task);
         } catch(CommandException t) {
             LOG.error("Error while initialization. ", t);
             Util.addError( "massagePanel", Util.getMessage(BOUNDLE_NAME,"init.failed"));
@@ -134,18 +153,26 @@ public class EditBean {
         }
     }
     
-    private void doInit() throws CommandException {
+    private void doInit(ITask task) throws CommandException {
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
         ri.setPermissions(true);
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(),getUuid(),ri);        
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(), getUuid(), ri);        
         command = getCommandService().executeCommand(command);    
         setElement(command.getElement());
+        
+        if (task != null && task instanceof TaskInformation) {
+            task = ((TaskInformation) task);
+        }
         
         checkMassnahmenUmsetzung();
                 
         if(getElement()!=null) {
-            Entity entity = getElement().getEntity();           
+            Entity entity = getElement().getEntity();
             setEntityType(getHuiService().getEntityType(getTypeId())); 
+            
+            if (isTaskEditorContext()) {
+                loadChangedElementPropertiesFromTask();
+            }
             
             getLinkBean().setElement(getElement());
             getLinkBean().setEntityType(getEntityType());
@@ -216,6 +243,16 @@ public class EditBean {
         }
     }
 
+    private void loadChangedElementPropertiesFromTask() {
+            Map<String, String> changedElementProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
+            for (Entry<String, String> entry : changedElementProperties.entrySet()) {
+                element.setSimpleProperty(entry.getKey(), entry.getValue());
+            }
+            
+            setTitle(element.getTitle());
+            LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
+    }
+    
     private boolean isVisible(PropertyType huiType) {
         if(getVisiblePropertyIds()!=null && !getVisiblePropertyIds().isEmpty()) {
             return isVisibleType(huiType);
@@ -288,7 +325,12 @@ public class EditBean {
         LOG.debug("save called...");
         try {
             if(getElement()!=null) {
-                doSave();                  
+                if (isTaskEditorContext()) {
+                    updateTaskWithChangedElementProperties();
+                    LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
+                } else {
+                    doSave();  
+                }
             }
             else {
                 LOG.warn("Control is null. Can not save.");
@@ -304,7 +346,18 @@ public class EditBean {
             Util.addError(SUBMIT, Util.getMessage(BOUNDLE_NAME, "save.failed"));
         }
     }
+    
+    private boolean isTaskEditorContext() {
+        return task != null && task.isWithAReleaseProcess();
+    }
 
+    private void updateTaskWithChangedElementProperties() {
+        if (!changedElementProperties.isEmpty()) {
+            getTaskService().updateChangedElementProperties(task.getId(), changedElementProperties);
+            changedElementProperties.clear();
+            LOG.info("Updated task: saved changes in element properties."); //$NON-NLS-1$
+        }
+    }
     private void doSave() throws CommandException {
         if (!writeEnabled()) {
             throw new SecurityException("write is not allowed" );
@@ -420,6 +473,25 @@ public class EditBean {
             throw new RuntimeException("Error while checking write permissions", t);
         }
         return false;
+    }
+    
+    public void onChange(ValueChangeEvent event) {
+        String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
+        String newValue = (String) event.getNewValue();
+        if(key != null && !Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE).equals(newValue)) {
+            changedElementProperties.put(key, newValue);
+//            element.setSimpleProperty(key, newValue);
+//            setTitle(element.getTitle());
+        }
+    }
+    
+    public void onDateSelect(DateSelectEvent event) {
+        String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
+        String newValue = String.valueOf(event.getDate().getTime());
+        if(key != null) {
+            changedElementProperties.put(key, newValue);
+//            element.setSimpleProperty(key, newValue);
+        }
     }
     
     public Set<String> getRoles() throws CommandException {
@@ -695,6 +767,10 @@ public class EditBean {
     
     private ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
+    }
+    
+    private ITaskService getTaskService() {
+        return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
     }
     
     public MassnahmenUmsetzung getMassnahmenUmsetzung() {
