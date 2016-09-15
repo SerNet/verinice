@@ -132,8 +132,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	
 	private Set<Attachment> files = new HashSet<Attachment>(1);
 	
-	private TaskInformation task;
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj){
@@ -789,19 +787,4 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
-
-
-    /**
-     * @return the task
-     */
-    public TaskInformation getTask() {
-        return task;
-    }
-
-    /**
-     * @param task the task to set
-     */
-    public void setTask(TaskInformation task) {
-        this.task = task;
-    }
 }

@@ -137,7 +137,7 @@ public interface ITaskService {
      * Set changed element properties to tasks.
      * 
      */
-    void updateTaskWithChangedElementProperties(String taskId, Map<String, String> changedElementProperties);
+    void updateChangedElementProperties(String taskId, Map<String, String> changedElementProperties);
     
     /**
      * @param taskId
@@ -146,5 +146,5 @@ public interface ITaskService {
      * If no tasks exists an empty map is returned.
      * 
      */
-    Map<String, String> loadChangedElementPropertiesFromTask(String taskId);
+    Map<String, String> loadChangedElementProperties(String taskId);
 }

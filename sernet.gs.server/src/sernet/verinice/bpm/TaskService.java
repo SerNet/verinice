@@ -777,7 +777,7 @@ public class TaskService implements ITaskService {
     }
     
     @Override
-    public void updateTaskWithChangedElementProperties(String taskId, Map<String, String> changedElementProperties) {
+    public void updateChangedElementProperties(String taskId, Map<String, String> changedElementProperties) {
         if (!changedElementProperties.isEmpty()) {
             Map<String, Object> variables = getVariables(taskId);
             if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
@@ -793,7 +793,7 @@ public class TaskService implements ITaskService {
     }
     
     @Override
-    public Map<String, String> loadChangedElementPropertiesFromTask(String taskId) {
+    public Map<String, String> loadChangedElementProperties(String taskId) {
         Map<String, Object> variables = getVariables(taskId);
         if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
             return (Map<String, String>) variables.get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);

@@ -78,6 +78,7 @@ import sernet.gs.ui.rcp.main.ComboModelNumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.bsi.editors.TaskEditorContext;
 import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -582,9 +583,11 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                         CnATreeElement element = loadControl.getElement();
                         if (element != null) {
                             if (task.isWithAReleaseProcess()) {
-                                element.setTask(task);
+                                TaskEditorContext editorContext = new TaskEditorContext(task, element);
+                                EditorFactory.getInstance().updateAndOpenObject(editorContext);
+                            } else {
+                                EditorFactory.getInstance().updateAndOpenObject(element);
                             }
-                            EditorFactory.getInstance().updateAndOpenObject(element);
                         } else {
                             showError("Error", Messages.TaskView_25); //$NON-NLS-1$
                         }

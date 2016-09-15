@@ -233,7 +233,13 @@ public final class EditorFactory {
         IEditorTypeFactory bsiEditorFactory = new IEditorTypeFactory() {
             @Override
             public void openEditorFor(Object o) throws PartInitException {
-                BSIElementEditorInput input = new BSIElementEditorInput((CnATreeElement) o);
+                BSIElementEditorInput input;
+                if (o instanceof CnATreeElement) {
+                    input = new BSIElementEditorInput((CnATreeElement) o);
+                } else {
+                    TaskEditorContext context = (TaskEditorContext) o;
+                    input = new BSIElementEditorInput(context.getElement(), context.getTask());
+                }
                 openEditor(input.getId(), input, BSIElementEditor.EDITOR_ID);
             }
         };
@@ -293,6 +299,8 @@ public final class EditorFactory {
         typedFactories.put(RecordGroup.class, bsiEditorFactory);
         // Self Assessment (SAMT) elements
         typedFactories.put(SamtTopic.class, bsiEditorFactory);
+        // for task context
+        typedFactories.put(TaskEditorContext.class, bsiEditorFactory);
     }
 
     private static IEditorPart openEditor(String id, IEditorInput input, String editorId)

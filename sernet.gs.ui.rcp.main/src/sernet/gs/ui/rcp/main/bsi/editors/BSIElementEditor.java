@@ -63,6 +63,7 @@ import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.iso27k.service.Retriever;
+import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
@@ -88,6 +89,7 @@ public class BSIElementEditor extends EditorPart {
     private HitroUIComposite huiComposite;
     
     private boolean isModelModified = false;
+    private TaskInformation task;
     private Map<String, String> changedElementProperties = new HashMap<>();
     
     private Boolean isWriteAllowed = null;
@@ -127,7 +129,9 @@ public class BSIElementEditor extends EditorPart {
 
     private void initContent() {
         try {
-            CnATreeElement element = ((BSIElementEditorInput) getEditorInput()).getCnAElement();
+            BSIElementEditorInput editorInput = (BSIElementEditorInput) getEditorInput();
+            CnATreeElement element = editorInput.getCnAElement();
+            task = editorInput.getTask();
 
             CnATreeElement elementWithChildren = Retriever.checkRetrieveChildren(element);
             LoadElementForEditor command = new LoadElementForEditor(element, false);
@@ -138,8 +142,7 @@ public class BSIElementEditor extends EditorPart {
             Entity entity = cnAElement.getEntity();
             EntityType entityType = HitroUtil.getInstance().getTypeFactory().getEntityType(entity.getEntityType());
 
-            if (shouldLoadChangesFromTask(element)) {
-                cnAElement.setTask(element.getTask());
+            if (isTaskEditorContext()) {
                 loadChangedElementPropertiesFromTask();
             }
 
@@ -181,12 +184,12 @@ public class BSIElementEditor extends EditorPart {
 
     }
 
-    private boolean shouldLoadChangesFromTask(CnATreeElement element) {
-        return element.getTask() != null && element.getTask().isWithAReleaseProcess();
+    private boolean isTaskEditorContext() {
+        return task != null && task.isWithAReleaseProcess();
     }
 
     private void loadChangedElementPropertiesFromTask() {
-        Map<String, String> changedElementProperties = (Map<String, String>) getTaskService().loadChangedElementPropertiesFromTask(cnAElement.getTask().getId());
+        Map<String, String> changedElementProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
             for (Entry<String, String> entry : changedElementProperties.entrySet()) {
                 cnAElement.setSimpleProperty(entry.getKey(), entry.getValue());
             }
@@ -199,7 +202,7 @@ public class BSIElementEditor extends EditorPart {
     @Override
     public void doSave(IProgressMonitor monitor) {
         if (isModelModified) {
-            if (shouldLoadChangesFromTask(cnAElement)) {
+            if (isTaskEditorContext()) {
                 updateTaskWithChangedElementProperties();
                 LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
             } else {
@@ -271,7 +274,7 @@ public class BSIElementEditor extends EditorPart {
 
     private void updateTaskWithChangedElementProperties() {
         if (!changedElementProperties.isEmpty()) {
-            getTaskService().updateTaskWithChangedElementProperties(cnAElement.getTask().getId(), changedElementProperties);
+            getTaskService().updateChangedElementProperties(task.getId(), changedElementProperties);
             changedElementProperties.clear();
             LOG.info("Updated task: saved changes in element properties."); //$NON-NLS-1$
         }
@@ -296,7 +299,7 @@ public class BSIElementEditor extends EditorPart {
     }
 
     private void modelChanged(PropertyChangedEvent evt) {
-        if (shouldLoadChangesFromTask(cnAElement)) {
+        if (isTaskEditorContext()) {
             changedElementProperties.put(evt.getProperty().getPropertyType(), evt.getProperty().getPropertyValue());
         }
         modelChanged();
@@ -409,7 +412,7 @@ public class BSIElementEditor extends EditorPart {
         setIcon();
 
         // if opened the first time, save initialized entity:
-        if (isDirty() && (shouldLoadChangesFromTask(cnAElement))) {
+        if (isDirty() && (isTaskEditorContext())) {
             save();
         }
     }
