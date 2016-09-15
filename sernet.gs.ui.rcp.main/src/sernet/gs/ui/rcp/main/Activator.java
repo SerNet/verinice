@@ -701,7 +701,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         if (uriArray != null) {
             for (int i = 0; i < uriArray.length; i++) {
                 URI uri = uriArray[i];
-                if (uri.toString().endsWith(LOCAL_UPDATE_SITE_URL)) {
+                if (uri.toString().endsWith(LOCAL_UPDATE_SITE_URL) || UPDATE_SITE_URL.equals(uri.toString())) {
                     getArtifactRepositoryManager().removeRepository(uri);
                     getMetadataRepositoryManager().removeRepository(uri);
                 }
