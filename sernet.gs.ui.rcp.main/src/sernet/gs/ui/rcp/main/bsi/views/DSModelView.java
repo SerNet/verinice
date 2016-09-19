@@ -269,8 +269,7 @@ public class DSModelView extends RightsEnabledView {
         CnAElementFactory.getInstance().addLoadListener(loadListener);
         MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
                 Messages.DSModelView_7,
-                Messages.DSModelView_8
-                        + Messages.DSModelView_9);
+                Messages.DSModelView_8);
 
 	}
 
