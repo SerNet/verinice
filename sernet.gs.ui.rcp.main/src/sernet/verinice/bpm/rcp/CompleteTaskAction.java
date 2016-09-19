@@ -20,6 +20,7 @@
 package sernet.verinice.bpm.rcp;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +30,17 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.osgi.util.NLS;
 
 import sernet.gs.service.IThreadCompleteListener;
+import sernet.gs.service.RetrieveInfo;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.IIndividualProcess;
+import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.TaskInformation;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.commands.LoadAncestors;
+import sernet.verinice.service.commands.LoadElementByUuid;
 
 /**
  * GUI action which completes task. Tasks are completed
@@ -71,6 +82,9 @@ final class CompleteTaskAction extends Action {
             executer = Executors.newFixedThreadPool(2);
             List<TaskInformation> taskList = taskView.getSelectedTasks();
             for (TaskInformation task: taskList) {            
+                if(outcomeId.equals(IIndividualProcess.TRANS_ACCEPT) && task.isWithAReleaseProcess()) {
+                    getTaskService().saveChangedElementPropertiesToCnATreeElement(task.getId(), task.getUuid());
+                }
                 completeTask(task, outcomeId);
             }
             this.setEnabled(false);
@@ -120,5 +134,9 @@ final class CompleteTaskAction extends Action {
             // Preserve interrupt status
             Thread.currentThread().interrupt();
         }
+    }
+    
+    private ITaskService getTaskService() {
+        return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
     }
 }

@@ -480,7 +480,7 @@ public class EditBean {
         String newValue = (String) event.getNewValue();
         if(key != null && !Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE).equals(newValue)) {
             changedElementProperties.put(key, newValue);
-//            element.setSimpleProperty(key, newValue);
+            //TODO: update title if new value set
 //            setTitle(element.getTitle());
         }
     }

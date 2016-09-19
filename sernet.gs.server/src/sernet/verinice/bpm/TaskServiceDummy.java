@@ -128,8 +128,20 @@ public class TaskServiceDummy implements ITaskService {
     public void updateChangedElementProperties(String taskId, Map<String, String> changedElementProperties) {
     }
     
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#loadChangedElementProperties(java.lang.String)
+     */
     @Override
     public Map<String, String> loadChangedElementProperties(String taskId) {
         return Collections.emptyMap();
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.ITaskService#saveChangedElementPropertiesToCnATreeElement(java.lang.String, java.lang.String)
+     */
+    @Override
+    public void saveChangedElementPropertiesToCnATreeElement(String taskId, String uuid) {
+    }
+    
+    
 }

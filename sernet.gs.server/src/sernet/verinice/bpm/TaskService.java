@@ -44,8 +44,11 @@ import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
@@ -64,10 +67,13 @@ import sernet.verinice.model.bpm.Messages;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.LoadAncestors;
+import sernet.verinice.service.commands.UpdateElementEntity;
 
 /**
  * JBoss jBPM implementation of {@link ITaskService}.
@@ -801,6 +807,29 @@ public class TaskService implements ITaskService {
         return Collections.emptyMap();
     }
     
+    public void saveChangedElementPropertiesToCnATreeElement(String taskId, String uuid) {
+        Map<String, Object> variables = getVariables(taskId);
+        if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
+            try {
+                RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+                LoadAncestors command = new LoadAncestors(uuid, ri);
+                command = getCommandService().executeCommand(command);
+                CnATreeElement cnAElement = command.getElement();
+                
+                Map<String, String> changedElementProperties = (Map<String, String>) variables.get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);
+                for (Map.Entry<String, String> entry : changedElementProperties.entrySet()) {
+                    cnAElement.setSimpleProperty(entry.getKey(), entry.getValue());
+                }
+                
+                UpdateElementEntity<? extends CnATreeElement> updateCommand = new UpdateElementEntity<CnATreeElement>(cnAElement, ChangeLogEntry.STATION_ID);
+                updateCommand = getCommandService().executeCommand(updateCommand);
+                
+            } catch (CommandException e) {
+                log.error("Error while saving changed element properties to CnATreeElement.", e); //$NON-NLS-1$
+            }
+        }
+    }
+    
     public org.jbpm.api.TaskService getTaskService() {
         return getProcessEngine().getTaskService();
     }
@@ -812,7 +841,7 @@ public class TaskService implements ITaskService {
     public ManagementService getManagementService() {
         return getProcessEngine().getManagementService();
     }
-
+    
     public ProcessEngine getProcessEngine() {
         return processEngine;
     }
@@ -835,6 +864,10 @@ public class TaskService implements ITaskService {
 
     public void setProcessEngine(ProcessEngine processEngine) {
         this.processEngine = processEngine;
+    }
+    
+    public ICommandService getCommandService() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
 
     public IBaseDao<CnATreeElement, Integer> getElementDao() {

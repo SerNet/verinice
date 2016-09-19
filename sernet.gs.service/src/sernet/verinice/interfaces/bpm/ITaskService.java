@@ -147,4 +147,13 @@ public interface ITaskService {
      * 
      */
     Map<String, String> loadChangedElementProperties(String taskId);
+    
+    /**
+     * @param taskId
+     * @param uuid
+     * 
+     * Save changed element properties to CnATreeElement.
+     * 
+     */
+    void saveChangedElementPropertiesToCnATreeElement(String taskId, String uuid);
 }
