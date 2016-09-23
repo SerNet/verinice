@@ -33,6 +33,8 @@ import sernet.verinice.security.report.ReportSecurityContext;
  */
 public class FilePermissionHandler extends AbstractPermissionHandler {
     
+    private ReportSecurityContext reportSecurityContext;
+
     public FilePermissionHandler(ReportSecurityContext securityContext) {
         this.reportSecurityContext = securityContext;
     }

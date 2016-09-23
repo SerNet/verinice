@@ -27,6 +27,8 @@ import java.security.Permission;
 
 import org.apache.log4j.Logger;
 
+import sernet.verinice.security.report.ReportSecurityContext;
+
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
@@ -34,6 +36,11 @@ import org.apache.log4j.Logger;
 public class SocketPermissionHandler extends AbstractPermissionHandler {
     
     private final static Logger LOG = Logger.getLogger(SocketPermissionHandler.class);
+    private ReportSecurityContext reportSecurityContext;
+
+    public SocketPermissionHandler(ReportSecurityContext reportSecurityContext) {
+        this.reportSecurityContext = reportSecurityContext;
+    }
 
     @Override
     public void handlePermission(Permission permission) {
