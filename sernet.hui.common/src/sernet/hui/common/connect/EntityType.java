@@ -79,6 +79,23 @@ public class EntityType {
 		return types;
 	}
 	
+	/** Retrieves sorted this {@link EntityType}'s property types and those
+     * of all its {@link PropertyGroup}s.
+     * 
+     * @return
+     */
+    public List<PropertyType> getAllPropertyTypesSorted() {
+        List<PropertyType> propertyTypes = new ArrayList<>();
+        for (IEntityElement entity : getElements()) {
+            if (entity instanceof PropertyType) {
+                propertyTypes.add((PropertyType) entity);
+            } else if (entity instanceof PropertyGroup) {
+                propertyTypes.addAll(((PropertyGroup) entity).getPropertyTypes());
+            }
+        }
+        return propertyTypes;
+    }
+	
 	/**
 	 * Retrieves all propertytype IDs. CAUTION: Does not return types that are contained in groups!
 	 * Use <code>getAllPropertyTypeIDsIncludingGroups()</code> instead.

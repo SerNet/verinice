@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -28,12 +29,8 @@ import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.GC;
@@ -52,11 +49,10 @@ import org.eclipse.swt.widgets.TableItem;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
+import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
-import sernet.snutils.AssertException;
-import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -77,7 +73,6 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
     private String title;
 
     private TableViewer tableViewer;
-    private TableSorter tableSorter = new TableSorter();
 
     private final TaskInformation task;
     private CnATreeElement element;
@@ -223,42 +218,34 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
             tc.pack();
         }
 
-        // SortedSet<String> keys = new
-        // TreeSet<String>(changedElementProperties.keySet());
-        for (Map.Entry<String, String> entry : changedElementProperties.entrySet()) {
-            if (StringUtils.isNotBlank(entry.getValue()) || StringUtils.isNotBlank(element.getPropertyValue(entry.getKey()))) {
-                TableItem item = new TableItem(getTable(), SWT.NONE);
-                item.setText(0, HUITypeFactory.getInstance().getMessage(entry.getKey()));
-                item.setText(1, element.getPropertyValue(entry.getKey()));
+        HUITypeFactory typeFactory = HUITypeFactory.getInstance();
+        EntityType entityType = typeFactory.getEntityType(element.getEntity().getEntityType());
+        List<PropertyType> propertyTypes = entityType.getAllPropertyTypesSorted();
 
-                PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(element.getEntityType().getId(), entry.getKey());
-                if (propertyType.isReference()) {
-                    // TODO: impl reference
-                    LOG.warn("Don `t show reference values.");
-                } else if (propertyType.isSingleSelect()) {
-                    PropertyOption propertyOption = propertyType.getOption(entry.getValue());
-                    item.setText(2, HUITypeFactory.getInstance().getMessage(propertyOption.getId()));
-                } else if (propertyType.isMultiselect()) {
-                    // TODO: impl multiselect
-                    LOG.warn("Don `t show multiselect values.");
-                } else {
-                    item.setText(2, entry.getValue());
+        for (PropertyType propertyType : propertyTypes) {
+            if (changedElementProperties.containsKey(propertyType.getId())) {
+                String oldValue = element.getPropertyValue(propertyType.getId());
+                String newValue = changedElementProperties.get(propertyType.getId());
+                if (StringUtils.isNotBlank(oldValue) || StringUtils.isNotBlank(newValue)) {
+                    TableItem item = new TableItem(getTable(), SWT.NONE);
+                    item.setText(0, typeFactory.getMessage(propertyType.getId()));
+                    item.setText(1, oldValue);
+
+                    if (propertyType.isReference()) {
+                        // TODO: impl reference
+                        LOG.warn("Don `t show reference values.");
+                    } else if (propertyType.isSingleSelect()) {
+                        PropertyOption propertyOption = propertyType.getOption(newValue);
+                        item.setText(2, typeFactory.getMessage(propertyOption.getId()));
+                    } else if (propertyType.isMultiselect()) {
+                        // TODO: impl multiselect
+                        LOG.warn("Don `t show multiselect values.");
+                    } else {
+                        item.setText(2, newValue);
+                    }
                 }
             }
         }
-
-        // TODO: impl alphabetical sort on column 0
-        // this.tableViewer.setSorter(new ViewerSorter() {
-        // @Override
-        // public int compare(Viewer viewer, Object e1, Object e2) {
-        // return Collator.getInstance().compare(e1, e1);
-        // }
-        // });
-        // ensure initial table sorting (by element property key)
-        // ((TableSorter) this.tableViewer.getSorter()).setColumn(0);
-
-        // tableViewer.getTable().setSortDirection(SWT.UP);
-        // tableViewer.getTable().setSortColumn(tableViewer.getTable().getColumn(1));
     }
 
     private void createTableColumn(String label, int columnIndex) {
@@ -267,7 +254,6 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         if (label != null) {
             column.setText(label);
         }
-        column.addSelectionListener(new SortSelectionAdapter(this, column, columnIndex));
     }
 
     private Table getTable() {
@@ -293,69 +279,6 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
 
     public ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
-    }
-
-    private static class TableSorter extends ViewerSorter {
-        private static final int DEFAULT_SORT_COLUMN = 0;
-        private static final int DESCENDING = 1;
-        private static final int ASCENDING = 0;
-        private int propertyIndex = DEFAULT_SORT_COLUMN;
-        private int direction = ASCENDING;
-
-        public TableSorter() {
-            super();
-        }
-
-        public void setColumn(int column) {
-            if (column == this.propertyIndex) {
-                // Same column as last sort; toggle the direction
-                direction = (direction == ASCENDING) ? DESCENDING : ASCENDING;
-            } else {
-                // New column; do an ascending sort
-                this.propertyIndex = column;
-                direction = ASCENDING;
-            }
-        }
-
-        /*
-         * (non-Javadoc)
-         * 
-         * @see
-         * org.eclipse.jface.viewers.ViewerComparator#compare(org.eclipse.jface.
-         * viewers.Viewer, java.lang.Object, java.lang.Object)
-         */
-        @Override
-        public int compare(Viewer viewer, Object e1, Object e2) {
-            return ((String) e1).compareTo((String) e2);
-        }
-    }
-
-    private static class SortSelectionAdapter extends SelectionAdapter {
-        private CompareChangedElementPropertiesDialog changedElementProperiesDialog;
-        private TableColumn column;
-        private int index;
-
-        public SortSelectionAdapter(CompareChangedElementPropertiesDialog changedElementProperiesDialog, TableColumn column, int index) {
-            super();
-            this.changedElementProperiesDialog = changedElementProperiesDialog;
-            this.column = column;
-            this.index = index;
-        }
-
-        @Override
-        public void widgetSelected(SelectionEvent e) {
-            changedElementProperiesDialog.tableSorter.setColumn(index);
-            int dir = changedElementProperiesDialog.tableViewer.getTable().getSortDirection();
-            if (changedElementProperiesDialog.tableViewer.getTable().getSortColumn() == column) {
-                dir = dir == SWT.UP ? SWT.DOWN : SWT.UP;
-            } else {
-
-                dir = SWT.DOWN;
-            }
-            changedElementProperiesDialog.tableViewer.getTable().setSortDirection(dir);
-            changedElementProperiesDialog.tableViewer.getTable().setSortColumn(column);
-            changedElementProperiesDialog.tableViewer.refresh();
-        }
     }
 
     @Override
