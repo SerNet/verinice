@@ -49,6 +49,13 @@ public class Messages extends NLS {
     public static String CompleteTaskAction_7;
     public static String ConfirmTaskDelete_0;
     public static String ConfirmTaskDelete_1;
+    public static String CompareTaskChangesAction_0;
+    public static String CompareTaskChangesAction_1;
+    public static String CompareTaskChangesAction_2;
+    public static String CompareTaskChangesAction_3;
+    public static String CompareTaskChangesAction_4;
+    public static String CompareTaskChangesAction_5;
+    public static String CompareTaskChangesAction_6;
     public static String DatePage_10;
     public static String DatePage_11;
     public static String DatePage_3;

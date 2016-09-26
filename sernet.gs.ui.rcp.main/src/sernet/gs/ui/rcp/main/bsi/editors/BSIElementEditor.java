@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -55,12 +56,16 @@ import sernet.gs.ui.rcp.main.service.crudcommands.LoadElementForEditor;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.IEntityChangedListener;
 import sernet.hui.common.connect.PropertyChangedEvent;
+import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
+import sernet.snutils.AssertException;
+import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bpm.TaskInformation;
@@ -87,11 +92,11 @@ public class BSIElementEditor extends EditorPart {
 
     public static final String EDITOR_ID = "sernet.gs.ui.rcp.main.bsi.editors.bsielementeditor"; //$NON-NLS-1$
     private HitroUIComposite huiComposite;
-    
+
     private boolean isModelModified = false;
     private TaskInformation task;
     private Map<String, String> changedElementProperties = new HashMap<>();
-    
+
     private Boolean isWriteAllowed = null;
 
     // TODO the editor needs another way to determine whether or not to show the
@@ -190,13 +195,13 @@ public class BSIElementEditor extends EditorPart {
 
     private void loadChangedElementPropertiesFromTask() {
         Map<String, String> changedElementProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
-            for (Entry<String, String> entry : changedElementProperties.entrySet()) {
-                cnAElement.setSimpleProperty(entry.getKey(), entry.getValue());
-            }
-            
-            this.setPartName(cnAElement.getTitle());
-            this.setTitleToolTip(cnAElement.getTitle());
-            LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
+        for (Entry<String, String> entry : changedElementProperties.entrySet()) {
+            cnAElement.setPropertyValue(entry.getKey(), entry.getValue());
+        }
+
+        this.setPartName(cnAElement.getTitle());
+        this.setTitleToolTip(cnAElement.getTitle());
+        LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
     }
 
     @Override
@@ -298,9 +303,27 @@ public class BSIElementEditor extends EditorPart {
         // not supported
     }
 
-    private void modelChanged(PropertyChangedEvent evt) {
-        if (isTaskEditorContext()) {
-            changedElementProperties.put(evt.getProperty().getPropertyType(), evt.getProperty().getPropertyValue());
+    private void modelChanged(PropertyChangedEvent event) {
+        if (isTaskEditorContext() && StringUtils.isNotEmpty(event.getProperty().getPropertyType())) {
+            PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), event.getProperty().getPropertyType());
+            if (propertyType.isReference()) {
+                // TODO: impl reference
+                LOG.warn("Don `t save reference values.");
+            } else if (propertyType.isSingleSelect()) {
+                changedElementProperties.put(event.getProperty().getPropertyType(), propertyType.getOption(event.getProperty().getPropertyValue()).getId());
+            } else if (propertyType.isMultiselect()) {
+                // TODO: impl multiselect
+                LOG.warn("Don `t save multiselect values.");
+            } else if (propertyType.isDate()) {
+                try {
+                    String date = FormInputParser.dateToString(new java.sql.Date(Long.parseLong(event.getProperty().getPropertyValue())));
+                    changedElementProperties.put(event.getProperty().getPropertyType(), date);
+                } catch (NumberFormatException | AssertException e) {
+                    LOG.error("Exception while getting the value of a date property", e);
+                }
+            } else {
+                changedElementProperties.put(event.getProperty().getPropertyType(), event.getProperty().getPropertyValue());
+            }
         }
         modelChanged();
     }

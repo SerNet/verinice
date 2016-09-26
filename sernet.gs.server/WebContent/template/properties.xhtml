@@ -98,9 +98,10 @@
 													</td>
 													<td>
 														<p:inputText value="#{p.URLValue}" rendered="#{p.isLine and p.isEditable and p.isURL}" style="width:450px"
-							                                 valueChangeListener="#{edit.onChange}" >
-							                                 <p:ajax update="title" />
+							                                 valueChangeListener="#{edit.onURLValueChange}" >
+							                                 <p:ajax />
 							                                 <f:attribute name="key" value="#{p.key}" />
+                                                             <f:attribute name="label" value="#{p.URLText}" />
 							                            </p:inputText>
 															
 													</td>
@@ -111,9 +112,10 @@
 													</td>								
 													<td>
 														<p:inputText value="#{p.URLText}" rendered="#{p.isLine and p.isEditable and p.isURL}" style="width:450px"
-                                                             valueChangeListener="#{edit.onChange}" >
-                                                             <p:ajax update="title" />
+                                                             valueChangeListener="#{edit.onURLTextChange}" >
+                                                             <p:ajax />
                                                              <f:attribute name="key" value="#{p.key}" />
+                                                             <f:attribute name="url" value="#{p.URLValue}" />
                                                         </p:inputText>
 													</td>
 												</tr>
@@ -149,13 +151,13 @@
 						<td width="530px" style="padding-bottom: 12px;">
 							<h:inputText value="#{i.value}" rendered="#{i.isLine and i.isEditable and (not i.isURL)}" styleClass="hui ui-corner-all"
                                 valueChangeListener="#{edit.onChange}" >
-                                <p:ajax update="title" />
+                                <p:ajax />
                                 <f:attribute name="key" value="#{i.key}" />
                             </h:inputText>
 							<h:outputText value="#{i.value}" rendered="#{(not i.isText) and (not i.isEditable) and (not i.isURL)}" styleClass="roText"/>
 							<h:inputTextarea value="#{i.value}" rendered="#{i.isText and i.isEditable and (not i.isURL)}" styleClass="hui" 
                                 valueChangeListener="#{edit.onChange}" >
-                                <p:ajax update="title" />
+                                <p:ajax />
                                 <f:attribute name="key" value="#{i.key}" />
                             </h:inputTextarea>
 							<h:outputText value="#{i.value}" escape="false" rendered="#{i.isText and (not i.isEditable) and (not i.isURL)}" styleClass="roText"/>
@@ -207,7 +209,7 @@
 										<td>
 											<h:inputText value="#{i.URLValue}" rendered="#{i.isLine and i.isEditable and i.isURL}" style="width:450px"
 				                                valueChangeListener="#{edit.onChange}" >
-				                                <p:ajax update="title" />
+				                                <p:ajax />
 				                                <f:attribute name="key" value="#{i.key}" />
 				                            </h:inputText>
 										</td>
@@ -219,7 +221,7 @@
 										<td>
 											<h:inputText value="#{i.URLText}" rendered="#{i.isLine and i.isEditable and i.isURL}" style="width:450px"
                                                 valueChangeListener="#{edit.onChange}" >
-                                                <p:ajax update="title" />
+                                                <p:ajax />
                                                 <f:attribute name="key" value="#{i.key}" />
                                             </h:inputText>
 										</td>

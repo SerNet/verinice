@@ -82,7 +82,7 @@ final class CompleteTaskAction extends Action {
             executer = Executors.newFixedThreadPool(2);
             List<TaskInformation> taskList = taskView.getSelectedTasks();
             for (TaskInformation task: taskList) {            
-                if(outcomeId.equals(IIndividualProcess.TRANS_ACCEPT) && task.isWithAReleaseProcess()) {
+                if(IIndividualProcess.TRANS_ACCEPT.equals(outcomeId) && task.isWithAReleaseProcess()) {
                     getTaskService().saveChangedElementPropertiesToCnATreeElement(task.getId(), task.getUuid());
                 }
                 completeTask(task, outcomeId);

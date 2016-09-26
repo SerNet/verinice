@@ -807,6 +807,7 @@ public class TaskService implements ITaskService {
         return Collections.emptyMap();
     }
     
+    @Override
     public void saveChangedElementPropertiesToCnATreeElement(String taskId, String uuid) {
         Map<String, Object> variables = getVariables(taskId);
         if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
@@ -818,7 +819,7 @@ public class TaskService implements ITaskService {
                 
                 Map<String, String> changedElementProperties = (Map<String, String>) variables.get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);
                 for (Map.Entry<String, String> entry : changedElementProperties.entrySet()) {
-                    cnAElement.setSimpleProperty(entry.getKey(), entry.getValue());
+                    cnAElement.setPropertyValue(entry.getKey(), entry.getValue());
                 }
                 
                 UpdateElementEntity<? extends CnATreeElement> updateCommand = new UpdateElementEntity<CnATreeElement>(cnAElement, ChangeLogEntry.STATION_ID);

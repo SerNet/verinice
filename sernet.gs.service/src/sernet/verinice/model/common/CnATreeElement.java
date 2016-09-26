@@ -374,6 +374,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		this.dbId = dbId;
 	}
 	
+	public String getPropertyValue(String typeId) {
+        return getEntity().getPropertyValue(typeId);
+    }
+	
+	public void setPropertyValue(String typeId, String value) {
+        getEntity().setPropertyValue(typeId, value);
+    }
+	
 	public void setSimpleProperty(String typeId, String value) {
 		EntityType entityType = getTypeFactory().getEntityType(getTypeId());
 		getEntity().setSimpleValue(entityType.getPropertyType(typeId), value);

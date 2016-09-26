@@ -727,6 +727,14 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
         getInfoPanel().setText(HtmlWriter.getPage(task.getDescription()));
 
+        if (task.isWithAReleaseProcess()) {
+            CompareChangedElementPropertiesAction compareChangesAction = new CompareChangedElementPropertiesAction(this, task);
+            compareChangesAction.setText(Messages.CompareTaskChangesAction_0);
+            compareChangesAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.VIEW_TASK_COMPARE_CHANGES));
+            ActionContributionItem item = new ActionContributionItem(compareChangesAction);
+            manager.add(item);
+        }
+
         List<KeyValue> outcomeList = task.getOutcomes();
         for (KeyValue keyValue : outcomeList) {
             CompleteTaskAction completeAction = new CompleteTaskAction(this, keyValue.getKey());

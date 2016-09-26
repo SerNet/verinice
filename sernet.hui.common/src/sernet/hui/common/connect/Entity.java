@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,20 +69,20 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     private String uuid;
     private Integer dbId;
     private String entityType;
-    
+
     // key: propertyTypeId, value: PropertyList with propertyTypeId
     private Map<String, PropertyList> typedPropertyLists = new HashMap<>();
 
     private transient List<IEntityChangedListener> changeListeners;
 
     /**
-     * This map caches the values of properties which are defined 
-     * with input type "reference" in SNCA.xml.
-     * The map is used in method {@link #getValue(String)} and
-     * {@link #getValueOfReferenceProperty(PropertyType)} 
+     * This map caches the values of properties which are defined with input
+     * type "reference" in SNCA.xml. The map is used in method
+     * {@link #getValue(String)} and
+     * {@link #getValueOfReferenceProperty(PropertyType)}
      */
     private Map<String, String> referenceValueCache;
-    
+
     protected Entity() {
         uuid = UUID.randomUUID().toString();
     }
@@ -107,7 +108,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
                 setSimpleValue(propertyType, propertyType.getDefaultRule().getValue());
             }
         }
-    }  
+    }
 
     /**
      * Convenience method to return a String representation of the given
@@ -179,15 +180,56 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         return sb.toString();
     }
 
+    /**
+     * Convenience method to set a String representation of the given
+     * propertyTypeId.
+     * 
+     * See SNCA.xml for valid propertyTypes.
+     * 
+     * @param propertyType The type id of a property
+     * @param value The new value of a property
+     */
+    public void setPropertyValue(String propertyTypeId, String value) {
+        PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyTypeId);
+
+        // TODO: impl reference
+        if (propertyType.isReference()) {
+            // return setValueOfReferenceProperty(propertyType);
+            log.warn("Don `t save reference values.");
+        }
+
+        PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
+        if (propertyList != null) {
+            for (Property property : propertyList.getProperties()) {
+                if (propertyType.isMultiselect()) {
+                    // TODO: impl multiselect
+                    // propertyType.isSingleSelect() ||
+                    // setValueOfOptionProperty(propertyType, value);
+                    log.warn("Don `t save multiselect values.");
+                } else if (propertyType.isDate()) {
+                    try {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(FormInputParser.stringToDate(value.trim()).getTime());
+                        property.setPropertyValue(calendar, false, null);
+                    } catch (AssertException e) {
+                        log.error("Exception while setting the value of a date property", e);
+                    }
+                } else {
+                    property.setPropertyValue(value);
+                }
+            }
+        }
+    }
+
     private String getValueOfReferenceProperty(PropertyType type) {
         String propertyTypeId = type.getId();
         if (!type.isReference()) {
             throw new HuiRuntimeException("Type of property with type id " + propertyTypeId + " is not 'reference'");
         }
         String value = getReferenceValueCache().get(propertyTypeId);
-        if(value==null) {
+        if (value == null) {
             value = loadValueOfReferenceProperty(type);
-            getReferenceValueCache().put(propertyTypeId, value);        
+            getReferenceValueCache().put(propertyTypeId, value);
         } else if (getLog().isDebugEnabled()) {
             getLog().debug("Reference value found in cache: " + value + ", property type id: " + propertyTypeId + ", entity db id: " + getDbId());
         }
@@ -202,14 +244,14 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             List<IMLPropertyOption> referencedEntities = type.getReferencedEntities(propertyList.getProperties());
             boolean first = true;
             for (IMLPropertyOption referenceEntity : referencedEntities) {
-                if(!first) {
+                if (!first) {
                     sb.append(", ");
                 }
                 sb.append(referenceEntity.getName());
                 first = false;
-            } 
+            }
             if (getLog().isDebugEnabled()) {
-                getLog().debug("Reference value loaded from db: " +  sb.toString() + ", property type id: " + propertyTypeId + ", entity db id: " + getDbId());
+                getLog().debug("Reference value loaded from db: " + sb.toString() + ", property type id: " + propertyTypeId + ", entity db id: " + getDbId());
             }
         }
         return sb.toString();
@@ -220,14 +262,21 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         return (option != null) ? option.getName() : "";
     }
 
+    // private void setValueOfOptionProperty(PropertyType type, String value) {
+    // String[] propertyOptions = value.split(",");
+    // for (String propertyOptionValue : propertyOptions) {
+    // createNewProperty(type, propertyOptionValue);
+    // }
+    // }
+
     private String getValueOfDateProperty(Property property) {
         String date = null;
         String propertyValue = property.getPropertyValue();
-        if(propertyValue==null) {
+        if (propertyValue == null) {
             return date;
         }
         propertyValue = propertyValue.trim();
-        if(propertyValue.isEmpty()) {
+        if (propertyValue.isEmpty()) {
             return date;
         }
         try {
@@ -240,7 +289,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         }
         return date;
     }
-    
+
     /**
      * Returns the property value as a Java date. If the property value can not
      * be converted to a date an error message is logged an null is returned.
@@ -330,49 +379,47 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         }
         return result;
     }
-	
-	public void setSimpleValue(PropertyType type, String value) {
-		PropertyList list = typedPropertyLists.get(type.getId());
-		if (list == null || list.getProperties().size() == 0) {
-			createNewProperty(type, value);
-		}
-		else {
-				list.getProperty(0).setPropertyValue(value);
-		}
-	}
 
-	public Integer getNumericValue(String propertyType) {
-	    try
-	      {
-	         return Integer.valueOf(getSimpleValue(propertyType));
-	      }
-	      catch (NumberFormatException ex)
-	      {
-	         return null;
-	      }
+    public void setSimpleValue(PropertyType type, String value) {
+        PropertyList list = typedPropertyLists.get(type.getId());
+        if (list == null || list.getProperties().size() == 0) {
+            createNewProperty(type, value);
+        } else {
+            list.getProperty(0).setPropertyValue(value);
+        }
     }
-	
-	public void setNumericValue(PropertyType type, int value) {
-	    setSimpleValue(type, Integer.toString(value));
-	}
-	
+
+    public Integer getNumericValue(String propertyType) {
+        try {
+            return Integer.valueOf(getSimpleValue(propertyType));
+        } catch (NumberFormatException ex) {
+            return null;
+        }
+    }
+
+    public void setNumericValue(PropertyType type, int value) {
+        setSimpleValue(type, Integer.toString(value));
+    }
+
     /**
      * Copy all property values from given entity to this one
      * 
-     * @param source The source entity for copying       
+     * @param source
+     *            The source entity for copying
      */
     public void copyEntity(Entity source) {
         List<String> emptyList = Collections.emptyList();
         copyEntity(source, emptyList);
     }
 
-    
     /**
      * Copy all property values from given entity to this one. Properties with
-     *  ids from list propertyTypeBlacklist will be ignored.
+     * ids from list propertyTypeBlacklist will be ignored.
      * 
-     * @param source The source entity for copying
-     * @param propertyTypeBlacklist A list with property ids which will not be copied 
+     * @param source
+     *            The source entity for copying
+     * @param propertyTypeBlacklist
+     *            A list with property ids which will not be copied
      */
     public void copyEntity(Entity source, List<String> propertyTypeBlacklist) {
         Map<String, PropertyList> sourceProperties = source.getTypedPropertyLists();
@@ -400,8 +447,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     private boolean checkProperty(Property property, List<String> propertyTypeBlacklist) {
         return !property.isEmpty() && !propertyTypeBlacklist.contains(property.getPropertyType());
     }
-    
-      
+
     /**
      * Check if given option is selected for any of the properties.
      * 
@@ -451,13 +497,13 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         addProperty(entry);
         return entry;
     }
-    
-    
+
     /**
      * Add a new property to the list of already present properties for its
      * type.
      * 
-     * @param property A property
+     * @param property
+     *            A property
      */
     private void addProperty(Property property) {
         try {
@@ -476,11 +522,13 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     }
 
     /**
-     * Removes a property with the given {@link PropertyType}
-     * and value from this entity.
+     * Removes a property with the given {@link PropertyType} and value from
+     * this entity.
      * 
-     * @param propertyType A {@link PropertyType}
-     * @param propertyValue The values of the property
+     * @param propertyType
+     *            A {@link PropertyType}
+     * @param propertyValue
+     *            The values of the property
      */
     public void remove(PropertyType propertyType, String propertyValue) {
         PropertyList list = typedPropertyLists.get(propertyType.getId());
@@ -495,15 +543,15 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             }
         }
     }
-    
+
     /**
      * Returns the int value of a property with propertyTypeId.
      * 
      * If no property value exists with the given propertyTypeId
      * {@link Property}.UNDEF is returned.
      * 
-     * If a property value exists but property has another
-     * input type than "numericoption" {@link Property}.UNDEF is returned.
+     * If a property value exists but property has another input type than
+     * "numericoption" {@link Property}.UNDEF is returned.
      * 
      * @param propertyTypeId
      *            The type id of a property
@@ -516,8 +564,8 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         }
         PropertyType type = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyTypeId);
         if (type.isNumericSelect()) {
-            for (Property property: propertyList.getProperties()) {
-                return property.getNumericPropertyValue();          
+            for (Property property : propertyList.getProperties()) {
+                return property.getNumericPropertyValue();
             }
         }
         return Property.UNDEF;
@@ -552,7 +600,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         }
         return value;
     }
-    
+
     /**
      * Sets the value for a given property.
      * 
@@ -652,7 +700,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 
         return amount;
     }
-    
+
     /*
      * (non-Javadoc)
      * 
@@ -690,14 +738,14 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     public String getTypeId() {
         return TYPE_ID;
     }
-    
+
     private synchronized List<IEntityChangedListener> getChangelisteners() {
         if (this.changeListeners == null) {
             changeListeners = new ArrayList<>();
         }
         return changeListeners;
     }
-    
+
     public void addChangeListener(IEntityChangedListener changeListener) {
         getChangelisteners().add(changeListener);
     }
@@ -717,7 +765,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             listener.propertyChanged(new PropertyChangedEvent(this, prop, source));
         }
     }
-    
+
     public Integer getDbId() {
         return dbId;
     }
@@ -753,11 +801,10 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     public void setTypedPropertyLists(Map<String, PropertyList> typedPropertyLists) {
         this.typedPropertyLists = typedPropertyLists;
     }
-    
+
     /**
-     * Returns all properties with the given property type id.
-     * Returns an empty PropertyList if there are no properties 
-     * with the given property type id.
+     * Returns all properties with the given property type id. Returns an empty
+     * PropertyList if there are no properties with the given property type id.
      * 
      * @param propertyTypeId
      *            The type id of a property
@@ -770,14 +817,13 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         }
         return propertyList;
     }
-    
+
     public void addToReferenceValueCache(String propertyTypeId, String value) {
         getReferenceValueCache().put(propertyTypeId, value);
     }
-    
-    
+
     private Map<String, String> getReferenceValueCache() {
-        if(referenceValueCache==null) {
+        if (referenceValueCache == null) {
             referenceValueCache = new HashMap<>();
         }
         return referenceValueCache;
