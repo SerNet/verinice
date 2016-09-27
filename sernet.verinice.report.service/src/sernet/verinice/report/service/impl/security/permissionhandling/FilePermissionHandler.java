@@ -38,6 +38,11 @@ public class FilePermissionHandler extends AbstractPermissionHandler {
     private static final Logger LOG = Logger.getLogger(FilePermissionHandler.class);
     
     private static final String OSGI_INSTANCE_AREA = "osgi.instance.area";
+    private static final String OSGI_CONFIGURATION_AREA = "osgi.configuration.area";
+    private static final String SUFFIX_LOG_DIR = "log";
+    private static final String SUFFIX_LOG_FILE = ".log";
+    private static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
+    private static final String USER_HOME = "user.home";
     
     public FilePermissionHandler(ReportSecurityContext securityContext) {
         this.reportSecurityContext = securityContext;
@@ -57,33 +62,33 @@ public class FilePermissionHandler extends AbstractPermissionHandler {
                 return;
             } else if (reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath().equals(permission.getName())) {
                 return;
-            } else if((PREFIX_FILE + permission.getName()).equals(System.getProperty(OSGI_INSTANCE_AREA) + "log")){ // 1.1
+            } else if((PREFIX_FILE + permission.getName()).equals(System.getProperty(OSGI_INSTANCE_AREA) + SUFFIX_LOG_DIR)){ 
                 return;
-            } else if ((PREFIX_FILE + permission.getName()).equals(getCanonicalFile(System.getProperty(OSGI_INSTANCE_AREA)) + "log")){ // 1.2
+            } else if ((PREFIX_FILE + permission.getName()).equals(getCanonicalFile(System.getProperty(OSGI_INSTANCE_AREA)) + SUFFIX_LOG_DIR)){ 
                 return;
-            } else if((PREFIX_FILE + permission.getName()).startsWith(System.getProperty(OSGI_INSTANCE_AREA) + "log")){ // 2.2
+            } else if((PREFIX_FILE + permission.getName()).startsWith(System.getProperty(OSGI_INSTANCE_AREA) + SUFFIX_LOG_DIR)){ 
                 return;
-            } else if ((PREFIX_FILE + permission.getName()).startsWith(getCanonicalFile(System.getProperty(OSGI_INSTANCE_AREA)) + "log")){ //2.1
+            } else if ((PREFIX_FILE + permission.getName()).startsWith(getCanonicalFile(System.getProperty(OSGI_INSTANCE_AREA)) + SUFFIX_LOG_DIR)){
                 return;
-            } else if (permission.getName().equals(getCanonicalFile(System.getProperty(OSGI_INSTANCE_AREA)) + File.separator + ".metadata" + File.separator + ".log")){ //3.1
+            } else if (permission.getName().equals(getCanonicalFile(System.getProperty(OSGI_INSTANCE_AREA)) + File.separator + ".metadata" + File.separator + SUFFIX_LOG_FILE)){
                 return;
-            } else if (permission.getName().equals(System.getProperty(OSGI_INSTANCE_AREA) + File.separator + ".metadata" + File.separator + ".log")){ //3.2
+            } else if (permission.getName().equals(System.getProperty(OSGI_INSTANCE_AREA) + File.separator + ".metadata" + File.separator + SUFFIX_LOG_FILE)){ 
                 return;                
-            } else if ((PREFIX_FILE + permission.getName()).startsWith(getCanonicalFile(System.getProperty("osgi.configuration.area")))){ // 4.1
+            } else if ((PREFIX_FILE + permission.getName()).startsWith(getCanonicalFile(System.getProperty(OSGI_CONFIGURATION_AREA)))){
                 return;
-            } else if ((PREFIX_FILE + permission.getName()).startsWith(System.getProperty("osgi.configuration.area"))){ // 4.2
+            } else if ((PREFIX_FILE + permission.getName()).startsWith(System.getProperty(OSGI_CONFIGURATION_AREA))){ 
                 return;
-            } else if ((permission.getName()).startsWith(getCanonicalFile(System.getProperty("java.io.tmpdir")))){ // 5.1
+            } else if ((permission.getName()).startsWith(getCanonicalFile(System.getProperty(JAVA_IO_TMPDIR)))){ 
                 return;
-            } else if ((permission.getName()).startsWith(System.getProperty("java.io.tmpdir"))){ // 5.2
+            } else if ((permission.getName()).startsWith(System.getProperty(JAVA_IO_TMPDIR))){ 
                 return;
-            } else if ((permission.getName()).startsWith(getCanonicalFile(System.getProperty("user.home")) + File.separator + ".java" + File.separator + "fonts")) { // 6.1
+            } else if ((permission.getName()).startsWith(getCanonicalFile(System.getProperty(USER_HOME)) + File.separator + ".java" + File.separator + "fonts")) {
                 return;
-            } else if ((permission.getName()).startsWith(System.getProperty("user.home") + File.separator + ".java" + File.separator + "fonts")) { // 6.2
+            } else if ((permission.getName()).startsWith(System.getProperty(USER_HOME) + File.separator + ".java" + File.separator + "fonts")) { 
                 return;
-            } else if (permission.getName().startsWith(FilenameUtils.getFullPath(getCanonicalFile(reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath())))){ // 7.1
+            } else if (permission.getName().startsWith(FilenameUtils.getFullPath(getCanonicalFile(reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath())))){
                 return; // needed by win32, cause path there looks like c:\$path\.\reportOutput.pdf
-            } else if (permission.getName().startsWith(FilenameUtils.getFullPath(reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath()))){ // 7.2
+            } else if (permission.getName().startsWith(FilenameUtils.getFullPath(reportSecurityContext.getReportOptions().getOutputFile().getAbsolutePath()))){
                 return; // needed by win32, cause path there looks like c:\$path\.\reportOutput.pdf
             } else if (SystemUtils.IS_OS_MAC_OSX && permission.getName().startsWith("/private/var/folders/")){
                 return; // handling osx tmp folder
@@ -94,21 +99,23 @@ public class FilePermissionHandler extends AbstractPermissionHandler {
         }
     }
     
-    
-    
+    /**
+     * on old windows versions some System.getProperty-Calls return file
+     * paths in the 8.3 format.
+     * CanonicalPath gets the long version of it 
+     * this prevents trouble in comparing different path versions
+     * of the "same" directory
+     */
     private String getCanonicalFile(String fileName){
         try {
             File f = new File(fileName);
             String canonicalPath = f.getCanonicalPath();
-            if(LOG.isDebugEnabled()){
-                LOG.debug("Canonical filename for:\t" + fileName + " is:\t" + canonicalPath);
-            }
+            LOG.debug("Canonical filename for:\t" + fileName + " is:\t" + canonicalPath);
             return canonicalPath;
         } catch (IOException e) {
-            LOG.error("Can not determine canonical path of:\t" + fileName);
+            LOG.debug("Can not determine canonical path of:\t" + fileName, e);
         }
         return fileName;
-        
     }
 
 }
