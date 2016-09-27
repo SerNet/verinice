@@ -97,7 +97,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     private static final String LOCAL_UPDATE_SITE_URL = "/Verinice-Update-Site-2010"; //$NON-NLS-1$
 
-    public static final String UPDATE_SITE_URL = "http://update.verinice.org/pub/verinice/Verinice-Update-Site-2010"; //$NON-NLS-1$
+    public static final String UPDATE_SITE_URL = "https://update.verinice.org/pub/verinice/update/1.13"; //$NON-NLS-1$
 
     public static final String DERBY_LOG_FILE_PROPERTY = "derby.stream.error.file"; //$NON-NLS-1$
 
@@ -647,7 +647,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         if (uriArray != null) {
             for (int i = 0; i < uriArray.length; i++) {
                 URI uri = uriArray[i];
-                if (uri.toString().endsWith(LOCAL_UPDATE_SITE_URL)) {
+                if (uri.toString().endsWith(LOCAL_UPDATE_SITE_URL) || UPDATE_SITE_URL.equals(uri.toString())) {
                     getArtifactRepositoryManager().removeRepository(uri);
                     getMetadataRepositoryManager().removeRepository(uri);
                 }
