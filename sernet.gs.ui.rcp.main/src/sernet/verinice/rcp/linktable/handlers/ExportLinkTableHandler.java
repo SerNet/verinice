@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -73,6 +74,7 @@ public class ExportLinkTableHandler extends RightsEnabledHandler {
         this.linkTableService = new LinkTableService();
         linkedTableCreator = new GraphLinkedTableCreator();
         this.linkTableService.setLinkTableCreator(linkedTableCreator);
+        this.csvExportHandler.setCharset(VeriniceCharset.CHARSET_WINDOWS_1250);
     }
 
     /*

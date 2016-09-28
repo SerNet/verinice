@@ -228,7 +228,7 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
            List<String> removeAlias = ColumnPathParser.removeAlias(columnPathAsList);
            String join = StringUtils.join(removeAlias, "");
            columnPath2TablePosition.put(join, position);
-           columnHeader2Alias.put(join, ColumnPathParser.extractAlias(columnPathAsList));
+           columnHeader2Alias.put(join, ColumnPathParser.extractAlias(s));
            position++;
         }
     }

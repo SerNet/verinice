@@ -35,15 +35,14 @@ import sernet.verinice.security.report.ReportSecurityContext;
  */
 public class FilePermissionHandler extends AbstractPermissionHandler {
     
+    private ReportSecurityContext reportSecurityContext;
     private static final Logger LOG = Logger.getLogger(FilePermissionHandler.class);
-    
     private static final String OSGI_INSTANCE_AREA = "osgi.instance.area";
     private static final String OSGI_CONFIGURATION_AREA = "osgi.configuration.area";
     private static final String SUFFIX_LOG_DIR = "log";
     private static final String SUFFIX_LOG_FILE = ".log";
     private static final String JAVA_IO_TMPDIR = "java.io.tmpdir";
     private static final String USER_HOME = "user.home";
-    
     public FilePermissionHandler(ReportSecurityContext securityContext) {
         this.reportSecurityContext = securityContext;
     }
