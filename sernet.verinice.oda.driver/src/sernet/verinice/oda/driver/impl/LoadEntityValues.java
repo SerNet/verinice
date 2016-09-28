@@ -102,6 +102,9 @@ public class LoadEntityValues extends GenericCommand {
         for (String name : propertyTypes)
         {
             PropertyType pType = HUITypeFactory.getInstance().getPropertyType(entity.getEntityType(), name);
+            if(pType==null) {
+                continue;
+            }
             
             Class<?> c = (i >= classes.length ? null : classes[i]);
             if ((c == null || c == String.class) && (!mapNumericalOptionValues || !pType.getInputName().equals("numericoption"))){
