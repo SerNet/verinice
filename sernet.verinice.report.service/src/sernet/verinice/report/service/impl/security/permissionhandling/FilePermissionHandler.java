@@ -117,7 +117,8 @@ public class FilePermissionHandler extends AbstractPermissionHandler {
             }           
             return canonicalPath;
         } catch (IOException e) {
-            LOG.error("Can not determine canonical path of:\t" + fileName, e);
+            // This exception is no error
+            LOG.debug("Can not determine canonical path of:\t" + fileName, e);
         }
         return fileName;
     }
