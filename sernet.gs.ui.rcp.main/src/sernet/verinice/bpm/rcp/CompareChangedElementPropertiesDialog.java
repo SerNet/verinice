@@ -26,9 +26,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.viewers.ColumnWeightData;
-import org.eclipse.jface.viewers.TableLayout;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.graphics.Font;
@@ -43,9 +40,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
@@ -71,8 +66,6 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
     private static final int DIALOG_HEIGHT = 450;
 
     private String title;
-
-    private TableViewer tableViewer;
 
     private final TaskInformation task;
     private CnATreeElement element;
@@ -180,7 +173,7 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         }
 
         if (!changedElementProperties.isEmpty()) {
-            createTableComposite(composite);
+            createGridComposite(composite);
         }
     }
 
@@ -193,30 +186,22 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         return newTitle;
     }
 
-    private void createTableComposite(Composite parent) {
-        this.tableViewer = new TableViewer(parent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-        final GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, true);
-        this.tableViewer.getControl().setLayoutData(gridData);
-        this.tableViewer.setUseHashlookup(true);
+    private void createGridComposite(final Composite parent) {
+        GridLayout compositeLayout = new GridLayout(3, false);
+        compositeLayout.marginWidth = 5;
+        parent.setLayout(compositeLayout);
 
-        getTable().setHeaderVisible(true);
-        getTable().setLinesVisible(true);
+        final Label fealdNameHeaderLabel = new Label(parent, SWT.NONE);
+        fealdNameHeaderLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
+        fealdNameHeaderLabel.setText(Messages.CompareTaskChangesAction_3);
 
-        createTableColumn(Messages.CompareTaskChangesAction_3, 0);
-        createTableColumn(Messages.CompareTaskChangesAction_4, 1);
-        createTableColumn(Messages.CompareTaskChangesAction_5, 2);
+        final Label fealdOldHeaderLabel = new Label(parent, SWT.NONE);
+        fealdOldHeaderLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
+        fealdOldHeaderLabel.setText(Messages.CompareTaskChangesAction_4);
 
-        // set initial column widths
-        TableLayout layout = new TableLayout();
-        layout.addColumnData(new ColumnWeightData(60, 207, true));
-        layout.addColumnData(new ColumnWeightData(60, 380, true));
-        layout.addColumnData(new ColumnWeightData(60, 380, true));
-
-        getTable().setLayout(layout);
-
-        for (TableColumn tc : getTable().getColumns()) {
-            tc.pack();
-        }
+        final Label fealdNewHeaderLabel = new Label(parent, SWT.NONE);
+        fealdNewHeaderLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
+        fealdNewHeaderLabel.setText(Messages.CompareTaskChangesAction_5);
 
         HUITypeFactory typeFactory = HUITypeFactory.getInstance();
         EntityType entityType = typeFactory.getEntityType(element.getEntity().getEntityType());
@@ -226,38 +211,49 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
             if (changedElementProperties.containsKey(propertyType.getId())) {
                 String oldValue = element.getPropertyValue(propertyType.getId());
                 String newValue = changedElementProperties.get(propertyType.getId());
+
                 if (StringUtils.isNotBlank(oldValue) || StringUtils.isNotBlank(newValue)) {
-                    TableItem item = new TableItem(getTable(), SWT.NONE);
-                    item.setText(0, typeFactory.getMessage(propertyType.getId()));
-                    item.setText(1, oldValue);
+                    final Label titleLabel = new Label(parent, SWT.NONE);
+                    titleLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
+                    titleLabel.setText(typeFactory.getMessage(propertyType.getId()));
+
+                    final Text oldText = new Text(parent, SWT.BORDER | SWT.WRAP);
+                    oldText.setEditable(false);
+                    oldText.setText(oldValue);
+                    GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH);
+                    gridData.widthHint = DIALOG_WIDTH / 3;
+                    gridData.heightHint = getHeightHint(oldText);
+                    oldText.setLayoutData(gridData);
+
+                    final Text newText = new Text(parent, SWT.BORDER | SWT.WRAP);
+                    newText.setEditable(false);
 
                     if (propertyType.isReference()) {
                         // TODO: impl reference
                         LOG.warn("Don `t show reference values.");
                     } else if (propertyType.isSingleSelect()) {
                         PropertyOption propertyOption = propertyType.getOption(newValue);
-                        item.setText(2, typeFactory.getMessage(propertyOption.getId()));
+                        newText.setText(typeFactory.getMessage(propertyOption.getId()));
                     } else if (propertyType.isMultiselect()) {
                         // TODO: impl multiselect
                         LOG.warn("Don `t show multiselect values.");
                     } else {
-                        item.setText(2, newValue);
+                        newText.setText(newValue);
                     }
+
+                    gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH);
+                    gridData.widthHint = DIALOG_WIDTH / 3;
+                    gridData.heightHint = getHeightHint(newText);
+                    newText.setLayoutData(gridData);
                 }
             }
         }
+
+        parent.pack();
     }
 
-    private void createTableColumn(String label, int columnIndex) {
-        TableColumn column;
-        column = new TableColumn(getTable(), SWT.LEFT);
-        if (label != null) {
-            column.setText(label);
-        }
-    }
-
-    private Table getTable() {
-        return this.tableViewer.getTable();
+    private static int getHeightHint(Text text) {
+        return text.getLineCount() * Math.round(text.getFont().getFontData()[0].height);
     }
 
     private void setDialogLocation() {
