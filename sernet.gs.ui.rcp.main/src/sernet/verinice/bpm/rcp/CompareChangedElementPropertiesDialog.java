@@ -222,7 +222,6 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
                     oldText.setText(oldValue);
                     GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH);
                     gridData.widthHint = DIALOG_WIDTH / 3;
-                    gridData.heightHint = getHeightHint(oldText);
                     oldText.setLayoutData(gridData);
 
                     final Text newText = new Text(parent, SWT.BORDER | SWT.WRAP);
@@ -243,17 +242,12 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
 
                     gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH);
                     gridData.widthHint = DIALOG_WIDTH / 3;
-                    gridData.heightHint = getHeightHint(newText);
                     newText.setLayoutData(gridData);
                 }
             }
         }
 
         parent.pack();
-    }
-
-    private static int getHeightHint(Text text) {
-        return text.getLineCount() * Math.round(text.getFont().getFontData()[0].height);
     }
 
     private void setDialogLocation() {
