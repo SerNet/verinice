@@ -31,6 +31,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.service.IThreadCompleteListener;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -81,7 +82,7 @@ final class CompleteTaskAction extends Action {
                 if (IIndividualProcess.TRANS_ACCEPT.equals(outcomeId) && task.isWithAReleaseProcess()) {
                     getTaskService().saveChangedElementPropertiesToCnATreeElement(task.getId(), task.getUuid());
                     for (IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
-                        if (task.getElementTitle().equals(editorReference.getPartName())) {
+                        if (editorReference.getEditorInput() instanceof BSIElementEditorInput && task.getUuid().equals(((BSIElementEditorInput) editorReference.getEditorInput()).getCnAElement().getUuid())) {
                             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(new IEditorReference[] { editorReference }, true);
                             break;
                         }
