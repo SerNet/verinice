@@ -39,6 +39,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 import org.elasticsearch.common.collect.Sets;
 
+import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.rcp.linktable.ui.CsvExportDialog;
@@ -373,9 +374,10 @@ public class LinkTableUtil {
         }
         message = StringUtils.replaceEachRepeatedly(message,
                 new String[] { "/", ":", ".", "<", ">" }, new String[] { "", "", "", "", "" });
-        message = message.replaceAll(" ", "__");
+        message = message.replaceAll(" ", "_");
 
         return columnPath + ALIAS_DELIMITER + message;
     }
+    
 
 }

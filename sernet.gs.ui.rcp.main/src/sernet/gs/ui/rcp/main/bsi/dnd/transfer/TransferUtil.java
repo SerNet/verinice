@@ -28,6 +28,7 @@ import java.util.Arrays;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.dnd.TransferData;
 
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -86,6 +87,16 @@ public class TransferUtil {
                 massnahmen.add((IMassnahmeUmsetzung) data);
                 write(transfer, transferData, massnahmen);
             }
+
+            ArrayList<BausteinUmsetzung> bausteine = new ArrayList<>();
+            if(data instanceof BausteinUmsetzung[]){
+                bausteine.addAll(Arrays.asList((BausteinUmsetzung[]) data));
+                write(transfer, transferData, bausteine);
+            }else if(data instanceof BausteinUmsetzung){
+                bausteine.add((BausteinUmsetzung) data);
+                write(transfer, transferData, bausteine);
+            }
+
         }
     }
 

@@ -38,6 +38,8 @@ public class Messages extends NLS{
     
     public static String MultiSelectionControl_6;
 
+    public static String MultiSelectionControl_7;
+    
     
     static {
         // initialize resource bundle

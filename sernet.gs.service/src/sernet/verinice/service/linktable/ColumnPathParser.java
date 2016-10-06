@@ -49,6 +49,8 @@ public abstract class ColumnPathParser {
 
     private static final Logger LOG = Logger.getLogger(ColumnPathParser.class);
 
+    private static final String ALIAS_DELIMITER = " AS ";
+    
     private ColumnPathParser() throws InstantiationException {
         throw new InstantiationException("Do not create instances of ColumnPathParser, use public static methods");
     }
@@ -204,7 +206,24 @@ public abstract class ColumnPathParser {
 
         if ("as".equalsIgnoreCase(alias)) {
             String aliasValue = path.get(path.size() - 1);
-            return aliasValue.replace("__", " ");
+            return aliasValue.replace("_", " ");
+        }
+
+        return StringUtils.EMPTY;
+    }
+    
+    /**
+     * Extracts the alias from a column path. This method does not use
+     * the ANTLR parser due to problems with German umlauts.
+
+     *
+     * @param path A valid path 
+     * @return the alias or empty string if no alias is defined.
+     */
+    public static String extractAlias(String path){
+
+        if(path.contains(ALIAS_DELIMITER)) {
+            return path.substring(path.indexOf(ALIAS_DELIMITER) + 4);
         }
 
         return StringUtils.EMPTY;

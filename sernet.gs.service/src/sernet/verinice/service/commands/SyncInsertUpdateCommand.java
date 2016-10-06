@@ -650,7 +650,9 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
      */
     private void setScopeIdAndParentNull(CnATreeElement gefaehrdung) {
         if (GefaehrdungsUmsetzung.TYPE_ID.equals(gefaehrdung.getTypeId())){
+
             GefaehrdungsUmsetzung gUms = (GefaehrdungsUmsetzung) gefaehrdung;
+
             gUms.setParent(null);
             gUms.setScopeId(null);
             
@@ -659,7 +661,7 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
             (IBaseDao<GefaehrdungsUmsetzung, Serializable>) getDaoFactory().
             getDAO( gUms.getClass());
             
-            dao.saveOrUpdate(gUms);
+            dao.merge(gUms);
         }
     }
 

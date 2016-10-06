@@ -290,7 +290,7 @@ public class LinkTableColumn {
             columnContainer.pack(true);
             columnContainer.layout(true);
         }
-        ltrParent.refresh(UpdateLinkTable.COLUMN_PATHS);
+        ltrParent.refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT);
     }
 
     public LinkTableElementComboViewer getFirstCombo() {

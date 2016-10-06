@@ -183,7 +183,8 @@ public class FindURLs extends GenericCommand {
 			StringBuilder sb = new StringBuilder();
 			sb.append("SELECT p.propertyValue,pl.entityId FROM PropertyList as pl INNER JOIN pl.properties as p ");
 			sb.append("WHERE p.propertyType IN (:types) ");
-			sb.append("AND NULLIF(p.propertyValue, '') IS NOT NULL");
+			sb.append("AND p.propertyValue IS NOT NULL ");
+            sb.append("AND p.propertyValue NOT LIKE ''");
 			final String hql = sb.toString();
 			Query hqlQuery = session.createQuery(hql);
 			hqlQuery.setParameterList("types", types, Hibernate.STRING);
