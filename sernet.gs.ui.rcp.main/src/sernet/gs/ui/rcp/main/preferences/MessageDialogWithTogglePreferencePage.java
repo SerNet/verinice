@@ -70,10 +70,6 @@ public class MessageDialogWithTogglePreferencePage extends FieldEditorPreference
                 getFieldEditorParent());
         addField(infoDialogProcess);
         
-        BooleanFieldEditor infoDialogTasksCompleted = new BooleanFieldEditor(PreferenceConstants.INFO_TASKS_COMPLETED, Messages.getString("GeneralSettingsPage.InfoTasksCompleted"), //$NON-NLS-1$
-                getFieldEditorParent());
-        addField(infoDialogTasksCompleted);
-        
         BooleanFieldEditor infoDialogLdapImport = new BooleanFieldEditor(PreferenceConstants.INFO_IMPORT_LDAP, Messages.getString("GeneralSettingsPage.InfoLdapImport"), //$NON-NLS-1$
                 getFieldEditorParent());
         addField(infoDialogLdapImport);

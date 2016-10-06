@@ -796,7 +796,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                 }
             });
             getInfoPanel().setText(""); //$NON-NLS-1$
-            showInformation(Messages.TaskView_0, NLS.bind(Messages.TaskView_8, taskList.size()));
         }
     }
 
@@ -852,15 +851,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
             @Override
             public void run() {
                 MessageDialog.openError(getShell(), title, message);
-            }
-        });
-    }
-
-    protected void showInformation(final String title, final String message) {
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                InfoDialogWithShowToggle.openInformation(title, message, Messages.TaskView_30, PreferenceConstants.INFO_TASKS_COMPLETED);
             }
         });
     }

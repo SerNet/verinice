@@ -92,8 +92,6 @@ final class CompleteTaskAction extends Action {
             }
             this.setEnabled(false);
             executer.shutdown();
-            int n = taskList.size();
-            showInformation(n);
         } catch (Exception t) {
             LOG.error("Error while completing tasks.", t); //$NON-NLS-1$
             shutdownAndAwaitTermination();
@@ -110,14 +108,6 @@ final class CompleteTaskAction extends Action {
             }
         });
         executer.execute(job);
-    }
-
-    private void showInformation(int n) {
-        String message = NLS.bind(Messages.CompleteTaskAction_4, n);
-        if (n == 1) {
-            message = NLS.bind(Messages.CompleteTaskAction_0, n);
-        }
-        CompleteTaskAction.this.taskView.showInformation(Messages.CompleteTaskAction_3, message);
     }
 
     private void shutdownAndAwaitTermination() {

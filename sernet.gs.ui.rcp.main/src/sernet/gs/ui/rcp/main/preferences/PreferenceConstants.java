@@ -42,7 +42,6 @@ public class PreferenceConstants {
     public static final String INFO_ELEMENTS_CUT = "info_elements_cut"; //$NON-NLS-1$
     public static final String INFO_IMPORT_LDAP = "info_import_ldap"; //$NON-NLS-1$v
     public static final String INFO_PROCESSES_STARTED = "info_processes_started"; //$NON-NLS-1$
-    public static final String INFO_TASKS_COMPLETED = "info_tasks_completed"; //$NON-NLS-1$
     public static final String INFO_PROCESS_VALIDATE = "info_processes_validate"; //$NON-NLS-1$
     public static final String INFO_STATUS_DERIVED = "info_status_derived"; //$NON-NLS-1$
     public static final String INFO_SEARCH_ELEMENT_NOT_FOUND = "search_element_not_found"; //$NON-NLS-1$

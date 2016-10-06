@@ -41,10 +41,7 @@ public class Messages extends NLS {
     public static String ButtonRefresh;
     public static String ButtonCancel;
     public static String ComboModelTaskType_1;
-    public static String CompleteTaskAction_0;
     public static String CompleteTaskAction_1;
-    public static String CompleteTaskAction_3;
-    public static String CompleteTaskAction_4;
     public static String CompleteTaskAction_6;
     public static String CompleteTaskAction_7;
     public static String ConfirmTaskDelete_0;
@@ -139,13 +136,11 @@ public class Messages extends NLS {
     public static String TaskView_25;
     public static String TaskView_26;
     public static String TaskView_29;
-    public static String TaskView_30;
     public static String TaskView_3;
     public static String TaskView_4;
     public static String TaskView_5;
     public static String TaskView_6;
     public static String TaskView_7;
-    public static String TaskView_8;
     public static String TaskView_9;
     public static String TaskViewColumn_0;
     public static String TaskViewColumn_1;
