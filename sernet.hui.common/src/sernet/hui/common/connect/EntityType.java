@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 public class EntityType {
 	private String id;
 	private String name;
@@ -197,6 +199,36 @@ public class EntityType {
 		}
 		return null;
 	}
+
+	public PropertyType getObjectBrowserPropertyType(){
+	    PropertyType htmlType = null;
+	    boolean foundHTMLProperty = false;
+	    for(IEntityElement entityElement : elements){
+	        if(entityElement instanceof PropertyType){
+	            Object[] values = isShowHTML(entityElement, foundHTMLProperty);
+	            htmlType = (PropertyType)values[0];
+	            foundHTMLProperty = (boolean)values[1];
+	        }
+	    }
+	    return htmlType;
+	}
+	
+	private Object[] isShowHTML(IEntityElement entityElement, boolean foundHTMLProperty){
+        Object[] returnValues = new Object[2];
+	    PropertyType propertyType = (PropertyType)entityElement;
+        if(propertyType.isShow_html()){
+            Logger.getRootLogger().warn("Found show_html for propertyType:\t" + propertyType.getId());
+            if(!foundHTMLProperty){
+                returnValues[0] = propertyType;
+                returnValues[1] = true;
+            } else {
+                Logger.getRootLogger().warn("Found more than one properties"
+                        + " tagged as \"show_html=true\", invalid configuration");
+            }
+        }
+        return returnValues;
+	}
+	
 	
 	
 }

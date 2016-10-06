@@ -164,6 +164,10 @@ public class HuiProperty<K,V> implements Serializable{
         return type.isBooleanSelect();
     }
     
+    public boolean isShow_html(){
+        return type.isShow_html();
+    }
+    
     public Date getDate() {
         if(!getIsDate()) {
             return null;
