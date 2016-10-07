@@ -84,7 +84,7 @@ public abstract class GefaehrdungsUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static boolean listContainsById(List selectedArrayList, Gefaehrdung currentGefaehrdung) {
+    public static boolean listContainsById(Iterable selectedArrayList, Gefaehrdung currentGefaehrdung) {
         for (Iterator iterator = selectedArrayList.iterator(); iterator.hasNext();) {
             Object object = iterator.next();
             if (object instanceof Gefaehrdung) {

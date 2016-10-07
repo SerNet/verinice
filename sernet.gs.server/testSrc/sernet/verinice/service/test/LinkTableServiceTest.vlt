@@ -1,0 +1,19 @@
+{
+  "useAllScopes": false,
+  "scopeIds": [],
+  "columnPaths": [
+    "incident_scenario.incident_scenario_name AS Titel__(Szenario)",
+    "incident_scenario:person-iso.title AS Titel",
+    "incident_scenario/person-iso.person-iso_name AS Vorname__(Person)",
+    "incident_scenario/person-iso.person-iso_surname AS Nachname__(Person)",
+    "incident_scenario/asset.asset_name AS Titel__(Asset)",
+    "incident_scenario/asset:person-iso.title AS Titel",
+    "incident_scenario/asset/person-iso.person-iso_name AS Vorname__(Person)",
+    "incident_scenario/asset/person-iso.person-iso_surname AS Nachname__(Person)",
+    "incident_scenario/control.control_name AS Titel__(Control)",
+    "incident_scenario/control:person-iso.title AS Titel",
+    "incident_scenario/control/person-iso.person-iso_name AS Vorname__(Person)",
+    "incident_scenario/control/person-iso.person-iso_surname AS Nachname__(Person)"
+  ],
+  "relationIds": []
+}

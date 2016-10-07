@@ -67,7 +67,7 @@ public class Indexer {
 
     /**
      * Factory to create {@link IndexThread} instances configured in
-     * veriniceserver-search.xml
+     * veriniceserver-search-base.xml
      */
     private ObjectFactory indexThreadFactory;
 

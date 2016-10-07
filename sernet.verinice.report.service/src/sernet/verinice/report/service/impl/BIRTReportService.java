@@ -57,6 +57,10 @@ import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.model.report.AbstractOutputFormat;
 import sernet.verinice.oda.driver.impl.VeriniceOdaDriver;
 import sernet.verinice.report.service.Activator;
+import sernet.verinice.report.service.impl.security.ReportExecutionThread;
+import sernet.verinice.report.service.impl.security.ReportSecurityManager;
+import sernet.verinice.security.report.ReportClassLoader;
+import sernet.verinice.security.report.ReportSecurityException;
 
 public class BIRTReportService {
 	
@@ -73,8 +77,13 @@ public class BIRTReportService {
     private static final int MILLIS_PER_SECOND = 1000;
     
     private VeriniceOdaDriver odaDriver;
-
+    
+    private ReportClassLoader secureClassLoader;
+    
 	public BIRTReportService() {
+	    
+	    secureClassLoader = new ReportClassLoader(this.getClass().getClassLoader());
+	    
         final int logMaxBackupIndex = 10;
         final int logRollingSize = 3000000; // equals 3MB
 		EngineConfig config = new EngineConfig();
@@ -83,7 +92,8 @@ public class BIRTReportService {
 		// from the *package* where the BIRTReportService class resides.
 		resourceLocator = new IResourceLocator() {
 			private IResourceLocator defaultLocator = new DefaultResourceLocator();
-
+			
+			
 			@Override
 			public URL findResource(ModuleHandle moduleHandle, String fileName,
 					int type, Map appContext) {
@@ -125,12 +135,18 @@ public class BIRTReportService {
 			
 		};
 		
-		HashMap hm = config.getAppContext();
-		hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
-		config.setAppContext(hm);
-		
 		odaDriver = (VeriniceOdaDriver)Activator.getDefault().getOdaDriver();
 		boolean useReportLogging = odaDriver.getReportLoggingState();
+
+		HashMap hm = config.getAppContext();
+		if(odaDriver.isSandboxEnabled()){
+		    hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, secureClassLoader);
+		} else {
+		    hm.put(EngineConstants.APPCONTEXT_CLASSLOADER_KEY, BIRTReportService.class.getClassLoader());
+		}
+		
+		config.setAppContext(hm);
+		
 		
 		if(useReportLogging){
 		    String pref = odaDriver.getLogFile();
@@ -164,6 +180,7 @@ public class BIRTReportService {
 	    }
 	    
 		HashMap<String, Object> map = new HashMap<String, Object>();
+		
 		map.put(ModuleOption.RESOURCE_LOCATOR_KEY, resourceLocator);
 		
 		IRunAndRenderTask task = null;
@@ -319,7 +336,7 @@ public class BIRTReportService {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void render(IRunAndRenderTask task, IReportOptions options)
+	public IRunAndRenderTask prepareTaskForRendering(IRunAndRenderTask task, IReportOptions options)
 	{
 	    
 		IRenderOption renderOptions = (IRenderOption)ServiceComponent.getDefault().getReportService().getRenderOptions(options.getOutputFormat().getId());
@@ -338,21 +355,37 @@ public class BIRTReportService {
 		}
 		task.setRenderOption(renderOptions);
 		
-		try {
+		return task;
+	}
+
+    public void performRenderTask(IRunAndRenderTask task, ReportSecurityManager secureReportExecutionManager)  {
+        try {
 		    long startTime = System.currentTimeMillis();
-			task.run();
+		    
+		    // report generation is handled by a thread here
+		    // which is not for reasons of concurrency 
+		    // BUT for reasons of security (this enables setting
+		    // specific classloader for executing the report
+		    // since concurrency is explicitly not wanted here,
+		    // we are using thread.run() instead of thread.start()
+		    
+            ReportExecutionThread reportExecutionThread = new ReportExecutionThread(task, secureReportExecutionManager, odaDriver.isSandboxEnabled());
+            if(odaDriver.isSandboxEnabled()){
+                reportExecutionThread.setContextClassLoader(secureClassLoader);
+            }
+            reportExecutionThread.run();
 			if(log.isDebugEnabled()){
 			    long duration = (System.currentTimeMillis() - startTime) / MILLIS_PER_SECOND;
 			    log.debug("RunAndRenderTask lasts " + duration + " seconds");
 			}
-		} catch (EngineException e) {
-		    log.error("Could not render design: ", e);
-			throw new IllegalStateException(e);
+			// EngineException (thrown by task.run() ) is handled within the thread
+        } catch (ReportSecurityException r){
+            throw r;
 		} finally{
 		    // ensure .log file is released again (.lck file will be removed)
 		    destroyEngine();
 		}
-	}
+    }
 	
 	public void run(IRunTask task, IReportOptions options){
 	    // Makes the chosen root element available via the appContext variable 'rootElementId'
@@ -411,5 +444,9 @@ public class BIRTReportService {
 	    } finally {
 	        destroyEngine();
 	    }
+	}
+	
+	public String getLogfile(){
+	    return odaDriver.getLogFile();
 	}
 }

@@ -26,12 +26,6 @@ import org.apache.log4j.Logger;
  * List of all possible actions that should be controlable by right-management
  */
 public final class ActionRightIDs {
-    
-    private static Logger log = Logger.getLogger(ActionRightIDs.class);
-
-    private ActionRightIDs() {
-        super();
-    }
 
     public static final String ACCESSCONTROL = "accesscontrol";
     public static final String ACCOUNTSETTINGS = "accountsettings";
@@ -65,6 +59,7 @@ public final class ActionRightIDs {
     public static final String DSMODELVIEW = "dsmodelview";
     public static final String EDITPROFILE = "editprofile";
     public static final String EDITLINKS = "editlinks";
+    public static final String EXPORT_LINK_TABLE = "exportlinktable";
     public static final String FILES = "files";
     public static final String GENERATEORGREPORT = "generateorgreport";
     public static final String GENERATEAUDITREPORT = "generateauditreport";
@@ -106,6 +101,12 @@ public final class ActionRightIDs {
     public static final String UNIFY = "unify";
     public static final String XMLEXPORT = "xmlexport";
     public static final String XMLIMPORT = "xmlimport";
+
+    private static Logger log = Logger.getLogger(ActionRightIDs.class);
+
+    private ActionRightIDs() {
+        super();
+    }
     
     public static String[] getAllRightIDs(){
         ArrayList<String> retVal = new ArrayList<String>(0);

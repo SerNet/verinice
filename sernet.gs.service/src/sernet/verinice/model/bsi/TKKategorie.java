@@ -21,7 +21,10 @@ import sernet.verinice.model.common.CnATreeElement;
 
 
 public class TKKategorie extends CnATreeElement implements IBSIStrukturKategorie {
-	public static final String TYPE_ID = "tkkategorie"; //$NON-NLS-1$
+
+    private static final long serialVersionUID = 1L;
+    public static final String TYPE_ID = "tkkategorie"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "tk-kategorie"; //$NON-NLS-1$
 	
 	public TKKategorie(CnATreeElement model) {
 		super(model);
@@ -33,7 +36,7 @@ public class TKKategorie extends CnATreeElement implements IBSIStrukturKategorie
 	
 	@Override
 	public String getTitle() {
-		return Messages.TKKategorie_0;
+        return getTypeFactory().getMessage(TYPE_ID);
 	}
 	
 	@Override

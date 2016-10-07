@@ -29,13 +29,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * The Database class is used to provide all of the low-level
- * JDBC services for the Datamover. Database specific 
- * implementations should be handled in derived classes,
- * for example the MySQL class.
+ * The Database class is used to provide all of the low-level JDBC services for
+ * the Datamover. Database specific implementations should be handled in derived
+ * classes.
  * 
- * @author Jeff Heaton (http://www.heatonresearch.com)
- * Used by permission.
+ * @author Jeff Heaton (http://www.heatonresearch.com) Used by permission.
  *
  */
 public abstract class Database

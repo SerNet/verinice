@@ -110,6 +110,8 @@ public final class Messages extends NLS {
     public static String CnATreeElementSelectionDialog_6;
     public static String CnATreeElementSelectionDialog_7;
     public static String CnATreeElementSelectionDialog_8;
+    public static String CnATreeElementSelectionDialog_9;
+    public static String CnATreeElementSelectionDialog_10;
     public static String EditBausteinVorgabeDialog_0;
     public static String EditBausteinVorgabeDialog_1;
     public static String EditBausteinVorgabeDialog_2;
@@ -187,6 +189,8 @@ public final class Messages extends NLS {
     public static String XMLImportDialog_17;
     public static String XMLImportDialog_18;
     public static String XMLImportDialog_19;
+    public static String XMLImportDialog_ARCHIV_IMPORT_ERROR_SINGLE_VERSION;
+    public static String XMLImportDialog_ARCHIV_IMPORT_ERROR_MULTI_VERSION;
     public static String KonsolidatorDialog_0;
     public static String KonsolidatorDialog_2;
     public static String KonsolidatorDialog_3;

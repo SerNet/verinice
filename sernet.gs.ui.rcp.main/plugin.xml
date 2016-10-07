@@ -15,7 +15,7 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             class="sernet.gs.ui.rcp.main.Perspective"
-            icon="icons/de.png"
+            icon="icons/gs.png"
             id="sernet.gs.ui.rcp.main.perspective"
             name="%perspective.name">
       </perspective>
@@ -62,7 +62,7 @@
       <view
 	    allowMultiple="false"
             category="sernet.verinice.rcp.accountgroup"
-            class="sernet.verinice.rcp.accountgroup.GroupView"
+            class="sernet.verinice.rcp.accountgroup.AccountGroupView"
             icon="icons/group.png"
             id="sernet.verinice.rcp.accountgroup.GroupView"
             name="%view.name.14">
@@ -71,7 +71,7 @@
             allowMultiple="false"
             category="sernet.gs.ui.rcp.main.views"
             class="sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView"
-            icon="icons/de.png"
+            icon="icons/gs.png"
             id="sernet.gs.ui.rcp.main.views.bsimassnahmenview"
             name="%view.name.1">
       </view>
@@ -305,12 +305,31 @@
             id="sernet.verinice.bpm.rcp.assign"
             name="%command.name.assign">
       </command>
-	  <command
+	    <command
             categoryId="sernet.gs.ui.rcp.commands"
             description="%command.description.assign"
             id="sernet.verinice.bpm.rcp.duedate"
             name="%command.name.assign">
       </command>
+	    <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Load link table and open it in an editor"
+            id="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
+            name="Load link table">
+      </command>
+	    <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Export vlt file to csv"
+            id="sernet.verinice.rcp.linktable.ExportLinkTableHandler"
+            name="Export query">
+      </command>
+	    <command
+            categoryId="sernet.gs.ui.rcp.commands"
+            description="Create a link table and open it in an editor"
+            id="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+            name="Create link table">
+      </command>
+
    </extension>
    <extension point="org.eclipse.ui.bindings">
       <key
@@ -353,7 +372,7 @@
             name="verinice">
          <property
                name="aboutText"
-               value="SerNet verinice 1.12.0 - Codename &apos;Piha&apos;&#x0A;&#x0A;(c) SerNet Service Network GmbH and others&#x0A;1996-2016&#x0A;&#x0A;Contact the authors:&#x0A;verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage:&#x0A;http://www.verinice.org&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&lt;ak@sernet.de&gt;&#x0A;Anne Hanekop 			&lt;ah@sernet.de&gt;&#x0A;Marek Seeger			&lt;ms@sernet.de&gt;&#x0A;Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;&#x0A;Robert Schuster			&lt;r.schuster@tarent.de&gt;&#x0A;Daniel Murygin			&lt;dm@sernet.de&gt;&#x0A;Sebastian Engel 		&lt;s.engel@tarent.de&gt;&#x0A;Markus Joos				&lt;markus.joos@T-ONLINE.DE&gt;&#x0A;Gregorio Levano			&lt;GregorioMagno.LevanoHuaman@HS-FURTWANGEN.DE&gt;&#x0A;Christian Ganzmann 		&lt;christian.ganzmann@HS-FURTWANGEN.DE&gt;&#x0A;Carmen Probst 			&lt;carmen.probst@hs-furtwangen.de&gt;&#x0A;Sebastian Hagedorn 		&lt;sh@sernet.de&gt;&#x0A;Johannes Stillig 			&lt;js@sernet.de&gt;&#x0A;Christian Eschenlohr 		&lt;christian.eschenlohr@leoni.com&gt;&#x0A;Benjamin Weißenfels         &lt;bw@sernet.de&gt;&#x0A;Joachim Seifert				&lt;Joachim.Seifert@rbt-nbg.de&gt;&#x0A;Moritz Reiter         &lt;mr@sernet.de&gt;&#x0A;Alexander von Ossowski, &lt;avo@it-infosec.de&gt;&#x0A;&#x0A;Artwork:&#x0A;Blackbit						www.blackbit.de&#x0A;Icons by Axialis Team		    http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North					&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder					www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten."/>
+               value="SerNet verinice 1.13.0 - Codename &apos;Sylt&apos;&#x0A;&#x0A;(c) SerNet Service Network GmbH and others&#x0A;1996-2016&#x0A;&#x0A;Contact the authors:&#x0A;verinice@sernet.de&#x0A;&#x0A;or&#x0A;&#x0A;Visit our homepage:&#x0A;http://www.verinice.com/en&#x0A;&#x0A;Contributors:&#x0A;Alexander Koderman 		&lt;ak@sernet.de&gt;&#x0A;Anne Hanekop 			&lt;ah@sernet.de&gt;&#x0A;Marek Seeger			&lt;ms@sernet.de&gt;&#x0A;Andreas Becker			&lt;andreas.r.becker@ruhr-uni-bochum.de&gt;&#x0A;Robert Schuster			&lt;r.schuster@tarent.de&gt;&#x0A;Daniel Murygin			&lt;dm@sernet.de&gt;&#x0A;Sebastian Engel 		&lt;s.engel@tarent.de&gt;&#x0A;Markus Joos				&lt;markus.joos@t-online.de&gt;&#x0A;Gregorio Levano			&lt;GregorioMagno.LevanoHuaman@hs-furtwangen.de&gt;&#x0A;Christian Ganzmann 		&lt;christian.ganzmann@hs-furtwangen.de&gt;&#x0A;Carmen Probst 			&lt;carmen.probst@hs-furtwangen.de&gt;&#x0A;Sebastian Hagedorn 		&lt;sh@sernet.de&gt;&#x0A;Johannes Stillig 			&lt;js@sernet.de&gt;&#x0A;Christian Eschenlohr 		&lt;christian.eschenlohr@leoni.com&gt;&#x0A;Julia Haas  	&lt;jh@sernet.de&gt;&#x0A;Sirin Torun  	&lt;st@sernet.de&gt;&#x0A;Benjamin Weißenfels         &lt;bw@sernet.de&gt;&#x0A;Stanislav Strigunov  	&lt;sstrigunov@sernet.de&gt;&#x0A;Joachim Seifert				&lt;Joachim.Seifert@rbt-nbg.de&gt;&#x0A;Moritz Reiter         &lt;mr@sernet.de&gt;&#x0A;Alexander von Ossowski &lt;avo@it-infosec.de&gt;&#x0A;Ruth Motza         &lt;rm@sernet.de&gt;&#x0A;Viktor Schmidt         &lt;vschmidt@ckc.de&gt;&#x0A;Tatjana Anisow         &lt;ta@sernet.de&gt;&#x0A;Michael Flürenbrock         &lt;mf@sernet.de&gt;&#x0A;&#x0A;&#x0A;Artwork:&#x0A;Blackbit						www.blackbit.de&#x0A;Icons by Axialis Team		    http://www.axialis.com&#x0A;Icons by Yusuke Kamiyamane      http://p.yusukekamiyamane.com&#x0A;Icons by FAMFAMFAM              http://www.famfamfam.com&#x0A;Joseph North					&lt;north@sublink.ca&gt;&#x0A;Agentur Roeder					www.agentur-roeder.de&#x0A;&#x0A;&#x0A;This program comes with ABSOLUTELY NO WARRANTY.&#x0A;This is free software, and you are welcome to redistribute it under certain conditions.&#x0A;Verinice is licensed to you under the conditions of the GPLv3, the Apache license, the Eclipse Public License and others.&#x0A;See the LICENSE.txt contained in the program folder, the verinice Plugin-Details in the help menu and the copyright and license header in each source file for details.&#x0A;&#x0A;VDA Information Security Assessment&#x0A;(c) Arbeitskreis Informationsschutz des Verband der Automobilindustrie e. V. (VDA)&#x0A;Lizenz: http://creativecommons.org/licenses/by-nd/3.0/de/&#x0A;VDA und das VDA Logo sind eingetragene Markenzeichen des Verband der Automobilindustrie e. V. (VDA), die zur Nutzung in verinice lizenziert sind. Alle Rechte vorbehalten. "/>
          <property
                name="windowImages"
                value="verinice_icons/v-16.png,verinice_icons/v-32.png,verinice_icons/v-48.png,verinice_icons/v-64.png,verinice_icons/v-128.png"/>
@@ -757,10 +776,11 @@
             id="sernet.gs.ui.rcp.main.auditreport"
             objectClass="sernet.verinice.model.iso27k.Audit">
          <action
-               class="sernet.gs.ui.rcp.main.actions.AuditReportAction"
+               class="sernet.verinice.report.actions.AuditReportAction"
+               
                enablesFor="+"
                icon="icons/report.png"
-               id="sernet.gs.ui.rcp.main.actions.AuditReportAction.action"
+               id="sernet.verinice.report.actions.AuditReportAction.action"
                label="%action.label.27"
                menubarPath="special"
                style="push"
@@ -1217,6 +1237,28 @@
                label="%command.label.duedate"
                tooltip="%Assign a person for this task"/>  
         </menuContribution>
+        
+        <menuContribution
+		  locationURI="menu:file?after=sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap">
+			<menu id="queryBuilder"
+			    label="%reportQueryBuilder.name">
+			    <command commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler"
+                  label="%reportQueryBuilder.create"
+                  style="push"
+                  tooltip="%reportQueryBuilder.create.tt">
+            	</command>
+            	<command commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler"
+                  label="%reportQueryBuilder.open"
+                  style="push"
+                  tooltip="%reportQueryBuilder.open.tt">
+            	</command>
+            	<command commandId="sernet.verinice.rcp.linktable.ExportLinkTableHandler"
+                  label="%reportQueryBuilder.run"
+                  style="push"
+                  tooltip="%reportQueryBuilder.run.tt">
+            	</command>
+			</menu>
+		</menuContribution>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -1239,6 +1281,12 @@
             id="sernet.gs.ui.rcp.main.bsi.editors.attachmenteditor"
             name="%editor.name.1">
       </editor>
+      <editor
+            class="sernet.verinice.rcp.linktable.LinkTableEditor"
+            default="false"
+            icon="icons/document-table.png"
+            id="sernet.verinice.rcp.linktable.LinkTableEditor"
+            name="LInk table editor"/>
    </extension>
    <extension
          point="org.eclipse.ui.preferencePages">
@@ -1616,6 +1664,22 @@
 	            </with>
 	         </and>
          </activeWhen>
+         
+         <enabledWhen>
+            	<with variable="selection">
+	                <iterate operator="and">
+	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.bsi.ImportBsiGroup"/>
+	                    </not>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup"/>
+	                    </not>
+	                </iterate>
+            	</with>
+		 </enabledWhen>
+         
+         
       </handler>
       <handler class="sernet.verinice.iso27k.rcp.action.CopyWithLinksHandler"
             commandId="sernet.verinice.iso27k.rcp.commands.copywithlinks">
@@ -1632,6 +1696,20 @@
 	            </with>
 	         </and>
          </activeWhen>
+         
+         <enabledWhen>
+            	<with variable="selection">
+	                <iterate operator="and">
+	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.bsi.ImportBsiGroup"/>
+	                    </not>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup"/>
+	                    </not>
+	                </iterate>
+            	</with>
+		 </enabledWhen>
       </handler>
       <handler class="sernet.verinice.iso27k.rcp.action.CutHandler"
             commandId="org.eclipse.ui.edit.cut">
@@ -1648,6 +1726,19 @@
 	            </with>
 	         </and>
          </activeWhen>
+         <enabledWhen>
+            	<with variable="selection">
+	                <iterate operator="and">
+	                    <instanceof value="sernet.verinice.model.common.CnATreeElement"/>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.bsi.ImportBsiGroup"/>
+	                    </not>
+	                    <not>
+	                    	<instanceof value="sernet.verinice.model.iso27k.ImportIsoGroup"/>
+	                    </not>
+	                </iterate>
+            	</with>
+		 </enabledWhen>
       </handler>
       <handler class="sernet.gs.ui.rcp.main.bsi.actions.DeleteHandler"
             commandId="org.eclipse.ui.edit.delete">
@@ -1810,6 +1901,12 @@
         	</with>
 		 </enabledWhen>
       </handler>
+      <handler class="sernet.verinice.rcp.linktable.handlers.OpenLinkTableHandler"
+          commandId="sernet.verinice.rcp.linktable.OpenLinkTableHandler" />
+      <handler class="sernet.verinice.rcp.linktable.handlers.ExportLinkTableHandler"
+          commandId="sernet.verinice.rcp.linktable.ExportLinkTableHandler" />
+      <handler class="sernet.verinice.rcp.linktable.handlers.CreateLinkTableHandler"
+          commandId="sernet.verinice.rcp.linktable.CreateLinkTableHandler" />
    </extension>
    <extension point="org.eclipse.core.expressions.propertyTesters">
 	   <propertyTester
@@ -1952,6 +2049,18 @@
              state="true">
           <enablement>
             <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
+          </enablement>
+       </decorator>
+       <decorator
+             adaptable="true"
+             class="sernet.verinice.rcp.linktable.ValidationDecorator"
+             id="sernet.verinice.rcp.linktable.ValidationDecorator"
+             label="ValidationDecorator"
+             lightweight="true"
+             location="BOTTOM_LEFT"
+             state="true">
+          <enablement>
+            <objectClass name="sernet.verinice.rcp.linktable.LinkTableEditor"/>
           </enablement>
        </decorator>
    </extension>

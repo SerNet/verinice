@@ -90,7 +90,7 @@ public class TaskBean {
         if(selectedAudit!=null) {
             parameter.setAuditUuid(selectedAudit.getUuid());
         }
-        taskList = getTaskService().getTaskList(parameter);
+        taskList = getTaskService().getCurrentUserTaskList();
         Collections.sort(taskList);
         for (ITask task : taskList) {
             String controlTitle = task.getElementTitle();

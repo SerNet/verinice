@@ -48,6 +48,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.sync.IVeriniceArchive;
 import sernet.verinice.service.sync.PureXml;
 import sernet.verinice.service.sync.VeriniceArchive;
+import sernet.verinice.service.sync.VnaSchemaVersion;
 import de.sernet.sync.sync.SyncRequest;
 
 @SuppressWarnings("serial")
@@ -80,6 +81,12 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
     private Set<CnATreeElement> elementSet = null;
     
     private transient IVeriniceArchive veriniceArchive = null;
+
+    private Status status = Status.OK;
+
+    private Exception errorCause;
+
+    public enum Status {OK, FAILED};
 
     /**
      * Creates an instance of the SyncCommand where the {@link SyncRequest}
@@ -160,15 +167,27 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
                 fileData = null;
             }
             
+            VnaSchemaVersion vnaSchemaVersion = getCommandService().getVnaSchemaVersion();
+
+            if (!veriniceArchive.isCompatible(vnaSchemaVersion)){
+                status = Status.FAILED;
+                errorCause = veriniceArchive.getErrorCause();
+                return;
+            }
+                        
             doInsertAndUpdate();
             doDelete();
             
             logRuntime(start);
         } catch (RuntimeException e) {
+            status = Status.FAILED;
+            errorCause = e;
             log.error("Error while importing", e);
             errors.add("Insert/Update failed.");
             throw e;
         } catch (Exception e) {
+            status = Status.FAILED;
+            errorCause = e;
             log.error("Error while importing", e);
             errors.add("Insert/Update failed.");
             throw new RuntimeCommandException(e);
@@ -176,8 +195,8 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
         finally {
             clear();
         }
-
     }
+  
 
     private void logRuntime(long start) {
         if (getLog().isInfoEnabled()) {
@@ -332,4 +351,20 @@ public class SyncCommand extends ChangeLoggingCommand implements IChangeLoggingC
         }
     }
 
+    /**
+     * If import is aborted or an exception occurred this is set to failed.
+     *
+     */
+    public Status getStatus() {
+        return status;
+    }
+
+    /**
+     * Encapsulates exception.
+     *
+     * @return Returns null if {@link #getStatus()} returns OK.
+     */
+    public Exception getErrorCause() {
+        return errorCause;
+    }
 }

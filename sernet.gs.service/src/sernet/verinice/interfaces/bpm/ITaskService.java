@@ -52,15 +52,12 @@ public interface ITaskService {
      * 
      * @return the task list for current user
      */
-    List<ITask> getTaskList();
+    List<ITask> getCurrentUserTaskList();
     
     /**
      * Returns tasks created after a date for user with name username.
      * If no tasks exists an empty list is returned.
      * 
-     * @param username a username
-     * @param since Tasks created after this date are returned, if null all tasks are returned
-     * @return task list for an user
      */
     List<ITask> getTaskList(ITaskParameter parameter);
     

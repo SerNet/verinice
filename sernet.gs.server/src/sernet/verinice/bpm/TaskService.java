@@ -144,8 +144,8 @@ public class TaskService implements ITaskService {
      * @see sernet.verinice.interfaces.bpm.ITaskService#getTaskList()
      */
     @Override
-    public List<ITask> getTaskList() {
-        return getTaskList(new TaskParameter(getAuthService().getUsername()));
+    public List<ITask> getCurrentUserTaskList() {
+        return doGetTaskList(new TaskParameter(getAuthService().getUsername()));
     }
     
     /**
@@ -166,7 +166,11 @@ public class TaskService implements ITaskService {
         }
         ServerInitializer.inheritVeriniceContextState();
         
-        // Workaround for null index column (JBPM4_EXECUTION.PARENT_IDX_) for collection: org.jbpm.pvm.internal.model.ExecutionImpl.executions
+        return doGetTaskList(parameter);
+    }
+
+	private List<ITask> doGetTaskList(ITaskParameter parameter) {
+		// Workaround for null index column (JBPM4_EXECUTION.PARENT_IDX_) for collection: org.jbpm.pvm.internal.model.ExecutionImpl.executions
         getElementDao().executeCallback(ParentIdxFixCallback.getInstance());
         
         if(!parameter.getAllUser() && parameter.getUsername()==null) {
@@ -193,7 +197,7 @@ public class TaskService implements ITaskService {
             log.debug("getTaskList finished"); //$NON-NLS-1$
         }
         return taskList;
-    }
+	}
 
     private List<ITask> populateTaskList(List<?> jbpmTaskList) {
         List<ITask> taskList;
@@ -639,7 +643,9 @@ public class TaskService implements ITaskService {
     private void completeTask(Task task, String outcomeId, Map<String, Object> parameter) {     
         ICompleteServerHandler handler = getHandler(task.getName(),outcomeId);
         if(handler!=null) {
+            handler.setTaskParameter(getVariables(task.getId()));
             handler.execute(task.getId(),parameter);
+            setVariables(task.getId(), handler.getTaskParameter()); 
         }
         getTaskService().completeTask(task.getId(),outcomeId);
     }

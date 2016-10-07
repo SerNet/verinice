@@ -6,11 +6,11 @@
       provider-name="sernet.de"
       plugin="sernet.gs.ui.rcp.main">
 
-   <description url="http://verinice.org">
+   <description url="http://verinice.com">
       The Verinice Open Source ISMS Tool.
    </description>
 
-   <copyright url="http://www.verinice.org/">
+   <copyright url="http://www.verinice.com/">
       Copyright 1997 - 2016 SerNet GmbH and others.
    </copyright>
 
@@ -2558,14 +2558,12 @@ Library.
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
    <plugin
          id="org.apache.commons.collections"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
-
    <plugin
          id="org.apache.commons.httpclient"
          download-size="0"
@@ -2843,5 +2841,12 @@ Library.
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="com.google.gson"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>

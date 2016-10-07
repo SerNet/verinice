@@ -115,7 +115,7 @@ public class BSIMassnahmenModel {
             LOG.debug("Cache dir is: " + cacheDir);
             LOG.debug("Grundschutzkatalog isFromZipFile=" + fromZipFile);
         }
-              
+
         // did user really change the path to file?
         if (!(previouslyReadFile.equals(gsPath) && previouslyReadFileDS.equals(dsPath))) {
             previouslyReadFile = gsPath;
@@ -141,17 +141,18 @@ public class BSIMassnahmenModel {
                 scrape = new GSScraper(gsSource, new PatternGSHB2005_2006());
             }
 
-            scrape.setCacheDir(cacheDir); //$NON-NLS-1$
+            scrape.setCacheDir(cacheDir); // $NON-NLS-1$
 
             Logger.getLogger(BSIMassnahmenModel.class).debug("Setting GS-Cache to " + scrape.getCacheDir()); //$NON-NLS-1$
             mon.beginTask(Messages.BSIMassnahmenModel_3, maxTaskSteps);
             List<Baustein> alleBst = new ArrayList<Baustein>();
 
-            processBausteinLayer(mon, alleBst, "b01", 0);
-            processBausteinLayer(mon, alleBst, "b02", 1);
-            processBausteinLayer(mon, alleBst, "b03", 2);
-            processBausteinLayer(mon, alleBst, "b04", 3);
-            processBausteinLayer(mon, alleBst, "b05", 4);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B01, 0);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B02, 1);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B03, 2);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B04, 3);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B05, 4);
+            processBausteinLayer(mon, alleBst, GSScraper.CATALOG_MODULE_B00, 5);
 
             this.language = scrape.getLanguage();
 
@@ -171,7 +172,7 @@ public class BSIMassnahmenModel {
             try {
                 ZIPGSSource dsSource = new ZIPGSSource(dsPath);
                 dsScrape = new GSScraper(dsSource, new PatternBfDI2008());
-                dsScrape.setCacheDir(cacheDir); //$NON-NLS-1$
+                dsScrape.setCacheDir(cacheDir); // $NON-NLS-1$
 
                 Baustein dsBaustein = scrapeDatenschutzBaustein();
 
@@ -289,7 +290,7 @@ public class BSIMassnahmenModel {
     public String getMassnahmeHtml(String url, String stand) throws GSServiceException {
         final int utf8NoBreakSpace = 160;
         try {
-            InputStreamReader read = new InputStreamReader(getMassnahme(url, stand), VeriniceCharset.CHARSET_UTF_8); //$NON-NLS-1$
+            InputStreamReader read = new InputStreamReader(getMassnahme(url, stand), VeriniceCharset.CHARSET_UTF_8); // $NON-NLS-1$
             BufferedReader buffRead = new BufferedReader(read);
             StringBuilder b = new StringBuilder();
             String line;

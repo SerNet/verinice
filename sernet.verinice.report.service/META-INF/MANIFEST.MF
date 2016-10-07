@@ -32,11 +32,11 @@ Require-Bundle: com.ibm.icu;bundle-version="4.4.2",
  org.eclipse.birt.report.engine.emitter.wpml,
  org.eclipse.birt.report.engine.emitter.wpml.config,
  com.springsource.org.apache.commons.io;bundle-version="1.4.0",
- com.springsource.org.apache.commons.lang;bundle-version="2.4.0"
+ com.springsource.org.apache.commons.lang;bundle-version="2.4.0",
+ com.springsource.org.junit;bundle-version="4.4.0"
 Bundle-Vendor: SerNet
 Export-Package: sernet.verinice.report.service.commands,
- sernet.verinice.report.service.impl,
- sernet.verinice.report.service.impl.dynamictable
+ sernet.verinice.report.service.impl
 Service-Component: OSGI-INF/component.xml
 Import-Package: net.sf.ehcache,
  org.jfree.chart

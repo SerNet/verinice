@@ -41,8 +41,6 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerComparator;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.FocusEvent;
-import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -158,20 +156,6 @@ public class ProfileDialog extends TitleAreaDialog {
         gridData = new GridData(GridData.GRAB_HORIZONTAL);
         gridData.minimumWidth = minWidthGridLayout;
         textName.setLayoutData(gridData);
-        textName.addFocusListener(new FocusListener() {
-            
-            @Override
-            public void focusLost(FocusEvent e) {
-                if(ProfileDialog.this.profile!=null) {
-                    ProfileDialog.this.profile.setName(textName.getText());
-                }
-            }
-            
-            @Override
-            public void focusGained(FocusEvent e) {
-                // nothing to do
-            }
-        });
         
         Label labelTranslated = new Label(comboComposite, SWT.WRAP);
         labelTranslated.setText(Messages.ProfileDialog_4);
@@ -264,7 +248,6 @@ public class ProfileDialog extends TitleAreaDialog {
         } else {
             this.profile = new Profile();
             selectedActions = profile.getAction();
-            auth.getProfiles().getProfile().add(this.profile);
         }
         setUnselected();
         table.setInput(unselectedActions);
@@ -298,20 +281,37 @@ public class ProfileDialog extends TitleAreaDialog {
     @Override
     protected void okPressed() {
         if (validateInput()) {
-            try {
-                if (!this.profile.getName().equals(this.profileName)) {
-                    updateProfileRefs();
-                }
-                getRightService().updateConfiguration(auth);
-                super.okPressed();
-            } catch (Exception e) {
-                final String message = "Error while saving profiles.";
-                LOG.error(message, e);
-                MessageDialog.openError(this.getShell(), "Error", message);
-            }
+            saveProfile();
         } else {
             showValidationWarning();
         }
+    }
+
+
+    private void saveProfile() {
+        try {
+            if (this.profile != null) {
+                this.profile.setName(textName.getText());
+            }
+            if (isNewProfile()) {
+                auth.getProfiles().getProfile().add(this.profile);
+            } else {
+                if (!this.profile.getName().equals(this.profileName)) {
+                    updateProfileRefs();
+                }
+            }
+            getRightService().updateConfiguration(auth);
+            super.okPressed();
+        } catch (Exception e) {
+            final String message = "Error while saving profiles.";
+            LOG.error(message, e);
+            MessageDialog.openError(this.getShell(), "Error", message);
+        }
+    }
+
+    private boolean isNewProfile() {
+
+        return profileName == null;
     }
 
     private void showValidationWarning() {
@@ -338,14 +338,14 @@ public class ProfileDialog extends TitleAreaDialog {
      */
     @Override
     protected void cancelPressed() {
-        if(this.profile!=null) {
+        if (this.profile != null && profileNameOld != null) {
             this.profile.setName(profileNameOld);
             this.profile.getAction().clear();
             for (Action action : selectedActionsOld) {
                 this.profile.getAction().add(action);
             }
         }
-        super.okPressed();
+        super.cancelPressed();
     }
 
     /**

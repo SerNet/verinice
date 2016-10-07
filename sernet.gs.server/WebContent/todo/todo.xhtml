@@ -324,13 +324,13 @@
 								    	<f:convertDateTime dateStyle="short" type="date" timeZone="#{toDo.timeZone}" />
 								    </h:outputText>	
 						        </p:column>	
-						        <p:column headerText="#{msg['todo.responsible']}" sortBy="#{item.umsetzungDurch}" style="width:95px">
+						        <p:column headerText="#{msg['todo.responsible']}" sortBy="#{item.umsetzungDurch}" style="width:105px">
 									<h:outputText value="#{item.umsetzungDurch}"/>	
 						        </p:column>
-						        <p:column headerText="#{msg['todo.level']}" sortBy="#{item.stufe}" style="width:35px">
+						        <p:column headerText="#{msg['todo.level']}" sortBy="#{item.stufe}" style="width:55px">
 									<h:outputText value="#{item.stufe}"/>	
 						        </p:column>
-						        <p:column headerText="#{msg['todo.asset']}" sortBy="#{item.parentTitle}" style="width:160px">
+						        <p:column headerText="#{msg['todo.asset']}" sortBy="#{item.parentTitle}" style="width:120px">
 									<h:outputText value="#{item.parentTitle}"/>	
 						        </p:column>
 						        <p:column headerText="#{msg['todo.title']}" sortBy="#{item.title}" style="width:260px">

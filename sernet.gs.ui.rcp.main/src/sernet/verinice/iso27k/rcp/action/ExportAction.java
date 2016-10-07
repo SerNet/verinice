@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -185,7 +186,11 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
                 exportCommand.setExportRiskAnalysis(exportRiskAnalysis);  
                 exportCommand = ServiceFactory.lookupCommandService().executeCommand(exportCommand);
         		if(exportCommand.getResult()!=null) {
-        		    FileUtils.writeByteArrayToFile(new File(filePath), encrypt(exportCommand.getResult()));
+                    String salt = RandomStringUtils.random(IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, true, true);
+                    byte[] saltBytes = salt.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING);
+        		    byte[] cypherTextBytes = encrypt(exportCommand.getResult(), saltBytes);
+        		    
+                    FileUtils.writeByteArrayToFile(new File(filePath), cypherTextBytes);
         		}
         		updateModel(exportCommand.getChangedElements());
         	} catch (Exception e) {
@@ -229,19 +234,22 @@ public class ExportAction extends RightsEnabledActionDelegate implements IViewAc
         }
     }
 	
-    private byte[] encrypt(byte[] result) throws CertificateException, EncryptionException, IOException {
+    private byte[] encrypt(byte[] result, byte[] salt) throws CertificateException, EncryptionException, IOException {
         IEncryptionService service = ServiceComponent.getDefault().getEncryptionService();
-        byte[] returnResult;
+        byte[] cypherTextBytes;
         if (keyAlias != null) {
-        	returnResult = service.encrypt(result, keyAlias);
+            cypherTextBytes = service.encrypt(result, keyAlias);
         } else if (password!=null) {
-            returnResult = service.encrypt(result, password);
+            // Encrypt message
+            cypherTextBytes = service.encrypt(result, password, salt);
+
         } else if (x509CertificateFile!=null) {
-            returnResult = service.encrypt(result, x509CertificateFile);
+            cypherTextBytes = service.encrypt(result, x509CertificateFile);
         } else {
-            returnResult = result;
-        }      
-        return returnResult;
+            cypherTextBytes = result;
+        }
+
+        return cypherTextBytes;
     }
 
     public OutputStream getExportOutputStream(String path, char[] password, File x509CertificateFile) {

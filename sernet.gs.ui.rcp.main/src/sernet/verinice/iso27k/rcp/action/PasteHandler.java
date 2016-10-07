@@ -269,7 +269,10 @@ public class PasteHandler extends AbstractHandler {
         IProgressRunnable operation = null;
         if(copyList!=null && !copyList.isEmpty()) {
             if(copyList.get(0) instanceof CnATreeElement) { 
-                operation = new CopyTreeElements(target,copyList, copyLinks);  
+                operation = new CopyTreeElements(target,copyList, copyLinks);
+                ((CopyTreeElements)operation).setCopyAttachments(
+                        Activator.getDefault().getPreferenceStore().getBoolean(
+                                PreferenceConstants.COPY_ATTACHMENTS_WITH_OBJECTS));
             }
             if(copyList.get(0) instanceof Baustein) {
                 operation = new CopyBausteine(target,copyList);

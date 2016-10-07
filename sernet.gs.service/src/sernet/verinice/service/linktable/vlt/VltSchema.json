@@ -1,0 +1,40 @@
+{
+  "title": "verinice Link Table configuration",
+  "type": "object",
+  "properties": {
+    "name": {
+      "id": "name",
+      "type": "string",
+      "description": "The name of the Link Table"
+    },
+    "scopeIds": {
+      "id": "scopeIds",
+      "type": "array",
+      "description": "The scope ids of the data for this Link Table (optional)",
+      "items": {
+        "type": "integer"
+      }
+    },
+    "columnPaths": {
+      "id": "columnPaths",
+      "type": "array",
+      "description": "At least one VQL column path",
+      "items": {
+        "type": "string"
+      }
+      "minItems": 1
+    },
+    "relationIds": {
+      "id": "relationIds",
+      "type": "array",
+      "description": "The ids of relations which are loaded for this Link Table",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "name"
+    "columnPaths"
+  ]
+}

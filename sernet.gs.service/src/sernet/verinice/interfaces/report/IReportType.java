@@ -18,6 +18,7 @@
 package sernet.verinice.interfaces.report;
 
 import sernet.verinice.model.report.ReportTemplateMetaData;
+import sernet.verinice.security.report.ReportSecurityException;
 
 
 public interface IReportType {
@@ -62,7 +63,7 @@ public interface IReportType {
 	
 	void createReport(IReportOptions reportOptions);
 	
-	void createReport(ReportTemplateMetaData metadata);
+	void createReport(ReportTemplateMetaData metadata) throws ReportSecurityException;
 	
 	/**
 	 * Return the selected report file or empty string.

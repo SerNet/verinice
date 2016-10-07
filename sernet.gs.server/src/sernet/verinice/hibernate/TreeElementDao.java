@@ -38,7 +38,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.InheritLogger;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.search.IElementSearchDao;
-import sernet.verinice.search.JsonBuilder;
 
 public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, ID> implements IBaseDao<T, ID> {
 
@@ -78,7 +77,7 @@ public class TreeElementDao<T, ID extends Serializable> extends HibernateDao<T, 
      * TreeElementDao. Since this is the only possible entry point for updates
      * its an appropriate way to go.
      * 
-     * see http://zimbra:81/cgi-bin/bugzilla/show_bug.cgi?id=5
+     * see http://bob.sernet.private:8180/browse/VN-1
      */
 
     /*

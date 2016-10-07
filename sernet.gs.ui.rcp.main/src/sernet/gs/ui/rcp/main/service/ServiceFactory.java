@@ -28,6 +28,7 @@ import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IReportDepositService;
 import sernet.verinice.interfaces.IReportHQLService;
+import sernet.verinice.interfaces.IRightsServiceClient;
 import sernet.verinice.interfaces.bpm.IGsmService;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IIsaControlFlowService;
@@ -36,6 +37,7 @@ import sernet.verinice.interfaces.bpm.IProcessServiceIsa;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.interfaces.search.ISearchService;
 import sernet.verinice.interfaces.validation.IValidationService;
+import sernet.verinice.service.model.IObjectModelService;
 
 @SuppressWarnings("restriction")
 public abstract class ServiceFactory {
@@ -142,10 +144,14 @@ public abstract class ServiceFactory {
 		}
 		return permissionHandlingNeeded;
 	}
-	
-	public static IValidationService lookupValidationService(){
-	    return (IValidationService)VeriniceContext.get(VeriniceContext.VALIDATION_SERVICE);
-	}
+
+    public static IValidationService lookupValidationService() {
+        return (IValidationService) VeriniceContext.get(VeriniceContext.VALIDATION_SERVICE);
+    }
+
+    public static IObjectModelService lookupObjectModelService() {
+        return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
+    }
 	
 	public static IReportDepositService lookupReportDepositService(){
 	    return (IReportDepositService)VeriniceContext.get(VeriniceContext.REPORT_DEPOSIT_SERVICE);
@@ -159,6 +165,10 @@ public abstract class ServiceFactory {
 	    return (ISearchService)VeriniceContext.get(VeriniceContext.SEARCH_SERVICE);
 	}
 	
+	public static IRightsServiceClient lookupRightsServiceClient(){
+		return (IRightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+	}
+
 	/**
 	 * Retrieves the work objects that have been configured for the client.
 	 * 

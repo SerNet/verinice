@@ -6,18 +6,17 @@ import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 import org.apache.log4j.Logger;
-import org.eclipse.core.internal.runtime.Activator;
 import org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor;
 
 import sernet.verinice.service.auth.KerberosStatusService;
 
-abstract public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
+public abstract class AbstractExecuter extends CommonsHttpInvokerRequestExecutor {
 
     public static final int DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS = 1000;
-    public static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = (30 * 60 * 1000);
+    public static final int DEFAULT_READ_TIMEOUT_MILLISECONDS = 30 * 60 * 1000;
 
-    public int readTimeout = DEFAULT_READ_TIMEOUT_MILLISECONDS;
-    public int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS;
+    private int readTimeout = DEFAULT_READ_TIMEOUT_MILLISECONDS;
+    private int connectionTimeout = DEFAULT_CONNECTION_TIMEOUT_MILLISECONDS;
 
     public static final int MAX_TOTAL_CONNECTIONS = 20;
     public static final int MAX_CONNECTIONS_PER_HOST = 5;
@@ -26,7 +25,23 @@ abstract public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor
 
     public AbstractExecuter() {
         super();
+        configureConnectionManager();
+        configureProxy();
+    }
+    
+    /**
+     * @param connectionTimeout The time to wait for a new connection
+     * @param readTimeout The time to wait for the result of a connection
+     */
+    public AbstractExecuter(int connectionTimeout, int readTimeout) {
+        super();
+        setConnectionTimeout(connectionTimeout);
+        setReadTimeout(readTimeout);
+        configureConnectionManager();
+        configureProxy();
+    }
 
+    private void configureConnectionManager() {
         MultiThreadedHttpConnectionManager connectionManager = new MultiThreadedHttpConnectionManager();
 
         connectionManager.getParams().setMaxConnectionsPerHost(HostConfiguration.ANY_HOST_CONFIGURATION, MAX_CONNECTIONS_PER_HOST);
@@ -37,9 +52,10 @@ abstract public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor
         connectionManager.getParams().setSoTimeout(getReadTimeout());
 
         setHttpClient(new HttpClient(connectionManager));
-
-        configureProxy();
-
+        
+        if (LOG.isInfoEnabled()) {
+            LOG.info("HttpClient created, connection timeout (ms): " + getConnectionTimeout() + ", read timeout (ms): " + getReadTimeout() );
+        }
     }
 
     /**
@@ -78,6 +94,11 @@ abstract public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor
         return readTimeout;
     }
 
+    /**
+     * @param readTimeout The time to wait for the result of a connection
+     * @see org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor#setReadTimeout(int)
+     */
+    @Override
     public void setReadTimeout(int readTimeout) {
         this.readTimeout = readTimeout;
     }
@@ -86,6 +107,9 @@ abstract public class AbstractExecuter extends CommonsHttpInvokerRequestExecutor
         return connectionTimeout;
     }
 
+    /**
+     * @param connectionTimeout The time to wait for a new connection
+     */
     public void setConnectionTimeout(int connectionTimeout) {
         this.connectionTimeout = connectionTimeout;
     }

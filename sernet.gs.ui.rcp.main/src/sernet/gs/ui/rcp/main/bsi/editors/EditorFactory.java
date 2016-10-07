@@ -23,7 +23,9 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -87,56 +89,63 @@ import sernet.verinice.model.iso27k.ThreatGroup;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.rcp.linktable.LinkTableEditor;
+import sernet.verinice.rcp.linktable.LinkTableEditorInput;
+import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
 /**
- * This class is a singleton and maps editors for different ressources and either opens a new
- * editor or looks them up in the EditorRegistry and shows an already open
- * editor for an object
+ * This class is a singleton and maps editors for different ressources and
+ * either opens a new editor or looks them up in the EditorRegistry and shows an
+ * already open editor for an object
  * 
  * @author koderman[at]sernet[dot]de
  * @author dm[at]sernet[dot]de
  */
 public final class EditorFactory {
-	
-	private final Logger log = Logger.getLogger(EditorFactory.class);
-	
-	private static EditorFactory instance;
-	private static Map<Class<?>, IEditorTypeFactory> typedFactories = new HashMap<>();
 
-	private interface IEditorTypeFactory {
-		void openEditorFor(Object o) throws PartInitException;
-	}
+    private final Logger log = Logger.getLogger(EditorFactory.class);
 
-	/**
-	 * Private singleton constructor
-	 */
-	private EditorFactory() {
-		registerCnaTreeElements();
-		registerGefaehrdung();
-		registerTodoViewItem();	
-		registerAttachment();		
-		registerNote();
-	}
-	
-	/**
-	 * @return The singleton instzance of this class
-	 */
-	public static EditorFactory getInstance() {
-        if (instance == null){
+    private static EditorFactory instance;
+    private static Map<Class<?>, IEditorTypeFactory> typedFactories = new HashMap<>();
+
+    private IEditorTypeFactory linkTableEditorFactory = new LinkTableEditorFactory();
+    
+    private interface IEditorTypeFactory {
+        void openEditorFor(Object o) throws PartInitException;
+    }
+
+    /**
+     * Private singleton constructor
+     */
+    private EditorFactory() {
+        registerCnaTreeElements();
+        registerGefaehrdung();
+        registerTodoViewItem();
+        registerAttachment();
+        registerNote();
+        typedFactories.put(LinkTableEditorInput.class, linkTableEditorFactory);
+    }
+
+    /**
+     * @return The singleton instzance of this class
+     */
+    public static EditorFactory getInstance() {
+        if (instance == null) {
             instance = new EditorFactory();
         }
         return instance;
     }
-	
-	/**
+
+    /**
      * Checks if an editor factory is registered for the given object type and
      * opens a new editor for it.
      * 
-     * @param o Object which is opened in the editor
+     * @param o
+     *            Object which is opened in the editor
      */
     public void openEditor(Object o) {
         IEditorTypeFactory factory = typedFactories.get(o.getClass());
-        if (factory!= null) {
+        if (factory != null) {
             try {
                 factory.openEditorFor(o);
             } catch (Exception e) {
@@ -150,65 +159,66 @@ public final class EditorFactory {
      * Checks if an editor factory is registered for the given object type and
      * opens a new editor for it. Also updates the object.
      * 
-     * @param o Object which is opened in the editor
+     * @param o
+     *            Object which is opened in the editor
      */
     public void updateAndOpenObject(Object o) {
-        if (o instanceof CnATreeElement) {
-            EditorFactory.getInstance().openEditor(o);
-        }
+        EditorFactory.getInstance().openEditor(o);
     }
 
     private void registerNote() {
         IEditorTypeFactory noteEditorFactory = new IEditorTypeFactory() {
-		    @Override
-			public void openEditorFor(Object o) throws PartInitException {
-				// replace element with new instance from DB:
-				Note selection = (Note) o;
-				NoteEditorInput input = new NoteEditorInput(selection);					
-				openEditor(String.valueOf(input.getId()), input, NoteEditor.EDITOR_ID);			
-			}			
-		};
-		typedFactories.put(Note.class, noteEditorFactory);
+            @Override
+            public void openEditorFor(Object o) throws PartInitException {
+                // replace element with new instance from DB:
+                Note selection = (Note) o;
+                NoteEditorInput input = new NoteEditorInput(selection);
+                openEditor(String.valueOf(input.getId()), input, NoteEditor.EDITOR_ID);
+            }
+        };
+        typedFactories.put(Note.class, noteEditorFactory);
     }
 
     private void registerAttachment() {
         IEditorTypeFactory attachmentEditorFactory = new IEditorTypeFactory() {
-		    @Override
-			public void openEditorFor(Object o) throws PartInitException {
-				Attachment attachment = (Attachment) o;
-				AttachmentEditorInput input = new AttachmentEditorInput(attachment);
-				openEditor(String.valueOf(input.getId()), input, AttachmentEditor.EDITOR_ID);			
-			}			
-		};
-		typedFactories.put(Attachment.class, attachmentEditorFactory);
+            @Override
+            public void openEditorFor(Object o) throws PartInitException {
+                Attachment attachment = (Attachment) o;
+                AttachmentEditorInput input = new AttachmentEditorInput(attachment);
+                openEditor(String.valueOf(input.getId()), input, AttachmentEditor.EDITOR_ID);
+            }
+        };
+        typedFactories.put(Attachment.class, attachmentEditorFactory);
     }
 
     private void registerTodoViewItem() {
         IEditorTypeFactory todoItemEditorFactory = new IEditorTypeFactory() {
-		    @Override
-		    public void openEditorFor(Object o) throws PartInitException {
-				// replace element with new instance from DB:
-				TodoViewItem selection = (TodoViewItem) o;
-				CnATreeElement element;
+            @Override
+            public void openEditorFor(Object o) throws PartInitException {
+                // replace element with new instance from DB:
+                TodoViewItem selection = (TodoViewItem) o;
+                CnATreeElement element;
                 try {
-                    element = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID, selection.getDbId());
-                    openEditor(element.getId(), new BSIElementEditorInput(element), BSIElementEditor.EDITOR_ID);
+                    element = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID,
+                            selection.getDbId());
+                    openEditor(element.getId(), new BSIElementEditorInput(element),
+                            BSIElementEditor.EDITOR_ID);
                 } catch (CommandException e) {
                     log.error("Error while opening editor.", e); //$NON-NLS-1$
                     ExceptionUtil.log(e, Messages.EditorFactory_2);
-                }								
-			}
-		};
-		typedFactories.put(TodoViewItem.class, todoItemEditorFactory);
+                }
+            }
+        };
+        typedFactories.put(TodoViewItem.class, todoItemEditorFactory);
     }
 
     private void registerGefaehrdung() {
         IEditorTypeFactory gefaehrdungsUmsetzungFactory = new IEditorTypeFactory() {
-		    @Override
+            @Override
             public void openEditorFor(Object o) throws PartInitException {
                 GefaehrdungsUmsetzung gefaehrdung = (GefaehrdungsUmsetzung) o;
                 String id;
-                if (gefaehrdung.getEntity() == null){
+                if (gefaehrdung.getEntity() == null) {
                     id = Entity.TITLE + gefaehrdung.getUuid();
                 } else {
                     id = gefaehrdung.getEntity().getId();
@@ -221,80 +231,100 @@ public final class EditorFactory {
 
     private void registerCnaTreeElements() {
         IEditorTypeFactory bsiEditorFactory = new IEditorTypeFactory() {
-		    @Override
-			public void openEditorFor(Object o) throws PartInitException  {			
-				BSIElementEditorInput input = new BSIElementEditorInput((CnATreeElement) o);
-				openEditor(input.getId(), input, BSIElementEditor.EDITOR_ID);			
-			}
-		};
-		typedFactories.put(ITVerbund.class, bsiEditorFactory);
-		typedFactories.put(Client.class, bsiEditorFactory);
-		typedFactories.put(SonstIT.class, bsiEditorFactory);
-		typedFactories.put(NetzKomponente.class, bsiEditorFactory);
-		typedFactories.put(TelefonKomponente.class, bsiEditorFactory);
-		typedFactories.put(Raum.class, bsiEditorFactory);
-		typedFactories.put(Server.class, bsiEditorFactory);
-		typedFactories.put(Person.class, bsiEditorFactory);
-		typedFactories.put(Gebaeude.class, bsiEditorFactory);
-		typedFactories.put(Anwendung.class, bsiEditorFactory);
-		typedFactories.put(BausteinUmsetzung.class, bsiEditorFactory);
-		typedFactories.put(MassnahmenUmsetzung.class, bsiEditorFactory);
-		typedFactories.put(RisikoMassnahmenUmsetzung.class, bsiEditorFactory);
-		typedFactories.put(Verarbeitungsangaben.class, bsiEditorFactory);
-		typedFactories.put(VerantwortlicheStelle.class, bsiEditorFactory);
-		typedFactories.put(Personengruppen.class, bsiEditorFactory);
-		typedFactories.put(Datenverarbeitung.class, bsiEditorFactory);
-		typedFactories.put(StellungnahmeDSB.class, bsiEditorFactory);
-		// ISO 27000 elements
-		typedFactories.put(Organization.class, bsiEditorFactory);
-		typedFactories.put(AssetGroup.class, bsiEditorFactory);
-		typedFactories.put(Asset.class, bsiEditorFactory);
-		typedFactories.put(PersonGroup.class, bsiEditorFactory);
-		typedFactories.put(PersonIso.class, bsiEditorFactory);
-		typedFactories.put(AuditGroup.class, bsiEditorFactory);
-		typedFactories.put(Audit.class, bsiEditorFactory);
-		typedFactories.put(ControlGroup.class, bsiEditorFactory);
-		typedFactories.put(Control.class, bsiEditorFactory);
-		typedFactories.put(ExceptionGroup.class, bsiEditorFactory);
-		typedFactories.put(sernet.verinice.model.iso27k.Exception.class, bsiEditorFactory);
-		typedFactories.put(RequirementGroup.class, bsiEditorFactory);
-		typedFactories.put(Requirement.class, bsiEditorFactory);
-		typedFactories.put(IncidentGroup.class, bsiEditorFactory);
-		typedFactories.put(Incident.class, bsiEditorFactory);
-		typedFactories.put(IncidentScenarioGroup.class, bsiEditorFactory);
-		typedFactories.put(IncidentScenario.class, bsiEditorFactory);
-		typedFactories.put(ResponseGroup.class, bsiEditorFactory);
-		typedFactories.put(Response.class, bsiEditorFactory);
-		typedFactories.put(ThreatGroup.class, bsiEditorFactory);
-		typedFactories.put(Threat.class, bsiEditorFactory);
-		typedFactories.put(VulnerabilityGroup.class, bsiEditorFactory);
-		typedFactories.put(Vulnerability.class, bsiEditorFactory);
-		typedFactories.put(DocumentGroup.class, bsiEditorFactory);
-		typedFactories.put(Document.class, bsiEditorFactory);
-		typedFactories.put(InterviewGroup.class, bsiEditorFactory);
-		typedFactories.put(Interview.class, bsiEditorFactory);
-		typedFactories.put(EvidenceGroup.class, bsiEditorFactory);
-		typedFactories.put(Evidence.class, bsiEditorFactory);
-		typedFactories.put(FindingGroup.class, bsiEditorFactory);
-		typedFactories.put(Finding.class, bsiEditorFactory);
-		typedFactories.put(sernet.verinice.model.iso27k.Process.class, bsiEditorFactory);
-		typedFactories.put(ProcessGroup.class, bsiEditorFactory);
-		typedFactories.put(Record.class, bsiEditorFactory);
-		typedFactories.put(RecordGroup.class, bsiEditorFactory);
-		// Self Assessment (SAMT) elements    
+            @Override
+            public void openEditorFor(Object o) throws PartInitException {
+                BSIElementEditorInput input = new BSIElementEditorInput((CnATreeElement) o);
+                openEditor(input.getId(), input, BSIElementEditor.EDITOR_ID);
+            }
+        };
+        typedFactories.put(ITVerbund.class, bsiEditorFactory);
+        typedFactories.put(Client.class, bsiEditorFactory);
+        typedFactories.put(SonstIT.class, bsiEditorFactory);
+        typedFactories.put(NetzKomponente.class, bsiEditorFactory);
+        typedFactories.put(TelefonKomponente.class, bsiEditorFactory);
+        typedFactories.put(Raum.class, bsiEditorFactory);
+        typedFactories.put(Server.class, bsiEditorFactory);
+        typedFactories.put(Person.class, bsiEditorFactory);
+        typedFactories.put(Gebaeude.class, bsiEditorFactory);
+        typedFactories.put(Anwendung.class, bsiEditorFactory);
+        typedFactories.put(BausteinUmsetzung.class, bsiEditorFactory);
+        typedFactories.put(MassnahmenUmsetzung.class, bsiEditorFactory);
+        typedFactories.put(RisikoMassnahmenUmsetzung.class, bsiEditorFactory);
+        typedFactories.put(Verarbeitungsangaben.class, bsiEditorFactory);
+        typedFactories.put(VerantwortlicheStelle.class, bsiEditorFactory);
+        typedFactories.put(Personengruppen.class, bsiEditorFactory);
+        typedFactories.put(Datenverarbeitung.class, bsiEditorFactory);
+        typedFactories.put(StellungnahmeDSB.class, bsiEditorFactory);
+        // ISO 27000 elements
+        typedFactories.put(Organization.class, bsiEditorFactory);
+        typedFactories.put(AssetGroup.class, bsiEditorFactory);
+        typedFactories.put(Asset.class, bsiEditorFactory);
+        typedFactories.put(PersonGroup.class, bsiEditorFactory);
+        typedFactories.put(PersonIso.class, bsiEditorFactory);
+        typedFactories.put(AuditGroup.class, bsiEditorFactory);
+        typedFactories.put(Audit.class, bsiEditorFactory);
+        typedFactories.put(ControlGroup.class, bsiEditorFactory);
+        typedFactories.put(Control.class, bsiEditorFactory);
+        typedFactories.put(ExceptionGroup.class, bsiEditorFactory);
+        typedFactories.put(sernet.verinice.model.iso27k.Exception.class, bsiEditorFactory);
+        typedFactories.put(RequirementGroup.class, bsiEditorFactory);
+        typedFactories.put(Requirement.class, bsiEditorFactory);
+        typedFactories.put(IncidentGroup.class, bsiEditorFactory);
+        typedFactories.put(Incident.class, bsiEditorFactory);
+        typedFactories.put(IncidentScenarioGroup.class, bsiEditorFactory);
+        typedFactories.put(IncidentScenario.class, bsiEditorFactory);
+        typedFactories.put(ResponseGroup.class, bsiEditorFactory);
+        typedFactories.put(Response.class, bsiEditorFactory);
+        typedFactories.put(ThreatGroup.class, bsiEditorFactory);
+        typedFactories.put(Threat.class, bsiEditorFactory);
+        typedFactories.put(VulnerabilityGroup.class, bsiEditorFactory);
+        typedFactories.put(Vulnerability.class, bsiEditorFactory);
+        typedFactories.put(DocumentGroup.class, bsiEditorFactory);
+        typedFactories.put(Document.class, bsiEditorFactory);
+        typedFactories.put(InterviewGroup.class, bsiEditorFactory);
+        typedFactories.put(Interview.class, bsiEditorFactory);
+        typedFactories.put(EvidenceGroup.class, bsiEditorFactory);
+        typedFactories.put(Evidence.class, bsiEditorFactory);
+        typedFactories.put(FindingGroup.class, bsiEditorFactory);
+        typedFactories.put(Finding.class, bsiEditorFactory);
+        typedFactories.put(sernet.verinice.model.iso27k.Process.class, bsiEditorFactory);
+        typedFactories.put(ProcessGroup.class, bsiEditorFactory);
+        typedFactories.put(Record.class, bsiEditorFactory);
+        typedFactories.put(RecordGroup.class, bsiEditorFactory);
+        // Self Assessment (SAMT) elements
         typedFactories.put(SamtTopic.class, bsiEditorFactory);
     }
-	
-	 private static void openEditor(String id, IEditorInput input, String editorId) throws PartInitException {         
-         IEditorPart editor = EditorRegistry.getInstance().getOpenEditor(id);
-         if (editor == null) {
-             // open new editor:             
-             editor = Activator.getActivePage().openEditor(input, editorId);
-             EditorRegistry.getInstance().registerOpenEditor(id, editor);
-         } else {
-             // show existing editor:
-             Activator.getActivePage().openEditor(editor.getEditorInput(), editorId);
-         }     
-     }
+
+    private static IEditorPart openEditor(String id, IEditorInput input, String editorId)
+            throws PartInitException {
+        IEditorPart editor = EditorRegistry.getInstance().getOpenEditor(id);
+        if (editor == null) {
+            // open new editor:
+            editor = getPage().openEditor(input, editorId);
+            EditorRegistry.getInstance().registerOpenEditor(id, editor);
+        } else {
+            // show existing editor:
+            getPage().openEditor(editor.getEditorInput(), editorId);
+        }
+        return editor;
+    }
+
+    private static IWorkbenchPage getPage() {
+        IWorkbenchPage page = Activator.getActivePage();
+        if (page == null) {
+            page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        }
+        return page;
+    }
+
+    private static class LinkTableEditorFactory implements IEditorTypeFactory {
+
+        @Override
+        public void openEditorFor(Object o) throws PartInitException {
+            LinkTableEditorInput input = (LinkTableEditorInput) o;
+            openEditor(input.getId(), input, LinkTableEditor.EDITOR_ID);
+        }
+
+    }
 
 }

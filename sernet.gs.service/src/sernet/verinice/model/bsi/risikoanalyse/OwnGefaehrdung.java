@@ -21,61 +21,70 @@ import sernet.gs.model.Gefaehrdung;
 import sernet.hui.common.connect.ITypedElement;
 
 public class OwnGefaehrdung extends Gefaehrdung implements ITypedElement {
-	
-    private static final long serialVersionUID = -5602823890068961674L;
+
+    private static final long serialVersionUID = -6750657671269804564L;
+    
     private String beschreibung;
-	private String ownkategorie;
-	
-	public static final String TYPE_ID = "owngefaehrdung";
+    private String ownkategorie;
+    private String extId;
+
+    public static final String TYPE_ID = "owngefaehrdung";
 
     public static final String NEW_CATEGORY_DE = "[Neue Kategorie]";
     public static final String NEW_CATEGORY_EN = "[New Category]";
-	
-	public OwnGefaehrdung() {
-		super();
-		this.beschreibung = "";
-		this.ownkategorie = "";
-	}
-	
-	public String getKategorieAsString() {
-		return this.ownkategorie;
-	}
-	
-	public void setBeschreibung(String newDescr) {
-		this.beschreibung =  newDescr;
-	}
-	
-	public String getBeschreibung() {
-		return this.beschreibung;
-	}
-	
-	/**
-	 * @return the ownkategorie
-	 */
-	public String getOwnkategorie() {
-		return ownkategorie;
-	}
 
-	/**
-	 * @param ownkategorie the ownkategorie to set
-	 */
-	public void setOwnkategorie(String ownkategorie) {
-		this.ownkategorie = ownkategorie;
-	}
+    public OwnGefaehrdung() {
+        super();
+        this.beschreibung = "";
+        this.ownkategorie = "";
+        this.extId = "";
+    }
 
-    /* (non-Javadoc)
+    public String getKategorieAsString() {
+        if (ownkategorie == null || ownkategorie.isEmpty()
+                || NEW_CATEGORY_DE.equalsIgnoreCase(ownkategorie)
+                || NEW_CATEGORY_EN.equalsIgnoreCase(ownkategorie)) {
+            return getCategory(this.getKategorie());
+        } else {
+            return ownkategorie;
+        }
+    }
+
+    @Override
+    public String getKategorieAsString(String language) {
+        return getKategorieAsString();
+    }
+
+    public void setBeschreibung(String newDescr) {
+        this.beschreibung = newDescr;
+    }
+
+    public String getBeschreibung() {
+        return this.beschreibung;
+    }
+
+    public String getOwnkategorie() {
+        return ownkategorie;
+    }
+
+    public void setOwnkategorie(String ownkategorie) {
+        this.ownkategorie = ownkategorie;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see sernet.hui.common.connect.ITypedElement#getTypeId()
      */
     public String getTypeId() {
         return TYPE_ID;
     }
-    
-    @Override
-    public String getKategorieAsString(String language) {
-        if(ownkategorie.isEmpty() || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_DE) || ownkategorie.equalsIgnoreCase(NEW_CATEGORY_EN)){
-            return getCategory(this.getKategorie());
-        }else{
-            return ownkategorie;
-        }
+
+    public String getExtId() {
+        return extId;
+    }
+
+    public void setExtId(String extId) {
+        this.extId = extId;
     }
 }

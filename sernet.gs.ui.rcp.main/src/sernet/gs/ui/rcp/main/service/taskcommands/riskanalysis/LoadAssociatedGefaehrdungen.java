@@ -29,7 +29,6 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportLinkedElements;
 import sernet.gs.ui.rcp.main.service.grundschutzparser.LoadBausteine;
 import sernet.verinice.interfaces.CommandException;
@@ -43,6 +42,7 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUtil;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.service.gstoolimport.GefaehrdungsUmsetzungFactory;
 
 /**
  * This command loads all threats (German: Gefaehrdungen) for an elmenent which
@@ -53,7 +53,8 @@ import sernet.verinice.model.common.Permission;
  * @author Alexander Koderman <ak[at]sernet[dot]de>
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuthAwareCommand {
+public class LoadAssociatedGefaehrdungen extends GenericCommand 
+    implements IAuthAwareCommand {
 
     private static final long serialVersionUID = -7092181298463682487L;
 
@@ -75,7 +76,7 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
     public LoadAssociatedGefaehrdungen(CnATreeElement cnaElement) {
         this.cnaElement = cnaElement;
     }
-
+    
     /*
      * (non-Javadoc)
      * 
@@ -88,7 +89,9 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
             loadAssociatedGefaehrdungen();
             inheritPermissions();
         } catch (CommandException e) {
-            getLog().error("Something went wrong on computing associated Gefaehrdungen via link for element:\t" + cnaElement.getUuid(), e);
+            getLog().error("Something went wrong on computing associated "
+                    + "Gefaehrdungen via link for element:\t"
+                    + cnaElement.getUuid(), e);
             throw new RuntimeCommandException(e);
         }
 
@@ -96,23 +99,30 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
 
     private void loadAssociatedGefaehrdungen() throws CommandException {
         associatedGefaehrdungen = new ArrayList<>();
+        Set<GefaehrdungsUmsetzung> unifiedCollection = new HashSet<>();
 
         /*
          * look for associated Gefaehrdung via children of cnaelement
          */
-        associatedGefaehrdungen.addAll(getAssociatedGefaehrdungenViaChildren());
+        unifiedCollection.addAll(getAssociatedGefaehrdungenViaChildren());
 
         /*
          * look for associated Gefaehrdung via downlinks of cnaelement
          */
-        associatedGefaehrdungen.addAll(getAssociatedGefaehrdungenViaLinks());
+        unifiedCollection.addAll(getAssociatedGefaehrdungenViaLinks());
+        
+        associatedGefaehrdungen.addAll(unifiedCollection);
     }
 
-    private Set<GefaehrdungsUmsetzung> getAssociatedGefaehrdungenViaLinks() throws CommandException {
+    private Set<GefaehrdungsUmsetzung> getAssociatedGefaehrdungenViaLinks()
+            throws CommandException {
         Set<GefaehrdungsUmsetzung> gefaehrdungen = new HashSet<>();
-        Set<BausteinUmsetzung> linkedBausteinUmsetzungen = findLinkedBausteinUmsetzungen(cnaElement);
+        Set<BausteinUmsetzung> linkedBausteinUmsetzungen 
+            = findLinkedBausteinUmsetzungen(cnaElement);
         for (BausteinUmsetzung linkedBausteinUmsetzung : linkedBausteinUmsetzungen) {
-            gefaehrdungen.addAll(getGefaehrdungsUmsetzungenFromBausteinUmsetzung(linkedBausteinUmsetzung));
+            gefaehrdungen.addAll(
+                    getGefaehrdungsUmsetzungenFromBausteinUmsetzung(
+                            linkedBausteinUmsetzung));
         }
         return gefaehrdungen;
     }
@@ -125,34 +135,44 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
                 continue;
             }
             BausteinUmsetzung bausteinUmsetzung = (BausteinUmsetzung) cnATreeElement;
-            gefaehrdungen.addAll(getGefaehrdungsUmsetzungenFromBausteinUmsetzung(bausteinUmsetzung));
+            gefaehrdungen.addAll(
+                    getGefaehrdungsUmsetzungenFromBausteinUmsetzung(
+                            bausteinUmsetzung));
         }
 
         return gefaehrdungen;
     }
 
-    private Set<GefaehrdungsUmsetzung> getGefaehrdungsUmsetzungenFromBausteinUmsetzung(BausteinUmsetzung bausteinUmsetzung) {
+    private Set<GefaehrdungsUmsetzung> 
+        getGefaehrdungsUmsetzungenFromBausteinUmsetzung(
+                BausteinUmsetzung bausteinUmsetzung) {
         Set<GefaehrdungsUmsetzung> gefaehrdungen = new HashSet<>();
         Baustein baustein = findBausteinForId(bausteinUmsetzung.getKapitel());
         if (baustein == null) {
             return gefaehrdungen;
         }
         for (Gefaehrdung gefaehrdung : baustein.getGefaehrdungen()) {
-            if (!GefaehrdungsUtil.listContainsById(this.associatedGefaehrdungen, gefaehrdung)) {
-                gefaehrdungen.add(GefaehrdungsUmsetzungFactory.build(null, gefaehrdung, null));
+            if (!GefaehrdungsUtil.listContainsById(this.associatedGefaehrdungen,
+                    gefaehrdung)) {
+                gefaehrdungen.add(GefaehrdungsUmsetzungFactory.build(null,
+                        gefaehrdung, null));
             }
         }
         return gefaehrdungen;
 
     }
 
-    private Set<BausteinUmsetzung> findLinkedBausteinUmsetzungen(CnATreeElement sourceElement) throws CommandException {
-        LoadReportLinkedElements linkLoader = new LoadReportLinkedElements(BausteinUmsetzung.TYPE_ID, sourceElement.getDbId());
+    private Set<BausteinUmsetzung> findLinkedBausteinUmsetzungen(
+            CnATreeElement sourceElement) throws CommandException {
+        LoadReportLinkedElements linkLoader = new LoadReportLinkedElements(
+                BausteinUmsetzung.TYPE_ID, sourceElement.getDbId());
         linkLoader = getCommandService().executeCommand(linkLoader);
-        Set<BausteinUmsetzung> linkedBausteinUmsetzungen = new HashSet<>(linkLoader.getElements().size());
+        Set<BausteinUmsetzung> linkedBausteinUmsetzungen = new HashSet<>(
+                linkLoader.getElements().size());
         for (CnATreeElement foundElement : linkLoader.getElements()) {
             if (BausteinUmsetzung.TYPE_ID.equals(foundElement.getTypeId())) {
-                foundElement = Retriever.retrieveElement(foundElement, RetrieveInfo.getPropertyInstance());
+                foundElement = Retriever.retrieveElement(foundElement,
+                        RetrieveInfo.getPropertyInstance());
                 linkedBausteinUmsetzungen.add((BausteinUmsetzung) foundElement);
             }
         }
@@ -160,6 +180,7 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
     }
 
     private Baustein findBausteinForId(String id) {
+        // FIXME: load only the baustein for the given id, not all!
         if (alleBausteine == null) {
             LoadBausteine bstsCommand = new LoadBausteine();
             try {
@@ -183,13 +204,16 @@ public class LoadAssociatedGefaehrdungen extends GenericCommand implements IAuth
     private void inheritPermissions() {
         for (GefaehrdungsUmsetzung gefaehrdungsUmsetzung : associatedGefaehrdungen) {
             if (authService.isPermissionHandlingNeeded()) {
-                gefaehrdungsUmsetzung.setPermissions(Permission.clonePermissionSet(gefaehrdungsUmsetzung, cnaElement.getPermissions()));
+                gefaehrdungsUmsetzung.setPermissions(Permission.
+                        clonePermissionSet(gefaehrdungsUmsetzung,
+                                cnaElement.getPermissions()));
             }
         }
     }
 
     private void reloadElement() {
-        IBaseDao<Object, Serializable> dao = getDaoFactory().getDAOforTypedElement(cnaElement);
+        IBaseDao<Object, Serializable> dao = getDaoFactory().
+                getDAOforTypedElement(cnaElement);
         dao.reload(cnaElement, cnaElement.getDbId());
     }
 

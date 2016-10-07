@@ -35,9 +35,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
         "classpath:/sernet/gs/server/spring/veriniceserver-daos-osgi.xml", //$NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-security-osgi.xml", //$NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-ldap.xml", //$NON-NLS-1$
-        "classpath:/sernet/gs/server/spring/veriniceserver-jbpm.xml", //$NON-NLS-1$
-        "classpath:/sernet/gs/server/spring/veriniceserver-rightmanagement.xml", //NON-NLS-1$
-        "classpath:/sernet/gs/server/spring/veriniceserver-reportdeposit.xml", //NON-NLS-1$
+        "classpath:/sernet/verinice/service/test/spring/veriniceserver-jbpm.xml", //$NON-NLS-1$
+        "classpath:/sernet/verinice/service/test/spring/veriniceserver-rightmanagement.xml", //NON-NLS-1$
+        "classpath:/sernet/verinice/service/test/spring/veriniceserver-reportdeposit.xml", //NON-NLS-1$
+        "classpath:/sernet/verinice/service/test/spring/veriniceserver-account.xml",
         "classpath:/sernet/gs/server/spring/veriniceserver-search-base.xml", //NON-NLS-1$
         "classpath:/sernet/gs/server/spring/veriniceserver-search.xml", //NON-NLS-1$
         "classpath:/verinice-test.xml"

@@ -17,10 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.report.actions;
 
-import sernet.verinice.report.rcp.GenerateReportAction;
-
 /**
- *
+ * representing an call of "generate report" from the application action bar
  */
 public class GenerateGenericReportAction extends GenerateReportAction {
 

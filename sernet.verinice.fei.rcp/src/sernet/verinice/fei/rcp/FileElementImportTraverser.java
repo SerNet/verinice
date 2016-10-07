@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.osgi.util.NLS;
 
@@ -41,12 +42,11 @@ import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.validation.IValidationService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Group;
+import sernet.verinice.service.commands.AttachmentFileCreationFactory;
 import sernet.verinice.service.commands.CreateElement;
 import sernet.verinice.service.commands.LoadFileSizeLimit;
-import sernet.verinice.service.commands.SaveAttachment;
 import sernet.verinice.service.commands.SaveNote;
 
 /**
@@ -195,13 +195,8 @@ public class FileElementImportTraverser extends FileSystemTraverser {
         command = getCommandService().executeCommand(command);
         attachment = (Attachment) command.getAddition();
         
-        // save file data
-        AttachmentFile attachmentFile = new AttachmentFile();
-        attachmentFile.readFileData(attachment.getFilePath());
-        SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
-        attachmentFile.setDbId(attachment.getDbId());
-        saveFileCommand = getCommandService().executeCommand(saveFileCommand);
-        saveFileCommand.clear();
+//        // save file data
+        AttachmentFileCreationFactory.createAttachmentFile(attachment, FileUtils.readFileToByteArray(new File(attachment.getFilePath())));
     }
     
     public int getNumberOfFiles() {

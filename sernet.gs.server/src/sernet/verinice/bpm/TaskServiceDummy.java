@@ -41,7 +41,7 @@ public class TaskServiceDummy implements ITaskService {
     }
 
     @Override
-    public List<ITask> getTaskList() {
+    public List<ITask> getCurrentUserTaskList() {
         return Collections.emptyList();
     }
 

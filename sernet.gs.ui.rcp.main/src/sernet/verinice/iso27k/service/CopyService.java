@@ -43,11 +43,13 @@ public class CopyService extends PasteService implements IProgressTask {
 	
 	
     
-	private List<CnATreeElement> elements;
+	private final List<CnATreeElement> elements;
 	
 	private List<String> newElements;
     
-    private boolean copyLinks = false;;
+    private boolean copyLinks = false;
+    
+    private boolean copyAttachments = false;
     
 	/**
      * Creates a new CopyService
@@ -57,7 +59,7 @@ public class CopyService extends PasteService implements IProgressTask {
      * @param elementList a list of elements
      */
     @SuppressWarnings("unchecked")
-    public CopyService(CnATreeElement group, List<CnATreeElement> elementList) {
+    public CopyService(final CnATreeElement group, final List<CnATreeElement> elementList) {
         progressObserver = new DummyProgressObserver();
         this.selectedGroup = group;
         this.elements = elementList;    
@@ -71,7 +73,7 @@ public class CopyService extends PasteService implements IProgressTask {
 	 * @param elementList a list of elements
 	 * @param copyLinks 
 	 */
-	public CopyService(IProgressObserver progressObserver, CnATreeElement group, List<CnATreeElement> elementList, boolean copyLinks) {
+	public CopyService(final IProgressObserver progressObserver, final CnATreeElement group, final List<CnATreeElement> elementList, final boolean copyLinks) {
 		this.progressObserver = progressObserver;
 		this.selectedGroup = group;
 		this.elements = elementList;	
@@ -85,20 +87,21 @@ public class CopyService extends PasteService implements IProgressTask {
     public void run()  {
 		try {	
 			Activator.inheritVeriniceContextState();
-		    List<String> uuidList = new ArrayList<String>(this.elements.size());
-			for (CnATreeElement element : this.elements) {
+		    final List<String> uuidList = new ArrayList<String>(this.elements.size());
+			for (final CnATreeElement element : this.elements) {
 			    uuidList.add(element.getUuid());
 				}
 			numberOfElements = uuidList.size();
 			// -1 means unknown runtime
 			progressObserver.beginTask(Messages.getString("CopyService.1",numberOfElements), -1);         //$NON-NLS-1$
 			CopyCommand cc = new CopyCommand(this.selectedGroup.getUuid(), uuidList, getPostProcessorList(), this.copyLinks);
+			cc.setCopyAttachments(isCopyAttachments());
 			cc = getCommandService().executeCommand(cc);
 			numberOfElements = cc.getNumber();
 			progressObserver.setTaskName(Messages.getString("CopyService.4")); //$NON-NLS-1$
 			CnAElementFactory.getInstance().reloadModelFromDatabase();
 			newElements = cc.getNewElements();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			log.error("Error while copying element", e); //$NON-NLS-1$
 			throw new RuntimeException("Error while copying element", e); //$NON-NLS-1$
 		} finally {
@@ -108,6 +111,20 @@ public class CopyService extends PasteService implements IProgressTask {
 
     public List<String> getNewElements() {
         return newElements;
+    }
+
+    /**
+     * @return the copyAttachments
+     */
+    public boolean isCopyAttachments() {
+        return copyAttachments;
+    }
+
+    /**
+     * @param copyAttachments the copyAttachments to set
+     */
+    public void setCopyAttachments(final boolean copyAttachments) {
+        this.copyAttachments = copyAttachments;
     }
 	
 }

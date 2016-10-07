@@ -33,7 +33,7 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
 
 abstract class CRUDAccountGroupDialog extends TitleAreaDialog {
 
-    private final GroupView groupView;
+    private final AccountGroupView groupView;
 
     protected Text textInputField;
 
@@ -41,7 +41,7 @@ abstract class CRUDAccountGroupDialog extends TitleAreaDialog {
 
     private String title;
 
-    public CRUDAccountGroupDialog(GroupView groupView, Shell parent, String title) {
+    public CRUDAccountGroupDialog(AccountGroupView groupView, Shell parent, String title) {
         super(parent);
         this.groupView = groupView;
         this.title = title;

@@ -28,6 +28,8 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.NotifyingThread;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 
@@ -63,16 +65,29 @@ final class LoadTaskJob extends NotifyingThread {
     }
     
     public void loadTasks() {
+
+        Activator.inheritVeriniceContextState();
+
         if (LOG.isDebugEnabled()) {
             LOG.debug("Loading tasks...");
         }
-        Activator.inheritVeriniceContextState();
-        taskList = ServiceFactory.lookupTaskService().getTaskList(param);
+
+
+        if(listAllUserEnabled()){
+		taskList = ServiceFactory.lookupTaskService().getTaskList(param);
+        } else {
+		taskList = ServiceFactory.lookupTaskService().getCurrentUserTaskList();
+
+        }
         Collections.sort(taskList);  
         if (LOG.isDebugEnabled()) {
             LOG.debug("Tasks loading finished.");
         }
     }
+
+	private boolean listAllUserEnabled() {
+		return ServiceFactory.lookupRightsServiceClient().isEnabled(ActionRightIDs.TASKSHOWALL);
+	}
     
     public ITaskParameter getParam() {
         return param;

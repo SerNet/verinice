@@ -95,7 +95,7 @@
           class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
           lazy-init="false">
         <property name="service">
-            <ref bean="rightsService"/>
+            <ref bean="rightsServiceClient"/>
         </property>
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.IRightsService</value>
@@ -122,6 +122,18 @@
 		</property>    
 		<property name="serviceInterface">
 			<value>sernet.verinice.interfaces.validation.IValidationService</value>
+		</property>
+	</bean>
+	
+	
+    <bean name="/objectModelServiceHttpInvoker"
+    	class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+		lazy-init="false">
+		<property name="service">
+			<ref bean="objectModelService" />
+		</property>    
+		<property name="serviceInterface">
+			<value>sernet.verinice.service.model.IObjectModelService</value>
 		</property>
 	</bean>
 	

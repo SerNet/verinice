@@ -72,9 +72,6 @@ public final class DigestAuthenticationService implements IAuthService {
 	 * Protected by Spring's security config, must have ROLE_ADMIN to use.
 	 */
 	public String hashPassword(String username, String pass) {
-	    if(!getRightsServerHandler().isEnabled(getUsername(), ActionRightIDs.ACCOUNTSETTINGS)) {
-	        throw new SecurityException("Action is not allowed for the current user");
-	    }
 		return DigestProcessingFilter.encodePasswordInA1Format(username,
 		        entryPoint.getRealmName(), pass);
 	}

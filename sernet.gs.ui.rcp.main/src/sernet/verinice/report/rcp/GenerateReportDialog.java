@@ -226,7 +226,11 @@ public class GenerateReportDialog extends TitleAreaDialog {
             filterReportTypes();
         }
         setTitle(Messages.GenerateReportDialog_0);
-        setMessage(Messages.GenerateReportDialog_7);
+        StringBuilder dialogMessage = new StringBuilder();  
+        dialogMessage.append(Messages.GenerateReportDialog_7);
+        dialogMessage.append(" ");
+        dialogMessage.append(Messages.GenerateReportDialog_36);
+        setMessage(dialogMessage.toString());
 
         final Composite composite = (Composite) super.createDialogArea(parent);
         GridLayout layout = (GridLayout) composite.getLayout();
@@ -477,7 +481,7 @@ public class GenerateReportDialog extends TitleAreaDialog {
         }
         dlg.setFilterPath(path);
         dlg.setFilterExtensions(new String[] { "*.rptdesign", "*.rpt", "*.xml", "*.*" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        String fn = dlg.open();
+        dlg.open();
     }
 
     public void selectOutputFile() {
@@ -513,7 +517,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     @Deprecated
     boolean isTemplateFilePath() {
-//        return isReportTemplate() && textReportTemplateFile.getText() != null && !textReportTemplateFile.getText().isEmpty();
         return false;
     }
 
@@ -523,7 +526,6 @@ public class GenerateReportDialog extends TitleAreaDialog {
 
     @Deprecated
     private String getOldTemplateFolderPath() {
-//        return getFolderFromPath(textReportTemplateFile.getText());
         return System.getProperty("osgi.instance.area");
     }
 
@@ -548,15 +550,13 @@ public class GenerateReportDialog extends TitleAreaDialog {
      */
     private void setupComboScopes() {
         scopes = new ArrayList<CnATreeElement>();
-        scopes.addAll(loadScopes());
-        scopes.addAll(loadITVerbuende());
 
         // check if audit was selected by context menu:
         if (this.auditId != null && isContextMenuCall()) {
             scopeCombo.removeAll();
             scopeCombo.add(this.auditName);
             rootElement = auditId;
-            scopeCombo.setEnabled(true);
+            scopeCombo.setEnabled(false);
             scopeCombo.select(0);
             scopeCombo.redraw();
             return;
@@ -579,6 +579,9 @@ public class GenerateReportDialog extends TitleAreaDialog {
             return;
 
         }
+        // call is initiated from applicationbar, so let user choose from all accessible scopes
+        scopes.addAll(loadScopes());
+        scopes.addAll(loadITVerbuende());
 
         List<String> scopeTitles = new ArrayList<String>();
 

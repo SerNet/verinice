@@ -19,7 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.rcp.account;
 
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.model.bsi.Person;
+import sernet.verinice.model.bsi.PersonenKategorie;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.rcp.ElementTitleCache;
@@ -59,7 +61,7 @@ public class GenericPerson {
             name = ElementTitleCache.get(person.getParentId());
         }
         if(person instanceof Person) {
-            name = sernet.verinice.model.bsi.Messages.PersonenKategorie_0;
+            name = HUITypeFactory.getInstance().getMessage(PersonenKategorie.TYPE_ID);
         }
         return name;
     }

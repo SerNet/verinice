@@ -26,11 +26,13 @@ import java.io.Serializable;
  */
 public class GefaehrdungInformationTransfer implements Serializable {
 
+    private static final long serialVersionUID = 20160222104609L;
     private String description;
     private String titel;
     private String id;
     private int kategorie;
     private String stand;
+    private String extId;
     /**
      * @return the description
      */
@@ -91,6 +93,14 @@ public class GefaehrdungInformationTransfer implements Serializable {
      */
     public void setStand(String stand) {
         this.stand = stand;
+    }
+
+    public String getExtId() {
+        return extId;
+    }
+
+    public void setExtId(String extId) {
+        this.extId = extId;
     }
     @Override
     public String toString(){

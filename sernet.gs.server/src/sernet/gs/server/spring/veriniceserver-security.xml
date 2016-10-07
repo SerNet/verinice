@@ -32,6 +32,8 @@
         granted.
     -->
     
+    <security:global-method-security access-decision-manager-ref="accessDecisionManager" />
+
 	<aop:config>
 		<aop:aspect ref="internalAuthenticationProvider">
     		<aop:pointcut id="commandServicePointcut" expression="execution(* sernet.verinice.service.HibernateCommandService.executeCommand(..))" />
@@ -48,5 +50,6 @@
             </set>
         </property>
     </bean>
+
 
 </beans>

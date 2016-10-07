@@ -1,0 +1,10 @@
+{
+  "useAllScopes": false,
+  "scopeIds": [],
+  "columnPaths": [
+    "asset<assetgroup.assetgroup_name AS Titel",
+    "asset<assetgroup<assetgroup.assetgroup_name AS Titel",
+    "asset<assetgroup<assetgroup>asset.asset_name AS Titel"
+  ],
+  "relationIds": []
+}

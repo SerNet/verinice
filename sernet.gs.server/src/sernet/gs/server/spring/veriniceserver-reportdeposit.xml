@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Spring configuration for JBoss jBPM  (https://www.jboss.org/jbpm) -->
-<!-- See jBPM developer guide - Chapter 17. Spring Integration -->
-<!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
 
-    <bean id="reportdepositService" class="sernet.verinice.service.ReportDepositService">
-    	<property name="reportDeposit" value="/WEB-INF/reportDeposit/" />
-    </bean>
-    
+	<!-- The IReportTemplateService interface is also published through this
+		service, but this interface has not to be secured since every client needs
+		access to it and it only provides readable access. -->
+	<bean id="reportdepositService" class="sernet.verinice.service.ReportDepositService">
+		<property name="reportDeposit" value="/WEB-INF/reportDeposit/" />
+		<security:intercept-methods>
+			<security:protect
+				method="sernet.verinice.service.ReportDepositService.add"
+				access="ACTION_ID_REPORTDEPOSITADD" />
+			<security:protect
+				method="sernet.verinice.service.ReportDepositService.remove"
+				access="ACTION_ID_REPORTDEPOSITDELETE" />
+			<security:protect
+				method="sernet.verinice.service.ReportDepositService.update"
+				access="ACTION_ID_REPORTDEPOSITEDIT" />
+			<security:protect
+				method="sernet.verinice.service.ReportDepositService.getDepositLocation"
+				access="ACTION_ID_REPORTDEPOSIT" />
+		</security:intercept-methods>
+	</bean>
+
 </beans>

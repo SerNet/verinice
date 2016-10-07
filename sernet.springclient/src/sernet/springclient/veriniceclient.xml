@@ -35,14 +35,14 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
     
-    <bean id="executerFactory" class="sernet.springclient.ExecuterFactoryBean" />
-    
-    <bean name="veriniceCommonsExecuter" factory-bean="executerFactory" factory-method="getExecuter">
-        <!-- Request-timeout in ms 24h = 24*60*60*1000 = 86.400.000-->
+    <bean id="executerFactory" class="sernet.springclient.ExecuterFactoryBean" >
+        <!-- Request-timeout in ms, 24h = 24*60*60*1000 = 86.400.000 -->
         <property name="readTimeout" value="86400000"/>
-        <!-- Connection-timeout in ms -->
+        <!-- Connection-timeout in ms, 10s = 10.000 -->
         <property name="connectionTimeout" value="10000"/>
     </bean>
+    
+    <bean name="veriniceCommonsExecuter" factory-bean="executerFactory" factory-method="getExecuter" />
 
      <bean id="authService"
           class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
@@ -142,6 +142,21 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         </property>
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
     </bean>
+
+	<bean id="objectModelService" 
+          class="sernet.verinice.service.model.HUIObjectModelLoader" >
+          <property name="objectModelService">
+			<bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+		        <property name="serviceUrl">
+		            <value>${verinice.serverURL}/service/objectModelServiceHttpInvoker</value>
+		        </property>
+		        <property name="serviceInterface">
+		            <value>sernet.verinice.service.model.IObjectModelService</value>         
+		        </property>
+		        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+			</bean>
+          </property>
+	</bean>
     
     <bean id="accountService"
           class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
@@ -307,6 +322,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             <entry key="reportdepositService" value-ref="reportdepositService" />
             <entry key="reportHQLService" value-ref="reportHQLService" />
             <entry key="searchService" value-ref="searchService" />
+			<entry key="objectModelService" value-ref="objectModelService" />
 		</map>
 	</property>
 	</bean>

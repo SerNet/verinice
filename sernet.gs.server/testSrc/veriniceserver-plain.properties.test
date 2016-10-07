@@ -7,7 +7,7 @@
 # Default location value of the resource specifying the SNCA.xml file
 snca.resource=SNCA.xml
 
-# Location of the hibernate configuration for PostgreSQL / MySQL:
+# Location of the hibernate configuration for PostgreSQL:
 hibernate.config.resource=classpath:/server_hibernate.cfg.xml
 
 # Location of the hibernate configuration for Oracle
@@ -29,16 +29,6 @@ jdbc.password=verinice
 #jdbc.url=jdbc:oracle:thin:@localhost:1521:XE
 #jdbc.username=verinice
 #jdbc.password=geheim
-##################################################
-
-
-##################################################
-# Probably still works, but no longer officially supported: connection settings for MySQL
-#jdbc.driverClass=com.mysql.jdbc.Driver
-#jdbc.hibernate.dialect=org.hibernate.dialect.MySQLInnoDBDialect
-#jdbc.url=jdbc:mysql://127.0.0.1:3306/verinicedb
-#jdbc.username=verinice
-#jdbc.password=verinice
 ##################################################
 
 # The password entered here must be in the form of a HTTP digest "A1" hash.
@@ -102,3 +92,23 @@ veriniceserver.filesize.max=100
 # Elasticsearch index directory
 # When running JUnit-Tests "file:./elasticsearch/" is created in directory sernet.gs.server
 veriniceserver.search.index.directory=file:./elasticsearch/
+
+# Greenbone Security Scanner (GSM) task generator settings
+# true: Automatic generation of GSM tasks is enabled, default: false
+veriniceserver.gsmGenerator.enabled=false
+# Cron expression for task generator, default: "0 5 3 * * ?"
+# See: http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger
+# 0 5 3 * * ?
+# | | | | | |
+# | | | | | +- Day of the week (1-7 or SUN-SAT, 1: sunday, 7: saturday, ?: every day)
+# | | | | +--- Month 
+# | | | +----- Day of the month
+# | | +------- Hour of the day (0-23)
+# | +--------- Minutes 
+# +----------- Seconds
+# Examples:
+# Every day 3:05 AM: "0 5 3 * * ?"
+# Every 30 minutes:  "0 */30 * * * ?"
+# 3:00 PM, 6:00 PM, 9:00 PM: "0 0 15,18,21 * * ?"
+# 15 minutes past each hour but only during the 9-to-5 "business hours" on weekdays: "* 15 9-17 * * MON-FRI"
+veriniceserver.gsmGenerator.cron=0 5 3 1 6 ?

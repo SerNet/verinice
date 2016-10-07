@@ -20724,7 +20724,7 @@ Die Risikoakzeptanzkriterien, die auf der linken Seite dargestellt sind, sind in
             <property name="paddingTop">20pt</property>
             <property name="pageBreakAfter">avoid</property>
             <property name="pageBreakBefore">auto</property>
-            <text-property name="text">Detaillierte Risikobeurteilung (mit Controls)</text-property>
+            <text-property name="text">Detaillierte Risikobeurteilung (ohne Controls)</text-property>
         </label>
         <grid id="2104">
             <property name="borderBottomColor">#FFFFFF</property>

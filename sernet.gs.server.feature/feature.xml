@@ -5,11 +5,11 @@
       version="1.1.1.qualifier"
       provider-name="sernet.de">
 
-   <description url="http://verinice.org">
+   <description url="http://www.verinice.com">
       Integrated server components for verinice - the Open Source ISMS tool.
    </description>
 
-   <copyright url="http://verinice.org">
+   <copyright url="http://www.verinice.com">
       Copyright 1997 - 2016 SerNet GmbH and others.
    </copyright>
 
@@ -378,7 +378,7 @@ Library.
          id="org.apache.commons.collections"
          download-size="0"
          install-size="0"
-         version="3.2.0.v200803061811"
+         version="3.2.2"
          unpack="false"/>
 
    <plugin
@@ -704,6 +704,13 @@ Library.
 
    <plugin
          id="org.hamcrest.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.google.gson"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -11,14 +11,11 @@ Bundle-ClassPath: .,
  lib/derby/derbynet.jar,
  lib/derby/derbyrun.jar,
  lib/derby/derbytools.jar,
- lib/mysql/mysql-connector-java-5.0.7-bin.jar,
  lib/postgres/postgresql-8.2-504.jdbc3.jar,
  lib/oracle/ojdbc6.jar
-Export-Package: com.mysql.jdbc,
- com.mysql.jdbc.exceptions,
+Export-Package: 
  oracle.jdbc,
  oracle.jdbc.driver,
  org.apache.derby.jdbc,
- org.gjt.mm.mysql,
  org.postgresql,
  org.postgresql.util

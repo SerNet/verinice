@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +30,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-
 
 import de.sernet.sync.data.SyncAttribute;
 import de.sernet.sync.data.SyncData;
@@ -43,16 +41,9 @@ import de.sernet.sync.mapping.SyncMapping.MapObjectType;
 import de.sernet.sync.mapping.SyncMapping.MapObjectType.MapAttributeType;
 import de.sernet.sync.risk.Risk;
 import de.sernet.sync.risk.SyncRiskAnalysis;
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.RuntimeCommandException;
 import sernet.hui.common.VeriniceContext;
-import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.HuiRelation;
-import sernet.hui.common.connect.Property;
-import sernet.hui.common.connect.PropertyList;
-import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
@@ -67,7 +58,9 @@ import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.ImportBsiGroup;
+import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
+import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahme;
 import sernet.verinice.model.common.CnALink;
@@ -594,6 +587,82 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
         riskAnalysisImporter.setElementDao( getDaoFactory().getDAO(CnATreeElement.class));
         riskAnalysisImporter.setExtIdElementMap(idElementMap);
         riskAnalysisImporter.run();
+        
+        reOrphanizeAssociatedGefaehrdungen(filterOrphanElements());
+        
+    }
+
+    /**
+     * computes set of instances of {@link GefaehrdungsUmsetzung} that belongs 
+     * to a {@link FinishedRiskAnalysis} that are not shown in the treeview,
+     * because they only appear on page one (checked) and two (unchecked)
+     * of the riskAnalysisWizard. The method returns a list that removes 
+     * all instances of {@link GefaehrdungsUmsetzung} that are referenced 
+     * in page 3 (or 4) of the wizard from the set that is shown on page 2.
+     * 
+     * The returned elements are going to have 
+     * 
+     * scope_id and parent unset (set to null)
+     * 
+     * which makes them some kind of an orphan element 
+     * (and leads to the invisibility in the treeview)
+     * @return filtered set of elements that needs to be resetted
+     */
+    private Set<String> filterOrphanElements() {
+        Set<String> extIdsToOrphanize = new HashSet<>();
+        
+        for (SyncRiskAnalysis syncRiskAnalysis : risk.getAnalysis()) {
+            extIdsToOrphanize.addAll(syncRiskAnalysis.getScenarios().getExtId());
+        }
+        
+        for (SyncRiskAnalysis syncRiskAnalysis : risk.getAnalysis()){
+            for (String extIdToKeep : syncRiskAnalysis.getScenariosNotTreated().getExtId()){
+                if (extIdsToOrphanize.contains(extIdToKeep)){
+                    extIdsToOrphanize.remove(extIdToKeep);
+                }
+            }
+        }
+        return extIdsToOrphanize;
+    }
+    
+    
+    /**
+     * (un-)sets scopeId and parent for list of elements (given by their extId) to null
+     * which is needed to restore state of page 1 and 2 of the riskanalysiswizard.
+     * all instances of {@link GefaehrdungsUmsetzung} that are not part of page 3 and 4
+     * should not be displayed (/existant from the users perspective) in the treeview. 
+     * unsetting scopeId and parent (id) leads to this behaviour 
+     */
+    private void reOrphanizeAssociatedGefaehrdungen(Set<String> orphanList) {
+        if (orphanList.size() > 0){
+            for (String extId : orphanList){
+                if (idElementMap.containsKey(extId)){
+                    setScopeIdAndParentNull(idElementMap.get(extId));
+                }
+            }
+        }
+    }
+
+    /**
+     * sets parent and scopeId to null, if typeId of parameter @param gefaehrdung 
+     * equals GefaehrdungsUmsetzung.TYPE_ID 
+     * 
+     */
+    private void setScopeIdAndParentNull(CnATreeElement gefaehrdung) {
+        if (GefaehrdungsUmsetzung.TYPE_ID.equals(gefaehrdung.getTypeId())){
+
+            GefaehrdungsUmsetzung gUms = (GefaehrdungsUmsetzung) gefaehrdung;
+
+            gUms.setParent(null);
+            gUms.setScopeId(null);
+            
+            @SuppressWarnings("unchecked")
+            IBaseDao<GefaehrdungsUmsetzung, Serializable> dao = 
+            (IBaseDao<GefaehrdungsUmsetzung, Serializable>) getDaoFactory().
+            getDAO( gUms.getClass());
+            
+            dao.merge(gUms);
+        }
     }
 
     private MapObjectType getMap(String extObjectType) {
@@ -751,10 +820,8 @@ public class SyncInsertUpdateCommand extends GenericCommand implements IAuthAwar
 
     protected void addElement(CnATreeElement element) {
         if (elementSet == null) {
-            elementSet = new HashSet<CnATreeElement>();
+            elementSet = new HashSet<>();
         }
-        // load the parent
-        element.getParent().getTitle();
         elementSet.add(element);
     }
 

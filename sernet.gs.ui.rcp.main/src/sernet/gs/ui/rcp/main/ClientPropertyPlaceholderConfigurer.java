@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -26,6 +28,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRCPLocal;
 import sernet.gs.ui.rcp.main.bsi.model.BSIConfigurationRemoteSource;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import static sernet.gs.ui.rcp.main.preferences.PreferenceConstants.*;
 
 /**
  * This class provides keyword replacement in a Spring configuration when it
@@ -44,7 +47,10 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 public class ClientPropertyPlaceholderConfigurer extends
 		PropertyPlaceholderConfigurer {
 	
-	private static final Logger LOG = Logger.getLogger(ClientPropertyPlaceholderConfigurer.class);
+	// port can be configured via jvm parameter
+    private static final String ORG_OSGI_SERVICE_HTTP_PORT = "org.osgi.service.http.port";
+
+    private static final Logger LOG = Logger.getLogger(ClientPropertyPlaceholderConfigurer.class);
 	
 	private static ServerModeAccessor serverModeAccessor = new RCPServerModeAccessor();
 	
@@ -56,7 +62,13 @@ public class ClientPropertyPlaceholderConfigurer extends
 		{
 			String server = null;
 			if (isInternalServerMode()){
-				server = PreferenceConstants.VNSERVER_URI_INTERNAL;
+			    try{
+                    String port = System.getProperty(ORG_OSGI_SERVICE_HTTP_PORT, VNSERVER_URI_INTERNAL_PORT);
+                    URI uri = new URI(VNSERVER_SCHEME_INTERNAL + "://" + VNSERVER_HOST_INTERNAL + ":" + port);
+                    server = uri.toString();
+			    } catch(Throwable ex){
+			        LOG.error("cannot set the internal server uri: " + ex.getLocalizedMessage(), ex);
+			    }
 			} else {
 				server = correctServerURI(getServerURI());
 			}

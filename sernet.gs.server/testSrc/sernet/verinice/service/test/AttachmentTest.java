@@ -47,9 +47,9 @@ import sernet.verinice.model.bsi.Addition;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.commands.AttachmentFileCreationFactory;
 import sernet.verinice.service.commands.LoadAttachmentFile;
 import sernet.verinice.service.commands.LoadAttachments;
-import sernet.verinice.service.commands.SaveAttachment;
 import sernet.verinice.service.commands.SaveNote;
 
 /**
@@ -175,13 +175,8 @@ public class AttachmentTest extends CommandServiceProvider {
         return attachmentLoader.getAttachmentList();
     }
 
-    private void attachFileData(File f, Attachment a) throws CommandException {
-        AttachmentFile attachmentFile = new AttachmentFile();
-        attachmentFile.setFileData(getFileData(f));
-        SaveAttachment saveFileCommand = new SaveAttachment(attachmentFile);
-        attachmentFile.setDbId(a.getDbId());
-        saveFileCommand = commandService.executeCommand(saveFileCommand);
-        saveFileCommand.clear();
+    private void attachFileData(File f, Attachment a) throws CommandException, IOException {
+        AttachmentFileCreationFactory.createAttachmentFile(a, FileUtils.readFileToByteArray(f));
     }
 
     private Attachment saveAttachment(Attachment a) throws CommandException {

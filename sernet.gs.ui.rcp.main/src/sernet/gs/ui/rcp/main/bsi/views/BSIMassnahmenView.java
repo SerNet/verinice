@@ -119,13 +119,12 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
         startInitDataJob();
 
         viewer.setInput(BSIKatalogInvisibleRoot.getInstance());
-        BSIKatalogInvisibleRoot.getInstance()
-                .addListener(new BSIKatalogInvisibleRoot.ISelectionListener() {
-                    @Override
-                    public void cataloguesChanged() {
-                        refresh();
-                    }
-                });
+        BSIKatalogInvisibleRoot.getInstance().addListener(new BSIKatalogInvisibleRoot.ISelectionListener() {
+            @Override
+            public void cataloguesChanged() {
+                refresh();
+            }
+        });
 
         createActions();
         createFilters();
@@ -178,8 +177,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
     }
 
     private void hookGlobalActions() {
-        getViewSite().getActionBars().setGlobalActionHandler(ActionFactory.COPY.getId(),
-                copyAction);
+        getViewSite().getActionBars().setGlobalActionHandler(ActionFactory.COPY.getId(), copyAction);
     }
 
     private void createActions() {
@@ -192,8 +190,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
             }
         };
         expandAllAction.setText(Messages.BSIMassnahmenView_5);
-        expandAllAction.setImageDescriptor(
-                ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
+        expandAllAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.EXPANDALL));
 
         collapseAction = new Action() {
             @Override
@@ -202,8 +199,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
             }
         };
         collapseAction.setText(Messages.BSIMassnahmenView_6);
-        collapseAction.setImageDescriptor(
-                ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
+        collapseAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.COLLAPSEALL));
     }
 
     private void fillContextMenu(IMenuManager manager) {
@@ -261,8 +257,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
 
     private void createPullDownMenu() {
         IMenuManager menuManager = getViewSite().getActionBars().getMenuManager();
-        filterAction = new MassnahmenViewFilterAction(viewer, Messages.BSIMassnahmenView_3,
-                this.siegelFilter, this.gefaehrdungenFilter);
+        filterAction = new MassnahmenViewFilterAction(viewer, Messages.BSIMassnahmenView_3, this.siegelFilter, this.gefaehrdungenFilter);
         menuManager.add(filterAction);
         menuManager.add(copyAction);
         menuManager.add(expandAllAction);
@@ -305,22 +300,19 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
                 // sort chapters correctly by converting 2.45, 2.221, 3.42
                 // to 2045, 2221, 3024
 
-                compareValue = Integer.valueOf(((Massnahme) e1).getKapitelValue())
-                        .compareTo(((Massnahme) e2).getKapitelValue());
+                compareValue = Integer.valueOf(((Massnahme) e1).getKapitelValue()).compareTo(((Massnahme) e2).getKapitelValue());
                 return compareValue;
             }
 
             if (e1 instanceof Gefaehrdung && e2 instanceof Gefaehrdung) {
 
-                compareValue = Integer.valueOf(((Gefaehrdung) e1).getKapitelValue())
-                        .compareTo(((Gefaehrdung) e2).getKapitelValue());
+                compareValue = Integer.valueOf(((Gefaehrdung) e1).getKapitelValue()).compareTo(((Gefaehrdung) e2).getKapitelValue());
                 return compareValue;
             }
 
             if (e1 instanceof Baustein && e2 instanceof Baustein) {
 
-                compareValue = Integer.valueOf(((Baustein) e1).getKapitelValue())
-                        .compareTo(((Baustein) e2).getKapitelValue());
+                compareValue = Integer.valueOf(((Baustein) e1).getKapitelValue()).compareTo(((Baustein) e2).getKapitelValue());
                 return compareValue;
             }
 
@@ -360,11 +352,15 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
 
         @Override
         public boolean hasChildren(Object parent) {
-            // Please be careful when refactoring this. For an unknown reason "size() > 0"
-            // behaves different then "isEmpty()" here. Replacing the former with the latter
-            // as Sonar suggests breaks the tree in the IT Baseline Protection Catalog View.
+            // Please be careful when refactoring this. For an unknown reason
+            // "size() > 0"
+            // behaves different then "isEmpty()" here. Replacing the former
+            // with the latter
+            // as Sonar suggests breaks the tree in the IT Baseline Protection
+            // Catalog View.
             if (parent instanceof Baustein) {
-                return ((Baustein) parent).getMassnahmen().size() > 0;
+                Baustein baustein = (Baustein) parent;
+                return baustein.hasSafequardsOrThreats();
             } else if (parent instanceof BSIKatalogInvisibleRoot) {
                 return ((BSIKatalogInvisibleRoot) parent).getBausteine().size() > 0;
             }
@@ -416,8 +412,7 @@ public class BSIMassnahmenView extends RightsEnabledView implements IAttachedToP
                 Massnahme mn = (Massnahme) obj;
                 return mn.getId() + " " + mn.getTitel() + " [" //$NON-NLS-1$ //$NON-NLS-2$
                         + mn.getSiegelstufe() + "] (" //$NON-NLS-1$
-                        + mn.getLZAsString(BSIKatalogInvisibleRoot.getInstance().getLanguage())
-                        + ")"; //$NON-NLS-1$
+                        + mn.getLZAsString(BSIKatalogInvisibleRoot.getInstance().getLanguage()) + ")"; //$NON-NLS-1$
             }
 
             if (obj instanceof Gefaehrdung) {

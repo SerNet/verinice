@@ -17,6 +17,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
+import sernet.verinice.rcp.search.SearchView;
+
 /**
  * Constant definitions for plug-in preferences
  */
@@ -55,7 +57,6 @@ public class PreferenceConstants {
     public static final String DB_DRIVER = "cna_driver"; //$NON-NLS-1$
     public static final String DB_DRIVER_DERBY = "org.apache.derby.jdbc.EmbeddedDriver"; //$NON-NLS-1$
     public static final String DB_DRIVER_POSTGRES = "org.postgresql.Driver"; //$NON-NLS-1$
-    public static final String DB_DRIVER_MYSQL = "org.gjt.mm.mysql.Driver"; //$NON-NLS-1$
     public static final String DB_DRIVER_ORACLE = "oracle.jdbc.OracleDriver"; //$NON-NLS-1$
 
     // Verinice DB:
@@ -65,12 +66,10 @@ public class PreferenceConstants {
     public static final String DB_URL = "cna_dburl"; //$NON-NLS-1$
     public static final String DB_URL_DERBY = "jdbc:derby:%s/verinicedb;create=true"; //$NON-NLS-1$
     public static final String DB_URL_POSTGRES = "jdbc:postgresql://127.0.0.1:5432/verinicedb"; //$NON-NLS-1$
-    public static final String DB_URL_MYSQL = "jdbc:mysql://127.0.0.1:3306/verinicedb"; //$NON-NLS-1$
 
     public static final String DB_DIALECT = "cna_dbdialect"; //$NON-NLS-1$
     public static final String DB_DIALECT_DERBY = "sernet.verinice.hibernate.ByteArrayDerbyDialect"; //$NON-NLS-1$
     public static final String DB_DIALECT_POSTGRE = "org.hibernate.dialect.PostgreSQLDialect"; //$NON-NLS-1$
-    public static final String DB_DIALECT_MYSQL = "org.hibernate.dialect.MySQLInnoDBDialect"; //$NON-NLS-1$
 
     // gstool db for import:
     public static final String GS_DB_USER = "gs_cna_dbuser"; //$NON-NLS-1$
@@ -101,7 +100,9 @@ public class PreferenceConstants {
     public static final String OPERATION_MODE_REMOTE_SERVER = "gs_cna_operationmode_withserver";
 
     public static final String VNSERVER_URI = "gs_cna_vnserver_uri";
-    public static final String VNSERVER_URI_INTERNAL = "http://localhost:8800";
+    public static final String VNSERVER_URI_INTERNAL_PORT= "8080";
+    public static final String VNSERVER_HOST_INTERNAL ="localhost";
+    public static final String VNSERVER_SCHEME_INTERNAL ="http";
     public static final String VNSERVER_URI_DEFAULT = "http://localhost:8080/veriniceserver";
     public static final String VNSERVER_USER = "gs_cna_serveruser";
     public static final String VNSERVER_PASS = "gs_cna_serverpass";
@@ -128,14 +129,16 @@ public class PreferenceConstants {
     public static final String DEFAULT_FOLDER_EXPORT = "default_folder_export";
     public static final String DEFAULT_FOLDER_REPORT = "default_folder_report";
     public static final String DEFAULT_FOLDER_CSV_EXPORT = "default_folder_csv_export";
+    public static final String DEFAULT_FOLDER_VLT = "default_folder_vlt_export";
     public static final String DEFAULT_TEMPLATE_FOLDER_REPORT = "default_template_folder_report";
     public static final String DEFAULT_FOLDER_ADDFILE = "default_folder_addfile";
-
+    public static final String DEFAULT_FOLDER_DIALOG = "default_folder_dialog";
     // additional gui preferences
     public static final String SWITCH_PERSPECTIVE = "switch_perspective";
     public static final String DONT_ASK_BEFORE_SWITCH_PERSPECTIVE = "switch_perspective_dont_ask";
     public static final String LINK_TO_EDITOR = "link_to_editor";
     public static final String CUT_INHERIT_PERMISSIONS = "cut_inherit_permissions";
+    public static final String COPY_ATTACHMENTS_WITH_OBJECTS = "copy_attachments_with_objects";
 
     // catalog import preferences
     public static final String CHARSET_CATALOG = "org.verinice.iso27k.rcp.charset";
@@ -177,7 +180,7 @@ public class PreferenceConstants {
      *            a view class
      * @return DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name
      */
-    public static String getDontAskBeforeSwitch(@SuppressWarnings("rawtypes") Class clazz) {
+    public static String getDontAskBeforeSwitch(@SuppressWarnings("rawtypes") final Class clazz) {
         return new StringBuilder(clazz.getName()).append("_").append(PreferenceConstants.DONT_ASK_BEFORE_SWITCH_PERSPECTIVE).toString();
     }
 
@@ -189,7 +192,7 @@ public class PreferenceConstants {
      * @return DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name
      */
     @SuppressWarnings("rawtypes")
-    public static String getSwitch(Class clazz) {
+    public static String getSwitch(final Class clazz) {
         return new StringBuilder(clazz.getName()).append("_").append(PreferenceConstants.SWITCH_PERSPECTIVE).toString();
     }
 

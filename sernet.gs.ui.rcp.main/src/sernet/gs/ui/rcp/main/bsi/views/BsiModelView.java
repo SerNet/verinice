@@ -23,96 +23,43 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IMenuListener;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
+import org.eclipse.core.runtime.*;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.DecoratingLabelProvider;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.Transfer;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPartListener2;
-import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.IWorkbenchActionConstants;
-import org.eclipse.ui.PlatformUI;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.ui.*;
 import org.eclipse.ui.part.DrillDownAdapter;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.Perspective;
-import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
-import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
-import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
-import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
-import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
-import sernet.gs.ui.rcp.main.bsi.actions.GSMBausteinZuordnungAction;
-import sernet.gs.ui.rcp.main.bsi.actions.NaturalizeAction;
+import sernet.gs.ui.rcp.main.*;
+import sernet.gs.ui.rcp.main.actions.*;
+import sernet.gs.ui.rcp.main.bsi.actions.*;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDragListener;
 import sernet.gs.ui.rcp.main.bsi.dnd.BSIModelViewDropListener;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.BausteinUmsetzungTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IBSIStrukturElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
-import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
-import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditorInput;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.filter.BSIModelElementFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.LebenszyklusPropertyFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenSiegelFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.MassnahmenUmsetzungFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.ObjektLebenszyklusPropertyFilter;
-import sernet.gs.ui.rcp.main.bsi.filter.TagFilter;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.*;
+import sernet.gs.ui.rcp.main.bsi.editors.*;
+import sernet.gs.ui.rcp.main.bsi.filter.*;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.wizard.RiskAnalysisWizard;
 import sernet.gs.ui.rcp.main.bsi.views.actions.BSIModelViewFilterAction;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
-import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.gs.ui.rcp.main.common.model.NullModel;
+import sernet.gs.ui.rcp.main.common.model.*;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
-import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
-import sernet.verinice.model.bsi.Attachment;
-import sernet.verinice.model.bsi.BSIModel;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.IBSIStrukturElement;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.iso27k.rcp.*;
+import sernet.verinice.model.bsi.*;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.ds.IDatenschutzElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.IAttachedToPerspective;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.rcp.tree.ElementManager;
-import sernet.verinice.rcp.tree.TreeContentProvider;
-import sernet.verinice.rcp.tree.TreeUpdateListener;
+import sernet.verinice.rcp.tree.*;
 
 /**
  * View for a tree structure, representing the data model for modeling an IT
@@ -397,7 +344,9 @@ public class BsiModelView extends RightsEnabledView
 
         Transfer[] dropTypes = new Transfer[] { IGSModelElementTransfer.getInstance(),
                 BausteinUmsetzungTransfer.getInstance(),
-                IBSIStrukturElementTransfer.getInstance() };
+                IBSIStrukturElementTransfer.getInstance(),
+                SearchViewElementTransfer.getInstance(),
+                ISO27kElementTransfer.getInstance() };
         Transfer[] dragTypes = new Transfer[] { IBSIStrukturElementTransfer.getInstance(),
                 BausteinUmsetzungTransfer.getInstance() };
 

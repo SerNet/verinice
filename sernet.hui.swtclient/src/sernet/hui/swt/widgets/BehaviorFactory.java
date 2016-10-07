@@ -24,6 +24,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
+import sernet.hui.swt.widgets.multiselectionlist.MultiSelectionControl;
+
 /**
  * Factory to create DependsBehavior instances for Controls.
  *
@@ -36,7 +38,8 @@ public final class BehaviorFactory {
     
     private BehaviorFactory(){}
 
-    public static DependsBehavior createBehaviorForControl(Control control) {
+    public static DependsBehavior createBehaviorForControl(IHuiControl huiControl) {
+        Control control = huiControl.getControl();
         DependsBehavior behavior = null;
         if(control instanceof Button) {
             behavior = new DependsButtonBehavior((Button) control);
@@ -46,6 +49,9 @@ public final class BehaviorFactory {
         }
         if(control instanceof Combo) {
             behavior = new DependsComboBehavior((Combo) control);
+        }
+        if(huiControl instanceof MultiSelectionControl){
+            behavior = new DependsMultiOptionBehavior((Text)control);
         }
         return behavior;
     }

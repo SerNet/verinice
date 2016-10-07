@@ -25,21 +25,23 @@ import java.util.Map;
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
 import sernet.verinice.interfaces.bpm.IGenericProcess;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
-import sernet.verinice.interfaces.bpm.ITaskService;
 
 /**
  * This task complete server handler reads param
  * IIsaQmProcess.VAR_IQM_ASSIGNEE and adds it's
- * value as process/task var IIsaQmProcess.VAR_IQM_ASSIGNEE
- * to task with id taskId.
+ * value as process/task variable IIsaQmProcess.VAR_IQM_ASSIGNEE.
  * 
- * Configured in veriniceserver-jbpm.xml as a property of Spring bean taskService.
+ * This handler is configured in veriniceserver-jbpm.xml 
+ * as a property of Spring bean taskService.
+ * 
+ * This handler is part of the business process isa-quality-management
+ * defined in isa-quality-management.jpdl.xml.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class IsaQmSetAssigneeHandler implements ICompleteServerHandler {
 
-    private ITaskService taskService;
+    private Map<String, Object> taskParameter;
     
     /**
      * Value of param IIsaQmProcess.VAR_IQM_ASSIGNEE is added
@@ -52,9 +54,7 @@ public class IsaQmSetAssigneeHandler implements ICompleteServerHandler {
         if(parameter!=null) {
             String assignee = (String) parameter.get(IIsaQmProcess.VAR_IQM_ASSIGNEE);
             if(assignee!=null) {
-                Map<String, Object> param = new HashMap<String, Object>();
-                param.put(IGenericProcess.VAR_ASSIGNEE_NAME, assignee);
-                getTaskService().setVariables(taskId, param);
+                getTaskParameter().put(IGenericProcess.VAR_ASSIGNEE_NAME, assignee);
             }
         }
         
@@ -77,12 +77,14 @@ public class IsaQmSetAssigneeHandler implements ICompleteServerHandler {
         return IIsaQmProcess.TRANS_IQM_SET_ASSIGNEE;
     }
 
-    public ITaskService getTaskService() {
-        return taskService;
+    public Map<String, Object> getTaskParameter() {
+        if(taskParameter==null) {
+            taskParameter = new HashMap<String, Object>();
+        }
+        return taskParameter;
     }
 
-    public void setTaskService(ITaskService taskService) {
-        this.taskService = taskService;
+    public void setTaskParameter(Map<String, Object> taskParameter) {
+        this.taskParameter = taskParameter;
     }
-
 }

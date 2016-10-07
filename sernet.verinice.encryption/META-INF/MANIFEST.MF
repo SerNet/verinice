@@ -10,7 +10,8 @@ Require-Bundle: bouncycastle;bundle-version="1.46.0",
  org.eclipse.core.runtime,
  inetlib;bundle-version="1.1.1",
  gnumail;bundle-version="1.1.2",
- com.springsource.org.junit
+ com.springsource.org.junit,
+ com.springsource.org.apache.commons.lang;bundle-version="2.4.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .,
  bin

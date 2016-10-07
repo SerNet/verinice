@@ -27,4 +27,5 @@ package sernet.verinice.model.bsi;
  */
 public interface IBSIStrukturKategorie {
 
+    String getTitle();
 }

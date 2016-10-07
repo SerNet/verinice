@@ -120,6 +120,9 @@ public class Messages extends NLS {
     public static String RiskHandlingPage_8;
     public static String RiskHandlingPage_9;
     public static String RiskAnalysisBrowserUpdateListener_0;
+    public static String RiskAnalysisDialog_Error_0;
+    public static String RiskAnalysisDialog_Error_1;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

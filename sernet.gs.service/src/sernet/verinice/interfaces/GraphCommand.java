@@ -39,6 +39,8 @@ import sernet.verinice.interfaces.graph.VeriniceGraph;
  */
 public class GraphCommand extends GenericCommand implements IGraphCommand {
 
+    private static final long serialVersionUID = -6577015989775607193L;
+
     private VeriniceGraph graph;
     
     private List<IGraphElementLoader> elementLoaderList;
@@ -65,7 +67,7 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
      */
     @Override
     public void executeWithGraph() {
-        
+       // override this method 
     }
 
     protected void initGraph() {
@@ -82,7 +84,7 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
     @Override
     public List<IGraphElementLoader> getLoader() {
         if(elementLoaderList==null) {
-            elementLoaderList = new LinkedList<IGraphElementLoader>();
+            elementLoaderList = new LinkedList<>();
         }
         return elementLoaderList;
     }
@@ -109,7 +111,7 @@ public class GraphCommand extends GenericCommand implements IGraphCommand {
     @Override
     public List<String> getRelationIds() {
         if(relationIdList==null) {
-            relationIdList = new LinkedList<String>();
+            relationIdList = new LinkedList<>();
         }
         return relationIdList;
     }

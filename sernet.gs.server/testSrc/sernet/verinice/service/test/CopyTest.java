@@ -61,7 +61,7 @@ public class CopyTest extends CommandServiceProvider {
     public void testCopy() throws Exception {
         // create
         uuidList = new LinkedList<String>();
-        Organization organization = createOrganization();
+        final Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
         uuidList.addAll(createElementsInGroups(organization, NUMBER_OF_ELEMENTS));       
         uuidList.addAll(createGroupsInGroups(organization, NUMBER_OF_GROUPS));      
@@ -72,12 +72,12 @@ public class CopyTest extends CommandServiceProvider {
         checkCopiedElements(organization);
         
         // remove
-        RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
+        final RemoveElement<CnATreeElement> removeCommand = new RemoveElement<CnATreeElement>(organization);
         commandService.executeCommand(removeCommand);
-        for (String uuid: uuidList) {
+        for (final String uuid: uuidList) {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuid);
             command = commandService.executeCommand(command);
-            CnATreeElement element = command.getElement();
+            final CnATreeElement element = command.getElement();
             assertNull("Organization was not deleted.", element);
         } 
     }
@@ -86,7 +86,7 @@ public class CopyTest extends CommandServiceProvider {
     public void testCopyOrganization() throws Exception {
         // create
         uuidList = new LinkedList<String>();
-        Organization organization = createOrganization();
+        final Organization organization = createOrganization();
         uuidList.add(organization.getUuid());
         uuidList.addAll(createElementsInGroups(organization, NUMBER_OF_ELEMENTS));       
         uuidList.addAll(createGroupsInGroups(organization, NUMBER_OF_GROUPS));      
@@ -94,9 +94,9 @@ public class CopyTest extends CommandServiceProvider {
         
         // copy org
         copyAllElements(organization);
-        String uuid = copyOrganization(organization);    
+        final String uuid = copyOrganization(organization);    
         uuidList.add(uuid);
-        Organization organizationCopy = (Organization) elementDao.findByUuid(uuid, RetrieveInfo.getChildrenInstance());
+        final Organization organizationCopy = (Organization) elementDao.findByUuid(uuid, RetrieveInfo.getChildrenInstance());
         checkCopiedElements(organizationCopy);
         
         // remove
@@ -104,21 +104,21 @@ public class CopyTest extends CommandServiceProvider {
         commandService.executeCommand(removeCommand);
         removeCommand = new RemoveElement<CnATreeElement>(organizationCopy);
         commandService.executeCommand(removeCommand);
-        for (String uuidDeleted: uuidList) {
+        for (final String uuidDeleted: uuidList) {
             LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(uuidDeleted);
             command = commandService.executeCommand(command);
-            CnATreeElement element = command.getElement();
+            final CnATreeElement element = command.getElement();
             assertNull("Organization was not deleted.", element);
         } 
     }
 
-    private String copyOrganization(Organization organization) throws CommandException {
-        ISO27KModel model = loadIsoModel();
-        List<String> uuidList = new ArrayList<String>();
+    private String copyOrganization(final Organization organization) throws CommandException {
+        final ISO27KModel model = loadIsoModel();
+        final List<String> uuidList = new ArrayList<String>();
         uuidList.add(organization.getUuid());
         CopyCommand copyCommand = new CopyCommand(model.getUuid(), uuidList);
         copyCommand = commandService.executeCommand(copyCommand);
-        List<String> newUuidList = copyCommand.getNewElements();
+        final List<String> newUuidList = copyCommand.getNewElements();
         assertTrue("Not only one element in result list", newUuidList!=null && newUuidList.size()==1);
         return newUuidList.get(0);
     }
@@ -127,15 +127,15 @@ public class CopyTest extends CommandServiceProvider {
      * @param organization
      * @throws CommandException 
      */
-    private void copyAllElements(Organization organization) throws CommandException {
-        Set<CnATreeElement> children = organization.getChildren();
-        for (CnATreeElement child : children) {
+    private void copyAllElements(final Organization organization) throws CommandException {
+        final Set<CnATreeElement> children = organization.getChildren();
+        for (final CnATreeElement child : children) {
             assertTrue("Child of organization is not a group", child instanceof Group);
-            Group<CnATreeElement> group = (Group) child;
-            Set<CnATreeElement> childrenOfGroup = group.getChildren();
+            final Group<CnATreeElement> group = (Group) child;
+            final Set<CnATreeElement> childrenOfGroup = group.getChildren();
             Group<CnATreeElement> subGroup = null;
-            List<String> copyUuidList = new LinkedList<String>();
-            for (CnATreeElement subChild : childrenOfGroup) {
+            final List<String> copyUuidList = new LinkedList<String>();
+            for (final CnATreeElement subChild : childrenOfGroup) {
                 if(subChild instanceof Group) {
                     subGroup = (Group<CnATreeElement>) subChild;
                 } else {
@@ -153,21 +153,21 @@ public class CopyTest extends CommandServiceProvider {
     /**
      * @param organization
      */
-    private void checkCopiedElements(Organization organization) {
-        Set<CnATreeElement> children = organization.getChildren();
+    private void checkCopiedElements(final Organization organization) {
+        final Set<CnATreeElement> children = organization.getChildren();
         for (CnATreeElement child : children) {
-            RetrieveInfo ri = RetrieveInfo.getChildrenInstance();
+            final RetrieveInfo ri = RetrieveInfo.getChildrenInstance();
             ri.setGrandchildren(true);
             child = elementDao.findByUuid(child.getUuid(), ri);
             assertTrue("Child of organization is not a group", child instanceof Group);
-            Group<CnATreeElement> group = (Group) child;
+            final Group<CnATreeElement> group = (Group) child;
             
-            Set<CnATreeElement> childrenOfGroup =  group.getChildren();
+            final Set<CnATreeElement> childrenOfGroup =  group.getChildren();
             assertTrue("Number of elements in group is not:" + (NUMBER_OF_ELEMENTS+1) + "): " + child.getTypeId(), childrenOfGroup.size()==(NUMBER_OF_ELEMENTS+1));
             
-            for (CnATreeElement subChild : childrenOfGroup) {
+            for (final CnATreeElement subChild : childrenOfGroup) {
                 if(subChild instanceof Group) {
-                    Group<CnATreeElement> subGroup = (Group<CnATreeElement>) subChild;
+                    final Group<CnATreeElement> subGroup = (Group<CnATreeElement>) subChild;
                     assertTrue("Number of elements in group is not: " + NUMBER_OF_ELEMENTS, subGroup.getChildren().size()==NUMBER_OF_ELEMENTS);
                 } 
             }

@@ -1,35 +1,37 @@
+
 package sernet.verinice.samt.rcp;
 
-import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 
-import sernet.verinice.iso27k.service.ControlMaturityService;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.samt.rcp.IsaDecoratorUtil.DecoratorColor;
 
 @SuppressWarnings("restriction")
 public class IsaDecoratorForSamtTopic extends LabelProvider implements ILightweightLabelDecorator {
 
-    private static final Logger LOG = Logger.getLogger(IsaDecoratorForSamtTopic.class);
-
-    private ControlMaturityService maturityService = new ControlMaturityService();
-    
     @Override
     public void decorate(Object element, IDecoration decoration) {
-        boolean prefEnabled = Activator.getDefault().getPreferenceStore().getBoolean(SamtPreferencePage.ISA_RESULTS);
-        if (!prefEnabled ||
-            !(element instanceof IControl) ||
-            !IsaDecoratorUtil.isAuditGroupDescendant((CnATreeElement) element)) {
+
+        boolean preferenceEnabled = Activator.getDefault().getPreferenceStore()
+                .getBoolean(SamtPreferencePage.ISA_RESULTS);
+        boolean isIsaControl = element instanceof SamtTopic;
+
+        if (!preferenceEnabled || !isIsaControl) {
             return;
         }
 
-        try {
-            sernet.gs.ui.rcp.main.Activator.inheritVeriniceContextState();
-            IsaDecoratorUtil.addOverlay(maturityService.getDecoratorColor((IControl) element), decoration);
-        } catch (Exception e) {
-            LOG.error("Error while using ControlMaturityService to determine decorator color.", e);
+        sernet.gs.ui.rcp.main.Activator.inheritVeriniceContextState();
+        SamtTopic isaControl = (SamtTopic) element;
+
+        boolean isGreatGrandchildOfAudit = IsaDecoratorUtil.isGreatGrandchildOfAudit(isaControl);
+
+        if (!isGreatGrandchildOfAudit) {
+            return;
         }
+
+        DecoratorColor color = IsaDecoratorUtil.decoratorColor(isaControl);
+        IsaDecoratorUtil.addOverlay(color, decoration);
     }
 }

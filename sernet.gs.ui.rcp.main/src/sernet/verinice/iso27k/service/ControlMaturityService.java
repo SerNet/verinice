@@ -1,20 +1,25 @@
-/*******************************************************************************
- * Copyright (c) 2010 Alexander Koderman <ak@sernet.de>.
- * This program is free software: you can redistribute it and/or 
- * modify it under the terms of the GNU General Public License 
- * as published by the Free Software Foundation, either version 3 
- * of the License, or (at your option) any later version.
- *     This program is distributed in the hope that it will be useful,    
- * but WITHOUT ANY WARRANTY; without even the implied warranty 
- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
- * See the GNU General Public License for more details.
- *     You should have received a copy of the GNU General Public 
- * License along with this program. 
- * If not, see <http://www.gnu.org/licenses/>.
- * 
+/**
+ * Copyright 2010 Alexander Koderman.
+ *
+ * This file is part of Verinice.
+ *
+ * Verinice is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Verinice is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Verinice. If not, see <http://www.gnu.org/licenses/>.
+ *
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
- ******************************************************************************/
+ *  - Alexander Koderman - Initial API and implementation
+ */
+
 package sernet.verinice.iso27k.service;
 
 import sernet.hui.common.VeriniceContext;
@@ -26,13 +31,9 @@ import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.IISRControl;
 
 /**
- * 
  * Calculate maturity values and weights for controls and control groups.
  * 
- * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
+ * @author Alexander Koderman
  */
 public class ControlMaturityService {
     
@@ -41,11 +42,11 @@ public class ControlMaturityService {
     public static final int TYPE_MATURITY = 0;
     public static final int TYPE_ISR = 1;
     
-    public static enum DecoratorColor {
+    public enum DecoratorColor {
         NULL, GREEN, YELLOW, RED
     }
     
-    private static enum Maturity {
+    private enum Maturity {
         NOT_EDITED(-2), NA(-1);
         
         private int specialMaturityValue;
@@ -97,7 +98,7 @@ public class ControlMaturityService {
         for (CnATreeElement child : cg.getChildren()) {
             if (child instanceof IControl) {
                 int m = getMaturity((IControl) child);
-                if (isNotSpecialMaturityValue(m)) {
+                if (isApplicable(m)) {
                     maturity += m;
                 }
             }
@@ -115,13 +116,16 @@ public class ControlMaturityService {
      * @return averageMaturity
      */
     public Double getAvgMaturity(ControlGroup controlGroup) {
-        Double averageMaturity = null;
+        Double averageMaturity;
         int accumulativeMaturity = 0;
         int count = 0;
         for (CnATreeElement child : controlGroup.getChildren()) {
             if (child instanceof IControl) {
                 int maturity = getMaturity((IControl) child);
-                if (isNotSpecialMaturityValue(maturity)) {
+                if (!(isEdited(maturity))) {
+                    maturity = 0;
+                }
+                if (isApplicable(maturity)) {
                     accumulativeMaturity += maturity;
                     count += 1;
                 }
@@ -136,7 +140,7 @@ public class ControlMaturityService {
     }
     
     public double getAverageTargetMaturity(ControlGroup controlGroup) {
-        double averageTargetMaturity = 0;
+        double averageTargetMaturity;
         int accumulativeTargetMaturity = 0;
         int count = 0;
         for (CnATreeElement child : controlGroup.getChildren()) {
@@ -154,8 +158,12 @@ public class ControlMaturityService {
         return averageTargetMaturity;
     }
 
-    private boolean isNotSpecialMaturityValue(int targetMaturity) {
-        return targetMaturity != Maturity.NA.getValue() && targetMaturity != Maturity.NOT_EDITED.getValue();
+    private boolean isApplicable(int maturity) {
+        return maturity != Maturity.NA.getValue();
+    }
+
+    private boolean isEdited(int maturity) {
+        return maturity != Maturity.NOT_EDITED.getValue();
     }
     
     public int getControlCount(ControlGroup cg){
@@ -196,7 +204,7 @@ public class ControlMaturityService {
         int weight = 0;
         for (CnATreeElement child : cg.getChildren()) {
             if (child instanceof IControl) {
-            	IControl control = (IControl) child;
+                IControl control = (IControl) child;
                 weight += control.getWeight2();
             }
             if (child instanceof ControlGroup) {
@@ -207,22 +215,14 @@ public class ControlMaturityService {
         return weight;
     }
     
-    /**
-     * @return
-     */
     public Integer getWeightedMaturity(IControl contr) {
         return getMaturity(contr) * contr.getWeight2();
     }
     
     public Double getMaturityByWeight(IControl contr) {
-        double result = ((double)getWeightedMaturity(contr)) / ((double)contr.getWeight2());
-        return result;
+        return ((double)getWeightedMaturity(contr)) / ((double)contr.getWeight2());
     }
 
-    /**
-     * @param group
-     * @return
-     */
     public Double getMaxMaturityValue(ControlGroup group) {
         Double result = Double.valueOf(0);
         for (CnATreeElement child : group.getChildren()) {
@@ -254,80 +254,6 @@ public class ControlMaturityService {
         return Double.valueOf(propertyType.getMaxValue());
     }
     
-    public int getThreshold1(ControlGroup group) {
-        int result = 0;
-        for (CnATreeElement child : group.getChildren()) {
-            if (child instanceof IControl) {
-                IControl control = (IControl)child;
-                // don't add threshold if maturity is NA
-                if(getMaturity(control)!=IControl.IMPLEMENTED_NA_NUMERIC) {
-                    result += control.getThreshold1();
-                }
-            }
-            if (child instanceof ControlGroup) {
-            	result += getThreshold1((ControlGroup)child);
-            }
-        }
-        return result;
-    }
-    
-    public int getThreshold2(ControlGroup group) {
-        int result = 0;
-        for (CnATreeElement child : group.getChildren()) {
-            if (child instanceof IControl) {
-                IControl control = (IControl)child;
-                // don't add threshold if maturity is NA
-                if(getMaturity(control)!=IControl.IMPLEMENTED_NA_NUMERIC) {
-                    result += control.getThreshold2();
-                }
-            }
-            if (child instanceof ControlGroup) {
-            	result+= getThreshold2((ControlGroup)child);
-            }
-        }
-        return result;
-    }
-    
-    /**
-     * Returns the implementaiton state based on the maturity level of the <code>IControl.</code>
-     * 
-     * @param control
-     * @return the implementation state as definied in the <code>IControl.IMPLEMENTED</code> constants.
-     */
-    public String getImplementationState(ControlGroup group) {
-    	String state = IControl.IMPLEMENTED_NO;
-    	int threshold1 = getThreshold1(group);
-    	int maturity = getMaturity(group);
-    	if (maturity >= threshold1) {
-    		state = IControl.IMPLEMENTED_PARTLY;
-        	int threshold2 = getThreshold2(group); 		
-    		if (maturity >= threshold2) {
-        		state = IControl.IMPLEMENTED_YES;
-        	}
-    	} 	
-    	return state;
-    }
-    
-    /**
-     * Returns the implementaiton state based on the maturity level of the <code>IControl.</code>
-     * 
-     * @param control
-     * @return the implementation state as definied in the <code>IControl.IMPLEMENTED</code> constants.
-     */
-    public String getImplementationState(IControl control) {
-    	String state =  IControl.IMPLEMENTED_NO;
-    	if (getMaturity(control) >= control.getThreshold1()) {
-    		state = IControl.IMPLEMENTED_PARTLY;
-    	}
-    	if (getMaturity(control) >= control.getThreshold2()) {
-    		state = IControl.IMPLEMENTED_YES;
-    	}
-    	if(getMaturity(control)==IControl.IMPLEMENTED_NA_NUMERIC) {
-    	    state = IControl.IMPLEMENTED_YES;
-    	}
-    	return state;
-    }
-    
     /**
      * Returns the isa implementaiton state based on the maturity level of the <code>IControl.</code>
      * Changed to represent just the states "control has been edited or not".
@@ -349,37 +275,34 @@ public class ControlMaturityService {
     
     public DecoratorColor getDecoratorColor(IControl control) {
         int maturity = getMaturity(control);
-        int getTargetMaturity = getTargetMaturity(control);
-        return getDecoratorColor(maturity, getTargetMaturity);
+        int targetMaturity = getTargetMaturity(control);
+        return getDecoratorColor(Double.valueOf(maturity), targetMaturity);
     }
     
     public DecoratorColor getDecoratorColor(ControlGroup controlGroup) {
         Double averageMaturity = getAvgMaturity(controlGroup);
         Double averageTargetMaturity = getAverageTargetMaturity(controlGroup);
         
-        DecoratorColor color = getDecoratorColor(averageMaturity, averageTargetMaturity);
-        
-        return color;
+        return getDecoratorColor(averageMaturity, Math.round(averageTargetMaturity));
     }
     
-    private DecoratorColor getDecoratorColor(double maturity, double targetMaturity) {
-        if (maturity == Double.NaN) {
-            maturity = Maturity.NOT_EDITED.getValue();
-        } else {
-            maturity = Math.round(maturity);
-        }
-
-        if (maturity == Maturity.NOT_EDITED.getValue()) {
-            return DecoratorColor.RED;
-        } else if (maturity == Maturity.NA.getValue()) {
+    private DecoratorColor getDecoratorColor(Double maturity, long targetMaturity) {
+        if (maturity.isNaN()) {
             return DecoratorColor.NULL;
-        } else if (maturity <= targetMaturity - 2) {
-            return DecoratorColor.RED;
-        } else if (maturity == targetMaturity - 1) {
-            return DecoratorColor.YELLOW;
-        } else if (maturity >= targetMaturity) {
-            return DecoratorColor.GREEN;
         }
-        return DecoratorColor.NULL;
+        
+        Long roundedMaturity = Math.round(maturity);
+        DecoratorColor decoratorColor = DecoratorColor.NULL;
+
+        if (roundedMaturity == Maturity.NOT_EDITED.getValue()) {
+            decoratorColor = DecoratorColor.RED;
+        } else if (roundedMaturity <= targetMaturity - 2) {
+            decoratorColor = DecoratorColor.RED;
+        } else if (roundedMaturity == targetMaturity - 1) {
+            decoratorColor = DecoratorColor.YELLOW;
+        } else if (roundedMaturity >= targetMaturity) {
+            decoratorColor = DecoratorColor.GREEN;
+        }
+        return decoratorColor;
     }
 }

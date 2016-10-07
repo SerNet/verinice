@@ -28,8 +28,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.imageio.ImageIO;
 
@@ -42,6 +45,9 @@ import org.eclipse.datatools.connectivity.oda.OdaException;
 import org.eclipse.datatools.connectivity.oda.SortSpec;
 import org.eclipse.datatools.connectivity.oda.spec.QuerySpecification;
 
+import bsh.EvalError;
+import bsh.Interpreter;
+import bsh.TargetError;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.HUITypeFactory;
@@ -50,8 +56,8 @@ import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.oda.driver.Activator;
-import bsh.EvalError;
-import bsh.Interpreter;
+import sernet.verinice.security.report.ReportClassLoader;
+import sernet.verinice.security.report.ReportSecurityException;
 
 
 
@@ -86,14 +92,17 @@ public class Query implements IQuery
     
     Query(Integer rootElementId)
     {
+        
     	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
+    	
+    	ReportClassLoader securedClassLoader = new ReportClassLoader(Query.class.getClassLoader());
     	
     	vnRootElement = rootElementId;
 
     	try {
     	    // "Setup" BSH environment:
     		setupInterpreter = new Interpreter();
-    		setupInterpreter.setClassLoader(Query.class.getClassLoader());
+    		setupInterpreter.setClassLoader(securedClassLoader);
     		
     		setupInterpreter.set("__columns", null);
     		setupInterpreter.eval("columns(c) { __columns = c; }");
@@ -104,7 +113,7 @@ public class Query implements IQuery
 
     		// BSH environment:
     		interpreter = new Interpreter();
-    		interpreter.setClassLoader(Query.class.getClassLoader());
+    		interpreter.setClassLoader(securedClassLoader);
     		
     		
 			interpreter.set("_inpv", inParameterValues);
@@ -124,6 +133,7 @@ public class Query implements IQuery
     		interpreter.set("helper", new Helper());
     		interpreter.eval("gpt(entityType) { return helper.getAllPropertyTypes(entityType); }");
     		interpreter.set("properties", properties);
+    		
 
     		
     		
@@ -167,7 +177,7 @@ public class Query implements IQuery
          * @param propertyNames
          * @return
          */
-        public List<List<String>> retrieveEntityValues(String typeId, String[] propertyNames)
+        public List<List<Object>> retrieveEntityValues(String typeId, String[] propertyNames)
         {
         	return retrieveEntityValues(typeId, propertyNames, new Class[0]);
         }
@@ -185,7 +195,7 @@ public class Query implements IQuery
          * @param classes
          * @return
          */
-        public List<List<String>> retrieveEntityValues(String typeId, String[] propertyNames, Class<?>[] classes)
+        public List<List<Object>> retrieveEntityValues(String typeId, String[] propertyNames, Class<?>[] classes)
         {
     		LoadEntityValues command = new LoadEntityValues(typeId, propertyNames, classes );
 
@@ -214,7 +224,7 @@ public class Query implements IQuery
             return props;
         }
       
-        public List<List<String>> map(List<CnATreeElement> input, String[] props)
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props)
         {
         	return map(input, props, new Class<?>[0]);
         }
@@ -229,10 +239,10 @@ public class Query implements IQuery
          * @param addDbId optionally add database ID of the element at the end of each result
          * @return
          */
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId)
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId)
         {
             if (input == null || input.size()==0){
-                return new ArrayList<List<String>>();
+                return new ArrayList<List<Object>>();
             }
        
            	MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(), reduceToIDs(input), props, classes, addDbId);
@@ -240,9 +250,9 @@ public class Query implements IQuery
         	return cmd.getResult();
         }
         
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId, boolean mapNumericalOptionValues){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes, boolean addDbId, boolean mapNumericalOptionValues){
             if (input == null || input.size()==0){
-                return new ArrayList<List<String>>();
+                return new ArrayList<List<Object>>();
             }
 
             MapEntityValues cmd = new MapEntityValues(input.get(0).getEntityType().getId(), reduceToIDs(input), props, classes, addDbId, mapNumericalOptionValues);
@@ -290,15 +300,15 @@ public class Query implements IQuery
             return result_0;
         }
 
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, boolean withDbId){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, boolean withDbId){
             return map(input, props, new Class<?>[0], withDbId);
         }
 
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, Class<?>[] classes){
             return map(input, props, classes, false);
         }
         
-        public List<List<String>> map(List<CnATreeElement> input, String[] props, boolean withDbId, boolean mapNumericalValues){
+        public List<List<Object>> map(List<CnATreeElement> input, String[] props, boolean withDbId, boolean mapNumericalValues){
             return map(input, props, new Class<?>[0], withDbId, mapNumericalValues);
         }
         
@@ -307,6 +317,9 @@ public class Query implements IQuery
         }
         
         public Integer[] getRootElements(){
+            if (vnRootElements == null || vnRootElements.length <= 0) {
+                return new Integer[] { getRoot() };
+            }
         	return vnRootElements;
         }
 
@@ -326,6 +339,11 @@ public class Query implements IQuery
         	ByteArrayOutputStream bos = new ByteArrayOutputStream();
         	ImageIO.write(im, "png", bos);
         	return bos.toByteArray();
+        }
+        
+        public Object arraycopy(Object sourceArray, int sourcePosition, Object destinationArray, int destinationPosition, int length){
+            System.arraycopy(sourceArray, sourcePosition, destinationArray, destinationPosition, length);
+            return destinationArray;
         }
         
     }
@@ -385,12 +403,14 @@ public class Query implements IQuery
 		}
 	}
 	
-	private Object runQuery() throws OdaException
+    private Object runQuery() throws OdaException
 	{
+	    
 		runSetupQuery();
 		
 		try {
 			result = interpreter.eval(queryText);
+			
 		} catch (EvalError e) {
 			result = "Exception while executing query: ";
 			if(e.getMessage() != null){
@@ -403,6 +423,12 @@ public class Query implements IQuery
 				result = result + ", " + e.getCause().getMessage();
 			}
 			log.error("Error evaluating the query: " + queryText + "\n\n" + result, e);
+
+			Throwable t = ((TargetError)e).getTarget();
+			if(t instanceof ReportSecurityException){
+			    throw (ReportSecurityException)t;
+			}
+
 		}
 		
 		return result;
@@ -667,6 +693,19 @@ public class Query implements IQuery
     public void cancel() throws OdaException
     {
     	result = null;
+    }
+    
+    private Set<String> getImportsFromQuery(String query){
+        Set<String> imports = new HashSet<String>();
+        StringTokenizer tokenizer = new StringTokenizer(query, ";");
+        while(tokenizer.hasMoreTokens()){
+            String token = tokenizer.nextToken();
+            if(token.trim().startsWith("import")){
+                String importPath = token.substring(token.lastIndexOf(" "));
+                imports.add(importPath.trim());
+            }
+        }
+        return imports;
     }
     
 }

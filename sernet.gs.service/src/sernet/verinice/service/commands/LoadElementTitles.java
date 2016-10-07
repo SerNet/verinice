@@ -32,30 +32,28 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 
 /**
+ * Class to get all Titles and DBIds for one or more typeIDs. If the typeIDs is
+ * left empty the root elements({@link ITVerbund}, {@link Organization}) are
+ * used
+ * 
  * @author Julia Haas <jh[at]sernet[dot]de>
  * 
  */
-@SuppressWarnings("serial")
 public class LoadElementTitles extends GenericCommand {
    
-    private transient Logger log = Logger.getLogger(LoadElementTitles.class);
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(LoadElementTitles.class);
-        }
-        return log;
-    }
-    
+    private static final long serialVersionUID = -7681461422144808207L;
     private static final String QUERY = "select elmt from CnATreeElement elmt " +
             "join fetch elmt.entity as entity " +
             "join fetch entity.typedPropertyLists as propertyList " +
             "join fetch propertyList.properties as props " +
             "where elmt.objectType in (:typeIds)"; //$NON-NLS-1$
-        
-    
+
+    private transient Logger log = Logger.getLogger(LoadElementTitles.class);
     private String[] typeIds;
-    
-    private HashMap<Integer, String> selectedElements = new HashMap<Integer, String>();
+
+    private HashMap<Integer, String> selectedElements = new HashMap<>();
+
+    private HashMap<String, String> selectedElementsUuid = new HashMap<>();
 
     public LoadElementTitles() {
         this(new String[] {ITVerbund.TYPE_ID_HIBERNATE, Organization.TYPE_ID});
@@ -63,8 +61,16 @@ public class LoadElementTitles extends GenericCommand {
      
     public LoadElementTitles(String[] typeIds) {
         super();
-        this.typeIds = (typeIds!=null) ? typeIds.clone() : null;
+        this.typeIds = (typeIds != null && typeIds.length > 0) ? typeIds.clone() : null;
     }
+
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(LoadElementTitles.class);
+        }
+        return log;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -76,20 +82,26 @@ public class LoadElementTitles extends GenericCommand {
             getLog().debug("Number of type ids: " + typeIds.length);
         }
         IBaseDao<? extends CnATreeElement, Serializable> dao = getDaoFactory().getDAO(CnATreeElement.class);
-        List<CnATreeElement> list = (List<CnATreeElement>) dao.findByQuery(QUERY, new String[]{"typeIds"}, new Object[]{typeIds});
-        if(list != null && list.size() > 0){
+        List<? extends CnATreeElement> list = dao.findByQuery(QUERY, new String[] { "typeIds" },
+                new Object[] { typeIds });
+        if (list != null && !list.isEmpty()) {
             for(Object obj : list){
                 if(obj instanceof CnATreeElement){
                     CnATreeElement element = (CnATreeElement)obj;
                     selectedElements.put(element.getDbId(), element.getTitle());
+                    selectedElementsUuid.put(element.getUuid(), element.getTitle());
                 }
             }
         } 
     }
    
-    
+
     public HashMap<Integer, String> getElements() {
         return selectedElements;
+    }
+
+    public HashMap<String, String> getElementsUuid() {
+        return selectedElementsUuid;
     }
 
     public String[] getTypeIds() {

@@ -298,7 +298,7 @@ public class GSVampire {
 //	        + " and zo_bst.id.bauId =  mbg.mbBaust.id.bauId"
 //	        + " and zo_bst.id.zobId = :zobId";
 	
-	private static final String QUERY_GEFS_FOR_BAUSTEIN = "select mbg.mbGefaehr.nr, mbg.mbGefaehr.id.gefImpId, mbg.mbGefaehr.gfkId, mbg.mbGefaehr.id.gefId, gtxt.name, gtxt.beschreibung"
+    private static final String QUERY_GEFS_FOR_BAUSTEIN = "select mbg.mbGefaehr.nr, mbg.mbGefaehr.id.gefImpId, mbg.mbGefaehr.gfkId," + " mbg.mbGefaehr.id.gefId, gtxt.name, gtxt.beschreibung, mbg.mbGefaehr.guid"
 	+ " from MbGefaehrTxt gtxt, MbBaustGefaehr mbg"
 	+ " where mbg.id.gefId = :gefId"
 	+ " and gtxt.id.gefId = :gefId"
@@ -530,15 +530,18 @@ public class GSVampire {
         Query qry = dao.getSession().createQuery(QUERY_GEFS_FOR_BAUSTEIN);
         qry.setParameter("gefId", mbBstGef.getMbGefaehr().getId().getGefId());
         List<Object> hqlResult = qry.list();
-        GefaehrdungInformationTransfer gefaehrdungInformation = new GefaehrdungInformationTransfer();
+        GefaehrdungInformationTransfer gefaehrdungsInformation = null;
         if(hqlResult.size() >= 1 && hqlResult.get(0) instanceof Object[]){
-            gefaehrdungInformation = processGefaehrdung(encoding, hqlResult, gefaehrdungInformation);
+            gefaehrdungsInformation = processGefaehrdung(encoding, hqlResult);
+            gefaehrdungsInformation.setExtId(generateGefaehrdungsUmsetzungExtid(String.valueOf(((Object[]) hqlResult.get(0))[0]), String.valueOf(z.getId().getZobId()), String.valueOf(((Object[]) hqlResult.get(0))[6]), z.getGuid()));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Setting extId for GefaehrdungsUmsetzung to:\t" + gefaehrdungsInformation.getExtId());
+            }
         }
-        
         logDuplicates(encoding, hqlResult);
         transaction.commit();
         dao.getSession().close();
-        return gefaehrdungInformation;
+        return gefaehrdungsInformation;
 	}
 
     /**
@@ -546,7 +549,8 @@ public class GSVampire {
      * @param hqlResult
      * @param gefaehrdungInformation
      */
-    private GefaehrdungInformationTransfer processGefaehrdung(String encoding, List<Object> hqlResult, GefaehrdungInformationTransfer gefaehrdungInformation) {
+    private GefaehrdungInformationTransfer processGefaehrdung(String encoding, List<Object> hqlResult) {
+        GefaehrdungInformationTransfer gefaehrdungInformation = new GefaehrdungInformationTransfer();
         Object[] resultArr = ((Object[])hqlResult.get(0));
         String gefaehrdungNr = String.valueOf(resultArr[0]);
         String gefaehrdungKapitelId = String.valueOf(resultArr[2]);
@@ -558,7 +562,7 @@ public class GSVampire {
             LOG.error("Error parsing clob to String", e);
             gefaehrdungInformation.setDescription("Description not parseable from CLOB");
         }
-        gefaehrdungInformation.setId(String.valueOf(gefaehrdungNr));
+        gefaehrdungInformation.setId(String.valueOf("bG " + gefaehrdungKapitelId + "." + gefaehrdungNr));
         gefaehrdungInformation.setTitel(gefaehrdungName);
         return gefaehrdungInformation;
     }
@@ -919,4 +923,16 @@ public class GSVampire {
 	    }
     }
 	
+    public static String generateGefaehrdungsUmsetzungExtid(String gefaehrdungId, String zielobjektId, String zobGuid, String gefaehrdungGuid) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(gefaehrdungId);
+        sb.append("-");
+        sb.append(zielobjektId);
+        sb.append("-");
+        sb.append(gefaehrdungGuid);
+        sb.append("-");
+        sb.append(zobGuid);
+        return sb.toString();
+    }
+
 }

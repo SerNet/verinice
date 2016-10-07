@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import sernet.gs.model.Gefaehrdung;
-import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.GefaehrdungsUmsetzungFactory;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IAuthAwareCommand;
 import sernet.verinice.interfaces.IAuthService;
@@ -27,6 +26,7 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.HydratorUtil;
 import sernet.verinice.model.common.Permission;
+import sernet.verinice.service.gstoolimport.GefaehrdungsUmsetzungFactory;
 
 /**
  * Assign a threat to a risk analysis: create a new threat instance.

@@ -14,20 +14,32 @@
         namespace="http://www.sernet.de/sync/mapping"
         schemaLocation="mapping.xsd" />
 
-    <xsd:element
-        name="syncRequest">
-        <xsd:complexType>
-            <xsd:sequence>
 
-                <xsd:element
-                    ref="data:syncData"
-                    minOccurs="1"
-                    maxOccurs="1" />
-                <xsd:element
-                    ref="map:syncMapping"
-                    minOccurs="1"
-                    maxOccurs="1" />
+	<xsd:element name="syncRequest">
+		<xsd:complexType>
+			<xsd:sequence>
 
+				<xsd:element 
+					ref="data:syncData" 
+					minOccurs="1"
+					maxOccurs="1" />
+				<xsd:element 
+					ref="map:syncMapping" 
+					minOccurs="1"
+					maxOccurs="1" />
+				<xsd:element name="syncVnaSchemaVersion">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element 
+								type="xsd:string" 
+								name="compatibleVersions"
+								minOccurs="1" 
+								maxOccurs="unbounded" />
+						</xsd:sequence>
+						<xsd:attribute name="vnaSchemaVersion" type="xsd:string"
+							use="required" />
+					</xsd:complexType>
+				</xsd:element>
             </xsd:sequence>
 
             <xsd:attribute
@@ -49,7 +61,6 @@
                 name="delete"
                 type="xsd:boolean"
                 default="false" />
-
         </xsd:complexType>
     </xsd:element>
 

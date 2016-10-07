@@ -19,14 +19,18 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.graph;
 
+import java.io.Serializable;
+
+import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
- *
+ * IElementFilter filter elements in {@link IGraphElementLoader}s
+ * of {@link GraphCommand}s.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-public interface IElementFilter {
+public interface IElementFilter extends Serializable {
 
     /**
      * @param element

@@ -23,16 +23,12 @@ public class CommandException extends Exception {
 		super(string);
 	}
 
-	public CommandException(String msg, Throwable cause) {
+	public CommandException(String msg, Throwable cause) {    
 		super(msg, cause);
 	}
-
-	/**
-	 * @param t
-	 */
+	
 	public CommandException(Throwable t) {
 		super(t);
 	}
 	
-
 }

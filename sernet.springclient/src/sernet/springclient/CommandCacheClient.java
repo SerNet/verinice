@@ -36,6 +36,7 @@ import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.interfaces.ICommand;
 import sernet.verinice.interfaces.ICommandCacheClient;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.service.sync.VnaSchemaVersion;
 
 /**
  *
@@ -202,6 +203,15 @@ public class CommandCacheClient implements ICommandCacheClient {
      */
     @Override
     public void disableFilter(IBaseDao dao) {
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.ICommandService#getVnaSchemaVersion()
+     */
+    @Override
+    public VnaSchemaVersion getVnaSchemaVersion() {
+        // delegate to server
+        return commandService.getVnaSchemaVersion();
     }
 
 }

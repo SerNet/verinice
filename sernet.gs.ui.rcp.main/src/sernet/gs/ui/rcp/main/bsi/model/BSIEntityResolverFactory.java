@@ -34,7 +34,6 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.PersonEntityOptionWrapper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.FastLoadCnAElementsByIds;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByEntityUuid;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadCnAElementByType;
 import sernet.gs.ui.rcp.main.service.taskcommands.FindAllRoles;
@@ -58,13 +57,14 @@ import sernet.verinice.model.bsi.Person;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.service.commands.LoadEntitiesByIds;
 import sernet.verinice.service.commands.SaveElement;
 
 /**
- * The HUI framework has no knowledge aout the database, so this factory
+ * The HUI framework has no knowledge about the database, so this factory
  * generates the necessary callback methods to get objects for it.
  * 
- * Basically this is needed to get objects referenced in propertytypes, i.e. a
+ * Basically this is needed to get objects referenced in property types, i.e. a
  * list of Authors for the field "Authors" in the entity "Book".
  * 
  * It is also used to get previously entered URLs in the URL edit dialog, so the
@@ -306,12 +306,12 @@ public class BSIEntityResolverFactory implements IEntityResolverFactory {
                     for (Property prop : references) {
                         dbIds.add(Integer.parseInt(prop.getPropertyValue()));
                     }
-                    FastLoadCnAElementsByIds command = new FastLoadCnAElementsByIds(dbIds);
+                    LoadEntitiesByIds command = new LoadEntitiesByIds(dbIds);
 
                     try {
                         command = ServiceFactory.lookupCommandService().executeCommand(command);
 
-                        List<Entity> personen = command.getFoundItems();
+                        List<Entity> personen = command.getEntities();
 
                         for (Entity person : personen) {
                             result.add(new PersonEntityOptionWrapper(person));

@@ -41,6 +41,8 @@
 			
 			<property name="ownkategorie"/>
 			
+			
+			<!-- this length is used in RiskAnalysisDialog.java. If you change this length here please adapt the constant there, too. -->
 			<property 
 				name="beschreibung"
 				length="30000"/>

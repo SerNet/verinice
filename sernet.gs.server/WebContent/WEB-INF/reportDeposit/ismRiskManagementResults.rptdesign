@@ -11632,7 +11632,7 @@ Risk acceptance criteria shown on the left are defined in the risk assessment po
             <property name="fontWeight">bold</property>
             <property name="textUnderline">underline</property>
             <property name="pageBreakBefore">always</property>
-            <text-property name="text">Identified Risks</text-property>
+            <text-property name="text">Identified Risks without implemented Controls</text-property>
         </label>
         <extended-item extensionName="Chart" id="2562">
             <xml-property name="xmlRepresentation"><![CDATA[<model:ChartWithAxes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:attribute="http://www.birt.eclipse.org/ChartModelAttribute" xmlns:data="http://www.birt.eclipse.org/ChartModelData" xmlns:layout="http://www.birt.eclipse.org/ChartModelLayout" xmlns:model="http://www.birt.eclipse.org/ChartModel" xmlns:type="http://www.birt.eclipse.org/ChartModelType">

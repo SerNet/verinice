@@ -19,16 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.bpm;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
-import sernet.verinice.interfaces.bpm.ITaskService;
 
 /**
  * Default ICompleteServerHandler which is active if parameter are set in
- * ITaskService.completeTask but no ICompleteServerHandler is set
- * for this task/outcome in veriniceserver-jbpm.xml.
+ * ITaskService.completeTask but no other ICompleteServerHandler is set
+ * for this task and outcome in veriniceserver-jbpm.xml.
  * 
  * DefaultCompleteServerHandler set all params passed from the client
  * as jBPM process variables.
@@ -37,7 +37,7 @@ import sernet.verinice.interfaces.bpm.ITaskService;
  */
 public class DefaultCompleteServerHandler implements ICompleteServerHandler {
 
-    private ITaskService taskService;
+    private Map<String, Object> taskParameter;
     
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.bpm.ICompleteServerHandler#getTaskType()
@@ -60,30 +60,29 @@ public class DefaultCompleteServerHandler implements ICompleteServerHandler {
      */
     @Override
     public void execute(String taskId, Map<String, Object> parameter) {
-        if(parameter!=null) {        
-            Map<String, Object> taskParameter = getTaskService().getVariables(taskId);
+        if(parameter!=null) {
             for (Entry<String, Object> entry : parameter.entrySet()) {
                 Object value = entry.getKey();
                 if(value instanceof String) {
                     String s = (String) value;
                     if(s.length()>254) {
-                        taskParameter.put(entry.getKey(), s.toCharArray());
+                        getTaskParameter().put(entry.getKey(), s.toCharArray());
                     } else {
-                        taskParameter.put(entry.getKey(), s);
-                    }
-                    
+                        getTaskParameter().put(entry.getKey(), s);
+                    }            
                 }
             }
-            getTaskService().setVariables(taskId, taskParameter);
         }
     }
-    
-    public ITaskService getTaskService() {
-        return taskService;
+
+    public Map<String, Object> getTaskParameter() {
+        if(taskParameter==null) {
+            taskParameter = new HashMap<String, Object>();
+        }
+        return taskParameter;
     }
 
-    public void setTaskService(ITaskService taskService) {
-        this.taskService = taskService;
+    public void setTaskParameter(Map<String, Object> taskParameter) {
+        this.taskParameter = taskParameter;
     }
-
 }

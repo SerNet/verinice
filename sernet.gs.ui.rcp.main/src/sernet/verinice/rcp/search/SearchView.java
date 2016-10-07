@@ -25,47 +25,31 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.*;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.KeyListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.Transfer;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.layout.*;
+import org.eclipse.swt.widgets.*;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.progress.UIJob;
 
-import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.*;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
+import sernet.gs.ui.rcp.main.bsi.dnd.SearchViewDragListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.SearchViewDropListener;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.*;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.search.ISearchService;
-import sernet.verinice.model.search.VeriniceQuery;
-import sernet.verinice.model.search.VeriniceSearchResult;
-import sernet.verinice.model.search.VeriniceSearchResultTable;
+import sernet.verinice.model.search.*;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.search.tables.TableMenuListener;
+import sernet.verinice.service.csv.CsvExportException;
 
 /**
  * Provides input fields for searching the verinice databases and renders the
@@ -419,6 +403,21 @@ public class SearchView extends RightsEnabledView {
             addTableColumnContextMenu(veriniceSearchResultTable);
 
             currentViewer.addDoubleClickListener(doubleClickListener);
+
+            Transfer[] dragTypes = new Transfer[] { SearchViewElementTransfer.getInstance(),
+            };
+            Transfer[] dropTypes = new Transfer[] { SearchViewElementTransfer.getInstance(),
+                    IBSIStrukturElementTransfer.getInstance(),
+                    ISO27kElementTransfer.getInstance()
+            };
+
+            int operations = DND.DROP_COPY | DND.DROP_MOVE;
+
+            currentViewer.addDragSupport(operations, dragTypes,
+                    new SearchViewDragListener(currentViewer));
+
+            currentViewer.addDropSupport(operations, dropTypes,
+                    new SearchViewDropListener(currentViewer));
 
             // repaint the table and rearranged the dimensions
             tableComposite.layout();

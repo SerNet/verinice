@@ -21,9 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.birt.report.engine.api.IDataExtractionTask;
@@ -45,7 +43,19 @@ import sernet.verinice.model.report.ODTOutputFormat;
 import sernet.verinice.model.report.PDFOutputFormat;
 import sernet.verinice.model.report.ReportTemplateMetaData;
 import sernet.verinice.model.report.WordOutputFormat;
+import sernet.verinice.report.service.impl.security.ReportSecurityManager;
+import sernet.verinice.security.report.ReportSecurityContext;
 
+/**
+ * with introduction of the the report-repository, this class gets annotated 
+ * deprecated, because the user defined report is not existant anymore. the user is now
+ * able to define the content of the report combo box of GenerateReportDialog itself, and every
+ * selection of that combo gets executed with {@link GenericReportType} 
+ * @author Robert Schuster <r.schuster@tarent.de> - initial API and implementation
+ * @author Sebastian Hagedorn <sh[at]sernet[dot]de>
+ */
+
+@Deprecated
 public class UserReportType implements IReportType {
 	
 	private static final Logger LOG = Logger.getLogger(UserReportType.class);
@@ -111,14 +121,17 @@ public class UserReportType implements IReportType {
 
         if (((AbstractOutputFormat) reportOptions.getOutputFormat()).isRenderOutput())
         {
-            IRunAndRenderTask task = brs.createTask(reportDesign);
+            ReportSecurityContext reportSecurityContext = new ReportSecurityContext(reportOptions, reportDesign, brs.getLogfile(), null);
+            ReportSecurityManager secureReportExecutionManager = new ReportSecurityManager(reportSecurityContext);
+            IRunAndRenderTask task = brs.createTask(reportSecurityContext.getRptDesignUrl());
+            task = brs.prepareTaskForRendering(task, reportOptions);
             int iterations = getEngineIterations(task);
             if(LOG.isDebugEnabled()){
                 LOG.debug("EngineIterations for UserTypeReport:\t" + iterations);
             }
-		    for(int i = 0;i < iterations; i++){
-			    brs.render(task, reportOptions);
-		    }
+            for(int i = 0;i < iterations; i++){
+                brs.performRenderTask(task, secureReportExecutionManager);
+            }
 
 		    // just in case a toc was generated, the next toc should start emtpy again
 		    TocHelper2.reset();

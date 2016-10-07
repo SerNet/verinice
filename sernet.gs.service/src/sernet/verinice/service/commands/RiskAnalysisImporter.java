@@ -82,10 +82,10 @@ public class RiskAnalysisImporter {
     public void run() {
         importOwnSzenarios();
         importOwnControls();
-        importRiskAnalysises();
+        importRiskAnalyses();
     }
 
-    private void importRiskAnalysises() {
+    private void importRiskAnalyses() {
         for (SyncRiskAnalysis syncRiskAnalysis : syncRiskAnalysisList) {
             importRiskAnalysis(syncRiskAnalysis);
         }
@@ -120,7 +120,7 @@ public class RiskAnalysisImporter {
        
        changeControlTypes(scenarioNotOk);
     }
-    
+
     /**
      * Changes the type of the control which are childs of
      * a risk analysis to RisikoMassnahmenUmsetzung.HIBERNATE_TYPE_ID.
@@ -178,6 +178,9 @@ public class RiskAnalysisImporter {
         scenario.setId(syncScenario.getNumber());
         scenario.setTitel(syncScenario.getName());
         scenario.setUuid(syncScenario.getUuid());
+        if(syncScenario.getCategory()!=null && !syncScenario.getCategory().isEmpty()) {
+            scenario.setOwnkategorie(syncScenario.getCategory());
+        }
         ownGefaehrdungDao.merge(scenario);       
     }
     

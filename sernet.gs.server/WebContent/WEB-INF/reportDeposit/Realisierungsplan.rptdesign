@@ -777,46 +777,63 @@ columns(new String[] {"kuerzel", "name"});</value>
                 <structure>
                     <property name="columnName">bstumsetzung_stand</property>
                     <text-property name="displayName">bstumsetzung_stand</text-property>
+                    <text-property name="heading">bstumsetzung_stand</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_erfasstam</property>
                     <text-property name="displayName">bstumsetzung_erfasstam</text-property>
+                    <text-property name="heading">bstumsetzung_erfasstam</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_url</property>
                     <text-property name="displayName">bstumsetzung_url</text-property>
+                    <text-property name="heading">bstumsetzung_url</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_name</property>
                     <text-property name="displayName">bstumsetzung_name</text-property>
+                    <text-property name="heading">bstumsetzung_name</text-property>
+                </structure>
+                <structure>
+                    <property name="columnName">eigene_bstumsetzung_beschreibung</property>
+                    <text-property name="displayName">eigene_bstumsetzung_beschreibung</text-property>
+                    <text-property name="heading">eigene_bstumsetzung_beschreibung</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_dokument</property>
                     <text-property name="displayName">bstumsetzung_dokument</text-property>
+                    <text-property name="heading">bstumsetzung_dokument</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_erfasstdurch_link</property>
                     <text-property name="displayName">bstumsetzung_erfasstdurch_link</text-property>
+                    <text-property name="heading">bstumsetzung_erfasstdurch_link</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_erlaeuterung</property>
                     <text-property name="displayName">bstumsetzung_erlaeuterung</text-property>
+                    <text-property name="heading">bstumsetzung_erlaeuterung</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_encoding</property>
                     <text-property name="displayName">bstumsetzung_encoding</text-property>
+                    <text-property name="heading">bstumsetzung_encoding</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_gespraechspartner_link</property>
                     <text-property name="displayName">bstumsetzung_gespraechspartner_link</text-property>
+                    <text-property name="heading">bstumsetzung_gespraechspartner_link</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">bstumsetzung_nr</property>
                     <text-property name="displayName">bstumsetzung_nr</text-property>
+                    <text-property name="heading">bstumsetzung_nr</text-property>
                 </structure>
                 <structure>
                     <property name="columnName">dbid</property>
+                    <property name="analysis">dimension</property>
                     <text-property name="displayName">dbid</text-property>
+                    <text-property name="heading">dbid</text-property>
                 </structure>
             </list-property>
             <list-property name="parameters">
@@ -857,36 +874,41 @@ columns(new String[] {"kuerzel", "name"});</value>
                     </structure>
                     <structure>
                         <property name="position">5</property>
-                        <property name="name">bstumsetzung_dokument</property>
+                        <property name="name">eigene_bstumsetzung_beschreibung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">6</property>
-                        <property name="name">bstumsetzung_erfasstdurch_link</property>
+                        <property name="name">bstumsetzung_dokument</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">7</property>
-                        <property name="name">bstumsetzung_erlaeuterung</property>
+                        <property name="name">bstumsetzung_erfasstdurch_link</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">8</property>
-                        <property name="name">bstumsetzung_encoding</property>
+                        <property name="name">bstumsetzung_erlaeuterung</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">9</property>
-                        <property name="name">bstumsetzung_gespraechspartner_link</property>
+                        <property name="name">bstumsetzung_encoding</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">10</property>
-                        <property name="name">bstumsetzung_nr</property>
+                        <property name="name">bstumsetzung_gespraechspartner_link</property>
                         <property name="dataType">javaObject</property>
                     </structure>
                     <structure>
                         <property name="position">11</property>
+                        <property name="name">bstumsetzung_nr</property>
+                        <property name="dataType">javaObject</property>
+                    </structure>
+                    <structure>
+                        <property name="position">12</property>
                         <property name="name">dbid</property>
                         <property name="dataType">javaObject</property>
                     </structure>
@@ -924,48 +946,55 @@ columns(new String[] {"kuerzel", "name"});</value>
                 </structure>
                 <structure>
                     <property name="position">5</property>
+                    <property name="name">eigene_bstumsetzung_beschreibung</property>
+                    <property name="nativeName">eigene_bstumsetzung_beschreibung</property>
+                    <property name="dataType">javaObject</property>
+                    <property name="nativeDataType">2000</property>
+                </structure>
+                <structure>
+                    <property name="position">6</property>
                     <property name="name">bstumsetzung_dokument</property>
                     <property name="nativeName">bstumsetzung_dokument</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">6</property>
+                    <property name="position">7</property>
                     <property name="name">bstumsetzung_erfasstdurch_link</property>
                     <property name="nativeName">bstumsetzung_erfasstdurch_link</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">7</property>
+                    <property name="position">8</property>
                     <property name="name">bstumsetzung_erlaeuterung</property>
                     <property name="nativeName">bstumsetzung_erlaeuterung</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">8</property>
+                    <property name="position">9</property>
                     <property name="name">bstumsetzung_encoding</property>
                     <property name="nativeName">bstumsetzung_encoding</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">9</property>
+                    <property name="position">10</property>
                     <property name="name">bstumsetzung_gespraechspartner_link</property>
                     <property name="nativeName">bstumsetzung_gespraechspartner_link</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">10</property>
+                    <property name="position">11</property>
                     <property name="name">bstumsetzung_nr</property>
                     <property name="nativeName">bstumsetzung_nr</property>
                     <property name="dataType">javaObject</property>
                     <property name="nativeDataType">2000</property>
                 </structure>
                 <structure>
-                    <property name="position">11</property>
+                    <property name="position">12</property>
                     <property name="name">dbid</property>
                     <property name="nativeName">dbid</property>
                     <property name="dataType">javaObject</property>
@@ -974,6 +1003,11 @@ columns(new String[] {"kuerzel", "name"});</value>
             </list-property>
             <xml-property name="queryText"><![CDATA[import sernet.hui.common.*;
 import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportElements;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
+import sernet.verinice.report.service.impl.TocHelper2;
+import sernet.verinice.model.common.CnATreeElement;
+import java.util.ArrayList;
 
 // set top level element for report:
 root = helper.getRoot();
@@ -988,35 +1022,93 @@ elmt = "bstumsetzung";
 cols = helper.getAllPropertyTypes(elmt);
 c2 = new LoadReportElements(elmt, root);
 elements = helper.execute(c2).getElements();
+
+countAllHQL = "select count(mnums.dbId) from CnATreeElement mnums where " +
+				"mnums.objectType = :typeIdMnums AND mnums.parentId = :bstId";
+
+
+bstCountHQL = "select count(massnahme.dbId) from CnATreeElement as massnahme " +
+				"inner join massnahme.entity as entity " + 
+				"inner join entity.typedPropertyLists as propertyList " + 
+		        	"inner join propertyList.properties as props " + 
+				"where massnahme.objectType = :typeIdMnums AND " + 
+				"massnahme.parentId = :bstId AND props.propertyType = :propUmsetzung " +
+				"and props.propertyValue in (:umsList)";
+
+//values that are not shown in the table
+propList = Arrays.asList(new String[]{"mnums_umsetzung_entbehrlich", "mnums_umsetzung_ja"});
+																		
+
+elementsToShow = new ArrayList();
+for(CnATreeElement bst : elements){
+
+	// first query setup 
+	paramNames0 = new String[]{"typeIdMnums", "bstId"};
+	params0 = new Object[]{MassnahmenUmsetzung.HIBERNATE_TYPE_ID, bst.getDbId()};
+	firstHqlExecuter = new ExecuteHQLInReportCommand(countAllHQL, paramNames0, params0, CnATreeElement.class);
+	totalMnumsSum = helper.execute(firstHqlExecuter).getResult();
+	totalCount = 0L;
+	TocHelper2.log("Size of totalSum hqlResult:\t" + totalMnumsSum.size());
+	if(totalMnumsSum.size() == 1){
+		totalCount = totalMnumsSum.get(0);
+	} else {
+		TocHelper2.log("More than one totalCount result for bst:\t" + bst.getDbId());
+	}
+
+	// second query setup
+	paramNames = new String[]{"typeIdMnums", "bstId", "propUmsetzung", "umsList"};
+	params = new Object[]{MassnahmenUmsetzung.HIBERNATE_TYPE_ID, bst.getDbId(), MassnahmenUmsetzung.P_UMSETZUNG, propList};
+	secondHqlExecuter = new ExecuteHQLInReportCommand(bstCountHQL, paramNames, params, CnATreeElement.class);
+	hiddenMnumsCount = helper.execute(secondHqlExecuter).getResult();
+	hiddenCount = 0L;
+	TocHelper2.log("Size of hiddenSum hqlResult:\t" + hiddenMnumsCount.size());
+	if(hiddenMnumsCount.size() == 1){
+		hiddenCount = hiddenMnumsCount.get(0);
+	} else {
+		TocHelper2.log("More than one hiddenCount result for bst:\t" + bst.getDbId());
+	}
+
+	if((totalCount - hiddenCount) > 0){
+		elementsToShow.add(bst);
+	}
+
+}
+
+
+
 return helper.map(
-	elements,
+	elementsToShow,
 	cols,
 	true
 );
 ]]></xml-property>
             <xml-property name="designerValues"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
 <model:DesignValues xmlns:design="http://www.eclipse.org/datatools/connectivity/oda/design" xmlns:model="http://www.eclipse.org/birt/report/model/adapter/odaModel">
-  <Version>1.0</Version>
-  <design:DataSetParameters>
-    <design:parameterDefinitions>
-      <design:inOutMode>In</design:inOutMode>
-      <design:attributes>
-        <design:name>root_object</design:name>
-        <design:position>1</design:position>
-        <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
-        <design:precision>-1</design:precision>
-        <design:scale>-1</design:scale>
-        <design:nullability>Unknown</design:nullability>
-      </design:attributes>
-      <design:inputAttributes>
-        <design:elementAttributes>
-          <design:defaultValues>
-            <design:values>dummy default value</design:values>
-          </design:defaultValues>
-        </design:elementAttributes>
-      </design:inputAttributes>
-    </design:parameterDefinitions>
-  </design:DataSetParameters>
+  <Version>2.0</Version>
+  <DataSetParameters>
+    <parameter>
+      <design:ParameterDefinition>
+        <design:inOutMode>In</design:inOutMode>
+        <design:attributes>
+          <design:identifier>
+            <design:name>root_object</design:name>
+            <design:position>1</design:position>
+          </design:identifier>
+          <design:nativeDataTypeCode>12</design:nativeDataTypeCode>
+          <design:precision>-1</design:precision>
+          <design:scale>-1</design:scale>
+          <design:nullability>Unknown</design:nullability>
+        </design:attributes>
+        <design:inputAttributes>
+          <design:elementAttributes>
+            <design:defaultValues>
+              <design:values>dummy default value</design:values>
+            </design:defaultValues>
+          </design:elementAttributes>
+        </design:inputAttributes>
+      </design:ParameterDefinition>
+    </parameter>
+  </DataSetParameters>
 </model:DesignValues>]]></xml-property>
             <list-property name="privateDriverProperties">
                 <ex-property>
@@ -2535,7 +2627,7 @@ if(elements.size() > 0){
 		")";
 		c2 = new ExecuteHQLInReportCommand(personNameHql, new Object[]{root, "massnahmen-umsetzung", Integer.parseInt(dbid)}, Person.TYPE_ID);
 		persons = helper.execute(c2).getResult();		
-		if(persons != null && persons.size() > 0){		
+		if(persons != null &amp;&amp; persons.size() > 0){		
 			for(Object[] oArr : persons){
 				for(Object o : oArr){
 					if(o instanceof Person){
@@ -4078,6 +4170,22 @@ columns(cols);</value>
                                                 <expression name="key" type="javascript">row["mnums_umsetzung"]</expression>
                                                 <property name="direction">asc</property>
                                                 <property name="strength">-1</property>
+                                            </structure>
+                                        </list-property>
+                                        <list-property name="filter">
+                                            <structure>
+                                                <property name="operator">ne</property>
+                                                <expression name="expr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                <simple-property-list name="value1">
+                                                    <value>"Ja"</value>
+                                                </simple-property-list>
+                                            </structure>
+                                            <structure>
+                                                <property name="operator">ne</property>
+                                                <expression name="expr" type="javascript">row["mnums_umsetzung"]</expression>
+                                                <simple-property-list name="value1">
+                                                    <value>"Entbehrlich"</value>
+                                                </simple-property-list>
                                             </structure>
                                         </list-property>
                                         <column id="1908">

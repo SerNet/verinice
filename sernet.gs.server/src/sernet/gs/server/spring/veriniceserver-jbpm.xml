@@ -4,7 +4,10 @@
 <!-- http://docs.jboss.com/jbpm/v4/devguide/html_single/#springIntegration                     -->
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+	http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
 
     <bean id="springHelper" class="org.jbpm.pvm.internal.processengine.SpringHelper">
         <property name="jbpmCfg" value="sernet/verinice/bpm/jbpm.cfg.xml" />
@@ -202,19 +205,26 @@
                 <value>indi.task.execute.loop</value>
             </set>
         </property>
+
+		<security:intercept-methods>
+			<security:protect
+				method="sernet.verinice.interfaces.bpm.ITaskService.cancelTask"
+				access="ACTION_ID_TASKDELETE" />
+			<security:protect
+				method="sernet.verinice.bpm.TaskService.getTaskList"
+				access="ACTION_ID_TASKSHOWALL" />
+			<security:protect
+				method="sernet.verinice.bpm.TaskService.setAssignee"
+				access="ACTION_ID_TASKCHANGEASSIGNEE"/>
+			<security:protect
+				method="sernet.verinice.bpm.TaskService.setDuedate"
+				access="ACTION_ID_TASKCHANGEDUEDATE" />
+		</security:intercept-methods>
     </bean>
     
-    <bean id="defaultCompleteServerHandler" class="sernet.verinice.bpm.DefaultCompleteServerHandler">
-        <property name="taskService" ref="taskService" />
-    </bean>
-      
-    <bean id="isaQmSetAssigneeHandler" class="sernet.verinice.bpm.qm.IsaQmSetAssigneeHandler">
-        <property name="taskService" ref="taskService" />
-    </bean>
-    
-    <bean id="indiExtensionHandler" class="sernet.verinice.bpm.indi.IndiExtensionHandler">
-        <property name="taskService" ref="taskService" />
-    </bean>
+    <bean id="defaultCompleteServerHandler" class="sernet.verinice.bpm.DefaultCompleteServerHandler" />     
+    <bean id="isaQmSetAssigneeHandler" class="sernet.verinice.bpm.qm.IsaQmSetAssigneeHandler" />   
+    <bean id="indiExtensionHandler" class="sernet.verinice.bpm.indi.IndiExtensionHandler" />
    
     <bean id="defaultDescriptionHandler" class="sernet.verinice.bpm.DefaultTaskDescriptionHandler" />
     <bean id="setAssigneeDescriptionHandler" class="sernet.verinice.bpm.qm.SetAssigneeDescriptionHandler" />
@@ -304,14 +314,14 @@
         <property name="elementDao" ref="cnaTreeElementDao" />
     </bean>
     
-    <!-- Activate this to activate GSM process generation for data imported from Greenbone Security Manager-->
+    <!-- Greenbone Security Manager (GSM) task generation for data imported from GSM-->
     <!-- See veriniceserver-plain.xml -->
-    <!-- Job to generate GSM processes -->
-    <!-- 
-    <bean name="gsmProcessJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+    <!-- Job to generate GSM tasks -->
+    <bean name="gsmProcessJob" class="org.springframework.scheduling.quartz.JobDetailBean">  		
         <property name="jobClass" value="sernet.verinice.bpm.ProcessJob" />
         <property name="jobDataAsMap">
             <map>
+            		<entry key="enabled" value="${veriniceserver.gsmGenerator.enabled}" />
                 <entry key="processCreaterSet">
                     <set>
                         <ref bean="gsmProcessCreater" />
@@ -328,7 +338,6 @@
         <property name="configurationService" ref="configurationService" />
         <property name="tag" value="ap-GSM" />
     </bean>
-    -->
     
     <!-- Creates one control-execution processes for every control. -->
     <!--

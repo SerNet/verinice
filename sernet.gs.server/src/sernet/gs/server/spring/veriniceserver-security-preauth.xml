@@ -93,8 +93,13 @@
 		<property name="decisionVoters">
 			<list>
 				<bean class="org.springframework.security.vote.RoleVoter" />
+				<ref bean="veriniceActionIdVoter" />
 			</list>
 		</property>
+	</bean>
+
+	<bean id="veriniceActionIdVoter" class="sernet.gs.server.security.VeriniceActionIdVoter">
+		<property name="rightsServerHandler" ref="rightsServerHandler" />
 	</bean>
 
 </beans>

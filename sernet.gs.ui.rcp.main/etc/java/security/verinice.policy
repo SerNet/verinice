@@ -1,0 +1,164 @@
+// verinice client stuff
+// grant codeBase "file:${{eclipse.home.location}}/plugins/sernet.verinice.report.service*"{
+//   permission java.lang.RuntimePermission "-";
+// };
+
+
+// Standard extensions get all permissions by default
+
+grant codeBase "file:${{java.ext.dirs}}/*" {
+        permission java.security.AllPermission;
+};
+
+// default permissions granted to all domains
+
+grant {
+        // Allows any thread to stop itself using the java.lang.Thread.stop()
+        // method that takes no argument.
+        // Note that this permission is granted by default only to remain
+        // backwards compatible.
+        // It is strongly recommended that you either remove this permission
+        // from this policy file or further restrict it to code sources
+        // that you specify, because Thread.stop() is potentially unsafe.
+        // See the API specification of java.lang.Thread.stop() for more
+        // information.
+        permission java.lang.RuntimePermission "stopThread";
+
+        // allows anyone to listen on dynamic ports
+        permission java.net.SocketPermission "localhost:0", "listen";
+
+        // "standard" properies that can be read by anyone
+
+        permission java.util.PropertyPermission "java.version", "read";
+        permission java.util.PropertyPermission "java.vendor", "read";
+        permission java.util.PropertyPermission "java.vendor.url", "read";
+        permission java.util.PropertyPermission "java.class.version", "read";
+        permission java.util.PropertyPermission "os.name", "read";
+        permission java.util.PropertyPermission "os.version", "read";
+        permission java.util.PropertyPermission "os.arch", "read";
+        permission java.util.PropertyPermission "file.separator", "read";
+        permission java.util.PropertyPermission "path.separator", "read";
+        permission java.util.PropertyPermission "line.separator", "read";
+
+        permission java.util.PropertyPermission "java.specification.version", "read";
+        permission java.util.PropertyPermission "java.specification.vendor", "read";
+        permission java.util.PropertyPermission "java.specification.name", "read";
+
+        permission java.util.PropertyPermission "java.vm.specification.version", "read";
+        permission java.util.PropertyPermission "java.vm.specification.vendor", "read";
+        permission java.util.PropertyPermission "java.vm.specification.name", "read";
+        permission java.util.PropertyPermission "java.vm.version", "read";
+        permission java.util.PropertyPermission "java.vm.vendor", "read";
+        permission java.util.PropertyPermission "java.vm.name", "read";
+
+        // additional permissions needed to start the verinice client
+
+        permission java.util.PropertyPermission "eclipse.exitcode", "read";
+        permission java.util.PropertyPermission "osgi.noShutdown", "read";
+        permission java.util.PropertyPermission "osgi.logfile", "read";
+        permission java.util.PropertyPermission "osgi.properties", "read";
+        permission java.util.PropertyPermission "osgi.configuration.area", "read";
+        permission java.util.PropertyPermission "*", "read,write";
+        permission java.io.FilePermission "/home/shagedorn/workspace-git/.metadata/.plugins/org.eclipse.pde.core/verinice-x86_64-linux-gtk/dev.properties", "read";
+        permission java.io.FilePermission "/home/shagedorn/workspace-git/.metadata/.plugins/org.eclipse.pde.core/verinice-x86_64-linux-gtk", "read";
+        permission java.io.FilePermission "/home/shagedorn/workspace-git/.metadata/.plugins/org.eclipse.pde.core/verinice-x86_64-linux-gtk/config.ini", "read";
+        permission java.io.FilePermission "/home/shagedorn/verinice-git/verinice/target-platform/verinice-tp-eclipse-3.7/-", "read, write, delete";
+        permission java.io.FilePermission "/home/shagedorn/workspace-git/.metadata/.plugins/org.eclipse.pde.core/verinice-x86_64-linux-gtk/-", "write";
+        permission java.io.FilePermission "/home/shagedorn/verinice-git/verinice/target-platform/verinice-tp-eclipse-3.7", "read, write";
+        permission java.lang.RuntimePermission "loadLibrary./home/shagedorn/verinice-git/verinice/target-platform/verinice-tp-eclipse-3.7/plugins/-";
+        permission java.lang.RuntimePermission "loadLibrary./home/shagedorn/verinice-git/verinice/target-platform/verinice-tp-eclipse-3.7/plugins/org.eclipse.equinox.launcher.gtk.linux.x86_64_1.1.100.v20110505/eclipse_1407.so";
+        permission java.io.FilePermission "/home/shagedorn/workspace-git/.metadata/-", "write, read, delete";
+        permission java.io.FilePermission "/home/shagedorn/workspace-TRUNK-verinice-x86_64-linux-gtk/.metadata", "write, read, delete";
+        permission java.io.FilePermission "/home/shagedorn/workspace-TRUNK-verinice-x86_64-linux-gtk/.metadata/-", "write, read, delete";
+        permission java.io.FilePermission "/home/shagedorn/verinice-git/verinice/-", "read";
+        permission java.io.FilePermission "/home/shagedorn/verinice-git/verinice", "read";
+        permission java.io.FilePermission "/home/shagedorn/verinice", "read, write, delete";
+        permission java.io.FilePermission "/home/shagedorn/verinice/-", "read, write, delete";
+        permission java.io.FilePermission "/home/shagedorn/Arbeitsfläche/vn-1394", "read, write, delete";
+        permission java.io.FilePermission "/home/shagedorn/Arbeitsfläche/vn-1394/-", "read, write, delete";
+        permission java.io.FilePermission "/home/shagedorn/.mozilla/eclipse", "read, write";
+        permission java.io.FilePermission "/home/shagedorn/.mozilla/eclipse/-", "read, write";
+        permission java.io.FilePermission "/tmp/verinice/-", "write, read, delete";
+        permission java.io.FilePermission "/tmp/verinice", "read, write";
+        permission java.io.FilePermission "meta.log", "read, write";
+        permission java.io.FilePermission "/home/shagedorn/Arbeitsfläche", "read, write";
+        permission java.io.FilePermission "/home/shagedorn/Arbeitsfläche/-", "read, write";
+        permission java.io.FilePermission "/opt/java/jdk1.8.0_45/jre/lib", "read";
+        permission java.io.FilePermission "/opt/java/jdk1.8.0_45/jre/lib/-", "read";
+        permission java.lang.RuntimePermission "getClassLoader";
+        permission java.lang.RuntimePermission "createClassLoader";
+        permission java.lang.RuntimePermission "accessDeclaredMembers";
+        permission java.io.FilePermission "/home/shagedorn/user", "read";
+        permission java.io.FilePermission "/opt/eclipse-mars/eclipse/workspace", "read";
+        permission java.io.FilePermission "/home/shagedorn/workspace-git/../workspace-TRUNK-verinice-x86_64-linux-gtk/-", "read";
+        permission java.io.FilePermission "/home/shagedorn/workspace-git/../workspace-TRUNK-verinice-x86_64-linux-gtk", "read";
+        permission java.io.FilePermission "/opt/java/jdk1.8.0_45/jre/lib/security/-", "read";
+        permission java.lang.RuntimePermission "createSecurityManager";
+        permission java.lang.RuntimePermission "setContextClassLoader";
+        permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
+        permission java.io.FilePermission "osgi.properties", "read";
+        permission java.net.NetPermission "specifyStreamHandler";
+        permission java.lang.RuntimePermission "setFactory";
+        permission org.osgi.framework.AdminPermission "*", "context, metadata, listener, execute, resolve, startlevel";
+        permission org.osgi.framework.ServicePermission "org.eclipse.osgi.service.runnable.StartupMonitor", "register";
+        permission org.osgi.framework.ServicePermission "org.eclipse.osgi.framework.console.CommandProvider", "register";
+        permission org.osgi.framework.ServicePermission "*", "get";
+        permission java.lang.RuntimePermission "getProtectionDomain";
+        permission org.osgi.framework.ServicePermission "org.osgi.service.packageadmin.PackageAdmin", "register";
+        permission org.osgi.framework.ServicePermission "(service.id=3)", "get";
+        permission org.osgi.framework.ServicePermission "org.osgi.service.permissionadmin.PermissionAdmin", "register";
+        permission org.osgi.framework.ServicePermission "org.osgi.service.condpermadmin.ConditionalPermissionAdmin", "register";
+        permission org.osgi.framework.ServicePermission "org.osgi.service.startlevel.StartLevel", "register";
+        permission org.osgi.framework.ServicePermission "org.eclipse.osgi.service.debug.DebugOptions", "register";
+        permission org.osgi.framework.ServicePermission "java.lang.ClassLoader", "register";
+        permission org.osgi.framework.ServicePermission "org.osgi.service.log.LogReaderService", "register";
+        permission org.osgi.framework.ServicePermission "org.eclipse.equinox.log.ExtendedLogReaderService", "register";
+        permission org.osgi.framework.ServicePermission "org.osgi.service.log.LogService", "register";
+        permission org.osgi.framework.ServicePermission "org.eclipse.equinox.log.ExtendedLogService",  "register";
+        permission org.osgi.framework.ServicePermission "org.eclipse.osgi.framework.log.FrameworkLog", "register";
+        permission org.osgi.framework.ServicePermission "*", "register";
+        permission org.osgi.framework.AdminPermission "*", "lifecycle";
+        permission java.lang.RuntimePermission "shutdownHooks";
+        permission org.osgi.framework.PackagePermission "org.osgi.framework", "exportonly";
+        permission org.osgi.framework.PackagePermission "org.osgi.service.packageadmin", "exportonly";
+        permission org.osgi.framework.PackagePermission "*", "exportonly";
+        permission org.osgi.framework.BundlePermission "org.eclipse.osgi", "provide,require";
+        permission org.eclipse.equinox.log.LogPermission "*", "log";
+        permission org.osgi.framework.PackagePermission "*", "exportonly";
+        permission org.osgi.framework.BundlePermission "*", "provide, require";
+        //permission java.security.AllPermission;
+        permission org.osgi.framework.AdminPermission "*", "*";
+        permission org.osgi.framework.PackagePermission "*", "*";
+        permission org.osgi.framework.BundlePermission "*", "*";
+        permission org.osgi.framework.ServicePermission "*", "*";
+        //permission org.osgi.service.application.ApplicationAdminPermission "sernet.gs.ui.rcp.main.application", "lifecycle";
+        permission org.osgi.service.application.ApplicationAdminPermission "*", "*";
+        permission org.osgi.service.condpermadmin.ConditionalPermissionAdmin "*", "*";
+
+        permission java.security.SecurityPermission "insertProvider";
+        permission java.security.SecurityPermission "insertProvider.BC";
+        permission java.io.FilePermission "/home/shagedorn/workspace-TRUNK-verinice-x86_64-linux-gtk/.metadata/.log", "write";
+        permission java.io.FilePermission "/home/shagedorn/verinice/verinice-client.log", "read";
+        permission java.io.FilePermission "/home/shagedorn/workspace-TRUNK-verinice-x86_64-linux-gtk/log/verinice-client.log", "write";
+        permission java.io.FilePermission "/opt/gsContent", "read";
+        permission java.io.FilePermission "/opt/gsContent/-", "read";
+        permission java.lang.RuntimePermission "loadLibrary.swt-gtk-3735";
+        permission java.lang.RuntimePermission "loadLibrary.swt-pi-gtk-3735";
+        permission java.lang.RuntimePermission "loadLibrary.swt-atk-gtk-3735";
+        permission java.io.FilePermission "/home/shagedorn/.eclipse", "read";
+        permission java.io.FilePermission "/home/shagedorn/.eclipse/-", "read";
+        permission java.net.NetPermission "setDefaultAuthenticator";
+        permission java.net.SocketPermission "127.0.0.1:8800", "connect,resolve";
+        permission java.net.SocketPermission "localhost:8800", "listen,resolve";
+
+        permission java.net.SocketPermission "localhost:30000-65535", "accept, resolve";
+
+        permission java.lang.RuntimePermission "loadLibrary.swt-xpcominit-gtk-3735";
+        permission java.io.FilePermission "/home/shagedorn/workspace-TRUNK-verinice-x86_64-linux-gtk/log/-", "delete, write";
+        permission java.lang.RuntimePermission "loadLibrary.swt-xulrunner-gtk-3735";
+        permission java.io.FilePermission "/home/shagedorn/workspace-TRUNK-verinice-x86_64-linux-gtk/conf/-", "write, read, delete";
+        permission java.io.FilePermission "/tmp", "write, read, delete";
+        permission java.io.FilePermission "/tmp/-", "write, read, delete";
+        permission java.util.logging.LoggingPermission "control";
+        permission java.io.FilePermission "/home/shagedorn/workspace-TRUNK-verinice-x86_64-linux-gtk/report_templates_remote/-", "delete, write, delete";
+};

@@ -17,8 +17,6 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.preferences;
 
-import java.io.File;
-
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 
@@ -37,19 +35,15 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 * 
 	 * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
 	 */
-	public void initializeDefaultPreferences() {
+	@Override
+    public void initializeDefaultPreferences() {
 	    final int defaultThumbnailSize = 50;
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		final IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
 		store.setDefault(PreferenceConstants.GSACCESS,
 				PreferenceConstants.GSACCESS_ZIP);
 
 		store.setDefault(PreferenceConstants.BSIDIR, CnAWorkspace.getInstance().getWorkdir());
-
-		store.setDefault(PreferenceConstants.BSIZIPFILE, CnAWorkspace.getInstance()
-				.getWorkdir()
-				+ File.separator + "it-grundschutz_el13_html_de.zip"); //$NON-NLS-1$
-
 
 		store.setDefault(PreferenceConstants.ERRORPOPUPS, true);
 		store.setDefault(PreferenceConstants.FIRSTSTART, true);
@@ -62,7 +56,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.DB_DIALECT,
 				PreferenceConstants.DB_DIALECT_DERBY);
 		
-		String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",CnAWorkspace //$NON-NLS-1$
+		final String derbyUrl = PreferenceConstants.DB_URL_DERBY.replace("%s",CnAWorkspace //$NON-NLS-1$
 				.getInstance().getWorkdir().replaceAll("\\\\", "/") );
 		store.setDefault(PreferenceConstants.DB_URL,
 				derbyUrl);
@@ -98,6 +92,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON, true);
 		
 		store.setDefault(PreferenceConstants.CUT_INHERIT_PERMISSIONS, false);
+		
+		store.setDefault(PreferenceConstants.COPY_ATTACHMENTS_WITH_OBJECTS, false);
 
 		store.setDefault(PreferenceConstants.SEARCH_INDEX_ON_STARTUP, true);
 		store.setDefault(PreferenceConstants.SEARCH_DISABLE, false);

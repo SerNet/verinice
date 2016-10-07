@@ -17,10 +17,8 @@
  ******************************************************************************/
 package sernet.verinice.report.actions;
 
-import sernet.verinice.report.rcp.GenerateReportAction;
-
 /**
- *
+ * representing an call of "generate report" from the context menu
  */
 public class GenerateSpecificReportAction extends GenerateReportAction {
     

@@ -27,8 +27,10 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * computes key figures for isa report templates
@@ -37,8 +39,10 @@ import sernet.verinice.model.iso27k.IControl;
  */
 
 /**
- * Computes ISA 2.0 key figures by summing up (and building the average of) maturity and targetmaturiy (threshold2) of samttopic children
- * of a controlgroup. root element should be an audit. 
+ * Computes ISA 2.0 key figures (total security figure and Result with/-out cutback
+ * to target maturity levels), by summing up (and
+ * building the average of) maturity and targetmaturity (threshold2) of {@link SamtTopic}
+ * children of a {@link ControlGroup}. root element should be an {@link Audit}.
  **/
 public class TotalSecurityFigureISA2Command extends GenericCommand implements ICachedCommand {
     
@@ -130,6 +134,7 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
         return control.getMaturity();
     }
     
+    @Deprecated
     public Double getResult() {
         return getRoundedValue(totalSecurityFigure);
     }
@@ -170,10 +175,12 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
     /**
      * @return the targetMaturity
      */
+    @Deprecated
     public Double getTargetMaturity() {
         return getRoundedValue(targetMaturity);
     }
     
+    @Deprecated
     public Double getAverageMaturity(){
         return getRoundedValue(averageTargetMaturity);
     }
@@ -187,6 +194,65 @@ public class TotalSecurityFigureISA2Command extends GenericCommand implements IC
         BigDecimal bd = new BigDecimal(d);
         bd = bd.setScale(2, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    /**
+     * returns a value used in ISA 2.0 called total Security Figure
+     * ("Result without cutback to target maturity levels")
+     * 
+     * the totalSecurityFigure sums up the maturity of all instances of
+     * {@link SamtTopic} which are children of a given {@link ControlGroup},
+     * computed recursively for all children of type {@link ControlGroup} of the
+     * root (given) {@link ControlGroup}. Once summed up, the value is divided
+     * by the count of for computation considered {@link SamtTopic} (
+     * {@link SamtTopic} with an maturity value of 0 or below are ignored )
+     * 
+     * to ensure downwards compatibility with old (custom) reports, the method
+     * getResult() needs to be kept here despite it is marked deprecated
+     **/
+    public Double getTotalSecurityFigure() {
+        return getResult();
+    }
+
+    /**
+     * returns a value used in ISA 2.0 called Reduced Target Maturity 
+     * ("Result with cutback to target maturity levels") 
+     * 
+     * the reducedTargetMaturity sums up maturity of all {@link SamtTopic} which are
+     * children of a given {@link ControlGroup}, computed recursively for all
+     * children of type {@link ControlGroup} of the root (given)
+     * {@link ControlGroup}. For every {@link SamtTopic} contained in an ISA 2.0
+     * {@link Audit} there is a property defined called target Maturity (for
+     * historical reasons this is stored in the attribute SamtTopic.PROP_MIN2
+     * (SamtTopic.getThreshold2()))
+     * 
+     * if the user defined maturity of the {@link SamtTopic} is greater as the
+     * predefined target maturity the predefined value instead of the user
+     * defined maturity gets summed up.
+     * 
+     * after summing up (reduced) maturity over all relevant ( maturity <= 0 are
+     * ignored) {@link SamtTopic} (recursively), the sum is divided by count of
+     * considered {@link SamtTopic}
+     * 
+     * to ensure downwards compatibility with old (custom) reports, the method
+     * getTargetMaturity() needs to be kept here despite it is marked deprecated
+     */
+    public Double getReducedTargetMaturity() {
+        return getTargetMaturity();
+    }
+
+    /**
+     * returns a value used in ISA 2.0 called maximum Score 
+     * this value represents the average of target maturity, 
+     * computed over all considered {@link SamtTopic},
+     * recursively on the given root {@link ControlGroup}
+     *
+     * to ensure downwards compatibility with old (custom) reports, the method
+     * getAverageMaturity() needs to be kept here despite it is marked
+     * deprecated
+     */
+    public Double getAverageMaximumAchieveableMaturity() {
+        return getAverageMaturity();
     }
 
 

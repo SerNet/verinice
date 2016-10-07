@@ -24,21 +24,23 @@ import java.util.Map;
 
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
-import sernet.verinice.interfaces.bpm.ITaskService;
 
 /**
  * This task complete server handler reads param
  * IIndividualProcess.VAR_EXTENSION_JUSTIFICATION and adds it's
- * value as process/task var IIndividualProcess.VAR_EXTENSION_JUSTIFICATION
- * to task with id taskId.
+ * value as process/task variable IIndividualProcess.VAR_EXTENSION_JUSTIFICATION.
  * 
- * Configured in veriniceserver-jbpm.xml as a property of Spring bean taskService.
+ * This handler is configured in veriniceserver-jbpm.xml 
+ * as a property of Spring bean taskService.
+ * 
+ * This handler is part of the business process individual-task
+ * defined in individual-task.jpdl.xml.
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class IndiExtensionHandler implements ICompleteServerHandler {
 
-    private ITaskService taskService;
+    private Map<String, Object> taskParameter;
     
     /**
      * Value of param IIsaQmProcess.VAR_IQM_ASSIGNEE is added
@@ -51,9 +53,7 @@ public class IndiExtensionHandler implements ICompleteServerHandler {
         if(parameter!=null) {
             String justification = (String) parameter.get(IIndividualProcess.VAR_EXTENSION_JUSTIFICATION);
             if(justification!=null) {
-                Map<String, Object> param = new HashMap<String, Object>();
-                param.put(IIndividualProcess.VAR_EXTENSION_JUSTIFICATION, justification);
-                getTaskService().setVariables(taskId, param);
+                getTaskParameter().put(IIndividualProcess.VAR_EXTENSION_JUSTIFICATION, justification);
             }
         }
         
@@ -76,12 +76,14 @@ public class IndiExtensionHandler implements ICompleteServerHandler {
         return IIndividualProcess.TRANS_EXTENSION;
     }
 
-    public ITaskService getTaskService() {
-        return taskService;
+    public Map<String, Object> getTaskParameter() {
+        if(taskParameter==null) {
+            taskParameter = new HashMap<String, Object>();
+        }
+        return taskParameter;
     }
 
-    public void setTaskService(ITaskService taskService) {
-        this.taskService = taskService;
+    public void setTaskParameter(Map<String, Object> taskParameter) {
+        this.taskParameter = taskParameter;
     }
-
 }

@@ -18,12 +18,12 @@
 package sernet.verinice.model.bsi.risikoanalyse;
 
 import sernet.hui.common.connect.Entity;
-import sernet.verinice.model.bsi.CnaStructureHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 public class FinishedRiskAnalysis extends CnATreeElement  {
 
-	public static final String TYPE_ID = "riskanalysis";
+	public static final String TYPE_ID = "riskanalysis"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "finished-risk-analysis"; //$NON-NLS-1$
 	
 	
 	public FinishedRiskAnalysis(CnATreeElement cnaElement) {
@@ -48,10 +48,7 @@ public class FinishedRiskAnalysis extends CnATreeElement  {
 	
 	@Override
 	public boolean canContain(Object obj) {
-		if (obj instanceof GefaehrdungsUmsetzung) {
-			return true;
-		}
-		return CnaStructureHelper.canContain(obj);
+        return obj instanceof GefaehrdungsUmsetzung;
 	}
 
 

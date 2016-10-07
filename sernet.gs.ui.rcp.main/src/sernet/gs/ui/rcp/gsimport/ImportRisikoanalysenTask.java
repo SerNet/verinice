@@ -30,6 +30,7 @@ import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.IGSModel;
 import sernet.gs.reveng.importData.GSDBConstants;
+import sernet.gs.reveng.importData.GSVampire;
 import sernet.gs.reveng.importData.RAGefaehrdungenResult;
 import sernet.gs.reveng.importData.RAGefaehrdungsMassnahmenResult;
 import sernet.gs.reveng.importData.ZielobjektTypeResult;
@@ -254,7 +255,9 @@ public class ImportRisikoanalysenTask extends AbstractGstoolImportTask {
         associateGefaehrdung = ServiceFactory.lookupCommandService().executeCommand(associateGefaehrdung);
         GefaehrdungsUmsetzung gefaehrdungsUmsetzung = associateGefaehrdung.getGefaehrdungsUmsetzung();
         transferData.transferRAGefaehrdungsUmsetzung(gefaehrdungsUmsetzung, gefaehrdungenResult);
+        gefaehrdungsUmsetzung.setExtId(GSVampire.generateGefaehrdungsUmsetzungExtid(String.valueOf(gefaehrdungenResult.getGefaehrdung().getId().getGefId()), String.valueOf(gefaehrdungenResult.getZielobjekt().getId().getZobId()), gefaehrdungenResult.getGefaehrdung().getGuid(), gefaehrdungenResult.getZielobjekt().getGuid()));
         CnAElementHome.getInstance().update(gefaehrdungsUmsetzung);
+        assert (gefaehrdungsUmsetzung.getExtId() != null);
         return gefaehrdungsUmsetzung;
     }
 

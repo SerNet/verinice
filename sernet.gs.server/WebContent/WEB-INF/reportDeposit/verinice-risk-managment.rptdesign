@@ -870,6 +870,16 @@ for(Asset asset : assetSet){
 	    avail = linkResults.get(0).getRiskAvailability();
 	}
 
+	if(conf == null){
+		conf = 0;
+	}
+	if(integ == null){
+		integ = 0;
+	}
+	if(avail == null){
+		avail = 0;
+	}
+
 
 	
 	valueAdapter = new AssetValueAdapter(asset);
@@ -879,6 +889,15 @@ for(Asset asset : assetSet){
 	impactC = valueAdapter.getVertraulichkeit();
 	impactI = valueAdapter.getIntegritaet();
 	impactA = valueAdapter.getVerfuegbarkeit();
+	if(scenario != null &amp;&amp; scenario.getEntity() != null){
+		trueString = "1";
+		propertyValue = scenario.getEntity().getProperties("scenario_value_method_confidentiality");
+		isCRelevant = propertyValue == null || trueString.equals(propertyValue.getProperty(0).getPropertyValue());
+		propertyValue = scenario.getEntity().getProperties("scenario_value_method_integrity");
+	    isIRelevant =  propertyValue == null || trueString.equals(propertyValue.getProperty(0).getPropertyValue());
+	    propertyValue = scenario.getEntity().getProperties("scenario_value_method_availability");
+	    isARelevant =  propertyValue == null || trueString.equals(propertyValue.getProperty(0).getPropertyValue());
+    }
 
 
 	reducedImpact = ras.applyControlsToImpact(IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
@@ -890,9 +909,25 @@ for(Asset asset : assetSet){
 
 	probabilityWithControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
 
-	treatedRiskC = probabilityWithControls + impactC;
+  		if(isCRelevant){
+			treatedRiskC = probabilityWithControls + impactC;
+                }else {
+                    treatedRiskC = 0;
+                }
+                
+                if(isIRelevant){
 	treatedRiskI = probabilityWithControls + impactI;
+                }else {
+                    treatedRiskI = 0;
+                }
+                
+                if(isARelevant){
 	treatedRiskA = probabilityWithControls + impactA;
+
+                }else {
+                    treatedRiskA = 0;
+                }
+
 
 	/** Get risk values for planned controls */
 	impactAllC = valueAdapter.getVertraulichkeit();
@@ -909,9 +944,26 @@ for(Asset asset : assetSet){
 	// get impact with all controls
 	probabilityWithAllControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
 	
-	treatedRiskAllC = probabilityWithAllControls + impactAllC;
-	treatedRiskAllI = probabilityWithAllControls + impactAllI;
-	treatedRiskAllA = probabilityWithAllControls + impactAllA;
+		if(isCRelevant){
+			treatedRiskAllC = probabilityWithAllControls + impactAllC;
+                }else {
+                    treatedRiskAllC = 0;
+                }
+                
+                if(isIRelevant){
+			treatedRiskAllI = probabilityWithAllControls + impactAllI;
+                }else {
+                    treatedRiskAllI = 0;
+                }
+                
+                if(isARelevant){
+			treatedRiskAllA = probabilityWithAllControls + impactAllA;
+
+                }else {
+                    treatedRiskAllA = 0;
+                }
+
+
 	
 	// feed the result table			
 	assetScenarioResult.add(asset.getTitle());
@@ -925,13 +977,13 @@ for(Asset asset : assetSet){
 	assetScenarioResult.add(scenario.getEntity().getSimpleValue("scenario_value_method_integrity"));
 	assetScenarioResult.add(scenario.getEntity().getSimpleValue("scenario_value_method_availability"));
 
-	assetScenarioResult.add(scenario.getEntity().getSimpleValue("incscen_threat_likelihood"));
-	assetScenarioResult.add(scenario.getEntity().getSimpleValue("incscen_vuln_level"));
+    assetScenarioResult.add(scenario.getEntity().getNumericValue("incscen_threat_likelihood"));
+    assetScenarioResult.add(scenario.getEntity().getNumericValue("incscen_vuln_level"));
 
-	assetScenarioResult.add(scenario.getEntity().getSimpleValue("incscen_likelihood"));
-	assetScenarioResult.add(scenario.getEntity().getSimpleValue("incscen_likelihood_wcontrol"));
-	assetScenarioResult.add(scenario.getEntity().getSimpleValue("incscen_likelihood_wplancontrol"));
-	assetScenarioResult.add(scenario.getEntity().getSimpleValue("incscen_likelihood_without_na_control"));
+    assetScenarioResult.add(scenario.getEntity().getNumericValue("incscen_likelihood"));
+    assetScenarioResult.add(scenario.getEntity().getNumericValue("incscen_likelihood_wcontrol"));
+    assetScenarioResult.add(scenario.getEntity().getNumericValue("incscen_likelihood_wplancontrol"));
+    assetScenarioResult.add(scenario.getEntity().getNumericValue("incscen_likelihood_without_na_control"));
 
 	// add cnalink description
 	assetScenarioResult.add(cnaLinkDescription);
@@ -943,29 +995,29 @@ for(Asset asset : assetSet){
 	assetScenarioResult.add(valueAdapter.getVerfuegbarkeit());
 
 	// CIA values from scenario cna link element
-	assetScenarioResult.add(String.valueOf(conf));
-	assetScenarioResult.add(String.valueOf(integ));
-	assetScenarioResult.add(String.valueOf(avail));
+    assetScenarioResult.add(Integer.valueOf(conf));
+    assetScenarioResult.add(Integer.valueOf(integ));
+    assetScenarioResult.add(Integer.valueOf(avail));
 		
 	// impact values with implemented controls
-	assetScenarioResult.add(String.valueOf(impactC));
-	assetScenarioResult.add(String.valueOf(impactI));
-	assetScenarioResult.add(String.valueOf(impactA));
+    assetScenarioResult.add(Integer.valueOf(impactC));
+    assetScenarioResult.add(Integer.valueOf(impactI));
+    assetScenarioResult.add(Integer.valueOf(impactA));
 
 	// impact values with all controls
-	assetScenarioResult.add(String.valueOf(impactAllC));
-	assetScenarioResult.add(String.valueOf(impactAllI));
-	assetScenarioResult.add(String.valueOf(impactAllA));
+    assetScenarioResult.add(Integer.valueOf(impactAllC));
+    assetScenarioResult.add(Integer.valueOf(impactAllI));
+    assetScenarioResult.add(Integer.valueOf(impactAllA));
 
 	// impact values + thread with implemented controls
-	assetScenarioResult.add(String.valueOf(treatedRiskC));
-	assetScenarioResult.add(String.valueOf(treatedRiskI));
-	assetScenarioResult.add(String.valueOf(treatedRiskA));
+    assetScenarioResult.add(Integer.valueOf(treatedRiskC));
+    assetScenarioResult.add(Integer.valueOf(treatedRiskI));
+    assetScenarioResult.add(Integer.valueOf(treatedRiskA));
 
 	// impact values + thread with all controls
-	assetScenarioResult.add(String.valueOf(treatedRiskAllC));
-	assetScenarioResult.add(String.valueOf(treatedRiskAllI));
-	assetScenarioResult.add(String.valueOf(treatedRiskAllA));
+    assetScenarioResult.add(Integer.valueOf(treatedRiskAllC));
+    assetScenarioResult.add(Integer.valueOf(treatedRiskAllI));
+    assetScenarioResult.add(Integer.valueOf(treatedRiskAllA));
 
 	
 	if(!scenariosForAssetList .contains(assetScenarioResult)){

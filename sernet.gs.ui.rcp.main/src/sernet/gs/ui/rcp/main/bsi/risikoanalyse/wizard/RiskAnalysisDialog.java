@@ -24,11 +24,15 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -47,12 +51,15 @@ import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
  */
 @SuppressWarnings("restriction")
 public abstract class RiskAnalysisDialog<T> extends Dialog {
+
     protected Text textNumber;
     protected Text textName;
     protected Text textDescription;
     protected Combo textCategory;
     private RiskAnalysisDialogItems<T> items;
+    protected Color defaultBackground;
     private static final Logger LOG = Logger.getLogger(RiskAnalysisDialog.class);
+    private static final int MAX_DESCRIPTION_LENGTH_FOR_GEFAEHRDUNG = 30000;
 
     protected RiskAnalysisDialog(Shell parentShell, RiskAnalysisDialogItems<T> items) {
         super(parentShell);
@@ -125,16 +132,34 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
 
     @Override
     protected void okPressed() {
-
         if (isUniqueId(textNumber.getText(), getItem())) {
-            okPressedAndApproved();
 
-            super.okPressed();
+            if (descriptionLengthOK()) {
+
+                okPressedAndApproved();
+                super.okPressed();
+            } else {
+                MessageDialog.openError(getShell(), Messages.RiskAnalysisDialog_Error_0,
+                        NLS.bind(Messages.RiskAnalysisDialog_Error_1,
+                                textDescription.getText().length(), getMaxDescriptionLength()));
+            }
         } else {
             MessageDialog.openError(getShell(), Messages.NewGefaehrdungDialog_Error_0, NLS.bind(
                     Messages.NewGefaehrdungDialog_Error_1, textNumber.getText()));
         }
     }
+
+    private boolean descriptionLengthOK() {
+
+        return textDescription.getText().length() <= getMaxDescriptionLength();
+            
+    }
+
+    private int getMaxDescriptionLength() {
+
+        return MAX_DESCRIPTION_LENGTH_FOR_GEFAEHRDUNG;
+    }
+
 
     protected abstract Object getItem();
 
@@ -205,6 +230,7 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
         gridTextDescription.widthHint = gridTextDescriptionWidthHint;
         gridTextDescription.heightHint = gridTextDescriptionHeightHint;
         textDescription.setLayoutData(gridTextDescription);
+        defaultBackground = textDescription.getBackground();
 
         /* label category */
         final Label labelCategory = new Label(composite, SWT.NONE);
@@ -217,6 +243,23 @@ public abstract class RiskAnalysisDialog<T> extends Dialog {
         addCategory(composite);
 
         initContents();
+
+        textDescription.addModifyListener(new ModifyListener() {
+
+            @Override
+            public void modifyText(ModifyEvent e) {
+                final int red = 250;
+                final int green = red;
+                final int blue = 120;
+
+                if (descriptionLengthOK()) {
+                    textDescription.setBackground(defaultBackground);
+                } else {
+                    textDescription
+                            .setBackground(new Color(Display.getCurrent(), red, green, blue));
+                }
+            }
+        });
 
         return composite;
     }

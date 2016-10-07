@@ -25,11 +25,12 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
+			classpath:sernet/gs/server/spring/veriniceserver-security.xml
         	classpath:sernet/gs/server/spring/veriniceserver-common.xml
         	classpath:sernet/gs/server/spring/veriniceserver-plain.xml
         	classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
         	classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml 
-            classpath:sernet/gs/server/spring/veriniceserver-security.xml
+
             
             <!-- Use this for digest authentication for rich and web client: -->  
             classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml
@@ -48,6 +49,7 @@
             classpath:sernet/gs/server/spring/veriniceserver-reportdeposit.xml
             classpath:sernet/gs/server/spring/veriniceserver-search-base.xml
             classpath:sernet/gs/server/spring/veriniceserver-search.xml
+            classpath:sernet/gs/server/spring/veriniceserver-account.xml
         </param-value>
 	</context-param>
 	

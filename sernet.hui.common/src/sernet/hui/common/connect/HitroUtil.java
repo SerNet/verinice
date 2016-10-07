@@ -175,9 +175,6 @@ public class HitroUtil {
 					resolverFactory.createResolvers(typeFactory);
 				} catch (DBException e) {
 					LOG_0.error("Unable to reach document: " + url, e);
-					
-					// TODO rschuster: Provide a message which is informative
-					// to the user.
 				}
 			}
 		}
@@ -189,6 +186,16 @@ public class HitroUtil {
 		    return typeFactory;
 		}
 		
+        /*
+         * (non-Javadoc)
+         * 
+         * @see sernet.hui.common.connect.HUITypeFactory#getAllTypeIds()
+         */
+        @Override
+        public Set<String> getAllTypeIds() {
+            return getTypeFactory().getAllTypeIds();
+        }
+
 		@Override
         public EntityType getEntityType(String id) {
 			return getTypeFactory().getEntityType(id);
@@ -255,6 +262,18 @@ public class HitroUtil {
 		public String getMessage(String key) {
 		    return getTypeFactory().getMessage(key);
 		}
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see
+         * sernet.hui.common.connect.HUITypeFactory#getPropertyGroup(java.lang.
+         * String, java.lang.String)
+         */
+        @Override
+        public PropertyGroup getPropertyGroup(String entityId, String propertyId) {
+            return getTypeFactory().getPropertyGroup(entityId, propertyId);
+        }
 	}
 
 }

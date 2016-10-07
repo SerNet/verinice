@@ -36,11 +36,18 @@ import sernet.verinice.interfaces.RightEnabledUserInteraction;
  */
 public abstract class RightsEnabledHandler extends AbstractHandler implements RightEnabledUserInteraction {
 
-    /**
-     * 
-     */
     public RightsEnabledHandler() {
+        this(true);
+    }
+    
+    public RightsEnabledHandler(boolean enable) {
         super();
+        if(enable) {
+            enableAccordingToUserRights();
+        }
+    }
+
+    private void enableAccordingToUserRights() {
         if(Activator.getDefault().isStandalone()  && !Activator.getDefault().getInternalServer().isRunning()){
             IInternalServerStartListener listener = new IInternalServerStartListener(){
                 @Override
@@ -62,10 +69,10 @@ public abstract class RightsEnabledHandler extends AbstractHandler implements Ri
      */
     @Override
     public boolean checkRights() {
+        Activator.inheritVeriniceContextState();
         RightsServiceClient service = (RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
         return service.isEnabled(getRightID());
     }
-
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.RightEnabledUserInteraction#setRightID(java.lang.String)

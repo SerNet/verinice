@@ -33,6 +33,7 @@ public final class Messages extends NLS {
     public static String Gefaehrdung_3;
     public static String Gefaehrdung_4;
     public static String Gefaehrdung_5;
+    public static String Gefaehrdung_6;
 
     static {
         // initialize resource bundle

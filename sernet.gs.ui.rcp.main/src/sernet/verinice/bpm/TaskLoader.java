@@ -63,18 +63,6 @@ public class TaskLoader {
         
         lastChecked = now;
     }
-
-    /**
-     * Loads new task since las check.
-     * This does not detects delete task
-     */
-    private void loadNewTasks() {
-        List<ITask> taskList;
-        ITaskParameter parameter = new TaskParameter();
-        parameter.setSince(lastChecked);
-        taskList = getTaskService().getTaskList(parameter);
-        TaskChangeRegistry.tasksAdded(taskList);
-    }
     
     public ITaskService getTaskService() {
         return taskService;

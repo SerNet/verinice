@@ -50,6 +50,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.UsernameExistsRuntimeException;
+import sernet.verinice.service.sync.VnaSchemaVersion;
 
 /**
  * Command service that executes commands using hibernate DAOs to access the
@@ -83,6 +84,8 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	private IRightsServerHandler rightsServerHandler;
 	
 	IBaseDao<BSIModel, Serializable> dao;
+	
+	private VnaSchemaVersion vnaSchemaVersion;
 	
 	private Properties properties;
 	
@@ -389,5 +392,13 @@ public class HibernateCommandService implements ICommandService, IHibernateComma
 	    }
 	    return dao;
 	}
+
+    public VnaSchemaVersion getVnaSchemaVersion() {
+        return vnaSchemaVersion;
+    }
+
+    public void setVnaSchemaVersion(VnaSchemaVersion vnaSchemaVersion) {
+        this.vnaSchemaVersion = vnaSchemaVersion;
+    }
 	
 }

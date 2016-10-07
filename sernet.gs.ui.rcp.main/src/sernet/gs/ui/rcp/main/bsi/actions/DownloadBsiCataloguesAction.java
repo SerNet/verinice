@@ -49,7 +49,7 @@ public class DownloadBsiCataloguesAction extends Action implements ICheatSheetAc
      */
     public void run(String[] params, ICheatSheetManager manager) {
         try {
-            PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL("https://www.bsi.bund.de/cln_174/DE/Themen/weitereThemen/ITGrundschutzKataloge/Download/download_node.html")); //$NON-NLS-1$
+            PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL("https://www.bsi.bund.de/DE/Themen/ITGrundschutz/ITGrundschutzKataloge/Download/download_node.html")); //$NON-NLS-1$
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.DownloadBsiCataloguesAction_1);
         }

@@ -24,134 +24,148 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
-public class Baustein implements IGSModel{
-	
+public class Baustein implements IGSModel {
 
-	private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)");
+    private static Pattern kapitelPattern = Pattern.compile("(\\d+)\\.(\\d+)");
 
-	
-	public static final int SCHICHT_0_MISSING = 0;
-	public static final int SCHICHT_1_UEBERGEORDNETE_ASPEKTE = 1;
-	public static final int SCHICHT_2_INFRASTRUKTUR = 2;
-	public static final int SCHICHT_3_IT_SYSTEME = 3;
-	public static final int SCHICHT_4_NETZ = 4;
-	public static final int SCHICHT_5_ANWENDUNGEN = 5;
+    public static final int SCHICHT_0_MISSING = 0;
+    public static final int SCHICHT_1_UEBERGEORDNETE_ASPEKTE = 1;
+    public static final int SCHICHT_2_INFRASTRUKTUR = 2;
+    public static final int SCHICHT_3_IT_SYSTEME = 3;
+    public static final int SCHICHT_4_NETZ = 4;
+    public static final int SCHICHT_5_ANWENDUNGEN = 5;
 
+    public static final String TYPE_ID = "baumstein_gs_model";
 
-	public static final String TYPE_ID="baumstein_gs_model";
-	
-	private String id;
-	private String titel;
-	private String url;
-	private String url_eigene;
-	private List<Massnahme> massnahmen;
-	private List<Gefaehrdung> gefaehrdungen;
-	private String encoding;
-	
-	public String getEncoding() {
-		return encoding;
-	}
+    private String id;
+    private String titel;
+    private String url;
+    private String url_eigene;
+    private List<Massnahme> massnahmen;
+    private List<Gefaehrdung> gefaehrdungen;
+    private String encoding;
 
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
-	}
+    public String getEncoding() {
+        return encoding;
+    }
 
-	private int schicht = 0;
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
 
+    private int schicht = 0;
 
-	private String stand;
-	
-	public Baustein() {
-		massnahmen = new ArrayList<Massnahme>();
-	}
-	
-	/**
-	 * Return Kapitel as comparable value, i.e. converts 3.42 to 3042 or 3.221 to 3221
-	 * 
-	 * 
-	 * @return
-	 */
-	public int getKapitelValue() {
-		int absvalue = 0;
-		Matcher m = kapitelPattern.matcher(getId());
-		if (m.find()) {
-			try {
-				 int whole = Integer.parseInt(m.group(1));
-				 int radix = Integer.parseInt(m.group(2));
-				 absvalue = whole * 1000 + radix;
-			} catch (NumberFormatException e) {
-				Logger.getLogger(this.getClass())
-					.error("Kapitelnummer der Massnahme ist kein Float.", e);
-			}
-		}
-		return absvalue;
-	
-	}
-	
-	@Override
-	public String toString() {
-		return id + " " + titel;
-	}
-	
-	public List<Massnahme> getMassnahmen() {
-		return massnahmen;
-	}
+    private String stand;
 
-	public void setMassnahmen(List<Massnahme> massnahmen) {
-		this.massnahmen = massnahmen;
-	}
+    public Baustein() {
+        massnahmen = new ArrayList<Massnahme>();
+    }
 
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getTitel() {
-		return titel;
-	}
-	public void setTitel(String titel) {
-		this.titel = titel;
-	}
-	public String getUrl() {
-		return url;
-	}
-	public void setUrl(String url) {
-		this.url = url;
-	}
-	public String getUrl_eigene() {
-		return url_eigene;
-	}
-	public void setUrl_eigene(String url_eigene) {
-		this.url = url_eigene;
-	}
-	
-	public void add(Massnahme m) {
-		massnahmen.add(m);
-	}
+    /**
+     * Return Kapitel as comparable value, i.e. converts 3.42 to 3042 or 3.221
+     * to 3221
+     * 
+     * 
+     * @return
+     */
+    public int getKapitelValue() {
+        int absvalue = 0;
+        Matcher m = kapitelPattern.matcher(getId());
+        if (m.find()) {
+            try {
+                int whole = Integer.parseInt(m.group(1));
+                int radix = Integer.parseInt(m.group(2));
+                absvalue = whole * 1000 + radix;
+            } catch (NumberFormatException e) {
+                Logger.getLogger(this.getClass()).error("Kapitelnummer der Massnahme ist kein Float.", e);
+            }
+        }
+        return absvalue;
 
-	public int getSchicht() {
-		return schicht;
-	}
+    }
 
-	public void setSchicht(int schicht) {
-		this.schicht = schicht;
-	}
+    @Override
+    public String toString() {
+        return id + " " + titel;
+    }
 
-	public void setStand(String stand) {
-		this.stand = stand;
-	}
+    public List<Massnahme> getMassnahmen() {
+        return massnahmen;
+    }
 
-	public String getStand() {
-		return stand;
-	}
+    public void setMassnahmen(List<Massnahme> massnahmen) {
+        this.massnahmen = massnahmen;
+    }
 
-	public List<Gefaehrdung> getGefaehrdungen() {
-		return gefaehrdungen;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setGefaehrdungen(List<Gefaehrdung> gefaehrdungen) {
-		this.gefaehrdungen = gefaehrdungen;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
+    public String getTitel() {
+        return titel;
+    }
+
+    public void setTitel(String titel) {
+        this.titel = titel;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl_eigene() {
+        return url_eigene;
+    }
+
+    public void setUrl_eigene(String url_eigene) {
+        this.url = url_eigene;
+    }
+
+    public void add(Massnahme m) {
+        massnahmen.add(m);
+    }
+
+    public int getSchicht() {
+        return schicht;
+    }
+
+    public void setSchicht(int schicht) {
+        this.schicht = schicht;
+    }
+
+    public void setStand(String stand) {
+        this.stand = stand;
+    }
+
+    public String getStand() {
+        return stand;
+    }
+
+    public List<Gefaehrdung> getGefaehrdungen() {
+        return gefaehrdungen;
+    }
+
+    public void setGefaehrdungen(List<Gefaehrdung> gefaehrdungen) {
+        this.gefaehrdungen = gefaehrdungen;
+    }
+
+    public boolean hasSafequards() {
+        return getMassnahmen() != null && getMassnahmen().size() > 0;
+    }
+
+    public boolean hasThreats() {
+        return getGefaehrdungen() != null && getGefaehrdungen().size() > 0;
+    }
+    
+    public boolean hasSafequardsOrThreats() {
+        return hasSafequards() || hasThreats();
+    }
 }

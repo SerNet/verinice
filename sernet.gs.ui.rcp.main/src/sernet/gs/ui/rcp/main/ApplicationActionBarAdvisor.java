@@ -18,25 +18,12 @@
 package sernet.gs.ui.rcp.main;
 
 import org.eclipse.core.runtime.IExtension;
-import org.eclipse.jface.action.GroupMarker;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.action.IContributionItem;
-import org.eclipse.jface.action.ICoolBarManager;
-import org.eclipse.jface.action.IMenuManager;
-import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.action.IToolBarManager;
-import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.action.StatusLineContributionItem;
-import org.eclipse.jface.action.ToolBarContributionItem;
-import org.eclipse.jface.action.ToolBarManager;
+import org.eclipse.jface.action.*;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.actions.ActionFactory;
+import org.eclipse.ui.actions.*;
 import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
-import org.eclipse.ui.actions.ContributionItemFactory;
-import org.eclipse.ui.actions.OpenPerspectiveAction;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.internal.ChangeToPerspectiveMenu;
@@ -46,44 +33,20 @@ import org.eclipse.ui.internal.registry.ActionSetRegistry;
 import org.eclipse.ui.internal.registry.IActionSetDescriptor;
 
 import sernet.gs.ui.rcp.gsimport.GstoolImportMappingView;
-import sernet.gs.ui.rcp.main.actions.ChangeOwnPasswordAction;
-import sernet.gs.ui.rcp.main.actions.GSMBasicSecurityCheckAction;
-import sernet.gs.ui.rcp.main.actions.ImportCSVAction;
-import sernet.gs.ui.rcp.main.actions.ImportGstoolAction;
-import sernet.gs.ui.rcp.main.actions.ImportGstoolNotesAction;
-import sernet.gs.ui.rcp.main.actions.OpenMultipleViewAction;
-import sernet.gs.ui.rcp.main.actions.OpenSearchViewAction;
-import sernet.gs.ui.rcp.main.actions.OpenViewAction;
-import sernet.gs.ui.rcp.main.actions.ReloadAction;
-import sernet.gs.ui.rcp.main.actions.RunRiskAnalysisAction;
-import sernet.gs.ui.rcp.main.actions.ShowAccessControlEditAction;
-import sernet.gs.ui.rcp.main.actions.ShowBulkEditAction;
-import sernet.gs.ui.rcp.main.actions.ShowKonsolidatorAction;
-import sernet.gs.ui.rcp.main.actions.TestAction;
+import sernet.gs.ui.rcp.main.actions.*;
 import sernet.gs.ui.rcp.main.bsi.actions.BausteinZuordnungAction;
 import sernet.gs.ui.rcp.main.bsi.actions.GSMBausteinZuordnungAction;
-import sernet.gs.ui.rcp.main.bsi.views.AuditView;
-import sernet.gs.ui.rcp.main.bsi.views.BSIMassnahmenView;
-import sernet.gs.ui.rcp.main.bsi.views.BrowserView;
-import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
-import sernet.gs.ui.rcp.main.bsi.views.DSModelView;
-import sernet.gs.ui.rcp.main.bsi.views.DocumentView;
-import sernet.gs.ui.rcp.main.bsi.views.FileView;
-import sernet.gs.ui.rcp.main.bsi.views.NoteView;
-import sernet.gs.ui.rcp.main.bsi.views.RelationView;
-import sernet.gs.ui.rcp.main.bsi.views.TodoView;
+import sernet.gs.ui.rcp.main.bsi.views.*;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.preferences.ShowPreferencesAction;
 import sernet.verinice.bpm.rcp.OpenTaskViewAction;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.CatalogView;
-import sernet.verinice.iso27k.rcp.ISMView;
-import sernet.verinice.iso27k.rcp.Iso27kPerspective;
+import sernet.verinice.iso27k.rcp.*;
 import sernet.verinice.iso27k.rcp.action.ImportPersonFromLdap;
 import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
-import sernet.verinice.rcp.accountgroup.GroupView;
+import sernet.verinice.rcp.accountgroup.AccountGroupView;
 import sernet.verinice.report.rcp.ReportDepositView;
 import sernet.verinice.validation.CnAValidationView;
 
@@ -111,6 +74,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private OpenViewAction openBSIViewAction;
 
     private IWorkbenchAction saveAction;
+
+    private IWorkbenchAction saveAsAction;
 
     private IWorkbenchAction closeAction;
 
@@ -220,11 +185,12 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.aboutAction = ActionFactory.ABOUT.create(window);
         this.newWindowAction = ActionFactory.OPEN_NEW_WINDOW.create(window);
         this.saveAction = ActionFactory.SAVE.create(window);
+        this.saveAsAction = ActionFactory.SAVE_AS.create(window);
         this.closeAction = ActionFactory.CLOSE.create(window);
         this.closeAllAction = ActionFactory.CLOSE_ALL.create(window);
         this.closeOthersAction = ActionFactory.CLOSE_OTHERS.create(window);
         this.deleteAction = ActionFactory.DELETE.create(window);
-        this.openGroupViewAction = new OpenViewAction(window,Messages.ApplicationActionBarAdvisor_36, GroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.ACCOUNTSETTINGS); //$NON-NLS-1$
+        this.openGroupViewAction = new OpenViewAction(window,Messages.ApplicationActionBarAdvisor_36, AccountGroupView.ID, ImageCache.GROUP_VIEW, ActionRightIDs.ACCOUNTSETTINGS); //$NON-NLS-1$
         this.openBSIBrowserAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_0, BrowserView.ID, ImageCache.VIEW_BROWSER, ActionRightIDs.BSIBROWSER);
         this.openNoteAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_1, NoteView.ID, ImageCache.VIEW_NOTE, ActionRightIDs.NOTES);
         this.openFileAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_2, FileView.ID, ImageCache.ATTACH, ActionRightIDs.FILES);
@@ -268,7 +234,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.introAction = ActionFactory.INTRO.create(window);
 
         IAction actions[] = new IAction[]{this.exitAction, this.copyAction, this.pasteAction,
-                this.aboutAction, this.newWindowAction, this.saveAction, this.closeAction, this.closeAllAction,
+                this.aboutAction, this.newWindowAction, this.saveAction, this.saveAsAction,
+                this.closeAction, this.closeAllAction,
                 this.closeOthersAction, this.openBSIBrowserAction, this.openNoteAction, this.openFileAction,
                 this.openCatalogAction, this.openRelationViewAction, this.openBSIViewAction,
                 this.openBSIModelViewAction, this.openISMViewAction, this.openDSViewAction,
@@ -359,6 +326,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager fileMenu = new MenuManager(Messages.ApplicationActionBarAdvisor_23, IWorkbenchActionConstants.M_FILE);
 
         fileMenu.add(this.saveAction);
+        fileMenu.add(this.saveAsAction);
         fileMenu.add(this.closeAction);
         fileMenu.add(this.closeAllAction);
         fileMenu.add(this.closeOthersAction);
@@ -440,6 +408,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         IToolBarManager myToolbar = new ToolBarManager(coolBar.getStyle());
         coolBar.add(new ToolBarContributionItem(myToolbar,VeriniceActionConstants.TOOLBAR));
         myToolbar.add(this.saveAction);
+        myToolbar.add(this.saveAsAction);
         myToolbar.add(new Separator(VeriniceActionConstants.TOOLBAR_REPORT));
         myToolbar.add(new Separator());
         myToolbar.add(this.bulkEditAction);

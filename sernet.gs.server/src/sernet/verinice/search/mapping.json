@@ -9,7 +9,7 @@
 				"properties":{
 					"p-name":{
 						"type":"string",
-						"index":"not_analyzed"
+						"analyzer": "analyzer_keyword"
 					},
 					"p-value":{
 						"type":"long"

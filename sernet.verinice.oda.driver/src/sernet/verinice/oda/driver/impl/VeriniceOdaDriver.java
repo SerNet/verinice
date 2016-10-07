@@ -93,4 +93,14 @@ public class VeriniceOdaDriver implements IVeriniceOdaDriver {
 	public String getLocalReportLocation(){
 	    return Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_LOCAL_TEMPLATE_DIRECTORY);
 	}
+	
+	public boolean isSandboxEnabled(){
+	    String pref = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.REPORT_USE_SANDBOX);
+	    if(PreferenceConstants.REPORT_USE_SANDBOX_YES.equals(pref)){
+	        return true;
+	    } else if (PreferenceConstants.REPORT_USE_SANDBOX_NO.equals(pref)){
+	        return false;
+	    }
+	    return true;
+	}
 }

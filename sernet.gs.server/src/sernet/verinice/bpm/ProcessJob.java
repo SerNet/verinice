@@ -21,6 +21,7 @@ package sernet.verinice.bpm;
 
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.StatefulJob;
@@ -34,7 +35,11 @@ import sernet.hui.common.VeriniceContext;
  */
 public class ProcessJob extends QuartzJobBean implements StatefulJob {
 
+    private static final Logger LOG = Logger.getLogger(ProcessJob.class);
+    
     private static VeriniceContext.State state;
+    
+    private boolean enabled = false;
 
     private Set<IProcessCreater> processCreaterSet;
 
@@ -47,6 +52,15 @@ public class ProcessJob extends QuartzJobBean implements StatefulJob {
      */
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+        if(!enabled) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("GSM process generator is disabled.");
+            }
+            return;
+        }
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Starting GSM process generation...");
+        }
         VeriniceContext.setState(ProcessJob.state);
         for (IProcessCreater creater : processCreaterSet) {
             creater.create();
@@ -59,6 +73,14 @@ public class ProcessJob extends QuartzJobBean implements StatefulJob {
 
     public void setProcessCreaterSet(Set<IProcessCreater> processCreaterSet) {
         this.processCreaterSet = processCreaterSet;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setWorkObjects(VeriniceContext.State workObjects) {

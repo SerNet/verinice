@@ -41,7 +41,7 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class MapEntityValues extends GenericCommand {
     
-	private List<List<String>> result;
+	private List<List<Object>> result;
 	
 	private String[] propertyTypes;
 	private Class<?>[] classes;
@@ -90,13 +90,13 @@ public class MapEntityValues extends GenericCommand {
     @SuppressWarnings("unchecked")
 	public void execute() {
         
-        result = new ArrayList<List<String>>(inputIDs.size());
+        result = new ArrayList<List<Object>>(inputIDs.size());
         
         for (Integer dbid : inputIDs)
         {
             IBaseDao<CnATreeElement, Serializable> dao = (IBaseDao<CnATreeElement, Serializable>) getDaoFactory().getDAO(typeID);
             CnATreeElement e = dao.findById(dbid);
-            List<String> row = null;
+            List<Object> row = null;
             if(!mapNumericalOptionValues){
                 row = LoadEntityValues.retrievePropertyValues(e.getEntity(), propertyTypes, classes);
             } else {
@@ -113,7 +113,7 @@ public class MapEntityValues extends GenericCommand {
     }
 	
 	
-	public List<List<String>> getResult()
+	public List<List<Object>> getResult()
 	{
 		return result;
 	}

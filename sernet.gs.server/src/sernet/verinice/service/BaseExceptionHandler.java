@@ -22,6 +22,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ldap.SizeLimitExceededException;
 import sernet.verinice.service.commands.UsernameExistsRuntimeException;
 import sernet.verinice.service.commands.unify.UnifyValidationException;
+import sernet.verinice.service.sync.VnaSchemaException;
 
 public class BaseExceptionHandler implements ICommandExceptionHandler {
 
@@ -32,6 +33,8 @@ public class BaseExceptionHandler implements ICommandExceptionHandler {
 		    throw (SizeLimitExceededException)e;
 		} else if(e instanceof UnifyValidationException) {
             throw (UnifyValidationException)e;
+        } else if(e instanceof VnaSchemaException) {
+            throw (VnaSchemaException) e;
         } else {
 			throw new CommandException("Ausführungsfehler in DB-Service-Layer\n\n", getDetails(e));
 		}
@@ -51,6 +54,7 @@ public class BaseExceptionHandler implements ICommandExceptionHandler {
 		} else {
 			cause = e;
 		}
+
 
 		CommandException commandException = new CommandException(cause.getClass().getSimpleName() + getMessage(cause));
 		commandException.setStackTrace(cause.getStackTrace());

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
-	http://www.springframework.org/schema/beans 
-    http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+<beans 
+	xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" >
 
 	<!--
 	All configuration options for the verinice server are available in the
@@ -19,6 +22,9 @@ This variant:
 -->
 
 	<!-- BEGIN Server settings ========================================================================= -->
+
+
+	<bean id="veriniceAccessManagerPostProcessor" class="sernet.gs.server.security.VeriniceAccessDecisionManagerPostProcessor" />
 
 	<bean id="serverInitializer" class="sernet.gs.service.ServerInitializer" init-method="initialize">
 		<property name="workObjects" ref="workObjects" />
@@ -80,6 +86,7 @@ This variant:
                 <entry key="reportdepositService" value-ref="reportdepositService" />
                 <entry key="reportHQLService" value-ref="reportHQLService"/>
                 <entry key="configurationService" value-ref="configurationService"/>
+				<entry key="objectModelService" value-ref="objectModelService" />
 			</map>
 		</property>
 	</bean>
@@ -227,6 +234,11 @@ This variant:
         <property name="importBsiDAO" ref="importBsiDAO" />   
         <property name="elementEntityDao" ref="elementEntityDao" /> 
         
+        <!-- unsecure daos (does not respect access rights or scope only restrictions -->
+        <property name="unsecureAssetDAO" ref="unsecureAssetDAO" />
+        <property name="unsecureIncidentScenarioDAO" ref="unsecureIncidentScenarioDAO" />
+        
+        
         <property name="finishedRiskAnalysisListsDao" ref="finishedRiskAnalysisListsDao" /> 
 	</bean>
 
@@ -256,6 +268,7 @@ This variant:
         <property name="configurationService" ref="configurationService" />
         <property name="rightsServerHandler" ref="rightsServerHandler" />
         <property name="graphService" ref="graphService" />
+        <property name="vnaSchemaVersion" ref="vnaSchemaVersion" />
 	</bean>
     
 	<bean id="commandService" parent="baseTxProxy">
@@ -304,17 +317,11 @@ This variant:
         <property name="cnaLinkDao" ref="cnaLinkDao" />
     </bean>
     
-    <!-- A service to handle user accounts and groups -->
-	<bean id="accountService" class="sernet.verinice.service.AccountService">
-	    <property name="accountGroupDao" ref="accountGroupDao" />
-		<property name="configurationDao" ref="configurationDao" />
-    	<property name="commandService" ref="commandService" />
-    	<property name="configurationService" ref="configurationService" />
-    	<property name="rightsServerHandler" ref="rightsServerHandler" />
-	    <property name="permissionDao" ref="permissionDAO" />
-    </bean>
-    
      <bean id="reportHQLService" class="sernet.verinice.service.ReportHQLService" />
+     
+	<bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelService">
+		<property name="huiTypeFactory" ref="huiTypeFactory" />
+	</bean>
      
      <bean id="titleCache" class="sernet.verinice.service.ElementTitleCache">
         <property name="loadScopeTitlesCommand" ref="loadScopeTitlesCommand" />
@@ -323,6 +330,24 @@ This variant:
      <bean name="loadScopeTitlesCommand" class="sernet.verinice.service.commands.LoadElementTitles">
         <property name="typeIds" value="it-verbund,org"/>
      </bean>
+
+	<!-- Stores the verinice archive version. This schema is written into the
+		xml data of the export, so whenever the schema is changed, the property "vnaSchemaVersion"
+		should be increased. Also the list to which versions the schema is compatible
+		should be extended if possible. -->
+	<bean name="vnaSchemaVersion" class="sernet.verinice.service.sync.VnaSchemaVersion"
+		factory-method="createVnaSchemaVersion">
+		<constructor-arg>
+			<!-- The current schema which is written into the xml date export -->
+			<value>vna-1.0</value>
+		</constructor-arg>
+		<constructor-arg>
+			<!-- This list to which vna versions the current schema is compatible -->
+			<list>
+				<value>vna-1.0</value>
+			</list>
+		</constructor-arg>
+	</bean>
    
 	<!-- uncomment to activate runtime logging of methods defined in veriniceserver-debug.xml -->
 	<!--<import resource="veriniceserver-debug.xml"/> -->

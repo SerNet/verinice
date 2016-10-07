@@ -33,7 +33,7 @@ public class RcpModelUpdater implements IModelUpdater {
     /* (non-Javadoc)
      * @see sernet.verinice.iso27k.service.IModelUpdater#childAdded(sernet.verinice.iso27k.model.Group, sernet.gs.ui.rcp.main.common.model.CnATreeElement)
      */
-    public void childAdded(Group group, CnATreeElement element) {
+    public void childAdded(CnATreeElement group, CnATreeElement element) {
         CnAElementFactory.getModel(element).childAdded(group, element);
         CnAElementFactory.getModel(element).databaseChildAdded(element);
     }

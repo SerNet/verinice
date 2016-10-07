@@ -68,6 +68,7 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
+import sernet.gs.ui.rcp.main.bsi.dnd.transfer.SearchViewElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditor;
 import sernet.gs.ui.rcp.main.bsi.editors.AttachmentEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
@@ -488,7 +489,8 @@ public class ISMView extends RightsEnabledView implements ILinkedWithEditorView 
 	                                            ISO27kElementTransfer.getInstance(),
 	                                            ISO27kGroupTransfer.getInstance(),
 	                                            IBSIStrukturElementTransfer.getInstance(),
-	                                            FileTransfer.getInstance()
+	                                            FileTransfer.getInstance(),
+	                                            SearchViewElementTransfer.getInstance()
 	                                          };
 	    
 

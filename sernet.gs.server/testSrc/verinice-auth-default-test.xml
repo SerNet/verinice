@@ -28,6 +28,7 @@
             "taskshowall"
             "taskchangeassignee"
             "taskchangeduedate"
+            "searchreindex"
             "showallfiles" -->
         <action id="addbsielement" />
         <action id="addcatalog" />
@@ -59,6 +60,7 @@
         <action id="documentview" />
         <action id="dsmodelview" />
         <action id="editlinks" />
+        <action id="exportlinktable" />
         <action id="files" />
         <action id="generateauditreport" />
         <action id="generateorgreport" />
@@ -83,8 +85,7 @@
         <action id="riskanalysis" />
         <action id="samtview" />
         <action id="searchexport" />
-        <action id="searchreindex" />
-        <action id="searchview" />
+        <action id="searchview" />    
         <action id="showchartview" />
         <action id="showpreferences" />
         <action id="simpleauditview" />
@@ -106,6 +107,7 @@
             "addismorg"
             "additverbund"
             "xmlimport" 
+            "searchreindex
             "showallfiles"
             "addsecurityassessment"-->
 	        <action id="addbsielement" />
@@ -135,6 +137,7 @@
 	        <action id="documentview" />
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
+	        <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
@@ -206,6 +209,7 @@
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
             <action id="editprofile" />
+	        <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />
@@ -279,6 +283,7 @@
 	        <action id="dsmodelview" />
 	        <action id="editlinks" />
             <action id="editprofile" />
+	        <action id="exportlinktable" />
 	        <action id="files" />
 	        <action id="generateauditreport" />
 	        <action id="generateorgreport" />

@@ -56,6 +56,7 @@ import org.osgi.util.tracker.ServiceTracker;
 
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.ProgressAdapter;
 import sernet.gs.ui.rcp.main.logging.LoggerInitializer;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -74,9 +75,13 @@ import sernet.verinice.interfaces.IVersionConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
+import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.ReportTemplateSync;
 import sernet.verinice.rcp.StartupImporter;
 import sernet.verinice.rcp.StatusResult;
+import sernet.verinice.rcp.jobs.VeriniceWorkspaceJob;
+import sernet.verinice.service.model.IObjectModelService;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -266,11 +271,60 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         ReportTemplateSync.sync();
 
+
         // Log the system and application configuration
         ConfigurationLogger.logSystemProperties();
         ConfigurationLogger.logApplicationProperties();
         ConfigurationLogger.logProxyPreferences();
+        if (CnAElementFactory.isModelLoaded() || CnAElementFactory.isIsoModelLoaded()) {
+            initObjectModelService();
+        } else {
+            IModelLoadListener loadListener = new IModelLoadListener() {
 
+                @Override
+                public void loaded(ISO27KModel model) {
+                    // do nothing
+
+                }
+
+                @Override
+                public void loaded(BSIModel model) {
+                    initObjectModelService();
+                    CnAElementFactory.getInstance().removeLoadListener(this);
+
+                }
+
+                @Override
+                public void closed(BSIModel model) {
+                    // do nothing
+
+                }
+            };
+            CnAElementFactory.getInstance().addLoadListener(loadListener);
+        }
+
+    }
+
+    private void initObjectModelService() {
+
+        VeriniceWorkspaceJob job = new VeriniceWorkspaceJob("Load objectModelService",
+                "error while loading objectModelService") {
+
+            @Override
+            protected void doRunInWorkspace() {
+
+                inheritVeriniceContextState();
+                IObjectModelService objectModelService = ServiceFactory.lookupObjectModelService();
+                long time = System.currentTimeMillis();
+                objectModelService.init();
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("took " + (System.currentTimeMillis() - time)
+                            + " msec to load Service");
+                }
+
+            }
+        };
+        JobScheduler.scheduleInitJob(job);
     }
 
     private void checkPKCS11Support(Preferences prefs) {

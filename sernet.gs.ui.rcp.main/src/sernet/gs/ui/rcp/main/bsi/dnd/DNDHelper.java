@@ -37,7 +37,9 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
+import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.iso27k.IISO27kElement;
 import sernet.verinice.service.iso27k.Item;
 
@@ -49,10 +51,12 @@ public final class DNDHelper {
     private static final Logger LOG = Logger.getLogger(DNDHelper.class);
     
     private static Class<?> classes[] = new Class[]{Baustein.class,
+                                             BausteinUmsetzung.class,
                                              Massnahme.class,
                                              Gefaehrdung.class,
                                              IBSIStrukturElement.class,
                                              IISO27kElement.class,
+                                             IMassnahmeUmsetzung.class,
                                              Item.class};
     
     private static Class<?> transferClasses[] = new Class[]{ BausteinElementTransfer.class,
@@ -90,8 +94,9 @@ public final class DNDHelper {
     /**
      * creates an array of one of the types contained in classes,
      * so transferclasses can check for correct type of dnd'ed array
+     * 
      * @param source
-     * @return
+     * @return an array instance of specific type or if source contains multiple types an empty array.
      */
     public static Object[] castDataArray(Object[] source){
         List<?> dest = null;
@@ -121,10 +126,11 @@ public final class DNDHelper {
                     LOG.error(STD_ERR_MSG, e);
                 }
             } else {
+                LOG.warn("DND source contains multiple types. Return an empty array");
                 return new Object[0];
             }
         }
-        
+
         return dest.toArray((Object[])Array.newInstance(type, dest.size()));
     }
     
