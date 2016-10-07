@@ -24,7 +24,6 @@ import java.util.Date;
 import org.apache.commons.beanutils.ConvertUtils;
 
 import sernet.verinice.interfaces.licensemanagement.IPropertyConverter;
-import sernet.verinice.model.licensemanagement.ConversionNotPossibleException;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -36,21 +35,15 @@ public class PropertyConverter implements IPropertyConverter {
      * @see sernet.verinice.interfaces.licensemanagement.IPropertyConverter#convertToString(java.lang.Object)
      */
     @Override
-    public String convertToString(Object property) throws ConversionNotPossibleException {
-        return String.valueOf(property);
+    public String convertToString(Object property) {
+        return (String)ConvertUtils.convert(property, String.class);
     }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.licensemanagement.IPropertyConverter#convertToIntger(java.lang.Object)
      */
     @Override
-    public Integer convertToInteger(Object property) throws ConversionNotPossibleException {
-//        try{
-//            return Integer.parseInt(convertToString(property));
-//        } catch (NumberFormatException e){
-//            throw new ConversionNotPossibleException("Can not convert " 
-//                    + convertToString(property) + " to Integer" );
-//        }
+    public Integer convertToInteger(Object property){
         return (Integer) ConvertUtils.lookup(Integer.class).convert(Integer.class, property);
     }
 
@@ -58,19 +51,16 @@ public class PropertyConverter implements IPropertyConverter {
      * @see sernet.verinice.interfaces.licensemanagement.IPropertyConverter#convertToDate(java.lang.Object)
      */
     @Override
-    public Date convertToDate(Object property) throws ConversionNotPossibleException {
-        return new Date(convertToLong(property));
+    public Date convertToDate(Object property){
+        return (Date)ConvertUtils.lookup(Date.class).convert(Date.class, property);
     }
 
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.licensemanagement.IPropertyConverter#convertToLong(java.lang.Object)
      */
     @Override
-    public Long convertToLong(Object property) throws ConversionNotPossibleException {
+    public Long convertToLong(Object property) {
         return (Long) ConvertUtils.lookup(Long.class).convert(Long.class, property);
     }
-
-
-
 
 }

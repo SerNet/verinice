@@ -21,20 +21,18 @@ package sernet.verinice.interfaces.licensemanagement;
 
 import java.util.Date;
 
-import sernet.verinice.model.licensemanagement.ConversionNotPossibleException;
-
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
 public interface IPropertyConverter {
     
-    String convertToString(Object property) throws ConversionNotPossibleException;
+    String convertToString(Object property);
     
-    Integer convertToInteger(Object property) throws ConversionNotPossibleException;
+    Integer convertToInteger(Object property);
     
-    Date convertToDate(Object property) throws ConversionNotPossibleException;
+    Date convertToDate(Object property);
     
-    Long convertToLong(Object property) throws ConversionNotPossibleException;
+    Long convertToLong(Object property);
 
 }

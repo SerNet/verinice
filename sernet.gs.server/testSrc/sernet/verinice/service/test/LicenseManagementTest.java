@@ -48,6 +48,7 @@ import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
+import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConverter;
 import sernet.verinice.service.commands.ExportFactory;
 
 /**
@@ -483,6 +484,22 @@ public class LicenseManagementTest extends ContextConfiguration{
         String decryptedText = cryptoService.decrypt(cypherText, password.toCharArray(), salt);
         
         Assert.assertEquals(plainText, decryptedText);
+    }
+    
+    @Test
+    public void testPropertyConverter(){
+        PropertyConverter converter = new PropertyConverter();
+        Object intObject = converter.convertToInteger("5");
+        Assert.assertTrue(intObject instanceof Integer);
+        Date d = new Date();
+        Object dateObject = converter.convertToDate(converter.convertToLong(d));
+        Assert.assertTrue(dateObject instanceof Date);
+        Object longObject = converter.convertToLong(intObject);
+        Assert.assertTrue(longObject instanceof Long);
+        longObject = converter.convertToLong(dateObject);
+        Assert.assertTrue(longObject instanceof Long);
+        Object stringObject = converter.convertToString(dateObject);
+        Assert.assertTrue(stringObject instanceof String);
     }
 
 }
