@@ -26,38 +26,40 @@ import org.apache.commons.beanutils.ConvertUtils;
 import sernet.verinice.interfaces.licensemanagement.IPropertyConverter;
 
 /**
+ * This class tries to convert Objects to an expected type
+ * use-case for this is the cast of properties that are 
+ * protected by licensemanagement and stored in the database
+ * encrypted as strings (base64). Decryption process is not
+ * aware of stored datatype, so the developer needs a tool to
+ * cast to the right datatype. This is implemented here.
+ * 
+ * this class makes usage of the converters defined in:
+ * org.apache.commons.beanutils
+ * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
 public class PropertyConverter implements IPropertyConverter {
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.licensemanagement.IPropertyConverter#convertToString(java.lang.Object)
-     */
     @Override
     public String convertToString(Object property) {
         return (String)ConvertUtils.convert(property, String.class);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.licensemanagement.IPropertyConverter#convertToIntger(java.lang.Object)
-     */
     @Override
     public Integer convertToInteger(Object property){
         return (Integer) ConvertUtils.lookup(Integer.class).convert(Integer.class, property);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.licensemanagement.IPropertyConverter#convertToDate(java.lang.Object)
-     */
     @Override
     public Date convertToDate(Object property){
+        // ensure property is of type long
+        if(!(property instanceof Long)){
+            property = convertToLong(property);
+        }
         return (Date)ConvertUtils.lookup(Date.class).convert(Date.class, property);
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.interfaces.licensemanagement.IPropertyConverter#convertToLong(java.lang.Object)
-     */
     @Override
     public Long convertToLong(Object property) {
         return (Long) ConvertUtils.lookup(Long.class).convert(Long.class, property);

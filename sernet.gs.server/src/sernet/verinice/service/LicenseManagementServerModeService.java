@@ -48,17 +48,18 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     private IEncryptionService cryptoService;
 
     /**
-     * @param contentId - id of content to inspect
+     * @param encryptedContentId - (encrypted) id of content to inspect
      * @return amount of authorised users for a given contentId 
      */
     @Override
-    public int getValidUsersForContentId(String contentId) {
+    public int getValidUsersForContentId(String encryptedContentId) {
         String hql = "from LicenseManagementEntry " 
                     + "where contentIdentifier = ?";
         // if somethings wrong with the hql-parameter contentId (e.g.
         // it does not exist in db) the result list will be empty
-        Object[] params = new Object[] { contentId };
-        List<LicenseManagementEntry> entryList = licenseManagementDao.findByQuery(hql, params);
+        Object[] params = new Object[] { encryptedContentId };
+        List<LicenseManagementEntry> entryList = licenseManagementDao.
+                findByQuery(hql, params);
         int sum = 0;
         for (LicenseManagementEntry entry : entryList) {
                 int validUsers = decrypt(
@@ -71,18 +72,18 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
 
     /**
      * 
-     * iterates over all {@link LicenseManagementEntry} for a given contentId
-     * to return to maximum validUntil-Date
+     * iterates over all {@link LicenseManagementEntry} for a given (encrypted)
+     * contentId to return to maximum validUntil-Date
      * 
-     * @param contentId - id of content to inspect
+     * @param encryptedContentId - id of content to inspect
      * @return the maximal date a content is valid to  
      */
     @Override
-    public Date getMaxValidUntil(String contentId) {
+    public Date getMaxValidUntil(String encryptedContentId) {
         Date longestValidDate = new Date(System.currentTimeMillis());
         String hql = "from LicenseManagementEntry " 
                 + "where contentIdentifier = ?";
-        Object[] params = new Object[] { contentId };
+        Object[] params = new Object[] { encryptedContentId };
         List<LicenseManagementEntry> entryList 
             = licenseManagementDao.findByQuery(hql, params);
         for (LicenseManagementEntry entry : entryList) {
@@ -110,9 +111,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
             = licenseManagementDao.findByQuery(hql, params);
         if(entryList.size() == 1){
             LicenseManagementEntry entry = entryList.get(0);
-            return cryptoService.decrypt(entry.getLicenseID(), 
-                    entry.getUserPassword().toCharArray(), 
-                    entry.getSalt());
+            return decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
         }
         return "";
     }
@@ -147,10 +146,9 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
             return false;
         } else {
             LicenseManagementEntry entry = entryList.get(0);
-            return Long.parseLong(cryptoService.decrypt(
-                    entry.getValidUntil(),
-                    entry.getUserPassword().toCharArray(),
-                    entry.getSalt())) > System.currentTimeMillis();
+            return ((Date)decrypt(
+                            entry, LicenseManagementEntry.COLUMN_VALIDUNTIL))
+                    .getTime() > System.currentTimeMillis();
         }
     }
 
@@ -172,11 +170,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
             return false;
         } else {
             LicenseManagementEntry entry = entryList.get(0);
-            validUsers = Integer.parseInt(
-                    cryptoService.decrypt(entry.getValidUsers(),
-                            entry.getUserPassword().toCharArray(),
-                            entry.getSalt()
-                            ));
+            validUsers = decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUSERS);
             assignedUsers = 0;
             for (Configuration configuration : getAllConfigurations()) {
                 if (getAuthorisedContentIdsByUser(configuration.getUser()).contains(licenseId)) {
@@ -214,7 +208,6 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public void grantUserToLicense(String user, String licenseId) {
-        // TODO: after implementation of VN-1538 add decrypt here
         addLicenseIdAuthorisation(user, licenseId);
     }
 
@@ -312,7 +305,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         String hql = "from LicenseManagementEntry";
         List<LicenseManagementEntry> allEntries = licenseManagementDao.findByQuery(hql, new Object[] {});
         for(LicenseManagementEntry entry : allEntries){
-            allIds.add((String)decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID));
+            allIds.add(String.valueOf(decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID)));
             
         }
         return allIds;
@@ -494,26 +487,54 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     }
     
     @Override
-    public <T extends Object> T  decrypt(LicenseManagementEntry entry, String propertyType){
+    public <T extends Object> T decrypt(LicenseManagementEntry entry, String propertyType){
+        T returnValue = null;
+        String plainText = "";
+        switch(propertyType){
+        case LicenseManagementEntry.COLUMN_CONTENTID:
+            plainText = cryptoService.decrypt(entry.getContentIdentifier(), 
+                    entry.getUserPassword().toCharArray(), entry.getSalt());
+            return convertPropery(plainText, propertyType);
+        case LicenseManagementEntry.COLUMN_LICENSEID:
+            plainText = cryptoService.decrypt(entry.getLicenseID(), 
+                    entry.getUserPassword().toCharArray(), entry.getSalt());
+            return convertPropery(plainText, propertyType);
+        case LicenseManagementEntry.COLUMN_VALIDUNTIL:
+            plainText = cryptoService.decrypt(entry.getValidUntil(), 
+                    entry.getUserPassword().toCharArray(), entry.getSalt());
+            return convertPropery(plainText, propertyType);
+        case LicenseManagementEntry.COLUMN_VALIDUSERS:
+            plainText = cryptoService.decrypt(entry.getValidUsers(), 
+                    entry.getUserPassword().toCharArray(), entry.getSalt());
+            return convertPropery(plainText, propertyType);
+        default:
+            plainText = cryptoService.decrypt(entry.getPropertyByType(propertyType), 
+                    entry.getUserPassword().toCharArray(), entry.getSalt());
+            return (T)entry.getPropertyByType(plainText);
+        }
+    }
+    
+    private <T extends Object> T convertPropery(Object property, String propertyType){
         T returnValue;
         PropertyConverter converter = new PropertyConverter();
         switch(propertyType){
-            case LicenseManagementEntry.COLUMN_CONTENTID:
-                returnValue = (T)converter.convertToString(propertyType);
-                break;
-            case LicenseManagementEntry.COLUMN_LICENSEID:
-                returnValue = (T)converter.convertToString(propertyType);
-                break;
-            case LicenseManagementEntry.COLUMN_VALIDUNTIL:
-                returnValue = (T)converter.convertToDate(propertyType);
-                break;
-            case LicenseManagementEntry.COLUMN_VALIDUSERS:
-                returnValue = (T)converter.convertToInteger(propertyType);              
-                break;
-             default:
-                 returnValue = (T)entry.getPropertyByType(propertyType);
+        case LicenseManagementEntry.COLUMN_CONTENTID:
+            returnValue = (T)converter.convertToString(property);
+            break;
+        case LicenseManagementEntry.COLUMN_LICENSEID:
+            returnValue = (T)converter.convertToString(property);
+            break;
+        case LicenseManagementEntry.COLUMN_VALIDUNTIL:
+            returnValue = (T)converter.convertToDate(property);
+            break;
+        case LicenseManagementEntry.COLUMN_VALIDUSERS:
+            returnValue = (T)converter.convertToInteger(property);              
+            break;
+        default:
+            // if none of the defined rules apply, just return a string
+            returnValue = (T)String.valueOf(property);
         }
-        return returnValue; 
+        return returnValue;
     }
     
 
