@@ -46,6 +46,7 @@ import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
+import sernet.hui.common.multiselectionlist.MultiSelectionHelper;
 import sernet.hui.swt.widgets.Colors;
 import sernet.hui.swt.widgets.IHuiControl;
 import sernet.snutils.AssertException;
@@ -184,36 +185,8 @@ public class MultiSelectionControl implements IHuiControl {
     }
 
     private void writeEntitiesToTextField() {
-		StringBuffer names = new StringBuffer();
-		List properties = entity.getProperties(type.getId()).getProperties();
-		if (properties == null){
-			return;
-		}
-		for (Iterator iter = properties.iterator(); iter.hasNext();) {
-			Property prop = (Property) iter.next();
-			String referencedId = prop.getPropertyValue();
-			IMLPropertyOption ref = getEntity(referencedId);
-			if (ref==null){
-				continue;
-			}
-			String optionName = ref.getName();
-			if (names.length()==0){
-				names.append(optionName);
-			} else {
-				names.append(" / ");
-				names.append(optionName);
-			}
-		}
-		text.setText(names.toString());
-	}
-
-	private IMLPropertyOption getEntity(String referencedId) {
-		for (IMLPropertyOption entity_ : type.getReferencedEntities()) {
-			if (entity_.getId().equals(referencedId)){
-				return entity_;
-			}
-		}
-		return null;
+		String names = MultiSelectionHelper.loadReferenceLabels(entity, type);
+		text.setText(names);
 	}
 
 	/**

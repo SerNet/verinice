@@ -195,13 +195,12 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     public void setPropertyValue(String propertyTypeId, String value) {
         PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyTypeId);
         PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
-        // TODO: impl reference
         if (propertyType.isReference()) {
-            // return setValueOfReferenceProperty(propertyType);
-            log.warn("Don `t set reference values.");
+            typedPropertyLists.put(propertyTypeId, null);
+            setMultiselectProperty(propertyTypeId, value);
         } else if (propertyType.isMultiselect()) {
             typedPropertyLists.put(propertyTypeId, null);
-            setMultiselectPropertyToNewValues(propertyTypeId, value);
+            setMultiselectProperty(propertyTypeId, value);
         } else {
             if (propertyList != null) {
                 for (Property property : propertyList.getProperties()) {
@@ -256,7 +255,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         return (option != null) ? option.getName() : "";
     }
 
-    private void setMultiselectPropertyToNewValues(String propertyTypeId, String value) {
+    private void setMultiselectProperty(String propertyTypeId, String value) {
         String[] propertyOptions = value.split(",");
         for (String propertyOptionValue : propertyOptions) {
             if (StringUtils.isNotEmpty(propertyOptionValue)) {

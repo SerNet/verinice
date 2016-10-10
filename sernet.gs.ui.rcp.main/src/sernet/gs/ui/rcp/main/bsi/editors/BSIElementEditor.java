@@ -312,8 +312,7 @@ public class BSIElementEditor extends EditorPart {
         if (isTaskEditorContext() && StringUtils.isNotEmpty(event.getProperty().getPropertyType())) {
             PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), event.getProperty().getPropertyType());
             if (propertyType.isReference()) {
-                // TODO: impl reference
-                LOG.warn("Don `t save reference values.");
+                saveChangedMultiselectElementProperties(event, propertyType);
             } else if (propertyType.isSingleSelect()) {
                 changedElementProperties.put(event.getProperty().getPropertyType(), propertyType.getOption(event.getProperty().getPropertyValue()).getId());
             } else if (propertyType.isMultiselect()) {
@@ -338,9 +337,7 @@ public class BSIElementEditor extends EditorPart {
     private void saveChangedMultiselectElementProperties(PropertyChangedEvent event, PropertyType propertyType) {
         PropertyOption option = propertyType.getOption(event.getProperty().getPropertyValue());
         if (changedElementProperties.containsKey(propertyType.getId())) {
-            if (changedElementProperties.get(propertyType.getId()).contains(option.getId())) {
-                changedElementProperties.put(propertyType.getId(), changedElementProperties.get(propertyType.getId()).replace(option.getId(), ""));
-            } else {
+            if (!changedElementProperties.get(propertyType.getId()).contains(option.getId())) {
                 changedElementProperties.put(propertyType.getId(), changedElementProperties.get(propertyType.getId()) + "," + option.getId());
             }
         } else {

@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +50,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.MultiSelectionHelper;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -250,8 +253,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         newText.setEditable(false);
 
         if (propertyType.isReference()) {
-            // TODO: impl reference
-            LOG.warn("Don `t show reference values.");
+            newValue = loadTextForReferenceProperty(propertyType, newValue);
+            newText.setText(newValue);
         } else if (propertyType.isSingleSelect()) {
             PropertyOption propertyOption = propertyType.getOption(newValue);
             newText.setText(typeFactory.getMessage(propertyOption.getId()));
@@ -281,6 +284,11 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
             }
         }
         return sb.toString();
+    }
+    
+    private String loadTextForReferenceProperty(PropertyType propertyType, String newValue) {
+        String[] propertyOptions = newValue.split(",");
+        return MultiSelectionHelper.loadReferenceLabels(propertyType, Arrays.asList(propertyOptions));
     }
 
     private void setDialogLocation() {
