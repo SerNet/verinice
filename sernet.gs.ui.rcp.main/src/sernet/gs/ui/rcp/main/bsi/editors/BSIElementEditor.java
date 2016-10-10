@@ -62,7 +62,6 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.IEntityChangedListener;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyChangedEvent;
-import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
@@ -113,7 +112,7 @@ public class BSIElementEditor extends EditorPart {
 
         @Override
         public void selectionChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
-            resetMultiselectElementPropertiesAfterRemovingOption(arg0);
+            saveMultiselectElementProperties(arg0);
             modelChanged();
         }
 
@@ -311,14 +310,12 @@ public class BSIElementEditor extends EditorPart {
     private void saveChangedElementProperties(PropertyChangedEvent event) {
         if (isTaskEditorContext() && StringUtils.isNotEmpty(event.getProperty().getPropertyType())) {
             PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), event.getProperty().getPropertyType());
-            if (propertyType.isReference()) {
-                saveChangedMultiselectElementProperties(event, propertyType);
-            } else if (propertyType.isSingleSelect()) {
+            if (propertyType.isSingleSelect()) {
                 changedElementProperties.put(event.getProperty().getPropertyType(), propertyType.getOption(event.getProperty().getPropertyValue()).getId());
-            } else if (propertyType.isMultiselect()) {
-                saveChangedMultiselectElementProperties(event, propertyType);
             } else if (propertyType.isDate()) {
                 saveChangedDateElementProperties(event);
+            } else if (propertyType.isMultiselect() || propertyType.isReference()) {
+                // nothing to do
             } else {
                 changedElementProperties.put(event.getProperty().getPropertyType(), event.getProperty().getPropertyValue());
             }
@@ -334,18 +331,7 @@ public class BSIElementEditor extends EditorPart {
         }
     }
 
-    private void saveChangedMultiselectElementProperties(PropertyChangedEvent event, PropertyType propertyType) {
-        PropertyOption option = propertyType.getOption(event.getProperty().getPropertyValue());
-        if (changedElementProperties.containsKey(propertyType.getId())) {
-            if (!changedElementProperties.get(propertyType.getId()).contains(option.getId())) {
-                changedElementProperties.put(propertyType.getId(), changedElementProperties.get(propertyType.getId()) + "," + option.getId());
-            }
-        } else {
-            changedElementProperties.put(propertyType.getId(), option.getId());
-        }
-    }
-    
-    private void resetMultiselectElementPropertiesAfterRemovingOption(IMLPropertyType arg0) {
+    private void saveMultiselectElementProperties(IMLPropertyType arg0) {
         if (isTaskEditorContext() && StringUtils.isNotEmpty(arg0.getId())) {
             PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), arg0.getId());
             List<Property> properties = cnAElement.getEntity().getProperties(propertyType.getId()).getProperties();

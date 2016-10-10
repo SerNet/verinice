@@ -19,7 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.bpm.rcp;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -48,9 +47,8 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
-import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
-import sernet.hui.common.multiselectionlist.MultiSelectionHelper;
+import sernet.hui.common.multiselectionlist.OptionSelectionHelper;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -226,8 +224,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
 
                 if (StringUtils.isNotBlank(oldValue) || StringUtils.isNotBlank(newValue)) {
                     createLabelForProperty(parent, typeFactory, propertyType);
-                    createTextForPropertyOldValue(parent, oldValue);
-                    createTextForPropertyNewValue(parent, typeFactory, propertyType, newValue);
+                    createTextForProperty(parent, oldValue);
+                    createTextForProperty(parent, propertyType, newValue);
                 }
             }
         }
@@ -238,31 +236,28 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         titleLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
         titleLabel.setText(typeFactory.getMessage(propertyType.getId()));
     }
+    
+    private void createTextForProperty(final Composite parent, String oldValue) { 
+        final Text oldText = new Text(parent, SWT.BORDER | SWT.WRAP); 
+        oldText.setEditable(false); 
+        oldText.setText(oldValue); 
+        GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH); 
+        gridData.widthHint = DIALOG_WIDTH / 3; 
+        oldText.setLayoutData(gridData); 
+    } 
 
-    private void createTextForPropertyOldValue(final Composite parent, String oldValue) {
-        final Text oldText = new Text(parent, SWT.BORDER | SWT.WRAP);
-        oldText.setEditable(false);
-        oldText.setText(oldValue);
-        GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH);
-        gridData.widthHint = DIALOG_WIDTH / 3;
-        oldText.setLayoutData(gridData);
-    }
-
-    private void createTextForPropertyNewValue(final Composite parent, HUITypeFactory typeFactory, PropertyType propertyType, String newValue) {
+    private void createTextForProperty(final Composite parent, PropertyType propertyType, String value) {
         final Text newText = new Text(parent, SWT.BORDER | SWT.WRAP);
         newText.setEditable(false);
 
         if (propertyType.isReference()) {
-            newValue = loadTextForReferenceProperty(propertyType, newValue);
-            newText.setText(newValue);
-        } else if (propertyType.isSingleSelect()) {
-            PropertyOption propertyOption = propertyType.getOption(newValue);
-            newText.setText(typeFactory.getMessage(propertyOption.getId()));
-        } else if (propertyType.isMultiselect()) {
-            newValue = createTextForMultiselectProperty(typeFactory, propertyType, newValue);
-            newText.setText(newValue);
+            value = loadTextForReferenceProperty(propertyType, value);
+            newText.setText(value);
+        } else if (propertyType.isSingleSelect() || propertyType.isMultiselect()) {
+            value = loadTextForOptionProperty(propertyType, value);
+            newText.setText(value);
         } else {
-            newText.setText(newValue);
+            newText.setText(value);
         }
 
         GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH);
@@ -270,25 +265,14 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         newText.setLayoutData(gridData);
     }
 
-    private String createTextForMultiselectProperty(HUITypeFactory typeFactory, PropertyType propertyType, String newValue) {
+    private String loadTextForOptionProperty(PropertyType propertyType, String newValue) {
         String[] propertyOptions = newValue.split(",");
-        StringBuilder sb = new StringBuilder();
-        for (String propertyOptionValue : propertyOptions) {
-            if (StringUtils.isNotBlank(propertyOptionValue)) {
-                PropertyOption propertyOption = propertyType.getOption(propertyOptionValue);
-                if (sb.length() == 0) {
-                    sb.append(typeFactory.getMessage(propertyOption.getId()));
-                } else {
-                    sb.append(" / ").append(typeFactory.getMessage(propertyOption.getId()));
-                }
-            }
-        }
-        return sb.toString();
+        return OptionSelectionHelper.loadOptionLabels(propertyType, Arrays.asList(propertyOptions));
     }
-    
+
     private String loadTextForReferenceProperty(PropertyType propertyType, String newValue) {
         String[] propertyOptions = newValue.split(",");
-        return MultiSelectionHelper.loadReferenceLabels(propertyType, Arrays.asList(propertyOptions));
+        return OptionSelectionHelper.loadReferenceLabels(propertyType, Arrays.asList(propertyOptions));
     }
 
     private void setDialogLocation() {

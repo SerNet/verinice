@@ -20,8 +20,6 @@
 package sernet.hui.common.multiselectionlist;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import sernet.hui.common.connect.Entity;
@@ -31,34 +29,64 @@ import sernet.hui.common.connect.PropertyType;
 /**
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
-public class MultiSelectionHelper {
+public class OptionSelectionHelper {
+
+    public static String loadOptionLabels(Entity entity, PropertyType type) {
+        List<Property> properties = entity.getProperties(type.getId()).getProperties();
+        if (properties == null) {
+            return "";
+        }
+
+        List<String> optionIds = getPropertiesIds(properties);
+        return loadOptionLabels(type, optionIds);
+    }
+
+    public static String loadOptionLabels(PropertyType type, List<String> optionIds) {
+        StringBuilder referenceLabels = new StringBuilder();
+        for (String optionId : optionIds) {
+
+            IMLPropertyOption option = type.getOption(optionId);
+            if (option == null) {
+                continue;
+            }
+            String optionName = option.getName();
+            if (referenceLabels.length() == 0) {
+                referenceLabels.append(optionName);
+            } else {
+                referenceLabels.append(" / ");
+                referenceLabels.append(optionName);
+            }
+        }
+        return referenceLabels.toString();
+    }
+
     public static String loadReferenceLabels(Entity entity, PropertyType type) {
         List<Property> properties = entity.getProperties(type.getId()).getProperties();
         if (properties == null) {
             return "";
         }
-        
-        List<String> referencedIds = propertiesToReferencedIds(properties);
+
+        List<String> referencedIds = getPropertiesIds(properties);
         return loadReferenceLabels(type, referencedIds);
     }
 
     public static String loadReferenceLabels(PropertyType type, List<String> referencedIds) {
-        StringBuilder names = new StringBuilder();
+        StringBuilder referenceLabels = new StringBuilder();
         for (String referencedId : referencedIds) {
-            String optionName = loadReferenceLabel(type, referencedId);
-            if (optionName == null) {
+            String referenceName = loadReferenceLabel(type, referencedId);
+            if (referenceName == null) {
                 continue;
-            } else if (names.length() == 0) {
-                names.append(optionName);
+            } else if (referenceLabels.length() == 0) {
+                referenceLabels.append(referenceName);
             } else {
-                names.append(" / ");
-                names.append(optionName);
+                referenceLabels.append(" / ");
+                referenceLabels.append(referenceName);
             }
         }
-        return names.toString();
+        return referenceLabels.toString();
     }
-    
-    private static List<String> propertiesToReferencedIds(List<Property> properties) {
+
+    private static List<String> getPropertiesIds(List<Property> properties) {
         List<String> referencedIds = new ArrayList<>(properties.size());
         for (Property property : properties) {
             referencedIds.add(property.getPropertyValue());
@@ -75,9 +103,9 @@ public class MultiSelectionHelper {
     }
 
     private static IMLPropertyOption getEntity(PropertyType type, String referencedId) {
-        for (IMLPropertyOption entity_ : type.getReferencedEntities()) {
-            if (entity_.getId().equals(referencedId)) {
-                return entity_;
+        for (IMLPropertyOption entity : type.getReferencedEntities()) {
+            if (entity.getId().equals(referencedId)) {
+                return entity;
             }
         }
         return null;
