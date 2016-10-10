@@ -35,20 +35,21 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
     LicenseManagementEntryDao licenseManagementDao;
 
     /**
-     * if any entries in db referencing the given contentId, return 1 since 
+     * if any entries in db referencing the given encrypted contentId, return 1 since 
      * in standalone mode there is no second user, otherwise return 0
      * 
-     * @param contentId - contentId (not licenseId!) to check for
+     * @param encryptedContentId - contentId (not licenseId!) to check for
      */
     @Override
-    public int getValidUsersForContentId(String contentId) {
-        String hql = "select validUsers from LicenseManagementEntry " + "where contentIdentifier = ?";
-        Object[] params = new Object[] { contentId };
+    public int getValidUsersForContentId(String encryptedContentId) {
+        String hql = "from LicenseManagementEntry " + "where contentIdentifier = ?";
+        Object[] params = new Object[] { encryptedContentId };
         List idList = licenseManagementDao.findByQuery(hql, params);
         int sum = 0;
         for (Object o : idList) {
-            if (o instanceof String) {
-                int validUsers = Integer.parseInt((String) o);
+            if (o instanceof LicenseManagementEntry) {
+                int validUsers = decrypt((LicenseManagementEntry)o,
+                        LicenseManagementEntry.COLUMN_VALIDUSERS);
                 sum += validUsers;
             }
         }
@@ -62,16 +63,20 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      * checks if the {@link LicenseManagementEntry} is valid at the current date
      * and ignores the username, since in standalone mode username does not bother
      * 
-     * @param licenseId - licenseId (not contentId!) to validate time for 
+     * @param encryptedLicenseId - encrypted licenseId (not contentId!) 
+     * to validate time for 
      */
     @Override
-    public boolean isUserAssignedLicenseStillValid(String user, String licenseId) {
-        String hql = "select validUntil from LicenseManagementEntry " 
+    public boolean isUserAssignedLicenseStillValid(String user, String encryptedLicenseId) {
+        String hql = "from LicenseManagementEntry " 
                 + "where licenseID = ?";
-        Object[] params = new Object[]{licenseId};
+        Object[] params = new Object[]{encryptedLicenseId};
         List validUntilList = licenseManagementDao.findByQuery(hql, params);
         if(validUntilList != null && validUntilList.size() == 1){
-            long validUntil = Long.parseLong((String)validUntilList.get(0));
+            
+            long validUntil = decrypt((LicenseManagementEntry)
+                    validUntilList.get(0),
+                    LicenseManagementEntry.COLUMN_VALIDUNTIL);
             long currentTime = System.currentTimeMillis();
             return validUntil > currentTime;
         }
@@ -80,23 +85,27 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
 
     /**
      * checks if there are any free slots for assigning another user to allow
-     * him the usage of the content referenced by licenseId
+     * him the usage of the content referenced by (encrypted )licenseId
      * in standalone, the existance of an {@link LicenseManagementEntry}
      * (and a validUser count > 0) allows the (singlemode) user to use
      * the content, so we do not have to check for any free slots, since 
      * there is only 1 slot we can use. so just check for slotsize > 0
      * 
-     * @param licenseId - the licenseId (not contentId!) to validate
+     * @param encryptedLicenseId - the encrypted licenseId (not contentId!) to validate
      * 
      */
     @Override
-    public boolean checkAssignedUsersForLicenseId(String licenseId) {
-        String hql = "select validUsers from LicenseManagementEntry " 
+    public boolean checkAssignedUsersForLicenseId(String encryptedLicenseId) {
+        String hql = "from LicenseManagementEntry " 
                 + "where licenseID = ?";
-        Object[] params = new Object[]{licenseId};
+        Object[] params = new Object[]{encryptedLicenseId};
         List validUserList = licenseManagementDao.findByQuery(hql, params);
         if(validUserList != null && validUserList.size() == 1){
-            return Integer.valueOf((String)validUserList.get(0)) > 0;
+            LicenseManagementEntry entry = (LicenseManagementEntry)
+                    validUserList.get(0);
+            int validUsers = decrypt(entry, 
+                    LicenseManagementEntry.COLUMN_VALIDUSERS);
+            return validUsers > 0;
         }
         return true;
     }
