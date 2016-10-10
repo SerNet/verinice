@@ -243,7 +243,7 @@ public class LinkTableComposite extends Composite {
                 column.getColumn().dispose();
                 numCols = columns.size();
                 renameColumns();
-                refresh(UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE);
+                refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT, UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE);
             }
         });
     }
@@ -435,7 +435,7 @@ public class LinkTableComposite extends Composite {
         column.getColumn().moveAbove(prevElement.getColumn());
 
         renameColumns();
-        refresh(UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE);
+        refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT, UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE);
     }
 
     public void moveColumnDown(LinkTableColumn column) {
@@ -460,6 +460,6 @@ public class LinkTableComposite extends Composite {
         column.getColumn().moveBelow(nextElement.getColumn());
 
         renameColumns();
-        refresh(UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE);
+        refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT, UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE);
     }
 }
