@@ -58,18 +58,8 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
      */
     @Override
     public Map<String, Object> execute(final ITask task) {
-        Map<String, Object> taskVariables = getTaskService().getVariables(task.getId());
         Map<String, Object> parameter = new HashMap<String, Object>();
-
-        final IndividualServiceParameter individualServiceParameter = new IndividualServiceParameter();
-        individualServiceParameter.setDueDate((Date) taskVariables.get(IIndividualProcess.VAR_DUEDATE));
-        individualServiceParameter.setReminderPeriodDays((Integer) taskVariables.get(IIndividualProcess.VAR_REMINDER_DAYS));
-        individualServiceParameter.setAssignee((String) taskVariables.get(IIndividualProcess.VAR_ASSIGNEE_NAME));
-        individualServiceParameter.setAssigneeRelationId((String) taskVariables.get(IIndividualProcess.VAR_RELATION_ID));
-        individualServiceParameter.setProperties((Set<String>) taskVariables.get(IIndividualProcess.VAR_PROPERTY_TYPES));
-        individualServiceParameter.setTitle((String) taskVariables.get(IIndividualProcess.VAR_TITLE));
-        individualServiceParameter.setDescription((String) taskVariables.get(IIndividualProcess.VAR_DESCRIPTION));
-        individualServiceParameter.setWithAReleaseProcess((boolean) taskVariables.get(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS));
+        final IndividualServiceParameter individualServiceParameter = getIndividualServiceParameter(task.getId());
 
         try {
             final IndividualProcessWizard wizard = new IndividualProcessWizard(Collections.singletonList(task.getUuid()), task.getElementTitle(), task.getElementType());
@@ -97,6 +87,20 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
             LOG.error("Error while apply for extension.", e);
         }
         return parameter;
+    }
+
+    private IndividualServiceParameter getIndividualServiceParameter(String taskId) {
+        Map<String, Object> taskVariables = getTaskService().getVariables(taskId);
+        final IndividualServiceParameter individualServiceParameter = new IndividualServiceParameter();
+        individualServiceParameter.setDueDate((Date) taskVariables.get(IIndividualProcess.VAR_DUEDATE));
+        individualServiceParameter.setReminderPeriodDays((Integer) taskVariables.get(IIndividualProcess.VAR_REMINDER_DAYS));
+        individualServiceParameter.setAssignee((String) taskVariables.get(IIndividualProcess.VAR_ASSIGNEE_NAME));
+        individualServiceParameter.setAssigneeRelationId((String) taskVariables.get(IIndividualProcess.VAR_RELATION_ID));
+        individualServiceParameter.setProperties((Set<String>) taskVariables.get(IIndividualProcess.VAR_PROPERTY_TYPES));
+        individualServiceParameter.setTitle((String) taskVariables.get(IIndividualProcess.VAR_TITLE));
+        individualServiceParameter.setDescription((String) taskVariables.get(IIndividualProcess.VAR_DESCRIPTION));
+        individualServiceParameter.setWithAReleaseProcess((boolean) taskVariables.get(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS));
+        return individualServiceParameter;
     }
 
     /*

@@ -26,8 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.service.IThreadCompleteListener;
@@ -81,12 +81,7 @@ final class CompleteTaskAction extends Action {
             for (TaskInformation task : taskList) {
                 if (IIndividualProcess.TRANS_ACCEPT.equals(outcomeId) && task.isWithAReleaseProcess()) {
                     getTaskService().saveChangedElementPropertiesToCnATreeElement(task.getId(), task.getUuid());
-                    for (IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
-                        if (editorReference.getEditorInput() instanceof BSIElementEditorInput && task.getUuid().equals(((BSIElementEditorInput) editorReference.getEditorInput()).getCnAElement().getUuid())) {
-                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(new IEditorReference[] { editorReference }, true);
-                            break;
-                        }
-                    }
+                    closeEditorForTaskElement(task);
                 }
                 completeTask(task, outcomeId);
             }
@@ -96,6 +91,15 @@ final class CompleteTaskAction extends Action {
             LOG.error("Error while completing tasks.", t); //$NON-NLS-1$
             shutdownAndAwaitTermination();
             this.taskView.showError(Messages.CompleteTaskAction_6, Messages.CompleteTaskAction_7);
+        }
+    }
+
+    private void closeEditorForTaskElement(TaskInformation task) throws PartInitException {
+        for (IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
+            if (editorReference.getEditorInput() instanceof BSIElementEditorInput && task.getUuid().equals(((BSIElementEditorInput) editorReference.getEditorInput()).getCnAElement().getUuid())) {
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(new IEditorReference[] { editorReference }, true);
+                break;
+            }
         }
     }
 

@@ -113,22 +113,14 @@ public class BSIElementEditor extends EditorPart {
 
         @Override
         public void selectionChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
-            if (isTaskEditorContext() && StringUtils.isNotEmpty(arg0.getId())) {
-                PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), arg0.getId());
-                List<Property> properties = cnAElement.getEntity().getProperties(propertyType.getId()).getProperties();
-
-                StringBuilder sb = new StringBuilder();
-                for (Property property : properties) {
-                    sb.append(property.getPropertyValue()).append(",");
-                }
-                changedElementProperties.put(propertyType.getId(), sb.toString());
-            }
+            resetMultiselectElementPropertiesAfterRemovingOption(arg0);
             modelChanged();
         }
 
         @Override
         public void propertyChanged(PropertyChangedEvent evt) {
-            modelChanged(evt);
+            saveChangedElementProperties(evt);
+            modelChanged();
         }
 
     };
@@ -316,7 +308,7 @@ public class BSIElementEditor extends EditorPart {
         // not supported
     }
 
-    private void modelChanged(PropertyChangedEvent event) {
+    private void saveChangedElementProperties(PropertyChangedEvent event) {
         if (isTaskEditorContext() && StringUtils.isNotEmpty(event.getProperty().getPropertyType())) {
             PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), event.getProperty().getPropertyType());
             if (propertyType.isReference()) {
@@ -325,28 +317,48 @@ public class BSIElementEditor extends EditorPart {
             } else if (propertyType.isSingleSelect()) {
                 changedElementProperties.put(event.getProperty().getPropertyType(), propertyType.getOption(event.getProperty().getPropertyValue()).getId());
             } else if (propertyType.isMultiselect()) {
-                PropertyOption option = propertyType.getOption(event.getProperty().getPropertyValue());
-                if (changedElementProperties.containsKey(propertyType.getId())) {
-                    if (changedElementProperties.get(propertyType.getId()).contains(option.getId())) {
-                        changedElementProperties.put(propertyType.getId(), changedElementProperties.get(propertyType.getId()).replace(option.getId(), ""));
-                    } else {
-                        changedElementProperties.put(propertyType.getId(), changedElementProperties.get(propertyType.getId()) + "," + option.getId());
-                    }
-                } else {
-                    changedElementProperties.put(propertyType.getId(), option.getId());
-                }
+                saveChangedMultiselectElementProperties(event, propertyType);
             } else if (propertyType.isDate()) {
-                try {
-                    String date = FormInputParser.dateToString(new java.sql.Date(Long.parseLong(event.getProperty().getPropertyValue())));
-                    changedElementProperties.put(event.getProperty().getPropertyType(), date);
-                } catch (NumberFormatException | AssertException e) {
-                    LOG.error("Exception while getting the value of a date property", e);
-                }
+                saveChangedDateElementProperties(event);
             } else {
                 changedElementProperties.put(event.getProperty().getPropertyType(), event.getProperty().getPropertyValue());
             }
         }
-        modelChanged();
+    }
+
+    private void saveChangedDateElementProperties(PropertyChangedEvent event) {
+        try {
+            String date = FormInputParser.dateToString(new java.sql.Date(Long.parseLong(event.getProperty().getPropertyValue())));
+            changedElementProperties.put(event.getProperty().getPropertyType(), date);
+        } catch (NumberFormatException | AssertException e) {
+            LOG.error("Exception while getting the value of a date property", e);
+        }
+    }
+
+    private void saveChangedMultiselectElementProperties(PropertyChangedEvent event, PropertyType propertyType) {
+        PropertyOption option = propertyType.getOption(event.getProperty().getPropertyValue());
+        if (changedElementProperties.containsKey(propertyType.getId())) {
+            if (changedElementProperties.get(propertyType.getId()).contains(option.getId())) {
+                changedElementProperties.put(propertyType.getId(), changedElementProperties.get(propertyType.getId()).replace(option.getId(), ""));
+            } else {
+                changedElementProperties.put(propertyType.getId(), changedElementProperties.get(propertyType.getId()) + "," + option.getId());
+            }
+        } else {
+            changedElementProperties.put(propertyType.getId(), option.getId());
+        }
+    }
+    
+    private void resetMultiselectElementPropertiesAfterRemovingOption(IMLPropertyType arg0) {
+        if (isTaskEditorContext() && StringUtils.isNotEmpty(arg0.getId())) {
+            PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), arg0.getId());
+            List<Property> properties = cnAElement.getEntity().getProperties(propertyType.getId()).getProperties();
+
+            StringBuilder sb = new StringBuilder();
+            for (Property property : properties) {
+                sb.append(property.getPropertyValue()).append(",");
+            }
+            changedElementProperties.put(propertyType.getId(), sb.toString());
+        }
     }
 
     private void modelChanged() {

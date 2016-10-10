@@ -206,13 +206,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             if (propertyList != null) {
                 for (Property property : propertyList.getProperties()) {
                     if (propertyType.isDate()) {
-                        try {
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.setTimeInMillis(FormInputParser.stringToDate(value.trim()).getTime());
-                            property.setPropertyValue(calendar, false, null);
-                        } catch (AssertException e) {
-                            log.error("Exception while setting the value of a date property", e);
-                        }
+                        setDateProperty(value, property);
                     } else {
                         property.setPropertyValue(value);
                     }
@@ -268,6 +262,16 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
             if (StringUtils.isNotEmpty(propertyOptionValue)) {
                 createNewProperty(propertyTypeId, propertyOptionValue);
             }
+        }
+    }
+    
+    private void setDateProperty(String value, Property property) {
+        try {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(FormInputParser.stringToDate(value.trim()).getTime());
+            property.setPropertyValue(calendar, false, null);
+        } catch (AssertException e) {
+            log.error("Exception while setting the value of a date property", e);
         }
     }
 
