@@ -19,6 +19,7 @@ package sernet.gs.ui.rcp.main.bsi.editors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -59,7 +60,9 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.IEntityChangedListener;
+import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyChangedEvent;
+import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
@@ -110,6 +113,16 @@ public class BSIElementEditor extends EditorPart {
 
         @Override
         public void selectionChanged(IMLPropertyType arg0, IMLPropertyOption arg1) {
+            if (isTaskEditorContext() && StringUtils.isNotEmpty(arg0.getId())) {
+                PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), arg0.getId());
+                List<Property> properties = cnAElement.getEntity().getProperties(propertyType.getId()).getProperties();
+
+                StringBuilder sb = new StringBuilder();
+                for (Property property : properties) {
+                    sb.append(property.getPropertyValue()).append(",");
+                }
+                changedElementProperties.put(propertyType.getId(), sb.toString());
+            }
             modelChanged();
         }
 
@@ -312,8 +325,16 @@ public class BSIElementEditor extends EditorPart {
             } else if (propertyType.isSingleSelect()) {
                 changedElementProperties.put(event.getProperty().getPropertyType(), propertyType.getOption(event.getProperty().getPropertyValue()).getId());
             } else if (propertyType.isMultiselect()) {
-                // TODO: impl multiselect
-                LOG.warn("Don `t save multiselect values.");
+                PropertyOption option = propertyType.getOption(event.getProperty().getPropertyValue());
+                if (changedElementProperties.containsKey(propertyType.getId())) {
+                    if (changedElementProperties.get(propertyType.getId()).contains(option.getId())) {
+                        changedElementProperties.put(propertyType.getId(), changedElementProperties.get(propertyType.getId()).replace(option.getId(), ""));
+                    } else {
+                        changedElementProperties.put(propertyType.getId(), changedElementProperties.get(propertyType.getId()) + "," + option.getId());
+                    }
+                } else {
+                    changedElementProperties.put(propertyType.getId(), option.getId());
+                }
             } else if (propertyType.isDate()) {
                 try {
                     String date = FormInputParser.dateToString(new java.sql.Date(Long.parseLong(event.getProperty().getPropertyValue())));

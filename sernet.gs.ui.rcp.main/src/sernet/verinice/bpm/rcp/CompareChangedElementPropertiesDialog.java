@@ -234,8 +234,19 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
                         PropertyOption propertyOption = propertyType.getOption(newValue);
                         newText.setText(typeFactory.getMessage(propertyOption.getId()));
                     } else if (propertyType.isMultiselect()) {
-                        // TODO: impl multiselect
-                        LOG.warn("Don `t show multiselect values.");
+                        String[] propertyOptions = newValue.split(",");
+                        StringBuilder sb = new StringBuilder();
+                        for (String propertyOptionValue : propertyOptions) {
+                            if (StringUtils.isNotBlank(propertyOptionValue)) {
+                                PropertyOption propertyOption = propertyType.getOption(propertyOptionValue);
+                                if (sb.length() == 0) {
+                                    sb.append(typeFactory.getMessage(propertyOption.getId()));
+                                } else {
+                                    sb.append(" / ").append(typeFactory.getMessage(propertyOption.getId()));
+                                }
+                            }
+                        }
+                        newText.setText(sb.toString());
                     } else {
                         newText.setText(newValue);
                     }

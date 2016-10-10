@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
@@ -186,36 +187,35 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
      * 
      * See SNCA.xml for valid propertyTypes.
      * 
-     * @param propertyType The type id of a property
-     * @param value The new value of a property
+     * @param propertyTypeId
+     *            The type id of a property
+     * @param value
+     *            The new value of a property
      */
     public void setPropertyValue(String propertyTypeId, String value) {
         PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyTypeId);
-
+        PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
         // TODO: impl reference
         if (propertyType.isReference()) {
             // return setValueOfReferenceProperty(propertyType);
-            log.warn("Don `t save reference values.");
-        }
-
-        PropertyList propertyList = typedPropertyLists.get(propertyTypeId);
-        if (propertyList != null) {
-            for (Property property : propertyList.getProperties()) {
-                if (propertyType.isMultiselect()) {
-                    // TODO: impl multiselect
-                    // propertyType.isSingleSelect() ||
-                    // setValueOfOptionProperty(propertyType, value);
-                    log.warn("Don `t save multiselect values.");
-                } else if (propertyType.isDate()) {
-                    try {
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTimeInMillis(FormInputParser.stringToDate(value.trim()).getTime());
-                        property.setPropertyValue(calendar, false, null);
-                    } catch (AssertException e) {
-                        log.error("Exception while setting the value of a date property", e);
+            log.warn("Don `t set reference values.");
+        } else if (propertyType.isMultiselect()) {
+            typedPropertyLists.put(propertyTypeId, null);
+            setMultiselectPropertyToNewValues(propertyTypeId, value);
+        } else {
+            if (propertyList != null) {
+                for (Property property : propertyList.getProperties()) {
+                    if (propertyType.isDate()) {
+                        try {
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTimeInMillis(FormInputParser.stringToDate(value.trim()).getTime());
+                            property.setPropertyValue(calendar, false, null);
+                        } catch (AssertException e) {
+                            log.error("Exception while setting the value of a date property", e);
+                        }
+                    } else {
+                        property.setPropertyValue(value);
                     }
-                } else {
-                    property.setPropertyValue(value);
                 }
             }
         }
@@ -262,12 +262,14 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
         return (option != null) ? option.getName() : "";
     }
 
-    // private void setValueOfOptionProperty(PropertyType type, String value) {
-    // String[] propertyOptions = value.split(",");
-    // for (String propertyOptionValue : propertyOptions) {
-    // createNewProperty(type, propertyOptionValue);
-    // }
-    // }
+    private void setMultiselectPropertyToNewValues(String propertyTypeId, String value) {
+        String[] propertyOptions = value.split(",");
+        for (String propertyOptionValue : propertyOptions) {
+            if (StringUtils.isNotEmpty(propertyOptionValue)) {
+                createNewProperty(propertyTypeId, propertyOptionValue);
+            }
+        }
+    }
 
     private String getValueOfDateProperty(Property property) {
         String date = null;
