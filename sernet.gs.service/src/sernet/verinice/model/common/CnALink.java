@@ -72,6 +72,14 @@ public class CnALink implements Serializable, ITypedElement {
     private Integer riskConfidentiality;
     private Integer riskIntegrity;
     private Integer riskAvailability;
+    
+    // risk values with controls
+    private Integer riskConfidentialityWithControls;
+    private Integer riskIntegrityWithControls;
+    private Integer riskAvailabilityWithControls;
+
+    private enum RiskTreatment {ACCEPT,TRANSFER,MODIFY,AVOID};
+    private String riskTreatmentValue;
 
     // user entered comment:
     private String comment;
@@ -356,6 +364,46 @@ public class CnALink implements Serializable, ITypedElement {
 
     public void setRiskAvailability(Integer riskAvailability) {
         this.riskAvailability = riskAvailability;
+    }
+
+    public Integer getRiskConfidentialityWithControls() {
+        return riskConfidentialityWithControls;
+    }
+
+    public void setRiskConfidentialityWithControls(Integer riskConfidentialityWithControls) {
+        this.riskConfidentialityWithControls = riskConfidentialityWithControls;
+    }
+
+    public Integer getRiskIntegrityWithControls() {
+        return riskIntegrityWithControls;
+    }
+
+    public void setRiskIntegrityWithControls(Integer riskIntegrityWithControls) {
+        this.riskIntegrityWithControls = riskIntegrityWithControls;
+    }
+
+    public Integer getRiskAvailabilityWithControls() {
+        return riskAvailabilityWithControls;
+    }
+
+    public void setRiskAvailabilityWithControls(Integer riskAvailabilityWithControls) {
+        this.riskAvailabilityWithControls = riskAvailabilityWithControls;
+    }
+    
+    public RiskTreatment getRiskTreatment() {
+        return RiskTreatment.valueOf(getRiskTreatmentValue());
+    }
+    
+    public void setRiskTreatment(RiskTreatment riskTreatment) {
+        setRiskTreatmentValue(riskTreatment.name());
+    }
+    
+    private String getRiskTreatmentValue() {
+        return riskTreatmentValue;
+    }
+
+    private void setRiskTreatmentValue(String riskTreatmentValue) {
+        this.riskTreatmentValue = riskTreatmentValue;
     }
 
     public String getComment() {

@@ -29,7 +29,11 @@
 
 		<property name="riskConfidentiality" />
 		<property name="riskIntegrity" />
-		<property name="riskAvailability" />
+		<property name="riskAvailability" />  
+    <property name="riskConfidentialityWithControls" />
+    <property name="riskIntegrityWithControls" />
+    <property name="riskAvailabilityWithControls" />
+    <property name="riskTreatmentValue" />
 		
 		<many-to-one name="dependant"
 			column="DEPENDANT_ID"
