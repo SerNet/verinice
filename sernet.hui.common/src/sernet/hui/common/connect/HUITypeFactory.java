@@ -35,10 +35,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.osgi.framework.Bundle;
 import org.springframework.core.io.Resource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -85,6 +81,7 @@ public class HUITypeFactory {
 
     private Map<String, String> defaultMessages = new HashMap<>();
 
+
     // loads translated messages for HUI entities from resource bundles
     private SNCAMessages messages;
 
@@ -96,14 +93,8 @@ public class HUITypeFactory {
         this(resource.getURL());
     }
     
-    public HUITypeFactory(String bundleId, String pathToSnca) throws DBException, IOException {
-        init(getUrl(bundleId, pathToSnca));
-    }
-
-    private URL getUrl(String bundleId, String pathToSnca) {
-        Bundle bundle = Platform.getBundle(bundleId);
-        Path path = new Path(pathToSnca);
-        return FileLocator.findEntries(bundle, path)[0];
+    public HUITypeFactory(IUrlLoader urlLoader) throws DBException, IOException {
+        init(urlLoader.load());
     }
 
     /**
@@ -740,5 +731,6 @@ public class HUITypeFactory {
         return null;
         
     }
+
 
 }

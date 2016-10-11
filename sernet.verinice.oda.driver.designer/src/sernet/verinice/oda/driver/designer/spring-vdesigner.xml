@@ -9,9 +9,13 @@
     <property name="huiTypeFactory" ref="huiTypeFactory" />
   </bean>
   
-  <bean id="huiTypeFactory" class="sernet.hui.common.connect.HUITypeFactory">
+  <bean id="urlLoader" class="sernet.verinice.oda.driver.designer.BundleUrlLoader">
     <constructor-arg value="sernet.gs.server" />
     <constructor-arg value="WebContent/WEB-INF/SNCA.xml" />
+  </bean>
+  
+  <bean id="huiTypeFactory" class="sernet.hui.common.connect.HUITypeFactory">
+    <constructor-arg ref="urlLoader" />
   </bean>
 
   <bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
