@@ -78,8 +78,8 @@ public class CnALink implements Serializable, ITypedElement {
     private Integer riskIntegrityWithControls;
     private Integer riskAvailabilityWithControls;
 
-    private enum RiskTreatment {ACCEPT,TRANSFER,MODIFY,AVOID};
-    private String riskTreatmentValue;
+    public enum RiskTreatment {ACCEPT,TRANSFER,MODIFY,AVOID};
+    private String riskTreatmentValue = RiskTreatment.ACCEPT.name();
 
     // user entered comment:
     private String comment;
@@ -412,6 +412,15 @@ public class CnALink implements Serializable, ITypedElement {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+    
+    public static String[] getRiskTreatmentOptions() {
+        RiskTreatment[] states = RiskTreatment.values();
+        String[] names = new String[states.length];
+        for (int i = 0; i < states.length; i++) {
+            names[i] = states[i].name();
+        }
+        return names;
     }
 
     public static class Id implements Serializable {

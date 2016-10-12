@@ -64,6 +64,11 @@ public class RelationTableViewer extends TableViewer {
     private final TableViewerColumn col3;
     private final TableViewerColumn viewerCol5;
     private final TableViewerColumn col5;
+    
+    private TableViewerColumn colRiskTreatment;
+    private TableViewerColumn colCWithControls;
+    private TableViewerColumn colIWithControls;
+    private TableViewerColumn colAWithControls;
 
     /**
      * @param parent
@@ -119,6 +124,11 @@ public class RelationTableViewer extends TableViewer {
 
         // risk avalues if requested:
         if (showRisk) {
+            colRiskTreatment = new TableViewerColumn(this, SWT.LEFT);
+            colRiskTreatment.getColumn().setText(Messages.RelationTableViewer_0);
+            colRiskTreatment.getColumn().setWidth(viewerCol2Width);
+            colRiskTreatment.setEditingSupport(new RiskTreatmentEditingSupport(view, this));
+                      
             col6 = new TableViewerColumn(this, SWT.LEFT);
             col6.getColumn().setText("C"); //$NON-NLS-1$
             col6.getColumn().setWidth(defaultColumnWidth);
@@ -130,17 +140,33 @@ public class RelationTableViewer extends TableViewer {
             col8 = new TableViewerColumn(this, SWT.LEFT);
             col8.getColumn().setText("A"); //$NON-NLS-1$
             col8.getColumn().setWidth(defaultColumnWidth);
+            
+            colCWithControls = new TableViewerColumn(this, SWT.LEFT);
+            colCWithControls.getColumn().setText(Messages.RelationTableViewer_2);
+            colCWithControls.getColumn().setWidth(defaultColumnWidth);
+
+            colIWithControls = new TableViewerColumn(this, SWT.LEFT);
+            colIWithControls.getColumn().setText(Messages.RelationTableViewer_8); 
+            colIWithControls.getColumn().setWidth(defaultColumnWidth);
+
+            colAWithControls = new TableViewerColumn(this, SWT.LEFT);
+            colAWithControls.getColumn().setText(Messages.RelationTableViewer_9); 
+            colAWithControls.getColumn().setWidth(defaultColumnWidth);
         }
 
-        setColumnProperties(new String[] { IRelationTable.COLUMN_IMG, //$NON-NLS-1$
-                IRelationTable.COLUMN_TYPE, //$NON-NLS-1$
-                IRelationTable.COLUMN_TYPE_IMG, //$NON-NLS-1$
-                IRelationTable.COLUMN_SCOPE_ID, //$NON-NLS-1$
-                IRelationTable.COLUMN_TITLE, //$NON-NLS-1$
-                IRelationTable.COLUMN_COMMENT, //$NON-NLS-1$
-                IRelationTable.COLUMN_RISK_C, //$NON-NLS-1$
-                IRelationTable.COLUMN_RISK_I, //$NON-NLS-1$
-                IRelationTable.COLUMN_RISK_A //$NON-NLS-1$
+        setColumnProperties(new String[] { IRelationTable.COLUMN_IMG, 
+                IRelationTable.COLUMN_TYPE, 
+                IRelationTable.COLUMN_TYPE_IMG, 
+                IRelationTable.COLUMN_SCOPE_ID, 
+                IRelationTable.COLUMN_TITLE, 
+                IRelationTable.COLUMN_COMMENT, 
+                IRelationTable.COLUMN_RISK_TREATMENT,
+                IRelationTable.COLUMN_RISK_C, 
+                IRelationTable.COLUMN_RISK_I, 
+                IRelationTable.COLUMN_RISK_A,
+                IRelationTable.COLUMN_RISK_C_CONTROLS, 
+                IRelationTable.COLUMN_RISK_I_CONTROLS, 
+                IRelationTable.COLUMN_RISK_A_CONTROLS 
         });
 
         table.setHeaderVisible(true);
@@ -196,7 +222,7 @@ public class RelationTableViewer extends TableViewer {
         public String getToolTipText(final Object element) {
 
             if (!(element instanceof CnALink)) {
-                return "";
+                return ""; //$NON-NLS-1$
             }
 
             CnALink link = (CnALink) element;
@@ -204,7 +230,7 @@ public class RelationTableViewer extends TableViewer {
             // the mouse location must be tracked, before we make "slow" remote
             // calls"
             int mouseX = MouseInfo.getPointerInfo().getLocation().x;
-            LOG.debug("mouse location: " + mouseX);
+            LOG.debug("mouse location: " + mouseX); //$NON-NLS-1$
 
             CnATreeElement cnATreeElement = null;
             boolean isDownwardLink = CnALink.isDownwardLink(relationViewLabelProvider.getInputElemt(), link);
@@ -234,17 +260,17 @@ public class RelationTableViewer extends TableViewer {
 
                 while (current.getParent() != null) {
                     current = current.getParent();
-                    sb.insert(0, "/");
+                    sb.insert(0, "/"); //$NON-NLS-1$
                     sb.insert(0, current.getTitle());
                 }
 
 
 
                 // crop the root element, which is always ISO .. or BSI ...
-                String[] p = sb.toString().split("/");
+                String[] p = sb.toString().split("/"); //$NON-NLS-1$
                 sb = new StringBuilder();
                 for (int i = 1; i < p.length; i++) {
-                    sb.append("/").append(p[i]);
+                    sb.append("/").append(p[i]); //$NON-NLS-1$
                 }
                 
                 // delete root slash
@@ -253,7 +279,7 @@ public class RelationTableViewer extends TableViewer {
                 cache.put(link.getId().toString() + isDownwardLink, sb.toString());
 
             } catch (CommandException e) {
-                LOG.debug("loading ancestors failed", e);
+                LOG.debug("loading ancestors failed", e); //$NON-NLS-1$
             }
 
             return cropToolTip(cache.get(link.getId().toString() + isDownwardLink), mouseX);
@@ -280,9 +306,9 @@ public class RelationTableViewer extends TableViewer {
 
             // crop
             int spaceLeft = shellWidth - (Math.abs(shellX - mouseX));
-            if (charWidth * toolTipText.length() >= spaceLeft - ("...".length() * charWidth)) {
+            if (charWidth * toolTipText.length() >= spaceLeft - ("...".length() * charWidth)) { //$NON-NLS-1$
 
-                String[] p = toolTipText.split("/");
+                String[] p = toolTipText.split("/"); //$NON-NLS-1$
                 StringBuilder sb = new StringBuilder();
 
                 // avoid infinite loop, since this path cannot be cropped
@@ -291,14 +317,14 @@ public class RelationTableViewer extends TableViewer {
                 }
 
                 for (int i = 0; i < p.length - 1; i++) {
-                    sb.append("/").append(p[i]);
+                    sb.append("/").append(p[i]); //$NON-NLS-1$
                 }
 
                 // delete root slash
                 sb.deleteCharAt(0);
 
                 // check again, if short enough
-                return cropToolTip(sb.toString() + " ...", mouseX);
+                return cropToolTip(sb.toString() + " ...", mouseX); //$NON-NLS-1$
             }
 
             return toolTipText;

@@ -153,6 +153,8 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 int riskPlannedControls = impactWithAllPlannedControlsCIA[0] + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
 
                 linksForAssets.get(asset).setRiskConfidentiality(risk);
+                linksForAssets.get(asset).setRiskConfidentialityWithControls(risk);
+                
                 asset.setNumericProperty(PROP_ASSET_RISK_C, asset.getNumericProperty(PROP_ASSET_RISK_C) + risk);
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_C, asset.getNumericProperty(PROP_ASSET_CONTROLRISK_C) + riskImplControls);
                 asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_C, asset.getNumericProperty(PROP_ASSET_PLANCONTROLRISK_C) + riskAllControls);
@@ -167,6 +169,8 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 int riskPlannedControls = impactWithAllPlannedControlsCIA[1] + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
 
                 linksForAssets.get(asset).setRiskIntegrity(risk);
+                linksForAssets.get(asset).setRiskIntegrityWithControls(risk);
+                
                 asset.setNumericProperty(PROP_ASSET_RISK_I, asset.getNumericProperty(PROP_ASSET_RISK_I) + risk);
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_I, asset.getNumericProperty(PROP_ASSET_CONTROLRISK_I) + riskImplControls);
                 asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_I, asset.getNumericProperty(PROP_ASSET_PLANCONTROLRISK_I) + riskAllControls);
@@ -182,6 +186,8 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 int riskPlannedControls = impactWithAllPlannedControlsCIA[2] + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
 
                 linksForAssets.get(asset).setRiskAvailability(risk);
+                linksForAssets.get(asset).setRiskAvailabilityWithControls(risk);
+                
                 asset.setNumericProperty(PROP_ASSET_RISK_A, asset.getNumericProperty(PROP_ASSET_RISK_A) + risk);
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_A, asset.getNumericProperty(PROP_ASSET_CONTROLRISK_A) + riskImplControls);
                 asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_A, asset.getNumericProperty(PROP_ASSET_PLANCONTROLRISK_A) + riskAllControls);
