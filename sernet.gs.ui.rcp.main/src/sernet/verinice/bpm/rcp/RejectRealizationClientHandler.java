@@ -59,8 +59,6 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
     @Override
     public Map<String, Object> execute(final ITask task) {
         Map<String, Object> parameter = new HashMap<String, Object>();
-        final IndividualServiceParameter individualServiceParameter = getIndividualServiceParameter(task.getId());
-
         try {
             final IndividualProcessWizard wizard = new IndividualProcessWizard(Collections.singletonList(task.getUuid()), task.getElementTitle(), task.getElementType());
             // TODO: check if isGrundschutzElement?
@@ -70,6 +68,8 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
                 public void run() {
                     WizardDialog wizardDialog = new NonModalWizardDialog(shell, wizard);
                     wizardDialog.create();
+                    
+                    IndividualServiceParameter individualServiceParameter = getIndividualServiceParameter(task.getId());
                     wizard.setTemplate(individualServiceParameter);
                     dialogStatus = wizardDialog.open();
                 }

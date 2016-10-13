@@ -404,6 +404,7 @@ public class DescriptionPage extends WizardPage {
      */
     public void setReleaseProcessSelected(boolean releaseProcessCheckboxSelected) {
         releaseProcessCheckbox.setSelection(releaseProcessCheckboxSelected);
+        releaseProcessCheckbox.setEnabled(false);
         withAReleaseProcess = releaseProcessCheckbox.getSelection();
     }
 
