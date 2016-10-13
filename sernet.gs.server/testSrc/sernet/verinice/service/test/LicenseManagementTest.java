@@ -204,9 +204,9 @@ public class LicenseManagementTest extends ContextConfiguration{
         
         String contentId = CONTENTID_TESTDATA.get(RandomUtils.nextInt(CONTENTID_TESTDATA.size() - 1));
         
-//        for (String licenseId : licenseManagementService.getLicenseIdsForContentId(contentId)){
-//            licenseManagementService.grantUserToLicense(ALL_USER_NAMES.get(RandomUtils.nextInt(ALL_USER_NAMES.size() - 1)), licenseId);
-//        }
+        for (String licenseId : licenseManagementService.getLicenseIdsForContentId(contentId)){
+            licenseManagementService.grantUserToLicense(ALL_USER_NAMES.get(RandomUtils.nextInt(ALL_USER_NAMES.size() - 1)), licenseId);
+        }
         
         Assert.assertTrue(licenseManagementService.getContentIdAllocationCount(contentId) > 0);
         
@@ -218,9 +218,9 @@ public class LicenseManagementTest extends ContextConfiguration{
     @Test
     public void testResetUserAssignmentsByContentId(){
         
-//        for (String licenseId : licenseManagementService.getLicenseIdsForContentId(CONTENTID)){
-//            licenseManagementService.grantUserToLicense(TEST_USERNAME, licenseId);
-//        }
+        for (String licenseId : licenseManagementService.getLicenseIdsForContentId(CONTENTID)){
+            licenseManagementService.grantUserToLicense(TEST_USERNAME, licenseId);
+        }
         
         licenseManagementService.removeContentIdUserAssignment(TEST_USERNAME, CONTENTID);
         
