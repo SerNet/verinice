@@ -207,7 +207,7 @@ public class EntityType {
 	        if(entityElement instanceof PropertyType){
 	            Object[] values = isShowHTML(entityElement, foundHTMLProperty);
 	            htmlType = (PropertyType)values[0];
-	            foundHTMLProperty = (boolean)values[1];
+	            foundHTMLProperty = (values[1] == null) ? false : (boolean)values[1];
 	        }
 	    }
 	    return htmlType;
@@ -217,12 +217,13 @@ public class EntityType {
         Object[] returnValues = new Object[2];
 	    PropertyType propertyType = (PropertyType)entityElement;
         if(propertyType.isShow_html()){
-            Logger.getRootLogger().warn("Found show_html for propertyType:\t" + propertyType.getId());
+            Logger.getRootLogger().debug("Found show_html for propertyType:\t"
+                    + propertyType.getId());
             if(!foundHTMLProperty){
                 returnValues[0] = propertyType;
                 returnValues[1] = true;
             } else {
-                Logger.getRootLogger().warn("Found more than one properties"
+                Logger.getRootLogger().debug("Found more than one properties"
                         + " tagged as \"show_html=true\", invalid configuration");
             }
         }

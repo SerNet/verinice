@@ -38,6 +38,7 @@ import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.iso27k.IItem;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
@@ -78,7 +79,17 @@ public abstract class HtmlWriter {
         return html;
   
     }
-    
+    /**
+     * tries to determine get html-text for browser-view
+     *  via dynamic SNCA-approach 
+     * ( xml-Attribute show_html equals true on huiproperty)
+     * 
+     * @param element to recieve html-text for
+     * 
+     * @return (html) content of show_html-annotated property or
+     * empty String if no property is found or element is not instanceof
+     * {@link CnATreeElement}
+     */
     private static String handleRequestDynamic(Object element){
         if(element instanceof CnATreeElement){
             CnATreeElement cnaTreeElement = (CnATreeElement)element;
@@ -86,16 +97,21 @@ public abstract class HtmlWriter {
                     .getEntityType().getObjectBrowserPropertyType();
             
             if(htmlProperty != null){
-                return cnaTreeElement.getEntity().getPropertyValue(htmlProperty.getId());
+                return Retriever.checkRetrieveElement(cnaTreeElement).
+                        getEntity().getPropertyValue(htmlProperty.getId());
             }
         }
         return "";
     }
 
     /**
-     * @param element
-     * @param html
-     * @return
+     * get html-text for browser-view the hardcoded (old-style) way
+     * should only be used, if DynamicRequest does return empty result
+     * 
+     * @param element to recieve html-text for
+     * 
+     * @return (html) content of specified property of given element
+     *
      * @throws GSServiceException
      */
     private static String handleRequestStatic(Object element) throws GSServiceException {
