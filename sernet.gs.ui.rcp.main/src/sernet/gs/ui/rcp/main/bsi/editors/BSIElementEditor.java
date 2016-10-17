@@ -311,7 +311,7 @@ public class BSIElementEditor extends EditorPart {
         if (isTaskEditorContext() && StringUtils.isNotEmpty(event.getProperty().getPropertyType())) {
             PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(cnAElement.getEntityType().getId(), event.getProperty().getPropertyType());
             if (propertyType.isSingleSelect()) {
-                changedElementProperties.put(event.getProperty().getPropertyType(), propertyType.getOption(event.getProperty().getPropertyValue()).getId());
+                changedElementProperties.put(event.getProperty().getPropertyType(), event.getProperty().getPropertyValue());
             } else if (propertyType.isDate()) {
                 saveChangedDateElementProperties(event);
             } else if (propertyType.isMultiselect() || propertyType.isReference()) {

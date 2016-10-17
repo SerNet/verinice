@@ -47,6 +47,7 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
+import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.OptionSelectionHelper;
 import sernet.verinice.interfaces.CommandException;
@@ -224,8 +225,8 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
 
                 if (StringUtils.isNotBlank(oldValue) || StringUtils.isNotBlank(newValue)) {
                     createLabelForProperty(parent, typeFactory, propertyType);
-                    createTextForProperty(parent, oldValue);
-                    createTextForProperty(parent, propertyType, newValue);
+                    createTextForOldValue(parent, propertyType, oldValue);
+                    createTextForNewValue(parent, propertyType, newValue);
                 }
             }
         }
@@ -236,17 +237,20 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
         titleLabel.setLayoutData(new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH));
         titleLabel.setText(typeFactory.getMessage(propertyType.getId()));
     }
-    
-    private void createTextForProperty(final Composite parent, String oldValue) { 
-        final Text oldText = new Text(parent, SWT.BORDER | SWT.WRAP); 
-        oldText.setEditable(false); 
-        oldText.setText(oldValue); 
-        GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH); 
-        gridData.widthHint = DIALOG_WIDTH / 3; 
-        oldText.setLayoutData(gridData); 
-    } 
 
-    private void createTextForProperty(final Composite parent, PropertyType propertyType, String value) {
+    private void createTextForOldValue(final Composite parent, PropertyType propertyType, String oldValue) {
+        if (propertyType.isSingleSelect() && StringUtils.isEmpty(oldValue)) {
+            oldValue = sernet.hui.swt.widgets.Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE);
+        }
+        final Text oldText = new Text(parent, SWT.BORDER | SWT.WRAP);
+        oldText.setEditable(false);
+        oldText.setText(oldValue);
+        GridData gridData = new GridData(GridData.GRAB_HORIZONTAL | GridData.FILL_BOTH);
+        gridData.widthHint = DIALOG_WIDTH / 3;
+        oldText.setLayoutData(gridData);
+    }
+
+    private void createTextForNewValue(final Composite parent, PropertyType propertyType, String value) {
         final Text newText = new Text(parent, SWT.BORDER | SWT.WRAP);
         newText.setEditable(false);
 
@@ -266,8 +270,12 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
     }
 
     private String loadTextForOptionProperty(PropertyType propertyType, String newValue) {
-        String[] propertyOptions = newValue.split(",");
-        return OptionSelectionHelper.loadOptionLabels(propertyType, Arrays.asList(propertyOptions));
+        if (propertyType.isSingleSelect() && StringUtils.isEmpty(newValue)) {
+            return sernet.hui.swt.widgets.Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE);
+        } else {
+            String[] propertyOptions = newValue.split(",");
+            return OptionSelectionHelper.loadOptionLabels(propertyType, Arrays.asList(propertyOptions));
+        }
     }
 
     private String loadTextForReferenceProperty(PropertyType propertyType, String newValue) {

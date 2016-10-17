@@ -55,6 +55,7 @@ import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
 import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.CommandException;
@@ -491,12 +492,31 @@ public class EditBean {
     public void onChange(ValueChangeEvent event) {
         String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
         String newValue = (String) event.getNewValue();
-        if (StringUtils.isNotEmpty(key) && !Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE).equals(newValue)) {
+
+        if (StringUtils.isNotEmpty(key)) {
+            PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(getElement().getEntityType().getId(), key);
+            if (propertyType.isSingleSelect()) {
+                newValue = getSingleSelectOptionId(newValue, propertyType);
+            }
             changedElementProperties.put(key, newValue);
         }
         if (key.contains(NAME_SUFFIX)) {
             setTitle(newValue);
         }
+    }
+
+    private String getSingleSelectOptionId(String newValue, PropertyType propertyType) {
+        if (Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE).equals(newValue)) {
+            newValue = null;
+        } else {
+            for (IMLPropertyOption option : propertyType.getOptions()) {
+                if (option.getName().equals(newValue)) {
+                    newValue = option.getId();
+                    break;
+                }
+            }
+        }
+        return newValue;
     }
 
     public void onDateSelect(DateSelectEvent event) {
