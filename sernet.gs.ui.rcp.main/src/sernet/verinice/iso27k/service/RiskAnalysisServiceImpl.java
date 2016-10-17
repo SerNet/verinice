@@ -99,7 +99,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         // deduct controls from probability:
         for (CnATreeElement control : linkedControlMap.keySet()) {
             int controlEffect = control.getNumericProperty(PROP_CONTROL_EFFECT_P);
-            int probAfterControl = 0;
+            int probAfterControl;
             // risk with planned controls
             probAfterControl = scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS) - controlEffect;
             scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS, probAfterControl < 0 ? 0 : probAfterControl);
@@ -153,7 +153,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 int riskPlannedControls = impactWithAllPlannedControlsCIA[0] + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
 
                 linksForAssets.get(asset).setRiskConfidentiality(risk);
-                linksForAssets.get(asset).setRiskConfidentialityWithControls(risk);
+                linksForAssets.get(asset).setRiskConfidentialityWithControls(riskImplControls);
                 
                 asset.setNumericProperty(PROP_ASSET_RISK_C, asset.getNumericProperty(PROP_ASSET_RISK_C) + risk);
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_C, asset.getNumericProperty(PROP_ASSET_CONTROLRISK_C) + riskImplControls);
@@ -169,7 +169,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 int riskPlannedControls = impactWithAllPlannedControlsCIA[1] + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
 
                 linksForAssets.get(asset).setRiskIntegrity(risk);
-                linksForAssets.get(asset).setRiskIntegrityWithControls(risk);
+                linksForAssets.get(asset).setRiskIntegrityWithControls(riskImplControls);
                 
                 asset.setNumericProperty(PROP_ASSET_RISK_I, asset.getNumericProperty(PROP_ASSET_RISK_I) + risk);
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_I, asset.getNumericProperty(PROP_ASSET_CONTROLRISK_I) + riskImplControls);
@@ -186,7 +186,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
                 int riskPlannedControls = impactWithAllPlannedControlsCIA[2] + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
 
                 linksForAssets.get(asset).setRiskAvailability(risk);
-                linksForAssets.get(asset).setRiskAvailabilityWithControls(risk);
+                linksForAssets.get(asset).setRiskAvailabilityWithControls(riskImplControls);
                 
                 asset.setNumericProperty(PROP_ASSET_RISK_A, asset.getNumericProperty(PROP_ASSET_RISK_A) + risk);
                 asset.setNumericProperty(PROP_ASSET_CONTROLRISK_A, asset.getNumericProperty(PROP_ASSET_CONTROLRISK_A) + riskImplControls);
@@ -231,13 +231,13 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
      * @throws CommandException 
      */
     @Override
-    public Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA)  {
+    public Integer[] applyControlsToImpact(int riskType, CnATreeElement rawElement, Integer impactC, Integer impactI, Integer impactA)  {
         if (riskType == RISK_PRE_CONTROLS){
             return null; // do nothing
         }
-        asset = Retriever.checkRetrieveLinks(asset, true);
+        CnATreeElement element = Retriever.checkRetrieveLinks(rawElement, true);
         
-        Map<CnATreeElement, CnALink> linkedElements = CnALink.getLinkedElements(asset, Control.TYPE_ID);
+        Map<CnATreeElement, CnALink> linkedElements = CnALink.getLinkedElements(element, Control.TYPE_ID);
         
         Integer impactC0 = Integer.valueOf(impactC.intValue());
         Integer impactI0 = Integer.valueOf(impactI.intValue());
@@ -294,7 +294,7 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
 
         int probability = scenario.getNumericProperty(probType);
-        int riskControlState = 0;
+        int riskControlState;
         if (probType.equals(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS)) {
             riskControlState = IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS;
         } else if (probType.equals(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS)) {
@@ -322,13 +322,13 @@ public class RiskAnalysisServiceImpl implements IRiskAnalysisService {
         // risk values:
         switch (riskType) {
         case 'c':
-            riskColour = (getRiskColor(riskC, getTolerableRisks(asset, 'c'), numOfYellowFields));
+            riskColour = getRiskColor(riskC, getTolerableRisks(asset, 'c'), numOfYellowFields);
             break;
         case 'i':
-            riskColour = (getRiskColor(riskI, getTolerableRisks(asset, 'i'), numOfYellowFields));
+            riskColour = getRiskColor(riskI, getTolerableRisks(asset, 'i'), numOfYellowFields);
             break;
         case 'a':
-            riskColour = (getRiskColor(riskA, getTolerableRisks(asset, 'a'), numOfYellowFields));
+            riskColour = getRiskColor(riskA, getTolerableRisks(asset, 'a'), numOfYellowFields);
             break;
         default: // do nothing
             break;
