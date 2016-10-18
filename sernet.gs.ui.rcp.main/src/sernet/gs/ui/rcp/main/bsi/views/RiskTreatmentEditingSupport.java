@@ -48,7 +48,7 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
     
     private static final String[] RISK_TREATMENT_LABELS;
     static {
-        List<String> riskTreatmentLabelList = new LinkedList<>(RelationViewLabelProvider.RISK_TREATMENT_LABELS.values());
+        List<String> riskTreatmentLabelList = new LinkedList<>(CnALink.RISK_TREATMENT_LABELS.values());
         Collections.sort(riskTreatmentLabelList);
         RISK_TREATMENT_LABELS = riskTreatmentLabelList.toArray(new String[riskTreatmentLabelList.size()]);
     }
@@ -94,7 +94,7 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
     public int getIndexOfRiskTreatment(CnALink.RiskTreatment riskTreatment) {
         int i = 0;
         int index = -1;
-        String selectedLabel = RelationViewLabelProvider.RISK_TREATMENT_LABELS.get(riskTreatment.name());
+        String selectedLabel = CnALink.RISK_TREATMENT_LABELS.get(riskTreatment.name());
         for (String label : RISK_TREATMENT_LABELS) {
             if(selectedLabel.equals(label)) {
                 index = i;
@@ -128,8 +128,8 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
     }
 
     public void selectRiskTreatment(CnALink cnaLink, String selectedLabel) {
-        for (String key : RelationViewLabelProvider.RISK_TREATMENT_LABELS.keySet()) {
-            if(selectedLabel.equals(RelationViewLabelProvider.RISK_TREATMENT_LABELS.get(key))) {
+        for (String key : CnALink.RISK_TREATMENT_LABELS.keySet()) {
+            if(selectedLabel.equals(CnALink.RISK_TREATMENT_LABELS.get(key))) {
                 cnaLink.setRiskTreatment(CnALink.RiskTreatment.valueOf(key));                 
                 break;                  
             }

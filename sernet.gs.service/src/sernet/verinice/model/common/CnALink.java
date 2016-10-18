@@ -19,6 +19,7 @@ package sernet.verinice.model.common;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,6 +46,15 @@ public class CnALink implements Serializable, ITypedElement {
 
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnALink.class);
 
+    public static final Map<String, String> RISK_TREATMENT_LABELS;
+    static {
+        RISK_TREATMENT_LABELS = new Hashtable<>();
+        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.ACCEPT.name(), Messages.getString("CnALink.RiskTreatment_ACCEPT")); //$NON-NLS-1$
+        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.AVOID.name(), Messages.getString("CnALink.RiskTreatment_AVOID")); //$NON-NLS-1$
+        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.MODIFY.name(), Messages.getString("CnALink.RiskTreatment_MODIFY")); //$NON-NLS-1$
+        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.TRANSFER.name(), Messages.getString("CnALink.RiskTreatment_TRANSFER")); //$NON-NLS-1$
+    }
+    
     // constants for link typeId, now replaced by relationIDs that can be
     // defined in SNCA.xml.
     // these can still be used to differentiate link categories such as "system

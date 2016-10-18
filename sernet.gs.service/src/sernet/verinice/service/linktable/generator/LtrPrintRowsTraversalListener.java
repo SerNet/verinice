@@ -21,8 +21,12 @@ package sernet.verinice.service.linktable.generator;
 
 import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_DESCRIPTION;
 import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_VALUE_A;
+import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_VALUE_A_WITH_CONTROLS;
 import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_VALUE_C;
+import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_VALUE_C_WITH_CONTROLS;
 import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_VALUE_I;
+import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_VALUE_I_WITH_CONTROLS;
+import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_RISK_TREATMENT;
 import static sernet.verinice.service.linktable.CnaLinkPropertyConstants.TYPE_TITLE;
 
 import java.util.HashMap;
@@ -41,6 +45,7 @@ import sernet.hui.common.connect.HuiRelation;
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.TraversalFilter;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
+import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.linktable.IPropertyAdapter;
 import sernet.verinice.service.linktable.PropertyAdapterFactory;
@@ -161,47 +166,64 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
     }
 
     private void printRow(Map<String, String> row, CnATreeElement node, VqlEdge incominVqlgEdge) {
-
         if (incominVqlgEdge != null && incominVqlgEdge.isMatch()) {
-
             Edge edge = incomingEdges.get(node);
-
             for (String propertyType : incominVqlgEdge.getPropertyTypes()) {
-
                 String pathforProperty = incominVqlgEdge.getPathforProperty(propertyType);
-
+                String column = "";
                 if (!row.containsKey(pathforProperty)) {
-                    LOG.error("this column path is not defined for this table: " + pathforProperty);
-                    return;
+                    LOG.error("This column path is not defined for this table: " + pathforProperty);                 
+                } else {
+                    column = printColumn(node, edge, propertyType);
                 }
-
-                if (TYPE_RISK_VALUE_C.equals(propertyType)) {
-                    row.put(pathforProperty, String.valueOf(edge.getRiskConfidentiality()));
-                }
-
-                else if (TYPE_RISK_VALUE_I.equals(propertyType)) {
-                    row.put(pathforProperty, String.valueOf(edge.getRiskIntegrity()));
-                }
-
-                else if (TYPE_RISK_VALUE_A.equals(propertyType)) {
-                    row.put(pathforProperty, String.valueOf(edge.getRiskAvailability()));
-                }
-
-                else if (TYPE_DESCRIPTION.equals(propertyType)) {
-                    row.put(pathforProperty, edge.getDescription());
-                }
-
-                else if (TYPE_TITLE.equals(propertyType)) {
-                    handleTitle(row, node, edge, pathforProperty);
-                }
+                row.put(pathforProperty, column);
             }
         }
     }
 
-    private void handleTitle(Map<String, String> row, CnATreeElement node, Edge edge, String pathforProperty) {
+    public String printColumn(CnATreeElement node, Edge edge, String propertyType) {
+        String column = "";
+        if (TYPE_RISK_VALUE_C.equals(propertyType)) {
+            column = getString(edge.getRiskConfidentiality());
+        }
+        if (TYPE_RISK_VALUE_I.equals(propertyType)) {
+            column = getString(edge.getRiskIntegrity());
+        }
+        if (TYPE_RISK_VALUE_A.equals(propertyType)) {
+            column = getString(edge.getRiskAvailability());
+        }
+        if (TYPE_RISK_VALUE_C_WITH_CONTROLS.equals(propertyType)) {
+            column = getString(edge.getRiskConfidentialityWithControls());
+        }
+        if (TYPE_RISK_VALUE_I_WITH_CONTROLS.equals(propertyType)) {
+            column = getString(edge.getRiskIntegrityWithControls());
+        }
+        if (TYPE_RISK_VALUE_A_WITH_CONTROLS.equals(propertyType)) {
+            column = getString(edge.getRiskAvailabilityWithControls());
+        }
+        if (TYPE_RISK_TREATMENT.equals(propertyType)) {
+            column = CnALink.RISK_TREATMENT_LABELS.get(edge.getRiskTreatment().name());
+        }
+        if (TYPE_DESCRIPTION.equals(propertyType)) {
+            column = edge.getDescription();
+        }
+        if (TYPE_TITLE.equals(propertyType)) {
+            column = getEdgeTitle(node, edge);
+        }
+        return column;
+    }
+    
+    private String getString(Integer value) {
+        if(value==null) {
+            return "";
+        }else {
+            return String.valueOf(value);
+        }
+    }
+
+    private String getEdgeTitle(CnATreeElement node, Edge edge) {
         Direction direction = getDirection(edge, node);
-        String edgeTitle = getEdgeTitle(edge, direction);
-        row.put(pathforProperty, edgeTitle);
+        return getEdgeTitle(edge, direction);
     }
 
     private void printRow(Map<String, String> row, CnATreeElement element, VqlNode pathElement) {

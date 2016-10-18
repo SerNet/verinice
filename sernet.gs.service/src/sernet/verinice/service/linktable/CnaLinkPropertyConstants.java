@@ -37,6 +37,18 @@ public interface CnaLinkPropertyConstants {
     String TYPE_RISK_VALUE_C = "risk-value-c";
     String TYPE_RISK_VALUE_I = "risk-value-i";
     String TYPE_RISK_VALUE_A = "risk-value-a";
+    String TYPE_RISK_VALUE_C_WITH_CONTROLS = "risk-value-c-with-controls";
+    String TYPE_RISK_VALUE_I_WITH_CONTROLS = "risk-value-i-with-controls";
+    String TYPE_RISK_VALUE_A_WITH_CONTROLS = "risk-value-a-with-controls";
+    String TYPE_RISK_TREATMENT = "risk-treatment";
 
-    public String[] ALL_PROPERTIES = new String[]{TYPE_TITLE,TYPE_DESCRIPTION,TYPE_RISK_VALUE_C,TYPE_RISK_VALUE_I,TYPE_RISK_VALUE_A};
+    public String[] ALL_PROPERTIES = new String[]{
+            TYPE_TITLE,TYPE_DESCRIPTION,
+            TYPE_RISK_VALUE_C,
+            TYPE_RISK_VALUE_I,
+            TYPE_RISK_VALUE_A,
+            TYPE_RISK_VALUE_C_WITH_CONTROLS,
+            TYPE_RISK_VALUE_I_WITH_CONTROLS,
+            TYPE_RISK_VALUE_A_WITH_CONTROLS,
+            TYPE_RISK_TREATMENT};
 }

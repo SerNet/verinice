@@ -336,6 +336,14 @@ public class LinkTableUtil {
             return Messages.LinkTableColumn_CnaLink_Property_I;
         case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
             return Messages.LinkTableColumn_CnaLink_Property_A;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C_WITH_CONTROLS:
+            return Messages.LinkTableColumn_CnaLink_Property_C_With_Controls;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I_WITH_CONTROLS:
+            return Messages.LinkTableColumn_CnaLink_Property_I_With_Controls;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A_WITH_CONTROLS:
+            return Messages.LinkTableColumn_CnaLink_Property_A_With_Controls;
+        case CnaLinkPropertyConstants.TYPE_RISK_TREATMENT:
+            return Messages.LinkTableColumn_CnaLink_Property_Risk_Treatment;
         default:
             return Messages.LinkTableColumn_CnaLink_Property_Unknown;
         }

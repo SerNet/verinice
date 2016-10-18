@@ -59,6 +59,10 @@ public class Messages extends NLS {
     public static String LinkTableColumn_CnaLink_Property_C;
     public static String LinkTableColumn_CnaLink_Property_I;
     public static String LinkTableColumn_CnaLink_Property_A;
+    public static String LinkTableColumn_CnaLink_Property_C_With_Controls;
+    public static String LinkTableColumn_CnaLink_Property_I_With_Controls;
+    public static String LinkTableColumn_CnaLink_Property_A_With_Controls;
+    public static String LinkTableColumn_CnaLink_Property_Risk_Treatment;
     public static String LinkTableColumn_CnaLink_Property_Unknown;
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle

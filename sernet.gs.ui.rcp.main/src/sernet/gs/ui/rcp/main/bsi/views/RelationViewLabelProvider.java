@@ -18,8 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.views;
 
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -50,14 +48,6 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
     
     private static final Logger LOG = Logger.getLogger(RelationViewLabelProvider.class);
     
-    public static final Map<String, String> RISK_TREATMENT_LABELS;
-    static {
-        RISK_TREATMENT_LABELS = new Hashtable<>();
-        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.ACCEPT.name(), Messages.RelationViewLabelProvider_ACCEPT);
-        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.AVOID.name(), Messages.RelationViewLabelProvider_AVOID);
-        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.MODIFY.name(), Messages.RelationViewLabelProvider_MODIFY);
-        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.TRANSFER.name(), Messages.RelationViewLabelProvider_TRANSFER);
-    }
 	private IRelationTable view;
 	private static HashMap<Integer, String> titleMap = new HashMap<>();
 	  
@@ -100,7 +90,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
                 break;
             case IRelationTable.COLUMN_RISK_TREATMENT:
                 if (link.getRiskTreatment() != null){
-                    riskValue = RISK_TREATMENT_LABELS.get(link.getRiskTreatment().name());
+                    riskValue = CnALink.RISK_TREATMENT_LABELS.get(link.getRiskTreatment().name());
                 }
         }
 	    if (LOG.isDebugEnabled()) {
@@ -219,7 +209,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	        String impl = Control.getImplementation(elmt.getEntity());
 	        return ImageCache.getInstance().getControlImplementationImage(impl);
 	    }if (elmt instanceof Group && !(elmt instanceof ImportIsoGroup)) {
-			Group group = (Group) elmt;
+			Group<?> group = (Group<?> ) elmt;
 			// TODO - getChildTypes()[0] might be a problem for more than one type
 			typeId = group.getChildTypes()[0];
 	    }

@@ -287,11 +287,6 @@ public final class Messages extends NLS {
 
     public static String RelationViewLabelProvider_3;
     
-    public static String RelationViewLabelProvider_ACCEPT;   
-    public static String RelationViewLabelProvider_TRANSFER;
-    public static String RelationViewLabelProvider_MODIFY;
-    public static String RelationViewLabelProvider_AVOID;
-
     public static String RelationTypeEditingSupport_1;
 
     public static String RelationTypeEditingSupport_2;
