@@ -138,6 +138,7 @@ public class PreferenceConstants {
     public static final String LINK_TO_EDITOR = "link_to_editor";
     public static final String CUT_INHERIT_PERMISSIONS = "cut_inherit_permissions";
     public static final String COPY_ATTACHMENTS_WITH_OBJECTS = "copy_attachments_with_objects";
+    public static final String ENABLE_RELEASE_PROCESS = "enable_release_process"; //$NON-NLS-1$
 
     // catalog import preferences
     public static final String CHARSET_CATALOG = "org.verinice.iso27k.rcp.charset";

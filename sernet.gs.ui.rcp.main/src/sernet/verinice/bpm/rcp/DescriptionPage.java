@@ -46,6 +46,7 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
@@ -86,7 +87,7 @@ public class DescriptionPage extends WizardPage {
     private String taskDescription;
     
     private boolean overwriteTemplate = true;
-    private boolean withAReleaseProcess = false;
+    private boolean withAReleaseProcess = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.ENABLE_RELEASE_PROCESS);
     
     private static final int PAGE_WIDTH = 600;
     
@@ -209,7 +210,7 @@ public class DescriptionPage extends WizardPage {
         });
         releaseProcessCheckbox = new Button(composite, SWT.CHECK);
         releaseProcessCheckbox.setText(Messages.DescriptionPage_12);
-        releaseProcessCheckbox.setSelection(false);
+        releaseProcessCheckbox.setSelection(isWithAReleaseProcess());
         boolean taskWithReleaseProcess = getRightsService().isEnabled(ActionRightIDs.TASKWITHRELEASEPROCESS);
         releaseProcessCheckbox.setEnabled(taskWithReleaseProcess);
         releaseProcessCheckbox.addSelectionListener(new SelectionAdapter() {
