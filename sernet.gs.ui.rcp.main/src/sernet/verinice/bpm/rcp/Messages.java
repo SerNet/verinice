@@ -79,6 +79,8 @@ public class Messages extends NLS {
     public static String DescriptionPage_9;
     public static String DescriptionPage_12;
     public static String DescriptionPage_13;
+    public static String DescriptionPage_14;
+    public static String DescriptionPage_15;
     public static String GroupLabelProvider_0;
     public static String GroupLabelProvider_1;
     public static String GroupLabelProvider_2;

@@ -212,8 +212,7 @@ public class DescriptionPage extends WizardPage {
         releaseProcessCheckbox.setText(Messages.DescriptionPage_12);
         releaseProcessCheckbox.setToolTipText(Messages.DescriptionPage_13);
         releaseProcessCheckbox.setSelection(isWithAReleaseProcess());
-        boolean taskWithReleaseProcess = getRightsService().isEnabled(ActionRightIDs.TASKWITHRELEASEPROCESS);
-        releaseProcessCheckbox.setEnabled(taskWithReleaseProcess);
+        releaseProcessCheckbox.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKWITHRELEASEPROCESS));
         releaseProcessCheckbox.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -405,8 +404,9 @@ public class DescriptionPage extends WizardPage {
      * @param releaseProcessCheckbox the releaseProcessCheckbox to set
      */
     public void setReleaseProcessSelected(boolean releaseProcessCheckboxSelected) {
-        releaseProcessCheckbox.setSelection(releaseProcessCheckboxSelected);
-        releaseProcessCheckbox.setEnabled(false);
+        releaseProcessCheckbox.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKWITHRELEASEPROCESS));
+        //only user with action right should start release process
+        releaseProcessCheckbox.setSelection(releaseProcessCheckbox.isEnabled() && releaseProcessCheckboxSelected);
         withAReleaseProcess = releaseProcessCheckbox.getSelection();
     }
 
@@ -415,5 +415,11 @@ public class DescriptionPage extends WizardPage {
      */
     public boolean isWithAReleaseProcess() {
         return withAReleaseProcess;
+    }
+    
+    public void disableTemplatesAndReleaseProcessCheckbox() {
+        templateCombo.setEnabled(false);
+        deleteButton.setEnabled(false);
+        releaseProcessCheckbox.setEnabled(false);
     }
 }
