@@ -9,6 +9,7 @@
     <property name="licenseManagementDao" ref="licenseManagementDao" />
     <property name="configurationDao" ref="configurationDao" />
     <property name="cryptoService" ref="encryptionService" />
+    <property name="commandService" ref="hibernateCommandService" />
   </bean>
 
 </beans>

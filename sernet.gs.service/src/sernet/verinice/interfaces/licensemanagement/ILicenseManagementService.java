@@ -31,48 +31,54 @@ import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
  *
  */
 public interface ILicenseManagementService {
+
+    public static final String VNL_STORAGE_FOLDER = "vnl_storage_folder";
+
+    int getValidUsersForContentId(String contentId);
+
+    Date getMaxValidUntil(String contentId);
+
+    String getLicenseId(int dbId);
+
+    IEncryptionService getCryptoService();
+
+    boolean isCurrentUserValidForLicense(String user, String licenseId);
+
+    boolean isUserAssignedLicenseStillValid(String user, String licenseId);
+
+    boolean checkAssignedUsersForLicenseId(String licenseId);
+
+    void removeAllUsersForLicense(String licenseId);
+
+    void grantUserToLicense(String user, String licenseId);
+
+    Set<String> getAllLicenseIds();
+
+    Set<String> getAllContentIds();
+
+    Set<LicenseManagementEntry> getLicenseEntriesForContentId(String contentId);
+
+    Map<String, String> getPublicInformationForLicenseIdEntry(LicenseManagementEntry licenseEntry);
+
+    int getContentIdAllocationCount(String contentId);
+
+    void addLicenseIdAuthorisation(String user, String contentId);
+
+    void removeAllLicenseIdAssignments(String licenseId);
+
+    void removeAllContentIdAssignments(String contentId);
+
+    void removeContentIdUserAssignment(String user, String contentId);
+
+    Set<String> getAuthorisedContentIdsByUser(String user);
+
+    Set<String> getLicenseIdsForContentId(String contentId);
+
+    <T extends Object> T  decrypt(LicenseManagementEntry entry, String propertyType);
     
-  int getValidUsersForContentId(String contentId);
-  
-  Date getMaxValidUntil(String contentId);
-  
-  String getLicenseId(int dbId);
-  
-  IEncryptionService getCryptoService();
-  
-  boolean isCurrentUserValidForLicense(String user, String licenseId);
-  
-  boolean isUserAssignedLicenseStillValid(String user, String licenseId);
-  
-  boolean checkAssignedUsersForLicenseId(String licenseId);
-  
-  void removeAllUsersForLicense(String licenseId);
-  
-  void grantUserToLicense(String user, String licenseId);
-  
-  Set<String> getAllLicenseIds();
-  
-  Set<String> getAllContentIds();
-  
-  Set<LicenseManagementEntry> getLicenseEntriesForContentId(String contentId);
-  
-  Map<String, String> getPublicInformationForLicenseIdEntry(LicenseManagementEntry licenseEntry);
-  
-  int getContentIdAllocationCount(String contentId);
-  
-  void addLicenseIdAuthorisation(String user, String contentId);
-  
-  void removeAllLicenseIdAssignments(String licenseId);
-  
-  void removeAllContentIdAssignments(String contentId);
-  
-  void removeContentIdUserAssignment(String user, String contentId);
-  
-  Set<String> getAuthorisedContentIdsByUser(String user);
-  
-  Set<String> getLicenseIdsForContentId(String contentId);
-  
-  <T extends Object> T  decrypt(LicenseManagementEntry entry, String propertyType);
-  
+    Set<LicenseManagementEntry> readVNLFiles();
+    
+    Set<LicenseManagementEntry> getExistingLicenses();
+
 
 }

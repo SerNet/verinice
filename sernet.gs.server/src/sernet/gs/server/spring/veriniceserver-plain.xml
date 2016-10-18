@@ -115,6 +115,7 @@
 
 <bean class="sernet.verinice.service.commands.PropertyLoader">
     <property name="fileSizeMax" value="${veriniceserver.filesize.max}" />
+    <property name="vnlRepositoryLocation" value="${veriniceserver.vnl.repository}" />
 </bean>
     
  

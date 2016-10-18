@@ -18,9 +18,11 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -50,6 +52,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
@@ -64,7 +67,10 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.licensemanagement.VNLMapper;
+import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.rcp.SWTElementFactory;
+import sernet.verinice.service.commands.LoadVNLRepoLocation;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
@@ -82,6 +88,8 @@ public class XMLImportDialog extends Dialog {
     private static final Logger LOG = Logger.getLogger(XMLImportDialog.class);
 
     private static final String SYNC_REQUEST = "syncRequest>"; //$NON-NLS-1$
+    private static final String VNL_FILE_EXTENSION = ".vnl";//$NON-NLS-1$
+    private static final int IMPORT_FORMAT_VNL = 2;
 
     private boolean insert;
     private boolean update;
@@ -632,9 +640,10 @@ public class XMLImportDialog extends Dialog {
         FileDialog dialog = new FileDialog(shell, SWT.NULL);
         dialog.setFilterExtensions(new String[] { "*" + VeriniceArchive.EXTENSION_VERINICE_ARCHIVE, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_XML, //$NON-NLS-1$
+                "*" + VNL_FILE_EXTENSION, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
-                "*" + ExportAction.EXTENSION_CERTIFICATE_ENCRPTION }); //$NON-NLS-1$
-        dialog.setFilterNames(new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33, Messages.XMLImportDialog_34, Messages.XMLImportDialog_35 });
+                "*" + ExportAction.EXTENSION_CERTIFICATE_ENCRPTION}); //$NON-NLS-1$ 
+        dialog.setFilterNames(new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33, Messages.XMLImportDialog_39, Messages.XMLImportDialog_34, Messages.XMLImportDialog_35 });
 
         if (isFilePath()) {
             dialog.setFilterPath(getOldFolderPath());
@@ -647,7 +656,7 @@ public class XMLImportDialog extends Dialog {
         String path = dialog.open();
         if (path != null) {
             f = new File(path);
-            if (dialog.getFilterIndex() < 2) {
+            if (dialog.getFilterIndex() < 3) {
                 // set the format if an uncrypted file was selected
                 format = dialog.getFilterIndex();
             }
@@ -721,7 +730,13 @@ public class XMLImportDialog extends Dialog {
                 format = guessFormat(fileData);
                 parameter.setFormat(format);
                 syncCommand = new SyncCommand(parameter, fileData);
-            } else {
+            } else if(format.equals(IMPORT_FORMAT_VNL)){
+                fileData = FileUtils.readFileToByteArray(dataFile);
+                importVNL(fileData, dataFile.getName());
+                return null;
+            }
+            
+            else {
                 if (Activator.getDefault().isStandalone()) {
                     String path = dataFile.getPath();
                     syncCommand = new SyncCommand(parameter, path);
@@ -746,6 +761,56 @@ public class XMLImportDialog extends Dialog {
         updateModelAndValidate(syncCommand);
         return syncCommand.getStatus();
     }
+    
+    private void importVNL(final byte[] vnlFileData, final String filename) throws CommandException{
+        final LoadVNLRepoLocation locationLoader = ServiceFactory.lookupCommandService().executeCommand(new LoadVNLRepoLocation());
+        final String vnlLocation = locationLoader.getLicenseRepoLocation();
+        final String filenameToWrite = FilenameUtils.concat(vnlLocation, filename);
+            PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+
+                @Override
+                public void run() {
+                    try {
+                        LicenseManagementEntry entry = VNLMapper.getInstance().unmarshalXML(vnlFileData);
+                        if(entry == null){
+                            MessageDialog.openWarning(getParentShell(), "Ungültige Lizenz", "Der Inhalt der zu importierenden Datei sind keine gültigen verinice-Lizenzinformationen ");
+                            return;
+                        }
+                        File f = new File(filenameToWrite);
+                        if(!f.exists()){
+                            // check if valid xml
+                            if(entry != null){
+                                FileUtils.writeByteArrayToFile(new File(filenameToWrite), vnlFileData);
+                                showSuccessfulVNLImport(filename);
+                            }
+                        } else {
+                            boolean equalFileContent = FileUtils.contentEquals(f, dataFile);
+                            if (equalFileContent){
+                                if (entry != null && MessageDialog.openConfirm(getParentShell(), "Datei existiert bereits", "Die zu importierende Datei existiert bereits. Trotzdem importieren?")){
+                                    FileUtils.writeByteArrayToFile(new File(filenameToWrite), vnlFileData);
+                                    showSuccessfulVNLImport(filename);
+                                }                                        
+                            } else {
+                                if (entry != null && MessageDialog.openConfirm(getParentShell(), "Datei gleichen Namens existiert bereits", "Eine Datei gleichen Namens aber unterschiedlichem Inhalts existiert bereits. Trotzdem importieren?")){
+                                    FileUtils.writeByteArrayToFile(new File(filenameToWrite), vnlFileData);
+                                    showSuccessfulVNLImport(filename);
+                                }
+                            }
+
+
+                        }
+                    } catch (IOException e) {
+                        LOG.error("Error while reading vnlFileData of file:\t" + filename, e);
+                    }
+                }
+            });
+
+    }
+    
+    private void showSuccessfulVNLImport(String filename){
+        MessageDialog.openInformation(getParentShell(), "Lizenzinformation erfolgreich hinzugefügt", "Die Lizenzinformationen aus der Datei " + filename + " wurden erfolgreich im System hinterlegt");
+    }
+
 
     private byte[] decryptWithGenericSalt(byte[] fileData, IEncryptionService service) throws PasswordException {
         byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];

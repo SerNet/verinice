@@ -221,7 +221,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
     		</value>
     	</property>
     	<property name="serviceInterface">
-    		<value>sernet.verinice.interfaces.ILicenseManagementService</value>
+    		<value>sernet.verinice.interfaces.licensemanagement.ILicenseManagementService</value>
     	</property>
     	<property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>	
     </bean>

@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,26 +29,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.LazyInitializationException;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConverter;
+import sernet.verinice.service.commands.LoadVNLFiles;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
 public class LicenseManagementServerModeService implements ILicenseManagementService {
+    
+    private Logger log = Logger.getLogger(LicenseManagementServerModeService.class);
 
     // injected by spring
     private LicenseManagementEntryDao licenseManagementDao;
     private IBaseDao<Configuration, Serializable> configurationDao;
     private IEncryptionService cryptoService;
+    private ICommandService commandService;
+    
+    private Set<LicenseManagementEntry> existingLicenses = null;
 
     /**
      * @param encryptedContentId - (encrypted) id of content to inspect
@@ -54,15 +67,16 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public int getValidUsersForContentId(String encryptedContentId) {
-        String hql = "from LicenseManagementEntry " 
-                    + "where contentIdentifier = ?";
-        // if somethings wrong with the hql-parameter contentId (e.g.
-        // it does not exist in db) the result list will be empty
-        Object[] params = new Object[] { encryptedContentId };
-        List<LicenseManagementEntry> entryList = licenseManagementDao.
-                findByQuery(hql, params);
+//        String hql = "from LicenseManagementEntry " 
+//                    + "where contentIdentifier = ?";
+//        // if somethings wrong with the hql-parameter contentId (e.g.
+//        // it does not exist in db) the result list will be empty
+//        Object[] params = new Object[] { encryptedContentId };
+//        List<LicenseManagementEntry> entryList = licenseManagementDao.
+//                findByQuery(hql, params);
         int sum = 0;
-        for (LicenseManagementEntry entry : entryList) {
+//        for (LicenseManagementEntry entry : entryList) {
+        for (LicenseManagementEntry entry : getExistingLicenses()) {
                 int validUsers = decrypt(
                         entry, LicenseManagementEntry.COLUMN_VALIDUSERS);
                 sum += validUsers;
@@ -82,12 +96,12 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     @Override
     public Date getMaxValidUntil(String encryptedContentId) {
         Date longestValidDate = new Date(System.currentTimeMillis());
-        String hql = "from LicenseManagementEntry " 
-                + "where contentIdentifier = ?";
-        Object[] params = new Object[] { encryptedContentId };
-        List<LicenseManagementEntry> entryList 
-            = licenseManagementDao.findByQuery(hql, params);
-        for (LicenseManagementEntry entry : entryList) {
+//        String hql = "from LicenseManagementEntry " 
+//                + "where contentIdentifier = ?";
+//        Object[] params = new Object[] { encryptedContentId };
+//        List<LicenseManagementEntry> entryList 
+//            = licenseManagementDao.findByQuery(hql, params);
+        for (LicenseManagementEntry entry : getExistingLicenses()) {
             Date current = decrypt(
                     entry,
                     LicenseManagementEntry.COLUMN_VALIDUNTIL);
@@ -104,6 +118,8 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      * @return returns a licenseId for a {@link LicenseManagementEntry} to 
      * a given dbId
      */
+    @Deprecated //with storing the licenseinformation in files instead of 
+                //db, this is deprecated
     @Override
     public String getLicenseId(int dbId) {
         String hql = "from LicenseManagementEntry " + "where dbId = ?";
@@ -140,17 +156,20 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public boolean isUserAssignedLicenseStillValid(String user, String encryptedLicenseId) {
-        String hql = "from LicenseManagementEntry " + "where licenseID = ?";
-        Object[] params = new Object[] { encryptedLicenseId };
-        List<LicenseManagementEntry> entryList = licenseManagementDao.findByQuery(hql, params);
-        if (entryList.size() != 1) {
-            return false;
-        } else {
-            LicenseManagementEntry entry = entryList.get(0);
-            return ((Date)decrypt(
-                            entry, LicenseManagementEntry.COLUMN_VALIDUNTIL))
-                    .getTime() > System.currentTimeMillis();
+//        String hql = "from LicenseManagementEntry " + "where licenseID = ?";
+//        Object[] params = new Object[] { encryptedLicenseId };
+//        List<LicenseManagementEntry> entryList = licenseManagementDao.findByQuery(hql, params);
+//        if (entryList.size() != 1) {
+//            return false;
+//        } else {
+        for(LicenseManagementEntry entry : getExistingLicenses()){
+            if(entry.getLicenseID().equals(encryptedLicenseId)){
+                return ((Date)decrypt(
+                        entry, LicenseManagementEntry.COLUMN_VALIDUNTIL))
+                        .getTime() > System.currentTimeMillis();
+            }
         }
+        return false;
     }
 
     /**
@@ -162,16 +181,16 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public boolean checkAssignedUsersForLicenseId(String encryptedLicenseId) {
-        int validUsers;
-        int assignedUsers;
-        String hql = "from LicenseManagementEntry " + "where licenseID = ?";
-        Object[] params = new Object[] { encryptedLicenseId };
-        List<LicenseManagementEntry> entryList = licenseManagementDao.
-                findByQuery(hql, params);
-        if (entryList.size() != 1) {
-            return false;
-        } else {
-            LicenseManagementEntry entry = entryList.get(0);
+        int validUsers = 0;
+        int assignedUsers = 0;
+//        String hql = "from LicenseManagementEntry " + "where licenseID = ?";
+//        Object[] params = new Object[] { encryptedLicenseId };
+//        List<LicenseManagementEntry> entryList = licenseManagementDao.
+//                findByQuery(hql, params);
+//        if (entryList.size() != 1) {
+//            return false;
+//        } else {
+        for(LicenseManagementEntry entry : getExistingLicenses()){
             validUsers = decrypt(entry, 
                     LicenseManagementEntry.COLUMN_VALIDUSERS);
             assignedUsers = 0;
@@ -224,10 +243,11 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     @Override
     public Set<String> getAllLicenseIds() {
         Set<String> allIds = new HashSet<String>();
-        String hql = "from LicenseManagementEntry";
-        List allEntries = licenseManagementDao.findByQuery(hql, new Object[] {});
-        for(Object o : allEntries){
-            LicenseManagementEntry entry = (LicenseManagementEntry)o;
+//        String hql = "from LicenseManagementEntry";
+//        List allEntries = licenseManagementDao.findByQuery(hql, new Object[] {});
+//        for(Object o : allEntries){
+//            LicenseManagementEntry entry = (LicenseManagementEntry)o;
+        for(LicenseManagementEntry entry : getExistingLicenses()){
             String licenseId = decrypt(entry, 
                     LicenseManagementEntry.COLUMN_LICENSEID);
             allIds.add(licenseId);
@@ -244,13 +264,19 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     @Override
     public Set<LicenseManagementEntry> getLicenseEntriesForContentId(String encryptedContentId) {
         // unless contentId is crypted with pw and salt, this returns an empty set
-        String hql = "from LicenseManagementEntry entry where "
-                + "entry.contentIdentifier = :contentId";
-        String[] names = new String[] { "contentId" };
-        Object[] params = new Object[] { encryptedContentId };
+//        String hql = "from LicenseManagementEntry entry where "
+//                + "entry.contentIdentifier = :contentId";
+//        String[] names = new String[] { "contentId" };
+//        Object[] params = new Object[] { encryptedContentId };
+        
         Set<LicenseManagementEntry> uniqueEntryCollection = new HashSet<>();
-        uniqueEntryCollection.addAll(licenseManagementDao
-                .findByQuery(hql, names, params));
+        for(LicenseManagementEntry entry : getExistingLicenses()){
+            if(entry.getContentIdentifier().equals(encryptedContentId)){
+                uniqueEntryCollection.add(entry);
+            }
+//        uniqueEntryCollection.addAll(licenseManagementDao
+//                .findByQuery(hql, names, params));
+        }
         return uniqueEntryCollection;
     }
 
@@ -261,16 +287,18 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     @Override
     public Set<String> getLicenseIdsForContentId(String encryptedContentId) {
         // unless contentId is crypted with pw and salt, this returns an empty set
-        String hql = "from LicenseManagementEntry entry where"
-                + " entry.contentIdentifier = :contentId";
-        String[] names = new String[] { "contentId" };
-        Object[] params = new Object[] { encryptedContentId };
+//        String hql = "from LicenseManagementEntry entry where"
+//                + " entry.contentIdentifier = :contentId";
+//        String[] names = new String[] { "contentId" };
+//        Object[] params = new Object[] { encryptedContentId };
         Set<String> uniqueIds = new HashSet<>();
-        List hqlResult = licenseManagementDao.findByQuery(hql, names, params);
-        for (Object o : hqlResult) {
-            if (o instanceof LicenseManagementEntry) {
-                uniqueIds.add((String)decrypt((LicenseManagementEntry)o,
-                        LicenseManagementEntry.COLUMN_LICENSEID));
+//        List hqlResult = licenseManagementDao.findByQuery(hql, names, params);
+//        for (Object o : hqlResult) {
+//            if (o instanceof LicenseManagementEntry) {
+        for(LicenseManagementEntry entry : getExistingLicenses()){
+            if(entry.getContentIdentifier().equals(encryptedContentId)){
+                    uniqueIds.add((String)decrypt(entry,
+                            LicenseManagementEntry.COLUMN_LICENSEID));
             }
         }
 
@@ -312,9 +340,9 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     @Override
     public Set<String> getAllContentIds() {
         Set<String> allIds = new HashSet<String>();
-        String hql = "from LicenseManagementEntry";
-        List<LicenseManagementEntry> allEntries = licenseManagementDao.findByQuery(hql, new Object[] {});
-        for(LicenseManagementEntry entry : allEntries){
+//        String hql = "from LicenseManagementEntry";
+//        List<LicenseManagementEntry> allEntries = licenseManagementDao.findByQuery(hql, new Object[] {});
+        for(LicenseManagementEntry entry : getExistingLicenses()){
             allIds.add(String.valueOf(decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID)));
             
         }
@@ -563,6 +591,57 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         }
         return returnValue;
     }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.licensemanagement.ILicenseManagementService#getAllLicenseEntries()
+     */
+    @Override
+    public Set<LicenseManagementEntry> readVNLFiles(){
+        if(existingLicenses != null){
+            existingLicenses.clear();
+        } else {
+            existingLicenses = new HashSet<>();
+        }
+        LoadVNLFiles vnlLoader = new LoadVNLFiles();
+        try{
+            for(String filename : getCommandService().executeCommand(vnlLoader).getVNLFiles()){
+                File file = new File(filename);
+                byte[] fileContent = FileUtils.readFileToByteArray(file);
+                LicenseManagementEntry entry = VNLMapper.getInstance().unmarshalXML(fileContent);
+                existingLicenses.add(entry);
+            }
+        } catch (IOException e){
+            log.error("Error while reading licensefile", e);
+        } catch (CommandException e){
+            log.error("Error while loading vnl-Files", e);
+        }
+        return existingLicenses;
+    }
+
+    /**
+     * @return the commandService
+     */
+    public ICommandService getCommandService() {
+        return commandService;
+    }
+
+    /**
+     * @param commandService the commandService to set
+     */
+    public void setCommandService(ICommandService commandService) {
+        this.commandService = commandService;
+    }
+
+    /**
+     * @return the existingLicenses
+     */
+    public Set<LicenseManagementEntry> getExistingLicenses() {
+        if(existingLicenses == null){
+            readVNLFiles();
+        }
+        return existingLicenses;
+    }
+
     
 
 }

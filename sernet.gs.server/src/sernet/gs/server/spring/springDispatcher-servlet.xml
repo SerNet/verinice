@@ -188,7 +188,7 @@
 			<ref bean="licenseManagementService"/>
 		</property>
 		<property name="serviceInterface">
-			<value>sernet.verinice.interfaces.ILicenseManagementService</value>
+			<value>sernet.verinice.interfaces.licensemanagement.ILicenseManagementService</value>
 		</property>	
 	</bean>
 	

@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
-import java.util.List;
-
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
@@ -42,15 +40,17 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      */
     @Override
     public int getValidUsersForContentId(String encryptedContentId) {
-        String hql = "from LicenseManagementEntry " + "where contentIdentifier = ?";
-        Object[] params = new Object[] { encryptedContentId };
-        List idList = licenseManagementDao.findByQuery(hql, params);
+//        String hql = "from LicenseManagementEntry " + "where contentIdentifier = ?";
+//        Object[] params = new Object[] { encryptedContentId };
+//        List idList = licenseManagementDao.findByQuery(hql, params);
         int sum = 0;
-        for (Object o : idList) {
-            if (o instanceof LicenseManagementEntry) {
-                int validUsers = decrypt((LicenseManagementEntry)o,
-                        LicenseManagementEntry.COLUMN_VALIDUSERS);
-                sum += validUsers;
+//        for (Object o : idList) {
+//            if (o instanceof LicenseManagementEntry) {
+        for(LicenseManagementEntry entry : getExistingLicenses()){
+            if(entry.getContentIdentifier().equals(encryptedContentId)){
+                    int validUsers = decrypt(entry,
+                            LicenseManagementEntry.COLUMN_VALIDUSERS);
+                    sum += validUsers;
             }
         }
         if(sum>0){
@@ -68,17 +68,18 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      */
     @Override
     public boolean isUserAssignedLicenseStillValid(String user, String encryptedLicenseId) {
-        String hql = "from LicenseManagementEntry " 
-                + "where licenseID = ?";
-        Object[] params = new Object[]{encryptedLicenseId};
-        List validUntilList = licenseManagementDao.findByQuery(hql, params);
-        if(validUntilList != null && validUntilList.size() == 1){
-            
-            long validUntil = decrypt((LicenseManagementEntry)
-                    validUntilList.get(0),
-                    LicenseManagementEntry.COLUMN_VALIDUNTIL);
-            long currentTime = System.currentTimeMillis();
-            return validUntil > currentTime;
+//        String hql = "from LicenseManagementEntry " 
+//                + "where licenseID = ?";
+//        Object[] params = new Object[]{encryptedLicenseId};
+//        List validUntilList = licenseManagementDao.findByQuery(hql, params);
+//        if(validUntilList != null && validUntilList.size() == 1){
+        for(LicenseManagementEntry entry : getExistingLicenses()){
+            if(entry.getLicenseID().equals(encryptedLicenseId)){
+                long validUntil = decrypt(entry,
+                        LicenseManagementEntry.COLUMN_VALIDUNTIL);
+                long currentTime = System.currentTimeMillis();
+                return validUntil > currentTime;
+            }
         }
         return false;
     }
@@ -96,16 +97,17 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      */
     @Override
     public boolean checkAssignedUsersForLicenseId(String encryptedLicenseId) {
-        String hql = "from LicenseManagementEntry " 
-                + "where licenseID = ?";
-        Object[] params = new Object[]{encryptedLicenseId};
-        List validUserList = licenseManagementDao.findByQuery(hql, params);
-        if(validUserList != null && validUserList.size() == 1){
-            LicenseManagementEntry entry = (LicenseManagementEntry)
-                    validUserList.get(0);
-            int validUsers = decrypt(entry, 
-                    LicenseManagementEntry.COLUMN_VALIDUSERS);
-            return validUsers > 0;
+//        String hql = "from LicenseManagementEntry " 
+//                + "where licenseID = ?";
+//        Object[] params = new Object[]{encryptedLicenseId};
+//        List validUserList = licenseManagementDao.findByQuery(hql, params);
+//        if(validUserList != null && validUserList.size() == 1){
+        for(LicenseManagementEntry entry : getExistingLicenses()){
+            if (entry.getLicenseID().equals(encryptedLicenseId)){
+                int validUsers = decrypt(entry, 
+                        LicenseManagementEntry.COLUMN_VALIDUSERS);
+                return validUsers > 0;
+            }
         }
         return true;
     }
