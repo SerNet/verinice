@@ -210,6 +210,7 @@ public class DescriptionPage extends WizardPage {
         });
         releaseProcessCheckbox = new Button(composite, SWT.CHECK);
         releaseProcessCheckbox.setText(Messages.DescriptionPage_12);
+        releaseProcessCheckbox.setToolTipText(Messages.DescriptionPage_13);
         releaseProcessCheckbox.setSelection(isWithAReleaseProcess());
         boolean taskWithReleaseProcess = getRightsService().isEnabled(ActionRightIDs.TASKWITHRELEASEPROCESS);
         releaseProcessCheckbox.setEnabled(taskWithReleaseProcess);
