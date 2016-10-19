@@ -26,12 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.service.IThreadCompleteListener;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
 import sernet.verinice.interfaces.bpm.ITaskService;
@@ -81,7 +77,7 @@ final class CompleteTaskAction extends Action {
             for (TaskInformation task : taskList) {
                 if (IIndividualProcess.TRANS_ACCEPT.equals(outcomeId) && task.isWithAReleaseProcess()) {
                     getTaskService().saveChangedElementPropertiesToCnATreeElement(task.getId(), task.getUuid());
-                    closeEditorForTaskElement(task);
+                    taskView.closeEditorForElement(task.getUuid());
                 }
                 completeTask(task, outcomeId);
             }
@@ -91,15 +87,6 @@ final class CompleteTaskAction extends Action {
             LOG.error("Error while completing tasks.", t); //$NON-NLS-1$
             shutdownAndAwaitTermination();
             this.taskView.showError(Messages.CompleteTaskAction_6, Messages.CompleteTaskAction_7);
-        }
-    }
-
-    private void closeEditorForTaskElement(TaskInformation task) throws PartInitException {
-        for (IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
-            if (editorReference.getEditorInput() instanceof BSIElementEditorInput && task.getUuid().equals(((BSIElementEditorInput) editorReference.getEditorInput()).getCnAElement().getUuid())) {
-                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(new IEditorReference[] { editorReference }, true);
-                break;
-            }
         }
     }
 

@@ -44,7 +44,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
@@ -67,7 +66,9 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPartListener2;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -77,10 +78,10 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ComboModelNumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.editors.TaskEditorContext;
 import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
@@ -103,7 +104,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.TextEventAdapter;
 import sernet.verinice.service.commands.LoadAncestors;
@@ -781,10 +781,11 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         });
     }
 
-    private void cancelTask() throws InvocationTargetException, InterruptedException {
+    private void cancelTask() throws InvocationTargetException, InterruptedException, PartInitException {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         final List<TaskInformation> taskList = getSelectedTasks();
         if (!taskList.isEmpty() && MessageDialog.openConfirm(getShell(), Messages.ConfirmTaskDelete_0, Messages.bind(Messages.ConfirmTaskDelete_1, taskList.size()))) {
+            closeEditors(taskList);
             progressService.run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -813,6 +814,25 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
 
     public void removeTask(ITask task) {
         contentProvider.removeTask(task);
+    }
+
+    public void closeEditorForElement(String uuid) {
+        for (IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
+            try {
+                if (editorReference.getEditorInput() instanceof BSIElementEditorInput && uuid.equals(((BSIElementEditorInput) editorReference.getEditorInput()).getCnAElement().getUuid())) {
+                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(new IEditorReference[] { editorReference }, true);
+                    break;
+                }
+            } catch (PartInitException e) {
+                LOG.error("Error while closing element editor.", e); //$NON-NLS-1$
+            }
+        }
+    }
+
+    private void closeEditors(List<TaskInformation> taskList) {
+        for (TaskInformation taskInformation : taskList) {
+            closeEditorForElement(taskInformation.getUuid());
+        }
     }
 
     private Combo createComboBox(Composite composite) {
