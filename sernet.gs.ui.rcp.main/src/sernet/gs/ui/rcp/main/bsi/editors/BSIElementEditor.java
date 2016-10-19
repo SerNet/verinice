@@ -257,11 +257,6 @@ public class BSIElementEditor extends EditorPart {
 
                 monitor.done();
             }
-            this.setPartName(cnAElement.getTitle());
-            this.setTitleToolTip(cnAElement.getTitle());
-            isModelModified = false;
-            firePropertyChange(IEditorPart.PROP_DIRTY);
-
         }
     }
 
@@ -273,6 +268,10 @@ public class BSIElementEditor extends EditorPart {
         try {
             // save element, refresh etc:
             CnAElementHome.getInstance().updateEntity(cnAElement);
+            isModelModified = false;
+            this.setPartName(cnAElement.getTitle());
+            this.setTitleToolTip(cnAElement.getTitle());
+            firePropertyChange(IEditorPart.PROP_DIRTY);
         } catch (StaleObjectStateException se) {
             // close editor, loosing changes:
             ExceptionUtil.log(se, Messages.BSIElementEditor_0);
@@ -287,6 +286,10 @@ public class BSIElementEditor extends EditorPart {
             changedElementProperties.clear();
             LOG.info("Updated task: saved changes in element properties."); //$NON-NLS-1$
         }
+        isModelModified = false;
+        this.setPartName(cnAElement.getTitle());
+        this.setTitleToolTip(cnAElement.getTitle());
+        firePropertyChange(IEditorPart.PROP_DIRTY);
     }
 
     protected ITaskService getTaskService() {
@@ -451,7 +454,7 @@ public class BSIElementEditor extends EditorPart {
         setIcon();
 
         // if opened the first time, save initialized entity:
-        if (isDirty() && (isTaskEditorContext())) {
+        if (isDirty()) {
             save();
         }
     }
