@@ -143,7 +143,7 @@ public class TaskBean {
             getEditBean().addNoLabelType(SamtTopic.PROP_DESC);
             setOutcomeId(null);
             
-            if (getSelectedTask() instanceof TaskInformation && ((TaskInformation) getSelectedTask()).isWithAReleaseProcess()) {
+            if (getSelectedTask().isWithAReleaseProcess()) {
                 getEditBean().init(getSelectedTask());
             } else {
                 getEditBean().init();

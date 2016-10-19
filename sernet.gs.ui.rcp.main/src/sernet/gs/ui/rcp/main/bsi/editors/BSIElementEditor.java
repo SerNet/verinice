@@ -68,6 +68,7 @@ import sernet.hui.common.multiselectionlist.IMLPropertyType;
 import sernet.hui.swt.widgets.HitroUIComposite;
 import sernet.snutils.AssertException;
 import sernet.snutils.FormInputParser;
+import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bpm.TaskInformation;
@@ -96,7 +97,7 @@ public class BSIElementEditor extends EditorPart {
     private HitroUIComposite huiComposite;
 
     private boolean isModelModified = false;
-    private TaskInformation task;
+    private ITask task;
     private Map<String, String> changedElementProperties = new HashMap<>();
 
     private Boolean isWriteAllowed = null;
@@ -153,6 +154,7 @@ public class BSIElementEditor extends EditorPart {
 
             if (isTaskEditorContext()) {
                 loadChangedElementPropertiesFromTask();
+                setPartName(getPartName() + Messages.BSIElementEditor_9);
             }
 
             // Enable dirty listener only for writable objects:
@@ -287,7 +289,7 @@ public class BSIElementEditor extends EditorPart {
             LOG.info("Updated task: saved changes in element properties."); //$NON-NLS-1$
         }
         isModelModified = false;
-        this.setPartName(cnAElement.getTitle());
+        this.setPartName(cnAElement.getTitle() + Messages.BSIElementEditor_9);
         this.setTitleToolTip(cnAElement.getTitle());
         firePropertyChange(IEditorPart.PROP_DIRTY);
     }

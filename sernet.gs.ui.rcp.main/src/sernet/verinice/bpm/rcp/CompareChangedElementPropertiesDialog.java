@@ -52,6 +52,7 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.OptionSelectionHelper;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.common.CnATreeElement;
@@ -69,7 +70,7 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
 
     private String title;
 
-    private final TaskInformation task;
+    private final ITask task;
     private CnATreeElement element;
     private Map<String, String> changedElementProperties;
 
@@ -77,7 +78,7 @@ public class CompareChangedElementPropertiesDialog extends TitleAreaDialog {
      * @param parentShell
      * @throws CommandException
      */
-    public CompareChangedElementPropertiesDialog(Shell parentShell, TaskInformation task) throws CommandException {
+    public CompareChangedElementPropertiesDialog(Shell parentShell, ITask task) throws CommandException {
         super(parentShell);
         this.task = task;
 

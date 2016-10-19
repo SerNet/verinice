@@ -133,7 +133,7 @@ public class EditBean {
 
     private MassnahmenUmsetzung massnahmenUmsetzung;
 
-    private TaskInformation task;
+    private ITask task;
     private Map<String, String> changedElementProperties = new HashMap<>();
 
     public void init() {
@@ -165,9 +165,7 @@ public class EditBean {
         command = getCommandService().executeCommand(command);
         setElement(command.getElement());
 
-        if (task != null && task instanceof TaskInformation) {
-            this.task = ((TaskInformation) task);
-        }
+        this.task = task;
 
         checkMassnahmenUmsetzung();
 
@@ -255,7 +253,7 @@ public class EditBean {
             element.setPropertyValue(entry.getKey(), entry.getValue());
         }
 
-        setTitle(element.getTitle());
+        setTitle(element.getTitle() + Util.getMessage(BOUNDLE_NAME, "change.request"));
         LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
     }
 
@@ -501,7 +499,7 @@ public class EditBean {
             changedElementProperties.put(key, newValue);
         }
         if (key.contains(NAME_SUFFIX)) {
-            setTitle(newValue);
+            setTitle(newValue + Util.getMessage(BOUNDLE_NAME, "change.request"));
         }
     }
 

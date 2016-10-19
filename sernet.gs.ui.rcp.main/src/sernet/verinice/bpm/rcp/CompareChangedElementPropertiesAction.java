@@ -27,6 +27,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 
+import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.model.bpm.TaskInformation;
 
 /**
@@ -47,10 +48,10 @@ final class CompareChangedElementPropertiesAction extends Action {
     private static final Logger LOG = Logger.getLogger(CompareChangedElementPropertiesAction.class);
 
     private final TaskView taskView;
-    private final TaskInformation task;
+    private final ITask task;
     final String id = TaskView.class.getName() + ".compare.changed.element.properties"; //$NON-NLS-1$
 
-    public CompareChangedElementPropertiesAction(TaskView taskView, TaskInformation task) {
+    public CompareChangedElementPropertiesAction(TaskView taskView, ITask task) {
         super();
         this.taskView = taskView;
         this.task = task;

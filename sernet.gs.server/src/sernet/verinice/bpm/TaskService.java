@@ -119,6 +119,8 @@ public class TaskService implements ITaskService {
         
         DEFAULT_OUTCOMES.put(IGsmIsmExecuteProzess.TASK_EXECUTE,IGsmIsmExecuteProzess.TRANS_COMPLETE);
     }
+
+    private static final String PROCESS_NAME_OF_TASK_WITH_RELEASE_PROCESS = "individual-task-release-process";
     
     private ProcessEngine processEngine;
     
@@ -426,18 +428,22 @@ public class TaskService implements ITaskService {
         String typeId = (String) varMap.get(IGenericProcess.VAR_TYPE_ID); 
         taskInformation.setElementType(typeId);
         taskInformation.setDueDate(task.getDuedate());   
-        taskInformation.setProcessName(getProcessName(task));
         taskInformation.setWithAReleaseProcess((boolean) varMap.get(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS));
+        taskInformation.setProcessName(getProcessName(task, taskInformation.isWithAReleaseProcess()));
         if (log.isDebugEnabled()) {
             log.debug("map finished"); //$NON-NLS-1$
         }
         return taskInformation;
     }
 
-    private String getProcessName(Task task) {
+    private String getProcessName(Task task, boolean isWithAReleaseProcess ) {
         String executionId = task.getExecutionId();
-        String processKey = executionId.substring(0,executionId.indexOf('.'));        
-        return Messages.getString(processKey);
+        String processKey = executionId.substring(0,executionId.indexOf('.'));
+        if (isWithAReleaseProcess){
+            return Messages.getString(PROCESS_NAME_OF_TASK_WITH_RELEASE_PROCESS);
+        } else {
+            return Messages.getString(processKey);
+        }
     }
 
     @Override

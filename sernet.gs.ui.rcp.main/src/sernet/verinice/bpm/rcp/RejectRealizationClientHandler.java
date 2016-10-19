@@ -68,7 +68,7 @@ public class RejectRealizationClientHandler implements ICompleteClientHandler {
                 public void run() {
                     WizardDialog wizardDialog = new NonModalWizardDialog(shell, wizard);
                     wizardDialog.create();
-                    
+
                     IndividualServiceParameter individualServiceParameter = getIndividualServiceParameter(task.getId());
                     wizard.setTemplateForRejectedRealization(individualServiceParameter);
                     dialogStatus = wizardDialog.open();

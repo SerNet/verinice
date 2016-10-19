@@ -35,6 +35,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.wizard.Wizard;
 
+import com.sun.xml.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
+import com.sun.xml.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
+
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
@@ -42,9 +45,6 @@ import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.PersonIso;
 import sernet.verinice.service.commands.LoadPersonForLogin;
-
-import com.sun.xml.messaging.saaj.packaging.mime.util.BASE64DecoderStream;
-import com.sun.xml.messaging.saaj.packaging.mime.util.BASE64EncoderStream;
 
 /**
  * Wizard to start jBPM process "individual-task" defined in
