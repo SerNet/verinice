@@ -73,20 +73,30 @@ public class LinkTableComposite extends Composite {
     private IObjectModelService objectModelService;
     
     private List<LinkTableFieldListener> listeners = new ArrayList<>();
+    private boolean showScopeSelection = true;
     private boolean fireUpdate = false;
     private boolean fireValidation = false;
 
     private int numCols = 0;
     private boolean useAllScopes = true;
 
+    
     public LinkTableComposite(VeriniceLinkTable vltContent,
             IObjectModelService objectModelService,
             Composite parent) {
+        this(vltContent, objectModelService, parent, true);
+    }
+    
+    public LinkTableComposite(VeriniceLinkTable vltContent,
+            IObjectModelService objectModelService,
+            Composite parent,
+            boolean showScopeSelection) {
 
         super(parent, SWT.NONE);
         this.objectModelService = objectModelService;
         this.veriniceLinkTable = vltContent;
         useAllScopes = vltContent.useAllScopes();
+        this.showScopeSelection = showScopeSelection;
         createContent();
     }
 
@@ -122,7 +132,15 @@ public class LinkTableComposite extends Composite {
 
     private void setHead(Composite parent) {
         Composite head = new Composite(parent, SWT.NONE);
+        if(showScopeSelection) {
+            setScopeComposite(head);
+        }
+        setLinkTypeComposite(head);
+        getDefaultLayoutFactory().numColumns(2).margins(DEFAULT_MARGIN).generateLayout(head);
 
+    }
+    
+    public void setScopeComposite(Composite head) {
         Composite scopeButtons = new Composite(head, getStyle());
         final Button[] scopeRadios = new Button[2];
         scopeRadios[0] = new Button(scopeButtons, SWT.RADIO);
@@ -154,6 +172,9 @@ public class LinkTableComposite extends Composite {
 
         getDefaultLayoutFactory().margins(DEFAULT_MARGIN).numColumns(1)
                 .generateLayout(scopeButtons);
+    }
+
+    public void setLinkTypeComposite(Composite head) {
         Composite multiControlContainer = new Composite(head, getStyle());
         multiControl = new LinkTableMultiSelectionControl(multiControlContainer,
                 this);
@@ -161,9 +182,9 @@ public class LinkTableComposite extends Composite {
         getDefaultLayoutFactory().numColumns(2).generateLayout(multiControlContainer);
         GridData multiControlContainerData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
         multiControlContainer.setLayoutData(multiControlContainerData);
-        getDefaultLayoutFactory().numColumns(2).margins(DEFAULT_MARGIN).generateLayout(head);
-
     }
+
+    
 
     /**
      * To ensure functionality of the scrolledComposite the body of the
@@ -500,4 +521,5 @@ public class LinkTableComposite extends Composite {
         renameColumns();
         refresh(UpdateLinkTable.COLUMN_PATHS);
     }
+
 }

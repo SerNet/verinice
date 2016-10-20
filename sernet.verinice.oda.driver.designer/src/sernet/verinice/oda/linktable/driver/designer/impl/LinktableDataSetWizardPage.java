@@ -119,7 +119,8 @@ public class LinktableDataSetWizardPage extends DataSetWizardPage {
 
         linkTableComposite = new LinkTableComposite(linkTable, 
                 ServiceFactory.getInstance().getObjectModelService(), 
-                composite); 
+                composite,
+                false);
         GridLayoutFactory.fillDefaults().generateLayout(linkTableComposite); 
         return linkTableComposite;
     }
