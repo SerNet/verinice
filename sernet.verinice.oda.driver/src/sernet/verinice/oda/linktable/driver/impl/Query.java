@@ -59,6 +59,8 @@ public class Query implements IQuery {
     
     private Integer[] scopeIds;
     
+    private int maxRows = DEFAULT_MAX_ROWS;
+    
     /**
      * @param rootElementIds
      */
@@ -141,7 +143,7 @@ public class Query implements IQuery {
      */
     @Override
     public int getMaxRows() throws OdaException {   
-        return DEFAULT_MAX_ROWS;
+        return maxRows;
     }
 
     /* (non-Javadoc)
@@ -254,8 +256,8 @@ public class Query implements IQuery {
     }
 
     @Override
-    public void setMaxRows(int arg0) throws OdaException {
-        throw new UnsupportedOperationException();
+    public void setMaxRows(int maxRows) throws OdaException {
+        this.maxRows = maxRows;
     }
 
     @Override
