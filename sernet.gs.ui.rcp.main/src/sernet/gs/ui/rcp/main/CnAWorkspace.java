@@ -45,6 +45,7 @@ import org.eclipse.osgi.util.NLS;
 import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.gsimport.GstoolTypeMapper;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.report.IReportService;
 
 /**
@@ -62,7 +63,8 @@ public class CnAWorkspace {
 
     private static final String OFFICEDIR = "office"; //$NON-NLS-1$
 
-    public static final String LINE_SEP = System.getProperty("line.separator"); //$NON-NLS-1$
+    public static final String LINE_SEP = System.getProperty(
+            IVeriniceConstants.LINE_SEPARATOR); //$NON-NLS-1$
 
     private static String workDir;
 

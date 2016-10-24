@@ -30,6 +30,7 @@ import org.eclipse.birt.report.engine.api.IRunAndRenderTask;
 import org.eclipse.core.runtime.URIUtil;
 
 import sernet.verinice.interfaces.IReportDepositService;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.report.IOutputFormat;
 import sernet.verinice.interfaces.report.IReportOptions;
 import sernet.verinice.interfaces.report.IReportType;
@@ -177,7 +178,7 @@ public class GenericReportType implements IReportType {
     
     private String getDepositPath(String locationConstant){
         StringBuilder sb = new StringBuilder();
-        sb.append(System.getProperty("osgi.instance.area"));
+        sb.append(System.getProperty(IVeriniceConstants.OSGI_INSTANCE_AREA));
         if(!(sb.toString().endsWith(String.valueOf(File.separatorChar)))){
             sb.append(File.separatorChar);
         }

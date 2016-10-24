@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -60,6 +59,7 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.encryption.PasswordException;
@@ -70,7 +70,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.rcp.SWTElementFactory;
-import sernet.verinice.service.commands.LoadVNLRepoLocation;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
@@ -129,7 +128,7 @@ public class XMLImportDialog extends Dialog {
     private static final int NOCRYPT_INDEX = 0;
 
     private SyncCommand syncCommand;
-
+    
     public XMLImportDialog(Shell shell) {
         super(shell);
     }
@@ -228,7 +227,9 @@ public class XMLImportDialog extends Dialog {
         String currentPath = ""; //$NON-NLS-1$
         try {
             if (dataPath != null && !dataPath.isEmpty()) {
-                int lastSlash = dataPath.lastIndexOf(System.getProperty("file.separator")); //$NON-NLS-1$
+                int lastSlash = dataPath.lastIndexOf(
+                        System.getProperty(
+                                IVeriniceConstants.FILE_SEPARATOR)); //$NON-NLS-1$
                 if (lastSlash != -1) {
                     currentPath = dataPath.substring(0, lastSlash + 1);
                 } else {
@@ -731,8 +732,7 @@ public class XMLImportDialog extends Dialog {
                 parameter.setFormat(format);
                 syncCommand = new SyncCommand(parameter, fileData);
             } else if(format.equals(IMPORT_FORMAT_VNL)){
-                fileData = FileUtils.readFileToByteArray(dataFile);
-                importVNL(fileData, dataFile.getName());
+                importVNL(dataFile);
                 return null;
             }
             
@@ -762,48 +762,30 @@ public class XMLImportDialog extends Dialog {
         return syncCommand.getStatus();
     }
     
-    private void importVNL(final byte[] vnlFileData, final String filename) throws CommandException{
-        final LoadVNLRepoLocation locationLoader = ServiceFactory.lookupCommandService().executeCommand(new LoadVNLRepoLocation());
-        final String vnlLocation = locationLoader.getLicenseRepoLocation();
-        final String filenameToWrite = FilenameUtils.concat(vnlLocation, filename);
-            PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+    private void importVNL(final File vnlFile) throws CommandException{
+        PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 
-                @Override
-                public void run() {
-                    try {
-                        LicenseManagementEntry entry = VNLMapper.getInstance().unmarshalXML(vnlFileData);
-                        if(entry == null){
-                            MessageDialog.openWarning(getParentShell(), "Ungültige Lizenz", "Der Inhalt der zu importierenden Datei sind keine gültigen verinice-Lizenzinformationen ");
-                            return;
-                        }
-                        File f = new File(filenameToWrite);
-                        if(!f.exists()){
-                            // check if valid xml
-                            if(entry != null){
-                                FileUtils.writeByteArrayToFile(new File(filenameToWrite), vnlFileData);
-                                showSuccessfulVNLImport(filename);
-                            }
-                        } else {
-                            boolean equalFileContent = FileUtils.contentEquals(f, dataFile);
-                            if (equalFileContent){
-                                if (entry != null && MessageDialog.openConfirm(getParentShell(), "Datei existiert bereits", "Die zu importierende Datei existiert bereits. Trotzdem importieren?")){
-                                    FileUtils.writeByteArrayToFile(new File(filenameToWrite), vnlFileData);
-                                    showSuccessfulVNLImport(filename);
-                                }                                        
-                            } else {
-                                if (entry != null && MessageDialog.openConfirm(getParentShell(), "Datei gleichen Namens existiert bereits", "Eine Datei gleichen Namens aber unterschiedlichem Inhalts existiert bereits. Trotzdem importieren?")){
-                                    FileUtils.writeByteArrayToFile(new File(filenameToWrite), vnlFileData);
-                                    showSuccessfulVNLImport(filename);
-                                }
-                            }
-
-
-                        }
-                    } catch (IOException e) {
-                        LOG.error("Error while reading vnlFileData of file:\t" + filename, e);
-                    }
+            @Override
+            public void run() {
+                LicenseManagementEntry entry = null;
+                try {
+                    entry = VNLMapper.getInstance().
+                            unmarshalXML(FileUtils.readFileToByteArray(vnlFile));
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
                 }
-            });
+                if(entry == null){
+                    MessageDialog.openWarning(getParentShell(), "Ungültige Lizenz", "Der Inhalt der zu importierenden Datei sind keine gültigen verinice-Lizenzinformationen ");
+                    return;
+                }
+                // check if valid xml
+                if(entry != null && ServiceFactory.lookupLicenseManagementService().addVNLToRepository(vnlFile)){
+                    showSuccessfulVNLImport(vnlFile.getName());
+                    //TODO show hint for not succesfull import
+                }
+            }
+        });
 
     }
     
@@ -941,10 +923,12 @@ public class XMLImportDialog extends Dialog {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_IMPORT);
         if (defaultFolder == null || defaultFolder.isEmpty()) {
-            defaultFolder = System.getProperty("user.home"); //$NON-NLS-1$
+            defaultFolder = System.getProperty(
+                    IVeriniceConstants.USER_HOME); //$NON-NLS-1$
         }
-        if (!defaultFolder.endsWith(System.getProperty("file.separator"))) { //$NON-NLS-1$
-            defaultFolder = defaultFolder + System.getProperty("file.separator"); //$NON-NLS-1$
+        if (!defaultFolder.endsWith(System.getProperty(IVeriniceConstants.FILE_SEPARATOR))) { //$NON-NLS-1$
+            defaultFolder = defaultFolder + 
+                    System.getProperty(IVeriniceConstants.FILE_SEPARATOR); //$NON-NLS-1$
         }
         return defaultFolder;
     }

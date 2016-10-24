@@ -19,8 +19,24 @@
  ******************************************************************************/
 package sernet.verinice.service;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
+import sernet.verinice.model.licensemanagement.LicenseManagementException;
+import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
@@ -143,6 +159,74 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
     public void grantUserToLicense(String username, String licenseId) {
         // should not be used in tier2, so always return true
         // since the tier2-user is always allowed to use a license, if its existant
+    }
+    
+    @Override
+    public File getVNLRepository(){
+        File location = null;
+        try {
+            String instanceAreaVNL = FilenameUtils.concat(
+                    System.getProperty(IVeriniceConstants.OSGI_INSTANCE_AREA),
+                    "vnl");
+            location = FileUtils.toFile(new URL(instanceAreaVNL));
+        } catch (MalformedURLException e) {
+            throw new LicenseManagementException("Cannot create vnl-storage-folder", e);
+        }
+        return location;
+    }
+    
+    /**
+     * in standalone mode, read vnl-files from workspace
+     */
+    @Override
+    public Set<LicenseManagementEntry> readVNLFiles(){
+        if(existingLicenses != null){
+            existingLicenses.clear();
+        } else {
+            existingLicenses = new HashSet<>();
+        }
+        
+        File location = getVNLRepository();
+
+        
+        Set<String> vnlFiles = new HashSet<>();
+        if(!location.exists()){
+            try {
+                FileUtils.touch(location);
+            } catch (IOException e) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Error creating ")
+                    .append(location.getAbsolutePath())
+                    .append(" to store vnl-Files");
+                log.error(sb.toString(), e);
+                throw new LicenseManagementException(sb.toString(), e);
+            }
+        }
+        if(location.isDirectory()){
+            List<String> filenames = Arrays.asList(location.list(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.endsWith(".vnl");
+                }
+            }));
+            for(String filename : filenames){
+                vnlFiles.add(FilenameUtils.concat(location.getAbsolutePath(), filename));
+            }
+        }
+        
+        try{
+            for(String filename : vnlFiles){
+                File file = new File(filename);
+                byte[] fileContent = FileUtils.readFileToByteArray(file);
+                LicenseManagementEntry entry = VNLMapper.getInstance().unmarshalXML(fileContent);
+                existingLicenses.add(entry);
+            }
+        } catch (IOException e){
+            String msg = "Error while reading licensefile"; 
+            log.error(msg, e);
+            throw new LicenseManagementException(msg, e);
+        }
+        return existingLicenses;
     }
 
 }

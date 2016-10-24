@@ -52,6 +52,7 @@ import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.SyncParameter;
@@ -362,10 +363,11 @@ public class ExportDialog extends TitleAreaDialog {
         IPreferenceStore prefs = Activator.getDefault().getPreferenceStore();
         defaultFolder = prefs.getString(PreferenceConstants.DEFAULT_FOLDER_EXPORT);      
         if(defaultFolder==null || defaultFolder.isEmpty()) {
-            defaultFolder = System.getProperty("user.home");
+            defaultFolder = System.getProperty(IVeriniceConstants.USER_HOME);
         }       
-        if (!defaultFolder.endsWith(System.getProperty("file.separator"))) {
-            defaultFolder = defaultFolder + System.getProperty("file.separator");
+        if (!defaultFolder.endsWith(System.getProperty(IVeriniceConstants.FILE_SEPARATOR))) {
+            defaultFolder = defaultFolder + 
+                    System.getProperty(IVeriniceConstants.FILE_SEPARATOR);
         }
         return defaultFolder;
     }
@@ -374,7 +376,8 @@ public class ExportDialog extends TitleAreaDialog {
        String currentPath = txtLocation.getText();
         String path = currentPath;
         if(currentPath!=null && !currentPath.isEmpty()) {
-             int lastSlash = currentPath.lastIndexOf(System.getProperty("file.separator"));
+             int lastSlash = currentPath.lastIndexOf(
+                     System.getProperty(IVeriniceConstants.FILE_SEPARATOR));
             if(lastSlash!=-1) {
                 path = currentPath.substring(0,lastSlash+1);
             }else{

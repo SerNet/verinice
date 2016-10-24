@@ -71,6 +71,7 @@ import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.ILogPathService;
 import sernet.verinice.interfaces.IMain;
 import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
+import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.IVersionConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
@@ -220,7 +221,10 @@ public class Activator extends AbstractUIPlugin implements IMain {
         setGSDSCatalog(prefs);
 
         // Set the derby log file path
-        System.setProperty(DERBY_LOG_FILE_PROPERTY, System.getProperty("user.home") + File.separatorChar + DERBY_LOG_FILE); //$NON-NLS-1$
+        System.setProperty(DERBY_LOG_FILE_PROPERTY, 
+                System.getProperty(IVeriniceConstants.USER_HOME) + 
+                File.separatorChar + 
+                DERBY_LOG_FILE); //$NON-NLS-1$
 
         // Provide initial DB connection details to server.
         internalServer.configureDatabase(prefs.getString(PreferenceConstants.DB_URL), prefs.getString(PreferenceConstants.DB_USER), prefs.getString(PreferenceConstants.DB_PASS), prefs.getString(PreferenceConstants.DB_DRIVER), prefs.getString(PreferenceConstants.DB_DIALECT));
@@ -346,7 +350,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     private boolean isAtLeastJava8() {
-        String javaVersion = System.getProperty("java.version");
+        String javaVersion = System.getProperty(IVeriniceConstants.JAVA_VERSION);
         boolean result = false;
         // version String should look like "1.4.2_10"
         if (javaVersion.indexOf("1.8.") != -1) { //$NON-NLS-1$ 
@@ -368,8 +372,8 @@ public class Activator extends AbstractUIPlugin implements IMain {
     }
 
     private boolean isWin64() {
-        String osName = System.getProperty("os.name"); //$NON-NLS-1$
-        String osArch = System.getProperty("os.arch"); //$NON-NLS-1$
+        String osName = System.getProperty(IVeriniceConstants.OS_NAME); //$NON-NLS-1$
+        String osArch = System.getProperty(IVeriniceConstants.OS_ARCH); //$NON-NLS-1$
         return osName.toLowerCase().contains("win") && osArch.contains("64"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 

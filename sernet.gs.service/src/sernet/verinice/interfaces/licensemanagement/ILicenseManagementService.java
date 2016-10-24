@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.licensemanagement;
 
+import java.io.File;
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -79,6 +80,10 @@ public interface ILicenseManagementService {
     Set<LicenseManagementEntry> readVNLFiles();
     
     Set<LicenseManagementEntry> getExistingLicenses();
+    
+    File getVNLRepository();
+    
+    boolean addVNLToRepository(File vnlFile);
 
 
 }

@@ -175,6 +175,7 @@ Export-Package: com.heatonresearch.datamover;uses:="com.heatonresearch.datamover
    org.eclipse.swt.widgets,
    org.eclipse.core.runtime.preferences",
  sernet.gs.ui.rcp.main.reports;uses:="junit.framework",
+ sernet.gs.ui.rcp.main.security,
  sernet.gs.ui.rcp.main.service;uses:="sernet.gs.ui.rcp.main.connect,sernet.hui.common,sernet.verinice.iso27k.service",
  sernet.gs.ui.rcp.main.service.commands;uses:="sernet.gs.ui.rcp.main.service",
  sernet.gs.ui.rcp.main.service.crudcommands;

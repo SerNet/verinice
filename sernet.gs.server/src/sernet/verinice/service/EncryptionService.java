@@ -7,10 +7,10 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 
-import sernet.verinice.encryption.PasswordBasedEncryption;
-import sernet.verinice.encryption.SMIMEBasedEncryption;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
+import sernet.verinice.service.crypto.PasswordBasedEncryption;
+import sernet.verinice.service.crypto.SMIMEBasedEncryption;
 
 /**
  * <p>

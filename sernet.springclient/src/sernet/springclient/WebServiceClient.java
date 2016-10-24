@@ -9,6 +9,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.log4j.Logger;
 import org.springframework.ws.client.core.WebServiceTemplate;
 
+import sernet.verinice.interfaces.IVeriniceConstants;
+
 public class WebServiceClient {
 
     private final WebServiceTemplate webServiceTemplate = new WebServiceTemplate();
@@ -19,7 +21,9 @@ public class WebServiceClient {
 
     // send to the configured default URI
     public void simpleSendAndReceive() throws FileNotFoundException {
-    	String path = System.getProperty("user.home") + System.getProperty("file.separator") + "foo.xml";
+    	String path = System.getProperty(IVeriniceConstants.USER_HOME) +
+    	        System.getProperty(IVeriniceConstants.FILE_SEPARATOR) + 
+    	        "foo.xml";
     	if(Logger.getLogger(WebServiceClient.class).isDebugEnabled()){
     	    Logger.getLogger(WebServiceClient.class).debug("Path:\t" + path);
     	}
@@ -29,7 +33,9 @@ public class WebServiceClient {
         webServiceTemplate.sendSourceAndReceiveToResult(source, result);
     }
     public void simpleSendAndReceive(File file) throws FileNotFoundException {
-      	String path = System.getProperty("user.home") + System.getProperty("file.separator") + "requestMarkus.xml";
+      	String path = System.getProperty(IVeriniceConstants.USER_HOME) + 
+      	        System.getProperty(IVeriniceConstants.FILE_SEPARATOR) + 
+      	        "requestMarkus.xml";
       	if(Logger.getLogger(WebServiceClient.class).isDebugEnabled()){
       	    Logger.getLogger(WebServiceClient.class).debug("Path:\t" + path);
       	}

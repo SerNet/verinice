@@ -159,14 +159,8 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	</bean>
     
     <bean id="encryptionService" 
-    	class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-        <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/encryptionServiceHttpInvoker</value>
-        </property>
-        <property name="serviceInterface">
-        	<value>sernet.verinice.interfaces.encryption.IEncryptionService</value>
-        </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
+    	class="sernet.gs.ui.rcp.main.security.ClientCryptoService">
+        
     </bean>
     
     <bean id="accountService"
@@ -320,6 +314,17 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
 	
     <bean id="webServiceClient" class="sernet.springclient.WebServiceClient">
     </bean>
+    
+    <bean id="loadBcProvider"
+          class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod"
+                  value="java.security.Security.addProvider"/>
+        <property name="arguments">
+            <list>
+                <bean class="org.bouncycastle.jce.provider.BouncyCastleProvider"/>
+            </list>
+        </property>
+    </bean>    
 	
 	<bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
 	<property name="map">

@@ -1,4 +1,4 @@
-package sernet.verinice.encryption;
+package sernet.verinice.service.crypto;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
