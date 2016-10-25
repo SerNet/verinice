@@ -56,13 +56,22 @@ public class EntityPropertyAdapter implements IPropertyAdapter {
             return null;
         }
         
-        String value = entity.getPropertyValue(propertyId);
-        PropertyType propertyType = getPropertyType(element.getTypeId(), propertyId);
-        if(isUrlAndNotEmpty(propertyType, value)) {
-            value = URLUtil.createLinkForSpreadsheet(value);
-        }
-        if(isDate(propertyType)) {
-            value = entity.getDateInISO8601(propertyId);
+        return getPropertyValue(entity, propertyId);
+    }
+
+    public String getPropertyValue(Entity entity, String propertyId) {
+        String value;      
+        if(CnATreeElement.isStaticProperty(propertyId)) {
+            value = CnATreeElement.getStaticProperty(element, propertyId);
+        } else {             
+            value = entity.getPropertyValue(propertyId);
+            PropertyType propertyType = getPropertyType(element.getTypeId(), propertyId);
+            if(isUrlAndNotEmpty(propertyType, value)) {
+                value = URLUtil.createLinkForSpreadsheet(value);
+            }
+            if(isDate(propertyType)) {
+                value = entity.getDateInISO8601(propertyId);
+            }
         }
         return value;
     }
@@ -86,4 +95,5 @@ public class EntityPropertyAdapter implements IPropertyAdapter {
     private EntityType getEntityType(String elementId) {
         return HUITypeFactory.getInstance().getEntityType(elementId);
     }
+    
 }

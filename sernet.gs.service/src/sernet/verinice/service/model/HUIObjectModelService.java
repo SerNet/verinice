@@ -65,7 +65,8 @@ public class HUIObjectModelService implements IObjectModelService {
     private Map<String, CnATreeElement> allTypeInstances = null;
 
     private Set<String> allTypeIds = null;
-    private Set<String> allBSIElements = null;
+    private Set<String> allBSICategories = null;
+    private Set<String> allStaticProperties = null;
 
     private Map<String, Set<String>> possibleChildren = null;
     private Map<String, Set<String>> possibleParents = null;
@@ -130,7 +131,10 @@ public class HUIObjectModelService implements IObjectModelService {
         allTypeIds = new HashSet<>(getHuiTypeFactory().getAllTypeIds());
         removeNonCnaTreeElementTypeIDs();
         addAllBSIElements();
+        addAllStaticProperties();
     }
+
+    
 
     public void removeNonCnaTreeElementTypeIDs() {
         allTypeIds.remove("note");
@@ -140,21 +144,28 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     private void addAllBSIElements() {
-        allBSIElements = new HashSet<>();
-        allBSIElements.add(AnwendungenKategorie.TYPE_ID);
-        allBSIElements.add(GebaeudeKategorie.TYPE_ID);
-        allBSIElements.add(ClientsKategorie.TYPE_ID);
-        allBSIElements.add(ServerKategorie.TYPE_ID);
-        allBSIElements.add(SonstigeITKategorie.TYPE_ID);
-        allBSIElements.add(TKKategorie.TYPE_ID);
-        allBSIElements.add(PersonenKategorie.TYPE_ID);
-        allBSIElements.add(NKKategorie.TYPE_ID);
-        allBSIElements.add(RaeumeKategorie.TYPE_ID);
-        allBSIElements.add(FinishedRiskAnalysis.TYPE_ID);
+        allBSICategories = new HashSet<>();
+        allBSICategories.add(AnwendungenKategorie.TYPE_ID);
+        allBSICategories.add(GebaeudeKategorie.TYPE_ID);
+        allBSICategories.add(ClientsKategorie.TYPE_ID);
+        allBSICategories.add(ServerKategorie.TYPE_ID);
+        allBSICategories.add(SonstigeITKategorie.TYPE_ID);
+        allBSICategories.add(TKKategorie.TYPE_ID);
+        allBSICategories.add(PersonenKategorie.TYPE_ID);
+        allBSICategories.add(NKKategorie.TYPE_ID);
+        allBSICategories.add(RaeumeKategorie.TYPE_ID);
+        allBSICategories.add(FinishedRiskAnalysis.TYPE_ID);
 
-        allTypeIds.addAll(allBSIElements);
+        allTypeIds.addAll(allBSICategories);    
+    }
     
-     }
+    private void addAllStaticProperties() {
+        allStaticProperties = new HashSet<>();
+        allStaticProperties.add(CnATreeElement.SCOPE_ID);
+        allStaticProperties.add(CnATreeElement.PARENT_ID);
+        allStaticProperties.add(CnATreeElement.DBID);
+        allStaticProperties.add(CnATreeElement.UUID);    
+    }
 
     /*
      * (non-Javadoc)
@@ -200,7 +211,7 @@ public class HUIObjectModelService implements IObjectModelService {
     @Override
     public Set<String> getPossibleRelationPartners(String typeID) {
         ServerInitializer.inheritVeriniceContextState();
-        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSIElement(typeID)) {
+        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSICategory(typeID)) {
             return new HashSet<>();
         }
         HashSet<String> possiblePartners = new HashSet<>();
@@ -216,8 +227,8 @@ public class HUIObjectModelService implements IObjectModelService {
         return possiblePartners;
     }
 
-    private boolean isBSIElement(String typeID) {
-        return allBSIElements.contains(typeID);
+    private boolean isBSICategory(String typeID) {
+        return allBSICategories.contains(typeID);
 
     }
 
@@ -237,16 +248,19 @@ public class HUIObjectModelService implements IObjectModelService {
     @Override
     public Set<String> getPossibleProperties(String typeID) {
         ServerInitializer.inheritVeriniceContextState();
-        if (isBSIElement(typeID)) {
+        if (isBSICategory(typeID)) {
             HashSet<String> set = new HashSet<>();
             set.add(typeID + "_name");
+            set.addAll(allStaticProperties);
             return set;
         }
         if (getHuiTypeFactory().getEntityType(typeID) == null) {
             return new HashSet<>();
         }
-        return new HashSet<>(
+        HashSet<String> set = new HashSet<>(
                 Arrays.asList(getHuiTypeFactory().getEntityType(typeID).getAllPropertyTypeIds()));
+        set.addAll(allStaticProperties);
+        return set;
     }
 
     /*
@@ -467,7 +481,7 @@ public class HUIObjectModelService implements IObjectModelService {
             allRelationLabels = new HashMap<>();
             Set<HuiRelation> allRelationIDs = new HashSet<>();
             for(String typeId : getAllTypeIDs()){
-                if (!isBSIElement(typeId)) {
+                if (!isBSICategory(typeId)) {
                     allRelationIDs.addAll(huiTypeFactory.getPossibleRelationsFrom(typeId));
                 }
                 

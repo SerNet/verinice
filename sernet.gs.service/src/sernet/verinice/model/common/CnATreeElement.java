@@ -63,6 +63,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnATreeElement.class);
 
+    public static final String DBID = "dbid";
+    public static final String UUID = "uuid";
+    public static final String PARENT_ID = "parent-id";
+    public static final String SCOPE_ID = "scope-id";
+    
     private Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(CnATreeElement.class);
@@ -587,6 +592,30 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
             }
         }
         return group;
+    }
+	
+	public static boolean isStaticProperty(String propertyId) {
+	        return(CnATreeElement.PARENT_ID.equals(propertyId)
+	            || CnATreeElement.SCOPE_ID.equals(propertyId)
+	            || CnATreeElement.DBID.equals(propertyId)
+	            || CnATreeElement.UUID.equals(propertyId));
+	    }
+	
+	public static String getStaticProperty(CnATreeElement element, String propertyId) {
+        String value = null;
+        if(CnATreeElement.SCOPE_ID.equals(propertyId)) {
+            value = String.valueOf(element.getScopeId());
+        }
+        if(CnATreeElement.DBID.equals(propertyId)) {
+            value = String.valueOf(element.getDbId());
+        }
+        if(CnATreeElement.PARENT_ID.equals(propertyId)) {
+            value = String.valueOf(element.getParentId());
+        }
+        if(CnATreeElement.UUID.equals(propertyId)) {
+            value = element.getUuid();
+        }
+        return value;
     }
 
 	public void fireVertraulichkeitChanged(CascadingTransaction ta) {
