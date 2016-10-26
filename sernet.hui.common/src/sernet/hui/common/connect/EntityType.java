@@ -204,7 +204,7 @@ public class EntityType {
 	    PropertyType htmlType = null;
 	    boolean foundHTMLProperty = false;
 	    for(IEntityElement entityElement : elements){
-	        if(entityElement instanceof PropertyType){
+	        if(entityElement instanceof PropertyType && !foundHTMLProperty){
 	            Object[] values = isShowHTML(entityElement, foundHTMLProperty);
 	            htmlType = (PropertyType)values[0];
 	            foundHTMLProperty = (values[1] == null) ? false : (boolean)values[1];
