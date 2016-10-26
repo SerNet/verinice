@@ -35,21 +35,21 @@ import sernet.verinice.service.linktable.generator.GraphLinkedTableCreator;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO;
 import sernet.verinice.service.test.helper.vnaimport.AbstractVNAImportHelper;
 
-class LoadData extends AbstractVNAImportHelper{
+class LoadData extends AbstractVNAImportHelper {
 
     private String sourceId;
-    private String extIdOrg;
+    private List<String> orgExtIds;
     private String vltFile;
     private String vnaFile;
 
     private ILinkTableService linkTableService;
     private ILinkTableConfiguration configuration;
 
-    public LoadData(){
+    public LoadData() {
         // spring need this
     }
 
-    public List<List<String>> loadAndExecuteVLT() throws CommandException{
+    public List<List<String>> loadAndExecuteVLT() throws CommandException {
         linkTableService = new LinkTableService();
         linkTableService.setLinkTableCreator(new GraphLinkedTableCreator());
         String vltPath = this.getClass().getResource(getVltFile()).getPath();
@@ -58,23 +58,25 @@ class LoadData extends AbstractVNAImportHelper{
         return linkTableService.createTable(configuration);
     }
 
-    private void writeScopeAndExtIdToLinkTableConfiguration() throws CommandException{
-        CnATreeElement org = loadElement(getSourceId(), getExtIdOrg());
+    private void writeScopeAndExtIdToLinkTableConfiguration() throws CommandException {
+
         LinkTableConfiguration changedConfiguration = cloneConfiguration(configuration);
-        changedConfiguration.addScopeId(org.getScopeId());
+        for(String extId : getOrgExtIds()){
+            CnATreeElement org = loadElement(getSourceId(), extId);
+            changedConfiguration.addScopeId(org.getScopeId());
+        }
+
         configuration = changedConfiguration;
     }
 
     private LinkTableConfiguration cloneConfiguration(ILinkTableConfiguration configuration) {
         LinkTableConfiguration.Builder builder = new LinkTableConfiguration.Builder();
-        builder.setColumnPathes(configuration.getColumnPaths())
-        .setLinkTypeIds(configuration.getLinkTypeIds());
-        if(configuration.getScopeIdArray()!=null) {
+        builder.setColumnPathes(configuration.getColumnPaths()).setLinkTypeIds(configuration.getLinkTypeIds());
+        if (configuration.getScopeIdArray() != null) {
             builder.setScopeIds(new HashSet<>(Arrays.asList(configuration.getScopeIdArray())));
         }
         return builder.build();
     }
-
 
     @Override
     protected String getFilePath() {
@@ -110,14 +112,12 @@ class LoadData extends AbstractVNAImportHelper{
         this.sourceId = sourceId;
     }
 
-    public String getExtIdOrg() {
-        return extIdOrg;
+    public List<String> getOrgExtIds() {
+        return orgExtIds;
     }
 
-    public void setExtIdOrg(String extIdOrg) {
-        this.extIdOrg = extIdOrg;
+    public void setOrgExtIds(List<String> orgExtIds) {
+        this.orgExtIds = orgExtIds;
     }
-
-
 
 }

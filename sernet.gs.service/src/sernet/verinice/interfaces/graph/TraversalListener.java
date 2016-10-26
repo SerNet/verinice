@@ -36,12 +36,14 @@ public interface TraversalListener {
      *
      * @param node
      *            The node which is currently traversed.
+     * @param incomingEdge
+     *            The edge we reached the node.
      * @param depth
      *            This is the depth of the traversal. Since the traversal starts
      *            from a specific root node this is also the distances to this
      *            root node.
      */
-    void nodeTraversed(CnATreeElement node, int depth);
+    void nodeTraversed(CnATreeElement node, Edge incomingEdge, int depth);
 
     /**
      * Is called if the sub tree is finally processed.

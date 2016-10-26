@@ -1,0 +1,16 @@
+{
+  "useAllScopes": false,
+  "scopeIds": [
+    688128
+  ],
+  "columnPaths": [
+    "asset<assetgroup<assetgroup.assetgroup_name AS Title_(Assets)",
+    "asset<assetgroup.assetgroup_name AS Title_(Assets)",
+    "asset.asset_name AS Title_(Asset)",
+    "asset/control.control_name AS Title_(Control)",
+    "asset/control<controlgroup>control.control_name AS Title_(Control)",
+    "asset:incident_scenario.title AS Title",
+    "asset/incident_scenario.incident_scenario_name AS Title_(Scenario)"
+  ],
+  "relationIds": []
+}

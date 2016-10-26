@@ -1,0 +1,12 @@
+{
+  "useAllScopes": false,
+  "scopeIds": [
+    2490368,
+    2490383
+  ],
+  "columnPaths": [
+    "control.control_name AS Title_(Control)",
+    "control/control.control_name AS Title_(Control)"
+  ],
+  "relationIds": []
+}
