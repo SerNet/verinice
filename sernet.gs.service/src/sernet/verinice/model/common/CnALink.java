@@ -52,7 +52,8 @@ public class CnALink implements Serializable, ITypedElement {
         RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.ACCEPT.name(), Messages.getString("CnALink.RiskTreatment_ACCEPT")); //$NON-NLS-1$
         RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.AVOID.name(), Messages.getString("CnALink.RiskTreatment_AVOID")); //$NON-NLS-1$
         RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.MODIFY.name(), Messages.getString("CnALink.RiskTreatment_MODIFY")); //$NON-NLS-1$
-        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.TRANSFER.name(), Messages.getString("CnALink.RiskTreatment_TRANSFER")); //$NON-NLS-1$
+        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.MODIFY.name(), Messages.getString("CnALink.RiskTreatment_MODIFY")); //$NON-NLS-1$
+        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.UNEDITED.name(), Messages.getString("CnALink.RiskTreatment_UNEDITED")); //$NON-NLS-1$
     }
     
     // constants for link typeId, now replaced by relationIDs that can be
@@ -88,7 +89,7 @@ public class CnALink implements Serializable, ITypedElement {
     private Integer riskIntegrityWithControls;
     private Integer riskAvailabilityWithControls;
 
-    public enum RiskTreatment {ACCEPT,TRANSFER,MODIFY,AVOID};
+    public enum RiskTreatment {ACCEPT,TRANSFER,MODIFY,AVOID,UNEDITED};
     private String riskTreatmentValue = RiskTreatment.ACCEPT.name();
 
     // user entered comment:
@@ -401,11 +402,20 @@ public class CnALink implements Serializable, ITypedElement {
     }
     
     public RiskTreatment getRiskTreatment() {
-        return RiskTreatment.valueOf(getRiskTreatmentValue());
+        String value = getRiskTreatmentValue();
+        if(value==null) {
+            return null;
+        } else {
+            return RiskTreatment.valueOf(value);
+        }
     }
     
     public void setRiskTreatment(RiskTreatment riskTreatment) {
-        setRiskTreatmentValue(riskTreatment.name());
+        if(riskTreatment==RiskTreatment.UNEDITED) {
+            setRiskTreatmentValue(null);
+        } else {
+            setRiskTreatmentValue(riskTreatment.name());
+        }
     }
     
     private String getRiskTreatmentValue() {

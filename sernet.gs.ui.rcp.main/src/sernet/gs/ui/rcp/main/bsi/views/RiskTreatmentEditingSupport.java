@@ -34,6 +34,9 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.service.commands.UpdateElement;
 
 /**
@@ -66,8 +69,27 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
 
     @Override
     protected boolean canEdit(Object element) {
-        return element instanceof CnALink;
+        boolean canEdit = element instanceof CnALink;
+        if(canEdit) {
+            CnALink link = (CnALink) element;
+            canEdit = isAssetOrSzenario(link);
+        }
+        return canEdit;
 
+    }
+
+    public boolean isAssetOrSzenario(CnALink link) {
+        try {
+            return isAssetOrSzenario(link.getDependant()) || isAssetOrSzenario(link.getDependency());
+        } catch(Exception e) {
+            LOG.error("Error while checking link.", e);
+            return true;
+        }
+    }
+
+    public boolean isAssetOrSzenario(CnATreeElement element) {
+        return Asset.TYPE_ID.equals(element.getTypeId())
+                || IncidentScenario.TYPE_ID.equals(element.getTypeId());
     }
 
     @Override
