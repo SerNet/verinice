@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-
 public class EntityType {
 	private String id;
 	private String name;
@@ -217,14 +215,9 @@ public class EntityType {
         Object[] returnValues = new Object[2];
 	    PropertyType propertyType = (PropertyType)entityElement;
         if(propertyType.isShow_html()){
-            Logger.getRootLogger().debug("Found show_html for propertyType:\t"
-                    + propertyType.getId());
             if(!foundHtmlProperty){
                 returnValues[0] = propertyType;
                 returnValues[1] = true;
-            } else {
-                Logger.getRootLogger().debug("Found more than one properties"
-                        + " tagged as \"show_html=true\", invalid configuration");
             }
         }
         return returnValues;
