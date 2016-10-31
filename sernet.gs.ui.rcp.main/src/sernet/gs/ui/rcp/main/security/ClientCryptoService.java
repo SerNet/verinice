@@ -65,8 +65,10 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public String decrypt(String cypherText, char[] password, String salt) throws EncryptionException {
-        // TODO Auto-generated method stub
-        return null;
+        byte[] cypherTextBytes = org.apache.commons.codec.binary.Base64.decodeBase64(cypherText.getBytes());
+        byte[] saltBytes = salt.getBytes();
+        byte[] plainTextBytes = PasswordBasedEncryption.decrypt(cypherTextBytes, password, saltBytes);
+        return new String(org.apache.commons.codec.binary.Base64.decodeBase64(plainTextBytes));  
     }
 
     /* (non-Javadoc)
