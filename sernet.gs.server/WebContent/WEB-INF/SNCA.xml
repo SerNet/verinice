@@ -4517,6 +4517,13 @@ the value between <param></param> will be used directly if no string is found fo
         	id="controlgroup_is_NoIso_group"
         	inputtype="booleanoption" defaultValue="0"
         	tags="VDA_ISA_Audit" />
+        	
+        <huiproperty 
+        	name="Object-Browser Description"
+        	id="controlgroup_objectbrowser_description"
+        	visible="false"
+        	editable="false"
+        	showInObjectBrowser="true"/>
     </huientity>
 
     <huientity
@@ -5729,7 +5736,7 @@ Wurden bereits weitere Stellen informiert?
         <huiproperty
             name="Title"
             id="document_name"
-            required="true" />
+            required="true"/>
         <huiproperty
             name="Abbreviation"
             id="document_abbr" />
@@ -5759,6 +5766,12 @@ Wurden bereits weitere Stellen informiert?
 	       <option name="Internal Use" id="document_classfc_internal"/>
 	       <option name="Public" id="document_classfc_public"/>
         </huiproperty>
+        <huiproperty 
+        	id="document_description" 
+        	name="Description" 
+        	visible="false"
+        	editable="false"
+        	showInObjectBrowser="true"/>
     </huientity>
     
     <huientity

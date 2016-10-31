@@ -23,6 +23,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -37,6 +39,7 @@ import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
@@ -50,10 +53,11 @@ import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.IControl;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
+import sernet.verinice.model.samt.SamtTopic;
 
 /**
  * This class creates HTML code for verinice elements.
@@ -90,11 +94,11 @@ public abstract class HtmlWriter {
     /**
      * tries to determine get html-text for browser-view
      *  via dynamic SNCA-approach 
-     * ( xml-Attribute show_html equals true on huiproperty)
+     * ( xml-Attribute showInObjectBrowser equals true on huiproperty)
      * 
      * @param element to recieve html-text for
      * 
-     * @return (html) content of show_html-annotated property or
+     * @return (html) content of showInObjectBrowser-annotated property or
      * empty String if no property is found or element is not instanceof
      * {@link CnATreeElement}
      */
@@ -102,40 +106,67 @@ public abstract class HtmlWriter {
         StringBuilder sb = new StringBuilder();
         if (element instanceof CnATreeElement){
             CnATreeElement cnaTreeElement = (CnATreeElement)element;
-            PropertyType htmlProperty = cnaTreeElement
-                    .getEntityType().getObjectBrowserPropertyType();
-            if (htmlProperty != null){
-                cnaTreeElement = Retriever.checkRetrieveElement(cnaTreeElement);
-                PropertyList propertyList = cnaTreeElement.getEntity().getProperties(
-                        htmlProperty.getId()
-                        );
-                
-                for (Property property : propertyList.getProperties()){
-                    if (property.isLimitedLicense()){
-                        String contentIdCypher = property.getLicenseContentId();
-                        String cypherText = property.getPropertyValue();
-                        if(getLicenseMgmtService().getAllContentIds(false).contains(contentIdCypher)){
-                            LicenseManagementEntry entry = null;
-                            for(LicenseManagementEntry lme : getLicenseMgmtService().getExistingLicenses()){
-                                if(lme.getContentIdentifier().equals(contentIdCypher)){
-                                    entry = lme;
-                                }
-                            }
-                            String password = entry.getUserPassword();
-                            String salt = entry.getSalt();
-                            String plain = getCryptoService().decrypt(cypherText, password.toCharArray(), salt);
-                            sb.append(plain);
-                        } else {
-                            sb.append(cypherText).append("\n\n\n");
-                            sb.append(NO_LICENSE_FOUND_WARNING);
-                            
-                        }
-                    } else {
-                        sb.append(property.getPropertyValue());
-                    }
+            List<PropertyType> htmlProperties = cnaTreeElement
+                    .getEntityType().getObjectBrowserPropertyTypes();
+            Iterator<PropertyType> iterator = htmlProperties.iterator();
+            while(iterator.hasNext()){
+                sb.append(buildDynamicObjectBrowserContent(cnaTreeElement,
+                        iterator.next()));
+                if(iterator.hasNext()){
+                    sb.append("<br><br>");
                 }
-//                getEntity().getPropertyValue(htmlProperty.getId());
             }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * @param sb
+     * @param cnaTreeElement
+     * @param iterator
+     * @return
+     */
+    private static String buildDynamicObjectBrowserContent(CnATreeElement cnaTreeElement, PropertyType propertyType) {
+        StringBuilder sb = new StringBuilder();
+        cnaTreeElement = Retriever.checkRetrieveElement(cnaTreeElement);
+        PropertyList propertyList = cnaTreeElement.getEntity().getProperties(
+                propertyType.getId()
+                );
+
+        for (Property property : propertyList.getProperties()){
+            if (property.isLimitedLicense())
+                sb.append(getLicenseRestrictedPropertyValue(property));
+            else {
+                sb.append(property.getPropertyValue());
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * @param sb
+     * @param property
+     */
+    private static String getLicenseRestrictedPropertyValue(Property property) {
+        StringBuilder sb = new StringBuilder();
+        String contentIdCypher = property.getLicenseContentId();
+        String cypherText = property.getPropertyValue();
+        if(getLicenseMgmtService().getAllContentIds(false).contains(contentIdCypher)){
+            LicenseManagementEntry entry = null;
+            for(LicenseManagementEntry lme : getLicenseMgmtService().getExistingLicenses()){
+                if(lme.getContentIdentifier().equals(contentIdCypher)){
+                    entry = lme;
+                }
+            }
+            String password = entry.getUserPassword();
+            String salt = entry.getSalt();
+            String plain = getCryptoService().decrypt(cypherText, 
+                    password.toCharArray(), salt);
+            sb.append(plain);
+        } else {
+            sb.append(cypherText).append("\n\n\n");
+            sb.append(NO_LICENSE_FOUND_WARNING);
+
         }
         return sb.toString();
     }
@@ -153,27 +184,36 @@ public abstract class HtmlWriter {
     private static String handleRequestStatic(Object element) throws GSServiceException {
         if (element instanceof Baustein) {
             Baustein bst = (Baustein) element;
-            return getHtmlFromStream(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
+            return getHtmlFromStream(GSScraperUtil.getInstance().getModel().
+                    getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
         }
 
         if (element instanceof OwnGefaehrdung) {
             OwnGefaehrdung ownGefaehrdung = (OwnGefaehrdung) element;
-            if (ownGefaehrdung.getUrl() == null || ownGefaehrdung.getUrl().isEmpty() || ownGefaehrdung.getUrl().equals(NULL_STRING)) { // $NON-NLS-1$
+            if (ownGefaehrdung.getUrl() == null 
+                    || ownGefaehrdung.getUrl().isEmpty() 
+                    || ownGefaehrdung.getUrl().equals(NULL_STRING)) { // $NON-NLS-1$
                 return toHtml(ownGefaehrdung);
             } else {
-                return getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(ownGefaehrdung.getUrl(), ownGefaehrdung.getStand()), UTF_8);
+                return getHtmlFromStream(GSScraperUtil.getInstance().
+                        getModel().getGefaehrdung(ownGefaehrdung.getUrl(),
+                                ownGefaehrdung.getStand()), UTF_8);
             }
         } else if (element instanceof Gefaehrdung) {
             Gefaehrdung gef = (Gefaehrdung) element;
-            return getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gef.getUrl(), gef.getStand()), gef.getEncoding());
+            return getHtmlFromStream(GSScraperUtil.getInstance().getModel().
+                    getGefaehrdung(gef.getUrl(), gef.getStand()), gef.getEncoding());
         }
 
         if (element instanceof GefaehrdungsUmsetzung) {
             GefaehrdungsUmsetzung gefUms = (GefaehrdungsUmsetzung) element;
-            if (gefUms.getUrl() == null || gefUms.getUrl().isEmpty() || gefUms.getUrl().equals(NULL_STRING)) { // $NON-NLS-1$
+            if (gefUms.getUrl() == null || gefUms.getUrl().isEmpty() 
+                    || gefUms.getUrl().equals(NULL_STRING)) { // $NON-NLS-1$
                 return toHtml(gefUms);
             } else {
-                return getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()), UTF_8); //$NON-NLS-1$
+                return getHtmlFromStream(GSScraperUtil.getInstance().
+                        getModel().getGefaehrdung(gefUms.getUrl(),
+                                gefUms.getStand()), UTF_8); //$NON-NLS-1$
                 
             }
         }
@@ -181,16 +221,20 @@ public abstract class HtmlWriter {
 
         if (element instanceof BausteinUmsetzung) {
             BausteinUmsetzung bst = (BausteinUmsetzung) element;
-            if (bst.getUrl() == null || bst.getUrl().isEmpty() || bst.getUrl().equals(NULL_STRING)) {
+            if (bst.getUrl() == null || bst.getUrl().isEmpty() 
+                    || bst.getUrl().equals(NULL_STRING)) {
             	return toHtml(bst);
             }else {
-            return getHtmlFromStream(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
+            return getHtmlFromStream(GSScraperUtil.getInstance().getModel().
+                    getBaustein(bst.getUrl(), bst.getStand()),
+                    bst.getEncoding());
         }
         }
         
         if (element instanceof Massnahme) {
             Massnahme mn = (Massnahme) element;
-            return GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mn.getUrl(), mn.getStand());
+            return GSScraperUtil.getInstance().getModel().
+                    getMassnahmeHtml(mn.getUrl(), mn.getStand());
         }
 
         if (element instanceof RisikoMassnahmenUmsetzung) {
@@ -199,20 +243,24 @@ public abstract class HtmlWriter {
             if (ums.getRisikoMassnahme() != null) {
                 return toHtml(ums);
             } else {
-                return GSScraperUtil.getInstance().getModel().getMassnahmeHtml(ums.getUrl(), ums.getStand());
+                return GSScraperUtil.getInstance().getModel().
+                        getMassnahmeHtml(ums.getUrl(), ums.getStand());
             }
         } else if (element instanceof MassnahmenUmsetzung) {
             MassnahmenUmsetzung mnu = (MassnahmenUmsetzung) element;
-            if (mnu.getUrl() == null || mnu.getUrl().isEmpty() || mnu.getUrl().equals(NULL_STRING)) {
+            if (mnu.getUrl() == null || mnu.getUrl().isEmpty() 
+                    || mnu.getUrl().equals(NULL_STRING)) {
                 return toHtml(mnu);
             } else {
-                return GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mnu.getUrl(), mnu.getStand());
+                return GSScraperUtil.getInstance().getModel().
+                        getMassnahmeHtml(mnu.getUrl(), mnu.getStand());
             }
         }
  
         if (element instanceof TodoViewItem) {
             TodoViewItem item = (TodoViewItem) element;
-            return GSScraperUtil.getInstance().getModel().getMassnahmeHtml(item.getUrl(), item.getStand());
+            return GSScraperUtil.getInstance().getModel().
+                    getMassnahmeHtml(item.getUrl(), item.getStand());
         }
 
         if (element instanceof IItem) {
@@ -222,24 +270,69 @@ public abstract class HtmlWriter {
             return sb.toString(); 
         }
         
-        if (element instanceof IControl) {
-            IControl control = (IControl) element;
+        if(element instanceof Control){
             StringBuilder sb = new StringBuilder();
-            writeHtml(sb, control.getTitle(), control.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
-            return sb.toString();         
+            Control control = (Control)element;
+            PropertyType titleProperty = HUITypeFactory.getInstance().
+                    getPropertyType(control.getEntityType().getId(),
+                            Control.PROP_NAME);
+            PropertyType descriptionProperty = HUITypeFactory.getInstance().
+                    getPropertyType(control.getEntityType().getId(),
+                            Control.PROP_DESC);
+            writeHtml(sb, buildDynamicObjectBrowserContent(control,
+                    titleProperty),
+                    buildDynamicObjectBrowserContent(control, 
+                            descriptionProperty),
+                    VeriniceCharset.CHARSET_UTF_8.name());
+            return sb.toString();
+        };
+        
+        if(element instanceof SamtTopic){
+            StringBuilder sb = new StringBuilder();
+            SamtTopic samtTopic = (SamtTopic)element;
+            PropertyType titleProperty = HUITypeFactory.getInstance().
+                    getPropertyType(samtTopic.getEntityType().getId(),
+                            SamtTopic.PROP_NAME);
+            PropertyType descriptionProperty = HUITypeFactory.getInstance().
+                    getPropertyType(samtTopic.getEntityType().getId(),
+                            SamtTopic.PROP_DESC);
+            writeHtml(sb, buildDynamicObjectBrowserContent(samtTopic,
+                    titleProperty),
+                    buildDynamicObjectBrowserContent(samtTopic,
+                            descriptionProperty),
+                    VeriniceCharset.CHARSET_UTF_8.name());
+            return sb.toString();
         }
         
         if (element instanceof Threat) {
             Threat item = (Threat) element;
             StringBuilder sb = new StringBuilder();
-            writeHtml(sb, item.getTitle(), item.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
+            PropertyType titleProperty = HUITypeFactory.getInstance().
+                    getPropertyType(item.getEntityType().getId(),
+                            Threat.PROP_NAME);
+            PropertyType descriptionProperty = HUITypeFactory.getInstance().
+                    getPropertyType(item.getEntityType().getId(),
+                            Threat.PROP_DESCRIPTION);            
+            writeHtml(sb, 
+                    buildDynamicObjectBrowserContent(item, titleProperty), 
+                    buildDynamicObjectBrowserContent(item, descriptionProperty),
+                    VeriniceCharset.CHARSET_UTF_8.name());
             return sb.toString();         
         }
 
         if (element instanceof Vulnerability) {
             Vulnerability item = (Vulnerability) element;
             StringBuilder sb = new StringBuilder();
-            writeHtml(sb, item.getTitle(), item.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
+            PropertyType titleProperty = HUITypeFactory.getInstance().
+                    getPropertyType(item.getEntityType().getId(),
+                            Vulnerability.PROP_NAME);
+            PropertyType descriptionProperty = HUITypeFactory.getInstance().
+                    getPropertyType(item.getEntityType().getId(),
+                            Vulnerability.PROP_DESC);
+            writeHtml(sb, 
+                    buildDynamicObjectBrowserContent(item, titleProperty), 
+                    buildDynamicObjectBrowserContent(item, descriptionProperty),
+                    VeriniceCharset.CHARSET_UTF_8.name());
             return sb.toString();         
         }
         
@@ -248,32 +341,76 @@ public abstract class HtmlWriter {
     
     private static String toHtml(BausteinUmsetzung bstums){
     	StringBuilder buf =  new StringBuilder();
-    	writeHtml(buf, bstums.getTitle(), bstums.getDescription(), ISO_8859_1);
+    	PropertyType titleProperty = HUITypeFactory.getInstance().
+    	        getPropertyType(bstums.getEntityType().getId(),
+    	                BausteinUmsetzung.P_NAME);
+    	PropertyType descriptionProperty = HUITypeFactory.getInstance().
+    	        getPropertyType(bstums.getEntityType().getId(), 
+    	                BausteinUmsetzung.P_BAUSTEIN_BESCHREIBUNG);
+    	writeHtml(buf, buildDynamicObjectBrowserContent(bstums, titleProperty),
+    	        buildDynamicObjectBrowserContent(bstums, descriptionProperty),
+    	        ISO_8859_1);
     	return buf.toString();
     }
     
     private static String toHtml(MassnahmenUmsetzung mnums){
     	StringBuilder buf =  new StringBuilder();
-    	writeHtml(buf, mnums.getTitle(), mnums.getDescription(), ISO_8859_1);
+    	PropertyType titleProperty = HUITypeFactory.getInstance().
+    	        getPropertyType(mnums.getEntityType().
+    	                getId(), MassnahmenUmsetzung.P_NAME);
+    	PropertyType descriptionProperty = HUITypeFactory.getInstance().
+    	        getPropertyType(mnums.getEntityType().
+    	                getId(), MassnahmenUmsetzung.P_BESCHREIBUNG);
+    	writeHtml(buf, buildDynamicObjectBrowserContent(mnums, titleProperty),
+    	        buildDynamicObjectBrowserContent(mnums, descriptionProperty),
+    	        ISO_8859_1);
     	return buf.toString();
     }
 
     private static String toHtml(GefaehrdungsUmsetzung ums) {
         StringBuilder buf = new StringBuilder();
-        writeHtml(buf, ums.getId() + " " + ums.getTitle(), ums.getDescription(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
+        PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(
+                ums.getEntityType().getId(), GefaehrdungsUmsetzung.PROP_ID);
+        StringBuilder titleBuilder = new StringBuilder().append(
+                buildDynamicObjectBrowserContent(ums, propertyType));
+        titleBuilder.append(" ");
+        propertyType = HUITypeFactory.getInstance().getPropertyType(
+                ums.getEntityType().getId(), GefaehrdungsUmsetzung.PROP_TITEL);
+        titleBuilder.append(buildDynamicObjectBrowserContent(ums, propertyType));
+        propertyType = HUITypeFactory.getInstance().getPropertyType(
+                ums.getEntityType().getId(), GefaehrdungsUmsetzung.PROP_DESCRIPTION);
+        writeHtml(buf, titleBuilder.toString(), 
+                buildDynamicObjectBrowserContent(ums, propertyType),
+                ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return buf.toString();
     }
 
     private static String toHtml(OwnGefaehrdung gef) {
         StringBuilder buf = new StringBuilder();
-        writeHtml(buf, gef.getId() + " " + gef.getTitel(), gef.getBeschreibung(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
+        writeHtml(buf, gef.getId() + " " + gef.getTitel(), 
+                gef.getBeschreibung(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return removeUnsupportedHtmlPattern(buf.toString());
     }
     
     private static String toHtml(RisikoMassnahmenUmsetzung ums) {
         StringBuilder buf = new StringBuilder();
         RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(ums);
-        writeHtml(buf, ums.getNumber() + " " + ums.getName(), ums.getDescription(), ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
+        StringBuilder titleBuilder = new StringBuilder();
+        PropertyType propertyType = HUITypeFactory.getInstance().
+                getPropertyType(ums.getEntityType().getId(),
+                        RisikoMassnahmenUmsetzung.P_KAPITEL);
+        titleBuilder.append(buildDynamicObjectBrowserContent(ums, propertyType));
+        titleBuilder.append(" ");
+        propertyType = HUITypeFactory.getInstance().
+                getPropertyType(ums.getEntityType().getId(),
+                        RisikoMassnahmenUmsetzung.P_NAME);
+        titleBuilder.append(buildDynamicObjectBrowserContent(ums, propertyType));
+        propertyType = HUITypeFactory.getInstance().getPropertyType(
+                ums.getEntityType().getId(), 
+                RisikoMassnahmenUmsetzung.P_BESCHREIBUNG);
+        writeHtml(buf, titleBuilder.toString(), 
+                buildDynamicObjectBrowserContent(ums, propertyType),
+                ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return buf.toString();
     }
     
@@ -284,10 +421,13 @@ public abstract class HtmlWriter {
     }
     
     private static void writeHtml(StringBuilder buf, String headline, String bodytext, String encoding) {
-        String cssDir = CnAWorkspace.getInstance().getWorkdir()+ File.separator + "html" + File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
+        String cssDir = CnAWorkspace.getInstance().getWorkdir()+ 
+                File.separator + "html" + File.separator + "screen.css"; //$NON-NLS-1$ //$NON-NLS-2$
         buf.append("<html><head>"); //$NON-NLS-1$
-        buf.append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=").append(encoding).append("\"/>\n"); //$NON-NLS-1$ //$NON-NLS-2$
-        buf.append("<link REL=\"stylesheet\" media=\"screen\" HREF=\"").append(cssDir).append("\"/>"); //$NON-NLS-1$ //$NON-NLS-2$
+        buf.append("<META HTTP-EQUIV=\"Content-Type\" CONTENT=\"text/html; charset=").
+        append(encoding).append("\"/>\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        buf.append("<link REL=\"stylesheet\" media=\"screen\" HREF=\"").append(cssDir).
+        append("\"/>"); //$NON-NLS-1$ //$NON-NLS-2$
         buf.append("</head><body><div id=\"content\">"); //$NON-NLS-1$
         if(headline!=null) {
             buf.append("<h1>"); //$NON-NLS-1$

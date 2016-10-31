@@ -126,7 +126,7 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
 
     private int textrows;
     
-    private boolean show_html;
+    private boolean showInObjectBrowser;
 
 
 	/**
@@ -547,20 +547,12 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
         return textrows;
     }
     
-    
-
-	/**
-     * @return the show_html
-     */
-    public boolean isShow_html() {
-        return show_html;
+    public boolean isShowInObjectBrowser() {
+        return showInObjectBrowser;
     }
 
-    /**
-     * @param show_html the show_html to set
-     */
-    public void setShow_html(boolean show_html) {
-        this.show_html = show_html;
+    public void setShowInObjectBrowser(boolean showInObjectBrowser) {
+        this.showInObjectBrowser = showInObjectBrowser;
     }
 
     @Override
