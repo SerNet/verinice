@@ -327,7 +327,7 @@ public class LicenseManagementTest extends ContextConfiguration{
     
     @Test
     public void serviceTest(){
-        Set<String> allIds = licenseManagementService.getAllContentIds();
+        Set<String> allIds = licenseManagementService.getAllContentIds(true);
         for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
             Assert.assertTrue(allIds.contains(CONTENTID_TESTDATA.get(j)));
         }

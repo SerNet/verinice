@@ -55,7 +55,7 @@ public interface ILicenseManagementService {
 
     Set<String> getAllLicenseIds();
 
-    Set<String> getAllContentIds();
+    Set<String> getAllContentIds(boolean decrypted);
 
     Set<LicenseManagementEntry> getLicenseEntriesForContentId(String contentId);
 

@@ -297,10 +297,14 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      * @return all contentIds 
      */
     @Override
-    public Set<String> getAllContentIds() {
+    public Set<String> getAllContentIds(boolean decrypted) {
         Set<String> allIds = new HashSet<String>();
         for(LicenseManagementEntry entry : getExistingLicenses()){
-            allIds.add(String.valueOf(decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID)));
+            if(decrypted){
+                allIds.add(String.valueOf(decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID)));
+            } else {
+                allIds.add(entry.getContentIdentifier());
+            }
             
         }
         return allIds;
@@ -608,7 +612,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      * @return the existingLicenses
      */
     public Set<LicenseManagementEntry> getExistingLicenses() {
-        if(existingLicenses == null){
+        if(existingLicenses == null || existingLicenses.size() == 0){
             readVNLFiles();
         }
         return existingLicenses;
@@ -629,6 +633,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
             throw new LicenseManagementException(msg,e );
         }
     }
+    
 
     
 

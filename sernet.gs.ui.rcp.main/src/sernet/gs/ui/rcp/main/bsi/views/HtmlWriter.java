@@ -36,8 +36,13 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.hui.common.connect.Property;
+import sernet.hui.common.connect.PropertyList;
 import sernet.hui.common.connect.PropertyType;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.iso27k.IItem;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -48,6 +53,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
  * This class creates HTML code for verinice elements.
@@ -62,6 +68,8 @@ public abstract class HtmlWriter {
     private static final String ISO_8859_1 = "iso-8859-1";
     private static final String UTF_8 = "utf-8";
     private static final String NULL_STRING = "null";
+    
+    private static final String NO_LICENSE_FOUND_WARNING = "no_valid_license_found";
   
     private HtmlWriter() {
     }
@@ -91,17 +99,45 @@ public abstract class HtmlWriter {
      * {@link CnATreeElement}
      */
     private static String handleRequestDynamic(Object element){
-        if(element instanceof CnATreeElement){
+        StringBuilder sb = new StringBuilder();
+        if (element instanceof CnATreeElement){
             CnATreeElement cnaTreeElement = (CnATreeElement)element;
             PropertyType htmlProperty = cnaTreeElement
                     .getEntityType().getObjectBrowserPropertyType();
-            
-            if(htmlProperty != null){
-                return Retriever.checkRetrieveElement(cnaTreeElement).
-                        getEntity().getPropertyValue(htmlProperty.getId());
+            if (htmlProperty != null){
+                cnaTreeElement = Retriever.checkRetrieveElement(cnaTreeElement);
+                PropertyList propertyList = cnaTreeElement.getEntity().getProperties(
+                        htmlProperty.getId()
+                        );
+                
+                for (Property property : propertyList.getProperties()){
+                    if (property.isLimitedLicense()){
+                        String contentIdCypher = property.getLicenseContentId();
+                        String cypherText = property.getPropertyValue();
+                        if(getLicenseMgmtService().getAllContentIds(false).contains(contentIdCypher)){
+                            LicenseManagementEntry entry = null;
+                            for(LicenseManagementEntry lme : getLicenseMgmtService().getExistingLicenses()){
+                                if(lme.getContentIdentifier().equals(contentIdCypher)){
+                                    entry = lme;
+                                }
+                            }
+                            String password = entry.getUserPassword();
+                            String salt = entry.getSalt();
+                            String plain = getCryptoService().decrypt(cypherText, password.toCharArray(), salt);
+                            sb.append(plain);
+                        } else {
+                            sb.append(cypherText).append("\n\n\n");
+                            sb.append(NO_LICENSE_FOUND_WARNING);
+                            
+                        }
+                    } else {
+                        sb.append(property.getPropertyValue());
+                    }
+                }
+//                getEntity().getPropertyValue(htmlProperty.getId());
             }
         }
-        return "";
+        return sb.toString();
     }
 
     /**
@@ -312,18 +348,28 @@ public abstract class HtmlWriter {
        }
    }
 
-private static String removeUnsupportedHtmlPattern(String line) {
-    line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+   private static String removeUnsupportedHtmlPattern(String line) {
+       line = line.replaceAll("<a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
        line = line.replaceAll("</a.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
        line = line.replaceAll("<img.*?>", ""); //$NON-NLS-1$ //$NON-NLS-2$
-    return line;
-}
+       return line;
+   }
 
-private static String convertCss(String line, String cssDir) {
-    line = line.replace("../../media/style/css/screen.css", cssDir); //$NON-NLS-1$
+   private static String convertCss(String line, String cssDir) {
+       line = line.replace("../../media/style/css/screen.css", cssDir); //$NON-NLS-1$
        line = line.replace("../../../screen.css", cssDir); //$NON-NLS-1$
        line = line.replace("../../screen.css", cssDir); //$NON-NLS-1$
        line = line.replace("../screen.css", cssDir); //$NON-NLS-1$
-    return line;
+       return line;
+   }
+   
+   private static ILicenseManagementService getLicenseMgmtService(){
+       return ServiceFactory.lookupLicenseManagementService();
+   }
+   
+   private static IEncryptionService getCryptoService(){
+       return ServiceFactory.lookupEncryptionService();
+   }
 }
-}
+
+
