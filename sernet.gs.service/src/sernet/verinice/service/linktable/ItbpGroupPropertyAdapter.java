@@ -20,6 +20,7 @@
 package sernet.verinice.service.linktable;
 
 import sernet.verinice.model.bsi.IBSIStrukturKategorie;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  *
@@ -39,7 +40,11 @@ public class ItbpGroupPropertyAdapter implements IPropertyAdapter {
      */
     @Override
     public String getPropertyValue(String propertyId) {
-        return element.getTitle();
+        if(CnATreeElement.isStaticProperty(propertyId)) {
+            return CnATreeElement.getStaticProperty((CnATreeElement) element, propertyId);
+        } else {
+            return element.getTitle();
+        }
     }
 
 }

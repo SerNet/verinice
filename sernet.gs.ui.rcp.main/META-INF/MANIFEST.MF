@@ -300,5 +300,5 @@ Import-Package: javax.xml.rpc.encoding,
  org.osgi.framework;version="1.5.0",
  org.osgi.util.tracker,
  sernet.gs.ui.rcp.main.common.model
-Service-Component: OSGI-INF/component-user.xml
+Service-Component: OSGI-INF/component-user.xml, OSGI-INF/uiservice.xml
 Bundle-ActivationPolicy: lazy

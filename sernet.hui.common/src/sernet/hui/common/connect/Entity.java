@@ -145,6 +145,10 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
     public String getPropertyValue(String propertyTypeId) {
         PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(this.entityType, propertyTypeId);
 
+        if(propertyType==null) {
+            return String.valueOf("");
+        }
+         
         if (propertyType.isReference()) {
             return getValueOfReferenceProperty(propertyType);
         }

@@ -29,6 +29,7 @@ import org.eclipse.swt.dnd.DragSourceListener;
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
 import sernet.gs.model.Massnahme;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 
 public class BSIToISMViewDragListener implements DragSourceListener {
 
@@ -52,7 +53,8 @@ public class BSIToISMViewDragListener implements DragSourceListener {
 			selectionList.add(o);
 			if (!(o instanceof Massnahme
 				  || o instanceof Gefaehrdung
-				  || o instanceof Baustein))
+				  || o instanceof Baustein
+				  || o instanceof BausteinUmsetzung))
 			{
 				event.doit = false;
 				return;	

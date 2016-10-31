@@ -117,7 +117,7 @@ public class ReportSecurityPermissionManager {
         permissionHandlerMap.put(PermissionClassname.RUNTIME, 
                 reflectAndRuntimeHandler);
         permissionHandlerMap.put(PermissionClassname.SOCKET,
-                new SocketPermissionHandler());
+                new SocketPermissionHandler(reportSecurityContext));
         permissionHandlerMap.put(PermissionClassname.OSGI, 
                 new OSGIPermissionHandler());
 

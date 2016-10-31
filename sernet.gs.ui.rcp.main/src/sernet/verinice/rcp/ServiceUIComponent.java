@@ -17,34 +17,35 @@
  * Contributors:
  *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.service.linktable;
+package sernet.verinice.rcp;
 
-import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
-import sernet.verinice.model.common.CnATreeElement;
+import org.eclipse.equinox.p2.core.IProvisioningAgent;
+import org.eclipse.equinox.p2.core.UIServices;
+import org.eclipse.equinox.p2.core.spi.IAgentServiceFactory;
 
 /**
- *
- *
+ * Component that provides a factory that can create and initialize
+ * {@link UIServices} instances. The service which is created by the factory
+ * provides authentication info for a HTTP request. You can set a 
+ * custom message for the auth dialog in this service.
+ * 
+ * This service factory is configured in file OSGI-INF/uiservice.xml
+ * and in the section "Service-Component:" in META-INF/MANIFEST.MF. 
+ * 
+ * See this article about OSGi Declarative Services:
+ * http://www.ibm.com/support/knowledgecenter/de/SSEQTP_8.5.5/com.ibm.websphere.wlp.doc/ae/twlp_declare_services_ds.html
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class RiskAnalysisPropertyAdapter implements IPropertyAdapter {
-
-    private final FinishedRiskAnalysis finishedRiskAnalysis;
-
-    public RiskAnalysisPropertyAdapter(FinishedRiskAnalysis finishedRiskAnalysis) {
-        this.finishedRiskAnalysis = finishedRiskAnalysis;
+public class ServiceUIComponent implements IAgentServiceFactory {
+    
+    public ServiceUIComponent() {
+        super();
     }
 
     @Override
-    public String getPropertyValue(String propertyId) {
-        if(finishedRiskAnalysis==null) {
-            return null;
-        }
-        if(CnATreeElement.isStaticProperty(propertyId)) {
-            return CnATreeElement.getStaticProperty(finishedRiskAnalysis, propertyId);
-        } else {
-            return finishedRiskAnalysis.getTitle();
-        }
+    public Object createService(IProvisioningAgent agent) {
+        return new ValidationServiceUI();
     }
+    
 
 }

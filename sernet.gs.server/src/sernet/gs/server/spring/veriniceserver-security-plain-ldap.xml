@@ -19,6 +19,7 @@
     <bean id="ldapAuthenticator" class="sernet.gs.server.security.LdapAuthenticatorImpl">
         <property name="contextFactory" ref="contextSource" />
         <property name="groupFilter" value="${ldap.groupfilter}" />
+        <property name="userFilter" value="${ldap.userfilter}" />
         <property name="principalPrefix" value="${ldap.prefix}" />
         <property name="principalSuffix" value="${ldap.suffix}" />
         <property name="guestUser" value="${ldap.guestuser}" />

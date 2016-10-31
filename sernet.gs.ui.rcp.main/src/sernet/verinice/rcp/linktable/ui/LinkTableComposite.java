@@ -20,6 +20,7 @@
 package sernet.verinice.rcp.linktable.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -111,7 +112,7 @@ public class LinkTableComposite extends Composite {
 
         setBody(rootContainer);
 
-        refresh(UpdateLinkTable.COLUMN_PATHS);
+        refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT);
 
         rootContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         getDefaultLayoutFactory().generateLayout(rootContainer);
@@ -288,7 +289,7 @@ public class LinkTableComposite extends Composite {
                 column.getColumn().dispose();
                 numCols = columns.size();
                 renameColumns();
-                refresh(UpdateLinkTable.COLUMN_PATHS);
+                refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT, UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE);
             }
         });
     }
@@ -301,15 +302,20 @@ public class LinkTableComposite extends Composite {
     }
 
     public void refresh(UpdateLinkTable... updateVeriniceLinkTable) {
+        List<UpdateLinkTable> options = Arrays.asList(updateVeriniceLinkTable);
         columnsContainer.pack(true);
         subBody.pack(true);
         mainBody.pack(true);
         scrolledBody.setMinSize(subBody.getClientArea().width, subBody.getClientArea().height);
-        scrolledBody.showControl(buttons);
+
         mainBody.layout(true);
         subBody.layout(true);
         columnsContainer.layout(true);
-        scrolledBody.layout(true);
+
+        if (!options.contains(UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE)) {
+            scrolledBody.showControl(buttons);
+        }
+
         updateAndValidateVeriniceContent(updateVeriniceLinkTable);
         enableShortcuts();
     }
@@ -330,7 +336,7 @@ public class LinkTableComposite extends Composite {
         if (set.contains(UpdateLinkTable.RELATION_IDS)) {
             updateRelationIds();
         }
-        if (set.contains(UpdateLinkTable.COLUMN_PATHS)) {
+        if (set.contains(UpdateLinkTable.COLUMN_PATHS_CONTENT)) {
             updateColumnPaths();
         }
         if (fireUpdate) {
@@ -387,7 +393,7 @@ public class LinkTableComposite extends Composite {
             @Override
             public void widgetSelected(SelectionEvent event) {
                 addColumn(null);
-                refresh(UpdateLinkTable.COLUMN_PATHS);
+                refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT);
             }
         });
 
@@ -403,7 +409,7 @@ public class LinkTableComposite extends Composite {
                 columns.add(duplicatedColumn);
                 addDeleteButtonListener(duplicatedColumn);
                 handleMoreThanOneColumn(false);
-                refresh(UpdateLinkTable.COLUMN_PATHS);
+                refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT);
             }
         });
         getDefaultLayoutFactory().margins(new Point(3, 3)).numColumns(2)
@@ -494,7 +500,7 @@ public class LinkTableComposite extends Composite {
         column.getColumn().moveAbove(prevElement.getColumn());
 
         renameColumns();
-        refresh(UpdateLinkTable.COLUMN_PATHS);
+        refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT, UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE);
     }
 
     public void moveColumnDown(LinkTableColumn column) {
@@ -519,7 +525,7 @@ public class LinkTableComposite extends Composite {
         column.getColumn().moveBelow(nextElement.getColumn());
 
         renameColumns();
-        refresh(UpdateLinkTable.COLUMN_PATHS);
+        refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT, UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE);
     }
 
 }

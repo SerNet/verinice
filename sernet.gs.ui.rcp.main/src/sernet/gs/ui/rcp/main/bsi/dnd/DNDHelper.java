@@ -37,6 +37,7 @@ import sernet.gs.ui.rcp.main.bsi.dnd.transfer.IGSModelElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kElementTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ISO27kGroupTransfer;
 import sernet.gs.ui.rcp.main.bsi.dnd.transfer.ItemTransfer;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.IBSIStrukturElement;
 import sernet.verinice.model.bsi.IMassnahmeUmsetzung;
 import sernet.verinice.model.iso27k.IISO27kElement;
@@ -50,6 +51,7 @@ public final class DNDHelper {
     private static final Logger LOG = Logger.getLogger(DNDHelper.class);
     
     private static Class<?> classes[] = new Class[]{Baustein.class,
+                                             BausteinUmsetzung.class,
                                              Massnahme.class,
                                              Gefaehrdung.class,
                                              IBSIStrukturElement.class,

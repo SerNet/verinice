@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
+import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.rcp.linktable.ui.CsvExportDialog;
@@ -328,5 +329,6 @@ public class LinkTableUtil {
     private static IObjectModelService createLoader() {
         return loader = (IObjectModelService) HUIObjectModelLoader.getInstance();
     }
+    
 
 }

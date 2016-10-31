@@ -17,6 +17,7 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -63,7 +64,7 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     private ISelectionListener selectionListener;
 
     private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
-
+    
     private boolean linkingActive = true;
 
     private SerializeBrowserLoadingListener serializeListener;
@@ -82,6 +83,8 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
             browser.setLayoutData(new GridData(
                     GridData.FILL_BOTH | GridData.GRAB_HORIZONTAL | GridData.GRAB_VERTICAL));
 
+            browser.setJavascriptEnabled(false);
+            
 			serializeListener = new SerializeBrowserLoadingListener(browser);
 			browser.addProgressListener(serializeListener);
 
@@ -147,8 +150,10 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
     }
 
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
+        
         if (part != this && selection instanceof IStructuredSelection) {
             Object element = ((IStructuredSelection) selection).getFirstElement();
+            
             if (part instanceof ISMView) {
                 setSelectedInISMView(element);
             } else if (part instanceof RelationView) {
@@ -159,7 +164,9 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
                     && isLinkingActive()) {
                 element = determineLinkedElement((CnALink) element);
             }
-            elementSelected(element);
+            if(element != null){
+                elementSelected(element);
+            }
         }
     }
 
@@ -248,4 +255,5 @@ public class BrowserView extends RightsEnabledView implements ILinkedWithEditorV
         }
         elementSelected(element);
     }
+
 }

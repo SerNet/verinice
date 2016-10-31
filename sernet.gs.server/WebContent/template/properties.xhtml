@@ -14,7 +14,7 @@
 						<td width="506px" style="padding-bottom: 3px;">
 							<h:outputText rendered="#{not p.isURL}" value="#{p.name} "/>
 						</td>
-                        <td><p:selectBooleanCheckbox value="#{p.boolean}" rendered="#{p.isBooleanSelect}" /></td>
+                        <td><p:selectBooleanCheckbox value="#{p['boolean']}" rendered="#{p.isBooleanSelect}" /></td>
                     </tr>
                     <tr>
 						<td colspan="2" style="padding-bottom: 12px;">				

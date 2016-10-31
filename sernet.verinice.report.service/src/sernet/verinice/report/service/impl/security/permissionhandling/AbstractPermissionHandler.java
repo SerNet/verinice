@@ -30,7 +30,6 @@ import org.eclipse.osgi.util.NLS;
 
 import sernet.verinice.interfaces.report.IReportPermissionHandler;
 import sernet.verinice.report.service.impl.security.Messages;
-import sernet.verinice.security.report.ReportSecurityContext;
 import sernet.verinice.security.report.ReportSecurityException;
 
 /**
@@ -42,8 +41,6 @@ import sernet.verinice.security.report.ReportSecurityException;
  *
  */
 public abstract class AbstractPermissionHandler implements IReportPermissionHandler {
-
-    ReportSecurityContext reportSecurityContext;
 
     static final String PREFIX_FILE = "file:";
     static Map<String, List<String>> runtimeActionsWhitelist ;
