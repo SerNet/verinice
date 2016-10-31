@@ -185,20 +185,6 @@ public abstract class ColumnPathParser {
     }
     
     /**
-     * Extracts the alias from a column path.
-     *
-     * <pre>
-     * assets>asset.title as name -> name
-     * </pre>
-     *
-     * @param columnPath A valid column path 
-     * @return the alias or empty string if no alias is defined.
-     */
-    public static String extractAlias(String columnPath){
-        return extractAlias(getColumnPathAsList(columnPath));
-    }
-
-    /**
      * Extracts the alias from a column path element list.
      *
      * <pre>
