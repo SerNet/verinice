@@ -322,6 +322,10 @@ public abstract class AbstractPermissionHandler implements IReportPermissionHand
                 Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS})); 
         runtimeActionsWhitelist .put("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.loadFontMappingConfig",
                 Arrays.asList(new String[]{"accessClassInPackage.sun.util.logging.resources"}));
+        runtimeActionsWhitelist .put("sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO.readContent", 
+                Arrays.asList(new String[]{RUNTIME_ACTIONNAME_ACCESSDECLARED, RUNTIME_ACTIONNAME_SUPPRESSACCESS}));
+        runtimeActionsWhitelist .put("sernet.verinice.service.linktable.ColumnPathParser.parse", 
+                Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS, RUNTIME_ACTIONNAME_CREATECLASSLOADER}));
     }
     
     List<String> osgiAdminPermissionList = Arrays.asList(new String[]{

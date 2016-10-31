@@ -81,6 +81,7 @@ public class HUITypeFactory {
 
     private Map<String, String> defaultMessages = new HashMap<>();
 
+
     // loads translated messages for HUI entities from resource bundles
     private SNCAMessages messages;
 
@@ -91,6 +92,10 @@ public class HUITypeFactory {
     public HUITypeFactory(Resource resource) throws DBException, IOException {
         this(resource.getURL());
     }
+    
+    public HUITypeFactory(IUrlLoader urlLoader) throws DBException, IOException {
+        init(urlLoader.load());
+    }
 
     /**
      * Create new validating parser with schema support.
@@ -98,8 +103,10 @@ public class HUITypeFactory {
      * @throws DBException
      */
     private HUITypeFactory(URL xmlFile) throws DBException {
-        
+        init(xmlFile);
+    }
 
+    private void init(URL xmlFile) throws DBException {
         if (xmlFile == null) {
             throw new DBException("Pfad für XML Systemdefinition nicht initialisiert. Config File korrekt?");
         }
@@ -725,5 +732,6 @@ public class HUITypeFactory {
         return null;
         
     }
+
 
 }

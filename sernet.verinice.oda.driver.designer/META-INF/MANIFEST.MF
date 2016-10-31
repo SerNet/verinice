@@ -8,9 +8,22 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.datatools.connectivity.oda.design.ui;bundle-version="[3.2.0,4.0.0)",
- sernet.verinice.oda.driver;bundle-version="1.0.0"
+ sernet.verinice.oda.driver;bundle-version="1.0.0",
+ org.springframework.beans;bundle-version="2.5.6",
+ org.springframework.context;bundle-version="2.5.6",
+ org.springframework.osgi.core;bundle-version="1.2.0",
+ org.springframework.core;bundle-version="2.5.6",
+ sernet.gs.service;bundle-version="1.12.0",
+ sernet.hui.common;bundle-version="1.1.1",
+ sernet.gs.server;bundle-version="1.3.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: SerNet
-Import-Package: org.apache.log4j
+Import-Package: org.apache.log4j, 
+ sernet.gs.ui.rcp.main, 
+ sernet.springclient, 
+ sernet.verinice.service.auth, 
+ sernet.verinice.iso27k.rcp,
+ sernet.verinice.rcp.linktable,
+ sernet.verinice.rcp.linktable.ui
 Bundle-ClassPath: .

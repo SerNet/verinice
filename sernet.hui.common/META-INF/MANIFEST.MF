@@ -10,7 +10,10 @@ Export-Package: sernet.hui.common,
  sernet.hui.common.multiselectionlist,
  sernet.hui.common.rules,
  sernet.snutils
-Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
- org.eclipse.core.commands;bundle-version="3.5.0",
- org.springframework.core;bundle-version="2.5.6"
-Import-Package: org.eclipse.osgi.util
+Require-Bundle: org.eclipse.core.commands;bundle-version="3.5.0",
+ org.springframework.core;bundle-version="2.5.6",
+ org.eclipse.osgi;bundle-version="3.7.0",
+ org.eclipse.core.runtime;bundle-version="3.7.0",
+ org.eclipse.equinox.common
+Import-Package: org.eclipse.osgi.util,
+ org.apache.log4j

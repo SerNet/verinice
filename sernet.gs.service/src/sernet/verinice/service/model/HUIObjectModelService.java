@@ -46,6 +46,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CnATypeMapper;
+import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
 
 /**
  * Server implementation of {@link IObjectModelService}
@@ -93,7 +94,7 @@ public class HUIObjectModelService implements IObjectModelService {
         }
         if (LOG.isDebugEnabled()) {
 
-            LOG.debug("init objectModelService finished");
+            LOG.debug("init objectModelService finished"); //$NON-NLS-1$
         }
     }
 
@@ -119,7 +120,7 @@ public class HUIObjectModelService implements IObjectModelService {
             }
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug("typeIDs instantiated");
+            LOG.debug("typeIDs instantiated"); //$NON-NLS-1$
         }
     }
 
@@ -137,10 +138,10 @@ public class HUIObjectModelService implements IObjectModelService {
     
 
     public void removeNonCnaTreeElementTypeIDs() {
-        allTypeIds.remove("note");
-        allTypeIds.remove("role");
-        allTypeIds.remove("configuration");
-        allTypeIds.remove("attachment");
+        allTypeIds.remove("note"); //$NON-NLS-1$
+        allTypeIds.remove("role"); //$NON-NLS-1$
+        allTypeIds.remove("configuration"); //$NON-NLS-1$
+        allTypeIds.remove("attachment"); //$NON-NLS-1$
     }
 
     private void addAllBSIElements() {
@@ -279,7 +280,7 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     private boolean isDefaultMessage(String id) {
-        return id.contains(" ");
+        return id.contains(" "); //$NON-NLS-1$
     }
 
     /*
@@ -292,7 +293,7 @@ public class HUIObjectModelService implements IObjectModelService {
     @Override
     public String getRelationLabel(String id) {
         ServerInitializer.inheritVeriniceContextState();
-        return getHuiTypeFactory().getMessage(id + "_name");
+        return getHuiTypeFactory().getMessage(id + "_name"); //$NON-NLS-1$
     }
 
     /*
@@ -304,6 +305,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getPossibleChildren(String typeID) {
+        init();
         Set<String> set = possibleChildren.get(typeID);
         if (set == null) {
             set = new HashSet<>();
@@ -380,7 +382,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getPossibleParents(String typeID) {
-
+        init();
         Set<String> set = possibleParents.get(typeID);
         if (set == null) {
             set = new HashSet<>();
@@ -464,6 +466,16 @@ public class HUIObjectModelService implements IObjectModelService {
 
         return container;
     }
+    
+    @Override
+    public boolean isValidTypeId(String typeID) {
+        return allLabels.containsKey(typeID);
+    }
+
+    @Override
+    public boolean isValidRelationId(String relationID) {
+        return allRelationLabels.containsKey(relationID);
+    }
 
     private Map<String, Set<String>> getAllRelationPartners() {
         if (allRelationPartners == null) {
@@ -529,11 +541,29 @@ public class HUIObjectModelService implements IObjectModelService {
         PropertyGroup propertyGroup = getHuiTypeFactory().getPropertyGroup(entityId, propertyId);
         if (propertyGroup != null) {
             label.append(getLabel(propertyGroup.getId()));
-            label.append(" - ");
+            label.append(" - "); //$NON-NLS-1$
         }
         label.append(getLabel(propertyId));
 
         return  label.toString();
     }
+    
+    public static String getCnaLinkPropertyMessage(String cnaLinkProperty) {
+        switch (cnaLinkProperty) {
+        case CnaLinkPropertyConstants.TYPE_TITLE:
+            return Messages.getString("HUIObjectModelService.10");  //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_DESCRIPTION:
+            return Messages.getString("HUIObjectModelService.11");  //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C:
+            return Messages.getString("HUIObjectModelService.12");  //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I:
+            return Messages.getString("HUIObjectModelService.13");  //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
+            return Messages.getString("HUIObjectModelService.14");  //$NON-NLS-1$
+        default:
+            return Messages.getString("HUIObjectModelService.15");  //$NON-NLS-1$
+        }
+    }
+    
 
 }

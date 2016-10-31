@@ -48,11 +48,12 @@ public class SNCAResourceBundleLoader extends ResourceBundle.Control {
 	private static final String HTTPS = "https";
 	private static final String JNDI = "jndi";
 	private static final String BUNDLERESOURCE = "bundleresource";
+    private static final String BUNDLEENTRY = "bundleentry";
 	private static final String FILE = "file";
 	public static final List<String> PROTOCOL_LIST;
 	
 	static {
-		PROTOCOL_LIST = Arrays.asList(HTTP,HTTPS,JNDI,BUNDLERESOURCE,FILE);
+		PROTOCOL_LIST = Arrays.asList(HTTP,HTTPS,JNDI,BUNDLERESOURCE,BUNDLEENTRY,FILE);
 	}
 	
     private String baseUrl;
