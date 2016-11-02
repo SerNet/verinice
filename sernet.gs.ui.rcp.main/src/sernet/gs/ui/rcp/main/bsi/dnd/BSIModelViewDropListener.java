@@ -222,14 +222,19 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
             isActive=false;
             return isActive;
         }
+
+        if (target instanceof BausteinUmsetzung
+                && ISO27kElementTransfer.getInstance().isSupportedType(transferType)) {
+            isActive = true;
+            return isActive;
+        }
+
         if (target instanceof BausteinUmsetzung && !(IBSIStrukturElementTransfer.getInstance().isSupportedType(transferType))) {
             if (IGSModelElementTransfer.getInstance().isSupportedType(transferType) && ((BausteinUmsetzung) target).isOwnModule()) {
                 isActive = true;
             } else {
                 isActive = false;
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("target is BausteinUmsetzung,  IBSIStrukturElementTransfer.getInstance().isSupportedType(..) return false");
-                }
+                LOG.debug("target is BausteinUmsetzung, transferType not supported; return false");
             }
             return isActive;
         } else if (target instanceof IBSIStrukturElement && isSupportedData(transferType)) {
@@ -239,6 +244,7 @@ public class BSIModelViewDropListener extends ViewerDropAdapter implements Right
             }
             return isActive;
         }
+
         if (target instanceof IISO27kGroup && BausteinElementTransfer.getInstance().isSupportedType(transferType)) {
             isActive = false;
             if (LOG.isDebugEnabled()) {
