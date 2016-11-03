@@ -328,6 +328,9 @@ public abstract class AbstractPermissionHandler implements IReportPermissionHand
                 Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS, RUNTIME_ACTIONNAME_CREATECLASSLOADER}));
         runtimeActionsWhitelist .put("org.eclipse.birt.report.item.crosstab.core.re.CrosstabQueryUtil.getCubeElementFactory", 
                 Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS}));
+        runtimeActionsWhitelist .put("com.ibm.icu.impl.JavaTimeZone.getOffset", 
+                Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS}));
+        
     }
     
     List<String> osgiAdminPermissionList = Arrays.asList(new String[]{
