@@ -33,9 +33,11 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
+import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadElementTitles;
 
@@ -91,6 +93,8 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
             case IRelationTable.COLUMN_RISK_TREATMENT:
                 if (link.getRiskTreatment() != null){
                     riskValue = CnALink.RISK_TREATMENT_LABELS.get(link.getRiskTreatment().name());
+                } else if (RelationTableViewer.isAssetAndSzenario(link)) {
+                    riskValue = CnALink.RISK_TREATMENT_LABELS.get(CnALink.RiskTreatment.UNEDITED.name());
                 }
         }
 	    if (LOG.isDebugEnabled()) {

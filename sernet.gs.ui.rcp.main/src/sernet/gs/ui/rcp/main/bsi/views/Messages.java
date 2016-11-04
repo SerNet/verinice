@@ -265,6 +265,18 @@ public final class Messages extends NLS {
 
     public static String RelationTableViewer_9;
 
+    public static String RelationTableViewer_A;
+
+    public static String RelationTableViewer_A_with_Controls;
+
+    public static String RelationTableViewer_C;
+
+    public static String RelationTableViewer_C_with_controls;
+
+    public static String RelationTableViewer_I;
+
+    public static String RelationTableViewer_I_with_controls;
+
     public static String RelationView_0;
 
     public static String RelationView_10;

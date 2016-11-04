@@ -42,6 +42,8 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.service.commands.LoadAncestors;
 
 /**
@@ -173,12 +175,57 @@ public class RelationTableViewer extends TableViewer {
         table.setLinesVisible(true);
 
     }
+    
+    /**
+     * Provides an object path of the linked object in the title column in the
+     * relation view.
+     */
+    static public class InfoCellLabelProvider extends CellLabelProvider {
+
+        static final Map<Integer, String> TOOLTIPS;
+        static {
+            TOOLTIPS = new HashMap<>();
+            TOOLTIPS.put(7, Messages.RelationTableViewer_C);
+            TOOLTIPS.put(8, Messages.RelationTableViewer_I);
+            TOOLTIPS.put(9, Messages.RelationTableViewer_A);
+            TOOLTIPS.put(10, Messages.RelationTableViewer_C_with_controls);
+            TOOLTIPS.put(11, Messages.RelationTableViewer_I_with_controls);
+            TOOLTIPS.put(12, Messages.RelationTableViewer_A_with_Controls);
+        }
+        
+        RelationViewLabelProvider relationViewLabelProvider;
+        
+        
+        /** current column index */
+        private int column;
+        
+        public InfoCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, int column) {
+            this.relationViewLabelProvider = relationViewLabelProvider;
+            this.column = column;
+           
+        }
+        
+        @Override
+        public void update(ViewerCell cell) {
+            cell.setText(relationViewLabelProvider.getColumnText(cell.getElement(), column));      
+        }
+        
+        @Override
+        public String getToolTipText(final Object element) {
+            String tooltip = TOOLTIPS.get(column);
+            if(tooltip==null) {
+                tooltip = ""; //$NON-NLS-1$
+            }     
+            return tooltip;
+        }
+        
+    }
 
     /**
      * Provides an object path of the linked object in the title column in the
      * relation view.
      */
-    static public class RelationTableCellLabelProvider extends CellLabelProvider {
+    static public class PathCellLabelProvider extends CellLabelProvider {
 
         /**
          * Caches the object pathes. Key is the title of the target
@@ -206,7 +253,7 @@ public class RelationTableViewer extends TableViewer {
 
         RelationViewLabelProvider relationViewLabelProvider;
 
-        public RelationTableCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, Composite parent, int column) {
+        public PathCellLabelProvider(RelationViewLabelProvider relationViewLabelProvider, Composite parent, int column) {
             this.relationViewLabelProvider = relationViewLabelProvider;
             this.parent = parent;
             this.column = column;
@@ -361,22 +408,42 @@ public class RelationTableViewer extends TableViewer {
      *            The {@link Composite} which contains the table.
      * @return A List of all initiated cell label provider.
      */
-    public List<RelationTableCellLabelProvider> initToolTips(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
+    public List<PathCellLabelProvider> initToolTips(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
 
-        List<RelationTableCellLabelProvider> relTblCellLabelProv = new ArrayList<RelationTableCellLabelProvider>();
+        List<PathCellLabelProvider> relTblCellLabelProv = new ArrayList<PathCellLabelProvider>();
 
-        RelationTableCellLabelProvider relTableCellProviderCol1 = new RelationTableCellLabelProvider(relationViewLabelProvider, parent, 0);
+        PathCellLabelProvider relTableCellProviderCol1 = new PathCellLabelProvider(relationViewLabelProvider, parent, 0);
         relTblCellLabelProv.add(relTableCellProviderCol1);
         col1.setLabelProvider(relTableCellProviderCol1);
 
-        RelationTableCellLabelProvider relTableCellProviderCol3 = new RelationTableCellLabelProvider(relationViewLabelProvider, parent, 2);
+        PathCellLabelProvider relTableCellProviderCol3 = new PathCellLabelProvider(relationViewLabelProvider, parent, 2);
         relTblCellLabelProv.add(relTableCellProviderCol3);
         col3.setLabelProvider(relTableCellProviderCol3);
 
-        RelationTableCellLabelProvider relTableCellProviderCol4 = new RelationTableCellLabelProvider(relationViewLabelProvider, parent, 3);
+        PathCellLabelProvider relTableCellProviderCol4 = new PathCellLabelProvider(relationViewLabelProvider, parent, 3);
         relTblCellLabelProv.add(relTableCellProviderCol4);
         col4.setLabelProvider(relTableCellProviderCol4);
-
+        
+        if(this.getTable().getColumnCount()>7) {
+            col6.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 7));
+            col7.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 8));
+            col8.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 9));
+            colCWithControls.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 10));
+            colIWithControls.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 11));
+            colAWithControls.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 12));
+        }
         return relTblCellLabelProv;
+    }
+    
+    public static boolean isAssetAndSzenario(CnALink link) {
+        try {
+            CnATreeElement dependant = link.getDependant();
+            CnATreeElement dependency = link.getDependency();
+            return (Asset.TYPE_ID.equals(dependant.getTypeId()) && IncidentScenario.TYPE_ID.equals(dependency.getTypeId()))
+                   || (Asset.TYPE_ID.equals(dependency.getTypeId()) && IncidentScenario.TYPE_ID.equals(dependant.getTypeId()));
+        } catch(Exception e) {
+            LOG.error("Error while checking link.", e); //$NON-NLS-1$
+            return false;
+        }
     }
 }

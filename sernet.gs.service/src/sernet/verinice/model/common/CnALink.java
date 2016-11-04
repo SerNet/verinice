@@ -90,7 +90,7 @@ public class CnALink implements Serializable, ITypedElement {
     private Integer riskAvailabilityWithControls;
 
     public enum RiskTreatment {ACCEPT,TRANSFER,MODIFY,AVOID,UNEDITED};
-    private String riskTreatmentValue = RiskTreatment.ACCEPT.name();
+    private String riskTreatmentValue = null;
 
     // user entered comment:
     private String comment;

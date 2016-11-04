@@ -72,26 +72,12 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
         boolean canEdit = element instanceof CnALink;
         if(canEdit) {
             CnALink link = (CnALink) element;
-            canEdit = isAssetOrSzenario(link);
+            canEdit = RelationTableViewer.isAssetAndSzenario(link);
         }
         return canEdit;
 
-    }
-
-    public boolean isAssetOrSzenario(CnALink link) {
-        try {
-            return isAssetOrSzenario(link.getDependant()) || isAssetOrSzenario(link.getDependency());
-        } catch(Exception e) {
-            LOG.error("Error while checking link.", e);
-            return true;
-        }
-    }
-
-    public boolean isAssetOrSzenario(CnATreeElement element) {
-        return Asset.TYPE_ID.equals(element.getTypeId())
-                || IncidentScenario.TYPE_ID.equals(element.getTypeId());
-    }
-
+    }  
+    
     @Override
     protected CellEditor getCellEditor(Object element) {
         if (!(element instanceof CnALink)) {
@@ -114,18 +100,21 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
     }
 
     public int getIndexOfRiskTreatment(CnALink.RiskTreatment riskTreatment) {
+        if(riskTreatment==null) {
+            riskTreatment = CnALink.RiskTreatment.UNEDITED;
+        }
         int i = 0;
         int index = -1;
         String selectedLabel = CnALink.RISK_TREATMENT_LABELS.get(riskTreatment.name());
         for (String label : RISK_TREATMENT_LABELS) {
             if(selectedLabel.equals(label)) {
-                index = i;
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Index of selected risk treatment is: " + index);
-                }
+                index = i;            
                 break;
             }
             i++;
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Index of selected risk treatment is: " + index);
         }
         return index;
     }
@@ -142,7 +131,7 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
             CnALink newLink = updateLink(cnaLink);
             CnAElementFactory.getModel(cnaLink.getDependant()).linkChanged(cnaLink, newLink, view);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Risk treatment of cnalink saved: " + newLink.getRiskTreatment().name());
+                LOG.debug("Risk treatment of cnalink saved: " + newLink.getRiskTreatment());
             }
         } catch(Exception e) {
             LOG.error("Error while setting risk treatment.", e);

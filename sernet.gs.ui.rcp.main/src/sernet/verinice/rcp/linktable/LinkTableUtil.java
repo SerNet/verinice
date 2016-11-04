@@ -370,7 +370,10 @@ public class LinkTableUtil {
                         + loader.getLabel(element) + ")";
             }
         } catch (IndexOutOfBoundsException e) {
-            LOG.warn("String-split did not work, using old way", e);
+            LOG.warn("String-split did not work, using old way, column path: " + columnPath);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Stackstrace: ", e);
+            }
             int propertyBeginning = columnPath
                     .lastIndexOf(LinkTableOperationType.PROPERTY.getOutput());
             propertyId = columnPath.substring(propertyBeginning + 1);

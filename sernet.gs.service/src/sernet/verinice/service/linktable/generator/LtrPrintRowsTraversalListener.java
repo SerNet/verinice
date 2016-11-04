@@ -47,6 +47,8 @@ import sernet.verinice.interfaces.graph.TraversalFilter;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.iso27k.Asset;
+import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.service.linktable.IPropertyAdapter;
 import sernet.verinice.service.linktable.PropertyAdapterFactory;
 import sernet.verinice.service.linktable.generator.mergepath.Path;
@@ -202,7 +204,11 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
             column = getString(edge.getRiskAvailabilityWithControls());
         }
         if (TYPE_RISK_TREATMENT.equals(propertyType)) {
-            column = CnALink.RISK_TREATMENT_LABELS.get(edge.getRiskTreatment().name());
+            if(edge.getRiskTreatment()!=null) {
+                column = CnALink.RISK_TREATMENT_LABELS.get(edge.getRiskTreatment().name());
+            } else if(isAssetAndSzenario(edge.getSource(), edge.getTarget())) {
+                column = CnALink.RISK_TREATMENT_LABELS.get(CnALink.RiskTreatment.UNEDITED.name());
+            }
         }
         if (TYPE_DESCRIPTION.equals(propertyType)) {
             column = edge.getDescription();
@@ -296,6 +302,16 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
             return linkType;
         }
         return direction.equals(Direction.OUTCOMING) ? relation.getName() : relation.getReversename();
+    }
+    
+    public static boolean isAssetAndSzenario(CnATreeElement dependant, CnATreeElement dependency) {
+        try {
+            return (Asset.TYPE_ID.equals(dependant.getTypeId()) && IncidentScenario.TYPE_ID.equals(dependency.getTypeId()))
+                   || (Asset.TYPE_ID.equals(dependency.getTypeId()) && IncidentScenario.TYPE_ID.equals(dependant.getTypeId()));
+        } catch(Exception e) {
+            LOG.error("Error while checking link.", e); //$NON-NLS-1$
+            return false;
+        }
     }
 
 }

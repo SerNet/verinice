@@ -65,7 +65,7 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.bsi.views.IRelationTable;
 import sernet.gs.ui.rcp.main.bsi.views.RelationByNameSorter;
 import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer;
-import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer.RelationTableCellLabelProvider;
+import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer.PathCellLabelProvider;
 import sernet.gs.ui.rcp.main.bsi.views.RelationViewContentProvider;
 import sernet.gs.ui.rcp.main.bsi.views.RelationViewLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -159,7 +159,7 @@ public class LinkMaker extends Composite implements IRelationTable {
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
-        List<RelationTableCellLabelProvider> cellLabelProviders = viewer.initToolTips(relationViewLabelProvider, this);
+        List<PathCellLabelProvider> cellLabelProviders = viewer.initToolTips(relationViewLabelProvider, this);
         // register resize listener for cutting the tooltips
         addResizeListener(cellLabelProviders);
 
@@ -278,12 +278,12 @@ public class LinkMaker extends Composite implements IRelationTable {
      * Tracks changes of viewpart size and delegates them to the tooltip
      * provider.
      */
-    private void addResizeListener(final List<RelationTableCellLabelProvider> cellLabelProviders) {
+    private void addResizeListener(final List<PathCellLabelProvider> cellLabelProviders) {
         addControlListener(new ControlAdapter() {
 
             @Override
             public void controlResized(ControlEvent e) {
-                for (RelationTableCellLabelProvider c : cellLabelProviders) {
+                for (PathCellLabelProvider c : cellLabelProviders) {
                     c.updateShellWidthAndX(getShell().getBounds().width, getShell().getBounds().x);
                 }
             }
