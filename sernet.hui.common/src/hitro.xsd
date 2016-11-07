@@ -242,6 +242,9 @@ be displayed when one of the given options has been previously selected.
 
     <!-- Number of rows for text input type -->    
 	<xs:attribute name="textrows" type="xs:int" default="4" /> 
+	
+	<!-- Is this the property that should be shown in the browser view? -->
+	<xs:attribute name="show_html" type="xs:boolean" default="false"/>
      
 </xs:complexType>
 

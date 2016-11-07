@@ -53,6 +53,7 @@ public class Activator extends AbstractUIPlugin {
             final Bundle bundle = context.getBundle();
             log.info("Starting bundle " + bundle.getSymbolicName() + " " + bundle.getVersion());
         }
+		ServiceFactory.getInstance().openBeanFactory(context);
 	}
 
 	/*

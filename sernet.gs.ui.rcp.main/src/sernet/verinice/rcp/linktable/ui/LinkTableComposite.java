@@ -35,6 +35,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -60,9 +61,10 @@ public class LinkTableComposite extends Composite {
     private static final Point DEFAULT_MARGIN_CONTENT = new Point(10, 10);
 
     private VeriniceLinkTable veriniceLinkTable = null;
-    
+
     private ArrayList<LinkTableColumn> columns = new ArrayList<>(); 
-    private Composite columnsContainer;
+    private Composite rootContainer;
+    private Composite columnsContainer;    
     private Composite mainBody;
     private Composite subBody;
     private ScrolledComposite scrolledBody;
@@ -72,26 +74,40 @@ public class LinkTableComposite extends Composite {
     private IObjectModelService objectModelService;
     
     private List<LinkTableFieldListener> listeners = new ArrayList<>();
+    private boolean showScopeSelection = true;
     private boolean fireUpdate = false;
     private boolean fireValidation = false;
 
     private int numCols = 0;
     private boolean useAllScopes = true;
 
+    
     public LinkTableComposite(VeriniceLinkTable vltContent,
             IObjectModelService objectModelService,
             Composite parent) {
+        this(vltContent, objectModelService, parent, true);
+    }
+    
+    public LinkTableComposite(VeriniceLinkTable vltContent,
+            IObjectModelService objectModelService,
+            Composite parent,
+            boolean showScopeSelection) {
 
         super(parent, SWT.NONE);
         this.objectModelService = objectModelService;
         this.veriniceLinkTable = vltContent;
         useAllScopes = vltContent.useAllScopes();
+        this.showScopeSelection = showScopeSelection;
         createContent();
     }
 
-    private void createContent() {
-        Composite rootContainer = new Composite(this, SWT.BORDER);
-
+    public void createContent() {
+        if(rootContainer==null) {
+            rootContainer = new Composite(this, SWT.BORDER);
+        }
+        numCols = 0;
+        clearComposite(rootContainer);
+        
         setHead(rootContainer);
 
         setBody(rootContainer);
@@ -100,6 +116,15 @@ public class LinkTableComposite extends Composite {
 
         rootContainer.setLayoutData(new GridData(GridData.FILL_BOTH));
         getDefaultLayoutFactory().generateLayout(rootContainer);
+        
+        rootContainer.layout();
+    }
+
+    private void clearComposite(Composite composite) {
+        for (Control child : composite.getChildren()) {
+            child.dispose();
+        }
+        columns.clear();
     }
 
     private GridLayoutFactory getDefaultLayoutFactory() {
@@ -108,7 +133,15 @@ public class LinkTableComposite extends Composite {
 
     private void setHead(Composite parent) {
         Composite head = new Composite(parent, SWT.NONE);
+        if(showScopeSelection) {
+            setScopeComposite(head);
+        }
+        setLinkTypeComposite(head);
+        getDefaultLayoutFactory().numColumns(2).margins(DEFAULT_MARGIN).generateLayout(head);
 
+    }
+    
+    public void setScopeComposite(Composite head) {
         Composite scopeButtons = new Composite(head, getStyle());
         final Button[] scopeRadios = new Button[2];
         scopeRadios[0] = new Button(scopeButtons, SWT.RADIO);
@@ -124,7 +157,7 @@ public class LinkTableComposite extends Composite {
             public void widgetSelected(SelectionEvent event) {
                 Button selected = (Button) event.widget;
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(selected.getText() + " is selected");
+                    LOG.debug(selected.getText() + " is selected"); //$NON-NLS-1$
                 }
 
                 useAllScopes = selected == useAllScopesButton;
@@ -140,6 +173,9 @@ public class LinkTableComposite extends Composite {
 
         getDefaultLayoutFactory().margins(DEFAULT_MARGIN).numColumns(1)
                 .generateLayout(scopeButtons);
+    }
+
+    public void setLinkTypeComposite(Composite head) {
         Composite multiControlContainer = new Composite(head, getStyle());
         multiControl = new LinkTableMultiSelectionControl(multiControlContainer,
                 this);
@@ -147,9 +183,9 @@ public class LinkTableComposite extends Composite {
         getDefaultLayoutFactory().numColumns(2).generateLayout(multiControlContainer);
         GridData multiControlContainerData = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
         multiControlContainer.setLayoutData(multiControlContainerData);
-        getDefaultLayoutFactory().numColumns(2).margins(DEFAULT_MARGIN).generateLayout(head);
-
     }
+
+    
 
     /**
      * To ensure functionality of the scrolledComposite the body of the
@@ -159,15 +195,25 @@ public class LinkTableComposite extends Composite {
         scrolledBody = new ScrolledComposite(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 
         mainBody = new Composite(scrolledBody, getStyle());
+        
         scrolledBody.setContent(mainBody);
         scrolledBody.setExpandHorizontal(true);
         scrolledBody.setExpandVertical(true);
         scrolledBody.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         subBody = new Composite(mainBody, getStyle());
-
+        
+        
+        
         columnsContainer = new Composite(subBody, getStyle());
         getDefaultLayoutFactory().generateLayout(columnsContainer);
+        
+        GridLayout secondLayout = new GridLayout(1, false);
+        secondLayout.marginHeight = 0;
+        secondLayout.marginWidth = 3;
+        columnsContainer.setLayout(secondLayout);
+        
+        
         addButtons(subBody);
         if (veriniceLinkTable.getColumnPaths() != null && !veriniceLinkTable.getColumnPaths().isEmpty()) {
             addColumnsWithContent();
@@ -184,7 +230,7 @@ public class LinkTableComposite extends Composite {
         for (String column : veriniceLinkTable.getColumnPaths()) {
             List<String> path = ColumnPathParser.getColumnPathAsList(column, true);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Element " + path);
+                LOG.debug("Element " + path); //$NON-NLS-1$
             }
             addColumn(path);
         }
@@ -238,7 +284,7 @@ public class LinkTableComposite extends Composite {
                 boolean delete = columns.remove(column);
                 handleMoreThanOneColumn(false);
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Deleted " + delete);
+                    LOG.debug("Deleted " + delete); //$NON-NLS-1$
                 }
                 column.getColumn().dispose();
                 numCols = columns.size();
@@ -366,7 +412,7 @@ public class LinkTableComposite extends Composite {
                 refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT);
             }
         });
-        getDefaultLayoutFactory().margins(DEFAULT_MARGIN).numColumns(2)
+        getDefaultLayoutFactory().margins(new Point(3, 3)).numColumns(2)
                 .generateLayout(buttons);
     }
 
@@ -380,6 +426,25 @@ public class LinkTableComposite extends Composite {
 
     public VeriniceLinkTable getVeriniceLinkTable() {
         return veriniceLinkTable;
+    }
+    
+    /**
+     * Call refresh() to refreshes the GUI component with the current verinice link table
+     * instance.
+     *
+     * @param veriniceLinkTable A verinice link table
+     */
+    public void setVeriniceLinkTable(VeriniceLinkTable veriniceLinkTable) {
+        this.veriniceLinkTable = veriniceLinkTable;
+    }
+
+    /**
+     * Refreshes the GUI component with the current verinice link table
+     * instance. Call this method after setting a new verinice link table.
+     */
+    public void refresh() {
+        createContent();
+        GridLayoutFactory.fillDefaults().generateLayout(this);
     }
 
     public Set<String> getAllUsedRelationIds() {
@@ -418,14 +483,14 @@ public class LinkTableComposite extends Composite {
 
         if (index < 0) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Column " + column + " not found");
+                LOG.debug("Column " + column + " not found"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             return;
         }
         if (index == 0) {
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Column " + column + " is first column, not possible to move up");
+                LOG.debug("Column " + column + " is first column, not possible to move up"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             return;
         }
@@ -443,14 +508,14 @@ public class LinkTableComposite extends Composite {
 
         if (index < 0) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Column " + column + "not found");
+                LOG.debug("Column " + column + "not found"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             return;
         }
         if (index == columns.size() - 1) {
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Column " + column + " is last column, not possible to move down");
+                LOG.debug("Column " + column + " is last column, not possible to move down"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             return;
         }
@@ -462,4 +527,5 @@ public class LinkTableComposite extends Composite {
         renameColumns();
         refresh(UpdateLinkTable.COLUMN_PATHS_CONTENT, UpdateLinkTable.COLUMN_PATHS_MOVE_CREATE_OR_DELETE);
     }
+
 }

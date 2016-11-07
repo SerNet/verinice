@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import org.apache.log4j.Logger;
+import org.eclipse.birt.core.data.DataTypeUtil;
 import org.eclipse.birt.core.exception.BirtException;
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.EngineConfig;
@@ -362,6 +363,9 @@ public class BIRTReportService {
         try {
 		    long startTime = System.currentTimeMillis();
 		    
+		    // Load class DataTypeUtil before the secureClassLoader is set
+		    preloadClasses();
+		    
 		    // report generation is handled by a thread here
 		    // which is not for reasons of concurrency 
 		    // BUT for reasons of security (this enables setting
@@ -385,6 +389,14 @@ public class BIRTReportService {
 		    // ensure .log file is released again (.lck file will be removed)
 		    destroyEngine();
 		}
+    }
+
+    public void preloadClasses() {
+        try {
+            DataTypeUtil.toOdiTypeClass(1);
+        } catch (BirtException e) {
+            log.error("Error while preloading class DataTypeUtil", e);
+        }
     }
 	
 	public void run(IRunTask task, IReportOptions options){

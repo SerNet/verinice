@@ -60,4 +60,16 @@ public interface ILinkTableConfiguration extends Serializable {
      * @return An array of scope ids for this Link Table
      */
     Integer[] getScopeIdArray();
+    
+    /**
+     * Adds a scope id to this configuration
+     * 
+     * @param scopeId The database id of an organization or IT network
+     */
+    void addScopeId(Integer scopeId);
+    
+    /**
+     * Removes all scope ids of this configuration. 
+     */
+    void removeAllScopeIds();
 }

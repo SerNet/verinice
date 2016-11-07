@@ -43,6 +43,9 @@ public class Messages extends NLS {
     public static String LinkTableHandler_3;
     public static String LinkTableHandler_4;
     public static String LinkTableHandler_5;
+    public static String LinkTableUtil_0;
+    public static String LinkTableUtil_1;
+    public static String LinkTableUtil_2;
     public static String OpenLinkTableHandler_0;
     public static String VeriniceLinkTableEditor_1;
     public static String VeriniceLinkTableEditor_2;

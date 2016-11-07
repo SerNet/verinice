@@ -21,6 +21,7 @@ package sernet.verinice.rcp.linktable.ui;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -39,7 +40,9 @@ import org.eclipse.swt.widgets.Label;
 import sernet.verinice.rcp.linktable.LinkTableUtil;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableComboViewer;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableElementComboViewer;
+import sernet.verinice.rcp.linktable.ui.combo.LinkTableOperationType;
 import sernet.verinice.service.linktable.ColumnPathParser;
+import sernet.verinice.service.model.HUIObjectModelService;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
@@ -311,7 +314,42 @@ public class LinkTableColumn {
 
     public String getColumnPath() {
        String columnPath = firstCombo.getColumnPath();
-        return LinkTableUtil.createAlias(columnPath);
+        return createAlias(columnPath);
+    }
+    
+    public String createAlias(String columnPath) {
+        String[] columnPathElements = columnPath.split("\\.|\\<|\\>|\\/|\\:");
+        int lastElement = columnPathElements.length - 1;
+        String propertyId;
+        String message;
+        try {
+            propertyId = columnPathElements[lastElement];
+            String element = columnPathElements[lastElement - 1];
+            LOG.debug(columnPath);
+            LOG.debug("Element:" + element);
+            LOG.debug("Property:" + propertyId);
+            if (columnPath.contains(LinkTableOperationType.RELATION.getOutput())) {
+                message = HUIObjectModelService.getCnaLinkPropertyMessage(propertyId);
+            } else {
+                message = getContentService().getLabel(propertyId) + " ("
+                        + getContentService().getLabel(element) + ")";
+            }
+        } catch (IndexOutOfBoundsException e) {
+            LOG.warn("String-split did not work, using old way", e);
+            int propertyBeginning = columnPath
+                    .lastIndexOf(LinkTableOperationType.PROPERTY.getOutput());
+            propertyId = columnPath.substring(propertyBeginning + 1);
+            if (columnPath.contains(":")) {
+                message = HUIObjectModelService.getCnaLinkPropertyMessage(propertyId);
+            } else {
+                message = getContentService().getLabel(propertyId);
+            }
+        }
+        message = StringUtils.replaceEachRepeatedly(message,
+                new String[] { "/", ":", ".", "<", ">" }, new String[] { "", "", "", "", "" });
+        message = message.replaceAll(" ", "__");
+
+        return columnPath + " AS " + message;
     }
 
 
