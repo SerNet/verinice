@@ -348,7 +348,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
                 importReferenceTypes.trackReferences(elementInDB, syncaAttribute, attrIntId);
                 elementInDB.getEntity().importProperties(huiTypeFactory, 
                         attrIntId, attrValues, syncaAttribute.getLimitedLicense(), 
-                        syncaAttribute.getLicenseContentId(), licenseManagementValid);
+                        syncaAttribute.getContentId(), licenseManagementValid);
                 addElement(elementInDB);
             } // for <syncAttribute>
             elementInDB = dao.merge(elementInDB);
@@ -414,7 +414,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
     /**
      * checks if amount of properties of a {@link SyncAttribute} is equal
      * to amount of licenseManagement-Information
-     * (limitedLicense and licenseContentId)
+     * (limitedLicense and contentId)
      * @param syncAttribute
      * @return true if cardinalities are equal, false otherwise
      */
@@ -422,7 +422,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
         return syncAttribute.getValue().size() 
                 == syncAttribute.getLimitedLicense().size() 
                 && syncAttribute.getLimitedLicense().size() 
-                == syncAttribute.getLicenseContentId().size();
+                == syncAttribute.getContentId().size();
     }
     
     /**
@@ -434,8 +434,8 @@ public class SyncInsertUpdateCommand extends GenericCommand
      */
     private boolean isLicenseManagementSupported(SyncObject syncObject){
         for(SyncAttribute syncAttribute : syncObject.getSyncAttribute()){
-            if(syncAttribute.getLicenseContentId() != null &&
-                    syncAttribute.getLicenseContentId().size() > 0){
+            if(syncAttribute.getContentId() != null &&
+                    syncAttribute.getContentId().size() > 0){
                 return true;
             }
         }
@@ -544,7 +544,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
                     String attrIntId = mat.getIntId();
                     attachment.getEntity().importProperties(huiTypeFactory, 
                             attrIntId, attrValues, sa.getLimitedLicense(), 
-                            sa.getLicenseContentId(), false);
+                            sa.getContentId(), false);
                 }
             }
             if (getLog().isDebugEnabled()) {

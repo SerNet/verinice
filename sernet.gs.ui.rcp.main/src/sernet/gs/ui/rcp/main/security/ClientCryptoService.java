@@ -199,4 +199,12 @@ public class ClientCryptoService implements IEncryptionService {
         return null;
     }
 
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.encryption.IEncryptionService#decryptLicenseRestrictedProperty(java.lang.String, java.lang.String)
+     */
+    @Override
+    public String decryptLicenseRestrictedProperty(String password, String value) throws EncryptionException {
+        return PasswordBasedEncryption.decryptLicenserestrictedProperty(password, value);
+    }
+
 }

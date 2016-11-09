@@ -121,7 +121,7 @@ public final class ExportFactory {
                     exportReferenceTypes.mapEntityDatabaseId2ExtId(syncAttribute, propertyList);
 
                 } else {
-                    entity.exportProperties(propertyTypeId, syncAttribute.getValue(), syncAttribute.getLimitedLicense(), syncAttribute.getLicenseContentId());
+                    entity.exportProperties(propertyTypeId, syncAttribute.getValue(), syncAttribute.getLimitedLicense(), syncAttribute.getContentId());
                 }
 
                 if (!syncAttribute.getValue().isEmpty()) {

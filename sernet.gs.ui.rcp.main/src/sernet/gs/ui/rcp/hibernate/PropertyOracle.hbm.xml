@@ -21,7 +21,7 @@
 			<column name="propertyValue" sql-type="NCLOB"/>
 		</property>
 		
-		<property name="licenseContentId"/>
+		<property name="contentId"/>
 		
 		<property name="limitedLicense" type="java.lang.Boolean" >
         	<column name="limitedlicense" not-null="false" default="0" />

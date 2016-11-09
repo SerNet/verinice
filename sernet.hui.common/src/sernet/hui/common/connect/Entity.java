@@ -373,7 +373,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	public void importProperties(HUITypeFactory huiTypeFactory, 
 	        String propertyTypeId, List<String> foreignProperties, 
 	        List<Boolean> foreinLimitedLicense, 
-	        List<String> foreignLicenseContentId,
+	        List<String> foreignContentId,
 	        boolean licenseManagement) {
 		PropertyList pl = typedPropertyLists.get(propertyTypeId);
         if(pl==null) {
@@ -424,7 +424,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 			p.setParent(this);
 			if(licenseManagement){
 			    p.setLimitedLicense(foreinLimitedLicense.get(i));
-			    p.setLicenseContentId(foreignLicenseContentId.get(i));
+			    p.setContentId(foreignContentId.get(i));
 			}
 			properties.add(p);
 		}
@@ -442,13 +442,13 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	 * 
 	 * @return The amount of individual values exported.
 	 */
-	public int exportProperties(String propertyType, List<String> foreignProperties, List<Boolean> foreignIsLicenseLimited, List<String> foreinLicenseContentId) {
+	public int exportProperties(String propertyType, List<String> foreignProperties, List<Boolean> foreignIsLicenseLimited, List<String> foreignContentId) {
 		int amount = 0;
 		for (Property prop : getProperties(propertyType).getProperties())
 		{
 			foreignProperties.add(prop.getPropertyValue());
 			foreignIsLicenseLimited.add(prop.isLimitedLicense() != null ? prop.isLimitedLicense() : false);
-			foreinLicenseContentId.add(prop.getLicenseContentId() != null  ? prop.getLicenseContentId() : "");
+			foreignContentId.add(prop.getContentId() != null  ? prop.getContentId() : "");
 			amount++;
 		}
 		

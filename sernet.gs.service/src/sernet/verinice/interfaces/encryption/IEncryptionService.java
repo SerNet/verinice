@@ -308,4 +308,6 @@ public interface IEncryptionService {
 	InputStream decrypt(InputStream encryptedDataStream, String keyAlias)
 			throws IOException, CertificateException,
 			EncryptionException;
+	
+	String decryptLicenseRestrictedProperty(String password, String value) throws EncryptionException;
 }

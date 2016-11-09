@@ -33,7 +33,7 @@ public class Property implements Serializable, ITypedElement {
 	private String propertyValue;
 	private Entity parent;
 	
-	private String licenseContentId;
+	private String contentId;
 	private Boolean limitedLicense = false;
 	
     public static final String TYPE_ID = "huiproperty";
@@ -122,15 +122,15 @@ public class Property implements Serializable, ITypedElement {
 	/**
      * @return the licensedContentId
      */
-    public String getLicenseContentId() {
-        return licenseContentId;
+    public String getContentId() {
+        return contentId;
     }
 
     /**
-     * @param licensedContentId the licensedContentId to set
+     * @param contentId the contentId to set
      */
-    public void setLicenseContentId(String licenseContentId) {
-        this.licenseContentId = licenseContentId;
+    public void setContentId(String contentId) {
+        this.contentId = contentId;
     }
 
     /**

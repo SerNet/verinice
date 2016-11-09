@@ -105,7 +105,7 @@
            		minOccurs="0"
            		maxOccurs="unbounded" />
             <xsd:element
-                name="licenseContentId"
+                name="contentId"
                 type="xsd:string"
                 minOccurs="0"
                 maxOccurs="unbounded" />          

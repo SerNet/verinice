@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
 
@@ -158,6 +159,14 @@ public class EncryptionService implements IEncryptionService {
         byte[] saltBytes = salt.getBytes();
         byte[] plainTextBytes = PasswordBasedEncryption.decrypt(cypherTextBytes, password, saltBytes);
         return new String(org.apache.commons.codec.binary.Base64.decodeBase64(plainTextBytes)); 
+    }
+    
+    @Override
+    public String decryptLicenseRestrictedProperty(String password, String value) throws EncryptionException {
+
+        return PasswordBasedEncryption.decryptLicenserestrictedProperty(password, value);
+
+
     }
 	
 }

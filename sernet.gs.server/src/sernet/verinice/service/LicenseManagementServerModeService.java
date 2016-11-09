@@ -38,6 +38,7 @@ import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -101,28 +102,6 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         }
         return longestValidDate;
     }
-
-    /**
-     * 
-     * @param dbId - dbId of a {@link LicenseManagementEntry}
-     * @return returns a licenseId for a {@link LicenseManagementEntry} to 
-     * a given dbId
-     */
-    @Deprecated //with storing the licenseinformation in files instead of 
-                //db, this is deprecated
-    @Override
-    public String getLicenseId(int dbId) {
-        String hql = "from LicenseManagementEntry " + "where dbId = ?";
-        Object[] params = new Object[] { dbId };
-        List<LicenseManagementEntry> entryList 
-            = licenseManagementDao.findByQuery(hql, params);
-        if(entryList.size() == 1){
-            LicenseManagementEntry entry = entryList.get(0);
-            return decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
-        }
-        return "";
-    }
-
 
     /**
      * checks if a given username is authorised for the usage of content
@@ -218,12 +197,13 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      * {@link LicenseManagementEntry} available the db
      */
     @Override
-    public Set<String> getAllLicenseIds() {
-        Set<String> allIds = new HashSet<String>();
+    public Set<String> getAllLicenseIds(boolean decrypted) {
+        Set<String> allIds = new HashSet<>();
         for(LicenseManagementEntry entry : getExistingLicenses()){
-            String licenseId = decrypt(entry, 
+            String cypherLicenseId = entry.getLicenseID();
+            String plainLicenseId = decrypt(entry, 
                     LicenseManagementEntry.COLUMN_LICENSEID);
-            allIds.add(licenseId);
+            allIds.add(decrypted ? plainLicenseId : cypherLicenseId);
         }
         return allIds;
     }
@@ -631,6 +611,35 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
             String msg = "Error adding vnl to repository";
             log.error(msg, e);
             throw new LicenseManagementException(msg,e );
+        }
+    }
+
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.licensemanagement.ILicenseManagementService#decryptRestrictedProperty(java.lang.String, java.lang.String)
+     */
+    @Override
+    public String decryptRestrictedProperty(String encryptedLicenseId, String cypherText, int userDbId) {
+        boolean valid = false;
+        if(getAllLicenseIds(false).contains(encryptedLicenseId)){ // is required license existant
+            LicenseManagementEntry entry = null;
+            for(LicenseManagementEntry existingEntry : getExistingLicenses()){ // get related licenceInformation
+                if(encryptedLicenseId.equals(existingEntry.getLicenseID())){
+                    entry = existingEntry;
+                }
+            }
+            
+            // decrypt
+            try {
+                if(valid){
+                    return getCryptoService().decryptLicenseRestrictedProperty(entry.getUserPassword(), cypherText);
+                } else {
+                    return "No valid License-Information found";
+                }
+            } catch (EncryptionException e) {
+                throw new LicenseManagementException("Problem while decrypting license restricted property", e);
+            }
+        } else {
+            return cypherText;
         }
     }
     

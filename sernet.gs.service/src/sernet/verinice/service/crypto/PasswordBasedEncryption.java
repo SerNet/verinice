@@ -3,13 +3,21 @@ package sernet.verinice.service.crypto;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -17,6 +25,7 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.encryption.PasswordException;
@@ -284,6 +293,55 @@ public abstract class PasswordBasedEncryption {
             throw new EncryptionException("There was a problem during the decryption process. See the stacktrace for details.", e);
         }
         return decryptedInputStream;
+    }
+    
+    public static String decryptLicenserestrictedProperty(String password, String value)
+            throws EncryptionException {
+
+        SecretKeyFactory secKeyFac;
+        try {
+            secKeyFac = SecretKeyFactory.getInstance(
+                    ENCRYPTION_ALGORITHM,
+                    CRYPTOPROVIDER);
+
+        char[] keyChar = new char[password.length()];
+        password.getChars(0, password.length(), keyChar, 0);
+        PBEKeySpec pbeKeySpec = new PBEKeySpec(keyChar);
+
+        byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(
+                    value.getBytes(VeriniceCharset.CHARSET_UTF_8.name()));
+        final byte[] salt = Arrays.copyOf(bytes, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
+        final byte[] cipherText = Arrays.copyOfRange(bytes,
+                                                     IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH,
+                                                     bytes.length);
+
+        PBEParameterSpec bEParameterSpec = new PBEParameterSpec(salt, ITERATION_COUNT);
+        SecretKey secret;
+            secret = secKeyFac.generateSecret(pbeKeySpec);
+
+        Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
+            cipher.init(Cipher.DECRYPT_MODE, secret, bEParameterSpec);
+            byte[] decrypted = cipher.doFinal(cipherText);
+            return new String(decrypted, VeriniceCharset.CHARSET_UTF_8.name());
+        } catch (IllegalBlockSizeException e) {
+            throw new EncryptionException(e);
+        } catch (BadPaddingException e) {
+            throw new EncryptionException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new EncryptionException(e);
+        } catch (InvalidAlgorithmParameterException e) {
+            throw new EncryptionException(e);
+        } catch (InvalidKeyException e) {
+            throw new EncryptionException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new EncryptionException(e);
+        } catch (NoSuchProviderException e) {
+            throw new EncryptionException(e);
+        } catch (NoSuchPaddingException e) {
+            throw new EncryptionException(e);
+        } catch (InvalidKeySpecException e) {
+            throw new EncryptionException(e);
+        }
     }
 
 }

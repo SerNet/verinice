@@ -486,7 +486,7 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	/**
 	 * removes all licenseId assignments from this user
 	 */
-	public void removeAllLicenseContentIds(){
+	public void removeAllLicenseIds(){
 	    Set<String> allLicenseIds = getLicensedContentIds();
 	    for (String licenseId : allLicenseIds){
 	        removeLicensedContentId(licenseId);

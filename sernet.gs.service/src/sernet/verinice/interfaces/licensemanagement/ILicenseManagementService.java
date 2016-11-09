@@ -39,8 +39,6 @@ public interface ILicenseManagementService {
 
     Date getMaxValidUntil(String contentId);
 
-    String getLicenseId(int dbId);
-
     IEncryptionService getCryptoService();
 
     boolean isCurrentUserValidForLicense(String user, String licenseId);
@@ -53,7 +51,7 @@ public interface ILicenseManagementService {
 
     void grantUserToLicense(String user, String licenseId);
 
-    Set<String> getAllLicenseIds();
+    Set<String> getAllLicenseIds(boolean decrypted);
 
     Set<String> getAllContentIds(boolean decrypted);
 
@@ -84,6 +82,8 @@ public interface ILicenseManagementService {
     File getVNLRepository();
     
     boolean addVNLToRepository(File vnlFile);
+    
+    String decryptRestrictedProperty(String licenseId, String cypherText, int userDbId);
 
 
 }

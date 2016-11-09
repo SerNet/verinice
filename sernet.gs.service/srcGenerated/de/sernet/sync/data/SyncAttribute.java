@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlType;
     "name",
     "value",
     "limitedLicense",
-    "licenseContentId"
+    "contentId"
 })
 public class SyncAttribute {
 
@@ -50,7 +50,7 @@ public class SyncAttribute {
     protected String name;
     protected List<String> value;
     protected List<Boolean> limitedLicense;
-    protected List<String> licenseContentId;
+    protected List<String> contentId;
 
     /**
      * Gets the value of the name property.
@@ -123,20 +123,20 @@ public class SyncAttribute {
     }
 
     /**
-     * @return the licenseContentId
+     * @return the contentId
      */
-    public List<String> getLicenseContentId() {
-        if(licenseContentId == null){
-            licenseContentId = new ArrayList<String>();
+    public List<String> getContentId() {
+        if(contentId == null){
+            contentId = new ArrayList<String>();
         }
-        return licenseContentId;
+        return contentId;
     }
 
     /**
-     * @param licenseContentId the licenseContentId to set
+     * @param contentId the contentId to set
      */
-    public void setLicenseContentId(List<String> licenseContentId) {
-        this.licenseContentId = licenseContentId;
+    public void setContentId(List<String> contentId) {
+        this.contentId = contentId;
     }
 
 }

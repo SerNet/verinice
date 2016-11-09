@@ -56,7 +56,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -110,7 +109,7 @@ public abstract class HtmlWriter {
                     .getEntityType().getObjectBrowserPropertyTypes();
             Iterator<PropertyType> iterator = htmlProperties.iterator();
             while(iterator.hasNext()){
-                sb.append(buildDynamicObjectBrowserContent(cnaTreeElement,
+                sb.append(buildObjectBrowserContent(cnaTreeElement,
                         iterator.next()));
                 if(iterator.hasNext()){
                     sb.append("<br><br>");
@@ -126,7 +125,7 @@ public abstract class HtmlWriter {
      * @param iterator
      * @return
      */
-    private static String buildDynamicObjectBrowserContent(CnATreeElement cnaTreeElement, PropertyType propertyType) {
+    private static String buildObjectBrowserContent(CnATreeElement cnaTreeElement, PropertyType propertyType) {
         StringBuilder sb = new StringBuilder();
         cnaTreeElement = Retriever.checkRetrieveElement(cnaTreeElement);
         PropertyList propertyList = cnaTreeElement.getEntity().getProperties(
@@ -149,26 +148,10 @@ public abstract class HtmlWriter {
      */
     private static String getLicenseRestrictedPropertyValue(Property property) {
         StringBuilder sb = new StringBuilder();
-        String contentIdCypher = property.getLicenseContentId();
+        String encryptedContentId = property.getContentId();
         String cypherText = property.getPropertyValue();
-        if(getLicenseMgmtService().getAllContentIds(false).contains(contentIdCypher)){
-            LicenseManagementEntry entry = null;
-            for(LicenseManagementEntry lme : getLicenseMgmtService().getExistingLicenses()){
-                if(lme.getContentIdentifier().equals(contentIdCypher)){
-                    entry = lme;
-                }
-            }
-            String password = entry.getUserPassword();
-            String salt = entry.getSalt();
-            String plain = getCryptoService().decrypt(cypherText, 
-                    password.toCharArray(), salt);
-            sb.append(plain);
-        } else {
-            sb.append(cypherText).append("\n\n\n");
-            sb.append(NO_LICENSE_FOUND_WARNING);
-
-        }
-        return sb.toString();
+        return getLicenseMgmtService().decryptRestrictedProperty(
+                encryptedContentId, cypherText,1 ); 
     }
 
     /**
@@ -279,9 +262,9 @@ public abstract class HtmlWriter {
             PropertyType descriptionProperty = HUITypeFactory.getInstance().
                     getPropertyType(control.getEntityType().getId(),
                             Control.PROP_DESC);
-            writeHtml(sb, buildDynamicObjectBrowserContent(control,
+            writeHtml(sb, buildObjectBrowserContent(control,
                     titleProperty),
-                    buildDynamicObjectBrowserContent(control, 
+                    buildObjectBrowserContent(control, 
                             descriptionProperty),
                     VeriniceCharset.CHARSET_UTF_8.name());
             return sb.toString();
@@ -296,9 +279,9 @@ public abstract class HtmlWriter {
             PropertyType descriptionProperty = HUITypeFactory.getInstance().
                     getPropertyType(samtTopic.getEntityType().getId(),
                             SamtTopic.PROP_DESC);
-            writeHtml(sb, buildDynamicObjectBrowserContent(samtTopic,
+            writeHtml(sb, buildObjectBrowserContent(samtTopic,
                     titleProperty),
-                    buildDynamicObjectBrowserContent(samtTopic,
+                    buildObjectBrowserContent(samtTopic,
                             descriptionProperty),
                     VeriniceCharset.CHARSET_UTF_8.name());
             return sb.toString();
@@ -314,8 +297,8 @@ public abstract class HtmlWriter {
                     getPropertyType(item.getEntityType().getId(),
                             Threat.PROP_DESCRIPTION);            
             writeHtml(sb, 
-                    buildDynamicObjectBrowserContent(item, titleProperty), 
-                    buildDynamicObjectBrowserContent(item, descriptionProperty),
+                    buildObjectBrowserContent(item, titleProperty), 
+                    buildObjectBrowserContent(item, descriptionProperty),
                     VeriniceCharset.CHARSET_UTF_8.name());
             return sb.toString();         
         }
@@ -330,8 +313,8 @@ public abstract class HtmlWriter {
                     getPropertyType(item.getEntityType().getId(),
                             Vulnerability.PROP_DESC);
             writeHtml(sb, 
-                    buildDynamicObjectBrowserContent(item, titleProperty), 
-                    buildDynamicObjectBrowserContent(item, descriptionProperty),
+                    buildObjectBrowserContent(item, titleProperty), 
+                    buildObjectBrowserContent(item, descriptionProperty),
                     VeriniceCharset.CHARSET_UTF_8.name());
             return sb.toString();         
         }
@@ -347,8 +330,8 @@ public abstract class HtmlWriter {
     	PropertyType descriptionProperty = HUITypeFactory.getInstance().
     	        getPropertyType(bstums.getEntityType().getId(), 
     	                BausteinUmsetzung.P_BAUSTEIN_BESCHREIBUNG);
-    	writeHtml(buf, buildDynamicObjectBrowserContent(bstums, titleProperty),
-    	        buildDynamicObjectBrowserContent(bstums, descriptionProperty),
+    	writeHtml(buf, buildObjectBrowserContent(bstums, titleProperty),
+    	        buildObjectBrowserContent(bstums, descriptionProperty),
     	        ISO_8859_1);
     	return buf.toString();
     }
@@ -361,8 +344,8 @@ public abstract class HtmlWriter {
     	PropertyType descriptionProperty = HUITypeFactory.getInstance().
     	        getPropertyType(mnums.getEntityType().
     	                getId(), MassnahmenUmsetzung.P_BESCHREIBUNG);
-    	writeHtml(buf, buildDynamicObjectBrowserContent(mnums, titleProperty),
-    	        buildDynamicObjectBrowserContent(mnums, descriptionProperty),
+    	writeHtml(buf, buildObjectBrowserContent(mnums, titleProperty),
+    	        buildObjectBrowserContent(mnums, descriptionProperty),
     	        ISO_8859_1);
     	return buf.toString();
     }
@@ -372,15 +355,15 @@ public abstract class HtmlWriter {
         PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(
                 ums.getEntityType().getId(), GefaehrdungsUmsetzung.PROP_ID);
         StringBuilder titleBuilder = new StringBuilder().append(
-                buildDynamicObjectBrowserContent(ums, propertyType));
+                buildObjectBrowserContent(ums, propertyType));
         titleBuilder.append(" ");
         propertyType = HUITypeFactory.getInstance().getPropertyType(
                 ums.getEntityType().getId(), GefaehrdungsUmsetzung.PROP_TITEL);
-        titleBuilder.append(buildDynamicObjectBrowserContent(ums, propertyType));
+        titleBuilder.append(buildObjectBrowserContent(ums, propertyType));
         propertyType = HUITypeFactory.getInstance().getPropertyType(
                 ums.getEntityType().getId(), GefaehrdungsUmsetzung.PROP_DESCRIPTION);
         writeHtml(buf, titleBuilder.toString(), 
-                buildDynamicObjectBrowserContent(ums, propertyType),
+                buildObjectBrowserContent(ums, propertyType),
                 ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return buf.toString();
     }
@@ -399,17 +382,17 @@ public abstract class HtmlWriter {
         PropertyType propertyType = HUITypeFactory.getInstance().
                 getPropertyType(ums.getEntityType().getId(),
                         RisikoMassnahmenUmsetzung.P_KAPITEL);
-        titleBuilder.append(buildDynamicObjectBrowserContent(ums, propertyType));
+        titleBuilder.append(buildObjectBrowserContent(ums, propertyType));
         titleBuilder.append(" ");
         propertyType = HUITypeFactory.getInstance().
                 getPropertyType(ums.getEntityType().getId(),
                         RisikoMassnahmenUmsetzung.P_NAME);
-        titleBuilder.append(buildDynamicObjectBrowserContent(ums, propertyType));
+        titleBuilder.append(buildObjectBrowserContent(ums, propertyType));
         propertyType = HUITypeFactory.getInstance().getPropertyType(
                 ums.getEntityType().getId(), 
                 RisikoMassnahmenUmsetzung.P_BESCHREIBUNG);
         writeHtml(buf, titleBuilder.toString(), 
-                buildDynamicObjectBrowserContent(ums, propertyType),
+                buildObjectBrowserContent(ums, propertyType),
                 ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$
         return buf.toString();
     }
