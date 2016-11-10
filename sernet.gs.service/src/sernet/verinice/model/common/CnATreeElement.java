@@ -32,7 +32,6 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
-import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -131,6 +130,9 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	private boolean childrenLoaded = false;
 	
 	private Set<Attachment> files = new HashSet<Attachment>(1);
+	
+	public enum TemplateType { NONE, TEMPLATE, IMPLEMENTATION }
+	public String templateTypeValue;
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -795,4 +797,36 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
+    
+    /**
+     * @return the templateTypeValue
+     */
+    public TemplateType getTemplateType() {
+        return TemplateType.valueOf(getTemplateTypeValue());
+    }
+
+    /**
+     * @param templateTypeValue the templateTypeValue to set
+     */
+    public void setTemplateType(TemplateType templateType) {
+        this.templateTypeValue = templateType.name();
+    }
+
+    /**
+     * @return the templateTypeValue
+     */
+    public String getTemplateTypeValue() {
+        return templateTypeValue;
+    }
+
+    /**
+     * @param templateTypeValue the templateTypeValue to set
+     */
+    public void setTemplateTypeValue(String templateTypeValue) {
+        this.templateTypeValue = templateTypeValue;
+    }
+
+    public boolean isTemplate() {
+        return TemplateType.TEMPLATE.equals(this.getTemplateType());
+    }
 }

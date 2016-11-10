@@ -605,10 +605,10 @@
                menubarPath="special"
                style="push"
                tooltip="%action.tooltip.29">
-              </action>
-            </objectContribution>   
-            <objectContribution
-                adaptable="false"
+            </action>
+      </objectContribution>   
+      <objectContribution
+            adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.BausteinMassnahmeContrib"
             objectClass="sernet.verinice.model.bsi.BausteinUmsetzung">
          <action
@@ -619,8 +619,9 @@
                label="%action.label.30"
                menubarPath="content"
                style="push"
-               tooltip="%action.tooltip.30"/>
-           </objectContribution>
+               tooltip="%action.tooltip.30">
+         </action>
+     </objectContribution>
 		<objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.BausteinGefaehrdungContrib"
@@ -636,6 +637,36 @@
                tooltip="%action.tooltip.37">
               </action>
         </objectContribution>              
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bsi.TemplateModule"
+            objectClass="sernet.verinice.model.bsi.BausteinUmsetzung">
+            <action
+               class="sernet.gs.ui.rcp.main.bsi.actions.AddTemplateModuleActionDelegate"
+               enablesFor="+"
+               icon="icons/blue-document-block.png"
+               id="sernet.gs.ui.rcp.main.addNewTemplateModule"
+               label="%action.label.38"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.38">
+            </action>
+      </objectContribution>   
+      <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bsi.TemplateSafeguard"
+            objectClass="sernet.verinice.model.bsi.MassnahmenUmsetzung">
+         <action
+               class="sernet.gs.ui.rcp.main.bsi.actions.AddTemplateSafeguardActionDelegate"
+               enablesFor="+"
+               icon="icons/blue-document-bookmark.png"
+               id="sernet.gs.ui.rcp.main.addNewTemplateSafeguard"
+               label="%action.label.39"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.39">
+         </action>
+     </objectContribution>
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.personContribution1"
@@ -2031,6 +2062,21 @@
 	          	<objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
 	         </enablement>
 	      </decorator>
+	      <decorator
+                adaptable="true"
+                class="sernet.verinice.rcp.TemplateDecorator"
+                id="sernet.verinice.rcp.TDecorator"
+                label="templateDecorator"
+                lightweight="true"
+                location="TOP_RIGHT"
+                state="true">
+              <enablement>
+                <or>
+                    <objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
+                    <objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
+                </or>
+             </enablement>
+          </decorator>
 	      <decorator
 	      		adaptable="true"
 	      		class="sernet.verinice.rcp.DBIDDecorator"

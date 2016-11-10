@@ -75,6 +75,8 @@ public class Messages extends NLS {
     public static String NaturalizeAction_0;
     public static String NaturalizeAction_1;
     public static String NaturalizeAction_2;
+    public static String AddTemplateModuleActionDelegate_0;
+    public static String AddTemplateSafeguardActionDelegate_0;
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
