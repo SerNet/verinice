@@ -44,16 +44,15 @@ import sernet.verinice.model.iso27k.InheritLogger;
 @SuppressWarnings("serial")
 public class CnALink implements Serializable, ITypedElement {
 
-    private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnALink.class);
+    private static final InheritLogger logInherit = InheritLogger.getLogger(CnALink.class);
 
-    public static final Map<String, String> RISK_TREATMENT_LABELS;
+    public static final Map<String, String> riskTreatmentLabels;
     static {
-        RISK_TREATMENT_LABELS = new Hashtable<>();
-        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.ACCEPT.name(), Messages.getString("CnALink.RiskTreatment_ACCEPT")); //$NON-NLS-1$
-        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.AVOID.name(), Messages.getString("CnALink.RiskTreatment_AVOID")); //$NON-NLS-1$
-        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.MODIFY.name(), Messages.getString("CnALink.RiskTreatment_MODIFY")); //$NON-NLS-1$
-        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.MODIFY.name(), Messages.getString("CnALink.RiskTreatment_MODIFY")); //$NON-NLS-1$
-        RISK_TREATMENT_LABELS.put(CnALink.RiskTreatment.UNEDITED.name(), Messages.getString("CnALink.RiskTreatment_UNEDITED")); //$NON-NLS-1$
+        riskTreatmentLabels = new Hashtable<>();
+        riskTreatmentLabels.put(CnALink.RiskTreatment.ACCEPT.name(), Messages.getString("CnALink.RiskTreatment_ACCEPT")); //$NON-NLS-1$
+        riskTreatmentLabels.put(CnALink.RiskTreatment.AVOID.name(), Messages.getString("CnALink.RiskTreatment_AVOID")); //$NON-NLS-1$
+        riskTreatmentLabels.put(CnALink.RiskTreatment.MODIFY.name(), Messages.getString("CnALink.RiskTreatment_MODIFY")); //$NON-NLS-1$
+        riskTreatmentLabels.put(CnALink.RiskTreatment.UNEDITED.name(), Messages.getString("CnALink.RiskTreatment_UNEDITED")); //$NON-NLS-1$
     }
     
     // constants for link typeId, now replaced by relationIDs that can be
@@ -323,9 +322,7 @@ public class CnALink implements Serializable, ITypedElement {
     }
 
     public void remove() {
-        if (LOG_INHERIT.isDebug()) {
-            LOG_INHERIT.debug("remove()...");
-        }
+        logInherit.debug("remove()...");
 
         dependant.removeLinkDown(this);
         dependency.removeLinkUp(this);
@@ -403,7 +400,7 @@ public class CnALink implements Serializable, ITypedElement {
     
     public RiskTreatment getRiskTreatment() {
         String value = getRiskTreatmentValue();
-        if(value==null) {
+        if (value == null) {
             return null;
         } else {
             return RiskTreatment.valueOf(value);
@@ -411,7 +408,7 @@ public class CnALink implements Serializable, ITypedElement {
     }
     
     public void setRiskTreatment(RiskTreatment riskTreatment) {
-        if(riskTreatment==RiskTreatment.UNEDITED) {
+        if (riskTreatment == RiskTreatment.UNEDITED) {
             setRiskTreatmentValue(null);
         } else {
             setRiskTreatmentValue(riskTreatment.name());

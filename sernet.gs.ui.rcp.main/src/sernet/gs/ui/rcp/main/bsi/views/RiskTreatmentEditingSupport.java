@@ -34,9 +34,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.service.commands.UpdateElement;
 
 /**
@@ -51,7 +48,7 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
     
     private static final String[] RISK_TREATMENT_LABELS;
     static {
-        List<String> riskTreatmentLabelList = new LinkedList<>(CnALink.RISK_TREATMENT_LABELS.values());
+        List<String> riskTreatmentLabelList = new LinkedList<>(CnALink.riskTreatmentLabels.values());
         Collections.sort(riskTreatmentLabelList);
         RISK_TREATMENT_LABELS = riskTreatmentLabelList.toArray(new String[riskTreatmentLabelList.size()]);
     }
@@ -70,7 +67,7 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
     @Override
     protected boolean canEdit(Object element) {
         boolean canEdit = element instanceof CnALink;
-        if(canEdit) {
+        if (canEdit) {
             CnALink link = (CnALink) element;
             canEdit = RelationTableViewer.isAssetAndSzenario(link);
         }
@@ -100,12 +97,12 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
     }
 
     public int getIndexOfRiskTreatment(CnALink.RiskTreatment riskTreatment) {
-        if(riskTreatment==null) {
+        if (riskTreatment == null) {
             riskTreatment = CnALink.RiskTreatment.UNEDITED;
         }
         int i = 0;
         int index = -1;
-        String selectedLabel = CnALink.RISK_TREATMENT_LABELS.get(riskTreatment.name());
+        String selectedLabel = CnALink.riskTreatmentLabels.get(riskTreatment.name());
         for (String label : RISK_TREATMENT_LABELS) {
             if(selectedLabel.equals(label)) {
                 index = i;            
@@ -139,8 +136,8 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
     }
 
     public void selectRiskTreatment(CnALink cnaLink, String selectedLabel) {
-        for (String key : CnALink.RISK_TREATMENT_LABELS.keySet()) {
-            if(selectedLabel.equals(CnALink.RISK_TREATMENT_LABELS.get(key))) {
+        for (String key : CnALink.riskTreatmentLabels.keySet()) {
+            if (selectedLabel.equals(CnALink.riskTreatmentLabels.get(key))) {
                 cnaLink.setRiskTreatment(CnALink.RiskTreatment.valueOf(key));                 
                 break;                  
             }
@@ -154,7 +151,7 @@ public class RiskTreatmentEditingSupport extends EditingSupport {
     }
     
     private ICommandService getCommandService() {
-        if(commandService==null) {
+        if(commandService == null) {
             commandService = ServiceFactory.lookupCommandService();
         }
         return commandService;

@@ -33,11 +33,9 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Group;
 import sernet.verinice.model.iso27k.ImportIsoGroup;
-import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadElementTitles;
 
@@ -48,7 +46,7 @@ import sernet.verinice.service.commands.LoadElementTitles;
  */
 public class RelationViewLabelProvider extends LabelProvider implements ITableLabelProvider {
     
-    private static final Logger LOG = Logger.getLogger(RelationViewLabelProvider.class);
+    private static final Logger log = Logger.getLogger(RelationViewLabelProvider.class);
     
 	private IRelationTable view;
 	private static HashMap<Integer, String> titleMap = new HashMap<>();
@@ -92,13 +90,13 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
                 break;
             case IRelationTable.COLUMN_RISK_TREATMENT:
                 if (link.getRiskTreatment() != null){
-                    riskValue = CnALink.RISK_TREATMENT_LABELS.get(link.getRiskTreatment().name());
+                    riskValue = CnALink.riskTreatmentLabels.get(link.getRiskTreatment().name());
                 } else if (RelationTableViewer.isAssetAndSzenario(link)) {
-                    riskValue = CnALink.RISK_TREATMENT_LABELS.get(CnALink.RiskTreatment.UNEDITED.name());
+                    riskValue = CnALink.riskTreatmentLabels.get(CnALink.RiskTreatment.UNEDITED.name());
                 }
         }
-	    if (LOG.isDebugEnabled()) {
-            LOG.debug("Risk values for column: " + col + " is: " + riskValue);
+	    if (log.isDebugEnabled()) {
+            log.debug("Risk values for column: " + col + " is: " + riskValue);
         }
 	    return riskValue;
 	}
@@ -145,7 +143,7 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
                     title = titleMap.get(target.getScopeId());
                 }
             } catch (CommandException e) {
-                LOG.error("Error while getting element properties", e);
+                log.error("Error while getting element properties", e);
             }
             return title; //ScopeTitle from element dependencies         
 	    case 5:

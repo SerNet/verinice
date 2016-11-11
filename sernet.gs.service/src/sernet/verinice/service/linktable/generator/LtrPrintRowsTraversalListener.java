@@ -204,10 +204,10 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
             column = getString(edge.getRiskAvailabilityWithControls());
         }
         if (TYPE_RISK_TREATMENT.equals(propertyType)) {
-            if(edge.getRiskTreatment()!=null) {
-                column = CnALink.RISK_TREATMENT_LABELS.get(edge.getRiskTreatment().name());
+            if (edge.getRiskTreatment() != null) {
+                column = CnALink.riskTreatmentLabels.get(edge.getRiskTreatment().name());
             } else if(isAssetAndSzenario(edge.getSource(), edge.getTarget())) {
-                column = CnALink.RISK_TREATMENT_LABELS.get(CnALink.RiskTreatment.UNEDITED.name());
+                column = CnALink.riskTreatmentLabels.get(CnALink.RiskTreatment.UNEDITED.name());
             }
         }
         if (TYPE_DESCRIPTION.equals(propertyType)) {
@@ -220,9 +220,9 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
     }
     
     private String getString(Integer value) {
-        if(value==null) {
+        if (value == null) {
             return "";
-        }else {
+        } else {
             return String.valueOf(value);
         }
     }

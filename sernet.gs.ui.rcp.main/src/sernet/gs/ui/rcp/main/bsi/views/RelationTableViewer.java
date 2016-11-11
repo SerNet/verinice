@@ -79,11 +79,12 @@ public class RelationTableViewer extends TableViewer {
     public RelationTableViewer(IRelationTable relationView, Composite parent, int style, boolean showRisk) {
         super(parent, style);
 
-        final int defaultColumnWidth = 25;
+        final int defaultColumnWidth = 30;
         final int viewerCol2Width = 100;
         final int col4Width = 150;
         final int col5Width = 100;
         final int viewerCol5Width = 250;
+        final int colWithRiskTreatment = 130;
 
         ColumnViewerToolTipSupport.enableFor(this, ToolTip.NO_RECREATE);
 
@@ -128,7 +129,7 @@ public class RelationTableViewer extends TableViewer {
         if (showRisk) {
             colRiskTreatment = new TableViewerColumn(this, SWT.LEFT);
             colRiskTreatment.getColumn().setText(Messages.RelationTableViewer_0);
-            colRiskTreatment.getColumn().setWidth(viewerCol2Width);
+            colRiskTreatment.getColumn().setWidth(colWithRiskTreatment);
             colRiskTreatment.setEditingSupport(new RiskTreatmentEditingSupport(view, this));
                       
             col6 = new TableViewerColumn(this, SWT.LEFT);
@@ -180,7 +181,7 @@ public class RelationTableViewer extends TableViewer {
      * Provides an object path of the linked object in the title column in the
      * relation view.
      */
-    static public class InfoCellLabelProvider extends CellLabelProvider {
+    public static class InfoCellLabelProvider extends CellLabelProvider {
 
         static final Map<Integer, String> TOOLTIPS;
         static {
@@ -213,7 +214,7 @@ public class RelationTableViewer extends TableViewer {
         @Override
         public String getToolTipText(final Object element) {
             String tooltip = TOOLTIPS.get(column);
-            if(tooltip==null) {
+            if (tooltip == null) {
                 tooltip = ""; //$NON-NLS-1$
             }     
             return tooltip;
@@ -225,7 +226,7 @@ public class RelationTableViewer extends TableViewer {
      * Provides an object path of the linked object in the title column in the
      * relation view.
      */
-    static public class PathCellLabelProvider extends CellLabelProvider {
+    public static class PathCellLabelProvider extends CellLabelProvider {
 
         /**
          * Caches the object pathes. Key is the title of the target
@@ -257,7 +258,7 @@ public class RelationTableViewer extends TableViewer {
             this.relationViewLabelProvider = relationViewLabelProvider;
             this.parent = parent;
             this.column = column;
-            cache = new HashMap<String, String>();
+            cache = new HashMap<>();
 
             // calc text width
             this.gc = new GC(parent);
@@ -279,7 +280,7 @@ public class RelationTableViewer extends TableViewer {
             int mouseX = MouseInfo.getPointerInfo().getLocation().x;
             LOG.debug("mouse location: " + mouseX); //$NON-NLS-1$
 
-            CnATreeElement cnATreeElement = null;
+            CnATreeElement cnATreeElement;
             boolean isDownwardLink = CnALink.isDownwardLink(relationViewLabelProvider.getInputElemt(), link);
             if (isDownwardLink) {
                 cnATreeElement = link.getDependency();
@@ -383,6 +384,7 @@ public class RelationTableViewer extends TableViewer {
             switch (column) {
             case 0:
                 cell.setImage(relationViewLabelProvider.getColumnImage(cell.getElement(), column));
+                break;
             case 2:
                 cell.setImage(relationViewLabelProvider.getColumnImage(cell.getElement(), column));
                 break;
@@ -410,7 +412,7 @@ public class RelationTableViewer extends TableViewer {
      */
     public List<PathCellLabelProvider> initToolTips(RelationViewLabelProvider relationViewLabelProvider, Composite parent) {
 
-        List<PathCellLabelProvider> relTblCellLabelProv = new ArrayList<PathCellLabelProvider>();
+        List<PathCellLabelProvider> relTblCellLabelProv = new ArrayList<>();
 
         PathCellLabelProvider relTableCellProviderCol1 = new PathCellLabelProvider(relationViewLabelProvider, parent, 0);
         relTblCellLabelProv.add(relTableCellProviderCol1);
@@ -424,7 +426,7 @@ public class RelationTableViewer extends TableViewer {
         relTblCellLabelProv.add(relTableCellProviderCol4);
         col4.setLabelProvider(relTableCellProviderCol4);
         
-        if(this.getTable().getColumnCount()>7) {
+        if (this.getTable().getColumnCount() > 7) {
             col6.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 7));
             col7.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 8));
             col8.setLabelProvider(new InfoCellLabelProvider(relationViewLabelProvider, 9));
