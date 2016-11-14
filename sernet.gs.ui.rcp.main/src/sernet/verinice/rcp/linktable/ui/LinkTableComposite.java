@@ -189,7 +189,7 @@ public class LinkTableComposite extends Composite {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
-                moveColumnUp();
+                moveUp();
             }
         });
 
@@ -199,7 +199,7 @@ public class LinkTableComposite extends Composite {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
-                moveColumnDown();
+                moveDown();
             }
         });
 
@@ -222,11 +222,7 @@ public class LinkTableComposite extends Composite {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
-                LinkTableColumn lastColumn = columns.get(columns.size() - 1);
-                LinkTableColumn duplicatedColumn = new LinkTableColumn(lastColumn, ++numCols);
-                columns.add(duplicatedColumn);
-                handleMoreThanOneColumn(false);
-                refresh(UpdateLinkTable.COLUMN_PATHS);
+                duplicate();
             }
         });
 
@@ -236,15 +232,7 @@ public class LinkTableComposite extends Composite {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
-                boolean delete = columns.remove(selectedColumn);
-                handleMoreThanOneColumn(false);
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Deleted " + delete); //$NON-NLS-1$
-                }
-                selectedColumn.getColumnContainer().dispose();
-                numCols = columns.size();
-                renameColumns();
-                refresh(UpdateLinkTable.COLUMN_PATHS);
+                remove();
             }
         });
 
@@ -421,7 +409,7 @@ public class LinkTableComposite extends Composite {
         }
     }
 
-    private void moveColumnUp() {
+    private void moveUp() {
         int index = columns.indexOf(selectedColumn);
 
         if (index < 0) {
@@ -447,7 +435,7 @@ public class LinkTableComposite extends Composite {
         refresh(UpdateLinkTable.COLUMN_PATHS);
     }
 
-    private void moveColumnDown() {
+    private void moveDown() {
         int index = columns.indexOf(selectedColumn);
 
         if (index < 0) {
@@ -469,6 +457,26 @@ public class LinkTableComposite extends Composite {
         columns.set(index, nextElement);
         selectedColumn.getColumnContainer().moveBelow(nextElement.getColumnContainer());
 
+        renameColumns();
+        refresh(UpdateLinkTable.COLUMN_PATHS);
+    }
+
+    private void duplicate() {
+        LinkTableColumn lastColumn = columns.get(columns.size() - 1);
+        LinkTableColumn duplicatedColumn = new LinkTableColumn(lastColumn, ++numCols);
+        columns.add(duplicatedColumn);
+        handleMoreThanOneColumn(false);
+        refresh(UpdateLinkTable.COLUMN_PATHS);
+    }
+
+    private void remove() {
+        boolean delete = columns.remove(selectedColumn);
+        handleMoreThanOneColumn(false);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Deleted " + delete); //$NON-NLS-1$
+        }
+        selectedColumn.getColumnContainer().dispose();
+        numCols = columns.size();
         renameColumns();
         refresh(UpdateLinkTable.COLUMN_PATHS);
     }
