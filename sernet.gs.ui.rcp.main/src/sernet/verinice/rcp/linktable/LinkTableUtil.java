@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -37,13 +38,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
-import sernet.gs.service.StringUtil;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.rcp.linktable.ui.CsvExportDialog;
 import sernet.verinice.rcp.linktable.ui.LinkTableComposite;
 import sernet.verinice.rcp.linktable.ui.combo.LinkTableOperationType;
 import sernet.verinice.service.csv.ICsvExport;
+import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
 import sernet.verinice.service.linktable.ColumnPathParseException;
 import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
@@ -64,6 +65,8 @@ public class LinkTableUtil {
     private static CsvExportDialog csvDialog;
     private static IObjectModelService loader;
 
+    private static final String ALIAS_DELIMITER = " AS ";
+    
     static {    
         if (vltExtensions == null) {
             vltExtensions = new HashMap<>();
@@ -319,13 +322,79 @@ public class LinkTableUtil {
         }
     }
     
+    public static String getCnaLinkPropertyMessage(String cnaLinkProperty) {
+        switch (cnaLinkProperty) {
+        case CnaLinkPropertyConstants.TYPE_TITLE:
+            return Messages.LinkTableColumn_CnaLink_Property_Title;
+        case CnaLinkPropertyConstants.TYPE_DESCRIPTION:
+            return Messages.LinkTableColumn_CnaLink_Property_Description;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C:
+            return Messages.LinkTableColumn_CnaLink_Property_C;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I:
+            return Messages.LinkTableColumn_CnaLink_Property_I;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
+            return Messages.LinkTableColumn_CnaLink_Property_A;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C_WITH_CONTROLS:
+            return Messages.LinkTableColumn_CnaLink_Property_C_With_Controls;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I_WITH_CONTROLS:
+            return Messages.LinkTableColumn_CnaLink_Property_I_With_Controls;
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A_WITH_CONTROLS:
+            return Messages.LinkTableColumn_CnaLink_Property_A_With_Controls;
+        case CnaLinkPropertyConstants.TYPE_RISK_TREATMENT:
+            return Messages.LinkTableColumn_CnaLink_Property_Risk_Treatment;
+        default:
+            return Messages.LinkTableColumn_CnaLink_Property_Unknown;
+        }
+    }
+
+    /**
+     * create an alias for a columnPath to improve headers in csv-file.
+     */
+    public static String createAlias(String columnPath) {
+        String[] columnPathElements = columnPath.split("\\.|\\<|\\>|\\/|\\:");
+        int lastElement = columnPathElements.length - 1;
+        String propertyId;
+        String message;
+        try {
+            propertyId = columnPathElements[lastElement];
+            String element = columnPathElements[lastElement - 1];
+            LOG.debug(columnPath);
+            LOG.debug("Element:" + columnPathElements[lastElement - 1]);
+            LOG.debug("Property:" + propertyId);
+            if (columnPath.contains(LinkTableOperationType.RELATION.getOutput())) {
+                message = LinkTableUtil.getCnaLinkPropertyMessage(propertyId);
+            } else {
+                message = loader.getLabel(propertyId) + " ("
+                        + loader.getLabel(element) + ")";
+            }
+        } catch (IndexOutOfBoundsException e) {
+            LOG.warn("String-split did not work, using old way, column path: " + columnPath);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Stackstrace: ", e);
+            }
+            int propertyBeginning = columnPath
+                    .lastIndexOf(LinkTableOperationType.PROPERTY.getOutput());
+            propertyId = columnPath.substring(propertyBeginning + 1);
+            if (columnPath.contains(":")) {
+                message = LinkTableUtil.getCnaLinkPropertyMessage(propertyId);
+            } else {
+                message = loader.getLabel(propertyId);
+            }
+        }
+        message = StringUtils.replaceEachRepeatedly(message,
+                new String[] { "/", ":", ".", "<", ">" }, new String[] { "", "", "", "", "" });
+        message = message.replaceAll(" ", "_");
+
+        return columnPath + ALIAS_DELIMITER + message;
+    }
+    
     public static IObjectModelService getLoader() {
-        if(loader==null) {
+        if (loader == null) {
             loader = createLoader();
         }
         return loader;
     }
-    
+
     private static IObjectModelService createLoader() {
         return loader = (IObjectModelService) HUIObjectModelLoader.getInstance();
     }

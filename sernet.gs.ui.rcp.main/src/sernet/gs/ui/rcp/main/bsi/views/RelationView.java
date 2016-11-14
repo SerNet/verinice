@@ -39,7 +39,7 @@ import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer.RelationTableCellLabelProvider;
+import sernet.gs.ui.rcp.main.bsi.views.RelationTableViewer.PathCellLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
@@ -175,7 +175,7 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
 
         // init tooltip provider
         ColumnViewerToolTipSupport.enableFor(viewer, ToolTip.RECREATE);
-        List<RelationTableCellLabelProvider> cellLabelProviders = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, parent);
+        List<PathCellLabelProvider> cellLabelProviders = ((RelationTableViewer) viewer).initToolTips(relationViewLabelProvider, parent);
 
         // register resize listener for cutting the tooltips
         addResizeListener(parent, cellLabelProviders);
@@ -198,13 +198,13 @@ public class RelationView extends RightsEnabledView implements IRelationTable, I
      * Tracks changes of viewpart size and delegates them to the tooltip
      * provider.
      */
-    private void addResizeListener(final Composite parent, final List<RelationTableCellLabelProvider> cellLabelProviders) {
+    private void addResizeListener(final Composite parent, final List<PathCellLabelProvider> cellLabelProviders) {
 
         parent.addControlListener(new ControlAdapter() {
 
             @Override
             public void controlResized(ControlEvent e) {
-                for (RelationTableCellLabelProvider c : cellLabelProviders) {
+                for (PathCellLabelProvider c : cellLabelProviders) {
                     c.updateShellWidthAndX(parent.getShell().getBounds().width, parent.getShell().getBounds().x);
                 }
             }

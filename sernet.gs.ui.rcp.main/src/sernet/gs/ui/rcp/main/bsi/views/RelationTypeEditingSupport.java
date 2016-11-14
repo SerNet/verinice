@@ -78,7 +78,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
         Set<HuiRelation> possibleRelations = huiTypeFactory.getPossibleRelations(
                 sourceEntityTypeId, targetEntityTypeId);
 
-        return (possibleRelations != null && possibleRelations.size() > 0);
+        return (possibleRelations != null && !possibleRelations.isEmpty());
     }
 
     @Override
@@ -96,7 +96,6 @@ public class RelationTypeEditingSupport extends EditingSupport {
     }
 
     private String[] getPossibleLinkTypeNames(CnALink cnaLink) {
-        HUITypeFactory huiTypeFactory = HitroUtil.getInstance().getTypeFactory();
         CnATreeElement relationSource = cnaLink.getDependant();
         CnATreeElement relationTarget = cnaLink.getDependency();
         String relationSourceEntityTypeId = relationSource.getEntityType().getId();
@@ -107,7 +106,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
         Set<HuiRelation> possibleUpRelations = huiTypeFactory
                 .getPossibleRelations(relationTargetEntityTypeId, relationSourceEntityTypeId);
 
-        Set<String> relationNames = new HashSet<String>();
+        Set<String> relationNames = new HashSet<>();
         String relationName;
 
         for (HuiRelation huiRelation : possibleDownRelations) {
@@ -181,7 +180,7 @@ public class RelationTypeEditingSupport extends EditingSupport {
         CnALink newCnaLink = null;
         if (changeLinkDirection(cnaLink, linkTypeId)) {
             CreateLink<CnALink, CnATreeElement, CnATreeElement> createLinkCommand =
-                    new CreateLink<CnALink, CnATreeElement, CnATreeElement>(
+                    new CreateLink<>(
                             cnaLink.getDependency(), cnaLink.getDependant(), linkTypeId);
             try {
                 createLinkCommand = ServiceFactory.lookupCommandService()

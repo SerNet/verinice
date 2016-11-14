@@ -245,7 +245,11 @@ public final class Messages extends NLS {
 
     public static String NoteView_8;
 
+    public static String RelationTableViewer_0;
+
     public static String RelationTableViewer_1;
+
+    public static String RelationTableViewer_2;
 
     public static String RelationTableViewer_3;
 
@@ -256,6 +260,22 @@ public final class Messages extends NLS {
     public static String RelationTableViewer_6;
 
     public static String RelationTableViewer_7;
+
+    public static String RelationTableViewer_8;
+
+    public static String RelationTableViewer_9;
+
+    public static String RelationTableViewer_A;
+
+    public static String RelationTableViewer_A_with_Controls;
+
+    public static String RelationTableViewer_C;
+
+    public static String RelationTableViewer_C_with_controls;
+
+    public static String RelationTableViewer_I;
+
+    public static String RelationTableViewer_I_with_controls;
 
     public static String RelationView_0;
 
@@ -278,7 +298,7 @@ public final class Messages extends NLS {
     public static String RelationViewLabelProvider_2;
 
     public static String RelationViewLabelProvider_3;
-
+    
     public static String RelationTypeEditingSupport_1;
 
     public static String RelationTypeEditingSupport_2;
