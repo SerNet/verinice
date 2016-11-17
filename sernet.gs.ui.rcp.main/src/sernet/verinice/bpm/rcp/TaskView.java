@@ -68,6 +68,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPartListener2;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
@@ -819,8 +820,10 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     public void closeEditorForElement(String uuid) {
         for (IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
             try {
-                if (editorReference.getEditorInput() instanceof BSIElementEditorInput && uuid.equals(((BSIElementEditorInput) editorReference.getEditorInput()).getCnAElement().getUuid())) {
-                    PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeEditors(new IEditorReference[] { editorReference }, true);
+                CnATreeElement element = ((BSIElementEditorInput) editorReference.getEditorInput()).getCnAElement();
+                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                if (editorReference.getEditorInput() instanceof BSIElementEditorInput && uuid.equals(element.getUuid())) {
+                    activePage.closeEditors(new IEditorReference[] { editorReference }, true);
                     break;
                 }
             } catch (PartInitException e) {
