@@ -22,14 +22,22 @@ package sernet.verinice.web;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
+import javax.faces.component.UIInput;
+import javax.faces.event.ValueChangeEvent;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.event.DateSelectEvent;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.service.GSServiceException;
@@ -45,9 +53,16 @@ import sernet.hui.common.connect.Entity;
 import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.PropertyGroup;
+import sernet.hui.common.connect.PropertyOption;
 import sernet.hui.common.connect.PropertyType;
+import sernet.hui.common.multiselectionlist.IMLPropertyOption;
+import sernet.snutils.AssertException;
+import sernet.snutils.FormInputParser;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.bpm.ITask;
+import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -61,116 +76,131 @@ import sernet.verinice.service.commands.SaveElement;
  * 
  */
 public class EditBean {
-    
+
     private static final Logger LOG = Logger.getLogger(EditBean.class);
-    
+
     public static final String BOUNDLE_NAME = "sernet.verinice.web.EditMessages";
 
     public static final String TAG_WEB = "Web";
-    
+
     public static final String TAG_ALL = "ALL-TAGS-VISIBLE";
-    
+
     private static final String SUBMIT = "submit";
-    
+
+    private static final String NAME_SUFFIX = "_name";
+
     private LinkBean linkBean;
-    
+
     private AttachmentBean attachmentBean;
-    
+
     private CnATreeElement element;
-    
+
     private EntityType entityType;
-    
+
     private String typeId;
-    
+
     private String uuid;
-    
+
     private String title;
-    
+
     private List<HuiProperty<String, String>> propertyList;
-    
+
     private List<sernet.verinice.web.PropertyGroup> groupList;
-    
+
     private List<String> noLabelTypeList = new LinkedList<String>();
-    
+
     private Set<String> roles = null;
-    
+
     private List<IActionHandler> actionHandler;
-    
+
     private List<IChangeListener> changeListener;
-    
+
     private boolean generalOpen = true;
-    
+
     private boolean groupOpen = false;
-    
+
     private boolean linkCollapsed = true;
-    
+
     private boolean attachmentOpen = true;
-    
+
     private boolean saveButtonHidden = false;
-    
+
     private List<String> visibleTags = Arrays.asList(TAG_ALL);
-    
-    private Set<String> visiblePropertyIds = new HashSet<String>(); 
-    
+
+    private Set<String> visiblePropertyIds = new HashSet<String>();
+
     private String saveMessage = null;
-        
+
     private MassnahmenUmsetzung massnahmenUmsetzung;
-    
+
+    private ITask task;
+    private Map<String, String> changedElementProperties = new HashMap<>();
+
     public void init() {
+        init(null);
+    }
+
+    public void init(ITask task) {
         long start = 0;
         if (LOG.isDebugEnabled()) {
             start = System.currentTimeMillis();
             LOG.debug("init() called ..."); //$NON-NLS-1$
         }
         try {
-            doInit();
-        } catch(CommandException t) {
+            doInit(task);
+        } catch (CommandException t) {
             LOG.error("Error while initialization. ", t);
-            Util.addError( "massagePanel", Util.getMessage(BOUNDLE_NAME,"init.failed"));
+            Util.addError("massagePanel", Util.getMessage(BOUNDLE_NAME, "init.failed"));
         }
         if (LOG.isDebugEnabled()) {
             long duration = System.currentTimeMillis() - start;
             LOG.debug("init() finished in: " + TimeFormatter.getHumanRedableTime(duration)); //$NON-NLS-1$
         }
     }
-    
-    private void doInit() throws CommandException {
+
+    private void doInit(ITask task) throws CommandException {
         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
         ri.setPermissions(true);
-        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(),getUuid(),ri);        
-        command = getCommandService().executeCommand(command);    
+        LoadElementByUuid<CnATreeElement> command = new LoadElementByUuid<CnATreeElement>(getTypeId(), getUuid(), ri);
+        command = getCommandService().executeCommand(command);
         setElement(command.getElement());
-        
+
+        this.task = task;
+
         checkMassnahmenUmsetzung();
-                
-        if(getElement()!=null) {
-            Entity entity = getElement().getEntity();           
-            setEntityType(getHuiService().getEntityType(getTypeId())); 
-            
+
+        if (getElement() != null) {
+            Entity entity = getElement().getEntity();
+            setEntityType(getHuiService().getEntityType(getTypeId()));
+
+            if (isTaskEditorContext()) {
+                loadChangedElementPropertiesFromTask();
+            }
+
             getLinkBean().setElement(getElement());
             getLinkBean().setEntityType(getEntityType());
             getLinkBean().setTypeId(getTypeId());
             getLinkBean().reset();
-            if(!(getLinkCollapsed())) {
+            if (!(getLinkCollapsed())) {
                 getLinkBean().init();
             }
-            
+
             getAttachmentBean().setElement(getElement());
             getAttachmentBean().init();
-            
+
             groupList = new ArrayList<sernet.verinice.web.PropertyGroup>();
-            List<PropertyGroup> groupListHui = entityType.getPropertyGroups();     
+            List<PropertyGroup> groupListHui = entityType.getPropertyGroups();
             for (PropertyGroup groupHui : groupListHui) {
-                if(isVisible(groupHui)) {
+                if (isVisible(groupHui)) {
                     sernet.verinice.web.PropertyGroup group = new sernet.verinice.web.PropertyGroup(groupHui.getId(), groupHui.getName());
                     List<PropertyType> typeListHui = groupHui.getPropertyTypes();
-                    List<HuiProperty<String, String>> listOfGroup = new ArrayList<HuiProperty<String,String>>();
+                    List<HuiProperty<String, String>> listOfGroup = new ArrayList<HuiProperty<String, String>>();
                     for (PropertyType huiType : typeListHui) {
-                        if(isVisible(huiType)) {
+                        if (isVisible(huiType)) {
                             String id = huiType.getId();
                             String value = entity.getValue(id);
                             HuiProperty<String, String> prop = new HuiProperty<String, String>(huiType, id, value);
-                            if(getNoLabelTypeList().contains(id)) {
+                            if (getNoLabelTypeList().contains(id)) {
                                 prop.setShowLabel(false);
                             }
                             listOfGroup.add(prop);
@@ -180,19 +210,19 @@ public class EditBean {
                         }
                     }
                     group.setPropertyList(listOfGroup);
-                    if(!listOfGroup.isEmpty()) {
+                    if (!listOfGroup.isEmpty()) {
                         groupList.add(group);
                     }
                 }
-            }              
-            propertyList = new ArrayList<HuiProperty<String,String>>();
-            List<PropertyType> typeList = entityType.getPropertyTypes();        
+            }
+            propertyList = new ArrayList<HuiProperty<String, String>>();
+            List<PropertyType> typeList = entityType.getPropertyTypes();
             for (PropertyType propertyType : typeList) {
-                if(isVisible(propertyType)) {
+                if (isVisible(propertyType)) {
                     String id = propertyType.getId();
                     String value = entity.getValue(id);
                     HuiProperty<String, String> prop = new HuiProperty<String, String>(propertyType, id, value);
-                    if(getNoLabelTypeList().contains(id)) {
+                    if (getNoLabelTypeList().contains(id)) {
                         prop.setShowLabel(false);
                     }
                     propertyList.add(prop);
@@ -202,22 +232,33 @@ public class EditBean {
                 }
             }
         } else {
-            // (sometimes) his is not an error, GSM workflow tasks doesn't have an element
+            // (sometimes) his is not an error, GSM workflow tasks doesn't have
+            // an element
             LOG.info("Element not found, type: " + getTypeId() + ", uuid: " + getUuid());
         }
-        
+
     }
 
     private void checkMassnahmenUmsetzung() {
-        if(getElement() instanceof MassnahmenUmsetzung){
-            setMassnahmenUmsetzung((MassnahmenUmsetzung)element);
+        if (getElement() instanceof MassnahmenUmsetzung) {
+            setMassnahmenUmsetzung((MassnahmenUmsetzung) element);
         } else {
             setMassnahmenUmsetzung(null);
         }
     }
 
+    private void loadChangedElementPropertiesFromTask() {
+        Map<String, String> changedElementProperties = (Map<String, String>) getTaskService().loadChangedElementProperties(task.getId());
+        for (Entry<String, String> entry : changedElementProperties.entrySet()) {
+            element.setPropertyValue(entry.getKey(), entry.getValue());
+        }
+
+        setTitle(element.getTitle() + Util.getMessage(BOUNDLE_NAME, "change.request"));
+        LOG.info("Loaded changes for element properties from task."); //$NON-NLS-1$
+    }
+
     private boolean isVisible(PropertyType huiType) {
-        if(getVisiblePropertyIds()!=null && !getVisiblePropertyIds().isEmpty()) {
+        if (getVisiblePropertyIds() != null && !getVisiblePropertyIds().isEmpty()) {
             return isVisibleType(huiType);
         } else {
             return isVisibleByTags(huiType);
@@ -227,9 +268,9 @@ public class EditBean {
     private boolean isVisibleType(PropertyType type) {
         return type.isVisible() && getVisiblePropertyIds().contains(type.getId());
     }
-    
+
     private boolean isVisibleByTags(PropertyType type) {
-        if(!type.isVisible()) {
+        if (!type.isVisible()) {
             return false;
         }
         Set<String> tagSet = getTagSet(type.getTags());
@@ -238,9 +279,9 @@ public class EditBean {
 
     private boolean isVisible(PropertyGroup groupHui) {
         boolean visible = isVisible(getTagSet(groupHui.getTags()));
-        if(!visible) {
+        if (!visible) {
             for (PropertyType type : groupHui.getPropertyTypes()) {
-                if(isVisible(type)) {
+                if (isVisible(type)) {
                     visible = true;
                     break;
                 }
@@ -251,24 +292,26 @@ public class EditBean {
 
     private Set<String> getTagSet(String allTags) {
         Set<String> tagSet = new HashSet<String>();
-        StringTokenizer st = new StringTokenizer(allTags,",");
-        while(st.hasMoreTokens()) {
+        StringTokenizer st = new StringTokenizer(allTags, ",");
+        while (st.hasMoreTokens()) {
             tagSet.add(st.nextToken());
         }
         return tagSet;
     }
 
     /**
-     * Returns true if tagSet contains one of the visible tags for this bean instance. 
+     * Returns true if tagSet contains one of the visible tags for this bean
+     * instance.
      * 
-     * @param tagSet A set of tags
+     * @param tagSet
+     *            A set of tags
      * @return true if tagSet contains one of the visible tags
      */
     private boolean isVisible(Set<String> tagSet) {
         boolean visible = getVisibleTags().contains(TAG_ALL);
-        if(tagSet!=null) {
+        if (tagSet != null) {
             for (String tag : getVisibleTags()) {
-                if(tagSet.contains(tag)) {
+                if (tagSet.contains(tag)) {
                     visible = true;
                     break;
                 }
@@ -276,21 +319,25 @@ public class EditBean {
         }
         return visible;
     }
-    
+
     public String getSave() {
         return null;
     }
-    
+
     public void setSave(String save) {
     }
 
     public void save() {
         LOG.debug("save called...");
         try {
-            if(getElement()!=null) {
-                doSave();                  
-            }
-            else {
+            if (getElement() != null) {
+                if (isTaskEditorContext()) {
+                    updateTaskWithChangedElementProperties();
+                    LOG.info("Sciped save cnAElement."); //$NON-NLS-1$
+                } else {
+                    doSave();
+                }
+            } else {
                 LOG.warn("Control is null. Can not save.");
             }
         } catch (SecurityException e) {
@@ -305,11 +352,23 @@ public class EditBean {
         }
     }
 
+    private boolean isTaskEditorContext() {
+        return task != null && task.isWithAReleaseProcess();
+    }
+
+    private void updateTaskWithChangedElementProperties() {
+        if (!changedElementProperties.isEmpty()) {
+            getTaskService().updateChangedElementProperties(task.getId(), changedElementProperties);
+            changedElementProperties.clear();
+            LOG.info("Updated task: saved changes in element properties."); //$NON-NLS-1$
+        }
+    }
+
     private void doSave() throws CommandException {
         if (!writeEnabled()) {
-            throw new SecurityException("write is not allowed" );
+            throw new SecurityException("write is not allowed");
         }
-        Entity entity = getElement().getEntity();    
+        Entity entity = getElement().getEntity();
         for (HuiProperty<String, String> property : getPropertyList()) {
             entity.setSimpleValue(property.getType(), property.getValue());
             if (LOG.isDebugEnabled()) {
@@ -324,73 +383,77 @@ public class EditBean {
                 }
             }
         }
-        SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(getElement());                           
+        SaveElement<CnATreeElement> command = new SaveElement<CnATreeElement>(getElement());
         command = getCommandService().executeCommand(command);
         setElement(command.getElement());
         for (IChangeListener listener : getChangeListener()) {
             listener.elementChanged(getElement());
         }
-        if(LOG.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Element saved, uuid: " + getUuid());
-        }   
+        }
         Util.addInfo(SUBMIT, getSaveMessage());
     }
 
     private String getSaveMessage() {
-        if(saveMessage==null) {
+        if (saveMessage == null) {
             return Util.getMessage(EditBean.BOUNDLE_NAME, "saved");
         } else {
             return saveMessage;
         }
     }
-    
-    public void setSaveMessage( String message ) {
+
+    public void setSaveMessage(String message) {
         this.saveMessage = message;
     }
-    
+
     public void clear() {
-        if(groupList!=null) {
+        if (groupList != null) {
             groupList.clear();
         }
-        if(propertyList!=null) {
+        if (propertyList != null) {
             propertyList.clear();
         }
         uuid = null;
         typeId = null;
         title = null;
         element = null;
-        if(getLinkBean()!=null) {
+        if (getLinkBean() != null) {
             getLinkBean().clear();
         }
-        if(noLabelTypeList!=null) {
+        if (noLabelTypeList != null) {
             noLabelTypeList.clear();
         }
         clearActionHandler();
     }
-    
-    public String getAction() { return null; };
-    
+
+    public String getAction() {
+        return null;
+    };
+
     public void setAction(String s) {
     }
-    
+
     public boolean writeEnabled() {
         boolean enabled = false;
-        if(getElement()!=null) {
-            // causes NoClassDefFoundError: org/eclipse/ui/plugin/AbstractUIPlugin
+        if (getElement() != null) {
+            // causes NoClassDefFoundError:
+            // org/eclipse/ui/plugin/AbstractUIPlugin
             // FIXME: fix this dependency to eclipse related classes.
             enabled = isWriteAllowed(getElement());
-        }   
+        }
         return enabled;
     }
-    
+
     public boolean isWriteAllowed(CnATreeElement cte) {
         // Server implementation of CnAElementHome.isWriteAllowed
         try {
-            // Short cut: If no permission handling is needed than all objects are
+            // Short cut: If no permission handling is needed than all objects
+            // are
             // writable.
             if (!ServiceFactory.isPermissionHandlingNeeded()) {
                 return true;
-            } 
+            }
             // Short cut 2: If we are the admin, then everything is writable as
             // well.
             if (AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN })) {
@@ -398,7 +461,7 @@ public class EditBean {
             }
             Set<String> userRoles = getRoles();
             for (Permission p : cte.getPermissions()) {
-                if (p!=null && p.isWriteAllowed() && userRoles.contains(p.getRole())) {
+                if (p != null && p.isWriteAllowed() && userRoles.contains(p.getRole())) {
                     return true;
                 }
             }
@@ -412,26 +475,95 @@ public class EditBean {
                 LOG.debug("Write is not allowed", e);
             }
             return false;
-        } catch(RuntimeException re) {
+        } catch (RuntimeException re) {
             LOG.error("Error while checking write permissions", re);
             throw re;
-        } catch(CommandException t) {
+        } catch (CommandException t) {
             LOG.error("Error while checking write permissions", t);
             throw new RuntimeException("Error while checking write permissions", t);
         }
         return false;
     }
-    
+
+    // TODO: impl reference
+    // TODO: impl multiselect
+    public void onChange(ValueChangeEvent event) {
+        String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
+        String newValue = (String) event.getNewValue();
+
+        if (StringUtils.isNotEmpty(key)) {
+            PropertyType propertyType = HUITypeFactory.getInstance().getPropertyType(getElement().getEntityType().getId(), key);
+            if (propertyType.isSingleSelect()) {
+                newValue = getSingleSelectOptionId(newValue, propertyType);
+            }
+            changedElementProperties.put(key, newValue);
+        }
+        if (key.contains(NAME_SUFFIX)) {
+            setTitle(newValue + Util.getMessage(BOUNDLE_NAME, "change.request"));
+        }
+    }
+
+    private String getSingleSelectOptionId(String newValue, PropertyType propertyType) {
+        if (Messages.getString(PropertyOption.SINGLESELECTDUMMYVALUE).equals(newValue)) {
+            newValue = null;
+        } else {
+            for (IMLPropertyOption option : propertyType.getOptions()) {
+                if (option.getName().equals(newValue)) {
+                    newValue = option.getId();
+                    break;
+                }
+            }
+        }
+        return newValue;
+    }
+
+    public void onDateSelect(DateSelectEvent event) {
+        try {
+            String key = (String) ((UIInput) event.getComponent()).getAttributes().get("key");
+            String newValue = FormInputParser.dateToString(new java.sql.Date(event.getDate().getTime()));
+
+            if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(newValue)) {
+                changedElementProperties.put(key, newValue);
+            }
+        } catch (AssertException e) {
+            LOG.error("Exception while getting the value of a date property", e);
+        }
+    }
+
+    public void onURLValueChange(ValueChangeEvent event) {
+        Map<String, Object> attributes = ((UIInput) event.getComponent()).getAttributes();
+        String key = (String) attributes.get("key");
+        String url = (String) event.getNewValue();
+        String label = (String) attributes.get("label");
+        changeURL(key, url, label);
+    }
+
+    public void onURLTextChange(ValueChangeEvent event) {
+        Map<String, Object> attributes = ((UIInput) event.getComponent()).getAttributes();
+        String key = (String) attributes.get("key");
+        String url = (String) attributes.get("url");
+        String label = (String) event.getNewValue();
+        changeURL(key, url, label);
+    }
+
+    private void changeURL(String key, String url, String label) {
+        if (StringUtils.isNotEmpty(key) && StringUtils.isNotEmpty(url) && StringUtils.isNotEmpty(label)) {
+            StringBuffer sb = new StringBuffer();
+            sb.append("<a href=\"").append(url).append("\">").append(label).append("</a>");
+            changedElementProperties.put(key, sb.toString());
+        }
+    }
+
     public Set<String> getRoles() throws CommandException {
-        if (roles == null) {        
+        if (roles == null) {
             roles = loadRoles();
-        } 
+        }
         return roles;
     }
-    
+
     public Set<String> loadRoles() throws CommandException {
-        LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();       
-        lcuc = getCommandService().executeCommand(lcuc);            
+        LoadCurrentUserConfiguration lcuc = new LoadCurrentUserConfiguration();
+        lcuc = getCommandService().executeCommand(lcuc);
         Configuration c = lcuc.getConfiguration();
         // No configuration for the current user (anymore?). Then nothing is
         // writable.
@@ -440,11 +572,11 @@ public class EditBean {
         }
         return c.getRoles();
     }
-    
+
     public void addNoLabelType(String id) {
         noLabelTypeList.add(id);
     }
-    
+
     public LinkBean getLinkBean() {
         return linkBean;
     }
@@ -461,7 +593,8 @@ public class EditBean {
     }
 
     /**
-     * @param attachmentBean the attachmentBean to set
+     * @param attachmentBean
+     *            the attachmentBean to set
      */
     public void setAttachmentBean(AttachmentBean attachmentBean) {
         this.attachmentBean = attachmentBean;
@@ -498,7 +631,7 @@ public class EditBean {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
-    
+
     public String getTitle() {
         return title;
     }
@@ -506,46 +639,47 @@ public class EditBean {
     public void setTitle(String title) {
         this.title = title;
     }
-    
+
     public List<HuiProperty<String, String>> getLabelPropertyList() {
         List<HuiProperty<String, String>> labelList = Collections.emptyList();
         List<HuiProperty<String, String>> list = getPropertyList();
-        if(list!=null) {
-            labelList = new LinkedList<HuiProperty<String,String>>();
-            for (HuiProperty<String, String> property : getPropertyList()) {
-                if(property.isShowLabel()) {
+        if (list != null) {
+            labelList = new LinkedList<HuiProperty<String, String>>();
+            for (HuiProperty<String, String> property : list) {
+                if (property.isShowLabel()) {
                     labelList.add(property);
                 }
-            }  
+            }
         }
         return labelList;
     }
+
     public List<HuiProperty<String, String>> getNoLabelPropertyList() {
         List<HuiProperty<String, String>> noLabelList = Collections.emptyList();
         List<HuiProperty<String, String>> list = getPropertyList();
-        if(list!=null) {
-            noLabelList = new LinkedList<HuiProperty<String,String>>();
-            for (HuiProperty<String, String> property : getPropertyList()) {
-                if(!property.isShowLabel()) {
+        if (list != null) {
+            noLabelList = new LinkedList<HuiProperty<String, String>>();
+            for (HuiProperty<String, String> property : list) {
+                if (!property.isShowLabel()) {
                     noLabelList.add(property);
                 }
-            }  
+            }
         }
         return noLabelList;
     }
-    
+
     public boolean isAttachmentEnabled() {
         // TODO dm implement rights management in web frontend
         return true;
     }
-    
+
     public boolean isNewAttachmentEnabled() {
         // TODO dm implement rights management in web frontend
         return true;
     }
-    
+
     public List<HuiProperty<String, String>> getPropertyList() {
-        if(propertyList==null) {
+        if (propertyList == null) {
             propertyList = Collections.emptyList();
         }
         moveURLPropertyToEndOfList();
@@ -554,13 +688,13 @@ public class EditBean {
 
     private void moveURLPropertyToEndOfList() {
         HuiProperty<String, String> docProp = null;
-        for(int i = 0; i < propertyList.size(); i++){
-            if(propertyList.get(i).getIsURL()){
-               docProp = propertyList.get(i); 
-               break;
+        for (int i = 0; i < propertyList.size(); i++) {
+            if (propertyList.get(i).getIsURL()) {
+                docProp = propertyList.get(i);
+                break;
             }
         }
-        if(docProp != null){
+        if (docProp != null) {
             Collections.swap(propertyList, propertyList.indexOf(docProp), propertyList.size() - 1);
         }
     }
@@ -568,7 +702,7 @@ public class EditBean {
     public void setPropertyList(List<HuiProperty<String, String>> properties) {
         this.propertyList = properties;
     }
-    
+
     public List<sernet.verinice.web.PropertyGroup> getGroupList() {
         return groupList;
     }
@@ -588,22 +722,22 @@ public class EditBean {
     public void setActionHandler(List<IActionHandler> actionHandlerList) {
         this.actionHandler = actionHandlerList;
     }
-    
+
     public void addActionHandler(IActionHandler newActionHandler) {
-        if(this.actionHandler==null) {
+        if (this.actionHandler == null) {
             this.actionHandler = new LinkedList<IActionHandler>();
         }
         this.actionHandler.add(newActionHandler);
     }
-    
+
     public void clearActionHandler() {
-        if(getActionHandler()!=null) {
+        if (getActionHandler() != null) {
             getActionHandler().clear();
         }
     }
-    
+
     public List<IChangeListener> getChangeListener() {
-        if(this.changeListener==null) {
+        if (this.changeListener == null) {
             this.changeListener = new LinkedList<IChangeListener>();
         }
         return changeListener;
@@ -612,11 +746,11 @@ public class EditBean {
     public void setChangeListener(List<IChangeListener> changeListener) {
         this.changeListener = changeListener;
     }
-    
+
     public void addChangeListener(IChangeListener changeListener) {
         getChangeListener().add(changeListener);
     }
-    
+
     public void clearChangeListener() {
         getChangeListener().clear();
     }
@@ -660,7 +794,7 @@ public class EditBean {
     public void setLinkCollapsed(boolean linkCollapsed) {
         this.linkCollapsed = linkCollapsed;
     }
-    
+
     public boolean isAttachmentOpen() {
         return attachmentOpen;
     }
@@ -676,9 +810,9 @@ public class EditBean {
     public void setSaveButtonHidden(boolean saveButtonHidden) {
         this.saveButtonHidden = saveButtonHidden;
     }
-    
+
     public String getSaveButtonClass() {
-        if(isSaveButtonHidden()) {
+        if (isSaveButtonHidden()) {
             return "saveButtonHidden";
         } else {
             return "saveButton";
@@ -692,23 +826,27 @@ public class EditBean {
     private HUITypeFactory getHuiService() {
         return (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
     }
-    
+
     private ICommandService getCommandService() {
         return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
-    
+
+    private ITaskService getTaskService() {
+        return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
+    }
+
     public MassnahmenUmsetzung getMassnahmenUmsetzung() {
         return massnahmenUmsetzung;
     }
-    
+
     public void setMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
         this.massnahmenUmsetzung = massnahmenUmsetzung;
     }
-    
+
     public String getMassnahmeHtml() {
         final MassnahmenUmsetzung massnahme = getMassnahmenUmsetzung();
         String text = null;
-        if(massnahme!=null) {
+        if (massnahme != null) {
             try {
                 text = GSScraperUtil.getInstanceWeb().getModel().getMassnahmeHtml(massnahme.getUrl(), massnahme.getStand());
             } catch (GSServiceException e) {
@@ -716,10 +854,10 @@ public class EditBean {
                 Util.addError("submit", Util.getMessage("todo.load.failed"));
             }
         }
-        if(text!=null) {
+        if (text != null) {
             int start = text.indexOf("<div id=\"content\">");
             int end = text.lastIndexOf("</body>");
-            if(start==-1 || end==-1) {
+            if (start == -1 || end == -1) {
                 LOG.error("Can not find content of control description: " + text);
                 text = "";
             } else {
@@ -730,4 +868,4 @@ public class EditBean {
         }
         return text;
     }
-} 
+}

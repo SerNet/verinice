@@ -44,7 +44,6 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
@@ -67,7 +66,10 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPartListener2;
+import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
@@ -77,9 +79,10 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ComboModelNumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
+import sernet.gs.ui.rcp.main.bsi.editors.TaskEditorContext;
 import sernet.gs.ui.rcp.main.bsi.views.HtmlWriter;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
@@ -102,7 +105,6 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.PersonAdapter;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.IAttachedToPerspective;
-import sernet.verinice.rcp.InfoDialogWithShowToggle;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.TextEventAdapter;
 import sernet.verinice.service.commands.LoadAncestors;
@@ -124,12 +126,9 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
     private static final Logger LOG = Logger.getLogger(TaskView.class);
     static final NumericStringComparator NSC = new NumericStringComparator();
 
-    static final ComboModelNumericStringComparator<CnATreeElement> COMPARATOR_CNA_TREE_ELEMENT =
-                    new ComboModelNumericStringComparator<CnATreeElement>();
-    static final ComboModelNumericStringComparator<Configuration> COMPARATOR_CONFIGURATION =
-                    new ComboModelNumericStringComparator<Configuration>();
-    static final ComboModelNumericStringComparator<KeyMessage> COMPARATOR_KEY_MESSAGE =
-                    new ComboModelNumericStringComparator<KeyMessage>();
+    static final ComboModelNumericStringComparator<CnATreeElement> COMPARATOR_CNA_TREE_ELEMENT = new ComboModelNumericStringComparator<CnATreeElement>();
+    static final ComboModelNumericStringComparator<Configuration> COMPARATOR_CONFIGURATION = new ComboModelNumericStringComparator<Configuration>();
+    static final ComboModelNumericStringComparator<KeyMessage> COMPARATOR_KEY_MESSAGE = new ComboModelNumericStringComparator<KeyMessage>();
 
     public static final String ID = "sernet.verinice.bpm.rcp.TaskView"; //$NON-NLS-1$
 
@@ -384,7 +383,7 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                 dataLoader.loadAudits();
             }
         });
-        
+
         comboModelScope = new ComboModel<CnATreeElement>(new GroupLabelProvider());
         filterScope = new RegexComboModelFilter();
         comboModelScope.setFilter(filterScope);
@@ -582,8 +581,14 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                         RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
                         LoadAncestors loadControl = new LoadAncestors(task.getElementType(), task.getUuid(), ri);
                         loadControl = getCommandService().executeCommand(loadControl);
-                        if (loadControl.getElement() != null) {
-                            EditorFactory.getInstance().updateAndOpenObject(loadControl.getElement());
+                        CnATreeElement element = loadControl.getElement();
+                        if (element != null) {
+                            if (task.isWithAReleaseProcess()) {
+                                TaskEditorContext editorContext = new TaskEditorContext(task, element);
+                                EditorFactory.getInstance().updateAndOpenObject(editorContext);
+                            } else {
+                                EditorFactory.getInstance().updateAndOpenObject(element);
+                            }
                         } else {
                             showError("Error", Messages.TaskView_25); //$NON-NLS-1$
                         }
@@ -723,6 +728,14 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         TaskInformation task = (TaskInformation) ((IStructuredSelection) getViewer().getSelection()).getFirstElement();
         getInfoPanel().setText(HtmlWriter.getPage(task.getDescription()));
 
+        if (task.isWithAReleaseProcess()) {
+            CompareChangedElementPropertiesAction compareChangesAction = new CompareChangedElementPropertiesAction(this, task);
+            compareChangesAction.setText(Messages.CompareTaskChangesAction_0);
+            compareChangesAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.VIEW_TASK_COMPARE_CHANGES));
+            ActionContributionItem item = new ActionContributionItem(compareChangesAction);
+            manager.add(item);
+        }
+
         List<KeyValue> outcomeList = task.getOutcomes();
         for (KeyValue keyValue : outcomeList) {
             CompleteTaskAction completeAction = new CompleteTaskAction(this, keyValue.getKey());
@@ -769,10 +782,11 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
         });
     }
 
-    private void cancelTask() throws InvocationTargetException, InterruptedException {
+    private void cancelTask() throws InvocationTargetException, InterruptedException, PartInitException {
         IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
         final List<TaskInformation> taskList = getSelectedTasks();
         if (!taskList.isEmpty() && MessageDialog.openConfirm(getShell(), Messages.ConfirmTaskDelete_0, Messages.bind(Messages.ConfirmTaskDelete_1, taskList.size()))) {
+            closeEditors(taskList);
             progressService.run(true, true, new IRunnableWithProgress() {
                 @Override
                 public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -784,7 +798,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
                 }
             });
             getInfoPanel().setText(""); //$NON-NLS-1$
-            showInformation(Messages.TaskView_0, NLS.bind(Messages.TaskView_8, taskList.size()));
         }
     }
 
@@ -802,6 +815,27 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
 
     public void removeTask(ITask task) {
         contentProvider.removeTask(task);
+    }
+
+    public void closeEditorForElement(String uuid) {
+        for (IEditorReference editorReference : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getEditorReferences()) {
+            try {
+                CnATreeElement element = ((BSIElementEditorInput) editorReference.getEditorInput()).getCnAElement();
+                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                if (editorReference.getEditorInput() instanceof BSIElementEditorInput && uuid.equals(element.getUuid())) {
+                    activePage.closeEditors(new IEditorReference[] { editorReference }, true);
+                    break;
+                }
+            } catch (PartInitException e) {
+                LOG.error("Error while closing element editor.", e); //$NON-NLS-1$
+            }
+        }
+    }
+
+    private void closeEditors(List<TaskInformation> taskList) {
+        for (TaskInformation taskInformation : taskList) {
+            closeEditorForElement(taskInformation.getUuid());
+        }
     }
 
     private Combo createComboBox(Composite composite) {
@@ -840,15 +874,6 @@ public class TaskView extends RightsEnabledView implements IAttachedToPerspectiv
             @Override
             public void run() {
                 MessageDialog.openError(getShell(), title, message);
-            }
-        });
-    }
-
-    protected void showInformation(final String title, final String message) {
-        Display.getDefault().syncExec(new Runnable() {
-            @Override
-            public void run() {
-                InfoDialogWithShowToggle.openInformation(title, message, Messages.TaskView_30, PreferenceConstants.INFO_TASKS_COMPLETED);
             }
         });
     }

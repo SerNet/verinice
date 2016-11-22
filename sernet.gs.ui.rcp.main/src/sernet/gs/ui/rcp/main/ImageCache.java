@@ -139,6 +139,7 @@ public final class ImageCache {
 	public static final String VIEW_AUDIT = "pruefplan-toolbar.png";
 	public static final String VIEW_NOTE = "note.png";
     public static final String VIEW_TASK = "tasks.gif";
+    public static final String VIEW_TASK_COMPARE_CHANGES = "history_rep.gif";
     public static final String VIEW_VALIDATION = "quickfix_warning_obj.gif";
     public static final String VIEW_GSMAPPING = "plugin_depend.gif";
 

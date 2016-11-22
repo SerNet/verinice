@@ -82,33 +82,37 @@ public class DescriptionDialog extends TitleAreaDialog {
         if(title!=null) {
             final Label objectLabel = new Label(composite, SWT.NONE);
             objectLabel.setText(Messages.NewQmIssueDialog_4);
-            final Label object = new Label(composite, SWT.NONE);
+            final Label titleLabel = new Label(composite, SWT.NONE);
            
-            FontData[] fD = object.getFont().getFontData();
+            FontData[] fD = titleLabel.getFont().getFontData();
             for (int i = 0; i < fD.length; i++) {
                 fD[i].setStyle(SWT.BOLD);
             }
             Font newFont = new Font(getShell().getDisplay(),fD);
-            object.setFont(newFont);
-            GC gc = new GC(object);
+            titleLabel.setFont(newFont);
+            GC gc = new GC(titleLabel);
             Point size = gc.textExtent(title);
             if(size.x > DIALOG_WIDTH - dialogWidthSubtrahend) {
                 title = trimTitleByWidthSize(gc,title,DIALOG_WIDTH-dialogWidthSubtrahend) + "..."; //$NON-NLS-1$
             }
-            object.setText(title);
+            titleLabel.setText(title);
         }
         
         final Label descriptionLabel = new Label(composite, SWT.NONE);
         descriptionLabel.setText(Messages.DescriptionDialog_0);
-        final Text textArea = new Text(composite, SWT.MULTI | SWT.LEAD | SWT.BORDER | SWT.WRAP);
+        final Text descriptionText = new Text(composite, SWT.MULTI | SWT.LEAD | SWT.BORDER | SWT.WRAP);
+        if(description != null)
+        {
+            descriptionText.setText(description);
+        }
         GridData gd = new GridData(SWT.FILL, SWT.TOP, true, false);
         gd.heightHint = gdHeightHint;
         
-        textArea.setLayoutData(gd);
-        textArea.addFocusListener(new FocusListener() {            
+        descriptionText.setLayoutData(gd);
+        descriptionText.addFocusListener(new FocusListener() {            
             @Override
             public void focusLost(FocusEvent e) {
-                description = textArea.getText();
+                description = descriptionText.getText();
             }
             
             @Override
@@ -193,4 +197,7 @@ public class DescriptionDialog extends TitleAreaDialog {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

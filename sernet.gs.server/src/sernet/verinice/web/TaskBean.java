@@ -35,9 +35,11 @@ import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.gs.web.Util;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskParameter;
 import sernet.verinice.interfaces.bpm.ITaskService;
+import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
@@ -140,7 +142,13 @@ public class TaskBean {
             getEditBean().setTypeId(getSelectedTask().getElementType());
             getEditBean().addNoLabelType(SamtTopic.PROP_DESC);
             setOutcomeId(null);
-            getEditBean().init();
+            
+            if (getSelectedTask().isWithAReleaseProcess()) {
+                getEditBean().init(getSelectedTask());
+            } else {
+                getEditBean().init();
+            }
+            
             getEditBean().clearActionHandler();
             getEditBean().addActionHandler(new SaveAndNextHandler());
             getEditBean().addActionHandler(new OpenNextHandler());
@@ -183,12 +191,16 @@ public class TaskBean {
                 handler.execute(getSelectedTask(), getOutcomeId());
             } else {
                 getTaskService().completeTask(getSelectedTask().getId(),getOutcomeId());
-                getTaskList().remove(getSelectedTask());
-                setSelectedTask(null);
-                getEditBean().clear();
+                resetSelectedTask();
                 Util.addInfo("complete", Util.getMessage(TaskBean.BOUNDLE_NAME, "taskCompleted"));   //$NON-NLS-1$ //$NON-NLS-2$
             }
          }
+    }
+
+    public void resetSelectedTask() {
+        getTaskList().remove(getSelectedTask());
+        setSelectedTask(null);
+        getEditBean().clear();
     }
     
     public void completeAllTask() { 

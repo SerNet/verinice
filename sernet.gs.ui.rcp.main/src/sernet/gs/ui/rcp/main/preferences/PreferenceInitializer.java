@@ -94,6 +94,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.CUT_INHERIT_PERMISSIONS, false);
 		
 		store.setDefault(PreferenceConstants.COPY_ATTACHMENTS_WITH_OBJECTS, false);
+		
+		store.setDefault(PreferenceConstants.ENABLE_RELEASE_PROCESS, false);
 
 		store.setDefault(PreferenceConstants.SEARCH_INDEX_ON_STARTUP, true);
 		store.setDefault(PreferenceConstants.SEARCH_DISABLE, false);

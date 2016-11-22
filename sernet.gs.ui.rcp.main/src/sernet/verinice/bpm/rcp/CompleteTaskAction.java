@@ -26,20 +26,22 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
-import org.eclipse.osgi.util.NLS;
 
 import sernet.gs.service.IThreadCompleteListener;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.bpm.IIndividualProcess;
+import sernet.verinice.interfaces.bpm.ITaskService;
 import sernet.verinice.model.bpm.TaskInformation;
 
 /**
- * GUI action which completes task. Tasks are completed
- * concurrently by {@link ExecutorService}.
+ * GUI action which completes task. Tasks are completed concurrently by
+ * {@link ExecutorService}.
  * 
- * Instances of this action are created on demand in {@link TaskView}
- * after the user selects a task in the view.
+ * Instances of this action are created on demand in {@link TaskView} after the
+ * user selects a task in the view.
  * 
- * To complete a task this action creates a {@link CompleteTaskJob}
- * and executes it by {@link ExecutorService}.
+ * To complete a task this action creates a {@link CompleteTaskJob} and executes
+ * it by {@link ExecutorService}.
  * 
  * @see TaskView
  * @see CompleteTaskJob
@@ -48,11 +50,11 @@ import sernet.verinice.model.bpm.TaskInformation;
 final class CompleteTaskAction extends Action {
 
     private static final Logger LOG = Logger.getLogger(CompleteTaskAction.class);
-    
+
     private final TaskView taskView;
     final String id = TaskView.class.getName() + ".complete"; //$NON-NLS-1$
     String outcomeId;
-    
+
     private ExecutorService executer;
 
     public CompleteTaskAction(TaskView taskView, String outcomeId) {
@@ -61,8 +63,10 @@ final class CompleteTaskAction extends Action {
         this.outcomeId = outcomeId;
         setId(id + "." + outcomeId); //$NON-NLS-1$
     }
-   
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -70,23 +74,25 @@ final class CompleteTaskAction extends Action {
         try {
             executer = Executors.newFixedThreadPool(2);
             List<TaskInformation> taskList = taskView.getSelectedTasks();
-            for (TaskInformation task: taskList) {            
+            for (TaskInformation task : taskList) {
+                if (IIndividualProcess.TRANS_ACCEPT.equals(outcomeId) && task.isWithAReleaseProcess()) {
+                    getTaskService().saveChangedElementPropertiesToCnATreeElement(task.getId(), task.getUuid());
+                    taskView.closeEditorForElement(task.getUuid());
+                }
                 completeTask(task, outcomeId);
             }
             this.setEnabled(false);
             executer.shutdown();
-            int n = taskList.size();
-            showInformation(n); 
         } catch (Exception t) {
             LOG.error("Error while completing tasks.", t); //$NON-NLS-1$
             shutdownAndAwaitTermination();
             this.taskView.showError(Messages.CompleteTaskAction_6, Messages.CompleteTaskAction_7);
         }
     }
-    
+
     protected void completeTask(final TaskInformation task, String outcomeId) {
         CompleteTaskJob job = new CompleteTaskJob(task, outcomeId, taskView.getSite().getShell());
-        job.addListener(new IThreadCompleteListener() {         
+        job.addListener(new IThreadCompleteListener() {
             @Override
             public void notifyOfThreadComplete(Thread thread) {
                 taskView.removeTask(task);
@@ -94,15 +100,7 @@ final class CompleteTaskAction extends Action {
         });
         executer.execute(job);
     }
-    
-    private void showInformation(int n) {
-        String message = NLS.bind(Messages.CompleteTaskAction_4, n);
-        if(n==1) { 
-            message = NLS.bind(Messages.CompleteTaskAction_0, n);
-        }
-        CompleteTaskAction.this.taskView.showInformation(Messages.CompleteTaskAction_3, message);
-    }
-  
+
     private void shutdownAndAwaitTermination() {
         executer.shutdown(); // Disable new tasks from being submitted
         try {
@@ -120,5 +118,9 @@ final class CompleteTaskAction extends Action {
             // Preserve interrupt status
             Thread.currentThread().interrupt();
         }
+    }
+
+    private ITaskService getTaskService() {
+        return (ITaskService) VeriniceContext.get(VeriniceContext.TASK_SERVICE);
     }
 }

@@ -55,6 +55,7 @@ public abstract class CompleteWebHandlerRegistry {
         handler.put(IIsaControlFlowProcess.TASK_EXECUTE + "." + IIsaControlFlowProcess.TRANS_ERROR, NewQmIssueBean.NAME);
         handler.put(IIndividualProcess.TASK_EXECUTE + "." + IIndividualProcess.TRANS_EXTENSION, IndiExecuteExtensionBean.NAME);
         handler.put(IIndividualProcess.TASK_EXECUTE_LOOP + "." + IIndividualProcess.TRANS_EXTENSION, IndiExecuteExtensionBean.NAME);
+        handler.put(IIndividualProcess.TASK_CHECK + "." + IIndividualProcess.TRANS_DECLINE, IndiRejectRealizationBean.NAME);
     }
     
     

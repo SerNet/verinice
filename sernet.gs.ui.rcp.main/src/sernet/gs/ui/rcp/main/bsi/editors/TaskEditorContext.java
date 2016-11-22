@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Daniel Murygin.
+ * Copyright (c) 2016 Viktor Schmidt.
  *
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU Lesser General Public License 
@@ -15,22 +15,39 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
+ *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.interfaces.bpm;
+package sernet.gs.ui.rcp.main.bsi.editors;
 
-import java.util.Map;
+import sernet.verinice.model.bpm.TaskInformation;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
- * Process service interface to create individual tasks
- * defined in jBPM definition: individual-task.jpdl.xml
- *
- * @author Daniel Murygin <dm[at]sernet[dot]de>
+ * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
-public interface IIndividualService extends IProcessServiceGeneric {
-
-    IProcessStartInformation startProcess(IndividualServiceParameter parameter);
+public class TaskEditorContext {
+    private TaskInformation task;
+    private CnATreeElement element;
     
-    Map<String, Object> createParameterMap(IndividualServiceParameter parameter);
-    
+    /**
+     * @param task
+     * @param element
+     */
+    public TaskEditorContext(TaskInformation task, CnATreeElement element) {
+        super();
+        this.task = task;
+        this.element = element;
+    }
+    /**
+     * @return the task
+     */
+    public TaskInformation getTask() {
+        return task;
+    }
+    /**
+     * @return the element
+     */
+    public CnATreeElement getElement() {
+        return element;
+    }
 }

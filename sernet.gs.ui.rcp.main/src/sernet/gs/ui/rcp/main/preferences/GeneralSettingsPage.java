@@ -112,6 +112,10 @@ public class GeneralSettingsPage extends FieldEditorPreferencePage implements IW
         
         final BooleanFieldEditor copyAttachmentsWithObjects = new BooleanFieldEditor(PreferenceConstants.COPY_ATTACHMENTS_WITH_OBJECTS, Messages.getString("GeneralSettingsPage.CopyAttachmentsWithObjects"), getFieldEditorParent()); //$NON-NLS-1$
 		addField(copyAttachmentsWithObjects);
+		
+		final BooleanFieldEditor enableReleaseProcess = new BooleanFieldEditor(PreferenceConstants.ENABLE_RELEASE_PROCESS, Messages.getString("GeneralSettingsPage.UseReleaseProcess"), //$NON-NLS-1$
+                getFieldEditorParent());
+        addField(enableReleaseProcess);
         
 		final ComboFieldEditor encodingFieldEditor = new ComboFieldEditor(PreferenceConstants.CHARSET_CATALOG, 
 		        Messages.getString("GeneralSettingsPage.6"),  //$NON-NLS-1$

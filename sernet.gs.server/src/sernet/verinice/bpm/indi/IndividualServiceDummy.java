@@ -82,5 +82,13 @@ public class IndividualServiceDummy implements IIndividualService {
     public Set<KeyMessage> findAllProcessDefinitions() {
         return Collections.emptySet();
     }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.interfaces.bpm.IIndividualService#createParameterMap(sernet.verinice.interfaces.bpm.IndividualServiceParameter)
+     */
+    @Override
+    public Map<String, Object> createParameterMap(IndividualServiceParameter parameter) {
+        return Collections.emptyMap();
+    }
 
 }

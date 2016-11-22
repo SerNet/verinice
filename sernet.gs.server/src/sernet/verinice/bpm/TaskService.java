@@ -44,8 +44,11 @@ import org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean;
 
 import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.ServerInitializer;
+import sernet.hui.common.VeriniceContext;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
 import sernet.verinice.interfaces.IDao;
 import sernet.verinice.interfaces.bpm.ICompleteServerHandler;
@@ -64,10 +67,13 @@ import sernet.verinice.model.bpm.Messages;
 import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bpm.TaskParameter;
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.common.ChangeLogEntry;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.service.commands.LoadAncestors;
+import sernet.verinice.service.commands.UpdateElementEntity;
 
 /**
  * JBoss jBPM implementation of {@link ITaskService}.
@@ -113,6 +119,8 @@ public class TaskService implements ITaskService {
         
         DEFAULT_OUTCOMES.put(IGsmIsmExecuteProzess.TASK_EXECUTE,IGsmIsmExecuteProzess.TRANS_COMPLETE);
     }
+
+    private static final String PROCESS_NAME_OF_TASK_WITH_RELEASE_PROCESS = "individual-task-release-process";
     
     private ProcessEngine processEngine;
     
@@ -420,17 +428,23 @@ public class TaskService implements ITaskService {
         String typeId = (String) varMap.get(IGenericProcess.VAR_TYPE_ID); 
         taskInformation.setElementType(typeId);
         taskInformation.setDueDate(task.getDuedate());   
-        taskInformation.setProcessName(getProcessName(task));      
+        boolean isWithAReleaseProcess = varMap.containsKey(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS) ? (boolean) varMap.get(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS) : false;
+        taskInformation.setWithAReleaseProcess(isWithAReleaseProcess);
+        taskInformation.setProcessName(getProcessName(task, taskInformation.isWithAReleaseProcess()));
         if (log.isDebugEnabled()) {
             log.debug("map finished"); //$NON-NLS-1$
         }
         return taskInformation;
     }
 
-    private String getProcessName(Task task) {
+    private String getProcessName(Task task, boolean isWithAReleaseProcess ) {
         String executionId = task.getExecutionId();
-        String processKey = executionId.substring(0,executionId.indexOf('.'));        
-        return Messages.getString(processKey);
+        String processKey = executionId.substring(0,executionId.indexOf('.'));
+        if (isWithAReleaseProcess){
+            return Messages.getString(PROCESS_NAME_OF_TASK_WITH_RELEASE_PROCESS);
+        } else {
+            return Messages.getString(processKey);
+        }
     }
 
     @Override
@@ -774,7 +788,56 @@ public class TaskService implements ITaskService {
         }
         return variables;
     }
-
+    
+    @Override
+    public void updateChangedElementProperties(String taskId, Map<String, String> changedElementProperties) {
+        if (!changedElementProperties.isEmpty()) {
+            Map<String, Object> variables = getVariables(taskId);
+            if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
+                @SuppressWarnings("unchecked")
+                Map<String, String> oldChangedElementProperties = (Map<String, String>) variables.get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);
+                oldChangedElementProperties.putAll(changedElementProperties);
+                variables.put(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES, oldChangedElementProperties);
+            } else {
+                variables.put(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES, changedElementProperties);
+            }
+            setVariables(taskId, variables);
+        }
+    }
+    
+    @Override
+    public Map<String, String> loadChangedElementProperties(String taskId) {
+        Map<String, Object> variables = getVariables(taskId);
+        if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
+            return (Map<String, String>) variables.get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);
+        }
+        return Collections.emptyMap();
+    }
+    
+    @Override
+    public void saveChangedElementPropertiesToCnATreeElement(String taskId, String uuid) {
+        Map<String, Object> variables = getVariables(taskId);
+        if (variables.containsKey(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES)) {
+            try {
+                RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
+                LoadAncestors command = new LoadAncestors(uuid, ri);
+                command = getCommandService().executeCommand(command);
+                CnATreeElement cnAElement = command.getElement();
+                
+                Map<String, String> changedElementProperties = (Map<String, String>) variables.get(IIndividualProcess.VAR_CHANGED_ELEMENT_PROPERTIES);
+                for (Map.Entry<String, String> entry : changedElementProperties.entrySet()) {
+                    cnAElement.setPropertyValue(entry.getKey(), entry.getValue());
+                }
+                
+                UpdateElementEntity<? extends CnATreeElement> updateCommand = new UpdateElementEntity<CnATreeElement>(cnAElement, ChangeLogEntry.STATION_ID);
+                updateCommand = getCommandService().executeCommand(updateCommand);
+                
+            } catch (CommandException e) {
+                log.error("Error while saving changed element properties to CnATreeElement.", e); //$NON-NLS-1$
+            }
+        }
+    }
+    
     public org.jbpm.api.TaskService getTaskService() {
         return getProcessEngine().getTaskService();
     }
@@ -786,7 +849,7 @@ public class TaskService implements ITaskService {
     public ManagementService getManagementService() {
         return getProcessEngine().getManagementService();
     }
-
+    
     public ProcessEngine getProcessEngine() {
         return processEngine;
     }
@@ -809,6 +872,10 @@ public class TaskService implements ITaskService {
 
     public void setProcessEngine(ProcessEngine processEngine) {
         this.processEngine = processEngine;
+    }
+    
+    public ICommandService getCommandService() {
+        return (ICommandService) VeriniceContext.get(VeriniceContext.COMMAND_SERVICE);
     }
 
     public IBaseDao<CnATreeElement, Integer> getElementDao() {

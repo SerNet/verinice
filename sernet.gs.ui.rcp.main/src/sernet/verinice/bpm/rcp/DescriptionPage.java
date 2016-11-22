@@ -46,6 +46,10 @@ import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
+import sernet.hui.common.VeriniceContext;
+import sernet.springclient.RightsServiceClient;
+import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
@@ -69,6 +73,7 @@ public class DescriptionPage extends WizardPage {
     private Text textArea;
     private Button deleteButton;
     private Button overwriteTemplateCheckbox;
+    private Button releaseProcessCheckbox;
     
     private Map<String, IndividualServiceParameter> templateMap;
     
@@ -82,8 +87,11 @@ public class DescriptionPage extends WizardPage {
     private String taskDescription;
     
     private boolean overwriteTemplate = true;
+    private boolean withAReleaseProcess = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.ENABLE_RELEASE_PROCESS);
     
     private static final int PAGE_WIDTH = 600;
+    
+    private RightsServiceClient rightsService;
     
     /**
      * @param elementTitle Title of affected element for the task
@@ -199,6 +207,18 @@ public class DescriptionPage extends WizardPage {
             }            
             @Override
             public void keyPressed(KeyEvent e) {}
+        });
+        releaseProcessCheckbox = new Button(composite, SWT.CHECK);
+        releaseProcessCheckbox.setText(Messages.DescriptionPage_12);
+        releaseProcessCheckbox.setToolTipText(Messages.DescriptionPage_13);
+        releaseProcessCheckbox.setSelection(isWithAReleaseProcess());
+        releaseProcessCheckbox.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKWITHRELEASEPROCESS));
+        releaseProcessCheckbox.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Button checkBox = (Button) e.getSource();
+                withAReleaseProcess = checkBox.getSelection();
+            }
         });
     }
 
@@ -373,4 +393,33 @@ public class DescriptionPage extends WizardPage {
         return bpmPreferences;
     }
 
+    public RightsServiceClient getRightsService() {
+        if (rightsService == null) {
+            rightsService = (RightsServiceClient) VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE);
+        }
+        return rightsService;
+    }
+
+    /**
+     * @param releaseProcessCheckbox the releaseProcessCheckbox to set
+     */
+    public void setReleaseProcessSelected(boolean releaseProcessCheckboxSelected) {
+        releaseProcessCheckbox.setEnabled(getRightsService().isEnabled(ActionRightIDs.TASKWITHRELEASEPROCESS));
+        //only user with action right should start release process
+        releaseProcessCheckbox.setSelection(releaseProcessCheckbox.isEnabled() && releaseProcessCheckboxSelected);
+        withAReleaseProcess = releaseProcessCheckbox.getSelection();
+    }
+
+    /**
+     * @return the withAReleaseProcess
+     */
+    public boolean isWithAReleaseProcess() {
+        return withAReleaseProcess;
+    }
+    
+    public void disableTemplatesAndReleaseProcessCheckbox() {
+        templateCombo.setEnabled(false);
+        deleteButton.setEnabled(false);
+        releaseProcessCheckbox.setEnabled(false);
+    }
 }

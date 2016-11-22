@@ -41,6 +41,8 @@ public class Messages extends NLS {
     public static String BSIElementEditor_7;
 
     public static String BSIElementEditor_8;
+    
+    public static String BSIElementEditor_9;
 
     public static String EditorFactory_0;
 

@@ -32,6 +32,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -372,6 +373,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public void setDbId(Integer dbId) {
 		this.dbId = dbId;
 	}
+	
+	public String getPropertyValue(String typeId) {
+        return getEntity().getPropertyValue(typeId);
+    }
+	
+	public void setPropertyValue(String typeId, String value) {
+        getEntity().setPropertyValue(typeId, value);
+    }
 	
 	public void setSimpleProperty(String typeId, String value) {
 		EntityType entityType = getTypeFactory().getEntityType(getTypeId());
@@ -786,5 +795,4 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
-
 }
