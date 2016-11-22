@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.generator;
 
-import org.apache.log4j.Logger;
+import java.nio.file.Path;
 
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.TraversalFilter;
@@ -36,15 +36,12 @@ final class LtrTraversalFilter implements TraversalFilter {
 
     private VqlContext vqlNavigator;
     
-    private final Logger LOG = Logger.getLogger(LtrTraversalFilter.class);
-
     public LtrTraversalFilter(VqlContext vqlNavigator) {
         this.vqlNavigator = vqlNavigator;
     }
 
     @Override
     public boolean edgeFilter(Edge e, CnATreeElement source, CnATreeElement target, int depth) {
-        LOG.debug("filter edge: " + source.getTitle() + " [ " + e.getType() + " ] -> " + target.getTitle());
         return vqlNavigator.isValideEdge(source, e, target);
     }
 

@@ -69,7 +69,9 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
     @Override
     public void nodeTraversed(CnATreeElement node, Edge incoming, int depth) {
 
-        LOG.debug("traversed node: " + node.getTitle() + ":" + node.getTypeId());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("traversed node: " + node.getTitle() + ":" + node.getTypeId());
+        }
 
         CnATreeElement source;
 
@@ -87,12 +89,15 @@ final class LtrPrintRowsTraversalListener implements sernet.verinice.interfaces.
     @Override
     public void nodeFinished(CnATreeElement node, int depth) {
 
-        if(vqlContext.getCurrentNode().isMatch()){
+        if (vqlContext.getCurrentNode().isMatch()) {
             result.removeValue();
         }
 
         vqlContext.stepBack();
-        LOG.debug("finished node: " + node.getTitle() + ":" + node.getTypeId());
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("finished node: " + node.getTitle() + ":" + node.getTypeId());
+        }
     }
 
     @Override
