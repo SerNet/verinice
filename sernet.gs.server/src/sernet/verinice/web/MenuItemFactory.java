@@ -19,14 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
-import javax.el.ELContext;
-import javax.el.ExpressionFactory;
-import javax.el.MethodExpression;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.MethodExpressionActionListener;
-
-import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.MenuItem;
 
 /**
  * MenuItemFactory contains methods to create Primefaces menut items.
@@ -34,12 +28,6 @@ import org.primefaces.component.menuitem.MenuItem;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public abstract class MenuItemFactory {
-
-    private static FacesContext facesCtx = FacesContext.getCurrentInstance();
-    private static ELContext elementCtx = facesCtx.getELContext();
-    private static ExpressionFactory factory = facesCtx.getApplication().getExpressionFactory();
-    private static MethodExpression methodExpression = factory.createMethodExpression(elementCtx, "#{tree.selectPath}", Void.class,new Class[]{ActionEvent.class});
-    private static MethodExpressionActionListener actionListener = new MethodExpressionActionListener(methodExpression);
     
     /**
      * Creates a new item for the breadcrumb menu 
@@ -47,10 +35,9 @@ public abstract class MenuItemFactory {
      * @return A Primefaces menu item
      */
     public static MenuItem createNavigationMenuItem() {
-        MenuItem item = new MenuItem();
+        DefaultMenuItem item = new DefaultMenuItem();
         item.setStyle("padding: 0;");
         item.setUpdate(":tableForm,:navForm");
-        item.addActionListener(actionListener);
         return item;
     }
 }

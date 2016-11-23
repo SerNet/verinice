@@ -19,18 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.faces.event.ActionEvent;
-
 import org.apache.log4j.Logger;
-import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.model.DefaultMenuModel;
-import org.primefaces.model.MenuModel;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.MenuItem;
+import org.primefaces.model.menu.MenuModel;
 
 import sernet.gs.service.SecurityException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
@@ -51,6 +44,12 @@ import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.iso27k.LoadModel;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 
@@ -204,7 +203,7 @@ public class TreeBean implements IElementListener {
     private void createMenuModel() {
         menuModel = new DefaultMenuModel();     
         // Add home item     
-        menuModel.addMenuItem(MenuItemFactory.createNavigationMenuItem());
+        menuModel.addElement(MenuItemFactory.createNavigationMenuItem());
         
         path.clear();
         createPath(this.getElement());
@@ -214,9 +213,8 @@ public class TreeBean implements IElementListener {
         for (int i = breadcrumbSize; i < path.size(); i++) {
             CnATreeElement pathElement = path.get(i);
             MenuItem item = MenuItemFactory.createNavigationMenuItem();
-            item.setValue(pathElement.getTitle());
-            item.getAttributes().put("pathId", i );
-            menuModel.addMenuItem(item);
+            ((DefaultMenuItem) item).setValue(pathElement.getTitle());
+            menuModel.addElement(item);
         }
     }
 
@@ -229,19 +227,6 @@ public class TreeBean implements IElementListener {
             n = path.size() - MAX_BREADCRUMB_SIZE;
         }
         return n;
-    }
-    
-    public void selectPath(ActionEvent event) {
-        MenuItem selectedMenuItem = (MenuItem) event.getComponent();
-        String id = null;
-        if(selectedMenuItem.getAttributes().get("pathId")!=null) {
-            id = selectedMenuItem.getAttributes().get("pathId").toString();
-        }
-        if(id!=null) {
-            setElement( path.get(Integer.valueOf(id)));
-        } else {
-            setElement( loadIsoModel() );
-        }
     }
     
     public void openElement() {
