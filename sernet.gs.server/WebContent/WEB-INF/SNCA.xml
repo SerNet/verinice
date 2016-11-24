@@ -4193,6 +4193,94 @@ the value between <param></param> will be used directly if no string is found fo
             name="Document"
             id="audit_document"
             isURL="true" />
+
+
+<!-- PCI Elements - SAQ -->
+
+
+        <huipropertygroup id="pci_group" name="PCI DSS - Merchant Organization Information" tags="PCI DSS">
+		<huiproperty
+            name="Company Name"
+            id="pci_company" />
+		<huiproperty
+            name="DBA (doing business as)"
+            id="pci_dba" />
+        <huiproperty
+            name="Contact Name"
+            id="pci_contact" />
+        <huiproperty
+            name="Title"
+            id="pci_title" />
+        <huiproperty
+            name="Telephone"
+            id="pci_tel" />
+        <huiproperty
+            name="E-Mail"
+            id="pci_email" />
+        <huiproperty
+            name="Business Adress"
+            id="pci_business" />
+        <huiproperty
+            name="City"
+            id="pci_city" />
+        <huiproperty
+            name="State/Province"
+            id="pci_state" />
+        <huiproperty
+            name="Country"
+            id="pci_country" />
+        <huiproperty
+            name="Zip"
+            id="pci_zip" />
+         <huiproperty
+            name="URL"
+            id="pci_URL"
+            isURL="true" />
+		</huipropertygroup>
+
+
+       <huipropertygroup id="org_pci_group" name="PCI DSS - Merchant Business" tags="PCI DSS">
+        <huiproperty
+            id="org_pci_1"
+            name="Storage cardholder data"
+            tooltip="How and in what capacity does your business store, process and / or transmit cardholer data?"
+            inputtype="text"/>
+        <huiproperty id="org_pci_handelstaetigkeit"
+            name="Type of Merchant Business"
+            inputtype="multioption">
+            <option id="org_pci_httgk_1" name="Retailer" />
+            <option id="org_pci_httgk_2" name="Telecommunication" />
+            <option id="org_pci_httgk_3" name="Grocery and Supermarkets" />
+            <option id="org_pci_httgk_4" name="Petroleum" />
+            <option id="org_pci_httgk_5" name="E-Commerce" />
+            <option id="org_pci_httgk_6" name="Mail order/telephone order (MOTO)" />
+            <option id="org_pci_httgk_7" name="Others"  />
+        </huiproperty>
+        <huiproperty tags="PCI DSS" id="org_pci_other" name="Others" tooltip="please specify">
+         </huiproperty>
+
+         <huiproperty id="org_pci_serve"
+            name="What types of payment channels does your business serve?"
+            inputtype="multioption">
+            <option id="org_pci_serve_1" name="Mail order/telephone order (MOTO)" />
+            <option id="org_pci_serve_2" name="E-Commerce" />
+            <option id="org_pci_serve_3" name="Card-present (face-to-face)" />
+         </huiproperty>
+
+         <huiproperty id="org_pci_covered"
+            name="Which payment channels are covered by this SAQ?"
+            inputtype="multioption">
+            <option id="org_pci_covered_1" name="Mail order/telephone order (MOTO)" />
+            <option id="org_pci_covered_2" name="E-Commerce" />
+            <option id="org_pci_covered_3" name="Card-present (face-to-face)" />
+         </huiproperty>
+
+
+    </huipropertygroup>
+
+
+<!-- PCI Elements - SAQ - End -->
+
      	<huipropertygroup id="audit_isr_group" name="Information Security Reporting" tags="Information Security Reporting" >
 	 <huiproperty
             id="audit_isr_approval"
@@ -4444,6 +4532,7 @@ the value between <param></param> will be used directly if no string is found fo
         <huiproperty
             name="Description"
             id="control_desc"
+            inputtype="text"
             visible="false"
             tags="Web,Basic"/>
 		<huiproperty
