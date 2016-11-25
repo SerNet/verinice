@@ -16,22 +16,24 @@
  *  
  * Contributors: 
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation 
- ******************************************************************************/ 
+ ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.model.common.CnATreeElement;
 
-/** 
- * @author Viktor Schmidt <vschmidt[at]ckc[dot]de> 
- */ 
-public abstract class AddTemplateActionDelegate implements IObjectActionDelegate, RightEnabledUserInteraction {
+/**
+ * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
+ */
+public abstract class MarkTemplateActionDelegate implements IObjectActionDelegate, RightEnabledUserInteraction {
     /*
      * (non-Javadoc)
      * 
@@ -41,11 +43,20 @@ public abstract class AddTemplateActionDelegate implements IObjectActionDelegate
      */
     public final void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
+        // Realizes that the action to mark a element as template is greyed out,
+        // if it is already template or implementation.
+        Object sel = ((IStructuredSelection) selection).getFirstElement();
+        if (sel instanceof CnATreeElement) {
+            boolean isTemplateOrImplementation = ((CnATreeElement) sel).isTemplateOrImplementation();
+            if (isTemplateOrImplementation) {
+                action.setEnabled(false);
+            }
+        }
     }
 
     @Override
     public String getRightID() {
-        return ActionRightIDs.ADDTEMPLATE;
+        return ActionRightIDs.MARKTEMPLATE;
     }
 
     /*

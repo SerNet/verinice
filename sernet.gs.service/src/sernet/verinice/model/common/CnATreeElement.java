@@ -802,14 +802,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      * @return the templateTypeValue
      */
     public TemplateType getTemplateType() {
-        return TemplateType.valueOf(getTemplateTypeValue());
+        return getTemplateTypeValue() == null? TemplateType.NONE : TemplateType.valueOf(getTemplateTypeValue());
     }
 
     /**
      * @param templateTypeValue the templateTypeValue to set
      */
     public void setTemplateType(TemplateType templateType) {
-        this.templateTypeValue = templateType.name();
+        this.templateTypeValue = templateType.toString();
     }
 
     /**
@@ -828,5 +828,12 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 
     public boolean isTemplate() {
         return TemplateType.TEMPLATE.equals(this.getTemplateType());
+    }
+    public boolean isImplementation() {
+        return TemplateType.IMPLEMENTATION.equals(this.getTemplateType());
+    }
+    
+    public boolean isTemplateOrImplementation() {
+        return TemplateType.TEMPLATE.equals(this.getTemplateType()) || TemplateType.IMPLEMENTATION.equals(this.getTemplateType());
     }
 }

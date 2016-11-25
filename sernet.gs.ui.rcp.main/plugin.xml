@@ -642,7 +642,7 @@
             id="sernet.gs.ui.rcp.main.bsi.TemplateModule"
             objectClass="sernet.verinice.model.bsi.BausteinUmsetzung">
             <action
-               class="sernet.gs.ui.rcp.main.bsi.actions.AddTemplateModuleActionDelegate"
+               class="sernet.gs.ui.rcp.main.bsi.actions.MarkTemplateModuleActionDelegate"
                enablesFor="+"
                icon="icons/blue-document-block.png"
                id="sernet.gs.ui.rcp.main.addNewTemplateModule"
@@ -657,7 +657,7 @@
             id="sernet.gs.ui.rcp.main.bsi.TemplateSafeguard"
             objectClass="sernet.verinice.model.bsi.MassnahmenUmsetzung">
          <action
-               class="sernet.gs.ui.rcp.main.bsi.actions.AddTemplateSafeguardActionDelegate"
+               class="sernet.gs.ui.rcp.main.bsi.actions.MarkTemplateSafeguardActionDelegate"
                enablesFor="+"
                icon="icons/blue-document-bookmark.png"
                id="sernet.gs.ui.rcp.main.addNewTemplateSafeguard"
@@ -2062,19 +2062,16 @@
 	          	<objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
 	         </enablement>
 	      </decorator>
-	      <decorator
+          <decorator
                 adaptable="true"
                 class="sernet.verinice.rcp.TemplateDecorator"
                 id="sernet.verinice.rcp.TDecorator"
-                label="templateDecorator"
+                label="TemplateDecorator"
                 lightweight="true"
                 location="TOP_RIGHT"
                 state="true">
               <enablement>
-                <or>
-                    <objectClass name="sernet.verinice.model.bsi.BausteinUmsetzung"/>
-                    <objectClass name="sernet.verinice.model.bsi.MassnahmenUmsetzung"/>
-                </or>
+                <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
              </enablement>
           </decorator>
 	      <decorator

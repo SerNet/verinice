@@ -23,15 +23,14 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 
-import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
-import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.verinice.model.common.CnATreeElement;
 
-public class AddTemplateSafeguardActionDelegate extends AddTemplateActionDelegate {
+/**
+ * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
+ */
+public class MarkTemplateModuleActionDelegate extends MarkTemplateActionDelegate {
     private IWorkbenchPart targetPart;
 
     public void setActivePart(IAction action, IWorkbenchPart targetPart) {
@@ -40,16 +39,14 @@ public class AddTemplateSafeguardActionDelegate extends AddTemplateActionDelegat
 
     public void run(IAction action) {
         try {
-            Object sel = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
-            if (sel instanceof CnATreeElement) {
-                boolean inheritIcon = Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.INHERIT_SPECIAL_GROUP_ICON);
-                CnATreeElement parent = (CnATreeElement) sel;
-                CnATreeElement newSafeguard = CnAElementFactory.getInstance().saveNew(parent, MassnahmenUmsetzung.TYPE_ID, null, inheritIcon);
-
-                EditorFactory.getInstance().openEditor(newSafeguard);
+            Object selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
+            if (selection instanceof CnATreeElement) {
+                CnATreeElement element = (CnATreeElement) selection;
+                element.setTemplateTypeValue(CnATreeElement.TemplateType.TEMPLATE.toString());
+                CnAElementHome.getInstance().update(element);
             }
         } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.AddTemplateSafeguardActionDelegate_0);
+            ExceptionUtil.log(e, Messages.MarkTemplateModuleActionDelegate_0);
         }
     }
 }
