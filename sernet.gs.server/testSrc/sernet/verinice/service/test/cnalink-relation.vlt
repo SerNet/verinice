@@ -4,12 +4,12 @@
     1180225
   ],
   "columnPaths": [
-    "assetgroup.assetgroup_name AS Titel",
-    "assetgroup>asset.asset_name AS Titel",
-    "assetgroup>assetgroup>asset.asset_name AS Titel",
-    "assetgroup>assetgroup>asset/control.control_name AS Titel",
-    "assetgroup>assetgroup>asset:control.description AS Beschreibung",
-    "assetgroup>assetgroup>asset/asset.asset_name AS Titel"
+    "assetgroup.assetgroup_name AS Titel(AssetGroup1)",
+    "assetgroup>asset.asset_name AS Titel(Asset1)",
+    "assetgroup>assetgroup>asset.asset_name AS Titel(Asset2)",
+    "assetgroup>assetgroup>asset/control.control_name AS Titel(Control)",
+    "assetgroup>assetgroup>asset:control.description AS Beschreibung(Control)",
+    "assetgroup>assetgroup>asset/asset.asset_name AS Titel(AssetLink)"
   ],
   "relationIds": []
 }
