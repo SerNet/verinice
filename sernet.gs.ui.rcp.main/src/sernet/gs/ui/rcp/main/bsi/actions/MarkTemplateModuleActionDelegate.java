@@ -24,7 +24,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -40,10 +42,13 @@ public class MarkTemplateModuleActionDelegate extends MarkTemplateActionDelegate
     public void run(IAction action) {
         try {
             Object selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
-            if (selection instanceof CnATreeElement) {
-                CnATreeElement element = (CnATreeElement) selection;
-                element.setTemplateTypeValue(CnATreeElement.TemplateType.TEMPLATE.toString());
-                CnAElementHome.getInstance().update(element);
+            if (selection instanceof BausteinUmsetzung) {
+                BausteinUmsetzung module = (BausteinUmsetzung) selection;
+                module.setTemplateTypeValue(CnATreeElement.TemplateType.TEMPLATE.toString());
+                CnAElementHome.getInstance().update(module);
+                // notify all listeners:
+                CnAElementFactory.getModel(module.getParent()).childChanged(module);
+                CnAElementFactory.getModel(module.getParent()).databaseChildChanged(module);
             }
         } catch (Exception e) {
             ExceptionUtil.log(e, Messages.MarkTemplateModuleActionDelegate_0);
