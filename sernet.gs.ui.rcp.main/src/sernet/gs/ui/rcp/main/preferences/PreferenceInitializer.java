@@ -30,7 +30,7 @@ import sernet.verinice.interfaces.report.IReportService;
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
     
-    private static final String STANDALONE_UPDATENEWS_URL_DEFAULT = "http://update.verinice.com/news.json";
+    private static final String STANDALONE_UPDATENEWS_URL_DEFAULT = "http://update.verinice.org/news.json";
 
 	/*
 	 * (non-Javadoc)

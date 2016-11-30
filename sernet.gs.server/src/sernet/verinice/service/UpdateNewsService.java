@@ -179,7 +179,6 @@ public class UpdateNewsService implements IUpdateNewsService {
             this.sessionNewsEntry = parseNewsEntry(IOUtils.toString(in));
         } catch (IOException e) {
             LOG.error("Error reading the update news", e);
-            throw new UpdateNewsException("Error reading the update news", e);
         } 
         return this.sessionNewsEntry;
         

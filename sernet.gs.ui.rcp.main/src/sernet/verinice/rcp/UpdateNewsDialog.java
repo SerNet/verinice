@@ -19,16 +19,20 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
+import org.eclipse.equinox.internal.p2.ui.ProvUI;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
 import org.eclipse.equinox.p2.operations.ProvisioningJob;
+import org.eclipse.equinox.p2.operations.ProvisioningSession;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
@@ -38,6 +42,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -47,6 +52,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
+import com.sun.xml.messaging.saaj.util.Base64;
+
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
@@ -75,15 +83,7 @@ public class UpdateNewsDialog extends Dialog {
         super(parent);
         this.message = text;
         this.updateSite = updateSite;
-        setShellStyle(SWT.CLOSE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.RESIZE);
-        setBlockOnOpen(true);
-        Display display = getDisplay();
-        Shell shell = parent;
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()){
-                display.sleep();
-            }
-        }
+        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
     }
 
     @Override
@@ -94,7 +94,6 @@ public class UpdateNewsDialog extends Dialog {
         gridData.heightHint = 300;
         container.setLayoutData(gridData);
         createContent(container);
-        container.getParent().pack();
         return container;
     }
     
@@ -102,6 +101,11 @@ public class UpdateNewsDialog extends Dialog {
     protected void configureShell(Shell newShell) {
       super.configureShell(newShell);
       newShell.setText(Messages.UpdateNewsDialog_1);
+      Point cursorLocation = Display.getCurrent().getCursorLocation();
+      final int shellLocationXSubtrahend = 200;
+      final int shellLocationYSubtrahend = 400;
+      newShell.setLocation(new Point(cursorLocation.x-shellLocationXSubtrahend,
+              cursorLocation.y-shellLocationYSubtrahend));
     }
 
     /* (non-Javadoc)
@@ -192,12 +196,45 @@ public class UpdateNewsDialog extends Dialog {
      */
     private void triggerUpdate(URL updateSiteURL) throws URISyntaxException{
         // create update operation
+        
+        String username = "verinice";
+        String password = "verinice";
+        String authString = username + ":" + password;
+        byte[] authEncBytes = Base64.encode(authString.getBytes(VeriniceCharset.CHARSET_UTF_8));
+        String authEncString = new String(authEncBytes, VeriniceCharset.CHARSET_UTF_8);
+
+        
+        
+        URL loggedInUrl = null;
+        
+        try {
+            URLConnection urlConnection = updateSiteURL.openConnection();
+            urlConnection.setRequestProperty("Authorization", "Basic" + authEncString);
+            urlConnection.connect();
+            loggedInUrl = urlConnection.getURL();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        
+        
         LOG.debug("Update against updatesite:\t" + updateSiteURL.toString() + " requested") ;
-        UpdateOperation operation = new UpdateOperation(ProvUIActivator.getDefault().getProvisioningUI().getSession());
-       
-        updateUpdateSite(updateSiteURL);
+        ProvisioningSession session = ProvUIActivator.getDefault().getProvisioningUI().getSession();
+        boolean isManagerPresent = ProvUI.isUpdateManagerInstallerPresent();
+        LOG.debug(ProvUIActivator.getDefault().getPluginPreferences().propertyNames().toString());
+        UpdateOperation operation = new UpdateOperation(session);
+        
+        if(loggedInUrl != null){
+            updateUpdateSite(loggedInUrl);
+        } else {
+            LOG.error("Could not authorize update credentials");
+        }
+        
+        LOG.debug("ResolutionPlanDetails:\t" + operation.getResolutionDetails());
         
         // check if updates are available
+        
         IStatus status = operation.resolveModal(null);
         if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
             LOG.debug("detected there is nothing to update today");

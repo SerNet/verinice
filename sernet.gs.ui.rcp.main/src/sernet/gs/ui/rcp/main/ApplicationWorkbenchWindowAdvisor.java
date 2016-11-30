@@ -67,6 +67,7 @@ import sernet.verinice.interfaces.InternalServerEvent;
 import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 import sernet.verinice.model.updateNews.UpdateNewsException;
+import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
 import sernet.verinice.rcp.UpdateNewsDialog;
 
 /**
@@ -317,30 +318,36 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         Activator.inheritVeriniceContextState();
         IUpdateNewsService updateNewsService =(IUpdateNewsService)VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE);
         try{
-            final String text = updateNewsService.getNewsFromRepository(getNewsRepository()).getMessage(Locale.getDefault());
-            String installedVersion = getApplicationVersionFromAboutText();
-            if(StringUtils.isNotEmpty(installedVersion) && updateNewsService.isUpdateNecessary(installedVersion)){
-                final URL updateSiteURL;
-                try{
-                    updateSiteURL = new URL(updateNewsService.getNewsFromRepository(getNewsRepository()).getUpdateSite());
-                } catch (MalformedURLException e){
-                    LOG.error("Updatesite not parseable", e);
-                    throw new UpdateNewsException("Malformed URL of updatesite", e);
-                }
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
-                        UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell,
-                                text, updateSiteURL);
-                        newsDialog.open();
+            String newsRepo = getNewsRepository();
+            UpdateNewsMessageEntry newsEntry = updateNewsService.getNewsFromRepository(newsRepo);
+            if (!(newsEntry == null)){ // equals null in servermode
+                final String text = newsEntry.getMessage(Locale.getDefault());
+                String installedVersion = getApplicationVersionFromAboutText();
+                if (StringUtils.isNotEmpty(installedVersion) && updateNewsService.isUpdateNecessary(installedVersion)){
+                    final URL updateSiteURL;
+                    try{
+                        updateSiteURL = new URL(updateNewsService.getNewsFromRepository(getNewsRepository()).getUpdateSite());
+                    } catch (MalformedURLException e){
+                        LOG.error("Updatesite not parseable", e);
+                        throw new UpdateNewsException("Malformed URL of updatesite", e);
                     }
-                });
+                    Display.getDefault().syncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
+                            UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell,
+                                    text, updateSiteURL);
+                            newsDialog.open();
+                        }
+                    });
+                }
             }
         } catch (UpdateNewsException e){
             LOG.error("Problem occured during loading the verinice-update-news", e);
             ExceptionUtil.log(e, Messages.ApplicationActionBarAdvisor_23);
+        } catch (Throwable t){
+            LOG.error("Problem occured", t);
         }
     }
     
