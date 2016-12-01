@@ -2074,6 +2074,18 @@
                 <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
              </enablement>
           </decorator>
+          <decorator
+                adaptable="true"
+                class="sernet.verinice.rcp.TemplateImplementationDecorator"
+                id="sernet.verinice.rcp.TIDecorator"
+                label="TemplateImplementationDecorator"
+                lightweight="true"
+                location="TOP_RIGHT"
+                state="true">
+              <enablement>
+                <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
+             </enablement>
+          </decorator>
 	      <decorator
 	      		adaptable="true"
 	      		class="sernet.verinice.rcp.DBIDDecorator"

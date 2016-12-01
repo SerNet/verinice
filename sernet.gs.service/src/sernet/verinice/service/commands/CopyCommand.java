@@ -45,6 +45,7 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
@@ -281,10 +282,17 @@ public class CopyCommand extends GenericCommand {
         copyElement = getDao().initializeAndUnproxy(copyElement);
         CnATreeElement newElement = saveNew(toGroup, copyElement);
         if(newElement.getEntity()!=null) {
-            newElement.getEntity().copyEntity(copyElement.getEntity());
+            if (copyElement.isTemplateOrImplementation()) {
+                newElement.setEntity(copyElement.getEntity());
+                newElement.setTemplateType(TemplateType.IMPLEMENTATION);
+            } else {
+                newElement.getEntity().copyEntity(copyElement.getEntity());
+            }
+
             if(copyElement.getIconPath()!=null) {
                 newElement.setIconPath(copyElement.getIconPath());
             }
+            
             if(toGroup.getChildren()!=null && toGroup.getChildren().size()>0) {
                if (newElement instanceof GefaehrdungsUmsetzung){
                     final String title = newElement.getTitle();
