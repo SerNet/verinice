@@ -379,17 +379,18 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
      * @return
      */
     private String getApplicationVersionFromAboutText() {
-        IProduct product = Platform.getProduct();
-        String aboutText = product.getProperty("aboutText");
+        final IProduct product = Platform.getProduct();
+        final String aboutText = product.getProperty("aboutText");
         String version = "";
-        if(aboutText!=null) {
+        if (aboutText!=null) {
             String lines[] = aboutText.split("\\r?\\n");
-            if(lines!=null && lines.length>0) {
-                String firstLine = lines[0];
-                String pattern = "\\b\\d{1}?[\\.]\\d{2}[\\.]\\d{1}\\b";
-                Pattern p = Pattern.compile(pattern);
-                Matcher matcher = p.matcher(firstLine);
-                if(matcher.find()){
+            if (lines!=null && lines.length>0) {
+                final String firstLine = lines[0];
+                final String pattern = 
+                        "\\b\\d{1}?[\\.]\\d{2}[\\.]\\d{1}\\w{1,4}\\b";
+                final Pattern p = Pattern.compile(pattern);
+                final Matcher matcher = p.matcher(firstLine);
+                if (matcher.find()){
                     version = matcher.group();
                 }
             }
