@@ -226,8 +226,11 @@ public class UpdateNewsDialog extends Dialog {
                         getPluginPreferences().propertyNames()).toString());
 
         
-        updateUpdateSite(updateSiteURL);
+//        updateUpdateSite(updateSiteURL);
         UpdateOperation operation = new UpdateOperation(session);
+        
+        operation.getProvisioningContext().setArtifactRepositories(new URI[]{updateSiteURL.toURI()});
+        operation.getProvisioningContext().setMetadataRepositories(new URI[]{updateSiteURL.toURI()});
         
 //        if(loggedInUrl != null){
 //            updateUpdateSite(loggedInUrl);
