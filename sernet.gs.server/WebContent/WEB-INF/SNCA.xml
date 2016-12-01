@@ -1191,6 +1191,403 @@ the value between <param></param> will be used directly if no string is found fo
                 </defaultRule>
             </huiproperty>
          </huipropertygroup>
+         <huipropertygroup
+			id="itverbund_group_bia"
+			name="Business Impact Analyse nach BSI Standard 100-4"
+			tags="BIA-BSI_100-4">
+            
+            <huiproperty
+				id="itverbund_bia_schritt_0"
+				name="Stammdaten und Geschäftsprozesse"
+				tags="BIA-BSI_100-4"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_bia_schritt_0_default">Für die Durchführung einer BIA wird eine Übersicht über alle relevanten Geschäftsprozesse des
+Unternehmens bzw. aller Fachaufgaben der Behörde mit den jeweils verantwortlichen Ansprechpartnern
+bzw. Prozessverantwortlichen benötigt. Diese Übersicht sollte neben der Auflistung der
+Prozesse auch eine Zuordnung zu den Geschäftszielen enthalten sowie die Abhängigkeiten zwischen
+den einzelnen Prozessen darstellen. Die Geschäftsziele einer Behörde leiten sich meist aus deren
+gesetzlichen Aufträgen ab. Liegt keine aktuelle Prozess-Übersicht vor, so ist diese als Vorarbeit zur
+BIA zu erstellen oder zu aktualisieren. Zusätzlich sollten Stammdaten der Institution wie Unternehmensstruktur
+oder Lokationen bereitgestellt werden. </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+           <huiproperty
+				id="itverbund_bia_schritt_1"
+				name="Organisationseinheiten und Geschäftsprozesse"
+				tags="BIA-BSI_100-4"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_bia_schritt_1_default">Ist offensichtlich, dass innerhalb des festgelegten Gültigkeitsbereichs des Notfallmanagements einige
+Organisationseinheiten oder Geschäftsprozesse eine sehr geringe Bedeutung für das Erreichen der
+Geschäftsziele und die wertschöpfenden Prozesse der Institution besitzen, so können diese bei der
+weiteren Betrachtung ausgespart werden.  </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_bia_schritt_2"
+				name="Schadensanalyse"
+				tags="BIA-BSI_100-4"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_bia_schritt_2_default">Die Schadensanalyse untersucht den Schaden für die Institution, den der Ausfall einzelner Geschäftsprozesse
+verursachen könnte. Dabei ist nicht nur die Höhe des Schadens, sondern insbesondere die
+zeitliche Entwicklung des Schadenverlaufs von Interesse. Für die Durchführung der Schadensanalyse
+sind die Rahmenbedingungen für die Erhebung festzulegen (Schadenskategorien und Schadensszenarien),
+die Bewertungsperioden sowie die Strategie zur Behandlung besonderer Termine, an denen
+die Verfügbarkeitsanforderung eines Prozesses von dessen Durchschnitt abweicht. Anschließend wird
+für jeden einzelnen Prozess und jede Bewertungsperiode der entstehende Schaden bei Ausfall
+bewertet.  </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_bia_schritt_3"
+				name="Festlegung der Wiederanlaufparameter"
+				tags="BIA-BSI_100-4"
+                inputtype="text">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_bia_schritt_3_default">Anhand des zeitlichen Schadenverlaufs und der zu erwartenden Schadenshöhe werden die maximal
+tolerierbare Ausfallzeit, die Wiederanlaufzeit und das Wiederanlauf-Niveau für jeden Geschäftsprozess
+festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und konsolidiert.  </param>
+                </defaultRule>
+            </huiproperty>
+            
+         </huipropertygroup>     
+         
+        
+    
+    
+    
+    
+    <huipropertygroup
+    
+			id="itverbund_group_schadenskategorie_niedrig"
+			name="Schadenskategorie: Niedrig"
+			tags="BIA-BSI_100-4">
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_niedrig_finanz"
+				name="Finanzielle Auswirkungen"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_niedrig_finanz_default">keine nennenswerten Auswirkungen (z. B. Verlust geringer als 5% des Umsatzes) </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_niedrig_beeintr"
+				name="Beeinträchtigung der Aufgabenerfüllung"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_niedrig_beeintr_default">keine nennenswerten Auswirkungen </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_niedrig_verstoss"
+				name="Verstoß gegen Gesetze, etc."
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_niedrig_verstoss_default">keine nennenswerten Auswirkungen </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_niedrig_negativ"
+				name="Negative Innen- und Außenwirkung"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_niedrig_negativ_default">keine nennenswerten Auswirkungen </param>
+                </defaultRule>
+            </huiproperty>
+    
+    </huipropertygroup> 
+    
+    
+    <huipropertygroup
+    
+			id="itverbund_group_schadenskategorie_normal"
+			name="Schadenskategorie: Normal"
+			tags="BIA-BSI_100-4">
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_normal_finanz"
+				name="Finanzielle Auswirkungen"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_normal_finanz_default">Der finanzielle Schaden bleibt für die Institution tolerabel (z. B. Verlust weniger als 5-20% des Umsatzes) </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_normal_beeintr"
+				name="Beeinträchtigung der Aufgabenerfüllung"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_normal_beeintr_default">Beeinträchtigung wird von Mitarbeitern toleriert / andere Tätigkeiten können vorgezogen werden / Nacharbeit  behindert die Aufgabenerfüllung nicht merklich / andere Organisationseinheiten oder Vertragspartner werden in ihrer Arbeit nicht wesentlich gestört.  </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_normal_verstoss"
+				name="Verstoß gegen Gesetze, etc."
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_normal_verstoss_default">Verstöße gegen Gesetze und Bestimmungen mit geringen Konsequenzen / Verstöße werden nur intern bemerkt</param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_normal_negativ"
+				name="Negative Innen- und Außenwirkung"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_normal_negativ_default">Störungen bzw. Ausfälle werden nur in Einzelfällen bemerkt und von Kunden und Geschäftspartnern als bedeutungslos eingeschätzt / Kunden und Geschäftspartner ziehen keine Konsequenzen / das grundsätzliche Vertrauen in die Institution ist nicht beeinträchtigt / keine wahrnehmbaren Verluste von Marktanteilen.  </param>
+                </defaultRule>
+            </huiproperty>
+    
+    </huipropertygroup> 
+    
+    
+    
+    
+    <huipropertygroup
+    
+			id="itverbund_group_schadenskategorie_hoch"
+			name="Schadenskategorie: Hoch"
+			tags="BIA-BSI_100-4">
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_hoch_finanz"
+				name="Finanzielle Auswirkungen"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_hoch_finanz_default">Der Schaden bewirkt beachtliche finanzielle Verluste, ist jedoch nicht existenzbedrohend (z. B. Verlust unter 20-30% des Umsatzes)</param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_hoch_beeintr"
+				name="Beeinträchtigung der Aufgabenerfüllung"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_hoch_beeintr_default">Nicht tolerierbare Unterbrechungen bzw. Einschränkungen / Minderung der Arbeitsqualität / Fristversäumnisse nach außen wirksam / Rückstandsaufholung nicht innerhalb der normalen Arbeitszeit möglich / andere Organisationseinheiten oder Vertragspartner werden in ihrer Arbeit erheblich gestört, auch dort müssen Rückstände aufgeholt werden / Konventionalstrafen in akzeptablem Rahmen  </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_hoch_verstoss"
+				name="Verstoß gegen Gesetze, etc."
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_hoch_verstoss_default">Verstoß gegen Gesetze und Bestimmungen mit tolerierbaren Konsequenzen / Verstöße werden auch außerhalb der Institution bemerkt </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_hoch_negativ"
+				name="Negative Innen- und Außenwirkung"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_hoch_negativ_default">Störungen bzw. Ausfälle werden von Kunden und Geschäftspartnern deutlich bemerkt und in der Brache wahrgenommen / Image und Vertrauen in die Institution sind bei einzelnen Kunden und Geschäftspartnern beeinträchtig / Image- bzw. Vertrauensverluste sind mit hohem Aufwand wieder auszugleichen / einzelne Kunden und Geschäftspartner ziehen Konsequenzen und beenden die Geschäftsbeziehung / merkliche Verluste von Marktanteilen / Verluste sind mit Aufwand wieder zurückzugewinnen  </param>
+                </defaultRule>
+            </huiproperty>
+    
+    </huipropertygroup> 
+    
+    
+    
+    <huipropertygroup
+    
+			id="itverbund_group_schadenskategorie_sehrhoch"
+			name="Schadenskategorie: Sehr Hoch"
+			tags="BIA-BSI_100-4">
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_sehrhoch_finanz"
+				name="Finanzielle Auswirkungen"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_sehrhoch_finanz_default">Der finanzielle Schaden ist für die Institution existenzgefährdend (z. B. wenn der Verlust 30% des Umsatzes überschreitet) </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_sehrhoch_beeintr"
+				name="Beeinträchtigung der Aufgabenerfüllung"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_sehrhoch_beeintr_default">gravierende Beeinträchtigung der Aufgabenerfüllung / Rückstände können nur mit externer Hilfe oder gar nicht aufgeholt werden / Verzögerte und fehlerhafte Ergebnisse werden extern deutlich bemerkt / schwerwiegende Minderung der Servicequalität / die Arbeit anderer Organisationseinheiten oder Vertragspartner ist nicht möglich / hohe Haftungsansprüche, Konventionalstrafen  </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_sehrhoch_verstoss"
+				name="Verstoß gegen Gesetze, etc."
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_sehrhoch_verstoss_default">Verstoß gegen Gesetze mit Konsequenzen für den Geschäftsbetrieb und einzelne Mitarbeiter </param>
+                </defaultRule>
+            </huiproperty>
+            
+            
+            <huiproperty
+				id="itverbund_schadenskategorie_sehrhoch_negativ"
+				name="Negative Innen- und Außenwirkung"
+                inputtype="text"
+                tags="BIA-BSI_100-4">
+                <defaultRule class="SimpleValue">
+                	<param id="itverbund_schadenskategorie_sehrhoch_negativ_default">ein erheblicher Teil der Kunden und Geschäftspartner zieht aus den Vorfällen Konsequenzen / Image, Vertrauen und Zuverlässigkeit der Institution sind stark beeinträchtigt und werden grundsätzlich in Zweifel gezogen / Image- und Vertrauensverluste sind schwer oder nicht mehr auszugleichen / starke Verluste von Marktanteilen / Verluste sind schwer oder nicht auszugleichen  </param>
+                </defaultRule>
+            </huiproperty>
+    
+    </huipropertygroup> 
+    
+    
+    
+    <huipropertygroup
+    
+			id="itverbund_group_gewichtung"
+			name="Gewichtung"
+			tags="BIA-BSI_100-4">
+            
+            <huiproperty
+								name="Finanzielle Auswirkungen" id="itverbund_gewichtung_finanz" tags="BIA-BSI_100-4" inputtype="numericoption" min="1" max="5">
+								<option
+                    id="itverbund_gewichtung_finanz_1"
+                    name="1"
+                    value="1" />
+                <option
+                    id="itverbund_gewichtung_finanz_2"
+                    name="2"
+                    value="2" />
+                <option
+                    id="itverbund_gewichtung_finanz_3"
+                    name="3"
+                    value="3" />
+                <option
+                    id="itverbund_gewichtung_finanz_4"
+                    name="4"
+                    value="4" />
+                <option
+                    id="itverbund_gewichtung_finanz_5"
+                    name="5"
+                    value="5" /> 
+               
+            </huiproperty>
+            
+           
+           <huiproperty
+								name="Beeinträchtigung der Aufgabenerfüllung" id="itverbund_gewichtung_beeintr" tags="BIA-BSI_100-4" inputtype="numericoption" min="1" max="5">
+								<option
+                    id="itverbund_gewichtung_beeintr_1"
+                    name="1"
+                    value="1" />
+                <option
+                    id="itverbund_gewichtung_beeintr_2"
+                    name="2"
+                    value="2" />
+                <option
+                    id="itverbund_gewichtung_beeintr_3"
+                    name="3"
+                    value="3" />
+                <option
+                    id="itverbund_gewichtung_beeintr_4"
+                    name="4"
+                    value="4" />
+                <option
+                    id="itverbund_gewichtung_beeintr_5"
+                    name="5"
+                    value="5" /> 
+               
+            </huiproperty> 
+            
+            
+            <huiproperty
+								name="Verstoß gegen Gesetze, etc." id="itverbund_gewichtung_verstoss" tags="BIA-BSI_100-4" inputtype="numericoption" min="1" max="5">
+								<option
+                    id="itverbund_gewichtung_verstoss_1"
+                    name="1"
+                    value="1" />
+                <option
+                    id="itverbund_gewichtung_verstoss_2"
+                    name="2"
+                    value="2" />
+                <option
+                    id="itverbund_gewichtung_verstoss_3"
+                    name="3"
+                    value="3" />
+                <option
+                    id="itverbund_gewichtung_verstoss_4"
+                    name="4"
+                    value="4" />
+                <option
+                    id="itverbund_gewichtung_verstoss_5"
+                    name="5"
+                    value="5" /> 
+               
+            </huiproperty> 
+            
+            
+           <huiproperty
+								name="Negative Innen- und Außenwirkung" id="itverbund_gewichtung_negativ" tags="BIA-BSI_100-4" inputtype="numericoption" min="1" max="5">
+								<option
+                    id="itverbund_gewichtung_negativ_1"
+                    name="1"
+                    value="1" />
+                <option
+                    id="itverbund_gewichtung_negativ_2"
+                    name="2"
+                    value="2" />
+                <option
+                    id="itverbund_gewichtung_negativ_3"
+                    name="3"
+                    value="3" />
+                <option
+                    id="itverbund_gewichtung_negativ_4"
+                    name="4"
+                    value="4" />
+                <option
+                    id="itverbund_gewichtung_negativ_5"
+                    name="5"
+                    value="5" /> 
+               
+            </huiproperty>             
+         
+    
+    </huipropertygroup> 
     </huientity>
     
     <huientity
@@ -2193,8 +2590,16 @@ the value between <param></param> will be used directly if no string is found fo
 			inputtype="reference" 
 			required="true">
 			<references 
-				entitytype="person"/>
-		</huiproperty>
+				entitytype="person"/>      
+		</huiproperty>	
+		<huiproperty
+                        name="BSI 100-4: Strategieoptionen" 
+                        id="bstumsetzung_nach_100-4"
+                        tooltip="Maßnahmen dieses Bausteins werden als Strategieoptionen im Rahmen eines Notfallmanagements gem. BSI-Standard 100-4 interpretiert."
+                        tags="BIA-BSI_100-4" 
+                        inputtype="booleanoption"  
+                        defaultValue="0" >	
+                </huiproperty>
 		<huiproperty
 			id="bstumsetzung_erfasstam"
 			name="Erfasst am"
@@ -2640,8 +3045,82 @@ the value between <param></param> will be used directly if no string is found fo
           <option id="mnums_kix_workflow_status_failure" name="Failure"/>
       </huiproperty>
     </huipropertygroup>
-      
-	</huientity>
+    <huipropertygroup 
+            name="Kosten-Nutzen-Analyse" 
+            id="mnums_group_kosten_nutzen"
+            tags="BIA-BSI_100-4">
+            <huiproperty 
+                    name="Szenario" 
+                    id="mnums_group_kosten_nutzen_szenario"
+                    tags="BIA-BSI_100-4"
+                    inputtype="text" /> 
+            <huiproperty
+                    name="Wiederanlaufzeit"
+                    id="mnums_group_kosten_nutzen_wiederanlauf"
+                    tooltip="Recovery Time Objective"
+                    tags="BIA-BSI_100-4"
+                    inputtype="singleoption">
+                        <option
+                            id="mnums_group_kosten_nutzen_wiederanlauf_8"
+                            name="8h" />
+                        <option
+                            id="mnums_group_kosten_nutzen_wiederanlauf_24"
+                            name="24h" />
+                        <option
+                            id="mnums_group_kosten_nutzen_wiederanlauf_48"
+                            name="48h" />
+                        <option
+                            id="mnums_group_kosten_nutzen_wiederanlauf_96"
+                            name="96h" /> 
+                        <option
+                            id="mnums_group_kosten_nutzen_wiederanlauf_168"
+                            name="168h" />
+                        <option
+                            id="mnums_group_kosten_nutzen_wiederanlauf_720"
+                            name="720h" />
+                        <option
+                            id="mnums_group_kosten_nutzen_wiederanlauf_mehr_720"           
+                            name=">720h" />       
+            </huiproperty>
+            <huiproperty 
+                    name="Kosten (€)" 
+                    id="mnums_group_kosten_nutzen_kosten"
+                    tags="BIA-BSI_100-4" />
+            <huiproperty
+                    name="Schaden bis zum Wiederanlauf"
+                    id="mnums_group_kosten_nutzen_schaden"
+                    tags="BIA-BSI_100-4"
+                    inputtype="singleoption">
+                    <option
+                        id="mnums_group_kosten_nutzen_schaden_niedrig"
+                        name="1:Niedrig" />
+                    <option
+                        id="mnums_group_kosten_nutzen_schaden_normal"
+                        name="2:Normal" />
+                    <option
+                        id="mnums_group_kosten_nutzen_schaden_hoch"
+                        name="3:Hoch" />
+                    <option
+                        id="mnums_group_kosten_nutzen_schaden_sehrhoch"
+                        name="4:Sehr Hoch" /> 
+        </huiproperty>
+        <huiproperty 
+                name="Zuverlässigkeit" 
+                id="mnums_group_kosten_nutzen_zuverlaessigkeit"
+                inputtype="text" />
+        <huiproperty 
+                name="Randbedingungen" 
+                id="mnums_group_kosten_nutzen_randbedingungen"
+                tags="BIA-BSI_100-4"
+                inputtype="text" />
+        <huiproperty 
+                name="Einschränkungen" 
+                id="mnums_group_kosten_nutzen_einschraenkungen"
+                tags="BIA-BSI_100-4"
+                inputtype="text" />
+        
+      </huipropertygroup>
+    </huientity>
 
     <huientity
         id="anwendung"
@@ -2909,8 +3388,828 @@ the value between <param></param> will be used directly if no string is found fo
 				<defaultRule class="Today"/>
 			</huiproperty>			
 			</huipropertygroup>
-    </huientity>
 
+	<huipropertygroup 
+						
+			name="BIA BSI 100-4" 
+			id="anwendung_bia"
+			tags="BIA-BSI_100-4">
+			
+			
+			
+			<huiproperty 
+				name="Wiederanlaufzeit" 
+				id="anwendung_rto"
+				tags="BIA-BSI_100-4"
+				tooltip="Recovery Time Objective / RTO -ist die Wiederanlaufzeit eines Prozesses oder der benötigten Ressourcen. Die maximale Zeit für den Wiederanlauf muss kleiner als die maximal tolerierbare Ausfallzeit sein."
+				/>
+				
+                        <huiproperty 
+				name="Wiederherstellungszeit" 
+				id="anwendung_rpo"
+				tags="BIA-BSI_100-4"
+				tooltip="-ist die Zeitspanne von der Unterbrechung des Prozesses bis zum Start des Normalbetriebs. Die Wiederherstellungszeit muss kleiner oder gleich der festgelegten Wiederanlaufzeit plus dem maximal tolerierbaren Notbetrieb sein (WHZ ≤ WAZ+MTN)"
+				/>
+				
+                        <huiproperty 
+				name="Maximal Tolerierbare Ausfallzeit" 
+				id="anwendung_mtpd"
+				tags="BIA-BSI_100-4"
+				tooltip="Maximum Tolerable Period of Disruption / MTPD -bei deren Überschreitung die Lebensfähigkeit des Prozesses bzw. der Institution mittel- bis langfristig ernsthaft bedroht ist."
+				/>
+				
+      
+				
+                        <huiproperty
+                                name="Wiederanlaufniveau"
+                                id="anwendung_wiederanlauf"
+                                tags="BIA-BSI_100-4"
+                                inputtype="singleoption">
+                                    <option
+                                        id="anwendung_wiederanlauf_0"
+                                        name="0 %" />
+                                    <option
+                                        id="anwendung_wiederanlauf_10"
+                                        name="10 %" />
+                                    <option
+                                        id="anwendung_wiederanlauf_20"
+                                        name="20 %" />
+                                    <option
+                                        id="anwendung_wiederanlauf_30"
+                                        name="30 %" /> 
+                                    <option
+                                        id="anwendung_wiederanlauf_40"
+                                        name="40 %" />
+                                    <option
+                                        id="anwendung_wiederanlauf_50"
+                                        name="50 %" />
+                                    <option
+                                        id="anwendung_wiederanlauf_60"
+                                        name="60 %" />
+                                    <option
+                                        id="anwendung_wiederanlauf_70"
+                                        name="70 %" />
+                                    <option
+                                        id="anwendung_wiederanlauf_80"
+                                        name="80 %" />
+                                    <option
+                                        id="anwendung_wiederanlauf_90"
+                                        name="90 %" />
+                                    <option
+                                        id="anwendung_wiederanlauf_100"
+                                        name="100 %" />       
+                        </huiproperty>
+        
+        
+        </huipropertygroup>
+    
+				
+        <huipropertygroup 
+                name="Finanzielle Auswirkungen" 
+                id="anwendung_finanz_auswirkung"
+                tags="BIA-BSI_100-4">
+                
+                
+                <huiproperty
+                        name="Auswirkung 8h" id="anwendung_auswirkung_8" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_auswirkung_8_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_auswirkung_8_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_auswirkung_8_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_auswirkung_8_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_auswirkung_8_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 24h"  id="anwendung_auswirkung_24" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_auswirkung_24_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_auswirkung_24_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_auswirkung_24_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_auswirkung_24_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_auswirkung_24_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                    name="Auswirkung 48h" id="anwendung_auswirkung_48" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_auswirkung_48_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_auswirkung_48_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_auswirkung_48_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_auswirkung_48_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_auswirkung_48_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" />
+                </huiproperty>
+                <huiproperty
+                    name="Auswirkung 96h"  id="anwendung_auswirkung_96" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_auswirkung_96_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_auswirkung_96_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_auswirkung_96_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_auswirkung_96_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_auswirkung_96_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" />
+                </huiproperty>
+                <huiproperty
+                    name="Auswirkung 168h" id="anwendung_auswirkung_168" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_auswirkung_168_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_auswirkung_168_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_auswirkung_168_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_auswirkung_168_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_auswirkung_168_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" />                
+                </huiproperty>
+                <huiproperty
+                name="Auswirkung 720h" id="anwendung_auswirkung_720" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_auswirkung_720_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_auswirkung_720_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_auswirkung_720_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_auswirkung_720_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_auswirkung_720_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty            
+                    name="Auswirkung >720h" id="anwendung_auswirkung_mehr_720" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_auswirkung_mehr_720_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_auswirkung_mehr_720_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_auswirkung_mehr_720_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_auswirkung_mehr_720_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_auswirkung_mehr_720_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty 
+                        name="Anmerkungen" 
+                        id="anwendung_auswirkung_anmerkung"
+                        tags="BIA-BSI_100-4"
+                        inputtype="text"
+                        />
+        </huipropertygroup>
+        <huipropertygroup 
+                name="Beeinträchtigung der Aufgabenerfüllung" 
+                id="anwendung_beeintr"
+                tags="BIA-BSI_100-4">
+                <huiproperty
+                        name="Auswirkung 8h" id="anwendung_beeintr_8" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_beeintr_8_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_beeintr_8_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_beeintr_8_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_beeintr_8_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_beeintr_8_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 24h"  id="anwendung_beeintr_24" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_beeintr_24_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_beeintr_24_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_beeintr_24_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_beeintr_24_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_beeintr_24_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 48h"  id="anwendung_beeintr_48" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_beeintr_48_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_beeintr_48_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_beeintr_48_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_beeintr_48_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_beeintr_48_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 96h"  id="anwendung_beeintr_96" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_beeintr_96_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_beeintr_96_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_beeintr_96_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_beeintr_96_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_beeintr_96_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 168h"  id="anwendung_beeintr_168" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_beeintr_168_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_beeintr_168_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_beeintr_168_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_beeintr_168_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_beeintr_168_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 720h"  id="anwendung_beeintr_720" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_beeintr_720_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_beeintr_720_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_beeintr_720_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_beeintr_720_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_beeintr_720_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung >720h"  id="anwendung_beeintr_mehr_720" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_beeintr_mehr_720_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_beeintr_mehr_720_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_beeintr_mehr_720_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_beeintr_mehr_720_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_beeintr_mehr_720_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" />
+                </huiproperty>
+                <huiproperty 
+                        name="Anmerkungen" 
+                        id="anwendung_beeintr_anmerkung"
+                        tags="BIA-BSI_100-4"
+                        inputtype="text" />
+        </huipropertygroup>	
+        <huipropertygroup 
+                name="Verstoß gegen Gesetze und Verträge" 
+                id="anwendung_verstoss"
+                tags="BIA-BSI_100-4">
+                <huiproperty
+                        name="Auswirkung 8h"  id="anwendung_verstoss_8" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_verstoss_8_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_verstoss_8_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_verstoss_8_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_verstoss_8_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_verstoss_8_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 24h"  id="anwendung_verstoss_24" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_verstoss_24_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_verstoss_24_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_verstoss_24_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_verstoss_24_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_verstoss_24_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 48h"  id="anwendung_verstoss_48" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_verstoss_48_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_verstoss_48_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_verstoss_48_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_verstoss_48_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_verstoss_48_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 96h"  id="anwendung_verstoss_96" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_verstoss_96_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_verstoss_96_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_verstoss_96_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_verstoss_96_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_verstoss_96_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty> 
+                <huiproperty
+                        name="Auswirkung 168h"  id="anwendung_verstoss_168" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_verstoss_168_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_verstoss_168_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_verstoss_168_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_verstoss_168_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_verstoss_168_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty> 
+                <huiproperty
+                        name="Auswirkung 720h"  id="anwendung_verstoss_720" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_verstoss_720_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_verstoss_720_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_verstoss_720_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_verstoss_720_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_verstoss_720_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung >720h"  id="anwendung_verstoss_mehr_720" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_verstoss_mehr_720_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_verstoss_mehr_720_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_verstoss_mehr_720_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_verstoss_mehr_720_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_verstoss_mehr_720_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty 
+                        name="Anmerkungen" 
+                        id="anwendung_verstoss_anmerkung"
+                        tags="BIA-BSI_100-4"
+                        inputtype="text" />
+        </huipropertygroup>											
+        <huipropertygroup 						
+                name="Negative Innen- und Außenwirkung" 
+                id="anwendung_image"
+                tags="BIA-BSI_100-4">
+                <huiproperty
+                        name="Auswirkung 8h"  id="anwendung_image_8" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_image_8_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_image_8_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_image_8_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_image_8_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_image_8_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>  
+                <huiproperty
+                        name="Auswirkung 24h"  id="anwendung_image_24" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_image_24_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_image_24_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_image_24_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_image_24_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_image_24_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 48h"  id="anwendung_image_48" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_image_48_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_image_48_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_image_48_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_image_48_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_image_48_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 96h"  id="anwendung_image_96" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_image_96_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_image_96_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_image_96_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_image_96_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_image_96_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 168h"  id="anwendung_image_168" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_image_168_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_image_168_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_image_168_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_image_168_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_image_168_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung 720h"  id="anwendung_image_720" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_image_720_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_image_720_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_image_720_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_image_720_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_image_720_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty
+                        name="Auswirkung >720h"  id="anwendung_image_mehr_720" tags="BIA-BSI_100-4" inputtype="numericoption" min="0" max="4">
+                        <option
+                            id="anwendung_image_mehr_720_unbearbeitet"
+                            name="Unbearbeitet"
+                            value="0" />
+                        <option
+                            id="anwendung_image_mehr_720_niedrig"
+                            name="Niedrig"
+                            value="1" />
+                        <option
+                            id="anwendung_image_mehr_720_normal"
+                            name="Normal"
+                            value="2" />
+                        <option
+                            id="anwendung_image_mehr_720_hoch"
+                            name="Hoch"
+                            value="3" />
+                        <option
+                            id="anwendung_image_mehr_720_sehrhoch"
+                            name="Sehr Hoch"
+                            value="4" /> 
+                </huiproperty>
+                <huiproperty 
+                        name="Anmerkungen" 
+                        id="anwendung_image_anmerkung"
+                        tags="BIA-BSI_100-4"
+                        inputtype="text"/>
+        </huipropertygroup>
+        <huipropertygroup 
+                name="Kritikalität" 
+                id="anwendung_kritikalitaet"
+                tags="BIA-BSI_100-4">
+                <huiproperty
+                        name="Kritikalitätskategorie"
+                        id="anwendung_kritikalitaetskat"
+                        tags="BIA-BSI_100-4"
+                        inputtype="singleoption">
+                        <option
+                                id="anwendung_kritikalitaetskat_unkritisch"
+                                name="unkritisch" />
+                        <option
+                                id="anwendung_kritikalitaetskat_wenig"
+                                name="wenig kritisch" />
+                        <option
+                                id="anwendung_kritikalitaetskat_kritisch"
+                                name="kritisch" />
+                        <option
+                                id="anwendung_kritikalitaetskat_hoch"
+                                name="hoch kritisch" /> 
+                </huiproperty>
+                <huiproperty 
+                        name="Anmerkungen" 
+                        id="anwendung_kritikalitaet_anmerkung"
+                        tags="BIA-BSI_100-4"
+                        inputtype="text" />
+        </huipropertygroup>
+        <huipropertygroup 
+                name="Strategieoptionen" 
+                id="anwendung_strategieoptionen"
+                tags="BIA-BSI_100-4">
+                <huiproperty 
+                        name="Minimale Lösung" 
+                        id="anwendung_strategieoptionen_minimal"
+                        tags="BIA-BSI_100-4"
+                        inputtype="text"
+                        tooltip="Hohes Restrisiko" />
+                <huiproperty 
+                        name="Kleine Lösung" 
+                        id="anwendung_strategieoptionen_klein"
+                        tags="BIA-BSI_100-4"
+                        inputtype="text"
+                        tooltip="Mittleres bis hohes Restrisiko" />
+                <huiproperty 
+                        name="Mittlere Lösung" 
+                        id="anwendung_strategieoptionen_mittel"
+                        tags="BIA-BSI_100-4"
+                        inputtype="text"
+                        tooltip="Mittleres Restrisiko" />
+                <huiproperty 
+                        name="Große Lösung" 
+                        id="anwendung_strategieoptionen_gross"
+                        tags="BIA-BSI_100-4"
+                        inputtype="text"
+                        tooltip="Geringes Restrisiko" />
+      </huipropertygroup>
+    </huientity>
     <huientity
         id="verarbeitungsangaben"
         name="Verarbeitungsangaben">
@@ -6975,8 +8274,8 @@ Wurden bereits weitere Stellen informiert?
 
        </huipropertygroup>   
 	
-       	<huipropertygroup id="record_Anfragen" name="Anfragen">
-	<huiproperty id="record_art_anfrage" name="Art der Anfrage" inputtype="singleoption">
+<huipropertygroup id="record_Anfragen" name="Anfragen">
+<huiproperty id="record_art_anfrage" name="Art der Anfrage" inputtype="singleoption">
                 <option id="record_art_anfrage_intern" name="Interne Anfrage" />
                 <option id="record_art_anfrage_ext" name="Externe Anfrage" />
             </huiproperty>
