@@ -101,7 +101,8 @@ public class UpdateNewsService implements IUpdateNewsService {
     public String getCurrentInstalledVersion() {
         try {
             
-            URL fileURL = new URL("platform:/plugin/sernet.gs.ui.rcp.main.feature/oc.product");
+            URL fileURL = new URL(
+                    "platform:/plugin/sernet.gs.ui.rcp.main.feature/oc.product");
             
             java.io.File file = null;
             file = new java.io.File(FileLocator.resolve(fileURL).toURI());
@@ -114,7 +115,11 @@ public class UpdateNewsService implements IUpdateNewsService {
                 NamedNodeMap namedNodeMap = node.getAttributes();
                 for (int j = 0; j < namedNodeMap.getLength(); j++){
                     if ("version".equals(namedNodeMap.item(j).getNodeName())){
-                        return namedNodeMap.item(j).getNodeValue();
+                        String installedVersion = namedNodeMap.item(j).
+                                getNodeValue();
+                        LOG.debug("installed Version from oc.product:\t" 
+                                + installedVersion);
+                        return installedVersion;
                     }
                 }
             };
@@ -145,8 +150,8 @@ public class UpdateNewsService implements IUpdateNewsService {
         String availableVersion = getNewsFromRepository(
                 this.newsLocation).getVersion();
         int result = ncs.compare( availableVersion, installedVersion); 
-        LOG.debug("Compare " + installedVersion + "(installed) with " + availableVersion
-                + "(available) = " + result);
+        LOG.debug("Compare " + installedVersion + "(installed) with "
+                + availableVersion + "(available) = " + result);
         return result == 1;
     }
 

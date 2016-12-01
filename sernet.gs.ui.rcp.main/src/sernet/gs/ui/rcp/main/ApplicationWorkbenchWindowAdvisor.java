@@ -323,6 +323,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             if (!(newsEntry == null)){ // equals null in servermode
                 final String text = newsEntry.getMessage(Locale.getDefault());
                 String installedVersion = getApplicationVersionFromAboutText();
+                LOG.debug("installed Version:\t" + installedVersion);
+                boolean updateNecessary = updateNewsService.isUpdateNecessary(installedVersion);
+                LOG.debug("update necessary:\t" + String.valueOf(updateNecessary));
                 if (StringUtils.isNotEmpty(installedVersion) && updateNewsService.isUpdateNecessary(installedVersion)){
                     final URL updateSiteURL;
                     try{

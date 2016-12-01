@@ -19,11 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
@@ -33,6 +33,7 @@ import org.eclipse.equinox.internal.p2.ui.ProvUI;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
 import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
+import org.eclipse.equinox.p2.operations.Update;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
 import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
 import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
@@ -52,9 +53,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 
-import com.sun.xml.messaging.saaj.util.Base64;
-
-import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
@@ -197,41 +195,56 @@ public class UpdateNewsDialog extends Dialog {
     private void triggerUpdate(URL updateSiteURL) throws URISyntaxException{
         // create update operation
         
-        String username = "verinice";
-        String password = "verinice";
-        String authString = username + ":" + password;
-        byte[] authEncBytes = Base64.encode(authString.getBytes(VeriniceCharset.CHARSET_UTF_8));
-        String authEncString = new String(authEncBytes, VeriniceCharset.CHARSET_UTF_8);
-
+//        String username = "verinice";
+//        String password = "verinice";
+//        String authString = username + ":" + password;
+//        byte[] authEncBytes = Base64.encode(authString.getBytes(VeriniceCharset.CHARSET_UTF_8));
+//        String authEncString = new String(authEncBytes, VeriniceCharset.CHARSET_UTF_8);
+//
+//        
+//        
+//        URL loggedInUrl = null;
+//        
+//        try {
+//            URLConnection urlConnection = updateSiteURL.openConnection();
+//            urlConnection.setRequestProperty("Authorization", "Basic" + authEncString);
+//            urlConnection.connect();
+//            loggedInUrl = urlConnection.getURL();
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
         
         
-        URL loggedInUrl = null;
         
-        try {
-            URLConnection urlConnection = updateSiteURL.openConnection();
-            urlConnection.setRequestProperty("Authorization", "Basic" + authEncString);
-            urlConnection.connect();
-            loggedInUrl = urlConnection.getURL();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
-        
-        
-        LOG.debug("Update against updatesite:\t" + updateSiteURL.toString() + " requested") ;
+//        LOG.debug("Update against updatesite:\t" + updateSiteURL.toString() + " requested") ;
         ProvisioningSession session = ProvUIActivator.getDefault().getProvisioningUI().getSession();
         boolean isManagerPresent = ProvUI.isUpdateManagerInstallerPresent();
-        LOG.debug(ProvUIActivator.getDefault().getPluginPreferences().propertyNames().toString());
+        LOG.debug("isUpdateManagerInstallerPresent:\t" + isManagerPresent);
+        LOG.debug("PropertyNames:\t" + 
+                Arrays.asList(ProvUIActivator.getDefault().
+                        getPluginPreferences().propertyNames()).toString());
+
+        
+        updateUpdateSite(updateSiteURL);
         UpdateOperation operation = new UpdateOperation(session);
         
-        if(loggedInUrl != null){
-            updateUpdateSite(loggedInUrl);
-        } else {
-            LOG.error("Could not authorize update credentials");
-        }
+//        if(loggedInUrl != null){
+//            updateUpdateSite(loggedInUrl);
+//        } else {
+//            LOG.error("Could not authorize update credentials");
+//        }
+        
         
         LOG.debug("ResolutionPlanDetails:\t" + operation.getResolutionDetails());
+        List<Update> possibleUpdates = Arrays.asList(operation.getPossibleUpdates());
+        
+        for(Update update : possibleUpdates){
+            LOG.debug("Possible Update:\t" + update.toString());
+            LOG.debug("Possible Update Properties:\t" + 
+                    Arrays.toString(update.replacement.getProperties().
+                            entrySet().toArray()));
+        }
         
         // check if updates are available
         
@@ -375,10 +388,44 @@ public class UpdateNewsDialog extends Dialog {
     private void updateUpdateSite(URL updateSiteURL) throws URISyntaxException {
         // set the updatesite
         LOG.debug("setting updatesite from verinice-news");
+        LOG.debug("All known repos before updating ArtifactRepoManager:\t");
+        
+        logRepos();
+        
         removeAllUpdateSites();
+        
         LOG.debug("adding updatesite:\t" + updateSiteURL.toString() + " to repositories");
+        
         Activator.getDefault().getMetadataRepositoryManager().addRepository(updateSiteURL.toURI());
         Activator.getDefault().getArtifactRepositoryManager().addRepository(updateSiteURL.toURI());
+        
+        LOG.debug("All known repos after updating ArtifactRepoManager:\t");
+        logRepos();
+    }
+
+    /**
+     * passing all known artifact and metadata repos to the logger
+     */
+    private void logRepos() {
+        if (LOG.isDebugEnabled()){
+            
+            List<URI> allArtifcatRepos = Arrays.asList(Activator.getDefault().
+                    getArtifactRepositoryManager().
+                    getKnownRepositories(Activator.getDefault().
+                    getArtifactRepositoryManager().REPOSITORIES_ALL));
+            List<URI> allMetadataRepos = Arrays.asList(Activator.getDefault().
+                    getMetadataRepositoryManager().
+                    getKnownRepositories(Activator.getDefault().
+                    getArtifactRepositoryManager().REPOSITORIES_ALL));
+            for(URI uri : allArtifcatRepos){
+                LOG.debug("ArtifactRepo:\t" + uri);
+            }
+            LOG.debug("================");
+            for(URI uri : allMetadataRepos){
+                LOG.debug("MetadataRepo:\t" + uri);
+            }
+            
+        }
     }
     
     /**
