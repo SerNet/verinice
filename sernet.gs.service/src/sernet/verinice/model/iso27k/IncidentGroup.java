@@ -29,6 +29,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class IncidentGroup extends Group<Asset> {
 
 	public static final String TYPE_ID = "incident_group"; //$NON-NLS-1$
+    public static final String TYPE_ID_HIBERNATE = "incidentgroup"; //$NON-NLS-1$
+    
 	public static final String PROP_NAME = "incident_group_name"; //$NON-NLS-1$
 	
 	public static final String[] CHILD_TYPES = new String[] {Incident.TYPE_ID};
