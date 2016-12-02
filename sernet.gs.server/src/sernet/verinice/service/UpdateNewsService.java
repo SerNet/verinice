@@ -22,6 +22,8 @@ package sernet.verinice.service;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -119,7 +121,13 @@ public class UpdateNewsService implements IUpdateNewsService {
                                 getNodeValue();
                         LOG.debug("installed Version from oc.product:\t" 
                                 + installedVersion);
-                        return installedVersion;
+                        final Pattern p = Pattern.compile(
+                                IUpdateNewsService.VERINICE_VERSION_PATTERN);
+                        final Matcher matcher = p.matcher(installedVersion);
+                        if (matcher.find()){
+                            String parsedVersion = matcher.group();
+                            return parsedVersion;
+                        }
                     }
                 }
             };
@@ -149,6 +157,14 @@ public class UpdateNewsService implements IUpdateNewsService {
         NumericStringComparator ncs = new NumericStringComparator();
         String availableVersion = getNewsFromRepository(
                 this.newsLocation).getVersion();
+        
+        final Pattern p = Pattern.compile(
+                IUpdateNewsService.VERINICE_VERSION_PATTERN);
+        final Matcher matcher = p.matcher(installedVersion);
+        if (matcher.find()){
+            availableVersion = matcher.group();
+        }
+        
         int result = ncs.compare( availableVersion, installedVersion); 
         LOG.debug("Compare " + installedVersion + "(installed) with "
                 + availableVersion + "(available) = " + result);

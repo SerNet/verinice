@@ -386,15 +386,15 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             String lines[] = aboutText.split("\\r?\\n");
             if (lines!=null && lines.length>0) {
                 final String firstLine = lines[0];
-                final String pattern = 
-                        "\\b\\d{1}?[\\.]\\d{2}[\\.]\\d{1}\\w{1,4}\\b";
-                final Pattern p = Pattern.compile(pattern);
+                final Pattern p = Pattern.compile(
+                        IUpdateNewsService.VERINICE_VERSION_PATTERN);
                 final Matcher matcher = p.matcher(firstLine);
                 if (matcher.find()){
                     version = matcher.group();
                 }
             }
         }
+        LOG.debug("Read versionnumber " + version + " from prodcut-description");
         return version;
     }
 
