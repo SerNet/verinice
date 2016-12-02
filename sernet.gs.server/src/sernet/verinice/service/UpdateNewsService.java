@@ -160,7 +160,7 @@ public class UpdateNewsService implements IUpdateNewsService {
         LOG.debug("version string from news-repo:\t" + availableVersion);
         final Pattern p = Pattern.compile(
                 IUpdateNewsService.VERINICE_VERSION_PATTERN);
-        final Matcher matcher = p.matcher(installedVersion);
+        final Matcher matcher = p.matcher(availableVersion);
         if (matcher.find()){
             availableVersion = matcher.group();
         }
