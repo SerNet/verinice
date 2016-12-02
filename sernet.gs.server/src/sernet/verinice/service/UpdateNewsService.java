@@ -157,7 +157,7 @@ public class UpdateNewsService implements IUpdateNewsService {
         NumericStringComparator ncs = new NumericStringComparator();
         String availableVersion = getNewsFromRepository(
                 this.newsLocation).getVersion();
-        
+        LOG.debug("version string from news-repo:\t" + availableVersion);
         final Pattern p = Pattern.compile(
                 IUpdateNewsService.VERINICE_VERSION_PATTERN);
         final Matcher matcher = p.matcher(installedVersion);
