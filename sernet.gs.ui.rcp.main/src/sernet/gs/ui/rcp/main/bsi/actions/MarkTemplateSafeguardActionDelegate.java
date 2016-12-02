@@ -52,7 +52,7 @@ public class MarkTemplateSafeguardActionDelegate extends MarkTemplateActionDeleg
         for (Object selection : selections) {
             if (selection instanceof MassnahmenUmsetzung) {
                 MassnahmenUmsetzung safeguard = (MassnahmenUmsetzung) selection;
-                safeguard.setTemplateTypeValue(CnATreeElement.TemplateType.TEMPLATE.toString());
+                safeguard.setTemplateTypeValue(CnATreeElement.TemplateType.TEMPLATE.name());
                 CnAElementHome.getInstance().update(safeguard);
             }
         }
@@ -62,7 +62,7 @@ public class MarkTemplateSafeguardActionDelegate extends MarkTemplateActionDeleg
         Object firstElement = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
         if (firstElement instanceof MassnahmenUmsetzung) {
             BausteinUmsetzung module = (BausteinUmsetzung) ((MassnahmenUmsetzung) firstElement).getParent();
-            module.setTemplateTypeValue(CnATreeElement.TemplateType.TEMPLATE.toString());
+            module.setTemplateTypeValue(CnATreeElement.TemplateType.TEMPLATE.name());
             CnAElementHome.getInstance().update(module);
 
             // notify all listeners:

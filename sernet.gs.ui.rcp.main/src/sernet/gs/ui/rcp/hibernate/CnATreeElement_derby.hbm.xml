@@ -95,6 +95,10 @@
         </set>
         
         <property name="iconPath" column="icon" type="string" length="256"/>
+        
+        <property name="templateTypeValue" type="string">
+            <column name="template_type" not-null="true" default="'none'" />
+        </property>
 		
 <!-- Grundschutz-Elemente: ################################################################# -->
 

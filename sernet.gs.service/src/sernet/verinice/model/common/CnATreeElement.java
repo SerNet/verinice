@@ -39,6 +39,7 @@ import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Schutzbedarf;
+import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.InheritLogger;
 import sernet.verinice.model.validation.CnAValidation;
@@ -132,7 +133,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	private Set<Attachment> files = new HashSet<Attachment>(1);
 	
 	public enum TemplateType { NONE, TEMPLATE, IMPLEMENTATION }
-	public String templateTypeValue;
+	public String templateTypeValue = TemplateType.NONE.name();
 	
 	@Override
 	public boolean equals(Object obj) {
@@ -809,7 +810,7 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
      * @param templateTypeValue the templateTypeValue to set
      */
     public void setTemplateType(TemplateType templateType) {
-        this.templateTypeValue = templateType.toString();
+        this.templateTypeValue = templateType.name();
     }
 
     /**

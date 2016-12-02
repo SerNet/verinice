@@ -44,7 +44,7 @@ public class MarkTemplateModuleActionDelegate extends MarkTemplateActionDelegate
             Object selection = ((IStructuredSelection) targetPart.getSite().getSelectionProvider().getSelection()).getFirstElement();
             if (selection instanceof BausteinUmsetzung) {
                 BausteinUmsetzung module = (BausteinUmsetzung) selection;
-                module.setTemplateTypeValue(CnATreeElement.TemplateType.TEMPLATE.toString());
+                module.setTemplateTypeValue(CnATreeElement.TemplateType.TEMPLATE.name());
                 CnAElementHome.getInstance().update(module);
                 // notify all listeners:
                 CnAElementFactory.getModel(module.getParent()).childChanged(module);
