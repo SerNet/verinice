@@ -2068,7 +2068,7 @@
                 id="sernet.verinice.rcp.TDecorator"
                 label="TemplateDecorator"
                 lightweight="true"
-                location="TOP_RIGHT"
+                location="TOP_LEFT"
                 state="true">
               <enablement>
                 <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
@@ -2080,7 +2080,7 @@
                 id="sernet.verinice.rcp.TIDecorator"
                 label="TemplateImplementationDecorator"
                 lightweight="true"
-                location="TOP_RIGHT"
+                location="TOP_LEFT"
                 state="true">
               <enablement>
                 <objectClass name="sernet.verinice.model.common.CnATreeElement"/>
