@@ -1,0 +1,154 @@
+body {
+    .ui-overlaypanel {
+        @include overlay-shadow();
+
+        .ui-overlaypanel-close {
+            background-color: $headerBgColor;
+            color: #ffffff;
+            padding: 2px;
+            @include transition(color .3s);
+
+            &.ui-state-hover {
+                color: $primaryColor;
+            }
+
+            span {
+                margin-left: 1px;
+            }
+        }
+    }
+
+    .ui-dialog {
+        @include overlay-shadow();
+
+        .ui-dialog-titlebar {
+            padding: $headerPadding;
+
+            .ui-dialog-title {
+                margin: 0;
+                float: none;
+            }
+
+            .ui-dialog-titlebar-icon {
+                color: #ffffff;
+                border: 0 none;
+                @include transition(color .3s);
+                padding: 0;
+                margin-left: 4px;
+
+                &.ui-state-hover {
+                    color: $primaryColor;
+                }
+
+                &.ui-dialog-titlebar-maximize  {
+                    position: relative;
+                    top: 1px;
+                    left: 1px;
+                }
+            }
+        }
+
+        .ui-dialog-content {
+            padding: $contentPadding;
+        }
+
+        .ui-dialog-buttonpane {
+            padding: $headerPadding;
+            text-align: right;
+
+            button {
+                margin: 0 4px 0 0;
+            }
+        }
+
+        &.ui-dialog-maximized {
+            top: 75px !important;
+        }
+
+        &.ui-confirm-dialog {
+            .ui-dialog-content {
+                padding: 20px;
+
+                > span {
+                    float: none;
+                    display: inline-block;
+                    vertical-align: middle;
+                    line-height: $fontSize;
+                    margin: 0;
+
+                    &.ui-icon {
+                        margin-right: 4px;
+                        font-size: $fontSize + 2;
+                    }
+                }
+            }
+        }
+    }
+
+    .ui-tooltip {
+        .ui-tooltip-text {
+            @include overlay-shadow();
+        }
+    }
+
+    .ui-lightbox {
+        @include overlay-shadow();
+
+        .ui-lightbox-caption {
+            padding: $headerPadding;
+
+            .ui-lightbox-caption-text {
+                color: $headerTextColor;
+                margin: 0;
+            }
+
+            .ui-lightbox-close {
+                padding: 0;
+                color: $headerTextColor;
+                @include transition(color .3s);
+
+                &.ui-state-hover {
+                    color: $primaryColor;
+                }
+            }
+        }
+
+        .ui-lightbox-content-wrapper {
+            overflow: hidden;
+
+            .ui-lightbox-nav-left {
+                @include icon_override("\f053");
+                @include transition(all .3s);
+                font-size: 24px;
+                margin-left: 4px;
+
+                &:hover {
+                    @include scale(1.2);
+                }
+
+                span {
+                    display: none;
+                }
+            }
+
+            .ui-lightbox-nav-right {
+                @include icon_override("\f054");
+                @include transition(all .3s);
+                font-size: 24px;
+                margin-right: 4px;
+
+                &:hover {
+                    @include scale(1.2);
+                }
+
+                span {
+                    display: none;
+                }
+            }
+
+            .ui-lightbox-content.ui-lightbox-loading + a {
+                display: none;
+            }
+        }
+    }
+}

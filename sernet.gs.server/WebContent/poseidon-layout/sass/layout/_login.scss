@@ -1,0 +1,59 @@
+.login-body {
+    .login-panel {
+        height: 100%;
+        width: 350px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 100px 50px;
+        -webkit-box-shadow: 0 5px 7px 5px rgba(0, 0, 0, 0.1);
+        -moz-box-shadow: 0 5px 7px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 7px 5px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        background-color: #ffffff;
+        overflow: auto;
+
+        .ui-g-12 {
+            padding: 16px 0;
+            text-align: center;
+
+            &.logo-container {
+                img {
+                    margin-bottom: 20px;
+                }
+            }
+
+            &.chkbox-container {
+                text-align: left;
+
+                .ui-outputlabel {
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-left: 8px;
+                }
+            }
+
+            &.button-container {
+                button {
+                    margin-bottom: 20px;
+                }
+            }
+        }
+    }
+}
+@media (min-width: 641px) {
+    .login-body {
+        background: url("\#{resource['poseidon-layout:images/login/login-background.png']}") top left no-repeat;
+        background-size: cover;
+    }
+}
+
+@media (max-width: 640px) {
+    .login-body {
+        background: none;
+
+        .login-panel {
+            width: 100%;
+        }
+    }
+}

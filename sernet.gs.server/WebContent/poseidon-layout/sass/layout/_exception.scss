@@ -1,0 +1,95 @@
+body {
+    &.exception-body {
+        .exception-top {
+            height: 30%;
+            position: relative;
+
+            img {
+                width: 100px;
+                display: block;
+                position: absolute;
+                bottom: 30px;
+                left: 50%;
+                margin-left: -50px;
+            }
+        }
+
+        .exception-bottom {
+            height: 70%;
+
+            .exception-wrapper {
+                margin:0 auto;
+                width: 500px;
+                padding: 50px;
+                text-align: center;
+                box-sizing: border-box;
+
+                .exception-summary {
+                    display: block;
+                    color: #ffffff;
+                    font-size: 36px;
+                    font-weight: bold;
+                    margin-bottom: 20px;
+                }
+
+                .exception-detail {
+                    display: block;
+                    color: #ffffff;
+                    margin-bottom: 50px;
+                }
+
+                button {
+                    width: 75%;
+                    display: block;
+                    margin: 0 auto 100px auto;
+                }
+
+                .logo-icon {
+                    width: 56px;
+                    display: block;
+                    margin: 0 auto 20px auto;
+                }
+
+                .exception-footer {
+                    color: #ffffff;
+                }
+            }
+        }
+
+        &.error-page {
+            background-color: #ce5051;
+
+            .exception-top {
+                background-color: #f0f3f5;
+            }
+        }
+
+        &.access-page {
+            background-color: #ce5051;
+
+            .exception-top {
+                background-color: #f0f3f5;
+            }
+        }
+
+        &.notfound-page {
+            background-color: #2d353c;
+
+            .exception-top {
+                background-color: #f0f3f5;
+            }
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        &.exception-body {
+            .exception-bottom {
+                .exception-wrapper {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

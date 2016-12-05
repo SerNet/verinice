@@ -1,0 +1,407 @@
+.landing-wrapper {
+    #header {
+        width: 100%;
+        min-height: 500px;
+        background:  url("\#{resource['poseidon-layout:images/landing/landing-bg.png']}") top left no-repeat #f7f7f7;
+        background-size: cover;
+
+        .header-top {
+            width: 960px;
+            margin: 0 auto;
+            padding: 30px 0px;
+
+            .logo {
+                display: inline-block;
+                vertical-align: middle;
+                width: 175px;
+                height: 49px;
+                background: url("\#{resource['poseidon-layout:images/logo-white.png']}") top left no-repeat;
+                background-size: 175px 49px;
+            }
+
+            #menu {
+                float: right;
+                list-style: none;
+                margin: 20px 20px 0 0;
+                padding: 0;
+
+                li {
+                    float: left;
+                    display: block;
+                    margin-left: 30px;
+
+                    a {
+                        padding: 3px 7px;
+                        color: #ffffff;
+                        @include transition(background-color .3s);
+                        @include border-radius(2px);
+
+                        &:hover {
+                            color: #00acac;
+                            background-color: #f0f3f5;
+                        }
+                    }
+
+                    i {
+                        display: none;
+                    }
+                }
+
+                &.lmenu-active {
+                    display: block;
+                }
+            }
+
+            #menu-button {
+                float: right;
+                font-size: 36px;
+                color: #ffffff;
+                display: none;
+            }
+        }
+
+        .header-content {
+            width: 960px;
+            margin: 0 auto;
+
+            h1 {
+                margin: 80px 0 0 0;
+                font-weight: 400;
+                font-size: 24px;
+                color: #ffffff;
+            }
+
+            h2 {
+                margin: 10px 0 40px 0;
+                font-weight: 300;
+                font-size: 20px;
+                color: #ffffff;
+            }
+
+            button {
+                .ui-button-text {
+                    padding: 10px 20px;
+                }
+            }
+        }
+    }
+
+    #features {
+        width: 960px;
+        margin: 0 auto;
+        padding: 100px 0px;
+        text-align: center;
+
+        p {
+            color: $textSecondaryColor;
+        }
+
+        .ui-g-12 {
+            padding: 2em .5em;
+        }
+
+        .feature-icon {
+            text-align: center;
+            box-sizing: border-box;
+            height: 100px;
+
+            img {
+                text-align: center;
+                width: 100px;
+            }
+
+        }
+    }
+
+    #promotion {
+        width: 100%;
+        background:  url("\#{resource['poseidon-layout:images/landing/landing-overlay-1.png']}") 775px 370px no-repeat #2d353c;
+        background-size: 400px auto;
+        min-height: 500px;
+
+        .promotion-content {
+            width: 960px;
+            margin: 0 auto;
+            padding: 50px 0 0 0;
+            text-align: center;
+            overflow: hidden;
+
+            h2 {
+                font-size: 24px;
+                color: #ffffff;
+            }
+
+            p {
+                color: #ffffff;
+            }
+
+            img {
+                margin-top: 50px;
+                display: inline-block;
+                height: 350px;
+                position: relative;
+                top: 25px;
+            }
+        }
+    }
+
+    #pricing {
+        width: 100%;
+        background:  url("\#{resource['poseidon-layout:images/landing/landing-overlay-2.png']}") 0px 300px no-repeat #ffffff;
+        background-size: 600px auto;
+        min-height: 400px;
+
+        .pricing-content {
+            width: 960px;
+            margin: 0 auto;
+            padding: 75px 0;
+            text-align: center;
+            overflow: hidden;
+
+            div.ui-g-12 {
+                padding: 1em;
+            }
+
+            .pricing-box {
+                color: #ffffff;
+
+                .pricing-header {
+                    margin: 0 auto;
+                    max-width: 200px;
+                    font-size: 20px;
+                    padding: 75px 0 75px 0px;
+                    box-sizing: border-box;
+                    margin-bottom: -100px;
+                    @include border-radius(50%);
+
+                    .pricing-name, .price {
+                        display: inline-block;
+                        width: 100%;
+                        position: relative;
+                        top: -40px;
+                    }
+
+                    .price {
+                        font-weight: 300;
+                    }
+                }
+
+                .pricing-features {
+                    text-align: left;
+                    padding: 30px 20px;
+                    min-height: 305px;
+                    box-sizing: border-box;
+                    @include border-radius(2px);
+
+                    ul {
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+
+                        li {
+                            padding: 8px 14px;
+
+                            i {
+                                margin-right: 8px;
+                                font-size: 18px;
+                            }
+                        }
+                    }
+                }
+
+                .pricing-buy {
+                    padding: 20px 0;
+                }
+
+
+                &.pricing-basic {
+                    > div {
+                        background-color: #2dcece;
+                    }
+                }
+
+                &.pricing-standard {
+                    > div {
+                        background-color: #2f8ee5;
+                    }
+                }
+
+                &.pricing-pro {
+                    > div {
+                        background-color: #6c76af;
+                    }
+                }
+            }
+        }
+    }
+
+    #video {
+       background-color: #f7f7f7;
+       min-width: 400px;
+
+       .video-content {
+           width: 960px;
+           margin: 0 auto;
+           padding: 50px 0px 75px 0px;
+           text-align: center;
+
+
+           h2 {
+               font-weight: 400;
+           }
+
+           p {
+               color: $textSecondaryColor;
+           }
+       }
+   }
+
+   #footer {
+       width: 100%;
+       background-color: #00acac;
+       color: #ffffff;
+       padding: 50px 0;
+
+       .footer-content {
+           width: 960px;
+           margin: 0 auto;
+
+           .footer-left {
+                img {
+                    float: left;
+                    margin-right: 10px;
+                }
+
+                span {
+                    margin-top: 4px;
+                    display: block;
+                    font-weight: 400;
+                }
+           }
+
+           .footer-right {
+               text-align: right;
+               font-size: 24px;
+
+               i {
+                   margin-right: 14px;
+                   @include transition(color .3s);
+
+                   &:hover {
+                       color: #000000;
+                   }
+               }
+           }
+       }
+   }
+}
+
+@media (max-width: 1024px) {
+
+    .landing-wrapper {
+        #header {
+
+            .header-top {
+                padding: 30px;
+                width: 100%;
+                box-sizing: border-box;
+
+                #menu-button {
+                    display: inline-block;
+                }
+
+                #menu {
+                    z-index: 100;
+                    position: absolute;
+                    top: 86px;
+                    right: 30px;
+                    float: none;
+                    display: none;
+                    margin: 0;
+                    padding: 0;
+                    width: 225px;
+                    list-style: none;
+                    background-color: #ffffff;
+                    -webkit-animation-duration: .5s;
+                    -moz-animation-duration: .5s;
+                    animation-duration: .5s;
+                    @include overlay-shadow();
+
+                    li {
+                        float: none;
+                        margin-left: 0;
+
+                        a {
+                            font-size: 16px;
+                            display: block;
+                            padding: $listItemPadding;
+                            color: $textColor;
+                            width: 100%;
+                            box-sizing: border-box;
+                            overflow: hidden;
+                            @include transition(background-color .3s);
+
+                            &:hover {
+                                background-color: #f0f3f5;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .header-content {
+                width: 100%;
+                padding: 0px 30px 60px 30px;
+                box-sizing: border-box;
+
+                h1 {
+                    font-weight: 400;
+                }
+            }
+        }
+
+        #features, #promotion, #pricing, #video, #footer .footer-content {
+            width: 100%;
+            padding-right: 30px;
+            padding-left: 30px;
+            box-sizing: border-box;
+        }
+
+        #promotion {
+            .promotion-content {
+                width: 100%;
+            }
+        }
+
+        #pricing {
+            .pricing-content {
+                width: 100%;
+
+                button {
+                    width: 90%;
+                }
+            }
+        }
+
+        #video {
+           .video-content {
+               width: 100%;
+
+               .video-container {
+                   iframe {
+                       width: 350px;
+                       height: 220px;
+                   }
+               }
+           }
+       }
+
+       #footer  {
+           .footer-content {
+               .footer-right {
+                   text-align: left;
+               }
+           }
+       }
+    }
+}

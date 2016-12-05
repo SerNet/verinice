@@ -1,0 +1,53 @@
+/* Common */
+$fontSize:14px;
+$textColor:#5f666c;
+$textSecondaryColor:lighten($textColor,10%);
+$borderRadius:2px;
+$dividerColor:#c9cdd2;
+$iconWidth:16px;
+$iconHeight:16px;
+
+/* Headers */
+$headerPadding:8px 14px;
+$headerBgColor:#2d353c;
+$headerTextColor:#ffffff;
+$headerHoverBgColor:#444d56;
+
+/* Contents */
+$contentPadding:8px 14px;
+$contentBorderColor:#c9cdd2;
+
+/* Forms */
+$inputPadding:5px;
+$inputBorderColor:#a8acb1;
+$inputHoverBorderColor:#5f666c;
+$inputInvalidBorderColor:#f06364;
+
+/* List Items */
+$listItemPadding:8px 14px;
+$listItemHoverBgColor:#f0f3f5;
+$listItemHoverTextColor:#5f666c;
+
+/* Messages */
+$infoMessageBgColor:#2f8ee5;
+$infoMessageTextColor:#ffffff;
+$warnMessageBgColor:#f1b263;
+$warnMessageTextColor:#ffffff;
+$errorMessageBgColor:#f06364;
+$errorMessageTextColor:#ffffff;
+$fatalMessageBgColor:#2d353c;
+$fatalMessageTextColor:#ffffff;
+
+/* Horizontal Menu */
+$hmenuBGColor: #f0f3f5;
+
+/* Predefined Colors */
+$turquoise:#00acac;
+$blue:#2f8ee5;
+$orange:#efa64c;
+$purple:#6c76af;
+$pink:#f16383;
+$lightBlue:#63c9f1;
+$green:#57c279;
+$deepPurple:#7e57c2;
+$black:#2d353c;

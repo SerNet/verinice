@@ -1,5 +1,5 @@
 
-<jsp:forward page="portal.verinice.private/index.jsf" />
+<%-- <jsp:forward page="portal.verinice.private/index.jsf" /> --%>
 <html>
 <head>
 <title>Verinice Server Welcome Page</title>

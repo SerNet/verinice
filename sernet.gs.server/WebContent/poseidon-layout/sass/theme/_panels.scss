@@ -1,0 +1,270 @@
+body {
+    .ui-panel {
+        padding: 0;
+
+        .ui-panel-titlebar {
+            border: 0 none;
+            padding: $headerPadding;
+            @include border-radius-top($borderRadius);
+            @include border-radius-bottom(0px);
+
+            .ui-panel-titlebar-icon {
+                position: relative;
+                top: 2px;
+                color: #ffffff;
+                margin: 0 0 0 4px;
+                @include transition(color .3s);
+
+                &.ui-state-hover {
+                    color: $primaryColor;
+                }
+            }
+        }
+
+        .ui-panel-content {
+            height: 100%;
+            box-sizing: border-box;
+            padding: $contentPadding;
+        }
+
+        .ui-panel-footer {
+            padding: $headerPadding;
+            border: 0 none;
+            border-top: 1px solid $contentBorderColor;
+            margin: 0;
+        }
+
+        &.ui-panel-collapsed-h {
+            .ui-panel-titlebar {
+                padding-left: 40px;
+            }
+        }
+    }
+
+    .ui-fieldset {
+        padding: 0 0 8px 0;
+
+        .ui-fieldset-legend {
+            color: #ffffff;
+            background-color: $headerBgColor;
+            margin-left: 10px;
+            @include transition(background-color .3s);
+
+            .ui-fieldset-toggler {
+                float: none;
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 8px;
+            }
+
+            &.ui-state-hover {
+                background-color: $primaryColor;
+            }
+
+            &.ui-state-focus {
+                background-color: $headerHoverBgColor;
+            }
+        }
+
+        .ui-fieldset-content {
+            padding: $contentPadding;
+        }
+    }
+
+    .ui-notificationbar {
+        background-color: $primaryColor;
+        color: #ffffff;
+    }
+
+    .ui-accordion {
+        .ui-accordion-header {
+            background-color: $headerBgColor;
+            padding: $headerPadding;
+            padding-left: 30px;
+            color:#ffffff;
+            font-size: $fontSize;
+            @include transition(background-color .3s);
+
+            &.ui-state-hover {
+                background-color: $headerHoverBgColor;
+            }
+
+            &.ui-state-active {
+                background-color: $primaryColor;
+                color: #ffffff;
+            }
+
+            .ui-icon-triangle-1-e {
+                margin-top: -7px;
+                @include icon_override("\f054");
+            }
+
+            .ui-icon-triangle-1-s {
+                @include icon_override("\f078");
+            }
+
+            &.ui-tabs-outline {
+                border: 0 none;
+                background-color: $headerHoverBgColor;
+
+                &.ui-state-active {
+                    background-color: lighten($primaryColor, 5%);
+                }
+            }
+        }
+
+        .ui-accordion-content {
+            padding: $contentPadding;
+        }
+    }
+
+    .ui-tabs {
+        padding: 0;
+
+        &.ui-tabs-top,&.ui-tabs-bottom,&.ui-tabs-left,&.ui-tabs-right {
+            .ui-tabs-nav {
+                padding: 0;
+
+                li {
+                    position: static;
+                    @include transition(background-color .3s);
+                    @include border-radius(0);
+                    margin: 0;
+                    box-sizing: border-box;
+
+                    a {
+                        padding: $headerPadding;
+                        color: #ffffff;
+
+                        &:focus {
+                            outline: 0 none;
+                        }
+                    }
+
+                    &.ui-state-hover {
+                        background-color: $headerHoverBgColor;
+                    }
+
+                    &.ui-tabs-outline {
+                        outline: 0 none;
+                        background-color: $headerHoverBgColor;
+                    }
+
+                    &.ui-state-active {
+                        background-color: $primaryColor;
+
+                        &.ui-tabs-outline {
+                            background-color: lighten($primaryColor,5%);
+                        }
+                    }
+
+                    .ui-icon-close {
+                        margin-top: 8px;
+                    }
+                }
+            }
+
+            .ui-tabs-navscroller-btn {
+                background-color: #ffffff;
+
+                &.ui-state-hover {
+                    background-color: $listItemHoverBgColor;
+                }
+
+                &.ui-tabs-navscroller-btn-left {
+                    left: 0;
+                    height: 33px;
+                }
+
+                &.ui-tabs-navscroller-btn-right {
+                    right: 0;
+                    height: 34px;
+                }
+
+                .ui-icon {
+                    margin-top: 8px;
+                }
+            }
+        }
+
+        &.ui-tabs-left,&.ui-tabs-right {
+            .ui-tabs-nav {
+                li {
+                    width: 100%;
+                }
+            }
+        }
+
+        .ui-tabs-panel {
+            padding: $contentPadding;
+        }
+    }
+
+    .ui-scrollpanel {
+        .ui-scrollpanel-drag {
+            background-color: #a8acb1;
+        }
+
+        .ui-scrollpanel-track {
+            background-color: #f0f3f5;
+        }
+
+        .ui-scrollpanel-corner {
+            background-color: #f0f3f5;
+        }
+    }
+
+    .ui-toolbar {
+        padding: $headerPadding;
+    }
+
+    .ui-tooltip {
+        .ui-tooltip-arrow {
+            color: #2d353c;
+        }
+
+        .ui-tooltip-text {
+            background-color: #2d353c;
+        }
+    }
+
+    .ui-wizard {
+        .ui-wizard-step-titles {
+            .ui-wizard-step-title {
+                background-color: #ffffff;
+                border-left: 1px solid $contentBorderColor;
+                margin: 0;
+                padding: $headerPadding;
+                @include border-radius(0);
+
+                &:first-child {
+                    @include border-radius-left($borderRadius);
+                    border-right: 1px solid $contentBorderColor;
+                }
+
+                &:last-child {
+                    @include border-radius-right($borderRadius);
+                    border-right: 1px solid $contentBorderColor;
+                }
+
+                &.ui-state-highlight {
+                    border-color: $primaryColor;
+                    background-color: $primaryColor;
+                    color: #ffffff;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 640px) {
+    body {
+        .ui-panelgrid {
+            .ui-grid-responsive {
+                .ui-grid-row {
+                    border: 0 none;
+                }
+            }
+        }
+    }
+}
