@@ -285,6 +285,7 @@ public class CopyCommand extends GenericCommand {
             if (copyElement.isTemplateOrImplementation()) {
                 newElement.setEntity(copyElement.getEntity());
                 newElement.setTemplateType(TemplateType.IMPLEMENTATION);
+//                TODO: add new task or email notification to administrator of template
             } else {
                 newElement.getEntity().copyEntity(copyElement.getEntity());
             }
