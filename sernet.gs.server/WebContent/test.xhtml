@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml">
+
+    <ui:define name="title">Sample</ui:define>
+
+    <ui:define name="viewname">Sample Page</ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-fluid">
+                <div class="ui-g">
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Form Elements</h1>
+                            <p:panelGrid columns="4" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" layout="grid" styleClass="ui-panelgrid-blank form-group" style="border:0px none; background-color:transparent;">
+                                <p:outputLabel for="input" value="Input"/>
+                                <p:inputText id="input"/>
+
+                                <p:outputLabel for="area" value="Textarea"/>
+                                <p:inputTextarea id="area"/>
+
+                                <p:outputLabel for="calendar" value="Calendar"/>
+                                <p:calendar id="calendar"/>
+
+                                <p:outputLabel for="ac" value="Auto Complete"/>
+                                <p:autoComplete id="ac" completeMethod="#{autoCompleteView.completeText}" />
+
+                                <p:outputLabel for="mask" value="Mask"/>
+                                <p:inputMask id="mask" mask="99/99/9999"/>
+
+                                <p:outputLabel for="pwd" value="Password"/>
+                                <p:password id="pwd" />
+
+                                <p:outputLabel for="keyboard" value="Keyboard"/>
+                                <p:keyboard id="keyboard" />
+
+                                <p:outputLabel for="onemenu" value="OneMenu"/>
+                                <p:selectOneMenu id="onemenu">
+                                    <f:selectItem itemLabel="Select One" itemValue="" />
+                                    <f:selectItem itemLabel="Xbox One" itemValue="Xbox One" />
+                                    <f:selectItem itemLabel="PS4" itemValue="PS4" />
+                                    <f:selectItem itemLabel="Wii U" itemValue="Wii U" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="spinner" value="Spinner"/>
+                                <p:spinner id="spinner"/>
+
+                                <p:outputLabel for="slider" value="Slider"/>
+                                <p:outputPanel>
+                                    <p:inputText id="slider"/>
+                                    <p:slider for="slider" />
+                                </p:outputPanel>
+
+                                <p:outputLabel for="radio" value="Radio"/>
+                                <p:selectOneRadio id="radio" value="#{radioView.city}" layout="responsive" columns="2" styleClass="form-group">
+                                    <f:selectItems value="#{radioView.cities}" var="c" itemLabel="#{city}" itemValue="#{city}"/>
+                                </p:selectOneRadio>
+
+                                <p:outputLabel for="chkbox" value="Checkbox"/>
+                                <p:selectManyCheckbox id="chkbox" value="#{checkboxView.selectedCities}" layout="responsive" columns="2" styleClass="form-group">
+                                    <f:selectItems value="#{checkboxView.cities}" var="city" itemLabel="#{city}" itemValue="#{city}" />
+                                </p:selectManyCheckbox>
+
+                                <p:outputLabel for="btn" value="Button" />
+                                <p:commandButton id="btn" value="Edit" icon="ui-icon-edit" type="button"/>
+
+                                <p:outputLabel for="spbtn" value="SplitButton" />
+                                <p:splitButton id="spbtn" value="Save" type="button" icon="fa fa-check" style="max-width:150px;">
+                                    <p:menuitem value="Update" url="#" icon="fa fa-refresh" />
+                                    <p:menuitem value="Delete" url="#" icon="fa fa-trash" />
+                                    <p:separator />
+                                    <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="fa fa-home" />
+                                </p:splitButton>
+
+                                <p:outputLabel for="chkmenu" value="Checkbox Menu" />
+                                <p:selectCheckboxMenu id="chkmenu" label="Cities">
+                                    <f:selectItems value="#{checkboxView.cities}" />
+                                </p:selectCheckboxMenu>
+
+                                <p:outputLabel for="booleanBtn" value="Boolean Button" />
+                                <p:selectBooleanButton id="booleanBtn" onLabel="Yes" offLabel="No" onIcon="ui-icon-check" offIcon="ui-icon-close"/>
+
+                                <p:outputLabel for="oneBtn" value="OneButton" />
+                                <p:selectOneButton id="oneBtn">
+                                    <f:selectItem itemLabel="Spark" itemValue="Spark" />
+                                    <f:selectItem itemLabel="Ronin" itemValue="Ronin" />
+                                </p:selectOneButton>
+
+                                <p:outputLabel for="manyBtn" value="Many Button"/>
+                                <p:selectManyButton id="manyBtn">
+                                    <f:selectItem itemLabel="Spark" itemValue="Spark" />
+                                    <f:selectItem itemLabel="Ronin" itemValue="Ronin" />
+                                    <f:selectItem itemLabel="Rio" itemValue="Rio" />
+                                </p:selectManyButton>
+
+                                <p:outputLabel for="listbox" value="Listbox"/>
+                                <p:selectOneListbox id="listbox">
+                                    <f:selectItem itemLabel="Sentinel" itemValue="Sentinel" />
+                                    <f:selectItem itemLabel="Spark" itemValue="Spark" />
+                                    <f:selectItem itemLabel="Ronin" itemValue="Ronin" />
+                                    <f:selectItem itemLabel="Rio" itemValue="Rio" />
+                                    <f:selectItem itemLabel="Primus" itemValue="Primus" />
+                                </p:selectOneListbox>
+
+                                <p:outputLabel for="listbox" value="Dialog"/>
+
+                                <p:commandButton id="dialog2" value="Dialog" icon="fa fa-home" type="button" onclick="PF('dlg').show()" style="max-width:150px;"/>
+                            </p:panelGrid>
+
+                            <p:dialog header="Login" widgetVar="dlg" resizable="false" draggable="false" responsive="true" hideEffect="scale">
+                                <p:panelGrid columns="2" layout="grid" styleClass="ui-panelgrid-blank" columnClasses="ui-grid-col-4,ui-grid-col-8">
+                                    <h:outputLabel for="username" value="Username:" />
+                                    <p:inputText id="username" />
+
+                                    <h:outputLabel for="password" value="Password:" />
+                                    <p:password id="password" />
+
+                                    <f:facet name="footer">
+                                        <p:commandButton value="Login" type="button" onclick="PF('dlg').hide()" icon="fa fa-user"/>
+                                    </f:facet>
+                                </p:panelGrid>
+                            </p:dialog>
+                        </div>
+
+                        <div class="card card-w-title">
+                            <h1>DataTable</h1>
+                            <p:dataTable var="car" value="#{dtBasicView.cars}" reflow="true" selectionMode="single" selection="#{dtSelectionView.selectedCar}" rowKey="#{car.id}">
+                                <f:facet name="header">
+                                    DataTable
+                                </f:facet>
+                                <p:column headerText="Id" sortBy="#{car.id}">
+                                    <h:outputText value="#{car.id}" />
+                                </p:column>
+
+                                <p:column headerText="Year" sortBy="#{car.year}">
+                                    <h:outputText value="#{car.year}" />
+                                </p:column>
+
+                                <p:column headerText="Brand" sortBy="#{car.brand}">
+                                    <h:outputText value="#{car.brand}" />
+                                </p:column>
+
+                                <p:column headerText="Color" sortBy="#{car.color}">
+                                    <h:outputText value="#{car.color}" />
+                                </p:column>
+                            </p:dataTable>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-lg-6">
+                        <!-- Left Side -->
+                        <div class="card card-w-title">
+                            <h1>DataGrid</h1>
+                            <p:dataGrid var="car" value="#{dataGridView.cars}" columns="2" layout="grid"
+                                        rows="6" paginator="true" style="">
+
+                                <f:facet name="header">
+                                    DataGrid
+                                </f:facet>
+
+                                <p:panel header="#{car.id}" style="text-align:center">
+                                    <h:panelGrid columns="1" style="width:100%">
+                                        <p:graphicImage name="demo/images/car/#{car.brand}.gif"/>
+
+                                        <h:outputText value="#{car.brand} - #{car.year}" />
+                                    </h:panelGrid>
+                                </p:panel>
+                            </p:dataGrid>
+                        </div>
+
+                        <div class="card card-w-title">
+                            <h1>Tree</h1>
+                            <p:tree value="#{treeIconView.root}" var="doc">
+                                <p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+                                    <h:outputText value="#{doc.name}"/>
+                                </p:treeNode>
+
+                                <p:treeNode type="document" icon="ui-icon-document">
+                                    <h:outputText value="#{doc.name}" />
+                                </p:treeNode>
+
+                                <p:treeNode type="picture" icon="ui-icon-image">
+                                    <h:outputText value="#{doc.name}" />
+                                </p:treeNode>
+
+                                <p:treeNode type="movie" icon="ui-icon-video">
+                                    <h:outputText value="#{doc.name}" />
+                                </p:treeNode>
+                            </p:tree>
+                        </div>
+
+                        <div class="card card-w-title">
+                            <h1>Menu</h1>
+                            <p:menu>
+                                <p:submenu label="Ajax">
+                                    <p:menuitem value="Save" icon="fa fa-floppy-o"/>
+                                    <p:menuitem value="Update" icon="fa fa-refresh"/>
+                                </p:submenu>
+                                <p:submenu label="Non-Ajax">
+                                    <p:menuitem value="Delete" icon="fa fa-trash"/>
+                                </p:submenu>
+                                <p:submenu label="Navigations">
+                                    <p:menuitem value="External" url="http://www.primefaces.org" icon="fa fa-external-link"/>
+                                    <p:menuitem value="Internal" icon="fa fa-home"/>
+                                </p:submenu>
+                            </p:menu>
+                        </div>
+
+                        <div class="card card-w-title">
+                            <h1>PanelMenu</h1>
+                            <p:panelMenu>
+                                <p:submenu label="Ajax Menuitems">
+                                    <p:menuitem value="Save" icon="fa fa-save" />
+                                    <p:menuitem value="Update" icon="fa fa-refresh"/>
+                                </p:submenu>
+                                <p:submenu label="Non-Ajax Menuitem">
+                                    <p:menuitem value="Delete" icon="fa fa-close"/>
+                                </p:submenu>
+                                <p:separator />
+                                <p:submenu label="Navigations" >
+                                    <p:submenu label="Links" icon="fa fa-close">
+                                        <p:submenu label="PrimeFaces">
+                                            <p:menuitem value="Home" url="http://www.primefaces.org" icon="fa fa-home"/>
+                                            <p:menuitem value="Docs" url="http://www.primefaces.org/documentation" icon="fa fa-file"/>
+                                            <p:menuitem value="Download" url="http://www.primefaces.org/downloads" icon="fa fa-download"/>
+                                            <p:menuitem value="Support" url="http://www.primefaces.org/support" icon="fa fa-ticket"/>
+                                        </p:submenu>
+                                    </p:submenu>
+                                    <p:menuitem value="Star" icon="fa fa-star-o"/>
+                                </p:submenu>
+                            </p:panelMenu>
+                        </div>
+
+                        <div class="card card-w-title">
+                            <h1>Heading 1</h1>
+
+                            <h2>Heading 2</h2>
+
+                            <h3>Heading 3</h3>
+
+                            <h4>Heading 4</h4>
+                        </div>
+                    </div>
+                    <div class="ui-g-12 ui-lg-6">
+                        <!-- Right Side -->
+                        <div class="card card-w-title">
+                            <h1>PickList</h1>
+                            <p:pickList id="pickList" value="#{pickListView.cities}" var="cities" itemLabel="#{cities}" itemValue="#{cities}"
+                                        showSourceControls="true" showTargetControls="true" showSourceFilter="true" showTargetFilter="true" responsive="true" >
+                                <f:facet name="sourceCaption">From</f:facet>
+                                <f:facet name="targetCaption">To</f:facet>
+                            </p:pickList>
+                        </div>
+
+                        <div class="card card-w-title">
+                            <h1>OrderList</h1>
+                            <p:orderList value="#{orderListView.cities}" var="city" controlsLocation="left" itemLabel="#{city}" itemValue="#{city}" responsive="true" >
+                                <f:facet name="caption">Cities List</f:facet>
+                            </p:orderList>
+                        </div>
+
+                        <div class="card card-w-title">
+                            <h1>Accordion Panel</h1>
+                            <p:accordionPanel style="margin-top:20px">
+                                <p:tab title="Godfather Part I">
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-4,ui-grid-col-8" layout="grid" styleClass="ui-panelgrid-blank">
+                                        <h:outputText value="IMAGE" />
+                                        <h:outputText
+                                            value="The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
+                                            His beloved son Michael has just come home from the war, but does not intend to become part of his father's business.
+                                            Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family, kind and benevolent to those who give respect,
+                                            but given to ruthless violence whenever anything stands against the good of the family." />
+                                    </p:panelGrid>
+                                </p:tab>
+                                <p:tab title="Godfather Part II">
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank">
+                                        <h:outputText value="IMAGE" />
+                                        <h:outputText value="Francis Ford Coppola's legendary continuation and sequel to his landmark 1972 film, The_Godfather, parallels the young Vito Corleone's rise with his son Michael's spiritual fall, deepening The_Godfather's depiction of the dark side of the American dream.
+                                                      In the early 1900s, the child Vito flees his Sicilian village for America after the local Mafia kills his family. Vito struggles to make a living, legally or illegally, for his wife and growing brood in Little Italy,
+                                                      killing the local Black Hand Fanucci after he demands his customary cut of the tyro's business. With Fanucci gone, Vito's communal stature grows." />
+                                    </p:panelGrid>
+                                </p:tab>
+                                <p:tab title="Godfather Part III">
+                                    <p:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-10" layout="grid" styleClass="ui-panelgrid-blank">
+                                        <h:outputText value="IMAGE" />
+                                        <h:outputText value="After a break of more than 15 years, director Francis Ford Coppola and writer Mario Puzo returned to the well for this third and final story of the fictional Corleone crime family.
+                                                      Two decades have passed, and crime kingpin Michael Corleone, now divorced from his wife Kay has nearly succeeded in keeping his promise that his family would one day be completely legitimate." />
+                                    </p:panelGrid>
+                                </p:tab>
+                            </p:accordionPanel>
+                        </div>
+
+                        <div class="card card-w-title">
+                            <h1>Panel</h1>
+                            <p:panel header="Panel" footer="Movie Details" style="margin-top:20px">
+                            The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.
+                            His beloved son Michael has just come home from the war, but does not intend to become part of his father's business.
+                            Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family,
+                            kind and benevolent to those who give respect, but given to ruthless violence whenever anything stands against the good of the family.
+                            </p:panel>
+                        </div>
+
+                        <div class="card card-w-title">
+                            <h1>ProgressBar - Static Display</h1>
+                            <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true"/>
+                        </div>
+                    </div>
+
+                    <div class="ui-g-12">
+                        <div class="card card-w-title">
+                            <h1>Carousel</h1>
+                            <p:carousel value="#{carouselView.cars}" headerText="Carousel" var="car" itemStyle="text-align:center" responsive="true" >
+                                <p:panelGrid columns="2" style="width:100%;margin:10px 0px" columnClasses="label,value" layout="grid" styleClass="ui-panelgrid-blank">
+                                    <f:facet name="header">
+                                        <p:graphicImage name="demo/images/car/#{car.brand}.gif"/>
+                                    </f:facet>
+
+                                    <h:outputText value="Id:" />
+                                    <h:outputText value="#{car.id}" />
+
+                                    <h:outputText value="Year" />
+                                    <h:outputText value="#{car.year}" />
+
+                                    <h:outputText value="Color:" />
+                                    <h:outputText value="#{car.color}" style="color:#{car.color}"/>
+
+                                    <h:outputText value="Price" />
+                                    <h:outputText value="\$#{car.price}" />
+                                </p:panelGrid>
+                            </p:carousel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>
