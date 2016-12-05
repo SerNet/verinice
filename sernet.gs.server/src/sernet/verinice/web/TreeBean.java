@@ -262,7 +262,7 @@ public class TreeBean implements IElementListener {
     public void delete() {
         final String componentElementtable = "elementTable";
         try {
-            RemoveElement<CnATreeElement> command = new RemoveElement(getElement());
+            RemoveElement<CnATreeElement> command = new RemoveElement<>(getElement());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
             manager.elementRemoved(getElement());
             getChildren().remove(getElementInformation());
