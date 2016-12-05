@@ -79,7 +79,17 @@ public class UpdateNewsService implements IUpdateNewsService {
     // valid for one session to cache the entry
     private UpdateNewsMessageEntry sessionNewsEntry;
     
-    // cache the news location
+    /*
+    * configured via clients preference-store, reference:
+    * 
+    * sernet.gs.ui.rcp.main.preferences.
+    * PreferenceConstants.STANDALONE_UPDATENEWS_URL
+    *  
+    * To replace / change it manually add the following line to the
+    * end of the file verinice.ini:
+    * 
+    * -Dstandalone_updatenews_url=http://url.of/your/choice.json
+    */
     private String newsLocation;
 
     /**
@@ -186,7 +196,6 @@ public class UpdateNewsService implements IUpdateNewsService {
      * loads the latest news entry from the configured server as plain text 
      * (plain json)
      * and returns it as a string
-     * TODO: make news location configurable
      */
     @Override
     public  UpdateNewsMessageEntry getNewsFromRepository(String newsRepository) throws UpdateNewsException {

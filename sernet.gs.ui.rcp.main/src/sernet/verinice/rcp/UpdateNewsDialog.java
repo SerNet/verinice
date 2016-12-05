@@ -22,21 +22,15 @@ package sernet.verinice.rcp;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
-import org.eclipse.equinox.internal.p2.ui.ProvUI;
 import org.eclipse.equinox.internal.p2.ui.ProvUIActivator;
 import org.eclipse.equinox.p2.operations.ProvisioningJob;
 import org.eclipse.equinox.p2.operations.ProvisioningSession;
-import org.eclipse.equinox.p2.operations.Update;
 import org.eclipse.equinox.p2.operations.UpdateOperation;
-import org.eclipse.equinox.p2.repository.artifact.IArtifactRepositoryManager;
-import org.eclipse.equinox.p2.repository.metadata.IMetadataRepositoryManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -106,9 +100,6 @@ public class UpdateNewsDialog extends Dialog {
               cursorLocation.y-shellLocationYSubtrahend));
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.dialogs.Dialog#createButton(org.eclipse.swt.widgets.Composite, int, java.lang.String, boolean)
-     */
     protected Button createButton(Composite arg0, int arg1, String arg2, boolean arg3) 
     {
         //Return null so that no default buttons like 'OK' and 'Cancel' will be created
@@ -195,72 +186,26 @@ public class UpdateNewsDialog extends Dialog {
     private void triggerUpdate(URL updateSiteURL) throws URISyntaxException{
         // create update operation
         
-//        String username = "verinice";
-//        String password = "verinice";
-//        String authString = username + ":" + password;
-//        byte[] authEncBytes = Base64.encode(authString.getBytes(VeriniceCharset.CHARSET_UTF_8));
-//        String authEncString = new String(authEncBytes, VeriniceCharset.CHARSET_UTF_8);
-//
-//        
-//        
-//        URL loggedInUrl = null;
-//        
-//        try {
-//            URLConnection urlConnection = updateSiteURL.openConnection();
-//            urlConnection.setRequestProperty("Authorization", "Basic" + authEncString);
-//            urlConnection.connect();
-//            loggedInUrl = urlConnection.getURL();
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
-        
-        
-        
-//        LOG.debug("Update against updatesite:\t" + updateSiteURL.toString() + " requested") ;
         ProvisioningSession session = ProvUIActivator.getDefault().getProvisioningUI().getSession();
-        boolean isManagerPresent = ProvUI.isUpdateManagerInstallerPresent();
-        LOG.debug("isUpdateManagerInstallerPresent:\t" + isManagerPresent);
-        LOG.debug("PropertyNames:\t" + 
-                Arrays.asList(ProvUIActivator.getDefault().
-                        getPluginPreferences().propertyNames()).toString());
-
         
-//        updateUpdateSite(updateSiteURL);
         UpdateOperation operation = new UpdateOperation(session);
         
         operation.getProvisioningContext().setArtifactRepositories(new URI[]{updateSiteURL.toURI()});
         operation.getProvisioningContext().setMetadataRepositories(new URI[]{updateSiteURL.toURI()});
         
-//        if(loggedInUrl != null){
-//            updateUpdateSite(loggedInUrl);
-//        } else {
-//            LOG.error("Could not authorize update credentials");
-//        }
-        
-        
-        LOG.debug("ResolutionPlanDetails:\t" + operation.getResolutionDetails());
-        List<Update> possibleUpdates = Arrays.asList(operation.getPossibleUpdates());
-        
-        for(Update update : possibleUpdates){
-            LOG.debug("Possible Update:\t" + update.toString());
-            LOG.debug("Possible Update Properties:\t" + 
-                    Arrays.toString(update.replacement.getProperties().
-                            entrySet().toArray()));
-        }
-        
         // check if updates are available
         
         IStatus status = operation.resolveModal(null);
         if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
-            LOG.debug("detected there is nothing to update today");
+            LOG.debug("detected there is nothing to update");
             MessageDialog.openInformation(
                     null, 
                     Messages.UpdateNewsDialog_5, 
                     Messages.UpdateNewsDialog_4);
             return;
         }
-        
+
+        // execute update
         createAndExecuteUpdateJob(operation);
     }
 
@@ -381,69 +326,6 @@ public class UpdateNewsDialog extends Dialog {
         });
              
     }            
-        
-
-    /**
-     * sets the updateSite configured in the news message as the
-     * only one in the system, to ensure the update is taken from this one
-     * 
-     */
-    private void updateUpdateSite(URL updateSiteURL) throws URISyntaxException {
-        // set the updatesite
-        LOG.debug("setting updatesite from verinice-news");
-        LOG.debug("All known repos before updating ArtifactRepoManager:\t");
-        
-        logRepos();
-        
-        removeAllUpdateSites();
-        
-        LOG.debug("adding updatesite:\t" + updateSiteURL.toString() + " to repositories");
-        
-        Activator.getDefault().getMetadataRepositoryManager().addRepository(updateSiteURL.toURI());
-        Activator.getDefault().getArtifactRepositoryManager().addRepository(updateSiteURL.toURI());
-        
-        LOG.debug("All known repos after updating ArtifactRepoManager:\t");
-        logRepos();
-    }
-
-    /**
-     * passing all known artifact and metadata repos to the logger
-     */
-    private void logRepos() {
-        if (LOG.isDebugEnabled()){
-            
-            List<URI> allArtifcatRepos = Arrays.asList(Activator.getDefault().
-                    getArtifactRepositoryManager().
-                    getKnownRepositories(Activator.getDefault().
-                    getArtifactRepositoryManager().REPOSITORIES_ALL));
-            List<URI> allMetadataRepos = Arrays.asList(Activator.getDefault().
-                    getMetadataRepositoryManager().
-                    getKnownRepositories(Activator.getDefault().
-                    getArtifactRepositoryManager().REPOSITORIES_ALL));
-            for(URI uri : allArtifcatRepos){
-                LOG.debug("ArtifactRepo:\t" + uri);
-            }
-            LOG.debug("================");
-            for(URI uri : allMetadataRepos){
-                LOG.debug("MetadataRepo:\t" + uri);
-            }
-            
-        }
-    }
-    
-    /**
-     * clears systems updateSite-Settings
-     */
-    private void removeAllUpdateSites(){
-        LOG.debug("removing all existant updatesites");
-        IArtifactRepositoryManager artifactRepoManager = Activator.getDefault().getArtifactRepositoryManager();
-        IMetadataRepositoryManager metaRepoManager =  Activator.getDefault().getMetadataRepositoryManager();
-        for(URI repository : Activator.getDefault().getArtifactRepositoryManager().getKnownRepositories(IArtifactRepositoryManager.REPOSITORIES_ALL)){
-            LOG.debug("Removing repository:\t" + repository.toASCIIString());
-            artifactRepoManager.removeRepository(repository);
-            metaRepoManager.removeRepository(repository);
-        }
-    }
     
     private Display getDisplay(){
         if(Display.getCurrent() == null){
