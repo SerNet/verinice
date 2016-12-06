@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://primefaces.org/poseidon">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>PrimeFaces Poseidon</title>
+	<script type="text/javascript">
+		$(function() {
+			$('#menu-button').on('click', function(e) {
+				var menu = $('#menu');
+				if (menu.hasClass('lmenu-active')) {
+					menu.addClass('fadeOutUp');
+
+					setTimeout(function() {
+						menu.removeClass('fadeOutUp fadeInDown lmenu-active');
+					}, 500);
+				} else {
+					menu.addClass('lmenu-active fadeInDown');
+				}
+				e.preventDefault();
+			});
+		});
+	</script>
+</h:head>
+
+<h:body styleClass="landing-body">
+	<div class="landing-wrapper">
+		<div id="header">
+			<div class="header-top clearfix">
+				<span class="logo"></span> <a id="menu-button" href="#"> <span
+					class="fa fa-bars"></span>
+				</a>
+
+				<pt:menu />
+
+			</div>
+
+			<div class="header-content clearfix">
+				<h1>Welcome</h1>
+				<h2>Your application slogan comes here</h2>
+<!-- 				<p:button outcome="/dashboard" value="Sign Up Now" -->
+<!-- 					styleClass="secondary" /> -->
+			</div>
+		</div>
+
+		<div id="features">
+			<div class="ui-g">
+				<div class="ui-g-12 ui-md-4">
+					<div class="feature-icon">
+						<p:graphicImage name="images/landing/landing-1.png"
+							library="poseidon-layout" />
+					</div>
+					<h3>Responsive Layout</h3>
+					<p>Lorem ipsum dolor sit amet</p>
+				</div>
+				<div class="ui-g-12 ui-md-4">
+					<div class="feature-icon">
+						<p:graphicImage name="images/landing/landing-2.png"
+							library="poseidon-layout" />
+					</div>
+					<h3>Clean Code</h3>
+					<p>Lorem ipsum dolor sit amet</p>
+				</div>
+				<div class="ui-g-12 ui-md-4">
+					<div class="feature-icon">
+						<p:graphicImage name="images/landing/landing-3.png"
+							library="poseidon-layout" />
+					</div>
+					<h3>Powerful Grid</h3>
+					<p>Lorem ipsum dolor sit amet</p>
+				</div>
+
+				<div class="ui-g-12 ui-md-4">
+					<div class="feature-icon">
+						<p:graphicImage name="images/landing/landing-4.png"
+							library="poseidon-layout" />
+					</div>
+					<h3>Modern Design</h3>
+					<p>Lorem ipsum dolor sit amet</p>
+				</div>
+				<div class="ui-g-12 ui-md-4">
+					<div class="feature-icon">
+						<p:graphicImage name="images/landing/landing-5.png"
+							library="poseidon-layout" />
+					</div>
+					<h3>Well Documented</h3>
+					<p>Lorem ipsum dolor sit amet</p>
+				</div>
+				<div class="ui-g-12 ui-md-4">
+					<div class="feature-icon">
+						<p:graphicImage name="images/landing/landing-6.png"
+							library="poseidon-layout" />
+					</div>
+					<h3>Premium Support</h3>
+					<p>Lorem ipsum dolor sit amet</p>
+				</div>
+			</div>
+		</div>
+
+		<div id="promotion" class="clearfix">
+			<div class="promotion-content">
+				<h2>Adipisicing elit, sed do eiusm od tempor incididunt ut lab</h2>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
+					do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+					enim ad minim veniam, quis nostrud exercitation ullamco irure dolor
+					in reprehenderit</p>
+
+				<p:graphicImage name="images/landing/landing-mobile.png"
+					library="poseidon-layout" />
+			</div>
+		</div>
+
+		<div id="pricing">
+			<div class="pricing-content">
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-4">
+						<div class="pricing-box pricing-basic">
+							<div class="pricing-header">
+								<span class="pricing-name">Basic</span> <span class="price">5$</span>
+							</div>
+							<div class="pricing-features">
+								<ul>
+									<li><i class="fa fa-check"></i>Responsive</li>
+									<li><i class="fa fa-check"></i>Push Messages</li>
+								</ul>
+							</div>
+<!-- 							<div class="pricing-buy"> -->
+<!-- 								<p:button outcome="/dashboard" value="Buy Now" -->
+<!-- 									styleClass="black-btn" /> -->
+<!-- 							</div> -->
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-4">
+						<div class="pricing-box pricing-standard">
+							<div class="pricing-header">
+								<span class="pricing-name">Standard</span> <span class="price">10$</span>
+							</div>
+							<div class="pricing-features">
+								<ul>
+									<li><i class="fa fa-check"></i>Responsive</li>
+									<li><i class="fa fa-check"></i>Push Messages</li>
+									<li><i class="fa fa-check"></i>7/24 Support</li>
+									<li><i class="fa fa-check"></i>Free Shipping</li>
+								</ul>
+							</div>
+							<div class="pricing-buy">
+<!-- 								<p:button outcome="/dashboard" value="Buy Now" -->
+<!-- 									styleClass="black-btn" /> -->
+							</div>
+						</div>
+					</div>
+					<div class="ui-g-12 ui-md-4">
+						<div class="pricing-box pricing-pro">
+							<div class="pricing-header">
+								<span class="pricing-name">Premium</span> <span class="price">20$</span>
+							</div>
+							<div class="pricing-features">
+								<ul>
+									<li><i class="fa fa-check"></i>Responsive</li>
+									<li><i class="fa fa-check"></i>Push Messages</li>
+									<li><i class="fa fa-check"></i>7/24 Support</li>
+									<li><i class="fa fa-check"></i>Free Shipping</li>
+									<li><i class="fa fa-check"></i>Unlimited Bandwidth</li>
+									<li><i class="fa fa-check"></i>Unlimited Storage</li>
+									<li><i class="fa fa-check"></i>Gift Card</li>
+								</ul>
+							</div>
+							<div class="pricing-buy">
+<!-- 								<p:button outcome="/dashboard" value="Buy Now" -->
+<!-- 									styleClass="black-btn" /> -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="video">
+			<div class="video-content">
+				<h2>Video</h2>
+				<p>Sed ut perspiciatis unde omnis iste natus error sit
+					voluptatem accusantium doloremque.</p>
+				<div class="video-container">
+					<iframe src="https://www.youtube.com/embed/B_lYGUtCd0g"
+						frameborder="0" width="560" height="330"></iframe>
+				</div>
+			</div>
+		</div>
+
+		<div id="footer">
+			<div class="footer-content">
+				<div class="ui-g">
+					<div class="ui-g-12 ui-md-6 footer-left clearfix">
+						<p:graphicImage name="images/logo-icon-white.png"
+							library="poseidon-layout" width="50" />
+						<span>PRIMEFACES POSEIDON</span> <span>All rights reserved</span>
+					</div>
+					<div class="ui-g-12 ui-md-6 footer-right">
+						<i class="fa fa-facebook-square"></i> <i
+							class="fa fa-twitter-square"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<h:outputStylesheet name="css/animate.css" library="poseidon-layout" />
+	<h:outputStylesheet name="css/layout-pink.css" library="poseidon-layout" />
+</h:body>
+
+</html>
