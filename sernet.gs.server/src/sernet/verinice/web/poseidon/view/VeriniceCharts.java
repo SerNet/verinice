@@ -19,15 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view;
 
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.PieChartModel;
+
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-
-import org.primefaces.model.chart.PieChartModel;
-
-import sernet.verinice.web.poseidon.services.ControlService;
 
 /**
  *
@@ -41,28 +42,77 @@ public class VeriniceCharts implements Serializable {
 
     private PieChartModel pieModel;
 
+    private BarChartModel barModel;
+
 
     @PostConstruct()
     public void init() {
         createPieModel();
+        createBarModel();
     }
 
     private void createPieModel() {
 
-        setPieModel(new PieChartModel());
+        pieModel = initPieModel();
 
+        pieModel.setTitle("Umsetzungstatus Hamburg");
+        pieModel.setLegendPosition("w");
+        pieModel.setExtender("skinPie");
 
-        getPieModel().setTitle("All ISA-Controls");
-        getPieModel().setLegendPosition("w");
-        getPieModel().setExtender("skinPie");
+        initPieModel();
+    }
+
+    private PieChartModel initPieModel() {
+        PieChartModel model = new PieChartModel();
+
+        model.set("Unbearbeitet", 23);
+        model.set("Teilweise", 31);
+        model.set("Nein", 55);
+        model.set("Ja", 83);
+        model.set("Entbehrlich", 12);
+
+        return model;
+    }
+
+    private void createBarModel() {
+
+        barModel = initBarModel();
+
+        barModel.setTitle("Umsetzungsstatus Hamburg");
+        barModel.setLegendPosition("ne");
+
+        Axis xAxis = barModel.getAxis(AxisType.X);
+        xAxis.setLabel("Status");
+
+        Axis yAxis = barModel.getAxis(AxisType.Y);
+        yAxis.setLabel("Anzahl");
+        yAxis.setMin(0);
+        yAxis.setMax(100);
+
+        barModel.setExtender("skinBar");
+    }
+
+    private BarChartModel initBarModel() {
+        BarChartModel model = new BarChartModel();
+
+        ChartSeries status = new ChartSeries();
+        status.setLabel("Status");
+        status.set("Unbearbeitet", 23);
+        status.set("Teilweise", 31);
+        status.set("Nein", 55);
+        status.set("Ja", 83);
+        status.set("Entbehrlich", 12);
+
+        model.addSeries(status);
+
+        return model;
     }
 
     public PieChartModel getPieModel() {
         return pieModel;
     }
 
-    public void setPieModel(PieChartModel pieModel) {
-        this.pieModel = pieModel;
+    public BarChartModel getBarModel() {
+        return barModel;
     }
-
 }

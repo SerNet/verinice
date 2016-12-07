@@ -15,16 +15,6 @@
  */
 package org.primefaces.poseidon.view;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -46,8 +36,21 @@ import org.primefaces.model.chart.OhlcChartModel;
 import org.primefaces.model.chart.OhlcChartSeries;
 import org.primefaces.model.chart.PieChartModel;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
+
 @ManagedBean(name = "chartDemoView")
 public class ChartDemoView implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private LineChartModel lineModel1;
     private LineChartModel lineModel2;
@@ -644,7 +647,11 @@ public class ChartDemoView implements Serializable {
     }
 
     private MeterGaugeChartModel initMeterGaugeModel() {
-        List<Number> intervals = new ArrayList<Number>(){{
+        List<Number> intervals = new ArrayList<Number>() {
+
+            private static final long serialVersionUID = 1L;
+
+            {
             add(20);
             add(50);
             add(120);

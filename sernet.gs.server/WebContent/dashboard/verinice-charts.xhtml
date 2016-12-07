@@ -1,312 +1,107 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
-	template="/WEB-INF/poseidon/template.xhtml">
+<ui:composition
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:p="http://primefaces.org/ui"
+  template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">Charts</ui:define>
+  <ui:define name="title">Charts</ui:define>
 
-	<ui:define name="viewname">Charts</ui:define>
+  <ui:define name="viewname">Charts</ui:define>
 
-	<ui:define name="head">
-		<script type="text/javascript">
-			function skinChart() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c',
-						'#6c76af' ];
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					borderWidth : 0.1,
-					borderColor : 'bdbdbd',
-					rendererOptions : {
-						textColor : '#666F77'
-					}
-				};
-				this.cfg.seriesDefaults = {
-					shadow : false,
-					lineWidth : 1,
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
+  <ui:define name="head">
 
-			function skinBar() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5' ];
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					borderWidth : 0.1,
-					borderColor : 'bdbdbd',
-					rendererOptions : {
-						textColor : '#666F77'
-					}
-				};
-				this.cfg.seriesDefaults = {
-					shadow : false,
-					lineWidth : 1,
-					renderer : $.jqplot.BarRenderer,
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
+    <script type="text/javascript">
 
-			function skinArea() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5' ];
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					borderWidth : 0.1,
-					borderColor : 'bdbdbd',
-					rendererOptions : {
-						textColor : '#666F77'
-					}
-				};
-				this.cfg.seriesDefaults = {
-					shadow : false,
-					lineWidth : 1,
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
+          function skinPie() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c', '#6c76af', '#666666' ];
+            this.cfg.grid = {
+              background : '#ffffff',
+              borderColor : '#ffffff',
+              gridLineColor : '#F5F5F5',
+              shadow : false
+            };
+            this.cfg.axesDefaults = {
+              rendererOptions : {
+                textColor : '#666F77',
+              }
+            };
+            this.cfg.seriesDefaults = {
+              renderer : $.jqplot.PieRenderer,
+              shadow : false,
+              lineWidth : 1,
+              markerOptions : {
+                shadow : false,
+                size : 7,
+                style : 'circle'
+              }
+            }
+          }
 
-			function skinBubble() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5' ];
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					rendererOptions : {
-						textColor : '#666F77'
-					}
-				};
-				this.cfg.seriesDefaults = {
-					shadow : false,
-					lineWidth : 1,
-					renderer : $.jqplot.BubbleRenderer,
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
+          function skinBar() {
+            this.cfg.shadow = false;
+            this.cfg.title = '';
+            this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c', '#6c76af', '#666666' ];
+            this.cfg.grid = {
+              background : '#ffffff',
+              borderColor : '#ffffff',
+              gridLineColor : '#F5F5F5',
+              shadow : false
+            };
+            this.cfg.axesDefaults = {
+              borderWidth : 0.1,
+              borderColor : 'bdbdbd',
+              rendererOptions : {
+                textColor : '#666F77'
+              }
+            };
+            this.cfg.seriesDefaults = {
+              shadow : false,
+              lineWidth : 1,
+              renderer : $.jqplot.BarRenderer,
+              rendererOptions:{ varyBarColor : true },
+              markerOptions : {
+                shadow : false,
+                size : 7,
+                style : 'circle'
+              }
+            }
+          }
 
-			function skinZoom() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5' ];
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					rendererOptions : {
-						textColor : '#666F77'
-					}
-				};
-				this.cfg.seriesDefaults = {
-					shadow : false,
-					lineWidth : 1,
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
+        </script>
 
-			function skinPie() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c',
-						'#6c76af' ];
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					rendererOptions : {
-						textColor : '#666F77',
-					}
-				};
-				this.cfg.seriesDefaults = {
-					renderer : $.jqplot.PieRenderer,
-					shadow : false,
-					lineWidth : 1,
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
+        <style type="text/css">
+          .jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label, .jqplot-x2axis-label {
+            color: #757575;
+          }
 
-			function skinDonut() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c',
-						'#6c76af' ];
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					rendererOptions : {
-						textColor : '#666F77',
-					}
-				};
-				this.cfg.seriesDefaults = {
-					renderer : $.jqplot.DonutRenderer,
-					shadow : false,
-					lineWidth : 1,
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
+          table.jqplot-table-legend {
+            background-color: #ffffff;
+            color: #757575;
+            border-color: #bdbdbd;
+          }
+        </style>
 
-			function skinBarAndLine() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5' ];
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					borderWidth : 0.1,
-					borderColor : 'bdbdbd',
-					rendererOptions : {
-						textColor : '#666F77'
-					}
-				};
-				this.cfg.seriesDefaults = {
-					shadow : false,
-					lineWidth : 5,
-					renderer : $.jqplot.BarRenderer,
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
+  </ui:define>
 
-			function skinMeterGauge() {
-				this.cfg.title = '';
-				this.cfg.seriesDefaults = {
-					shadow : false,
-					lineWidth : 5,
-					renderer : $.jqplot.MeterGaugeRenderer,
-					rendererOptions : {
-						shadow : false,
-						min : 100,
-						max : 800,
-						intervals : [ 200, 300, 400, 500, 600, 700, 800 ],
-						intervalColors : [ '#00acac', '#2f8ee5', '#efa64c',
-								'#6c76af', '#f16383', '#63c9f1', '#2d353c' ]
-					}
-				}
-			}
+  <ui:define name="content">
 
-			function skinMultiAxis() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5' ];
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					borderWidth : 0.1,
-					borderColor : 'bdbdbd',
-					rendererOptions : {
-						textColor : '#666F77'
-					}
-				};
-				this.cfg.seriesDefaults = {
-					shadow : false,
-					lineWidth : 1,
-					renderer : $.jqplot.BarRenderer,
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
-		</script>
-		<style type="text/css">
-.jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label,
-	.jqplot-x2axis-label {
-	color: #757575;
-}
+    <div class="ui-g ui-fluid">
+      <div class="ui-g-12 ui-lg-6">
+        <div class="card">
+          <h1 class="centerText">Umsetzungsstatus Hamburg</h1>
+          <p:chart id="pie" type="pie" model="#{veriniceChartView.pieModel}" responsive="true" />
+        </div>
+        <div class="card">
+          <h1 class="centerText">Umsetzungsstatus Hamburg</h1>
+          <p:chart id="bar" type="bar" model="#{veriniceChartView.barModel}" responsive="true" />
+        </div>
+      </div>
+    </div>
 
-table.jqplot-table-legend {
-	background-color: #ffffff;
-	color: #757575;
-	border-color: #bdbdbd;
-}
-</style>
-	</ui:define>
-
-	<ui:define name="content">
-
-		<div class="ui-g ui-fluid">
-			<div class="ui-g-12 ui-lg-6">
-				<div class="card">
-					<h1 class="centerText">Pie Chart</h1>
-					<p:chart id="pie" type="pie" model="#{veriniceChartView.pieModel}"
-						responsive="true" />
-				</div>
-			</div>
-		</div>
-
-	</ui:define>
+  </ui:define>
 
 </ui:composition>
