@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/poseidon/template.xhtml">
+
+    <ui:define name="title">Misc</ui:define>
+
+    <ui:define name="viewname">Misc</ui:define>
+
+    <ui:define name="content">
+        <script type="text/javascript">
+            function start() {
+                PF('startButton1').disable();
+
+                window['progress'] = setInterval(function () {
+                    var pbClient = PF('pbClient'),
+                            oldValue = pbClient.getValue(),
+                            newValue = oldValue + 10;
+
+                    pbClient.setValue(pbClient.getValue() + 10);
+
+                    if (newValue === 100) {
+                        clearInterval(window['progress']);
+                    }
+
+
+                }, 1000);
+            }
+
+            function cancel() {
+                clearInterval(window['progress']);
+                PF('pbClient').setValue(0);
+                PF('startButton1').enable();
+            }
+
+        </script>
+
+        <h:form>
+            <div class="ui-g">
+                <div class="ui-g-12 ui-lg-6">
+                    <!-- Left colum -->
+                    <div class="card">
+                        <h1>ProgressBar - Client</h1>
+                        <p:growl id="progressGrowl" />
+
+                        <p:commandButton value="Start" id="start" type="button" onclick="start()" widgetVar="startButton1"/>
+                        <p:commandButton value="Cancel" id="cancel" type="button" onclick="cancel()" />
+                        <br /><br />
+                        <p:progressBar id="progressBarClient" widgetVar="pbClient"/>
+                    </div>
+
+                    <div class="card">
+                        <h1>ProgressBar - Ajax</h1>
+                        <p:commandButton value="Start" type="button" onclick="PF('pbAjax').start();
+                                PF('startButton2').disable();" widgetVar="startButton2" />
+                        <p:commandButton value="Cancel" actionListener="#{progressBarView.cancel}" oncomplete="PF('pbAjax').cancel();PF('startButton2').enable();" />
+                        <br /><br />
+                        <p:progressBar widgetVar="pbAjax" ajax="true" value="#{progressBarView.progress}" labelTemplate="{value}%" styleClass="animated" global="false">
+                            <p:ajax event="complete" listener="#{progressBarView.onComplete}" update="progressGrowl" oncomplete="PF('startButton2').enable()"/>
+                        </p:progressBar>
+                    </div>
+
+                    <div class="card">
+                        <h1>ProgressBar - Static Display</h1>
+                        <p:progressBar value="50" labelTemplate="{value}%" displayOnly="true"/>
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-lg-6">
+                    <!-- Right colum -->
+                    <div class="card">
+                        <h1>Galleria</h1>
+                        <p:galleria value="#{imagesView.images}" var="image" panelWidth="500" panelHeight="313" showCaption="true">
+                            <p:graphicImage name="demo/images/nature/#{image}" alt="Image Description for #{image}" title="#{image}"/>
+                        </p:galleria>
+                    </div>
+
+                    <div class="card">
+                        <h1>Clock</h1>
+                        <p:clock />
+                    </div>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+</ui:composition>

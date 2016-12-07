@@ -1,0 +1,336 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/poseidon/template.xhtml">
+
+    <ui:define name="title">Documentation</ui:define>
+
+    <ui:define name="head">
+        <style type="text/css">
+            .docs h1 {
+                margin-top: 30px;
+            }
+
+            .docs pre {
+                font-family: monospace;
+                background-color: #0C2238;
+                color: #dddddd;
+                padding: 1em;
+                font-size: 14px;
+                border-radius: 3px;
+                overflow: auto;
+            }
+
+            .video-container {
+                position: relative;
+                width: 100%;
+                height: 0;
+                padding-bottom: 56.25%;
+            }
+            .video-container iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="viewname">Documentation</ui:define>
+
+    <ui:define name="content">
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <div class="card docs">
+                    <h1>Layout</h1>
+                    <p>Poseidon provides a main template.xhtml and additional <i>topbar</i>, <i>menu</i>, <i>right-sidebar</i> and <i>footer</i> fragments for the base layout.
+                        These xhtml files must be placed under WEB-INF folder and client pages should reference the template.xhtml as their template.
+                        Provided empty.xhtml is a sample content page using the main template.xhtml that defines "content" as the main ui:define placeholder. By default template defines 3 placeholders
+                        (page title, view name in breadcrumb and actual content)to insert content and you can add more as per your requirements.</p>
+
+                    <p>Sample page below uses the main template from Poseidon.</p>
+<pre>
+&lt;ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/template.xhtml"&gt;
+
+    &lt;ui:define name="title"&gt;Test Page&lt;/ui:define&gt;
+
+    &lt;ui:define name="viewname"&gt;Test&lt;/ui:define&gt;
+
+    &lt;ui:define name="content"&gt;
+        Content goes here
+    &lt;/ui:define&gt;
+&lt;/ui:composition&gt;
+</pre>
+
+                    <p>Other required resources are the css, js and images that are located inside resources/poseidon-layout folder, simply copy the poseidon-layout folder to your %WEB-APP-FOLDER%/resources folder
+                        so that final path would be %WEB-APP-FOLDER%/resources/poseidon-layout/. Please refer to demo app or maven project of the demo app as the reference.</p>
+
+                    <h1>Theme</h1>
+                    <p>Poseidon provides 8 PrimeFaces themes out of the box, setup of a theme simple as including the theme jar in your classpath and defining primefaces.THEME context parameter in web.xml such as "primefaces-poseidon-green". Full list of
+                    available themes are;</p>
+
+                    <ul>
+                        <li>primefaces-poseidon-turquoise</li>
+                        <li>primefaces-poseidon-blue</li>
+                        <li>primefaces-poseidon-purple</li>
+                        <li>primefaces-poseidon-orange</li>
+                        <li>primefaces-poseidon-pink</li>
+                        <li>primefaces-poseidon-light-blue</li>
+                        <li>primefaces-poseidon-green</li>
+                        <li>primefaces-poseidon-deep-purple</li>
+                    </ul>
+
+                    <p>A custom theme can be developed by the following steps.</p>
+                    <ul>
+                        <li>Choose a custom theme name such as primefaces-poseidon-myown.</li>
+                        <li>Create a folder named primefaces-poseidon-myown and place an empty theme.scss inside</li>
+                        <li>Copy the sass folder from the distribution to your application.</li>
+                        <li>Define the variables listed below and import the <i>/sass/theme/_theme.scss</i> file.</li>
+                        <li>Build the scss to generate css</li>
+                        <li>Set primefaces.THEME context parameter as <i>poseidon-myown</i></li>
+                        <li>Either bundle the css in a jar file or serve from webapp/resources/primefaces-poseidon-myown folder</li>
+                    </ul>
+
+                    <p>Here are the variables required to create a theme, you may need to change the last line according to the
+                        relative path of the sass folder in your application.</p>
+
+<pre>
+$primaryColor:#f16383;
+
+@import '../sass/theme/_theme';
+</pre>
+
+                    <p> An example sass command to compile the css would be;</p>
+
+<pre>
+sass src/main/webapp/resources/primefaces-poseidon-myown/theme.scss src/main/webapp/resources/primefaces-poseidon-myown/theme.css  --sourcemap=none
+</pre>
+
+                    <p>Watch mode is handy to avoid compiling everytime when a change is made, instead use the following command
+                    so that sass generates the file whenever you make a customization. This builds all css files whenever a change is made to any scss file.</p>
+<pre>
+sass -w src/main/webapp/resources/ --sourcemap=none
+</pre>
+
+                    <p>Same can also be applied to layout itself;</p>
+                    <ul>
+                        <li>Choose a layout name such as layout-myown.</li>
+                        <li>Create an empty file named layout-myown.scss inside resources/poseidon-layout/css folder.</li>
+                        <li>Define the variables listed below and import the <i>/sass/layout/_layout.scss</i> file.</li>
+                        <li>Build the scss to generate css</li>
+                        <li>Serve the css by importing it using a link tag or h:outputStylesheet.</li>
+                    </ul>
+
+                    <p>Here are the variables required to create a layout, you may need to change the last line according to the
+                        relative path of the sass folder in your application.</p>
+
+<pre>
+$primaryColor:#f16383;
+
+@import '/../sass/layout/_layout';
+</pre>
+
+                    <p>For both cases, several .scss files such as _layout.scss, _theme.scss or _variables.scss has to be present relative to your scss files, these are available inside the sass folder in the distribution.</p>
+                    <p>In case you'd like to customize the structure not just the colors, the _variables.scss is where the structural variables (e.g. font size, paddings) for the layout are defined.</p>
+<pre>
+/* Common */
+$fontSize:14px;
+$textColor:#5f666c;
+$textSecondaryColor:lighten($textColor,10%);
+$borderRadius:2px;
+$dividerColor:#c9cdd2;
+$iconWidth:16px;
+$iconHeight:16px;
+
+/* Headers */
+$headerPadding:8px 14px;
+$headerBgColor:#2d353c;
+$headerTextColor:#ffffff;
+$headerHoverBgColor:#444d56;
+
+/* Contents */
+$contentPadding:8px 14px;
+$contentBorderColor:#c9cdd2;
+
+/* Forms */
+$inputPadding:5px;
+$inputBorderColor:#a8acb1;
+$inputHoverBorderColor:#5f666c;
+$inputInvalidBorderColor:#f06364;
+
+/* List Items */
+$listItemPadding:8px 14px;
+$listItemHoverBgColor:#f0f3f5;
+$listItemHoverTextColor:#5f666c;
+
+/* Messages */
+$infoMessageBgColor:#2f8ee5;
+$infoMessageTextColor:#ffffff;
+$warnMessageBgColor:#f1b263;
+$warnMessageTextColor:#ffffff;
+$errorMessageBgColor:#f06364;
+$errorMessageTextColor:#ffffff;
+$fatalMessageBgColor:#2d353c;
+$fatalMessageTextColor:#ffffff;
+
+/* Horizontal Menu */
+$hmenuBGColor: #f0f3f5;
+
+/* Predefined Colors */
+$green:#00acac;
+$blue:#2f8ee5;
+$orange:#efa64c;
+$purple:#6c76af;
+$pink:#f16383;
+$lightBlue:#63c9f1;
+$black:#2d353c;
+</pre>
+
+                    <h1>Menu</h1>
+                    <p>Menu is a regular JSF component that supports PrimeFaces MenuModel API allowing both declarative and programmatic approaches.
+                    State is saved via a cookie and to remove it define a widgetVar to the menu and call PF('yourwidgetvar').clearMenuState(). To use the menu
+                    add the primefaces-poseidon-{version}.jar to your classpath and import the http://primefaces.org/poseidon namespace.</p>
+<pre>
+xmlns:pp="http://primefaces.org/poseidon">
+
+&lt;pp:menu&gt;
+&lt;/pp:menu&gt;
+</pre>
+                    <p>Menu has 3 modes, static, overlay and horizontal. Layout wrapper element in template.xhtml is used to define which mode to use by adding specific classes. List
+                    below indicates the style classes for each mode.</p>
+                    <ul>
+                        <li>Static: "layout-wrapper menu-layout-static"</li>
+                        <li>Overlay: "layout-wrapper menu-layout-overlay"</li>
+                        <li>Horizontal: "layout-wrapper menu-layout-static menu-layout-horizontal"</li>
+                    </ul>
+
+                    <p>For example to create a horizontal menu, the div element should be in following form;</p>
+<pre>
+&lt;div class="layout-wrapper menu-layout-static menu-layout-horizontal"&gt;
+    &lt;ui:include src="./topbar.xhtml" /&gt;
+    &lt;ui:include src="./menu.xhtml" /&gt;
+
+    &lt;div class="layout-main"&gt;
+        &lt;ui:insert name="content"/&gt;
+
+        &lt;ui:include src="./footer.xhtml" /&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+                    <p>It is also possible to leave the choice to the user by keeping the preference at a bean and usign an EL expression to bind it so that user can switch between modes. Sample
+                    application has an example implementation of such use case.</p>
+<pre>
+&lt;div class="layout-wrapper #{guestPreferences.menuLayout}"&gt;
+
+&lt;/div&gt;
+</pre>
+
+                    <p>Sample bean below can be used to keep the layout configuration based on user preferences</p>
+<pre>
+package org.primefaces.poseidon.view;
+
+import javax.annotation.PostConstruct;
+import java.util.Map;
+import java.util.HashMap;
+import java.io.Serializable;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
+@ManagedBean
+@SessionScoped
+public class GuestPreferences implements Serializable {
+
+    //match address bar in mobile browser
+    private Map&lt;String,String&gt; themeColors;
+
+    //theme name
+    private String theme = "green";
+
+    //menu mode
+    private String menuLayout = "static";
+
+    @PostConstruct
+    public void init() {
+        themeColors = new HashMap&lt;String,String&gt;();
+        themeColors.put("green", "#00acac");
+        themeColors.put("blue", "#2f8ee5");
+        themeColors.put("orange", "#efa64c");
+        themeColors.put("purple", "#6c76af");
+        themeColors.put("pink", "#f16383");
+        themeColors.put("light-blue", "#63c9f1");
+    }
+
+    public String getMenuLayout() {
+        if(this.menuLayout.equals("static"))
+            return "menu-layout-static";
+        else if(this.menuLayout.equals("overlay"))
+            return "menu-layout-overlay";
+        else if(this.menuLayout.equals("horizontal"))
+            return "menu-layout-static menu-layout-horizontal";
+        else
+            return "menu-layout-static";
+    }
+
+    public String getTheme() {
+        return theme;
+    }
+
+    public void setTheme(String theme) {
+	this.theme = theme;
+    }
+
+    public void setMenuLayout(String menuLayout) {
+        this.menuLayout = menuLayout;
+    }
+
+    public Map getThemeColors() {
+        return this.themeColors;
+    }
+}
+</pre>
+                    <h1>Icons</h1>
+                    <p>Poseidon Layout uses font awesome icons for layout so enable font awesome support in PrimeFaces by setting primefaces.FONT_AWESOME context parameter in web.xml as true. If your PrimeFaces version
+                    does not have the font awesome integration, include the font-awesome manually in your application.</p>
+
+                    <h1>Card</h1>
+                    <p>Card is a section to group content and layout provides a built-in css for it. Apply .card style class to your container to use it. If the
+                    card has a title defined with h1 tag, add card-w-title to adjust paddings.</p>
+<pre>
+&lt;div class="card"&gt;
+    Content here
+&lt;/div&gt;
+
+&lt;div class="card card-w-title"&gt;
+    &lt;h1&gt;Card with Title&lt;h1&gt;
+    Content here
+&lt;/div&gt;
+</pre>
+
+                    <h1>Grid CSS</h1>
+                    <p>Poseidon uses new PrimeFaces Grid CSS (ui-g-*) throughout the samples, we strongly suggest using Grid CSS as your layout framework as it is well tested and supported by PrimeFaces. Grid CSS
+                    is automatically included on newer versions however if your PrimeFaces version is older than 5.3.14, add the provided grid.css file under /poseidon-layout/css/ folder to your template manually.</p>
+
+                    <h1>Tips</h1>
+                    <ul>
+                        <li>Familiarity with <a href="http://sass-lang.com/">SASS</a> is required to make customizations to the layout and theme.</li>
+                        <li>Demo application war and the maven project tag are included in distribution however you don't necessarily need them to install Poseidon, the actual artifacts required are the layout zip file and the theme jar.</li>
+                        <li>Sample demo application war includes the JSF libraries so it is suggested to remove them from the war file when you deploy to an appserver.</li>
+                        <li>When running the maven project, you need to build the sass with (sass --update src/main/webapp/resources/ --sourcemap=none) command.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,508 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                template="/WEB-INF/poseidon/template.xhtml">
+
+    <ui:define name="title">Menus</ui:define>
+
+    <ui:define name="viewname">Menus</ui:define>
+
+    <ui:define name="head">
+        <style type="text/css">
+            .ui-steps .ui-steps-item {
+                width: 25%;
+            }
+        </style>
+    </ui:define>
+
+    <ui:define name="content">
+        <h:form>
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12">
+                    <div class="card">
+                        <h1>Breadcrumb</h1>
+                        <p:breadCrumb>
+                            <p:menuitem value="Categories" url="#" />
+                            <p:menuitem value="Sports" url="#" />
+                            <p:menuitem value="Basketball" url="#" />
+                            <p:menuitem value="NBA" url="#" />
+                            <p:menuitem value="Teams" url="#" />
+                            <p:menuitem value="L.A. Lakers" url="#" />
+                            <p:menuitem value="Roster" url="#" />
+                            <p:menuitem value="Kobe Bryant" url="#" />
+                        </p:breadCrumb>
+                    </div>
+
+                    <div class="card">
+                        <h1>Steps</h1>
+                        <p:steps activeIndex="1">
+                            <p:menuitem value="Personal" />
+                            <p:menuitem value="Seat" />
+                            <p:menuitem value="Payment" />
+                            <p:menuitem value="Confirm" />
+                        </p:steps>
+                    </div>
+
+                    <div class="card">
+                        <h1>MenuBar</h1>
+                        <p:menubar>
+                            <p:submenu label="File" icon="ui-icon-document fa fa-file">
+                                <p:submenu label="New" icon="ui-icon-contact fa fa-plus">
+                                    <p:menuitem value="Project" url="#" />
+                                    <p:menuitem value="Other" url="#" />
+                                </p:submenu>
+                                <p:menuitem value="Open" url="#" />
+                                <p:separator />
+                                <p:menuitem value="Quit" url="#" />
+                            </p:submenu>
+
+                            <p:submenu label="Edit" icon="ui-icon-pencil fa fa-pencil">
+                                <p:menuitem value="Undo" url="#" icon="ui-icon-arrowreturnthick-1-w fa fa-undo" />
+                                <p:menuitem value="Redo" url="#" icon="ui-icon-arrowreturnthick-1-e fa fa-repeat" />
+                            </p:submenu>
+
+                            <p:submenu label="Help" icon="ui-icon-help fa fa-life-buoy">
+                                <p:menuitem value="Contents" url="#" />
+                                <p:submenu label="Search" icon="ui-icon-search fa fa-search">
+                                    <p:submenu label="Text">
+                                        <p:menuitem value="Workspace" url="#" />
+                                    </p:submenu>
+                                    <p:menuitem value="File" url="#" />
+                                </p:submenu>
+                            </p:submenu>
+
+                            <p:submenu label="Actions" icon="ui-icon-gear fa fa-gear">
+                                <p:submenu label="Ajax" icon="ui-icon-refresh fa fa-refresh">
+                                    <p:menuitem value="Save" icon="ui-icon-disk fa fa-save"/>
+                                    <p:menuitem value="Update" icon="ui-icon-arrowrefresh-1-w fa fa-refresh"/>
+                                </p:submenu>
+                                <p:submenu label="Non-Ajax" icon="ui-icon-newwin fa fa-bolt">
+                                    <p:menuitem value="Delete" icon="ui-icon-close fa fa-close"/>
+                                </p:submenu>
+                            </p:submenu>
+
+                            <p:menuitem value="Quit" url="http://www.primefaces.org" icon="ui-icon-close fa fa-close" />
+
+                            <f:facet name="options">
+                                <p:inputText placeholder="Search" style="padding:3px;margin-top:4px"/>
+                            </f:facet>
+                        </p:menubar>
+                    </div>
+                </div>
+
+                <div class="ui-g-12 ui-lg-6">
+                    <!-- Left Colum -->
+                    <div class="card">
+                        <h1>Plain Menu</h1>
+                        <p:menu style="margin-bottom:20px">
+                            <p:submenu label="Ajax">
+                                <p:menuitem value="Save" icon="fa fa-floppy-o"/>
+                                <p:menuitem value="Update" icon="fa fa-refresh"/>
+                            </p:submenu>
+                            <p:submenu label="Non-Ajax">
+                                <p:menuitem value="Delete" icon="fa fa-trash"/>
+                            </p:submenu>
+                            <p:submenu label="Navigations">
+                                <p:menuitem value="External" url="http://www.primefaces.org" icon="fa fa-external-link"/>
+                                <p:menuitem value="Internal" icon="fa fa-home"/>
+                            </p:submenu>
+                        </p:menu>
+
+                        <p:commandButton id="dynaButton" value="Overlay" type="button" icon="fa fa-external-link" style="width:auto"/>
+                        <p:menu overlay="true" trigger="dynaButton" my="left top" at="left bottom">
+                            <p:submenu label="Ajax">
+                                <p:menuitem value="Save" icon="fa fa-floppy-o"/>
+                                <p:menuitem value="Update" icon="fa fa-refresh"/>
+                            </p:submenu>
+                            <p:submenu label="Non-Ajax">
+                                <p:menuitem value="Delete" icon="fa fa-trash"/>
+                            </p:submenu>
+                            <p:submenu label="Navigations">
+                                <p:menuitem value="External" url="http://www.primefaces.org" icon="fa fa-external-link"/>
+                                <p:menuitem value="Internal" icon="fa fa-home"/>
+                            </p:submenu>
+                        </p:menu>
+                    </div>
+
+                    <div class="card">
+                        <h1>Toggleable</h1>
+                        <p:menu toggleable="true">
+                            <p:submenu label="Ajax">
+                                <p:menuitem value="Save" icon="fa fa-floppy-o"/>
+                                <p:menuitem value="Update" icon="fa fa-refresh"/>
+                            </p:submenu>
+                            <p:submenu label="Non-Ajax">
+                                <p:menuitem value="Delete" icon="fa fa-trash"/>
+                            </p:submenu>
+                            <p:submenu label="Navigations">
+                                <p:menuitem value="External" url="http://www.primefaces.org" icon="fa fa-external-link"/>
+                                <p:menuitem value="Internal" icon="fa fa-home"/>
+                            </p:submenu>
+                        </p:menu>
+                    </div>
+
+                    <div class="card">
+                        <h1>TieredMenu</h1>
+                        <p:tieredMenu style="width:250px;margin-bottom:20px">
+                            <p:submenu label="Ajax Menuitems" icon="fa fa-refresh">
+                                <p:menuitem value="Save" icon="fa fa-save" />
+                                <p:menuitem value="Update" icon="fa fa-repeat" />
+                            </p:submenu>
+                            <p:submenu label="Non-Ajax Menuitem" icon="fa fa-bolt">
+                                <p:menuitem value="Delete" icon="fa fa-close" />
+                            </p:submenu>
+                            <p:separator />
+                            <p:submenu label="Navigations" icon="fa fa-stack-exchange">
+                                <p:submenu label="Prime Links">
+                                    <p:menuitem value="Prime" url="http://www.prime.com.tr"/>
+                                    <p:menuitem value="PrimeFaces" url="http://www.primefaces.org" />
+                                </p:submenu>
+                                <p:menuitem value="Mobile" />
+                            </p:submenu>
+                        </p:tieredMenu>
+
+                        <p:commandButton id="dynaButtonTiered" value="Overlay" type="button" icon="fa fa-external-link" style="width:auto" />
+                        <p:tieredMenu overlay="true" trigger="dynaButtonTiered" my="left top" at="left bottom" style="width:250px">
+                            <p:submenu label="Ajax Menuitems" icon="fa fa-refresh">
+                                <p:menuitem value="Save" icon="fa fa-save" />
+                                <p:menuitem value="Update" icon="fa fa-repeat" />
+                            </p:submenu>
+                            <p:submenu label="Non-Ajax Menuitem" icon="fa fa-bolt">
+                                <p:menuitem value="Delete" icon="fa fa-close" />
+                            </p:submenu>
+                            <p:separator />
+                            <p:submenu label="Navigations" icon="fa fa-stack-exchange">
+                                <p:submenu label="Prime Links">
+                                    <p:menuitem value="Prime" url="http://www.prime.com.tr"/>
+                                    <p:menuitem value="PrimeFaces" url="http://www.primefaces.org" />
+                                </p:submenu>
+                                <p:menuitem value="Mobile" />
+                            </p:submenu>
+                        </p:tieredMenu>
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-lg-6">
+                    <!-- Right Colum -->
+                    <div class="card">
+                        <h1>MenuButton</h1>
+                        <p:menuButton value="Options">
+                            <p:menuitem value="Save" icon="fa fa-save"/>
+                            <p:menuitem value="Update" icon="fa fa-repeat"/>
+                            <p:menuitem value="Delete" icon="fa fa-close"/>
+                            <p:separator />
+                            <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="ui-icon-extlink fa fa-university"/>
+                        </p:menuButton>
+
+                        <h1 style="margin-top:40px">ContextMenu</h1>
+                        Right click!
+                        <p:contextMenu>
+                            <p:menuitem value="Save" icon="fa fa-save"/>
+                            <p:menuitem value="Update" icon="fa fa-refresh"/>
+                            <p:menuitem value="Delete" icon="fa fa-close"/>
+                            <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="fa fa-university"/>
+                        </p:contextMenu>
+                    </div>
+
+                    <div class="card">
+                        <h1>SlideMenu</h1>
+                        <p:slideMenu style="width:260px">
+                            <p:submenu label="Ajax Menuitems" icon="fa fa-refresh">
+                                <p:menuitem value="Save" icon="fa fa-save" />
+                                <p:menuitem value="Update" icon="fa fa-repeat" />
+                            </p:submenu>
+                            <p:submenu label="Non-Ajax Menuitem" icon="fa fa-bolt">
+                                <p:menuitem value="Delete" icon="fa fa-close" />
+                            </p:submenu>
+                            <p:separator />
+                            <p:submenu label="Navigations" icon="fa fa-stack-exchange">
+                                <p:submenu label="Prime Links">
+                                    <p:menuitem value="Prime" url="http://www.prime.com.tr"/>
+                                    <p:menuitem value="PrimeFaces" url="http://www.primefaces.org" />
+                                </p:submenu>
+                                <p:menuitem value="Mobile" />
+                            </p:submenu>
+                        </p:slideMenu>
+                    </div>
+
+                    <div class="card">
+                        <h1>PanelMenu</h1>
+                        <p:panelMenu>
+                            <p:submenu label="Ajax Menuitems">
+                                <p:menuitem value="Save" icon="fa fa-save" />
+                                <p:menuitem value="Update" icon="fa fa-refresh"/>
+                            </p:submenu>
+                            <p:submenu label="Non-Ajax Menuitem">
+                                <p:menuitem value="Delete" icon="fa fa-close"/>
+                            </p:submenu>
+                            <p:separator />
+                            <p:submenu label="Navigations" >
+                                <p:submenu label="Links" icon="fa fa-close">
+                                    <p:submenu label="PrimeFaces">
+                                        <p:menuitem value="Home" url="http://www.primefaces.org" icon="fa fa-home"/>
+                                        <p:menuitem value="Docs" url="http://www.primefaces.org/documentation" icon="fa fa-file"/>
+                                        <p:menuitem value="Download" url="http://www.primefaces.org/downloads" icon="fa fa-download"/>
+                                        <p:menuitem value="Support" url="http://www.primefaces.org/support" icon="fa fa-ticket"/>
+                                    </p:submenu>
+                                </p:submenu>
+                                <p:menuitem value="Star" icon="fa fa-star-o"/>
+                            </p:submenu>
+                        </p:panelMenu>
+                    </div>
+                </div>
+
+                <div class="ui-g-12 ui-g-6">
+                    <div class="card">
+                        <h1>TabMenu</h1>
+                        <p:tabMenu activeIndex="#{param.i}">
+                            <p:menuitem value="Overview" outcome="/menu" icon="fa fa-star">
+                                <f:param name="i" value="0" />
+                            </p:menuitem>
+                            <p:menuitem value="Demos" outcome="/menu" icon="fa fa-search">
+                                <f:param name="i" value="1" />
+                            </p:menuitem>
+                            <p:menuitem value="Documentation" outcome="/menu" icon="fa fa-file">
+                                <f:param name="i" value="2" />
+                            </p:menuitem>
+                            <p:menuitem value="Support" outcome="/menu" icon="fa fa-wrench">
+                                <f:param name="i" value="3" />
+                            </p:menuitem>
+                            <p:menuitem value="Social" outcome="/menu" icon="fa fa-child">
+                                <f:param name="i" value="4" />
+                            </p:menuitem>
+                        </p:tabMenu>
+                    </div>
+                </div>
+
+                <div class="ui-g-12 ui-g-6">
+                    <div class="card">
+                        <h1>MegaMenu - Horizontal</h1>
+                        <p:megaMenu orientation="horizontal">
+                            <p:submenu label="TV" icon="fa fa-desktop">
+                                <p:column>
+                                    <p:submenu label="TV.1">
+                                        <p:menuitem value="TV.1.1" url="#" />
+                                        <p:menuitem value="TV.1.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="TV.2">
+                                        <p:menuitem value="TV.2.1" url="#" />
+                                        <p:menuitem value="TV.2.2" url="#" />
+                                        <p:menuitem value="TV.2.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+
+                                <p:column>
+                                    <p:submenu label="TV.4">
+                                        <p:menuitem value="TV.4.1" url="#" />
+                                        <p:menuitem value="TV.4.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="TV.5">
+                                        <p:menuitem value="TV.5.1" url="#" />
+                                        <p:menuitem value="TV.5.2" url="#" />
+                                        <p:menuitem value="TV.5.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+
+                            <p:submenu label="Sports" icon="fa fa-child">
+
+                                <p:column>
+                                    <p:submenu label="Sports.1">
+                                        <p:menuitem value="Sports.1.1" url="#" />
+                                        <p:menuitem value="Sports.1.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="Sports.2">
+                                        <p:menuitem value="Sports.2.1" url="#" />
+                                        <p:menuitem value="Sports.2.2" url="#" />
+                                        <p:menuitem value="Sports.2.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+
+                                <p:column>
+                                    <p:submenu label="Sports.4">
+                                        <p:menuitem value="Sports.4.1" url="#" />
+                                        <p:menuitem value="Sports.4.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="Sports.5">
+                                        <p:menuitem value="Sports.5.1" url="#" />
+                                        <p:menuitem value="Sports.5.2" url="#" />
+                                        <p:menuitem value="Sports.5.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+                                <p:column>
+                                    <p:submenu label="Sports.7">
+                                        <p:menuitem value="Sports.7.1" url="#" />
+                                        <p:menuitem value="Sports.7.2" url="#" />
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+
+                            <p:submenu label="Entertainment" icon="fa fa-magic">
+                                <p:column>
+                                    <p:submenu label="Entertainment.1">
+                                        <p:menuitem value="Entertainment.1.1" url="#" />
+                                        <p:menuitem value="Entertainment.1.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="Entertainment.2">
+                                        <p:menuitem value="Entertainment.2.1" url="#" />
+                                        <p:menuitem value="Entertainment.2.2" url="#" />
+                                        <p:menuitem value="Entertainment.2.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+
+                                <p:column>
+                                    <p:submenu label="Entertainment.4">
+                                        <p:menuitem value="Entertainment.4.1" url="#" />
+                                        <p:menuitem value="Entertainment.4.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="Entertainment.5">
+                                        <p:menuitem value="Entertainment.5.1" url="#" />
+                                        <p:menuitem value="Entertainment.5.2" url="#" />
+                                        <p:menuitem value="Entertainment.5.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+
+                            <p:submenu label="Tech" icon="fa fa-space-shuttle">
+                                <p:column>
+                                    <p:submenu label="Tech.1">
+                                        <p:menuitem value="Tech.1.1" url="#" />
+                                        <p:menuitem value="Tech.1.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="Tech.2">
+                                        <p:menuitem value="Tech.2.1" url="#" />
+                                        <p:menuitem value="Tech.2.2" url="#" />
+                                        <p:menuitem value="Tech.2.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+
+                                <p:column>
+                                    <p:submenu label="Tech.4">
+                                        <p:menuitem value="Tech.4.1" url="#" />
+                                        <p:menuitem value="Tech.4.2" url="#" />
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+
+                            <p:menuitem value="Quit" url="http://www.primefaces.org" icon="fa fa-close" />
+                        </p:megaMenu>
+
+                        <h1>MegaMenu - Vertical</h1>
+                        <p:megaMenu orientation="vertical" style="width:200px">
+                            <p:submenu label="TV" icon="fa fa-desktop">
+                                <p:column>
+                                    <p:submenu label="TV.1">
+                                        <p:menuitem value="TV.1.1" url="#" />
+                                        <p:menuitem value="TV.1.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="TV.2">
+                                        <p:menuitem value="TV.2.1" url="#" />
+                                        <p:menuitem value="TV.2.2" url="#" />
+                                        <p:menuitem value="TV.2.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+
+                                <p:column>
+                                    <p:submenu label="TV.4">
+                                        <p:menuitem value="TV.4.1" url="#" />
+                                        <p:menuitem value="TV.4.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="TV.5">
+                                        <p:menuitem value="TV.5.1" url="#" />
+                                        <p:menuitem value="TV.5.2" url="#" />
+                                        <p:menuitem value="TV.5.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+
+                            <p:submenu label="Sports" icon="fa fa-child">
+
+                                <p:column>
+                                    <p:submenu label="Sports.1">
+                                        <p:menuitem value="Sports.1.1" url="#" />
+                                        <p:menuitem value="Sports.1.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="Sports.2">
+                                        <p:menuitem value="Sports.2.1" url="#" />
+                                        <p:menuitem value="Sports.2.2" url="#" />
+                                        <p:menuitem value="Sports.2.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+
+                                <p:column>
+                                    <p:submenu label="Sports.4">
+                                        <p:menuitem value="Sports.4.1" url="#" />
+                                        <p:menuitem value="Sports.4.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="Sports.5">
+                                        <p:menuitem value="Sports.5.1" url="#" />
+                                        <p:menuitem value="Sports.5.2" url="#" />
+                                        <p:menuitem value="Sports.5.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+                                <p:column>
+                                    <p:submenu label="Sports.7">
+                                        <p:menuitem value="Sports.7.1" url="#" />
+                                        <p:menuitem value="Sports.7.2" url="#" />
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+
+                            <p:submenu label="Entertainment" icon="fa fa-magic">
+                                <p:column>
+                                    <p:submenu label="Entertainment.1">
+                                        <p:menuitem value="Entertainment.1.1" url="#" />
+                                        <p:menuitem value="Entertainment.1.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="Entertainment.2">
+                                        <p:menuitem value="Entertainment.2.1" url="#" />
+                                        <p:menuitem value="Entertainment.2.2" url="#" />
+                                        <p:menuitem value="Entertainment.2.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+
+                                <p:column>
+                                    <p:submenu label="Entertainment.4">
+                                        <p:menuitem value="Entertainment.4.1" url="#" />
+                                        <p:menuitem value="Entertainment.4.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="Entertainment.5">
+                                        <p:menuitem value="Entertainment.5.1" url="#" />
+                                        <p:menuitem value="Entertainment.5.2" url="#" />
+                                        <p:menuitem value="Entertainment.5.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+
+                            <p:submenu label="Tech" icon="fa fa-space-shuttle">
+                                <p:column>
+                                    <p:submenu label="Tech.1">
+                                        <p:menuitem value="Tech.1.1" url="#" />
+                                        <p:menuitem value="Tech.1.2" url="#" />
+                                    </p:submenu>
+                                    <p:submenu label="Tech.2">
+                                        <p:menuitem value="Tech.2.1" url="#" />
+                                        <p:menuitem value="Tech.2.2" url="#" />
+                                        <p:menuitem value="Tech.2.3" url="#" />
+                                    </p:submenu>
+                                </p:column>
+
+                                <p:column>
+                                    <p:submenu label="Tech.4">
+                                        <p:menuitem value="Tech.4.1" url="#" />
+                                        <p:menuitem value="Tech.4.2" url="#" />
+                                    </p:submenu>
+                                </p:column>
+                            </p:submenu>
+
+                            <p:menuitem value="Quit" url="http://www.primefaces.org" icon="fa fa-close" />
+                        </p:megaMenu>
+                    </div>
+                </div>
+            </div>
+        </h:form>
+
+    </ui:define>
+
+</ui:composition>
