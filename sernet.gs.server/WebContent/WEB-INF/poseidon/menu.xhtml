@@ -15,7 +15,7 @@
                         <i class="fa fa-search"></i>
                     </div>
                     <pp:menu widgetVar="me">
-                        <p:menuitem id="om_dashboard" value="Dashboard" icon="fa fa-fw fa-home" outcome="/dashboard"/>
+                        <p:menuitem id="om_dashboard" value="Dashboard" icon="fa fa-fw fa-home" outcome="/dashboard/dashboard"/>
                         <p:submenu id="um_themes" label="Themes" icon="fa fa-fw fa-paint-brush">
                             <p:menuitem id="theme1" value="Turquoise Theme" icon="fa fa-fw fa-paint-brush" actionListener="#{guestPreferences.setTheme('turquoise')}" ajax="false" style="color:#00acac"/>
                             <p:menuitem id="theme2" value="Blue Theme" icon="fa fa-fw fa-paint-brush" actionListener="#{guestPreferences.setTheme('blue')}" ajax="false" style="color:#2f8ee5"/>
@@ -32,24 +32,24 @@
                             <p:menuitem id="custom5" value="Horizontal Menu" icon="fa fa-fw fa-bars" actionListener="#{guestPreferences.setMenuLayout('horizontal')}" ajax="false"/>
                         </p:submenu>
                         <p:submenu id="om_components" label="Components" icon="fa fa-fw fa-sitemap">
-                            <p:menuitem id="om_sample" value="Sample Page" icon="fa fa-fw fa-columns" outcome="/sample" />
-                            <p:menuitem id="om_forms" value="Forms" icon="fa fa-fw fa-code" outcome="/forms" />
-                            <p:menuitem id="om_data" value="Data" icon="fa fa-fw fa-table" outcome="/data" />
-                            <p:menuitem id="om_panels" value="Panels" icon="fa fa-fw fa-list-alt" outcome="/panel" />
-                            <p:menuitem id="om_overlays" value="Overlays" icon="fa fa-fw fa-square" outcome="/overlay" />
-                            <p:menuitem id="om_menus" value="Menus" icon="fa fa-fw fa-minus-square-o" outcome="/menu" />
-                            <p:menuitem id="om_messages" value="Messages" icon="fa fa-fw fa-circle-o-notch" outcome="/messages" />
-                            <p:menuitem id="om_charts" value="Charts" icon="fa fa-fw fa-area-chart" outcome="/charts" />
-                            <p:menuitem id="om_file" value="File" icon="fa fa-fw fa-arrow-circle-o-up" outcome="/file" />
-                            <p:menuitem id="om_misc" value="Misc" icon="fa fa-fw fa-user-secret" outcome="/misc" />
+                            <p:menuitem id="om_sample" value="Sample Page" icon="fa fa-fw fa-columns" outcome="/dashboard/sample" />
+                            <p:menuitem id="om_forms" value="Forms" icon="fa fa-fw fa-code" outcome="/dashboard/forms" />
+                            <p:menuitem id="om_data" value="Data" icon="fa fa-fw fa-table" outcome="/dashboard/data" />
+                            <p:menuitem id="om_panels" value="Panels" icon="fa fa-fw fa-list-alt" outcome="/dashboard/panel" />
+                            <p:menuitem id="om_overlays" value="Overlays" icon="fa fa-fw fa-square" outcome="/dashboard/overlay" />
+                            <p:menuitem id="om_menus" value="Menus" icon="fa fa-fw fa-minus-square-o" outcome="/dashboard/menu" />
+                            <p:menuitem id="om_messages" value="Messages" icon="fa fa-fw fa-circle-o-notch" outcome="/dashboard/messages" />
+                            <p:menuitem id="om_charts" value="Charts" icon="fa fa-fw fa-area-chart" outcome="/dashboard/charts" />
+                            <p:menuitem id="om_file" value="File" icon="fa fa-fw fa-arrow-circle-o-up" outcome="/dashboard/file" />
+                            <p:menuitem id="om_misc" value="Misc" icon="fa fa-fw fa-user-secret" outcome="/dashboard/misc" />
                         </p:submenu>
-                        <p:menuitem id="om_db_landing" value="Landing" icon="fa fa-fw fa-certificate" outcome="/landing"/>
+                        <p:menuitem id="om_db_landing" value="Landing" icon="fa fa-fw fa-certificate" outcome="/dashboard/landing"/>
                         <p:submenu id="om_default" label="Template Pages" icon="fa fa-fw fa-life-saver">
-                            <p:menuitem id="om_empty" value="Empty Page" icon="fa fa-fw fa-square-o" outcome="/empty" />
-                            <p:menuitem id="om_login" value="Login Page" icon="fa fa-fw fa-sign-in" outcome="/login" />
-                            <p:menuitem id="om_error" value="Error Page" icon="fa fa-fw fa-exclamation-circle" outcome="/error" />
-                            <p:menuitem id="om_404" value="404 Page" icon="fa fa-fw fa-times" outcome="/404" />
-                            <p:menuitem id="om_access" value="Access Denied Page" icon="fa fa-fw fa-exclamation-triangle" outcome="/access" />
+                            <p:menuitem id="om_empty" value="Empty Page" icon="fa fa-fw fa-square-o" outcome="/dashboard/empty" />
+                            <p:menuitem id="om_login" value="Login Page" icon="fa fa-fw fa-sign-in" outcome="/dashboard/login" />
+                            <p:menuitem id="om_error" value="Error Page" icon="fa fa-fw fa-exclamation-circle" outcome="/dashboard/error" />
+                            <p:menuitem id="om_404" value="404 Page" icon="fa fa-fw fa-times" outcome="/dashboard/404" />
+                            <p:menuitem id="om_access" value="Access Denied Page" icon="fa fa-fw fa-exclamation-triangle" outcome="/dashboard/access" />
                         </p:submenu>
                         <p:submenu id="om_hierarchy" label="Menu Hierarchy" icon="fa fa-fw fa-gg">
                             <p:submenu id="om_sm1" label="Submenu 1" icon="fa fa-fw fa-sign-in">
@@ -72,7 +72,7 @@
                                 </p:submenu>
                             </p:submenu>
                         </p:submenu>
-                        <p:menuitem id="om_doc" value="Documentation" icon="fa fa-fw fa-book" outcome="/docs"/>
+                        <p:menuitem id="om_doc" value="Documentation" icon="fa fa-fw fa-book" outcome="/dashboard/docs"/>
                     </pp:menu>
 
                     <div class="layout-menu-footer">

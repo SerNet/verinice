@@ -23,21 +23,21 @@
     <h:body styleClass="main-body">
 
         <div class="layout-wrapper #{guestPreferences.menuLayout}">
-            <ui:include src="./topbar.xhtml" />
-            <ui:include src="./menu.xhtml" />
+            <ui:include src="topbar.xhtml" />
+            <ui:include src="menu.xhtml" />
 
             <div class="layout-main">
                 <div class="route-bar">
                     <i class="fa fa-home"></i> <span>/ </span>
                     <ui:insert name="viewname" />
 
-                    <ui:include src="./right-sidebar.xhtml" />
+                    <ui:include src="right-sidebar.xhtml" />
                 </div>
                 <div class="layout-main-content">
                     <ui:insert name="content"/>
                 </div>
 
-                <ui:include src="./footer.xhtml" />
+                <ui:include src="footer.xhtml" />
             </div>
         </div>
 
@@ -53,7 +53,7 @@
 
         <h:outputStylesheet name="css/nanoscroller.css" library="poseidon-layout" />
         <h:outputStylesheet name="css/animate.css" library="poseidon-layout" />
-        <h:outputStylesheet name="css/layout-#{guestPreferences.theme}.css" library="poseidon-layout" />
+        <h:outputStylesheet name="css/layout-blue.css" library="poseidon-layout" />
     </h:body>
 
 </html>
