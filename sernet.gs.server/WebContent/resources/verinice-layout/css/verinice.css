@@ -4,14 +4,25 @@
 }
 
 .layout-wrapper .topbar .logo {
-    display: inline-block;
-    vertical-align: middle;
-    width: 175px;
-    height: 49px;
-    background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
-    background-size: 175px 49px;
+	display: inline-block;
+	vertical-align: middle;
+	width: 175px;
+	height: 49px;
+	background:
+		url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top
+		left no-repeat;
+	background-size: 175px 49px;
 }
 
-.layout-wrapper .topbar .topbar-left {
+.layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left .logo
+{
+	background:
+		url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top
+		left no-repeat;
+}
+
+.layout-wrapper .topbar .topbar-left,
+ .layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left
+{
 	background-color: #fff;
 }
