@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -35,6 +36,10 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -45,6 +50,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
@@ -122,6 +128,23 @@ public class UpdateNewsDialog extends Dialog {
         browser.setLayoutData(gridData);
         browser.setText(message);
         browser.setJavascriptEnabled(false);
+        browser.addLocationListener(new LocationListener() {
+            
+            @Override
+            public void changing(LocationEvent event) {
+                try {
+                    PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.location));
+                } catch (PartInitException | MalformedURLException e) {
+                    LOG.error("Error opening Link in external Browser", e);
+                }
+                
+            }
+            
+            @Override
+            public void changed(LocationEvent event) {
+                // do nothing
+            }
+        });
         
         Button showAgainCheck = new Button(dialogComposite, SWT.CHECK);
         showAgainCheck.setText(Messages.UpdateNewsDialog_0);
