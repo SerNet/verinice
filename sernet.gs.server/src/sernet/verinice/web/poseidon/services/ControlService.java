@@ -19,10 +19,25 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 public class ControlService {
 
+    public Map<String, Integer> getAccumulatedControlStatesForScope(String scope) {
+
+        Map<String, Integer> states = new HashMap<>();
+
+        states.put("Unbearbeitet", 23);
+        states.put("Teilweise", 31);
+        states.put("Nein", 55);
+        states.put("Ja", 83);
+        states.put("Entbehrlich", 12);
+
+        return states;
+    }
 }

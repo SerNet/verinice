@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.faces.bean.ManagedBean;
 
 /**
@@ -28,4 +31,16 @@ import javax.faces.bean.ManagedBean;
 @ManagedBean(name = "controlServiceDummy")
 public class ControlServiceDummy extends ControlService {
 
+    public Map<String, Integer> getAccumulatedControlStatesForScope(String scope) {
+
+        Map<String, Integer> states = new HashMap<>();
+
+        states.put("Unbearbeitet", 3);
+        states.put("Teilweise", 31);
+        states.put("Nein", 55);
+        states.put("Ja", 83);
+        states.put("Entbehrlich", 12);
+
+        return states;
+    }
 }

@@ -25,10 +25,14 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.PieChartModel;
 
+import sernet.verinice.web.poseidon.services.ControlService;
+
 import java.io.Serializable;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 
 /**
  *
@@ -40,10 +44,11 @@ public class VeriniceCharts implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ManagedProperty("#{controlServiceDummy}")
+    private ControlService controlService;
+
     private PieChartModel pieModel;
-
     private BarChartModel barModel;
-
 
     @PostConstruct()
     public void init() {
@@ -65,11 +70,11 @@ public class VeriniceCharts implements Serializable {
     private PieChartModel initPieModel() {
         PieChartModel model = new PieChartModel();
 
-        model.set("Unbearbeitet", 23);
-        model.set("Teilweise", 31);
-        model.set("Nein", 55);
-        model.set("Ja", 83);
-        model.set("Entbehrlich", 12);
+        Map<String, Integer> states = controlService.getAccumulatedControlStatesForScope("");
+
+        for (Map.Entry<String, Integer> entry : states.entrySet()) {
+            model.set(entry.getKey(), entry.getValue());
+        }
 
         return model;
     }
@@ -97,11 +102,12 @@ public class VeriniceCharts implements Serializable {
 
         ChartSeries status = new ChartSeries();
         status.setLabel("Status");
-        status.set("Unbearbeitet", 23);
-        status.set("Teilweise", 31);
-        status.set("Nein", 55);
-        status.set("Ja", 83);
-        status.set("Entbehrlich", 12);
+
+        Map<String, Integer> states = controlService.getAccumulatedControlStatesForScope("");
+
+        for (Map.Entry<String, Integer> entry : states.entrySet()) {
+            status.set(entry.getKey(), entry.getValue());
+        }
 
         model.addSeries(status);
 
@@ -114,5 +120,13 @@ public class VeriniceCharts implements Serializable {
 
     public BarChartModel getBarModel() {
         return barModel;
+    }
+
+    public ControlService getControlService() {
+        return controlService;
+    }
+
+    public void setControlService(ControlService controlService) {
+        this.controlService = controlService;
     }
 }
