@@ -15,14 +15,14 @@
 }
 
 .layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left .logo
-{
+	{
 	background:
 		url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top
 		left no-repeat;
+	background-size: 175px 49px;
 }
 
-.layout-wrapper .topbar .topbar-left,
- .layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left
-{
+.layout-wrapper .topbar .topbar-left, .layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left
+	{
 	background-color: #fff;
 }

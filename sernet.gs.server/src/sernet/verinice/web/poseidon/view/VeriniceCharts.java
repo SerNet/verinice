@@ -19,6 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view;
 
+import java.io.Serializable;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
@@ -26,13 +33,6 @@ import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ControlService;
-
-import java.io.Serializable;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 
 /**
  *
@@ -112,6 +112,8 @@ public class VeriniceCharts implements Serializable {
         model.addSeries(status);
 
         return model;
+
+
     }
 
     public PieChartModel getPieModel() {
