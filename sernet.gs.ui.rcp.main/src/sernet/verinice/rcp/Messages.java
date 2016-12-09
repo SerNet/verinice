@@ -83,6 +83,7 @@ public class Messages extends NLS {
     public static String UpdateNewsDialog_1;
     public static String UpdateNewsDialog_10;
     public static String UpdateNewsDialog_11;
+    public static String UpdateNewsDialog_13;
     public static String UpdateNewsDialog_2;
     public static String UpdateNewsDialog_3;
     public static String UpdateNewsDialog_4;

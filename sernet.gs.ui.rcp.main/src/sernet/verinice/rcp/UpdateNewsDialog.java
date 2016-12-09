@@ -19,6 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.rcp;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -43,6 +44,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.program.Program;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -63,6 +65,8 @@ import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
  * @author Sebastian Hagedorn sh[at]sernet.de
  */
 public class UpdateNewsDialog extends Dialog {
+    
+    private static final String SHOP_URL = "https://shop.verinice.com/";  //$NON-NLS-1$
     
     private String message;
     private URL updateSite;
@@ -130,7 +134,7 @@ public class UpdateNewsDialog extends Dialog {
                 try {
                     PlatformUI.getWorkbench().getBrowserSupport().getExternalBrowser().openURL(new URL(event.location));
                 } catch (PartInitException | MalformedURLException e) {
-                    LOG.error("Error opening Link in external Browser", e);
+                    LOG.error("Error opening Link in external Browser", e); //$NON-NLS-1$
                 }
                 
             }
@@ -160,10 +164,23 @@ public class UpdateNewsDialog extends Dialog {
         gridData.horizontalSpan = 4;
         buttonComposite.setLayoutData(gridData);
         
+        Button openShop = new Button(buttonComposite, SWT.PUSH );
+        openShop.setText(Messages.UpdateNewsDialog_13);
+        gridData = new GridData();
+        openShop.setLayoutData(gridData);
+        openShop.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent event) {            
+                try {
+                    Program.launch(SHOP_URL);
+                } catch (Exception e) {
+                    LOG.error("Error while loading shop", e); //$NON-NLS-1$
+                } 
+            }
+        });
+        
         Button updateLater = new Button(buttonComposite, SWT.PUSH );
         updateLater.setText(Messages.UpdateNewsDialog_2);
         gridData = new GridData();
-        gridData.horizontalSpan = 2;
         updateLater.setLayoutData(gridData);
         updateLater.addSelectionListener(new SelectionAdapter() {
             public void widgetSelected(SelectionEvent event) {
@@ -182,7 +199,7 @@ public class UpdateNewsDialog extends Dialog {
                     triggerUpdate(updateSite);
                     parent.getShell().close();
                 } catch (URISyntaxException e){
-                    LOG.error("URL of given Updatesite is not valid", e);
+                    LOG.error("URL of given Updatesite is not valid", e); //$NON-NLS-1$
                 }
             }
         });
@@ -211,7 +228,7 @@ public class UpdateNewsDialog extends Dialog {
         // check if updates are available    
         IStatus status = operation.resolveModal(null);
         if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
-            LOG.debug("detected there is nothing to update");
+            LOG.debug("detected there is nothing to update"); //$NON-NLS-1$
             MessageDialog.openInformation(
                     null, 
                     Messages.UpdateNewsDialog_5, 
@@ -234,7 +251,7 @@ public class UpdateNewsDialog extends Dialog {
                         Messages.UpdateNewsDialog_6,
                         Messages.UpdateNewsDialog_7);
                 if (restart) {
-                    LOG.debug("Restarting application manually requested after update");
+                    LOG.debug("Restarting application manually requested after update"); //$NON-NLS-1$
                     PlatformUI.getWorkbench().restart();
                 }
             }
@@ -248,18 +265,18 @@ public class UpdateNewsDialog extends Dialog {
      */
     private void createAndExecuteUpdateJob(UpdateOperation operation) {
         try{
-            LOG.debug("creating provisioningJob from p2-api");
+            LOG.debug("creating provisioningJob from p2-api"); //$NON-NLS-1$
             final ProvisioningJob provisioningJob = operation.getProvisioningJob(null);
             if (provisioningJob != null) {
-                LOG.debug("performing update using provisioning job");
+                LOG.debug("performing update using provisioning job"); //$NON-NLS-1$
                 performUpdate(provisioningJob);
             }
             else {
-                LOG.debug("provisioning job was null");
+                LOG.debug("provisioning job was null"); //$NON-NLS-1$
                 handleUpdateError(operation);
             }
         } catch (Exception e){
-            LOG.error("Error executing update", e);
+            LOG.error("Error executing update", e); //$NON-NLS-1$
         }
     }
 
@@ -267,7 +284,7 @@ public class UpdateNewsDialog extends Dialog {
         if (operation.hasResolved()) {
             MessageDialog.openError(null, 
                     Messages.UpdateNewsDialog_8, Messages.UpdateNewsDialog_9 
-                    + ":\t" + operation.getResolutionResult());
+                    + ":\t" + operation.getResolutionResult()); //$NON-NLS-1$
         } else {
             MessageDialog.openError(null, 
                     Messages.UpdateNewsDialog_8, Messages.UpdateNewsDialog_9);
@@ -287,33 +304,33 @@ public class UpdateNewsDialog extends Dialog {
                         Messages.UpdateNewsDialog_10,
                         Messages.UpdateNewsDialog_11);
               if (performUpdate) {
-                  LOG.debug("Running update job modal");
+                  LOG.debug("Running update job modal"); //$NON-NLS-1$
                   provisioningJob.addJobChangeListener(new IJobChangeListener() {                     
                       @Override
                       public void sleeping(IJobChangeEvent arg0) {
-                          LOG.debug("Update-Job sleeping");
+                          LOG.debug("Update-Job sleeping"); //$NON-NLS-1$
                       }                     
                       @Override
                       public void scheduled(IJobChangeEvent arg0) {
-                          LOG.debug("Update-Job scheduled");
+                          LOG.debug("Update-Job scheduled"); //$NON-NLS-1$
                       }                 
                       @Override
                       public void running(IJobChangeEvent arg0) {
-                          LOG.debug("Update-Job running");
+                          LOG.debug("Update-Job running"); //$NON-NLS-1$
                       }                   
                       @Override
                       public void done(IJobChangeEvent arg0) {
-                          LOG.debug("Update-Job done");
+                          LOG.debug("Update-Job done"); //$NON-NLS-1$
                           restartApplication();                     
                       }                    
                       @Override
                       public void awake(IJobChangeEvent arg0) {
-                          LOG.debug("Update-Job awake");
+                          LOG.debug("Update-Job awake"); //$NON-NLS-1$
                       }                    
                       @Override
                       public void aboutToRun(IJobChangeEvent arg0) {
-                          LOG.debug("Update-Job about to run");                        
-                      }
+                          LOG.debug("Update-Job about to run"); //$NON-NLS-1$                       
+                      } 
                   });
                   provisioningJob.schedule();
               }
