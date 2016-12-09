@@ -38,8 +38,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -57,14 +55,12 @@ import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 
 /**
- * 
  * A dialog that informs the user that there is a new update available and
  * offers actions to update now or later. Displaying the dialog is optional
  * via preference. Dialog will be shown only once per client-session,
  * on startup time, when internal server is ready. 
  * 
  * @author Sebastian Hagedorn sh[at]sernet.de
- *
  */
 public class UpdateNewsDialog extends Dialog {
     
@@ -106,8 +102,7 @@ public class UpdateNewsDialog extends Dialog {
               cursorLocation.y-shellLocationYSubtrahend));
     }
 
-    protected Button createButton(Composite arg0, int arg1, String arg2, boolean arg3) 
-    {
+    protected Button createButton(Composite arg0, int arg1, String arg2, boolean arg3) {
         //Return null so that no default buttons like 'OK' and 'Cancel' will be created
         return null;
     }
@@ -191,8 +186,6 @@ public class UpdateNewsDialog extends Dialog {
                 }
             }
         });
-        
-        
     }
     
     private void setShowAgainProperty(boolean showAgain){
@@ -207,8 +200,7 @@ public class UpdateNewsDialog extends Dialog {
      * button "Update now" is clicked by the user
      */
     private void triggerUpdate(URL updateSiteURL) throws URISyntaxException{
-        // create update operation
-        
+        // create update operation       
         ProvisioningSession session = ProvUIActivator.getDefault().getProvisioningUI().getSession();
         
         UpdateOperation operation = new UpdateOperation(session);
@@ -216,8 +208,7 @@ public class UpdateNewsDialog extends Dialog {
         operation.getProvisioningContext().setArtifactRepositories(new URI[]{updateSiteURL.toURI()});
         operation.getProvisioningContext().setMetadataRepositories(new URI[]{updateSiteURL.toURI()});
         
-        // check if updates are available
-        
+        // check if updates are available    
         IStatus status = operation.resolveModal(null);
         if (status.getCode() == UpdateOperation.STATUS_NOTHING_TO_UPDATE) {
             LOG.debug("detected there is nothing to update");
@@ -227,7 +218,6 @@ public class UpdateNewsDialog extends Dialog {
                     Messages.UpdateNewsDialog_4);
             return;
         }
-
         // execute update
         createAndExecuteUpdateJob(operation);
     }
@@ -236,8 +226,7 @@ public class UpdateNewsDialog extends Dialog {
      * restarts the application after successful update 
      */
     private void restartApplication() {
-        getDisplay().syncExec(new Runnable() {
-            
+        getDisplay().syncExec(new Runnable() {       
             @Override
             public void run() {
                 //  restart application
@@ -289,10 +278,8 @@ public class UpdateNewsDialog extends Dialog {
      * executes the p2-update job in a modal way, so the user is
      * not able to interrupt it or do something else while updating
      */
-    private void performUpdate(final ProvisioningJob provisioningJob) {
-        
-        getDisplay().syncExec(new Runnable() {
-            
+    private void performUpdate(final ProvisioningJob provisioningJob) {      
+        getDisplay().syncExec(new Runnable() {          
             @Override
             public void run() {
                 boolean performUpdate = MessageDialog.openQuestion(
@@ -301,53 +288,37 @@ public class UpdateNewsDialog extends Dialog {
                         Messages.UpdateNewsDialog_11);
               if (performUpdate) {
                   LOG.debug("Running update job modal");
-                  provisioningJob.addJobChangeListener(new IJobChangeListener() {
-                      
+                  provisioningJob.addJobChangeListener(new IJobChangeListener() {                     
                       @Override
                       public void sleeping(IJobChangeEvent arg0) {
-                          // TODO Auto-generated method stub
                           LOG.debug("Update-Job sleeping");
-                      }
-                      
+                      }                     
                       @Override
                       public void scheduled(IJobChangeEvent arg0) {
-                          // TODO Auto-generated method stub
                           LOG.debug("Update-Job scheduled");
-                      }
-                      
+                      }                 
                       @Override
                       public void running(IJobChangeEvent arg0) {
-                          // TODO Auto-generated method stub
                           LOG.debug("Update-Job running");
-                      }
-                      
+                      }                   
                       @Override
                       public void done(IJobChangeEvent arg0) {
                           LOG.debug("Update-Job done");
-                          restartApplication();
-                          
-                      }
-                      
+                          restartApplication();                     
+                      }                    
                       @Override
                       public void awake(IJobChangeEvent arg0) {
-                          // TODO Auto-generated method stub
                           LOG.debug("Update-Job awake");
-                      }
-                      
+                      }                    
                       @Override
                       public void aboutToRun(IJobChangeEvent arg0) {
-                          // TODO Auto-generated method stub
-                          LOG.debug("Update-Job about to run");
-                          
+                          LOG.debug("Update-Job about to run");                        
                       }
                   });
                   provisioningJob.schedule();
               }
-              
-
             }
-        });
-             
+        });            
     }            
     
     private Display getDisplay(){
@@ -355,8 +326,5 @@ public class UpdateNewsDialog extends Dialog {
             return Display.getDefault();
         }
         return Display.getCurrent();
-    }
-
-
-        
+    }     
 }

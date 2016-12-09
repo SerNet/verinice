@@ -84,6 +84,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
     private static final Logger LOG = Logger.getLogger(ApplicationWorkbenchWindowAdvisor.class);
     
+    private IUpdateNewsService updateNewsService;
+    
     public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
     }
@@ -301,9 +303,6 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         }
     }
 
-    /**
-     * 
-     */
     private void handleOpenDialogByServerStatus() {
         if (Activator.getDefault().isStandalone() 
                 && !Activator.getDefault().getInternalServer().isRunning()){
@@ -311,54 +310,59 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
                 @Override
                 public void statusChanged(InternalServerEvent e) {
                     if (e.isStarted()){
-                        openNewsDialogAsync();
+                        openNewsDialog();
                     }
                 }
             };
             Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
         } else if(Activator.getDefault().getInternalServer().isRunning()){
-                openNewsDialogAsync();
+                openNewsDialog();
         }
     }
     
-    private void openNewsDialogAsync(){
-        Activator.inheritVeriniceContextState();
-        IUpdateNewsService updateNewsService =(IUpdateNewsService)VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE);
+    private void openNewsDialog(){
         try{
+            Activator.inheritVeriniceContextState();
             String newsRepo = getNewsRepository();
-            UpdateNewsMessageEntry newsEntry = updateNewsService.getNewsFromRepository(newsRepo);
-            if (!(newsEntry == null)){ // equals null in servermode
-                final String text = newsEntry.getMessage(Locale.getDefault());
-                String installedVersion = getApplicationVersionFromAboutText();
-                LOG.debug("installed Version:\t" + installedVersion);
-                boolean updateNecessary = updateNewsService.isUpdateNecessary(installedVersion);
-                LOG.debug("update necessary:\t" + String.valueOf(updateNecessary));
-                if (StringUtils.isNotEmpty(installedVersion) && updateNewsService.isUpdateNecessary(installedVersion)){
-                    final URL updateSiteURL;
-                    try{
-                        updateSiteURL = new URL(updateNewsService.getNewsFromRepository(getNewsRepository()).getUpdateSite());
-                    } catch (MalformedURLException e){
-                        LOG.error("Updatesite not parseable", e);
-                        throw new UpdateNewsException("Malformed URL of updatesite", e);
-                    }
-                    Display.getDefault().syncExec(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
-                            UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell,
-                                    text, updateSiteURL);
-                            newsDialog.open();
-                        }
-                    });
-                }
+            UpdateNewsMessageEntry newsEntry = getUpdateNewsService().getNewsFromRepository(newsRepo);
+            if (newsEntry != null){ // equals null in servermode
+                openNewsDialog(newsEntry);
             }
         } catch (UpdateNewsException e){
             LOG.error("Problem occured during loading the verinice-update-news", e);
-            ExceptionUtil.log(e, Messages.ApplicationActionBarAdvisor_23);
-        } catch (Throwable t){
+        } catch (Exception t){
             LOG.error("Problem occured", t);
         }
+    }
+
+    private void openNewsDialog(UpdateNewsMessageEntry newsEntry) throws UpdateNewsException {
+        final String text = newsEntry.getMessage(Locale.getDefault());
+        String installedVersion = getApplicationVersionFromAboutText();
+        LOG.debug("installed Version:\t" + installedVersion);
+        boolean updateNecessary = getUpdateNewsService().isUpdateNecessary(installedVersion);
+        LOG.debug("update necessary:\t" + updateNecessary);
+        if (StringUtils.isNotEmpty(installedVersion) && getUpdateNewsService().isUpdateNecessary(installedVersion)){
+            openNewsDialog(text);
+        }
+    }
+
+    private void openNewsDialog(final String text) throws UpdateNewsException {
+        final URL updateSiteURL;
+        try{
+            updateSiteURL = new URL(getUpdateNewsService().getNewsFromRepository(getNewsRepository()).getUpdateSite());
+        } catch (MalformedURLException e){
+            LOG.error("Updatesite not parseable", e);
+            throw new UpdateNewsException("Malformed URL of updatesite", e);
+        }
+        Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
+                UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell,
+                        text, updateSiteURL);
+                newsDialog.open();
+            }
+        });
     }
     
     /**
@@ -403,6 +407,13 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         }
         LOG.debug("Read versionnumber " + version + " from prodcut-description");
         return version;
+    }
+    
+    private IUpdateNewsService getUpdateNewsService() {
+        if(updateNewsService==null) {
+            updateNewsService = (IUpdateNewsService) VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE);
+        }
+        return updateNewsService;
     }
 
 }

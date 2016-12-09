@@ -21,12 +21,14 @@ package sernet.verinice.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -35,6 +37,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -46,8 +49,7 @@ import sernet.verinice.model.updateNews.UpdateNewsException;
 import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
 
 /**
- * 
- * service to provide functionallity to parse a json-message 
+ * Service to provide functionality to parse a json-message 
  * hosted on a server, that provides information about an available
  * software-update for verinice. Messages on a server has to look like this:
  * 
@@ -62,19 +64,16 @@ import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
  *           
  * }
  * 
- * the html within the message will be interpreted by an instance of
+ * The html within the message will be interpreted by an instance of
  * org.eclipse.swt.browser.Browser, javascript is turned off.
  * 
- * 
- * 
  * @author Sebastian Hagedorn sh[at]sernet.de
- *
  */
 public class UpdateNewsService implements IUpdateNewsService {
     
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    
     private static final Logger LOG = Logger.getLogger(UpdateNewsService.class);
+    
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     
     // valid for one session to cache the entry
     private UpdateNewsMessageEntry sessionNewsEntry;
@@ -111,42 +110,52 @@ public class UpdateNewsService implements IUpdateNewsService {
      */
     @Override
     public String getCurrentInstalledVersion() {
-        try {
-            
-            URL fileURL = new URL(
-                    "platform:/plugin/sernet.gs.ui.rcp.main.feature/oc.product");
-            
-            java.io.File file = null;
-            file = new java.io.File(FileLocator.resolve(fileURL).toURI());
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder parser = factory.newDocumentBuilder();
-            Document document = parser.parse(file);
-            NodeList nodeList = document.getElementsByTagName("product"); 
-            for (int i = 0; i < nodeList.getLength(); i++){
-                Node node = nodeList.item(i);
-                NamedNodeMap namedNodeMap = node.getAttributes();
-                for (int j = 0; j < namedNodeMap.getLength(); j++){
-                    if ("version".equals(namedNodeMap.item(j).getNodeName())){
-                        String installedVersion = namedNodeMap.item(j).
-                                getNodeValue();
-                        LOG.debug("installed Version from oc.product:\t" 
-                                + installedVersion);
-                        final Pattern p = Pattern.compile(
-                                IUpdateNewsService.VERINICE_VERSION_PATTERN);
-                        final Matcher matcher = p.matcher(installedVersion);
-                        if (matcher.find()){
-                            String parsedVersion = matcher.group();
-                            return parsedVersion;
-                        }
-                    }
+        String version = null;
+        try {          
+            NodeList productElements = getProductElements(); 
+            for (int i = 0; i < productElements.getLength(); i++){
+                version = getVersion(productElements.item(i));
+                if(version!=null) {
+                    break;
                 }
-            };
-
+            }
         } catch (Exception e){
             LOG.error("Unable to determine version of running client:\t", e);
         }
+        return version;
+    }
 
-        return null;
+    private String getVersion(Node product) {
+        String version = null;
+        NamedNodeMap namedNodeMap = product.getAttributes();
+        for (int j = 0; j < namedNodeMap.getLength(); j++){
+            if ("version".equals(namedNodeMap.item(j).getNodeName())){
+                String installedVersion = namedNodeMap.item(j).
+                        getNodeValue();
+                LOG.debug("installed Version from oc.product:\t" 
+                        + installedVersion);
+                final Pattern p = Pattern.compile(
+                        IUpdateNewsService.VERINICE_VERSION_PATTERN);
+                final Matcher matcher = p.matcher(installedVersion);
+                if (matcher.find()){
+                    String parsedVersion = matcher.group();
+                    version = parsedVersion;
+                    break;
+                }
+            }
+        }
+        return version;
+    }
+
+    private NodeList getProductElements() throws URISyntaxException,
+            IOException, ParserConfigurationException, SAXException {
+        URL fileURL = new URL(
+                "platform:/plugin/sernet.gs.ui.rcp.main.feature/oc.product");         
+        java.io.File file = new java.io.File(FileLocator.resolve(fileURL).toURI());
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder parser = factory.newDocumentBuilder();
+        Document document = parser.parse(file);
+        return document.getElementsByTagName("product");
     }
     
     /**
@@ -176,15 +185,33 @@ public class UpdateNewsService implements IUpdateNewsService {
         }
         
         int result = ncs.compare( availableVersion, installedVersion); 
-        LOG.debug("Compare " + installedVersion + "(installed) with "
-                + availableVersion + "(available) = " + result);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Compare " + installedVersion + "(installed) with "
+                    + availableVersion + "(available) = " + result);
+        }
         return result == 1;
     }
 
+    private void loadNewsFromRepository(String url) {
+        try {
+            URL repositoryURL = new URL(url);
+            InputStream in = repositoryURL.openStream();
+            this.sessionNewsEntry = parseNewsEntry(IOUtils.toString(in));
+        } catch (IOException e) {
+            LOG.info("Can not read update news from URL:  " + url + " " + e.getMessage());
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Stacktrace: ", e);
+            }
+        } catch (Exception e) {
+            LOG.error("Error while reading read update news.", e);
+        }
+    }
 
-
-    private UpdateNewsMessageEntry parseNewsEntry(String newsEntry) throws UpdateNewsException{
-        try{
+    private UpdateNewsMessageEntry parseNewsEntry(String newsEntry) throws UpdateNewsException {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("JSON: " + newsEntry);
+        }
+        try {
             return gson.fromJson(newsEntry, UpdateNewsMessageEntry.class);
         } catch (JsonSyntaxException e){
             LOG.error("Error parsing json", e);
@@ -198,20 +225,13 @@ public class UpdateNewsService implements IUpdateNewsService {
      * and returns it as a string
      */
     @Override
-    public  UpdateNewsMessageEntry getNewsFromRepository(String newsRepository) throws UpdateNewsException {
-        this.newsLocation = newsRepository;
+    public  UpdateNewsMessageEntry getNewsFromRepository(String url) throws UpdateNewsException {
+        this.newsLocation = url;
         if(this.sessionNewsEntry != null){
             return this.sessionNewsEntry;
         }
-        try {
-            URL repositoryURL = new URL(newsRepository);
-            InputStream in = repositoryURL.openStream();
-            this.sessionNewsEntry = parseNewsEntry(IOUtils.toString(in));
-        } catch (IOException e) {
-            LOG.error("Error reading the update news", e);
-        } 
+        loadNewsFromRepository(url);
         return this.sessionNewsEntry;
         
     }
-
 }
