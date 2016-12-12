@@ -31,6 +31,7 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import junit.framework.Assert;
+import sernet.hui.common.connect.HUITypeFactory;
 import sernet.verinice.interfaces.CommandException;
 
 /**
@@ -42,6 +43,9 @@ public class LinkTableCreateTest extends ContextConfiguration {
 
     @Autowired
     ObjectFactory loadDataFactory;
+
+    @Autowired
+    HUITypeFactory huiTypeFactory;
 
     private LoadData loadData;
 
@@ -124,6 +128,7 @@ public class LinkTableCreateTest extends ContextConfiguration {
         Assert.assertEquals(expectedList, table);
     }
 
+    @SuppressWarnings("static-access")
     @Test
     public void testListEntriesInParentGroupAndLinkedWithScenerio() throws Exception {
 
@@ -131,16 +136,18 @@ public class LinkTableCreateTest extends ContextConfiguration {
 
         List<List<String>> expectedList = new ArrayList<>();
 
+        String scenario2AssetReverseName = huiTypeFactory.getInstance().getMessage("rel_incscen_asset_reversename");
+
         expectedList.add(Arrays.asList(new String[] { "Title_(Assets)", "Title_(Assets)", "Title_(Asset)", "Title_(Control)", "Title_(Control)", "Title", "Title_(Scenario)" }));
-        expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 1", "", "", "affected by", "Scenario 1" }));
-        expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 1", "", "", "affected by", "Scenario 2" }));
+        expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 1", "", "", scenario2AssetReverseName, "Scenario 1" }));
+        expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 1", "", "", scenario2AssetReverseName, "Scenario 2" }));
         expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 1", "Control 1", "Control 1", "", "" }));
         expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 1", "Control 1", "Control 2", "", "" }));
         expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 1", "Control 1", "Control 5", "", "" }));
         expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 1", "Control 2", "Control 1", "", "" }));
         expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 1", "Control 2", "Control 2", "", "" }));
         expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 1", "Control 2", "Control 5", "", "" }));
-        expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 2", "", "", "affected by", "Scenario 2" }));
+        expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 2", "", "", scenario2AssetReverseName, "Scenario 2" }));
         expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 2", "Control 2", "Control 1", "", "" }));
         expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 2", "Control 2", "Control 2", "", "" }));
         expectedList.add(Arrays.asList(new String[] { "Assets level 0", "Assets level 1", "Asset 2", "Control 2", "Control 5", "", "" }));
