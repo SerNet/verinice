@@ -304,19 +304,20 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     }
 
     private void handleOpenDialogByServerStatus() {
-        if (Activator.getDefault().isStandalone() 
-                && !Activator.getDefault().getInternalServer().isRunning()){
-            IInternalServerStartListener listener = new IInternalServerStartListener() {
-                @Override
-                public void statusChanged(InternalServerEvent e) {
-                    if (e.isStarted()){
-                        openNewsDialog();
+        if (Activator.getDefault().isStandalone() ) {
+            if(!Activator.getDefault().getInternalServer().isRunning()){
+                IInternalServerStartListener listener = new IInternalServerStartListener() {
+                    @Override
+                    public void statusChanged(InternalServerEvent e) {
+                        if (e.isStarted()){
+                            openNewsDialog();
+                        }
                     }
-                }
-            };
-            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
-        } else if(Activator.getDefault().getInternalServer().isRunning()){
-                openNewsDialog();
+                };
+                Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+            } else if(Activator.getDefault().getInternalServer().isRunning()){
+                    openNewsDialog();
+            }
         }
     }
     

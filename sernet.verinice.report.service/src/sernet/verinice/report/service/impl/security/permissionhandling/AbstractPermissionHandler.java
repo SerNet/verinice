@@ -359,6 +359,7 @@ public abstract class AbstractPermissionHandler implements IReportPermissionHand
             "org.eclipse.birt.report.engine.emitter.excel.layout.ExcelContext.parseSheetName",
             "org.eclipse.osgi.util.NLS.load",
             "org.eclipse.birt.report.engine.emitter.html.HTMLReportEmitter.outputHtmlText",
+            "org.eclipse.birt.report.engine.layout.html.HTMLReportLayoutEngine.layout",
             "org.eclipse.birt.report.engine.emitter.excel.ExcelEmitter.startForeign",
             "org.eclipse.birt.report.engine.emitter.ods.OdsEmitter.startForeign",
             "org.eclipse.birt.report.engine.emitter.ods.OdsEmitter.parseSheetName",
@@ -382,8 +383,8 @@ public abstract class AbstractPermissionHandler implements IReportPermissionHand
             "org.eclipse.birt.report.model.core.ModuleImpl.getMessage",
             "org.eclipse.birt.core.data.DataTypeUtil.toInteger",
             "org.mozilla.javascript.ScriptRuntime.getMessage",
-            "com.ibm.icu.impl.ICULocaleService$ICUResourceBundleFactory.getSupportedIDs"
-
+            "com.ibm.icu.impl.ICULocaleService$ICUResourceBundleFactory.getSupportedIDs",
+            "com.ibm.icu.impl.ICULocaleService$LocaleKeyFactory.create"
     });
 
     /**
