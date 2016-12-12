@@ -29,6 +29,8 @@ import sernet.verinice.interfaces.report.IReportService;
  * Class used to initialize default preference values.
  */
 public class PreferenceInitializer extends AbstractPreferenceInitializer {
+    
+    private static final String STANDALONE_UPDATENEWS_URL_DEFAULT = "https://update.verinice.org/pub/verinice/news.json";
 
 	/*
 	 * (non-Javadoc)
@@ -106,6 +108,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
         store.setDefault(PreferenceConstants.DEFAULT_FOLDER_ADDFILE, System.getProperty("user.home"));
         
         store.setDefault(PreferenceConstants.EXPORT_RISK_ANALYSIS, true);
+        
+        store.setDefault(PreferenceConstants.SHOW_UPDATE_NEWS_DIALOG, false);
+        
+        store.setDefault(PreferenceConstants.STANDALONE_UPDATENEWS_URL, STANDALONE_UPDATENEWS_URL_DEFAULT);
 	}
 
 }

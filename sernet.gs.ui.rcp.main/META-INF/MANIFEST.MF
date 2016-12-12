@@ -274,7 +274,8 @@ Require-Bundle: com.springsource.org.apache.log4j;bundle-version="1.2.15",
  jgrapht;bundle-version="0.8.3",
  com.springsource.org.junit;bundle-version="4.4.0",
  com.springsource.org.apache.commons.lang;bundle-version="2.4.0",
- org.apache.servicemix.bundles.elasticsearch;bundle-version="1.4.1"
+ org.apache.servicemix.bundles.elasticsearch;bundle-version="1.4.1",
+ org.eclipse.equinox.p2.engine;bundle-version="2.1.0"
 Import-Package: javax.xml.rpc.encoding,
  org.apache.axis.encoding.ser,
  org.eclipse.core.runtime;version="3.4.0",

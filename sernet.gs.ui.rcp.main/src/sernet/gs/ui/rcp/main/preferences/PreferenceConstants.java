@@ -52,6 +52,7 @@ public class PreferenceConstants {
     public static final String USE_AUTOMATIC_VALIDATION = "use_automatic_validation"; //$NON-NLS-1$
     public static final String SHOW_REPORT_VALIDATION_WARNING = "show_report_validation_warning"; //$NON-NLS-1$
     public static final String USE_VALIDATION_GUI_HINTS = "use_validation_gui_hints"; //$NON-NLS-1$
+    public static final String SHOW_UPDATE_NEWS_DIALOG = "show_update_news_dialog"; //$NON-NLS-1$
 
     public static final String DB_DRIVER = "cna_driver"; //$NON-NLS-1$
     public static final String DB_DRIVER_DERBY = "org.apache.derby.jdbc.EmbeddedDriver"; //$NON-NLS-1$
@@ -171,6 +172,9 @@ public class PreferenceConstants {
     public static final String SEARCH_DISABLE = "search_disable";
     
     public static final String EXPORT_RISK_ANALYSIS = "export_risk_analysis";
+    
+    public static final String STANDALONE_UPDATENEWS_URL = 
+            "standalone_updatenews_url";
 
     /**
      * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view

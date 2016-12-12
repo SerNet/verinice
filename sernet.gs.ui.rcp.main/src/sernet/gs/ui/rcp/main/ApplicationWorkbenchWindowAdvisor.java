@@ -19,25 +19,36 @@ package sernet.gs.ui.rcp.main;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Locale;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
+import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PerspectiveAdapter;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.application.ActionBarAdvisor;
@@ -55,7 +66,11 @@ import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IInternalServerStartListener;
 import sernet.verinice.interfaces.InternalServerEvent;
+import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.iso27k.rcp.Iso27kPerspective;
+import sernet.verinice.model.updateNews.UpdateNewsException;
+import sernet.verinice.model.updateNews.UpdateNewsMessageEntry;
+import sernet.verinice.rcp.UpdateNewsDialog;
 
 /**
  * Workbench Window advisor.
@@ -68,6 +83,8 @@ import sernet.verinice.iso27k.rcp.Iso27kPerspective;
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     
     private static final Logger LOG = Logger.getLogger(ApplicationWorkbenchWindowAdvisor.class);
+    
+    private IUpdateNewsService updateNewsService;
     
     public ApplicationWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         super(configurer);
@@ -141,8 +158,9 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             initPerspective();
         }
         closeUnallowedViews();
+        showUpdateNews();
     }
-
+    
     private void preloadDBMapper() {
         WorkspaceJob job = new WorkspaceJob(Messages.ApplicationWorkbenchWindowAdvisor_2) {
             @Override
@@ -224,12 +242,12 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         for(IViewReference ref : PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getViewReferences()){
             openViews.add(ref.getId());
             final IViewPart part = ref.getView(true);
-            if(part!=null) {
-                for(Method m : part.getClass().getDeclaredMethods()){
-                    if(m.getName().equals("getRightID")){
+            if (part!=null) {
+                for (Method m : part.getClass().getDeclaredMethods()){
+                    if (m.getName().equals("getRightID")){
                         try {
                             Object o = m.invoke(part, null);
-                            if(o instanceof String){
+                            if (o instanceof String){
                                 rightID = (String)o;
                                 chosenRef = ref;
                                 break;
@@ -246,37 +264,156 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
             }
             final String rID = rightID;
             final IViewReference rRef = chosenRef;
-            if(Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()){
+            if (Activator.getDefault().isStandalone() && !Activator.getDefault().getInternalServer().isRunning()){
                 IInternalServerStartListener listener = new IInternalServerStartListener(){
                     @Override
                     public void statusChanged(InternalServerEvent e) {
-                        if(e.isStarted()){
-                            Activator.inheritVeriniceContextState();
-                            if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(rID)){
-                                Display.getDefault().asyncExec(new Runnable() { // execute in ui thread
-                                    @Override
-                                    public void run() {
-                                        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                                        if(page.isPartVisible(part)) {
-                                            page.hideView(rRef);
-                                        }
-                                    }
-                                });
-                            }
+                        if (e.isStarted()){
+                            hideView(part, rID, rRef);
                         }
                     }
                 };
                 Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
             }  else {
-                Activator.inheritVeriniceContextState();
-                if(!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(rID)){
-                    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                    if(page.isPartVisible(part)) {
-                        page.hideView(rRef);
-                    }
+                hideView(part, rID, rRef);
+            }
+        }
+    }
+
+    private void hideView(final IViewPart part, final String actionId, final IViewReference viewReference) {
+        Activator.inheritVeriniceContextState();
+        if (!((RightsServiceClient)VeriniceContext.get(VeriniceContext.RIGHTS_SERVICE)).isEnabled(actionId)){
+            IWorkbench workbench = PlatformUI.getWorkbench();
+            IWorkbenchWindow window = workbench.getActiveWorkbenchWindow();
+            if(window != null){
+                IWorkbenchPage page = window.getActivePage();
+                //            IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                if (page.isPartVisible(part)) {
+                    page.hideView(viewReference);
                 }
             }
         }
+    }
+    
+    private void showUpdateNews(){
+        boolean showNewsDialog = !Activator.getDefault().getPreferenceStore()
+                .getBoolean(PreferenceConstants.SHOW_UPDATE_NEWS_DIALOG);
+        if(showNewsDialog){
+            handleOpenDialogByServerStatus();
+        }
+    }
+
+    private void handleOpenDialogByServerStatus() {
+        if (Activator.getDefault().isStandalone() 
+                && !Activator.getDefault().getInternalServer().isRunning()){
+            IInternalServerStartListener listener = new IInternalServerStartListener() {
+                @Override
+                public void statusChanged(InternalServerEvent e) {
+                    if (e.isStarted()){
+                        openNewsDialog();
+                    }
+                }
+            };
+            Activator.getDefault().getInternalServer().addInternalServerStatusListener(listener);
+        } else if(Activator.getDefault().getInternalServer().isRunning()){
+                openNewsDialog();
+        }
+    }
+    
+    private void openNewsDialog(){
+        try{
+            Activator.inheritVeriniceContextState();
+            String newsRepo = getNewsRepository();
+            UpdateNewsMessageEntry newsEntry = getUpdateNewsService().getNewsFromRepository(newsRepo);
+            if (newsEntry != null){ // equals null in servermode
+                openNewsDialog(newsEntry);
+            }
+        } catch (UpdateNewsException e){
+            LOG.error("Problem occured during loading the verinice-update-news", e);
+        } catch (Exception t){
+            LOG.error("Problem occured", t);
+        }
+    }
+
+    private void openNewsDialog(UpdateNewsMessageEntry newsEntry) throws UpdateNewsException {
+        final String text = newsEntry.getMessage(Locale.getDefault());
+        String installedVersion = getApplicationVersionFromAboutText();
+        LOG.debug("installed Version:\t" + installedVersion);
+        boolean updateNecessary = getUpdateNewsService().isUpdateNecessary(installedVersion);
+        LOG.debug("update necessary:\t" + updateNecessary);
+        if (StringUtils.isNotEmpty(installedVersion) && getUpdateNewsService().isUpdateNecessary(installedVersion)){
+            openNewsDialog(text);
+        }
+    }
+
+    private void openNewsDialog(final String text) throws UpdateNewsException {
+        final URL updateSiteURL;
+        try{
+            updateSiteURL = new URL(getUpdateNewsService().getNewsFromRepository(getNewsRepository()).getUpdateSite());
+        } catch (MalformedURLException e){
+            LOG.error("Updatesite not parseable", e);
+            throw new UpdateNewsException("Malformed URL of updatesite", e);
+        }
+        Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                Shell dialogShell = new Shell(Display.getCurrent().getActiveShell());
+                UpdateNewsDialog newsDialog = new UpdateNewsDialog(dialogShell,
+                        text, updateSiteURL);
+                newsDialog.open();
+            }
+        });
+    }
+    
+    /**
+     * this reads a hardcoded preferencevalue (from the preferencestore
+     * or from the preferenceInitializer if it is not existant already)
+     * if its not replaced by the user manually.
+     * 
+     * To replace / change it manually add the following line to the
+     * end of the file verinice.ini:
+     * 
+     * -Dstandalone_updatenews_url=http://url.of/your/choice.txt
+     * 
+     */
+    private String getNewsRepository(){
+        String repo = Activator.getDefault().getPreferenceStore().getString(PreferenceConstants.STANDALONE_UPDATENEWS_URL); 
+        String repoSetBySystem = System.getProperty(PreferenceConstants.STANDALONE_UPDATENEWS_URL);
+        if(StringUtils.isNotEmpty(repoSetBySystem)){
+            repo = repoSetBySystem;
+        }
+        return repo;
+    }
+    
+    /**
+     * @param parent
+     * @return
+     */
+    private String getApplicationVersionFromAboutText() {
+        final IProduct product = Platform.getProduct();
+        final String aboutText = product.getProperty("aboutText");
+        String version = "";
+        if (aboutText!=null) {
+            String lines[] = aboutText.split("\\r?\\n");
+            if (lines!=null && lines.length>0) {
+                final String firstLine = lines[0];
+                final Pattern p = Pattern.compile(
+                        IUpdateNewsService.VERINICE_VERSION_PATTERN);
+                final Matcher matcher = p.matcher(firstLine);
+                if (matcher.find()){
+                    version = matcher.group();
+                }
+            }
+        }
+        LOG.debug("Read versionnumber " + version + " from prodcut-description");
+        return version;
+    }
+    
+    private IUpdateNewsService getUpdateNewsService() {
+        if(updateNewsService==null) {
+            updateNewsService = (IUpdateNewsService) VeriniceContext.get(VeriniceContext.UPDATE_NEWS_SERVICE);
+        }
+        return updateNewsService;
     }
 
 }
