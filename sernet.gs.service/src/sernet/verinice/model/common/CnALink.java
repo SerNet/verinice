@@ -52,6 +52,7 @@ public class CnALink implements Serializable, ITypedElement {
         riskTreatmentLabels.put(CnALink.RiskTreatment.ACCEPT.name(), Messages.getString("CnALink.RiskTreatment_ACCEPT")); //$NON-NLS-1$
         riskTreatmentLabels.put(CnALink.RiskTreatment.AVOID.name(), Messages.getString("CnALink.RiskTreatment_AVOID")); //$NON-NLS-1$
         riskTreatmentLabels.put(CnALink.RiskTreatment.MODIFY.name(), Messages.getString("CnALink.RiskTreatment_MODIFY")); //$NON-NLS-1$
+        riskTreatmentLabels.put(CnALink.RiskTreatment.TRANSFER.name(), Messages.getString("CnALink.RiskTreatment_TRANSFER")); //$NON-NLS-1$
         riskTreatmentLabels.put(CnALink.RiskTreatment.UNEDITED.name(), Messages.getString("CnALink.RiskTreatment_UNEDITED")); //$NON-NLS-1$
     }
     
