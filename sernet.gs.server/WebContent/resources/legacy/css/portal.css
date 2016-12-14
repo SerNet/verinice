@@ -1,26 +1,26 @@
-#col1 { 
-	float: left; 
-	width: 205px;  
+#col1 {
+	float: left;
+	width: 205px;
 	margin:0;
 	background-image: url("../image/navi-bg.jpg");
 	background-repeat: no-repeat;
 	height: 550px;
 	position: relative;
 }
-#col2 { 
-	float: right; 
-	width: 195px;  
+#col2 {
+	float: right;
+	width: 195px;
 	margin:0
 }
-#col3 { 
-	width: 700px; 
-	margin: 0; 
-	*margin-right:0; 
+#col3 {
+	width: 700px;
+	margin: 0;
+	*margin-right:0;
 	*width:551px;
 }
 
-h1 {  
-	margin: 10px 0 25px 
+h1 {
+	margin: 10px 0 25px
 }
 
 #header #topnav {

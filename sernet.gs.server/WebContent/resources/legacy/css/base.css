@@ -140,24 +140,24 @@
   }
 
   /* skiplinks:technical setup */
-  #skiplinks { 
+  #skiplinks {
     position:absolute;
-    top:0px; 
-    left:-32768px; 
-    z-index:1000; 
+    top:0px;
+    left:-32768px;
+    z-index:1000;
     width:100%;
-    margin:0; 
-    padding:0; 
-    list-style-type:none;   
+    margin:0;
+    padding:0;
+    list-style-type:none;
   }
-  
+
   #skiplinks a.skip:focus,
   #skiplinks a.skip:active {
-    left:32768px; 
+    left:32768px;
     outline:0 none;
-    position:absolute; 
+    position:absolute;
     width:100%;
-  }  
+  }
 }
 
 @media screen, projection
@@ -226,8 +226,8 @@
 
   .equalize > div {
     display:table-cell;
-    float:none; 
-    margin:0; 
+    float:none;
+    margin:0;
     overflow:hidden;
     vertical-align:top;
   }
@@ -247,15 +247,15 @@
   */
 
   .subcolumns > div,
-  .floatbox { 
-    overflow:visible; 
+  .floatbox {
+    overflow:visible;
     display:table;
-  } 
+  }
 
   /* (en) make .print class visible */
   /* (de) .print-Klasse sichtbar schalten */
-  .print { 
-    position:static; 
+  .print {
+    position:static;
     left:0;
   }
 

@@ -12,7 +12,7 @@ span.powermail_mandatory {
 }
 input.validation-failed,
 textarea.validation-failed {
-	/* Background color if validation failed 
+	/* Background color if validation failed
 	background-color: red;
 	background-image: url(/typo3conf/ext/powermail/img/icon_exclamation.gif);
 	background-repeat: no-repeat;
@@ -348,7 +348,7 @@ fieldset.rechnungskontakt .powermail_check_inner {
 
 #auftragveriniceprosubskript .verinice_form .powermail_mandatory_js {
 	*top:0;
-} 
+}
 
 #auftragveriniceprosubskript .tx_powermail_pi1_fieldwrap_html_radio div.powermail_mandatory_js {
 	position:relative;
@@ -358,7 +358,7 @@ fieldset.rechnungskontakt .powermail_check_inner {
 	font-weight:normal;
 	width:424px;
 	clear:none;
-} 
+}
 
 #auftragveriniceprosubskript .overlabel-wrapper .overlabel-apply {
 	left:8px;
@@ -377,7 +377,7 @@ fieldset.rechnungskontakt .powermail_check_inner {
 	padding:2px;
 }
 
-#auftragveriniceprosubskript div.tx_powermail_pi1_fieldwrap_html_reset, 
+#auftragveriniceprosubskript div.tx_powermail_pi1_fieldwrap_html_reset,
 #auftragveriniceprosubskript div.tx_powermail_pi1_fieldwrap_html_submit {
 	margin:0;
 }
@@ -388,7 +388,7 @@ fieldset.rechnungskontakt .powermail_check_inner {
 
 #auftragveriniceprosubskript .powermail_reset {
 	margin:10px 0 0 25px;
-} 
+}
 
 #auftragveriniceprosubskript legend {
 	width: 503px;

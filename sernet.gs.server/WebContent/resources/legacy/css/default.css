@@ -73,10 +73,10 @@ input.submit {
 	margin-top:1em;
 }
 
-.breadcrumb {	
+.breadcrumb {
 	width: 1010px;
 	height: 22px;
-	display: inline-block; 
+	display: inline-block;
 	vertical-align: middle;
 }
 
@@ -147,7 +147,7 @@ input.submit {
 }
 
 h1 a {
-	font-size:1.1em; 
+	font-size:1.1em;
 	color:#765;
 }
 h1 a:visited {
@@ -193,7 +193,7 @@ h1+a:visited {
 	right: 10px;
 	color: #fff;
 	background: transparent;
-	text-align: right; 
+	text-align: right;
 	border-width: 1px;
 	border-color: gray;
 }
@@ -373,7 +373,7 @@ h1+a:visited {
 }
 
 .ui-inputfield.ui-state-focus, .ui-widget-content .ui-inputfield.ui-state-focus, .ui-widget-header .ui-inputfield.ui-state-focus {
-    box-shadow: 0 0 0 0;  
+    box-shadow: 0 0 0 0;
     padding: 2px 0 2px 0;
 }
 

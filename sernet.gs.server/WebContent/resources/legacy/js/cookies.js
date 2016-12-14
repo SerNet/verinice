@@ -54,11 +54,11 @@ Cookiemanager.prototype.getCookie = function() {
 
 Cookiemanager.prototype.setCookie = function(cookieValue) {
     if (!isNaN(cookieValue)) {
-    	this.cookies['fontSize'] = parseInt(cookieValue);
-    	this.expiration['fontSize'] = this.getExpiration();
-    	this.domain['fontSize'] = this.defaultDomain;
-    	this.path['fontSize'] = this.defaultPath;
-    	return true;
+	this.cookies['fontSize'] = parseInt(cookieValue);
+	this.expiration['fontSize'] = this.getExpiration();
+	this.domain['fontSize'] = this.defaultDomain;
+	this.path['fontSize'] = this.defaultPath;
+	return true;
     }
 }
 

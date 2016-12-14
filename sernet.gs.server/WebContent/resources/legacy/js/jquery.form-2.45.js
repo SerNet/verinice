@@ -143,7 +143,7 @@ $.fn.ajaxSubmit = function(options) {
 	}
 
 	options.success = function(data, status, xhr) { // jQuery 1.4+ passes xhr as 3rd arg
-		var context = options.context || options;   // jQuery 1.4+ supports scope context 
+		var context = options.context || options;   // jQuery 1.4+ supports scope context
 		for (var i=0, max=callbacks.length; i < max; i++) {
 			callbacks[i].apply(context, [data, status, xhr || $form, $form]);
 		}
@@ -219,7 +219,7 @@ $.fn.ajaxSubmit = function(options) {
 		}
 
 		if (s.beforeSend && s.beforeSend.call(s.context, xhr, s) === false) {
-			if (s.global) { 
+			if (s.global) {
 				$.active--;
 			}
 			return;
@@ -306,7 +306,7 @@ $.fn.ajaxSubmit = function(options) {
 		else {
 			setTimeout(doSubmit, 10); // this lets dom updates render
 		}
-	
+
 		var data, doc, domCheckCount = 100;
 
 		function cb() {
@@ -315,7 +315,7 @@ $.fn.ajaxSubmit = function(options) {
 			}
 
 			$io.removeData('form-plugin-onload');
-			
+
 			var ok = true;
 			try {
 				if (timedOut) {
@@ -323,7 +323,7 @@ $.fn.ajaxSubmit = function(options) {
 				}
 				// extract the server response from the iframe
 				doc = io.contentWindow ? io.contentWindow.document : io.contentDocument ? io.contentDocument : io.document;
-				
+
 				var isXml = s.dataType == 'xml' || doc.XMLDocument || $.isXMLDoc(doc);
 				log('isXml='+isXml);
 				if (!isXml && (doc.body == null || doc.body.innerHTML == '')) {
@@ -340,7 +340,7 @@ $.fn.ajaxSubmit = function(options) {
 
 				log('response detected');
 				cbInvoked = true;
-				xhr.responseText = doc.documentElement ? doc.documentElement.innerHTML : null; 
+				xhr.responseText = doc.documentElement ? doc.documentElement.innerHTML : null;
 				xhr.responseXML = doc.XMLDocument ? doc.XMLDocument : doc;
 				xhr.getResponseHeader = function(header){
 					var headers = {'content-type': s.dataType};
@@ -360,7 +360,7 @@ $.fn.ajaxSubmit = function(options) {
 						if (pre) {
 							xhr.responseText = pre.innerHTML;
 						}
-					}			  
+					}
 				}
 				else if (s.dataType == 'xml' && !xhr.responseXML && xhr.responseText != null) {
 					xhr.responseXML = toXml(xhr.responseText);
@@ -443,7 +443,7 @@ $.fn.ajaxForm = function(options) {
 		log('terminating; zero elements found by selector' + ($.isReady ? '' : ' (DOM not ready)'));
 		return this;
 	}
-	
+
 	return this.ajaxFormUnbind().bind('submit.form-plugin', function(e) {
 		if (!e.isDefaultPrevented()) { // if event has been canceled, don't proceed
 			e.preventDefault();
@@ -507,7 +507,7 @@ $.fn.formToArray = function(semantic) {
 	if (!els) {
 		return a;
 	}
-	
+
 	var i,j,n,v,el;
 	for(i=0, max=els.length; i < max; i++) {
 		el = els[i];

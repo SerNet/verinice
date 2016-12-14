@@ -43,7 +43,7 @@
   /* (de) optionale Ausgabe von Auszeichnung von AbkÃ¼rzungen */
 
   /*
-    abbr[title]:after, 
+    abbr[title]:after,
     acronym[title]:after { content:'(' attr(title) ')'; }
   */
 
