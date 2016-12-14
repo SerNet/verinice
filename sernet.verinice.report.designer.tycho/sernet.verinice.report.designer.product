@@ -7,10 +7,14 @@
    </configIni>
 
    <launcherArgs>
-   <programArgs>-data .</programArgs>
+      <programArgs>-data .
+      </programArgs>
+      <programArgsMac>-vm ../../../jre/Contents/Home/jre/lib/jli/libjli.dylib
+      </programArgsMac>
       <vmArgs>-Xms64m
 -Xmx2048m
--XX:MaxPermSize=512m</vmArgs>
+-XX:MaxPermSize=512m
+      </vmArgs>
    </launcherArgs>
 
    <windowImages/>
