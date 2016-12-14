@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import sernet.verinice.bpm.rcp.CompletionAbortedException;
 import sernet.verinice.bpm.rcp.NewQmIssueDialog;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
+import sernet.verinice.interfaces.bpm.ITask;
 
 /**
  *
@@ -48,7 +49,7 @@ public class NewQmIssueClientHandler implements ICompleteClientHandler {
      * @see sernet.verinice.bpm.ICompleteClientHandler#execute()
      */
     @Override
-    public Map<String, Object> execute() {
+    public Map<String, Object> execute(ITask task) {
         Map<String, Object> parameter = new Hashtable<String, Object>();
         try {                             
             final NewQmIssueDialog dialog = new NewQmIssueDialog(shell);

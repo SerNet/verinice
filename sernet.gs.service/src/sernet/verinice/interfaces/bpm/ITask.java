@@ -117,5 +117,7 @@ public interface ITask extends Comparable<ITask> {
     void setProperties(Set<String> properties);
     
     void setSortValue(String sortValue);
+    
+    boolean isWithAReleaseProcess();
 
 }

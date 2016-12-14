@@ -39,6 +39,7 @@
 	
 	
 	<target name="coverage" description="Creates coverage reports">
+		<mkdir dir="${reports}"/>
 		<jacoco:coverage destfile="${coverage-reports}/jacoco.exec">
 		    <junit fork="true" forkmode="perTest" maxmemory="2048m" printsummary="yes" haltonfailure="no">
 				<jvmarg value="-Dlog4j.configuration=log4j-test-server.xml" />

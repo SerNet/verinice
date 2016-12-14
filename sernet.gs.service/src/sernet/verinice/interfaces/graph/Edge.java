@@ -22,6 +22,7 @@ package sernet.verinice.interfaces.graph;
 import java.io.Serializable;
 
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.common.CnALink.RiskTreatment;
 
 /**
  * An Edge is the representation of a link between to
@@ -33,6 +34,8 @@ import sernet.verinice.model.common.CnATreeElement;
  */
 public class Edge implements Serializable {
 
+    private static final long serialVersionUID = -7300388773596283110L;
+
     public static final String RELATIVES = "relatives";
     
     private CnATreeElement source;  
@@ -42,6 +45,10 @@ public class Edge implements Serializable {
     private Integer riskConfidentiality;
     private Integer riskIntegrity;
     private Integer riskAvailability;
+    private Integer riskConfidentialityWithControls;
+    private Integer riskIntegrityWithControls;
+    private Integer riskAvailabilityWithControls;
+    private RiskTreatment riskTreatment;
 
     public Edge(CnATreeElement parent, CnATreeElement child) {
         this(parent, child, RELATIVES);
@@ -108,6 +115,38 @@ public class Edge implements Serializable {
 
     public void setRiskAvailability(Integer integer) {
         this.riskAvailability = integer;
+    }
+
+    public Integer getRiskConfidentialityWithControls() {
+        return riskConfidentialityWithControls;
+    }
+
+    public void setRiskConfidentialityWithControls(Integer riskConfidentialityWithControls) {
+        this.riskConfidentialityWithControls = riskConfidentialityWithControls;
+    }
+
+    public Integer getRiskIntegrityWithControls() {
+        return riskIntegrityWithControls;
+    }
+
+    public void setRiskIntegrityWithControls(Integer riskIntegrityWithControls) {
+        this.riskIntegrityWithControls = riskIntegrityWithControls;
+    }
+
+    public Integer getRiskAvailabilityWithControls() {
+        return riskAvailabilityWithControls;
+    }
+
+    public void setRiskAvailabilityWithControls(Integer riskAvailabilityWithControls) {
+        this.riskAvailabilityWithControls = riskAvailabilityWithControls;
+    }
+
+    public RiskTreatment getRiskTreatment() {
+        return riskTreatment;
+    }
+
+    public void setRiskTreatment(RiskTreatment riskTreatment) {
+        this.riskTreatment = riskTreatment;
     }
 
     @Override

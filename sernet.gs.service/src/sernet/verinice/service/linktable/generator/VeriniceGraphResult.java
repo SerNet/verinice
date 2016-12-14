@@ -20,34 +20,91 @@
 package sernet.verinice.service.linktable.generator;
 
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import sernet.verinice.interfaces.graph.Edge;
+import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
+import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
+
 /**
  * Wrapper for the rows built by {@link LtrPrintRowsTraversalListener}.
- * They have to be seperated to prevent row duplications.
  * 
+ * This wrapper stores all the results from one traversal for a given root. Thus
+ * it decides wether it duplicates lines or add values to the current row.
+ *
+ * 1. If the algorithm steps deeper into the graph, the value is always add to
+ * an existing row.
+ *
+ * 2. If the algorithm is finished with a node and steps up, it duplicates the
+ * last row und set this as current row.
+ *
+ * 3. If the algorithm steps down again check, if the current row is add to the
+ * final result row and start with step 1.
+ *
+ *
+ *
  * @author Ruth Motza <rm[at]sernet[dot]de>
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class VeriniceGraphResult {
+final class VeriniceGraphResult {
 
-    private List<Map<String, String>> completelyTraversedRows = new ArrayList<>();
-    private List<Map<String, String>> partlyTraversedRows = new ArrayList<>();
+    private List<VeriniceGraphResultRow> linkedTableRows;
 
-    public List<Map<String, String>> getCompletelyTraversedRows() {
-        return completelyTraversedRows;
+    private VeriniceGraphResultRow currentLinkedTableRow;
+
+    private boolean justDuplicated;
+
+    private Deque<VeriniceGraphResultEntry> entryStack = new LinkedList<>();
+
+    VeriniceGraphResult() {
+        linkedTableRows = new ArrayList<>();
+        currentLinkedTableRow = new VeriniceGraphResultRow();
+        linkedTableRows.add(currentLinkedTableRow);
     }
 
-    public List<Map<String, String>> getPartlyTraversedRows() {
-        return partlyTraversedRows;
+    void addValue(VqlNode vqlNode, VqlEdge vqlEdge, Edge edge, CnATreeElement element, int depth) {
+
+        VeriniceGraphResultEntry veriniceGraphResultEntry = new VeriniceGraphResultEntry(vqlNode, vqlEdge, edge, element, depth);
+
+        currentLinkedTableRow.addEntry(veriniceGraphResultEntry);
+
+        if (!linkedTableRows.contains(currentLinkedTableRow)) {
+            linkedTableRows.add(currentLinkedTableRow);
+        }
+
+        entryStack.addFirst(veriniceGraphResultEntry);
+        justDuplicated = false;
     }
 
-    public void setCompletelyTraversedRows(List<Map<String, String>> completelyTraversedRows) {
-        this.completelyTraversedRows = completelyTraversedRows;
+    void removeValue() {
+
+        if (entryStack.isEmpty()) {
+            return;
+        }
+
+        VeriniceGraphResultEntry pop = entryStack.removeFirst();
+
+        if (!justDuplicated && !pop.isParentRelation()) {
+            currentLinkedTableRow = currentLinkedTableRow.duplicate();
+            justDuplicated = true;
+        }
+
+        if (!pop.isParentRelation()) {
+            currentLinkedTableRow.removeEntry(pop);
+        }
     }
 
-    public void setPartlyTraversedRows(List<Map<String, String>> partlyTraversedRows) {
-        this.partlyTraversedRows = partlyTraversedRows;
-    }
+    List<Map<String, String>> getResult() {
 
+        List<Map<String, String>> rows = new ArrayList<>();
+
+        for (VeriniceGraphResultRow row : linkedTableRows) {
+            rows.add(row.getExpandedRow());
+        }
+        return rows;
+    }
 }

@@ -79,6 +79,23 @@ public class EntityType {
 		return types;
 	}
 	
+	/** Retrieves sorted this {@link EntityType}'s property types and those
+     * of all its {@link PropertyGroup}s.
+     * 
+     * @return
+     */
+    public List<PropertyType> getAllPropertyTypesSorted() {
+        List<PropertyType> propertyTypes = new ArrayList<>();
+        for (IEntityElement entity : getElements()) {
+            if (entity instanceof PropertyType) {
+                propertyTypes.add((PropertyType) entity);
+            } else if (entity instanceof PropertyGroup) {
+                propertyTypes.addAll(((PropertyGroup) entity).getPropertyTypes());
+            }
+        }
+        return propertyTypes;
+    }
+	
 	/**
 	 * Retrieves all propertytype IDs. CAUTION: Does not return types that are contained in groups!
 	 * Use <code>getAllPropertyTypeIDsIncludingGroups()</code> instead.
@@ -197,6 +214,32 @@ public class EntityType {
 		}
 		return null;
 	}
+
+	public PropertyType getObjectBrowserPropertyType(){
+	    PropertyType htmlType = null;
+	    boolean foundHtmlProperty = false;
+	    for (IEntityElement entityElement : elements){
+	        if (entityElement instanceof PropertyType && !foundHtmlProperty){
+	            Object[] values = isShowHtml(entityElement, foundHtmlProperty);
+	            htmlType = (PropertyType)values[0];
+	            foundHtmlProperty = (values[1] == null) ? false : (boolean)values[1];
+	        }
+	    }
+	    return htmlType;
+	}
+	
+	private Object[] isShowHtml(IEntityElement entityElement, boolean foundHtmlProperty){
+        Object[] returnValues = new Object[2];
+	    PropertyType propertyType = (PropertyType)entityElement;
+        if (propertyType.isShow_html()){
+            if (!foundHtmlProperty){
+                returnValues[0] = propertyType;
+                returnValues[1] = true;
+            }
+        }
+        return returnValues;
+	}
+	
 	
 	
 }

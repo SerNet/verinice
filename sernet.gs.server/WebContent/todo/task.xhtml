@@ -24,7 +24,7 @@
 					    	<p:commandButton id="complete" 
 					    		action="#{task.completeTask}" 
 					    		value="#{outcome.value}" 
-					    		update=":tableForm,:editForm,:completeHandlerForm">
+					    		update=":tableForm,:editForm,:completeHandlerForm, :indiRejectRealizationBeanForm, :indiExecuteExtensionBeanForm">
 					    		<f:setPropertyActionListener target="#{task.outcomeId}" value="#{outcome.key}" />					    		
 					    	</p:commandButton>						    
 					    </ui:repeat>
@@ -108,7 +108,8 @@
 		<ui:include src="/todo/extensions.xhtml"/>
 	</ui:insert>
 	<h:outputText value="" style="#{newQmBean.description}" />
-   <h:outputText value="" style="#{indiExecuteExtensionBean.description}" />
+    <h:outputText value="" style="#{indiExecuteExtensionBean.description}" />
+    <h:outputText value="" style="#{indiRejectRealizationBean.description}" />
 </ui:define>
 </ui:composition>
 </html>

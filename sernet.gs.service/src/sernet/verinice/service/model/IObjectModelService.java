@@ -99,4 +99,8 @@ public interface IObjectModelService {
      */
     ObjectModelContainer loadAll();
 
+    
+    boolean isValidTypeId(String typeID);
+
+    boolean isValidRelationId(String relationID);
 }

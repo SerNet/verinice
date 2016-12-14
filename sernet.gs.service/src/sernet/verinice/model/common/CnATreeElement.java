@@ -32,6 +32,7 @@ import sernet.hui.common.connect.EntityType;
 import sernet.hui.common.connect.HUITypeFactory;
 import sernet.hui.common.connect.ITypedElement;
 import sernet.hui.common.connect.PropertyList;
+import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -63,6 +64,11 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     
     private static final InheritLogger LOG_INHERIT = InheritLogger.getLogger(CnATreeElement.class);
 
+    public static final String DBID = "dbid";
+    public static final String UUID = "uuid";
+    public static final String PARENT_ID = "parent-id";
+    public static final String SCOPE_ID = "scope-id";
+    
     private Logger getLog() {
         if (log == null) {
             log = Logger.getLogger(CnATreeElement.class);
@@ -95,8 +101,6 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	    EntityType type = getTypeFactory().getEntityType(getEntity().getEntityType());
         getEntity().setSimpleValue(type.getPropertyType(propTypeId), Integer.toString(value));
 	}
-	
-	private static final String ENTITY_TITLE = "ENTITY_";
 
 	private Integer parentId;
 	
@@ -370,6 +374,14 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 		this.dbId = dbId;
 	}
 	
+	public String getPropertyValue(String typeId) {
+        return getEntity().getPropertyValue(typeId);
+    }
+	
+	public void setPropertyValue(String typeId, String value) {
+        getEntity().setPropertyValue(typeId, value);
+    }
+	
 	public void setSimpleProperty(String typeId, String value) {
 		EntityType entityType = getTypeFactory().getEntityType(getTypeId());
 		getEntity().setSimpleValue(entityType.getPropertyType(typeId), value);
@@ -588,6 +600,47 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
         }
         return group;
     }
+	
+	/**
+	 * Checks if a propertyId is the id of a static property which are
+	 * defined for every element: CnATreeElement.DBID, .PARENT_ID, .SCOPE_ID, .UUID
+	 * 
+	 * @param propertyId The id of a "static" property.
+	 * @return Return true if the id is the id of a "static" property
+	 */
+	public static boolean isStaticProperty(String propertyId) {
+	        return(CnATreeElement.PARENT_ID.equals(propertyId)
+	            || CnATreeElement.SCOPE_ID.equals(propertyId)
+	            || CnATreeElement.DBID.equals(propertyId)
+	            || CnATreeElement.UUID.equals(propertyId));
+	    }
+	
+	/**
+	 * Returns properties which are defined for every element. This method is a addition
+	 * to retrieve these values by property keys the same way as the properties
+	 * which are saved as dynamic properties
+	 * 
+	 * @param element A CnATreeElement
+	 * @param propertyId The id of a "static" property: 
+	 *     CnATreeElement.DBID, .PARENT_ID, .SCOPE_ID, .UUID
+	 * @return The value of the property or null if no value exists
+	 */
+	public static String getStaticProperty(CnATreeElement element, String propertyId) {
+        String value = null;
+        if(CnATreeElement.SCOPE_ID.equals(propertyId)) {
+            value = String.valueOf(element.getScopeId());
+        }
+        if(CnATreeElement.DBID.equals(propertyId)) {
+            value = String.valueOf(element.getDbId());
+        }
+        if(CnATreeElement.PARENT_ID.equals(propertyId)) {
+            value = String.valueOf(element.getParentId());
+        }
+        if(CnATreeElement.UUID.equals(propertyId)) {
+            value = element.getUuid();
+        }
+        return value;
+    }
 
 	public void fireVertraulichkeitChanged(CascadingTransaction ta) {
 		if (isSchutzbedarfProvider()) {
@@ -742,5 +795,4 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     
     @Override
     public void validationChanged(CnAValidation oldValidation, CnAValidation newValidation){};
-
 }

@@ -63,6 +63,9 @@ import sernet.verinice.security.report.ReportSecurityException;
 
 public class Query implements IQuery
 {
+    public static final String ODA_DATA_SOURCE_ID = "verinice.oda.driver.dataSource.id";  //$NON-NLS-1$
+    public static final String ODA_DATA_SET_ID = "verinice.oda.driver.dataSet.id";  //$NON-NLS-1$
+    
 	private Logger log = Logger.getLogger(Query.class);
 	
 	private int maxRows;
@@ -86,18 +89,25 @@ public class Query implements IQuery
     public static final String PROP_SETUP_QUERY_TEXT = "setupQueryText";
     
     Query(Integer[] rootElementIds){
-    	this(Integer.valueOf(-1));
-    	vnRootElements = (rootElementIds != null) ? rootElementIds.clone() : null;
+        if(rootElementIds!=null && rootElementIds.length == 1 ) {
+            vnRootElement = rootElementIds[0]; 
+            vnRootElements = null;
+        } else {
+        	vnRootElement = -1;
+        	vnRootElements = (rootElementIds != null) ? rootElementIds.clone() : null;
+        }
+    	init();
     }
     
-    Query(Integer rootElementId)
-    {
-        
-    	IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();
-    	
-    	ReportClassLoader securedClassLoader = new ReportClassLoader(Query.class.getClassLoader());
-    	
-    	vnRootElement = rootElementId;
+    Query(Integer rootElementId) {
+        vnRootElement = rootElementId; 
+        vnRootElements = null;
+        init();
+    }
+
+    private void init() {
+        IVeriniceOdaDriver odaDriver = Activator.getDefault().getOdaDriver();  	
+    	ReportClassLoader securedClassLoader = new ReportClassLoader(Query.class.getClassLoader());	
 
     	try {
     	    // "Setup" BSH environment:
@@ -146,7 +156,7 @@ public class Query implements IQuery
         } catch (Exception e) {
 		    log.error("Exception while creating an ODA query.", e);
             throw new RuntimeException("Error while evaluating a BeanShell script for an ODA query.", e);
-        } 
+        }
     }
     
     /**

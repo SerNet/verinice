@@ -34,9 +34,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import sernet.verinice.oda.driver.Activator;
 
-/**
- *
- */
+@SuppressWarnings("restriction")
 public class ReportPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
     private String[][] logLvlValues = new String[][]{
@@ -47,7 +45,8 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
             new String[]{Messages.getString("ReportLogLevel.4"), Level.ALL.toString()}
     };
     private DirectoryFieldEditor localTemplateEditor;
-    private RadioGroupFieldEditor useSandboxEditor;
+
+    private BooleanFieldEditor useSandboxEditor;
     
     public ReportPreferencePage(){
         super(GRID);
@@ -84,15 +83,7 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
         BooleanFieldEditor useCacheEditor = new BooleanFieldEditor(PreferenceConstants.REPORT_USE_CACHE, Messages.getString("ReportPreferencePage.7"), getFieldEditorParent());
         addField(useCacheEditor);
         
-        String[][] labelAndValues = new String[2][2];
-        labelAndValues[0] = new String[] { Messages.getString("ReportPreferencePage.10"), PreferenceConstants.REPORT_USE_SANDBOX_YES };
-        labelAndValues[1] = new String[] { Messages.getString("ReportPreferencePage.11"), PreferenceConstants.REPORT_USE_SANDBOX_NO };
-        
-        useSandboxEditor = new RadioGroupFieldEditor(PreferenceConstants.REPORT_USE_SANDBOX,
-                Messages.getString("ReportPreferencePage.9"),
-                2,
-                labelAndValues,
-                getFieldEditorParent());
+        useSandboxEditor = new BooleanFieldEditor(PreferenceConstants.REPORT_USE_SANDBOX, Messages.getString("ReportPreferencePage.9"), getFieldEditorParent());
         addField(useSandboxEditor);
     }
     
@@ -109,8 +100,8 @@ public class ReportPreferencePage extends FieldEditorPreferencePage implements I
         
         if(event.getSource() == useSandboxEditor) {
             // show a warning dialog if user disables security feature
-            if(event.getNewValue().equals(PreferenceConstants.REPORT_USE_SANDBOX_NO) && 
-                    event.getOldValue().equals(PreferenceConstants.REPORT_USE_SANDBOX_YES)){
+            boolean deactivated = !(Boolean) event.getNewValue();
+            if(deactivated){
                 getDisplay().syncExec(new Runnable() {
                     @Override
                     public void run() {

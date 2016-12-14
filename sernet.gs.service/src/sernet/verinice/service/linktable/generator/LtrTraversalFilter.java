@@ -19,13 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.service.linktable.generator;
 
+import java.nio.file.Path;
+
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.TraversalFilter;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.service.linktable.generator.mergepath.Path;
-import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
-import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
-import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
 
 /**
  * Controls a traversal, so that only egdes and nodes are traversed which follow
@@ -36,64 +34,20 @@ import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
  */
 final class LtrTraversalFilter implements TraversalFilter {
 
-    private final Path path;
-
+    private VqlContext vqlNavigator;
     
-    public LtrTraversalFilter(Path path) {
-        this.path = path;
+    public LtrTraversalFilter(VqlContext vqlNavigator) {
+        this.vqlNavigator = vqlNavigator;
     }
 
     @Override
     public boolean edgeFilter(Edge e, CnATreeElement source, CnATreeElement target, int depth) {
-
-        if(hasNextElementInPath(depth)){
-            return false;
-        }
-
-        PathElement pathElement = getNextElementInQueryPath(depth);
-        VqlEdge vqlEdge = pathElement.edge;
-
-        if(Edge.RELATIVES.equals(e.getType())){
-
-            if(EdgeType.CHILD == vqlEdge.getEdgeType()){
-                return e.getSource() == source;
-            }
-
-            if(EdgeType.PARENT == vqlEdge.getEdgeType()){
-                return e.getTarget() == source;
-            }
-        } else {
-            return target.getTypeId().equals(pathElement.node.getTypeId());
-        }
-
-        return true;
-    }
-
-    private boolean hasNextElementInPath(int depth) {
-        return path.getPathElements().size() < depth + 2;
-    }
-
-    private boolean reachedEndOfPath(int depth) {
-        return depth >= path.getPathElements().size();
-    }
-
-    private PathElement getNextElementInQueryPath(int depth) {
-        return path.getPathElements().get(depth + 1);
+        return vqlNavigator.isValideEdge(source, e, target);
     }
 
     @Override
-    public boolean nodeFilter(CnATreeElement target, int depth) {
-        return isProperNode(target, depth);
+    public boolean nodeFilter(CnATreeElement target, Edge incomingEdge, int depth) {
+       return true;
     }
 
-    private boolean isProperNode(CnATreeElement target, int depth) {
-        if (reachedEndOfPath(depth)) {
-            return false;
-        }
-
-        String targetTypeId = target.getTypeId();
-        String pathElementTypeId = path.getPathElements().get(depth).node.getTypeId();
-
-        return targetTypeId.equals(pathElementTypeId);
-    }
 }

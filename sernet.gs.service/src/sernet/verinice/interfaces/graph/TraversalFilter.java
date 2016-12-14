@@ -69,11 +69,13 @@ public interface TraversalFilter {
      *
      * @param target
      *            The currently traversed node.
+     * @param incomingEdge
+     *            The edge from which the traversed node is reached.
      * @param depth
      *            This is the depth of the traversal. Since the traversal starts
      *            from a specific root node this is also the distances to this
      *            root node.
      * @return If returns true this node is traversed.
      */
-    boolean nodeFilter(CnATreeElement target, int depth);
+    boolean nodeFilter(CnATreeElement target, Edge incomingEdge, int depth);
 }

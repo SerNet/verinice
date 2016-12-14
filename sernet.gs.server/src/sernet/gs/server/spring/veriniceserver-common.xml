@@ -87,6 +87,7 @@ This variant:
                 <entry key="reportHQLService" value-ref="reportHQLService"/>
                 <entry key="configurationService" value-ref="configurationService"/>
 				<entry key="objectModelService" value-ref="objectModelService" />
+                <entry key="updateNewsService" value-ref="updateNewsService" />
 			</map>
 		</property>
 	</bean>

@@ -120,6 +120,7 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
         this.scopeIds = scopeIds;
     }
 
+    @Override
     public void addScopeId(Integer scopeId) {
         getScopeIds().add(scopeId);
     }
@@ -129,6 +130,14 @@ public class LinkTableConfiguration implements ILinkTableConfiguration {
             scopeIds = new HashSet<>();
         }
         return scopeIds;
+    }
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.service.linktable.ILinkTableConfiguration#removeAllScopeIds()
+     */
+    @Override
+    public void removeAllScopeIds() {
+        getScopeIds().clear();
     }
 
     public String[] getColumnPathArray() {

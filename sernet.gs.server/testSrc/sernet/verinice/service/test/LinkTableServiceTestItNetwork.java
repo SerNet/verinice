@@ -20,13 +20,11 @@
 package sernet.verinice.service.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -38,8 +36,6 @@ import org.junit.Test;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.service.commands.LoadCnAElementByEntityTypeId;
 import sernet.verinice.service.commands.SyncParameter;
 import sernet.verinice.service.commands.SyncParameterException;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
@@ -131,7 +127,7 @@ public class LinkTableServiceTestItNetwork extends BeforeEachVNAImportHelper {
         if (LOG.isDebugEnabled()) {
             int i = 0;
             for (List<String> list : resultTable) {
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 sb.append(i).append(" - ");
                 for (String cell : list) {
                     sb.append(cell).append(", ");
@@ -140,14 +136,14 @@ public class LinkTableServiceTestItNetwork extends BeforeEachVNAImportHelper {
                 i++;
             }
         }
-        assertEquals(24, resultTable.size());
+        assertEquals(20, resultTable.size());
         assertEquals(6, resultTable.get(0).size());
         
-        assertEquals("Clients Entwicklungsabteilung", resultTable.get(22).get(1));
-        assertEquals("Risikoanalyse", resultTable.get(22).get(2));
-        assertEquals("Abhören der elektromagnetischen Abstrahlung von IT-Komponenten", resultTable.get(4).get(3));
-        assertEquals("bM 1.99", resultTable.get(4).get(4));        
-        assertEquals("Verringerung der elektromagnetischen Abstrahlung von IT-Geräten", resultTable.get(4).get(5));        
+        assertEquals("Clients Entwicklungsabteilung", resultTable.get(2).get(1));
+        assertEquals("Risikoanalyse", resultTable.get(2).get(2));
+        assertEquals("Abhören der elektromagnetischen Abstrahlung von IT-Komponenten", resultTable.get(2).get(3));
+        assertEquals("bM 1.99", resultTable.get(2).get(4));
+        assertEquals("Verringerung der elektromagnetischen Abstrahlung von IT-Geräten", resultTable.get(2).get(5));
      
     }
 

@@ -61,7 +61,7 @@ public class ParameterMetaData implements IParameterMetaData
 	public String getParameterTypeName( int param ) throws OdaException 
 	{
         int nativeTypeCode = getParameterType( param );
-        return Driver.getNativeDataTypeName( nativeTypeCode );
+        return Driver.getNativeDataTypeName( nativeTypeCode, Query.ODA_DATA_SOURCE_ID );
 	}
 
 	public int getPrecision( int param ) throws OdaException 

@@ -33,6 +33,9 @@ public class Organization extends CnATreeElement implements IISO27kGroup, IISO27
 	public static final String PROP_ABBR = "org_abbr"; //$NON-NLS-1$
 	public static final String PROP_NAME = "org_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "org_tag"; //$NON-NLS-1$
+	public static final String PROP_RISKACCEPT_CONFID = "org_riskaccept_confid"; //$NON-NLS-1$
+	public static final String PROP_RISKACCEPT_INTEG = "org_riskaccept_integ"; //$NON-NLS-1$
+	public static final String PROP_RISKACCEPT_AVAIL = "org_riskaccept_avail"; //$NON-NLS-1$
 	
 	public static final String[] CHILD_TYPES = new String[] {
 	    AssetGroup.TYPE_ID,

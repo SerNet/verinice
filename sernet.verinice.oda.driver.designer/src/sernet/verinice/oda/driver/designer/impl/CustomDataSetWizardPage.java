@@ -304,7 +304,7 @@ public class CustomDataSetWizardPage extends DataSetWizardPage {
 	 */
 	private void updateDesign(DataSetDesign dataSetDesign, IConnection conn,
 			String queryText) throws OdaException {
-		IQuery query = conn.newQuery(null);
+		IQuery query = conn.newQuery(Query.ODA_DATA_SOURCE_ID);
 		query.prepare(queryText);
 		query.setProperty(Query.PROP_SETUP_QUERY_TEXT, getSetupQueryText());
 

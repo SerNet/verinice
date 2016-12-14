@@ -64,7 +64,8 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
      * @param parameter
      * @return
      */
-    private Map<String, Object> createParameterMap(IndividualServiceParameter parameter) {
+    @Override
+    public Map<String, Object> createParameterMap(IndividualServiceParameter parameter) {
         final int maxDescriptionLength = 254;
         Map<String, Object> map = new HashMap<String, Object>();
         map.put(IGenericProcess.VAR_UUID, parameter.getUuid());
@@ -86,6 +87,7 @@ public class IndividualService extends ProcessServiceVerinice implements IIndivi
         map.put(IIndividualProcess.VAR_TITLE, parameter.getTitle());
         map.put(IGenericProcess.VAR_TYPE_ID, parameter.getTypeId());
         map.put(IIndividualProcess.VAR_PROPERTY_TYPES, parameter.getProperties());
+        map.put(IIndividualProcess.VAR_IS_WITH_RELEASE_PROCESS, parameter.isWithAReleaseProcess());
         return map;
     }
 

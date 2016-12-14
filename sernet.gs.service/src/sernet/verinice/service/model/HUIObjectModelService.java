@@ -46,6 +46,7 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Audit;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.CnATypeMapper;
+import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
 
 /**
  * Server implementation of {@link IObjectModelService}
@@ -65,7 +66,8 @@ public class HUIObjectModelService implements IObjectModelService {
     private Map<String, CnATreeElement> allTypeInstances = null;
 
     private Set<String> allTypeIds = null;
-    private Set<String> allBSIElements = null;
+    private Set<String> allBSICategories = null;
+    private Set<String> allStaticProperties = null;
 
     private Map<String, Set<String>> possibleChildren = null;
     private Map<String, Set<String>> possibleParents = null;
@@ -92,7 +94,7 @@ public class HUIObjectModelService implements IObjectModelService {
         }
         if (LOG.isDebugEnabled()) {
 
-            LOG.debug("init objectModelService finished");
+            LOG.debug("init objectModelService finished"); //$NON-NLS-1$
         }
     }
 
@@ -118,7 +120,7 @@ public class HUIObjectModelService implements IObjectModelService {
             }
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug("typeIDs instantiated");
+            LOG.debug("typeIDs instantiated"); //$NON-NLS-1$
         }
     }
 
@@ -130,31 +132,41 @@ public class HUIObjectModelService implements IObjectModelService {
         allTypeIds = new HashSet<>(getHuiTypeFactory().getAllTypeIds());
         removeNonCnaTreeElementTypeIDs();
         addAllBSIElements();
+        addAllStaticProperties();
     }
 
+    
+
     public void removeNonCnaTreeElementTypeIDs() {
-        allTypeIds.remove("note");
-        allTypeIds.remove("role");
-        allTypeIds.remove("configuration");
-        allTypeIds.remove("attachment");
+        allTypeIds.remove("note"); //$NON-NLS-1$
+        allTypeIds.remove("role"); //$NON-NLS-1$
+        allTypeIds.remove("configuration"); //$NON-NLS-1$
+        allTypeIds.remove("attachment"); //$NON-NLS-1$
     }
 
     private void addAllBSIElements() {
-        allBSIElements = new HashSet<>();
-        allBSIElements.add(AnwendungenKategorie.TYPE_ID);
-        allBSIElements.add(GebaeudeKategorie.TYPE_ID);
-        allBSIElements.add(ClientsKategorie.TYPE_ID);
-        allBSIElements.add(ServerKategorie.TYPE_ID);
-        allBSIElements.add(SonstigeITKategorie.TYPE_ID);
-        allBSIElements.add(TKKategorie.TYPE_ID);
-        allBSIElements.add(PersonenKategorie.TYPE_ID);
-        allBSIElements.add(NKKategorie.TYPE_ID);
-        allBSIElements.add(RaeumeKategorie.TYPE_ID);
-        allBSIElements.add(FinishedRiskAnalysis.TYPE_ID);
+        allBSICategories = new HashSet<>();
+        allBSICategories.add(AnwendungenKategorie.TYPE_ID);
+        allBSICategories.add(GebaeudeKategorie.TYPE_ID);
+        allBSICategories.add(ClientsKategorie.TYPE_ID);
+        allBSICategories.add(ServerKategorie.TYPE_ID);
+        allBSICategories.add(SonstigeITKategorie.TYPE_ID);
+        allBSICategories.add(TKKategorie.TYPE_ID);
+        allBSICategories.add(PersonenKategorie.TYPE_ID);
+        allBSICategories.add(NKKategorie.TYPE_ID);
+        allBSICategories.add(RaeumeKategorie.TYPE_ID);
+        allBSICategories.add(FinishedRiskAnalysis.TYPE_ID);
 
-        allTypeIds.addAll(allBSIElements);
+        allTypeIds.addAll(allBSICategories);    
+    }
     
-     }
+    private void addAllStaticProperties() {
+        allStaticProperties = new HashSet<>();
+        allStaticProperties.add(CnATreeElement.SCOPE_ID);
+        allStaticProperties.add(CnATreeElement.PARENT_ID);
+        allStaticProperties.add(CnATreeElement.DBID);
+        allStaticProperties.add(CnATreeElement.UUID);    
+    }
 
     /*
      * (non-Javadoc)
@@ -200,7 +212,7 @@ public class HUIObjectModelService implements IObjectModelService {
     @Override
     public Set<String> getPossibleRelationPartners(String typeID) {
         ServerInitializer.inheritVeriniceContextState();
-        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSIElement(typeID)) {
+        if (getHuiTypeFactory().getEntityType(typeID) == null || isBSICategory(typeID)) {
             return new HashSet<>();
         }
         HashSet<String> possiblePartners = new HashSet<>();
@@ -216,8 +228,8 @@ public class HUIObjectModelService implements IObjectModelService {
         return possiblePartners;
     }
 
-    private boolean isBSIElement(String typeID) {
-        return allBSIElements.contains(typeID);
+    private boolean isBSICategory(String typeID) {
+        return allBSICategories.contains(typeID);
 
     }
 
@@ -237,16 +249,19 @@ public class HUIObjectModelService implements IObjectModelService {
     @Override
     public Set<String> getPossibleProperties(String typeID) {
         ServerInitializer.inheritVeriniceContextState();
-        if (isBSIElement(typeID)) {
+        if (isBSICategory(typeID)) {
             HashSet<String> set = new HashSet<>();
-            set.add(typeID + "_name");
+            set.add(typeID + "_name"); //$NON-NLS-1$
+            set.addAll(allStaticProperties);
             return set;
         }
         if (getHuiTypeFactory().getEntityType(typeID) == null) {
             return new HashSet<>();
         }
-        return new HashSet<>(
+        HashSet<String> set = new HashSet<>(
                 Arrays.asList(getHuiTypeFactory().getEntityType(typeID).getAllPropertyTypeIds()));
+        set.addAll(allStaticProperties);
+        return set;
     }
 
     /*
@@ -265,7 +280,7 @@ public class HUIObjectModelService implements IObjectModelService {
     }
 
     private boolean isDefaultMessage(String id) {
-        return id.contains(" ");
+        return id.contains(" "); //$NON-NLS-1$
     }
 
     /*
@@ -278,7 +293,7 @@ public class HUIObjectModelService implements IObjectModelService {
     @Override
     public String getRelationLabel(String id) {
         ServerInitializer.inheritVeriniceContextState();
-        return getHuiTypeFactory().getMessage(id + "_name");
+        return getHuiTypeFactory().getMessage(id + "_name"); //$NON-NLS-1$
     }
 
     /*
@@ -290,6 +305,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getPossibleChildren(String typeID) {
+        init();
         Set<String> set = possibleChildren.get(typeID);
         if (set == null) {
             set = new HashSet<>();
@@ -366,7 +382,7 @@ public class HUIObjectModelService implements IObjectModelService {
      */
     @Override
     public Set<String> getPossibleParents(String typeID) {
-
+        init();
         Set<String> set = possibleParents.get(typeID);
         if (set == null) {
             set = new HashSet<>();
@@ -450,6 +466,16 @@ public class HUIObjectModelService implements IObjectModelService {
 
         return container;
     }
+    
+    @Override
+    public boolean isValidTypeId(String typeID) {
+        return allLabels.containsKey(typeID);
+    }
+
+    @Override
+    public boolean isValidRelationId(String relationID) {
+        return allRelationLabels.containsKey(relationID);
+    }
 
     private Map<String, Set<String>> getAllRelationPartners() {
         if (allRelationPartners == null) {
@@ -467,7 +493,7 @@ public class HUIObjectModelService implements IObjectModelService {
             allRelationLabels = new HashMap<>();
             Set<HuiRelation> allRelationIDs = new HashSet<>();
             for(String typeId : getAllTypeIDs()){
-                if (!isBSIElement(typeId)) {
+                if (!isBSICategory(typeId)) {
                     allRelationIDs.addAll(huiTypeFactory.getPossibleRelationsFrom(typeId));
                 }
                 
@@ -515,11 +541,37 @@ public class HUIObjectModelService implements IObjectModelService {
         PropertyGroup propertyGroup = getHuiTypeFactory().getPropertyGroup(entityId, propertyId);
         if (propertyGroup != null) {
             label.append(getLabel(propertyGroup.getId()));
-            label.append(" - ");
+            label.append(" - "); //$NON-NLS-1$
         }
         label.append(getLabel(propertyId));
 
         return  label.toString();
     }
+    
+    public static String getCnaLinkPropertyMessage(String cnaLinkProperty) {
+        switch (cnaLinkProperty) {
+        case CnaLinkPropertyConstants.TYPE_TITLE:
+            return Messages.getString("HUIObjectModelService.10");  //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_DESCRIPTION:
+            return Messages.getString("HUIObjectModelService.11");  //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C:
+            return Messages.getString("HUIObjectModelService.12");  //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I:
+            return Messages.getString("HUIObjectModelService.13");  //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
+            return Messages.getString("HUIObjectModelService.14");  //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C_WITH_CONTROLS:
+            return Messages.getString("HUIObjectModelService.1");   //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I_WITH_CONTROLS:
+            return Messages.getString("HUIObjectModelService.2");   //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A_WITH_CONTROLS:
+            return Messages.getString("HUIObjectModelService.3");    //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_TREATMENT:
+            return Messages.getString("HUIObjectModelService.4");  //$NON-NLS-1$
+        default:
+            return Messages.getString("HUIObjectModelService.15");  //$NON-NLS-1$
+        }
+    }
+    
 
 }

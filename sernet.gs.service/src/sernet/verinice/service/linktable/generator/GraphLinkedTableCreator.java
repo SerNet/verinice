@@ -23,7 +23,6 @@ import static sernet.verinice.interfaces.graph.DepthFirstConditionalSearchPathes
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -43,7 +42,6 @@ import sernet.verinice.service.linktable.ColumnPathParser;
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
 import sernet.verinice.service.linktable.LinkedTableCreator;
 import sernet.verinice.service.linktable.RowComparator;
-import sernet.verinice.service.linktable.generator.mergepath.Path;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
 
@@ -58,9 +56,9 @@ import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
  * <ul>
  * <li>1. Merge all column paths to a AST ({@link VqlAst}).</li>
  * <li>2. Find all possible potential points for a traversal.</li>
- * <li>3. Extract all possible search paths from the AST.</li>
- * <li>4. Iterate over potential starting points and filter all matching paths
- * with the help of the search paths from step 3.</li>
+ * <li>3. Iterate over potential starting points and filter all matching paths
+ * with the help of {@link VqlContext}, which walks through a {@link VqlAst}
+ * data structure.</li>
  * </ul>
  *
  * <p>
@@ -75,20 +73,13 @@ import sernet.verinice.service.linktable.generator.mergepath.VqlNode;
  * this type id.
  * </p>
  *
- * <h2>Search pathes</h2>
- *
- * <p>
- * After creating the {@link VqlAst} we can extract all paths from the root node
- * to every leaf. This set of paths is used to traverse the
- * {@link VeriniceGraph}
- * </p>
- *
  * <h2>Traversal</h2>
  *
  * <p>
  * After extracting paths and starting nodes we start a
  * {@link DepthFirstConditionalSearchPathes} traversal on the verinice graph.
- * The path is used to determine if edges and nodes in the verinice graph are valid.
+ * The {@link VqlContext} is used to determine if edges and nodes in the
+ * verinice graph are valid.
  * </p>
  *
  * 
@@ -109,13 +100,13 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
     @Override
     public List<List<String>> createTable(VeriniceGraph veriniceGraph, ILinkTableConfiguration conf) {
 
-        this.vqlAst = new VqlAst(conf);
         this.veriniceDataGraph = veriniceGraph;
+        this.vqlAst = new VqlAst(conf);
+
         VqlNode root = vqlAst.getRoot();
-        final String typeId = root.getPath();
+        String typeId = root.getPath();
 
         storeColumnHeaderOrderAndAlias(conf);
-
         Set<CnATreeElement> roots = getRootNodes(typeId);
 
         List<Map<String, String>> table = doCreateTable(roots);
@@ -135,63 +126,18 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
     private List<Map<String, String>> doCreateTable(Set<CnATreeElement> roots) {
         List<Map<String, String>> table = new ArrayList<>();
         for (CnATreeElement potentialRoot : roots) {
-            VeriniceGraphResult resultSet = new VeriniceGraphResult();
-            for (Path p : vqlAst.getPaths()) {
-                scanVeriniceGraph(potentialRoot, p, resultSet);
-            }
-            table.addAll(mergeRows(resultSet));
+            VeriniceGraphResult scanVeriniceGraph = scanVeriniceGraph(potentialRoot);
+            table.addAll(scanVeriniceGraph.getResult());
         }
         return table;
     }
 
-    /**
-     * Removes the problem with the duplicated lines
-     * It adds all the partly filled rows just if there is no other row already
-     * containing everything inside
-     */
-    private Collection<? extends Map<String, String>> mergeRows(VeriniceGraphResult resultSet) {
+    private VeriniceGraphResult scanVeriniceGraph(CnATreeElement potentialRoot) {
 
-        List<Map<String, String>> completelyTraversedRows = resultSet.getCompletelyTraversedRows();
-        List<Map<String, String>> mergedRows = new ArrayList<>(completelyTraversedRows);
-        List<Map<String, String>> partlyTraversedRows = new ArrayList<>(
-                resultSet.getPartlyTraversedRows());
-        Map<String, String> partRow;
-        while (!partlyTraversedRows.isEmpty()) {
-            partRow = partlyTraversedRows.remove(0);
-            boolean isIncluded = false;
-            for (Map<String, String> completeTraversedRow : completelyTraversedRows) {
-                if (isAlreadyIncluded(partRow, completeTraversedRow)) {
-                    isIncluded = true;
-                    break;
-                }
-            }
-            if (!isIncluded) {
-                mergedRows.add(partRow);
-            }
-        }
-        return mergedRows;
-    }
-
-    private boolean isAlreadyIncluded(Map<String, String> partRow,
-            Map<String, String> completeTraversedRow) {
-        boolean isAlreadyIncluded = true;
-        for (Entry<String, String> cell : partRow.entrySet()) {
-            if (!cell.getValue().isEmpty()
-                    && !completeTraversedRow.entrySet().contains(cell)) {
-                isAlreadyIncluded = false;
-                break;
-            }
-        }
-        return isAlreadyIncluded;
-    }
-
-    private VeriniceGraphResult scanVeriniceGraph(CnATreeElement potentialRoot, final Path p,
-            VeriniceGraphResult resultSet) {
-
-        filter = new LtrTraversalFilter(p);
-        traversalListener = new LtrPrintRowsTraversalListener(p, filter, veriniceDataGraph,
-                getLTRHeaderColumnPathes(), resultSet);
-
+        VqlContext vqlNavigator = new VqlContext(vqlAst);
+        filter = new LtrTraversalFilter(vqlNavigator);
+        VeriniceGraphResult result = new VeriniceGraphResult();
+        traversalListener = new LtrPrintRowsTraversalListener(vqlNavigator, filter, veriniceDataGraph, result);
 
         traverse(veriniceDataGraph, potentialRoot, filter, traversalListener);
         return traversalListener.getResult();
@@ -203,15 +149,18 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
 
         for (Map<String, String> map : table) {
 
-            String[] row = new String[map.size()];
+            String[] row = new String[columnPath2TablePosition.size()];
 
-            for (Entry<String, String> e : map.entrySet()) {
-                int position = columnPath2TablePosition.get(e.getKey());
-                row[position] = e.getValue();
+            for(Entry<String, Integer> pos : columnPath2TablePosition.entrySet()){
+                row[pos.getValue()] = map.containsKey(pos.getKey()) ? map.get(pos.getKey()) : "";
             }
 
+
             stringTable.add(Arrays.asList(row));
-            LOG.debug("Add row to link table: [" + StringUtils.join(row, ", ") + "]");
+
+            if(LOG.isDebugEnabled()) {
+                LOG.debug("Add row to link table: [" + StringUtils.join(row, ", ") + "]");
+            }
         }
 
         Collections.sort(stringTable, new RowComparator());
@@ -223,33 +172,26 @@ public class GraphLinkedTableCreator implements LinkedTableCreator {
         int position = 0;
         columnHeader2Alias = new HashMap<>();
         columnPath2TablePosition = new HashMap<>();
-        for(String s : conf.getColumnPaths()){
-           List<String> columnPathAsList = ColumnPathParser.getColumnPathAsList(s);
-           List<String> removeAlias = ColumnPathParser.removeAlias(columnPathAsList);
-           String join = StringUtils.join(removeAlias, "");
-           columnPath2TablePosition.put(join, position);
-           columnHeader2Alias.put(join, ColumnPathParser.extractAlias(s));
-           position++;
+        for (String s : conf.getColumnPaths()) {
+            List<String> columnPathAsList = ColumnPathParser.getColumnPathAsList(s);
+            List<String> removeAlias = ColumnPathParser.removeAlias(columnPathAsList);
+            String join = StringUtils.join(removeAlias, "");
+            columnPath2TablePosition.put(join, position);
+            columnHeader2Alias.put(join, ColumnPathParser.extractAlias(s));
+            position++;
         }
     }
-
-    private Set<String> getLTRHeaderColumnPathes() {
-        return columnHeader2Alias.keySet();
-    }
-
 
     private List<String> getAliasHeader() {
 
         // replaces column pathes with aliases
         String[] aliasHeader = new String[columnHeader2Alias.size()];
-        for(Map.Entry<String, String> e : columnHeader2Alias.entrySet()){
+        for (Map.Entry<String, String> e : columnHeader2Alias.entrySet()) {
             int position = columnPath2TablePosition.get(e.getKey());
             aliasHeader[position] = e.getValue().equals(StringUtils.EMPTY) ? e.getKey() : e.getValue();
-
         }
 
         return Arrays.asList(aliasHeader);
     }
-
 
 }

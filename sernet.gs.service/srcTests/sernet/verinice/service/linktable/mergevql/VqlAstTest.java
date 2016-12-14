@@ -30,8 +30,6 @@ import org.jgrapht.traverse.BreadthFirstIterator;
 import org.junit.Test;
 
 import sernet.verinice.service.linktable.ILinkTableConfiguration;
-import sernet.verinice.service.linktable.generator.mergepath.Path;
-import sernet.verinice.service.linktable.generator.mergepath.Path.PathElement;
 import sernet.verinice.service.linktable.generator.mergepath.VqlAst;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge;
 import sernet.verinice.service.linktable.generator.mergepath.VqlEdge.EdgeType;
@@ -94,30 +92,5 @@ public class VqlAstTest {
 
     private String getFilePath(String fileName) {
         return this.getClass().getResource(fileName).getPath();
-    }
-
-    @Test
-    public void testGetPathes(){
-
-        ILinkTableConfiguration conf = readLinkTableConfiguration(getFilePath(TEST_VLT_FILE));
-        VqlAst mergedVqlAst = new VqlAst(conf);
-
-        assertTrue(mergedVqlAst.getPaths().size() == 2);
-        for(Path p : mergedVqlAst.getPaths()){
-            Set<String> pathes = new HashSet<>();
-            for (PathElement pElement : p.getPathElements()) {
-                VqlEdge edge = pElement.edge;
-                if (edge != null) {
-                    assertUniquePath(pathes, edge);
-                    assertTrue("was type " + edge.getEdgeType(),
-                            edge.getEdgeType() == EdgeType.CHILD);
-                    assertTrue(edge.getPath().contains(ROOT_ELEMENT));
-                } else {
-                    assertTrue(pElement.node.getPath().equals(ROOT_ELEMENT));
-                }
-
-            }
-        }
-
     }
 }

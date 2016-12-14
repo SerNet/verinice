@@ -79,7 +79,7 @@ final class CompleteTaskJob extends NotifyingThread {
         Map<String, Object> parameter = null;
         if(handler!=null) {
             handler.setShell(getShell());
-            parameter = handler.execute();          
+            parameter = handler.execute(task);          
         }
             
         if (outcomeId == null) {

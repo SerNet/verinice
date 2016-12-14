@@ -19,6 +19,7 @@ package sernet.verinice.rcp.linktable.ui;
 
 import org.eclipse.osgi.util.NLS;
 
+@SuppressWarnings("restriction")
 public class Messages extends NLS{
 
     private static final String BUNDLE_NAME = "sernet.verinice.rcp.linktable.ui.messages"; //$NON-NLS-1$
@@ -48,6 +49,12 @@ public class Messages extends NLS{
     public static String CsvExportDialog_17;
 
     public static String CsvExportDialog_9;
+
+    public static String LinkTableComposite_moveDownButton;
+
+    public static String LinkTableComposite_moveUpButton;
+
+    public static String LinkTableComposite_removeButton;
 
     public static String LinkTableMultiSelectionDialog_0;
     public static String LinkTableMultiSelectionDialog_1;

@@ -91,7 +91,6 @@ import sernet.verinice.model.iso27k.VulnerabilityGroup;
 import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.linktable.LinkTableEditor;
 import sernet.verinice.rcp.linktable.LinkTableEditorInput;
-import sernet.verinice.service.linktable.vlt.VeriniceLinkTable;
 
 /**
  * This class is a singleton and maps editors for different ressources and
@@ -109,7 +108,7 @@ public final class EditorFactory {
     private static Map<Class<?>, IEditorTypeFactory> typedFactories = new HashMap<>();
 
     private IEditorTypeFactory linkTableEditorFactory = new LinkTableEditorFactory();
-    
+
     private interface IEditorTypeFactory {
         void openEditorFor(Object o) throws PartInitException;
     }
@@ -199,10 +198,8 @@ public final class EditorFactory {
                 TodoViewItem selection = (TodoViewItem) o;
                 CnATreeElement element;
                 try {
-                    element = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID,
-                            selection.getDbId());
-                    openEditor(element.getId(), new BSIElementEditorInput(element),
-                            BSIElementEditor.EDITOR_ID);
+                    element = CnAElementHome.getInstance().loadById(MassnahmenUmsetzung.TYPE_ID, selection.getDbId());
+                    openEditor(element.getId(), new BSIElementEditorInput(element), BSIElementEditor.EDITOR_ID);
                 } catch (CommandException e) {
                     log.error("Error while opening editor.", e); //$NON-NLS-1$
                     ExceptionUtil.log(e, Messages.EditorFactory_2);
@@ -233,7 +230,13 @@ public final class EditorFactory {
         IEditorTypeFactory bsiEditorFactory = new IEditorTypeFactory() {
             @Override
             public void openEditorFor(Object o) throws PartInitException {
-                BSIElementEditorInput input = new BSIElementEditorInput((CnATreeElement) o);
+                BSIElementEditorInput input;
+                if (o instanceof CnATreeElement) {
+                    input = new BSIElementEditorInput((CnATreeElement) o);
+                } else {
+                    TaskEditorContext context = (TaskEditorContext) o;
+                    input = new BSIElementEditorInput(context.getElement(), context.getTask());
+                }
                 openEditor(input.getId(), input, BSIElementEditor.EDITOR_ID);
             }
         };
@@ -293,10 +296,11 @@ public final class EditorFactory {
         typedFactories.put(RecordGroup.class, bsiEditorFactory);
         // Self Assessment (SAMT) elements
         typedFactories.put(SamtTopic.class, bsiEditorFactory);
+        // for task context
+        typedFactories.put(TaskEditorContext.class, bsiEditorFactory);
     }
 
-    private static IEditorPart openEditor(String id, IEditorInput input, String editorId)
-            throws PartInitException {
+    private static IEditorPart openEditor(String id, IEditorInput input, String editorId) throws PartInitException {
         IEditorPart editor = EditorRegistry.getInstance().getOpenEditor(id);
         if (editor == null) {
             // open new editor:

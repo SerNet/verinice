@@ -34,6 +34,8 @@ public interface IIndividualProcess extends IGenericProcess {
     String VAR_REMINDER_DATE = "INDI_REMINDER_DATE";
     String VAR_REMINDER_DAYS = "INDI_REMINDER_DAYS";
     String VAR_EXTENSION_JUSTIFICATION = "INDI_EXTENSION_JUSTIFICATION";
+    String VAR_IS_WITH_RELEASE_PROCESS = "INDI_IS_WITH_RELEASE_PROCESS";
+    String VAR_CHANGED_ELEMENT_PROPERTIES = "INDI_CHANGED_ELEMENT_PROPERTIES";
     
     String TASK_ASSIGN = "indi.task.assign";  
     String TASK_EXECUTE = "indi.task.execute";
@@ -49,4 +51,5 @@ public interface IIndividualProcess extends IGenericProcess {
     String TRANS_ASSIGNED = "indi.trans.assigned";
     String TRANS_ACCEPT = "indi.trans.accept";
     String TRANS_EXTENSION = "indi.trans.extension";
+    String TRANS_DECLINE = "indi.trans.decline";
 }

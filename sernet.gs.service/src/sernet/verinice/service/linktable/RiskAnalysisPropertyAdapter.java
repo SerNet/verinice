@@ -20,6 +20,7 @@
 package sernet.verinice.service.linktable;
 
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
+import sernet.verinice.model.common.CnATreeElement;
 
 /**
  *
@@ -36,7 +37,14 @@ public class RiskAnalysisPropertyAdapter implements IPropertyAdapter {
 
     @Override
     public String getPropertyValue(String propertyId) {
-        return finishedRiskAnalysis.getTitle();
+        if(finishedRiskAnalysis==null) {
+            return null;
+        }
+        if(CnATreeElement.isStaticProperty(propertyId)) {
+            return CnATreeElement.getStaticProperty(finishedRiskAnalysis, propertyId);
+        } else {
+            return finishedRiskAnalysis.getTitle();
+        }
     }
 
 }

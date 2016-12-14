@@ -34,9 +34,13 @@ public interface IRelationTable {
 	String COLUMN_SCOPE_ID = "_scope_id";
 	String COLUMN_TITLE = "_title";
 	String COLUMN_COMMENT= "_comment";
+	String COLUMN_RISK_TREATMENT = "_risk_treatment";
     String COLUMN_RISK_C = "_riskc";
     String COLUMN_RISK_I = "_riski";
     String COLUMN_RISK_A = "_riska";
+    String COLUMN_RISK_C_CONTROLS = "_riskc_controls";
+    String COLUMN_RISK_I_CONTROLS = "_riski_controls";
+    String COLUMN_RISK_A_CONTROLS = "_riska_controls";
 
 
 
