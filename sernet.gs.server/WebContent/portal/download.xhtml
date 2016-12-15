@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -10,27 +10,26 @@
 	xmlns:p="http://primefaces.org/ui" >
 
 <ui:composition template="/layout-login.xhtml">
-<ui:define name="content">
-
-
-
-<!-- Beginn Inhaltsbereich -->
+	<ui:define name="content">
+		<!-- Beginn Inhaltsbereich -->
 					<div id="col3">
 						<div id="col3_content">
-							<h1><h:outputText escape="false" value="#{msgWeb['manual_head']}" /></h1>
+							<h1>Downloads</h1>
 							<p class="bodytext">
-						 				<h:outputText escape="false" value="#{msgWeb['manual_content_0']}" />
+										<h:outputText escape="false" value="#{msgWeb['download_content_0']}" />
 							</p>
 							<ul>
-								<li><a href="#{request.contextPath}/manual/#{msgWeb['manual_name']}.pdf" target="_blank"><h:outputText escape="false" value="#{msgWeb['manual_pdf']}" /></a></li>
-								<li><a href="#{request.contextPath}/manual/#{msgWeb['manual_name']}/" target="_blank"><h:outputText escape="false" value="#{msgWeb['manual_html']}" /></a></li>
+								<li><a href="#{request.contextPath}/clients/windows-x86_64">verinice (Windows, 64 Bit)</a></li>
+								<li><a href="#{request.contextPath}/clients/windows-x86">verinice (Windows, 32 Bit)</a></li>
+								<li><a href="#{request.contextPath}/clients/linux-x86_64">verinice (Linux, 64 Bit)</a></li>
+								<li><a href="#{request.contextPath}/clients/linux-x86">verinice (Linux, 32 Bit)</a></li>
 							</ul>
 						</div>
 					</div>
 					<!-- Ende Inhaltsbereich -->
-					
+
 					<!-- Beginn rechte Spalte -->
 					<ui:include src="installation_note.xhtml"/>
-</ui:define>
+	</ui:define>
 </ui:composition>
 </html>

@@ -54,17 +54,17 @@ public class NavigationBean {
     }
 
     public String getIndexNavStyle() {
-        String fullId = "/portal.verinice.private/index.xhtml";
+        String fullId = "/portal/index.xhtml";
         return fullId.equals(getViewId()) ? CLASS_NAV_ACTIVE : CLASS_NAV_INACTIVE;
     }
 
     public String getDownloadNavStyle() {
-        String fullId = "/portal.verinice.private/download.xhtml";
+        String fullId = "/portal/download.xhtml";
         return fullId.equals(getViewId()) ? CLASS_NAV_ACTIVE : CLASS_NAV_INACTIVE;
     }
 
     public String getManualNavStyle() {
-        String fullId = "/portal.verinice.private/manual.xhtml";
+        String fullId = "/portal/manual.xhtml";
         return fullId.equals(getViewId()) ? CLASS_NAV_ACTIVE : CLASS_NAV_INACTIVE;
     }
 
