@@ -22,6 +22,8 @@ package sernet.verinice.service.commands;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -33,11 +35,16 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.ServerInitializer;
+import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
+import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
+import sernet.verinice.interfaces.bpm.IIndividualService;
+import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -46,6 +53,7 @@ import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
@@ -141,10 +149,11 @@ public class CopyCommand extends GenericCommand {
             copyElements = createInsertList(uuidList);
             selectedGroup = getDao().findByUuid(uuidGroup, RetrieveInfo.getChildrenInstance().setParent(true).setProperties(true));       
             final Map<String, String> sourceDestMap = new Hashtable<String, String>();
-            for (final CnATreeElement element : copyElements) {     
-                final CnATreeElement newElement = copy(selectedGroup, element, sourceDestMap);
+            for (final CnATreeElement copyElement : copyElements) {     
+                final CnATreeElement newElement = copy(selectedGroup, copyElement, sourceDestMap);
                 if(newElement != null && newElement.getUuid() != null){
-                    newElements.add(newElement.getUuid());         
+                    newElements.add(newElement.getUuid());
+                    createTaskWhenUsingTemplate(copyElement, newElement);
                 }
             }
             if(getPostProcessorList()!=null && !getPostProcessorList().isEmpty()) {
@@ -285,7 +294,6 @@ public class CopyCommand extends GenericCommand {
             if (copyElement.isTemplateOrImplementation()) {
                 newElement.setEntity(copyElement.getEntity());
                 newElement.setTemplateType(TemplateType.IMPLEMENTATION);
-//                TODO: add new task or email notification to administrator of template
             } else {
                 newElement.getEntity().copyEntity(copyElement.getEntity());
             }
@@ -436,6 +444,72 @@ public class CopyCommand extends GenericCommand {
     
     private String getCopyTitle(final String title, final int n) {
         return Messages.getString("CopyCommand.0", title, n); //$NON-NLS-1$
+    }
+
+    private void createTaskWhenUsingTemplate(final CnATreeElement copyElement, final CnATreeElement newElement) {
+        // TODO: get server preference for create task when using template
+        if (copyElement.isTemplate()) {
+            ServerInitializer.inheritVeriniceContextState();
+            IIndividualService individualService = (IIndividualService) VeriniceContext.get(VeriniceContext.INDIVIDUAL_SERVICE);
+            IndividualServiceParameter parameter = getIndividualServiceParameter(copyElement, newElement);
+            
+            individualService.startProcess(parameter);
+        }
+    }
+
+    private IndividualServiceParameter getIndividualServiceParameter(final CnATreeElement copyElement, final CnATreeElement newElement) {
+        IndividualServiceParameter parameter = new IndividualServiceParameter();
+        parameter.setUuid(newElement.getUuid());
+        parameter.setTypeId(newElement.getTypeId());
+        String owner = loadOwnerByCnAElementDbId(copyElement.getDbId());
+        parameter.setAssignee(owner);
+        parameter.setTitle(Messages.getString("CopyCommand.TaskTitleWhenUsingTemplate"));
+        parameter.setDescription(Messages.getString("CopyCommand.TaskDescriptionWhenUsingTemplate", copyElement.getTitle(), newElement.getParent().getTitle()));
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, 14);
+        parameter.setDueDate(cal.getTime());
+
+        if (IControlExecutionProcess.DEFAULT_OWNER_NAME.equals(owner)) {
+            parameter.setReminderPeriodDays(7);
+        } else {
+            Configuration ownerConfiguration = loadConfiguration(owner);
+            parameter.setReminderPeriodDays(ownerConfiguration.getNotificationExpirationDays());
+        }
+
+        parameter.setProperties(new HashSet<>(Arrays.asList(newElement.getEntityType().getAllPropertyTypeIds())));
+        parameter.setWithAReleaseProcess(false);
+        return parameter;
+    }
+
+    private String loadOwnerByCnAElementDbId(Integer dbId) {
+
+        LoadOwnerByCnAElementDbId command = new LoadOwnerByCnAElementDbId(dbId);
+        String elementCreator = IControlExecutionProcess.DEFAULT_OWNER_NAME;
+        try {
+            command = getCommandService().executeCommand(command);
+            elementCreator = command.getElementOwner();
+        } catch (CommandException e) {
+            getLog().error("Error while determing element owner by dbId", e);
+        }
+        return elementCreator;
+    }
+
+    private Configuration loadConfiguration(String account) {
+        Configuration configuration = null;
+        try {
+            LoadPersonForLogin loadPerson = new LoadPersonForLogin(account);
+            loadPerson = getCommandService().executeCommand(loadPerson);
+            CnATreeElement person = loadPerson.getPerson();
+
+            LoadConfiguration command = new LoadConfiguration(person);
+            command = getCommandService().executeCommand(command);
+            configuration = command.getConfiguration();
+
+        } catch (CommandException e) {
+            getLog().error("Error while determing configuration", e);
+        }
+        return configuration;
     }
 
     public String getUuidGroup() {
