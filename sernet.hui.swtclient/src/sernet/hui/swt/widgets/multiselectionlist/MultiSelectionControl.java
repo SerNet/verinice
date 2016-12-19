@@ -18,8 +18,6 @@
 package sernet.hui.swt.widgets.multiselectionlist;
 
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -42,10 +40,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import sernet.hui.common.connect.Entity;
-import sernet.hui.common.connect.Property;
 import sernet.hui.common.connect.PropertyType;
 import sernet.hui.common.multiselectionlist.IMLPropertyOption;
 import sernet.hui.common.multiselectionlist.IMLPropertyType;
+import sernet.hui.common.multiselectionlist.OptionSelectionHelper;
 import sernet.hui.swt.widgets.Colors;
 import sernet.hui.swt.widgets.IHuiControl;
 import sernet.snutils.AssertException;
@@ -184,36 +182,8 @@ public class MultiSelectionControl implements IHuiControl {
     }
 
     private void writeEntitiesToTextField() {
-		StringBuffer names = new StringBuffer();
-		List properties = entity.getProperties(type.getId()).getProperties();
-		if (properties == null){
-			return;
-		}
-		for (Iterator iter = properties.iterator(); iter.hasNext();) {
-			Property prop = (Property) iter.next();
-			String referencedId = prop.getPropertyValue();
-			IMLPropertyOption ref = getEntity(referencedId);
-			if (ref==null){
-				continue;
-			}
-			String optionName = ref.getName();
-			if (names.length()==0){
-				names.append(optionName);
-			} else {
-				names.append(" / ");
-				names.append(optionName);
-			}
-		}
-		text.setText(names.toString());
-	}
-
-	private IMLPropertyOption getEntity(String referencedId) {
-		for (IMLPropertyOption entity_ : type.getReferencedEntities()) {
-			if (entity_.getId().equals(referencedId)){
-				return entity_;
-			}
-		}
-		return null;
+		String names = OptionSelectionHelper.loadReferenceLabels(entity, type);
+		text.setText(names);
 	}
 
 	/**
@@ -224,28 +194,8 @@ public class MultiSelectionControl implements IHuiControl {
 	 * @throws AssertException 
 	 */
 	private void writeOptionsToTextField() {
-		StringBuffer names = new StringBuffer();
-		List properties = entity.getProperties(type.getId()).getProperties();
-		if (properties == null){
-			return;
-		}
-		for (Iterator iter = properties.iterator(); iter.hasNext();) {
-			Property prop = (Property) iter.next();
-			String optionId = prop.getPropertyValue();
-			IMLPropertyOption opt = type.getOption(optionId);
-			if (opt==null){
-				continue;
-			}
-			String optionName = opt.getName();
-			if (names.length()==0){
-				names.append(optionName);
-			} else {
-				names.append(" / ");
-				names.append(optionName);
-			}
-		}
-		text.setText(names.toString());
-		
+	    String names = OptionSelectionHelper.loadOptionLabels(entity, type);
+        text.setText(names);
 	}
 	
 	void showSelectionDialog() {

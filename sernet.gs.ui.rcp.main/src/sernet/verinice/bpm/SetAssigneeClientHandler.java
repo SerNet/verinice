@@ -32,6 +32,7 @@ import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.bpm.rcp.CompletionAbortedException;
 import sernet.verinice.interfaces.bpm.IIsaQmProcess;
+import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.commands.LoadConfiguration;
@@ -63,7 +64,7 @@ public class SetAssigneeClientHandler implements ICompleteClientHandler {
      * @see sernet.verinice.interfaces.bpm.ICompleteClientHandler#execute()
      */
     @Override
-    public Map<String, Object> execute() {
+    public Map<String, Object> execute(ITask task) {
         Map<String, Object> parameter = null;
         try {  
             String type = selectElementType();                           

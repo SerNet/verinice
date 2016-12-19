@@ -80,6 +80,8 @@ public class TaskInformation implements ITask, Serializable {
     
     private Set<String> properties;
     
+    private boolean withAReleaseProcess = false;
+    
     /**
      * 
      */
@@ -373,4 +375,17 @@ public class TaskInformation implements ITask, Serializable {
         return result;
     }
 
+    /**
+     * @return the withAReleaseProcess
+     */
+    public boolean isWithAReleaseProcess() {
+        return withAReleaseProcess;
+    }
+
+    /**
+     * @param withAReleaseProcess the withAReleaseProcess to set
+     */
+    public void setWithAReleaseProcess(boolean withAReleaseProcess) {
+        this.withAReleaseProcess = withAReleaseProcess;
+    }
 }

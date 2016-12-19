@@ -172,7 +172,7 @@ public class ZIPGSSource implements IGSSource {
                 entry = getBausteinPath2012(zf, bausteinFileName0);
             }
             if (entry == null) {
-                throw new GSServiceException("Feler beim Laden des Bausteins: " + bausteinFileName0);
+                throw new GSServiceException("Fehler beim Laden des Bausteins: " + bausteinFileName0);
             }
             return parseDocument(zf.getInputStream(entry), getVintage().equals(IGSSource.VINTAGE_2009) ? "utf-8" : "iso-8859-1");
 

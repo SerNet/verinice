@@ -202,6 +202,16 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>    	
     </bean> 
     
+    <bean id="updateNewsService"
+    	class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+    	<property name="serviceUrl">
+    		<value>${verinice.serverURL}/service/updateNewsServiceHttpInvoker</value>
+    	</property>
+    	<property name="serviceInterface">
+    		<value>sernet.verinice.interfaces.updatenews.IUpdateNewsService</value>
+    	</property>
+   </bean>
+    
     
               
     <bean id="rightsServiceClient" class="sernet.springclient.RightsServiceClient">
@@ -323,6 +333,7 @@ ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
             <entry key="reportHQLService" value-ref="reportHQLService" />
             <entry key="searchService" value-ref="searchService" />
 			<entry key="objectModelService" value-ref="objectModelService" />
+            <entry key="updateNewsService" value-ref="updateNewsService" />
 		</map>
 	</property>
 	</bean>

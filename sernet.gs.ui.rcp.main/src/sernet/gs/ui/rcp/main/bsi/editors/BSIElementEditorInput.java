@@ -26,6 +26,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.hui.common.connect.Entity;
+import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -39,11 +40,17 @@ public class BSIElementEditorInput implements IEditorInput {
     private static final Logger LOG = Logger.getLogger(BSIElementEditorInput.class);
     
 	private CnATreeElement element;
+	private TaskInformation task;
 	
 
 	public BSIElementEditorInput(CnATreeElement element) {
 		this.element = element;
 	}
+	
+	public BSIElementEditorInput(CnATreeElement element, TaskInformation task) {
+        this.element = element;
+        this.task = task;
+    }
 	
 	public boolean exists() {
 		return true;
@@ -114,6 +121,11 @@ public class BSIElementEditorInput implements IEditorInput {
         
         return elementInput.getCnAElement();
     }
-	
 
+    /**
+     * @return the task
+     */
+    public TaskInformation getTask() {
+        return task;
+    }
 }

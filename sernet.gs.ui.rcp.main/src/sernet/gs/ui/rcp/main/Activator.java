@@ -74,6 +74,7 @@ import sernet.verinice.interfaces.IReportLocalTemplateDirectoryService;
 import sernet.verinice.interfaces.IVersionConstants;
 import sernet.verinice.interfaces.oda.IVeriniceOdaDriver;
 import sernet.verinice.interfaces.report.IReportService;
+import sernet.verinice.interfaces.updatenews.IUpdateNewsService;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.iso27k.ISO27KModel;
@@ -124,7 +125,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
     private boolean standalone = false;
 
     private ServiceTracker templateDirTracker;
-
+    
     private WorkspaceJob reindexJob;
 
     /**
@@ -169,7 +170,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         templateDirTracker = new ServiceTracker(context, IReportLocalTemplateDirectoryService.class.getName(), null);
         templateDirTracker.open();
-
+        
     }
 
     /**
@@ -245,7 +246,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
         // Make command service available as an OSGi service
         context.registerService(ICommandService.class.getName(), VeriniceContext.get(VeriniceContext.COMMAND_SERVICE), null);
-
+        
         Job repositoryJob = new Job("add-repository") { //$NON-NLS-1$
             /*
              * (non-Javadoc)
@@ -326,7 +327,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         };
         JobScheduler.scheduleInitJob(job);
     }
-
+    
     private void checkPKCS11Support(Preferences prefs) {
         // May replace the JDK's built-in security settings
         try {
@@ -667,6 +668,7 @@ public class Activator extends AbstractUIPlugin implements IMain {
         try {
             getMetadataRepositoryManager().addRepository(repoUri);
             getMetadataRepositoryManager().setRepositoryProperty(repoUri, IRepository.PROP_NAME, name);
+            
             if (LOG.isDebugEnabled()) {
                 LOG.debug("MetadataRepository added: " + repoUri); //$NON-NLS-1$
             }
@@ -684,13 +686,13 @@ public class Activator extends AbstractUIPlugin implements IMain {
 
     }
 
-    private IArtifactRepositoryManager getArtifactRepositoryManager() {
+    public IArtifactRepositoryManager getArtifactRepositoryManager() {
         // Load artifact manager
         final ProvisioningUI ui = ProvUIActivator.getDefault().getProvisioningUI();
         return ProvUI.getArtifactRepositoryManager(ui.getSession());
     }
 
-    private IMetadataRepositoryManager getMetadataRepositoryManager() {
+    public IMetadataRepositoryManager getMetadataRepositoryManager() {
         // Load repository manager
         final ProvisioningUI ui = ProvUIActivator.getDefault().getProvisioningUI();
         return ProvUI.getMetadataRepositoryManager(ui.getSession());
@@ -907,8 +909,9 @@ public class Activator extends AbstractUIPlugin implements IMain {
     public IReportLocalTemplateDirectoryService getIReportTemplateDirectoryService() {
         return (IReportLocalTemplateDirectoryService) templateDirTracker.getService();
     }
-
+    
     public void setReindexJob(WorkspaceJob reindexJob) {
         this.reindexJob = reindexJob;
     }
+    
 }

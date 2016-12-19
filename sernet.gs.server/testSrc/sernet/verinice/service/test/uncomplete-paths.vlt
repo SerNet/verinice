@@ -1,0 +1,12 @@
+{
+  "useAllScopes": false,
+  "scopeIds": [
+    458752
+  ],
+  "columnPaths": [
+    "incident_scenario.incident_scenario_name AS Title_(Scenario)",
+    "incident_scenario/asset.asset_name AS Title_(Asset)",
+    "incident_scenario/asset/person-iso.person-iso_surname AS Surname_(Person)"
+  ],
+  "relationIds": []
+}

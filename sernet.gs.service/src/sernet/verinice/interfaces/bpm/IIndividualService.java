@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.bpm;
 
+import java.util.Map;
+
 /**
  * Process service interface to create individual tasks
  * defined in jBPM definition: individual-task.jpdl.xml
@@ -28,5 +30,7 @@ package sernet.verinice.interfaces.bpm;
 public interface IIndividualService extends IProcessServiceGeneric {
 
     IProcessStartInformation startProcess(IndividualServiceParameter parameter);
+    
+    Map<String, Object> createParameterMap(IndividualServiceParameter parameter);
     
 }

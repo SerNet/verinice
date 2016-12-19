@@ -72,7 +72,7 @@ public class GraphService implements IGraphService {
     
     private IBaseDao<CnALink, CnALink.Id> cnaLinkDao;
     
-    private Map<String, CnATreeElement> uuidMap = new Hashtable<String, CnATreeElement>();
+    private Map<String, CnATreeElement> uuidMap = new Hashtable<>();
 
    
     /* (non-Javadoc)
@@ -97,7 +97,7 @@ public class GraphService implements IGraphService {
      * An edge for each children is added if the child is part of the graph.
      */
     private void loadVerticesAndRelatives() {
-        List<CnATreeElement> elementList = new LinkedList<CnATreeElement>();
+        List<CnATreeElement> elementList = new LinkedList<>();
         for (IGraphElementLoader loader : getLoaderList()) {
             loader.setCnaTreeElementDao(getCnaTreeElementDao());
             elementList.addAll(loader.loadElements());
@@ -166,6 +166,10 @@ public class GraphService implements IGraphService {
             edge.setRiskAvailability(link.getRiskAvailability());
             edge.setRiskConfidentiality(link.getRiskConfidentiality());
             edge.setRiskIntegrity(link.getRiskIntegrity());
+            edge.setRiskAvailabilityWithControls(link.getRiskAvailabilityWithControls());
+            edge.setRiskConfidentialityWithControls(link.getRiskConfidentialityWithControls());
+            edge.setRiskIntegrityWithControls(link.getRiskIntegrityWithControls());
+            edge.setRiskTreatment(link.getRiskTreatment());
         }
         return edge;
     }

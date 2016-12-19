@@ -40,6 +40,7 @@ import sernet.verinice.model.bsi.TelefonKomponente;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
+import sernet.verinice.model.iso27k.IncidentGroup;
 
 /**
  * This class returns a Hibernate type id for a type id.
@@ -86,7 +87,7 @@ public abstract class HibernateTypeIdManager {
         
         TYPE_HIBERNATE_TYPE_MAP.put(FinishedRiskAnalysis.TYPE_ID, FinishedRiskAnalysis.TYPE_ID_HIBERNATE);
         
-        
+        TYPE_HIBERNATE_TYPE_MAP.put(IncidentGroup.TYPE_ID, IncidentGroup.TYPE_ID_HIBERNATE);
         
     }
     

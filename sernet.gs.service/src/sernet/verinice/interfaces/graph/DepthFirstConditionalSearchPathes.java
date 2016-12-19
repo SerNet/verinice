@@ -85,14 +85,14 @@ public final class DepthFirstConditionalSearchPathes {
     }
 
     private void dfs() {
-        dfs(root, 0);
+        dfs(root, null, 0);
     }
 
-    private void dfs(CnATreeElement node, int depth) {
+    private void dfs(CnATreeElement node, Edge incomingEdge, int depth) {
 
-        if (traversalFilter.nodeFilter(node, depth)) {
+        if (traversalFilter.nodeFilter(node, incomingEdge, depth)) {
 
-            traversalListener.nodeTraversed(node, depth);
+            traversalListener.nodeTraversed(node, incomingEdge, depth);
 
             for (Edge e : g.edgesOf(node)) {
 
@@ -104,7 +104,7 @@ public final class DepthFirstConditionalSearchPathes {
 
                 if (traversalFilter.edgeFilter(e, source, target, depth)) {
                     traversalListener.edgeTraversed(source, target, e, depth);
-                    dfs(target, depth + 1);
+                    dfs(target, e, depth + 1);
                 }
             }
 
@@ -142,7 +142,7 @@ public final class DepthFirstConditionalSearchPathes {
         }
 
         @Override
-        public boolean nodeFilter(CnATreeElement target, int depth) {
+        public boolean nodeFilter(CnATreeElement target, Edge incoming, int depth) {
             if (!isVisited(target)) {
                 marked.put(target, true);
                 return true;
@@ -168,8 +168,8 @@ public final class DepthFirstConditionalSearchPathes {
         private static final Logger LOG = Logger.getLogger(DepthFirstConditionalSearchPathes.DefaultTraversalListener.class);
 
         @Override
-        public void nodeTraversed(CnATreeElement node, int depth) {
-            LOG.info("traversed node: " + node + " depth: " + depth);
+        public void nodeTraversed(CnATreeElement node, Edge incoming, int depth) {
+            LOG.info("traversed node: " + node + " incoming edge: " + incoming.getType() + " depth: " + depth);
         }
 
         @Override

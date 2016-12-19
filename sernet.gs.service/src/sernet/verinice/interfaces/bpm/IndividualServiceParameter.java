@@ -31,33 +31,35 @@ import java.util.Set;
 public class IndividualServiceParameter implements Serializable, Comparable<IndividualServiceParameter> {
 
     private String uuid;
-    
+
     private String orgUuid;
-    
+
     private String typeId;
-    
+
     private String assignee;
-    
+
     private String assigneeRelationId;
 
     private String assigneeRelationName;
-    
+
     private Date dueDate;
-    
+
     private String title;
-    
+
     private String description;
-    
+
     private Integer reminderPeriodDays;
-    
+
     private Set<String> properties;
 
     private Set<String> propertyNames;
 
+    private boolean withAReleaseProcess;
+
     public String getUuid() {
         return uuid;
     }
-    
+
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
@@ -89,10 +91,9 @@ public class IndividualServiceParameter implements Serializable, Comparable<Indi
     public void setAssigneeRelationId(String assigneeRelationId) {
         this.assigneeRelationId = assigneeRelationId;
     }
-    
 
     public void setAssigneeRelationName(String assigneeRelationName) {
-        this.assigneeRelationName = assigneeRelationName;      
+        this.assigneeRelationName = assigneeRelationName;
     }
 
     public String getAssigneeRelationName() {
@@ -142,23 +143,40 @@ public class IndividualServiceParameter implements Serializable, Comparable<Indi
     public void setProperties(Set<String> properties) {
         this.properties = properties;
     }
-    
+
     public void setPropertyNames(Set<String> propertyNames) {
-        this.propertyNames = propertyNames;       
+        this.propertyNames = propertyNames;
     }
 
     public Set<String> getPropertyNames() {
         return propertyNames;
     }
 
-    /* (non-Javadoc)
+    /**
+     * @return the withAReleaseProcess
+     */
+    public boolean isWithAReleaseProcess() {
+        return withAReleaseProcess;
+    }
+
+    /**
+     * @param withAReleaseProcess
+     *            the withAReleaseProcess to set
+     */
+    public void setWithAReleaseProcess(boolean withAReleaseProcess) {
+        this.withAReleaseProcess = withAReleaseProcess;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     @Override
     public int compareTo(IndividualServiceParameter param) {
         int result = -1;
-        if(param!=null && param.getTitle()!=null) {
-            if(this.getTitle()!=null) {
+        if (param != null && param.getTitle() != null) {
+            if (this.getTitle() != null) {
                 result = this.getTitle().compareTo(param.getTitle());
             } else {
                 result = 1;
@@ -166,8 +184,4 @@ public class IndividualServiceParameter implements Serializable, Comparable<Indi
         }
         return result;
     }
-
-    
-
-    
 }

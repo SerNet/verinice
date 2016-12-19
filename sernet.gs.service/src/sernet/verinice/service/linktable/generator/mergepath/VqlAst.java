@@ -32,7 +32,6 @@ import java.util.Set;
 
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.graph.DefaultDirectedGraph;
-import org.jgrapht.traverse.DepthFirstIterator;
 
 import antlr.CommonAST;
 import antlr.collections.AST;
@@ -244,47 +243,6 @@ public class VqlAst {
     }
 
     /**
-     * Returns all possible paths of the vql tree to the each leaf. So in this
-     * case:
-     *
-     *
-     * <pre>
-     *
-     *                    * assetgroup[title]
-     *                    |
-     *                    * asset[title, description]
-     *                   / \
-     *  CnaLink[title]  /   \ CnaLink
-     *                 /     \
-     * control[title] *       * person[name, surname]
-     * </pre>
-     *
-     * The method returns two path:
-     *
-     * <pre>
-     *      [
-     *          [(assetgroup, null), (asset, child), (control, link)],
-     *          [(assetgroup, null), (asset, child), (person, link)]
-     *      ]
-     * </pre>
-     *
-     * @return A list of all possible{@link Path} to each leaf.
-     */
-    public final Set<Path> getPaths() {
-
-        DepthFirstIterator<VqlNode, VqlEdge> iterator = new DepthFirstIterator<>(vqlGraph, root);
-        FilterPaths filterpath = new FilterPaths(this);
-        iterator.addTraversalListener(filterpath);
-
-        // iterate of the whole tree
-        while (iterator.hasNext()) {
-            iterator.next();
-        }
-
-        return filterpath.getPaths();
-    }
-
-    /**
      * Filter for nodes which properties should be written to the result table.
      * 
      * Returns all nodes in abstract syntax tree, which contains at least one a
@@ -315,6 +273,10 @@ public class VqlAst {
         }
 
         return matchingEdges;
+    }
+
+    public Set<VqlEdge> getOutgoingEdges(VqlNode node){
+        return vqlGraph.outgoingEdgesOf(node);
     }
 
     public DirectedGraph<VqlNode, VqlEdge> getVqlGraph() {

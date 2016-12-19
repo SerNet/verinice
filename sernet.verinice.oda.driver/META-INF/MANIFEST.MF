@@ -18,7 +18,8 @@ Export-Package: sernet.verinice.oda.driver.impl;
    sernet.verinice.interfaces.oda,
    org.eclipse.datatools.connectivity.oda.spec,
    sernet.verinice.interfaces,
-   org.eclipse.datatools.connectivity.oda"
+   org.eclipse.datatools.connectivity.oda",
+ sernet.verinice.oda.linktable.driver.impl
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-Vendor: SerNet

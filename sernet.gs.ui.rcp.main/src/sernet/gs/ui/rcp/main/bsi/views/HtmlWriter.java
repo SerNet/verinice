@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.model.Baustein;
@@ -35,12 +36,15 @@ import sernet.gs.ui.rcp.main.CnAWorkspace;
 import sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil;
 import sernet.gs.ui.rcp.main.bsi.model.TodoViewItem;
 import sernet.gs.ui.rcp.main.bsi.risikoanalyse.model.RisikoMassnahmeHome;
+import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.iso27k.IItem;
+import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.OwnGefaehrdung;
 import sernet.verinice.model.bsi.risikoanalyse.RisikoMassnahmenUmsetzung;
+import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.IControl;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
@@ -63,31 +67,77 @@ public abstract class HtmlWriter {
     }
 
     public static String getHtml(Object element) throws GSServiceException {
-        String html = null;
         
+        String html = "";
+        
+        html = handleRequestDynamic(element);
+        
+        if(StringUtils.isEmpty(html)){
+            html = handleRequestStatic(element);
+        }
+        
+        return html;
+  
+    }
+    /**
+     * tries to determine get html-text for browser-view
+     *  via dynamic SNCA-approach 
+     * ( xml-Attribute show_html equals true on huiproperty)
+     * 
+     * @param element to recieve html-text for
+     * 
+     * @return (html) content of show_html-annotated property or
+     * empty String if no property is found or element is not instanceof
+     * {@link CnATreeElement}
+     */
+    private static String handleRequestDynamic(Object element){
+        if(element instanceof CnATreeElement){
+            CnATreeElement cnaTreeElement = (CnATreeElement)element;
+            PropertyType htmlProperty = cnaTreeElement
+                    .getEntityType().getObjectBrowserPropertyType();
+            
+            if(htmlProperty != null){
+                return Retriever.checkRetrieveElement(cnaTreeElement).
+                        getEntity().getPropertyValue(htmlProperty.getId());
+            }
+        }
+        return "";
+    }
+
+    /**
+     * get html-text for browser-view the hardcoded (old-style) way
+     * should only be used, if DynamicRequest does return empty result
+     * 
+     * @param element to recieve html-text for
+     * 
+     * @return (html) content of specified property of given element
+     *
+     * @throws GSServiceException
+     */
+    private static String handleRequestStatic(Object element) throws GSServiceException {
         if (element instanceof Baustein) {
             Baustein bst = (Baustein) element;
-            html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
+            return getHtmlFromStream(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
         }
 
         if (element instanceof OwnGefaehrdung) {
             OwnGefaehrdung ownGefaehrdung = (OwnGefaehrdung) element;
             if (ownGefaehrdung.getUrl() == null || ownGefaehrdung.getUrl().isEmpty() || ownGefaehrdung.getUrl().equals(NULL_STRING)) { // $NON-NLS-1$
-                html = toHtml(ownGefaehrdung);
+                return toHtml(ownGefaehrdung);
             } else {
-                html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(ownGefaehrdung.getUrl(), ownGefaehrdung.getStand()), UTF_8);
+                return getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(ownGefaehrdung.getUrl(), ownGefaehrdung.getStand()), UTF_8);
             }
         } else if (element instanceof Gefaehrdung) {
             Gefaehrdung gef = (Gefaehrdung) element;
-            html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gef.getUrl(), gef.getStand()), gef.getEncoding());
+            return getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gef.getUrl(), gef.getStand()), gef.getEncoding());
         }
 
         if (element instanceof GefaehrdungsUmsetzung) {
             GefaehrdungsUmsetzung gefUms = (GefaehrdungsUmsetzung) element;
             if (gefUms.getUrl() == null || gefUms.getUrl().isEmpty() || gefUms.getUrl().equals(NULL_STRING)) { // $NON-NLS-1$
-                html = toHtml(gefUms);
+                return toHtml(gefUms);
             } else {
-                html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()), UTF_8); //$NON-NLS-1$
+                return getHtmlFromStream(GSScraperUtil.getInstance().getModel().getGefaehrdung(gefUms.getUrl(),gefUms.getStand()), UTF_8); //$NON-NLS-1$
                 
             }
         }
@@ -96,70 +146,68 @@ public abstract class HtmlWriter {
         if (element instanceof BausteinUmsetzung) {
             BausteinUmsetzung bst = (BausteinUmsetzung) element;
             if (bst.getUrl() == null || bst.getUrl().isEmpty() || bst.getUrl().equals(NULL_STRING)) {
-            	html=toHtml(bst);
+            	return toHtml(bst);
             }else {
-            
-            html = getHtmlFromStream(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
+            return getHtmlFromStream(GSScraperUtil.getInstance().getModel().getBaustein(bst.getUrl(), bst.getStand()), bst.getEncoding());
         }
         }
         
         if (element instanceof Massnahme) {
             Massnahme mn = (Massnahme) element;
-            html = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mn.getUrl(), mn.getStand());
+            return GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mn.getUrl(), mn.getStand());
         }
 
         if (element instanceof RisikoMassnahmenUmsetzung) {
             RisikoMassnahmenUmsetzung ums = (RisikoMassnahmenUmsetzung) element;
             RisikoMassnahmeHome.getInstance().initRisikoMassnahmeUmsetzung(ums);
             if (ums.getRisikoMassnahme() != null) {
-                html = toHtml(ums);
+                return toHtml(ums);
             } else {
-                html = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(ums.getUrl(), ums.getStand());
+                return GSScraperUtil.getInstance().getModel().getMassnahmeHtml(ums.getUrl(), ums.getStand());
             }
         } else if (element instanceof MassnahmenUmsetzung) {
             MassnahmenUmsetzung mnu = (MassnahmenUmsetzung) element;
             if (mnu.getUrl() == null || mnu.getUrl().isEmpty() || mnu.getUrl().equals(NULL_STRING)) {
-                html = toHtml(mnu);
+                return toHtml(mnu);
             } else {
-                html = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mnu.getUrl(), mnu.getStand());
+                return GSScraperUtil.getInstance().getModel().getMassnahmeHtml(mnu.getUrl(), mnu.getStand());
             }
         }
  
         if (element instanceof TodoViewItem) {
             TodoViewItem item = (TodoViewItem) element;
-            html = GSScraperUtil.getInstance().getModel().getMassnahmeHtml(item.getUrl(), item.getStand());
+            return GSScraperUtil.getInstance().getModel().getMassnahmeHtml(item.getUrl(), item.getStand());
         }
 
         if (element instanceof IItem) {
             IItem item = (IItem) element;
             StringBuilder sb = new StringBuilder();
             writeHtml(sb, item.getName(), item.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
-            html = sb.toString(); 
+            return sb.toString(); 
         }
         
         if (element instanceof IControl) {
             IControl control = (IControl) element;
             StringBuilder sb = new StringBuilder();
             writeHtml(sb, control.getTitle(), control.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
-            html = sb.toString();         
+            return sb.toString();         
         }
         
         if (element instanceof Threat) {
             Threat item = (Threat) element;
             StringBuilder sb = new StringBuilder();
             writeHtml(sb, item.getTitle(), item.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
-            html = sb.toString();         
+            return sb.toString();         
         }
 
         if (element instanceof Vulnerability) {
             Vulnerability item = (Vulnerability) element;
             StringBuilder sb = new StringBuilder();
             writeHtml(sb, item.getTitle(), item.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
-            html = sb.toString();         
+            return sb.toString();         
         }
         
-        return html;
-  
+        return "";
     }
     
     private static String toHtml(BausteinUmsetzung bstums){

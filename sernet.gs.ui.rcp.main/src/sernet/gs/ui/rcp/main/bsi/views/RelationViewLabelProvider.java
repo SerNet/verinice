@@ -45,41 +45,60 @@ import sernet.verinice.service.commands.LoadElementTitles;
  * 
  */
 public class RelationViewLabelProvider extends LabelProvider implements ITableLabelProvider {
-    private transient Logger log = Logger.getLogger(RelationViewLabelProvider.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(RelationViewLabelProvider.class);
-        }
-        return log;
-    }
+    
+    private static final Logger log = Logger.getLogger(RelationViewLabelProvider.class);
     
 	private IRelationTable view;
-	private static HashMap<Integer, String> titleMap = new HashMap<Integer, String>();
+	private static HashMap<Integer, String> titleMap = new HashMap<>();
 	  
-	private String getRisk(CnALink link, char risk) {
-	    switch (risk) {
-        case 'C':
-            if (link.getRiskConfidentiality() != null){
-                return link.getRiskConfidentiality().toString();
-            }
-        case 'I':
-            if (link.getRiskIntegrity() != null){
-                return link.getRiskIntegrity().toString();
-            }
-        case 'A':
-            if (link.getRiskAvailability() != null){
-                return link.getRiskAvailability().toString();
-            }
-        }
-	    return "";
-	}
-
-	/**
-	 * @param viewer
-	 */
 	public RelationViewLabelProvider(IRelationTable view) {
-		this.view = view;
+        this.view = view;
+    }
+	
+	private String getRisk(CnALink link, String col) {
+	    String riskValue = "";
+	    switch (col) {
+            case IRelationTable.COLUMN_RISK_C:
+                if (link.getRiskConfidentiality() != null){
+                    riskValue = link.getRiskConfidentiality().toString();
+                }
+                break;
+            case IRelationTable.COLUMN_RISK_C_CONTROLS:
+                if (link.getRiskConfidentialityWithControls() != null){
+                    riskValue = link.getRiskConfidentialityWithControls().toString();
+                }
+                break;
+            case IRelationTable.COLUMN_RISK_I:
+                if (link.getRiskIntegrity() != null){
+                    riskValue = link.getRiskIntegrity().toString();
+                }
+                break;
+            case IRelationTable.COLUMN_RISK_I_CONTROLS:
+                if (link.getRiskIntegrityWithControls() != null){
+                    riskValue = link.getRiskIntegrityWithControls().toString();
+                }
+                break;
+            case IRelationTable.COLUMN_RISK_A:
+                if (link.getRiskAvailability() != null){
+                    riskValue = link.getRiskAvailability().toString();
+                }
+                break;
+            case IRelationTable.COLUMN_RISK_A_CONTROLS:
+                if (link.getRiskAvailabilityWithControls() != null){
+                    riskValue = link.getRiskAvailabilityWithControls().toString();
+                }
+                break;
+            case IRelationTable.COLUMN_RISK_TREATMENT:
+                if (link.getRiskTreatment() != null){
+                    riskValue = CnALink.riskTreatmentLabels.get(link.getRiskTreatment().name());
+                } else if (RelationTableViewer.isAssetAndSzenario(link)) {
+                    riskValue = CnALink.riskTreatmentLabels.get(CnALink.RiskTreatment.UNEDITED.name());
+                }
+        }
+	    if (log.isDebugEnabled()) {
+            log.debug("Risk values for column: " + col + " is: " + riskValue);
+        }
+	    return riskValue;
 	}
 
 	@Override
@@ -129,12 +148,20 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
             return title; //ScopeTitle from element dependencies         
 	    case 5:
 	        return link.getComment();
-	    case 6:
-	        return getRisk(link, 'C');
+        case 6:
+            return getRisk(link, IRelationTable.COLUMN_RISK_TREATMENT);
 	    case 7:
-	        return getRisk(link, 'I');
+	        return getRisk(link, IRelationTable.COLUMN_RISK_C);
 	    case 8:
-	        return getRisk(link, 'A');
+	        return getRisk(link, IRelationTable.COLUMN_RISK_I);
+	    case 9:
+	        return getRisk(link, IRelationTable.COLUMN_RISK_A);
+        case 10:
+            return getRisk(link, IRelationTable.COLUMN_RISK_C_CONTROLS);
+        case 11:
+            return getRisk(link, IRelationTable.COLUMN_RISK_I_CONTROLS);
+        case 12:
+            return getRisk(link, IRelationTable.COLUMN_RISK_A_CONTROLS);
 	    default:
 	        return ""; //$NON-NLS-1$
 	    }
@@ -172,10 +199,6 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 
 	}
 
-	/**
-	 * @param link
-	 * @return
-	 */
 	private Image getObjTypeImage(CnATreeElement elmt) {
 	    Image image = CnAImageProvider.getCustomImage(elmt);
         if(image!=null) {
@@ -188,14 +211,14 @@ public class RelationViewLabelProvider extends LabelProvider implements ITableLa
 	        String impl = Control.getImplementation(elmt.getEntity());
 	        return ImageCache.getInstance().getControlImplementationImage(impl);
 	    }if (elmt instanceof Group && !(elmt instanceof ImportIsoGroup)) {
-			Group group = (Group) elmt;
+			Group<?> group = (Group<?> ) elmt;
 			// TODO - getChildTypes()[0] might be a problem for more than one type
 			typeId = group.getChildTypes()[0];
 	    }
 		return ImageCache.getInstance().getObjectTypeImage(typeId);
 	}
 	
-	private String loadElementsTitles(CnATreeElement elmt ) throws CommandException {
+	private static String loadElementsTitles(CnATreeElement elmt ) throws CommandException {
 	    LoadElementTitles  scopeCommand;
 	    scopeCommand = new LoadElementTitles();
 	    scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);

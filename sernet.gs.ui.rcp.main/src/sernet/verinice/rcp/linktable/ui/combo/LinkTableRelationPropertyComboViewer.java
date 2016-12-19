@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import sernet.verinice.rcp.linktable.LinkTableUtil;
 import sernet.verinice.rcp.linktable.ui.LinkTableColumn;
 import sernet.verinice.service.linktable.CnaLinkPropertyConstants;
+import sernet.verinice.service.model.HUIObjectModelService;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
@@ -48,7 +49,7 @@ public class LinkTableRelationPropertyComboViewer
     @Override
     protected String getLabelText(Object element) {
         if (element instanceof String) {
-            return LinkTableUtil.getCnaLinkPropertyMessage((String) element);
+            return HUIObjectModelService.getCnaLinkPropertyMessage((String) element);
         } else {
             return ltrColumn.getContentService().getLabel(element.toString());
         }

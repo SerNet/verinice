@@ -55,7 +55,7 @@ public class TemplatePage extends WizardPage {
     private Preferences bpmPreferences;
     private Hashtable<String, IndividualServiceParameter> templateMap;
     
-    private Label title, date, reminder, assignee, assigneeRelation;
+    private Label title, date, reminder, assignee, assigneeRelation, releaseProcess;
     private Text description, properties;
 
     protected TemplatePage() {
@@ -130,6 +130,13 @@ public class TemplatePage extends WizardPage {
         properties.setLayoutData(gd);
         properties.setFont(newFont);
 
+        final Label releaseProcessLabel = new Label(container, SWT.NONE);
+        releaseProcessLabel.setText(Messages.DescriptionPage_12);
+        releaseProcess = new Label(container, SWT.NONE);
+        gd = new GridData(SWT.FILL, SWT.TOP, true, false);
+        releaseProcess.setLayoutData(gd);
+        releaseProcess.setFont(newFont);
+        releaseProcess.setText(Messages.TemplatePage_10);
     }
 
     public void saveTemplate(boolean overwrite) {   
@@ -208,6 +215,12 @@ public class TemplatePage extends WizardPage {
                     sb.append(prop);
                 }
                 properties.setText(sb.toString());
+            }
+            
+            if (parameter.isWithAReleaseProcess()) {
+                releaseProcess.setText(Messages.TemplatePage_18);
+            } else {
+                releaseProcess.setText(Messages.TemplatePage_10);
             }
         }
     }

@@ -322,6 +322,15 @@ public abstract class AbstractPermissionHandler implements IReportPermissionHand
                 Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS})); 
         runtimeActionsWhitelist .put("org.eclipse.birt.report.engine.layout.pdf.font.FontMappingManagerFactory.loadFontMappingConfig",
                 Arrays.asList(new String[]{"accessClassInPackage.sun.util.logging.resources"}));
+        runtimeActionsWhitelist .put("sernet.verinice.service.linktable.vlt.VeriniceLinkTableIO.readContent", 
+                Arrays.asList(new String[]{RUNTIME_ACTIONNAME_ACCESSDECLARED, RUNTIME_ACTIONNAME_SUPPRESSACCESS}));
+        runtimeActionsWhitelist .put("sernet.verinice.service.linktable.ColumnPathParser.parse", 
+                Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS, RUNTIME_ACTIONNAME_CREATECLASSLOADER}));
+        runtimeActionsWhitelist .put("org.eclipse.birt.report.item.crosstab.core.re.CrosstabQueryUtil.getCubeElementFactory", 
+                Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS}));
+        runtimeActionsWhitelist .put("com.ibm.icu.impl.JavaTimeZone.getOffset", 
+                Arrays.asList(new String[]{RUNTIME_ACTIONNAME_SUPPRESSACCESS}));
+        
     }
     
     List<String> osgiAdminPermissionList = Arrays.asList(new String[]{
@@ -350,6 +359,7 @@ public abstract class AbstractPermissionHandler implements IReportPermissionHand
             "org.eclipse.birt.report.engine.emitter.excel.layout.ExcelContext.parseSheetName",
             "org.eclipse.osgi.util.NLS.load",
             "org.eclipse.birt.report.engine.emitter.html.HTMLReportEmitter.outputHtmlText",
+            "org.eclipse.birt.report.engine.layout.html.HTMLReportLayoutEngine.layout",
             "org.eclipse.birt.report.engine.emitter.excel.ExcelEmitter.startForeign",
             "org.eclipse.birt.report.engine.emitter.ods.OdsEmitter.startForeign",
             "org.eclipse.birt.report.engine.emitter.ods.OdsEmitter.parseSheetName",
@@ -373,8 +383,8 @@ public abstract class AbstractPermissionHandler implements IReportPermissionHand
             "org.eclipse.birt.report.model.core.ModuleImpl.getMessage",
             "org.eclipse.birt.core.data.DataTypeUtil.toInteger",
             "org.mozilla.javascript.ScriptRuntime.getMessage",
-            "com.ibm.icu.impl.ICULocaleService$ICUResourceBundleFactory.getSupportedIDs"
-
+            "com.ibm.icu.impl.ICULocaleService$ICUResourceBundleFactory.getSupportedIDs",
+            "com.ibm.icu.impl.ICULocaleService$LocaleKeyFactory.create"
     });
 
     /**

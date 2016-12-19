@@ -61,7 +61,9 @@ public class ServerInitializer {
 		// at this point because otherwise we would have a circular dependency
 		// in the Spring configuration (= commandService needs workObjects
 		// and vice versa)
-		hibernateCommandService.setWorkObjects(state);	
+		if(hibernateCommandService!=null) {
+		    hibernateCommandService.setWorkObjects(state);
+		}
 		
 	}
 

@@ -125,6 +125,8 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
     private String tags;
 
     private int textrows;
+    
+    private boolean show_html;
 
 
 	/**
@@ -547,7 +549,21 @@ public class PropertyType implements IMLPropertyType, IEntityElement, Comparable
     
     
 
-	@Override
+	/**
+     * @return the show_html
+     */
+    public boolean isShow_html() {
+        return show_html;
+    }
+
+    /**
+     * @param show_html the show_html to set
+     */
+    public void setShow_html(boolean show_html) {
+        this.show_html = show_html;
+    }
+
+    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;

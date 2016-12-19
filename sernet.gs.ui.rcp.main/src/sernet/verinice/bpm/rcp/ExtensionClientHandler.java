@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import sernet.verinice.bpm.ICompleteClientHandler;
 import sernet.verinice.interfaces.bpm.IIndividualProcess;
+import sernet.verinice.interfaces.bpm.ITask;
 
 /**
  *
@@ -47,7 +48,7 @@ public class ExtensionClientHandler implements ICompleteClientHandler {
      * @see sernet.verinice.bpm.ICompleteClientHandler#execute()
      */
     @Override
-    public Map<String, Object> execute() {
+    public Map<String, Object> execute(ITask task) {
         Map<String, Object> parameter = new Hashtable<String, Object>();
         try {                             
             final DescriptionDialog dialog = new DescriptionDialog(shell);

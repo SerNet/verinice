@@ -42,7 +42,6 @@ public class PreferenceConstants {
     public static final String INFO_ELEMENTS_CUT = "info_elements_cut"; //$NON-NLS-1$
     public static final String INFO_IMPORT_LDAP = "info_import_ldap"; //$NON-NLS-1$v
     public static final String INFO_PROCESSES_STARTED = "info_processes_started"; //$NON-NLS-1$
-    public static final String INFO_TASKS_COMPLETED = "info_tasks_completed"; //$NON-NLS-1$
     public static final String INFO_PROCESS_VALIDATE = "info_processes_validate"; //$NON-NLS-1$
     public static final String INFO_STATUS_DERIVED = "info_status_derived"; //$NON-NLS-1$
     public static final String INFO_SEARCH_ELEMENT_NOT_FOUND = "search_element_not_found"; //$NON-NLS-1$
@@ -53,6 +52,7 @@ public class PreferenceConstants {
     public static final String USE_AUTOMATIC_VALIDATION = "use_automatic_validation"; //$NON-NLS-1$
     public static final String SHOW_REPORT_VALIDATION_WARNING = "show_report_validation_warning"; //$NON-NLS-1$
     public static final String USE_VALIDATION_GUI_HINTS = "use_validation_gui_hints"; //$NON-NLS-1$
+    public static final String SHOW_UPDATE_NEWS_DIALOG = "show_update_news_dialog"; //$NON-NLS-1$
 
     public static final String DB_DRIVER = "cna_driver"; //$NON-NLS-1$
     public static final String DB_DRIVER_DERBY = "org.apache.derby.jdbc.EmbeddedDriver"; //$NON-NLS-1$
@@ -139,6 +139,7 @@ public class PreferenceConstants {
     public static final String LINK_TO_EDITOR = "link_to_editor";
     public static final String CUT_INHERIT_PERMISSIONS = "cut_inherit_permissions";
     public static final String COPY_ATTACHMENTS_WITH_OBJECTS = "copy_attachments_with_objects";
+    public static final String ENABLE_RELEASE_PROCESS = "enable_release_process"; //$NON-NLS-1$
 
     // catalog import preferences
     public static final String CHARSET_CATALOG = "org.verinice.iso27k.rcp.charset";
@@ -171,6 +172,9 @@ public class PreferenceConstants {
     public static final String SEARCH_DISABLE = "search_disable";
     
     public static final String EXPORT_RISK_ANALYSIS = "export_risk_analysis";
+    
+    public static final String STANDALONE_UPDATENEWS_URL = 
+            "standalone_updatenews_url";
 
     /**
      * Returns the DONT_ASK_BEFORE_SWITCH_PERSPECTIVE preference name for a view

@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.eclipse.swt.widgets.Shell;
 
+import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
 
 /**
@@ -42,9 +43,11 @@ public interface ICompleteClientHandler {
      * Executed on client site before a task is completed.
      * Returned {@link Map} is passed to {@link ITaskService} completeTask methods.
      * 
+     * @param task The task to execute
+     * 
      * @return Parameter which are passed to task service.
      */
-    Map<String, Object> execute();
+    Map<String, Object> execute(ITask task);
 
     /**
      * @param shell The current Shell
