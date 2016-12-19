@@ -12,7 +12,7 @@
 
   <display-name>veriniceserver</display-name>
   <welcome-file-list>
-    <welcome-file>portal/index.xhtml</welcome-file>
+    <welcome-file>dashboard/dashboard.xhtml</welcome-file>
   </welcome-file-list>
 
   <!-- Load EL 2.2 -->
