@@ -18,6 +18,7 @@
     
     <bean id="ldapAuthenticator" class="sernet.gs.server.security.LdapAuthenticatorImpl">
         <property name="contextFactory" ref="contextSource" />
+        <property name="contextSourceLdapSearch" ref="contextSourceLdapSearch" />
         <property name="groupFilter" value="${ldap.groupfilter}" />
         <property name="userFilter" value="${ldap.userfilter}" />
         <property name="principalPrefix" value="${ldap.prefix}" />
@@ -31,6 +32,12 @@
         <property name="passwordRealm" value="${veriniceserver.realm}" />
     </bean>
     
+   <bean id="contextSourceLdapSearch" class="org.springframework.ldap.core.support.LdapContextSource">
+      <property name="url" value="${ldap.protocol}://${ldap.server}:${ldap.port}/" />
+      <property name="userDn" value="${ldap.search.user}" />
+      <property name="password" value="${ldap.search.password}" />
+   </bean>
+
     <bean id="contextSource" class="org.springframework.security.ldap.DefaultSpringSecurityContextSource">
         <constructor-arg value="${ldap.protocol}://${ldap.server}:${ldap.port}/${ldap.base}" />
     </bean>
