@@ -16,75 +16,10 @@
                     </div>
                     <pp:menu widgetVar="me">
                         <p:menuitem id="om_dashboard" value="Dashboard" icon="fa fa-fw fa-home" outcome="/dashboard/dashboard"/>
-                        <p:submenu id="um_themes" label="Themes" icon="fa fa-fw fa-paint-brush">
-                            <p:menuitem id="theme1" value="Turquoise Theme" icon="fa fa-fw fa-paint-brush" actionListener="#{guestPreferences.setTheme('turquoise')}" ajax="false" style="color:#00acac"/>
-                            <p:menuitem id="theme2" value="Blue Theme" icon="fa fa-fw fa-paint-brush" actionListener="#{guestPreferences.setTheme('blue')}" ajax="false" style="color:#2f8ee5"/>
-                            <p:menuitem id="theme3" value="Purple Theme" icon="fa fa-fw fa-paint-brush" actionListener="#{guestPreferences.setTheme('purple')}" ajax="false" style="color:#6c76af"/>
-                            <p:menuitem id="theme4" value="Orange Theme" icon="fa fa-fw fa-paint-brush" actionListener="#{guestPreferences.setTheme('orange')}" ajax="false" style="color:#efa64c"/>
-                            <p:menuitem id="theme5" value="Pink Theme" icon="fa fa-fw fa-paint-brush" actionListener="#{guestPreferences.setTheme('pink')}" ajax="false" style="color:#f16383"/>
-                            <p:menuitem id="theme6" value="Light Blue Theme" icon="fa fa-fw fa-paint-brush" actionListener="#{guestPreferences.setTheme('light-blue')}" ajax="false" style="color:#63c9f1"/>
-                            <p:menuitem id="theme7" value="Green Theme" icon="fa fa-fw fa-paint-brush" actionListener="#{guestPreferences.setTheme('green')}" ajax="false" style="color:#57c279"/>
-                            <p:menuitem id="theme8" value="Deep Purple Theme" icon="fa fa-fw fa-paint-brush" actionListener="#{guestPreferences.setTheme('deep-purple')}" ajax="false" style="color:#7e57c2"/>
+                        <p:submenu id="om_components" label="Implementation" icon="fa fa-fw fa-sitemap">
+                            <p:menuitem id="om_implementation-total" value="Total" icon="fa fa-fw fa-area-chart" outcome="/dashboard/implementation-total" />
                         </p:submenu>
-                        <p:submenu id="um_customization" label="Menu Modes" icon="fa fa-fw fa-bars">
-                            <p:menuitem id="custom3" value="Static Menu" icon="fa fa-fw fa-bars" actionListener="#{guestPreferences.setMenuLayout('static')}" ajax="false"/>
-                            <p:menuitem id="custom4" value="Overlay Menu" icon="fa fa-fw fa-bars" actionListener="#{guestPreferences.setMenuLayout('overlay')}" ajax="false"/>
-                            <p:menuitem id="custom5" value="Horizontal Menu" icon="fa fa-fw fa-bars" actionListener="#{guestPreferences.setMenuLayout('horizontal')}" ajax="false"/>
-                        </p:submenu>
-                        <p:submenu id="om_components" label="Components" icon="fa fa-fw fa-sitemap">
-                            <p:menuitem id="om_sample" value="Sample Page" icon="fa fa-fw fa-columns" outcome="/dashboard/sample" />
-                            <p:menuitem id="om_forms" value="Forms" icon="fa fa-fw fa-code" outcome="/dashboard/forms" />
-                            <p:menuitem id="om_data" value="Data" icon="fa fa-fw fa-table" outcome="/dashboard/data" />
-                            <p:menuitem id="om_panels" value="Panels" icon="fa fa-fw fa-list-alt" outcome="/dashboard/panel" />
-                            <p:menuitem id="om_overlays" value="Overlays" icon="fa fa-fw fa-square" outcome="/dashboard/overlay" />
-                            <p:menuitem id="om_menus" value="Menus" icon="fa fa-fw fa-minus-square-o" outcome="/dashboard/menu" />
-                            <p:menuitem id="om_messages" value="Messages" icon="fa fa-fw fa-circle-o-notch" outcome="/dashboard/messages" />
-                            <p:menuitem id="om_charts" value="Charts" icon="fa fa-fw fa-area-chart" outcome="/dashboard/charts" />
-                            <p:menuitem id="om_file" value="File" icon="fa fa-fw fa-arrow-circle-o-up" outcome="/dashboard/file" />
-                            <p:menuitem id="om_misc" value="Misc" icon="fa fa-fw fa-user-secret" outcome="/dashboard/misc" />
-                        </p:submenu>
-                        <p:menuitem id="om_db_landing" value="Landing" icon="fa fa-fw fa-certificate" outcome="/dashboard/landing"/>
-                        <p:submenu id="om_default" label="Template Pages" icon="fa fa-fw fa-life-saver">
-                            <p:menuitem id="om_empty" value="Empty Page" icon="fa fa-fw fa-square-o" outcome="/dashboard/empty" />
-                            <p:menuitem id="om_login" value="Login Page" icon="fa fa-fw fa-sign-in" outcome="/dashboard/login" />
-                            <p:menuitem id="om_error" value="Error Page" icon="fa fa-fw fa-exclamation-circle" outcome="/dashboard/error" />
-                            <p:menuitem id="om_404" value="404 Page" icon="fa fa-fw fa-times" outcome="/dashboard/404" />
-                            <p:menuitem id="om_access" value="Access Denied Page" icon="fa fa-fw fa-exclamation-triangle" outcome="/dashboard/access" />
-                        </p:submenu>
-                        <p:submenu id="om_hierarchy" label="Menu Hierarchy" icon="fa fa-fw fa-gg">
-                            <p:submenu id="om_sm1" label="Submenu 1" icon="fa fa-fw fa-sign-in">
-                                <p:submenu id="om_sm11" label="Submenu 1.1" icon="fa fa-fw fa-sign-in">
-                                    <p:menuitem id="om_lnk111" value="Link 1.1.1" icon="fa fa-fw fa-sign-in" url="#" />
-                                    <p:menuitem id="om_lnk112" value="Link 1.1.2" icon="fa fa-fw fa-sign-in" url="#" />
-                                    <p:menuitem id="om_lnk113" value="Link 1.1.3" icon="fa fa-fw fa-sign-in" url="#" />
-                                </p:submenu>
-                                <p:submenu id="om_sm12" label="Submenu 1.2" icon="fa fa-fw fa-sign-in">
-                                    <p:menuitem id="om_lnk121" value="Link 1.2.1" icon="fa fa-fw fa-sign-in" url="#" />
-                                </p:submenu>
-                            </p:submenu>
-                            <p:submenu id="om_sm2" label="Submenu 2" icon="fa fa-fw fa-sign-in">
-                                <p:submenu id="om_sm21" label="Submenu 2.1" icon="fa fa-fw fa-sign-in">
-                                    <p:menuitem id="om_lnk211" value="Link 2.1.1" icon="fa fa-fw fa-sign-in" url="#" />
-                                    <p:menuitem id="om_lnk212" value="Link 2.1.2" icon="fa fa-fw fa-sign-in" url="#" />
-                                </p:submenu>
-                                <p:submenu id="om_sm22" label="Submenu 2.2" icon="fa fa-fw fa-sign-in">
-                                    <p:menuitem id="om_lnk221" value="Link 2.2.1" icon="fa fa-fw fa-sign-in" url="#" />
-                                </p:submenu>
-                            </p:submenu>
-                        </p:submenu>
-                        <p:menuitem id="om_doc" value="Documentation" icon="fa fa-fw fa-book" outcome="/dashboard/docs"/>
                     </pp:menu>
-
-                    <div class="layout-menu-footer">
-                        <span class="layout-menu-footer-title">Tasks Overview</span>
-
-                        <p:progressBar value="50" labelTemplate="" displayOnly="true"/>
-                        Today
-
-                        <p:progressBar value="80" labelTemplate=""  displayOnly="true"/>
-                        Overall
-                    </div>
-
                 </div>
             </div>
         </div>

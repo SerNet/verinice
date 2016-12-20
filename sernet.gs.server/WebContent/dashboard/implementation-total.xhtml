@@ -90,14 +90,25 @@
   <ui:define name="content">
 
     <div class="ui-g ui-fluid">
-      <div class="ui-g-12 ui-lg-6">
-        <div class="card">
-          <h1 class="centerText">Umsetzungsstatus Hamburg</h1>
+      <div class="ui-g-12">
+        <div class="ui-g-6 card">
+          <h1 class="centerText">Implementation Total</h1>
           <p:chart id="pie" type="pie" model="#{veriniceChartView.pieModel}" responsive="true" />
         </div>
-        <div class="card">
-          <h1 class="centerText">Umsetzungsstatus Hamburg</h1>
+        <div class="ui-g-6 card">
+          <h1 class="centerText">Implementation Total</h1>
           <p:chart id="bar" type="bar" model="#{veriniceChartView.barModel}" responsive="true" />
+        </div>
+      </div>
+      <div class="ui-g-12">
+        <div class="ui-g-4 card">
+          <h1 class="centerText">Implementation Hamburg</h1>
+        </div>
+        <div class="ui-g-4 card">
+          <h1 class="centerText">Implementation Brandwiek</h1>
+        </div>
+        <div class="ui-g-4 card">
+          <h1 class="centerText">Implementation Berndorf</h1>
         </div>
       </div>
     </div>
