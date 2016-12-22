@@ -10,16 +10,21 @@
         <div class="layout-menu-container">
             <div class="nano">
                 <div class="nano-content menu-scroll-content">
-                    <div class="search-input">
-                        <input type="text" placeholder="Search"/>
-                        <i class="fa fa-search"></i>
-                    </div>
-                    <pp:menu widgetVar="me">
-                        <p:menuitem id="om_dashboard" value="Dashboard" icon="fa fa-fw fa-home" outcome="/dashboard/dashboard"/>
-                        <p:submenu id="om_components" label="Implementation" icon="fa fa-fw fa-sitemap">
-                            <p:menuitem id="om_implementation-total" value="Total" icon="fa fa-fw fa-area-chart" outcome="/dashboard/implementation-total" />
-                        </p:submenu>
-                    </pp:menu>
+<!--                     <div class="search-input"> -->
+<!--                         <input type="text" placeholder="Search"/> -->
+<!--                         <i class="fa fa-search"></i> -->
+<!--                     </div> -->
+                    <pp:menu model="#{menu.model}" widgetVar="me" />
+<!--                         <p:menuitem id="om_dashboard" value="Dashboard" icon="fa fa-fw fa-home" outcome="/dashboard/dashboard"/> -->
+<!--                         <p:submenu id="om_safeguards" label="MassnahmenUmsetz." icon="fa fa-fw fa-line-chart"> -->
+<!--                             <p:menuitem id="om_safeguards-total" value="Gesamt" icon="fa fa-fw fa-area-chart" outcome="/dashboard/implementation-total" /> -->
+<!--                             <p:menuitem id="om_safeguards-hamburg" value="Hamburg" icon="fa fa-fw fa-area-chart" outcome="/dashboard/implementation-network" /> -->
+<!--                         </p:submenu> -->
+<!--                         <p:submenu id="om_bausteinumsetzung" label="BausteinUmsetzung" icon="fa fa-fw fa-line-chart"> -->
+<!--                             <p:menuitem id="om_bausteinumsetzung-total" value="Gesamt" icon="fa fa-fw fa-area-chart" outcome="/dashboard/implementation-total" /> -->
+<!--                             <p:menuitem id="om_bausteinumsetzun-hamburg" value="Hamburg" icon="fa fa-fw fa-area-chart" outcome="/dashboard/implementation-network" /> -->
+<!--                         </p:submenu> -->
+<!--                     </pp:menu>  -->
                 </div>
             </div>
         </div>

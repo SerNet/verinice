@@ -28,8 +28,8 @@ import javax.faces.bean.ManagedProperty;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
+import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ControlService;
@@ -48,12 +48,13 @@ public class VeriniceCharts implements Serializable {
     private ControlService controlService;
 
     private PieChartModel pieModel;
-    private BarChartModel barModel;
+
+    private HorizontalBarChartModel horizontalBarModel;
 
     @PostConstruct()
     public void init() {
         createPieModel();
-        createBarModel();
+        initBarModel();
     }
 
     private void createPieModel() {
@@ -79,49 +80,32 @@ public class VeriniceCharts implements Serializable {
         return model;
     }
 
-    private void createBarModel() {
+    private HorizontalBarChartModel initBarModel() {
 
-        barModel = initBarModel();
-
-        barModel.setTitle("Umsetzungsstatus Hamburg");
-        barModel.setLegendPosition("ne");
-
-        Axis xAxis = barModel.getAxis(AxisType.X);
-        xAxis.setLabel("Status");
-
-        Axis yAxis = barModel.getAxis(AxisType.Y);
-        yAxis.setLabel("Anzahl");
-        yAxis.setMin(0);
-        yAxis.setMax(100);
-
-        barModel.setExtender("skinBar");
-    }
-
-    private BarChartModel initBarModel() {
-        BarChartModel model = new BarChartModel();
-
-        ChartSeries status = new ChartSeries();
-        status.setLabel("Status");
-
+        setHorizontalBarModel(new HorizontalBarChartModel());
         Map<String, Integer> states = controlService.getAccumulatedControlStatesForScope("");
 
         for (Map.Entry<String, Integer> entry : states.entrySet()) {
-            status.set(entry.getKey(), entry.getValue());
+            ChartSeries boys = new ChartSeries();
+            boys.getRenderer();
+            boys.set(entry.getKey(), entry.getValue());
+            getHorizontalBarModel().addSeries(boys);
         }
 
-        model.addSeries(status);
+        getHorizontalBarModel().setLegendPosition("e");
 
-        return model;
+        Axis xAxis = getHorizontalBarModel().getAxis(AxisType.X);
+        xAxis.setLabel("Anzahl");
+        xAxis.setMin(0);
+        xAxis.setMax(200);
 
-
+        Axis yAxis = getHorizontalBarModel().getAxis(AxisType.Y);
+        yAxis.setLabel("Status");
+        return getHorizontalBarModel();
     }
 
     public PieChartModel getPieModel() {
         return pieModel;
-    }
-
-    public BarChartModel getBarModel() {
-        return barModel;
     }
 
     public ControlService getControlService() {
@@ -130,5 +114,13 @@ public class VeriniceCharts implements Serializable {
 
     public void setControlService(ControlService controlService) {
         this.controlService = controlService;
+    }
+
+    public HorizontalBarChartModel getHorizontalBarModel() {
+        return horizontalBarModel;
+    }
+
+    public void setHorizontalBarModel(HorizontalBarChartModel horizontalBarModel) {
+        this.horizontalBarModel = horizontalBarModel;
     }
 }

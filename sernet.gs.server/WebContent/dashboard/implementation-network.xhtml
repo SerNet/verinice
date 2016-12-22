@@ -93,7 +93,7 @@ table.jqplot-table-legend {
 
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-12 ui-md-12">
-				<h1>Massnahmenumsetzung gesamt</h1>
+				<h1>Massnahmenumsetzung Hamburg</h1>
 			</div>
 			<div class="ui-g-12 ui-md-6">
 				<div class="card">
@@ -103,62 +103,12 @@ table.jqplot-table-legend {
 			</div>
 			<div class="ui-g-12 ui-md-6">
 				<div class="card">
-					<p:chart id="bar" type="bar" model="#{veriniceChartView.horizontalBarModel}"
-						responsive="true" />
-				</div>
-			</div>
-		</div>
-
-		<div class="ui-g ui-fluid">
-			<div class="ui-g-12 ui-md-12">
-				<h1>Massnahmenumsetzung nach IT-Verbünden</h1>
-			</div>
-		</div>
-
-
-		<div class="ui-g ui-fluid">
-			<div class="ui-g-12 ui-md-6">
-				<div class="card">
-					<h1 class="centerText">Hamburg</h1>
-					<p:chart id="pie-hambug" type="pie"
-						model="#{veriniceChartView.pieModel}" responsive="true" />
-				</div>
-
-				<div class="card">
-					<h1 class="centerText">Brandwiek</h1>
-					<p:chart id="pie-brandwiek" type="pie"
-						model="#{veriniceChartView.pieModel}" responsive="true" />
-				</div>
-
-				<div class="card">
-					<h1 class="centerText">Berndorf</h1>
-					<p:chart id="pie-berndorf" type="pie"
-						model="#{veriniceChartView.pieModel}" responsive="true" />
-				</div>
-			</div>
-
-
-			<div class="ui-g-12 ui-md-6">
-
-				<div class="card">
-					<h1 class="centerText">Hamburg</h1>
-					<p:chart id="bar-hambug" type="bar"
-						model="#{veriniceChartView.horizontalBarModel}" responsive="true" />
-				</div>
-
-				<div class="card">
-					<h1 class="centerText">Brandwiek</h1>
-					<p:chart id="bar-brandwiek" type="bar"
-						model="#{veriniceChartView.horizontalBarModel}" responsive="true" />
-				</div>
-
-				<div class="card">
-					<h1 class="centerText">Berndorf</h1>
-					<p:chart id="bar-berndorf" type="bar"
+					<p:chart id="bar" type="bar"
 						model="#{veriniceChartView.horizontalBarModel}" responsive="true" />
 				</div>
 			</div>
 		</div>
+
 	</ui:define>
 
 </ui:composition>
