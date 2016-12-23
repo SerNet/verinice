@@ -636,7 +636,22 @@
                style="push"
                tooltip="%action.tooltip.37">
               </action>
-        </objectContribution>              
+        </objectContribution>  
+        <objectContribution
+            adaptable="false"
+            id="sernet.gs.ui.rcp.main.bsi.TemplateBSIStrukturElement"
+            objectClass="sernet.verinice.model.bsi.IBSIStrukturElement">
+            <action
+               class="sernet.gs.ui.rcp.main.bsi.actions.MarkTemplateBSIStrukturElementActionDelegate"
+               enablesFor="+"
+               icon="icons/blue-document-block.png"
+               id="sernet.gs.ui.rcp.main.markTemplateBSIStrukturElement"
+               label="%action.label.38"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.38">
+            </action>
+      </objectContribution>             
       <objectContribution
             adaptable="false"
             id="sernet.gs.ui.rcp.main.bsi.TemplateModule"

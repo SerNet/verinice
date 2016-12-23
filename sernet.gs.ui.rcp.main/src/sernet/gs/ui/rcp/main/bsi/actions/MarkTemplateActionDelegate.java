@@ -28,6 +28,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.springclient.RightsServiceClient;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.RightEnabledUserInteraction;
+import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -41,14 +42,18 @@ public abstract class MarkTemplateActionDelegate implements IObjectActionDelegat
      * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.
      * IAction, org.eclipse.jface.viewers.ISelection)
      */
+    @Override
     public final void selectionChanged(IAction action, ISelection selection) {
         action.setEnabled(checkRights());
         // Realizes that the action to mark a element as template is greyed out,
         // if it is already template or implementation.
         Object sel = ((IStructuredSelection) selection).getFirstElement();
-        if (sel instanceof CnATreeElement) {
-            boolean isTemplateOrImplementation = ((CnATreeElement) sel).isTemplateOrImplementation();
-            if (isTemplateOrImplementation) {
+        if (sel instanceof ITVerbund) {
+            action.setEnabled(false);
+        } else if (sel instanceof CnATreeElement) {
+
+            CnATreeElement element = (CnATreeElement) sel;
+            if (element.isTemplateOrImplementation()) {
                 action.setEnabled(false);
             }
         }
