@@ -251,7 +251,7 @@ public class HUIObjectModelService implements IObjectModelService {
         ServerInitializer.inheritVeriniceContextState();
         if (isBSICategory(typeID)) {
             HashSet<String> set = new HashSet<>();
-            set.add(typeID + "_name");
+            set.add(typeID + "_name"); //$NON-NLS-1$
             set.addAll(allStaticProperties);
             return set;
         }
@@ -560,6 +560,14 @@ public class HUIObjectModelService implements IObjectModelService {
             return Messages.getString("HUIObjectModelService.13");  //$NON-NLS-1$
         case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A:
             return Messages.getString("HUIObjectModelService.14");  //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_C_WITH_CONTROLS:
+            return Messages.getString("HUIObjectModelService.1");   //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_I_WITH_CONTROLS:
+            return Messages.getString("HUIObjectModelService.2");   //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_VALUE_A_WITH_CONTROLS:
+            return Messages.getString("HUIObjectModelService.3");    //$NON-NLS-1$
+        case CnaLinkPropertyConstants.TYPE_RISK_TREATMENT:
+            return Messages.getString("HUIObjectModelService.4");  //$NON-NLS-1$
         default:
             return Messages.getString("HUIObjectModelService.15");  //$NON-NLS-1$
         }

@@ -4371,6 +4371,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <option
             id="pg_betroffene_11"
             name="Externe Berater"
+	/>
+        <option
+            id="pg_betroffene_13"
+            name="Patienten"
         />
         </huiproperty>
 	    <huiproperty
@@ -4659,6 +4663,9 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty
 	       name="Website" id="org_isa_web" 
            tags="VDA-ISA" />
+	<huiproperty
+	       name="Allg. E-Mail Kontakt" id="org_isa_allg_Mail" 
+           tags="VDA-ISA" />
         <huiproperty
 	       name="Short company description" id="org_isa_compdesc"
            inputtype="text" 
@@ -4780,6 +4787,14 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         	<huiproperty name="Enquiry Phone" id="org_vv_bsig_enquiry_phone" />
         	<huiproperty name="Enquiry E-Mail" id="org_vv_bsig_equiry_email" />            
         </huipropertygroup>
+
+        <huipropertygroup name="Datenschutz Aufsichtsbehörde" id="org_ds_AB">
+                <huiproperty name="Zuständige Behörde" id="org_ds_AB_zust"/>       	
+        	<huiproperty name="Adresse" id="org_ds_AB_adress" />
+        	<huiproperty name="Telefonnummer" id="org_ds_tel" />
+        	<huiproperty name="E-Mail Adresse" id="org_ds_email" />        
+        </huipropertygroup>
+
     </huientity>
     
     <huientity
@@ -5234,6 +5249,10 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         	name="CTO of" reversename="CTO" tooltip="" />
         <huirelation to="org" id="rel_person_org_ciso"
         	name="CISO of" reversename="CISO" tooltip="" />
+        <huirelation to="org" id="rel_person_org_dsb"
+        	name="DSB von" reversename="DSB" tooltip="" />
+        <huirelation to="org" id="rel_person_org_interw_Pers"
+        	name="Interviewte Person" reversename="Interviewte Person" tooltip="" />
 
        
         <huirelation to="requirement" id="rel_person_requirement_responsible"
@@ -7841,7 +7860,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_empf_ext_art_sonst" name="Sonstige Datenart" > 
             	<depends option="process_empf_ext_art" value="process_empf_ext_art_24a" />
             </huiproperty>            
-            <huiproperty id="process_empf_ext_zweck" name="Zweck des Datentransfers" />
+            <huiproperty id="process_empf_ext_zweck" name="Zweck des Datentransfers" inputtype="text"/>
             <huiproperty id="process_empf_ext_erlaeuterung" name="Erläuterung" inputtype="text"/>
             <huiproperty
             name="Dokument"
@@ -7889,8 +7908,8 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_empf_dienstl_art_sonst" name="Sonstige Datenart">
            		<depends option="process_empf_dienstl_art" value="process_empf_dienstl_art_24a" />
             </huiproperty> 
-            <huiproperty id="process_empf_dienstl_zweck" name="Zweck des Datentransfers" />
-            <huiproperty id="process_empf_dienstl_erlaeuterung" name="Erläuterung" inputtype="text"/>
+            <huiproperty id="process_empf_dienstl_zweck" name="Zweck des Datentransfers" inputtype="text" />
+            <huiproperty id="process_empf_dienstl_erlaeuterung" name="Erläuterung" inputtype="text" />
             <huiproperty
             name="Dokument"
             id="empfaenger_dienstl_dokument"
@@ -7948,7 +7967,7 @@ Wurden bereits weitere Stellen informiert?
             <huiproperty id="process_empf_sonstempf_sonst" name="Sonstige Datenart">
                 <depends option="process_empf_sonstempf_art" value="process_empf_sonstempf_art_24a" />
             </huiproperty>       
-            <huiproperty id="process_empf_sonstempf_zweck" name="Zweck der Übermittlung">
+            <huiproperty id="process_empf_sonstempf_zweck" name="Zweck der Übermittlung" inputtype="text">
                 <depends option="process_pg_ausserhalbeu" value="process_pg_ausserhalbeu_1" />
             </huiproperty>
             <huiproperty id="process_empf_sonstempf_erlaeuterung" name="Erläuterung" inputtype="text">
@@ -7983,15 +8002,21 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_dv_sens_rechtsgrundl_3" name="Vorrangige Rechtsvorschriften" />
                 <option id="process_dv_sens_rechtsgrundl_5" name="Sonstige Rechtsgrundlagen (s.u.)" />
             </huiproperty>
-            <huiproperty tags="Privacy" id="process_dv_kategorie_sonst" name="Bemerkungen">
+            <huiproperty tags="Privacy" id="process_dv_sens_vorrvorschr" name="Vorrangige Rechtsvorschriften" >
+                <depends option="process_dv_kategorie_yesno" value="1" />   
+            </huiproperty>
+            
+            <huiproperty tags="Privacy" id="process_dv_sens_rechtsgrundlage_sonst" name="Sonstige Rechtsgrundlagen">
                 <depends option="process_dv_kategorie_yesno" value="1" />
+            </huiproperty>
+            <huiproperty tags="Privacy" id="process_dv_kategorie_sonst" name="Bemerkungen">
+		<depends option="process_dv_kategorie_yesno" value="1"/>
             </huiproperty>
             <huiproperty tags="Privacy" id="process_dv_kategorie_42a" name="Daten nach §42a BDSG betroffen?" inputtype="booleanoption" >
             </huiproperty>
 		<huiproperty tags="Privacy" id="process_dv_kategorie_203" name="Schweigepflichtiger Personenkreis nach §203 StGB?" inputtype="booleanoption" >
             </huiproperty>
-
-        </huipropertygroup>
+	</huipropertygroup>
     
         <huipropertygroup tags="Privacy" id="process_dv_group_herkunft" name="Betroffene">
             <depends option="process_privacy_yesno" value="1" />
@@ -8008,6 +8033,7 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_pg_betroffene_10" name="Lieferanten" />
                 <option id="process_pg_betroffene_11" name="Externe Berater" />
                 <option id="process_pg_betroffene_12" name="Sonstige" />
+                <option id="process_pg_betroffene_13" name="Patienten" />
             </huiproperty>
             <huiproperty tags="Privacy" id="process_pg_sonstbetr" name="Ergänzende Angaben" />
         </huipropertygroup>
@@ -8041,7 +8067,7 @@ Wurden bereits weitere Stellen informiert?
     
         <huipropertygroup tags="Privacy" id="process_dv_group_loesch" name="Löschfristen">
             <depends option="process_privacy_yesno" value="1" />
-            <huiproperty tags="Privacy" id="process_dv_loeschfrist" name="Fristabhängige Löschung" inputtype="singleoption">
+            <huiproperty tags="Privacy" id="process_dv_loeschfrist" name="Fristabhängige Löschung" inputtype="multioption">
                 <option id="process_dv_loeschfrist_1" name="1 Woche" />
                 <option id="process_dv_loeschfrist_2" name="1 Monat" />
                 <option id="process_dv_loeschfrist_3a" name="3 Monate" />
@@ -8089,7 +8115,9 @@ Wurden bereits weitere Stellen informiert?
                 <option id="process_dsb_schwerw_abw_opt_zertifiz_1" name="Ja" />
                 <option id="process_dsb_schwerw_abw_opt_zertifiz_2" name="Nein" />
   		</huiproperty>
-		<huiproperty tags="Privacy" id="process_zertifiz_bez" name="Bezeichnung des Standards" inputtype="text" />
+		<huiproperty tags="Privacy" id="process_zertifiz_bez" name="Bezeichnung des Standards" inputtype="text">
+                    <depends option="process_stellungnahmedsb_sachg_group_zertifiz" value="process_dsb_schwerw_abw_opt_zertifiz_1" />
+                </huiproperty>
         
 
 
