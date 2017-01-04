@@ -156,6 +156,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private OpenViewAction openGSToolMappingViewAction;
     
+    private OpenViewAction openTemplateViewAction;
+
     private TestAction testAction;
 
     public ApplicationActionBarAdvisor(IActionBarConfigurer configurer) {
@@ -210,6 +212,8 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.openReportdepositViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_41, ReportDepositView.ID, ImageCache.REPORT_DEPOSIT, ActionRightIDs.REPORTDEPOSIT);
         this.openSearchViewAction = new OpenSearchViewAction(window, Messages.ApplicationActionBarAdvisor_42);
         this.openGSToolMappingViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_43, GstoolImportMappingView.ID, ImageCache.VIEW_GSMAPPING, ActionRightIDs.GSTOOLIMPORT);
+        this.openTemplateViewAction = new OpenViewAction(window, Messages.ApplicationActionBarAdvisor_44, TemplateView.ID, ImageCache.TEMPLATES, ActionRightIDs.TEMPLATES);
+
 
         this.reloadAction = new ReloadAction(window, Messages.ApplicationActionBarAdvisor_14);
         this.importGstoolAction = new ImportGstoolAction(window, Messages.ApplicationActionBarAdvisor_15);
@@ -372,6 +376,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         viewsMenu.add(this.openNoteAction);
         viewsMenu.add(this.openFileAction);
         viewsMenu.add(this.openRelationViewAction);
+        viewsMenu.add(this.openTemplateViewAction);
         viewsMenu.add(this.openValidationViewAction);
         viewsMenu.add(this.openSearchViewAction);
         viewsMenu.add(this.openGSToolMappingViewAction);
@@ -427,6 +432,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(this.openTodoViewAction);
         myToolbar.add(this.openAuditViewAction);
         myToolbar.add(this.openDocumentViewAction);
+        myToolbar.add(this.openTemplateViewAction);
 
         myToolbar.add(new Separator());
         // ISO 27k items

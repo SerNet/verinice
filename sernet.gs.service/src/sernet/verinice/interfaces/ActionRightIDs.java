@@ -39,7 +39,6 @@ public final class ActionRightIDs {
     public static final String ADDNOTE = "addnote";
     public static final String ADDSECURITYASSESSMENT = "addsecurityassessment";
     public static final String ADDOWNMODUL = "addownmodul";
-    public static final String MARKTEMPLATE = "marktemplate";
     public static final String ASSIGNALLISATOPICS = "assignallisatopics";
     public static final String AUDITVIEW = "auditview";
     public static final String BAUSTEINZUORDNUNG = "bausteinzuordnung";
@@ -75,6 +74,7 @@ public final class ActionRightIDs {
     public static final String ISMVIEW = "ismview";
     public static final String ISMVIEWWEB = "ismviewweb";
     public static final String KONSOLIDATOR = "konsolidator";
+    public static final String MARKTEMPLATE = "marktemplate";
     public static final String NATURALIZE = "naturalize";
     public static final String NOTES = "notes";
     public static final String CHANGEOWNPASSWORD = "changeownpassword";
@@ -99,6 +99,7 @@ public final class ActionRightIDs {
     public static final String TASKCHANGEASSIGNEE = "taskchangeassignee";
     public static final String TASKCHANGEDUEDATE = "taskchangeduedate";
     public static final String TASKWITHRELEASEPROCESS = "taskwithreleaseprocess";
+    public static final String TEMPLATES = "templates";
     // value "bsidnd" kept due to historical reasons
     public static final String TREEDND = "bsidnd";
     public static final String UNIFY = "unify";

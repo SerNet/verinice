@@ -315,6 +315,28 @@ public final class Messages extends NLS {
 
     public static String RelationTypeEditingSupport_2;
 
+    public static String TemplateView_0;
+
+    public static String TemplateView_2;
+
+    public static String TemplateView_3;
+
+    public static String TemplateView_4;
+
+    public static String TemplateView_7;
+
+    public static String TemplateView_8;
+
+    public static String TemplateView_9;
+
+    public static String TemplateTableViewer_1;
+
+    public static String TemplateTableViewer_2;
+
+    public static String TemplateTableViewer_3;
+
+    public static String TemplateTableViewer_4;
+
     public static String GroupView_0;
 
     public static String GroupView_1;

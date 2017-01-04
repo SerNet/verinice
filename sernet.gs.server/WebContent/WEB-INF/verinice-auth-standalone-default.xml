@@ -30,6 +30,7 @@
 	              "taskdelete"
 	              "taskshowall"
 	              "taskwithreleaseprocess"
+	              "templates"
                 "importldap"
                 "reportdeposit"
                 "reportdepositadd"

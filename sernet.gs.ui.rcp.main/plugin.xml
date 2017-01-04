@@ -51,6 +51,14 @@
             class="sernet.gs.ui.rcp.main.bsi.views.RelationView"
             id="sernet.gs.ui.rcp.main.bsi.views.RelationView">
       </view>
+      
+      <view
+            name="%view.name.19"
+            icon="icons/copy.png"
+            category="sernet.gs.ui.rcp.main.views"
+            class="sernet.gs.ui.rcp.main.bsi.views.TemplateView"
+            id="sernet.gs.ui.rcp.main.bsi.views.TemplateView">
+      </view>
      
       <view
             allowMultiple="true"

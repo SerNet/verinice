@@ -29,6 +29,7 @@
             "taskchangeassignee"
             "taskchangeduedate"
             "taskwithreleaseprocess"
+            "templates"
             "searchreindex"
             "showallfiles" -->
             <action id="addbsielement" />
@@ -111,23 +112,78 @@
             "taskchangeduedate"
             "taskdelete"
             "taskshowall"
-            "xmlimport" -->
-            <action id="addbsielement" />
-            <action id="addcatalog" />
-            <action id="addfile" />
-            <action id="addismelement" />
-            <action id="addismgroup" />
-            <action id="addnote" />
-            <action id="addownmodul"/>
-            <action id="assignallisatopics" />
-            <action id="auditview" />
-            <action id="bausteinzuordnung" />
-            <action id="bsidnd" />
-            <action id="bsibrowser" />
-            <action id="bsimassnahmen" />
-            <action id="bsimodelview" />
-            <action id="bulkedit" />
-            <action id="changeicon" />
+            "taskchangeassignee"
+            "taskchangeduedate"
+            "taskwithreleaseprocess"
+            "templates"
+            "addismorg"
+            "additverbund"
+            "xmlimport" 
+            "searchreindex
+            "showallfiles"
+            "addsecurityassessment"-->
+	        <action id="addbsielement" />
+	        <action id="addcatalog" />
+	        <action id="addfile" />
+	        <action id="addismelement" />
+	        <action id="addismgroup" />
+	        <action id="addnote" />
+	        <action id="addownmodul"/>
+	        <action id="assignallisatopics" />
+	        <action id="auditview" />
+	        <action id="bausteinzuordnung" />
+	        <action id="bsidnd" />
+        	<action id="bsibrowser" />
+	        <action id="bsimassnahmen" />
+	        <action id="bsimodelview" />
+	        <action id="bulkedit" />
+          <action id="changeicon" />
+	        <action id="cnavalidation" />
+          <action id="creategreenbonetasks" />
+          <action id="createindividualtasks" />
+	        <action id="createisatasks" />
+	        <action id="deletecatalog" />
+	        <action id="deletefile" />
+	        <action id="deleteitem" />
+	        <action id="derivestatus" />
+	        <action id="documentview" />
+	        <action id="dsmodelview" />
+	        <action id="editlinks" />
+          <action id="exportlinktable" />
+	        <action id="files" />
+	        <action id="generateauditreport" />
+	        <action id="generateorgreport" />
+          <action id="groupbytag"/>
+	        <action id="gsnotesimport" />
+	        <action id="gstoolimport" />
+	        <action id="importcsv" />
+	        <action id="importldap" />
+	        <action id="ismcatalog" />
+	        <action id="ismcopy" />
+	        <action id="ismcut" />
+	        <action id="ismview" />
+          <action id="ismviewweb" />
+	        <action id="konsolidator" />
+	        <action id="naturalize" />
+	        <action id="notes" />
+	        <action id="relations" />
+	        <action id="reportdeposit" />
+	        <action id="reportdepositadd" />
+    	    <action id="reportdepositdelete" />
+	        <action id="reportdepositedit" />
+	        <action id="riskanalysis" />
+	        <action id="samtview" />
+          <action id="searchexport" />
+          <action id="searchreindex" />
+          <action id="searchview" />
+	        <action id="showchartview" />
+	        <action id="showpreferences" />
+	        <action id="simpleauditview" />
+	        <action id="taskview" />
+            <action id="taskwithreleaseprocess" />
+	        <action id="todo"/>
+          <action id="unify" />
+	        <action id="xmlexport"/>
             <action id="changeownpassword" />
             <action id="cnavalidation" />
             <action id="creategreenbonetasks" />
@@ -248,6 +304,7 @@
           <action id="taskwithreleaseprocess" />
 	        <action id="taskdelete" />
 	        <action id="taskview" />
+	        <action id="templates" />
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>
@@ -324,6 +381,7 @@
 	        <action id="taskdelete" />
 	        <action id="taskshowall" />
 	        <action id="taskview" />
+	        <action id="templates" />
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>
