@@ -30,7 +30,6 @@
 	              "taskdelete"
 	              "taskshowall"
 	              "taskwithreleaseprocess"
-	              "templates"
                 "importldap"
                 "reportdeposit"
                 "reportdepositadd"
@@ -89,6 +88,7 @@
 	        <action id="showpreferences" />
 	        <action id="simpleauditview" />
 	        <action id="taskview" />
+	        <action id="templates"/>
 	        <action id="todo"/>
           <action id="unify" />
 	        <action id="xmlexport"/>
