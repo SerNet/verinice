@@ -29,7 +29,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -44,27 +43,20 @@ import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IPartListener2;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
-import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.bsi.editors.BSIElementEditorInput;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.TemplateTableViewer.PathCellLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.CnAElementHome;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
-import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.ILinkedWithEditorView;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.rcp.LinkWithEditorPartListener;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
@@ -75,7 +67,7 @@ import sernet.verinice.service.commands.LoadTemplates;
 /**
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de> 
  */
-public class TemplateView extends RightsEnabledView implements ILinkedWithEditorView {
+public class TemplateView extends RightsEnabledView {
 
     private static final Logger LOG = Logger.getLogger(TemplateView.class);
 
@@ -87,9 +79,6 @@ public class TemplateView extends RightsEnabledView implements ILinkedWithEditor
     private TemplateViewContentProvider contentProvider;
 
     private Action doubleClickAction;
-    private Action linkWithEditorAction;
-    private IPartListener2 linkWithEditorPartListener = new LinkWithEditorPartListener(this);
-    private boolean linkingActive = false;
 
     private IModelLoadListener loadListener;
     private ISelectionListener selectionListener;
@@ -163,8 +152,6 @@ public class TemplateView extends RightsEnabledView implements ILinkedWithEditor
 
         // register resize listener for cutting the tooltips
         addResizeListener(parent, cellLabelProviders);
-
-        toggleLinking(Activator.getDefault().getPreferenceStore().getBoolean(PreferenceConstants.LINK_TO_EDITOR));
 
         // try to add listeners once on startup, and register for model changes:
         addBSIModelListeners();
@@ -263,15 +250,6 @@ public class TemplateView extends RightsEnabledView implements ILinkedWithEditor
                 }
             }
         };
-
-        linkWithEditorAction = new Action(Messages.TemplateView_2, IAction.AS_CHECK_BOX) {
-            @Override
-            public void run() {
-                toggleLinking(isChecked());
-            }
-        };
-        linkWithEditorAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.LINKED));
-        linkWithEditorAction.setChecked(isLinkingActive());
     }
 
     private void hookActions() {
@@ -293,12 +271,10 @@ public class TemplateView extends RightsEnabledView implements ILinkedWithEditor
         getSite().getPage().addPostSelectionListener(selectionListener);
 
         /**
-         * Own selection provider returns a CnALin k Object of the selected row.
-         * Uses the viewer for all other methods.
+         * Own selection provider returns an Element object of the selected row.
+         * Uses the table for all other methods.
          */
         getSite().setSelectionProvider(table);
-
-        getSite().getPage().addPartListener(linkWithEditorPartListener);
     }
 
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -359,24 +335,14 @@ public class TemplateView extends RightsEnabledView implements ILinkedWithEditor
         this.setContentDescription(title);
     }
 
-    protected void toggleLinking(boolean checked) {
-        this.linkingActive = checked;
-        if (checked) {
-            editorActivated(getSite().getPage().getActiveEditor());
-        }
-    }
-
-    protected boolean isLinkingActive() {
-        return linkingActive;
-    }
-
-    private void fillLocalToolBar(IToolBarManager manager) {
-        manager.add(this.linkWithEditorAction);
-    }
 
     private void contributeToActionBars() {
         IActionBars bars = getViewSite().getActionBars();
         fillLocalToolBar(bars.getToolBarManager());
+    }
+
+    private void fillLocalToolBar(IToolBarManager manager) {
+        // manager.add(this.linkWithEditorAction);
     }
 
     /*
@@ -409,7 +375,6 @@ public class TemplateView extends RightsEnabledView implements ILinkedWithEditor
         CnAElementFactory.getInstance().removeLoadListener(loadListener);
         removeModelListeners();
         getSite().getPage().removePostSelectionListener(selectionListener);
-        getSite().getPage().removePartListener(linkWithEditorPartListener);
         super.dispose();
     }
 
@@ -417,24 +382,5 @@ public class TemplateView extends RightsEnabledView implements ILinkedWithEditor
         if (CnAElementFactory.isModelLoaded()) {
             CnAElementFactory.getLoadedModel().removeBSIModelListener(contentProvider);
         }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * sernet.verinice.iso27k.rcp.ILinkedWithEditorView#editorActivated(org.
-     * eclipse.ui.IEditorPart)
-     */
-    @Override
-    public void editorActivated(IEditorPart activeEditor) {
-        if (!isLinkingActive() || !getViewSite().getPage().isPartVisible(this)) {
-            return;
-        }
-        CnATreeElement element = BSIElementEditorInput.extractElement(activeEditor);
-        if (element == null) {
-            return;
-        }
-        setNewInputElement(element);
     }
 }

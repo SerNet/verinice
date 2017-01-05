@@ -317,8 +317,6 @@ public final class Messages extends NLS {
 
     public static String TemplateView_0;
 
-    public static String TemplateView_2;
-
     public static String TemplateView_3;
 
     public static String TemplateView_4;
