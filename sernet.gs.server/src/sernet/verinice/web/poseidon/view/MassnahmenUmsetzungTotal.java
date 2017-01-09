@@ -20,9 +20,7 @@
 package sernet.verinice.web.poseidon.view;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -34,21 +32,14 @@ import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.service.model.IObjectModelService;
-import sernet.verinice.web.Messages;
 import sernet.verinice.web.poseidon.services.ControlService;
 
 /**
- *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "veriniceChartView")
-public class VeriniceCharts implements Serializable {
-
-    private static final String IMPLEMENTATION_STATUS_UNEDITET = "SingleSelectDummyValue";
+@ManagedBean(name = "massnahmenUmsetzungTotal")
+public class MassnahmenUmsetzungTotal implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -80,18 +71,12 @@ public class VeriniceCharts implements Serializable {
         PieChartModel model = new PieChartModel();
 
         Map<String, Number> states = controlService.aggregateMassnahmenUmsetzungStatus();
-        states = setLabel(states);
-        model.setData(states);
-        return model;
-    }
 
-    private Map<String, Number> setLabel(Map<String, Number> states) {
-        Map<String, Number> humanReadableLabels = new HashMap<>();
-        for(Entry<String, Number> e : states.entrySet()){
-            humanReadableLabels.put(getLabel(e), e.getValue());
+        for (Map.Entry<String, Number> entry : states.entrySet()) {
+            model.set(entry.getKey(), entry.getValue());
         }
 
-        return humanReadableLabels;
+        return model;
     }
 
     private HorizontalBarChartModel initBarModel() {
@@ -102,8 +87,7 @@ public class VeriniceCharts implements Serializable {
         for (Map.Entry<String, Number> entry : states.entrySet()) {
             ChartSeries boys = new ChartSeries();
             boys.getRenderer();
-            String label = getLabel(entry);
-            boys.set(label, entry.getValue());
+            boys.set(entry.getKey(), entry.getValue());
             getHorizontalBarModel().addSeries(boys);
         }
 
@@ -117,15 +101,6 @@ public class VeriniceCharts implements Serializable {
         Axis yAxis = getHorizontalBarModel().getAxis(AxisType.Y);
         yAxis.setLabel("Status");
         return getHorizontalBarModel();
-    }
-
-    private String getLabel(Map.Entry<String, Number> entry) {
-
-        if(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(entry.getKey())) {
-            return Messages.getString(IMPLEMENTATION_STATUS_UNEDITET);
-        }
-
-        return getPropertyName().getLabel(entry.getKey());
     }
 
     public PieChartModel getPieModel() {
@@ -148,7 +123,4 @@ public class VeriniceCharts implements Serializable {
         this.horizontalBarModel = horizontalBarModel;
     }
 
-    private IObjectModelService getPropertyName() {
-        return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
-    }
 }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <web-app
   version="2.5"
   xmlns="http://java.sun.com/xml/ns/javaee"
@@ -7,24 +8,16 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
   http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
 
-  <!-- This file configures the plain veriniceserver. It is not used for the internal verinice
-    server. To find its equivalent have a look at the sernet.gs.server.InternalServer class. -->
+  <!--
+    This file configures the plain verinice server. It is not used for the internal verinice
+    server. To find its equivalent have a look at the sernet.gs.server.InternalServer class.
+  -->
 
-  <display-name>veriniceserver</display-name>
+  <display-name>verinice server</display-name>
+
   <welcome-file-list>
     <welcome-file>dashboard/dashboard.xhtml</welcome-file>
   </welcome-file-list>
-
-  <!-- Load EL 2.2 -->
-  <context-param>
-    <param-name>org.apache.myfaces.EXPRESSION_FACTORY</param-name>
-    <param-value>com.sun.el.ExpressionFactoryImpl</param-value>
-  </context-param>
-  <context-param>
-    <param-name>com.sun.faces.expressionFactory</param-name>
-    <param-value>com.sun.el.ExpressionFactoryImpl</param-value>
-  </context-param>
-  <!-- /Load EL 2.2 -->
 
   <context-param>
     <param-name>contextConfigLocation</param-name>
@@ -35,11 +28,11 @@
       classpath:sernet/gs/server/spring/veriniceserver-daos-common.xml
       classpath:sernet/gs/server/spring/veriniceserver-daos-plain.xml
 
-      <!-- Use this for digest authentication for rich and web client: -->
-<!--       classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml -->
+      <!-- Use this for HTTP digest authentication for rich and web client: -->
+      <!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-internal.xml -->
 
-      <!-- Use this for digest authentication for rich client -->
-      <!-- and ordinary form based authentication for web client: -->
+      <!-- Use this for HTTP digest authentication for rich client -->
+      <!-- and form based authentication for web client: -->
       classpath:sernet/gs/server/spring/veriniceserver-security-web.xml
 
       <!-- Use this for LDAP / Active Directory authentication: -->
@@ -59,7 +52,7 @@
     </param-value>
   </context-param>
 
-  <!-- Webclient conf -->
+  <!-- JSF and PrimeFaces config -->
   <context-param>
     <param-name>javax.faces.CONFIG_FILES</param-name>
     <param-value>
@@ -75,99 +68,31 @@
     <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
     <param-value>.xhtml</param-value>
   </context-param>
-
   <context-param>
     <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
-    <param-value>/WEB-INF/verinice-taglib.xml;/WEB-INF/primefaces-poseidon.taglib.xml</param-value>
+    <param-value>
+      /WEB-INF/verinice-taglib.xml;
+      /WEB-INF/primefaces-poseidon.taglib.xml
+    </param-value>
   </context-param>
-
   <context-param>
     <param-name>primefaces.THEME</param-name>
     <param-value>blitzer</param-value>
   </context-param>
-
   <context-param>
     <param-name>primefaces.FONT_AWESOME</param-name>
     <param-value>true</param-value>
   </context-param>
 
-  <listener>
-    <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
-  </listener>
-
-  <filter>
-    <filter-name>Character Encoding Filter</filter-name>
-    <filter-class>org.primefaces.poseidon.filter.CharacterEncodingFilter</filter-class>
-  </filter>
-
-  <filter-mapping>
-    <filter-name>Character Encoding Filter</filter-name>
-    <servlet-name>Faces Servlet</servlet-name>
-  </filter-mapping>
-
-
-  <!-- Webclient conf end -->
-
-  <filter>
-    <filter-name>springSecurityFilterChain</filter-name>
-    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-  </filter>
-  <filter>
-    <filter-name>contextInitializer</filter-name>
-    <filter-class>sernet.gs.web.ContextInitializer</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>/service/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>/todo/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>/edit/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>/sync/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>/auth/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>contextInitializer</filter-name>
-    <url-pattern>/todo/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>contextInitializer</filter-name>
-    <url-pattern>/edit/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>contextInitializer</filter-name>
-    <url-pattern>/auth/*</url-pattern>
-  </filter-mapping>
-
-  <filter-mapping>
-    <filter-name>contextInitializer</filter-name>
-    <url-pattern>/dashboard/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-
-    <filter-name>springSecurityFilterChain</filter-name>
-    <url-pattern>/dashboard/*</url-pattern>
-  </filter-mapping>
-
-  <!-- Primefaces fileupload -->
-  <filter>
-    <filter-name>PrimeFaces FileUpload Filter</filter-name>
-    <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>PrimeFaces FileUpload Filter</filter-name>
-    <servlet-name>Faces Servlet</servlet-name>
-  </filter-mapping>
+  <!-- Load EL 2.2 -->
+  <context-param>
+    <param-name>org.apache.myfaces.EXPRESSION_FACTORY</param-name>
+    <param-value>com.sun.el.ExpressionFactoryImpl</param-value>
+  </context-param>
+  <context-param>
+    <param-name>com.sun.faces.expressionFactory</param-name>
+    <param-value>com.sun.el.ExpressionFactoryImpl</param-value>
+  </context-param>
 
   <!-- Spring context loader -->
   <servlet>
@@ -185,6 +110,10 @@
     </init-param>
     <load-on-startup>2</load-on-startup>
   </servlet>
+  <servlet-mapping>
+    <servlet-name>springDispatcher</servlet-name>
+    <url-pattern>/service/*</url-pattern>
+  </servlet-mapping>
 
   <!-- Apache CXF Servlet -->
   <servlet>
@@ -192,6 +121,10 @@
     <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
     <load-on-startup>2</load-on-startup>
   </servlet>
+  <servlet-mapping>
+    <servlet-name>cxfServlet</servlet-name>
+    <url-pattern>/sync/*</url-pattern>
+  </servlet-mapping>
 
   <servlet>
     <description>Output HuiConfig from classpath.</description>
@@ -204,6 +137,101 @@
     </init-param>
     <load-on-startup>3</load-on-startup>
   </servlet>
+  <servlet-mapping>
+    <servlet-name>GetHitroConfig</servlet-name>
+    <url-pattern>/GetHitroConfig</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.jsf</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.faces</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.xhtml</url-pattern>
+  </servlet-mapping>
+
+  <listener>
+    <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+  </listener>
+
+  <filter>
+    <filter-name>Character Encoding Filter</filter-name>
+    <filter-class>org.primefaces.poseidon.filter.CharacterEncodingFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>Character Encoding Filter</filter-name>
+    <servlet-name>Faces Servlet</servlet-name>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>contextInitializer</filter-name>
+    <filter-class>sernet.gs.web.ContextInitializer</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>contextInitializer</filter-name>
+    <url-pattern>/todo/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>contextInitializer</filter-name>
+    <url-pattern>/edit/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>contextInitializer</filter-name>
+    <url-pattern>/auth/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>contextInitializer</filter-name>
+    <url-pattern>/dashboard/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/dashboard/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/service/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/todo/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/edit/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/sync/*</url-pattern>
+  </filter-mapping>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/auth/*</url-pattern>
+  </filter-mapping>
+
+  <!-- PrimeFaces fileupload -->
+  <filter>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <servlet-name>Faces Servlet</servlet-name>
+  </filter-mapping>
 
   <error-page>
     <error-code>403</error-code>
@@ -217,44 +245,6 @@
     <error-code>500</error-code>
     <location>/error/500.html</location>
   </error-page>
-
-  <servlet-mapping>
-    <servlet-name>springDispatcher</servlet-name>
-    <url-pattern>/service/*</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>GetHitroConfig</servlet-name>
-    <url-pattern>/GetHitroConfig</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>cxfServlet</servlet-name>
-    <url-pattern>/sync/*</url-pattern>
-  </servlet-mapping>
-
-  <!-- Webclient conf -->
-
-  <servlet>
-    <servlet-name>Faces Servlet</servlet-name>
-    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
-
-  <servlet-mapping>
-    <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.jsf</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.faces</url-pattern>
-  </servlet-mapping>
-
-  <servlet-mapping>
-    <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.xhtml</url-pattern>
-  </servlet-mapping>
 
   <session-config>
     <!-- Session idle timeout in min. -->
