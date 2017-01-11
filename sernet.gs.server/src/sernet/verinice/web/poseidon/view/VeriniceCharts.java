@@ -28,12 +28,14 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
+import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
+import sernet.gs.ui.rcp.main.actions.GreenboneIntroAction;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.service.model.IObjectModelService;
@@ -48,9 +50,32 @@ import sernet.verinice.web.poseidon.services.ControlService;
 @ManagedBean(name = "veriniceChartView")
 public class VeriniceCharts implements Serializable {
 
-    private static final String IMPLEMENTATION_STATUS_UNEDITET = "SingleSelectDummyValue";
-
     private static final long serialVersionUID = 1L;
+
+    /** Does not work at the moment */
+    private enum DiagramColor {
+
+        GREEN("66CC00"),
+        RED("FF4747"),
+        YELLOW("FFE47A"),
+        GREY("BFBFBF"),
+        BLUE("0000FF");
+
+        private String hexColor;
+
+        DiagramColor(String hexColor) {
+            this.hexColor = hexColor;
+
+        }
+
+        String getColor() {
+            return hexColor;
+        }
+
+        public String toString() {
+            return getColor();
+        }
+    };
 
     @ManagedProperty("#{controlService}")
     private ControlService controlService;
@@ -77,36 +102,27 @@ public class VeriniceCharts implements Serializable {
     }
 
     private PieChartModel initPieModel() {
+
         PieChartModel model = new PieChartModel();
 
-        Map<String, Number> states = controlService.aggregateMassnahmenUmsetzungStatus();
-        states = setLabel(states);
-        model.setData(states);
+        model.setData(controlService.aggregateMassnahmenUmsetzungStatus());
+        model.setSeriesColors(StringUtils.join(DiagramColor.values(), ","));
         return model;
     }
 
-    private Map<String, Number> setLabel(Map<String, Number> states) {
-        Map<String, Number> humanReadableLabels = new HashMap<>();
-        for(Entry<String, Number> e : states.entrySet()){
-            humanReadableLabels.put(getLabel(e), e.getValue());
-        }
 
-        return humanReadableLabels;
-    }
 
     private HorizontalBarChartModel initBarModel() {
 
         setHorizontalBarModel(new HorizontalBarChartModel());
         Map<String, Number> states = controlService.aggregateMassnahmenUmsetzungStatus();
 
+        ChartSeries series = new ChartSeries();
         for (Map.Entry<String, Number> entry : states.entrySet()) {
-            ChartSeries boys = new ChartSeries();
-            boys.getRenderer();
-            String label = getLabel(entry);
-            boys.set(label, entry.getValue());
-            getHorizontalBarModel().addSeries(boys);
+            series.set(entry.getKey(), entry.getValue());
         }
 
+        getHorizontalBarModel().addSeries(series);
         getHorizontalBarModel().setLegendPosition("e");
 
         Axis xAxis = getHorizontalBarModel().getAxis(AxisType.X);
@@ -119,14 +135,7 @@ public class VeriniceCharts implements Serializable {
         return getHorizontalBarModel();
     }
 
-    private String getLabel(Map.Entry<String, Number> entry) {
 
-        if(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(entry.getKey())) {
-            return Messages.getString(IMPLEMENTATION_STATUS_UNEDITET);
-        }
-
-        return getPropertyName().getLabel(entry.getKey());
-    }
 
     public PieChartModel getPieModel() {
         return pieModel;
@@ -146,9 +155,5 @@ public class VeriniceCharts implements Serializable {
 
     public void setHorizontalBarModel(HorizontalBarChartModel horizontalBarModel) {
         this.horizontalBarModel = horizontalBarModel;
-    }
-
-    private IObjectModelService getPropertyName() {
-        return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
     }
 }

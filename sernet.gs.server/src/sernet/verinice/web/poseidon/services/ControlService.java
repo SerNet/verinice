@@ -25,15 +25,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.service.model.IObjectModelService;
+import sernet.verinice.web.Messages;
 
 /**
  * Provides several methods which provide data for the charts.
@@ -47,6 +52,8 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
  */
 @ManagedBean(name = "controlService")
 public class ControlService extends GenericChartService {
+
+    private static final String IMPLEMENTATION_STATUS_UNEDITET = "SingleSelectDummyValue";
 
     /**
      * Returns aggregate status of all {@link MassnahmenUmsetzung} in verinice.
@@ -127,12 +134,14 @@ public class ControlService extends GenericChartService {
     }
 
     private Map<String, Number> aggregateMassnahmenUmsetzung(List<MassnahmenUmsetzung> massnahmen) {
-        Map<String, Number> result = new HashMap<>();
+        Map<String, Number> result = new TreeMap<>(new NumericStringComparator());
         for (MassnahmenUmsetzung m : massnahmen) {
             Number number = result.get(m.getUmsetzung());
             number = number == null ? 0 : number.intValue() + 1;
             result.put(m.getUmsetzung(), number);
         }
+
+        result = setLabel(result);
 
         return result;
     }
@@ -213,6 +222,29 @@ public class ControlService extends GenericChartService {
 
         return chapter2MaUs;
     }
+
+    private Map<String, Number> setLabel(Map<String, Number> states) {
+        Map<String, Number> humanReadableLabels = new TreeMap<>(new NumericStringComparator());
+        for (Entry<String, Number> e : states.entrySet()) {
+            humanReadableLabels.put(getLabel(e), e.getValue());
+        }
+
+        return humanReadableLabels;
+    }
+
+    private String getLabel(Map.Entry<String, Number> entry) {
+
+        if (MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(entry.getKey())) {
+            return Messages.getString(IMPLEMENTATION_STATUS_UNEDITET);
+        }
+
+        return getPropertyName().getLabel(entry.getKey());
+    }
+
+    private IObjectModelService getPropertyName() {
+               return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
+    }
+
 
     private List<BausteinUmsetzung> filterBausteinUmsetzung(ITVerbund itNetwork, List<BausteinUmsetzung> allBausteinUmsetzungen) {
         List<BausteinUmsetzung> filteredBausteinUmsetzungen = new ArrayList<>();
