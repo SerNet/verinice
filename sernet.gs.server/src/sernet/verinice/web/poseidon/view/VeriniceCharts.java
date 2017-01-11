@@ -20,7 +20,11 @@
 package sernet.verinice.web.poseidon.view;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -28,12 +32,15 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
+import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
+import org.primefaces.util.CollectionUtils;
 
 import sernet.gs.ui.rcp.main.actions.GreenboneIntroAction;
 import sernet.hui.common.VeriniceContext;
@@ -123,19 +130,27 @@ public class VeriniceCharts implements Serializable {
         }
 
         getHorizontalBarModel().addSeries(series);
-        getHorizontalBarModel().setLegendPosition("e");
+        getHorizontalBarModel().setLegendPlacement(LegendPlacement.OUTSIDE);
 
         Axis xAxis = getHorizontalBarModel().getAxis(AxisType.X);
         xAxis.setLabel("Anzahl");
         xAxis.setMin(0);
-        xAxis.setMax(200);
+        xAxis.setMax(getMax(states.values()));
 
         Axis yAxis = getHorizontalBarModel().getAxis(AxisType.Y);
         yAxis.setLabel("Status");
         return getHorizontalBarModel();
     }
 
+    private Integer getMax(Collection<Number> values) {
+        Collection<Integer> buffer = new ArrayList<>();
+        for (Iterator iterator = values.iterator(); iterator.hasNext();) {
+            Number number = (Number) iterator.next();
+            buffer.add((Integer) number);
+        }
 
+        return Collections.max(buffer);
+    }
 
     public PieChartModel getPieModel() {
         return pieModel;
