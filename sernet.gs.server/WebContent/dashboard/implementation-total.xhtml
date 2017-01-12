@@ -12,11 +12,15 @@
 	<ui:define name="head">
 
 		<script type="text/javascript">
-			function skinPie() {
+
+			/** verinice color schema for MassnahmenUmsetzung states */
+			var colorSchema = [ "#FF4747", "#BFBFBF", "#FFE47A", "#0000FF", "#66CC00" ];
+
+			/** Custom layout extender for verinice pie charts based on poseidon */
+			function verinicePie() {
 				this.cfg.shadow = false;
 				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c',
-						'#6c76af', '#666666' ];
+				this.cfg.seriesColors = colorSchema;
 				this.cfg.grid = {
 					background : '#ffffff',
 					borderColor : '#ffffff',
@@ -40,11 +44,11 @@
 				}
 			}
 
-			function skinBar() {
+
+			function veriniceHorizontalBar() {
 				this.cfg.shadow = false;
 				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c',
-						'#6c76af', '#666666' ];
+				this.cfg.seriesColors = colorSchema;
 				this.cfg.grid = {
 					background : '#ffffff',
 					borderColor : '#ffffff',
@@ -63,8 +67,36 @@
 					lineWidth : 1,
 					renderer : $.jqplot.BarRenderer,
 					rendererOptions : {
-						varyBarColor : true
-					},
+						varyBarColor : true,
+			            barDirection: 'horizontal'
+			            },
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
+
+			function skinPie() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c', '#6c76af', '#666666' ];
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					rendererOptions : {
+						textColor : '#666F77',
+					}
+				};
+				this.cfg.seriesDefaults = {
+					renderer : $.jqplot.PieRenderer,
+					shadow : false,
+					lineWidth : 1,
 					markerOptions : {
 						shadow : false,
 						size : 7,

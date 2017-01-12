@@ -59,31 +59,6 @@ public class VeriniceCharts implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /** Does not work at the moment */
-    private enum DiagramColor {
-
-        GREEN("66CC00"),
-        RED("FF4747"),
-        YELLOW("FFE47A"),
-        GREY("BFBFBF"),
-        BLUE("0000FF");
-
-        private String hexColor;
-
-        DiagramColor(String hexColor) {
-            this.hexColor = hexColor;
-
-        }
-
-        String getColor() {
-            return hexColor;
-        }
-
-        public String toString() {
-            return getColor();
-        }
-    };
-
     @ManagedProperty("#{controlService}")
     private ControlService controlService;
 
@@ -103,7 +78,7 @@ public class VeriniceCharts implements Serializable {
 
         pieModel.setTitle("Umsetzungstatus Hamburg");
         pieModel.setLegendPosition("w");
-        pieModel.setExtender("skinPie");
+        pieModel.setExtender("verinicePie");
 
         initPieModel();
     }
@@ -111,9 +86,7 @@ public class VeriniceCharts implements Serializable {
     private PieChartModel initPieModel() {
 
         PieChartModel model = new PieChartModel();
-
         model.setData(controlService.aggregateMassnahmenUmsetzungStatus());
-        model.setSeriesColors(StringUtils.join(DiagramColor.values(), ","));
         return model;
     }
 
@@ -138,8 +111,10 @@ public class VeriniceCharts implements Serializable {
         xAxis.setMax(getMax(states.values()));
 
         Axis yAxis = getHorizontalBarModel().getAxis(AxisType.Y);
+        getHorizontalBarModel().setExtender("veriniceHorizontalBar");
+
         yAxis.setLabel("Status");
-        return getHorizontalBarModel();
+        return horizontalBarModel;
     }
 
     private Integer getMax(Collection<Number> values) {

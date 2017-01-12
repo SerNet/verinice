@@ -54,7 +54,7 @@ public class Menu {
         massnahmenUmsetzungSubMenu.setIcon("fa fa-fw fa-line-chart");
 
         DefaultMenuItem all = new DefaultMenuItem("Alle");
-        all.setUrl("/dashboard/implementation-total.xhtml");
+        all.setUrl("/dashboard/implementation-all.xhtml");
         all.setIcon("fa fa-fw fa-area-chart");
         massnahmenUmsetzungSubMenu.addElement(all);
 
