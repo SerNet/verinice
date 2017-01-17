@@ -13,14 +13,10 @@
 
 		<script type="text/javascript">
 
-			/** verinice color schema for MassnahmenUmsetzung states */
-			var colorSchema = [ "#FF4747", "#BFBFBF", "#FFE47A", "#4a93de", "#5fcd79" ];
-
 			/** Custom layout extender for verinice pie charts based on poseidon */
 			function verinicePie() {
 				this.cfg.shadow = false;
 				this.cfg.title = '';
-				this.cfg.seriesColors = colorSchema;
 				this.cfg.grid = {
 					background : '#ffffff',
 					borderColor : '#ffffff',
@@ -48,7 +44,6 @@
 			function veriniceHorizontalBar() {
 				this.cfg.shadow = false;
 				this.cfg.title = '';
-				this.cfg.seriesColors = colorSchema;
 				this.cfg.grid = {
 					background : '#ffffff',
 					borderColor : '#ffffff',
@@ -128,14 +123,14 @@ table.jqplot-table-legend {
 			</div>
 			<div class="ui-g-12 ui-md-6">
 				<div class="card">
-					<p:chart id="verinicePieChart" type="pie" model="#{veriniceChartView.pieModel}"
+					<p:chart id="verinicePieChart" type="pie" model="#{totalBsiChartView.pieModel}"
 						responsive="true" />
 				</div>
 			</div>
 			<div class="ui-g-12 ui-md-6">
 				<div class="card">
 					<p:chart id="verinicePieBar" type="bar"
-						model="#{veriniceChartView.horizontalBarModel}" responsive="true" />
+						model="#{totalBsiChartView.horizontalBarModel}" responsive="true" />
 				</div>
 			</div>
 		</div>

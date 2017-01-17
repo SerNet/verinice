@@ -56,7 +56,7 @@
   <context-param>
     <param-name>javax.faces.CONFIG_FILES</param-name>
     <param-value>
-      /WEB-INF/verinice-faces-config.xml,
+      /WEB-INF/verinice-faces-config.xml;
       /WEB-INF/poseidon-faces-config.xml
     </param-value>
   </context-param>

@@ -2,6 +2,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
@@ -12,15 +13,23 @@
 	<ui:define name="head">
 
 		<script type="text/javascript">
+<<<<<<< HEAD
 
 			/** verinice color schema for MassnahmenUmsetzung states */
 			var colorSchema = [ "#FF4747", "#BFBFBF", "#FFE47A", "#4a93de", "#5fcd79" ];
 
+||||||| merged common ancestors
+
+			/** verinice color schema for MassnahmenUmsetzung states */
+			var colorSchema = [ "#FF4747", "#BFBFBF", "#FFE47A", "#4a93de", "#5fcd79" ];
+
+=======
+
+>>>>>>> Implement ISO-Diagrams.
 			/** Custom layout extender for verinice pie charts based on poseidon */
 			function verinicePie() {
 				this.cfg.shadow = false;
 				this.cfg.title = '';
-				this.cfg.seriesColors = colorSchema;
 				this.cfg.grid = {
 					background : '#ffffff',
 					borderColor : '#ffffff',
@@ -43,12 +52,18 @@
 					}
 				}
 			}
+<<<<<<< HEAD
 
 
+||||||| merged common ancestors
+
+
+=======
+
+>>>>>>> Implement ISO-Diagrams.
 			function veriniceHorizontalBar() {
 				this.cfg.shadow = false;
 				this.cfg.title = '';
-				this.cfg.seriesColors = colorSchema;
 				this.cfg.grid = {
 					background : '#ffffff',
 					borderColor : '#ffffff',
@@ -81,7 +96,8 @@
 			function skinPie() {
 				this.cfg.shadow = false;
 				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c', '#6c76af', '#666666' ];
+				this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c',
+						'#6c76af', '#666666' ];
 				this.cfg.grid = {
 					background : '#ffffff',
 					borderColor : '#ffffff',
@@ -122,23 +138,27 @@ table.jqplot-table-legend {
 	</ui:define>
 
 	<ui:define name="content">
-		<div class="ui-g ui-fluid">
-			<div class="ui-g-12 ui-md-12">
-				<h1>Massnahmenumsetzung gesamt</h1>
-			</div>
-			<div class="ui-g-12 ui-md-6">
-				<div class="card">
-					<p:chart id="verinicePieChart" type="pie" model="#{veriniceChartView.pieModel}"
-						responsive="true" />
+		<c:set var="count" value="0" scope="view" />
+		<ui:repeat value="#{allBsiChartsView.charts}" var="chart">
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-md-12">
+					<h1>#{chart.title}</h1>
+				</div>
+				<div class="ui-g-12 ui-md-6">
+					<div class="card">
+						<p:chart id="pie-#{count}" type="pie"
+							model="#{chart.pieChartModel}" responsive="true" />
+					</div>
+				</div>
+				<div class="ui-g-12 ui-md-6">
+					<div class="card">
+						<p:chart id="bar-#{count}" type="bar"
+							model="#{chart.horizontalBarChartModel}" responsive="true" />
+					</div>
 				</div>
 			</div>
-			<div class="ui-g-12 ui-md-6">
-				<div class="card">
-					<p:chart id="verinicePieBar" type="bar"
-						model="#{veriniceChartView.horizontalBarModel}" responsive="true" />
-				</div>
-			</div>
-		</div>
+			<c:set var="count" value="${count + 1}" />
+		</ui:repeat>
 	</ui:define>
 
 </ui:composition>

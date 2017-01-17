@@ -19,26 +19,26 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.SortedMap;
+import java.util.TreeMap;
+
+import javax.faces.bean.ManagedBean;
+
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
-import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.service.model.IObjectModelService;
 import sernet.verinice.web.Messages;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
-import javax.faces.bean.ManagedBean;
 
 /**
  * Provides several methods which provide data for the charts.
@@ -53,7 +53,7 @@ import javax.faces.bean.ManagedBean;
 @ManagedBean(name = "controlService")
 public class ControlService extends GenericChartService {
 
-    private static final String IMPLEMENTATION_STATUS_UNEDITET = "SingleSelectDummyValue";
+    private static final String IMPLEMENTATION_STATUS_UNEDITED = "SingleSelectDummyValue";
 
     /**
      * Returns aggregate status of all {@link MassnahmenUmsetzung} in verinice.
@@ -61,12 +61,12 @@ public class ControlService extends GenericChartService {
      * @return The keys of the map is {@link MassnahmenUmsetzung#getUmsetzung()}
      *
      */
-    public Map<String, Number> aggregateMassnahmenUmsetzungStatus() {
+    public SortedMap<String, Number> aggregateMassnahmenUmsetzungStatus() {
 
         IDAOFactory iDaoFactory = getDaoFactory();
 
         IBaseDao<MassnahmenUmsetzung, Serializable> massnahmenDao = getMassnahmenDao(iDaoFactory);
-        RetrieveInfo ri = RetrieveInfo.getPropertyChildrenInstance();
+        RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
 
         @SuppressWarnings("unchecked")
         List<MassnahmenUmsetzung> massnahmen = massnahmenDao.findAll(ri);
@@ -86,24 +86,40 @@ public class ControlService extends GenericChartService {
      * @exception IllegalArgumentException
      *                If no it network is given.
      */
-    public Map<String, Number> aggregateMassnahmenUmsetzung(ITVerbund itNetwork) {
+    public SortedMap<String, Number> aggregateMassnahmenUmsetzung(ITVerbund itNetwork) {
 
         if (itNetwork == null) {
             throw new IllegalArgumentException("param itNetwork may not be null");
         }
 
-        Integer itNetworkScopeId = itNetwork.getScopeId();
+        return aggregateMassnahmenUmsetzung(itNetwork.getScopeId());
+    }
+
+    /**
+     * Returns aggregated status of all {@link MassnahmenUmsetzung} of a it
+     * network.
+     *
+     * @param scopeId
+     *            The IT-Network for which the {@link MassnahmenUmsetzung} are
+     *            aggregated.
+     * @return If no {@link MassnahmenUmsetzung} is defined for the IT network.
+     *         it could be empty.
+     * @exception IllegalArgumentException
+     *                If no it network is given.
+     */
+    public SortedMap<String, Number> aggregateMassnahmenUmsetzung(Integer scopeId) {
+
         String hqlQuery = new StringBuilder()
                 .append("from CnATreeElement element")
                 .append(" left join fetch element.entity entity")
                 .append(" left join fetch entity.typedPropertyLists propertyLists")
                 .append(" left join fetch propertyLists.properties props")
-                .append(" where element.scopeId = ?").toString();
-        String[] params = new String[] { String.valueOf(itNetworkScopeId) };
-        Object[] values = new Object[] { MassnahmenUmsetzung.class };
+                .append(" where element.scopeId = ?")
+                .append(" and element.objectType = ?").toString();
+        Object[] params = new Object[] { scopeId, MassnahmenUmsetzung.HIBERNATE_TYPE_ID };
         IBaseDao<MassnahmenUmsetzung, Serializable> massnahmenDao = getMassnahmenDao(getDaoFactory());
-
-        List<MassnahmenUmsetzung> massnahmenUmsetzungen = massnahmenDao.findByQuery(hqlQuery, params, values);
+        @SuppressWarnings("unchecked")
+        List<MassnahmenUmsetzung> massnahmenUmsetzungen = massnahmenDao.findByQuery(hqlQuery, params);
         return aggregateMassnahmenUmsetzung(massnahmenUmsetzungen);
     }
 
@@ -133,15 +149,30 @@ public class ControlService extends GenericChartService {
         return chapter2MaUs;
     }
 
-    private Map<String, Number> aggregateMassnahmenUmsetzung(List<MassnahmenUmsetzung> massnahmen) {
-        Map<String, Number> result = new TreeMap<>(new NumericStringComparator());
+    private SortedMap<String, Number> aggregateMassnahmenUmsetzung(List<MassnahmenUmsetzung> massnahmen) {
+
+        SortedMap<String, Number> result = new TreeMap<>(new Comparator<String>() {
+
+            @Override
+            public int compare(String o1, String o2) {
+                return new NumericStringComparator().compare(getLabel(o1), getLabel(o2));
+            }
+
+            private String getLabel(String value) {
+
+                if (MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(value)) {
+                    return Messages.getString(IMPLEMENTATION_STATUS_UNEDITED);
+                }
+
+                return getObjectService().getLabel(value);
+            }
+        });
+
         for (MassnahmenUmsetzung m : massnahmen) {
             Number number = result.get(m.getUmsetzung());
             number = number == null ? 1 : number.intValue() + 1;
             result.put(m.getUmsetzung(), number);
         }
-
-        result = setLabel(result);
 
         return result;
     }
@@ -223,27 +254,7 @@ public class ControlService extends GenericChartService {
         return chapter2MaUs;
     }
 
-    private Map<String, Number> setLabel(Map<String, Number> states) {
-        Map<String, Number> humanReadableLabels = new TreeMap<>(new NumericStringComparator());
-        for (Entry<String, Number> e : states.entrySet()) {
-            humanReadableLabels.put(getLabel(e), e.getValue());
-        }
 
-        return humanReadableLabels;
-    }
-
-    private String getLabel(Map.Entry<String, Number> entry) {
-
-        if (MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(entry.getKey())) {
-            return Messages.getString(IMPLEMENTATION_STATUS_UNEDITET);
-        }
-
-        return getPropertyName().getLabel(entry.getKey());
-    }
-
-    private IObjectModelService getPropertyName() {
-               return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
-    }
 
 
     private List<BausteinUmsetzung> filterBausteinUmsetzung(ITVerbund itNetwork, List<BausteinUmsetzung> allBausteinUmsetzungen) {

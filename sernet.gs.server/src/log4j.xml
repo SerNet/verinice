@@ -22,28 +22,26 @@
 			<param name="ConversionPattern" value="%d %-5p [%t] (%13F:%L) %3x - %m%n" />
 		</layout>
 	</appender>
-    
-    <!-- Avoid a lot of warnings (An item was expired by the cache while it was locked) -->
-    <logger name="org.hibernate.cache.ReadWriteCache">
-        <level value="ERROR" />
-    </logger>
 
-    <!-- Add settings for packages here  -->
-    <!-- 
-    <logger name="sernet.verinice.web">
-        <level value="DEBUG" />
-    </logger> 
-    <logger name="org.hibernate.SQL">
-        <level value="DEBUG" />
-    </logger>
-    -->
-    
-    
+	<!-- Avoid a lot of warnings (An item was expired by the cache while it
+		was locked) -->
+	<logger name="org.hibernate.cache.ReadWriteCache">
+		<level value="ERROR" />
+	</logger>
+
+	<!-- Add settings for packages here -->
+	<!-- <logger name="sernet.verinice.web"> <level value="DEBUG" /> </logger>
+		<logger name="org.hibernate.SQL"> <level value="DEBUG" /> </logger> -->
+
+	<logger name="org.springframework">
+		<level value="DEBUG" />
+	</logger>
+
 	<!-- Logger for everything else -->
 	<root>
 		<priority value="WARN" />
 		<appender-ref ref="FILE" />
-        <appender-ref ref="STDOUT" />
+		<appender-ref ref="STDOUT" />
 	</root>
 
 </log4j:configuration>

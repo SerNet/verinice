@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE facelet-taglib PUBLIC
-  "-//Sun Microsystems, Inc.//DTD Facelet Taglib 1.0//EN"
-  "/WEB-INF/facelet-taglib_1_0.dtd">
-<facelet-taglib>
+<facelet-taglib xmlns="http://java.sun.com/xml/ns/javaee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facelettaglibrary_2_0.xsd"
+		version="2.0">
+
   <namespace>http://www.verinice.org/taglib</namespace>
   <tag>
     <tag-name>editor</tag-name>
@@ -16,4 +16,5 @@
     <tag-name>login</tag-name>
     <source>../template/login.xhtml</source>
   </tag>
+  <tag-name>diagrams</tag-name>
 </facelet-taglib>

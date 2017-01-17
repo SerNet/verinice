@@ -19,10 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
+import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
@@ -38,6 +42,8 @@ import sernet.verinice.web.poseidon.services.MenuService;
 @ManagedBean(name = "menu")
 public class Menu {
 
+    private static final Logger log = Logger.getLogger(Menu.class);
+
     private MenuModel model;
 
     private DefaultSubMenu massnahmenUmsetzungSubMenu;
@@ -46,7 +52,7 @@ public class Menu {
     private MenuService menuService;
 
     @PostConstruct()
-    public void initMenu(){
+    public void initMenu() {
 
         model = new DefaultMenuModel();
 
@@ -63,15 +69,23 @@ public class Menu {
         total.setIcon("fa fa-fw fa-area-chart");
         massnahmenUmsetzungSubMenu.addElement(total);
 
-        addItNetworks();
+        try {
+            addItNetworks();
+        } catch (UnsupportedEncodingException e) {
+            log.error("could not create menu item", e);
+        }
 
         model.addElement(massnahmenUmsetzungSubMenu);
     }
 
-    private void addItNetworks() {
+    private void addItNetworks() throws UnsupportedEncodingException {
         for(ITVerbund itNetwork : getMenuService().getVisibleItNetworks()){
-            DefaultMenuItem item = new DefaultMenuItem(itNetwork.getTitle());
+            String title = itNetwork.getTitle();
+            DefaultMenuItem item = new DefaultMenuItem(title);
             item.setIcon("fa fa-fw fa-area-chart");
+            String scopeIdParam = "scopeId=" + itNetwork.getScopeId();
+            String titleParam =  "itNetwork=" + URLEncoder.encode(title, "UTF-8");
+            item.setUrl("/dashboard/implementation-itnetwork.xhtml?" + scopeIdParam + "&" + titleParam);
             massnahmenUmsetzungSubMenu.addElement(item);
         }
     }

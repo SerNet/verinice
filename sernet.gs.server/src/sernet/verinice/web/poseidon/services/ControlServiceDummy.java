@@ -21,6 +21,8 @@ package sernet.verinice.web.poseidon.services;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
 
@@ -34,8 +36,8 @@ import sernet.verinice.model.bsi.ITVerbund;
 public class ControlServiceDummy extends ControlService {
 
     @Override
-    public Map<String, Number> aggregateMassnahmenUmsetzungStatus() {
-        Map<String, Number> states = new HashMap<>();
+    public SortedMap<String, Number> aggregateMassnahmenUmsetzungStatus() {
+        SortedMap<String, Number> states = new TreeMap<>();
 
         states.put("Unbearbeitet", 3);
         states.put("Teilweise", 31);
@@ -47,7 +49,7 @@ public class ControlServiceDummy extends ControlService {
     }
 
     @Override
-    public Map<String, Number> aggregateMassnahmenUmsetzung(ITVerbund itNetwork) {
+    public SortedMap<String, Number> aggregateMassnahmenUmsetzung(ITVerbund itNetwork) {
         // TODO Auto-generated method stub
         return super.aggregateMassnahmenUmsetzung(itNetwork);
     }

@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
@@ -37,6 +38,7 @@ import sernet.verinice.model.bsi.ITVerbund;
  *
  */
 @ManagedBean(name = "menuService")
+@SessionScoped
 public class MenuService extends GenericChartService {
 
     /**
