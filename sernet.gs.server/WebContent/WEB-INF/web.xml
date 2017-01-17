@@ -77,7 +77,7 @@
   </context-param>
   <context-param>
     <param-name>primefaces.THEME</param-name>
-    <param-value>blitzer</param-value>
+    <param-value>poseidon-verinice</param-value>
   </context-param>
   <context-param>
     <param-name>primefaces.FONT_AWESOME</param-name>
