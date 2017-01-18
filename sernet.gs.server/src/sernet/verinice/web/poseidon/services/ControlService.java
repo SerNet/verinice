@@ -19,16 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
-import javax.faces.bean.ManagedBean;
-
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
@@ -39,6 +29,16 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.service.model.IObjectModelService;
 import sernet.verinice.web.Messages;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
+
+import javax.faces.bean.ManagedBean;
 
 /**
  * Provides several methods which provide data for the charts.
@@ -137,7 +137,7 @@ public class ControlService extends GenericChartService {
         Map<String, Number> result = new TreeMap<>(new NumericStringComparator());
         for (MassnahmenUmsetzung m : massnahmen) {
             Number number = result.get(m.getUmsetzung());
-            number = number == null ? 0 : number.intValue() + 1;
+            number = number == null ? 1 : number.intValue() + 1;
             result.put(m.getUmsetzung(), number);
         }
 
