@@ -19,13 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -34,6 +27,13 @@ import org.primefaces.model.menu.MenuModel;
 
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -76,6 +76,8 @@ public class Menu {
         }
 
         model.addElement(massnahmenUmsetzungSubMenu);
+
+        addMiscMenu();
     }
 
     private void addItNetworks() throws UnsupportedEncodingException {
@@ -88,6 +90,24 @@ public class Menu {
             item.setUrl("/dashboard/implementation-itnetwork.xhtml?" + scopeIdParam + "&" + titleParam);
             massnahmenUmsetzungSubMenu.addElement(item);
         }
+    }
+
+    private void addMiscMenu() {
+
+        DefaultSubMenu miscMenu = new DefaultSubMenu("Miscellaneous");
+        miscMenu.setIcon("fa fa-fw fa-caret-square-o-down");
+
+        DefaultMenuItem download = new DefaultMenuItem("Download");
+        download.setUrl("/misc/download.xhtml");
+        download.setIcon("fa fa-fw fa-download");
+        miscMenu.addElement(download);
+
+        DefaultMenuItem help = new DefaultMenuItem("Help");
+        help.setUrl("/misc/help.xhtml");
+        help.setIcon("fa fa-fw fa-info-circle");
+        miscMenu.addElement(help);
+
+        model.addElement(miscMenu);
     }
 
     public MenuModel getModel() {
