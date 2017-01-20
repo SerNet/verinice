@@ -12,6 +12,36 @@
 	<ui:define name="head">
 
 		<script type="text/javascript">
+			function veriniceBar() {
+				this.cfg.shadow = false;
+				this.cfg.title = '';
+				this.cfg.grid = {
+					background : '#ffffff',
+					borderColor : '#ffffff',
+					gridLineColor : '#F5F5F5',
+					shadow : false
+				};
+				this.cfg.axesDefaults = {
+					borderWidth : 0.1,
+					borderColor : 'bdbdbd',
+					rendererOptions : {
+						textColor : '#666F77'
+					}
+				};
+				this.cfg.seriesDefaults = {
+					shadow : false,
+					lineWidth : 1,
+					renderer : $.jqplot.BarRenderer,
+					rendererOptions : {
+						varyBarColor : true
+					},
+					markerOptions : {
+						shadow : false,
+						size : 7,
+						style : 'circle'
+					}
+				}
+			}
 
 			/** Custom layout extender for verinice pie charts based on poseidon */
 			function verinicePie() {
@@ -40,7 +70,6 @@
 				}
 			}
 
-
 			function veriniceHorizontalBar() {
 				this.cfg.shadow = false;
 				this.cfg.title = '';
@@ -63,35 +92,8 @@
 					renderer : $.jqplot.BarRenderer,
 					rendererOptions : {
 						varyBarColor : true,
-			            barDirection: 'horizontal'
-			            },
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
-
-			function skinPie() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.seriesColors = [ '#00acac', '#2f8ee5', '#efa64c', '#6c76af', '#666666' ];
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					rendererOptions : {
-						textColor : '#666F77',
-					}
-				};
-				this.cfg.seriesDefaults = {
-					renderer : $.jqplot.PieRenderer,
-					shadow : false,
-					lineWidth : 1,
+						barDirection : 'horizontal'
+					},
 					markerOptions : {
 						shadow : false,
 						size : 7,
@@ -123,18 +125,14 @@ table.jqplot-table-legend {
 			</div>
 			<div class="ui-g-12 ui-md-6">
 				<div class="card">
-					<p:chart
-						id="verinicePieChart" type="pie"
-						model="#{itNetworkView.pieModel}"
-						responsive="true" />
+					<p:chart id="verinicePieChart" type="pie"
+						model="#{itNetworkView.pieModel}" responsive="true" />
 				</div>
 			</div>
 			<div class="ui-g-12 ui-md-6">
 				<div class="card">
-					<p:chart id="verinicePieBar"
-						type="bar"
-						model="#{itNetworkView.horizontalBarModel}"
-						responsive="true" />
+					<p:chart id="verinicePieBar" type="bar"
+						model="#{itNetworkView.barModel}" responsive="true" />
 				</div>
 			</div>
 		</div>

@@ -27,7 +27,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
 import org.primefaces.model.chart.BarChartModel;
-import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ControlService;
@@ -49,7 +48,7 @@ public class TotalBsiChartsView implements Serializable {
 
     private PieChartModel pieModel;
 
-    private HorizontalBarChartModel horizontalBarChartModel;
+    private BarChartModel barModel;
 
     private ChartModelFactory chartModelFactory;
 
@@ -57,7 +56,7 @@ public class TotalBsiChartsView implements Serializable {
     final public void init() {
         this.chartModelFactory = new ChartModelFactory(getStates());
         this.pieModel = chartModelFactory.getPieChartModel();
-        this.horizontalBarChartModel = chartModelFactory.getHorizontalBarModel();
+        this.barModel = chartModelFactory.getBarChart();
     }
 
     private SortedMap<String, Number> getStates() {
@@ -83,11 +82,11 @@ public class TotalBsiChartsView implements Serializable {
         return pieModel;
     }
 
-    public HorizontalBarChartModel getHorizontalBarChartModel() {
-        return horizontalBarChartModel;
+    public BarChartModel getBarModel() {
+        return barModel;
     }
 
-    public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {
-        this.horizontalBarChartModel = horizontalBarChartModel;
+    public void setBarModel(BarChartModel barModel) {
+        this.barModel = barModel;
     }
 }

@@ -54,9 +54,18 @@ public class AllBsiChartsView {
 
     private List<VeriniceAllChartItem> charts;
 
+    private HorizontalBarChartModel horizontalBarChartModel;
+
+    private PieChartModel pieModel;
 
     @PostConstruct
     public void init() {
+
+        SortedMap<String, Number> allStates = controlService.aggregateMassnahmenUmsetzungStatus();
+        ChartModelFactory allChartModelFactory = new ChartModelFactory(allStates);
+
+        pieModel = allChartModelFactory.getPieChartModel();
+        horizontalBarChartModel = allChartModelFactory.getHorizontalBarModel();
 
         charts = new ArrayList<>();
 
@@ -113,6 +122,7 @@ public class AllBsiChartsView {
         private String title;
 
         private PieChartModel pieChartModel;
+
         private HorizontalBarChartModel horizontalBarChartModel;
 
         public VeriniceAllChartItem() {
@@ -158,6 +168,30 @@ public class AllBsiChartsView {
 
     public void setControlService(ControlService controlService) {
         this.controlService = controlService;
+    }
+
+
+
+    public HorizontalBarChartModel getHorizontalBarChartModel() {
+        return horizontalBarChartModel;
+    }
+
+
+
+    public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {
+        this.horizontalBarChartModel = horizontalBarChartModel;
+    }
+
+
+
+    public PieChartModel getPieModel() {
+        return pieModel;
+    }
+
+
+
+    public void setPieModel(PieChartModel pieModel) {
+        this.pieModel = pieModel;
     }
 
 }
