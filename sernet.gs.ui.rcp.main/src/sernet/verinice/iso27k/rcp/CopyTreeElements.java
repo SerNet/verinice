@@ -114,4 +114,7 @@ public class CopyTreeElements implements IProgressRunnable {
         this.copyAttachments = copyAttachments;
     }
 
+    public CnATreeElement getSelectedGroup() {
+        return selectedGroup;
+    }
 }

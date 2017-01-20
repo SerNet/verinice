@@ -62,7 +62,7 @@ public class TemplateTableViewer extends TableViewer {
     public TemplateTableViewer(Composite parent, int style) {
         super(parent, style);
 
-        final int defaultColumnWidth = 30;
+        final int iconColumnWidth = 30;
         final int col1Width = 250;
         final int col2Width = 250;
         final int col3Width = 250;
@@ -72,21 +72,21 @@ public class TemplateTableViewer extends TableViewer {
 
         Table table = getTable();
 
+        // element parent
+        col2 = new TableViewerColumn(this, SWT.LEFT);
+        col2.getColumn().setText(Messages.TemplateTableViewer_2);
+        col2.getColumn().setWidth(col2Width);
+
         // element type icon:
         col0 = new TableViewerColumn(this, SWT.CENTER);
         col0.getColumn().setText(""); //$NON-NLS-1$
-        col0.getColumn().setWidth(defaultColumnWidth);
+        col0.getColumn().setWidth(iconColumnWidth);
         col0.getColumn().setResizable(false);
 
         // element title
         col1 = new TableViewerColumn(this, SWT.LEFT);
         col1.getColumn().setText(Messages.TemplateTableViewer_1);
         col1.getColumn().setWidth(col1Width);
-
-        // element parent
-        col2 = new TableViewerColumn(this, SWT.LEFT);
-        col2.getColumn().setText(Messages.TemplateTableViewer_2);
-        col2.getColumn().setWidth(col2Width);
 
         // element scope id:
         col3 = new TableViewerColumn(this, SWT.LEFT);
@@ -165,7 +165,6 @@ public class TemplateTableViewer extends TableViewer {
             }
 
             try {
-
                 RetrieveInfo ri = RetrieveInfo.getPropertyInstance();
 
                 LoadAncestors command = new LoadAncestors(element.getTypeId(), element.getUuid(), ri);
@@ -250,10 +249,10 @@ public class TemplateTableViewer extends TableViewer {
         public void update(ViewerCell cell) {
             // delegate the cell text to the origin label provider
             switch (column) {
-            case 0:
+            case 1:
                 cell.setImage(templateViewLabelProvider.getColumnImage(cell.getElement(), column));
                 break;
-            case 1:
+            case 2:
                 cell.setText(templateViewLabelProvider.getColumnText(cell.getElement(), column));
                 break;
             }
@@ -280,11 +279,11 @@ public class TemplateTableViewer extends TableViewer {
 
         List<PathCellLabelProvider> labelProviders = new ArrayList<>();
 
-        PathCellLabelProvider labelProviderCol0 = new PathCellLabelProvider(templateViewLabelProvider, parent, 0);
+        PathCellLabelProvider labelProviderCol0 = new PathCellLabelProvider(templateViewLabelProvider, parent, 1);
         labelProviders.add(labelProviderCol0);
         col0.setLabelProvider(labelProviderCol0);
 
-        PathCellLabelProvider labelProviderCol1 = new PathCellLabelProvider(templateViewLabelProvider, parent, 1);
+        PathCellLabelProvider labelProviderCol1 = new PathCellLabelProvider(templateViewLabelProvider, parent, 2);
         labelProviders.add(labelProviderCol1);
         col1.setLabelProvider(labelProviderCol1);
 

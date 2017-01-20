@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +31,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
@@ -37,17 +39,23 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.progress.IProgressService;
 
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
+import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.bsi.dialogs.CnATreeElementSelectionDialog;
 import sernet.gs.ui.rcp.main.bsi.editors.EditorFactory;
 import sernet.gs.ui.rcp.main.bsi.views.TemplateTableViewer.PathCellLabelProvider;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
@@ -56,16 +64,22 @@ import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
+import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.rcp.CopyTemplateElements;
 import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
+import sernet.verinice.rcp.IProgressRunnable;
 import sernet.verinice.rcp.RightsEnabledView;
-import sernet.verinice.service.commands.LoadTemplates;
+import sernet.verinice.rcp.TemplateSelectionDialog;
+import sernet.verinice.service.commands.LoadTemplatesOrImplementations;
 
 /**
- * @author Viktor Schmidt <vschmidt[at]ckc[dot]de> 
+ * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
 public class TemplateView extends RightsEnabledView {
 
@@ -73,12 +87,13 @@ public class TemplateView extends RightsEnabledView {
 
     public static final String ID = "sernet.gs.ui.rcp.main.bsi.views.TemplateView"; //$NON-NLS-1$
 
-    private TableViewer table;
+    private TableViewer tableViewer;
     private CnATreeElement inputElement;
     private Set<CnATreeElement> templates = new HashSet<CnATreeElement>();
     private TemplateViewContentProvider contentProvider;
 
     private Action doubleClickAction;
+    private Action addTemplateAction;
 
     private IModelLoadListener loadListener;
     private ISelectionListener selectionListener;
@@ -102,27 +117,28 @@ public class TemplateView extends RightsEnabledView {
                     Display.getDefault().asyncExec(new Runnable() {
                         @Override
                         public void run() {
-                            table.setInput(new PlaceHolder(Messages.TemplateView_0));
+                            tableViewer.setInput(new PlaceHolder(Messages.TemplateView_0));
                         }
                     });
 
                     monitor.setTaskName(Messages.TemplateView_0);
 
-                    LoadTemplates command = new LoadTemplates(inputElement);
+                    LoadTemplatesOrImplementations command = new LoadTemplatesOrImplementations(inputElement);
                     command = ServiceFactory.lookupCommandService().executeCommand(command);
-                    templates = command.getTemplates();
+                    final Set<CnATreeElement> elements = command.getElements();
 
                     Display.getDefault().asyncExec(new Runnable() {
                         @Override
                         public void run() {
-                            table.setInput(inputElement);
+                            tableViewer.setInput(elements);
                         }
                     });
+
                 } catch (Exception e) {
                     Display.getDefault().asyncExec(new Runnable() {
                         @Override
                         public void run() {
-                            table.setInput(new PlaceHolder(Messages.TemplateView_3));
+                            tableViewer.setInput(new PlaceHolder(Messages.TemplateView_3));
                         }
                     });
                     ExceptionUtil.log(e, Messages.TemplateView_4);
@@ -137,19 +153,17 @@ public class TemplateView extends RightsEnabledView {
     @Override
     public void createPartControl(Composite parent) {
         super.createPartControl(parent);
-        table = new TemplateTableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
-        contentProvider = new TemplateViewContentProvider(this, table);
-        table.setContentProvider(contentProvider);
+        tableViewer = new TemplateTableViewer(parent, SWT.FULL_SELECTION | SWT.MULTI);
+        contentProvider = new TemplateViewContentProvider(this, tableViewer);
+        tableViewer.setContentProvider(contentProvider);
 
         TemplateViewLabelProvider templateViewLabelProvider = new TemplateViewLabelProvider(this);
-        table.setLabelProvider(templateViewLabelProvider);
-
+        tableViewer.setLabelProvider(templateViewLabelProvider);
         // table.setSorter(new CnAElementByTitelSorter());
 
         // init tooltip provider
-        ColumnViewerToolTipSupport.enableFor(table, ToolTip.RECREATE);
-        List<PathCellLabelProvider> cellLabelProviders = ((TemplateTableViewer) table).initToolTips(templateViewLabelProvider, parent);
-
+        ColumnViewerToolTipSupport.enableFor(tableViewer, ToolTip.RECREATE);
+        List<PathCellLabelProvider> cellLabelProviders = ((TemplateTableViewer) tableViewer).initToolTips(templateViewLabelProvider, parent);
         // register resize listener for cutting the tooltips
         addResizeListener(parent, cellLabelProviders);
 
@@ -159,8 +173,8 @@ public class TemplateView extends RightsEnabledView {
 
         makeActions();
         hookActions();
+        addToolBarActions();
 
-        contributeToActionBars();
         hookPageSelection();
     }
 
@@ -182,39 +196,9 @@ public class TemplateView extends RightsEnabledView {
         });
     }
 
-    private void hookModelLoadListener() {
-        this.loadListener = new IModelLoadListener() {
-
-            @Override
-            public void closed(BSIModel model) {
-                removeModelListeners();
-                Display.getDefault().asyncExec(new Runnable() {
-                    @Override
-                    public void run() {
-                        table.setInput(new PlaceHolder("")); //$NON-NLS-1$
-                    }
-                });
-            }
-
-            @Override
-            public void loaded(BSIModel model) {
-                synchronized (loadListener) {
-                    addBSIModelListeners();
-                }
-            }
-
-            @Override
-            public void loaded(ISO27KModel model) {
-                // only BSI view
-
-            }
-
-        };
-        CnAElementFactory.getInstance().addLoadListener(loadListener);
-    }
-
     protected void addBSIModelListeners() {
         WorkspaceJob initDataJob = new WorkspaceJob(Messages.ISMView_InitData) {
+            @SuppressWarnings("static-access")
             @Override
             public IStatus runInWorkspace(final IProgressMonitor monitor) {
                 IStatus status = Status.OK_STATUS;
@@ -224,7 +208,7 @@ public class TemplateView extends RightsEnabledView {
                         CnAElementFactory.getInstance().getLoadedModel().addBSIModelListener(contentProvider);
                     }
                 } catch (Exception e) {
-                    LOG.error("Error while loading data.", e); //$NON-NLS-1$
+                    LOG.error(Messages.TemplateView_7, e); // $NON-NLS-1$
                     status = new Status(Status.ERROR, "sernet.gs.ui.rcp.main", Messages.TemplateView_7, e); //$NON-NLS-1$
                 } finally {
                     monitor.done();
@@ -235,25 +219,77 @@ public class TemplateView extends RightsEnabledView {
         JobScheduler.scheduleInitJob(initDataJob);
     }
 
+    private void hookModelLoadListener() {
+        this.loadListener = new IModelLoadListener() {
+            @Override
+            public void closed(BSIModel model) {
+                removeModelListeners();
+                setInputAsync();
+            }
+
+            @Override
+            public void loaded(BSIModel model) {
+                synchronized (loadListener) {
+                    addBSIModelListeners();
+                }
+                setInputAsync();
+            }
+
+            @Override
+            public void loaded(ISO27KModel model) {
+                // only BSI view
+            }
+        };
+        CnAElementFactory.getInstance().addLoadListener(loadListener);
+    }
+
+    private void setInputAsync() {
+        Display.getDefault().asyncExec(new Runnable() {
+            @Override
+            public void run() {
+                if (tableViewer.getContentProvider() != null) {
+                    tableViewer.setInput(new PlaceHolder("")); //$NON-NLS-1$
+                }
+            }
+
+        });
+    }
+
     @Override
     public void setFocus() {
-        table.getControl().setFocus();
+        tableViewer.getControl().setFocus();
     }
 
     private void makeActions() {
         doubleClickAction = new Action() {
             @Override
             public void run() {
-                if (table.getSelection() instanceof IStructuredSelection) {
-                    Object selection = ((IStructuredSelection) table.getSelection()).getFirstElement();
+                if (tableViewer.getSelection() instanceof IStructuredSelection) {
+                    Object selection = ((IStructuredSelection) tableViewer.getSelection()).getFirstElement();
                     EditorFactory.getInstance().updateAndOpenObject(selection);
                 }
             }
         };
+
+        addTemplateAction = new Action() {
+            @Override
+            public void run() {
+                try {
+                    addTemplates();
+                    this.setChecked(false);
+                } catch (Exception e) {
+                    LOG.error(Messages.TemplateView_6, e); // $NON-NLS-1$
+                    showError(Messages.TemplateView_5, Messages.TemplateView_6);
+                }
+            }
+        };
+        addTemplateAction.setText(Messages.TemplateView_1);
+        addTemplateAction.setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.PLUS));
+        addTemplateAction.setEnabled(false);
     }
 
     private void hookActions() {
-        table.addDoubleClickListener(new IDoubleClickListener() {
+        tableViewer.addDoubleClickListener(new IDoubleClickListener() {
             @Override
             public void doubleClick(DoubleClickEvent event) {
                 doubleClickAction.run();
@@ -274,9 +310,10 @@ public class TemplateView extends RightsEnabledView {
          * Own selection provider returns an Element object of the selected row.
          * Uses the table for all other methods.
          */
-        getSite().setSelectionProvider(table);
+        getSite().setSelectionProvider(tableViewer);
     }
 
+    @SuppressWarnings("restriction")
     protected void pageSelectionChanged(IWorkbenchPart part, ISelection selection) {
         if (part == this) {
             return;
@@ -289,12 +326,39 @@ public class TemplateView extends RightsEnabledView {
         }
         Object element = ((IStructuredSelection) selection).getFirstElement();
         if (element instanceof CnATreeElement) {
-            setNewInputElement((CnATreeElement) element);
+            CnATreeElement cnTreeElement = (CnATreeElement) element;
+            setNewInputElement(cnTreeElement);
+
+            if (MassnahmenUmsetzung.TYPE_ID.equals(cnTreeElement.getTypeId()) || ITVerbund.TYPE_ID.equals(cnTreeElement.getTypeId())) {
+                addTemplateAction.setEnabled(false);
+                addTemplateAction.setText(Messages.TemplateView_1);
+            } else {
+                addTemplateAction.setEnabled(true);
+                addTemplateAction.setText(Messages.bind(Messages.TemplateView_2, inputElement.getTitle()));
+            }
         }
     }
 
     public CnATreeElement getInputElement() {
+        checkAndRetrieveTemplates();
         return this.inputElement;
+    }
+
+    protected void setNewInputElement(CnATreeElement element) {
+        this.inputElement = element;
+        setViewTitle();
+        loadTemplates();
+    }
+
+    @SuppressWarnings("restriction")
+    private void setViewTitle() {
+        if (inputElement.isTemplate()) {
+            this.setContentDescription(Messages.bind(Messages.TemplateView_8, inputElement.getTitle()));
+        } else if (inputElement.isImplementation()) {
+            this.setContentDescription(Messages.bind(Messages.TemplateView_9, inputElement.getTitle()));
+        } else {
+            this.setContentDescription("");
+        }
     }
 
     public Set<CnATreeElement> getTemplates() {
@@ -304,45 +368,72 @@ public class TemplateView extends RightsEnabledView {
 
     private void checkAndRetrieveTemplates() {
         for (CnATreeElement element : templates) {
-            element.setEntity(Retriever.checkRetrieveElement(element).getEntity());
-            // element.setParent(Retriever.checkRetrieveParent(element.getParent()));
+            CnATreeElement retrieveElement = Retriever.checkRetrieveElement(element);
+            element.setEntity(retrieveElement.getEntity());
         }
+    }
+
+    public void setTemplates(Set<CnATreeElement> templates) {
+        this.templates = templates;
     }
 
     public void reloadAll() {
         loadTemplates();
     }
 
-    public void setInputElement(CnATreeElement inputElement) {
-        this.inputElement = inputElement;
+    private void addToolBarActions() {
+        IActionBars bars = getViewSite().getActionBars();
+        bars.getToolBarManager().add(this.addTemplateAction);
     }
 
-    @SuppressWarnings("restriction")
-    protected void setNewInputElement(CnATreeElement element) {
-        if (element.isTemplate()) {
-            setViewTitle(Messages.bind(Messages.TemplateView_8, element.getTitle()));
-        } else if (element.isImplementation()) {
-            setViewTitle(Messages.bind(Messages.TemplateView_9, element.getTitle()));
-        } else {
-            setViewTitle("");
+    private void addTemplates() throws InvocationTargetException, InterruptedException, CommandException {
+        CnATreeElementSelectionDialog dialog = new TemplateSelectionDialog(getShell(), inputElement);
+        if (dialog.open() != Window.OK) {
+            return;
         }
 
-        this.inputElement = element;
-        loadTemplates();
+        List<CnATreeElement> templateCandidates = dialog.getSelectedElements();
+        Set<String> templateCandidateUuids = new HashSet<String>();
+        List<CnATreeElement> newChildren = new ArrayList<CnATreeElement>();
+
+        for (CnATreeElement templateCandidate : templateCandidates) {
+            if (!templateCandidate.getChildren().isEmpty()) {
+                newChildren.addAll(templateCandidate.getChildren());
+                templateCandidateUuids.add(templateCandidate.getUuid());
+            }
+        }
+
+        IProgressRunnable operation = new CopyTemplateElements(inputElement, newChildren, templateCandidateUuids);
+        if (operation != null) {
+            IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+            progressService.run(true, true, operation);
+        }
+
+        // notify all listeners:
+        CnAElementFactory.getModel(inputElement.getParent()).childChanged(inputElement);
+        CnAElementFactory.getModel(inputElement.getParent()).databaseChildChanged(inputElement);
     }
 
-    private void setViewTitle(String title) {
-        this.setContentDescription(title);
+    protected void showError(final String title, final String message) {
+        Display.getDefault().syncExec(new Runnable() {
+            @Override
+            public void run() {
+                MessageDialog.openError(getShell(), title, message);
+            }
+        });
     }
 
-
-    private void contributeToActionBars() {
-        IActionBars bars = getViewSite().getActionBars();
-        fillLocalToolBar(bars.getToolBarManager());
+    private static Shell getShell() {
+        return getDisplay().getActiveShell();
     }
 
-    private void fillLocalToolBar(IToolBarManager manager) {
-        // manager.add(this.linkWithEditorAction);
+    private static Display getDisplay() {
+        Display display = Display.getCurrent();
+        // may be null if outside the UI thread
+        if (display == null) {
+            display = Display.getDefault();
+        }
+        return display;
     }
 
     /*

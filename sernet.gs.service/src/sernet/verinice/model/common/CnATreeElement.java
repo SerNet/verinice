@@ -39,7 +39,6 @@ import sernet.verinice.model.bsi.IBSIModelListener;
 import sernet.verinice.model.bsi.ISchutzbedarfProvider;
 import sernet.verinice.model.bsi.LinkKategorie;
 import sernet.verinice.model.bsi.Schutzbedarf;
-import sernet.verinice.model.common.CnATreeElement.TemplateType;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 import sernet.verinice.model.iso27k.InheritLogger;
 import sernet.verinice.model.validation.CnAValidation;
@@ -135,6 +134,8 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
 	public enum TemplateType { NONE, TEMPLATE, IMPLEMENTATION }
 	public String templateTypeValue = TemplateType.NONE.name();
 	
+    private Set<String> implementedTemplateUuids = new HashSet<String>();
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj){
@@ -836,5 +837,13 @@ public abstract class CnATreeElement implements Serializable, IBSIModelListener,
     
     public boolean isTemplateOrImplementation() {
         return TemplateType.TEMPLATE.equals(this.getTemplateType()) || TemplateType.IMPLEMENTATION.equals(this.getTemplateType());
+    }
+
+    public Set<String> getImplementedTemplateUuids() {
+        return implementedTemplateUuids;
+    }
+
+    public void setImplementedTemplateUuids(Set<String> implementedTemplateUuids) {
+        this.implementedTemplateUuids = implementedTemplateUuids;
     }
 }

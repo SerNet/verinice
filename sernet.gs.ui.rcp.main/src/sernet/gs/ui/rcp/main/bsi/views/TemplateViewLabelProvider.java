@@ -29,6 +29,7 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportParent;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
@@ -42,7 +43,7 @@ import sernet.verinice.service.commands.LoadElementTitles;
  */
 public class TemplateViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-    private static final Logger log = Logger.getLogger(TemplateViewLabelProvider.class);
+    private static final Logger LOG = Logger.getLogger(TemplateViewLabelProvider.class);
 
     private TemplateView templateView;
     private static HashMap<Integer, String> titleMap = new HashMap<>();
@@ -67,7 +68,7 @@ public class TemplateViewLabelProvider extends LabelProvider implements ITableLa
         }
         CnATreeElement element = (CnATreeElement) obj;
         switch (index) {
-        case 0:
+        case 1:
             return getObjTypeImage(element);
         default:
             return null;
@@ -116,12 +117,11 @@ public class TemplateViewLabelProvider extends LabelProvider implements ITableLa
 
         switch (index) {
         case 0:
-            return ""; // image only //$NON-NLS-1$
+            return loadParentTitle(element);
         case 1:
-            return element.getTitle();
+            return ""; // image only //$NON-NLS-1$
         case 2:
-            return "Test";// element.getParent() != null ?
-                          // element.getParent().getTitle() : "";
+            return element.getTitle();
         case 3:
             String title = "";
             try {
@@ -131,7 +131,7 @@ public class TemplateViewLabelProvider extends LabelProvider implements ITableLa
                     title = titleMap.get(element.getScopeId());
                 }
             } catch (CommandException e) {
-                log.error("Error while getting element properties", e);
+                LOG.error("Error while getting element properties", e);
             }
             return title; // ScopeTitle from element dependencies
         case 4:
@@ -147,5 +147,15 @@ public class TemplateViewLabelProvider extends LabelProvider implements ITableLa
         scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
         titleMap = scopeCommand.getElements();
         return titleMap.get(element.getScopeId());
+    }
+
+    private String loadParentTitle(CnATreeElement element) {
+        LoadReportParent scopeCommand = new LoadReportParent(element.getDbId());
+        try {
+            scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
+        } catch (CommandException e) {
+            LOG.error("Error while getting element parent title", e);
+        }
+        return scopeCommand.getElements().get(0).getTitle();
     }
 }

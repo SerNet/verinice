@@ -19,6 +19,8 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.bsi.views;
 
+import java.util.Set;
+
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
@@ -37,21 +39,21 @@ import sernet.verinice.model.validation.CnAValidation;
 public class TemplateViewContentProvider implements IStructuredContentProvider, IBSIModelListener {
 
     private TemplateView templateView;
-    private TableViewer table;
+    private TableViewer tableViewer;
 
     public TemplateViewContentProvider(TemplateView view, TableViewer viewer) {
         this.templateView = view;
-        this.table = viewer;
+        this.tableViewer = viewer;
     }
 
     @Override
-    public void inputChanged(Viewer v, Object oldInput, Object newInputElement) {
-        if (newInputElement instanceof PlaceHolder) {
+    public void inputChanged(Viewer v, Object oldInput, Object newTemplates) {
+        if (newTemplates instanceof PlaceHolder) {
             return;
         }
-        CnATreeElement inputElement = (CnATreeElement) newInputElement;
-        templateView.setInputElement(inputElement);
-        table.refresh();
+        Set<CnATreeElement> inputElement = (Set<CnATreeElement>) newTemplates;
+        templateView.setTemplates(inputElement);
+        tableViewer.refresh();
     }
 
     @Override

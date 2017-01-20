@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -40,20 +41,20 @@ import sernet.hui.common.VeriniceContext;
 import sernet.hui.common.connect.HitroUtil;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IPostProcessor;
-import sernet.verinice.interfaces.bpm.IControlExecutionProcess;
 import sernet.verinice.interfaces.bpm.IIndividualService;
 import sernet.verinice.interfaces.bpm.IndividualServiceParameter;
 import sernet.verinice.model.bsi.Attachment;
 import sernet.verinice.model.bsi.AttachmentFile;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysis;
 import sernet.verinice.model.bsi.risikoanalyse.FinishedRiskAnalysisLists;
 import sernet.verinice.model.bsi.risikoanalyse.GefaehrdungsUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnATreeElement.TemplateType;
-import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.IISO27kGroup;
 
 /**
@@ -99,6 +100,8 @@ public class CopyCommand extends GenericCommand {
     private boolean copyLinks = false;
     
     private boolean copyAttachments = false;
+
+    private HashMap<Integer, String> titleMap = new HashMap<>();
       
 
     /**
@@ -294,6 +297,7 @@ public class CopyCommand extends GenericCommand {
             if (copyElement.isTemplateOrImplementation()) {
                 newElement.setEntity(copyElement.getEntity());
                 newElement.setTemplateType(TemplateType.IMPLEMENTATION);
+                newElement.getImplementedTemplateUuids().add(copyElement.getUuid());
             } else {
                 newElement.getEntity().copyEntity(copyElement.getEntity());
             }
@@ -447,13 +451,18 @@ public class CopyCommand extends GenericCommand {
     }
 
     private void createTaskWhenUsingTemplate(final CnATreeElement copyElement, final CnATreeElement newElement) {
-        // TODO: get server preference for create task when using template
-        if (copyElement.isTemplate()) {
+        if (copyElement.isTemplate() && !MassnahmenUmsetzung.TYPE_ID.equals(copyElement.getTypeId())) {
+            // TODO: use element creator instead of verinice admin
             ServerInitializer.inheritVeriniceContextState();
+            String admin = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getAdminUsername();
+            String username = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getUsername();
+
+            if (!admin.equals(username)) {
             IIndividualService individualService = (IIndividualService) VeriniceContext.get(VeriniceContext.INDIVIDUAL_SERVICE);
             IndividualServiceParameter parameter = getIndividualServiceParameter(copyElement, newElement);
             
             individualService.startProcess(parameter);
+        }
         }
     }
 
@@ -461,55 +470,45 @@ public class CopyCommand extends GenericCommand {
         IndividualServiceParameter parameter = new IndividualServiceParameter();
         parameter.setUuid(newElement.getUuid());
         parameter.setTypeId(newElement.getTypeId());
-        String owner = loadOwnerByCnAElementDbId(copyElement.getDbId());
-        parameter.setAssignee(owner);
+        String admin = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getAdminUsername();
+        parameter.setAssignee(admin);
         parameter.setTitle(Messages.getString("CopyCommand.TaskTitleWhenUsingTemplate"));
-        parameter.setDescription(Messages.getString("CopyCommand.TaskDescriptionWhenUsingTemplate", copyElement.getTitle(), newElement.getParent().getTitle()));
+        String newElementScopeTitle = getScopeTitle(newElement);
+        parameter.setDescription(Messages.getString("CopyCommand.TaskDescriptionWhenUsingTemplate", copyElement.getTitle(), newElement.getParent().getTitle(), newElementScopeTitle));
 
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, 14);
         parameter.setDueDate(cal.getTime());
-
-        if (IControlExecutionProcess.DEFAULT_OWNER_NAME.equals(owner)) {
-            parameter.setReminderPeriodDays(7);
-        } else {
-            Configuration ownerConfiguration = loadConfiguration(owner);
-            parameter.setReminderPeriodDays(ownerConfiguration.getNotificationExpirationDays());
-        }
-
+        parameter.setReminderPeriodDays(7);
         parameter.setProperties(new HashSet<>(Arrays.asList(newElement.getEntityType().getAllPropertyTypeIds())));
         parameter.setWithAReleaseProcess(false);
         return parameter;
     }
 
-    private String loadOwnerByCnAElementDbId(Integer dbId) {
-
-        LoadOwnerByCnAElementDbId command = new LoadOwnerByCnAElementDbId(dbId);
-        String elementCreator = IControlExecutionProcess.DEFAULT_OWNER_NAME;
+    /**
+     * @param copyElement
+     * @return
+     */
+    private String getScopeTitle(final CnATreeElement copyElement) {
+        String scopeTitle = "";
         try {
-            command = getCommandService().executeCommand(command);
-            elementCreator = command.getElementOwner();
+            if (!titleMap.containsKey(copyElement.getScopeId())) {
+                scopeTitle = loadElementsTitles(copyElement);
+            } else {
+                scopeTitle = titleMap.get(copyElement.getScopeId());
+            }
         } catch (CommandException e) {
-            getLog().error("Error while determing element owner by dbId", e);
+            log.error("Error while getting element properties", e);
         }
-        return elementCreator;
+        return scopeTitle;
     }
 
-    private Configuration loadConfiguration(String account) {
-        Configuration configuration = null;
-        try {
-            LoadPersonForLogin loadPerson = new LoadPersonForLogin(account);
-            loadPerson = getCommandService().executeCommand(loadPerson);
-            CnATreeElement person = loadPerson.getPerson();
-
-            LoadConfiguration command = new LoadConfiguration(person);
-            command = getCommandService().executeCommand(command);
-            configuration = command.getConfiguration();
-
-        } catch (CommandException e) {
-            getLog().error("Error while determing configuration", e);
-        }
-        return configuration;
+    private String loadElementsTitles(CnATreeElement element) throws CommandException {
+        LoadElementTitles scopeCommand;
+        scopeCommand = new LoadElementTitles();
+        scopeCommand = getCommandService().executeCommand(scopeCommand);
+        titleMap = scopeCommand.getElements();
+        return titleMap.get(element.getScopeId());
     }
 
     public String getUuidGroup() {
