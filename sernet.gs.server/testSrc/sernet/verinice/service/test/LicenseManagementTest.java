@@ -253,7 +253,7 @@ public class LicenseManagementTest extends ContextConfiguration{
             licenseManagementService.addLicenseIdAuthorisation(username, secondEntry.getLicenseID());
         }
         
-        Assert.assertTrue(licenseManagementService.getAllLicenseIds().size() >= 2);
+        Assert.assertTrue(licenseManagementService.getAllLicenseIds(false).size() >= 2);
         
         Assert.assertTrue("more users assigned than allowed by licenseEntry", licenseManagementService.checkAssignedUsersForLicenseId(firstEntry.getLicenseID()));
         Assert.assertTrue("more users assigned than allowed by licenseEntry", licenseManagementService.checkAssignedUsersForLicenseId(secondEntry.getLicenseID()));
@@ -271,14 +271,6 @@ public class LicenseManagementTest extends ContextConfiguration{
     public void testGetValidUsersForContentId(){
         for(String contentId : CONTENTID_TESTDATA){
             Assert.assertTrue("assigned users for " + contentId + " is 0", licenseManagementService.getValidUsersForContentId(contentId) > 0);
-        }
-    }
-    
-    @Test
-    public void testGetLicenseIdByDbId(){
-        for(LicenseManagementEntry entry : elementDao.findAll()){
-            String licenseId = licenseManagementService.getLicenseId(entry.getDbId());
-            Assert.assertTrue("entry has no licenseId", licenseId != null && !licenseId.equals(""));
         }
     }
     

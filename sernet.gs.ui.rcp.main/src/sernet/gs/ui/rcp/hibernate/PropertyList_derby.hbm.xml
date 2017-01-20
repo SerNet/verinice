@@ -50,7 +50,7 @@
 					 />
 				-->
 				
-				<property name="contentId" />
+				<property name="licenseContentId" />
 
 				<property name="limitedLicense" type="boolean">
 					<column name="limitedlicense" not-null="false" default="0" />

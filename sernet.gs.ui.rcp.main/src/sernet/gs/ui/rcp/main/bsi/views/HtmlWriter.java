@@ -148,7 +148,7 @@ public abstract class HtmlWriter {
      */
     private static String getLicenseRestrictedPropertyValue(Property property) {
         StringBuilder sb = new StringBuilder();
-        String encryptedContentId = property.getContentId();
+        String encryptedContentId = property.getLicenseContentId();
         String cypherText = property.getPropertyValue();
         return getLicenseMgmtService().decryptRestrictedProperty(
                 encryptedContentId, cypherText,1 ); 

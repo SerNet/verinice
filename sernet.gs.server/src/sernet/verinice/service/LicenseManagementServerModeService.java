@@ -22,6 +22,7 @@ package sernet.verinice.service;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,9 +36,9 @@ import org.apache.log4j.Logger;
 import org.hibernate.LazyInitializationException;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.IDirectoryCreator;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
@@ -46,8 +47,6 @@ import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConverter;
-import sernet.verinice.service.commands.LoadVNLFiles;
-import sernet.verinice.service.commands.LoadVNLRepoLocation;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -62,6 +61,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     private IBaseDao<Configuration, Serializable> configurationDao;
     private IEncryptionService cryptoService;
     private ICommandService commandService;
+    private IDirectoryCreator directoryCreator;
     
     protected Set<LicenseManagementEntry> existingLicenses = null;
 
@@ -541,11 +541,12 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         } else {
             existingLicenses = new HashSet<>();
         }
-        LoadVNLFiles vnlLoader = new LoadVNLFiles();
+        
+        Collection<File> vnlFiles = FileUtils.listFiles(getVNLRepository(), new String[]{"vnl"}, false);
+        
         try{
-            for(String filename : getCommandService().executeCommand(vnlLoader).getVNLFiles()){
-                File file = new File(filename);
-                byte[] fileContent = FileUtils.readFileToByteArray(file);
+            for(File vnlFile : vnlFiles){
+                byte[] fileContent = FileUtils.readFileToByteArray(vnlFile);
                 LicenseManagementEntry entry = VNLMapper.getInstance().unmarshalXML(fileContent);
                 existingLicenses.add(entry);
             }
@@ -553,25 +554,13 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
             String msg = "Error while reading licensefile"; 
             log.error(msg, e);
             throw new LicenseManagementException(msg);
-        } catch (CommandException e){
-            String msg = "Error while loading vnl-Files"; 
-            log.error(msg, e);
-            throw new LicenseManagementException(msg, e);
-        }
+        } 
         return existingLicenses;
     }
     
     @Override
     public File getVNLRepository(){
-        LoadVNLRepoLocation vnlRepoLoader = new LoadVNLRepoLocation();
-        try {
-            vnlRepoLoader = getCommandService().executeCommand(vnlRepoLoader);
-        } catch (CommandException e) {
-            String msg = "Error while retrieving vnl-Folder-Property";
-            log.error(msg, e);
-            throw new LicenseManagementException(msg, e);
-        }
-        return new File(vnlRepoLoader.getLicenseRepoLocation());
+        return new File(directoryCreator.create());
     }
 
     /**
@@ -618,32 +607,38 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      * @see sernet.verinice.interfaces.licensemanagement.ILicenseManagementService#decryptRestrictedProperty(java.lang.String, java.lang.String)
      */
     @Override
-    public String decryptRestrictedProperty(String encryptedLicenseId, String cypherText, int userDbId) {
-        boolean valid = false;
-        if(getAllLicenseIds(false).contains(encryptedLicenseId)){ // is required license existant
-            LicenseManagementEntry entry = null;
-            for(LicenseManagementEntry existingEntry : getExistingLicenses()){ // get related licenceInformation
-                if(encryptedLicenseId.equals(existingEntry.getLicenseID())){
-                    entry = existingEntry;
-                }
+    public String decryptRestrictedProperty(String encryptedContentId, String cypherText, int userDbId) {
+        LicenseManagementEntry entry = null;
+        for(LicenseManagementEntry existingEntry : getExistingLicenses()){ // get related licenceInformation
+            String plainContentId = getCryptoService().decryptLicenseRestrictedProperty(encryptedContentId, existingEntry.getUserPassword());
+            if(plainContentId.equals(this.decrypt(existingEntry, LicenseManagementEntry.COLUMN_CONTENTID))){
+                entry = existingEntry;
             }
-            
-            // decrypt
-            try {
-                if(valid){
-                    return getCryptoService().decryptLicenseRestrictedProperty(entry.getUserPassword(), cypherText);
-                } else {
-                    return "No valid License-Information found";
-                }
-            } catch (EncryptionException e) {
-                throw new LicenseManagementException("Problem while decrypting license restricted property", e);
+        }
+        // decrypt
+        try {
+            if(entry != null){
+                return getCryptoService().decryptLicenseRestrictedProperty(entry.getUserPassword(), cypherText);
+            } else {
+                return "No valid License-Information found";
             }
-        } else {
-            return cypherText;
+        } catch (EncryptionException e) {
+            throw new LicenseManagementException("Problem while decrypting license restricted property", e);
         }
     }
-    
 
-    
+    /**
+     * @return the directoryCreator
+     */
+    public IDirectoryCreator getDirectoryCreator() {
+        return directoryCreator;
+    }
+
+    /**
+     * @param directoryCreator the directoryCreator to set
+     */
+    public void setDirectoryCreator(IDirectoryCreator directoryCreator) {
+        this.directoryCreator = directoryCreator;
+    }
 
 }

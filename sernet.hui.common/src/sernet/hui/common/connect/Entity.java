@@ -372,7 +372,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 	 */
 	public void importProperties(HUITypeFactory huiTypeFactory, 
 	        String propertyTypeId, List<String> foreignProperties, 
-	        List<Boolean> foreinLimitedLicense, 
+	        List<Boolean> foreignLimitedLicense, 
 	        List<String> foreignContentId,
 	        boolean licenseManagement) {
 		PropertyList pl = typedPropertyLists.get(propertyTypeId);
@@ -422,9 +422,12 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 			p.setPropertyType(propertyTypeId);
 			p.setPropertyValue(value);
 			p.setParent(this);
-			if(licenseManagement){
-			    p.setLimitedLicense(foreinLimitedLicense.get(i));
-			    p.setContentId(foreignContentId.get(i));
+			if(licenseManagement 
+			        && foreignContentId.size() > 0 
+			        && foreignLimitedLicense.size() > 0
+			        ){
+			    p.setLimitedLicense(foreignLimitedLicense.get(i));
+			    p.setLicenseContentId(foreignContentId.get(i));
 			}
 			properties.add(p);
 		}
@@ -448,7 +451,7 @@ public class Entity implements ISelectOptionHandler, ITypedElement, Serializable
 		{
 			foreignProperties.add(prop.getPropertyValue());
 			foreignIsLicenseLimited.add(prop.isLimitedLicense() != null ? prop.isLimitedLicense() : false);
-			foreignContentId.add(prop.getContentId() != null  ? prop.getContentId() : "");
+			foreignContentId.add(prop.getLicenseContentId() != null  ? prop.getLicenseContentId() : "");
 			amount++;
 		}
 		

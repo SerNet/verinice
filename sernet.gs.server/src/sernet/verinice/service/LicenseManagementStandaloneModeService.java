@@ -33,6 +33,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
+import sernet.verinice.interfaces.IDirectoryCreator;
 import sernet.verinice.interfaces.IVeriniceConstants;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
@@ -47,6 +48,8 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
     implements ILicenseManagementService {
     
     LicenseManagementEntryDao licenseManagementDao;
+    
+    IDirectoryCreator directoryCreator;
 
     /**
      * if any entries in db referencing the given encrypted contentId, return 1 since 
@@ -227,6 +230,20 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
             throw new LicenseManagementException(msg, e);
         }
         return existingLicenses;
+    }
+
+    /**
+     * @return the directoryCreator
+     */
+    public IDirectoryCreator getDirectoryCreator() {
+        return directoryCreator;
+    }
+
+    /**
+     * @param directoryCreator the directoryCreator to set
+     */
+    public void setDirectoryCreator(IDirectoryCreator directoryCreator) {
+        this.directoryCreator = directoryCreator;
     }
 
 }

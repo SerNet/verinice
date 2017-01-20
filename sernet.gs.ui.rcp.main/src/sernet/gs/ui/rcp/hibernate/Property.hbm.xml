@@ -17,7 +17,7 @@
         
         <property name="propertyValue" type="java.lang.String" length="400000"/>
         
-        <property name="contentId" />
+        <property name="licenseContentId" />
         
         <property name="limitedLicense" type="boolean" >
         	<column name="limitedlicense" not-null="false" default="false" />

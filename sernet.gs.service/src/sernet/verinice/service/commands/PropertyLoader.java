@@ -28,10 +28,8 @@ package sernet.verinice.service.commands;
 public class PropertyLoader {
 
     public static final String FILESIZE_MAX = "veriniceserver.filesize.max";
-    public static final String VNL_REPOSITORY = "veriniceserver.vnl.repository";
     
     private static String fileSizeMax;
-    private static String vnlRepositoryLocation;
 
     /**
      * Returns the value of veriniceserver.filesize.max property in file veriniceserver-plain.properties
@@ -46,17 +44,4 @@ public class PropertyLoader {
         PropertyLoader.fileSizeMax = fileSizeMax;
     }
 
-    /**
-     * @return the licenseManagementKey
-     */
-    public static String getVnlRepositoryLocation() {
-        return PropertyLoader.vnlRepositoryLocation;
-    }
-
-    /**
-     * @param licenseManagementKey the licenseManagementKey to set
-     */
-    public void setVnlRepositoryLocation(String vnlRepositoryLocation) {
-        PropertyLoader.vnlRepositoryLocation = vnlRepositoryLocation;
-    } 
 }

@@ -346,9 +346,13 @@ public class SyncInsertUpdateCommand extends GenericCommand
 
                 boolean licenseManagementValid = validateInformation(licenseManagement, syncaAttribute);
                 importReferenceTypes.trackReferences(elementInDB, syncaAttribute, attrIntId);
-                elementInDB.getEntity().importProperties(huiTypeFactory, 
-                        attrIntId, attrValues, syncaAttribute.getLimitedLicense(), 
-                        syncaAttribute.getContentId(), licenseManagementValid);
+                try{
+                    elementInDB.getEntity().importProperties(huiTypeFactory, 
+                            attrIntId, attrValues, syncaAttribute.getLimitedLicense(), 
+                            syncaAttribute.getLicenseContentId(), licenseManagementValid);
+                } catch (IndexOutOfBoundsException e){
+                    getLog().error("wrong number of arguments while importing", e);
+                }
                 addElement(elementInDB);
             } // for <syncAttribute>
             elementInDB = dao.merge(elementInDB);
@@ -399,6 +403,10 @@ public class SyncInsertUpdateCommand extends GenericCommand
     private boolean validateInformation(boolean licenseManagement, SyncAttribute sa) {
         boolean licenseListCardinality 
             = checkEqualCardinalityOfLists(sa);
+        if(sa.getLicenseContentId().size() == 0 
+                && sa.getLimitedLicense().size() == 0){
+            return true;
+        } 
         boolean licenseManagementValid = licenseManagement 
                 && licenseListCardinality;
         
@@ -422,7 +430,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
         return syncAttribute.getValue().size() 
                 == syncAttribute.getLimitedLicense().size() 
                 && syncAttribute.getLimitedLicense().size() 
-                == syncAttribute.getContentId().size();
+                == syncAttribute.getLicenseContentId().size();
     }
     
     /**
@@ -434,8 +442,8 @@ public class SyncInsertUpdateCommand extends GenericCommand
      */
     private boolean isLicenseManagementSupported(SyncObject syncObject){
         for(SyncAttribute syncAttribute : syncObject.getSyncAttribute()){
-            if(syncAttribute.getContentId() != null &&
-                    syncAttribute.getContentId().size() > 0){
+            if(syncAttribute.getLicenseContentId() != null &&
+                    syncAttribute.getLicenseContentId().size() > 0){
                 return true;
             }
         }
@@ -544,7 +552,7 @@ public class SyncInsertUpdateCommand extends GenericCommand
                     String attrIntId = mat.getIntId();
                     attachment.getEntity().importProperties(huiTypeFactory, 
                             attrIntId, attrValues, sa.getLimitedLicense(), 
-                            sa.getContentId(), false);
+                            sa.getLicenseContentId(), false);
                 }
             }
             if (getLog().isDebugEnabled()) {
