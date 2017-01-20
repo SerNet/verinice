@@ -5,117 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">Charts</ui:define>
+	<ui:define name="title">#{itNetworkView.itNetwork} - MassnahmenUmsetzung</ui:define>
 
 	<ui:define name="viewname">Charts</ui:define>
 
 	<ui:define name="head">
-
-		<script type="text/javascript">
-			function veriniceBar() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					borderWidth : 0.1,
-					borderColor : 'bdbdbd',
-					rendererOptions : {
-						textColor : '#666F77'
-					}
-				};
-				this.cfg.seriesDefaults = {
-					shadow : false,
-					lineWidth : 1,
-					renderer : $.jqplot.BarRenderer,
-					rendererOptions : {
-						varyBarColor : true
-					},
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
-
-			/** Custom layout extender for verinice pie charts based on poseidon */
-			function verinicePie() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					rendererOptions : {
-						textColor : '#666F77',
-					}
-				};
-				this.cfg.seriesDefaults = {
-					renderer : $.jqplot.PieRenderer,
-					shadow : false,
-					lineWidth : 1,
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
-
-			function veriniceHorizontalBar() {
-				this.cfg.shadow = false;
-				this.cfg.title = '';
-				this.cfg.grid = {
-					background : '#ffffff',
-					borderColor : '#ffffff',
-					gridLineColor : '#F5F5F5',
-					shadow : false
-				};
-				this.cfg.axesDefaults = {
-					borderWidth : 0.1,
-					borderColor : 'bdbdbd',
-					rendererOptions : {
-						textColor : '#666F77'
-					}
-				};
-				this.cfg.seriesDefaults = {
-					shadow : false,
-					lineWidth : 1,
-					renderer : $.jqplot.BarRenderer,
-					rendererOptions : {
-						varyBarColor : true,
-						barDirection : 'horizontal'
-					},
-					markerOptions : {
-						shadow : false,
-						size : 7,
-						style : 'circle'
-					}
-				}
-			}
-		</script>
-
-		<style type="text/css">
-.jqplot-xaxis-label, .jqplot-yaxis-label, .jqplot-y2axis-label,
-	.jqplot-x2axis-label {
-	color: #757575;
-}
-
-table.jqplot-table-legend {
-	background-color: #ffffff;
-	color: #757575;
-	border-color: #bdbdbd;
-}
-</style>
-
+		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
 	</ui:define>
 
 	<ui:define name="content">
