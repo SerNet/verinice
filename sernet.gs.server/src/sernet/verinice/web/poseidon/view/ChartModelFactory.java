@@ -32,6 +32,7 @@ import java.util.TreeMap;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.LegendPlacement;
@@ -92,8 +93,30 @@ public class ChartModelFactory {
         return model;
     }
 
+    public BarChartModel getBarChart(){
+
+        BarChartModel barChartModel = new BarChartModel();
+
+        ChartSeries series = new ChartSeries();
+        for (Map.Entry<String, Number> entry : setLabel(data).entrySet()) {
+            series.set(entry.getKey(), entry.getValue());
+        }
+
+        barChartModel.addSeries(series);
+        barChartModel.setLegendPlacement(LegendPlacement.OUTSIDE);
+
+        Axis yAxis = barChartModel.getAxis(AxisType.Y);
+        yAxis.setMax(getMax(data.values()));
+
+        barChartModel.setExtender("veriniceBar");
+        barChartModel.setSeriesColors(getColors());
+
+        return barChartModel;
+    }
+
 
     public HorizontalBarChartModel getHorizontalBarModel() {
+
         HorizontalBarChartModel horizontalBarModel = new HorizontalBarChartModel();
 
         ChartSeries series = new ChartSeries();

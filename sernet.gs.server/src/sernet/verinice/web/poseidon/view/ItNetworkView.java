@@ -20,33 +20,15 @@
 package sernet.verinice.web.poseidon.view;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Map.Entry;
 import java.util.SortedMap;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
-import org.apache.commons.lang.StringUtils;
-import org.primefaces.model.chart.Axis;
-import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.ChartSeries;
-import org.primefaces.model.chart.HorizontalBarChartModel;
-import org.primefaces.model.chart.LegendPlacement;
+import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-import sernet.gs.service.NumericStringComparator;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.service.model.IObjectModelService;
-import sernet.verinice.web.Messages;
 import sernet.verinice.web.poseidon.services.ControlService;
 
 /**
@@ -54,7 +36,7 @@ import sernet.verinice.web.poseidon.services.ControlService;
  *
  */
 @ManagedBean(name = "itNetworkView")
-public class ItNetworkView extends AbstractBsiChartsView implements Serializable {
+public class ItNetworkView implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -69,8 +51,18 @@ public class ItNetworkView extends AbstractBsiChartsView implements Serializable
 
     private SortedMap<String, Number> states;
 
-    @Override
-    protected SortedMap<String, Number> getStates() {
+    private PieChartModel pieModel;
+
+    private BarChartModel barModel;
+
+    @PostConstruct
+    final public void init() {
+        ChartModelFactory chartModelFactory = new ChartModelFactory(getStates());
+        this.setPieModel(chartModelFactory.getPieChartModel());
+        this.setBarModel(chartModelFactory.getBarChart());
+    }
+
+    private SortedMap<String, Number> getStates() {
         if(states == null){
             states = controlService.aggregateMassnahmenUmsetzung(scopeId);
         }
@@ -100,5 +92,21 @@ public class ItNetworkView extends AbstractBsiChartsView implements Serializable
 
     public void setItNetwork(String itNetwork) {
         this.itNetwork = itNetwork;
+    }
+
+    public PieChartModel getPieModel() {
+        return pieModel;
+    }
+
+    public void setPieModel(PieChartModel pieModel) {
+        this.pieModel = pieModel;
+    }
+
+    public BarChartModel getBarModel() {
+        return barModel;
+    }
+
+    public void setBarModel(BarChartModel barModel) {
+        this.barModel = barModel;
     }
 }

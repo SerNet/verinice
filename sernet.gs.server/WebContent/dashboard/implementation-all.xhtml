@@ -64,8 +64,8 @@
 					renderer : $.jqplot.BarRenderer,
 					rendererOptions : {
 						varyBarColor : true,
-			            barDirection: 'horizontal'
-			            },
+						barDirection : 'horizontal'
+					},
 					markerOptions : {
 						shadow : false,
 						size : 7,
@@ -119,6 +119,25 @@ table.jqplot-table-legend {
 	</ui:define>
 
 	<ui:define name="content">
+
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-12 ui-md-12">
+				<h1>Massnahmenumsetzung gesamt</h1>
+			</div>
+			<div class="ui-g-12 ui-md-6">
+				<div class="card">
+					<p:chart id="verinicePieChart" type="pie"
+						model="#{totalBsiChartView.pieModel}" responsive="true" />
+				</div>
+			</div>
+			<div class="ui-g-12 ui-md-6">
+				<div class="card">
+					<p:chart id="verinicePieBar" type="bar"
+						model="#{totalBsiChartView.horizontalBarChartModel}" responsive="true" />
+				</div>
+			</div>
+		</div>
+
 		<c:set var="count" value="0" scope="view" />
 		<ui:repeat value="#{allBsiChartsView.charts}" var="chart">
 			<div class="ui-g ui-fluid">

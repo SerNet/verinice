@@ -20,31 +20,12 @@
 package sernet.verinice.web.poseidon.view;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang.StringUtils;
-import org.primefaces.model.chart.Axis;
-import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
-import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
-
-import sernet.gs.service.NumericStringComparator;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.service.model.IObjectModelService;
-import sernet.verinice.web.Messages;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -53,8 +34,6 @@ import sernet.verinice.web.Messages;
 public abstract class AbstractBsiChartsView implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    private static final String IMPLEMENTATION_STATUS_UNEDITED = "SingleSelectDummyValue";
 
     private PieChartModel pieModel;
 

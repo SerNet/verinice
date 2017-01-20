@@ -22,8 +22,13 @@ package sernet.verinice.web.poseidon.view;
 import java.io.Serializable;
 import java.util.SortedMap;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.HorizontalBarChartModel;
+import org.primefaces.model.chart.PieChartModel;
 
 import sernet.verinice.web.poseidon.services.ControlService;
 
@@ -33,7 +38,7 @@ import sernet.verinice.web.poseidon.services.ControlService;
  *
  */
 @ManagedBean(name = "totalBsiChartView")
-public class TotalBsiChartsView extends AbstractBsiChartsView implements Serializable {
+public class TotalBsiChartsView implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -42,8 +47,20 @@ public class TotalBsiChartsView extends AbstractBsiChartsView implements Seriali
 
     private SortedMap<String, Number> states;
 
-    @Override
-    protected SortedMap<String, Number> getStates() {
+    private PieChartModel pieModel;
+
+    private HorizontalBarChartModel horizontalBarChartModel;
+
+    private ChartModelFactory chartModelFactory;
+
+    @PostConstruct
+    final public void init() {
+        this.chartModelFactory = new ChartModelFactory(getStates());
+        this.pieModel = chartModelFactory.getPieChartModel();
+        this.horizontalBarChartModel = chartModelFactory.getHorizontalBarModel();
+    }
+
+    private SortedMap<String, Number> getStates() {
         if (states == null){
             states = getControlService().aggregateMassnahmenUmsetzungStatus();
         }
@@ -56,5 +73,21 @@ public class TotalBsiChartsView extends AbstractBsiChartsView implements Seriali
 
     public void setControlService(ControlService controlService) {
         this.controlService = controlService;
+    }
+
+    public void setPieModel(PieChartModel pieModel) {
+        this.pieModel = pieModel;
+    }
+
+    public PieChartModel getPieModel() {
+        return pieModel;
+    }
+
+    public HorizontalBarChartModel getHorizontalBarChartModel() {
+        return horizontalBarChartModel;
+    }
+
+    public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {
+        this.horizontalBarChartModel = horizontalBarChartModel;
     }
 }
