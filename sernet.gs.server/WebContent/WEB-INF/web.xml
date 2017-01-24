@@ -16,7 +16,7 @@
   <display-name>verinice server</display-name>
 
   <welcome-file-list>
-    <welcome-file>dashboard/dashboard.xhtml</welcome-file>
+    <welcome-file>dashboard/implementation-all.xhtml</welcome-file>
   </welcome-file-list>
 
   <context-param>
@@ -193,11 +193,19 @@
     <filter-name>contextInitializer</filter-name>
     <url-pattern>/dashboard/*</url-pattern>
   </filter-mapping>
+    <filter-mapping>
+    <filter-name>contextInitializer</filter-name>
+    <url-pattern>/misc/*</url-pattern>
+  </filter-mapping>
 
   <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
   </filter>
+  <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/misc/*</url-pattern>
+  </filter-mapping>
   <filter-mapping>
     <filter-name>springSecurityFilterChain</filter-name>
     <url-pattern>/dashboard/*</url-pattern>
