@@ -127,8 +127,8 @@
         </property>
         
 		<set name="implementedTemplateUuids" table="templaterelations" lazy="false">
-		    <key column="uuid"/>
-		    <element column="template_uuid" type="java.lang.String" not-null="true" unique="false"/>
+		    <key column="cnatreeelement_id" not-null="true" />
+		    <element column="template_uuid" type="java.lang.String" not-null="true" unique="false" />
 		</set>
 		
 <!-- Grundschutz-Elemente: ################################################################# -->
