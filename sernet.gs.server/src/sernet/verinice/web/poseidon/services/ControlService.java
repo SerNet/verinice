@@ -19,6 +19,15 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
+import sernet.gs.service.NumericStringComparator;
+import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDAOFactory;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.web.Messages;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,15 +39,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
-
-import sernet.gs.service.NumericStringComparator;
-import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.IDAOFactory;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.web.Messages;
 
 /**
  * Provides several methods which provide data for the charts.
@@ -115,7 +115,8 @@ public class ControlService extends GenericChartService {
                 .append(" left join fetch entity.typedPropertyLists propertyLists")
                 .append(" left join fetch propertyLists.properties props")
                 .append(" where element.scopeId = ?")
-                .append(" and element.objectType = ?").toString();
+                .append(" and element.objectType = ?")
+                .append(" and props.propertyType = 'mnums_umsetzung'").toString();
         Object[] params = new Object[] { scopeId, MassnahmenUmsetzung.HIBERNATE_TYPE_ID };
         IBaseDao<MassnahmenUmsetzung, Serializable> massnahmenDao = getMassnahmenDao(getDaoFactory());
         @SuppressWarnings("unchecked")
