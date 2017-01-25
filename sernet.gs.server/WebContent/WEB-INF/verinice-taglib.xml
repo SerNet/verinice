@@ -16,5 +16,4 @@
     <tag-name>login</tag-name>
     <source>../template/login.xhtml</source>
   </tag>
-  <tag-name>diagrams</tag-name>
 </facelet-taglib>
