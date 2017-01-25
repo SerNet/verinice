@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.web.poseidon.view.AbstractChartModelFactory.DiagramColors;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>

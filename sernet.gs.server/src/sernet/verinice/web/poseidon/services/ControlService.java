@@ -31,9 +31,11 @@ import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.graph.GraphService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDAOFactory;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
@@ -111,20 +113,21 @@ public class ControlService extends GenericChartService {
     public SortedMap<String, Number> aggregateMassnahmenUmsetzung(Integer scopeId) {
 
         String hqlQuery = new StringBuilder()
-                .append("from CnATreeElement element")
-                .append(" join element.entity entity")
-                .append(" join entity.typedPropertyLists propertyLists")
-                .append(" join propertyLists.properties props")
+                .append(" select distinct element from CnATreeElement element")
+                .append(" join fetch element.entity entity")
+                .append(" join fetch entity.typedPropertyLists propertyLists")
+                .append(" join fetch propertyLists.properties props")
                 .append(" where element.scopeId = ?")
-                .append(" and element.objectType = ?")
-                .append(" and props.propertyType = 'mnums_umsetzung'").toString();
-        Object[] params = new Object[] { scopeId, MassnahmenUmsetzung.HIBERNATE_TYPE_ID };
+                .append(" and element.objectType = ?").toString();
+        Object[] params = new Object[] { scopeId, MassnahmenUmsetzung.HIBERNATE_TYPE_ID  };
         IBaseDao<MassnahmenUmsetzung, Serializable> massnahmenDao = getMassnahmenDao(getDaoFactory());
+
         @SuppressWarnings("unchecked")
-        List<MassnahmenUmsetzung> massnahmenUmsetzungen = massnahmenDao.findByQuery(hqlQuery, params);
+        List<MassnahmenUmsetzung> massnahmenUmsetzungen =  massnahmenDao.findByQuery(hqlQuery, params);
 
         return aggregateMassnahmenUmsetzung(massnahmenUmsetzungen);
     }
+
 
     /**
      * Aggregate over all {@link BausteinUmsetzung} objects and aggregate the

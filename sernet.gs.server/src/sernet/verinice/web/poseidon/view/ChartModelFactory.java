@@ -141,6 +141,11 @@ public class ChartModelFactory extends AbstractChartModelFactory {
     }
 
     private Integer getMax(Collection<Number> values) {
+
+        if(values == null || values.isEmpty()){
+            return 0;
+        }
+
         Collection<Integer> buffer = new ArrayList<>();
         for (Iterator<Number> iterator = values.iterator(); iterator.hasNext();) {
             Number number = iterator.next();
