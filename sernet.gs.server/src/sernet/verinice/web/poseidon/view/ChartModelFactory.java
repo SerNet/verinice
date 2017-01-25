@@ -48,38 +48,11 @@ import sernet.verinice.web.Messages;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ChartModelFactory {
+public class ChartModelFactory extends AbstractChartModelFactory {
 
-    private static final String IMPLEMENTATION_STATUS_UNEDITED = "SingleSelectDummyValue";
 
     private SortedMap<String, Number> data;
 
-    private enum DiagramColors {
-
-        NO("FF4747"), NOT_APPLICABLE("BFBFBF"), PARTIALLY("FFE47A"), UNEDITED("4a93de"), YES("5fcd79");
-
-        private String color;
-
-        private DiagramColors(String color) {
-            this.color = color;
-        }
-
-        @Override
-        public String toString() {
-            return color;
-        }
-    }
-
-    static final Map<String, DiagramColors> states2Colors;
-
-    static {
-        states2Colors = new HashMap<>();
-        states2Colors.put(MassnahmenUmsetzung.P_UMSETZUNG_JA, DiagramColors.YES);
-        states2Colors.put(MassnahmenUmsetzung.P_UMSETZUNG_NEIN, DiagramColors.NO);
-        states2Colors.put(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, DiagramColors.PARTIALLY);
-        states2Colors.put(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET, DiagramColors.UNEDITED);
-        states2Colors.put(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, DiagramColors.NOT_APPLICABLE);
-    }
 
     public ChartModelFactory(SortedMap<String, Number> data){
         this.data = data;
@@ -128,7 +101,6 @@ public class ChartModelFactory {
         horizontalBarModel.setLegendPlacement(LegendPlacement.OUTSIDE);
 
         Axis xAxis = horizontalBarModel.getAxis(AxisType.X);
-        xAxis.setMin(0);
         xAxis.setMax(getMax(data.values()));
 
         Axis yAxis = horizontalBarModel.getAxis(AxisType.Y);

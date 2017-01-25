@@ -210,6 +210,10 @@
     <filter-name>springSecurityFilterChain</filter-name>
     <url-pattern>/dashboard/*</url-pattern>
   </filter-mapping>
+    <filter-mapping>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <url-pattern>/poseidon/*</url-pattern>
+  </filter-mapping>
   <filter-mapping>
     <filter-name>springSecurityFilterChain</filter-name>
     <url-pattern>/service/*</url-pattern>

@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/poseidon/template.xhtml">
+
+	<ui:define name="title">Charts</ui:define>
+
+	<ui:define name="viewname">Charts</ui:define>
+
+	<ui:define name="head">
+		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-12 ui-md-12">
+				<h1>Bausteinumsetzung gesamt</h1>
+			</div>
+			<div class="ui-g-12 ui-md-12">
+				<div class="card">
+					<p:chart id="verinicePieBar" type="bar"
+						model="#{bstUmsetzungView.horizontalBarChartModel}" responsive="true" />
+				</div>
+			</div>
+		</div>
+
+	</ui:define>
+</ui:composition>

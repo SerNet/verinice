@@ -19,49 +19,61 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view;
 
-import java.io.Serializable;
+import java.util.Map;
 import java.util.SortedMap;
 
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 
-import org.primefaces.model.chart.HorizontalBarChartModel;
+import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
+
+import sernet.verinice.web.poseidon.services.ControlService;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public abstract class AbstractBsiChartsView implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@ManagedBean(name = "bstUmsetzungView")
+public class BstUmsetzungTotalView {
 
     private PieChartModel pieModel;
 
-    private HorizontalBarChartModel horizontalBarModel;
+    private BarChartModel barChartModel;
 
-
+    @ManagedProperty("#{controlService}")
+    private ControlService controlService;
 
     @PostConstruct
-    final public void init() {
-
-        ChartModelFactory chartModelFactory = new ChartModelFactory(getStates());
-        this.pieModel = chartModelFactory.getPieChartModel();
-        this.horizontalBarModel = chartModelFactory.getHorizontalBarModel();
+    public void init(){
+        SortedMap<String, Map<String, Number>> data = controlService.groupMassnahmenUmsByBausteinUms();
+        BstChartFactory chartModelFactory = new BstChartFactory(data);
+        barChartModel = chartModelFactory.getHorizontalBarChartModel();
     }
 
-    abstract protected SortedMap<String, Number> getStates();
+    public BarChartModel getBarChartModel() {
+        return barChartModel;
+    }
 
+    public void setBarChartModel(BarChartModel barChartModel) {
+        this.barChartModel = barChartModel;
+    }
 
     public PieChartModel getPieModel() {
         return pieModel;
     }
 
-
-    public HorizontalBarChartModel getHorizontalBarModel() {
-        return horizontalBarModel;
+    public void setPieModel(PieChartModel pieModel) {
+        this.pieModel = pieModel;
     }
 
-    public void setHorizontalBarModel(HorizontalBarChartModel horizontalBarModel) {
-        this.horizontalBarModel = horizontalBarModel;
+    public ControlService getControlService() {
+        return controlService;
     }
+
+    public void setControlService(ControlService controlService) {
+        this.controlService = controlService;
+    }
+
 }

@@ -19,15 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
-import sernet.gs.service.NumericStringComparator;
-import sernet.gs.service.RetrieveInfo;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.IDAOFactory;
-import sernet.verinice.model.bsi.BausteinUmsetzung;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.web.Messages;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -39,6 +30,16 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
+
+import sernet.gs.service.NumericStringComparator;
+import sernet.gs.service.RetrieveInfo;
+import sernet.verinice.graph.GraphService;
+import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.IDAOFactory;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
+import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.web.Messages;
 
 /**
  * Provides several methods which provide data for the charts.
@@ -111,9 +112,9 @@ public class ControlService extends GenericChartService {
 
         String hqlQuery = new StringBuilder()
                 .append("from CnATreeElement element")
-                .append(" left join fetch element.entity entity")
-                .append(" left join fetch entity.typedPropertyLists propertyLists")
-                .append(" left join fetch propertyLists.properties props")
+                .append(" join element.entity entity")
+                .append(" join entity.typedPropertyLists propertyLists")
+                .append(" join propertyLists.properties props")
                 .append(" where element.scopeId = ?")
                 .append(" and element.objectType = ?")
                 .append(" and props.propertyType = 'mnums_umsetzung'").toString();
@@ -121,6 +122,7 @@ public class ControlService extends GenericChartService {
         IBaseDao<MassnahmenUmsetzung, Serializable> massnahmenDao = getMassnahmenDao(getDaoFactory());
         @SuppressWarnings("unchecked")
         List<MassnahmenUmsetzung> massnahmenUmsetzungen = massnahmenDao.findByQuery(hqlQuery, params);
+
         return aggregateMassnahmenUmsetzung(massnahmenUmsetzungen);
     }
 
@@ -152,22 +154,7 @@ public class ControlService extends GenericChartService {
 
     private SortedMap<String, Number> aggregateMassnahmenUmsetzung(List<MassnahmenUmsetzung> massnahmen) {
 
-        SortedMap<String, Number> result = new TreeMap<>(new Comparator<String>() {
-
-            @Override
-            public int compare(String o1, String o2) {
-                return new NumericStringComparator().compare(getLabel(o1), getLabel(o2));
-            }
-
-            private String getLabel(String value) {
-
-                if (MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(value)) {
-                    return Messages.getString(IMPLEMENTATION_STATUS_UNEDITED);
-                }
-
-                return getObjectService().getLabel(value);
-            }
-        });
+        SortedMap<String, Number> result = new TreeMap<>(new CompareByTitle());
 
         for (MassnahmenUmsetzung m : massnahmen) {
             Number number = result.get(m.getUmsetzung());
@@ -191,12 +178,12 @@ public class ControlService extends GenericChartService {
      *         map with the key {@link MassnahmenUmsetzung#getUmsetzung()}. This
      *         allows the result to be displayed as a stacked chart.
      */
-    public Map<String, Map<String, Number>> groupMassnahmenUmsByBausteinUms() {
+    public SortedMap<String, Map<String, Number>> groupMassnahmenUmsByBausteinUms() {
 
         List<BausteinUmsetzung> baUs = getAllBausteinUmsetzungen();
 
-        Map<String, Map<String, Number>> chapter2MaUs = new HashMap<>();
-        Map<String, Integer> chapter2Count = new HashMap<>();
+        SortedMap<String, Map<String, Number>> chapter2MaUs = new TreeMap<>(new CompareByTitle());
+        SortedMap<String, Integer> chapter2Count = new TreeMap<>(new CompareByTitle());
 
         aggregateMassnahmen(baUs, chapter2MaUs, chapter2Count);
         return chapter2MaUs;
@@ -321,5 +308,22 @@ public class ControlService extends GenericChartService {
 
     private IBaseDao<MassnahmenUmsetzung, Serializable> getMassnahmenDao(IDAOFactory iDaoFactory) {
         return (IBaseDao<MassnahmenUmsetzung, Serializable>) iDaoFactory.getDAO(MassnahmenUmsetzung.class);
+    }
+
+
+    private final class CompareByTitle implements Comparator<String> {
+        @Override
+        public int compare(String o1, String o2) {
+            return new NumericStringComparator().compare(getLabel(o1), getLabel(o2));
+        }
+
+        private String getLabel(String value) {
+
+            if (MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(value)) {
+                return Messages.getString(IMPLEMENTATION_STATUS_UNEDITED);
+            }
+
+            return getObjectService().getLabel(value);
+        }
     }
 }

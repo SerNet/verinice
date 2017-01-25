@@ -46,34 +46,25 @@
 
 	<!-- The filter chain that all HTTP requests go through: -->
 
-  <bean
-    id="springSecurityFilterChain"
-    class="org.springframework.security.util.FilterChainProxy">
-    <security:filter-chain-map path-type="ant">
-      <security:filter-chain
-        pattern="/auth/**"
-        filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
-      <security:filter-chain
-        pattern="/dashboard/**"
-        filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
-      <security:filter-chain
-        pattern="/misc/**"
-        filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
-      <security:filter-chain
-        pattern="/edit/**"
-        filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
-      <security:filter-chain
-        pattern="/todo/**"
-        filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
-      <security:filter-chain
-        pattern="/sync/**"
-        filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
-      <security:filter-chain
-        pattern="/service/**"
-        filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
-    </security:filter-chain-map>
-  </bean>
 
+	<bean id="springSecurityFilterChain" class="org.springframework.security.util.FilterChainProxy">
+		<security:filter-chain-map path-type="ant">
+			<security:filter-chain pattern="/auth/**"
+				filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
+			<security:filter-chain pattern="/dashboard/**"
+				filters="httpSessionContextIntegrationFilter,anonymousAuthFilter,authenticationProcessingFilter,logoutFilter,timeoutFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
+			<security:filter-chain pattern="/edit/**"
+				filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
+			<security:filter-chain pattern="/todo/**"
+				filters="httpSessionContextIntegrationFilter,authenticationProcessingFilter,exceptionTranslationFilterWeb,securityInterceptorFilter" />
+			<security:filter-chain pattern="/sync/**"
+				filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
+			<security:filter-chain pattern="/service/**"
+				filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
+			<security:filter-chain pattern="/dashboard/**"
+				filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
+		</security:filter-chain-map>
+	</bean>
 
 	<!-- Filter definitions -->
 

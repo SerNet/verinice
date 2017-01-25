@@ -61,12 +61,6 @@ public class ControlServiceDummy extends ControlService {
     }
 
     @Override
-    public Map<String, Map<String, Number>> groupMassnahmenUmsByBausteinUms() {
-        // TODO Auto-generated method stub
-        return super.groupMassnahmenUmsByBausteinUms();
-    }
-
-    @Override
     public Map<String, Map<String, Number>> groupMassnahmenUmsByBausteinUms(ITVerbund itNetwork) {
         // TODO Auto-generated method stub
         return super.groupMassnahmenUmsByBausteinUms(itNetwork);

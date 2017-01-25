@@ -46,15 +46,20 @@ public class Menu {
 
     private MenuModel model;
 
-    private DefaultSubMenu massnahmenUmsetzungSubMenu;
-
     @ManagedProperty("#{menuService}")
     private MenuService menuService;
+
+    private DefaultSubMenu bausteinUmsSubMenu;
+
+    private DefaultSubMenu massnahmenUmsetzungSubMenu;
 
     @PostConstruct()
     public void initMenu() {
 
+
         model = new DefaultMenuModel();
+
+        addMiscMenu();
 
         massnahmenUmsetzungSubMenu = new DefaultSubMenu("MassnahmenUms.");
         massnahmenUmsetzungSubMenu.setIcon("fa fa-fw fa-line-chart");
@@ -70,25 +75,47 @@ public class Menu {
         massnahmenUmsetzungSubMenu.addElement(total);
 
         try {
-            addItNetworks();
+            addItNetworks(massnahmenUmsetzungSubMenu, "implementation-itnetwork.xhtml");
+        } catch (UnsupportedEncodingException e) {
+            log.error("could not create menu item", e);
+        }
+
+        bausteinUmsSubMenu = new DefaultSubMenu("BausteinUms.");
+        bausteinUmsSubMenu.setIcon("fa fa-fw fa-line-chart");
+
+        DefaultMenuItem bausteinUmsAll = new DefaultMenuItem("Alle");
+        bausteinUmsAll.setUrl("/dashboard/implementation-bstums-all.xhtml");
+        bausteinUmsAll.setIcon("fa fa-fw fa-area-chart");
+        bausteinUmsSubMenu.addElement(bausteinUmsAll);
+
+        DefaultMenuItem bausteinUmsTotal = new DefaultMenuItem("Gesamt");
+        bausteinUmsTotal.setUrl("/dashboard/implementation-bstums-all.xhtml");
+        bausteinUmsTotal.setIcon("fa fa-fw fa-area-chart");
+        bausteinUmsSubMenu.addElement(bausteinUmsTotal);
+
+
+        try {
+            addItNetworks(bausteinUmsSubMenu, "implementation-bstums.xhtml");
         } catch (UnsupportedEncodingException e) {
             log.error("could not create menu item", e);
         }
 
         model.addElement(massnahmenUmsetzungSubMenu);
 
-        addMiscMenu();
+        model.addElement(bausteinUmsSubMenu);
+
+
     }
 
-    private void addItNetworks() throws UnsupportedEncodingException {
+    private void addItNetworks(DefaultSubMenu menu, String templateFile) throws UnsupportedEncodingException {
         for(ITVerbund itNetwork : getMenuService().getVisibleItNetworks()){
             String title = itNetwork.getTitle();
             DefaultMenuItem item = new DefaultMenuItem(title);
             item.setIcon("fa fa-fw fa-area-chart");
             String scopeIdParam = "scopeId=" + itNetwork.getScopeId();
             String titleParam =  "itNetwork=" + URLEncoder.encode(title, "UTF-8");
-            item.setUrl("/dashboard/implementation-itnetwork.xhtml?" + scopeIdParam + "&" + titleParam);
-            massnahmenUmsetzungSubMenu.addElement(item);
+            item.setUrl("/dashboard/" + templateFile + "?" + scopeIdParam + "&" + titleParam);
+            menu.addElement(item);
         }
     }
 

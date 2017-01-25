@@ -31,6 +31,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
@@ -87,7 +89,8 @@ public class AllBsiChartsView {
             item.setTitle(itNetwork.getTitle());
             item.pieChartModel = chartModelFactory.getPieChartModel();
             item.horizontalBarChartModel = chartModelFactory.getHorizontalBarModel();
-
+            Axis axis = item.horizontalBarChartModel.getAxis(AxisType.X);
+            axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
             charts.add(item);
         }
     }

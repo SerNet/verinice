@@ -31,6 +31,7 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Service;
 
 import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.IBaseDao;
