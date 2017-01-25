@@ -16,7 +16,7 @@
   <display-name>verinice server</display-name>
 
   <welcome-file-list>
-    <welcome-file>dashboard/implementation-all.xhtml</welcome-file>
+    <welcome-file>misc/landing.xhtml</welcome-file>
   </welcome-file-list>
 
   <context-param>
