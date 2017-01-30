@@ -35,10 +35,8 @@ import sernet.verinice.web.poseidon.services.ControlService;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "bstUmsetzungView")
+@ManagedBean(name = "bstUmsetzungTotalView")
 public class BstUmsetzungTotalView {
-
-    private PieChartModel pieModel;
 
     private BarChartModel barChartModel;
 
@@ -47,7 +45,7 @@ public class BstUmsetzungTotalView {
 
     @PostConstruct
     public void init(){
-        SortedMap<String, Map<String, Number>> data = controlService.groupMassnahmenUmsByBausteinUms();
+        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates(null);
         BstChartFactory chartModelFactory = new BstChartFactory(data);
         barChartModel = chartModelFactory.getHorizontalBarChartModel();
     }
@@ -58,14 +56,6 @@ public class BstUmsetzungTotalView {
 
     public void setBarChartModel(BarChartModel barChartModel) {
         this.barChartModel = barChartModel;
-    }
-
-    public PieChartModel getPieModel() {
-        return pieModel;
-    }
-
-    public void setPieModel(PieChartModel pieModel) {
-        this.pieModel = pieModel;
     }
 
     public ControlService getControlService() {

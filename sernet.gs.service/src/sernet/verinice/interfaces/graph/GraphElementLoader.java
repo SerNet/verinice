@@ -54,7 +54,7 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
     
     private IElementFilter elementFilter;
     
-    private transient IBaseDao<CnATreeElement, Long> cnaTreeElementDao;
+    private transient IBaseDao<CnATreeElement, ? extends Serializable> cnaTreeElementDao;
 
     /* (non-Javadoc)
      * @see sernet.verinice.graph.IGraphElementLoadeTr#loadElements()
@@ -150,12 +150,12 @@ public class GraphElementLoader implements IGraphElementLoader, Serializable {
         this.elementFilter = elementFilter;
     }
     
-    public IBaseDao<CnATreeElement, Long> getCnaTreeElementDao() {
+    public IBaseDao<CnATreeElement, ? extends Serializable> getCnaTreeElementDao() {
         return cnaTreeElementDao;
     }
 
     @Override
-    public void setCnaTreeElementDao(IBaseDao<CnATreeElement, Long> cnaTreeElementDao) {
+    public void setCnaTreeElementDao(IBaseDao<CnATreeElement, ? extends Serializable> cnaTreeElementDao) {
         this.cnaTreeElementDao = cnaTreeElementDao;
     }
 

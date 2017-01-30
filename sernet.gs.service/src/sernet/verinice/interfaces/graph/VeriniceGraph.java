@@ -97,6 +97,28 @@ public class VeriniceGraph implements Serializable {
         return elements;
     }
 
+    /**
+     * Returns all elements of type "typeId".
+     *
+     * @param typeId
+     *            Type of returned elements
+     * @return All elements of type "typeId".
+     */
+    public <T> Set<T> getElements(Class<T> clazz) {
+        Set<T> elements = new HashSet<T>();
+        Set<CnATreeElement> allElements = getElements();
+
+
+        for (CnATreeElement element : allElements) {
+            if (element.getClass().equals(clazz)) {
+                elements.add((T) element);
+            }
+        }
+
+        return elements;
+    }
+
+
     public CnATreeElement getElement(String uuid) {
         CnATreeElement result = null;
         Set<CnATreeElement> allElements = getElements();
@@ -158,10 +180,36 @@ public class VeriniceGraph implements Serializable {
      * 
      * @param element
      *            A verinice element
+     * @param
+     *
+     * @return The children of the element
+     */
+    @SuppressWarnings("unchecked")
+    public <T> Set<T> getChildren(CnATreeElement element, Class<T> type) {
+        Set<T> children = new HashSet<>();
+        int parentId = element.getParentId();
+        Set<CnATreeElement> relatives = getLinkTargets(element, Edge.RELATIVES);
+        for (CnATreeElement parentOrChild : relatives) {
+            if (parentId != parentOrChild.getDbId()) {
+                if (type.equals(parentOrChild.getClass())) {
+                    children.add((T) parentOrChild);
+                }
+            }
+        }
+
+        return children;
+    }
+
+    /**
+     * Returns all children of an element. If no children are found an empty Set
+     * is returned.
+     *
+     * @param element
+     *            A verinice element
      * @return The children of the element
      */
     public Set<CnATreeElement> getChildren(CnATreeElement element) {
-        return getChildren(element, null);
+        return getChildren(element, "");
     }
 
     /**
@@ -180,7 +228,7 @@ public class VeriniceGraph implements Serializable {
         Set<CnATreeElement> relatives = getLinkTargets(element, Edge.RELATIVES);
         for (CnATreeElement parentOrChild : relatives) {
             if (parentId != parentOrChild.getDbId()) {
-                if (elementTypeId == null || elementTypeId.equals(parentOrChild.getTypeId())) {
+                if (elementTypeId == "" || elementTypeId.equals(parentOrChild.getTypeId())) {
                     children.add(parentOrChild);
                 }
             }

@@ -26,18 +26,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.IDAOFactory;
+import sernet.verinice.interfaces.graph.GraphElementLoader;
+import sernet.verinice.interfaces.graph.IGraphElementLoader;
+import sernet.verinice.interfaces.graph.IGraphService;
+import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -111,23 +114,14 @@ public class ControlService extends GenericChartService {
      *                If no it network is given.
      */
     public SortedMap<String, Number> aggregateMassnahmenUmsetzung(Integer scopeId) {
-
-        String hqlQuery = new StringBuilder()
-                .append(" select distinct element from CnATreeElement element")
-                .append(" join fetch element.entity entity")
-                .append(" join fetch entity.typedPropertyLists propertyLists")
-                .append(" join fetch propertyLists.properties props")
-                .append(" where element.scopeId = ?")
-                .append(" and element.objectType = ?").toString();
-        Object[] params = new Object[] { scopeId, MassnahmenUmsetzung.HIBERNATE_TYPE_ID  };
-        IBaseDao<MassnahmenUmsetzung, Serializable> massnahmenDao = getMassnahmenDao(getDaoFactory());
-
-        @SuppressWarnings("unchecked")
-        List<MassnahmenUmsetzung> massnahmenUmsetzungen =  massnahmenDao.findByQuery(hqlQuery, params);
-
-        return aggregateMassnahmenUmsetzung(massnahmenUmsetzungen);
+        IGraphService graphService = getGraphService();
+        IGraphElementLoader graphElementLoader = new GraphElementLoader();
+        graphElementLoader.setTypeIds(new String[] { MassnahmenUmsetzung.HIBERNATE_TYPE_ID });
+        graphElementLoader.setScopeId(scopeId);
+        graphService.setLoader(graphElementLoader);
+        VeriniceGraph g = graphService.create();
+        return aggregateMassnahmenUmsetzung(g.getElements(MassnahmenUmsetzung.class));
     }
-
 
     /**
      * Aggregate over all {@link BausteinUmsetzung} objects and aggregate the
@@ -144,18 +138,16 @@ public class ControlService extends GenericChartService {
      */
     public Map<String, Map<String, Number>> groupMassnahmenUmsByBausteinUmsNormalized() {
 
-        List<BausteinUmsetzung> baUs = getAllBausteinUmsetzungen();
-
         Map<String, Map<String, Number>> chapter2MaUs = new HashMap<>();
         Map<String, Integer> chapter2Count = new HashMap<>();
 
-        aggregateMassnahmen(baUs, chapter2MaUs, chapter2Count);
+        aggregateMassnahmen(chapter2MaUs, chapter2Count);
 
         normalize(chapter2MaUs, chapter2Count);
         return chapter2MaUs;
     }
 
-    private SortedMap<String, Number> aggregateMassnahmenUmsetzung(List<MassnahmenUmsetzung> massnahmen) {
+    private SortedMap<String, Number> aggregateMassnahmenUmsetzung(Iterable<MassnahmenUmsetzung> massnahmen) {
 
         SortedMap<String, Number> result = new TreeMap<>(new CompareByTitle());
 
@@ -183,12 +175,10 @@ public class ControlService extends GenericChartService {
      */
     public SortedMap<String, Map<String, Number>> groupMassnahmenUmsByBausteinUms() {
 
-        List<BausteinUmsetzung> baUs = getAllBausteinUmsetzungen();
-
         SortedMap<String, Map<String, Number>> chapter2MaUs = new TreeMap<>(new CompareByTitle());
         SortedMap<String, Integer> chapter2Count = new TreeMap<>(new CompareByTitle());
 
-        aggregateMassnahmen(baUs, chapter2MaUs, chapter2Count);
+        aggregateMassnahmen(chapter2MaUs, chapter2Count);
         return chapter2MaUs;
     }
 
@@ -206,12 +196,10 @@ public class ControlService extends GenericChartService {
      */
     public Map<String, Map<String, Number>> groupMassnahmenUmsByBausteinUms(ITVerbund itNetwork) {
 
-        List<BausteinUmsetzung> baUs = filterBausteinUmsetzung(itNetwork, getAllBausteinUmsetzungen());
-
         Map<String, Map<String, Number>> chapter2MaUs = new HashMap<>();
         Map<String, Integer> chapter2Count = new HashMap<>();
 
-        aggregateMassnahmen(baUs, chapter2MaUs, chapter2Count);
+        aggregateMassnahmen(itNetwork, chapter2MaUs, chapter2Count);
         return chapter2MaUs;
     }
 
@@ -234,58 +222,115 @@ public class ControlService extends GenericChartService {
      */
     public Map<String, Map<String, Number>> groupMassnahmenUmsByBausteinUmsNormalized(ITVerbund itNetwork) {
 
-        List<BausteinUmsetzung> baUs = filterBausteinUmsetzung(itNetwork, getAllBausteinUmsetzungen());
-
         Map<String, Map<String, Number>> chapter2MaUs = new HashMap<>();
         Map<String, Integer> chapter2Count = new HashMap<>();
 
-        aggregateMassnahmen(baUs, chapter2MaUs, chapter2Count);
+        aggregateMassnahmen(chapter2MaUs, chapter2Count);
         normalize(chapter2MaUs, chapter2Count);
 
         return chapter2MaUs;
     }
 
+    /**
+     * Aggregate over all {@link BausteinUmsetzung} objects and aggregate the
+     * {@link MassnahmenUmsetzung} states.
+     *
+     * This method normalizes the data in a way, that the number of a specific
+     * state is divided through the number of instances of a specific
+     * {@link BausteinUmsetzung}. With instances is meant several
+     * {@link BausteinUmsetzung} object with the same chapter value.
+     *
+     * @param itNetwork
+     *            Only {@link BausteinUmsetzung} under this it network are taken
+     *            into account.
+     *
+     * @return Key is the chapter of a
+     *         {@link MassnahmenUmsetzung#getUmsetzung()}. The value is a map
+     *         with the key {@link BausteinUmsetzung#getKapitel()}. This allows
+     *         the result to be displayed as a stacked chart.
+     */
+    public Map<String, Map<String, Number>> groupByMassnahmenStates(ITVerbund itNetwork) {
 
+        IGraphService graphService = getGraphService();
+        IGraphElementLoader graphElementLoader = new GraphElementLoader();
+        graphElementLoader.setTypeIds(new String[] { BausteinUmsetzung.HIBERNATE_TYPE_ID, MassnahmenUmsetzung.HIBERNATE_TYPE_ID });
 
+        graphService.setLoader(graphElementLoader);
+        VeriniceGraph g = graphService.create();
 
-    private List<BausteinUmsetzung> filterBausteinUmsetzung(ITVerbund itNetwork, List<BausteinUmsetzung> allBausteinUmsetzungen) {
-        List<BausteinUmsetzung> filteredBausteinUmsetzungen = new ArrayList<>();
-        for (BausteinUmsetzung b : allBausteinUmsetzungen) {
-            if (b.getScopeId() == itNetwork.getScopeId()) {
-                filteredBausteinUmsetzungen.add(b);
+        List<DataPoint> dataPoints = new ArrayList<>();
+
+        for (MassnahmenUmsetzung maU : g.getElements(MassnahmenUmsetzung.class)) {
+
+            if (itNetwork != null && !itNetwork.getScopeId().equals(maU.getScopeId())) {
+                continue;
             }
+
+            dataPoints.add(new DataPoint((BausteinUmsetzung) g.getParent(maU), maU));
         }
 
-        return filteredBausteinUmsetzungen;
+        Map<String, List<DataPoint>> massnahmenUmsetzung2DataPoint = new  HashMap<>();
+        for(DataPoint p : dataPoints){
+            if(!massnahmenUmsetzung2DataPoint.containsKey(p.getState())){
+                massnahmenUmsetzung2DataPoint.put(p.getState(), new ArrayList<DataPoint>());
+            }
+
+            massnahmenUmsetzung2DataPoint.get(p.getState()).add(p);
+        }
+
+        Map<String, Map<String, Number>> data = new HashMap<>();
+        for(Entry<String, List<DataPoint>> e : massnahmenUmsetzung2DataPoint.entrySet()){
+           data.put(e.getKey(), new HashMap<String, Number>());
+           for(DataPoint p : e.getValue()){
+               Number number = data.get(e.getKey()).get(p.getChapter());
+               number = number == null ? 1 : number.intValue() + 1;
+               data.get(e.getKey()).put(p.getChapter(), number);
+           }
+        }
+
+        return data;
+
     }
 
-    @SuppressWarnings("unchecked")
-    private List<BausteinUmsetzung> getAllBausteinUmsetzungen() {
-        IBaseDao<BausteinUmsetzung, Serializable> dao = getDaoFactory().getDAO(BausteinUmsetzung.class);
-        RetrieveInfo retrieveInfo = new RetrieveInfo();
-        retrieveInfo.setParent(true);
-        retrieveInfo.setProperties(true);
-        retrieveInfo.setChildren(true);
-        return dao.findAll(retrieveInfo);
+    private IGraphService getGraphService() {
+        return (IGraphService) VeriniceContext.get(VeriniceContext.GRAPH_SERVICE);
     }
 
-    private void aggregateMassnahmen(List<BausteinUmsetzung> baUs, Map<String, Map<String, Number>> chapter2MaUs, Map<String, Integer> chapter2Count) {
-        for (BausteinUmsetzung baU : baUs) {
+    private void aggregateMassnahmen(Map<String, Map<String, Number>> chapter2MaUs, Map<String, Integer> chapter2Count) {
+        aggregateMassnahmen(null, chapter2MaUs, chapter2Count);
+    }
+
+    private void aggregateMassnahmen(ITVerbund itNetwork, Map<String, Map<String, Number>> chapter2MaUs, Map<String, Integer> chapter2Count) {
+
+        IGraphService graphService = getGraphService();
+
+        IGraphElementLoader graphElementLoader = new GraphElementLoader();
+        graphElementLoader.setTypeIds(new String[] { BausteinUmsetzung.HIBERNATE_TYPE_ID, MassnahmenUmsetzung.HIBERNATE_TYPE_ID });
+
+        graphService.setLoader(graphElementLoader);
+
+        VeriniceGraph g = graphService.create();
+
+        for (BausteinUmsetzung baU : g.getElements(BausteinUmsetzung.class)) {
+
+            if (itNetwork != null && !itNetwork.getScopeId().equals(baU.getScopeId())) {
+                continue;
+            }
 
             String chapter = baU.getKapitel();
-            List<MassnahmenUmsetzung> maUs = baU.getMassnahmenUmsetzungen();
+            Set<MassnahmenUmsetzung> maUs = (Set<MassnahmenUmsetzung>) g.getChildren(baU, MassnahmenUmsetzung.class);
             Map<String, Number> state2Count = aggregateMassnahmenUmsetzung(maUs);
 
             if (chapter2Count.containsKey(chapter)) {
                 chapter2Count.put(chapter, chapter2Count.get(chapter) + 1);
             } else {
-                chapter2Count.put(chapter, 0);
+                chapter2Count.put(chapter, 1);
             }
 
             if (chapter2MaUs.containsKey(chapter)) {
                 Map<String, Number> maU2Count = chapter2MaUs.get(chapter);
                 for (Entry<String, Number> e : state2Count.entrySet()) {
-                    if (maU2Count.containsKey(e.getValue())) {
+                    if (maU2Count.containsKey(e.getKey())) {
                         Number oldStateCount = maU2Count.get(e.getKey());
                         Number currentStateCount = e.getValue();
                         Number newStateCount = oldStateCount.intValue() + currentStateCount.intValue();
@@ -312,7 +357,6 @@ public class ControlService extends GenericChartService {
     private IBaseDao<MassnahmenUmsetzung, Serializable> getMassnahmenDao(IDAOFactory iDaoFactory) {
         return (IBaseDao<MassnahmenUmsetzung, Serializable>) iDaoFactory.getDAO(MassnahmenUmsetzung.class);
     }
-
 
     private final class CompareByTitle implements Comparator<String> {
         @Override

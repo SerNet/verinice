@@ -90,6 +90,7 @@ This variant:
                 <entry key="updateNewsService" value-ref="updateNewsService" />
                 <entry key="licenseManagementService" value-ref="licenseManagementService"/>
                 <entry key="encryptionService" value-ref="encryptionService" />
+				<entry key="graphService" value-ref="graphService" />
 			</map>
 		</property>
 	</bean>
