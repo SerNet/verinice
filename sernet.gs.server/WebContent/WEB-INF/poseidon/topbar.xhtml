@@ -46,10 +46,12 @@
 <!--                             </a> -->
 <!--                         </li> -->
                         <li role="menuitem">
-                            <a href="#">
-                                <i class="fa fa-fw fa-sign-out"></i>
-                                <span>Logout</span>
-                            </a>
+                          <h:form>
+                            <h:commandLink action="#{userManager.logout}">
+                              <i class="fa fa-fw fa-sign-out"></i>
+                              <span>Logout</span>
+                            </h:commandLink>
+                          </h:form>
                         </li>
                     </ul>
                 </li>
