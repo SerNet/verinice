@@ -26,3 +26,12 @@
 	{
 	background-color: #fff;
 }
+
+@media ( max-width : 1024px) {
+  .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
+    background-image: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
+  }
+  .layout-wrapper.menu-layout-static .topbar .topbar-left {
+    background-color: white;
+  }
+}
