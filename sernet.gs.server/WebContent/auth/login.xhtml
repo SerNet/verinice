@@ -3,7 +3,8 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:vn="http://www.verinice.org/taglib">
 
     <h:head>
         <f:facet name="first">
@@ -21,20 +22,21 @@
                 <div class="ui-g-12 logo-container">
                     <p:graphicImage name="images/logo_verinice_rgb.png" library="verinice-layout" />
                 </div>
-                <div class="ui-g-12">
-                    <p:inputText placeholder="Username" />
-                </div>
-                <div class="ui-g-12">
-                    <p:password placeholder="Password" feedback="false"/>
-                </div>
-                <div class="ui-g-12 chkbox-container">
-                    <p:selectBooleanCheckbox id="remember-me" />
-                    <p:outputLabel for="remember-me" value="Remember Me"/>
-                </div>
-                <div class="ui-g-12 button-container">
-                    <p:button outcome="dashboard" value="Sign In" icon="fa fa-user" styleClass="turquoise-btn"/>
-                    <p:button outcome="dashboard" value="Forgot Password" icon="fa fa-key" styleClass="blue-btn" />
-                </div>
+<!--                 <div class="ui-g-12"> -->
+<!--                     <p:inputText placeholder="Username" /> -->
+<!--                 </div> -->
+<!--                 <div class="ui-g-12"> -->
+<!--                     <p:password placeholder="Password" feedback="false"/> -->
+<!--                 </div> -->
+<!--                 <div class="ui-g-12 chkbox-container"> -->
+<!--                     <p:selectBooleanCheckbox id="remember-me" /> -->
+<!--                     <p:outputLabel for="remember-me" value="Remember Me"/> -->
+<!--                 </div> -->
+<!--                 <div class="ui-g-12 button-container"> -->
+<!--                     <p:button outcome="dashboard" value="Sign In" icon="fa fa-user" styleClass="turquoise-btn"/> -->
+<!--                     <p:button outcome="dashboard" value="Forgot Password" icon="fa fa-key" styleClass="blue-btn" /> -->
+<!--                 </div> -->
+                <vn:login />
             </div>
         </div>
 
