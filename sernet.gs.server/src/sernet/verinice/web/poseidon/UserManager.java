@@ -26,8 +26,8 @@ import javax.faces.context.FacesContext;
 /**
  * @author Moritz Reiter
  */
-@ManagedBean(name="userManager")
 @SessionScoped
+@ManagedBean
 public class UserManager {
 
     public String logout() {

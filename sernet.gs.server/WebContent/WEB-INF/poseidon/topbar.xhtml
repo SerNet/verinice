@@ -19,14 +19,13 @@
             <a id="topbar-menu-button" href="#">
                 <i class="fa fa-bars"></i>
             </a>
-            <ul class="topbar-items fadeInDown animated">
-                <li class="profile-item">
-                    <a href="#">
-                        <div class="profile-image"></div>
-                        <span class="topbar-item-name">Jane Williams</span>
-                    </a>
-
-                    <ul class="poseidon-menu animated">
+<!--             <ul class="topbar-items fadeInDown animated"> -->
+<!--                 <li class="profile-item"> -->
+<!--                     <a href="#">                             -->
+<!--                         <div class="profile-image"></div> -->
+<!--                         <span class="topbar-item-name">Jane Williams</span> -->
+<!--                     </a>                   -->
+<!--                     <ul class="poseidon-menu animated"> -->
 <!--                         <li role="menuitem"> -->
 <!--                             <a href="#"> -->
 <!--                                 <i class="fa fa-fw fa-user"></i> -->
@@ -45,16 +44,11 @@
 <!--                                 <span>Settings</span> -->
 <!--                             </a> -->
 <!--                         </li> -->
-                        <li role="menuitem">
-                          <h:form>
-                            <h:commandLink action="#{userManager.logout}">
-                              <i class="fa fa-fw fa-sign-out"></i>
-                              <span>Logout</span>
-                            </h:commandLink>
-                          </h:form>
-                        </li>
-                    </ul>
-                </li>
+<!--                         <li role="menuitem"> -->
+
+<!--                         </li> -->
+<!--                     </ul> -->
+<!--                 </li> -->
 <!--                 <li> -->
 <!--                     <a href="#"> -->
 <!--                         <i class="topbar-icon fa fa-fw fa-cog"></i> -->
@@ -87,8 +81,15 @@
 <!--                         </li> -->
 <!--                     </ul> -->
 <!--                 </li> -->
-            </ul>
-        </div>
-    </div>
+<!--       </ul> -->
 
+      <h:form style="text-align:right; margin-top:-20px">
+        <h:commandLink action="#{userManager.logout}" style="text-align:right">
+          <i class="fa fa-fw fa-sign-out"></i>
+          <span>Logout</span>
+        </h:commandLink>
+      </h:form>
+
+    </div>
+    </div>
 </ui:composition>
