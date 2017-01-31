@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -32,8 +32,8 @@ import javax.faces.bean.ManagedProperty;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.HorizontalBarChartModel;
-import org.primefaces.model.chart.PieChartModel;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
@@ -47,26 +47,26 @@ import sernet.verinice.web.poseidon.services.ControlService;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "allBsiChartsView")
-public class AllBsiChartsView {
+@ManagedBean(name = "bausteinUmsetzungAllView")
+public class BausteinUmsetzungAllView {
 
     @ManagedProperty("#{controlService}")
     private ControlService controlService;
 
     private List<VeriniceAllChartItem> charts;
 
-    private HorizontalBarChartModel horizontalBarChartModel;
+    private HorizontalBarChartModel horizontalBarChart;
 
-    private PieChartModel pieModel;
+    private BarChartModel verticalBarChart;
 
     @PostConstruct
     public void init() {
 
-        SortedMap<String, Number> allStates = controlService.aggregateMassnahmenUmsetzungStatus();
-        ChartModelFactory allChartModelFactory = new ChartModelFactory(allStates);
+        Map<String, Map<String, Number>> allStates = controlService.groupByMassnahmenStates("");
+        BstChartFactory allChartModelFactory = new BstChartFactory(allStates);
 
-        pieModel = allChartModelFactory.getPieChartModel();
-        horizontalBarChartModel = allChartModelFactory.getHorizontalBarModel();
+        verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
+        horizontalBarChart = allChartModelFactory.getHorizontalBarChartModel();
 
         charts = new ArrayList<>();
 
@@ -78,18 +78,18 @@ public class AllBsiChartsView {
 
         for (ITVerbund itNetwork : itNetworks) {
 
-            SortedMap<String, Number> states = getControlService().aggregateMassnahmenUmsetzung(itNetwork);
+            Map<String, Map<String, Number>> states = controlService.groupByMassnahmenStates(itNetwork);
 
             if(states.isEmpty()) continue;
 
             VeriniceAllChartItem item = new VeriniceAllChartItem();
-            ChartModelFactory chartModelFactory = new ChartModelFactory(states);
+            BstChartFactory chartModelFactory = new BstChartFactory(states);
 
             item.setTitle(itNetwork.getTitle());
-            item.pieChartModel = chartModelFactory.getPieChartModel();
-            item.horizontalBarChartModel = chartModelFactory.getHorizontalBarModel();
+            item.pieChartModel = chartModelFactory.getVerticalBarChartModel();
+            item.horizontalBarChartModel = chartModelFactory.getHorizontalBarChartModel();
             Axis axis = item.horizontalBarChartModel.getAxis(AxisType.X);
-            axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
+            axis.setMax(horizontalBarChart.getAxis(AxisType.X).getMax());
             charts.add(item);
         }
     }
@@ -117,6 +117,7 @@ public class AllBsiChartsView {
         this.charts = charts;
     }
 
+
     public ControlService getControlService() {
         return controlService;
     }
@@ -128,25 +129,22 @@ public class AllBsiChartsView {
 
 
     public HorizontalBarChartModel getHorizontalBarChartModel() {
-        return horizontalBarChartModel;
+        return horizontalBarChart;
     }
 
 
 
     public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {
-        this.horizontalBarChartModel = horizontalBarChartModel;
+        this.horizontalBarChart = horizontalBarChartModel;
     }
 
 
 
-    public PieChartModel getPieModel() {
-        return pieModel;
+    public BarChartModel getVerticalBarChart() {
+        return verticalBarChart;
     }
 
-
-
-    public void setPieModel(PieChartModel pieModel) {
-        this.pieModel = pieModel;
+    public void setVerticalBarChart(BarChartModel verticalBarChart) {
+        this.verticalBarChart = verticalBarChart;
     }
-
 }

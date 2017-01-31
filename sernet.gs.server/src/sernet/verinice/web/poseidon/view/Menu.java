@@ -92,7 +92,7 @@ public class Menu {
         bausteinUmsSubMenu.addElement(bausteinUmsTotal);
 
         try {
-            addItNetworks(bausteinUmsSubMenu, "implementation-bstums.xhtml");
+            addItNetworks(bausteinUmsSubMenu, "implementation-bstums-itnetwork.xhtml");
         } catch (UnsupportedEncodingException e) {
             log.error("could not create menu item", e);
         }

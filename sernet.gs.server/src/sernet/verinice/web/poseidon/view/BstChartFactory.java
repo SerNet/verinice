@@ -21,24 +21,20 @@ package sernet.verinice.web.poseidon.view;
 
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.SortedMap;
-import java.util.UUID;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
-
-import sernet.verinice.web.poseidon.services.DataPoint;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class BstChartFactory extends AbstractChartModelFactory {
+public class BstChartFactory {
 
     private Map<String, Map<String, Number>> data;
-
 
     public BstChartFactory(Map<String, Map<String, Number>> data) {
         this.data = data;
@@ -48,65 +44,74 @@ public class BstChartFactory extends AbstractChartModelFactory {
 
         HorizontalBarChartModel horizontalBarModel = new HorizontalBarChartModel();
 
-//        setData(horizontalBarModel);
-
-//        ChartSeries boys = new ChartSeries();
-//        boys.setLabel("Boys");
-//        boys.set("2004", 50);
-//        boys.set("2005", 96);
-//        boys.set("2006", 44);
-//        boys.set("2007", 55);
-//        boys.set("2008", 25);
-//
-//        ChartSeries girls = new ChartSeries();
-//        girls.setLabel("Girls");
-//        girls.set("2004", 52);
-//        girls.set("2005", 60);
-//        girls.set("2006", 82);
-//        girls.set("2007", 35);
-//        girls.set("2008", 120);
-//
-//        ChartSeries neutral = new ChartSeries();
-//        neutral.setLabel("neutral");
-//        neutral.set("2004", 50);
-//        neutral.set("2005", 96);
-//        neutral.set("2006", 44);
-//        neutral.set("2007", 55);
-//        neutral.set("2008", 25);
-//
-//
-//        horizontalBarModel.addSeries(boys);
-//        horizontalBarModel.addSeries(girls);
-//        horizontalBarModel.addSeries(neutral);
 
         setData(horizontalBarModel);
 
         horizontalBarModel.setTitle("Horizontal and Stacked");
         horizontalBarModel.setLegendPosition("e");
-        horizontalBarModel.setStacked(false);
 
         Axis xAxis = horizontalBarModel.getAxis(AxisType.X);
         Axis yAxis = horizontalBarModel.getAxis(AxisType.Y);
 
         xAxis.setLabel("Status");
         xAxis.setMin(0);
-        xAxis.setMax(500);
+        xAxis.setMax(getMax());
+        xAxis.setTickInterval("5");
+
+        yAxis.setLabel("Bausteinkapitel");
+
+        horizontalBarModel.setExtender("bausteinUmsetzungHorizontalBar");
+        horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
+        return horizontalBarModel;
+    }
+
+
+    public BarChartModel getVerticalBarChartModel() {
+
+       BarChartModel horizontalBarModel = new BarChartModel();
+
+        setData(horizontalBarModel);
+
+        horizontalBarModel.setLegendPosition("e");
+
+        Axis xAxis = horizontalBarModel.getAxis(AxisType.X);
+        Axis yAxis = horizontalBarModel.getAxis(AxisType.Y);
+
+        xAxis.setLabel("Bausteinkapitel");
+        xAxis.setMin(0);
+        xAxis.setMax(getMax());
+        xAxis.setTickInterval("5");
 
         yAxis.setLabel("Massnahmen");
+
+        horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
+        horizontalBarModel.setShadow(false);
+        horizontalBarModel.setExtender("bausteinUmsetzungVerticalBar");
 
         return horizontalBarModel;
     }
 
 
-    private void setData(HorizontalBarChartModel horizontalBarModel) {
 
-        for(Entry<String, Map<String, Number>> dataPoint : data.entrySet()) {
-            ChartSeries girls = new ChartSeries();
-            girls.setLabel(dataPoint.getKey());
-            for(Entry<String, Number> e : dataPoint.getValue().entrySet()) {
-                girls.set(e.getKey(), e.getValue());
+    private Object getMax() {
+        int MARGIN = 10;
+        int max = 0;
+        for (Map<String, Number> n : data.values()) {
+            for (Number e2 : n.values()) {
+                max = Math.max(max, e2.intValue());
             }
-            horizontalBarModel.addSeries(girls);
+        }
+
+        return max + MARGIN;
+    }
+
+    private void setData(BarChartModel horizontalBarModel) {
+        for(Entry<String, Map<String, Number>> dataPoint : ChartUtils.transalteMapKeyLabel(this.data).entrySet()) {
+            ChartSeries chartSeries = new ChartSeries(dataPoint.getKey());
+            for(Entry<String, Number> e : dataPoint.getValue().entrySet()) {
+                chartSeries.set(e.getKey(), e.getValue());
+            }
+            horizontalBarModel.addSeries(chartSeries);
         }
     }
 }

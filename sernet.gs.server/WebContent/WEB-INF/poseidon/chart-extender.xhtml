@@ -1,7 +1,27 @@
 
-<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets" >
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 	<script type="text/javascript">
-		function veriniceBar() {
+		function veriniceHorizontalBar() {
+			this.cfg.shadow = false;
+			this.cfg.title = '';
+			this.cfg.grid = {
+				background : '#ffffff',
+				borderColor : '#ffffff',
+				gridLineColor : '#F5F5F5',
+				shadow : false
+			};
+
+			this.cfg.seriesDefaults = {
+				renderer : $.jqplot.BarRenderer,
+				shadow : false,
+				rendererOptions : {
+					varyBarColor : true,
+					barDirection : 'horizontal'
+				},
+			};
+		}
+
+		function veriniceVerticalBar() {
 			this.cfg.shadow = false;
 			this.cfg.title = '';
 			this.cfg.grid = {
@@ -20,10 +40,10 @@
 			this.cfg.seriesDefaults = {
 				shadow : false,
 				lineWidth : 1,
-				renderer : $.jqplot.BarRenderer,
 				rendererOptions : {
 					varyBarColor : true
 				},
+				renderer : $.jqplot.BarRenderer,
 				markerOptions : {
 					shadow : false,
 					size : 7,
@@ -59,7 +79,7 @@
 			}
 		}
 
-		function veriniceHorizontalBar() {
+		function bausteinUmsetzungVerticalBar() {
 			this.cfg.shadow = false;
 			this.cfg.title = '';
 			this.cfg.grid = {
@@ -75,20 +95,25 @@
 					textColor : '#666F77'
 				}
 			};
-			this.cfg.seriesDefaults = {
-				shadow : false,
-				lineWidth : 1,
-				renderer : $.jqplot.BarRenderer,
+		}
+
+		function bausteinUmsetzungHorizontalBar() {
+			this.cfg.shadow = false;
+			this.cfg.title = '';
+			this.cfg.grid = {
+				background : '#ffffff',
+				borderColor : '#ffffff',
+				gridLineColor : '#F5F5F5',
+				shadow : false
+			};
+
+			this.cfg.axesDefaults = {
+				borderWidth : 0.1,
+				borderColor : 'bdbdbd',
 				rendererOptions : {
-					varyBarColor : true,
-					barDirection : 'horizontal'
-				},
-				markerOptions : {
-					shadow : false,
-					size : 7,
-					style : 'circle'
+					textColor : '#666F77'
 				}
-			}
+			};
 		}
 	</script>
 

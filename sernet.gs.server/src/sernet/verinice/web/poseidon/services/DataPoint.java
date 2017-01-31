@@ -58,6 +58,6 @@ public class DataPoint {
     }
 
     public String getChapter() {
-        return bst.getKapitel();
+        return bst.getKapitel().replaceAll("[a-zA-Z]", "").trim();
     }
 }

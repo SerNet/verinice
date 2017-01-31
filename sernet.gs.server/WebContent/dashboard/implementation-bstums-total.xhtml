@@ -15,44 +15,24 @@
 	</ui:define>
 
 	<ui:define name="content">
-
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-12 ui-md-12">
-				<h1>Massnahmenumsetzung gesamt</h1>
+				<h1>BausteinUm gesamt</h1>
 			</div>
 			<div class="ui-g-12 ui-md-6">
 				<div class="card">
 					<p:chart id="verinicePieChart" type="pie"
-						model="#{allBsiChartsView.pieModel}" responsive="true" />
+						model="#{totalBsiChartView.pieModel}" responsive="true" />
 				</div>
 			</div>
 			<div class="ui-g-12 ui-md-6">
 				<div class="card">
 					<p:chart id="verinicePieBar" type="bar"
-						model="#{allBsiChartsView.horizontalBarChartModel}" responsive="true" />
+						model="#{totalBsiChartView.barModel}" responsive="true" />
 				</div>
 			</div>
 		</div>
-
-		<ui:repeat value="#{allBsiChartsView.charts}" var="chart">
-			<div class="ui-g ui-fluid">
-				<div class="ui-g-12 ui-md-12">
-					<h1>#{chart.title}</h1>
-				</div>
-				<div class="ui-g-12 ui-md-6">
-					<div class="card">
-						<p:chart id="pie-#{count}" type="pie"
-							model="#{chart.pieChartModel}" responsive="true" />
-					</div>
-				</div>
-				<div class="ui-g-12 ui-md-6">
-					<div class="card">
-						<p:chart id="bar-#{count}" type="bar"
-							model="#{chart.horizontalBarChartModel}" responsive="true" />
-					</div>
-				</div>
-			</div>
-		</ui:repeat>
 	</ui:define>
 
+	</ui:define>
 </ui:composition>

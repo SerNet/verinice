@@ -20,13 +20,41 @@
 			<div class="ui-g-12 ui-md-12">
 				<h1>Bausteinumsetzung gesamt</h1>
 			</div>
-			<div class="ui-g-12 ui-md-12">
+			<div class="ui-g-12 ui-md-6">
 				<div class="card">
-					<p:chart id="veriniceHorizontalBarChart" type="bar"
-						model="#{bstUmsetzungTotalView.barChartModel}" responsive="true" />
+					<p:chart id="veriniceHorizontalBar" type="bar"
+						model="#{bausteinUmsetzungAllView.verticalBarChart}"
+						responsive="true" />
+				</div>
+			</div>
+			<div class="ui-g-12 ui-md-6">
+				<div class="card">
+					<p:chart id="veriniceVerticalBar" type="bar"
+						model="#{bausteinUmsetzungAllView.horizontalBarChartModel}"
+						responsive="true" />
 				</div>
 			</div>
 		</div>
 
+		<ui:repeat value="#{bausteinUmsetzungAllView.charts}" var="chart">
+			<div class="ui-g ui-fluid">
+				<div class="ui-g-12 ui-md-12">
+					<h1>#{chart.title}</h1>
+				</div>
+				<div class="ui-g-12 ui-md-6">
+					<div class="card">
+						<p:chart id="verticalBar" type="bar"
+							model="#{chart.pieChartModel}" responsive="true" />
+					</div>
+				</div>
+				<div class="ui-g-12 ui-md-6">
+					<div class="card">
+						<p:chart id="horizontalBar" type="bar"
+							model="#{chart.horizontalBarChartModel}" responsive="true" />
+					</div>
+				</div>
+			</div>
+		</ui:repeat>
 	</ui:define>
+
 </ui:composition>

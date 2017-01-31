@@ -32,6 +32,8 @@ import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
 
+import org.apache.commons.lang.StringUtils;
+
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.service.RetrieveInfo;
 import sernet.hui.common.VeriniceContext;
@@ -250,10 +252,37 @@ public class ControlService extends GenericChartService {
      *         the result to be displayed as a stacked chart.
      */
     public Map<String, Map<String, Number>> groupByMassnahmenStates(ITVerbund itNetwork) {
+        return groupByMassnahmenStates(String.valueOf(itNetwork.getScopeId()));
+    }
+
+
+    /**
+     * Aggregate over all {@link BausteinUmsetzung} objects and aggregate the
+     * {@link MassnahmenUmsetzung} states.
+     *
+     * This method normalizes the data in a way, that the number of a specific
+     * state is divided through the number of instances of a specific
+     * {@link BausteinUmsetzung}. With instances is meant several
+     * {@link BausteinUmsetzung} object with the same chapter value.
+     *
+     * @param itNetwork
+     *            Only {@link BausteinUmsetzung} under this it network are taken
+     *            into account.
+     *
+     * @return Key is the chapter of a
+     *         {@link MassnahmenUmsetzung#getUmsetzung()}. The value is a map
+     *         with the key {@link BausteinUmsetzung#getKapitel()}. This allows
+     *         the result to be displayed as a stacked chart.
+     */
+    public Map<String, Map<String, Number>> groupByMassnahmenStates(String scopeId) {
 
         IGraphService graphService = getGraphService();
         IGraphElementLoader graphElementLoader = new GraphElementLoader();
         graphElementLoader.setTypeIds(new String[] { BausteinUmsetzung.HIBERNATE_TYPE_ID, MassnahmenUmsetzung.HIBERNATE_TYPE_ID });
+
+        if(scopeId != null && !StringUtils.EMPTY.equals(scopeId)) {
+            graphElementLoader.setScopeId(Integer.valueOf(scopeId));
+        }
 
         graphService.setLoader(graphElementLoader);
         VeriniceGraph g = graphService.create();
@@ -261,10 +290,6 @@ public class ControlService extends GenericChartService {
         List<DataPoint> dataPoints = new ArrayList<>();
 
         for (MassnahmenUmsetzung maU : g.getElements(MassnahmenUmsetzung.class)) {
-
-            if (itNetwork != null && !itNetwork.getScopeId().equals(maU.getScopeId())) {
-                continue;
-            }
 
             dataPoints.add(new DataPoint((BausteinUmsetzung) g.getParent(maU), maU));
         }
@@ -278,7 +303,7 @@ public class ControlService extends GenericChartService {
             massnahmenUmsetzung2DataPoint.get(p.getState()).add(p);
         }
 
-        Map<String, Map<String, Number>> data = new HashMap<>();
+        Map<String, Map<String, Number>> data = new TreeMap<>(new CompareByTitle());
         for(Entry<String, List<DataPoint>> e : massnahmenUmsetzung2DataPoint.entrySet()){
            data.put(e.getKey(), new HashMap<String, Number>());
            for(DataPoint p : e.getValue()){

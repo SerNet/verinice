@@ -33,19 +33,25 @@ import sernet.verinice.web.poseidon.services.ControlService;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "bstUmsetzungTotalView")
-public class BstUmsetzungTotalView {
+@ManagedBean(name = "bstUmsetzungItNetworkView")
+public class BstUmsetzungItNetwork {
 
     private BarChartModel horizontalChartModel;
 
     private BarChartModel verticalChartModel;
+
+    @ManagedProperty(value = "#{param.itNetwork}")
+    private String itNetwork;
+
+    @ManagedProperty(value = "#{param.scopeId}")
+    private String scopeId;
 
     @ManagedProperty("#{controlService}")
     private ControlService controlService;
 
     @PostConstruct
     public void init(){
-        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates("");
+        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates(scopeId);
         BstChartFactory chartModelFactory = new BstChartFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
@@ -73,6 +79,22 @@ public class BstUmsetzungTotalView {
 
     public void setHorizontalChartModel(BarChartModel horizontalChartModel) {
         this.horizontalChartModel = horizontalChartModel;
+    }
+
+    public String getItNetwork() {
+        return itNetwork;
+    }
+
+    public void setItNetwork(String itNetwork) {
+        this.itNetwork = itNetwork;
+    }
+
+    public String getScopeId() {
+        return scopeId;
+    }
+
+    public void setScopeId(String scopeId) {
+        this.scopeId = scopeId;
     }
 
 }

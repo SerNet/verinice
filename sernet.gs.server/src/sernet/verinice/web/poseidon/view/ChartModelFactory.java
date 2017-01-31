@@ -19,17 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
-import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
@@ -38,17 +30,11 @@ import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
 
-import sernet.gs.service.NumericStringComparator;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.service.model.IObjectModelService;
-import sernet.verinice.web.Messages;
-
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ChartModelFactory extends AbstractChartModelFactory {
+public class ChartModelFactory {
 
 
     private SortedMap<String, Number> data;
@@ -60,9 +46,9 @@ public class ChartModelFactory extends AbstractChartModelFactory {
 
     public PieChartModel getPieChartModel(){
         PieChartModel model = new PieChartModel();
-        model.setData(setLabel(data));
+        model.setData(ChartUtils.transalteMapKeyLabel(data));
         model.setExtender("verinicePie");
-        model.setSeriesColors(getColors());
+        model.setSeriesColors(ChartUtils.getColors(data.keySet()));
         return model;
     }
 
@@ -71,7 +57,7 @@ public class ChartModelFactory extends AbstractChartModelFactory {
         BarChartModel barChartModel = new BarChartModel();
 
         ChartSeries series = new ChartSeries();
-        for (Map.Entry<String, Number> entry : setLabel(data).entrySet()) {
+        for (Map.Entry<String, Number> entry : ChartUtils.transalteMapKeyLabel(data).entrySet()) {
             series.set(entry.getKey(), entry.getValue());
         }
 
@@ -79,10 +65,10 @@ public class ChartModelFactory extends AbstractChartModelFactory {
         barChartModel.setLegendPlacement(LegendPlacement.OUTSIDE);
 
         Axis yAxis = barChartModel.getAxis(AxisType.Y);
-        yAxis.setMax(getMax(data.values()));
+        yAxis.setMax(ChartUtils.getMax(data.values()));
 
-        barChartModel.setExtender("veriniceBar");
-        barChartModel.setSeriesColors(getColors());
+        barChartModel.setExtender("veriniceVerticalBar");
+        barChartModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
 
         return barChartModel;
     }
@@ -93,7 +79,7 @@ public class ChartModelFactory extends AbstractChartModelFactory {
         HorizontalBarChartModel horizontalBarModel = new HorizontalBarChartModel();
 
         ChartSeries series = new ChartSeries();
-        for (Map.Entry<String, Number> entry : setLabel(data).entrySet()) {
+        for (Map.Entry<String, Number> entry : ChartUtils.transalteMapKeyLabel(data).entrySet()) {
             series.set(entry.getKey(), entry.getValue());
         }
 
@@ -101,61 +87,16 @@ public class ChartModelFactory extends AbstractChartModelFactory {
         horizontalBarModel.setLegendPlacement(LegendPlacement.OUTSIDE);
 
         Axis xAxis = horizontalBarModel.getAxis(AxisType.X);
-        xAxis.setMax(getMax(data.values()));
+        xAxis.setMax(ChartUtils.getMax(data.values()));
 
         Axis yAxis = horizontalBarModel.getAxis(AxisType.Y);
         horizontalBarModel.setExtender("veriniceHorizontalBar");
-        horizontalBarModel.setSeriesColors(getColors());
+        horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
+        horizontalBarModel.setShadow(false);
 
         yAxis.setLabel("Status");
 
         return horizontalBarModel;
     }
 
-    private String getColors() {
-
-        java.util.List<String> colors = new ArrayList<>();
-        for (String state : data.keySet()) {
-            colors.add(states2Colors.get(state).toString());
-        }
-
-        return StringUtils.join(colors, ",");
-    }
-
-    private Map<String, Number> setLabel(Map<String, Number> states) {
-        Map<String, Number> humanReadableLabels = new TreeMap<>(new NumericStringComparator());
-        for (Entry<String, Number> e : states.entrySet()) {
-            humanReadableLabels.put(getLabel(e), e.getValue());
-        }
-
-        return humanReadableLabels;
-    }
-
-    private String getLabel(Map.Entry<String, Number> entry) {
-
-        if (MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(entry.getKey())) {
-            return Messages.getString(IMPLEMENTATION_STATUS_UNEDITED);
-        }
-
-        return getObjectModelService().getLabel(entry.getKey());
-    }
-
-    private Integer getMax(Collection<Number> values) {
-
-        if(values == null || values.isEmpty()){
-            return 0;
-        }
-
-        Collection<Integer> buffer = new ArrayList<>();
-        for (Iterator<Number> iterator = values.iterator(); iterator.hasNext();) {
-            Number number = iterator.next();
-            buffer.add((Integer) number);
-        }
-
-        return Collections.max(buffer);
-    }
-
-    private IObjectModelService getObjectModelService() {
-        return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
-    }
 }
