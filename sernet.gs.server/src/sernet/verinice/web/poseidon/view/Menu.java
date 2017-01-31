@@ -59,8 +59,6 @@ public class Menu {
 
         model = new DefaultMenuModel();
 
-        addMiscMenu();
-
         massnahmenUmsetzungSubMenu = new DefaultSubMenu("MassnahmenUms.");
         massnahmenUmsetzungSubMenu.setIcon("fa fa-fw fa-line-chart");
 
@@ -93,7 +91,6 @@ public class Menu {
         bausteinUmsTotal.setIcon("fa fa-fw fa-area-chart");
         bausteinUmsSubMenu.addElement(bausteinUmsTotal);
 
-
         try {
             addItNetworks(bausteinUmsSubMenu, "implementation-bstums.xhtml");
         } catch (UnsupportedEncodingException e) {
@@ -104,7 +101,7 @@ public class Menu {
 
         model.addElement(bausteinUmsSubMenu);
 
-
+        addMiscItems();
     }
 
     private void addItNetworks(DefaultSubMenu menu, String templateFile) throws UnsupportedEncodingException {
@@ -119,22 +116,17 @@ public class Menu {
         }
     }
 
-    private void addMiscMenu() {
-
-        DefaultSubMenu miscMenu = new DefaultSubMenu("Miscellaneous");
-        miscMenu.setIcon("fa fa-fw fa-caret-square-o-down");
+    private void addMiscItems() {
 
         DefaultMenuItem download = new DefaultMenuItem("Download");
         download.setUrl("/misc/download.xhtml");
         download.setIcon("fa fa-fw fa-download");
-        miscMenu.addElement(download);
+        model.addElement(download);
 
         DefaultMenuItem help = new DefaultMenuItem("Help");
         help.setUrl("/misc/help.xhtml");
         help.setIcon("fa fa-fw fa-info-circle");
-        miscMenu.addElement(help);
-
-        model.addElement(miscMenu);
+        model.addElement(help);
     }
 
     public MenuModel getModel() {
