@@ -138,7 +138,7 @@
 
 	<bean id="authenticationEntryPoint"
 		class="org.springframework.security.ui.webapp.AuthenticationProcessingFilterEntryPoint">
-		<property name="loginFormUrl" value="/auth/login.jsf" />
+		<property name="loginFormUrl" value="/auth/login.xhtml" />
 		<property name="forceHttps" value="false" />
 	</bean>
 
@@ -148,7 +148,7 @@
 
 
 	<bean id="logoutFilter" class="org.springframework.security.ui.logout.LogoutFilter">
-		<constructor-arg value="/auth/login.jsf" />
+		<constructor-arg value="/auth/login.xhtml" />
 		<constructor-arg>
 			<list>
 				<bean
@@ -178,7 +178,7 @@
 			<security:filter-invocation-definition-source>
 				<security:intercept-url pattern="/auth/j_verinice_security_check"
 					access="ROLE_ANONYMOUS" />
-				<security:intercept-url pattern="/auth/login.jsf"
+				<security:intercept-url pattern="/auth/login.xhtml"
 					access="ROLE_ANONYMOUS" />
 				<security:intercept-url pattern="/edit/**"
 					access="ROLE_WEB" />
