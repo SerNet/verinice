@@ -53,6 +53,8 @@ public class Menu {
 
     private DefaultSubMenu massnahmenUmsetzungSubMenu;
 
+    private DefaultSubMenu bausteinUmsNormSubMenu;
+
     @PostConstruct()
     public void initMenu() {
 
@@ -78,7 +80,7 @@ public class Menu {
             log.error("could not create menu item", e);
         }
 
-        bausteinUmsSubMenu = new DefaultSubMenu("BausteinUms.");
+        bausteinUmsSubMenu = new DefaultSubMenu("BausteinUms. Kum.");
         bausteinUmsSubMenu.setIcon("fa fa-fw fa-line-chart");
 
         DefaultMenuItem bausteinUmsAll = new DefaultMenuItem("Alle");
@@ -97,9 +99,28 @@ public class Menu {
             log.error("could not create menu item", e);
         }
 
-        model.addElement(massnahmenUmsetzungSubMenu);
+        bausteinUmsNormSubMenu = new DefaultSubMenu("BausteinUms. Norm.");
+        bausteinUmsNormSubMenu.setIcon("fa fa-fw fa-line-chart");
 
+        DefaultMenuItem bausteinUmsNormAll = new DefaultMenuItem("Alle");
+        bausteinUmsNormAll.setUrl("/dashboard/implementation-bstums-all.xhtml");
+        bausteinUmsNormAll.setIcon("fa fa-fw fa-area-chart");
+        bausteinUmsNormSubMenu.addElement(bausteinUmsAll);
+
+        DefaultMenuItem bausteinUmsNormTotal = new DefaultMenuItem("Gesamt");
+        bausteinUmsNormTotal.setUrl("/dashboard/implementation-bstums-all.xhtml");
+        bausteinUmsNormTotal.setIcon("fa fa-fw fa-area-chart");
+        bausteinUmsNormSubMenu.addElement(bausteinUmsTotal);
+
+        try {
+            addItNetworks(bausteinUmsNormSubMenu, "implementation-bstums-itnetwork.xhtml");
+        } catch (UnsupportedEncodingException e) {
+            log.error("could not create menu item", e);
+        }
+
+        model.addElement(massnahmenUmsetzungSubMenu);
         model.addElement(bausteinUmsSubMenu);
+        model.addElement(bausteinUmsNormSubMenu);
 
         addMiscItems();
     }
