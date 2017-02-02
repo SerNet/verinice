@@ -33,6 +33,6 @@ public class UserManager {
     public String logout() {
 
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "/misc/landing.xhtml?faces-redirect=true";
+        return "/misc/home.xhtml?faces-redirect=true";
     }
 }

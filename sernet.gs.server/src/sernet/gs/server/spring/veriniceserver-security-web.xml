@@ -95,7 +95,7 @@
 		class="org.springframework.security.ui.webapp.AuthenticationProcessingFilter">
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="filterProcessesUrl" value="/auth/j_verinice_security_check" />
-		<property name="defaultTargetUrl" value="/misc/landing.xhtml" />
+		<property name="defaultTargetUrl" value="/misc/home.xhtml" />
 		<property name="authenticationFailureUrl" value="/auth/login-error.jsf" />
 	</bean>
 
