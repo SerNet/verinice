@@ -610,7 +610,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     public String decryptRestrictedProperty(String encryptedContentId, String cypherText, int userDbId) {
         LicenseManagementEntry entry = null;
         for(LicenseManagementEntry existingEntry : getExistingLicenses()){ // get related licenceInformation
-            String plainContentId = getCryptoService().decryptLicenseRestrictedProperty(encryptedContentId, existingEntry.getUserPassword());
+            String plainContentId = getCryptoService().decryptLicenseRestrictedProperty(existingEntry.getUserPassword(), encryptedContentId);
             if(plainContentId.equals(this.decrypt(existingEntry, LicenseManagementEntry.COLUMN_CONTENTID))){
                 entry = existingEntry;
             }

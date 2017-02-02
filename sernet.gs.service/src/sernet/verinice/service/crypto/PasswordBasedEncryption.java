@@ -309,19 +309,24 @@ public abstract class PasswordBasedEncryption {
         PBEKeySpec pbeKeySpec = new PBEKeySpec(keyChar);
 
         byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(
-                    value.getBytes(VeriniceCharset.CHARSET_UTF_8.name()));
+                    value.getBytes());
         final byte[] salt = Arrays.copyOf(bytes, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
-        final byte[] cipherText = Arrays.copyOfRange(bytes,
-                                                     IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH,
-                                                     bytes.length);
-
+        final  byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+        System.arraycopy(bytes, 0, saltBytes, 0, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
+//        final byte[] cipherText = Arrays.copyOfRange(bytes,
+//                                                     IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH,
+//                                                     bytes.length);
+        
+        final byte[] cipherTextBytes = new byte[bytes.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+        System.arraycopy(bytes, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, cipherTextBytes, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, bytes.length);
+        
         PBEParameterSpec bEParameterSpec = new PBEParameterSpec(salt, ITERATION_COUNT);
         SecretKey secret;
             secret = secKeyFac.generateSecret(pbeKeySpec);
 
         Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
             cipher.init(Cipher.DECRYPT_MODE, secret, bEParameterSpec);
-            byte[] decrypted = cipher.doFinal(cipherText);
+            byte[] decrypted = cipher.doFinal(cipherTextBytes);
             return new String(decrypted, VeriniceCharset.CHARSET_UTF_8.name());
         } catch (IllegalBlockSizeException e) {
             throw new EncryptionException(e);

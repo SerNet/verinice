@@ -2348,7 +2348,8 @@ the value between <param></param> will be used directly if no string is found fo
 				id="mnums_name"
                 editable="true"
 				name="Titel"
-				required="true" />
+				required="true"
+				showInObjectBrowser="true" />
             <huiproperty
                 id="mnums_lebenszyklus"
                 name="Lebenszyklus"
