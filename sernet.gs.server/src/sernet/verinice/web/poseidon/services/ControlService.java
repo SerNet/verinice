@@ -31,6 +31,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -59,6 +60,7 @@ import sernet.verinice.web.Messages;
  *
  */
 @ManagedBean(name = "controlService")
+@SessionScoped
 public class ControlService extends GenericChartService {
 
     private static final String IMPLEMENTATION_STATUS_UNEDITED = "SingleSelectDummyValue";
@@ -317,9 +319,6 @@ public class ControlService extends GenericChartService {
 
     }
 
-    private IGraphService getGraphService() {
-        return (IGraphService) VeriniceContext.get(VeriniceContext.GRAPH_SERVICE);
-    }
 
     private void aggregateMassnahmen(Map<String, Map<String, Number>> chapter2MaUs, Map<String, Integer> chapter2Count) {
         aggregateMassnahmen(null, chapter2MaUs, chapter2Count);

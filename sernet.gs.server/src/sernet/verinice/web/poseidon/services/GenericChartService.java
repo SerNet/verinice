@@ -21,6 +21,7 @@ package sernet.verinice.web.poseidon.services;
 
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IDAOFactory;
+import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.service.model.IObjectModelService;
 
 /**
@@ -36,4 +37,9 @@ public abstract class GenericChartService {
     IObjectModelService getObjectService(){
        return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
     }
+
+    IGraphService getGraphService() {
+        return (IGraphService) VeriniceContext.get(VeriniceContext.GRAPH_SERVICE);
+    }
+
 }
