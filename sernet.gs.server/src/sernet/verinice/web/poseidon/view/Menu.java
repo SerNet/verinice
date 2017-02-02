@@ -158,7 +158,7 @@ public class Menu {
 
     private void addMiscItems() {
 
-        DefaultMenuItem download = new DefaultMenuItem("Download");
+        DefaultMenuItem download = new DefaultMenuItem("Downloads");
         download.setUrl("/misc/download.xhtml");
         download.setIcon("fa fa-fw fa-download");
         model.addElement(download);
