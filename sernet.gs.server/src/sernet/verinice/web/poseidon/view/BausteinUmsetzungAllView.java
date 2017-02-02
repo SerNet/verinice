@@ -86,9 +86,11 @@ public class BausteinUmsetzungAllView {
             BstChartFactory chartModelFactory = new BstChartFactory(states);
 
             item.setTitle(itNetwork.getTitle());
-            item.pieChartModel = chartModelFactory.getVerticalBarChartModel();
-            item.horizontalBarChartModel = chartModelFactory.getHorizontalBarChartModel();
-            Axis axis = item.horizontalBarChartModel.getAxis(AxisType.X);
+            item.setFirstChartModel(chartModelFactory.getVerticalBarChartModel());
+            HorizontalBarChartModel horizontalBarChartModel = chartModelFactory.getHorizontalBarChartModel();
+            item.setSecondChartModel(horizontalBarChartModel);
+            Axis axis = horizontalBarChartModel.getAxis(AxisType.X);
+
             axis.setMax(horizontalBarChart.getAxis(AxisType.X).getMax());
             charts.add(item);
         }

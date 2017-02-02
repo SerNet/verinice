@@ -31,29 +31,14 @@ public class VeriniceAllChartItem {
 
     private String title;
 
-    ChartModel pieChartModel;
+    private ChartModel firstChartModel;
 
-    HorizontalBarChartModel horizontalBarChartModel;
+    private ChartModel secondChartModel;
 
     public VeriniceAllChartItem() {
         setId(UUID.randomUUID().toString());
     }
 
-    public ChartModel getPieChartModel() {
-        return pieChartModel;
-    }
-
-    public void ChartModel(PieChartModel pieChartModel) {
-        this.pieChartModel = pieChartModel;
-    }
-
-    public HorizontalBarChartModel getHorizontalBarChartModel() {
-        return horizontalBarChartModel;
-    }
-
-    public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {
-        this.horizontalBarChartModel = horizontalBarChartModel;
-    }
 
     public String getId() {
         return id;
@@ -69,5 +54,21 @@ public class VeriniceAllChartItem {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public ChartModel getFirstChartModel() {
+        return firstChartModel;
+    }
+
+    public void setFirstChartModel(ChartModel firstChartModel) {
+        this.firstChartModel = firstChartModel;
+    }
+
+    public ChartModel getSecondChartModel() {
+        return secondChartModel;
+    }
+
+    public void setSecondChartModel(ChartModel secondChartModel) {
+        this.secondChartModel = secondChartModel;
     }
 }

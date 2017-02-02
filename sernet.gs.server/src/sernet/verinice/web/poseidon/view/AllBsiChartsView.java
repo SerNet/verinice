@@ -86,9 +86,10 @@ public class AllBsiChartsView {
             ChartModelFactory chartModelFactory = new ChartModelFactory(states);
 
             item.setTitle(itNetwork.getTitle());
-            item.pieChartModel = chartModelFactory.getPieChartModel();
-            item.horizontalBarChartModel = chartModelFactory.getHorizontalBarModel();
-            Axis axis = item.horizontalBarChartModel.getAxis(AxisType.X);
+            item.setFirstChartModel(chartModelFactory.getPieChartModel());
+            HorizontalBarChartModel horizontalBarModel = chartModelFactory.getHorizontalBarModel();
+            item.setSecondChartModel(horizontalBarModel);
+            Axis axis = horizontalBarModel.getAxis(AxisType.X);
             axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
             charts.add(item);
         }
