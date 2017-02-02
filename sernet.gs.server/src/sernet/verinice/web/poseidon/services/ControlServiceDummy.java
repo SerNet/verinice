@@ -54,24 +54,6 @@ public class ControlServiceDummy extends ControlService {
         return super.aggregateMassnahmenUmsetzung(itNetwork);
     }
 
-    @Override
-    public Map<String, Map<String, Number>> groupMassnahmenUmsByBausteinUmsNormalized() {
-        // TODO Auto-generated method stub
-        return super.groupMassnahmenUmsByBausteinUmsNormalized();
-    }
-
-    @Override
-    public Map<String, Map<String, Number>> groupMassnahmenUmsByBausteinUms(ITVerbund itNetwork) {
-        // TODO Auto-generated method stub
-        return super.groupMassnahmenUmsByBausteinUms(itNetwork);
-    }
-
-    @Override
-    public Map<String, Map<String, Number>> groupMassnahmenUmsByBausteinUmsNormalized(ITVerbund itNetwork) {
-        // TODO Auto-generated method stub
-        return super.groupMassnahmenUmsByBausteinUmsNormalized(itNetwork);
-    }
-
     public Map<String, Integer> aggregateMassnahmenUmsetzungStatus(String scope) {
 
         Map<String, Integer> states = new HashMap<>();

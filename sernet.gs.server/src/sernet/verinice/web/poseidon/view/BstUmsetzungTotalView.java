@@ -28,6 +28,7 @@ import javax.faces.bean.ManagedProperty;
 import org.primefaces.model.chart.BarChartModel;
 
 import sernet.verinice.web.poseidon.services.ControlService;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -45,7 +46,7 @@ public class BstUmsetzungTotalView {
 
     @PostConstruct
     public void init(){
-        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates("");
+        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates("", new GroupByStrategySum());
         BstChartFactory chartModelFactory = new BstChartFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();

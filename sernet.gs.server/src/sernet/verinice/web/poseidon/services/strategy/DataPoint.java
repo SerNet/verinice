@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Benjamin Weißenfels.
+ * Copyright (c) 2017 Benjamin Weißenfels.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -17,37 +17,47 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.services;
+package sernet.verinice.web.poseidon.services.strategy;
 
-import java.io.Serializable;
-
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.interfaces.IDAOFactory;
-import sernet.verinice.interfaces.graph.IGraphService;
+import sernet.verinice.model.bsi.BausteinUmsetzung;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
-import sernet.verinice.service.model.IObjectModelService;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public abstract class GenericChartService {
+public class DataPoint {
 
-    IDAOFactory getDaoFactory(){
-        return (IDAOFactory) VeriniceContext.get(VeriniceContext.DAO_FACTORY);
+    private BausteinUmsetzung bst;
+
+    private MassnahmenUmsetzung massnahmenUmsetzung;
+
+    public DataPoint(BausteinUmsetzung bst, MassnahmenUmsetzung massnahmenUmsetzung) {
+        this.bst =bst;
+        this.massnahmenUmsetzung = massnahmenUmsetzung;
     }
 
-    IObjectModelService getObjectService(){
-       return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
+    public BausteinUmsetzung getBst() {
+        return bst;
     }
 
-    IGraphService getGraphService() {
-        return (IGraphService) VeriniceContext.get(VeriniceContext.GRAPH_SERVICE);
+    public void setBst(BausteinUmsetzung bst) {
+        this.bst = bst;
     }
 
+    public MassnahmenUmsetzung getMassnahmenUmsetzung() {
+        return massnahmenUmsetzung;
+    }
 
-    IBaseDao<MassnahmenUmsetzung, Serializable> getMassnahmenDao(IDAOFactory iDaoFactory) {
-        return (IBaseDao<MassnahmenUmsetzung, Serializable>) iDaoFactory.getDAO(MassnahmenUmsetzung.class);
+    public void setMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
+        this.massnahmenUmsetzung = massnahmenUmsetzung;
+    }
+
+    public String getState() {
+        return massnahmenUmsetzung.getUmsetzung();
+    }
+
+    public String getChapter() {
+        return bst.getKapitel().replaceAll("[a-zA-Z]", "").trim();
     }
 }

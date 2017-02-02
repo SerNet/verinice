@@ -19,45 +19,33 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
-import sernet.verinice.model.bsi.BausteinUmsetzung;
+import java.util.Comparator;
+
+import sernet.gs.service.NumericStringComparator;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.service.model.IObjectModelService;
+import sernet.verinice.web.Messages;
 
-/**
- * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
- *
- */
-public class DataPoint {
+public final class CompareByTitle implements Comparator<String> {
 
-    private BausteinUmsetzung bst;
+    static final String IMPLEMENTATION_STATUS_UNEDITED = "SingleSelectDummyValue";
 
-    private MassnahmenUmsetzung massnahmenUmsetzung;
-
-    public DataPoint(BausteinUmsetzung bst, MassnahmenUmsetzung massnahmenUmsetzung) {
-        this.bst =bst;
-        this.massnahmenUmsetzung = massnahmenUmsetzung;
+    @Override
+    public int compare(String o1, String o2) {
+        return new NumericStringComparator().compare(getLabel(o1), getLabel(o2));
     }
 
-    public BausteinUmsetzung getBst() {
-        return bst;
+    private String getLabel(String value) {
+
+        if (MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET.equals(value)) {
+            return Messages.getString(IMPLEMENTATION_STATUS_UNEDITED);
+        }
+
+        return getObjectService().getLabel(value);
     }
 
-    public void setBst(BausteinUmsetzung bst) {
-        this.bst = bst;
-    }
-
-    public MassnahmenUmsetzung getMassnahmenUmsetzung() {
-        return massnahmenUmsetzung;
-    }
-
-    public void setMassnahmenUmsetzung(MassnahmenUmsetzung massnahmenUmsetzung) {
-        this.massnahmenUmsetzung = massnahmenUmsetzung;
-    }
-
-    public String getState() {
-        return massnahmenUmsetzung.getUmsetzung();
-    }
-
-    public String getChapter() {
-        return bst.getKapitel().replaceAll("[a-zA-Z]", "").trim();
+    private IObjectModelService getObjectService() {
+        return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
     }
 }

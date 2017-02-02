@@ -42,6 +42,7 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.service.DAOFactory;
 import sernet.verinice.web.poseidon.services.ControlService;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -62,7 +63,7 @@ public class BausteinUmsetzungAllView {
     @PostConstruct
     public void init() {
 
-        Map<String, Map<String, Number>> allStates = controlService.groupByMassnahmenStates("");
+        Map<String, Map<String, Number>> allStates = controlService.groupByMassnahmenStates("", new GroupByStrategySum());
         BstChartFactory allChartModelFactory = new BstChartFactory(allStates);
 
         verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
@@ -78,7 +79,7 @@ public class BausteinUmsetzungAllView {
 
         for (ITVerbund itNetwork : itNetworks) {
 
-            Map<String, Map<String, Number>> states = controlService.groupByMassnahmenStates(itNetwork);
+            Map<String, Map<String, Number>> states = controlService.groupByMassnahmenStates(itNetwork, new GroupByStrategySum());
 
             if(states.isEmpty()) continue;
 
