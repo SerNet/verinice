@@ -53,7 +53,7 @@ public class BausteinUmsetzungAllView {
     @ManagedProperty("#{controlService}")
     private ControlService controlService;
 
-    private List<VeriniceAllChartItem> charts;
+    private List<VeriniceChartRow> charts;
 
     private HorizontalBarChartModel horizontalBarChart;
 
@@ -82,7 +82,7 @@ public class BausteinUmsetzungAllView {
 
             if(states.isEmpty()) continue;
 
-            VeriniceAllChartItem item = new VeriniceAllChartItem();
+            VeriniceChartRow item = new VeriniceChartRow();
             BstChartFactory chartModelFactory = new BstChartFactory(states);
 
             item.setTitle(itNetwork.getTitle());
@@ -111,11 +111,11 @@ public class BausteinUmsetzungAllView {
 
 
 
-    public List<VeriniceAllChartItem> getCharts() {
+    public List<VeriniceChartRow> getCharts() {
         return charts;
     }
 
-    public void setCharts(List<VeriniceAllChartItem> charts) {
+    public void setCharts(List<VeriniceChartRow> charts) {
         this.charts = charts;
     }
 

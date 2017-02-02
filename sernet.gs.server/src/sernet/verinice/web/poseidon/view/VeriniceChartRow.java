@@ -25,7 +25,7 @@ import org.primefaces.model.chart.ChartModel;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-public class VeriniceAllChartItem {
+public class VeriniceChartRow {
 
     private String id;
 
@@ -35,7 +35,7 @@ public class VeriniceAllChartItem {
 
     private ChartModel secondChartModel;
 
-    public VeriniceAllChartItem() {
+    public VeriniceChartRow() {
         setId(UUID.randomUUID().toString());
     }
 
