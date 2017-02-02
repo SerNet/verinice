@@ -32,11 +32,11 @@ import org.primefaces.model.chart.HorizontalBarChartModel;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class BstChartFactory {
+public class ModulChartsFactory {
 
     private Map<String, Map<String, Number>> data;
 
-    public BstChartFactory(Map<String, Map<String, Number>> data) {
+    public ModulChartsFactory(Map<String, Map<String, Number>> data) {
         this.data = data;
     }
 

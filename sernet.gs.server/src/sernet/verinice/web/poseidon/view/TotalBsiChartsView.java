@@ -50,11 +50,11 @@ public class TotalBsiChartsView implements Serializable {
 
     private BarChartModel barModel;
 
-    private ChartModelFactory chartModelFactory;
+    private BsiControlChartsFactory chartModelFactory;
 
     @PostConstruct
     final public void init() {
-        this.chartModelFactory = new ChartModelFactory(getStates());
+        this.chartModelFactory = new BsiControlChartsFactory(getStates());
         this.pieModel = chartModelFactory.getPieChartModel();
         this.barModel = chartModelFactory.getBarChart();
     }

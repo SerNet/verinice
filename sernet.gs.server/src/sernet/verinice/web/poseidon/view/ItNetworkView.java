@@ -57,7 +57,7 @@ public class ItNetworkView implements Serializable {
 
     @PostConstruct
     final public void init() {
-        ChartModelFactory chartModelFactory = new ChartModelFactory(getStates());
+        BsiControlChartsFactory chartModelFactory = new BsiControlChartsFactory(getStates());
         this.setPieModel(chartModelFactory.getPieChartModel());
         this.setBarModel(chartModelFactory.getBarChart());
     }

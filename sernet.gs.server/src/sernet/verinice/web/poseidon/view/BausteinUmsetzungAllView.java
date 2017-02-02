@@ -64,7 +64,7 @@ public class BausteinUmsetzungAllView {
     public void init() {
 
         Map<String, Map<String, Number>> allStates = controlService.groupByMassnahmenStates("", new GroupByStrategySum());
-        BstChartFactory allChartModelFactory = new BstChartFactory(allStates);
+        ModulChartsFactory allChartModelFactory = new ModulChartsFactory(allStates);
 
         verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
         horizontalBarChart = allChartModelFactory.getHorizontalBarChartModel();
@@ -84,7 +84,7 @@ public class BausteinUmsetzungAllView {
             if(states.isEmpty()) continue;
 
             VeriniceChartRow item = new VeriniceChartRow();
-            BstChartFactory chartModelFactory = new BstChartFactory(states);
+            ModulChartsFactory chartModelFactory = new ModulChartsFactory(states);
 
             item.setTitle(itNetwork.getTitle());
             item.setFirstChartModel(chartModelFactory.getVerticalBarChartModel());

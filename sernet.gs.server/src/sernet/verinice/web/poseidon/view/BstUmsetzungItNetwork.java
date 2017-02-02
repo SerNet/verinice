@@ -53,7 +53,7 @@ public class BstUmsetzungItNetwork {
     @PostConstruct
     public void init(){
         Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates(scopeId, new GroupByStrategySum());
-        BstChartFactory chartModelFactory = new BstChartFactory(data);
+        ModulChartsFactory chartModelFactory = new ModulChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
     }

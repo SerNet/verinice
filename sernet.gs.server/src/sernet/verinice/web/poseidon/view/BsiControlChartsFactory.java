@@ -34,13 +34,13 @@ import org.primefaces.model.chart.PieChartModel;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ChartModelFactory {
+public class BsiControlChartsFactory {
 
 
     private SortedMap<String, Number> data;
 
 
-    public ChartModelFactory(SortedMap<String, Number> data){
+    public BsiControlChartsFactory(SortedMap<String, Number> data){
         this.data = data;
     }
 
@@ -66,6 +66,7 @@ public class ChartModelFactory {
 
         Axis yAxis = barChartModel.getAxis(AxisType.Y);
         yAxis.setMax(ChartUtils.getMax(data.values()));
+        yAxis.setTickCount(5);
 
         barChartModel.setExtender("veriniceVerticalBar");
         barChartModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
@@ -88,13 +89,14 @@ public class ChartModelFactory {
 
         Axis xAxis = horizontalBarModel.getAxis(AxisType.X);
         xAxis.setMax(ChartUtils.getMax(data.values()));
+        xAxis.setTickCount(5);
 
         Axis yAxis = horizontalBarModel.getAxis(AxisType.Y);
+        yAxis.setLabel("Status");
+
         horizontalBarModel.setExtender("veriniceHorizontalBar");
         horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
         horizontalBarModel.setShadow(false);
-
-        yAxis.setLabel("Status");
 
         return horizontalBarModel;
     }

@@ -63,7 +63,7 @@ public class AllBsiChartsView {
     public void init() {
 
         SortedMap<String, Number> allStates = controlService.aggregateMassnahmenUmsetzungStatus();
-        ChartModelFactory allChartModelFactory = new ChartModelFactory(allStates);
+        BsiControlChartsFactory allChartModelFactory = new BsiControlChartsFactory(allStates);
 
         pieModel = allChartModelFactory.getPieChartModel();
         horizontalBarChartModel = allChartModelFactory.getHorizontalBarModel();
@@ -83,7 +83,7 @@ public class AllBsiChartsView {
             if(states.isEmpty()) continue;
 
             VeriniceChartRow item = new VeriniceChartRow();
-            ChartModelFactory chartModelFactory = new ChartModelFactory(states);
+            BsiControlChartsFactory chartModelFactory = new BsiControlChartsFactory(states);
 
             item.setTitle(itNetwork.getTitle());
             item.setFirstChartModel(chartModelFactory.getPieChartModel());

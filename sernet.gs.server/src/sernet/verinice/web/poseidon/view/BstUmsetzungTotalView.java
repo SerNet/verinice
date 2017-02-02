@@ -47,7 +47,7 @@ public class BstUmsetzungTotalView {
     @PostConstruct
     public void init(){
         Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates("", new GroupByStrategySum());
-        BstChartFactory chartModelFactory = new BstChartFactory(data);
+        ModulChartsFactory chartModelFactory = new ModulChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
     }
