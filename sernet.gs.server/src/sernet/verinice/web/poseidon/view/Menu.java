@@ -58,8 +58,12 @@ public class Menu {
     @PostConstruct()
     public void initMenu() {
 
-
         model = new DefaultMenuModel();
+
+        DefaultMenuItem home = new DefaultMenuItem("Home");
+        home.setUrl("/");
+        home.setIcon("fa fa-fw fa-home");
+        model.addElement(home);
 
         massnahmenUmsetzungSubMenu = new DefaultSubMenu("MassnahmenUms.");
         massnahmenUmsetzungSubMenu.setIcon("fa fa-fw fa-line-chart");
@@ -121,6 +125,21 @@ public class Menu {
         model.addElement(massnahmenUmsetzungSubMenu);
         model.addElement(bausteinUmsSubMenu);
         model.addElement(bausteinUmsNormSubMenu);
+
+        DefaultMenuItem vdaIsa = new DefaultMenuItem("VDA-ISA");
+        vdaIsa.setIcon("fa fa-fw fa-area-chart");
+
+        DefaultMenuItem controls = new DefaultMenuItem("Controls");
+        controls.setIcon("fa fa-fw fa-wrench");
+
+        DefaultMenuItem risksAnalysis = new DefaultMenuItem("Risikoanalyse");
+        risksAnalysis.setIcon("fa fa-fw fa-bomb");
+
+
+        model.addElement(controls);
+        model.addElement(vdaIsa);
+        model.addElement(risksAnalysis);
+
 
         addMiscItems();
     }
