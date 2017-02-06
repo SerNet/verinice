@@ -25,9 +25,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.hibernate.FetchMode;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Restrictions;
 
 import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.service.SecurityException;
+import sernet.hui.common.connect.Entity;
 import sernet.verinice.interfaces.ChangeLoggingCommand;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
@@ -159,6 +163,15 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                 if (children[i] instanceof FinishedRiskAnalysis) {
                     removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
                 }
+
+                if (children[i].getEntity() != null && isOrphanEntity(dao, children[i].getDbId())) {
+                    deleteOrphanEntity(children[i].getEntity());
+                    children[i].setEntity(null);
+                }
+            }
+            if (element.getEntity() != null && isOrphanEntity(dao, element.getEntity().getDbId())) {
+                deleteOrphanEntity(element.getEntity());
+                element.setEntity(null);
             }
             
             if (element instanceof ITVerbund) {
@@ -301,6 +314,22 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
         }
     }
     
+    private boolean isOrphanEntity(IBaseDao dao, int entityDbId) {
+        DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
+        crit.setFetchMode("entity", FetchMode.JOIN);
+        crit.add(Restrictions.eq("entity.dbId", entityDbId));
+        List<CnATreeElement> entities = dao.findByCriteria(crit);
+        return entities.size() > 1 ? false : true;
+    }
+
+    private void deleteOrphanEntity(Entity entity) {
+        IBaseDao<Entity, Serializable> entityDao = getDaoFactory().getDAO(Entity.class);
+        if (getLog().isInfoEnabled()) {
+            getLog().info("Found and deleted orpahn entity with dbId: " + entity.getDbId());
+        }
+        entityDao.delete(entity);
+    }
+
     /* (non-Javadoc)
      * @see sernet.gs.ui.rcp.main.service.commands.GenericCommand#clear()
      */
