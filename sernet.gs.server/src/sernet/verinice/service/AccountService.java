@@ -21,6 +21,7 @@
 package sernet.verinice.service;
 
 import static sernet.verinice.interfaces.IRightsService.ADMINDEFAULTGROUPNAME;
+import static sernet.verinice.interfaces.IRightsService.ADMINLOCALDEFAULTGROUPNAME;
 import static sernet.verinice.interfaces.IRightsService.ADMINSCOPEDEFAULTGROUPNAME;
 import static sernet.verinice.interfaces.IRightsService.USERDEFAULTGROUPNAME;
 import static sernet.verinice.interfaces.IRightsService.USERSCOPEDEFAULTGROUPNAME;
@@ -73,7 +74,7 @@ public class AccountService implements IAccountService, Serializable {
 
     private IBaseDao<Permission, Serializable> permissionDao;
 
-    private final Set<String> STANDARD_GROUPS = new HashSet<String>(Arrays.asList(new String[] { ADMINDEFAULTGROUPNAME, ADMINSCOPEDEFAULTGROUPNAME, USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME }));
+    private final Set<String> STANDARD_GROUPS = new HashSet<String>(Arrays.asList(new String[] { ADMINDEFAULTGROUPNAME, ADMINLOCALDEFAULTGROUPNAME, ADMINSCOPEDEFAULTGROUPNAME, USERDEFAULTGROUPNAME, USERSCOPEDEFAULTGROUPNAME }));
 
     @Override
     public List<Configuration> findAccounts(IAccountSearchParameter parameter) {
