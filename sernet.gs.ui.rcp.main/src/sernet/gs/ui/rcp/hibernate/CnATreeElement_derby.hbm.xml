@@ -99,6 +99,11 @@
         <property name="templateTypeValue" type="string">
             <column name="template_type" not-null="true" default="'none'" />
         </property>
+        
+		<set name="implementedTemplateUuids" table="templaterelations" lazy="false">
+		    <key column="cnatreeelement_id" not-null="true" />
+		    <element column="template_uuid" type="java.lang.String" not-null="true" unique="false" />
+		</set>
 		
 <!-- Grundschutz-Elemente: ################################################################# -->
 
