@@ -135,7 +135,7 @@ public class TemplateViewLabelProvider extends LabelProvider implements ITableLa
             }
             return title; // ScopeTitle from element dependencies
         case 4:
-            return templateView.getInputElement().getEntity().getDbId().equals(element.getEntity().getDbId()) ? TEMPLATE_MASTER : "";
+            return isTemplateMaster(element) ? TEMPLATE_MASTER : "";
         default:
             return ""; //$NON-NLS-1$
         }
@@ -157,5 +157,12 @@ public class TemplateViewLabelProvider extends LabelProvider implements ITableLa
             LOG.error("Error while getting element parent title", e);
         }
         return scopeCommand.getElements().get(0).getTitle();
+    }
+
+    private boolean isTemplateMaster(CnATreeElement element) {
+        if (templateView.getInputElement() == null) {
+            return false;
+        }
+        return templateView.getInputElement().getEntity().getDbId().equals(element.getEntity().getDbId());
     }
 }
