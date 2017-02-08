@@ -40,17 +40,16 @@ public class DeleteOrphanTemplateRelations {
 
     public void init() {
         Integer numberOfDeletedRelations = (Integer) getElementDao().executeCallback(new CleanTemplateRelations());
-        if (LOG.isInfoEnabled() && numberOfDeletedRelations.intValue() > 0) {
+         if (LOG.isInfoEnabled() && numberOfDeletedRelations.intValue() > 0) {
             LOG.info("Found orpahn template relations.");
             LOG.info(numberOfDeletedRelations + " orphan template relations deleted");
-        }
+         }
     }
 
     private class CleanTemplateRelations implements HibernateCallback {
 
-        private String query = "DELETE FROM templaterelations WHERE NOT EXISTS (" //$NON-NLS-1$
+        private String query = "DELETE FROM templaterelations rel WHERE NOT EXISTS (" //$NON-NLS-1$
                 + "SELECT ce.uuid FROM cnatreeelement ce "//$NON-NLS-1$
-                + "JOIN templaterelations rel ON rel.cnatreeelement_id = ce.dbid "//$NON-NLS-1$
                 + "WHERE ce.template_type like 'TEMPLATE' AND ce.uuid = rel.template_uuid)";
 
         /*
