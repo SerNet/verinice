@@ -53,9 +53,9 @@ public class CopyTemplateElements extends CopyTreeElements {
     @Override
     public void run(final IProgressMonitor monitor) {
         super.run(monitor);
+
         if (this.getSelectedGroup().isImplementation()) {
             try {
-
                 this.getSelectedGroup().getImplementedTemplateUuids().addAll(templateCandidateUuids);
                 SaveElement<CnATreeElement> saveCommand = new SaveElement<CnATreeElement>(this.getSelectedGroup(), true);
                 saveCommand = ServiceFactory.lookupCommandService().executeCommand(saveCommand);

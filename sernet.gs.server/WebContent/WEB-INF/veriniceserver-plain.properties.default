@@ -119,3 +119,6 @@ veriniceserver.object.limit=10000
 # location to store the vnl-files representing the licenses 
 # needed to access license-restricted content                                  
 veriniceserver.vnl.repository=/WEB-INF/vnl
+
+# default user for tasks created when using template
+template.master=admin

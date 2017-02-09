@@ -452,12 +452,11 @@ public class CopyCommand extends GenericCommand {
 
     private void createTaskWhenUsingTemplate(final CnATreeElement copyElement, final CnATreeElement newElement) {
         if (copyElement.isTemplate() && !MassnahmenUmsetzung.TYPE_ID.equals(copyElement.getTypeId())) {
-            // TODO: use element creator instead of verinice admin
             ServerInitializer.inheritVeriniceContextState();
-            String admin = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getAdminUsername();
+            String defaultTemplateMaster = defaultTemplateMaster();
             String username = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getUsername();
 
-            if (!admin.equals(username)) {
+            if (!defaultTemplateMaster.equals(username)) {
             IIndividualService individualService = (IIndividualService) VeriniceContext.get(VeriniceContext.INDIVIDUAL_SERVICE);
             IndividualServiceParameter parameter = getIndividualServiceParameter(copyElement, newElement);
             
@@ -466,12 +465,21 @@ public class CopyCommand extends GenericCommand {
         }
     }
 
+    private String defaultTemplateMaster() {
+        String defaultTemplateMaster = PropertyLoader.getDefaultTemplateMaster();
+        if (defaultTemplateMaster == null) {
+            getLog().error("Error while parsing property " + PropertyLoader.DEFAULT_TEMPLATE_MASTER);
+            defaultTemplateMaster = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getAdminUsername();
+        }
+        return defaultTemplateMaster;
+    }
+
     private IndividualServiceParameter getIndividualServiceParameter(final CnATreeElement copyElement, final CnATreeElement newElement) {
         IndividualServiceParameter parameter = new IndividualServiceParameter();
         parameter.setUuid(newElement.getUuid());
         parameter.setTypeId(newElement.getTypeId());
-        String admin = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getAdminUsername();
-        parameter.setAssignee(admin);
+        String defaultTemplateMaster = defaultTemplateMaster();
+        parameter.setAssignee(defaultTemplateMaster);
         parameter.setTitle(Messages.getString("CopyCommand.TaskTitleWhenUsingTemplate"));
         String newElementScopeTitle = getScopeTitle(newElement);
         parameter.setDescription(Messages.getString("CopyCommand.TaskDescriptionWhenUsingTemplate", copyElement.getTitle(), newElement.getParent().getTitle(), newElementScopeTitle));
