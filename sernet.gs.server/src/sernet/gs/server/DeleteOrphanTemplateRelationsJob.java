@@ -17,14 +17,18 @@
  * Contributors:  
  *     Viktor Schmidt <vschmidt[at]ckc[dot]de> - initial API and implementation  
  ******************************************************************************/
-package sernet.verinice.templates;
+package sernet.gs.server;
 
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.quartz.StatefulJob;
 import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
@@ -32,18 +36,27 @@ import sernet.verinice.model.common.CnATreeElement;
 /**
  * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
-public class DeleteOrphanTemplateRelations {
+public class DeleteOrphanTemplateRelationsJob extends QuartzJobBean implements StatefulJob {
 
-    private static final Logger LOG = Logger.getLogger(DeleteOrphanTemplateRelations.class);
+    private static final Logger LOG = Logger.getLogger(DeleteOrphanTemplateRelationsJob.class);
 
     private IBaseDao<CnATreeElement, Integer> elementDao;
 
-    public void init() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.springframework.scheduling.quartz.QuartzJobBean#executeInternal(org.
+     * quartz.JobExecutionContext)
+     */
+    @Override
+    protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {
         Integer numberOfDeletedRelations = (Integer) getElementDao().executeCallback(new CleanTemplateRelations());
-         if (LOG.isInfoEnabled() && numberOfDeletedRelations.intValue() > 0) {
+        if (LOG.isInfoEnabled() && numberOfDeletedRelations.intValue() > 0) {
             LOG.info("Found orpahn template relations.");
             LOG.info(numberOfDeletedRelations + " orphan template relations deleted");
-         }
+        }
+
     }
 
     private class CleanTemplateRelations implements HibernateCallback {
