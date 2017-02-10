@@ -397,21 +397,28 @@ public class TemplateView extends RightsEnabledView {
         List<CnATreeElement> newChildren = new ArrayList<CnATreeElement>();
 
         for (CnATreeElement templateCandidate : templateCandidates) {
-            if (!templateCandidate.getChildren().isEmpty()) {
-                newChildren.addAll(templateCandidate.getChildren());
-                templateCandidateUuids.add(templateCandidate.getUuid());
-            }
+            newChildren.addAll(templateCandidate.getChildren());
+            templateCandidateUuids.add(templateCandidate.getUuid());
         }
-
-        IProgressRunnable operation = new CopyTemplateElements(inputElement, newChildren, templateCandidateUuids);
-        if (operation != null) {
-            IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
-            progressService.run(true, true, operation);
-        }
+        addTemplatesChildren(templateCandidateUuids, newChildren);
 
         // notify all listeners:
         CnAElementFactory.getModel(inputElement.getParent()).childChanged(inputElement);
         CnAElementFactory.getModel(inputElement.getParent()).databaseChildChanged(inputElement);
+    }
+
+    /**
+     * @param templateCandidateUuids
+     * @param newChildren
+     * @throws InvocationTargetException
+     * @throws InterruptedException
+     */
+    private void addTemplatesChildren(Set<String> templateCandidateUuids, List<CnATreeElement> newChildren) throws InvocationTargetException, InterruptedException {
+            IProgressRunnable operation = new CopyTemplateElements(inputElement, newChildren, templateCandidateUuids);
+            if (operation != null) {
+                IProgressService progressService = PlatformUI.getWorkbench().getProgressService();
+                progressService.run(true, true, operation);
+            }
     }
 
     protected void showError(final String title, final String message) {

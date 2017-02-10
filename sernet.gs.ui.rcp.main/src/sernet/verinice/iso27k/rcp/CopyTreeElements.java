@@ -117,4 +117,8 @@ public class CopyTreeElements implements IProgressRunnable {
     public CnATreeElement getSelectedGroup() {
         return selectedGroup;
     }
+
+    public List<CnATreeElement> getElements() {
+        return elements;
+    }
 }

@@ -52,7 +52,9 @@ public class CopyTemplateElements extends CopyTreeElements {
 
     @Override
     public void run(final IProgressMonitor monitor) {
-        super.run(monitor);
+        if (getElements().size() > 0) {
+            super.run(monitor);
+        }
 
         if (this.getSelectedGroup().isImplementation()) {
             try {
