@@ -29,7 +29,6 @@ import org.eclipse.swt.graphics.Image;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportParent;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
@@ -39,7 +38,7 @@ import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.service.commands.LoadElementTitles;
 
 /**
- * @author Viktor Schmidt <vschmidt[at]ckc[dot]de> 
+ * @author Viktor Schmidt <vschmidt[at]ckc[dot]de>
  */
 public class TemplateViewLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -117,7 +116,7 @@ public class TemplateViewLabelProvider extends LabelProvider implements ITableLa
 
         switch (index) {
         case 0:
-            return loadParentTitle(element);
+            return element.getParent().getTitle();
         case 1:
             return ""; // image only //$NON-NLS-1$
         case 2:
@@ -149,18 +148,10 @@ public class TemplateViewLabelProvider extends LabelProvider implements ITableLa
         return titleMap.get(element.getScopeId());
     }
 
-    private String loadParentTitle(CnATreeElement element) {
-        LoadReportParent scopeCommand = new LoadReportParent(element.getDbId());
-        try {
-            scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
-        } catch (CommandException e) {
-            LOG.error("Error while getting element parent title", e);
-        }
-        return scopeCommand.getElements().get(0).getTitle();
-    }
-
     private boolean isTemplateMaster(CnATreeElement element) {
-        if (templateView.getInputElement() == null) {
+        if (templateView.getInputElement() == null || templateView.getInputElement().getEntity() == null || // $NON-NLS-1$
+                templateView.getInputElement().getEntity().getDbId() == null || // $NON-NLS-1$
+                element.getEntity() == null || element.getEntity().getDbId() == null) {
             return false;
         }
         return templateView.getInputElement().getEntity().getDbId().equals(element.getEntity().getDbId());

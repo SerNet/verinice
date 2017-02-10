@@ -31,7 +31,6 @@ import org.eclipse.swt.widgets.Composite;
 import sernet.gs.ui.rcp.main.bsi.dialogs.Messages;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.gs.ui.rcp.main.service.crudcommands.LoadReportParent;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.service.commands.LoadTemplateCandidates;
@@ -71,7 +70,7 @@ public class TemplateSelectionComponent extends ElementSelectionComponent {
                     return;
                 }
                 CnATreeElement elmt = (CnATreeElement) cell.getElement();
-                cell.setText(loadParentTitle(elmt));
+                cell.setText(elmt.getParent().getTitle());
             }
         });
         super.createColumns();
@@ -88,15 +87,4 @@ public class TemplateSelectionComponent extends ElementSelectionComponent {
         command = ServiceFactory.lookupCommandService().executeCommand(command);
         showElementsInTable(new ArrayList<CnATreeElement>(command.getTemplateCandidates()));
     }
-
-    private String loadParentTitle(CnATreeElement element) {
-        LoadReportParent scopeCommand = new LoadReportParent(element.getDbId());
-        try {
-            scopeCommand = ServiceFactory.lookupCommandService().executeCommand(scopeCommand);
-        } catch (CommandException e) {
-            LOG.error("Error while getting element parent title", e);
-        }
-        return scopeCommand.getElements().get(0).getTitle();
-    }
-
 }

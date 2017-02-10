@@ -67,7 +67,6 @@ import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.iso27k.rcp.CopyTemplateElements;
 import sernet.verinice.iso27k.rcp.JobScheduler;
-import sernet.verinice.iso27k.service.Retriever;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
@@ -340,7 +339,6 @@ public class TemplateView extends RightsEnabledView {
     }
 
     public CnATreeElement getInputElement() {
-        checkAndRetrieveTemplates();
         return this.inputElement;
     }
 
@@ -362,15 +360,7 @@ public class TemplateView extends RightsEnabledView {
     }
 
     public Set<CnATreeElement> getTemplates() {
-        checkAndRetrieveTemplates();
         return this.templates;
-    }
-
-    private void checkAndRetrieveTemplates() {
-        for (CnATreeElement element : templates) {
-            CnATreeElement retrieveElement = Retriever.checkRetrieveElement(element);
-            element.setEntity(retrieveElement.getEntity());
-        }
     }
 
     public void setTemplates(Set<CnATreeElement> templates) {

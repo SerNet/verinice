@@ -86,9 +86,10 @@ public class LoadTemplateCandidates extends GenericCommand {
         CnATreeElement element = dao.findByUuid(this.uuid, ri);
 
         DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
+        crit.setFetchMode("parent", FetchMode.JOIN);
         crit.setFetchMode("entity", FetchMode.JOIN);
         crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
-        crit.setFetchMode("entity.typedPropertyLists.properties", FetchMode.JOIN);
+        crit.setFetchMode("children", FetchMode.JOIN);
         crit.add(Restrictions.eq("objectType", typeId));
         crit.add(Restrictions.eq("templateTypeValue", CnATreeElement.TemplateType.TEMPLATE.name()));
         crit.add(Restrictions.ne("uuid", uuid));

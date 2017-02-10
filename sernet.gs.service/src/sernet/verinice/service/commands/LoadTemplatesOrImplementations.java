@@ -70,30 +70,24 @@ public class LoadTemplatesOrImplementations extends GenericCommand {
     }
 
     private void loadTemplates() {
-        try {
             if (!inputElement.getImplementedTemplateUuids().isEmpty()) {
-                LoadElementsByUuid<CnATreeElement> command = new LoadElementsByUuid<CnATreeElement>(inputElement.getImplementedTemplateUuids(), RetrieveInfo.getPropertyInstance());
-                command = getCommandService().executeCommand(command);
-                Set<CnATreeElement> list = command.getElements();
+            Set<CnATreeElement> templates = getElementsWithUuids(inputElement.getImplementedTemplateUuids());
 
-                if (list == null || list.isEmpty()) {
+                if (templates == null || templates.isEmpty()) {
                     if (getLog().isInfoEnabled()) {
                         getLog().error("No templates for element id: " + inputElement.getDbId() + " found.");
                     }
                     return;
                 }
-                elements.addAll(list);
+                elements.addAll(templates);
             }
-        } catch (CommandException e) {
-            getLog().error("Error while loading template elements.", e);
-        }
     }
 
     @SuppressWarnings("unchecked")
     private void loadImplementations() {
         IBaseDao<? extends CnATreeElement, Serializable> dao = getCnATreeElementDao();
 
-        String hgl = "from CnATreeElement as ce " + //$NON-NLS-1$
+        String hgl = "select distinct ce from CnATreeElement as ce " + //$NON-NLS-1$
                 "join ce.implementedTemplateUuids " + //$NON-NLS-1$
                 "where ? in elements(ce.implementedTemplateUuids) "; //$NON-NLS-1$
 
@@ -106,7 +100,35 @@ public class LoadTemplatesOrImplementations extends GenericCommand {
             }
             return;
         }
-        elements.addAll(list);
+
+        Set<String> implementedElementUuids = new HashSet<String>();
+        for (CnATreeElement element : list) {
+            implementedElementUuids.add(element.getUuid());
+        }
+
+        Set<CnATreeElement> implementations = new HashSet<CnATreeElement>();
+        implementations = getElementsWithUuids(implementedElementUuids);
+        elements.addAll(implementations);
+    }
+
+    /**
+     * @param implementedElementUuids
+     * @param implementations
+     * @return
+     */
+    private Set<CnATreeElement> getElementsWithUuids(Set<String> implementedElementUuids) {
+        Set<CnATreeElement> elements = new HashSet<CnATreeElement>();
+        try {
+            RetrieveInfo retrieveInfo = RetrieveInfo.getPropertyInstance();
+            retrieveInfo.setParent(true);
+            retrieveInfo.setParentProperties(true);
+            LoadElementsByUuid<CnATreeElement> command = new LoadElementsByUuid<CnATreeElement>(implementedElementUuids, retrieveInfo);
+            command = getCommandService().executeCommand(command);
+            elements = command.getElements();
+        } catch (CommandException e) {
+            getLog().error("Error while loading elements.", e);
+        }
+        return elements;
     }
 
     private IBaseDao<CnATreeElement, Serializable> getCnATreeElementDao() {

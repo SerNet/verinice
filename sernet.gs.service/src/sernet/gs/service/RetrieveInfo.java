@@ -53,6 +53,8 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	
 	private boolean parentPermissions = false;
 	
+    private boolean parentProperties = false;
+
 	private boolean siblings = false;
 	
 	private boolean permissions = false;
@@ -87,11 +89,13 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	/**
 	 * @return true if properties are joined and retrieved
 	 */
-	public boolean isProperties() {
+	@Override
+    public boolean isProperties() {
 		return properties;
 	}
 
-	public RetrieveInfo setProperties(boolean properties) {
+	@Override
+    public RetrieveInfo setProperties(boolean properties) {
 		this.properties = properties;
 		return this;
 	}
@@ -99,11 +103,13 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	/**
 	 * @return true if links-up are joined and retrieved
 	 */
-	public boolean isLinksUp() {
+	@Override
+    public boolean isLinksUp() {
 		return linksUp;
 	}
 
-	public RetrieveInfo setLinksUp(boolean linksUp) {
+	@Override
+    public RetrieveInfo setLinksUp(boolean linksUp) {
 		this.linksUp = linksUp;
 		return this;
 	}
@@ -111,11 +117,13 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	/**
 	 * @return true if properties of links-up are joined and retrieved
 	 */
-	public boolean isLinksUpProperties() {
+	@Override
+    public boolean isLinksUpProperties() {
 		return linksUpProperties;
 	}
 
-	public RetrieveInfo setLinksUpProperties(boolean linksUpProperties) {
+	@Override
+    public RetrieveInfo setLinksUpProperties(boolean linksUpProperties) {
 	    if(linksUpProperties) {
 	        this.setLinksUp(linksUpProperties);
 	    }
@@ -126,11 +134,13 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	/**
 	 * @return true if links-down are joined and retrieved
 	 */
-	public boolean isLinksDown() {
+	@Override
+    public boolean isLinksDown() {
 		return linksDown;
 	}
 
-	public RetrieveInfo setLinksDown(boolean linksDown) {
+	@Override
+    public RetrieveInfo setLinksDown(boolean linksDown) {
 		this.linksDown = linksDown;
 		return this;
 	}
@@ -138,11 +148,13 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	/**
 	 * @return true if properties of links-down are joined and retrieved
 	 */
-	public boolean isLinksDownProperties() {
+	@Override
+    public boolean isLinksDownProperties() {
 		return linksDownProperties;
 	}
 
-	public RetrieveInfo setLinksDownProperties(boolean linksDownProperties) {
+	@Override
+    public RetrieveInfo setLinksDownProperties(boolean linksDownProperties) {
 	    if(linksDownProperties) {
             this.setLinksDown(linksDownProperties);
         }
@@ -153,11 +165,13 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	/**
 	 * @return true if children are joined and retrieved
 	 */
-	public boolean isChildren() {
+	@Override
+    public boolean isChildren() {
 		return children;
 	}
 
-	public RetrieveInfo setChildren(boolean children) {
+	@Override
+    public RetrieveInfo setChildren(boolean children) {
 		this.children = children;
 		return this;
 	}
@@ -165,83 +179,109 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 	/**
 	 * @return true if properties of children are joined and retrieved
 	 */
-	public boolean isChildrenProperties() {
+	@Override
+    public boolean isChildrenProperties() {
 		return childrenProperties;
 	}
 
-	public RetrieveInfo setChildrenProperties(boolean childrenProperties) {
+	@Override
+    public RetrieveInfo setChildrenProperties(boolean childrenProperties) {
 		this.childrenProperties = childrenProperties;
 		return this;
 	}
 	
-	public RetrieveInfo setGrandchildren(boolean grandchildren) {
+	@Override
+    public RetrieveInfo setGrandchildren(boolean grandchildren) {
 		this.grandchildren = grandchildren;
 		return this;
 	}
 
-	public boolean isGrandchildren() {
+	@Override
+    public boolean isGrandchildren() {
 		return grandchildren;
 	}
 
-	public boolean isParent() {
+	@Override
+    public boolean isParent() {
 		return parent;
 	}
 
-	public RetrieveInfo setParent(boolean parent) {
+	@Override
+    public RetrieveInfo setParent(boolean parent) {
 		this.parent = parent;
 		return this;
 	}
 
+    @Override
+    public boolean isParentProperties() {
+        return parentProperties;
+    }
+
+    @Override
+    public RetrieveInfo setParentProperties(boolean parentProperties) {
+        this.parentProperties = parentProperties;
+        return this;
+    }
 
     public RetrieveInfo setParentPermissions(boolean parentPermissions) {
         this.parentPermissions = parentPermissions;
         return this;  
     }
 
+    @Override
     public boolean isParentPermissions() {
         return parentPermissions;
     }
 
+    @Override
     public boolean isSiblings() {
 		return siblings;
 	}
 
-	public RetrieveInfo setSiblings(boolean siblings) {
+	@Override
+    public RetrieveInfo setSiblings(boolean siblings) {
 		this.siblings = siblings;
 		return this;
 	}
 
-	public boolean isPermissions() {
+	@Override
+    public boolean isPermissions() {
 		return permissions;
 	}
 	
-	public RetrieveInfo setPermissions(boolean permissions) {
+	@Override
+    public RetrieveInfo setPermissions(boolean permissions) {
 		this.permissions = permissions;
 		return this;
 	}
 
-	public RetrieveInfo setChildrenPermissions(boolean childrenPermissions) {
+	@Override
+    public RetrieveInfo setChildrenPermissions(boolean childrenPermissions) {
 		this.childrenPermissions = childrenPermissions;
 		return this;
 	}
 
-	public boolean isChildrenPermissions() {
+	@Override
+    public boolean isChildrenPermissions() {
 		return childrenPermissions;
 	}
 
 	/**
 	 * @return true if inner joins are used
 	 */
-	public boolean isInnerJoin() {
+	@Override
+    public boolean isInnerJoin() {
 		return innerJoin;
 	}
 
-	public RetrieveInfo setInnerJoin(boolean innerJoin) {
+	@Override
+    public RetrieveInfo setInnerJoin(boolean innerJoin) {
 		this.innerJoin = innerJoin;
 		return this;
 	}
 
-	public String toString() {
+	@Override
+    public String toString() {
 		StringBuffer sb = new StringBuffer("RetrieveInfo - ");
 		if(properties) {
 			sb.append( " properties");
@@ -278,6 +318,12 @@ public class RetrieveInfo implements Serializable, IRetrieveInfo{
 		}
         if(isParent()) {
             sb.append(" parent");
+        }
+        if (parentProperties) {
+            sb.append(" parentProperties");
+        }
+        if (parentProperties) {
+            sb.append(" innerJoin");
         }
         if(isParentPermissions()) {
             sb.append(" parentPermissions");
