@@ -40,7 +40,7 @@ public class GroupByStrategyNormalized implements GroupByStrategy{
 
     @Override
     public Map<String, Map<String, Number>> aggregateMassnahmen(VeriniceGraph g) {
-        this.graph = g;
+        graph = g;
         groupByStrategySum = new GroupByStrategySum();
         aggregateMassnahmen = groupByStrategySum.aggregateMassnahmen(g);
         counterOccurenceOfChapter();

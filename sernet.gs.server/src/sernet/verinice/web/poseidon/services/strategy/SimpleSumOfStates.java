@@ -31,10 +31,11 @@ import sernet.verinice.web.poseidon.services.CompareByTitle;
  */
 public final class SimpleSumOfStates implements AggregateControlsStrategy {
 
+    private SortedMap<String, Number> result;
 
     @Override
     public SortedMap<String, Number> aggregateData(Iterable<MassnahmenUmsetzung> bsiControls) {
-        SortedMap<String, Number> result = new TreeMap<>(new CompareByTitle());
+        result = new TreeMap<>(new CompareByTitle());
 
         for (MassnahmenUmsetzung m : bsiControls) {
             Number number = result.get(m.getUmsetzung());
@@ -42,6 +43,32 @@ public final class SimpleSumOfStates implements AggregateControlsStrategy {
             result.put(m.getUmsetzung(), number);
         }
 
+        fillUpEmptyKeys();
+
         return result;
     }
+
+    private void fillUpEmptyKeys() {
+
+        if (!result.containsKey(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET)) {
+            result.put(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET, 0);
+        }
+
+        if (!result.containsKey(MassnahmenUmsetzung.P_UMSETZUNG_JA)) {
+            result.put(MassnahmenUmsetzung.P_UMSETZUNG_JA, 0);
+        }
+
+        if (!result.containsKey(MassnahmenUmsetzung.P_UMSETZUNG_NEIN)) {
+            result.put(MassnahmenUmsetzung.P_UMSETZUNG_NEIN, 0);
+        }
+
+        if (!result.containsKey(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE)) {
+            result.put(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, 0);
+        }
+
+        if (!result.containsKey(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH)) {
+            result.put(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, 0);
+        }
+    }
+
 }
