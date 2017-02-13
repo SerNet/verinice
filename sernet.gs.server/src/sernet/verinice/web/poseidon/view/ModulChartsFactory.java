@@ -22,6 +22,7 @@ package sernet.verinice.web.poseidon.view;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
@@ -62,6 +63,9 @@ public class ModulChartsFactory {
 
         horizontalBarModel.setExtender("bausteinUmsetzungHorizontalBar");
         horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
+        horizontalBarModel.setStacked(true);
+        horizontalBarModel.setShadow(false);
+
         return horizontalBarModel;
     }
 
@@ -87,6 +91,7 @@ public class ModulChartsFactory {
         horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
         horizontalBarModel.setShadow(false);
         horizontalBarModel.setExtender("bausteinUmsetzungVerticalBar");
+        horizontalBarModel.setStacked(true);
 
         return horizontalBarModel;
     }
