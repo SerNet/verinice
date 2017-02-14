@@ -81,7 +81,9 @@ public class BausteinUmsetzungAllView {
 
             Map<String, Map<String, Number>> states = controlService.groupByMassnahmenStates(itNetwork, new GroupByStrategySum());
 
-            if(states.isEmpty()) continue;
+            if(states.isEmpty()) {
+                continue;
+            }
 
             VeriniceChartRow item = new VeriniceChartRow();
             ModulChartsFactory chartModelFactory = new ModulChartsFactory(states);

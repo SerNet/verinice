@@ -27,6 +27,9 @@ import org.primefaces.model.menu.MenuModel;
 
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategy;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -79,7 +82,7 @@ public class Menu {
         massnahmenUmsetzungSubMenu.addElement(total);
 
         try {
-            addItNetworks(massnahmenUmsetzungSubMenu, "implementation-itnetwork.xhtml");
+            addItNetworks(massnahmenUmsetzungSubMenu, "implementation-itnetwork.xhtml", null);
         } catch (UnsupportedEncodingException e) {
             log.error("could not create menu item", e);
         }
@@ -98,7 +101,8 @@ public class Menu {
         bausteinUmsSubMenu.addElement(bausteinUmsTotal);
 
         try {
-            addItNetworks(bausteinUmsSubMenu, "implementation-bstums-itnetwork.xhtml");
+            addItNetworks(bausteinUmsSubMenu, "implementation-bstums-itnetwork.xhtml",
+                    GroupByStrategySum.GET_PARAM_IDENTIFIER);
         } catch (UnsupportedEncodingException e) {
             log.error("could not create menu item", e);
         }
@@ -117,7 +121,8 @@ public class Menu {
         bausteinUmsNormSubMenu.addElement(bausteinUmsTotal);
 
         try {
-            addItNetworks(bausteinUmsNormSubMenu, "implementation-bstums-itnetwork.xhtml");
+            addItNetworks(bausteinUmsNormSubMenu, "implementation-bstums-itnetwork.xhtml",
+                    GroupByStrategyNormalized.GET_PARAM_IDENTIFIER);
         } catch (UnsupportedEncodingException e) {
             log.error("could not create menu item", e);
         }
@@ -135,23 +140,22 @@ public class Menu {
         DefaultMenuItem risksAnalysis = new DefaultMenuItem("Risikoanalyse");
         risksAnalysis.setIcon("fa fa-fw fa-bomb");
 
-
         model.addElement(controls);
         model.addElement(vdaIsa);
         model.addElement(risksAnalysis);
 
-
         addMiscItems();
     }
 
-    private void addItNetworks(DefaultSubMenu menu, String templateFile) throws UnsupportedEncodingException {
-        for(ITVerbund itNetwork : getMenuService().getVisibleItNetworks()){
+    private void addItNetworks(DefaultSubMenu menu, String templateFile, String param) throws UnsupportedEncodingException {
+        for (ITVerbund itNetwork : getMenuService().getVisibleItNetworks()) {
             String title = itNetwork.getTitle();
             DefaultMenuItem item = new DefaultMenuItem(title);
             item.setIcon("fa fa-fw fa-area-chart");
             String scopeIdParam = "scopeId=" + itNetwork.getScopeId();
-            String titleParam =  "itNetwork=" + URLEncoder.encode(title, "UTF-8");
-            item.setUrl("/dashboard/" + templateFile + "?" + scopeIdParam + "&" + titleParam);
+            String titleParam = "itNetwork=" + URLEncoder.encode(title, "UTF-8");
+            String algorithm = (param == null) ? "" : "crunchStrategy=" + param;
+            item.setUrl("/dashboard/" + templateFile + "?" + scopeIdParam + "&" + titleParam + "&" + algorithm);
             menu.addElement(item);
         }
     }

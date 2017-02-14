@@ -28,6 +28,8 @@ import javax.faces.bean.ManagedProperty;
 import org.primefaces.model.chart.BarChartModel;
 
 import sernet.verinice.web.poseidon.services.ControlService;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategy;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 
 /**
@@ -47,15 +49,29 @@ public class BstUmsetzungItNetwork {
     @ManagedProperty(value = "#{param.scopeId}")
     private String scopeId;
 
+    @ManagedProperty(value = "#{param.crunchStrategy}")
+    private String crunchStrategy;
+
     @ManagedProperty("#{controlService}")
     private ControlService controlService;
 
     @PostConstruct
-    public void init(){
-        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates(scopeId, new GroupByStrategySum());
+    public void init() {
+        GroupByStrategy strategy = getStrategy();
+        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates(scopeId, strategy);
         ModulChartsFactory chartModelFactory = new ModulChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
+    }
+
+    private GroupByStrategy getStrategy() {
+        if (GroupByStrategySum.GET_PARAM_IDENTIFIER.equals(crunchStrategy)) {
+            return new GroupByStrategySum();
+        } else if (GroupByStrategyNormalized.GET_PARAM_IDENTIFIER.equals(crunchStrategy)) {
+            return new GroupByStrategyNormalized();
+        } else {
+            return new GroupByStrategySum();
+        }
     }
 
     public ControlService getControlService() {
@@ -98,4 +114,11 @@ public class BstUmsetzungItNetwork {
         this.scopeId = scopeId;
     }
 
+    public String getCrunchStrategy() {
+        return crunchStrategy;
+    }
+
+    public void setCrunchStrategy(String crunchStrategy) {
+        this.crunchStrategy = crunchStrategy;
+    }
 }

@@ -41,6 +41,8 @@ import sernet.verinice.web.poseidon.services.CompareByTitle;
  */
 public class GroupByStrategySum implements GroupByStrategy {
 
+    public static final String GET_PARAM_IDENTIFIER = "accumulated";
+
     private static final Logger LOG = Logger.getLogger(GroupByStrategySum.class);
 
     @Override

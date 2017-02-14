@@ -33,6 +33,9 @@ import sernet.verinice.model.bsi.BausteinUmsetzung;
  */
 public class GroupByStrategyNormalized implements GroupByStrategy{
 
+    public static final String GET_PARAM_IDENTIFIER = "normalized";
+
+
     private GroupByStrategySum groupByStrategySum;
     private Map<String, Map<String, Number>> aggregateMassnahmen;
     private VeriniceGraph graph;
