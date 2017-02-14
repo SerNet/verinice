@@ -84,14 +84,15 @@ public class ModulChartsFactory {
         xAxis.setLabel("Bausteinkapitel");
         xAxis.setMin(0);
         xAxis.setMax(getMax());
-        xAxis.setTickInterval("5");
+        xAxis.setTickInterval("100");
+        xAxis.setTickAngle(90);
 
         yAxis.setLabel("Massnahmen");
 
         horizontalBarModel.setSeriesColors(ChartUtils.getColors(data.keySet()));
         horizontalBarModel.setShadow(false);
-        horizontalBarModel.setExtender("bausteinUmsetzungVerticalBar");
         horizontalBarModel.setStacked(true);
+        horizontalBarModel.setExtender("bausteinUmsetzungVerticalBar");
 
         return horizontalBarModel;
     }
