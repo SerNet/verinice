@@ -19,6 +19,13 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -27,16 +34,8 @@ import org.primefaces.model.menu.MenuModel;
 
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategy;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -110,15 +109,17 @@ public class Menu {
         bausteinUmsNormSubMenu = new DefaultSubMenu("BausteinUms. Norm.");
         bausteinUmsNormSubMenu.setIcon("fa fa-fw fa-line-chart");
 
+        String normalizeParameter = "?crunchStrategy=" + GroupByStrategyNormalized.GET_PARAM_IDENTIFIER;
+
         DefaultMenuItem bausteinUmsNormAll = new DefaultMenuItem("Alle");
-        bausteinUmsNormAll.setUrl("/dashboard/implementation-bstums-all.xhtml");
+        bausteinUmsNormAll.setUrl("/dashboard/implementation-bstums-all.xhtml" + normalizeParameter);
         bausteinUmsNormAll.setIcon("fa fa-fw fa-area-chart");
-        bausteinUmsNormSubMenu.addElement(bausteinUmsAll);
+        bausteinUmsNormSubMenu.addElement(bausteinUmsNormAll);
 
         DefaultMenuItem bausteinUmsNormTotal = new DefaultMenuItem("Gesamt");
-        bausteinUmsNormTotal.setUrl("/dashboard/implementation-bstums-total.xhtml");
+        bausteinUmsNormTotal.setUrl("/dashboard/implementation-bstums-total.xhtml" + normalizeParameter);
         bausteinUmsNormTotal.setIcon("fa fa-fw fa-area-chart");
-        bausteinUmsNormSubMenu.addElement(bausteinUmsTotal);
+        bausteinUmsNormSubMenu.addElement(bausteinUmsNormTotal);
 
         try {
             addItNetworks(bausteinUmsNormSubMenu, "implementation-bstums-itnetwork.xhtml",

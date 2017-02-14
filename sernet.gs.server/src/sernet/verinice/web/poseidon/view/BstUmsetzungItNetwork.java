@@ -28,9 +28,7 @@ import javax.faces.bean.ManagedProperty;
 import org.primefaces.model.chart.BarChartModel;
 
 import sernet.verinice.web.poseidon.services.ControlService;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategy;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
+import sernet.verinice.web.poseidon.services.strategy.StrategyBean;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -49,29 +47,19 @@ public class BstUmsetzungItNetwork {
     @ManagedProperty(value = "#{param.scopeId}")
     private String scopeId;
 
-    @ManagedProperty(value = "#{param.crunchStrategy}")
-    private String crunchStrategy;
 
     @ManagedProperty("#{controlService}")
     private ControlService controlService;
 
+    @ManagedProperty("#{strategyBean}")
+    private StrategyBean strategyBean;
+
     @PostConstruct
     public void init() {
-        GroupByStrategy strategy = getStrategy();
-        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates(scopeId, strategy);
+        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates(scopeId, strategyBean.getStrategy());
         ModulChartsFactory chartModelFactory = new ModulChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
-    }
-
-    private GroupByStrategy getStrategy() {
-        if (GroupByStrategySum.GET_PARAM_IDENTIFIER.equals(crunchStrategy)) {
-            return new GroupByStrategySum();
-        } else if (GroupByStrategyNormalized.GET_PARAM_IDENTIFIER.equals(crunchStrategy)) {
-            return new GroupByStrategyNormalized();
-        } else {
-            return new GroupByStrategySum();
-        }
     }
 
     public ControlService getControlService() {
@@ -114,11 +102,13 @@ public class BstUmsetzungItNetwork {
         this.scopeId = scopeId;
     }
 
-    public String getCrunchStrategy() {
-        return crunchStrategy;
+
+
+    public StrategyBean getStrategyBean() {
+        return strategyBean;
     }
 
-    public void setCrunchStrategy(String crunchStrategy) {
-        this.crunchStrategy = crunchStrategy;
+    public void setStrategyBean(StrategyBean strategyBean) {
+        this.strategyBean = strategyBean;
     }
 }

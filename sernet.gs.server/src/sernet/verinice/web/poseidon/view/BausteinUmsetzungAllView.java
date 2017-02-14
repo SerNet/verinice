@@ -43,6 +43,7 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.service.DAOFactory;
 import sernet.verinice.web.poseidon.services.ControlService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
+import sernet.verinice.web.poseidon.services.strategy.StrategyBean;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -60,10 +61,13 @@ public class BausteinUmsetzungAllView {
 
     private BarChartModel verticalBarChart;
 
+    @ManagedProperty("#{strategyBean}")
+    private StrategyBean strategyBean;
+
     @PostConstruct
     public void init() {
 
-        Map<String, Map<String, Number>> allStates = controlService.groupByMassnahmenStates("", new GroupByStrategySum());
+        Map<String, Map<String, Number>> allStates = controlService.groupByMassnahmenStates("", strategyBean.getStrategy());
         ModulChartsFactory allChartModelFactory = new ModulChartsFactory(allStates);
 
         verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
@@ -151,5 +155,17 @@ public class BausteinUmsetzungAllView {
 
     public void setVerticalBarChart(BarChartModel verticalBarChart) {
         this.verticalBarChart = verticalBarChart;
+    }
+
+
+
+    public StrategyBean getStrategyBean() {
+        return strategyBean;
+    }
+
+
+
+    public void setStrategyBean(StrategyBean strategyBean) {
+        this.strategyBean = strategyBean;
     }
 }
