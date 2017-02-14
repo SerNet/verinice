@@ -56,7 +56,6 @@ public class ModulChartsFactory {
         xAxis.setLabel("Status");
         xAxis.setMin(0);
         xAxis.setMax(getMax());
-        xAxis.setTickInterval("20");
 
         yAxis.setLabel("Bausteinkapitel");
 
@@ -67,7 +66,6 @@ public class ModulChartsFactory {
 
         return horizontalBarModel;
     }
-
 
     public BarChartModel getVerticalBarChartModel() {
 
@@ -83,7 +81,6 @@ public class ModulChartsFactory {
         xAxis.setLabel("Bausteinkapitel");
         xAxis.setMin(0);
         xAxis.setMax(getMax());
-        xAxis.setTickInterval("100");
         xAxis.setTickAngle(90);
 
         yAxis.setLabel("Massnahmen");
@@ -99,7 +96,7 @@ public class ModulChartsFactory {
 
 
     private Object getMax() {
-        int MARGIN = 10;
+        int margin = 10;
         int max = 0;
         for (Map<String, Number> n : data.values()) {
             for (Number e2 : n.values()) {
@@ -107,7 +104,7 @@ public class ModulChartsFactory {
             }
         }
 
-        return max + MARGIN;
+        return max + margin;
     }
 
     private void setData(BarChartModel horizontalBarModel) {

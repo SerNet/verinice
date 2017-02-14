@@ -96,7 +96,7 @@ public class Menu {
         bausteinUmsSubMenu.addElement(bausteinUmsAll);
 
         DefaultMenuItem bausteinUmsTotal = new DefaultMenuItem("Gesamt");
-        bausteinUmsTotal.setUrl("/dashboard/implementation-bstums-all.xhtml");
+        bausteinUmsTotal.setUrl("/dashboard/implementation-bstums-total.xhtml");
         bausteinUmsTotal.setIcon("fa fa-fw fa-area-chart");
         bausteinUmsSubMenu.addElement(bausteinUmsTotal);
 
@@ -116,7 +116,7 @@ public class Menu {
         bausteinUmsNormSubMenu.addElement(bausteinUmsAll);
 
         DefaultMenuItem bausteinUmsNormTotal = new DefaultMenuItem("Gesamt");
-        bausteinUmsNormTotal.setUrl("/dashboard/implementation-bstums-all.xhtml");
+        bausteinUmsNormTotal.setUrl("/dashboard/implementation-bstums-total.xhtml");
         bausteinUmsNormTotal.setIcon("fa fa-fw fa-area-chart");
         bausteinUmsNormSubMenu.addElement(bausteinUmsTotal);
 

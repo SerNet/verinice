@@ -17,22 +17,22 @@
 	<ui:define name="content">
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-12 ui-md-12">
-				<h1>BausteinUm gesamt</h1>
+				<h1>Bausteinumsetzung gesamt</h1>
 			</div>
 			<div class="ui-g-12 ui-md-6">
 				<div class="card">
-					<p:chart id="verinicePieChart" type="pie"
-						model="#{totalBsiChartView.pieModel}" responsive="true" />
+					<p:chart id="veriniceHorizontalBar" type="bar"
+						model="#{bausteinUmsetzungAllView.verticalBarChart}"
+						responsive="true" />
 				</div>
 			</div>
 			<div class="ui-g-12 ui-md-6">
 				<div class="card">
-					<p:chart id="verinicePieBar" type="bar"
-						model="#{totalBsiChartView.barModel}" responsive="true" />
+					<p:chart id="veriniceVerticalBar" type="bar"
+						model="#{bausteinUmsetzungAllView.horizontalBarChartModel}"
+						responsive="true" />
 				</div>
 			</div>
 		</div>
-	</ui:define>
-
 	</ui:define>
 </ui:composition>
