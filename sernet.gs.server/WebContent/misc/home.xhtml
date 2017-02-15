@@ -1,24 +1,49 @@
-<ui:composition
-  xmlns="http://www.w3.org/1999/xhtml"
-  xmlns:h="http://java.sun.com/jsf/html"
-  xmlns:f="http://java.sun.com/jsf/core"
-  xmlns:ui="http://java.sun.com/jsf/facelets"
-  xmlns:p="http://primefaces.org/ui"
-  template="/WEB-INF/poseidon/template.xhtml">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/poseidon/template.xhtml">
 
-  <ui:define name="title">Home</ui:define>
+	<ui:define name="title">Home</ui:define>
 
-  <ui:define name="viewname">Home</ui:define>
+	<ui:define name="viewname">Home</ui:define>
 
-  <ui:define name="content">
-    <div class="ui-g">
-      <div class="ui-g-12">
-        <div class="card">
-          <h1>Welcome to verinice</h1>
-        </div>
-      </div>
-    </div>
+	<ui:define name="content">
+		<div class="ui-g ui-fluid">
+			<div class="ui-g-12 ui-md-12">
+				<div class="card">
+					<h1>
+						<h:outputText escape="false"
+							value="#{msgWeb['index_welcome_head']}" />
+					</h1>
+					<p>
+						<h:outputText escape="false"
+							value="#{msgWeb['index_welcome_content']}" />
+					</p>
+				</div>
+			</div>
 
-  </ui:define>
+			<div class="ui-g-12 ui-md-12">
+				<div class="card">
+					<h1>
+						<h:outputText escape="false" value="#{msgWeb['index_side_head']}" />
+					</h1>
+					<p>
+						<h:outputText escape="false"
+							value="#{msgWeb['index_side_content_0']}" />
+					</p>
+					<ul>
+						<li><a
+							href="http://www.sernet.de/#{message.currentLanguageTag}/services/support/"
+							target="_blank" class="external-link-new-window">Support</a></li>
+						<li><a
+							href="https://www.sernet.de/#{message.currentLanguageTag}/services/consulting/"
+							target="_blank" class="external-link-new-window">Consulting/Audits</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</ui:define>
 
 </ui:composition>

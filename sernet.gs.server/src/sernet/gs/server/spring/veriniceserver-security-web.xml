@@ -72,6 +72,9 @@
       <security:filter-chain
         pattern="/service/**"
         filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
+       <security:filter-chain
+        pattern="/poseidon/**"
+        filters="httpSessionContextIntegrationFilter,digestProcessingFilter,exceptionTranslationFilter,securityInterceptorFilter" />
     </security:filter-chain-map>
   </bean>
 

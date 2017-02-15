@@ -5,6 +5,11 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
+<f:view locale="#{messageBean.locale}">
+
+	<f:loadBundle basename="sernet.gs.web.Messages" var="msg" />
+	<f:loadBundle basename="sernet.verinice.web.WebMessages" var="msgWeb" />
+
     <h:head>
         <f:facet name="first">
             <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -60,5 +65,5 @@
         <h:outputStylesheet name="css/layout-blue.css" library="poseidon-layout" />
         <h:outputStylesheet name="css/verinice.css" library="verinice-layout" />
     </h:body>
-
+</f:view>
 </html>

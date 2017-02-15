@@ -2,6 +2,7 @@ package sernet.verinice.web;
 
 import java.util.Locale;
 
+import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 
 import sernet.gs.web.Util;
@@ -11,6 +12,7 @@ import sernet.gs.web.Util;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@ManagedBean
 public class MessageBean {
 
     private String info;
