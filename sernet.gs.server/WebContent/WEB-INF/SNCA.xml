@@ -3107,6 +3107,7 @@ festgelegt. Die Ergebnisse werden anschließend zentral zusammengefasst und kons
         <huiproperty 
                 name="Zuverlässigkeit" 
                 id="mnums_group_kosten_nutzen_zuverlaessigkeit"
+                tags="BIA-BSI_100-4"
                 inputtype="text" />
         <huiproperty 
                 name="Randbedingungen" 
