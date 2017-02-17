@@ -19,12 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
+@ManagedBean(name = "nav")
+@SessionScoped
 public class NavigationBean {
     
     public static final String VIEW_ID_TASK = "/todo/task.xhtml";

@@ -20,6 +20,8 @@ package sernet.gs.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.convert.Converter;
 
 import org.apache.log4j.Logger;
@@ -41,6 +43,8 @@ import sernet.verinice.model.common.CnATreeElement;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@ManagedBean(name = "assetNavigation")
+@SessionScoped
 public class AssetNavigationBean {
 
 	private static final Logger LOG = Logger.getLogger(AssetNavigationBean.class);

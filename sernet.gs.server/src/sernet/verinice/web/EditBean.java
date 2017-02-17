@@ -32,6 +32,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIInput;
 import javax.faces.event.ValueChangeEvent;
 
@@ -62,7 +65,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.bpm.ITask;
 import sernet.verinice.interfaces.bpm.ITaskService;
-import sernet.verinice.model.bpm.TaskInformation;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
@@ -75,6 +77,8 @@ import sernet.verinice.service.commands.SaveElement;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
+@ManagedBean(name = "edit")
+@SessionScoped
 public class EditBean {
 
     private static final Logger LOG = Logger.getLogger(EditBean.class);
@@ -89,8 +93,10 @@ public class EditBean {
 
     private static final String NAME_SUFFIX = "_name";
 
+    @ManagedProperty("#{link}")
     private LinkBean linkBean;
 
+    @ManagedProperty("#{attachmentBean}")
     private AttachmentBean attachmentBean;
 
     private CnATreeElement element;
@@ -123,7 +129,7 @@ public class EditBean {
 
     private boolean attachmentOpen = true;
 
-    private boolean saveButtonHidden = false;
+    private boolean saveButtonHidden = true;
 
     private List<String> visibleTags = Arrays.asList(TAG_ALL);
 

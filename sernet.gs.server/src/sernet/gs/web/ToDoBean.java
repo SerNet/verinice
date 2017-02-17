@@ -25,6 +25,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 
@@ -54,6 +56,8 @@ import sernet.verinice.service.commands.SaveElement;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@ManagedBean(name = "toDo")
+@SessionScoped
 public class ToDoBean {
 
 	private static final Logger LOG = Logger.getLogger(ToDoBean.class);

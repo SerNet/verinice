@@ -27,6 +27,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
@@ -50,6 +53,8 @@ import sernet.verinice.service.commands.LoadElementByUuid;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
+@ManagedBean(name = "task")
+@SessionScoped
 public class TaskBean {
 
     private static final Logger LOG = Logger.getLogger(TaskBean.class);

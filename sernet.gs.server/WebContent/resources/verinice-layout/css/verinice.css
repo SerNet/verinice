@@ -27,15 +27,23 @@
 	background-color: #fff;
 }
 
-body.exception-body .exception-bottom .exception-wrapper {
-	width:100%;
+.veriniceElementTable td:nth-child(1), .veriniceElmentTable th:nth-child(1)
+	{
+	width: 20px;
+	  }
+
+.saveButtonHidden {
+	display: none;
+	visibility: hidden;
+}
+
+  .layout-wrapper.menu-layout-static .topbar .topbar-left {
+    background-color: white;
 }
 
 @media ( max-width : 1024px) {
-  .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
-    background-image: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
-  }
-  .layout-wrapper.menu-layout-static .topbar .topbar-left {
-    background-color: white;
+	.layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
+		background-image:
+			url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
   }
 }

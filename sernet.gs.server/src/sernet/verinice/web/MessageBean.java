@@ -2,6 +2,7 @@ package sernet.verinice.web;
 
 import java.util.Locale;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 
@@ -12,7 +13,7 @@ import sernet.gs.web.Util;
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@ManagedBean
+@ManagedBean(name = "message")
 public class MessageBean {
 
     private String info;
@@ -20,6 +21,16 @@ public class MessageBean {
     private String error;
     
     private Locale locale = null;
+
+    @PostConstruct
+    public void init(){
+        FacesContext context = FacesContext.getCurrentInstance();
+        if (locale == null) {
+            locale = context.getViewRoot().getLocale();
+        } else {
+            context.getViewRoot().setLocale(locale);
+        }
+    }
 
     public void showInfo() {
         Util.addInfo("massagePanel", getInfo()); //$NON-NLS-1$
@@ -66,12 +77,6 @@ public class MessageBean {
     }
 
     public Locale getLocale() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        if (locale == null) {
-            locale = context.getViewRoot().getLocale();
-        } else {
-            context.getViewRoot().setLocale(locale);
-        }
         return locale;
     }
 

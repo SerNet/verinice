@@ -19,6 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAuthService;
@@ -28,6 +31,8 @@ import sernet.verinice.interfaces.IRightsServerHandler;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
+@ManagedBean(name = "auth")
+@SessionScoped
 public class AuthBean {
 
     

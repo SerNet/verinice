@@ -5,10 +5,11 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:p="http://primefaces.org/ui">
 
-<f:view locale="#{messageBean.locale}">
+<f:view local="#{messages.locale}">
 
 	<f:loadBundle basename="sernet.gs.web.Messages" var="msg" />
 	<f:loadBundle basename="sernet.verinice.web.WebMessages" var="msgWeb" />
+	<f:loadBundle basename="sernet.verinice.web.EditMessages" var="msgEdit" />
 
     <h:head>
         <f:facet name="first">

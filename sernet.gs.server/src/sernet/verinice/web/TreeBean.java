@@ -51,11 +51,18 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.view.facelets.FaceletException;
+
 /**
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("restriction")
+@ManagedBean(name = "tree")
+@SessionScoped
 public class TreeBean implements IElementListener {
 
     private static final Logger LOG = Logger.getLogger(TreeBean.class);
@@ -71,8 +78,10 @@ public class TreeBean implements IElementListener {
     
     private static final int MAX_BREADCRUMB_SIZE = 4;
     
+    @ManagedProperty("#{edit}")
     private EditBean editBean;
     
+    @ManagedProperty("#{auth}")
     private AuthBean authBean;
     
     private CnATreeElement element;
