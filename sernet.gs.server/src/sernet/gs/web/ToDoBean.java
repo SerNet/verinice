@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -67,6 +68,7 @@ public class ToDoBean {
 	
 	public static final String BOUNDLE_NAME = "sernet.gs.web.Messages";
 	
+	@ManagedProperty("#{assetNavigation}")
 	private AssetNavigationBean assetNavigation;
 	
 	private List<TodoViewItem> todoList = new ArrayList<TodoViewItem>();

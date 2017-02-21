@@ -20,6 +20,7 @@ package sernet.gs.web;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.convert.Converter;
@@ -75,8 +76,8 @@ public class AssetNavigationBean {
     private List<CnATreeElement> tkKomponenteList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
     private List<CnATreeElement> sonstItList = new ArrayList<CnATreeElement>(DEFAULT_LIST_SIZE);
 	
-	public AssetNavigationBean() {
-		super();
+    @PostConstruct
+	public void init() {
 		loadItVerbundList();
 	}
 
