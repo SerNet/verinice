@@ -41,6 +41,10 @@
     background-color: white;
 }
 
+.ui-panelgrid > * > tr, .ui-panelgrid > * > tr > td.ui-panelgrid-cell {
+    border: none;
+}
+
 @media ( max-width : 1024px) {
 	.layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
 		background-image:

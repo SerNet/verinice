@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
@@ -63,6 +64,7 @@ public class TaskBean {
     
     public static final int MAX_TITLE_LENGTH = 100;
 
+    @ManagedProperty("#{edit}")
     private EditBean editBean;
     
     private List<CnATreeElement> auditList;
