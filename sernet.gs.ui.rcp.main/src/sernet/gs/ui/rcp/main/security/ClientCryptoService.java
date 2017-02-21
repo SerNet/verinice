@@ -67,7 +67,7 @@ public class ClientCryptoService implements IEncryptionService {
     public String decrypt(String cypherText, char[] password, String salt) throws EncryptionException {
         byte[] cypherTextBytes = org.apache.commons.codec.binary.Base64.decodeBase64(cypherText.getBytes());
         byte[] saltBytes = salt.getBytes();
-        byte[] plainTextBytes = PasswordBasedEncryption.decrypt(cypherTextBytes, password, saltBytes);
+        byte[] plainTextBytes = PasswordBasedEncryption.decrypt(cypherTextBytes, password, saltBytes, true);
         return new String(org.apache.commons.codec.binary.Base64.decodeBase64(plainTextBytes));  
     }
 
@@ -76,7 +76,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException {
-        return PasswordBasedEncryption.encrypt(unencryptedByteData, password, salt);
+        return PasswordBasedEncryption.encrypt(unencryptedByteData, password, salt, true);
     }
 
     /* (non-Javadoc)
@@ -92,7 +92,7 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt) throws EncryptionException {
-        return PasswordBasedEncryption.decrypt(encryptedByteData, password, salt);
+        return PasswordBasedEncryption.decrypt(encryptedByteData, password, salt, true);
     }
 
     /* (non-Javadoc)

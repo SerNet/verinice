@@ -27,8 +27,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -37,15 +40,25 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.Base64;
 import java.util.Calendar;
 
 import javax.annotation.Resource;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.PBEParameterSpec;
 import javax.security.auth.x500.X500Principal;
 import javax.xml.bind.DatatypeConverter;
 
@@ -58,7 +71,9 @@ import org.bouncycastle.util.Arrays;
 import org.bouncycastle.x509.X509V3CertificateGenerator;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import sernet.gs.service.FileUtil;
+import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.service.commands.SyncParameterException;
@@ -71,6 +86,12 @@ public class CryptoTest extends ContextConfiguration {
     private static final Logger LOG = Logger.getLogger(CryptoTest.class);
     
     private static final int MAX_PASSWORD_LENGTH = 100;
+    
+    private static final String BC_PROVIDER_NAME = BouncyCastleProvider.PROVIDER_NAME;
+    private static final int CRYPTO_SALT_DEFAULT_LENGTH = 8;
+    private static final String CRYPTO_DEFAULT_ENCODING = "UTF-8";
+    private static final int CRYPTO_KEY_ITERATION_COUNTS = 1200;
+    private static final String ENCRYPTION_ALGORITHM = "PBEWITHSHA256AND256BITAES-CBC-BC";
     
     @Resource (name="encryptionService")
     private IEncryptionService encryptionService;
@@ -130,6 +151,16 @@ public class CryptoTest extends ContextConfiguration {
             assertEquals("test fails on password(" + password.length + "):\n" + String.valueOf(password), new String(decryptedMessage), SECRET);
             
         }
+    }
+    
+    @Test
+    public void cryptVNLContentId(){
+        String password = "111";
+        String salt = "111";
+        String plainContentId = "ISO27K1";
+        String encryptedContentId = getEncryptionService().encrypt(plainContentId, password.toCharArray(), salt);
+        String decryptedContentId = getEncryptionService().decrypt(encryptedContentId, password.toCharArray(), salt);
+        Assert.assertTrue(plainContentId.equals(decryptedContentId));
     }
     
     @Test
@@ -237,9 +268,8 @@ public class CryptoTest extends ContextConfiguration {
             prefix = "-----BEGIN PRIVATE KEY-----\n";
             suffix = "\n-----END PRIVATE KEY-----"    ;      
         }
-        String certData;
         try {
-            return certData = prefix + DatatypeConverter.printBase64Binary(data) + suffix;
+            return prefix + DatatypeConverter.printBase64Binary(data) + suffix;
         } catch (Exception e) {
             LOG.error("Error converting cert",e);
         }
@@ -249,6 +279,115 @@ public class CryptoTest extends ContextConfiguration {
     
     private String getAbsoluteFilePath(String path) {
         return getClass().getResource(path).getPath();
+    }
+    
+    @Test
+    public void testBouncyCastle(){
+        
+        final String PLAINTEXT = "ISO27K1";
+        final String PASSWORD = "111";
+        
+        try{
+            byte[] saltBytes = getSalt();
+            String saltString = new String(saltBytes, VeriniceCharset.CHARSET_UTF_8);
+            String cyphertext = encryptCLIWay(PLAINTEXT, PASSWORD, saltString);
+            String decryptedText = decryptCLIWay(cyphertext, PASSWORD);
+            Assert.assertEquals(PLAINTEXT, decryptedText);
+            
+        } catch (Exception e){
+            LOG.error("Something went wrong", e);
+        }
+    }
+    
+    private byte[] getSalt()
+            throws NoSuchAlgorithmException,
+            NoSuchProviderException, UnsupportedEncodingException {
+        byte[] salt = new byte[CRYPTO_SALT_DEFAULT_LENGTH];
+        SecureRandom secureRandom = SecureRandom.getInstance("SHA1PRNG");
+        byte[] randomAlphanumericBytes = 
+                new BigInteger(130, secureRandom).toString(32).getBytes(CRYPTO_DEFAULT_ENCODING);
+        salt = java.util.Arrays.copyOfRange(randomAlphanumericBytes, 0, CRYPTO_SALT_DEFAULT_LENGTH);
+        return salt;
+    }
+    
+    private String decryptCLIWay(String cypherText, String password) throws 
+        NoSuchAlgorithmException, 
+        NoSuchProviderException, 
+        UnsupportedEncodingException, 
+        InvalidKeySpecException, 
+        NoSuchPaddingException, 
+        InvalidKeyException, 
+        InvalidAlgorithmParameterException, 
+        IllegalBlockSizeException, 
+        BadPaddingException{
+
+        if (Security.getProvider(BC_PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
+        SecretKeyFactory secKeyFac = SecretKeyFactory.getInstance(
+                ENCRYPTION_ALGORITHM,
+                BC_PROVIDER_NAME);
+
+        char[] keyChar = new char[password.length()];
+        password.getChars(0, password.length(), keyChar, 0);
+        PBEKeySpec pbeKeySpec = new PBEKeySpec(keyChar);
+
+        final byte[] bytes = Base64.getDecoder().decode(
+                cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
+        final byte[] salt = java.util.Arrays.copyOf(bytes, CRYPTO_SALT_DEFAULT_LENGTH);
+        final byte[] cipherText = java.util.Arrays.copyOfRange(bytes,
+                                                     CRYPTO_SALT_DEFAULT_LENGTH,
+                                                     bytes.length);
+
+        PBEParameterSpec bEParameterSpec = new PBEParameterSpec(salt, CRYPTO_KEY_ITERATION_COUNTS);
+        SecretKey secret = secKeyFac.generateSecret(pbeKeySpec);
+
+        Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, BC_PROVIDER_NAME);
+        cipher.init(Cipher.DECRYPT_MODE, secret, bEParameterSpec);
+        byte[] decrypted = cipher.doFinal(cipherText);
+
+        return new String(decrypted, IEncryptionService.CRYPTO_DEFAULT_ENCODING);
+
+        
+    }
+    
+    private String encryptCLIWay(String plainText, String password, String salt) throws 
+        NoSuchAlgorithmException, 
+        NoSuchProviderException, 
+        InvalidKeySpecException, 
+        NoSuchPaddingException, 
+        InvalidKeyException, 
+        InvalidAlgorithmParameterException, 
+        IllegalBlockSizeException, 
+        BadPaddingException, 
+        UnsupportedEncodingException{
+        if (Security.getProvider(BC_PROVIDER_NAME) == null) {
+            Security.addProvider(new BouncyCastleProvider());
+        }
+        
+        SecretKeyFactory secKeyFac = SecretKeyFactory.getInstance(
+                ENCRYPTION_ALGORITHM,
+                BC_PROVIDER_NAME);
+        
+        char[] keyChar = new char[password.length()];
+        password.getChars(0, password.length(), keyChar, 0);
+        PBEKeySpec pbeKeySpec = new PBEKeySpec(keyChar);
+        PBEParameterSpec paramSpec = new PBEParameterSpec(salt.getBytes(VeriniceCharset.CHARSET_UTF_8),
+                CRYPTO_KEY_ITERATION_COUNTS);
+        SecretKey secret = secKeyFac.generateSecret(pbeKeySpec);
+
+        Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, BC_PROVIDER_NAME);
+        cipher.init(Cipher.ENCRYPT_MODE, secret, paramSpec);
+        byte[] encrypted = cipher.doFinal(plainText.getBytes(CRYPTO_DEFAULT_ENCODING));
+        byte[] saltBytes = paramSpec.getSalt();
+        byte[] saltAndEncrypted = new byte[saltBytes.length + encrypted.length];
+
+        System.arraycopy(saltBytes, 0, saltAndEncrypted, 0, saltBytes.length);
+        System.arraycopy(encrypted, 0, saltAndEncrypted, saltBytes.length, encrypted.length);
+
+        byte[] encoded = Base64.getEncoder().encode(saltAndEncrypted);
+        final String encodedString = new String(encoded, CRYPTO_DEFAULT_ENCODING);
+        return encodedString;
     }
     
 }

@@ -7,7 +7,9 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.cert.CertificateException;
+import java.util.Base64;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.service.crypto.PasswordBasedEncryption;
@@ -44,7 +46,7 @@ public class EncryptionService implements IEncryptionService {
 
     @Override
     public byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException {
-        return PasswordBasedEncryption.encrypt(unencryptedByteData, password, salt);
+        return PasswordBasedEncryption.encrypt(unencryptedByteData, password, salt, true);
     }
 
 	@Override
@@ -54,7 +56,7 @@ public class EncryptionService implements IEncryptionService {
 
     @Override
     public byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt) throws EncryptionException {
-        return PasswordBasedEncryption.decrypt(encryptedByteData, password, salt);
+        return PasswordBasedEncryption.decrypt(encryptedByteData, password, salt, true);
     }
 
 	@Override
@@ -143,10 +145,9 @@ public class EncryptionService implements IEncryptionService {
      */
     @Override
     public String encrypt(String plainText, char[] password, String salt) throws EncryptionException {
-        String base64PlainText = new String(org.apache.commons.codec.binary.Base64.encodeBase64(plainText.getBytes()));
-        byte[] plainTextBytes = base64PlainText.getBytes();
+        byte[] plainTextBytes = plainText.getBytes(VeriniceCharset.CHARSET_UTF_8);
         byte[] saltBytes = salt.getBytes();
-        byte[] cypherTextBytes = PasswordBasedEncryption.encrypt(plainTextBytes, password, saltBytes);
+        byte[] cypherTextBytes = PasswordBasedEncryption.encrypt(plainTextBytes, password, saltBytes, false);
         return new String(org.apache.commons.codec.binary.Base64.encodeBase64(cypherTextBytes));
     }
 
@@ -155,10 +156,15 @@ public class EncryptionService implements IEncryptionService {
      */
     @Override
     public String decrypt(String cypherText, char[] password, String salt) throws EncryptionException {
-        byte[] cypherTextBytes = org.apache.commons.codec.binary.Base64.decodeBase64(cypherText.getBytes());
+        byte[] cypherTextBytes = new byte[0];
+        try{
+            cypherTextBytes = Base64.getDecoder().decode(cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
+        } catch (UnsupportedEncodingException e){
+            throw new EncryptionException("Unsupported encoding", e);
+        }
         byte[] saltBytes = salt.getBytes();
-        byte[] plainTextBytes = PasswordBasedEncryption.decrypt(cypherTextBytes, password, saltBytes);
-        return new String(org.apache.commons.codec.binary.Base64.decodeBase64(plainTextBytes)); 
+        byte[] plainTextBytes = PasswordBasedEncryption.decrypt(cypherTextBytes, password, saltBytes, false);
+        return new String(plainTextBytes, VeriniceCharset.CHARSET_UTF_8);
     }
     
     @Override

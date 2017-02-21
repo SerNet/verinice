@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
+import java.util.Base64;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -104,22 +105,26 @@ public abstract class PasswordBasedEncryption {
      *            the password used for encryption
      * @param salt
      *            a generic salt passed to the parameters of the crypto-engine
+     * @param attachSaltToCypherText if true, salt gets attached as a prefix to 
+     * the cyphertext (returnValue of the method
      * @return the encrypted data as array of bytes
      * @throws EncryptionException
      *             when a problem occured during the encryption process
      */
-    public static byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException {
+    public static byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt, boolean attachSaltToCypherText) throws EncryptionException {
         byte[] encryptedData = encryptData(unencryptedByteData, password, salt);
         encryptedData = (encryptedData == null) ? new byte[] {} : encryptedData;
 
         // attach (generic) salt to cyphertext as a prefix
-        byte[] encryptedDataWithSaltPrefix = new byte[encryptedData.length + IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
-        System.arraycopy(salt, 0, encryptedDataWithSaltPrefix, 0, salt.length);
-        System.arraycopy(encryptedData, 0, encryptedDataWithSaltPrefix, salt.length, encryptedData.length);
+        if (attachSaltToCypherText){
+            byte[] encryptedDataWithSaltPrefix = new byte[encryptedData.length + IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+            System.arraycopy(salt, 0, encryptedDataWithSaltPrefix, 0, salt.length);
+            System.arraycopy(encryptedData, 0, encryptedDataWithSaltPrefix, salt.length, encryptedData.length);
 
-        return encryptedDataWithSaltPrefix;
+            return encryptedDataWithSaltPrefix;
+        } else return encryptedData;
     }
-
+    
     private static byte[] encryptData(byte[] unencryptedByteData, char[] password, byte[] salt) {
         byte[] encryptedData = null;
         PBEKeySpec pbeKeySpec = new PBEKeySpec(password);
@@ -177,22 +182,26 @@ public abstract class PasswordBasedEncryption {
      *            the password used for decryption
      * @param salt
      *            a generic salt passed to the parameters of the crypto-engine
+     * @param isGenericSaltAttached
+     *          defines if the cyphertext (encryptedByteData) contains the
+     *          generic generated salt in the first 8 byte
+     *          (is not the case for vnl-data)
      * @return the decrypted data as array of bytes
      * @throws EncryptionException
      *             when a problem occured during the decryption process
      */
-    public static byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt) throws EncryptionException {
+    public static byte[] decrypt(byte[] encryptedByteData, char[] password, byte[] salt, boolean isGenericSaltAttached) throws EncryptionException {
 
+        if(isGenericSaltAttached){
+            // remove salt prefix from cyphertext
+            byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
+            System.arraycopy(encryptedByteData, 0, saltBytes, 0, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
 
-        // remove salt prefix from cyphertext
-        byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
-        System.arraycopy(encryptedByteData, 0, saltBytes, 0, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
+            byte[] cypherText = new byte[encryptedByteData.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
 
-        byte[] cypherText = new byte[encryptedByteData.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
-
-        System.arraycopy(encryptedByteData, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, cypherText, 0, encryptedByteData.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
-
-        return decryptData(password, salt, cypherText);
+            System.arraycopy(encryptedByteData, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, cypherText, 0, encryptedByteData.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
+            return decryptData(password, salt, cypherText);
+        } else return decryptData(password, salt, encryptedByteData); 
     }
 
     private static byte[] decryptData(char[] password, byte[] salt, byte[] cypherText) {
@@ -295,7 +304,7 @@ public abstract class PasswordBasedEncryption {
         return decryptedInputStream;
     }
     
-    public static String decryptLicenserestrictedProperty(String password, String value)
+    public static String decryptLicenserestrictedProperty(String password, String cypherText)
             throws EncryptionException {
 
         SecretKeyFactory secKeyFac;
@@ -304,27 +313,23 @@ public abstract class PasswordBasedEncryption {
                     ENCRYPTION_ALGORITHM,
                     CRYPTOPROVIDER);
 
-        char[] keyChar = new char[password.length()];
-        password.getChars(0, password.length(), keyChar, 0);
-        PBEKeySpec pbeKeySpec = new PBEKeySpec(keyChar);
 
-        byte[] bytes = org.apache.commons.codec.binary.Base64.decodeBase64(
-                    value.getBytes());
-        final byte[] salt = Arrays.copyOf(bytes, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
-        final  byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
-        System.arraycopy(bytes, 0, saltBytes, 0, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
-//        final byte[] cipherText = Arrays.copyOfRange(bytes,
-//                                                     IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH,
-//                                                     bytes.length);
-        
-        final byte[] cipherTextBytes = new byte[bytes.length - IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];
-        System.arraycopy(bytes, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, cipherTextBytes, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH, bytes.length);
-        
-        PBEParameterSpec bEParameterSpec = new PBEParameterSpec(salt, ITERATION_COUNT);
-        SecretKey secret;
+            char[] keyChar = new char[password.length()];
+            password.getChars(0, password.length(), keyChar, 0);
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(keyChar);
+
+            final byte[] bytes = Base64.getDecoder().decode(
+                    cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
+            final byte[] salt = Arrays.copyOf(bytes, IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH);
+            final byte[] cipherTextBytes = Arrays.copyOfRange(bytes,
+                    IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH,
+                    bytes.length);
+
+            PBEParameterSpec bEParameterSpec = new PBEParameterSpec(salt, ITERATION_COUNT);
+            SecretKey secret;
             secret = secKeyFac.generateSecret(pbeKeySpec);
 
-        Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
+            Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM, CRYPTOPROVIDER);
             cipher.init(Cipher.DECRYPT_MODE, secret, bEParameterSpec);
             byte[] decrypted = cipher.doFinal(cipherTextBytes);
             return new String(decrypted, VeriniceCharset.CHARSET_UTF_8.name());
@@ -348,5 +353,4 @@ public abstract class PasswordBasedEncryption {
             throw new EncryptionException(e);
         }
     }
-
 }
