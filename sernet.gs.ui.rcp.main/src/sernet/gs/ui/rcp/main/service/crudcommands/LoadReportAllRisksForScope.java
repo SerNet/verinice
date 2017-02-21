@@ -12,8 +12,8 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
@@ -54,9 +54,9 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
     
     
     // present for backwards compatibility, some reports still use the constants in this Class:
-    public static final int RISK_PRE_CONTROLS               = IRiskAnalysisService.RISK_PRE_CONTROLS;
-    public static final int RISK_WITH_IMPLEMENTED_CONTROLS  = IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS;
-    public static final int RISK_WITH_ALL_CONTROLS          = IRiskAnalysisService.RISK_WITH_ALL_CONTROLS;
+    public static final int RISK_PRE_CONTROLS               = RiskAnalysisHelper.RISK_PRE_CONTROLS;
+    public static final int RISK_WITH_IMPLEMENTED_CONTROLS  = RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS;
+    public static final int RISK_WITH_ALL_CONTROLS          = RiskAnalysisHelper.RISK_WITH_ALL_CONTROLS;
         
     private Integer rootElmt;
     private List<List<String>> result;
@@ -75,7 +75,7 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
 
     private boolean distinct;
 
-    private int riskType = IRiskAnalysisService.RISK_PRE_CONTROLS;
+    private int riskType = RiskAnalysisHelper.RISK_PRE_CONTROLS;
    
     private boolean resultInjectedFromCache = false;
 
@@ -91,7 +91,7 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
     }
 
     public LoadReportAllRisksForScope(Integer rootElement, boolean distinct) {
-        this(rootElement, distinct, IRiskAnalysisService.RISK_PRE_CONTROLS);
+        this(rootElement, distinct, RiskAnalysisHelper.RISK_PRE_CONTROLS);
     }
         
     @SuppressWarnings({ "unchecked" })
@@ -101,7 +101,7 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
             Organization org = (Organization) getDaoFactory().getDAO(Organization.TYPE_ID).findById(rootElmt);
             
             HUITypeFactory huiTypeFactory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-            PropertyType type = huiTypeFactory.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisServiceImpl.PROP_SCENARIO_PROBABILITY);
+            PropertyType type = huiTypeFactory.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisHelperImpl.PROP_SCENARIO_PROBABILITY);
             int probMax = type.getMaxValue();
 
             int ciaMax = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.CONFIDENTIALITY).getMaxValue();
@@ -172,22 +172,22 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
 
         ArrayList<String> row = new ArrayList<String>();
         AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
-        RiskAnalysisServiceImpl raService = new RiskAnalysisServiceImpl();
+        RiskAnalysisHelperImpl raService = new RiskAnalysisHelperImpl();
         
         int probability = 0;
         switch (this.riskType) {
-        case IRiskAnalysisService.RISK_PRE_CONTROLS:
-            probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
+        case RiskAnalysisHelper.RISK_PRE_CONTROLS:
+            probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY);
             break;
-        case IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS:
-            probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+        case RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS:
+            probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
             break;
-        case IRiskAnalysisService.RISK_WITH_ALL_CONTROLS:
-            probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+        case RiskAnalysisHelper.RISK_WITH_ALL_CONTROLS:
+            probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
             break;
 
-        case IRiskAnalysisService.RISK_WITHOUT_NA_CONTROLS:
-            probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+        case RiskAnalysisHelper.RISK_WITHOUT_NA_CONTROLS:
+            probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
             break;
         default:
             break;
@@ -296,7 +296,7 @@ public class LoadReportAllRisksForScope extends GenericCommand implements ICache
     public void injectCacheResult(Object result) {
         if(result instanceof Object[]){
             HUITypeFactory huiTypeFactory = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
-            PropertyType type = huiTypeFactory.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisServiceImpl.PROP_SCENARIO_PROBABILITY);
+            PropertyType type = huiTypeFactory.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisHelperImpl.PROP_SCENARIO_PROBABILITY);
             int probMax = type.getMaxValue();
 
             int ciaMax = huiTypeFactory.getPropertyType(Asset.TYPE_ID, Asset.TYPE_ID+AssetValueService.CONFIDENTIALITY).getMaxValue();

@@ -97,7 +97,11 @@ public class RunRiskAnalysisCommand extends GenericCommand implements INoAccessC
             if(getLog().isDebugEnabled()){
                 getLog().debug("Determine Risk for Scenario:\t" + scenario.getTitle());
             }            
-            ra.determineRisks((IncidentScenario) scenario);
+            try {
+                ra.determineRisks((IncidentScenario) scenario);
+            } catch (CommandException e) {
+                getLog().error("Error while determine risk", e);
+            }
         }
         
         

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 Alexander Koderman <ak@sernet.de>.
+ * Copyright (c) 2017 Daniel Murygin <dm[at]sernet[dot]de>.
  * This program is free software: you can redistribute it and/or 
  * modify it under the terms of the GNU General Public License 
  * as published by the Free Software Foundation, either version 3 
@@ -13,68 +13,26 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
- *     Benjamin Weißenfels <bw@sernet.de> - calculate risk values for planned controls
+ *     Alexander Koderman
+ *     Benjamin Weißenfels <bw@sernet.de>
+ *     Daniel Murygin <dm[at]sernet[dot]de> 
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
-import java.util.ResourceBundle.Control;
-
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.IncidentScenario;
 
 /**
+ * Helper interface for executing a risk analysis.
  * 
+ * The methods "applyControlsToImpact" and "getRiskColor" were moved from
+ * interface IRiskAnalysisService to this interface during a refactoring 
+ * of the risk analysis service.
  * 
- * The risk values Confidentality (C), Integrity (I) and Availability (A) is
- * calculated for each Asset (A). The initial risk values (C,I,A) are inherited
- * by an Process (P) or an Asset or is defined directly in the asset.
- * 
- * Scenarios increase each risk value by adding the probalitiy (Pr). Pr is the
- * sum of the Threat (T) or Vulnerability (V). All controls (C) which are
- * connected with an asset or a scenario decrease the risk values. Controls
- * which are directly linked with an asset decreases only the specific risk
- * values (C, I, A). Controls which are linked with the scenario decrease only
- * the Pr value of the scenario. The resulting Pr value added to each risk value
- * of the linked asset.
- * 
- * <pre>
- *                 P 
- *                 |
- *         -C,I,A  |
- *         *-------A (C,I,A)
- *         |       |
- *         C-------* -- resulting RiskValue for Asset (C,I,A)
- *         |       |
- *         *-------S 
- *         -Pr    / \
- *               T   V
- * 
- * </pre>
- * 
- * The resulting risk values are stored in the asset properties. There are 4
- * kinds of this risk values (C, I, A):
- * 
- * <pre>
- * 1. {@link #RISK_PRE_CONTROLS}: All linked controls are not taken into account.
- * 2. {@link #RISK_WITH_ALL_CONTROLS}: All linked controls are taken into account.
- * 3. {@link #RISK_WITH_IMPLEMENTED_CONTROLS}: Only controls which have status "Implemented"
- * 4. {@link #RISK_WITHOUT_NA_CONTROLS}: This are planned controls, which means all controls which not carry status "N.a" or for which the method
- * {@linkplain sernet.verinice.model.iso27k.Control#isPlanned(sernet.hui.common.connect.Entity)} returns true.
- * 
- * </pre>
- * 
- * Note: Some constants uses planned_control as a sub string in their name.
- * Values which are stored under these constants are actually dedcuted from all
- * control values.
- * 
- * @author koderman@sernet.de
- * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  *
  */
-public interface IRiskAnalysisService {
+public interface RiskAnalysisHelper {
 
     String PROP_SCENARIO_METHOD = "incscen_likelihoodmethod";
     String PROP_SCENARIO_THREAT_PROBABILITY = "incscen_threat_likelihood";
@@ -124,27 +82,29 @@ public interface IRiskAnalysisService {
     int RISK_COLOR_RED = 2;
 
     /**
-     * Determine probability for this scenario, based on threat and
-     * vulnerability.
+     * Apply the controls linked to the given asset to the given business impact
+     * values.
      * 
-     * @param scenario
+     * @param riskType The type of the risk: RISK_WITH_IMPLEMENTED_CONTROLS, RISK_WITH_ALL_CONTROLS or RISK_WITHOUT_NA_CONTROLS
+     * @param asset An asset
+     * @param impactC Impact value confidentiality
+     * @param impactI Impact value integrity
+     * @param impactA Impact value availability
+     * @throws CommandException
      */
-    void determineProbability(IncidentScenario scenario);
+    Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA) throws CommandException;
 
     /**
-     * Determine risks for linked assets from this scenario.
-     * 
-     * @param scenario
-     * @throws CommandException 
+     * Computes if a given risk (given by asset & scenario) is red, yellow or
+     * green.
+     *
+     * @param asset An asset
+     * @param scenario A szenario
+     * @param riskType 'c', 'i', 'a'
+     * @param numOfYellowFields Numer of yellow fields
+     * @param probType Probability type: PROP_SCENARIO_PROBABILITY_WITH_CONTROLS or PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS
+     * @return RISK_COLOR_RED, RISK_COLOR_GREEN or RISK_COLOR_YELLOW
      */
-    void determineRisks(IncidentScenario scenario) throws CommandException;
-
-    /**
-     * Reset risk calculation, remove all calculated risk values.
-     * 
-     * @param asset
-     */
-    void resetRisks(Asset asset);
-
+    int getRiskColor(CnATreeElement asset, CnATreeElement scenario, char riskType, int numOfYellowFields, String probType);
 
 }

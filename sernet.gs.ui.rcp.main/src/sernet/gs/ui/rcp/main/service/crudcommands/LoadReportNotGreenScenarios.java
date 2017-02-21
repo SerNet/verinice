@@ -26,8 +26,8 @@ import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
@@ -68,7 +68,7 @@ public class LoadReportNotGreenScenarios extends GenericCommand implements ICach
         if(!resultInjectedFromCache){
             try{
                 HashMap<String, Integer> seenScenarios = new HashMap<String, Integer>(0);
-                RiskAnalysisServiceImpl raService = new RiskAnalysisServiceImpl();
+                RiskAnalysisHelperImpl raService = new RiskAnalysisHelperImpl();
                 LoadReportElements scenarioLoader = new LoadReportElements(IncidentScenario.TYPE_ID, rootElmt, false);
                 scenarioLoader = getCommandService().executeCommand(scenarioLoader);
                 for(CnATreeElement e : scenarioLoader.getElements()){
@@ -83,22 +83,22 @@ public class LoadReportNotGreenScenarios extends GenericCommand implements ICach
                                 int tc = raService.getRiskColor(a, e, riskTypes[i], numOfYellowFields[i], probabilityType);
                                 if(riskColour == 0){ // case of first iteration
                                     riskColour = tc;
-                                } else if(riskColour != IRiskAnalysisService.RISK_COLOR_GREEN && tc != IRiskAnalysisService.RISK_COLOR_GREEN){
+                                } else if(riskColour != RiskAnalysisHelper.RISK_COLOR_GREEN && tc != RiskAnalysisHelper.RISK_COLOR_GREEN){
                                     riskColour = tc;
                                 }
-                                if(riskColour == IRiskAnalysisService.RISK_COLOR_RED){
+                                if(riskColour == RiskAnalysisHelper.RISK_COLOR_RED){
                                     break;
                                 }
 
                             }
-                            if(riskColour == IRiskAnalysisService.RISK_COLOR_RED){
+                            if(riskColour == RiskAnalysisHelper.RISK_COLOR_RED){
                                 break;
                             }
                         }
                         if(riskColour != 0){
                             ArrayList<String> result = new ArrayList<String>(0);
                             result.add(e.getTitle());
-                            result.add(riskColour == IRiskAnalysisService.RISK_COLOR_RED ? "red" : "yellow");
+                            result.add(riskColour == RiskAnalysisHelper.RISK_COLOR_RED ? "red" : "yellow");
                             result.add(e.getDbId().toString());
                             results.add(result);
                             seenScenarios.put(e.getUuid(), 1);

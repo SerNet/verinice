@@ -781,7 +781,7 @@ import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.report.service.impl.TocHelper2;
 
@@ -883,7 +883,7 @@ for(Asset asset : assetSet){
 
 	
 	valueAdapter = new AssetValueAdapter(asset);
-	ras = new RiskAnalysisServiceImpl();
+	ras = new RiskAnalysisHelperImpl();
 
 	/** Get risk values for implement controls */	    
 	impactC = valueAdapter.getVertraulichkeit();

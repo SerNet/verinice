@@ -52,6 +52,8 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
     private VeriniceGraph graph;
     private IBaseDao<CnALink, Serializable> cnaLinkDao;
     
+    private RiskAnalysisHelper riskAnalysisHelper = new RiskAnalysisHelperImpl();
+    
     /**
      * @param graph
      * @param cnaLinkDao2 
@@ -98,7 +100,7 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
      * .verinice.model.iso27k.IncidentScenario)
      */
     @Override
-    public void determineRisks(IncidentScenario scenario) {
+    public void determineRisks(IncidentScenario scenario) throws CommandException {
         Set<Edge> edgesToAsset = graph.getEdgesByElementType(scenario, Asset.TYPE_ID);
       
         for (Edge edge : edgesToAsset) {
@@ -124,7 +126,7 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
         
     }
 
-    private void determineRisk(IncidentScenario scenario, Edge edgeToAsset) {
+    private void determineRisk(IncidentScenario scenario, Edge edgeToAsset) throws CommandException {
         Asset asset = (Asset) edgeToAsset.getTarget();
         AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
 
@@ -134,17 +136,17 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
         edgeToAsset.setRiskAvailability(0);
 
         // get reduced impact of asset:
-        Integer[] impactWithImplementedControlsCIA = applyControlsToImpact(
+        Integer[] impactWithImplementedControlsCIA = riskAnalysisHelper.applyControlsToImpact(
                 IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset,
                 valueAdapter.getVertraulichkeit(), valueAdapter.getIntegritaet(),
                 valueAdapter.getVerfuegbarkeit());
 
-        Integer[] impactWithAllControlsCIA = applyControlsToImpact(
+        Integer[] impactWithAllControlsCIA = riskAnalysisHelper.applyControlsToImpact(
                 IRiskAnalysisService.RISK_WITH_ALL_CONTROLS, asset,
                 valueAdapter.getVertraulichkeit(), valueAdapter.getIntegritaet(),
                 valueAdapter.getVerfuegbarkeit());
 
-        Integer[] impactWithAllPlannedControlsCIA = applyControlsToImpact(
+        Integer[] impactWithAllPlannedControlsCIA = riskAnalysisHelper.applyControlsToImpact(
                 IRiskAnalysisService.RISK_WITHOUT_NA_CONTROLS, asset,
                 valueAdapter.getVertraulichkeit(), valueAdapter.getIntegritaet(),
                 valueAdapter.getVerfuegbarkeit());
@@ -254,121 +256,7 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
         asset.setNumericProperty(PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_A, 0);
     }
 
-  
-    
-    /**
-     * Reduce impact levels by all controls applied to this asset.
-     * 
-     * @param asset
-     * @param impactC
-     * @param impactI
-     * @param impactA
-     * @throws CommandException 
-     */
-    @Override
-    public Integer[] applyControlsToImpact(int riskType, CnATreeElement rawElement, Integer impactC, Integer impactI, Integer impactA)  {
-        if (riskType == RISK_PRE_CONTROLS){
-            return null; // do nothing
-        }
-        Set<CnATreeElement> controlSet = graph.getLinkTargetsByElementType(rawElement, Control.TYPE_ID);       
-        
-        Integer impactC0 = Integer.valueOf(impactC.intValue());
-        Integer impactI0 = Integer.valueOf(impactI.intValue());
-        Integer impactA0 = Integer.valueOf(impactA.intValue());
-        
-        
-        switch (riskType) {
-        case RISK_WITH_IMPLEMENTED_CONTROLS:
-            for (CnATreeElement control : controlSet) {
-                control = Retriever.checkRetrieveElement(control);
-                if (Control.isImplemented(control.getEntity())) {
-                    impactC0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_C);
-                    impactI0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_I);
-                    impactA0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_A);
-                } 
-            }
-            break;
-        case RISK_WITH_ALL_CONTROLS:
-            for (CnATreeElement control : controlSet) {
-                control = Retriever.checkRetrieveElement(control);
-                impactC0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_C);
-                impactI0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_I);
-                impactA0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_A);
-            }
-            break;
-        case RISK_WITHOUT_NA_CONTROLS:
-            for (CnATreeElement control : controlSet) {
-                control = Retriever.checkRetrieveElement(control);
-                if (Control.isPlanned(control.getEntity())) {
-                    impactC0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_C);
-                    impactI0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_I);
-                    impactA0 -= control.getNumericProperty(IRiskAnalysisService.PROP_CONTROL_EFFECT_A);
-                }
-            }
-            break;
-        default: // do nothing
-            break;
-        }
-
-        impactC0 = (impactC0.intValue() < 0) ? Integer.valueOf(0) : impactC0;
-        impactI0 = (impactI0.intValue() < 0) ? Integer.valueOf(0) : impactI0;
-        impactA0 = (impactA0.intValue() < 0) ? Integer.valueOf(0) : impactA0;
-
-        return new Integer[] { impactC0, impactI0, impactA0 };
-
-    }
-
-    /**
-     * computes if a given risk (given by asset & scenario) is red, yellow or
-     * green
-     */
-    @Override
-    public int getRiskColor(CnATreeElement asset, CnATreeElement scenario, char riskType, int numOfYellowFields, String probType) {
-        AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
-
-        int probability = scenario.getNumericProperty(probType);
-        int riskControlState;
-        if (probType.equals(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS)) {
-            riskControlState = IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS;
-        } else if (probType.equals(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS)) {
-            riskControlState = IRiskAnalysisService.RISK_WITH_ALL_CONTROLS;
-        } else {
-            riskControlState = IRiskAnalysisService.RISK_PRE_CONTROLS;
-        }
-
-        int impactC = valueAdapter.getVertraulichkeit();
-        int impactI = valueAdapter.getIntegritaet();
-        int impactA = valueAdapter.getVerfuegbarkeit();
-        Integer[] reducedImpact = applyControlsToImpact(riskControlState, asset, impactC, impactI, impactA);
-        if (reducedImpact != null) {
-            impactC = reducedImpact[0];
-            impactI = reducedImpact[1];
-            impactA = reducedImpact[2];
-        }
-
-        // prob. / impact:
-        int riskC = probability + impactC;
-        int riskI = probability + impactI;
-        int riskA = probability + impactA;
-
-        int riskColour = 0;
-        // risk values:
-        switch (riskType) {
-        case 'c':
-            riskColour = getRiskColor(riskC, getTolerableRisks(asset, 'c'), numOfYellowFields);
-            break;
-        case 'i':
-            riskColour = getRiskColor(riskI, getTolerableRisks(asset, 'i'), numOfYellowFields);
-            break;
-        case 'a':
-            riskColour = getRiskColor(riskA, getTolerableRisks(asset, 'a'), numOfYellowFields);
-            break;
-        default: // do nothing
-            break;
-        }
-        return riskColour;
-    }
-    
+ 
     private void getProbabilityFromThreatAndVulnerability(IncidentScenario scenario) {
         // only calculate if threat AND vulnerability is linked to scenario:     
         Set<CnATreeElement> threatSet = graph.getLinkTargetsByElementType(scenario, Threat.TYPE_ID);

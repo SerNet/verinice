@@ -31,8 +31,8 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.interfaces.IDAOFactory;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.Audit;
@@ -133,13 +133,13 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
             coloredScenarioGroup.title = groupLoader.getElement().getTitle();
             
             switch (entry.getValue().intValue()) {
-            case IRiskAnalysisService.RISK_COLOR_GREEN:
+            case RiskAnalysisHelper.RISK_COLOR_GREEN:
                 coloredScenarioGroup.color = "2green";
                 break;
-            case IRiskAnalysisService.RISK_COLOR_YELLOW:
+            case RiskAnalysisHelper.RISK_COLOR_YELLOW:
                 coloredScenarioGroup.color = "1yellow";
                 break;
-            case IRiskAnalysisService.RISK_COLOR_RED:
+            case RiskAnalysisHelper.RISK_COLOR_RED:
                 coloredScenarioGroup.color = "0red";
                 break;
             default:
@@ -165,14 +165,14 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
             scenarioGroups.put(parentUuid, riskColor);
 
         } else {
-            if (!(scenarioGroups.get(parentUuid).intValue() == IRiskAnalysisService.RISK_COLOR_RED)) {
-                if (!(scenarioGroups.get(parentUuid).intValue() == IRiskAnalysisService.RISK_COLOR_YELLOW)) {
+            if (!(scenarioGroups.get(parentUuid).intValue() == RiskAnalysisHelper.RISK_COLOR_RED)) {
+                if (!(scenarioGroups.get(parentUuid).intValue() == RiskAnalysisHelper.RISK_COLOR_YELLOW)) {
                     scenarioGroups.put(parentUuid, riskColor); // previous
                                                                // value
                                                                // green
                 } else {// previous value yellow, if
                         // red ==> save
-                    if (riskColor == IRiskAnalysisService.RISK_COLOR_RED) {
+                    if (riskColor == RiskAnalysisHelper.RISK_COLOR_RED) {
                         scenarioGroups.put(parentUuid, riskColor);
                     }
                 }
@@ -215,7 +215,7 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     private Map<String, Integer> markParents(CnATreeElement element, Map<String, Integer> currentMap, IDAOFactory daoFactory) {
         while (!(element instanceof Organization)) {
             if (element instanceof IncidentScenarioGroup) {
-                currentMap.put(element.getUuid(), IRiskAnalysisService.RISK_COLOR_RED);
+                currentMap.put(element.getUuid(), RiskAnalysisHelper.RISK_COLOR_RED);
             }
             element = element.getParent();
             element = daoFactory.getDAO(CnATreeElement.class).initializeAndUnproxy(element);
@@ -233,13 +233,13 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
     private int getRiskColour(CnATreeElement asset, CnATreeElement scenario) {
         char[] riskTypes = new char[] { 'c', 'i', 'a' };
         for (int i = 0; i < riskTypes.length; i++) {
-            if (isColouredRisk(asset, scenario, IRiskAnalysisService.RISK_COLOR_RED, riskTypes[i])) {
-                return IRiskAnalysisService.RISK_COLOR_RED;
-            } else if (isColouredRisk(asset, scenario, IRiskAnalysisService.RISK_COLOR_YELLOW, riskTypes[i])) {
-                return IRiskAnalysisService.RISK_COLOR_YELLOW;
+            if (isColouredRisk(asset, scenario, RiskAnalysisHelper.RISK_COLOR_RED, riskTypes[i])) {
+                return RiskAnalysisHelper.RISK_COLOR_RED;
+            } else if (isColouredRisk(asset, scenario, RiskAnalysisHelper.RISK_COLOR_YELLOW, riskTypes[i])) {
+                return RiskAnalysisHelper.RISK_COLOR_YELLOW;
             }
         }
-        return IRiskAnalysisService.RISK_COLOR_GREEN;
+        return RiskAnalysisHelper.RISK_COLOR_GREEN;
     }
 
     /**
@@ -254,7 +254,7 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
      * @return
      */
     private boolean isColouredRisk(CnATreeElement asset, CnATreeElement scenario, int riskColour, char riskType) {
-        RiskAnalysisServiceImpl raService = new RiskAnalysisServiceImpl();
+        RiskAnalysisHelperImpl raService = new RiskAnalysisHelperImpl();
         int yellowNum = 0;
         switch (riskType) {
         case 'c':
@@ -280,7 +280,7 @@ public class LoadReportRedYellowScenarioGroups extends GenericCommand implements
      * checked. (is relevant for group categorization)
      */
     private boolean affectsCIA(CnATreeElement scenario) {
-        String[] sArr = new String[] { IRiskAnalysisService.PROP_SCENARIO_AFFECTS_C, IRiskAnalysisService.PROP_SCENARIO_AFFECTS_I, IRiskAnalysisService.PROP_SCENARIO_AFFECTS_A };
+        String[] sArr = new String[] { RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_C, RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_I, RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_A };
         for (String s : Arrays.asList(sArr)) {
             if (scenario.getEntity().getProperties(s).getProperty(0).getPropertyValue().equals("1")) {
                 return true;

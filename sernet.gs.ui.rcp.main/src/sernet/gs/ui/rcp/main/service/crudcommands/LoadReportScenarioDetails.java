@@ -17,6 +17,9 @@
  ******************************************************************************/
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
+import static sernet.verinice.iso27k.service.RiskAnalysisHelper.RISK_WITHOUT_NA_CONTROLS;
+import static sernet.verinice.iso27k.service.RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,8 +32,8 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelper;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -38,7 +41,6 @@ import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
-import static sernet.verinice.iso27k.service.IRiskAnalysisService.*;
 
 /**
  * Adds more columns to the normal list of links for an element in case of
@@ -150,8 +152,8 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
         }
 
         // get the reduced probability of the scenario:
-        int probabilityWithControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
-        int probalilityWithoutNAControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+        int probabilityWithControls = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+        int probalilityWithoutNAControls = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
 
         // get the CIA deciders
         boolean isCRelevant = scenario.getEntity().getProperties("scenario_value_method_confidentiality").getProperty(0).getPropertyValue().equals("1");
@@ -174,12 +176,12 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
 
         HUITypeFactory hui = (HUITypeFactory) VeriniceContext.get(VeriniceContext.HUI_TYPE_FACTORY);
 
-        int threatLevel = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_THREAT_PROBABILITY);
-        PropertyType propertyType = hui.getPropertyType(IncidentScenario.TYPE_ID, IRiskAnalysisService.PROP_SCENARIO_THREAT_PROBABILITY);
+        int threatLevel = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_THREAT_PROBABILITY);
+        PropertyType propertyType = hui.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisHelper.PROP_SCENARIO_THREAT_PROBABILITY);
         String threatDesc = propertyType.getNameForValue(threatLevel);
 
-        int vulnLevel = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_VULN_PROBABILITY);
-        propertyType = hui.getPropertyType(IncidentScenario.TYPE_ID, IRiskAnalysisService.PROP_SCENARIO_VULN_PROBABILITY);
+        int vulnLevel = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_VULN_PROBABILITY);
+        propertyType = hui.getPropertyType(IncidentScenario.TYPE_ID, RiskAnalysisHelper.PROP_SCENARIO_VULN_PROBABILITY);
         String vulnDesc = propertyType.getNameForValue(vulnLevel);
 
         String threatTitle;
@@ -194,7 +196,7 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
             // scenario may be linked to more than one threat, add all to
             // description:
             // (for risk calculation, the highest threat will be used, see
-            // RiskAnalysisServiceImpl.java)
+            // RiskAnalysisHelperImpl.java)
             StringBuilder sb = new StringBuilder();
             for (Iterator iterator = threats.keySet().iterator(); iterator.hasNext();) {
                 CnATreeElement t = (CnATreeElement) iterator.next();
@@ -244,7 +246,7 @@ public class LoadReportScenarioDetails extends GenericCommand implements ICached
         Integer impactI = 0;
         Integer impactA = 0;
         AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
-        RiskAnalysisServiceImpl ras = new RiskAnalysisServiceImpl();
+        RiskAnalysisHelperImpl ras = new RiskAnalysisHelperImpl();
 
         impactC = valueAdapter.getVertraulichkeit();
         impactI = valueAdapter.getIntegritaet();

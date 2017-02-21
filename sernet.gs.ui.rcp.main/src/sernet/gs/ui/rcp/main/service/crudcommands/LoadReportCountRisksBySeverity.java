@@ -8,7 +8,7 @@ import sernet.gs.service.RuntimeCommandException;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.iso27k.service.RiskAnalysisHelper;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
@@ -119,7 +119,7 @@ public class LoadReportCountRisksBySeverity extends GenericCommand implements IC
         ArrayList<String> row = new ArrayList<String>();
         AssetValueAdapter valueAdapter = new AssetValueAdapter(asset);
         
-        int probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY);
+        int probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY);
         
         // prob. / impact:
         int riskC = probability + valueAdapter.getVertraulichkeit();

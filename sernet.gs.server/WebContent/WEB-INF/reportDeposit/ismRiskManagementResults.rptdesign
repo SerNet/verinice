@@ -6866,7 +6866,7 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import java.util.*;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.service.commands.LoadElementByUuid;
 
@@ -6908,8 +6908,7 @@ for (CnATreeElement process : processes) {
 		for (CnATreeElement asset : assets) {
 			// risk matrices
 			  valueAdapter = new AssetValueAdapter(asset);
-        		  raService = new RiskAnalysisServiceImpl();
-
+        		  raService = new RiskAnalysisHelperImpl();
 			// reload asset
 			assetReloader = new LoadElementByUuid(asset.getUuid(), new RetrieveInfo().setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true));
 			asset = helper.execute(assetReloader).getElement();
@@ -7190,7 +7189,7 @@ import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.ui.rcp.main.service.crudcommands.RiskMatrix;
 import java.util.*;
 
@@ -7229,7 +7228,7 @@ for (CnATreeElement process : processes) {
 			amountYellowScens = 0;
 			// risk matrices
 			  valueAdapter = new AssetValueAdapter(asset);
-        		  raService = new RiskAnalysisServiceImpl();
+        		  raService = new RiskAnalysisHelperImpl();
 			
 			// load all scenarios for each asset
 			scenarioLoader = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
@@ -9232,7 +9231,7 @@ import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.ui.rcp.main.service.crudcommands.RiskMatrix;
 import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.service.commands.LoadElementByUuid;
@@ -9272,7 +9271,7 @@ for (CnATreeElement process : processes) {
 			amountYellowScens = 0;
 			// risk matrices
 			  valueAdapter = new AssetValueAdapter(asset);
-        		  raService = new RiskAnalysisServiceImpl();
+        		  raService = new RiskAnalysisHelperImpl();
 			
 			// load all scenarios for each asset
 			scenarioLoader = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
