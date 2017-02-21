@@ -29,8 +29,10 @@ import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * A control from the ISO/IEC 27000 standard.
+ * See https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
- *
  */
 @SuppressWarnings("serial")
 public class Control extends CnATreeElement implements IISO27kElement, IControl, IISRControl {
@@ -65,13 +67,11 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
     public static final String PROP_EFFECTIVENESS_AVAILABILITY="control_effectiveness_availability"; 
     public static final String PROP_EFFECTIVENESS_PROBABILITY="control_eff_probability";
     public static final String PROP_GSM_ISM_CONTROL_DESCRIPTION = "gsm_ism_control_description";
+    public static final String PROP_CONTROL_EFFECT_P = "control_eff_probability"; 
+    
     public static final String REL_CONTROL_PERSON_ISO = "rel_control_person-iso"; 
-    public static final String REL_CONTROL_INCSCEN = "rel_control_incscen"; 
-	
-   
-	/**
-	 * Creates an empty asset
-	 */
+    public static final String REL_CONTROL_INCSCEN = "rel_control_incscen";
+	   
 	public Control() {
 		super();
 		setEntity(new Entity(TYPE_ID));
@@ -84,11 +84,7 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 		getEntity().initDefaultValues(getTypeFactory());
         // sets the localized title via HUITypeFactory from message bundle
         setTitel(getTypeFactory().getMessage(TYPE_ID));
-    }
-	
-   
-	
-   
+	}
 	
 	/* (non-Javadoc)
 	 * @see sernet.gs.ui.rcp.main.common.model.CnATreeElement#getTypeId()
@@ -103,7 +99,7 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	 */
 	@Override
 	public String getTitle() {
-		return getEntity().getSimpleValue(PROP_NAME);
+		return getEntity().getPropertyValue(PROP_NAME);
 	}
 	
 	@Override
@@ -113,7 +109,7 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	
 	@Override
     public String getAbbreviation() {
-		return getEntity().getSimpleValue(PROP_ABBR);
+		return getEntity().getPropertyValue(PROP_ABBR);
 	}
 	
 	public void setAbbreviation(String abbreviation) {
@@ -122,12 +118,12 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	
 	@Override
     public Collection<? extends String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
 	}
 	
 	@Override
     public String getDescription() {
-		return getEntity().getSimpleValue(PROP_DESC);
+		return getEntity().getPropertyValue(PROP_DESC);
 	}
 	
 	@Override
@@ -151,11 +147,11 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
     }
 	
 	public String getMaturityComment() {
-        return getEntity().getSimpleValue(PROP_MATURITY_COMMENT);
+        return getEntity().getPropertyValue(PROP_MATURITY_COMMENT);
     }
 	
 	public String getImplementationExplanation() {
-        return getEntity().getSimpleValue(PROP_IMPL_EXPLANATION);
+        return getEntity().getPropertyValue(PROP_IMPL_EXPLANATION);
     }
 	
 	public int getMaturityValueByTag(){
@@ -269,11 +265,11 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
 	}
 	
 	public String getFeedbackNote() {
-	    return getEntity().getSimpleValue(PROP_FEEDBACK_NOTE);
+	    return getEntity().getPropertyValue(PROP_FEEDBACK_NOTE);
     }
 	
     public String getGsmDescription() {
-        return getEntity().getSimpleValue(PROP_GSM_ISM_CONTROL_DESCRIPTION);
+        return getEntity().getPropertyValue(PROP_GSM_ISM_CONTROL_DESCRIPTION);
     }
 
     /* (non-Javadoc)
@@ -297,7 +293,7 @@ public class Control extends CnATreeElement implements IISO27kElement, IControl,
      */
     @Override
     public String getISRMaturityQuantity() {
-        return getEntity().getSimpleValue(PROP_ISR_MATURITY_QUANTITY);
+        return getEntity().getPropertyValue(PROP_ISR_MATURITY_QUANTITY);
     }
 
     /* (non-Javadoc)

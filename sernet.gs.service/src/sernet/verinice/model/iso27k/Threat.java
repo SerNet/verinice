@@ -24,6 +24,9 @@ import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * A threat from the ISO/IEC 27000 standard.
+ * See https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
@@ -34,11 +37,9 @@ public class Threat extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_NAME = "threat_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "threat_tag"; //$NON-NLS-1$
 	public static final String PROP_DESCRIPTION = "threat_description"; //$NON-NLS-1$
+    public static final String PROP_THREAT_LIKELIHOOD = "threat_likelihood"; //$NON-NLS-1$
+    public static final String PROP_THREAT_IMPACT = "threat_impact"; //$NON-NLS-1$
 
-	
-	/**
-	 * Creates an empty asset
-	 */
 	public Threat() {
 		super();
 		setEntity(new Entity(TYPE_ID));
@@ -66,7 +67,7 @@ public class Threat extends CnATreeElement implements IISO27kElement {
 	 */
 	@Override
 	public String getTitle() {
-		return getEntity().getSimpleValue(PROP_NAME);
+		return getEntity().getPropertyValue(PROP_NAME);
 	}
 
 	public void setTitel(String name) {
@@ -74,7 +75,7 @@ public class Threat extends CnATreeElement implements IISO27kElement {
 	}
 	
 	public String getAbbreviation() {
-		return getEntity().getSimpleValue(PROP_ABBR);
+		return getEntity().getPropertyValue(PROP_ABBR);
 	}
 	
 	public void setAbbreviation(String abbreviation) {
@@ -86,14 +87,11 @@ public class Threat extends CnATreeElement implements IISO27kElement {
 	}
 	
 	public Collection<? extends String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
 	}
 
-    /**
-     * @return
-     */
     public String getDescription() {
-        return getEntity().getSimpleValue(PROP_DESCRIPTION);
+        return getEntity().getPropertyValue(PROP_DESCRIPTION);
     }
 
 }

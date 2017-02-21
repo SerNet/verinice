@@ -23,10 +23,15 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
+import sernet.gs.service.RuntimeCommandException;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.graph.Edge;
+import sernet.verinice.interfaces.graph.GraphElementLoader;
+import sernet.verinice.interfaces.graph.IGraphElementLoader;
+import sernet.verinice.interfaces.graph.IGraphService;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -42,6 +47,9 @@ import sernet.verinice.service.commands.RetrieveCnATreeElement;
 /**
  * Performs risk analysis according to ISO 27005.
  *  
+ * The service needs a VeriniceGraph and a IBaseDao<CnALink, Serializable>
+ * to run.
+ *  
  * @author koderman@sernet.de
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
@@ -50,58 +58,100 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
     private static final transient Logger LOG = Logger.getLogger(RiskAnalysisServiceGraph.class);
 
     private VeriniceGraph graph;
-    private IBaseDao<CnALink, Serializable> cnaLinkDao;
     
+    private IGraphService graphService;  
+    private IBaseDao<CnALink, Serializable> cnaLinkDao;  
     private RiskAnalysisHelper riskAnalysisHelper = new RiskAnalysisHelperImpl();
     
     /**
-     * @param graph
-     * @param cnaLinkDao2 
+     * The service needs a VeriniceGraph and a IBaseDao<CnALink, Serializable>
+     * to run.
      */
-    public RiskAnalysisServiceGraph(VeriniceGraph graph, IBaseDao<CnALink,Serializable> cnaLinkDao) {
-        this.graph = graph;
+    public RiskAnalysisServiceGraph() {
+        super();
+    }
+    
+    public RiskAnalysisServiceGraph(IGraphService graphService, IBaseDao<CnALink,Serializable> cnaLinkDao) {
+        this.graphService = graphService;
         this.cnaLinkDao = cnaLinkDao;
     }
-
-    /*
-     * @see
-     * sernet.verinice.iso27k.service.IRiskAnalysisService#determineProbability
-     * (sernet.verinice.model.iso27k.IncidentScenario)
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.service.IRiskAnalysisService#runRiskAnalysis()
      */
     @Override
-    public void determineProbability(IncidentScenario scenario) {
+    public void runRiskAnalysis() {
+        // update asset values (business impact, CIA):
+        // done on every save, no need to do it here
+        Set<CnATreeElement> scenarios = getGraph().getElements(IncidentScenario.TYPE_ID);
+        for (CnATreeElement scenario : scenarios) {
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Determine Probability for Scenario:\t" 
+                        + scenario.getTitle());
+            }
+            determineProbability((IncidentScenario) scenario);
+        }
+     
+        Set<CnATreeElement> assets = getGraph().getElements(Asset.TYPE_ID);
+        for (CnATreeElement asset : assets) {
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Resetting Risk for Asset:\t" + asset.getTitle());
+            }
+            resetRisks((Asset) asset);
+        }
+
+        // determine risk originating from scenarios for all linked assets:
+        for (CnATreeElement scenario : scenarios) {
+            if(LOG.isDebugEnabled()){
+                LOG.debug("Determine Risk for Scenario:\t" + scenario.getTitle());
+            }            
+            try {
+                determineRisks((IncidentScenario) scenario);
+            } catch (CommandException e) {
+                LOG.error("Error while determine risk", e);
+            }
+        }
+    }
+
+    /**
+     * Determine probability for this scenario, based on threat and
+     * vulnerability.
+     *
+     * @param scenario
+     */
+    private void determineProbability(IncidentScenario scenario) {
         // get values from linked threat & vuln, only if automatic mode is activated:
-        if (scenario.getNumericProperty(PROP_SCENARIO_METHOD) == 1) {
+        if (scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_METHOD) == 1) {
             getProbabilityFromThreatAndVulnerability(scenario);
         }
 
         // calculate probability:
-        scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY, 0);
-        int myThreat = scenario.getNumericProperty(PROP_SCENARIO_THREAT_PROBABILITY);
-        int myVuln = scenario.getNumericProperty(PROP_SCENARIO_VULN_PROBABILITY);
-        scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY, myThreat + myVuln);
+        scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY, 0);
+        int myThreat = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_THREAT_PROBABILITY);
+        int myVuln = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_VULN_PROBABILITY);
+        scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY, myThreat + myVuln);
 
         // now determine probability after all applied controls:
         // init probability values to value without controls:
-        scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS, scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY));
-        scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS, scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY));
-        scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS, scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY));
+        scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS, scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY));
+        scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS, scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY));
+        scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS, scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY));
 
-        Set<CnATreeElement> controlSet = graph.getLinkTargetsByElementType(scenario, Control.TYPE_ID);
+        Set<CnATreeElement> controlSet = getGraph().getLinkTargetsByElementType(scenario, Control.TYPE_ID);
         // deduct controls from probability:
         for (CnATreeElement control : controlSet) {
             deductControlFromSzenario(scenario, control);
         }
     }
 
-    /*
-     * @see
-     * sernet.verinice.iso27k.service.IRiskAnalysisService#determineRisks(sernet
-     * .verinice.model.iso27k.IncidentScenario)
+    /** 
+     * Determine risks for linked assets from this scenario.
+     *
+     * @param scenario
+     * @throws CommandException
      */
-    @Override
-    public void determineRisks(IncidentScenario scenario) throws CommandException {
-        Set<Edge> edgesToAsset = graph.getEdgesByElementType(scenario, Asset.TYPE_ID);
+    private void determineRisks(IncidentScenario scenario) throws CommandException {
+        Set<Edge> edgesToAsset = getGraph().getEdgesByElementType(scenario, Asset.TYPE_ID);
       
         for (Edge edge : edgesToAsset) {
             determineRisk(scenario, edge);
@@ -151,159 +201,156 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
                 valueAdapter.getVertraulichkeit(), valueAdapter.getIntegritaet(),
                 valueAdapter.getVerfuegbarkeit());
 
-        if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_C) == 1) {
+        if (scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_AFFECTS_C) == 1) {
             // increase total asset risk by this combination's risk, saving
             // this individual combination's risk in the link between the
             // two objects:
             // without any controls:
             int risk = valueAdapter.getVertraulichkeit()
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
             int riskImplControls = impactWithImplementedControlsCIA[0]
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
             int riskAllControls = impactWithAllControlsCIA[0]
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
             int riskPlannedControls = impactWithAllPlannedControlsCIA[0]
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
 
             edgeToAsset.setRiskConfidentiality(risk);
             edgeToAsset.setRiskConfidentialityWithControls(riskImplControls);
 
-            asset.setNumericProperty(PROP_ASSET_RISK_C,
-                    asset.getNumericProperty(PROP_ASSET_RISK_C) + risk);
-            asset.setNumericProperty(PROP_ASSET_CONTROLRISK_C,
-                    asset.getNumericProperty(PROP_ASSET_CONTROLRISK_C) + riskImplControls);
-            asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_C,
-                    asset.getNumericProperty(PROP_ASSET_PLANCONTROLRISK_C) + riskAllControls);
-            asset.setNumericProperty(PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_C,
-                    asset.getNumericProperty(PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_C)
+            asset.setNumericProperty(Asset.ASSET_RISK_C,
+                    asset.getNumericProperty(Asset.ASSET_RISK_C) + risk);
+            asset.setNumericProperty(Asset.ASSET_CONTROLRISK_C,
+                    asset.getNumericProperty(Asset.ASSET_CONTROLRISK_C) + riskImplControls);
+            asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_C,
+                    asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_C) + riskAllControls);
+            asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C,
+                    asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C)
                             + riskPlannedControls);
         }
 
-        if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_I) == 1) {
+        if (scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_AFFECTS_I) == 1) {
             // increase total asset risk by this combination's risk
             int risk = valueAdapter.getIntegritaet()
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
             int riskImplControls = impactWithImplementedControlsCIA[1]
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
             int riskAllControls = impactWithAllControlsCIA[1]
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
             int riskPlannedControls = impactWithAllPlannedControlsCIA[1]
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
 
             edgeToAsset.setRiskIntegrity(risk);
             edgeToAsset.setRiskIntegrityWithControls(riskImplControls);
 
-            asset.setNumericProperty(PROP_ASSET_RISK_I,
-                    asset.getNumericProperty(PROP_ASSET_RISK_I) + risk);
-            asset.setNumericProperty(PROP_ASSET_CONTROLRISK_I,
-                    asset.getNumericProperty(PROP_ASSET_CONTROLRISK_I) + riskImplControls);
-            asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_I,
-                    asset.getNumericProperty(PROP_ASSET_PLANCONTROLRISK_I) + riskAllControls);
-            asset.setNumericProperty(PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_I,
-                    asset.getNumericProperty(PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_I)
+            asset.setNumericProperty(Asset.ASSET_RISK_I,
+                    asset.getNumericProperty(Asset.ASSET_RISK_I) + risk);
+            asset.setNumericProperty(Asset.ASSET_CONTROLRISK_I,
+                    asset.getNumericProperty(Asset.ASSET_CONTROLRISK_I) + riskImplControls);
+            asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_I,
+                    asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_I) + riskAllControls);
+            asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I,
+                    asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I)
                             + riskPlannedControls);
 
         }
 
-        if (scenario.getNumericProperty(PROP_SCENARIO_AFFECTS_A) == 1) {
+        if (scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_AFFECTS_A) == 1) {
             // increase total asset risk by this combination's risk
             int risk = valueAdapter.getVerfuegbarkeit()
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
             int riskImplControls = impactWithImplementedControlsCIA[2]
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
             int riskAllControls = impactWithAllControlsCIA[2]
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
             int riskPlannedControls = impactWithAllPlannedControlsCIA[2]
-                    + scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
 
             edgeToAsset.setRiskAvailability(risk);
             edgeToAsset.setRiskAvailabilityWithControls(riskImplControls);
 
-            asset.setNumericProperty(PROP_ASSET_RISK_A,
-                    asset.getNumericProperty(PROP_ASSET_RISK_A) + risk);
-            asset.setNumericProperty(PROP_ASSET_CONTROLRISK_A,
-                    asset.getNumericProperty(PROP_ASSET_CONTROLRISK_A) + riskImplControls);
-            asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_A,
-                    asset.getNumericProperty(PROP_ASSET_PLANCONTROLRISK_A) + riskAllControls);
-            asset.setNumericProperty(PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_A,
-                    asset.getNumericProperty(PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_A)
+            asset.setNumericProperty(Asset.ASSET_RISK_A,
+                    asset.getNumericProperty(Asset.ASSET_RISK_A) + risk);
+            asset.setNumericProperty(Asset.ASSET_CONTROLRISK_A,
+                    asset.getNumericProperty(Asset.ASSET_CONTROLRISK_A) + riskImplControls);
+            asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_A,
+                    asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_A) + riskAllControls);
+            asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A,
+                    asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A)
                             + riskPlannedControls);
         }
     }
 
    
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * sernet.verinice.iso27k.service.IRiskAnalysisService#resetRisks(sernet
-     * .verinice.model.iso27k.Asset)
+    /**
+     * Reset risk calculation, remove all calculated risk values in an asset.
+     * 
+     * @param asset
      */
-    @Override
-    public void resetRisks(Asset asset) {
-        asset.setNumericProperty(PROP_ASSET_RISK_C, 0);
-        asset.setNumericProperty(PROP_ASSET_RISK_I, 0);
-        asset.setNumericProperty(PROP_ASSET_RISK_A, 0);
-        asset.setNumericProperty(PROP_ASSET_CONTROLRISK_C, 0);
-        asset.setNumericProperty(PROP_ASSET_CONTROLRISK_I, 0);
-        asset.setNumericProperty(PROP_ASSET_CONTROLRISK_A, 0);
-        asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_C, 0);
-        asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_I, 0);
-        asset.setNumericProperty(PROP_ASSET_PLANCONTROLRISK_A, 0);
-        asset.setNumericProperty(PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_C, 0);
-        asset.setNumericProperty(PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_I, 0);
-        asset.setNumericProperty(PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_A, 0);
+    private void resetRisks(Asset asset) {
+        asset.setNumericProperty(Asset.ASSET_RISK_C, 0);
+        asset.setNumericProperty(Asset.ASSET_RISK_I, 0);
+        asset.setNumericProperty(Asset.ASSET_RISK_A, 0);
+        asset.setNumericProperty(Asset.ASSET_CONTROLRISK_C, 0);
+        asset.setNumericProperty(Asset.ASSET_CONTROLRISK_I, 0);
+        asset.setNumericProperty(Asset.ASSET_CONTROLRISK_A, 0);
+        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_C, 0);
+        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_I, 0);
+        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_A, 0);
+        asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C, 0);
+        asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I, 0);
+        asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A, 0);
     }
 
  
     private void getProbabilityFromThreatAndVulnerability(IncidentScenario scenario) {
         // only calculate if threat AND vulnerability is linked to scenario:     
-        Set<CnATreeElement> threatSet = graph.getLinkTargetsByElementType(scenario, Threat.TYPE_ID);
-        Set<CnATreeElement> vulnerabilitySet = graph.getLinkTargetsByElementType(scenario, Vulnerability.TYPE_ID);
+        Set<CnATreeElement> threatSet = getGraph().getLinkTargetsByElementType(scenario, Threat.TYPE_ID);
+        Set<CnATreeElement> vulnerabilitySet = getGraph().getLinkTargetsByElementType(scenario, Vulnerability.TYPE_ID);
          
         if (threatSet.size()>0 && vulnerabilitySet.size()>0) {
             int threatImpact = 0;
             for (CnATreeElement threat : threatSet) {
                 //use higher value of likelihood or impact:
-                int level1 = threat.getNumericProperty(PROP_THREAT_LIKELIHOOD);
-                int level2 = threat.getNumericProperty(PROP_THREAT_IMPACT);
+                int level1 = threat.getNumericProperty(Threat.PROP_THREAT_LIKELIHOOD);
+                int level2 = threat.getNumericProperty(Threat.PROP_THREAT_IMPACT);
                 int level = (level1 > level2) ? level1 : level2;
                 threatImpact = (level > threatImpact) ? level : threatImpact;
             }
             
             int exploitability = 0;
             for (CnATreeElement vuln : vulnerabilitySet) {
-                int level = vuln.getNumericProperty(PROP_VULNERABILITY_EXPLOITABILITY);
+                int level = vuln.getNumericProperty(Vulnerability.PROP_VULNERABILITY_EXPLOITABILITY);
                 exploitability = (level > exploitability) ? level : exploitability;
             }
             
             // set values to highest found:
-            scenario.setNumericProperty(PROP_SCENARIO_THREAT_PROBABILITY, threatImpact);
-            scenario.setNumericProperty(PROP_SCENARIO_VULN_PROBABILITY, exploitability);
+            scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_THREAT_PROBABILITY, threatImpact);
+            scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_VULN_PROBABILITY, exploitability);
         }
     }
 
     private void deductControlFromSzenario(IncidentScenario scenario, CnATreeElement control) {
-        int controlEffect = control.getNumericProperty(PROP_CONTROL_EFFECT_P);
+        int controlEffect = control.getNumericProperty(Control.PROP_CONTROL_EFFECT_P);
         int probAfterControl;
         // risk with planned controls
         probAfterControl = scenario.getNumericProperty(
-                PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS) - controlEffect;
-        scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS,
+                IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS) - controlEffect;
+        scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS,
                 probAfterControl < 0 ? 0 : probAfterControl);
         if (Control.isImplemented(control.getEntity())) {
             // risk with implemented controls
-            probAfterControl = scenario.getNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS)
+            probAfterControl = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS)
                     - controlEffect;
-            scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY_WITH_CONTROLS,
+            scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS,
                     probAfterControl < 0 ? 0 : probAfterControl);
         }
 
         if (Control.isPlanned(control.getEntity())) {
             probAfterControl = scenario.getNumericProperty(
-                    PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS) - controlEffect;
-            scenario.setNumericProperty(PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS,
+                    IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS) - controlEffect;
+            scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS,
                     probAfterControl < 0 ? 0 : probAfterControl);
         }
     }
@@ -332,27 +379,50 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
         return 0;
     }
     
-    private int getRiskColor(int risk, int tolerableRisk, int numOfYellowFields){
-        if(risk > tolerableRisk){
-            return IRiskAnalysisService.RISK_COLOR_RED;
-        } else if(risk < tolerableRisk-numOfYellowFields+1){
-            return IRiskAnalysisService.RISK_COLOR_GREEN;
-        } else {
-            return IRiskAnalysisService.RISK_COLOR_YELLOW;
-        }
-    }
+
+   
     
-    public String getColorString(int colorValue){
-        switch(colorValue){
-            case IRiskAnalysisService.RISK_COLOR_GREEN:
-                return "green";
-            case IRiskAnalysisService.RISK_COLOR_YELLOW:
-                return "yellow";
-            case IRiskAnalysisService.RISK_COLOR_RED:
-                return "red";
-            default: 
-                return "noColourDefined";
-        }
+    private VeriniceGraph loadGraph() { 
+        IGraphElementLoader loader = new GraphElementLoader();
+        loader.setTypeIds(new String[]{Asset.TYPE_ID, IncidentScenario.TYPE_ID, Control.TYPE_ID, Threat.TYPE_ID, Vulnerability.TYPE_ID});
+        getGraphService().setLoader(loader);
+        return getGraphService().create() ;          
     }
+
+    public VeriniceGraph getGraph() {
+        if(graph==null) {
+            graph = loadGraph();
+        }
+        return graph;
+    }
+
+    public void setGraph(VeriniceGraph graph) {
+        this.graph = graph;
+    }
+
+    public IBaseDao<CnALink, Serializable> getCnaLinkDao() {
+        return cnaLinkDao;
+    }
+
+    public void setCnaLinkDao(IBaseDao<CnALink, Serializable> cnaLinkDao) {
+        this.cnaLinkDao = cnaLinkDao;
+    }
+
+    public IGraphService getGraphService() {
+        return graphService;
+    }
+
+    public void setGraphService(IGraphService graphService) {
+        this.graphService = graphService;
+    }
+
+    public RiskAnalysisHelper getRiskAnalysisHelper() {
+        return riskAnalysisHelper;
+    }
+
+    public void setRiskAnalysisHelper(RiskAnalysisHelper riskAnalysisHelper) {
+        this.riskAnalysisHelper = riskAnalysisHelper;
+    }
+
 
 }

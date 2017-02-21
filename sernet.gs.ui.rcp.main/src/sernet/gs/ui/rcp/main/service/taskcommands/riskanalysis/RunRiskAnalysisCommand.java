@@ -53,7 +53,7 @@ import sernet.verinice.model.iso27k.Vulnerability;
  * $LastChangedBy$
  *
  */
-public class RunRiskAnalysisCommand extends GenericCommand implements INoAccessControl {
+public class RunRiskAnalysisCommand extends GraphCommand implements INoAccessControl {
     
     private transient Logger log = Logger.getLogger(RunRiskAnalysisCommand.class);
 
@@ -69,59 +69,11 @@ public class RunRiskAnalysisCommand extends GenericCommand implements INoAccessC
      */
     @Override
     public void execute() {      
-        IBaseDao<CnALink, Serializable> cnaLinkDao = getDaoFactory().getDAO(CnALink.class);
-        VeriniceGraph graph = loadGraph();       
-        IRiskAnalysisService ra = new RiskAnalysisServiceGraph(graph, cnaLinkDao);
-        
-        // update asset values (business impact, CIA):
-        // done on every save, no need to do it here
-        Set<CnATreeElement> scenarios = graph.getElements(IncidentScenario.TYPE_ID);
-        for (CnATreeElement scenario : scenarios) {
-            if(getLog().isDebugEnabled()){
-                getLog().debug("Determine Probability for Scenario:\t" 
-                        + scenario.getTitle());
-            }
-            ra.determineProbability((IncidentScenario) scenario);
-        }
-     
-        Set<CnATreeElement> assets = graph.getElements(Asset.TYPE_ID);
-        for (CnATreeElement asset : assets) {
-            if(getLog().isDebugEnabled()){
-                getLog().debug("Resetting Risk for Asset:\t" + asset.getTitle());
-            }
-            ra.resetRisks((Asset) asset);
-        }
-
-        // determine risk originating from scenarios for all linked assets:
-        for (CnATreeElement scenario : scenarios) {
-            if(getLog().isDebugEnabled()){
-                getLog().debug("Determine Risk for Scenario:\t" + scenario.getTitle());
-            }            
-            try {
-                ra.determineRisks((IncidentScenario) scenario);
-            } catch (CommandException e) {
-                getLog().error("Error while determine risk", e);
-            }
-        }
-        
-        
+        IBaseDao<CnALink, Serializable> cnaLinkDao = getDaoFactory().getDAO(CnALink.class);     
+        IRiskAnalysisService ra = new RiskAnalysisServiceGraph(getGraphService(), cnaLinkDao);
+        ra.runRiskAnalysis();     
     }
-
-    private VeriniceGraph loadGraph() {
-        try {
-            GraphCommand graphCommand = new GraphCommand();
-            IGraphElementLoader loader = new GraphElementLoader();
-            loader.setTypeIds(new String[]{Asset.TYPE_ID, IncidentScenario.TYPE_ID, Control.TYPE_ID, Threat.TYPE_ID, Vulnerability.TYPE_ID});
-            graphCommand.addLoader(loader);
-            graphCommand = getCommandService().executeCommand(graphCommand);      
-        return graphCommand.getGraph();
-        } catch (CommandException e) {
-            getLog().error("Error while loading graph", e);
-            throw new RuntimeCommandException(e);
-        }
-    }
-    
-   
+ 
     
 
 }
