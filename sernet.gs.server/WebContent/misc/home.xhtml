@@ -10,8 +10,8 @@
 	<ui:define name="viewname">Home</ui:define>
 
 	<ui:define name="content">
-		<div class="ui-g ui-fluid">
-			<div class="ui-g-12 ui-md-12">
+		<div class="ui-g ui-fluid dashboard">
+			<div class="ui-g-12 ui-sm-12">
 				<div class="card">
 					<h1>
 						<h:outputText escape="false"
@@ -24,25 +24,78 @@
 				</div>
 			</div>
 
-			<div class="ui-g-12 ui-md-12">
-				<div class="card">
-					<h1>
-						<h:outputText escape="false" value="#{msgWeb['index_side_head']}" />
-					</h1>
-					<p>
-						<h:outputText escape="false"
-							value="#{msgWeb['index_side_content_0']}" />
-					</p>
-					<ul>
-						<li><a
-							href="http://www.sernet.de/#{message.currentLanguageTag}/services/support/"
-							target="_blank" class="external-link-new-window">Support</a></li>
-						<li><a
-							href="https://www.sernet.de/#{message.currentLanguageTag}/services/consulting/"
-							target="_blank" class="external-link-new-window">Consulting/Audits</a></li>
-					</ul>
-				</div>
+			 <div class="ui-g-12 ui-md-4 ui-lg-4">
+                <div class="ui-g card overview-box overview-box-1">
+                    <div class="ui-g-4">
+                        <i class="fa fa-inbox"></i>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="overview-box-count">253</span>
+                        <span class="overview-box-name">Unread Messages</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-4 ui-lg-4">
+                <div class="ui-g card overview-box overview-box-2">
+                    <div class="ui-g-4">
+                        <i class="fa fa-map-marker"></i>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="overview-box-count">3216</span>
+                        <span class="overview-box-name">Check-ins</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-4 ui-lg-4">
+                <div class="ui-g card overview-box overview-box-3">
+                    <div class="ui-g-4">
+                        <i class="fa fa-cloud"></i>
+                    </div>
+                    <div class="ui-g-8">
+                        <span class="overview-box-count">428</span>
+                        <span class="overview-box-name">Files Synced</span>
+                    </div>
+                </div>
+            </div>
+
+
+			<div class="ui-g-4 ui-sm-12">
+				<p:panel header="Downloads" style="min-height: 200px">
+					<p:menu>
+						<p:menuitem url="/files/verinice-win-64.zip"
+							icon="fa fa-fw fa-windows" value="verinice (Windows, 64 bit)" />
+						<p:menuitem url="/files/verinice-win-32.zip"
+							icon="fa fa-fw fa-windows" value="verinice (Windows, 32 bit)" />
+						<p:menuitem url="/files/verinice-linux-64.zip"
+							icon="fa fa-fw fa-linux" value="verinice (Linux, 64 bit)" />
+						<p:menuitem url="/files/verinice-linux-32.zip"
+							icon="fa fa-fw fa-linux	" value="verinice (Linux, 32 bit)" />
+					</p:menu>
+				</p:panel>
 			</div>
+			<div class="ui-g-4 ui-sm-12">
+				<p:panel header="Support" style="min-height: 200px">
+					<p:menu>
+						<p:menuitem
+							url="http://www.sernet.de/#{message.currentLanguageTag}/services/support/"
+							value="Technical support" icon="fa fa-fw fa-external-link" />
+						<p:menuitem
+							url="https://www.sernet.de/#{message.currentLanguageTag}/services/consulting/"
+							value="Consulting/Audits" icon="fa fa-fw fa-external-link" />
+					</p:menu>
+				</p:panel>
+			</div>
+			<div class="ui-g-4 ui-sm-12" >
+				<p:panel header="#{msgWeb['manual_head']}" style="min-height: 200px">
+					<p:menu>
+						<p:menuitem icon="fa fa-fw fa-file-pdf-o" value="User Guide (PDF)"
+							url="/files/verinice-user-guide-en.pdf" />
+						<p:menuitem icon="fa fa-fw fa-code" value="User Guide (HTML)"
+							url="/doc/verinice-user-guide" />
+					</p:menu>
+				</p:panel>
+			</div>
+
 		</div>
 	</ui:define>
 
