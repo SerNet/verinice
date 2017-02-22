@@ -9,46 +9,32 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:vn="http://www.verinice.org/taglib">
 <ui:composition>
-	<div class="ui-g ui-fluid">
-		<h:form id="editForm" rendered="#{rendered}">
+	<h:form id="editForm" rendered="#{rendered}">
 
-			<p:remoteCommand name="loadLinks" actionListener="#{link.init}"
-				update="editForm:groupAccordion:linkPanel" />
+		<p:remoteCommand name="loadLinks" actionListener="#{link.init}"
+			update="editForm:groupAccordion:linkPanel" />
 
-			<p:outputPanel id="editPanel" rendered="#{edit.element!=null}">
-				<div class="ui-g-12">
-					<h1>
-
-						<h:outputText value="#{edit.title}" />
-					</h1>
+		<p:panel header="#{edit.title}" rendered="#{edit.element!=null}">
+			<p:outputPanel styleClass="ui-g #{getSaveButtonClass}">
+				<p:remoteCommand name="submitEditForm" process="@form"
+					update=":editForm :tableForm :navForm" action="#{edit.save}" />
+				<div class="ui-g-4">
+					<p:commandButton id="submit" value="#{msgEdit['save']}"
+						action="#{edit.save}" styleClass="button"
+						update=":editForm :tableForm" />
 				</div>
-
-				<p:outputPanel styleClass="#{edit.saveButtonClass}">
+				<ui:repeat value="#{edit.actionHandler}" var="actionHandler">
 					<div class="ui-g-4">
-
-						<p:commandButton id="submit" value="#{msgEdit['save']}"
-							action="#{edit.save}" styleClass="button"
+						<p:commandButton action="#{actionHandler.execute}"
+							value="#{actionHandler.label}" oncomplete="loadLinks();"
 							update=":editForm :tableForm" />
 					</div>
-					<ui:repeat value="#{edit.actionHandler}" var="actionHandler">
-						<div class="ui-g-4">
-							<p:commandButton action="#{actionHandler.execute}"
-								value="#{actionHandler.label}" oncomplete="loadLinks();"
-								update=":editForm :tableForm" />
-						</div>
-					</ui:repeat>
-					<div class="ui-g-4">
-						<p:remoteCommand name="submitEditForm" process="@form"
-							update=":editForm :tableForm :navForm" action="#{edit.save}" />
-					</div>
-				</p:outputPanel>
+				</ui:repeat>
+			</p:outputPanel>
 
+
+			<div class="ui-g">
 				<div class="ui-g-12">
-					<p:panel header="#{msgEdit['description']}" collapsed="true"
-						toggleable="true" toggleSpeed="50" style="margin-top: 3px"
-						rendered="#{edit.massnahmenUmsetzung!=null}">
-						<h:outputText value="#{edit.massnahmeHtml}" escape="false" />
-					</p:panel>
 					<p:accordionPanel id="groupAccordion" style="margin-top:20px">
 						<p:tab title="#{msgEdit['general']}">
 							<vn:pprops list="#{edit.labelPropertyList}"
@@ -169,8 +155,8 @@
 						</p:tab>
 					</p:accordionPanel>
 				</div>
-			</p:outputPanel>
-		</h:form>
-	</div>
+			</div>
+		</p:panel>
+	</h:form>
 </ui:composition>
 </html>
