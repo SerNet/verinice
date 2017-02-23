@@ -23,10 +23,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.RuntimeCommandException;
+import sernet.gs.service.TimeFormatter;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
@@ -56,6 +55,7 @@ import sernet.verinice.service.commands.RetrieveCnATreeElement;
 public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
     
     private static final transient Logger LOG = Logger.getLogger(RiskAnalysisServiceGraph.class);
+    private static final Logger LOG_RUNTIME = Logger.getLogger(RiskAnalysisServiceGraph.class.getName() + ".runtime");
 
     private VeriniceGraph graph;
     
@@ -81,9 +81,13 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
      */
     @Override
     public void runRiskAnalysis() {
+        long time = initRuntime();
         // update asset values (business impact, CIA):
         // done on every save, no need to do it here
         Set<CnATreeElement> scenarios = getGraph().getElements(IncidentScenario.TYPE_ID);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Number of scenarios: " + scenarios.size());
+        }
         for (CnATreeElement scenario : scenarios) {
             if(LOG.isDebugEnabled()){
                 LOG.debug("Determine Probability for Scenario:\t" 
@@ -93,6 +97,9 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
         }
      
         Set<CnATreeElement> assets = getGraph().getElements(Asset.TYPE_ID);
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Number of assets: " + assets.size());
+        }
         for (CnATreeElement asset : assets) {
             if(LOG.isDebugEnabled()){
                 LOG.debug("Resetting Risk for Asset:\t" + asset.getTitle());
@@ -111,6 +118,7 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
                 LOG.error("Error while determine risk", e);
             }
         }
+        logRuntime("runRiskAnalysis() runtime : ", time);
     }
 
     /**
@@ -156,11 +164,15 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
         for (Edge edge : edgesToAsset) {
             determineRisk(scenario, edge);
         }  
-    
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Number of links from scenarios to assets: " + edgesToAsset.size());
+        }
+        long time = initRuntime();
         // Update cnalinks
         for (Edge edge : edgesToAsset) {
             saveLink(edge);
         }
+        logRuntime("Updating links from scenarios to assets runtime : ", time);
     }
     
     private void saveLink(Edge edge) {
@@ -422,6 +434,18 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
 
     public void setRiskAnalysisHelper(RiskAnalysisHelper riskAnalysisHelper) {
         this.riskAnalysisHelper = riskAnalysisHelper;
+    }
+    
+    private long initRuntime() {
+        long time = 0;
+        if (LOG_RUNTIME.isDebugEnabled()) {
+            time = System.currentTimeMillis();
+        }
+        return time;
+    }
+    
+    private void logRuntime(String message, long starttime) {
+        LOG_RUNTIME.debug(message + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-starttime));
     }
 
 

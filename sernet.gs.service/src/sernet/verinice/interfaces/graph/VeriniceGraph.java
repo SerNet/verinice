@@ -376,7 +376,7 @@ public class VeriniceGraph implements Serializable {
                     if (target.equals(element)) {
                         target = edge.getSource();
                     }
-                    getLog().debug("  |-" + edge.getType() + " -> " + target.getTitle());
+                    getLog().debug("  |-" + edge.getType() + "-> " + target.getTitle());
                 }
             }
         }

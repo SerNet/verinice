@@ -18,31 +18,15 @@
 package sernet.gs.ui.rcp.main.service.taskcommands.riskanalysis;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.RetrieveInfo;
-import sernet.gs.service.RuntimeCommandException;
-import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.INoAccessControl;
-import sernet.verinice.interfaces.graph.GraphElementLoader;
-import sernet.verinice.interfaces.graph.IGraphElementLoader;
-import sernet.verinice.interfaces.graph.IGraphService;
-import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.iso27k.service.IRiskAnalysisService;
 import sernet.verinice.iso27k.service.RiskAnalysisServiceGraph;
 import sernet.verinice.model.common.CnALink;
-import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.model.iso27k.Control;
-import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.Threat;
-import sernet.verinice.model.iso27k.Vulnerability;
 
 /**
  * 
@@ -73,8 +57,6 @@ public class RunRiskAnalysisCommand extends GraphCommand implements INoAccessCon
         IRiskAnalysisService ra = new RiskAnalysisServiceGraph(getGraphService(), cnaLinkDao);
         ra.runRiskAnalysis();     
     }
- 
-    
 
 }
 
