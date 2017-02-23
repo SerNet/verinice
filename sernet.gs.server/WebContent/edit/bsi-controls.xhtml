@@ -12,95 +12,91 @@
 <ui:composition template="/WEB-INF/poseidon/template.xhtml">
 	<ui:define name="content">
 		<div class="ui-g ui-fluid">
-			<div class="ui-g-2">
-				<div class="card">
+			<div class="ui-g-12">
+				<p:panel header="Filter" toggleable="true">
 					<h:form id="verbundForm" rendered="#{auth.bsiTasks}">
-						<h1>
-							<h:outputText value="#{msg['todo.groups']}" />
-						</h1>
-						<ul id="listLeftNavi">
-							<ui:repeat id="itVerbundList"
-								value="#{assetNavigation.itVerbundList}" var="itVerbund">
-								<li id="liLeftNavi"
-									class="#{itVerbund.dbId==assetNavigation.selectedItVerbund.dbId ? 'selected' : 'normal'}">
-									<p:commandLink value="#{itVerbund.title}"
-										actionListener="#{toDo.loadToDoListForVerbund}"
-										update=":verbundForm,:elementsForm,:tablePanel,:editPanel"
-										styleClass="#{itVerbund.dbId==assetNavigation.selectedItVerbund.dbId ? 'selected' : 'normal'}">
-										<f:param name="itVerbundTitle"
-											value="#{itVerbund.titleEscaped}" />
-									</p:commandLink>
-								</li>
-							</ui:repeat>
-						</ul>
-						<h1>
-							<h:outputText value="#{msg['todo.realization']}" />
-						</h1>
-						<ul id="listLeftNavi">
-							<!-- Grundschutz -->
-							<li id="liLeftNavi"><h:selectBooleanCheckbox
-									id="executionNo" value="#{toDo.executionNo}">
-									<p:ajax event="change" listener="#{toDo.loadToDoList}"
-										process="executionNo" />
-								</h:selectBooleanCheckbox> <h:outputLabel for="executionNo" value="#{msg['todo.no']}" /></li>
-							<li id="liLeftNavi"><h:selectBooleanCheckbox
-									id="executionYes" value="#{toDo.executionYes}">
-									<p:ajax event="change" listener="#{toDo.loadToDoList}"
-										update=":tablePanel,:editPanel" process="executionYes" />
-								</h:selectBooleanCheckbox> <h:outputLabel for="executionYes" value="#{msg['todo.yes']}" /></li>
-							<li id="liLeftNavi"><h:selectBooleanCheckbox
-									id="executionPartly" value="#{toDo.executionPartly}">
-									<p:ajax event="change" listener="#{toDo.loadToDoList}"
-										update=":tablePanel,:editPanel" process="executionPartly" />
-								</h:selectBooleanCheckbox> <h:outputLabel for="executionPartly"
-									value="#{msg['todo.partly']}" /></li>
-							<li id="liLeftNavi"><h:selectBooleanCheckbox
-									id="executionDispensable" value="#{toDo.executionDispensable}">
-									<p:ajax event="change" listener="#{toDo.loadToDoList}"
-										update=":tablePanel,:editPanel" process="executionDispensable" />
-								</h:selectBooleanCheckbox> <h:outputLabel for="executionDispensable"
-									value="#{msg['todo.superfluous']}" /></li>
-							<li id="liLeftNavi"><h:selectBooleanCheckbox
-									id="executionUntreated" value="#{toDo.executionUntreated}">
-									<p:ajax event="change" listener="#{toDo.loadToDoList}"
-										update=":tablePanel,:editPanel" process="executionUntreated" />
-								</h:selectBooleanCheckbox> <h:outputLabel for="executionUntreated"
-									value="#{msg['todo.untreated']}" /></li>
-						</ul>
-						<h1>
-							<h:outputText value="#{msg['todo.seal']}" />
-						</h1>
-						<ul id="listLeftNavi">
-							<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealA"
-									value="#{toDo.sealA}">
-									<p:ajax event="change" listener="#{toDo.loadToDoList}"
-										update=":tablePanel,:editPanel" process="sealA" />
-								</h:selectBooleanCheckbox> <h:outputLabel for="sealA" value="A" /></li>
-							<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealB"
-									value="#{toDo.sealB}">
-									<p:ajax event="change" listener="#{toDo.loadToDoList}"
-										update=":tablePanel,:editPanel" process="sealB" />
-								</h:selectBooleanCheckbox> <h:outputLabel for="sealB" value="B" /></li>
-							<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealC"
-									value="#{toDo.sealC}">
-									<p:ajax event="change" listener="#{toDo.loadToDoList}"
-										update=":tablePanel,:editPanel" process="sealC" />
-								</h:selectBooleanCheckbox> <h:outputLabel for="sealC" value="C" /></li>
-							<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealZ"
-									value="#{toDo.sealZ}">
-									<p:ajax event="change" listener="#{toDo.loadToDoList}"
-										update=":tablePanel,:editPanel" process="sealZ" />
-								</h:selectBooleanCheckbox> <h:outputLabel for="sealZ" value="Z" /></li>
-						</ul>
+
+						<div class="ui-g">
+							<div class="ui-g-4">
+								<h1>#{msg['todo.groups']}</h1>
+								<p:selectOneMenu id="car"
+									value="#{assetNavigation.itVerbundItem}">
+									<p:ajax event="change"
+										update="verbundForm,:elementsForm,:tablePanel,:editPanel"
+										listener="#{toDo.loadToDosForItNetworkItem}" process="@this" />
+									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItems value="#{assetNavigation.itVerbundItems}" />
+								</p:selectOneMenu>
+							</div>
+							<div class="ui-g-4">
+								<h1>#{msg['todo.realization']}</h1>
+								<ul id="listLeftNavi">
+									<!-- Grundschutz -->
+									<li id="liLeftNavi"><h:selectBooleanCheckbox
+											id="executionNo" value="#{toDo.executionNo}">
+											<p:ajax event="change" listener="#{toDo.loadToDoList}"
+												process="executionNo" />
+										</h:selectBooleanCheckbox> <h:outputLabel for="executionNo" value="#{msg['todo.no']}" /></li>
+									<li id="liLeftNavi"><h:selectBooleanCheckbox
+											id="executionYes" value="#{toDo.executionYes}">
+											<p:ajax event="change" listener="#{toDo.loadToDoList}"
+												update=":tablePanel,:editPanel" process="executionYes" />
+										</h:selectBooleanCheckbox> <h:outputLabel for="executionYes" value="#{msg['todo.yes']}" /></li>
+									<li id="liLeftNavi"><h:selectBooleanCheckbox
+											id="executionPartly" value="#{toDo.executionPartly}">
+											<p:ajax event="change" listener="#{toDo.loadToDoList}"
+												update=":tablePanel,:editPanel" process="executionPartly" />
+										</h:selectBooleanCheckbox> <h:outputLabel for="executionPartly"
+											value="#{msg['todo.partly']}" /></li>
+									<li id="liLeftNavi"><h:selectBooleanCheckbox
+											id="executionDispensable"
+											value="#{toDo.executionDispensable}">
+											<p:ajax event="change" listener="#{toDo.loadToDoList}"
+												update=":tablePanel,:editPanel"
+												process="executionDispensable" />
+										</h:selectBooleanCheckbox> <h:outputLabel for="executionDispensable"
+											value="#{msg['todo.superfluous']}" /></li>
+									<li id="liLeftNavi"><h:selectBooleanCheckbox
+											id="executionUntreated" value="#{toDo.executionUntreated}">
+											<p:ajax event="change" listener="#{toDo.loadToDoList}"
+												update=":tablePanel,:editPanel" process="executionUntreated" />
+										</h:selectBooleanCheckbox> <h:outputLabel for="executionUntreated"
+											value="#{msg['todo.untreated']}" /></li>
+								</ul>
+							</div>
+							<div class="ui-g-4">
+								<h1>
+									<h:outputText value="#{msg['todo.seal']}" />
+								</h1>
+								<ul id="listLeftNavi">
+									<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealA"
+											value="#{toDo.sealA}">
+											<p:ajax event="change" listener="#{toDo.loadToDoList}"
+												update=":tablePanel,:editPanel" process="sealA" />
+										</h:selectBooleanCheckbox> <h:outputLabel for="sealA" value="A" /></li>
+									<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealB"
+											value="#{toDo.sealB}">
+											<p:ajax event="change" listener="#{toDo.loadToDoList}"
+												update=":tablePanel,:editPanel" process="sealB" />
+										</h:selectBooleanCheckbox> <h:outputLabel for="sealB" value="B" /></li>
+									<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealC"
+											value="#{toDo.sealC}">
+											<p:ajax event="change" listener="#{toDo.loadToDoList}"
+												update=":tablePanel,:editPanel" process="sealC" />
+										</h:selectBooleanCheckbox> <h:outputLabel for="sealC" value="C" /></li>
+									<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealZ"
+											value="#{toDo.sealZ}">
+											<p:ajax event="change" listener="#{toDo.loadToDoList}"
+												update=":tablePanel,:editPanel" process="sealZ" />
+										</h:selectBooleanCheckbox> <h:outputLabel for="sealZ" value="Z" /></li>
+								</ul>
+							</div>
+						</div>
 					</h:form>
-				</div>
+				</p:panel>
 			</div>
-			<div class="ui-g-2">
-				<div class="card">
-					<h1 class="csc-firstHeader">
-						<h:outputText value="#{msg['todo.assets']}"
-							rendered="#{auth.bsiTasks}" />
-					</h1>
+			<div class="ui-g-3">
+				<p:panel header="#{msg['todo.assets']}" rendered="#{auth.bsiTasks}">
 					<h:form id="elementsForm" rendered="#{auth.bsiTasks}">
 						<p:accordionPanel id="elementPanel"
 							style="background-color: #ffffff;">
@@ -259,18 +255,11 @@
 							</p:tab>
 						</p:accordionPanel>
 					</h:form>
-				</div>
+				</p:panel>
 			</div>
-			<div class="ui-g-8">
-				<div class="card">
+			<div class="ui-g-9">
+				<p:dialog widgetVar="editDialog" modal="true" header="#{msg['todo.measure']} #{toDo.massnahmeUmsetzung.title}">
 					<p:outputPanel id="editPanel">
-						<p:outputPanel id="editHeader"
-							rendered="#{toDo.massnahmeUmsetzung!=null and auth.bsiTasks}">
-							<h1 class="csc-firstHeader">
-								<h:outputText
-									value="#{msg['todo.measure']} #{toDo.massnahmeUmsetzung.title}" />
-							</h1>
-						</p:outputPanel>
 						<h:form id="editForm"
 							rendered="#{toDo.massnahmeUmsetzung!=null and auth.bsiTasks}">
 							<table id="editTable">
@@ -327,51 +316,48 @@
 							</p:outputPanel>
 						</h:form>
 					</p:outputPanel>
-					<p:outputPanel id="tablePanel">
-						<h1 class="csc-firstHeader">
-							<h:outputText
-								value="#{msg['todo.measures']} - #{assetNavigation.selectedItVerbundTitel}"
-								rendered="#{auth.bsiTasks}" />
-						</h1>
-						<h:form id="tableForm" rendered="#{auth.bsiTasks}">
-							<p:dataTable id="toDoTable" var="item" value="#{toDo.todoList}"
-								rowKey="#{item.dbId}" selection="#{toDo.selectedItem}"
-								selectionMode="single" scrollable="true" scrollHeight="500"
-								resizableColumns="true" rendered="#{!empty toDo.todoList}">
-								<p:ajax event="rowSelect" listener="#{toDo.loadToDo}"
-									update=":editPanel" />
-								<p:column sortBy="#{item.umsetzung}" style="width:25px">
-									<h:graphicImage id="colUmsetzungImage"
-										url="/image/icon/#{item.umsetzungIcon}" />
-								</p:column>
-								<p:column headerText="#{msg['todo.until']}"
-									sortBy="#{item.umsetzungBis}" style="width:55px">
-									<h:outputText id="colUmsetzungBisText"
-										value="#{item.umsetzungBis}">
-										<f:convertDateTime dateStyle="short" type="date"
-											timeZone="#{toDo.timeZone}" />
-									</h:outputText>
-								</p:column>
-								<p:column headerText="#{msg['todo.responsible']}"
-									sortBy="#{item.umsetzungDurch}" style="width:105px">
-									<h:outputText value="#{item.umsetzungDurch}" />
-								</p:column>
-								<p:column headerText="#{msg['todo.level']}"
-									sortBy="#{item.stufe}" style="width:55px">
-									<h:outputText value="#{item.stufe}" />
-								</p:column>
-								<p:column headerText="#{msg['todo.asset']}"
-									sortBy="#{item.parentTitle}" style="width:120px">
-									<h:outputText value="#{item.parentTitle}" />
-								</p:column>
-								<p:column headerText="#{msg['todo.title']}"
-									sortBy="#{item.title}" style="width:260px">
-									<h:outputText value="#{item.title}" />
-								</p:column>
-							</p:dataTable>
-						</h:form>
-					</p:outputPanel>
-				</div>
+				</p:dialog>
+				<p:panel
+					header="#{msg['todo.measures']} - #{assetNavigation.selectedItVerbundTitel}"
+					id="tablePanel" rendered="#{auth.bsiTasks}">
+					<h:form id="tableForm" rendered="#{auth.bsiTasks}">
+						<p:dataTable id="toDoTable" var="item" value="#{toDo.todoList}"
+							rowKey="#{item.dbId}" selection="#{toDo.selectedItem}"
+							selectionMode="single" scrollable="true" scrollHeight="500"
+							resizableColumns="true" rendered="#{!empty toDo.todoList}">
+							<p:ajax event="rowSelect" listener="#{toDo.loadToDo}"
+								oncomplete="PF('editDialog').show();" update="editPanel" />
+							<p:column sortBy="#{item.umsetzung}" style="width:25px">
+								<h:graphicImage id="colUmsetzungImage"
+									url="/image/icon/#{item.umsetzungIcon}" />
+							</p:column>
+							<p:column headerText="#{msg['todo.until']}"
+								sortBy="#{item.umsetzungBis}" style="width:55px">
+								<h:outputText id="colUmsetzungBisText"
+									value="#{item.umsetzungBis}">
+									<f:convertDateTime dateStyle="short" type="date"
+										timeZone="#{toDo.timeZone}" />
+								</h:outputText>
+							</p:column>
+							<p:column headerText="#{msg['todo.responsible']}"
+								sortBy="#{item.umsetzungDurch}" style="width:105px">
+								<h:outputText value="#{item.umsetzungDurch}" />
+							</p:column>
+							<p:column headerText="#{msg['todo.level']}"
+								sortBy="#{item.stufe}" style="width:55px">
+								<h:outputText value="#{item.stufe}" />
+							</p:column>
+							<p:column headerText="#{msg['todo.asset']}"
+								sortBy="#{item.parentTitle}" style="width:120px">
+								<h:outputText value="#{item.parentTitle}" />
+							</p:column>
+							<p:column headerText="#{msg['todo.title']}"
+								sortBy="#{item.title}" style="width:260px">
+								<h:outputText value="#{item.title}" />
+							</p:column>
+						</p:dataTable>
+					</h:form>
+				</p:panel>
 			</div>
 		</div>
 	</ui:define>

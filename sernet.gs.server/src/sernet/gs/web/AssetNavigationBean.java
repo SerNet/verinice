@@ -57,9 +57,9 @@ public class AssetNavigationBean {
 	
 	private List<ItVerbundWrapper> itVerbundList;
 	
-	private SelectItem itVerbundItem;
+	private String itVerbundItem;
 
-	private List<SelectItem> itVerbundItems;
+	private List<String> itVerbundItems;
 
 	private ITVerbund selectedItVerbund;
 	
@@ -95,7 +95,7 @@ public class AssetNavigationBean {
 
 			itVerbundItems = new ArrayList<>();
 			for(ITVerbund itNetworks : command.getElements()){
-			    itVerbundItems.add(new SelectItem(itNetworks.getTitle()));
+			    itVerbundItems.add(itNetworks.getTitle());
 			}
 
 		} catch (Exception e) {
@@ -260,19 +260,19 @@ public class AssetNavigationBean {
         this.sonstItList = sonstItList;
     }
 
-    public SelectItem getItVerbundItem() {
+    public String getItVerbundItem() {
         return itVerbundItem;
     }
 
-    public void setItVerbundItem(SelectItem itVerbundItem) {
+    public void setItVerbundItem(String itVerbundItem) {
         this.itVerbundItem = itVerbundItem;
     }
 
-    public List<SelectItem> getItVerbundItems() {
+    public List<String> getItVerbundItems() {
         return itVerbundItems;
     }
 
-    public void setItVerbundItems(List<SelectItem> itVerbundItems) {
+    public void setItVerbundItems(List<String> itVerbundItems) {
         this.itVerbundItems = itVerbundItems;
     }
 }
