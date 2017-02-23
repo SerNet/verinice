@@ -24,6 +24,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.convert.Converter;
+import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 
@@ -56,6 +57,10 @@ public class AssetNavigationBean {
 	
 	private List<ItVerbundWrapper> itVerbundList;
 	
+	private SelectItem itVerbundItem;
+
+	private List<SelectItem> itVerbundItems;
+
 	private ITVerbund selectedItVerbund;
 	
 	private Converter itVerbundConverter = new ItVerbundConverter(this);
@@ -87,6 +92,12 @@ public class AssetNavigationBean {
 		try {
 			service.executeCommand(command);
 			setItVerbundList(getWrapperList(command.getElements()));
+
+			itVerbundItems = new ArrayList<>();
+			for(ITVerbund itNetworks : command.getElements()){
+			    itVerbundItems.add(new SelectItem(itNetworks.getTitle()));
+			}
+
 		} catch (Exception e) {
 			LOG.error("Error while loading IT-Verbuende", e);
 			Util.addError("verbundForm", Util.getMessage("error"));
@@ -247,5 +258,21 @@ public class AssetNavigationBean {
 
     public void setSonstItList(List<CnATreeElement> sonstItList) {
         this.sonstItList = sonstItList;
+    }
+
+    public SelectItem getItVerbundItem() {
+        return itVerbundItem;
+    }
+
+    public void setItVerbundItem(SelectItem itVerbundItem) {
+        this.itVerbundItem = itVerbundItem;
+    }
+
+    public List<SelectItem> getItVerbundItems() {
+        return itVerbundItems;
+    }
+
+    public void setItVerbundItems(List<SelectItem> itVerbundItems) {
+        this.itVerbundItems = itVerbundItems;
     }
 }

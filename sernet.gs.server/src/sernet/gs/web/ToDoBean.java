@@ -30,6 +30,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
+import javax.faces.event.ActionEvent;
 
 import org.apache.log4j.Logger;
 
@@ -133,6 +134,14 @@ public class ToDoBean {
 		loadToDoList(AssetNavigationBean.SOURCE_VERBUND);
 	}
 	
+	public void loadToDosForItNetworkItem() {
+        String title = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itVerbundTitle");
+        if(title!=null) {
+            getAssetNavigation().setSelectedItVerbundTitel(title);
+        }
+        loadToDoList(AssetNavigationBean.SOURCE_VERBUND);
+    }
+
 	public void loadToDoListForElement() {
 	    String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itemId");
 	    if(id!=null) {
