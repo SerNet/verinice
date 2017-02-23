@@ -73,17 +73,16 @@
 		<div class="ui-g ui-fluid">
 
 			<div class="ui-g-12 ui-md-6">
-				<div class="card card-w-title">
-					<h:form id="tableForm" rendered="#{auth.isoElements}">
+				<h:form id="tableForm" rendered="#{auth.isoElements}">
+					<p:panel header="Organizations">
 						<p:dataTable id="elementTable" var="item" value="#{tree.children}"
 							rowKey="#{item.element.dbId}"
 							selection="#{tree.elementInformation}" selectionMode="single"
 							scrollable="true" resizableColumns="true"
-							rendered="#{!empty tree.children}"
-							styleClass="veriniceElementTable">
+							rendered="#{!empty tree.children}">
 
-							<p:ajax event="rowSelect"
-								listener="#{tree.openElement}" ajax="true"
+							<p:ajax event="rowSelect" listener="#{tree.openElement}"
+								ajax="true"
 								update=":tableForm,:navForm,:editForm,:navForm:newPanel" />
 
 
@@ -117,14 +116,12 @@
 								value="Reload!"
 								rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}" />
 						</p:dialog>
-					</h:form>
-				</div>
+					</p:panel>
+				</h:form>
 			</div>
 
 			<div class="ui-g-12 ui-md-6">
-				<div class="card card-w-title">
-					<vn:editor rendered="#{auth.isoElements}" />
-				</div>
+				<vn:editor rendered="#{auth.isoElements}" />
 			</div>
 		</div>
 	</ui:define>
