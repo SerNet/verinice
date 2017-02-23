@@ -52,10 +52,10 @@ import sernet.verinice.service.commands.RetrieveCnATreeElement;
  * @author koderman@sernet.de
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  */
-public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
+public class RiskAnalysisServiceImpl implements RiskAnalysisService {
     
-    private static final transient Logger LOG = Logger.getLogger(RiskAnalysisServiceGraph.class);
-    private static final Logger LOG_RUNTIME = Logger.getLogger(RiskAnalysisServiceGraph.class.getName() + ".runtime");
+    private static final transient Logger LOG = Logger.getLogger(RiskAnalysisServiceImpl.class);
+    private static final Logger LOG_RUNTIME = Logger.getLogger(RiskAnalysisServiceImpl.class.getName() + ".runtime");
 
     private VeriniceGraph graph;
     
@@ -67,17 +67,17 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
      * The service needs a VeriniceGraph and a IBaseDao<CnALink, Serializable>
      * to run.
      */
-    public RiskAnalysisServiceGraph() {
+    public RiskAnalysisServiceImpl() {
         super();
     }
     
-    public RiskAnalysisServiceGraph(IGraphService graphService, IBaseDao<CnALink,Serializable> cnaLinkDao) {
+    public RiskAnalysisServiceImpl(IGraphService graphService, IBaseDao<CnALink,Serializable> cnaLinkDao) {
         this.graphService = graphService;
         this.cnaLinkDao = cnaLinkDao;
     }
     
     /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.service.IRiskAnalysisService#runRiskAnalysis()
+     * @see sernet.verinice.iso27k.service.RiskAnalysisService#runRiskAnalysis()
      */
     @Override
     public void runRiskAnalysis() {
@@ -199,17 +199,17 @@ public class RiskAnalysisServiceGraph implements IRiskAnalysisService {
 
         // get reduced impact of asset:
         Integer[] impactWithImplementedControlsCIA = riskAnalysisHelper.applyControlsToImpact(
-                IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset,
+                RiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset,
                 valueAdapter.getVertraulichkeit(), valueAdapter.getIntegritaet(),
                 valueAdapter.getVerfuegbarkeit());
 
         Integer[] impactWithAllControlsCIA = riskAnalysisHelper.applyControlsToImpact(
-                IRiskAnalysisService.RISK_WITH_ALL_CONTROLS, asset,
+                RiskAnalysisService.RISK_WITH_ALL_CONTROLS, asset,
                 valueAdapter.getVertraulichkeit(), valueAdapter.getIntegritaet(),
                 valueAdapter.getVerfuegbarkeit());
 
         Integer[] impactWithAllPlannedControlsCIA = riskAnalysisHelper.applyControlsToImpact(
-                IRiskAnalysisService.RISK_WITHOUT_NA_CONTROLS, asset,
+                RiskAnalysisService.RISK_WITHOUT_NA_CONTROLS, asset,
                 valueAdapter.getVertraulichkeit(), valueAdapter.getIntegritaet(),
                 valueAdapter.getVerfuegbarkeit());
 

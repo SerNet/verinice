@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.GraphCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.INoAccessControl;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceGraph;
+import sernet.verinice.iso27k.service.RiskAnalysisService;
+import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
 import sernet.verinice.model.common.CnALink;
 
 /**
@@ -54,7 +54,7 @@ public class RunRiskAnalysisCommand extends GraphCommand implements INoAccessCon
     @Override
     public void execute() {      
         IBaseDao<CnALink, Serializable> cnaLinkDao = getDaoFactory().getDAO(CnALink.class);     
-        IRiskAnalysisService ra = new RiskAnalysisServiceGraph(getGraphService(), cnaLinkDao);
+        RiskAnalysisService ra = new RiskAnalysisServiceImpl(getGraphService(), cnaLinkDao);
         ra.runRiskAnalysis();     
     }
 

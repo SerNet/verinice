@@ -26,7 +26,7 @@ import sernet.verinice.model.common.CnATreeElement;
  * Helper interface for executing a risk analysis.
  * 
  * The methods "applyControlsToImpact" and "getRiskColor" were moved from
- * interface IRiskAnalysisService to this interface during a refactoring 
+ * interface RiskAnalysisService to this interface during a refactoring 
  * of the risk analysis service.
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>

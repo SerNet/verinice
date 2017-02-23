@@ -67,12 +67,14 @@ package sernet.verinice.iso27k.service;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  * @author Daniel Murygin <dm@sernet.de>
  */
-public interface IRiskAnalysisService {
+public interface RiskAnalysisService {
 
     int RISK_WITH_IMPLEMENTED_CONTROLS = 1; 
     int RISK_WITH_ALL_CONTROLS = 2; 
     int RISK_WITHOUT_NA_CONTROLS = 3;
     
     void runRiskAnalysis();
+    
+    // void runRiskAnalysis(Long);
 
 }
