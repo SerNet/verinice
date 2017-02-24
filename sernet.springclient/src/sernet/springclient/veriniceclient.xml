@@ -1,341 +1,345 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	 http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" >
-<!-- 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+    <!--  -->
+    <!-- Sprint configuration of the verinice Client -->
+    <!--  -->
+    <bean class="sernet.gs.ui.rcp.main.ClientPropertyPlaceholderConfigurer" />
 
-All of the Spring vodoo goes on in here. 
+    <bean id="executerFactory" class="sernet.springclient.ExecuterFactoryBean">
+        <!-- Request-timeout in millisecond (ms), 24h = 24*60*60*1000 = 86400000 -->
+        <property name="readTimeout" value="86400000" />
+        <!-- Connection-timeout in millisecond (ms), 10s = 10000 -->
+        <property name="connectionTimeout" value="10000" />
+    </bean>
 
-This variant:
-	Wiring for remote service access using spring http invoker proxy from the RCP client.
-
-IST NICHT FÜR DER GEFINGERPOKEN UND MITTENGRABEN! ODERWISE IST EASY TO SCHNAPPEN DER SPRINGENWERK,
-BLOWENFUSEN UND POPPENCORKEN MIT SPITZENSPARKSEN.
-IST NICHT FÜR GEWERKEN BEI DUMMKOPFEN. DER RUBBERNECKEN SIGHTSEEREN KEEPEN DAS COTTONPICKEN 
-HÄNDER IN DAS POCKETS MUSS.
-ZO RELAXEN UND WATSCHEN DER BLINKENLIGHTS.
-
--->
-
-	<!--
-		This bean causes a programmatically controlled keyword replacement being active
-		for this configuration.
-	-->
-	<bean class="sernet.gs.ui.rcp.main.ClientPropertyPlaceholderConfigurer"/>
+    <bean name="veriniceCommonsExecuter" factory-bean="executerFactory"
+        factory-method="getExecuter" />
+        
+    <!-- HttpInvokerProxyFactoryBeans start -->
 
     <bean id="commandService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/commandServiceHttpInvoker</value>
+            <value>${verinice.serverURL}/service/commandServiceHttpInvoker
+            </value>
         </property>
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.ICommandService</value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
-    
-    <bean id="executerFactory" class="sernet.springclient.ExecuterFactoryBean" >
-        <!-- Request-timeout in ms, 24h = 24*60*60*1000 = 86.400.000 -->
-        <property name="readTimeout" value="86400000"/>
-        <!-- Connection-timeout in ms, 10s = 10.000 -->
-        <property name="connectionTimeout" value="10000"/>
-    </bean>
-    
-    <bean name="veriniceCommonsExecuter" factory-bean="executerFactory" factory-method="getExecuter" />
 
-     <bean id="authService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+    <bean id="authService"
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/authServiceHttpInvoker</value>
+            <value>${verinice.serverURL}/service/authServiceHttpInvoker
+            </value>
         </property>
         <property name="serviceInterface">
             <value>sernet.verinice.interfaces.IAuthService</value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
-    
+
     <bean id="taskService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/taskServiceHttpInvoker</value>
+            <value>${verinice.serverURL}/service/taskServiceHttpInvoker
+            </value>
         </property>
         <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.bpm.ITaskService</value>         
+            <value>sernet.verinice.interfaces.bpm.ITaskService</value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
-    
+
     <bean id="processServiceIsa"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/processServiceHttpInvoker</value>
+            <value>${verinice.serverURL}/service/processServiceHttpInvoker
+            </value>
         </property>
         <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.bpm.IProcessServiceIsa</value>         
+            <value>sernet.verinice.interfaces.bpm.IProcessServiceIsa
+            </value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
-    
+
     <bean id="isaControlFlowService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/controlFlowHttpInvoker</value>
+            <value>${verinice.serverURL}/service/controlFlowHttpInvoker
+            </value>
         </property>
         <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.bpm.IIsaControlFlowService</value>         
+            <value>sernet.verinice.interfaces.bpm.IIsaControlFlowService
+            </value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
-    
+
     <bean id="qmService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
             <value>${verinice.serverURL}/service/qmHttpInvoker</value>
         </property>
         <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.bpm.IIsaQmService</value>         
+            <value>sernet.verinice.interfaces.bpm.IIsaQmService</value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
-    
+
     <bean id="individualService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/individualHttpInvoker</value>
+            <value>${verinice.serverURL}/service/individualHttpInvoker
+            </value>
         </property>
         <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.bpm.IIndividualService</value>         
+            <value>sernet.verinice.interfaces.bpm.IIndividualService
+            </value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
-    
+
     <bean id="gsmService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
             <value>${verinice.serverURL}/service/gsmHttpInvoker</value>
         </property>
         <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.bpm.IGsmService</value>         
+            <value>sernet.verinice.interfaces.bpm.IGsmService</value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
-    </bean>
-    
-    <bean id="rightsServiceExecuter"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-        <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/rightsServiceHttpInvoker</value>
-        </property>
-        <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.IRightsService</value>         
-        </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
-    </bean>
-    
-    <bean id="validationService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-        <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/validationServiceHttpInvoker</value>
-        </property>
-        <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.validation.IValidationService</value>         
-        </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
 
-	<bean id="objectModelService" 
-          class="sernet.verinice.service.model.HUIObjectModelLoader" >
-          <property name="objectModelService">
-			<bean class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-		        <property name="serviceUrl">
-		            <value>${verinice.serverURL}/service/objectModelServiceHttpInvoker</value>
-		        </property>
-		        <property name="serviceInterface">
-		            <value>sernet.verinice.service.model.IObjectModelService</value>         
-		        </property>
-		        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
-			</bean>
-          </property>
-	</bean>
-    
+    <bean id="rightsServiceExecuter"
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/rightsServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.IRightsService</value>
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
+    </bean>
+
+    <bean id="validationService"
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/validationServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.validation.IValidationService
+            </value>
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
+    </bean>
+
+    <bean id="objectModelService" class="sernet.verinice.service.model.HUIObjectModelLoader">
+        <property name="objectModelService">
+            <bean
+                class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+                <property name="serviceUrl">
+                    <value>${verinice.serverURL}/service/objectModelServiceHttpInvoker
+                    </value>
+                </property>
+                <property name="serviceInterface">
+                    <value>sernet.verinice.service.model.IObjectModelService
+                    </value>
+                </property>
+                <property name="httpInvokerRequestExecutor"
+                    ref="veriniceCommonsExecuter" />
+            </bean>
+        </property>
+    </bean>
+
     <bean id="accountService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/accountServiceHttpInvoker</value>
+            <value>${verinice.serverURL}/service/accountServiceHttpInvoker
+            </value>
         </property>
         <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.IAccountService</value>         
+            <value>sernet.verinice.interfaces.IAccountService</value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
-    
+
     <bean id="reportdepositService"
-          class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/reportdepositServiceHttpInvoker</value>
-        </property>  
-        <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.IReportDepositService</value>         
+            <value>${verinice.serverURL}/service/reportdepositServiceHttpInvoker
+            </value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.IReportDepositService
+            </value>
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
-    
+
     <bean id="reportHQLService"
-    	class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/reportHQLServiceHttpInvoker</value>
-        </property>  
-        <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.IReportHQLService</value>         
+            <value>${verinice.serverURL}/service/reportHQLServiceHttpInvoker
+            </value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>    	
-    </bean> 
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.IReportHQLService</value>
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
+    </bean>
 
     <bean id="searchService"
-    	class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
         <property name="serviceUrl">
-            <value>${verinice.serverURL}/service/searchServiceHttpInvoker</value>
-        </property>  
-        <property name="serviceInterface">
-            <value>sernet.verinice.interfaces.search.ISearchService</value>         
+            <value>${verinice.serverURL}/service/searchServiceHttpInvoker
+            </value>
         </property>
-        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter"/>    	
-    </bean> 
-    
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.search.ISearchService
+            </value>
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
+    </bean>
+
     <bean id="updateNewsService"
-    	class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
-    	<property name="serviceUrl">
-    		<value>${verinice.serverURL}/service/updateNewsServiceHttpInvoker</value>
-    	</property>
-    	<property name="serviceInterface">
-    		<value>sernet.verinice.interfaces.updatenews.IUpdateNewsService</value>
-    	</property>
-   </bean>
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/updateNewsServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.interfaces.updatenews.IUpdateNewsService
+            </value>
+        </property>
+    </bean>
     
-    
-              
+    <!-- HttpInvokerProxyFactoryBeans end -->
+
     <bean id="rightsServiceClient" class="sernet.springclient.RightsServiceClient">
-    	<property name="authService" ref="authService" />
+        <property name="authService" ref="authService" />
         <property name="rightsServiceExecuter" ref="rightsServiceExecuter" />
         <property name="accountService" ref="accountService" />
     </bean>
-    
+
     <bean id="commandCacheClient" class="sernet.springclient.CommandCacheClient">
-    	<property name="commandService" ref="commandService" />
-    	<!--  <property name="daoFactory" ref=""  -->
+        <property name="commandService" ref="commandService" />
+        <!-- <property name="daoFactory" ref="" -->
     </bean>
-    
-    <!-- timer bean to check for changes every x seconds: -->
-     
+
+    <!-- Timer bean to pull changes from the server t a fixed interval -->
     <bean id="quartzSchedulerFactory"
-    	class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
-    	destroy-method="destroy" >
-    	<property name="triggers">
-    		<list>
-    			<ref bean="simpleTrigger" />
-    		</list>
-    	</property>
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean"
+        destroy-method="destroy">
+        <property name="triggers">
+            <list>
+                <ref bean="simpleTrigger" />
+            </list>
+        </property>
     </bean>
-    
-    <bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-    	<property name="jobDetail" ref="checkTransactionLogJob" />
-    	<property name="startDelay" value="15000" />
-    	<property name="repeatInterval" value="15000" />
+
+    <!-- Property startDelay and repeatInterval are set in milliseconds (ms) -->
+    <bean id="simpleTrigger"
+        class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <property name="jobDetail" ref="checkTransactionLogJob" />
+        <property name="startDelay" value="15000" />
+        <property name="repeatInterval" value="15000" />
     </bean>
-    
-    <bean id="checkTransactionLogJob" 
+
+    <bean id="checkTransactionLogJob"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="transactionLogWatcher"/>
-        <property name="targetMethod" value="checkLog"/>
-    </bean>
-    
-    <bean id="transactionLogWatcher" class="sernet.gs.ui.rcp.main.service.TransactionLogWatcher" >  
-        <property name="commandService" ref="commandService"/>
-    </bean>
-    
-	<!-- Prepares a hitroUtil instance that can be used from within
-         the client and which reads its information from a verinice
-         server.
-	-->
-    <bean id="hitroUtil"
-    	class="sernet.hui.common.connect.HitroUtil"
-		init-method="initForClient">
-		<property name="url" value="${verinice.serverURL}/GetHitroConfig" />
-		<property name="entityResolverFactory">
-			<bean class="sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory"/>
-		</property>
+        <property name="targetObject" ref="transactionLogWatcher" />
+        <property name="targetMethod" value="checkLog" />
     </bean>
 
-	<bean id="huiTypeFactory"
-		class="sernet.hui.common.connect.HUITypeFactory"
-	      factory-bean="hitroUtil"
-    	  factory-method="getTypeFactory">
+    <bean id="transactionLogWatcher" class="sernet.gs.ui.rcp.main.service.TransactionLogWatcher">
+        <property name="commandService" ref="commandService" />
     </bean>
 
-	<bean
-		id="gsScraperUtil"
-		class="sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil">
-		<property name="model">
-			<bean
-			class="sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel">
-				<constructor-arg>
-					<bean class="${verinice.model.configuration.class}"/>
-				</constructor-arg>
-			</bean>
-		</property>
-	</bean>
-	 <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/> 
- 	
+    <!-- Prepares a hitroUtil instance that can be used from within the client -->
+    <!-- and which reads its information from a verinice server. -->
+    <bean id="hitroUtil" class="sernet.hui.common.connect.HitroUtil"
+        init-method="initForClient">
+        <property name="url" value="${verinice.serverURL}/GetHitroConfig" />
+        <property name="entityResolverFactory">
+            <bean
+                class="sernet.gs.ui.rcp.main.bsi.model.BSIEntityResolverFactory" />
+        </property>
+    </bean>
 
-	
-	<!--<bean id="messageFactory" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping"/> -->
+    <bean id="huiTypeFactory" class="sernet.hui.common.connect.HUITypeFactory"
+        factory-bean="hitroUtil" factory-method="getTypeFactory">
+    </bean>
 
-	<bean id="webServiceTemplate" class="org.springframework.ws.client.core.WebServiceTemplate">
-		<constructor-arg ref="messageFactory" />
-		<property name="messageSender">
-			<bean
-				class="org.springframework.ws.transport.http.CommonsHttpMessageSender">
-				<property name="credentials">
-					<bean class="org.apache.commons.httpclient.UsernamePasswordCredentials">
-						<constructor-arg value="admin" />
-						<constructor-arg value="geheim" />
-					</bean>
-				</property>
-			</bean>
-		</property>
-		<property name="defaultUri" value="http://localhost:8080/veriniceserver/sync/syncService" />
-	</bean>
-	
+    <bean id="gsScraperUtil" class="sernet.gs.ui.rcp.main.bsi.model.GSScraperUtil">
+        <property name="model">
+            <bean class="sernet.gs.ui.rcp.main.bsi.model.BSIMassnahmenModel">
+                <constructor-arg>
+                    <bean class="${verinice.model.configuration.class}" />
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+    <bean id="messageFactory"
+        class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory" />
+
+    <bean id="webServiceTemplate"
+        class="org.springframework.ws.client.core.WebServiceTemplate">
+        <constructor-arg ref="messageFactory" />
+        <property name="messageSender">
+            <bean
+                class="org.springframework.ws.transport.http.CommonsHttpMessageSender">
+                <property name="credentials">
+                    <bean
+                        class="org.apache.commons.httpclient.UsernamePasswordCredentials">
+                        <constructor-arg value="admin" />
+                        <constructor-arg value="geheim" />
+                    </bean>
+                </property>
+            </bean>
+        </property>
+        <property name="defaultUri"
+            value="http://localhost:8080/veriniceserver/sync/syncService" />
+    </bean>
+
     <bean id="webServiceClient" class="sernet.springclient.WebServiceClient">
     </bean>
-	
-	<bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
-	<property name="map">
-		<map>
-			<entry key="gsScraperUtil" value-ref="gsScraperUtil"/>
-			<entry key="hitroUtil" value-ref="hitroUtil"/>
-			<entry key="huiTypeFactory" value-ref="huiTypeFactory"/>
-			<entry key="commandService" value-ref="commandService"/>
-			<entry key="authService" value-ref="authService"/>
-			<!--<entry key="syncService" value-ref="syncService" />-->
-			<entry key="webServiceClient" value-ref="webServiceClient" />
-            <entry key="taskService" value-ref="taskService" />
-            <entry key="isaControlFlowService" value-ref="isaControlFlowService" />
-            <entry key="isaQmService" value-ref="qmService" />
-            <entry key="individualService" value-ref="individualService" />
-            <entry key="gsmService" value-ref="gsmService" />          
-            <entry key="processServiceIsa" value-ref="processServiceIsa" />
-            <entry key="rightsService" value-ref="rightsServiceClient" />
-            <entry key="validationService" value-ref="validationService" />
-            <entry key="accountService" value-ref="accountService" />
-            <entry key="commandCacheClient" value-ref="commandCacheClient" />
-            <entry key="reportdepositService" value-ref="reportdepositService" />
-            <entry key="reportHQLService" value-ref="reportHQLService" />
-            <entry key="searchService" value-ref="searchService" />
-			<entry key="objectModelService" value-ref="objectModelService" />
-            <entry key="updateNewsService" value-ref="updateNewsService" />
-		</map>
-	</property>
-	</bean>
+
+    <bean id="workObjects" class="sernet.hui.common.VeriniceContext$State">
+        <property name="map">
+            <map>
+                <entry key="gsScraperUtil" value-ref="gsScraperUtil" />
+                <entry key="hitroUtil" value-ref="hitroUtil" />
+                <entry key="huiTypeFactory" value-ref="huiTypeFactory" />
+                <entry key="commandService" value-ref="commandService" />
+                <entry key="authService" value-ref="authService" />
+                <!--<entry key="syncService" value-ref="syncService" /> -->
+                <entry key="webServiceClient" value-ref="webServiceClient" />
+                <entry key="taskService" value-ref="taskService" />
+                <entry key="isaControlFlowService" value-ref="isaControlFlowService" />
+                <entry key="isaQmService" value-ref="qmService" />
+                <entry key="individualService" value-ref="individualService" />
+                <entry key="gsmService" value-ref="gsmService" />
+                <entry key="processServiceIsa" value-ref="processServiceIsa" />
+                <entry key="rightsService" value-ref="rightsServiceClient" />
+                <entry key="validationService" value-ref="validationService" />
+                <entry key="accountService" value-ref="accountService" />
+                <entry key="commandCacheClient" value-ref="commandCacheClient" />
+                <entry key="reportdepositService" value-ref="reportdepositService" />
+                <entry key="reportHQLService" value-ref="reportHQLService" />
+                <entry key="searchService" value-ref="searchService" />
+                <entry key="objectModelService" value-ref="objectModelService" />
+                <entry key="updateNewsService" value-ref="updateNewsService" />
+            </map>
+        </property>
+    </bean>
 
 </beans>
