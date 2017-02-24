@@ -22,9 +22,7 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import sernet.gs.service.RetrieveInfo;
 import sernet.gs.service.TimeFormatter;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.graph.Edge;
@@ -38,15 +36,13 @@ import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.IncidentScenario;
-import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
-import sernet.verinice.service.commands.RetrieveCnATreeElement;
 
 /**
- * Performs risk analysis according to ISO 27005.
+ * Service implementation to run a ISO/IEC 27005 risk analysis.
  *  
- * The service needs a VeriniceGraph and a IBaseDao<CnALink, Serializable>
+ * This implementation needs a IGraphService and a IBaseDao<CnALink, Serializable>
  * to run.
  *  
  * @author koderman@sernet.de
@@ -56,8 +52,6 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
     
     private static final transient Logger LOG = Logger.getLogger(RiskAnalysisServiceImpl.class);
     private static final Logger LOG_RUNTIME = Logger.getLogger(RiskAnalysisServiceImpl.class.getName() + ".runtime");
-
-    private VeriniceGraph graph;
     
     private IGraphService graphService;  
     private IBaseDao<CnALink, Serializable> cnaLinkDao;  
@@ -77,14 +71,23 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
     }
     
     /* (non-Javadoc)
-     * @see sernet.verinice.iso27k.service.RiskAnalysisService#runRiskAnalysis()
+     * @see sernet.verinice.iso27k.service.RiskAnalysisService#runRiskAnalysis(java.lang.Long[])
      */
     @Override
-    public void runRiskAnalysis() {
-        long time = initRuntime();
+    public void runRiskAnalysis(Integer... organizationIds) {
+        long time = initRuntime();   
+        
+        VeriniceGraph graph = loadGraph(organizationIds);              
+        runRiskAnalysis(graph);
+        
+        logRuntime("runRiskAnalysis() runtime : ", time);
+    }
+    
+
+    private void runRiskAnalysis(VeriniceGraph graph) {
         // update asset values (business impact, CIA):
         // done on every save, no need to do it here
-        Set<CnATreeElement> scenarios = getGraph().getElements(IncidentScenario.TYPE_ID);
+        Set<CnATreeElement> scenarios = graph.getElements(IncidentScenario.TYPE_ID);
         if (LOG.isInfoEnabled()) {
             LOG.info("Number of scenarios: " + scenarios.size());
         }
@@ -93,10 +96,10 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
                 LOG.debug("Determine Probability for Scenario:\t" 
                         + scenario.getTitle());
             }
-            determineProbability((IncidentScenario) scenario);
+            determineProbability(graph, (IncidentScenario) scenario);
         }
      
-        Set<CnATreeElement> assets = getGraph().getElements(Asset.TYPE_ID);
+        Set<CnATreeElement> assets = graph.getElements(Asset.TYPE_ID);
         if (LOG.isInfoEnabled()) {
             LOG.info("Number of assets: " + assets.size());
         }
@@ -113,12 +116,11 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
                 LOG.debug("Determine Risk for Scenario:\t" + scenario.getTitle());
             }            
             try {
-                determineRisks((IncidentScenario) scenario);
+                determineRisks(graph, (IncidentScenario) scenario);
             } catch (CommandException e) {
                 LOG.error("Error while determine risk", e);
             }
         }
-        logRuntime("runRiskAnalysis() runtime : ", time);
     }
 
     /**
@@ -127,10 +129,10 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
      *
      * @param scenario
      */
-    private void determineProbability(IncidentScenario scenario) {
+    private void determineProbability(VeriniceGraph graph, IncidentScenario scenario) {
         // get values from linked threat & vuln, only if automatic mode is activated:
         if (scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_METHOD) == 1) {
-            getProbabilityFromThreatAndVulnerability(scenario);
+            getProbabilityFromThreatAndVulnerability(graph, scenario);
         }
 
         // calculate probability:
@@ -145,7 +147,7 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
         scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS, scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY));
         scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS, scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY));
 
-        Set<CnATreeElement> controlSet = getGraph().getLinkTargetsByElementType(scenario, Control.TYPE_ID);
+        Set<CnATreeElement> controlSet = graph.getLinkTargetsByElementType(scenario, Control.TYPE_ID);
         // deduct controls from probability:
         for (CnATreeElement control : controlSet) {
             deductControlFromSzenario(scenario, control);
@@ -158,8 +160,8 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
      * @param scenario
      * @throws CommandException
      */
-    private void determineRisks(IncidentScenario scenario) throws CommandException {
-        Set<Edge> edgesToAsset = getGraph().getEdgesByElementType(scenario, Asset.TYPE_ID);
+    private void determineRisks(VeriniceGraph graph, IncidentScenario scenario) throws CommandException {
+        Set<Edge> edgesToAsset = graph.getEdgesByElementType(scenario, Asset.TYPE_ID);
       
         for (Edge edge : edgesToAsset) {
             determineRisk(scenario, edge);
@@ -316,12 +318,12 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
     }
 
  
-    private void getProbabilityFromThreatAndVulnerability(IncidentScenario scenario) {
+    private void getProbabilityFromThreatAndVulnerability(VeriniceGraph graph, IncidentScenario scenario) {
         // only calculate if threat AND vulnerability is linked to scenario:     
-        Set<CnATreeElement> threatSet = getGraph().getLinkTargetsByElementType(scenario, Threat.TYPE_ID);
-        Set<CnATreeElement> vulnerabilitySet = getGraph().getLinkTargetsByElementType(scenario, Vulnerability.TYPE_ID);
+        Set<CnATreeElement> threatSet = graph.getLinkTargetsByElementType(scenario, Threat.TYPE_ID);
+        Set<CnATreeElement> vulnerabilitySet = graph.getLinkTargetsByElementType(scenario, Vulnerability.TYPE_ID);
          
-        if (threatSet.size()>0 && vulnerabilitySet.size()>0) {
+        if (!threatSet.isEmpty() && !vulnerabilitySet.isEmpty()) {
             int threatImpact = 0;
             for (CnATreeElement threat : threatSet) {
                 //use higher value of likelihood or impact:
@@ -366,50 +368,15 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
                     probAfterControl < 0 ? 0 : probAfterControl);
         }
     }
-    
-    private int getTolerableRisks(CnATreeElement elmt, char riskType) {
-        try {
-            RetrieveCnATreeElement command = new RetrieveCnATreeElement(Organization.TYPE_ID,
-                    elmt.getScopeId(), RetrieveInfo.getPropertyInstance());
-            CnATreeElement organization = ServiceFactory.lookupCommandService()
-                    .executeCommand(command).getElement();
-            if (organization instanceof Organization) {
-                switch (riskType) {
-                case 'c':
-                    return organization.getNumericProperty(Organization.PROP_RISKACCEPT_CONFID);
-                case 'i':
-                    return organization.getNumericProperty(Organization.PROP_RISKACCEPT_INTEG);
-                case 'a':
-                    return organization.getNumericProperty(Organization.PROP_RISKACCEPT_AVAIL);
-                default:
-                    return 0;
-                }
-            }
-        } catch (CommandException e) {
-            LOG.error("Error while getting tolerable risk", e);
-        }
-        return 0;
-    }
-    
-
    
-    
-    private VeriniceGraph loadGraph() { 
+    private VeriniceGraph loadGraph(Integer[] scopeIds) { 
         IGraphElementLoader loader = new GraphElementLoader();
+        if(scopeIds!=null) {
+            loader.setScopeIds(scopeIds);
+        }
         loader.setTypeIds(new String[]{Asset.TYPE_ID, IncidentScenario.TYPE_ID, Control.TYPE_ID, Threat.TYPE_ID, Vulnerability.TYPE_ID});
         getGraphService().setLoader(loader);
         return getGraphService().create() ;          
-    }
-
-    public VeriniceGraph getGraph() {
-        if(graph==null) {
-            graph = loadGraph();
-        }
-        return graph;
-    }
-
-    public void setGraph(VeriniceGraph graph) {
-        this.graph = graph;
     }
 
     public IBaseDao<CnALink, Serializable> getCnaLinkDao() {
@@ -447,6 +414,8 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
     private void logRuntime(String message, long starttime) {
         LOG_RUNTIME.debug(message + TimeFormatter.getHumanRedableTime(System.currentTimeMillis()-starttime));
     }
+
+
 
 
 }

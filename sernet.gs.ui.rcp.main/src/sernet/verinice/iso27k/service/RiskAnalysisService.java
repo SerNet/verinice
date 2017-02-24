@@ -20,7 +20,7 @@
 package sernet.verinice.iso27k.service;
 
 /**
- * A service to conduct a ISO/IEC 27005 risk analysis.
+ * A service to run a ISO/IEC 27005 risk analysis.
  * 
  * The risk values confidentiality (C), integrity (I) and availability (A) is
  * calculated for each Asset (A). The initial risk values (C,I,A) are inherited
@@ -73,8 +73,14 @@ public interface RiskAnalysisService {
     int RISK_WITH_ALL_CONTROLS = 2; 
     int RISK_WITHOUT_NA_CONTROLS = 3;
     
-    void runRiskAnalysis();
-    
-    // void runRiskAnalysis(Long);
+    /**
+     * Runs a risk on one or more organizations with the given organization ids.
+     * When null is passed as parameter, the risk analysis is run on all organizations
+     * in the database. Running a risk analysis on all organizations might be a 
+     * perform issue.
+     * 
+     * @param organizationIds One or more database ids of organizations. Null is allowed.
+     */
+    void runRiskAnalysis(Integer... organizationIds);
 
 }

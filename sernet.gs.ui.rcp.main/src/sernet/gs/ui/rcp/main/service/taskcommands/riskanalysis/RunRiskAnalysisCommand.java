@@ -29,25 +29,21 @@ import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
 import sernet.verinice.model.common.CnALink;
 
 /**
- * 
- * Run ISO 27005-style risk analysis.
+ * A command to run a ISO/IEC 27005 risk analysis.
  * 
  * @author koderman@sernet.de
- * @version $Rev$ $LastChangedDate$ 
- * $LastChangedBy$
- *
  */
 public class RunRiskAnalysisCommand extends GraphCommand implements INoAccessControl {
     
     private transient Logger log = Logger.getLogger(RunRiskAnalysisCommand.class);
-
-    public Logger getLog() {
-        if (log == null) {
-            log = Logger.getLogger(RunRiskAnalysisCommand.class);
-        }
-        return log;
-    }
     
+    private Integer[] organizationIds;
+    
+    public RunRiskAnalysisCommand(Integer... organizationIds) {
+        super();
+        this.organizationIds = organizationIds;
+    }
+
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.ICommand#execute()
      */
@@ -55,7 +51,14 @@ public class RunRiskAnalysisCommand extends GraphCommand implements INoAccessCon
     public void execute() {      
         IBaseDao<CnALink, Serializable> cnaLinkDao = getDaoFactory().getDAO(CnALink.class);     
         RiskAnalysisService ra = new RiskAnalysisServiceImpl(getGraphService(), cnaLinkDao);
-        ra.runRiskAnalysis();     
+        ra.runRiskAnalysis(organizationIds);     
+    }
+    
+    public Logger getLog() {
+        if (log == null) {
+            log = Logger.getLogger(RunRiskAnalysisCommand.class);
+        }
+        return log;
     }
 
 }
