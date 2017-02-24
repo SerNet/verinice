@@ -115,7 +115,7 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      * 
      */
     @Override
-    public boolean checkAssignedUsersForLicenseId(String encryptedLicenseId) {
+    public boolean hasLicenseIdAssignableSlots(String encryptedLicenseId) {
 //        String hql = "from LicenseManagementEntry " 
 //                + "where licenseID = ?";
 //        Object[] params = new Object[]{encryptedLicenseId};
@@ -146,24 +146,6 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
         
     }
 
-    /**
-     * assigns a user to a {@link LicenseManagementEntry} (referenced
-     * by licenseId) to allow him to use the content referenced in that
-     * entry. 
-     * 
-     * In standalone mode, 
-     * the existance of a {@link LicenseManagementEntry} for a contentId
-     * allows the user to use a license, no need for assignments here
-     * 
-     * so the method should to nothing in this mode
-     * 
-     */    
-    @Override
-    public void grantUserToLicense(String username, String licenseId) {
-        // should not be used in tier2, so always return true
-        // since the tier2-user is always allowed to use a license, if its existant
-    }
-    
     @Override
     public File getVNLRepository(){
         File location = null;

@@ -71,6 +71,7 @@
         <mapping resource="BausteinVorschlag.hbm.xml"/>
         <mapping resource="CnAValidation.hbm.xml"/>
         <mapping resource="AccountGroup.hbm.xml"/>
+        <!-- <mapping resource="LicenseManagementEntry.hbm.xml"/> -->
         
         
         <!-- Workaround for Hibernate bug HHH-2146

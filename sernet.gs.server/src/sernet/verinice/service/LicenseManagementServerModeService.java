@@ -36,6 +36,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.LazyInitializationException;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDirectoryCreator;
@@ -113,7 +114,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     @Override
     public boolean isCurrentUserValidForLicense(String username, String encryptedLicenseId) {
         return isUserAssignedLicenseStillValid(username, encryptedLicenseId) &&
-                checkAssignedUsersForLicenseId(encryptedLicenseId);
+                hasLicenseIdAssignableSlots(encryptedLicenseId);
     }
 
     /**
@@ -143,21 +144,29 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      * @return are there free slots to be assigned for a given licenseId
      */
     @Override
-    public boolean checkAssignedUsersForLicenseId(String encryptedLicenseId) {
+    public boolean hasLicenseIdAssignableSlots(String encryptedLicenseId) {
         int validUsers = 0;
         int assignedUsers = 0;
-        for(LicenseManagementEntry entry : getExistingLicenses()){
+        LicenseManagementEntry entry = null;
+        for(LicenseManagementEntry existingEntry : getExistingLicenses()){
+            if(encryptedLicenseId.equals(existingEntry.getLicenseID())){
+                entry = existingEntry;
+            }
+        }
+        if(entry != null){
             validUsers = decrypt(entry, 
                     LicenseManagementEntry.COLUMN_VALIDUSERS);
+            String decryptedLicenseId = (String)decrypt(
+                    entry, LicenseManagementEntry.COLUMN_LICENSEID);
             assignedUsers = 0;
             for (Configuration configuration : getAllConfigurations()) {
-                if (getAuthorisedContentIdsByUser(configuration.
-                        getUser()).contains(encryptedLicenseId)) {
+                Set<String> assignedIds = configuration.getAllLicenseIds();
+                if (assignedIds.contains(decryptedLicenseId)) {
                     assignedUsers++;
                 }
             }
         }
-
+        log.debug(encryptedLicenseId + " currently has (" + assignedUsers + "/" + validUsers + ") users");
         return assignedUsers < validUsers;
 
     }
@@ -179,18 +188,6 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
 
     }
 
-    /**
-     * add given (decrypted) licenseId to userproperties,
-     * which allows the user to use the contentId of t
-     * he {@link LicenseManagementEntry} referenced by the licenseId
-     * 
-     * @param user - username (login) of user to authorise for license usage
-     * @param decryptedLicenseId - id (not contentId!) of {@link LicenseManagementEntry} 
-     */
-    @Override
-    public void grantUserToLicense(String user, String decryptedLicenseId) {
-        addLicenseIdAuthorisation(user, decryptedLicenseId);
-    }
 
     /**
      * @return decrypted licenceIds (not contentIds!) of all 
@@ -225,6 +222,17 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         }
         return uniqueEntryCollection;
     }
+    
+    @Override
+    public LicenseManagementEntry getLicenseEntryForLicenseId(String encryptedLicenseId){
+        for(LicenseManagementEntry entry : getExistingLicenses()){
+            if(entry.getLicenseID().equals(encryptedLicenseId)){
+                return entry;
+            }
+        }
+        return null;
+    }
+    
 
     /**
      * @return all decrypted licenseIds for a given encrypted contentId
@@ -278,10 +286,15 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public Set<String> getAllContentIds(boolean decrypted) {
-        Set<String> allIds = new HashSet<String>();
+        Set<String> allIds = new HashSet<>();
         for(LicenseManagementEntry entry : getExistingLicenses()){
             if(decrypted){
-                allIds.add(String.valueOf(decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID)));
+                Object decryptedValue = 
+                        decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID);
+                String decryptedString = String.valueOf(decryptedValue);
+                allIds.add(decryptedString);
+//                allIds.add(String.valueOf(decrypt(entry, LicenseManagementEntry.
+//                        COLUMN_CONTENTID)));
             } else {
                 allIds.add(entry.getContentIdentifier());
             }
@@ -301,7 +314,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
         Set<Configuration> configurations = getAllConfigurations();
         for (Configuration configuration : configurations) {
             for (String licenseId : licenseIds){
-                if (configuration.getLicensedContentIds().contains(licenseId)) {
+                if (configuration.getAssignedLicenseIds().contains(licenseId)) {
                     count++;
                 }
             }
@@ -323,13 +336,14 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      *  
      *  TODO: decide if licenseId is stored de- or encrypted at
      *  instanceof {@link Configuration}
+     * @throws CommandException 
      */
     @Override
-    public void addLicenseIdAuthorisation(String user, String licenseId) {
+    public void addLicenseIdAuthorisation(String user, String licenseId) throws CommandException {
         Configuration configuration = getConfigurationByUsername(user);
         configuration.addLicensedContentId(licenseId);
-        configurationDao.merge(configuration);
-        configurationDao.flush();
+        configurationDao.merge(configuration, true);
+        "".hashCode();
     }
 
     /**
@@ -378,25 +392,42 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
     }
 
     /**
-     * remove a single user assignment from a given encrypted contentId
+     * remove all user assignments (licenseIds) for a given encrypted contentId
      * 
      * 
      * @param username - user that should be forbidden to use content
      * @param encryptedContentId - content that should be dereferenced from username
      * 
-     * TODO: adjust to the decision of de-/encrypted storage of licenseId in
-     * {@link Configuration}
-     * 
      */
     @Override
     public void removeContentIdUserAssignment(String username, String encryptedContentId) {
-        Configuration configuration = getConfigurationByUsername(username);
         for (LicenseManagementEntry entry : getLicenseEntriesForContentId(encryptedContentId)) {
-            configuration.removeLicensedContentId(entry.getLicenseID());
+            removeLicenseIdUserAssignment(username, entry.getLicenseID(), true);
         }
-        configurationDao.saveOrUpdate(configuration);
     }
 
+    
+    /**
+     * remove a single licenseId assignment from a configuration (user)
+     **/
+    @Override
+    public void removeLicenseIdUserAssignment(String user, String licenseId, boolean licenseIdEncrypted) {
+        String decryptedLicenseId;
+        
+        Configuration configuration = getConfigurationByUsername(user);
+        LicenseManagementEntry entry = getLicenseEntryForLicenseId(licenseId);
+        if(licenseIdEncrypted){
+            decryptedLicenseId = decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
+        } else {
+            decryptedLicenseId = licenseId;
+        }
+        if(configuration != null){
+            configuration.removeLicensedContentId(decryptedLicenseId);
+            configurationDao.saveOrUpdate(configuration);
+        }
+    }
+    
+    
     /**
      * load all instances of {@link Configuration} via hql
      * including their properties via join to avoid 
@@ -450,7 +481,7 @@ public class LicenseManagementServerModeService implements ILicenseManagementSer
      */
     @Override
     public Set<String> getAuthorisedContentIdsByUser(String username) {
-        return getConfigurationByUsername(username).getLicensedContentIds();
+        return getConfigurationByUsername(username).getAssignedLicenseIds();
     }
 
     /**

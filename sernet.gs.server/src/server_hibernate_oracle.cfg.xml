@@ -77,7 +77,7 @@
         <mapping resource="sernet/gs/ui/rcp/hibernate/Addition.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/AttachmentFile.hbm.xml"/>
         <mapping resource="sernet/gs/ui/rcp/hibernate/CnAValidation.hbm.xml"/>
-        <mapping resource="sernet/gs/ui/rcp/hibernate/LicenseManagementEntry.hbm.xml"/>       
+        <mapping resource="sernet/gs/ui/rcp/hibernate/LicenseManagementEntry.hbm.xml"/>      
         
         <mapping resource="jbpm.repository.hbm.xml" />
         <mapping resource="jbpm.execution.hbm.xml" />

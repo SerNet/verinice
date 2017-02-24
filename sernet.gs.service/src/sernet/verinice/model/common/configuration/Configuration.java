@@ -234,6 +234,17 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	    }
 	}
 	
+	public Set<String> getAllLicenseIds(){
+	    Set<String> allIds = new HashSet<>();
+	       PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);
+	        List<Property> propertyList = getEntity().getProperties(type.getId()).getProperties();
+	        for(Property p : propertyList){
+	            allIds.add(p.getPropertyValue());
+	        }
+	            
+	    return allIds;        
+	}
+	
 	/**
 	 * removes one licenseId assignment from this user, given by paramater 
 	 * licenseId
@@ -464,7 +475,7 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	 * defines the access to content that is covered by special license
 	 * @return set of strings representing the ids assigned to this user
 	 */
-	public Set<String> getLicensedContentIds(){
+	public Set<String> getAssignedLicenseIds(){
 	    List<Property> properties = entity.getProperties(Configuration.PROP_LICENSED_CONTENT_IDS).getProperties();
 	    
 	    Set<String> licenseIds;
@@ -487,7 +498,7 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	 * removes all licenseId assignments from this user
 	 */
 	public void removeAllLicenseIds(){
-	    Set<String> allLicenseIds = getLicensedContentIds();
+	    Set<String> allLicenseIds = getAssignedLicenseIds();
 	    for (String licenseId : allLicenseIds){
 	        removeLicensedContentId(licenseId);
 	    }

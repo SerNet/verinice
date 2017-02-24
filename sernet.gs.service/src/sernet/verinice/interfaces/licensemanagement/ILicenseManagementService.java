@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
@@ -45,11 +46,9 @@ public interface ILicenseManagementService {
 
     boolean isUserAssignedLicenseStillValid(String user, String licenseId);
 
-    boolean checkAssignedUsersForLicenseId(String licenseId);
+    boolean hasLicenseIdAssignableSlots(String licenseId);
 
     void removeAllUsersForLicense(String licenseId);
-
-    void grantUserToLicense(String user, String licenseId);
 
     Set<String> getAllLicenseIds(boolean decrypted);
 
@@ -61,17 +60,21 @@ public interface ILicenseManagementService {
 
     int getContentIdAllocationCount(String contentId);
 
-    void addLicenseIdAuthorisation(String user, String contentId);
+    void addLicenseIdAuthorisation(String user, String contentId) throws CommandException;
 
     void removeAllLicenseIdAssignments(String licenseId);
 
     void removeAllContentIdAssignments(String contentId);
 
     void removeContentIdUserAssignment(String user, String contentId);
+    
+    void removeLicenseIdUserAssignment(String user, String licenseId, boolean licenseIdEncrypted);
 
     Set<String> getAuthorisedContentIdsByUser(String user);
 
     Set<String> getLicenseIdsForContentId(String contentId);
+    
+    LicenseManagementEntry getLicenseEntryForLicenseId(String encryptedLicenseId);
 
     <T extends Object> T  decrypt(LicenseManagementEntry entry, String propertyType);
     

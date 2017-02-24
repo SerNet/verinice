@@ -92,10 +92,6 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 	
-	<bean id="licenseManagementDao" class="sernet.verinice.hibernate.LicenseManagementEntryDao">
-		<property name="sessionFactory" ref="sessionFactory" />
-	</bean>	
-
 	<!-- business object Dao definitions follow ================================================================== -->
 
 	<bean id="anwendungDAO" parent="secureDao">
@@ -633,6 +629,10 @@
     <bean id="finishedRiskAnalysisListsDao" class="sernet.verinice.hibernate.FinishedRiskAnalysisListsDao">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
+    
+    <bean id="licenseManagementDao" class="sernet.verinice.hibernate.LicenseManagementEntryDao">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
     
 	<!-- END dao definitions ============================================================================ -->
 

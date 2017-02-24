@@ -58,9 +58,6 @@ public interface IEncryptionService {
 
     byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt) throws EncryptionException;
 
-    // byte[] encrypt(byte[] unencryptedByteData, char[] password, byte[] salt)
-    // throws EncryptionException;
-
 	/**
 	 * Decrypts the given byte data with the given password using the AES algorithm.
 	 * 
