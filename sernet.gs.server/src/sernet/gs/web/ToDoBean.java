@@ -168,7 +168,7 @@ public class ToDoBean {
 		Collections.sort(getTodoList());
 		MassnahmenUmsetzung selectedMassnahme = getMassnahmeUmsetzung();
 		boolean massnahmeInList = false;
-		if(selectedMassnahme!=null) {
+		if(selectedMassnahme != null) {
 			for (TodoViewItem item : massnahmenList) {
 				if(selectedMassnahme.getDbId()==item.getDbId()) {
 					massnahmeInList = true;
@@ -335,7 +335,7 @@ public class ToDoBean {
 					LOG.debug("Massnahme saved, id: " + massnahmeId);
 				}
 				loadToDoListForElement();	
-				Util.addInfo("submit", Util.getMessage("todo.saved"));					
+				Util.addInfo("submit", Util.getMessage("todo.saved") + ": " + getMassnahmeUmsetzung().getTitle());
 			}
 			else {
 				LOG.warn("Control is null. Can not save.");
