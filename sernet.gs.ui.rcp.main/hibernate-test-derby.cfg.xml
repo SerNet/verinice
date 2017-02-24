@@ -63,6 +63,7 @@
         <mapping resource="Gefaehrdung.hbm.xml"/>
         <mapping resource="Risikomassnahme.hbm.xml"/>
         <mapping resource="FinishedRiskAnalysisLists.hbm.xml"/>
+        <!-- <mapping resource="LicenseManagementEntry.hbm.xml"/> --> 
 
     </session-factory>
 

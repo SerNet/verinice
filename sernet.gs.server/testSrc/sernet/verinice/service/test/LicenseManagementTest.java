@@ -27,9 +27,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Set;
 
@@ -39,13 +37,16 @@ import javax.xml.bind.JAXB;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
+import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
+import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConverter;
@@ -56,6 +57,8 @@ import sernet.verinice.service.commands.ExportFactory;
  *
  */
 public class LicenseManagementTest extends ContextConfiguration{
+    
+    private static final Logger LOG = Logger.getLogger(LicenseManagementTest.class);
     
     @Resource(name = "licenseManagementDao")
     protected LicenseManagementEntryDao elementDao;
@@ -75,8 +78,6 @@ public class LicenseManagementTest extends ContextConfiguration{
     private final static String TEST_USERNAME = "dd";
     
     private final static List<String> ALL_USER_NAMES = Arrays.asList(new String[]{"bb", "cc", "dd", "ee"});
-    
-    private final static String ENCODING = "UTF-8";
     
     private final static String CRYPTO_CONTENT_ID = "ISO27k1-Risk-Catalogue-2016";
     private final static String CRYPTO_LICENSE_ID = "sernetIso27k1-License";
@@ -118,32 +119,6 @@ public class LicenseManagementTest extends ContextConfiguration{
         elementDao.flush();
     }
     
-    private int getRandomNotNullInt(int intervall){
-        int random = 0;
-        while(random == 0){
-            random = RandomUtils.nextInt(intervall);
-        }
-        return random;
-        
-    }
-    
-    private LicenseManagementEntry getSingleRandomInstance(){
-        String licenseId = RandomStringUtils.randomAlphabetic(getRandomNotNullInt(32));
-        String userPassword = RandomStringUtils.randomAlphanumeric(getRandomNotNullInt(16));
-        String salt = RandomStringUtils.randomAlphanumeric(getRandomNotNullInt(64));
-        Date validUntil = getRandomDate(2017, 2030);
-        int validUsers = getRandomNotNullInt(20);
-        
-        LicenseManagementEntry entry = new LicenseManagementEntry();
-        entry.setContentIdentifier(CONTENTID_TESTDATA.get(RandomUtils.nextInt(CONTENTID_TESTDATA.size())));
-        entry.setLicenseID(licenseId);
-        entry.setSalt(salt);
-        entry.setUserPassword(userPassword);
-        entry.setValidUntil(String.valueOf(validUntil.getTime()));
-        entry.setValidUsers(String.valueOf(validUsers));
-        
-        return entry;
-    }
     
     private LicenseManagementEntry getSingleCryptedEntry(){
 
@@ -159,42 +134,33 @@ public class LicenseManagementTest extends ContextConfiguration{
         return entry;
     }
     
-    private Date getRandomDate(int startYear, int endYear){
-        Calendar calendar = GregorianCalendar.getInstance();
-        calendar.set(startYear, 01, 01, 0, 0, 0);
-        long offset = calendar.getTimeInMillis();
-        calendar.clear();
-        calendar.set(endYear, 01, 01, 0, 0, 0);
-        long end = calendar.getTimeInMillis();
-        long diff = end - offset + 1;
-        long randomDate = offset + (long)(Math.random() * diff);
-        calendar.clear();
-        calendar.setTimeInMillis(randomDate);
-        return calendar.getTime();
-    }
     
     @Test
     public void testIfUserIsValidForLicenseId(){
         // check why this lasts so long (currently 192s )
-        Set<LicenseManagementEntry> licenseEntries = licenseManagementService.getLicenseEntriesForContentId(CONTENTID_TESTDATA.get(0));
-        
-        for(LicenseManagementEntry entry : licenseEntries){
-            String licenseId = licenseManagementService.
-                    decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
-            licenseManagementService.grantUserToLicense(
-                    TEST_USERNAME, licenseId);
-            
-            
-            Assert.assertTrue(licenseManagementService.
-                    isCurrentUserValidForLicense(TEST_USERNAME, licenseId));
-            
-            Assert.assertTrue("user " + TEST_USERNAME 
-                    + " is no longer authorised to use content from :\t" 
-                    + entry.getContentIdentifier(), 
-                    licenseManagementService.
-                    isUserAssignedLicenseStillValid(TEST_USERNAME, licenseId));
+        try{
+            Set<LicenseManagementEntry> licenseEntries = licenseManagementService.getLicenseEntriesForContentId(CONTENTID_TESTDATA.get(0));
+
+            for(LicenseManagementEntry entry : licenseEntries){
+                String licenseId = licenseManagementService.
+                        decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
+                licenseManagementService.addLicenseIdAuthorisation(
+                        TEST_USERNAME, licenseId);
+                Assert.assertTrue(licenseManagementService.
+                        isCurrentUserValidForLicense(TEST_USERNAME, licenseId));
+
+                Assert.assertTrue("user " + TEST_USERNAME 
+                        + " is no longer authorised to use content from :\t" 
+                        + entry.getContentIdentifier(), 
+                        licenseManagementService.
+                        isUserAssignedLicenseStillValid(TEST_USERNAME, licenseId));
+            }
+        } catch (LicenseManagementException e){
+            LOG.error("something went wrong with content-licensing", e);
+        }catch(CommandException e){
+            LOG.error("Error while adding a license to a user", e);
         }
-        
+
     }
     
     @Test
@@ -204,27 +170,41 @@ public class LicenseManagementTest extends ContextConfiguration{
         
         String contentId = CONTENTID_TESTDATA.get(RandomUtils.nextInt(CONTENTID_TESTDATA.size() - 1));
         
-        for (String licenseId : licenseManagementService.getLicenseIdsForContentId(contentId)){
-            licenseManagementService.grantUserToLicense(ALL_USER_NAMES.get(RandomUtils.nextInt(ALL_USER_NAMES.size() - 1)), licenseId);
+        try{
+            for (String licenseId : licenseManagementService.getLicenseIdsForContentId(contentId, false)){
+                licenseManagementService.addLicenseIdAuthorisation(ALL_USER_NAMES.get(RandomUtils.nextInt(ALL_USER_NAMES.size() - 1)), licenseId);
+            }
+
+            Assert.assertTrue(licenseManagementService.getContentIdAllocationCount(contentId) > 0);
+
+            licenseManagementService.removeAllContentIdAssignments(contentId);
+
+            Assert.assertTrue(licenseManagementService.getContentIdAllocationCount(contentId) == 0);
+        } catch (LicenseManagementException e){
+
+        } catch (CommandException e) {
+            LOG.error("Error granting license to user", e);
         }
-        
-        Assert.assertTrue(licenseManagementService.getContentIdAllocationCount(contentId) > 0);
-        
-        licenseManagementService.removeAllContentIdAssignments(contentId);
-        
-        Assert.assertTrue(licenseManagementService.getContentIdAllocationCount(contentId) == 0);
     }
     
     @Test
     public void testResetUserAssignmentsByContentId(){
         
-        for (String licenseId : licenseManagementService.getLicenseIdsForContentId(CONTENTID)){
-            licenseManagementService.grantUserToLicense(TEST_USERNAME, licenseId);
+        try{
+            for (String licenseId : licenseManagementService.getLicenseIdsForContentId(CONTENTID, false)){
+                try {
+                    licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, licenseId);
+                } catch (CommandException e) {
+                    LOG.error("Error granting license to user", e);
+                }
+            }
+
+            licenseManagementService.removeContentIdUserAssignment(TEST_USERNAME, CONTENTID);
+
+            Assert.assertFalse(licenseManagementService.getAuthorisedContentIdsByUser(TEST_USERNAME).contains(CONTENTID));
+        } catch (LicenseManagementException e){
+            LOG.error("Something went wrong with removing licenses", e);
         }
-        
-        licenseManagementService.removeContentIdUserAssignment(TEST_USERNAME, CONTENTID);
-        
-        Assert.assertFalse(licenseManagementService.getAuthorisedContentIdsByUser(TEST_USERNAME).contains(CONTENTID));
     }
     
     @Test
@@ -248,15 +228,16 @@ public class LicenseManagementTest extends ContextConfiguration{
         elementDao.merge(firstEntry);
         elementDao.merge(secondEntry);
         
+        try {
         for (String username : ALL_USER_NAMES){
-            licenseManagementService.addLicenseIdAuthorisation(username, firstEntry.getLicenseID());
-            licenseManagementService.addLicenseIdAuthorisation(username, secondEntry.getLicenseID());
+                licenseManagementService.addLicenseIdAuthorisation(username, firstEntry.getLicenseID());
+                licenseManagementService.addLicenseIdAuthorisation(username, secondEntry.getLicenseID());
         }
         
         Assert.assertTrue(licenseManagementService.getAllLicenseIds(false).size() >= 2);
         
-        Assert.assertTrue("more users assigned than allowed by licenseEntry", licenseManagementService.checkAssignedUsersForLicenseId(firstEntry.getLicenseID()));
-        Assert.assertTrue("more users assigned than allowed by licenseEntry", licenseManagementService.checkAssignedUsersForLicenseId(secondEntry.getLicenseID()));
+        Assert.assertTrue("more users assigned than allowed by licenseEntry", licenseManagementService.hasLicenseIdAssignableSlots(firstEntry.getLicenseID()));
+        Assert.assertTrue("more users assigned than allowed by licenseEntry", licenseManagementService.hasLicenseIdAssignableSlots(secondEntry.getLicenseID()));
         
         int countFor2 = licenseManagementService.getContentIdAllocationCount(firstEntry.getContentIdentifier());
         
@@ -264,13 +245,22 @@ public class LicenseManagementTest extends ContextConfiguration{
         
         int countFor1 = licenseManagementService.getContentIdAllocationCount(firstEntry.getContentIdentifier());
         Assert.assertTrue("removing user assignments for licenseId " + firstEntry.getLicenseID() + " failed", countFor1 < countFor2);
-        
+
+        } catch (LicenseManagementException e){
+            LOG.error("Something went wrong with removing licenses from users", e);
+        } catch (CommandException e) {
+            LOG.error("Error granting license to user", e);
+        }
     }
     
     @Test
     public void testGetValidUsersForContentId(){
         for(String contentId : CONTENTID_TESTDATA){
-            Assert.assertTrue("assigned users for " + contentId + " is 0", licenseManagementService.getValidUsersForContentId(contentId) > 0);
+            try{
+                Assert.assertTrue("assigned users for " + contentId + " is 0", licenseManagementService.getValidUsersForContentId(contentId) > 0);
+            } catch (LicenseManagementException e){
+                LOG.error("Error getting valid users for contentId", e);
+            }
         }
     }
     
@@ -307,21 +297,29 @@ public class LicenseManagementTest extends ContextConfiguration{
         elementDao.flush();
         
         Assert.assertNull(elementDao.findByLicenseId(plainLicenseId));
-        // contentID_testdata needs to be encrypted here as well, obviously
-        for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
-            Date maximalValid = licenseManagementService.getMaxValidUntil(CONTENTID_TESTDATA.get(j));
-            int sumOfValidUsers = licenseManagementService.getValidUsersForContentId(CONTENTID_TESTDATA.get(j));
-            System.out.println(CONTENTID_TESTDATA.get(j) + " is valid until:\t" + maximalValid.toString() + " and for " + String.valueOf(sumOfValidUsers) +" users" );
+        try{
+            // contentID_testdata needs to be encrypted here as well, obviously
+            for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
+                Date maximalValid = licenseManagementService.getMaxValidUntil(CONTENTID_TESTDATA.get(j));
+                int sumOfValidUsers = licenseManagementService.getValidUsersForContentId(CONTENTID_TESTDATA.get(j));
+                System.out.println(CONTENTID_TESTDATA.get(j) + " is valid until:\t" + maximalValid.toString() + " and for " + String.valueOf(sumOfValidUsers) +" users" );
+            }
+        } catch (LicenseManagementException e){
+            LOG.error("Error getting licenseData-attributes",e );
         }
-        
+
         
     }
     
     @Test
     public void serviceTest(){
-        Set<String> allIds = licenseManagementService.getAllContentIds(true);
-        for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
-            Assert.assertTrue(allIds.contains(CONTENTID_TESTDATA.get(j)));
+        try{
+            Set<String> allIds = licenseManagementService.getAllContentIds(true);
+            for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
+                Assert.assertTrue(allIds.contains(CONTENTID_TESTDATA.get(j)));
+            }
+        }   catch (LicenseManagementException e){
+            LOG.error("Error getting license Data contentId", e);
         }
         
     }
@@ -376,14 +374,18 @@ public class LicenseManagementTest extends ContextConfiguration{
         CONTENTID_TESTDATA.add("blafasel");
         CONTENTID_TESTDATA.add("blafasel23");
         
-        for (String contentId : CONTENTID_TESTDATA){
-            for (String licenseId : licenseManagementService.getLicenseIdsForContentId(contentId)){
-                licenseManagementService.removeAllLicenseIdAssignments(licenseId);
+        try{
+            for (String contentId : CONTENTID_TESTDATA){
+                for (String licenseId : licenseManagementService.getLicenseIdsForContentId(contentId, false)){
+                    licenseManagementService.removeAllLicenseIdAssignments(licenseId);
+                }
             }
-        }
-        
-        for(String contentId : CONTENTID_TESTDATA){
-            Assert.assertTrue (0 == licenseManagementService.getContentIdAllocationCount(contentId));
+
+            for(String contentId : CONTENTID_TESTDATA){
+                Assert.assertTrue (0 == licenseManagementService.getContentIdAllocationCount(contentId));
+            }
+        } catch (LicenseManagementException e){
+            LOG.error("Error dealing with license/vnl-Data", e);
         }
     }
     
@@ -395,16 +397,21 @@ public class LicenseManagementTest extends ContextConfiguration{
         
         String localLicenseId  = entry.getLicenseID();
         
-        licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, localLicenseId);
-        licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, localLicenseId);
+        try{
+            licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, localLicenseId);
+            licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, localLicenseId);
         
         Set<String> idsFromDb = licenseManagementService.getAuthorisedContentIdsByUser(TEST_USERNAME);
         Assert.assertEquals(1, licenseManagementService.getContentIdAllocationCount(entry.getContentIdentifier()));
         
-        
         Assert.assertTrue(idsFromDb.contains(localLicenseId));
         
         elementDao.delete(entry);
+        } catch (CommandException e){
+            LOG.error("Error granting license to user", e);
+        } catch (LicenseManagementException e){
+            LOG.error("Error dealing with license-/vnl data", e);
+        }
     }
     
     @Test
@@ -460,9 +467,12 @@ public class LicenseManagementTest extends ContextConfiguration{
     @Test
     public void cryptoServiceTest(){
         testPlainCryptoFunctionality();
-//        LicenseManagementEntry cryptedEntry = getSingleCryptedEntry();
-        
+        LicenseManagementEntry cryptedEntry = getSingleCryptedEntry();
     }
+    
+
+    
+    
 
     /**
      * 

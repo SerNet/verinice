@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
+import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -67,6 +68,7 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.rcp.SWTElementFactory;
@@ -771,18 +773,23 @@ public class XMLImportDialog extends Dialog {
                 try {
                     entry = VNLMapper.getInstance().
                             unmarshalXML(FileUtils.readFileToByteArray(vnlFile));
+                    if(entry == null){
+                        MessageDialog.openWarning(getParentShell(), "Ungültige Lizenz", "Der Inhalt der zu importierenden Datei sind keine gültigen verinice-Lizenzinformationen ");
+                        return;
+                    }
+                    // check if valid xml
+                    if(entry != null && ServiceFactory.lookupLicenseManagementService().addVNLToRepository(vnlFile)){
+                        showSuccessfulVNLImport(vnlFile.getName());
+                        //TODO show hint for not succesfull import
+                    }
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                if(entry == null){
-                    MessageDialog.openWarning(getParentShell(), "Ungültige Lizenz", "Der Inhalt der zu importierenden Datei sind keine gültigen verinice-Lizenzinformationen ");
-                    return;
-                }
-                // check if valid xml
-                if(entry != null && ServiceFactory.lookupLicenseManagementService().addVNLToRepository(vnlFile)){
-                    showSuccessfulVNLImport(vnlFile.getName());
-                    //TODO show hint for not succesfull import
+                    String msg = "Error reading vnl-Data";
+                    ExceptionUtil.log(e, msg);
+                    LOG.error(msg, e);
+                } catch (LicenseManagementException e){
+                    String msg = "Error adding vnl to repository";
+                    ExceptionUtil.log(e, msg);
+                    LOG.error(msg, e);
                 }
             }
         });

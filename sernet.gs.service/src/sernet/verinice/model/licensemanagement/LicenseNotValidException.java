@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 Sebastian Hagedorn.
+ * Copyright (c) 2017 Sebastian Hagedorn.
  *
  * This program is free software: you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License
@@ -20,22 +20,20 @@
 package sernet.verinice.model.licensemanagement;
 
 /**
- * class to wrap exceptions appearing during dealing 
- * with vnl-Files / -Informations
- * 
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class LicenseManagementException extends Exception {
-    
-    private static final long serialVersionUID = 20161019113412L;
+public class LicenseNotValidException extends LicenseManagementException {
 
-    public LicenseManagementException(String msg){
+    private static final long serialVersionUID = 201702241109L;
+
+    public LicenseNotValidException(String msg) {
         super(msg);
     }
-    
-    public LicenseManagementException(String msg, Throwable t){
+
+    public LicenseNotValidException(String msg, Throwable t) {
         super(msg, t);
     }
+
 
 }

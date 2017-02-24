@@ -17,7 +17,9 @@
  ******************************************************************************/
 package sernet.verinice.rcp.account;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -65,6 +67,7 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.ICommandService;
+import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.iso27k.rcp.ComboModel;
 import sernet.verinice.iso27k.rcp.IComboModelLabelProvider;
 import sernet.verinice.iso27k.rcp.JobScheduler;
@@ -76,6 +79,8 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonGroup;
+import sernet.verinice.model.licensemanagement.LicenseManagementException;
+import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.rcp.ElementTitleCache;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.TextEventAdapter;
@@ -350,19 +355,31 @@ public class AccountView extends RightsEnabledView {
         viewer.getControl().setLayoutData(gd);
         
         viewer.setContentProvider(contentProvider);
-        viewer.setLabelProvider(new AccountLabelProvider());
+        viewer.setLabelProvider(new AccountLabelProvider(viewer));
         Table table = viewer.getTable();
         
-        createTableColumn(Messages.AccountView_12, TEXT_COLUMN_WIDTH, 0);
-        createTableColumn(Messages.AccountView_13, TEXT_COLUMN_WIDTH, 1);
-        createTableColumn(Messages.AccountView_14, TEXT_COLUMN_WIDTH, 2);
-        createTableColumn(Messages.AccountView_15, TEXT_COLUMN_WIDTH, 3);
-        createTableColumn(Messages.AccountView_16, TEXT_COLUMN_WIDTH, 4);
-        createTableColumn(Messages.AccountView_17, BOOLEAN_COLUMN_WIDTH, 5);
-        createTableColumn(Messages.AccountView_18, BOOLEAN_COLUMN_WIDTH, 6);
-        createTableColumn(Messages.AccountView_19, BOOLEAN_COLUMN_WIDTH, 7);
-        createTableColumn(Messages.AccountView_20, BOOLEAN_COLUMN_WIDTH, 8);
-        createTableColumn(Messages.AccountView_21, BOOLEAN_COLUMN_WIDTH, 9);
+        int columnIndex = 0;
+        
+        createTableColumn(Messages.AccountView_12, TEXT_COLUMN_WIDTH, columnIndex++);
+        createTableColumn(Messages.AccountView_13, TEXT_COLUMN_WIDTH, columnIndex++);
+        createTableColumn(Messages.AccountView_14, TEXT_COLUMN_WIDTH, columnIndex++);
+        createTableColumn(Messages.AccountView_15, TEXT_COLUMN_WIDTH, columnIndex++);
+        createTableColumn(Messages.AccountView_16, TEXT_COLUMN_WIDTH, columnIndex++);
+        createTableColumn(Messages.AccountView_17, BOOLEAN_COLUMN_WIDTH, columnIndex++);
+        createTableColumn(Messages.AccountView_18, BOOLEAN_COLUMN_WIDTH, columnIndex++);
+        createTableColumn(Messages.AccountView_19, BOOLEAN_COLUMN_WIDTH, columnIndex++);
+        createTableColumn(Messages.AccountView_20, BOOLEAN_COLUMN_WIDTH, columnIndex++);
+        createTableColumn(Messages.AccountView_21, BOOLEAN_COLUMN_WIDTH, columnIndex++);
+        
+        Set<String> createdLMColumnIds = new HashSet<>();
+        
+        try{
+            columnIndex = creatLMColumns(columnIndex, createdLMColumnIds);
+        } catch (LicenseManagementException e){
+            String msg = "Error creating license-mgmt-Colums";
+            ExceptionUtil.log(e, msg);
+            LOG.error(msg, e);
+        }
         
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
@@ -371,6 +388,29 @@ public class AccountView extends RightsEnabledView {
         ((AccountTableSorter) viewer.getSorter()).setColumn(2);
     }
 
+    /**
+     * @param columnIndex
+     * @param createdLMColumnIds
+     * @return
+     * @throws LicenseManagementException
+     */
+    private int creatLMColumns(int columnIndex, Set<String> createdLMColumnIds) throws LicenseManagementException {
+        for(LicenseManagementEntry entry : getLMService().getExistingLicenses()){
+            Object licenseIdValue = getLMService().decrypt(entry, 
+                    LicenseManagementEntry.COLUMN_LICENSEID);
+            String licenseIdString = String.valueOf(licenseIdValue);
+            if(!createdLMColumnIds.contains(licenseIdString)){
+                createTableColumn(
+                        licenseIdString, 
+                        BOOLEAN_COLUMN_WIDTH, 
+                        columnIndex++);
+
+            }
+
+        }
+        return columnIndex;
+    }
+    
     private void createTableColumn(String title, int width, int index) {
         TableColumn scopeColumn = new TableColumn(viewer.getTable(), SWT.LEFT);
         scopeColumn.setText(title);
@@ -678,5 +718,9 @@ public class AccountView extends RightsEnabledView {
             }
             return input;
         }
+    }
+    
+    private ILicenseManagementService getLMService(){
+        return ServiceFactory.lookupLicenseManagementService();
     }
 }

@@ -3,7 +3,9 @@ package sernet.verinice.rcp.account;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.TableColumn;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -13,7 +15,16 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
 
     private static final Logger LOG = Logger.getLogger(AccountLabelProvider.class);
     
+    private static final String DUMMY_LM_LABEL = "###verinice-dummy-id###";
+    
     boolean titleMapInitialized = false;
+    
+    private TableViewer viewer = null;
+    
+    public AccountLabelProvider(TableViewer viewer) {
+        super();
+        this.viewer = viewer;
+    }
     
     @Override
     public String getColumnText(Object element, int columnIndex) {
@@ -45,14 +56,27 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
                     return convertToX(account.isRcpUser());
                 case 9:
                     return convertToX(account.isDeactivatedUser());  
+                case 10:
+                    return getLMColumnLabel(10, account);
                 
                 default:
+                    if(columnIndex > 9){
+                        return getLMColumnLabel(columnIndex, account);
+                    }
                     return null;
             }
         } catch (Exception e) {
             LOG.error("Error while getting column text", e); //$NON-NLS-1$
             throw new RuntimeException(e);
         }
+    }
+
+    private String getLMColumnLabel(int columnIndex, Configuration account){
+        TableColumn column = viewer.getTable().getColumn(columnIndex);
+        String licenseId = column.getText();
+        return convertToX(
+                account.getAssignedLicenseIds().
+                contains(licenseId));
     }
 
     private String getPlaceHolderText(Object element, int columnIndex) {

@@ -58,13 +58,9 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      * @param encryptedContentId - contentId (not licenseId!) to check for
      */
     @Override
-    public int getValidUsersForContentId(String encryptedContentId) {
-//        String hql = "from LicenseManagementEntry " + "where contentIdentifier = ?";
-//        Object[] params = new Object[] { encryptedContentId };
-//        List idList = licenseManagementDao.findByQuery(hql, params);
+    public int getValidUsersForContentId(String encryptedContentId) 
+            throws LicenseManagementException {
         int sum = 0;
-//        for (Object o : idList) {
-//            if (o instanceof LicenseManagementEntry) {
         for(LicenseManagementEntry entry : getExistingLicenses()){
             if(entry.getContentIdentifier().equals(encryptedContentId)){
                     int validUsers = decrypt(entry,
@@ -86,12 +82,8 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      * to validate time for 
      */
     @Override
-    public boolean isUserAssignedLicenseStillValid(String user, String encryptedLicenseId) {
-//        String hql = "from LicenseManagementEntry " 
-//                + "where licenseID = ?";
-//        Object[] params = new Object[]{encryptedLicenseId};
-//        List validUntilList = licenseManagementDao.findByQuery(hql, params);
-//        if(validUntilList != null && validUntilList.size() == 1){
+    public boolean isUserAssignedLicenseStillValid(String user, 
+            String encryptedLicenseId) throws LicenseManagementException {
         for(LicenseManagementEntry entry : getExistingLicenses()){
             if(entry.getLicenseID().equals(encryptedLicenseId)){
                 long validUntil = decrypt(entry,
@@ -115,12 +107,8 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      * 
      */
     @Override
-    public boolean hasLicenseIdAssignableSlots(String encryptedLicenseId) {
-//        String hql = "from LicenseManagementEntry " 
-//                + "where licenseID = ?";
-//        Object[] params = new Object[]{encryptedLicenseId};
-//        List validUserList = licenseManagementDao.findByQuery(hql, params);
-//        if(validUserList != null && validUserList.size() == 1){
+    public boolean hasLicenseIdAssignableSlots(String encryptedLicenseId) 
+        throws LicenseManagementException{
         for(LicenseManagementEntry entry : getExistingLicenses()){
             if (entry.getLicenseID().equals(encryptedLicenseId)){
                 int validUsers = decrypt(entry, 
@@ -147,7 +135,7 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
     }
 
     @Override
-    public File getVNLRepository(){
+    public File getVNLRepository() throws LicenseManagementException{
         File location = null;
         try {
             String instanceAreaVNL = FilenameUtils.concat(
@@ -164,7 +152,8 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      * in standalone mode, read vnl-files from workspace
      */
     @Override
-    public Set<LicenseManagementEntry> readVNLFiles(){
+    public Set<LicenseManagementEntry> readVNLFiles() 
+            throws LicenseManagementException{
         if(existingLicenses != null){
             existingLicenses.clear();
         } else {

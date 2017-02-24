@@ -56,6 +56,8 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
+import sernet.verinice.model.licensemanagement.LicenseManagementException;
+import sernet.verinice.model.licensemanagement.NoLicenseAssignedException;
 import sernet.verinice.model.samt.SamtTopic;
 
 /**
@@ -150,8 +152,19 @@ public abstract class HtmlWriter {
         StringBuilder sb = new StringBuilder();
         String encryptedContentId = property.getLicenseContentId();
         String cypherText = property.getPropertyValue();
-        return getLicenseMgmtService().decryptRestrictedProperty(
-                encryptedContentId, cypherText,1 ); 
+        String currentUser = ServiceFactory.lookupAuthService().getUsername();
+        try{
+            return getLicenseMgmtService().decryptRestrictedProperty(
+                    encryptedContentId, cypherText, currentUser );
+        } catch (NoLicenseAssignedException e){
+            String msg  = "User has no license assigned for this content";
+            LOG.error(msg, e);
+        } catch (LicenseManagementException e){
+            String msg = "Something went wrong decrypting license restricted information";
+            LOG.error(msg, e);
+        }
+        return "For some reason user is not allowed to see this content\n"
+                + "For Details see Log-File or contact Administrator";
     }
 
     /**

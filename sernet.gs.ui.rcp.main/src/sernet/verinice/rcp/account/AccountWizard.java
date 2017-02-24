@@ -24,7 +24,6 @@ import java.util.Set;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
-import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 
 /**
@@ -43,6 +42,7 @@ public class AccountWizard extends Wizard {
     private NotificationPage notificationPage;
     private AuditorNotificationPage auditorNotificationPage;
     private ProfilePage profilePage;
+    private LicenseMgmtPage licenseMgmtPage;
     
     public AccountWizard(Configuration account) {
         super(); 
@@ -68,6 +68,8 @@ public class AccountWizard extends Wizard {
         addPage(limitationPage);
         groupPage = new GroupPage(account);
         addPage(groupPage);     
+        licenseMgmtPage = new LicenseMgmtPage();
+        addPage(licenseMgmtPage);
         notificationPage = new NotificationPage();
         addPage(notificationPage);
         auditorNotificationPage = new AuditorNotificationPage();
@@ -85,6 +87,8 @@ public class AccountWizard extends Wizard {
             limitationPage.setWeb(account.isWebUser());
             limitationPage.setDesktop(account.isRcpUser());
             limitationPage.setDeactivated(account.isDeactivatedUser());
+            licenseMgmtPage.setUser(account.getUser());
+            licenseMgmtPage.setAssignedLicenseIds(account.getAssignedLicenseIds());
             notificationPage.setNotification(getAccount().isNotificationEnabled());
             notificationPage.setGlobal(getAccount().isNotificationGlobal());
             notificationPage.setNewTasks(getAccount().isNotificationMeasureAssignment());
@@ -128,7 +132,29 @@ public class AccountWizard extends Wizard {
         
         getAccount().setAuditorNotificationExpirationDays(auditorNotificationPage.getDeadlineInDays());
         
+        syncLicenseIdsToAccount();
         return true;
+    }
+
+    /**
+     * 
+     */
+    private void syncLicenseIdsToAccount() {
+        Set<String> oldLicenseIds = getAccount().getAllLicenseIds();
+        Set<String> newLicenseIds = licenseMgmtPage.getAssignedLicenseIds();
+        
+        for(String oldLicenseId : oldLicenseIds){
+            if(!newLicenseIds.contains(oldLicenseId)){
+                // id has been removed in the wizard
+                getAccount().removeLicensedContentId(oldLicenseId);
+            }
+        }
+        for(String newLicenseId : newLicenseIds){
+            if(!oldLicenseIds.contains(newLicenseId)){
+                // license id has been added
+                getAccount().addLicensedContentId(newLicenseId);
+            }
+        }
     }
     
     @Override
