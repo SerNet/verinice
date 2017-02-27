@@ -15,12 +15,11 @@
 			<div class="ui-g-12">
 				<p:panel header="Filter" toggleable="true">
 					<h:form id="verbundForm" rendered="#{auth.bsiTasks}">
-
 						<div class="ui-g">
 							<div class="ui-g-4">
-								<h1>#{msg['todo.groups']}</h1>
-								<p:selectOneMenu id="car"
-									value="#{assetNavigation.itVerbundItem}">
+								<p:selectOneMenu id="itnetwork"
+									value="#{assetNavigation.itVerbundItem}"
+									label="#{msg['todo.groups']}">
 									<p:ajax event="change"
 										update="verbundForm,:elementsForm,:tablePanel,:editPanel"
 										listener="#{toDo.loadToDosForItNetworkItem}" process="@this" />
@@ -29,67 +28,39 @@
 								</p:selectOneMenu>
 							</div>
 							<div class="ui-g-4">
-								<h1>#{msg['todo.realization']}</h1>
-								<ul id="listLeftNavi">
-									<!-- Grundschutz -->
-									<li id="liLeftNavi"><h:selectBooleanCheckbox
-											id="executionNo" value="#{toDo.executionNo}">
-											<p:ajax event="change" listener="#{toDo.loadToDoList}"
-												process="executionNo" />
-										</h:selectBooleanCheckbox> <h:outputLabel for="executionNo" value="#{msg['todo.no']}" /></li>
-									<li id="liLeftNavi"><h:selectBooleanCheckbox
-											id="executionYes" value="#{toDo.executionYes}">
-											<p:ajax event="change" listener="#{toDo.loadToDoList}"
-												update=":tablePanel,:editPanel" process="executionYes" />
-										</h:selectBooleanCheckbox> <h:outputLabel for="executionYes" value="#{msg['todo.yes']}" /></li>
-									<li id="liLeftNavi"><h:selectBooleanCheckbox
-											id="executionPartly" value="#{toDo.executionPartly}">
-											<p:ajax event="change" listener="#{toDo.loadToDoList}"
-												update=":tablePanel,:editPanel" process="executionPartly" />
-										</h:selectBooleanCheckbox> <h:outputLabel for="executionPartly"
-											value="#{msg['todo.partly']}" /></li>
-									<li id="liLeftNavi"><h:selectBooleanCheckbox
-											id="executionDispensable"
-											value="#{toDo.executionDispensable}">
-											<p:ajax event="change" listener="#{toDo.loadToDoList}"
-												update=":tablePanel,:editPanel"
-												process="executionDispensable" />
-										</h:selectBooleanCheckbox> <h:outputLabel for="executionDispensable"
-											value="#{msg['todo.superfluous']}" /></li>
-									<li id="liLeftNavi"><h:selectBooleanCheckbox
-											id="executionUntreated" value="#{toDo.executionUntreated}">
-											<p:ajax event="change" listener="#{toDo.loadToDoList}"
-												update=":tablePanel,:editPanel" process="executionUntreated" />
-										</h:selectBooleanCheckbox> <h:outputLabel for="executionUntreated"
-											value="#{msg['todo.untreated']}" /></li>
-								</ul>
+
+								<p:selectCheckboxMenu id="realizationFilter"
+									value="#{toDo.grundSchutzExecutionFilter}"
+									label="#{msg['todo.realization']}"
+									converter="grundSchutzExecutionConverter">
+									<f:selectItem itemLabel="#{msg['todo.no']}"
+										itemValue="#{toDo.getGrundSchutzExecutionNo()}" />
+									<f:selectItem itemLabel="#{msg['todo.yes']}"
+										itemValue="#{toDo.getGrundSchutzExecutionYes()}" />
+									<f:selectItem itemLabel="#{msg['todo.partly']}"
+										itemValue="#{toDo.getGrundSchutzExecutionPartly()}" />
+									<f:selectItem itemLabel="#{msg['todo.superfluous']}"
+										itemValue="#{toDo.getGrundSchutzExecutionDispensable()}" />
+									<f:selectItem itemLabel="#{msg['todo.untreated']}"
+										itemValue="#{toDo.getGrundSchutzExecutionUntreated()}" />
+									<p:ajax event="change" listener="#{toDo.loadToDoList}"
+										update=":tablePanel,:editPanel" process="@this" />
+									<p:ajax event="toggleSelect" listener="#{toDo.loadToDoList}"
+										update=":tablePanel,:editPanel" process="@this" />
+								</p:selectCheckboxMenu>
 							</div>
 							<div class="ui-g-4">
-								<h1>
-									<h:outputText value="#{msg['todo.seal']}" />
-								</h1>
-								<ul id="listLeftNavi">
-									<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealA"
-											value="#{toDo.sealA}">
-											<p:ajax event="change" listener="#{toDo.loadToDoList}"
-												update=":tablePanel,:editPanel" process="sealA" />
-										</h:selectBooleanCheckbox> <h:outputLabel for="sealA" value="A" /></li>
-									<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealB"
-											value="#{toDo.sealB}">
-											<p:ajax event="change" listener="#{toDo.loadToDoList}"
-												update=":tablePanel,:editPanel" process="sealB" />
-										</h:selectBooleanCheckbox> <h:outputLabel for="sealB" value="B" /></li>
-									<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealC"
-											value="#{toDo.sealC}">
-											<p:ajax event="change" listener="#{toDo.loadToDoList}"
-												update=":tablePanel,:editPanel" process="sealC" />
-										</h:selectBooleanCheckbox> <h:outputLabel for="sealC" value="C" /></li>
-									<li id="liLeftNavi"><h:selectBooleanCheckbox id="sealZ"
-											value="#{toDo.sealZ}">
-											<p:ajax event="change" listener="#{toDo.loadToDoList}"
-												update=":tablePanel,:editPanel" process="sealZ" />
-										</h:selectBooleanCheckbox> <h:outputLabel for="sealZ" value="Z" /></li>
-								</ul>
+								<p:selectCheckboxMenu id="sealFilter" value="#{toDo.sealFilter}"
+									converter="sealConverter" label="#{msg['todo.seal']}">
+									<f:selectItem itemLabel="A" itemValue="#{toDo.getSealA()}" />
+									<f:selectItem itemLabel="B" itemValue="#{toDo.getSealB()}" />
+									<f:selectItem itemLabel="C" itemValue="#{toDo.getSealC()}" />
+									<f:selectItem itemLabel="Z" itemValue="#{toDo.getSealZ()}" />
+									<p:ajax event="toggleSelect" listener="#{toDo.loadToDoList}"
+										update=":tablePanel,:editPanel" process="@this" />
+									<p:ajax event="change" listener="#{toDo.loadToDoList}"
+										update=":tablePanel,:editPanel" process="@this" />
+								</p:selectCheckboxMenu>
 							</div>
 						</div>
 					</h:form>
