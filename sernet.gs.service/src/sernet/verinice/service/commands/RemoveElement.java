@@ -164,7 +164,7 @@ public class RemoveElement<T extends CnATreeElement> extends ChangeLoggingComman
                     removeRiskAnalysis((FinishedRiskAnalysis) children[i]);
                 }
 
-                if (children[i].getEntity() != null && isOrphanEntity(dao, children[i].getDbId())) {
+                if (children[i].getEntity() != null && isOrphanEntity(dao, children[i].getEntity().getDbId())) {
                     deleteOrphanEntity(children[i].getEntity());
                     children[i].setEntity(null);
                 }
