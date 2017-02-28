@@ -453,33 +453,31 @@ public class CopyCommand extends GenericCommand {
     private void createTaskWhenUsingTemplate(final CnATreeElement copyElement, final CnATreeElement newElement) {
         if (copyElement.isTemplate() && !MassnahmenUmsetzung.TYPE_ID.equals(copyElement.getTypeId())) {
             ServerInitializer.inheritVeriniceContextState();
-            String defaultTemplateMaster = defaultTemplateMaster();
+            String templateMaster = templateMaster();
             String username = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getUsername();
 
-            if (!defaultTemplateMaster.equals(username)) {
-            IIndividualService individualService = (IIndividualService) VeriniceContext.get(VeriniceContext.INDIVIDUAL_SERVICE);
-            IndividualServiceParameter parameter = getIndividualServiceParameter(copyElement, newElement);
-            
-            individualService.startProcess(parameter);
-        }
+            if (!templateMaster.equals(username)) {
+                IIndividualService individualService = (IIndividualService) VeriniceContext.get(VeriniceContext.INDIVIDUAL_SERVICE);
+                IndividualServiceParameter parameter = getIndividualServiceParameter(copyElement, newElement, templateMaster);
+                individualService.startProcess(parameter);
+            }
         }
     }
 
-    private String defaultTemplateMaster() {
-        String defaultTemplateMaster = PropertyLoader.getDefaultTemplateMaster();
+    private String templateMaster() {
+        String defaultTemplateMaster = PropertyLoader.getTemplateMaster();
         if (defaultTemplateMaster == null) {
-            getLog().error("Error while parsing property " + PropertyLoader.DEFAULT_TEMPLATE_MASTER);
+            getLog().error("Error while parsing property " + PropertyLoader.TEMPLATE_MASTER);
             defaultTemplateMaster = ((IAuthService) VeriniceContext.get(VeriniceContext.AUTH_SERVICE)).getAdminUsername();
         }
         return defaultTemplateMaster;
     }
 
-    private IndividualServiceParameter getIndividualServiceParameter(final CnATreeElement copyElement, final CnATreeElement newElement) {
+    private IndividualServiceParameter getIndividualServiceParameter(final CnATreeElement copyElement, final CnATreeElement newElement, String templateMaster) {
         IndividualServiceParameter parameter = new IndividualServiceParameter();
         parameter.setUuid(newElement.getUuid());
         parameter.setTypeId(newElement.getTypeId());
-        String defaultTemplateMaster = defaultTemplateMaster();
-        parameter.setAssignee(defaultTemplateMaster);
+        parameter.setAssignee(templateMaster);
         parameter.setTitle(Messages.getString("CopyCommand.TaskTitleWhenUsingTemplate"));
         String newElementScopeTitle = getScopeTitle(newElement);
         parameter.setDescription(Messages.getString("CopyCommand.TaskDescriptionWhenUsingTemplate", copyElement.getTitle(), newElement.getParent().getTitle(), newElementScopeTitle));
