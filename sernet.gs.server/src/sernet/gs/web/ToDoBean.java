@@ -94,6 +94,8 @@ public class ToDoBean {
     private boolean executionPredictable = true;
     private boolean executionOptimizing = true;
 
+    private String selectedChapterId;
+
     private Set<GrundSchutzExecution> grundSchutzExecutionFilter;
 
     private Set<Seal> sealFilter;
@@ -151,6 +153,11 @@ public class ToDoBean {
         executionList.add(new KeyValue(UmsetzungConverter.NEIN, MassnahmenUmsetzung.P_UMSETZUNG_NEIN));
         executionList.add(new KeyValue(UmsetzungConverter.TEILWEISE, MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE));
         executionList.add(new KeyValue(UmsetzungConverter.UNBEARBEITET, MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET));
+
+        grundSchutzExecutionFilter =  new HashSet<>();
+        grundSchutzExecutionFilter.add(GrundSchutzExecution.EXECUTION_UNTREATED);
+
+        sealFilter = new HashSet<>();
     }
 
     public void loadToDoList() {
@@ -181,9 +188,8 @@ public class ToDoBean {
     }
 
     public void loadToDoListForElement() {
-        String id = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("itemId");
-        if (id != null) {
-            getAssetNavigation().setSelectedElementId(Integer.valueOf(id));
+        if (selectedChapterId != null) {
+            getAssetNavigation().setSelectedElementId(Integer.valueOf(selectedChapterId));
         }
         loadToDoList(AssetNavigationBean.SOURCE_ELEMENT);
     }
@@ -576,6 +582,14 @@ public class ToDoBean {
 
     public void setSealFilter(Set<Seal> sealFilter) {
         this.sealFilter = sealFilter;
+    }
+
+    public String getSelectedChapterId() {
+        return selectedChapterId;
+    }
+
+    public void setSelectedChapterId(String selectedChapterId) {
+        this.selectedChapterId = selectedChapterId;
     }
 
 }

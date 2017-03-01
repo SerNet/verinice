@@ -68,7 +68,7 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 	public String getUmsetzungIcon() {
 		// ISO 27001
 		// Grundschutz
-		return UMSETZUNG_IMAGE_MAP.get(getUmsetzung());
+		return "/resources/verinice-layout/images/icon/" + UMSETZUNG_IMAGE_MAP.get(getUmsetzung()) ;
 	}
 
 	public Date getUmsetzungBis() {
