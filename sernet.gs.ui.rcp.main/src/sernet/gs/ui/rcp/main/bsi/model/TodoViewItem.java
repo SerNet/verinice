@@ -55,8 +55,6 @@ public class TodoViewItem implements Serializable, IMassnahmeUmsetzung, Comparab
 	private Date naechsteRevision;
 	private String revisionDurch;
 
-	
-
 	public String getTitle() {
 		return titel;
 	}

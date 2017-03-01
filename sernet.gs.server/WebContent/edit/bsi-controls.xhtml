@@ -76,7 +76,7 @@
 
 								 <p:selectOneListbox id="buildingBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
                                     <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.gebaeudeList}" />
-                                    <p:ajax update=":tablePanel,:elementsForm,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
                                 </p:selectOneListbox>
 							</p:tab>
 							<p:tab title="#{msg['todo.rooms']}"
@@ -84,7 +84,7 @@
 
 								 <p:selectOneListbox id="raumListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
                                     <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.raumList}" />
-                                    <p:ajax update=":tablePanel,:elementsForm,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
                                 </p:selectOneListbox>
 
 							</p:tab>
@@ -92,49 +92,49 @@
 								rendered="#{not empty assetNavigation.clienteList}">
 								 <p:selectOneListbox id="clientListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
                                     <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.clienteList}" />
-                                    <p:ajax update=":tablePanel,:elementsForm,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
                                 </p:selectOneListbox>
 							</p:tab>
 							<p:tab title="#{msg['todo.server']}"
 								rendered="#{not empty assetNavigation.serverList}">
 								 <p:selectOneListbox id="serverListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
                                     <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.serverList}" />
-                                    <p:ajax update=":tablePanel,:elementsForm,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
                                 </p:selectOneListbox>
 							</p:tab>
 							<p:tab title="#{msg['todo.applications']}"
 								rendered="#{not empty assetNavigation.anwendungList}">
 								<p:selectOneListbox id="anwendungListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
                                     <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.anwendungList}" />
-                                    <p:ajax update=":tablePanel,:elementsForm,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
                                 </p:selectOneListbox>
 							</p:tab>
 							<p:tab title="#{msg['todo.employees']}"
 								rendered="#{not empty assetNavigation.personList}">
 								<p:selectOneListbox id="personListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
                                     <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.personList}" />
-                                    <p:ajax update=":tablePanel,:elementsForm,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
                                 </p:selectOneListbox>
 							</p:tab>
 							<p:tab title="#{msg['todo.networks']}"
 								rendered="#{not empty assetNavigation.netzList}">
 								<p:selectOneListbox id="netzListBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
                                     <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.netzList}" />
-                                    <p:ajax update=":tablePanel,:elementsForm,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
                                 </p:selectOneListbox>
 							</p:tab>
 							<p:tab title="#{msg['todo.netzkomponente']}"
 								rendered="#{not empty assetNavigation.sonstItList}">
 								<p:selectOneListbox id="netzkomponenteBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
                                     <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.sonstItList}" />
-                                    <p:ajax update=":tablePanel,:elementsForm,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
                                 </p:selectOneListbox>
 							</p:tab>
 							<p:tab title="#{msg['todo.tkkomponente']}"
 								rendered="#{not empty assetNavigation.tkKomponenteList}">
 								<p:selectOneListbox id="tkkomponenteBox" value="#{toDo.selectedChapterId}" style="border:0px none;">
                                     <f:selectItems itemLabel="#{item.title}" itemValue="#{item.dbId}" var="item" value="#{assetNavigation.tkKomponenteList}" />
-                                    <p:ajax update=":tablePanel,:elementsForm,:editPanel" listener="#{toDo.loadToDoListForElement}" />
+                                    <p:ajax update=":tablePanel,:editPanel" listener="#{toDo.loadToDoListForElement}" />
                                 </p:selectOneListbox>
 							</p:tab>
 						</p:accordionPanel>
@@ -215,7 +215,7 @@
 							<p:ajax event="rowSelect" listener="#{toDo.loadToDo}"
 								update="editPanel" />
 							<p:column width="16" sortBy="#{item.umsetzung}">
-								<h:graphicImage id="colUmsetzungImage"
+								<h:graphicImage width="16" id="colUmsetzungImage"
 									url="#{item.umsetzungIcon}" />
 							</p:column>
 							<p:column headerText="#{msg['todo.until']}"
