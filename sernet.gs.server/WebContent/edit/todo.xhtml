@@ -13,7 +13,7 @@
 <ui:composition template="/WEB-INF/poseidon/template.xhtml">
 	<ui:define name="content">
 		<div class="ui-g ui-fluid">
-			<div class="ui-g-6">
+			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-12 ui-sm-12">
 				<p:panel header="#{msgTask['tasks']}">
 					<h:form id="tableForm" rendered="#{auth.isoTasks}">
 						<div class="ui-g ui-fluid">
@@ -118,7 +118,7 @@
 				</p:panel>
 			</div>
 
-			<div class="ui-g-6">
+			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-12 ui-sm-12">
 				<vn:editor rendered="#{auth.isoTasks}" />
 			</div>
 		</div>

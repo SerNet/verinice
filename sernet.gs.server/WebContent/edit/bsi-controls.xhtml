@@ -16,7 +16,7 @@
 				<p:panel header="Filter" toggleable="true">
 					<h:form id="verbundForm" rendered="#{auth.bsiTasks}">
 						<div class="ui-g">
-							<div class="ui-g-4">
+							<div class="ui-g-4 ui-lg-4 ui-xl-4 ui-md-12 ui-sm-12">
 								<p:selectOneMenu id="itnetwork"
 									value="#{assetNavigation.itVerbundItem}"
 									label="#{msg['todo.groups']}">
@@ -27,8 +27,7 @@
 									<f:selectItems value="#{assetNavigation.itVerbundItems}" />
 								</p:selectOneMenu>
 							</div>
-							<div class="ui-g-4">
-
+							<div class="ui-g-4 ui-lg-4 ui-xl-4 ui-md-12 ui-sm-12">
 								<p:selectCheckboxMenu id="realizationFilter"
 									value="#{toDo.grundSchutzExecutionFilter}"
 									label="#{msg['todo.realization']}"
@@ -49,7 +48,7 @@
 										update=":tablePanel,:editPanel" process="@this" />
 								</p:selectCheckboxMenu>
 							</div>
-							<div class="ui-g-4">
+							<div class="ui-g-4 ui-lg-4 ui-xl-4 ui-md-12 ui-sm-12">
 								<p:selectCheckboxMenu id="sealFilter" value="#{toDo.sealFilter}"
 									converter="sealConverter" label="#{msg['todo.seal']}">
 									<f:selectItem itemLabel="A" itemValue="#{toDo.getSealA()}" />
@@ -66,7 +65,7 @@
 					</h:form>
 				</p:panel>
 			</div>
-			<div class="ui-g-3">
+			<div class="ui-g-3 ui-lg-3 ui-xl-3 ui-md-12 ui-sm-12">
 				<p:panel header="#{msg['todo.assets']}" rendered="#{auth.bsiTasks}">
 					<h:form id="elementsForm" rendered="#{auth.bsiTasks}">
 						<p:accordionPanel id="elementPanel"
@@ -141,7 +140,7 @@
 					</h:form>
 				</p:panel>
 			</div>
-			<div class="ui-g-9">
+			<div class="ui-g-9 ui-lg-9 ui-xl-9 ui-md-12 ui-sm-12">
 				<p:outputPanel id="editPanel">
 					<p:panel rendered="#{toDo.massnahmeUmsetzung!=null}"
 						header="#{msg['todo.measure']} #{toDo.massnahmeUmsetzung.title}"
