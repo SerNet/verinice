@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.interfaces.licensemanagement;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -31,7 +31,7 @@ public interface IPropertyConverter {
     
     Integer convertToInteger(Object property);
     
-    Date convertToDate(Object property);
+    LocalDate convertToDate(Object property);
     
     Long convertToLong(Object property);
 

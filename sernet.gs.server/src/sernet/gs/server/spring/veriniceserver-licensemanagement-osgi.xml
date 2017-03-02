@@ -9,6 +9,7 @@
     <property name="licenseManagementDao" ref="licenseManagementDao" />
     <property name="commandService" ref="hibernateCommandService" />
     <property name="directoryCreator" ref="directoryCreator" />
+    <property name="cryptoService" ref="encryptionService" />
   </bean>
   
   <bean id="directoryCreator" class="sernet.verinice.licensemanagement.LMOsgiDirectoryCreator">

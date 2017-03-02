@@ -20,13 +20,12 @@
 package sernet.verinice.interfaces.licensemanagement;
 
 import java.io.File;
-import java.util.Date;
-import java.util.Map;
 import java.util.Set;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
+import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
 /**
@@ -39,77 +38,90 @@ public interface ILicenseManagementService {
     
     public static final String VNL_FILE_EXTENSION = "vnl";
     
-    int getValidUsersForContentId(String contentId) 
-            throws LicenseManagementException;
+    public static final int WARNING_VALID_LESS_THAN_DAYS = 31;
+    
+    void addLicenseIdAuthorisation(
+            String user, String contentId) throws CommandException;
 
-    Date getMaxValidUntil(String licenseId) throws LicenseManagementException;
+    boolean addVNLToRepository(File vnlFile) throws LicenseManagementException;
+
+    <T extends Object> T  decrypt(
+            LicenseManagementEntry entry, String propertyType);
+
+    String decryptRestrictedProperty(String licenseId, String cypherText,
+            String username) throws LicenseManagementException;
 
     IEncryptionService getCryptoService();
-
-    boolean isCurrentUserValidForLicense(String user, String licenseId) 
-            throws LicenseManagementException;
-
-    boolean isUserAssignedLicenseStillValid(String user, String licenseId) 
-            throws LicenseManagementException;
-
-    boolean hasLicenseIdAssignableSlots(String licenseId) 
-            throws LicenseManagementException;
-
-    void removeAllUsersForLicense(String licenseId);
-
-    Set<String> getAllLicenseIds(boolean decrypted) 
-            throws LicenseManagementException;
 
     Set<String> getAllContentIds(boolean decrypted) 
             throws LicenseManagementException;
 
-    Set<LicenseManagementEntry> getLicenseEntriesForContentId(
-            String contentId) throws LicenseManagementException;
+    Set<String> getAllLicenseIds(boolean decrypted) 
+            throws LicenseManagementException;
 
-    Map<String, String> getPublicInformationForLicenseIdEntry(
-            LicenseManagementEntry licenseEntry);
+    Set<String> getAuthorisedContentIdsByUser(String user);
 
     int getContentIdAllocationCount(String contentId) 
             throws LicenseManagementException;
-    
+
+    Set<LicenseManagementEntry> getExistingLicenses() 
+            throws LicenseManagementException;
+
+    Set<LicenseManagementEntry> getLicenseEntriesForContentId(
+            String contentId, boolean decrypt) throws LicenseManagementException;
+
+    LicenseManagementEntry getLicenseEntryForLicenseId(
+            String encryptedLicenseId) throws LicenseManagementException;
+
     int getLicenseIdAllocationCount(String licenseId);
-
-    void addLicenseIdAuthorisation(
-            String user, String contentId) throws CommandException;
-
-    void removeAllLicenseIdAssignments(String licenseId);
-
-    void removeAllContentIdAssignments(String contentId) 
-        throws LicenseManagementException;
-
-    void removeContentIdUserAssignment(String user, String contentId)
-        throws LicenseManagementException;
-    
-    void removeLicenseIdUserAssignment(String user, String licenseId, 
-            boolean licenseIdEncrypted) throws LicenseManagementException;
-
-    Set<String> getAuthorisedContentIdsByUser(String user);
 
     Set<String> getLicenseIdsForContentId(String contentId, boolean decrypted) 
             throws LicenseManagementException;
     
-    LicenseManagementEntry getLicenseEntryForLicenseId(
-            String encryptedLicenseId) throws LicenseManagementException;
+    LicenseMessageInfos getLicenseMessageInfos(String user, String contentId)
+        throws LicenseManagementException;
 
-    <T extends Object> T  decrypt(
-            LicenseManagementEntry entry, String propertyType);
+    File getVNLRepository() throws LicenseManagementException;
+
+    boolean hasLicenseIdAssignableSlots(String licenseId) 
+            throws LicenseManagementException;
     
+    boolean isCurrentUserValidForLicense(String user, String licenseId, 
+            boolean decrypt) throws LicenseManagementException;
+    
+
+    boolean isLicenseInvalidSoon(String username, String encryptedContentId)
+            throws LicenseManagementException;
+
+    boolean isUserAssignedLicenseStillValid(String user, String licenseId,
+            boolean decrypt) throws LicenseManagementException;
+
     Set<LicenseManagementEntry> readVNLFiles() 
             throws LicenseManagementException;
     
-    Set<LicenseManagementEntry> getExistingLicenses() 
+
+    void removeAllContentIdAssignments(String contentId) 
             throws LicenseManagementException;
+
+    void removeAllLicenseIdAssignments(String licenseId);
     
-    File getVNLRepository() throws LicenseManagementException;
+    void removeAllUsersForLicense(String licenseId);
+
+    void removeContentIdUserAssignment(String user, String contentId)
+            throws LicenseManagementException;
+
     
-    boolean addVNLToRepository(File vnlFile) throws LicenseManagementException;
+    void removeLicenseIdUserAssignment(String user, String licenseId, 
+            boolean licenseIdEncrypted) throws LicenseManagementException;
+
+
     
-    String decryptRestrictedProperty(String licenseId, String cypherText,
-            String username) throws LicenseManagementException;
+
+    
+    
+    
+    
+    
+    
     
 }

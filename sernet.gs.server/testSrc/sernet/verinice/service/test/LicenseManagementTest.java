@@ -139,7 +139,7 @@ public class LicenseManagementTest extends ContextConfiguration{
     public void testIfUserIsValidForLicenseId(){
         // check why this lasts so long (currently 192s )
         try{
-            Set<LicenseManagementEntry> licenseEntries = licenseManagementService.getLicenseEntriesForContentId(CONTENTID_TESTDATA.get(0));
+            Set<LicenseManagementEntry> licenseEntries = licenseManagementService.getLicenseEntriesForContentId(CONTENTID_TESTDATA.get(0), false);
 
             for(LicenseManagementEntry entry : licenseEntries){
                 String licenseId = licenseManagementService.
@@ -147,13 +147,13 @@ public class LicenseManagementTest extends ContextConfiguration{
                 licenseManagementService.addLicenseIdAuthorisation(
                         TEST_USERNAME, licenseId);
                 Assert.assertTrue(licenseManagementService.
-                        isCurrentUserValidForLicense(TEST_USERNAME, licenseId));
+                        isCurrentUserValidForLicense(TEST_USERNAME, licenseId, false));
 
                 Assert.assertTrue("user " + TEST_USERNAME 
                         + " is no longer authorised to use content from :\t" 
                         + entry.getContentIdentifier(), 
                         licenseManagementService.
-                        isUserAssignedLicenseStillValid(TEST_USERNAME, licenseId));
+                        isUserAssignedLicenseStillValid(TEST_USERNAME, licenseId, false));
             }
         } catch (LicenseManagementException e){
             LOG.error("something went wrong with content-licensing", e);
@@ -254,17 +254,6 @@ public class LicenseManagementTest extends ContextConfiguration{
     }
     
     @Test
-    public void testGetValidUsersForContentId(){
-        for(String contentId : CONTENTID_TESTDATA){
-            try{
-                Assert.assertTrue("assigned users for " + contentId + " is 0", licenseManagementService.getValidUsersForContentId(contentId) > 0);
-            } catch (LicenseManagementException e){
-                LOG.error("Error getting valid users for contentId", e);
-            }
-        }
-    }
-    
-    @Test
     public void daoTest(){
         String plainContentIdentifier = "content123";
         String plainLicenseId = "uniqueLicenseId";
@@ -297,16 +286,6 @@ public class LicenseManagementTest extends ContextConfiguration{
         elementDao.flush();
         
         Assert.assertNull(elementDao.findByLicenseId(plainLicenseId));
-        try{
-            // contentID_testdata needs to be encrypted here as well, obviously
-            for(int j = 0; j < CONTENTID_TESTDATA.size(); j++){
-                Date maximalValid = licenseManagementService.getMaxValidUntil(CONTENTID_TESTDATA.get(j));
-                int sumOfValidUsers = licenseManagementService.getValidUsersForContentId(CONTENTID_TESTDATA.get(j));
-                System.out.println(CONTENTID_TESTDATA.get(j) + " is valid until:\t" + maximalValid.toString() + " and for " + String.valueOf(sumOfValidUsers) +" users" );
-            }
-        } catch (LicenseManagementException e){
-            LOG.error("Error getting licenseData-attributes",e );
-        }
 
         
     }

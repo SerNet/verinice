@@ -19,7 +19,7 @@
  ******************************************************************************/
 package sernet.verinice.model.licensemanagement.propertyconverter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.apache.commons.beanutils.ConvertUtils;
 
@@ -52,12 +52,13 @@ public class PropertyConverter implements IPropertyConverter {
     }
 
     @Override
-    public Date convertToDate(Object property){
+    public LocalDate convertToDate(Object property){
         // ensure property is of type long
         if(!(property instanceof Long)){
-            property = convertToLong(property);
+            LocalDate ld = LocalDate.parse((String)property);
+            return ld;
         }
-        return (Date)ConvertUtils.lookup(Date.class).convert(Date.class, property);
+        return null;
     }
 
     @Override

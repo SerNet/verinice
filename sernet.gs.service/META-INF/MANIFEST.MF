@@ -85,7 +85,8 @@ Require-Bundle: com.springsource.org.apache.commons.io;bundle-version="1.4.0",
  com.google.gson;bundle-version="2.6.2",
  bouncycastle;bundle-version="1.46.0",
  com.springsource.javax.mail;bundle-version="1.4.1",
- com.springsource.org.junit;bundle-version="4.4.0"
+ com.springsource.org.junit;bundle-version="4.4.0",
+ org.apache.servicemix.bundles.commons-beanutils;bundle-version="1.8.3"
 Import-Package: org.eclipse.osgi.util,
  org.hibernate,
  org.hibernate.criterion,
