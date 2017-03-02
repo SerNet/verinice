@@ -40,6 +40,8 @@ public class LicenseMessageInfos implements Serializable {
     private LocalDate validUntil;
     private String licenseId;
     private String contentId;
+    private String accountViewColumnHeader;
+    private String accountWizardLabel;
     private boolean isInvalidSoon;
     private boolean isNoLicenseAvailable;
     private int validUsers;
@@ -160,6 +162,34 @@ public class LicenseMessageInfos implements Serializable {
      */
     public void setAssignedUsers(int assignedUsers) {
         this.assignedUsers = assignedUsers;
+    }
+
+    /**
+     * @return the accountViewColumnHeader
+     */
+    public String getAccountViewColumnHeader() {
+        return accountViewColumnHeader;
+    }
+
+    /**
+     * @param accountViewColumnHeader the accountViewColumnHeader to set
+     */
+    public void setAccountViewColumnHeader(String accountViewColumnHeader) {
+        this.accountViewColumnHeader = accountViewColumnHeader;
+    }
+
+    /**
+     * @return the accountWizardLabel
+     */
+    public String getAccountWizardLabel() {
+        return accountWizardLabel;
+    }
+
+    /**
+     * @param accountWizardLabel the accountWizardLabel to set
+     */
+    public void setAccountWizardLabel(String accountWizardLabel) {
+        this.accountWizardLabel = accountWizardLabel;
     }
     
     

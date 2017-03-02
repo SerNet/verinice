@@ -78,7 +78,8 @@ public interface ILicenseManagementService {
     Set<String> getLicenseIdsForContentId(String contentId, boolean decrypted) 
             throws LicenseManagementException;
     
-    LicenseMessageInfos getLicenseMessageInfos(String user, String contentId)
+    LicenseMessageInfos getLicenseMessageInfos(String user, String contentId,
+            LicenseManagementEntry entry)
         throws LicenseManagementException;
 
     File getVNLRepository() throws LicenseManagementException;

@@ -1,14 +1,15 @@
 package sernet.verinice.rcp.account;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.TableColumn;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
 import sernet.verinice.model.common.configuration.Configuration;
+import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.rcp.ElementTitleCache;
 
 class AccountLabelProvider extends LabelProvider implements ITableLabelProvider {           
@@ -19,11 +20,11 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
     
     boolean titleMapInitialized = false;
     
-    private TableViewer viewer = null;
+    private Map<Integer, LicenseMessageInfos> lmInfosMap;
     
-    public AccountLabelProvider(TableViewer viewer) {
+    public AccountLabelProvider(Map<Integer, LicenseMessageInfos> lmInfosMap) {
         super();
-        this.viewer = viewer;
+        this.lmInfosMap = lmInfosMap;
     }
     
     @Override
@@ -72,8 +73,8 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
     }
 
     private String getLMColumnLabel(int columnIndex, Configuration account){
-        TableColumn column = viewer.getTable().getColumn(columnIndex);
-        String licenseId = column.getText();
+        LicenseMessageInfos infos = lmInfosMap.get(columnIndex);
+        String licenseId = infos.getLicenseId();
         return convertToX(
                 account.getAssignedLicenseIds().
                 contains(licenseId));

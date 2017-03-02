@@ -172,7 +172,7 @@ public abstract class HtmlWriter {
         LicenseMessageInfos infos = getLicenseMgmtService().
                 getLicenseMessageInfos(ServiceFactory.
                         lookupAuthService().getUsername(), 
-                        property.getLicenseContentId());
+                        property.getLicenseContentId(), null);
                 if (infos.isInvalidSoon()){
                     String msg = NLS.bind(Messages.
                             BrowserView_License_Ends_Soon,

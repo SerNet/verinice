@@ -17,10 +17,16 @@
  ******************************************************************************/
 package sernet.verinice.rcp.account;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -80,6 +86,7 @@ import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
+import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.rcp.ElementTitleCache;
 import sernet.verinice.rcp.RightsEnabledView;
@@ -134,6 +141,8 @@ public class AccountView extends RightsEnabledView {
     AccountTableSorter tableSorter = new AccountTableSorter();
     private AccountContentProvider contentProvider = new AccountContentProvider();
     private WorkspaceJob initDataJob;
+    
+    private Map<Integer, LicenseMessageInfos> lmColumnsMap;
 
     public AccountView() {
         super();
@@ -154,7 +163,7 @@ public class AccountView extends RightsEnabledView {
                 return status;
             }
         };
-        
+        lmColumnsMap = new HashMap<>();
     }
     
     private void init() throws CommandException {
@@ -355,21 +364,21 @@ public class AccountView extends RightsEnabledView {
         viewer.getControl().setLayoutData(gd);
         
         viewer.setContentProvider(contentProvider);
-        viewer.setLabelProvider(new AccountLabelProvider(viewer));
+        viewer.setLabelProvider(new AccountLabelProvider(lmColumnsMap));
         Table table = viewer.getTable();
         
         int columnIndex = 0;
         
-        createTableColumn(Messages.AccountView_12, TEXT_COLUMN_WIDTH, columnIndex++);
-        createTableColumn(Messages.AccountView_13, TEXT_COLUMN_WIDTH, columnIndex++);
-        createTableColumn(Messages.AccountView_14, TEXT_COLUMN_WIDTH, columnIndex++);
-        createTableColumn(Messages.AccountView_15, TEXT_COLUMN_WIDTH, columnIndex++);
-        createTableColumn(Messages.AccountView_16, TEXT_COLUMN_WIDTH, columnIndex++);
-        createTableColumn(Messages.AccountView_17, BOOLEAN_COLUMN_WIDTH, columnIndex++);
-        createTableColumn(Messages.AccountView_18, BOOLEAN_COLUMN_WIDTH, columnIndex++);
-        createTableColumn(Messages.AccountView_19, BOOLEAN_COLUMN_WIDTH, columnIndex++);
-        createTableColumn(Messages.AccountView_20, BOOLEAN_COLUMN_WIDTH, columnIndex++);
-        createTableColumn(Messages.AccountView_21, BOOLEAN_COLUMN_WIDTH, columnIndex++);
+        createTableColumn(Messages.AccountView_12, TEXT_COLUMN_WIDTH, columnIndex++, "");
+        createTableColumn(Messages.AccountView_13, TEXT_COLUMN_WIDTH, columnIndex++, "");
+        createTableColumn(Messages.AccountView_14, TEXT_COLUMN_WIDTH, columnIndex++, "");
+        createTableColumn(Messages.AccountView_15, TEXT_COLUMN_WIDTH, columnIndex++, "");
+        createTableColumn(Messages.AccountView_16, TEXT_COLUMN_WIDTH, columnIndex++, "");
+        createTableColumn(Messages.AccountView_17, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
+        createTableColumn(Messages.AccountView_18, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
+        createTableColumn(Messages.AccountView_19, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
+        createTableColumn(Messages.AccountView_20, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
+        createTableColumn(Messages.AccountView_21, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
         
         Set<String> createdLMColumnIds = new HashSet<>();
         
@@ -395,27 +404,70 @@ public class AccountView extends RightsEnabledView {
      * @throws LicenseManagementException
      */
     private int creatLMColumns(int columnIndex, Set<String> createdLMColumnIds) throws LicenseManagementException {
+        List<LicenseMessageInfos> licenseInfos = new ArrayList<>();
         for(LicenseManagementEntry entry : getLMService().getExistingLicenses()){
-            Object licenseIdValue = getLMService().decrypt(entry, 
-                    LicenseManagementEntry.COLUMN_LICENSEID);
-            String licenseIdString = String.valueOf(licenseIdValue);
-            if(!createdLMColumnIds.contains(licenseIdString)){
-                createTableColumn(
-                        licenseIdString, 
-                        BOOLEAN_COLUMN_WIDTH, 
-                        columnIndex++);
+            try{
+                licenseInfos.add(getLMService().getLicenseMessageInfos(
+                        getUser(), entry.getContentIdentifier(), entry));
+            } catch (LicenseManagementException e){
+                LOG.error("Error getting license infos", e);
+            }
+        }
 
+        Collections.sort(licenseInfos, new Comparator<LicenseMessageInfos>() {
+
+            @Override
+            public int compare(LicenseMessageInfos infos0, LicenseMessageInfos infos1) {
+                return infos0.getContentId().
+                        compareToIgnoreCase(infos1.getContentId());
             }
 
+        });
+
+        for(int index = 0; index < licenseInfos.size() ; index++){
+
+            LicenseMessageInfos infos = licenseInfos.get(index);
+            if(infos != null){
+                infos.setAccountWizardLabel(LicenseMgmtPage.getLicenseLabelString(infos.getLicenseId()));
+                infos.setAccountViewColumnHeader(getLMColumnHeader(infos.getContentId(), index + 1));
+                lmColumnsMap.put(columnIndex, infos);
+
+                createTableColumn(
+                        infos.getAccountViewColumnHeader(), 
+                        BOOLEAN_COLUMN_WIDTH, 
+                        columnIndex++,
+                        infos.getAccountWizardLabel());
+            }
         }
         return columnIndex;
     }
     
-    private void createTableColumn(String title, int width, int index) {
+    private String getLMColumnHeader(String contentId, int index){
+        StringBuilder sb = new StringBuilder();
+        sb.append(String.valueOf(index));
+        sb.append(". ");
+        if(contentId.length() > 2){
+            sb.append(contentId.substring(0, 3));
+        } else {
+            sb.append(contentId);
+        }
+        
+        return sb.toString();
+    }
+    
+    private String getUser(){
+        return ServiceFactory.lookupAuthService().getUsername();
+    }
+    
+    private void createTableColumn(String title, int width, int index, String tooltip) {
         TableColumn scopeColumn = new TableColumn(viewer.getTable(), SWT.LEFT);
         scopeColumn.setText(title);
         scopeColumn.setWidth(width);
-        scopeColumn.setToolTipText(LicenseMgmtPage.getLicenseLabelString(title));
+        if(StringUtils.isEmpty(tooltip)){
+            scopeColumn.setToolTipText(title);
+        } else {
+            scopeColumn.setToolTipText(tooltip);
+        }
         scopeColumn.addSelectionListener(new AccountSortSelectionAdapter(this, scopeColumn, index));
     }
     
