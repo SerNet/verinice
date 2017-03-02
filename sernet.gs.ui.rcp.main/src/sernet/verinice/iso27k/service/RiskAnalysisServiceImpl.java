@@ -13,7 +13,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  * 
  * Contributors:
- *     Alexander Koderman <ak@sernet.de> - initial API and implementation
+ *     Alexander Koderman - initial API and implementation
+ *     Benjamin Weißenfels <bw[at]sernet[dot]de>
+ *     Daniel Murygin <dm[at]sernet[dot]de>
  ******************************************************************************/
 package sernet.verinice.iso27k.service;
 
@@ -45,8 +47,9 @@ import sernet.verinice.model.iso27k.Vulnerability;
  * This implementation needs a IGraphService and a IBaseDao<CnALink, Serializable>
  * to run.
  *  
- * @author koderman@sernet.de
+ * @author Alexander Koderman
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public class RiskAnalysisServiceImpl implements RiskAnalysisService {
     

@@ -180,6 +180,17 @@
 			<value>sernet.verinice.interfaces.updatenews.IUpdateNewsService</value>
 		</property>
 	</bean>
+  
+  <bean name="/riskAnalysisServiceHttpInvoker"
+    class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"
+    lazy-init="false">
+    <property name="service">
+      <ref bean="riskAnalysisService"/>
+    </property>
+    <property name="serviceInterface">
+      <value>sernet.verinice.iso27k.service.RiskAnalysisService</value>
+    </property>
+  </bean>
 	
 </beans>
 

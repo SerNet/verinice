@@ -75,9 +75,9 @@ public interface RiskAnalysisService {
     
     /**
      * Runs a risk on one or more organizations with the given organization ids.
-     * When null is passed as parameter, the risk analysis is run on all organizations
-     * in the database. Running a risk analysis on all organizations might be a 
-     * perform issue.
+     * When null or an emtpy array is passed as parameter, 
+     * the risk analysis is run on all organizations in the database. 
+     * Running a risk analysis on all organizations might be a performance issue.
      * 
      * @param organizationIds One or more database ids of organizations. Null is allowed.
      */

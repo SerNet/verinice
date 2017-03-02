@@ -209,6 +209,19 @@
         </property>
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
     </bean>
+  
+    <bean id="riskAnalysisService"
+        class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
+        <property name="serviceUrl">
+            <value>${verinice.serverURL}/service/riskAnalysisServiceHttpInvoker
+            </value>
+        </property>
+        <property name="serviceInterface">
+            <value>sernet.verinice.iso27k.service.RiskAnalysisService
+            </value>
+        </property>
+        <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />
+    </bean>
 
     <bean id="updateNewsService"
         class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">
@@ -337,7 +350,8 @@
                 <entry key="reportHQLService" value-ref="reportHQLService" />
                 <entry key="searchService" value-ref="searchService" />
                 <entry key="objectModelService" value-ref="objectModelService" />
-                <entry key="updateNewsService" value-ref="updateNewsService" />
+                <entry key="updateNewsService" value-ref="updateNewsService" />               
+                <entry key="riskAnalysisService" value-ref="riskAnalysisService" />
             </map>
         </property>
     </bean>

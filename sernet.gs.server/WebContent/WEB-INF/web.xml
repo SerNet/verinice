@@ -40,7 +40,7 @@
             <!-- classpath:sernet/gs/server/spring/veriniceserver-security-web.xml -->
             
             <!-- Use this for LDAP / Active Directory authentication: -->    
-        	<!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml -->
+            <!-- classpath:sernet/gs/server/spring/veriniceserver-security-plain-ldap.xml -->
             
             classpath:sernet/gs/server/spring/veriniceserver-webservice.xml
             classpath:sernet/gs/server/spring/veriniceserver-ldap.xml
@@ -51,6 +51,7 @@
             classpath:sernet/gs/server/spring/veriniceserver-search.xml
             classpath:sernet/gs/server/spring/veriniceserver-account.xml
             classpath:sernet/gs/server/spring/veriniceserver-updatenews-dummy.xml
+            classpath:sernet/gs/server/spring/veriniceserver-risk-analysis.xml
         </param-value>
 	</context-param>
 	
