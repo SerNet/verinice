@@ -24,6 +24,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -35,8 +36,12 @@ import org.apache.commons.io.FilenameUtils;
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.IDirectoryCreator;
 import sernet.verinice.interfaces.IVeriniceConstants;
+import sernet.verinice.interfaces.encryption.EncryptionException;
+import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
+import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
+import sernet.verinice.model.licensemanagement.NoLicenseAssignedException;
 import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 
@@ -44,46 +49,28 @@ import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
  * @author Sebastian Hagedorn sh[at]sernet.de
  *
  */
-public class LicenseManagementStandaloneModeService extends LicenseManagementServerModeService
+public class LicenseManagementStandaloneModeService 
+    extends LicenseManagementServerModeService
     implements ILicenseManagementService {
     
     LicenseManagementEntryDao licenseManagementDao;
+    IEncryptionService cryptoService;
     
     IDirectoryCreator directoryCreator;
 
-    /**
-     * if any entries in db referencing the given encrypted contentId, return 1 since 
-     * in standalone mode there is no second user, otherwise return 0
-     * 
-     * @param encryptedContentId - contentId (not licenseId!) to check for
-     */
-    @Override
-    public int getValidUsersForContentId(String encryptedContentId) 
-            throws LicenseManagementException {
-        int sum = 0;
-        for(LicenseManagementEntry entry : getExistingLicenses()){
-            if(entry.getContentIdentifier().equals(encryptedContentId)){
-                    int validUsers = decrypt(entry,
-                            LicenseManagementEntry.COLUMN_VALIDUSERS);
-                    sum += validUsers;
-            }
-        }
-        if(sum>0){
-            return 1;
-        }
-        return sum;
-    }
 
     /**
      * checks if the {@link LicenseManagementEntry} is valid at the current date
-     * and ignores the username, since in standalone mode username does not bother
+     * and ignores the username, since in standalone mode username 
+     * does not bother
      * 
      * @param encryptedLicenseId - encrypted licenseId (not contentId!) 
      * to validate time for 
      */
     @Override
     public boolean isUserAssignedLicenseStillValid(String user, 
-            String encryptedLicenseId) throws LicenseManagementException {
+            String encryptedLicenseId, boolean decrypt) 
+                        throws LicenseManagementException {
         for(LicenseManagementEntry entry : getExistingLicenses()){
             if(entry.getLicenseID().equals(encryptedLicenseId)){
                 long validUntil = decrypt(entry,
@@ -103,7 +90,8 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      * the content, so we do not have to check for any free slots, since 
      * there is only 1 slot we can use. so just check for slotsize > 0
      * 
-     * @param encryptedLicenseId - the encrypted licenseId (not contentId!) to validate
+     * @param encryptedLicenseId - the encrypted licenseId 
+     * (not contentId!) to validate
      * 
      */
     @Override
@@ -143,7 +131,8 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
                     "vnl");
             location = FileUtils.toFile(new URL(instanceAreaVNL));
         } catch (MalformedURLException e) {
-            throw new LicenseManagementException("Cannot create vnl-storage-folder", e);
+            throw new LicenseManagementException(
+                    "Cannot create vnl-storage-folder", e);
         }
         return location;
     }
@@ -165,42 +154,202 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
         
         Set<String> vnlFiles = new HashSet<>();
         if(!location.exists()){
-            try {
-                FileUtils.touch(location);
-            } catch (IOException e) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Error creating ")
-                    .append(location.getAbsolutePath())
-                    .append(" to store vnl-Files");
-                log.error(sb.toString(), e);
-                throw new LicenseManagementException(sb.toString(), e);
-            }
+            createVNLLocation(location);
         }
         if(location.isDirectory()){
-            List<String> filenames = Arrays.asList(location.list(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".vnl");
-                }
-            }));
-            for(String filename : filenames){
-                vnlFiles.add(FilenameUtils.concat(location.getAbsolutePath(), filename));
-            }
+            vnlFiles = readVNLFilesFromLocation(location);
         }
         
+        existingLicenses.addAll(mapVNLFilesToObjects(vnlFiles));
+        return existingLicenses;
+    }
+
+    /**
+     * maps a set of Strings (paths to vnl-files) to instances of
+     * {@link LicenseManagementEntry}
+     * 
+     * @param vnlFiles
+     * @throws LicenseManagementException
+     */
+    private Set<LicenseManagementEntry> mapVNLFilesToObjects(
+            Set<String> vnlFiles) throws LicenseManagementException {
+        Set<LicenseManagementEntry> mappedVNLFiles = new HashSet<>();
         try{
             for(String filename : vnlFiles){
                 File file = new File(filename);
                 byte[] fileContent = FileUtils.readFileToByteArray(file);
-                LicenseManagementEntry entry = VNLMapper.getInstance().unmarshalXML(fileContent);
-                existingLicenses.add(entry);
+                LicenseManagementEntry entry = VNLMapper.getInstance().
+                        unmarshalXML(fileContent);
+                mappedVNLFiles.add(entry);
             }
         } catch (IOException e){
             String msg = "Error while reading licensefile"; 
             log.error(msg, e);
             throw new LicenseManagementException(msg, e);
         }
-        return existingLicenses;
+        return mappedVNLFiles;
+    }
+
+    /**
+     * returns a set of file-paths that are having the extension
+     * ".vnl" and are contained in the given directory
+     * 
+     * @param location
+     * @param vnlFiles
+     */
+    private Set<String> readVNLFilesFromLocation(File location) {
+        Set<String> vnlFiles = new HashSet<>();
+        List<String> filenames = Arrays.asList(location.list(
+                new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".vnl");
+            }
+        }));
+        for(String filename : filenames){
+            vnlFiles.add(FilenameUtils.concat(location.getAbsolutePath(),
+                    filename));
+        }
+        return vnlFiles;
+    }
+
+    /**
+     * creates a file/directory at the given location
+     * (should be a directoy, file makes no sense here)
+     * 
+     * @param location
+     * @throws LicenseManagementException
+     */
+    private void createVNLLocation(File location) 
+            throws LicenseManagementException {
+        try {
+            FileUtils.touch(location);
+        } catch (IOException e) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Error creating ")
+                .append(location.getAbsolutePath())
+                .append(" to store vnl-Files");
+            log.error(sb.toString(), e);
+            throw new LicenseManagementException(sb.toString(), e);
+        }
+    }
+    
+    
+    /**
+     * creates instance of {@link LicenseMessageInfos} that wraps 
+     * information abput a {@link LicenseManagementEntry}
+     */
+    @Override
+    public LicenseMessageInfos getLicenseMessageInfos(String user,
+            String encryptedContentId) throws LicenseManagementException {
+        LicenseManagementEntry entry = getFirstLicenseForUser(user, 
+                encryptedContentId);
+        LicenseMessageInfos infos = null;
+        if(entry != null){
+            String contentId = 
+                    decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID);
+            String licenseId = 
+                    decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
+            LocalDate validUntil = 
+                    decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
+            int validUsers = 
+                    decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUSERS);
+            boolean invalidSoon = invalidInTheNextMonth(entry);
+            infos = new LicenseMessageInfos();
+            infos.setContentId(contentId);
+            infos.setInvalidSoon(invalidSoon);
+            infos.setLicenseId(licenseId);
+            infos.setNoLicenseAvailable(false);
+            infos.setValidUntil(validUntil);
+        } else {
+            // no license found, set only noLicenseAvailable
+            infos = new LicenseMessageInfos();
+            infos.setNoLicenseAvailable(true);
+        }
+        return infos;
+    }
+    
+    /**
+     * returns a license for the (given) default user, if existant
+     * considering the given contentId
+     * 
+     * @param user
+     * @param encryptedContentId
+     * @throws LicenseManagementException
+     */
+    private LicenseManagementEntry getFirstLicenseForUser(String user, 
+            String encryptedContentId) throws LicenseManagementException {
+        for(LicenseManagementEntry entry : getExistingLicenses()){
+            String plainContentId = getCryptoService().
+                    decryptLicenseRestrictedProperty(
+                            entry.getUserPassword(), encryptedContentId);
+            String entryPlainContentId = "";
+            try{
+                entryPlainContentId = decrypt(entry, 
+                        LicenseManagementEntry.COLUMN_CONTENTID);
+            } catch (EncryptionException e){
+                continue;
+            }
+            if(plainContentId.equals(entryPlainContentId)){
+                return entry;
+            }
+        }
+        
+        return null;
+        
+    }
+    
+    @Override
+    public String decryptRestrictedProperty(String encryptedContentId, 
+            String cypherText, String username) 
+                    throws LicenseManagementException {
+        LicenseManagementEntry entry = null;
+        entry = getLicenseEntryToUseForDecryption(encryptedContentId);
+        if(entry != null){
+            // decrypt
+            try {
+                if(entry != null){
+                    return getCryptoService().decryptLicenseRestrictedProperty(
+                            entry.getUserPassword(), cypherText);
+                } else {
+                    throw new NoLicenseAssignedException("License " 
+                            + encryptedContentId + " is not assigned to user: " 
+                            + username);                }
+            } catch (EncryptionException e) {
+                throw new LicenseManagementException(
+                        "Problem while decrypting license restricted property",
+                        e);
+            }
+        } else {
+            throw new NoLicenseAssignedException("License " 
+                    + encryptedContentId + " is not assigned to user: " 
+                    + username);
+        }
+    }
+
+    /**
+     * get first instance of {@link LicenseManagementEntry} that will be found
+     * matching a given contentId
+     * 
+     * returns null if no matching entry can be found
+     * 
+     * @param encryptedContentId
+     * @param entry
+     * @throws LicenseManagementException
+     */
+    private LicenseManagementEntry getLicenseEntryToUseForDecryption(
+            String encryptedContentId) throws LicenseManagementException {
+        for(LicenseManagementEntry existingEntry : getExistingLicenses()){
+            String plainContentId = getCryptoService().
+                    decryptLicenseRestrictedProperty(existingEntry.
+                            getUserPassword(), encryptedContentId);
+            String plainEntryContentId = decrypt(existingEntry, 
+                    LicenseManagementEntry.COLUMN_CONTENTID);
+            if(plainContentId.equals(plainEntryContentId)){
+                return existingEntry;
+            }
+        }
+        return null;
     }
 
     /**
@@ -215,6 +364,20 @@ public class LicenseManagementStandaloneModeService extends LicenseManagementSer
      */
     public void setDirectoryCreator(IDirectoryCreator directoryCreator) {
         this.directoryCreator = directoryCreator;
+    }
+
+    /**
+     * @return the cryptoService
+     */
+    public IEncryptionService getCryptoService() {
+        return cryptoService;
+    }
+
+    /**
+     * @param cryptoService the cryptoService to set
+     */
+    public void setCryptoService(IEncryptionService cryptoService) {
+        this.cryptoService = cryptoService;
     }
 
 }

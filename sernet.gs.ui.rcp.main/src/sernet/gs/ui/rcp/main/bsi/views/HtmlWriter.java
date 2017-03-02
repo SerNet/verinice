@@ -28,6 +28,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.osgi.util.NLS;
 
 import sernet.gs.model.Baustein;
 import sernet.gs.model.Gefaehrdung;
@@ -57,6 +58,7 @@ import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Threat;
 import sernet.verinice.model.iso27k.Vulnerability;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
+import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.model.licensemanagement.NoLicenseAssignedException;
 import sernet.verinice.model.samt.SamtTopic;
 
@@ -74,8 +76,11 @@ public abstract class HtmlWriter {
     private static final String UTF_8 = "utf-8";
     private static final String NULL_STRING = "null";
     
-    private static final String NO_LICENSE_FOUND_WARNING = "no_valid_license_found";
-  
+    private static final String NO_LICENSE_FOUND_WARNING 
+        = "no_valid_license_found";
+    private static final String LICENSE_INVALID_SOON_WARNING 
+        = "BrowserView_License_Ends_Soon"; 
+            
     private HtmlWriter() {
     }
 
@@ -122,29 +127,68 @@ public abstract class HtmlWriter {
     }
 
     /**
+     * builds the content of the {@link BrowserView} considering the 
+     * selected {@link CnATreeElement} in the object-tree and the 
+     * {@link PropertyType} (optionally) configured in the SNCA.xml 
+     * (if not configured by xml-Attribute, it is hard-coded in this class) 
+     * 
      * @param sb
      * @param cnaTreeElement
      * @param iterator
      * @return
      */
-    private static String buildObjectBrowserContent(CnATreeElement cnaTreeElement, PropertyType propertyType) {
+    private static String buildObjectBrowserContent(
+                CnATreeElement cnaTreeElement, PropertyType propertyType) {
         StringBuilder sb = new StringBuilder();
         cnaTreeElement = Retriever.checkRetrieveElement(cnaTreeElement);
         PropertyList propertyList = cnaTreeElement.getEntity().getProperties(
-                propertyType.getId()
-                );
-
-        for (Property property : propertyList.getProperties()){
-            if (property.isLimitedLicense())
-                sb.append(getLicenseRestrictedPropertyValue(property));
-            else {
-                sb.append(property.getPropertyValue());
+                propertyType.getId());
+        try{
+            for (Property property : propertyList.getProperties()) {
+                sb.append((property.isLimitedLicense()) 
+                        ? sb.append(getLicenseRestrictedContent(property))  
+                                : sb.append(property.getPropertyValue()));
             }
+        } catch (LicenseManagementException e){
+            LOG.error("Error while validating license", e);
         }
         return sb.toString();
     }
 
     /**
+     * prepares the 
+     * decryption of the value of a license restricted property 
+     * 
+     * throws a {@link LicenseManagementException} if the 
+     * propertyvalue could not be decrypted
+     * 
+     * @param sb
+     * @param property
+     * @throws LicenseManagementException
+     */
+    private static String getLicenseRestrictedContent(Property property)
+                throws LicenseManagementException {
+        StringBuilder sb = new StringBuilder();
+        LicenseMessageInfos infos = getLicenseMgmtService().
+                getLicenseMessageInfos(ServiceFactory.
+                        lookupAuthService().getUsername(), 
+                        property.getLicenseContentId());
+                if (infos.isInvalidSoon()){
+                    String msg = NLS.bind(Messages.
+                            BrowserView_License_Ends_Soon,
+                                new Object[]{
+                                       infos.getLicenseId(),
+                                       infos.getValidUntil()});
+                    sb.append(msg);
+                }
+        sb.append(getLicenseRestrictedPropertyValue(property));
+        return sb.toString();
+    }
+
+    /**
+     * hands over the license restricted property value to the 
+     * {@link LicenseManagementService) to decrypt it
+     * 
      * @param sb
      * @param property
      */
@@ -163,8 +207,7 @@ public abstract class HtmlWriter {
             String msg = "Something went wrong decrypting license restricted information";
             LOG.error(msg, e);
         }
-        return "For some reason user is not allowed to see this content\n"
-                + "For Details see Log-File or contact Administrator";
+        return Messages.BrowserView_No_License_assigned;
     }
 
     /**
@@ -177,7 +220,8 @@ public abstract class HtmlWriter {
      *
      * @throws GSServiceException
      */
-    private static String handleRequestStatic(Object element) throws GSServiceException {
+    private static String handleRequestStatic(Object element) 
+                throws GSServiceException {
         if (element instanceof Baustein) {
             Baustein bst = (Baustein) element;
             return getHtmlFromStream(GSScraperUtil.getInstance().getModel().
@@ -262,7 +306,8 @@ public abstract class HtmlWriter {
         if (element instanceof IItem) {
             IItem item = (IItem) element;
             StringBuilder sb = new StringBuilder();
-            writeHtml(sb, item.getName(), item.getDescription(), VeriniceCharset.CHARSET_UTF_8.name());
+            writeHtml(sb, item.getName(), item.getDescription(), 
+                    VeriniceCharset.CHARSET_UTF_8.name());
             return sb.toString(); 
         }
         
@@ -374,7 +419,8 @@ public abstract class HtmlWriter {
                 ums.getEntityType().getId(), GefaehrdungsUmsetzung.PROP_TITEL);
         titleBuilder.append(buildObjectBrowserContent(ums, propertyType));
         propertyType = HUITypeFactory.getInstance().getPropertyType(
-                ums.getEntityType().getId(), GefaehrdungsUmsetzung.PROP_DESCRIPTION);
+                ums.getEntityType().getId(), 
+                GefaehrdungsUmsetzung.PROP_DESCRIPTION);
         writeHtml(buf, titleBuilder.toString(), 
                 buildObjectBrowserContent(ums, propertyType),
                 ISO_8859_1); //$NON-NLS-1$ //$NON-NLS-2$

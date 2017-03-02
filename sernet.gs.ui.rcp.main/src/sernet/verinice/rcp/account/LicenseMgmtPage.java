@@ -223,6 +223,12 @@ public class LicenseMgmtPage extends BaseWizardPage {
         if(licenseIdToLabelMap.containsKey(licenseId)){
             return licenseIdToLabelMap.get(licenseId);
         }
+        String label = getLicenseLabel(licenseId);
+        licenseIdToLabelMap.put(licenseId, label);
+        return label;
+    }
+    
+    public static String getLicenseLabelString(String licenseId){
         final String singleSpace = " ";
         final String licenseIdDelimiter = "###";
         final String openBracket = "(";
@@ -238,7 +244,8 @@ public class LicenseMgmtPage extends BaseWizardPage {
         String validUntil = tokenizer.nextToken();
         String validUsers = tokenizer.nextToken();
         
-        String assignedUsers = String.valueOf(licenseService.
+        String assignedUsers = String.valueOf(ServiceFactory.
+                lookupLicenseManagementService().
                 getLicenseIdAllocationCount(licenseId));
         
         sb.append(contentId).append(singleSpace);
@@ -246,7 +253,6 @@ public class LicenseMgmtPage extends BaseWizardPage {
             append(validUntil).append(singleSpace).append(dash);
         sb.append(singleSpace).append(openBracket).append(assignedUsers);
         sb.append(slash).append(validUsers).append(closingBracket);
-        licenseIdToLabelMap.put(licenseId, sb.toString());
         return sb.toString();
     }
 

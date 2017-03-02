@@ -23,8 +23,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.security.cert.CertificateException;
+import java.util.Base64;
 
+import sernet.gs.service.VeriniceCharset;
 import sernet.gs.ui.rcp.main.bsi.dialogs.XMLImportDialog;
 import sernet.verinice.interfaces.encryption.EncryptionException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
@@ -65,10 +68,15 @@ public class ClientCryptoService implements IEncryptionService {
      */
     @Override
     public String decrypt(String cypherText, char[] password, String salt) throws EncryptionException {
-        byte[] cypherTextBytes = org.apache.commons.codec.binary.Base64.decodeBase64(cypherText.getBytes());
+        byte[] cypherTextBytes = new byte[0];
+        try{
+            cypherTextBytes = Base64.getDecoder().decode(cypherText.getBytes(IEncryptionService.CRYPTO_DEFAULT_ENCODING));
+        } catch (UnsupportedEncodingException e){
+            throw new EncryptionException("Unsupported encoding", e);
+        }
         byte[] saltBytes = salt.getBytes();
-        byte[] plainTextBytes = PasswordBasedEncryption.decrypt(cypherTextBytes, password, saltBytes, true);
-        return new String(org.apache.commons.codec.binary.Base64.decodeBase64(plainTextBytes));  
+        byte[] plainTextBytes = PasswordBasedEncryption.decrypt(cypherTextBytes, password, saltBytes, false);
+        return new String(plainTextBytes, VeriniceCharset.CHARSET_UTF_8);
     }
 
     /* (non-Javadoc)

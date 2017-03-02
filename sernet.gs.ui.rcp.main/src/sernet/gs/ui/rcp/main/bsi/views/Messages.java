@@ -52,6 +52,10 @@ public final class Messages extends NLS {
     public static String BrowserView_4;
 
     public static String BrowserView_5;
+    
+    public static String BrowserView_License_Ends_Soon;
+    
+    public static String BrowserView_No_License_assigned;
 
     public static String BSIKatalogInvisibleRoot_2;
 

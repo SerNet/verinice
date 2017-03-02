@@ -415,6 +415,7 @@ public class AccountView extends RightsEnabledView {
         TableColumn scopeColumn = new TableColumn(viewer.getTable(), SWT.LEFT);
         scopeColumn.setText(title);
         scopeColumn.setWidth(width);
+        scopeColumn.setToolTipText(LicenseMgmtPage.getLicenseLabelString(title));
         scopeColumn.addSelectionListener(new AccountSortSelectionAdapter(this, scopeColumn, index));
     }
     
