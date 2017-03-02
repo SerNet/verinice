@@ -162,11 +162,14 @@ public class LicenseManagementServerModeService
      * checks if the amount of authorised users for a given encrypted 
      * licenseId is below the amount allowed at basis of db entries (licenses)
      * 
+     * has to be synchronized, because data to be read can be edited by 
+     * several threads simultaneously
+     * 
      * @param encryptedLicenseId - licenseId (not contentId) to check for
      * @return are there free slots to be assigned for a given licenseId
      */
     @Override
-    public boolean hasLicenseIdAssignableSlots(String encryptedLicenseId) 
+    public synchronized boolean hasLicenseIdAssignableSlots(String encryptedLicenseId) 
             throws LicenseManagementException {
         int validUsers = 0;
         int assignedUsers = 0;
@@ -365,9 +368,11 @@ public class LicenseManagementServerModeService
     /**
      * returns how many users are currently assigned to use 
      * the license with the @param contentId
+     * 
+     * 
      */
     @Override
-    public int getContentIdAllocationCount(String encryptedContentId) 
+    public synchronized int getContentIdAllocationCount(String encryptedContentId) 
             throws LicenseManagementException{
         int count = 0;
         Set<String> licenseIds = getLicenseIdsForContentId(encryptedContentId,
@@ -386,6 +391,10 @@ public class LicenseManagementServerModeService
      *  Attention: this method does not(!) validate if the license
      *  has any free slots for another user
      *  
+     *  has to be synchronized, because adding a user to a license my only happen
+     *  by one thread ad a time, to prevent two (or more threads) adding
+     *  users at a time producing a assignment of e.g. 6/5
+     *  
      *  @param user - username to authorise
      *  @param licenseId - licenseId (not contentId!) the user will 
      *  get authorised for
@@ -393,7 +402,7 @@ public class LicenseManagementServerModeService
      * @throws CommandException 
      */
     @Override
-    public void addLicenseIdAuthorisation(String user, String licenseId) 
+    public synchronized void addLicenseIdAuthorisation(String user, String licenseId) 
                 throws CommandException {
         Configuration configuration = getConfigurationByUsername(user);
         configuration.addLicensedContentId(licenseId);
