@@ -92,7 +92,7 @@ public interface RiskAnalysisHelper {
      * @param impactA Impact value availability
      * @throws CommandException
      */
-    Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA) throws CommandException;
+    Integer[] applyControlsToImpact(int riskType, CnATreeElement asset, Integer impactC, Integer impactI, Integer impactA) ;
 
     /**
      * Computes if a given risk (given by asset & scenario) is red, yellow or
