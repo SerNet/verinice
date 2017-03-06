@@ -5,9 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">Charts</ui:define>
-
-	<ui:define name="viewname">Charts</ui:define>
+	<ui:define name="title">Massnahmenumsetzung gesamt :: Charts</ui:define>
 
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
@@ -15,20 +13,19 @@
 
 	<ui:define name="content">
 		<div class="ui-g ui-fluid">
-			<div class="ui-g-12 ui-md-12">
-				<h1>Massnahmenumsetzung gesamt</h1>
-			</div>
-			<div class="ui-g-12 ui-md-6">
-				<div class="card">
-					<p:chart id="verinicePieChart" type="pie"
-						model="#{totalBsiChartView.pieModel}" responsive="true" />
-				</div>
-			</div>
-			<div class="ui-g-12 ui-md-6">
-				<div class="card">
-					<p:chart id="verinicePieBar" type="bar"
-						model="#{totalBsiChartView.barModel}" responsive="true" />
-				</div>
+			<div class="ui-g-12">
+				<p:panel header="Massnahmenumsetzung gesamt">
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+							<p:chart id="verinicePieChart" type="pie"
+								model="#{totalBsiChartView.pieModel}" responsive="true" />
+						</div>
+						<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+							<p:chart id="verinicePieBar" type="bar"
+								model="#{totalBsiChartView.barModel}" responsive="true" />
+						</div>
+					</div>
+				</p:panel>
 			</div>
 		</div>
 	</ui:define>

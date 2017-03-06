@@ -6,35 +6,30 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">Charts</ui:define>
-
-	<ui:define name="viewname">Charts</ui:define>
+	<ui:define name="title">#{bstUmsetzungItNetworkView.itNetwork} :: Bausteinumsetzung :: Charts</ui:define>
 
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
 	</ui:define>
 
 	<ui:define name="content">
-
 		<div class="ui-g ui-fluid">
-			<div class="ui-g-12 ui-md-12">
-				<h1>Bausteinumsetzung gesamt</h1>
-			</div>
-
-			<div class="ui-g-12 ui-md-6">
-				<div class="card">
-					<p:chart id="veriniceVerticalBarChart" type="bar"
-						model="#{bstUmsetzungItNetworkView.verticalChartModel}" responsive="true" />
-				</div>
-			</div>
-
-			<div class="ui-g-12 ui-md-6">
-				<div class="card">
-					<p:chart id="veriniceHorizontalBarChart" type="bar"
-						model="#{bstUmsetzungItNetworkView.horizontalChartModel}" responsive="true" />
-				</div>
+			<div class="ui-g-12">
+				<p:panel header="#{bstUmsetzungItNetworkView.itNetwork}">
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+							<p:chart id="veriniceVerticalBarChart" type="bar"
+								model="#{bstUmsetzungItNetworkView.verticalChartModel}"
+								responsive="true" />
+						</div>
+						<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+							<p:chart id="veriniceHorizontalBarChart" type="bar"
+								model="#{bstUmsetzungItNetworkView.horizontalChartModel}"
+								responsive="true" />
+						</div>
+					</div>
+				</p:panel>
 			</div>
 		</div>
-
 	</ui:define>
 </ui:composition>

@@ -7,28 +7,25 @@
 
 	<ui:define name="title">#{itNetworkView.itNetwork} - MassnahmenUmsetzung</ui:define>
 
-	<ui:define name="viewname">Charts</ui:define>
-
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
 	</ui:define>
 
 	<ui:define name="content">
 		<div class="ui-g ui-fluid">
-			<div class="ui-g-12 ui-md-12">
-				<h1>#{itNetworkView.itNetwork}</h1>
-			</div>
-			<div class="ui-g-12 ui-md-6">
-				<div class="card">
-					<p:chart id="verinicePieChart" type="pie"
-						model="#{itNetworkView.pieModel}" responsive="true" />
-				</div>
-			</div>
-			<div class="ui-g-12 ui-md-6">
-				<div class="card">
-					<p:chart id="verinicePieBar" type="bar"
-						model="#{itNetworkView.barModel}" responsive="true" />
-				</div>
+			<div class="ui-g-12">
+				<p:panel header="#{itNetworkView.itNetwork}">
+					<div class="ui-g ui-fluid">
+						<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+							<p:chart id="verinicePieChart" type="pie"
+								model="#{itNetworkView.pieModel}" responsive="true" />
+						</div>
+						<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+							<p:chart id="verinicePieBar" type="bar"
+								model="#{itNetworkView.barModel}" responsive="true" />
+						</div>
+					</div>
+				</p:panel>
 			</div>
 		</div>
 	</ui:define>
