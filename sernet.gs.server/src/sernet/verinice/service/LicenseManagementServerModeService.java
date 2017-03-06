@@ -28,6 +28,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.text.html.HTMLWriter;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -230,6 +232,25 @@ public class LicenseManagementServerModeService
             allIds.add(decrypted ? plainLicenseId : cypherLicenseId);
         }
         return allIds;
+    }
+    
+    private Set<LicenseManagementEntry> getLicenseEntriesForUserByContentId(
+            String user, String contentId) throws LicenseManagementException{
+        Set<LicenseManagementEntry> userLicenses = new HashSet<>();
+        if(user.equals("admin")){ // TODO: catch admin user in client already
+            return getLicenseEntriesForContentId(contentId, false);
+        }
+        Configuration configuration = getConfigurationByUsername(user);
+        for(LicenseManagementEntry entry : 
+            getLicenseEntriesForContentId(contentId, true)){
+            String entryLicenseIdPlain = 
+                    decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
+            if(configuration.getAssignedLicenseIds().
+                    contains(entryLicenseIdPlain)){
+                userLicenses.add(entry);
+            }
+        }
+        return userLicenses;
     }
 
     /**
@@ -906,10 +927,11 @@ public class LicenseManagementServerModeService
      */
     @Override
     public LicenseMessageInfos getLicenseMessageInfos(String user,
-            String encryptedContentId, LicenseManagementEntry entry) 
+            String encryptedContentId, String encryptedLicenseId, 
+            LicenseManagementEntry entry) 
                     throws LicenseManagementException {
         LicenseManagementEntry firstEntry = getFirstLicenseForUser(user,
-               encryptedContentId, entry);
+               encryptedContentId, encryptedLicenseId,entry);
         LicenseMessageInfos infos = null;
         if(firstEntry != null){
             String contentId = 
@@ -939,37 +961,83 @@ public class LicenseManagementServerModeService
     
     
     /**
-     * iterates over all existing licences and returns the first 
-     * {@link LicenseManagementEntry} that matches the given contentId and
-     * is assigned to the given user
+     * iterates over all existing licences and returns the 
+     * {@link LicenseManagementEntry} that matches the given contentId,
+     * licenseId and is assigned to the given user
+     *
+     * note that licenseId can be empty ("" or null), usecase for
+     * calling this from {@link HTMLWriter}, that does not know about
+     * an entry. In the case of more than one assigned license
+     * for the given contentId, the one that is valid the longest will
+     * be taken
+     * TODO
      * 
      * @param user
      * @param encryptedContentId
+     * @param encryptedLicenseId
      * @return
      * @throws LicenseManagementException
      */
     private LicenseManagementEntry getFirstLicenseForUser(String user, 
-            String encryptedContentId, 
+            String encryptedContentId, String encryptedLicenseId,
             LicenseManagementEntry entry) throws LicenseManagementException {
-        for(LicenseManagementEntry existingEntry : getExistingLicenses()){
+        Set<LicenseManagementEntry> matchingEntries = new HashSet<>();
+        for(LicenseManagementEntry existingEntry : 
+            getLicenseEntriesForUserByContentId(user, encryptedContentId)){
             String plainContentId = "";
+            String plainLicenseId = "";
             if(entry == null){
                 plainContentId = getCryptoService().
                     decryptLicenseRestrictedProperty(
                             existingEntry.getUserPassword(), encryptedContentId);
+                if(StringUtils.isNotEmpty(encryptedLicenseId)){
+                    plainLicenseId = getCryptoService().
+                            decryptLicenseRestrictedProperty(
+                                    existingEntry.getUserPassword(), encryptedLicenseId);
+                }
             } else {
                 plainContentId = decrypt(
                         entry, LicenseManagementEntry.COLUMN_CONTENTID);
+                if(StringUtils.isNotEmpty(encryptedLicenseId)){
+                    plainLicenseId = decrypt(
+                            entry, LicenseManagementEntry.COLUMN_LICENSEID);
+                }
+                
             }
-            String entryPlainContentId = decrypt(entry, 
+            String entryPlainContentId = decrypt(existingEntry, 
                     LicenseManagementEntry.COLUMN_CONTENTID);
-            if(plainContentId.equals(entryPlainContentId)){
-                return entry;
+            String entryPlainLicenseId = decrypt(existingEntry, 
+                    LicenseManagementEntry.COLUMN_LICENSEID);
+            if(StringUtils.isEmpty(plainLicenseId) &&
+                    plainContentId.equals(entryPlainContentId)){
+                matchingEntries.add(existingEntry);
+            } else if(StringUtils.isNotEmpty(plainLicenseId) &&
+                    plainLicenseId.equals(entryPlainLicenseId) &&
+                    plainContentId.equals(entryPlainContentId)){
+                matchingEntries.add(existingEntry);
+                break; // can only be this one
             }
         }
         
-        return null;
-        
+        if(matchingEntries.size() == 1){
+            return matchingEntries.stream().findFirst().get();
+        } else {
+            LicenseManagementEntry oldestEntry = null;
+            for(LicenseManagementEntry possibleEntry : matchingEntries){
+                if(oldestEntry == null){
+                    oldestEntry = possibleEntry;
+                    continue;
+                } else {
+                    LocalDate current = decrypt(possibleEntry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
+                    LocalDate oldest = decrypt(oldestEntry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
+                    if(oldest.isBefore(current)){
+                        oldestEntry = possibleEntry;
+                        continue;
+                    }
+                }
+            }
+            return oldestEntry;
+        }
     }
 
 }

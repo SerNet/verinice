@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
 
@@ -61,6 +62,7 @@ import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.model.licensemanagement.NoLicenseAssignedException;
 import sernet.verinice.model.samt.SamtTopic;
+import sernet.verinice.rcp.account.LicenseMgmtPage;
 
 /**
  * This class creates HTML code for verinice elements.
@@ -76,11 +78,6 @@ public abstract class HtmlWriter {
     private static final String UTF_8 = "utf-8";
     private static final String NULL_STRING = "null";
     
-    private static final String NO_LICENSE_FOUND_WARNING 
-        = "no_valid_license_found";
-    private static final String LICENSE_INVALID_SOON_WARNING 
-        = "BrowserView_License_Ends_Soon"; 
-            
     private HtmlWriter() {
     }
 
@@ -146,8 +143,8 @@ public abstract class HtmlWriter {
         try{
             for (Property property : propertyList.getProperties()) {
                 sb.append((property.isLimitedLicense()) 
-                        ? sb.append(getLicenseRestrictedContent(property))  
-                                : sb.append(property.getPropertyValue()));
+                        ? getLicenseRestrictedContent(property)  
+                                : property.getPropertyValue());
             }
         } catch (LicenseManagementException e){
             LOG.error("Error while validating license", e);
@@ -167,20 +164,33 @@ public abstract class HtmlWriter {
      * @throws LicenseManagementException
      */
     private static String getLicenseRestrictedContent(Property property)
-                throws LicenseManagementException {
+            throws LicenseManagementException {
         StringBuilder sb = new StringBuilder();
         LicenseMessageInfos infos = getLicenseMgmtService().
                 getLicenseMessageInfos(ServiceFactory.
                         lookupAuthService().getUsername(), 
-                        property.getLicenseContentId(), null);
-                if (infos.isInvalidSoon()){
-                    String msg = NLS.bind(Messages.
-                            BrowserView_License_Ends_Soon,
-                                new Object[]{
-                                       infos.getLicenseId(),
-                                       infos.getValidUntil()});
-                    sb.append(msg);
-                }
+                        property.getLicenseContentId(), "",  null);
+        if(infos.isNoLicenseAvailable()){
+            return Messages.BrowserView_No_License_assigned;
+        } else { // license exists, so set label
+            infos.setAccountWizardLabel(LicenseMgmtPage.
+                    getLicenseLabelString(infos.getLicenseId()));
+        }
+        if(infos.getValidUntil().isBefore(LocalDate.now())){
+            return NLS.bind(Messages.BrowserView_License_Not_Valid_Anymore, 
+                    new Object[]{
+                            infos.getAccountWizardLabel()
+                    });
+        }
+        else if (infos.isInvalidSoon()){
+            String msg = NLS.bind(Messages.
+                    BrowserView_License_Ends_Soon,
+                    new Object[]{
+                            infos.getAccountWizardLabel(),
+                            infos.getValidUntil()});
+            sb.append(msg);
+        }
+
         sb.append(getLicenseRestrictedPropertyValue(property));
         return sb.toString();
     }

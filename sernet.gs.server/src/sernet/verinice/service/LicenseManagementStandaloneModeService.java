@@ -241,7 +241,8 @@ public class LicenseManagementStandaloneModeService
      */
     @Override
     public LicenseMessageInfos getLicenseMessageInfos(String user,
-            String encryptedContentId, LicenseManagementEntry entry) throws LicenseManagementException {
+            String encryptedContentId, String encryptedLicenseId,
+            LicenseManagementEntry entry) throws LicenseManagementException {
         LicenseManagementEntry firstEntry = getFirstLicenseForUser(user, 
                 encryptedContentId, entry);
         LicenseMessageInfos infos = null;

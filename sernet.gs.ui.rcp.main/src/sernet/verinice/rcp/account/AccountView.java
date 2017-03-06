@@ -407,8 +407,13 @@ public class AccountView extends RightsEnabledView {
         List<LicenseMessageInfos> licenseInfos = new ArrayList<>();
         for(LicenseManagementEntry entry : getLMService().getExistingLicenses()){
             try{
-                licenseInfos.add(getLMService().getLicenseMessageInfos(
-                        getUser(), entry.getContentIdentifier(), entry));
+                LicenseMessageInfos info = 
+                        getLMService().getLicenseMessageInfos(
+                                getUser(), entry.getContentIdentifier(),
+                                entry.getLicenseID(), entry);
+                if(info != null){
+                    licenseInfos.add(info);
+                }
             } catch (LicenseManagementException e){
                 LOG.error("Error getting license infos", e);
             }

@@ -79,6 +79,7 @@ public interface ILicenseManagementService {
             throws LicenseManagementException;
     
     LicenseMessageInfos getLicenseMessageInfos(String user, String contentId,
+            String licenseId,
             LicenseManagementEntry entry)
         throws LicenseManagementException;
 

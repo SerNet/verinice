@@ -191,6 +191,20 @@ public class LicenseMessageInfos implements Serializable {
     public void setAccountWizardLabel(String accountWizardLabel) {
         this.accountWizardLabel = accountWizardLabel;
     }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return "LicenseMessageInfos [validUntil=" + validUntil + ", licenseId="
+                + licenseId + ", contentId=" + contentId + ", "
+                + "accountViewColumnHeader=" + accountViewColumnHeader + ","
+                + " accountWizardLabel=" + accountWizardLabel + ","
+                + " isInvalidSoon=" + isInvalidSoon + ", isNoLicenseAvailable="
+                + isNoLicenseAvailable + ", validUsers=" + validUsers 
+                + ", assignedUsers=" + assignedUsers + "]";
+    }
     
     
 }

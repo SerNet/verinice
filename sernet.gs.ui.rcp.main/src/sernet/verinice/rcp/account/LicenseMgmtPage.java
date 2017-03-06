@@ -19,8 +19,12 @@
  ******************************************************************************/
 package sernet.verinice.rcp.account;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -33,6 +37,7 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
+import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.CommandException;
@@ -75,7 +80,10 @@ public class LicenseMgmtPage extends BaseWizardPage {
         setMessage(Messages.LicenseMgmtPage_Text);
 
         try{
-            for(LicenseManagementEntry entry : licenseService.getExistingLicenses()){
+            List<LicenseManagementEntry> licenseList = 
+                    getSortedExistingLicenses();
+            
+            for(LicenseManagementEntry entry : licenseList){
                 createLicenseIdCheckbox(composite, entry);
             }
         } catch (LicenseManagementException e){
@@ -88,12 +96,34 @@ public class LicenseMgmtPage extends BaseWizardPage {
     }
 
     /**
+     * @return
+     * @throws LicenseManagementException
+     */
+    private List<LicenseManagementEntry> getSortedExistingLicenses() 
+            throws LicenseManagementException {
+        List<LicenseManagementEntry> licenseList = new ArrayList<>(); 
+        licenseList.addAll(licenseService.getExistingLicenses());
+        Collections.sort(licenseList, new Comparator<LicenseManagementEntry>() {
+            NumericStringComparator ncs = new NumericStringComparator();
+
+            @Override
+            public int compare(LicenseManagementEntry entry1, 
+                    LicenseManagementEntry entry2) {
+                return ncs.compare(entry1.getLicenseID(), entry2.getLicenseID());
+            }
+        });
+        return licenseList;
+    }
+
+    /**
      * @param composite
      * @param entry
      */
-    private void createLicenseIdCheckbox(Composite composite, LicenseManagementEntry entry) {
+    private void createLicenseIdCheckbox(Composite composite, 
+            LicenseManagementEntry entry) {
         Button checkbox = new Button(composite, SWT.CHECK);
-        String plainLicenseId = (String)licenseService.decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
+        String plainLicenseId = (String)licenseService.decrypt(entry, 
+                LicenseManagementEntry.COLUMN_LICENSEID);
         checkbox.setText(getLicenseLabel(plainLicenseId));
         licenseEntryMap.put(plainLicenseId, entry);
         checkbox.addSelectionListener(getCheckboxSelectionListener());
@@ -110,14 +140,17 @@ public class LicenseMgmtPage extends BaseWizardPage {
                 if (event.getSource() instanceof Button){
                     Button checkbox = (Button)event.getSource();
                     if (checkbox.getSelection()){
-                                licenseService.addLicenseIdAuthorisation(user, getLicenseIdForLabel(checkbox.getText()));
+                                licenseService.addLicenseIdAuthorisation(user, 
+                                        getLicenseIdForLabel(checkbox.getText()));
                     } else {
-                        licenseService.removeLicenseIdUserAssignment(user, getLicenseIdForLabel(checkbox.getText()), false);
+                        licenseService.removeLicenseIdUserAssignment(user, 
+                                getLicenseIdForLabel(checkbox.getText()), false);
                     }
                 }
                 validateCheckboxStatus();
                 } catch (CommandException e){
-                    String msg = Messages.LicenseMgmtPage_Error_licenseNotAssigneable;
+                    String msg = Messages.
+                            LicenseMgmtPage_Error_licenseNotAssigneable;
                     ExceptionUtil.log(e, msg);
                     LOG.error(msg, e);
                     
@@ -148,7 +181,8 @@ public class LicenseMgmtPage extends BaseWizardPage {
         try{
         for(Button checkbox : checkboxes){
             boolean slotsAvailable = licenseService.hasLicenseIdAssignableSlots(
-                    licenseEntryMap.get(getLicenseIdForLabel(checkbox.getText())).getLicenseID());
+                    licenseEntryMap.get(getLicenseIdForLabel(
+                            checkbox.getText())).getLicenseID());
             if(slotsAvailable){
                 checkbox.setEnabled(true);    
             } else {
@@ -173,7 +207,8 @@ public class LicenseMgmtPage extends BaseWizardPage {
     @Override
     protected void initData() throws Exception {
         for(Button checkbox : checkboxes){
-            if(assignedLicenseIds.contains(getLicenseIdForLabel(checkbox.getText()))){
+            if(assignedLicenseIds.contains(
+                    getLicenseIdForLabel(checkbox.getText()))){
                 checkbox.setSelection(true);
                 checkbox.setEnabled(true);
             } 
@@ -223,7 +258,7 @@ public class LicenseMgmtPage extends BaseWizardPage {
         if(licenseIdToLabelMap.containsKey(licenseId)){
             return licenseIdToLabelMap.get(licenseId);
         }
-        String label = getLicenseLabel(licenseId);
+        String label = getLicenseLabelString(licenseId);
         licenseIdToLabelMap.put(licenseId, label);
         return label;
     }
@@ -235,7 +270,8 @@ public class LicenseMgmtPage extends BaseWizardPage {
         final String closingBracket = ")";
         final String dash = "-";
         final String slash = "/";
-        StringTokenizer tokenizer = new StringTokenizer(licenseId, licenseIdDelimiter);
+        StringTokenizer tokenizer = new StringTokenizer(licenseId,
+                licenseIdDelimiter);
         StringBuilder sb = new StringBuilder();
         if(tokenizer.countTokens() != 3){
             return licenseId;
@@ -253,6 +289,7 @@ public class LicenseMgmtPage extends BaseWizardPage {
             append(validUntil).append(singleSpace).append(dash);
         sb.append(singleSpace).append(openBracket).append(assignedUsers);
         sb.append(slash).append(validUsers).append(closingBracket);
+        LOG.debug("LicenseLabel for id:\t" + licenseId + "\t=" + sb.toString());
         return sb.toString();
     }
 
