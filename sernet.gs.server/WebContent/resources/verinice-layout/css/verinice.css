@@ -27,6 +27,10 @@
 	background-color: #fff;
 }
 
+body.exception-body .exception-bottom .exception-wrapper {
+	width:100%;
+}
+
 @media ( max-width : 1024px) {
   .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
     background-image: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");

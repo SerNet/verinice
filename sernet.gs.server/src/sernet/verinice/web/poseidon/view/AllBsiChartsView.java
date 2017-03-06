@@ -80,7 +80,8 @@ public class AllBsiChartsView {
 
             SortedMap<String, Number> states = getControlService().aggregateMassnahmenUmsetzung(itNetwork);
 
-            if(states.isEmpty()) continue;
+            if (states.isEmpty())
+                continue;
 
             VeriniceChartRow item = new VeriniceChartRow();
             BsiControlChartsFactory chartModelFactory = new BsiControlChartsFactory(states);
