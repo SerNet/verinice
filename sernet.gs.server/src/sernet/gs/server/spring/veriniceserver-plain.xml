@@ -140,7 +140,7 @@
 
 <bean class="sernet.verinice.service.commands.PropertyLoader">
     <property name="fileSizeMax" value="${veriniceserver.filesize.max}" />
-    <property name="templateMaster" value="${template.master}" />
+    <property name="modelingTemplateMaster" value="${modeling.template.master}" />
 </bean>
     
  

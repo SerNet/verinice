@@ -121,4 +121,4 @@ veriniceserver.object.limit=10000
 veriniceserver.vnl.repository=/WEB-INF/vnl
 
 # default user for tasks created when using template
-template.master=admin
+modeling.template.master=admin

@@ -87,6 +87,8 @@ public class LoadTemplateCandidates extends GenericCommand {
 
         DetachedCriteria crit = DetachedCriteria.forClass(CnATreeElement.class);
         crit.setFetchMode("parent", FetchMode.JOIN);
+        crit.setFetchMode("parent.entity", FetchMode.JOIN);
+        crit.setFetchMode("parent.entity.typedPropertyLists", FetchMode.JOIN);
         crit.setFetchMode("entity", FetchMode.JOIN);
         crit.setFetchMode("entity.typedPropertyLists", FetchMode.JOIN);
         crit.setFetchMode("children", FetchMode.JOIN);
