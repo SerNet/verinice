@@ -200,6 +200,22 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
     }
     
     /**
+     * Returns the risk for a given business impact of an asset and
+     * a given probability of occurrence for a incident scenario.
+     * 
+     * In this method the risk is calculated by addition.
+     * Overwrite this method to implement a different risk
+     * calculation.
+     * 
+     * @param businessImpact A business impact of an asset
+     * @param probability The probability of occurrence for a incident scenario
+     * @return A risk value for the given parameters
+     */
+    protected int calculateRisk(int businessImpact, int probability) {
+        return businessImpact * probability;
+    }
+    
+    /**
      * Analyses the risk of all assets which are linked to incident scenarios
      * in a given verinice graph.
      * 
@@ -269,106 +285,164 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
         }
     }
 
-    private void analyseRiskCOfAsset(IncidentScenario scenario, Edge edgeToAsset, Asset assetWithReducedCIAValues) {
-        Asset asset = (Asset) edgeToAsset.getTarget();
-        int assetValueC = asset.getEntity().getNumericValue(Asset.ASSET_VALUE_CONFIDENTIALITY);
-        
-        // Without controls:
-        int riskValueC = assetValueC + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
-        asset.setNumericProperty(Asset.ASSET_RISK_C,
-                asset.getNumericProperty(Asset.ASSET_RISK_C) + riskValueC);
-        edgeToAsset.setRiskConfidentiality(riskValueC);
-        
-        // With implemented controls
-        int assetValueImplementedControlsC = assetWithReducedCIAValues.getNumericProperty(Asset.ASSET_CONTROLRISK_C);        
-        int riskImplControlsC = assetValueImplementedControlsC + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
-        asset.setNumericProperty(Asset.ASSET_CONTROLRISK_C,
-                asset.getNumericProperty(Asset.ASSET_CONTROLRISK_C) + riskImplControlsC);
-        edgeToAsset.setRiskConfidentialityWithControls(riskImplControlsC);
-                    
-        // With all controls          
-        int assetValueAllControlsC = assetWithReducedCIAValues.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_C);        
-        int riskAllControlsC = assetValueAllControlsC
-                + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
-        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_C,
-                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_C) + riskAllControlsC);
-        
-        // With planned controls
-        int assetValuePlannedControlsC = assetWithReducedCIAValues.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C);   
-        int riskPlannedControlsC = assetValuePlannedControlsC
-                + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
-        asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C,
-                asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C)
-                        + riskPlannedControlsC);
-    }
-    
-    private void analyseRiskIOfAsset(IncidentScenario scenario, Edge edgeToAsset, 
+    /**
+     * Abbreviations used in this method to shorten in names of variables:
+     *  - business impact: bi
+     *  - confidentiality: C
+     * 
+     * @param scenario
+     * @param edgeToAsset
+     * @param assetWithReducedCIAValues
+     */
+    private void analyseRiskCOfAsset(IncidentScenario scenario, Edge edgeToAsset,
             Asset assetWithReducedCIAValues) {
         Asset asset = (Asset) edgeToAsset.getTarget();
-        int assetValueI = asset.getEntity().getNumericValue(Asset.ASSET_VALUE_INTEGRITY);
-        
+
         // Without controls:
-        int riskValueI = assetValueI + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
-        asset.setNumericProperty(Asset.ASSET_RISK_I,
-                asset.getNumericProperty(Asset.ASSET_RISK_I) + riskValueI);
-        edgeToAsset.setRiskIntegrity(riskValueI);
-        
+        int biC = asset.getNumericProperty(Asset.ASSET_VALUE_CONFIDENTIALITY);
+        int probability = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
+        int riskC = calculateRisk(biC, probability);
+        asset.setNumericProperty(Asset.ASSET_RISK_C,
+                asset.getNumericProperty(Asset.ASSET_RISK_C) + riskC);
+        edgeToAsset.setRiskConfidentiality(riskC);
+
         // With implemented controls
-        int assetValueImplementedControlsI = assetWithReducedCIAValues.getNumericProperty(Asset.ASSET_CONTROLRISK_I);        
-        int riskImplControlsI = assetValueImplementedControlsI + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
-        asset.setNumericProperty(Asset.ASSET_CONTROLRISK_I,
-                asset.getNumericProperty(Asset.ASSET_CONTROLRISK_I) + riskImplControlsI);
-        edgeToAsset.setRiskIntegrityWithControls(riskImplControlsI);
-                
-        // With all controls          
-        int assetValueAllControlsI = assetWithReducedCIAValues.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_I);        
-        int riskAllControlsI = assetValueAllControlsI
-                + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
-        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_I,
-                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_I) + riskAllControlsI);
-        
+        int biWithImplementedControlsC = assetWithReducedCIAValues
+                .getNumericProperty(Asset.ASSET_CONTROLRISK_C);
+        int probabilityWithImplementedControls = scenario
+                .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+        int riskWithImplementedControlsC = calculateRisk(biWithImplementedControlsC,
+                probabilityWithImplementedControls);
+        asset.setNumericProperty(Asset.ASSET_CONTROLRISK_C,
+                asset.getNumericProperty(Asset.ASSET_CONTROLRISK_C) + riskWithImplementedControlsC);
+        edgeToAsset.setRiskConfidentialityWithControls(riskWithImplementedControlsC);
+
+        // With all controls
+        int biWithAllControlsC = assetWithReducedCIAValues
+                .getNumericProperty(Asset.ASSET_PLANCONTROLRISK_C);
+        int probabilityWithAllControls = scenario.getNumericProperty(
+                IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+        int riskWithAllControlsC = calculateRisk(biWithAllControlsC, probabilityWithAllControls);
+        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_C,
+                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_C) + riskWithAllControlsC);
+
         // With planned controls
-        int assetValuePlannedControlsI = assetWithReducedCIAValues.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I);   
-        int riskPlannedControlsI = assetValuePlannedControlsI
-                + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
-        asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I,
-                asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I)
-                        + riskPlannedControlsI);
+        int biWithPlannedControlsC = assetWithReducedCIAValues
+                .getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C);
+        int probabilityWithPlannedControls = scenario
+                .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+        int riskWithPlannedControlsC = calculateRisk(biWithPlannedControlsC,
+                probabilityWithPlannedControls);
+        asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C,
+                asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C)
+                        + riskWithPlannedControlsC);
     }
     
+    /**
+     * Abbreviations used in this method to shorten in names of variables:
+     *  - Business impact: bi
+     *  - Integrity: I
+     * 
+     * @param scenario
+     * @param edgeToAsset
+     * @param assetWithReducedCIAValues
+     */
+    private void analyseRiskIOfAsset(IncidentScenario scenario, Edge edgeToAsset,
+            Asset assetWithReducedCIAValues) {
+        Asset asset = (Asset) edgeToAsset.getTarget();
+
+        // Without controls:
+        int biI = asset.getNumericProperty(Asset.ASSET_VALUE_INTEGRITY);
+        int probability = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
+        int riskI = calculateRisk(biI, probability);
+        asset.setNumericProperty(Asset.ASSET_RISK_I,
+                asset.getNumericProperty(Asset.ASSET_RISK_I) + riskI);
+        edgeToAsset.setRiskIntegrity(riskI);
+
+        // With implemented controls
+        int biWithImplementedControlsI = assetWithReducedCIAValues
+                .getNumericProperty(Asset.ASSET_CONTROLRISK_I);
+        int probabilityWithImplementedControls = scenario
+                .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+        int riskWithImplementedControlsI = calculateRisk(biWithImplementedControlsI,
+                probabilityWithImplementedControls);
+        asset.setNumericProperty(Asset.ASSET_CONTROLRISK_I,
+                asset.getNumericProperty(Asset.ASSET_CONTROLRISK_I) + riskWithImplementedControlsI);
+        edgeToAsset.setRiskIntegrityWithControls(riskWithImplementedControlsI);
+
+        // With all controls
+        int biWithAllControlsI = assetWithReducedCIAValues
+                .getNumericProperty(Asset.ASSET_PLANCONTROLRISK_I);
+        int probabilityWithAllControls = scenario.getNumericProperty(
+                IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+        int riskWithAllControlsI = calculateRisk(biWithAllControlsI, probabilityWithAllControls);
+        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_I,
+                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_I) + riskWithAllControlsI);
+
+        // With planned controls
+        int biWithPlannedControlsI = assetWithReducedCIAValues
+                .getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I);
+        int probabilityWithPlannedControls = scenario
+                .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+        int riskWithPlannedControlsI = calculateRisk(biWithPlannedControlsI,
+                probabilityWithPlannedControls);
+        asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I,
+                asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I)
+                        + riskWithPlannedControlsI);
+    }
+    
+    /**
+     * Abbreviations used in this method to shorten in names of variables:
+     *  - Business impact: bi
+     *  - Availability: A
+     * 
+     * @param scenario
+     * @param edgeToAsset
+     * @param assetWithReducedCIAValues
+     */
     private void analyseRiskAOfAsset(IncidentScenario scenario, Edge edgeToAsset,
             Asset assetWithReducedCIAValues) {
         Asset asset = (Asset) edgeToAsset.getTarget();
-        int assetValueA = asset.getEntity().getNumericValue(Asset.ASSET_VALUE_AVAILABILITY);
-        
+
         // Without controls:
-        int riskValueA = assetValueA + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
+        int biA = asset.getNumericProperty(Asset.ASSET_VALUE_AVAILABILITY);
+        int probability = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
+        int riskA = calculateRisk(biA, probability);
         asset.setNumericProperty(Asset.ASSET_RISK_A,
-                asset.getNumericProperty(Asset.ASSET_RISK_A) + riskValueA);
-        edgeToAsset.setRiskAvailability(riskValueA);
-        
+                asset.getNumericProperty(Asset.ASSET_RISK_A) + riskA);
+        edgeToAsset.setRiskAvailability(riskA);
+
         // With implemented controls
-        int assetValueImplementedControlsA = assetWithReducedCIAValues.getNumericProperty(Asset.ASSET_CONTROLRISK_A);        
-        int riskImplControlsA = assetValueImplementedControlsA + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+        int biWithImplementedControlsA = assetWithReducedCIAValues
+                .getNumericProperty(Asset.ASSET_CONTROLRISK_A);
+        int probabilityWithImplementedControls = scenario
+                .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+        int riskWithImplementedControlsA = calculateRisk(biWithImplementedControlsA,
+                probabilityWithImplementedControls);
         asset.setNumericProperty(Asset.ASSET_CONTROLRISK_A,
-                asset.getNumericProperty(Asset.ASSET_CONTROLRISK_A) + riskImplControlsA);
-        edgeToAsset.setRiskAvailabilityWithControls(riskImplControlsA);
-                
-        // With all controls          
-        int assetValueAllControlsA = assetWithReducedCIAValues.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_A);        
-        int riskAllControlsA = assetValueAllControlsA
-                + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+                asset.getNumericProperty(Asset.ASSET_CONTROLRISK_A) + riskWithImplementedControlsA);
+        edgeToAsset.setRiskAvailabilityWithControls(riskWithImplementedControlsA);
+
+        // With all controls
+        int biWithAllControlsA = assetWithReducedCIAValues
+                .getNumericProperty(Asset.ASSET_PLANCONTROLRISK_A);
+        int probabilityWithAllControls = scenario.getNumericProperty(
+                IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+        int riskWithAllControlsA = calculateRisk(biWithAllControlsA, probabilityWithAllControls);
         asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_A,
-                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_A) + riskAllControlsA);
-        
+                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_A) + riskWithAllControlsA);
+
         // With planned controls
-        int assetValuePlannedControlsA = assetWithReducedCIAValues.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A);   
-        int riskPlannedControlsA = assetValuePlannedControlsA
-                + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+        int biWithPlannedControlsA = assetWithReducedCIAValues
+                .getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A);
+        int probabilityWithPlannedControls = scenario
+                .getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS);
+        int riskWithPlannedControlsA = calculateRisk(biWithPlannedControlsA,
+                probabilityWithPlannedControls);
         asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A,
                 asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A)
-                        + riskPlannedControlsA);
-    }
+                        + riskWithPlannedControlsA);
+    }    
       
     /**
      * Reduce the CIA values of an given asset with the effect of all controls
@@ -410,9 +484,9 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
      * @param control A control which reduces the CIA values
      */
     private void reduceCIAValues(Asset asset, CnATreeElement control) {
-        int controlEffectC = control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_C);
-        int controlEffectI = control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_I);
-        int controlEffectA = control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_A);
+        int controlEffectC = control.getNumericProperty(Control.PROP_EFFECTIVENESS_CONFIDENTIALITY);
+        int controlEffectI = control.getNumericProperty(Control.PROP_EFFECTIVENESS_INTEGRITY);
+        int controlEffectA = control.getNumericProperty(Control.PROP_EFFECTIVENESS_AVAILABILITY);
         
         // Reduce regardless of implementation status
         asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_C,

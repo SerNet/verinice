@@ -70,27 +70,27 @@ public class RiskAnalysisHelperImpl implements RiskAnalysisHelper {
             for (CnATreeElement control : linkedElements.keySet()) {
                 control = Retriever.checkRetrieveElement(control);
                 if (Control.isImplemented(control.getEntity())) {
-                    impactC0 -= control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_C);
-                    impactI0 -= control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_I);
-                    impactA0 -= control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_A);
+                    impactC0 -= control.getNumericProperty(Control.PROP_EFFECTIVENESS_CONFIDENTIALITY);
+                    impactI0 -= control.getNumericProperty(Control.PROP_EFFECTIVENESS_INTEGRITY);
+                    impactA0 -= control.getNumericProperty(Control.PROP_EFFECTIVENESS_AVAILABILITY);
                 } 
             }
             break;
         case RISK_WITH_ALL_CONTROLS:
             for (CnATreeElement control : linkedElements.keySet()) {
                 control = Retriever.checkRetrieveElement(control);
-                impactC0 -= control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_C);
-                impactI0 -= control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_I);
-                impactA0 -= control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_A);
+                impactC0 -= control.getNumericProperty(Control.PROP_EFFECTIVENESS_CONFIDENTIALITY);
+                impactI0 -= control.getNumericProperty(Control.PROP_EFFECTIVENESS_INTEGRITY);
+                impactA0 -= control.getNumericProperty(Control.PROP_EFFECTIVENESS_AVAILABILITY);
             }
             break;
         case RISK_WITHOUT_NA_CONTROLS:
             for (CnATreeElement control : linkedElements.keySet()) {
                 control = Retriever.checkRetrieveElement(control);
                 if (Control.isPlanned(control.getEntity())) {
-                    impactC0 -= control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_C);
-                    impactI0 -= control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_I);
-                    impactA0 -= control.getNumericProperty(RiskAnalysisHelper.PROP_CONTROL_EFFECT_A);
+                    impactC0 -= control.getNumericProperty(Control.PROP_EFFECTIVENESS_CONFIDENTIALITY);
+                    impactI0 -= control.getNumericProperty(Control.PROP_EFFECTIVENESS_INTEGRITY);
+                    impactA0 -= control.getNumericProperty(Control.PROP_EFFECTIVENESS_AVAILABILITY);
                 }
             }
             break;

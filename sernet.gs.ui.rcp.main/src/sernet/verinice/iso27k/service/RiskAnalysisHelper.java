@@ -67,11 +67,6 @@ public interface RiskAnalysisHelper {
     String PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_I = "asset_risk_without_na_plancontrolvalue_i";
     String PROP_ASSET_WITHOUT_NA_PLANCONTROLRISK_A = "asset_risk_without_na_plancontrolvalue_a";
 
-    String PROP_CONTROL_EFFECT_C = "control_effectiveness_confidentiality";
-    String PROP_CONTROL_EFFECT_I = "control_effectiveness_integrity";
-    String PROP_CONTROL_EFFECT_A = "control_effectiveness_availability";
-    String PROP_CONTROL_EFFECT_P = "control_eff_probability";
-
     int RISK_PRE_CONTROLS = 0;
     int RISK_WITH_IMPLEMENTED_CONTROLS = 1;
     int RISK_WITH_ALL_CONTROLS = 2;
