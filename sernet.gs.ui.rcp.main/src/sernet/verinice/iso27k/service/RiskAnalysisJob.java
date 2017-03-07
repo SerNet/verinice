@@ -47,11 +47,15 @@ import sernet.verinice.model.iso27k.Vulnerability;
 public class RiskAnalysisJob {
 
     private static final Logger LOG = Logger.getLogger(RiskAnalysisJob.class);
+
+    private static final RiskCalculator RISK_CALCULATOR_DEFAULT = new RiskAdder();
     
     /**
      * A verinice graph with all elements which are analyzed
      */
     private VeriniceGraph graph;
+    
+    private RiskCalculator riskCalculator;
     
     private IBaseDao<CnALink, Serializable> cnaLinkDao;
     
@@ -176,16 +180,12 @@ public class RiskAnalysisJob {
      * Returns the risk for a given business impact of an asset and
      * a given probability of occurrence for a incident scenario.
      * 
-     * In this method the risk is calculated by addition.
-     * Overwrite this method to implement a different risk
-     * calculation.
-     * 
      * @param businessImpact A business impact of an asset
      * @param probability The probability of occurrence for a incident scenario
      * @return A risk value for the given parameters
      */
     protected int calculateRisk(int businessImpact, int probability) {
-        return businessImpact * probability;
+        return getRiskCalculator().calculateRiskFromBusinessImpactAndProbability(businessImpact, probability);
     }
     
     /**
@@ -576,6 +576,17 @@ public class RiskAnalysisJob {
         
     }
     
+    public RiskCalculator getRiskCalculator() {
+        if(riskCalculator==null) {
+            riskCalculator = RISK_CALCULATOR_DEFAULT;
+        }
+        return riskCalculator;
+    }
+
+    public void setRiskCalculator(RiskCalculator riskCalculator) {
+        this.riskCalculator = riskCalculator;
+    }
+
     public IBaseDao<CnALink, Serializable> getCnaLinkDao() {
         return cnaLinkDao;
     }
