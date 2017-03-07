@@ -244,7 +244,7 @@ public class LicenseManagementStandaloneModeService
             String encryptedContentId, String encryptedLicenseId,
             LicenseManagementEntry entry) throws LicenseManagementException {
         LicenseManagementEntry firstEntry = getFirstLicenseForUser(user, 
-                encryptedContentId, entry);
+                encryptedContentId, encryptedLicenseId,entry);
         LicenseMessageInfos infos = null;
         if(firstEntry != null){
             String contentId = 
@@ -253,8 +253,6 @@ public class LicenseManagementStandaloneModeService
                     decrypt(firstEntry, LicenseManagementEntry.COLUMN_LICENSEID);
             LocalDate validUntil = 
                     decrypt(firstEntry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
-            int validUsers = 
-                    decrypt(firstEntry, LicenseManagementEntry.COLUMN_VALIDUSERS);
             boolean invalidSoon = invalidInTheNextMonth(firstEntry);
             infos = new LicenseMessageInfos();
             infos.setContentId(contentId);
@@ -270,6 +268,13 @@ public class LicenseManagementStandaloneModeService
         return infos;
     }
     
+    @Override
+    public int getLicenseIdAllocationCount(String licenseId) {
+        // standalone the default user is the only one
+        // that is always assigend for every license
+        return 1;
+    }
+    
     /**
      * returns a license for the (given) default user, if existant
      * considering the given contentId
@@ -279,27 +284,21 @@ public class LicenseManagementStandaloneModeService
      * @throws LicenseManagementException
      */
     private LicenseManagementEntry getFirstLicenseForUser(String user, 
-            String encryptedContentId, 
+            String encryptedContentId, String encryptedLicenseId,
             LicenseManagementEntry entry) throws LicenseManagementException {
-        for(LicenseManagementEntry existingEntry : getExistingLicenses()){
-            String plainContentId = "";
-            if(entry == null){
-                plainContentId = getCryptoService().
-                    decryptLicenseRestrictedProperty(
-                            existingEntry.getUserPassword(), encryptedContentId);
-            } else {
-                plainContentId = decrypt(
-                        entry, LicenseManagementEntry.COLUMN_CONTENTID);
-            }
-            String entryPlainContentId = decrypt(entry, 
-                    LicenseManagementEntry.COLUMN_CONTENTID);
-            if(plainContentId.equals(entryPlainContentId)){
-                return entry;
+        Set<LicenseManagementEntry> matchingEntries = new HashSet<>();
+        for(LicenseManagementEntry existingEntry : 
+            getExistingLicenses()){
+            LicenseManagementEntry matchingEntry = getMatchingEntries(
+                    encryptedContentId, encryptedLicenseId, entry, existingEntry);
+            if(matchingEntry != null){
+                matchingEntries.add(matchingEntry);
             }
         }
-        
-        return null;
+        return getOldestEntry(matchingEntries);
     }
+
+
     
     @Override
     public String decryptRestrictedProperty(String encryptedContentId, 

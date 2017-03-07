@@ -984,47 +984,25 @@ public class LicenseManagementServerModeService
         Set<LicenseManagementEntry> matchingEntries = new HashSet<>();
         for(LicenseManagementEntry existingEntry : 
             getLicenseEntriesForUserByContentId(user, encryptedContentId)){
-            String plainContentId = "";
-            String plainLicenseId = "";
-            if(entry == null){
-                plainContentId = getCryptoService().
-                    decryptLicenseRestrictedProperty(
-                            existingEntry.getUserPassword(), encryptedContentId);
-                if(StringUtils.isNotEmpty(encryptedLicenseId)){
-                    plainLicenseId = getCryptoService().
-                            decryptLicenseRestrictedProperty(
-                                    existingEntry.getUserPassword(), encryptedLicenseId);
-                }
-            } else {
-                plainContentId = decrypt(
-                        entry, LicenseManagementEntry.COLUMN_CONTENTID);
-                if(StringUtils.isNotEmpty(encryptedLicenseId)){
-                    plainLicenseId = decrypt(
-                            entry, LicenseManagementEntry.COLUMN_LICENSEID);
-                }
-                
-            }
-            String entryPlainContentId = decrypt(existingEntry, 
-                    LicenseManagementEntry.COLUMN_CONTENTID);
-            String entryPlainLicenseId = decrypt(existingEntry, 
-                    LicenseManagementEntry.COLUMN_LICENSEID);
-            if(StringUtils.isEmpty(plainLicenseId) &&
-                    plainContentId.equals(entryPlainContentId)){
-                matchingEntries.add(existingEntry);
-            } else if(StringUtils.isNotEmpty(plainLicenseId) &&
-                    plainLicenseId.equals(entryPlainLicenseId) &&
-                    plainContentId.equals(entryPlainContentId)){
-                matchingEntries.add(existingEntry);
-                break; // can only be this one
+            LicenseManagementEntry matchingEntry = 
+                    getMatchingEntries(encryptedContentId, encryptedLicenseId,
+                            entry, existingEntry);
+            if(matchingEntry != null){
+                matchingEntries.add(matchingEntry);
             }
         }
         
-        if(matchingEntries.size() == 1){
-            return matchingEntries.stream().findFirst().get();
+        return getOldestEntry(matchingEntries);
+    }
+
+    protected LicenseManagementEntry getOldestEntry(Set<LicenseManagementEntry>
+    entries){
+        if (entries.size() == 1){
+            return entries.stream().findFirst().get();
         } else {
             LicenseManagementEntry oldestEntry = null;
-            for(LicenseManagementEntry possibleEntry : matchingEntries){
-                if(oldestEntry == null){
+            for (LicenseManagementEntry possibleEntry : entries){
+                if (oldestEntry == null){
                     oldestEntry = possibleEntry;
                     continue;
                 } else {
@@ -1038,6 +1016,58 @@ public class LicenseManagementServerModeService
             }
             return oldestEntry;
         }
+    }
+    
+    /**
+     * 
+     * checks if a given @param existingEntry (instance of 
+     * {@link LicenseManagementEntry} matches to a given
+     * encrypted ContentId and optionally a given
+     * encrypted licenseId. Also possible to pass the license-/content-Id
+     * containing {@link LicenseManagementEntry} (needed by use-case
+     * of {@link AccountView} to create license-columns
+     * 
+     * @param encryptedContentId
+     * @param encryptedLicenseId
+     * @param entry
+     * @param existingEntry
+     */
+    protected LicenseManagementEntry getMatchingEntries(String encryptedContentId,
+            String encryptedLicenseId, LicenseManagementEntry entry, 
+            LicenseManagementEntry existingEntry) {
+        String plainContentId;
+        String plainLicenseId = "";
+        if(entry == null){
+            plainContentId = getCryptoService().
+                decryptLicenseRestrictedProperty(
+                        existingEntry.getUserPassword(), encryptedContentId);
+            if(StringUtils.isNotEmpty(encryptedLicenseId)){
+                plainLicenseId = getCryptoService().
+                        decryptLicenseRestrictedProperty(
+                                existingEntry.getUserPassword(), encryptedLicenseId);
+            }
+        } else {
+            plainContentId = decrypt(
+                    entry, LicenseManagementEntry.COLUMN_CONTENTID);
+            if(StringUtils.isNotEmpty(encryptedLicenseId)){
+                plainLicenseId = decrypt(
+                        entry, LicenseManagementEntry.COLUMN_LICENSEID);
+            }
+            
+        }
+        String entryPlainContentId = decrypt(existingEntry, 
+                LicenseManagementEntry.COLUMN_CONTENTID);
+        String entryPlainLicenseId = decrypt(existingEntry, 
+                LicenseManagementEntry.COLUMN_LICENSEID);
+        if(StringUtils.isEmpty(plainLicenseId) &&
+                plainContentId.equals(entryPlainContentId)){
+            return existingEntry;
+        } else if(StringUtils.isNotEmpty(plainLicenseId) &&
+                plainLicenseId.equals(entryPlainLicenseId) &&
+                plainContentId.equals(entryPlainContentId)){
+            return existingEntry;
+        }
+        return null;
     }
 
 }
