@@ -41,7 +41,6 @@ import org.eclipse.swt.widgets.Composite;
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
-import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
@@ -149,31 +148,21 @@ public class LicenseMgmtPage extends BaseWizardPage {
 
             @Override
             public void widgetSelected(SelectionEvent event) {
-                try{
                 if (event.getSource() instanceof Button){
                     Button checkbox = (Button)event.getSource();
+                    String checkboxText = checkbox.getText();
+                    String licenseIdLabel = getLicenseLabelFromCheckboxText(checkboxText);
+                    String licenseId = getLicenseIdForLabel(licenseIdLabel);
                     if (checkbox.getSelection()){
-                                licenseService.addLicenseIdAuthorisation(user, 
-                                        getLicenseIdForLabel(checkbox.getText()));
+                        assignedLicenseIds.add(licenseId);
                     } else {
-                        licenseService.removeLicenseIdUserAssignment(user, 
-                                getLicenseIdForLabel(checkbox.getText()), false);
+                        assignedLicenseIds.remove(licenseId);
                     }
                 }
                 validateCheckboxStatus();
-                } catch (CommandException e){
-                    String msg = Messages.
-                            LicenseMgmtPage_Error_licenseNotAssigneable;
-                    ExceptionUtil.log(e, msg);
-                    LOG.error(msg, e);
-                    
-                } catch (LicenseManagementException e){
-                    String msg = "Error adding or removing license data to user";
-                    ExceptionUtil.log(e, msg);
-                    LOG.error(msg, e);                    
-                }
+
             }
-            
+
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 // do nothing
@@ -272,7 +261,11 @@ public class LicenseMgmtPage extends BaseWizardPage {
         assignedLicenseIds = new HashSet<>();
         for(Button checkbox : checkboxes){
             if(checkbox.getSelection()){
-                assignedLicenseIds.add(getLicenseIdForLabel(checkbox.getText()));
+                String checkboxText = checkbox.getText();
+                String licenseLabel = getLicenseLabelFromCheckboxText(
+                        checkboxText);
+                String licenseId = getLicenseIdForLabel(licenseLabel);
+                assignedLicenseIds.add(licenseId);
             }
         }
         return assignedLicenseIds;

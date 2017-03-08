@@ -265,16 +265,22 @@ public class LicenseManagementServerModeService
             String encryptedContentId, boolean decrypt) 
                     throws LicenseManagementException{
         Set<LicenseManagementEntry> uniqueEntryCollection = new HashSet<>();
-        
+
         if (decrypt){
             for (LicenseManagementEntry entry : getExistingLicenses()){
-                String plainContentId = getCryptoService().
-                        decryptLicenseRestrictedProperty(entry.getUserPassword(),
-                                encryptedContentId);
-                String plainEntryContentId = decrypt(entry, 
-                        LicenseManagementEntry.COLUMN_CONTENTID);
-                if(plainContentId.equals(plainEntryContentId)){
-                    uniqueEntryCollection.add(entry);
+                try{
+                    String plainContentId = getCryptoService().
+                            decryptLicenseRestrictedProperty(entry.getUserPassword(),
+                                    encryptedContentId);
+                    String plainEntryContentId = decrypt(entry, 
+                            LicenseManagementEntry.COLUMN_CONTENTID);
+                    if(plainContentId.equals(plainEntryContentId)){
+                        uniqueEntryCollection.add(entry);
+                    }
+                } catch (EncryptionException e){
+                    log.info("Could not decrypt correctly for value:\t" + encryptedContentId 
+                            + "with entry (licenseId):\t" + entry.getLicenseID());
+                    continue;
                 }
             }
             return uniqueEntryCollection;
@@ -320,9 +326,15 @@ public class LicenseManagementServerModeService
             } else {
                 String plainContentIdEntry = 
                         decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID);
-                String plainContentIdInput = getCryptoService().
-                        decryptLicenseRestrictedProperty(entry.getUserPassword(),
-                                contentId);
+                String plainContentIdInput = "";
+                try{
+                    plainContentIdInput = getCryptoService().
+                            decryptLicenseRestrictedProperty(entry.getUserPassword(),
+                                    contentId);
+                } catch (EncryptionException e){
+                    // this is try & error, so fails are ok here
+                    continue;
+                }
                 if(plainContentIdEntry.equals(plainContentIdInput)){
                     uniqueIds.add(plainLicenseId);
                 }
