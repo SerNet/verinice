@@ -40,7 +40,10 @@ import sernet.verinice.model.iso27k.Vulnerability;
  * A job which runs a risk analysis on a verinice graph. 
  * The verinice graph contains all elements which are analyzed.
  * 
- * This Job is created and executed by class {@link RiskAnalysisServiceImpl}.
+ * This Job is created and executed by class RiskAnalysisServiceImpl.
+ * RiskAnalysisServiceImpl is configured as a singleton. In contrast to this
+ * a new instance of RiskAnalysisJob is created for every execution of
+ * a risk analysis.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */

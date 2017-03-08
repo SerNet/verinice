@@ -20,6 +20,7 @@
 package sernet.verinice.iso27k.service;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import org.apache.log4j.Logger;
 
@@ -39,8 +40,14 @@ import sernet.verinice.model.iso27k.Vulnerability;
 /**
  * Service implementation to run a ISO/IEC 27005 risk analysis.
  *  
- * This implementation loads data by IGraphService and a CnALink dao
- * to save links.
+ * This implementation loads data by IGraphService and saves links by CnALink dao.
+ *  
+ * This service is managed by the Spring framework. It is configured in file
+ *  veriniceserver-risk-analysis.xml (On the server / verinice.PRO) or
+ *  veriniceserver-risk-analysis-standalone.xml (verinice stanalone)
+ *  
+ * This service is configured as a singleton 
+ * (see: https://en.wikipedia.org/wiki/Singleton_pattern).
  *  
  * @author Alexander Koderman
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -50,6 +57,20 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
     
     private static final transient Logger LOG = Logger.getLogger(RiskAnalysisServiceImpl.class);
     private static final Logger LOG_RUNTIME = Logger.getLogger(RiskAnalysisServiceImpl.class.getName() + ".runtime");
+    
+    public enum RiskCalculationMethod {
+        ADDITION, MULTIPLICATION
+    }  
+    public static final RiskCalculationMethod RISK_CALCULATION_METHOD_DEFAULT = RiskCalculationMethod.ADDITION;
+    
+    /**
+     * The riskCalculationMethod is configured in 
+     * veriniceserver-plain.properties[.default|.local] respectively
+     * veriniceserver-risk-analysis[-standalone].xml
+     * 
+     * If no value is set in these files, RISK_CALCULATION_METHOD_DEFAULT is used.
+     */
+    private RiskCalculationMethod riskCalculationMethod = RISK_CALCULATION_METHOD_DEFAULT;
     
     private IGraphService graphService;  
     private IBaseDao<CnALink, Serializable> cnaLinkDao;
@@ -69,16 +90,37 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
     @Override
     public void runRiskAnalysis(Integer... organizationIds) {
         if (LOG.isInfoEnabled()) {
-            LOG.info("Running a risk analysis on organizations with database ids: " + organizationIds + "...");
-        }
-        
+            LOG.info("Running a risk analysis on organizations with database ids: " + Arrays.toString(organizationIds) + "...");
+        }     
         long time = initRuntime();   
         
         VeriniceGraph graph = loadGraph(organizationIds);  
-        RiskAnalysisJob job = new RiskAnalysisJob(graph, getCnaLinkDao());      
+        
+        RiskAnalysisJob job = new RiskAnalysisJob(graph, getCnaLinkDao());
+        configureRiskCalculator(job);
         job.runRiskAnalysis();
         
         logRuntime("runRiskAnalysis() runtime : ", time);
+    }
+
+    private void configureRiskCalculator(RiskAnalysisJob job) {
+        if (LOG.isInfoEnabled()) {
+            LOG.info("Risk calculation method is: " + riskCalculationMethod);
+        }
+        switch (riskCalculationMethod) {
+        case ADDITION:
+            job.setRiskCalculator(new RiskAdder());
+            break;
+        case MULTIPLICATION:
+            job.setRiskCalculator(new RiskMultiplier());
+            break;
+        default:
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Setting risk calculation method to the default: addition");
+            }
+            job.setRiskCalculator(new RiskAdder());
+            break;
+        }
     }
    
     private VeriniceGraph loadGraph(Integer[] scopeIds) { 
@@ -89,6 +131,15 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
         loader.setTypeIds(new String[]{Asset.TYPE_ID, IncidentScenario.TYPE_ID, Control.TYPE_ID, Threat.TYPE_ID, Vulnerability.TYPE_ID});
         getGraphService().setLoader(loader);
         return getGraphService().create() ;          
+    }
+
+    public RiskCalculationMethod getRiskCalculationMethod() {
+        return riskCalculationMethod;
+    }
+
+
+    public void setRiskCalculationMethod(RiskCalculationMethod riskCalculationArithmetic) {
+        this.riskCalculationMethod = riskCalculationArithmetic;
     }
 
     public IBaseDao<CnALink, Serializable> getCnaLinkDao() {
