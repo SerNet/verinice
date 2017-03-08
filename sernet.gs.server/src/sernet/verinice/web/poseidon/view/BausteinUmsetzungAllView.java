@@ -29,6 +29,8 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -43,13 +45,14 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.service.DAOFactory;
 import sernet.verinice.web.poseidon.services.ControlService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
-import sernet.verinice.web.poseidon.services.strategy.StrategyBean;
+import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 @ManagedBean(name = "bausteinUmsetzungAllView")
+@ViewScoped
 public class BausteinUmsetzungAllView {
 
     @ManagedProperty("#{controlService}")
@@ -61,31 +64,63 @@ public class BausteinUmsetzungAllView {
 
     private BarChartModel verticalBarChart;
 
-    @ManagedProperty("#{strategyBean}")
-    private StrategyBean strategyBean;
+    private boolean totalCalculated = false;
+
+    private boolean allItNetworksCalculated = false;
+
+    private GroupedByChapterStrategy strategy;
 
     @PostConstruct
     public void init() {
+        strategy = new GroupedByChapterStrategy();
+    }
 
-        Map<String, Map<String, Number>> allStates = controlService.groupByMassnahmenStates("", strategyBean.getStrategy());
+    /**
+     * Loads data, does number crunching and sets the
+     * {@link #isTotalCalculated()} to true, so the result can be fetched via
+     * ajax.
+     */
+    public void loadTotalData() {
+        initTotalCharts();
+        totalCalculated = true;
+    }
+
+    private void initTotalCharts() {
+        Map<String, Map<String, Number>> allStates = controlService.groupByMassnahmenStates("", strategy.getStrategy());
         ModulChartsFactory allChartModelFactory = new ModulChartsFactory(allStates);
 
         verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
         horizontalBarChart = allChartModelFactory.getHorizontalBarChartModel();
+    }
 
-        charts = new ArrayList<>();
+    public void loadDataForAllItNetworks() {
+        initChartsForAllItNetworks();
+        allItNetworksCalculated = true;
+    }
 
+    private void initChartsForAllItNetworks() {
+        List<ITVerbund> itNetworks = loadItNetworks();
+        itNetworks = sortItNetworks(itNetworks);
+        this.charts = createCharts(itNetworks);
+    }
+
+    private List<ITVerbund> loadItNetworks() {
         DAOFactory daoFactory = (DAOFactory) VeriniceContext.get(VeriniceContext.DAO_FACTORY);
         IBaseDao<ITVerbund, Serializable> itNetworkDao = daoFactory.getDAO(ITVerbund.class);
         @SuppressWarnings("unchecked")
         List<ITVerbund> itNetworks = itNetworkDao.findAll(RetrieveInfo.getPropertyInstance());
-        itNetworks = sortItNetworks(itNetworks);
+        return itNetworks;
+    }
+
+    private ArrayList<VeriniceChartRow> createCharts(List<ITVerbund> itNetworks) {
+
+        ArrayList<VeriniceChartRow> charts = new ArrayList<>();
 
         for (ITVerbund itNetwork : itNetworks) {
 
-            Map<String, Map<String, Number>> states = controlService.groupByMassnahmenStates(itNetwork, new GroupByStrategySum());
+            Map<String, Map<String, Number>> states = controlService.groupByMassnahmenStates(itNetwork, strategy.getStrategy());
 
-            if(states.isEmpty()) {
+            if (states.isEmpty()) {
                 continue;
             }
 
@@ -101,9 +136,9 @@ public class BausteinUmsetzungAllView {
             axis.setMax(horizontalBarChart.getAxis(AxisType.X).getMax());
             charts.add(item);
         }
+
+        return charts;
     }
-
-
 
     private List<ITVerbund> sortItNetworks(List<ITVerbund> itNetworks) {
         Collections.sort(itNetworks, new Comparator<ITVerbund>() {
@@ -116,8 +151,6 @@ public class BausteinUmsetzungAllView {
         return itNetworks;
     }
 
-
-
     public List<VeriniceChartRow> getCharts() {
         return charts;
     }
@@ -125,7 +158,6 @@ public class BausteinUmsetzungAllView {
     public void setCharts(List<VeriniceChartRow> charts) {
         this.charts = charts;
     }
-
 
     public ControlService getControlService() {
         return controlService;
@@ -135,19 +167,13 @@ public class BausteinUmsetzungAllView {
         this.controlService = controlService;
     }
 
-
-
     public HorizontalBarChartModel getHorizontalBarChartModel() {
         return horizontalBarChart;
     }
 
-
-
     public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {
         this.horizontalBarChart = horizontalBarChartModel;
     }
-
-
 
     public BarChartModel getVerticalBarChart() {
         return verticalBarChart;
@@ -157,15 +183,27 @@ public class BausteinUmsetzungAllView {
         this.verticalBarChart = verticalBarChart;
     }
 
-
-
-    public StrategyBean getStrategyBean() {
-        return strategyBean;
+    public GroupedByChapterStrategy getStrategyBean() {
+        return strategy;
     }
 
+    public void setStrategyBean(GroupedByChapterStrategy strategyBean) {
+        this.strategy = strategyBean;
+    }
 
+    public boolean isTotalCalculated() {
+        return totalCalculated;
+    }
 
-    public void setStrategyBean(StrategyBean strategyBean) {
-        this.strategyBean = strategyBean;
+    public void setTotalCalculated(boolean totalCalculated) {
+        this.totalCalculated = totalCalculated;
+    }
+
+    public boolean isAllItNetworksCalculated() {
+        return allItNetworksCalculated;
+    }
+
+    public void setAllItNetworksCalculated(boolean allItNetworksCalculated) {
+        this.allItNetworksCalculated = allItNetworksCalculated;
     }
 }

@@ -22,9 +22,9 @@ package sernet.verinice.web.poseidon.view;
 import java.io.Serializable;
 import java.util.SortedMap;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.event.ActionEvent;
 
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
@@ -50,13 +50,13 @@ public class TotalBsiChartsView implements Serializable {
 
     private BarChartModel barModel;
 
-    private BsiControlChartsFactory chartModelFactory;
+    private boolean calculated = false;
 
-    @PostConstruct
-    final public void init() {
-        this.chartModelFactory = new BsiControlChartsFactory(getStates());
+    public void init() {
+        BsiControlChartsFactory chartModelFactory = new BsiControlChartsFactory(getStates());
         this.pieModel = chartModelFactory.getPieChartModel();
         this.barModel = chartModelFactory.getBarChart();
+        this.calculated = true;
     }
 
     private SortedMap<String, Number> getStates() {
@@ -88,5 +88,13 @@ public class TotalBsiChartsView implements Serializable {
 
     public void setBarModel(BarChartModel barModel) {
         this.barModel = barModel;
+    }
+
+    public boolean isCalculated() {
+        return calculated;
+    }
+
+    public void setCalculated(boolean calculated) {
+        this.calculated = calculated;
     }
 }

@@ -7,6 +7,7 @@
 	template="/WEB-INF/poseidon/template.xhtml">
 
 	<ui:define name="title">Bausteinumsetzung gesamt :: Charts</ui:define>
+	<ui:define name="viewname">Bausteinumsetzung gesamt :: Charts</ui:define>
 
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
@@ -16,23 +17,104 @@
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-12">
 				<p:panel header="Bausteinumsetzung gesamt" toggleable="true">
-					<div class="ui-g ui-fluid">
-						<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
-							<p:chart id="veriniceHorizontalBar" type="bar"
-								model="#{bausteinUmsetzungAllView.verticalBarChart}"
-								responsive="true" />
-						</div>
-						<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
-							<p:chart id="veriniceVerticalBar" type="bar"
-								model="#{bausteinUmsetzungAllView.horizontalBarChartModel}"
-								responsive="true" />
-						</div>
-					</div>
+					<h:form id="chartPanel">
+						<p:outputPanel
+							rendered="#{not bausteinUmsetzungAllView.totalCalculated}">
+							<p:ajaxStatus
+								style="display:block;margin-bottom:2em; height:50px;">
+								<f:facet name="default">
+
+								</f:facet>
+
+								<f:facet name="start">
+									<div style="margin: 0 auto; text-align: center;">
+										<p>Crunching numbers</p>
+										<p:graphicImage
+											name="#{resource['poseidon-layout:images/ajax-loader.gif']}" />
+										<p:graphicImage name="images/ajax-loader.gif"
+											library="poseidon-layout" />
+									</div>
+								</f:facet>
+							</p:ajaxStatus>
+						</p:outputPanel>
+						<p:outputPanel
+							rendered="#{bausteinUmsetzungAllView.totalCalculated}">
+							<div class="ui-g ui-fluid">
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="veriniceHorizontalBar" type="bar"
+										model="#{bausteinUmsetzungAllView.verticalBarChart}"
+										responsive="true" />
+								</div>
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="veriniceVerticalBar" type="bar"
+										model="#{bausteinUmsetzungAllView.horizontalBarChartModel}"
+										responsive="true" />
+								</div>
+							</div>
+						</p:outputPanel>
+					</h:form>
+
+					<h:form>
+						<p:remoteCommand
+							action="#{bausteinUmsetzungAllView.loadTotalData()}"
+							autoRun="true" delay="2" update=":chartPanel" />
+					</h:form>
 				</p:panel>
 			</div>
 
-			<ui:repeat value="#{bausteinUmsetzungAllView.charts}" var="chart"  toggleable="true">
-				<div class="ui-g-12"  toggleable="true">
+
+			<div class="ui-g-12 ui-lg-12">
+				<h:form id="all-chapter">
+					<p:panel header="Alle IT-Verbünde" toggleable="true">
+						<p:outputPanel
+							rendered="#{not bausteinUmsetzungAllView.allItNetworksCalculated}">
+							<p:ajaxStatus
+								style="display:block;margin-bottom:2em; height:50px;">
+								<f:facet name="start">
+									<div style="margin: 0 auto; text-align: center;">
+										<p>Crunching numbers</p>
+										<p:graphicImage name="images/ajax-loader.gif"
+											library="poseidon-layout" />
+									</div>
+								</f:facet>
+							</p:ajaxStatus>
+						</p:outputPanel>
+
+						<p:outputPanel id="charts"
+							rendered="#{bausteinUmsetzungAllView.allItNetworksCalculated}">
+							<ui:repeat value="#{bausteinUmsetzungAllView.charts}" var="chart"
+								toggleable="true">
+								<div class="ui-g">
+									<div class="ui-g-12 ui-lg-12">
+										<h3>#{chart.title}</h3>
+									</div>
+									<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+										<p:chart id="verticalBar" type="bar"
+											model="#{chart.firstChartModel}" responsive="true" />
+									</div>
+									<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+										<p:chart id="horizontalBar" type="bar"
+											model="#{chart.secondChartModel}" responsive="true" />
+									</div>
+								</div>
+
+							</ui:repeat>
+						</p:outputPanel>
+					</p:panel>
+				</h:form>
+			</div>
+
+			<h:form>
+				<p:remoteCommand
+					action="#{bausteinUmsetzungAllView.loadDataForAllItNetworks()}"
+					update=":all-chapter" autoRun="true" delay="2">
+				</p:remoteCommand>
+			</h:form>
+
+
+			<ui:repeat value="#{bausteinUmsetzungAllView.charts}" var="chart"
+				toggleable="true">
+				<div class="ui-g-12" toggleable="true">
 					<p:panel header="#{chart.title}">
 						<div class="ui-g ui-fluid">
 							<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">

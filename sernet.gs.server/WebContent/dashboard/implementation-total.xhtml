@@ -5,27 +5,59 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/poseidon/template.xhtml">
 
-	<ui:define name="title">Massnahmenumsetzung gesamt :: Charts</ui:define>
-
 	<ui:define name="head">
 		<ui:include src="/WEB-INF/poseidon/chart-extender.xhtml" />
 	</ui:define>
 
+	<ui:define name="title">Bausteinumsetzung :: Charts</ui:define>
+	<ui:define name="viewname">Bausteinumsetzung :: Charts</ui:define>
+
 	<ui:define name="content">
 		<div class="ui-g ui-fluid">
 			<div class="ui-g-12">
-				<p:panel header="Massnahmenumsetzung gesamt">
-					<div class="ui-g ui-fluid">
-						<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
-							<p:chart id="verinicePieChart" type="pie"
-								model="#{totalBsiChartView.pieModel}" responsive="true" />
-						</div>
-						<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
-							<p:chart id="verinicePieBar" type="bar"
-								model="#{totalBsiChartView.barModel}" responsive="true" />
-						</div>
-					</div>
-				</p:panel>
+				<h:form id="chartPanel">
+					<p:panel header="Massnahmenumsetzung gesamt">
+
+						<p:outputPanel rendered="#{not totalBsiChartView.calculated}">
+							<p:ajaxStatus
+								style="display:block;margin-bottom:2em; height:50px;">
+								<f:facet name="default">
+
+								</f:facet>
+
+								<f:facet name="start">
+									<div style="margin: 0 auto; text-align: center;">
+										<p>Crunching numbers</p>
+										<p:graphicImage name="images/ajax-loader.gif"
+											library="poseidon-layout" />
+									</div>
+								</f:facet>
+							</p:ajaxStatus>
+						</p:outputPanel>
+
+						<p:outputPanel id="charts"
+							rendered="#{totalBsiChartView.calculated}">
+							<div class="ui-g ui-fluid">
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="verinicePieChart" type="pie"
+										model="#{totalBsiChartView.pieModel}" responsive="true" />
+								</div>
+								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
+									<p:chart id="verinicePieBar" type="bar"
+										model="#{totalBsiChartView.barModel}" responsive="true" />
+								</div>
+							</div>
+						</p:outputPanel>
+					</p:panel>
+				</h:form>
+
+				<p:messages id="msg" globalOnly="true" autoUpdate="true" />
+
+				<h:form>
+					<p:remoteCommand id="loadDataCommand"
+						action="#{totalBsiChartView.init()}" update=":chartPanel"
+						autoRun="true" delay="2" />
+				</h:form>
 			</div>
 		</div>
 	</ui:define>

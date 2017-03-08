@@ -24,38 +24,63 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.primefaces.model.chart.BarChartModel;
 
 import sernet.verinice.web.poseidon.services.ControlService;
-import sernet.verinice.web.poseidon.services.strategy.StrategyBean;
+import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
 @ManagedBean(name = "bstUmsetzungItNetworkView")
+@ViewScoped
 public class BstUmsetzungItNetwork {
 
     private BarChartModel horizontalChartModel;
 
     private BarChartModel verticalChartModel;
 
-    @ManagedProperty(value = "#{param.itNetwork}")
     private String itNetwork;
 
-    @ManagedProperty(value = "#{param.scopeId}")
     private String scopeId;
 
+    private GroupedByChapterStrategy strategyBean;
+
+    private boolean calculated = false;
 
     @ManagedProperty("#{controlService}")
     private ControlService controlService;
 
-    @ManagedProperty("#{strategyBean}")
-    private StrategyBean strategyBean;
-
     @PostConstruct
     public void init() {
+        readParameter();
+    }
+
+    private void readParameter() {
+        Map<String, String> parameterMap = getParameterMap();
+        this.scopeId = parameterMap.get("scopeId");
+        this.itNetwork = parameterMap.get("itNetwork");
+        this.strategyBean = new GroupedByChapterStrategy(parameterMap.get("strategy"));
+    }
+
+    private Map<String, String> getParameterMap() {
+        return (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    }
+
+    /**
+     * Calculates data for the charts and set {@link #setCalculated(boolean)} to
+     * true, so the client that data are available.
+     */
+    public void loadData() {
+        createCharts();
+        calculated = true;
+    }
+
+    private void createCharts() {
         Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates(scopeId, strategyBean.getStrategy());
         ModulChartsFactory chartModelFactory = new ModulChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
@@ -102,13 +127,19 @@ public class BstUmsetzungItNetwork {
         this.scopeId = scopeId;
     }
 
-
-
-    public StrategyBean getStrategyBean() {
+    public GroupedByChapterStrategy getStrategyBean() {
         return strategyBean;
     }
 
-    public void setStrategyBean(StrategyBean strategyBean) {
+    public void setStrategyBean(GroupedByChapterStrategy strategyBean) {
         this.strategyBean = strategyBean;
+    }
+
+    public boolean isCalculated() {
+        return calculated;
+    }
+
+    public void setCalculated(boolean calculated) {
+        this.calculated = calculated;
     }
 }

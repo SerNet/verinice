@@ -96,7 +96,7 @@
 		<property name="authenticationManager" ref="authenticationManager" />
 		<property name="filterProcessesUrl" value="/auth/j_verinice_security_check" />
 		<property name="defaultTargetUrl" value="/misc/home.xhtml" />
-		<property name="authenticationFailureUrl" value="/auth/login-error.jsf" />
+		<property name="authenticationFailureUrl" value="/auth/login.xhtml" />
 	</bean>
 
 	<!-- Using digest authentication: (doesn't work with LDAP) Instead of digest

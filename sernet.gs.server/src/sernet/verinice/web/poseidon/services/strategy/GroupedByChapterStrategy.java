@@ -19,19 +19,32 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services.strategy;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
+import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
 /**
+ *
+ * Support different strategies to calculate {@link MassnahmenUmsetzung} charts.
+ *
+ * Default strategy is {@link GroupByStrategySum}.
+ *
+ * @see GroupByStrategy
+ * @see GroupByStrategyNormalized
+ * @see GroupByStrategySum
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "strategyBean")
-public class StrategyBean {
+public class GroupedByChapterStrategy {
 
-    @ManagedProperty(value = "#{param.crunchStrategy}")
     private String crunchStrategy;
 
+    public GroupedByChapterStrategy(String strategy) {
+        this.crunchStrategy = strategy;
+    }
+
+    public GroupedByChapterStrategy() {
+        this.crunchStrategy = GroupByStrategySum.GET_PARAM_IDENTIFIER;
+    }
 
     public String getCrunchStrategy() {
         return crunchStrategy;

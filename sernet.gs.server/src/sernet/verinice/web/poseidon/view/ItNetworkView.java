@@ -20,12 +20,19 @@
 package sernet.verinice.web.poseidon.view;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.SortedMap;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.ActionListener;
 
+import org.primefaces.component.remotecommand.RemoteCommand;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
@@ -36,14 +43,13 @@ import sernet.verinice.web.poseidon.services.ControlService;
  *
  */
 @ManagedBean(name = "itNetworkView")
+@ViewScoped
 public class ItNetworkView implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ManagedProperty(value = "#{param.scopeId}")
     private Integer scopeId;
 
-    @ManagedProperty(value = "#{param.itNetwork}")
     private String itNetwork;
 
     @ManagedProperty("#{controlService}")
@@ -55,15 +61,45 @@ public class ItNetworkView implements Serializable {
 
     private BarChartModel barModel;
 
+    private boolean calculated = false;
+
+    private RemoteCommand remoteCommand;
+
     @PostConstruct
-    final public void init() {
+    public void init() {
+        readParameter();
+        initRemoteCall();
+    }
+
+    private void readParameter() {
+        Map<String, String> parameterMap = getParameterMap();
+        this.scopeId = Integer.valueOf(parameterMap.get("scopeId"));
+        this.itNetwork = parameterMap.get("itNetwork");
+    }
+
+    private Map<String, String> getParameterMap() {
+        return (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    }
+
+    private void initRemoteCall() {
+        remoteCommand = new RemoteCommand();
+        remoteCommand.addActionListener(new DataLoader(getScopeId()));
+        remoteCommand.setAutoRun(true);
+        remoteCommand.setUpdate("chartPanel");
+        remoteCommand.setName("onload");
+        remoteCommand.setDelay("2");
+    }
+
+    public void loadData(Integer scopeId) {
+        setScopeId(scopeId);
         BsiControlChartsFactory chartModelFactory = new BsiControlChartsFactory(getStates());
         this.setPieModel(chartModelFactory.getPieChartModel());
         this.setBarModel(chartModelFactory.getBarChart());
+        calculated = true;
     }
 
     private SortedMap<String, Number> getStates() {
-        if(states == null){
+        if (states == null) {
             states = controlService.aggregateMassnahmenUmsetzung(scopeId);
         }
 
@@ -108,5 +144,34 @@ public class ItNetworkView implements Serializable {
 
     public void setBarModel(BarChartModel barModel) {
         this.barModel = barModel;
+    }
+
+    public boolean isCalculated() {
+        return calculated;
+    }
+
+    public void setCalculated(boolean calculated) {
+        this.calculated = calculated;
+    }
+
+    public RemoteCommand getRemoteCommand() {
+        return remoteCommand;
+    }
+
+    public void setRemoteCommand(RemoteCommand remoteCommand) {
+        this.remoteCommand = remoteCommand;
+    }
+
+    private final class DataLoader implements ActionListener {
+        private Integer scopeId;
+
+        public DataLoader(Integer scopeId) {
+            this.scopeId = scopeId;
+        }
+
+        @Override
+        public void processAction(ActionEvent event) throws AbortProcessingException {
+            loadData(scopeId);
+        }
     }
 }

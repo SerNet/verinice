@@ -29,6 +29,7 @@ import java.util.SortedMap;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -48,6 +49,7 @@ import sernet.verinice.web.poseidon.services.ControlService;
  *
  */
 @ManagedBean(name = "allBsiChartsView")
+@ViewScoped
 public class AllBsiChartsView {
 
     @ManagedProperty("#{controlService}")
@@ -59,14 +61,19 @@ public class AllBsiChartsView {
 
     private PieChartModel pieModel;
 
-    @PostConstruct
-    public void init() {
+    private boolean totalCalculated;
 
-        SortedMap<String, Number> allStates = controlService.aggregateMassnahmenUmsetzungStatus();
+    private boolean allItNetworksCalculated;
+
+    public void loadTotalData() {
+        SortedMap<String, Number> allStates = calculateTotal();
         BsiControlChartsFactory allChartModelFactory = new BsiControlChartsFactory(allStates);
-
         pieModel = allChartModelFactory.getPieChartModel();
         horizontalBarChartModel = allChartModelFactory.getHorizontalBarModel();
+        totalCalculated = true;
+    }
+
+    public void loadDataForAllItNetworks(){
 
         charts = new ArrayList<>();
 
@@ -94,6 +101,15 @@ public class AllBsiChartsView {
             axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
             charts.add(item);
         }
+
+        allItNetworksCalculated = true;
+    }
+
+
+
+    private SortedMap<String, Number> calculateTotal() {
+        SortedMap<String, Number> allStates = controlService.aggregateMassnahmenUmsetzungStatus();
+        return allStates;
     }
 
 
@@ -149,6 +165,26 @@ public class AllBsiChartsView {
 
     public void setPieModel(PieChartModel pieModel) {
         this.pieModel = pieModel;
+    }
+
+
+
+    public boolean isTotalCalculated() {
+        return totalCalculated;
+    }
+
+
+
+    public void setTotalCalculated(boolean totalCalculated) {
+        this.totalCalculated = totalCalculated;
+    }
+
+    public boolean isAllItNetworksCalculated() {
+        return allItNetworksCalculated;
+    }
+
+    public void setAllItNetworksCalculated(boolean allItNetworksCalculated) {
+        this.allItNetworksCalculated = allItNetworksCalculated;
     }
 
 }
