@@ -5,9 +5,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.graphics.Image;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.rcp.ElementTitleCache;
@@ -22,9 +24,13 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
     
     private Map<Integer, LicenseMessageInfos> lmInfosMap;
     
-    public AccountLabelProvider(Map<Integer, LicenseMessageInfos> lmInfosMap) {
+    private TableViewer viewer;
+    
+    public AccountLabelProvider(Map<Integer, LicenseMessageInfos> lmInfosMap,
+            TableViewer viewer) {
         super();
         this.lmInfosMap = lmInfosMap;
+        this.viewer = viewer;
     }
     
     @Override
@@ -74,10 +80,35 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
 
     private String getLMColumnLabel(int columnIndex, Configuration account){
         LicenseMessageInfos infos = lmInfosMap.get(columnIndex);
+        int newCount = 
+                ServiceFactory.lookupLicenseManagementService().
+                getLicenseIdAllocationCount(infos.getLicenseId());
         String licenseId = infos.getLicenseId();
+        if (infos.getAssignedUsers()!=newCount){
+            refreshColumnTooltip(columnIndex, newCount);
+        }
         return convertToX(
                 account.getAssignedLicenseIds().
                 contains(licenseId));
+    }
+
+    /**
+     * refreshes assignmentcount in columntooltip after
+     * new license has been assigned to user
+     * 
+     * @param columnIndex
+     * @param newCount
+     */
+    private void refreshColumnTooltip(int columnIndex, int newCount) {
+        String oldColumnTooltip = 
+                viewer.getTable().getColumn(columnIndex).getToolTipText();
+        StringBuilder replacement = new StringBuilder();
+        replacement.append("- (");
+        replacement.append(String.valueOf(newCount));
+        replacement.append("/");
+        String newColumnTooltip = 
+                oldColumnTooltip.replaceFirst("- \\(\\d/", replacement.toString());
+        viewer.getTable().getColumn(columnIndex).setToolTipText(newColumnTooltip);
     }
 
     private String getPlaceHolderText(Object element, int columnIndex) {

@@ -364,7 +364,7 @@ public class AccountView extends RightsEnabledView {
         viewer.getControl().setLayoutData(gd);
         
         viewer.setContentProvider(contentProvider);
-        viewer.setLabelProvider(new AccountLabelProvider(lmColumnsMap));
+        viewer.setLabelProvider(new AccountLabelProvider(lmColumnsMap, viewer));
         Table table = viewer.getTable();
         
         int columnIndex = 0;
