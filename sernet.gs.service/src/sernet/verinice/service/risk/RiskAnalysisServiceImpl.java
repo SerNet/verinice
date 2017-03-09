@@ -17,7 +17,7 @@
  *     Benjamin Weißenfels <bw[at]sernet[dot]de>
  *     Daniel Murygin <dm[at]sernet[dot]de>
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.verinice.service.risk;
 
 import java.io.Serializable;
 import java.util.Arrays;

@@ -17,21 +17,21 @@
  * Contributors:
  *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.verinice.service.risk;
 
 /**
- * Calculates risk values by multiplying given parameters.
+ * Calculates risk values by adding given parameters.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class RiskMultiplier implements RiskCalculator {
+public class RiskAdder implements RiskCalculator {
 
     /* (non-Javadoc)
      * @see sernet.verinice.iso27k.service.RiskCalculator#calculateRiskFromBusinessImpactAndProbability(int, int)
      */
     @Override
     public int calculateRiskFromBusinessImpactAndProbability(int businessImpact, int probability) {
-       return businessImpact * probability;
+        return businessImpact + probability;
     }
 
 }

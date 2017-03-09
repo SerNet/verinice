@@ -32,6 +32,7 @@ import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.service.commands.RetrieveCnATreeElement;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 /**
  * Helper class for executing a risk analysis.

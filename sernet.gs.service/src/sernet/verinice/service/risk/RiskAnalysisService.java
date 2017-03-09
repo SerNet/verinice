@@ -17,7 +17,7 @@
  *     Benjamin Weißenfels <bw@sernet.de> - calculate risk values for planned controls
  *     Daniel Murygin <dm@sernet.de> - Refactoring
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.verinice.service.risk;
 
 /**
  * A service to run a ISO/IEC 27005 risk analysis.

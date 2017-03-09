@@ -188,7 +188,7 @@
       <ref bean="riskAnalysisService"/>
     </property>
     <property name="serviceInterface">
-      <value>sernet.verinice.iso27k.service.RiskAnalysisService</value>
+      <value>sernet.verinice.service.risk.RiskAnalysisService</value>
     </property>
   </bean>
 	

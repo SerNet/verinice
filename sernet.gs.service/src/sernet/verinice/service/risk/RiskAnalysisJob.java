@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.verinice.service.risk;
 
 import java.io.Serializable;
 import java.util.Set;

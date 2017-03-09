@@ -217,7 +217,7 @@
             </value>
         </property>
         <property name="serviceInterface">
-            <value>sernet.verinice.iso27k.service.RiskAnalysisService
+            <value>sernet.verinice.service.risk.RiskAnalysisService
             </value>
         </property>
         <property name="httpInvokerRequestExecutor" ref="veriniceCommonsExecuter" />

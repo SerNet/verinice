@@ -26,7 +26,6 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
 import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -34,6 +33,7 @@ import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 /**
  *

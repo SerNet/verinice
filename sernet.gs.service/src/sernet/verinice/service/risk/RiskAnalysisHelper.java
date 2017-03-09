@@ -17,7 +17,7 @@
  *     Benjamin Weißenfels <bw@sernet.de>
  *     Daniel Murygin <dm[at]sernet[dot]de> 
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.verinice.service.risk;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.model.common.CnATreeElement;

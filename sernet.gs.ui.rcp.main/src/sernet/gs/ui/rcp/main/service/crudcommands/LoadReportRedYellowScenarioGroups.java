@@ -31,7 +31,6 @@ import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
 import sernet.verinice.interfaces.IDAOFactory;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
 import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -41,6 +40,7 @@ import sernet.verinice.model.iso27k.IncidentScenarioGroup;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 /**
  * command categorizes all scenario groups of a rootElmt to red or yellow if

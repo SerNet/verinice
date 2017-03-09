@@ -26,11 +26,11 @@ import org.apache.log4j.Logger;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
 import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.IncidentScenario;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 /**
  * Loads all yellow & red risks to a given scenarioGroup

@@ -38,11 +38,11 @@ import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.service.RiskAnalysisService;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.service.risk.RiskAnalysisService;
 
 /**
  * This action class runs a ISO/IEC 27005 risk analysis
@@ -55,7 +55,7 @@ public class RunRiskAnalysisAction extends RightsEnabledAction implements ISelec
 
     public static final String ID = "sernet.gs.ui.rcp.main.runriskanalysisaction"; //$NON-NLS-1$
     
-    private List<Integer> scopeIds = new LinkedList<>();
+    private List<Integer> organizationIds = new LinkedList<>();
 
     private RiskAnalysisService riskAnalysisService;
     
@@ -86,7 +86,7 @@ public class RunRiskAnalysisAction extends RightsEnabledAction implements ISelec
     }
 
     private void runRiskAnalysis() {
-        Integer[] scopeIdArray = scopeIds.toArray(new Integer[scopeIds.size()]);
+        Integer[] scopeIdArray = organizationIds.toArray(new Integer[organizationIds.size()]);
         getRiskAnalysisService().runRiskAnalysis(scopeIdArray);
     }
 
@@ -114,12 +114,12 @@ public class RunRiskAnalysisAction extends RightsEnabledAction implements ISelec
     public void selectionChanged(IWorkbenchPart arg0, ISelection input) {
         if (input instanceof IStructuredSelection) {
             IStructuredSelection selection = (IStructuredSelection) input;
-            scopeIds.clear();
+            organizationIds.clear();
             for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
                 Object selectedObject = iter.next();
                 if (isOrganization(selectedObject)) {
                     CnATreeElement element = (CnATreeElement) selectedObject;
-                    scopeIds.add(element.getDbId());
+                    organizationIds.add(element.getDbId());
                 }
             }
         }      

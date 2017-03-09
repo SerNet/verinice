@@ -12,7 +12,6 @@ import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.RiskAnalysisHelper;
 import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -21,6 +20,7 @@ import sernet.verinice.model.iso27k.AssetValueService;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.Process;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 /**
  * Starting with all process for a given scope, load all linked assets and their

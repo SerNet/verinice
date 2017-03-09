@@ -17,26 +17,21 @@
  * Contributors:
  *     Daniel Murygin <dm{a}sernet{dot}de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.service;
+package sernet.verinice.service.risk;
 
 /**
- * Calculates risk values for given parameters.
+ * Calculates risk values by multiplying given parameters.
  *
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public interface RiskCalculator {
+public class RiskMultiplier implements RiskCalculator {
 
-    /**
-     * Returns the risk for a given business impact of an asset and
-     * a given probability of occurrence for a incident scenario.
-     * 
-     * In this method the risk is calculated by addition.
-     * Overwrite this method to implement a different risk
-     * calculation.
-     * 
-     * @param businessImpact A business impact of an asset
-     * @param probability The probability of occurrence for a incident scenario
-     * @return A risk value for the given parameters
+    /* (non-Javadoc)
+     * @see sernet.verinice.iso27k.service.RiskCalculator#calculateRiskFromBusinessImpactAndProbability(int, int)
      */
-    int calculateRiskFromBusinessImpactAndProbability(int businessImpact, int probability);
+    @Override
+    public int calculateRiskFromBusinessImpactAndProbability(int businessImpact, int probability) {
+       return businessImpact * probability;
+    }
+
 }

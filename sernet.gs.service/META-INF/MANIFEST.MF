@@ -64,6 +64,7 @@ Export-Package: de.sernet.service.vna,
  sernet.verinice.service.linktable.generator,
  sernet.verinice.service.linktable.vlt,
  sernet.verinice.service.model,
+ sernet.verinice.service.risk,
  sernet.verinice.service.sync
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Eclipse-RegisterBuddy: sernet.springclient,com.springsource.org.hibernate
