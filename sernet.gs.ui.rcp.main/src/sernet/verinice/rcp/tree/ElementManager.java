@@ -313,7 +313,7 @@ public class ElementManager {
      * @throws CommandException
      *             If executing of command fails
      */
-    private CnATreeElement loadElementWithChildren(CnATreeElement element) throws CommandException {
+    public CnATreeElement loadElementWithChildren(CnATreeElement element) throws CommandException {
         RetrieveInfo ri = new RetrieveInfo();
         ri.setChildren(true).setChildrenProperties(true);
         if (cache.getCachedObject(element) == null) {
