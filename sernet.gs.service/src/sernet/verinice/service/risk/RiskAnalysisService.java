@@ -74,13 +74,13 @@ public interface RiskAnalysisService {
     int RISK_WITHOUT_NA_CONTROLS = 3;
     
     /**
-     * Runs a risk on one or more organizations with the given organization ids.
-     * When null or an emtpy array is passed as parameter, 
+     * Runs a risk on one or more organizations for the given configuration.
+     * When null or an empty array of organization ids is passed, 
      * the risk analysis is run on all organizations in the database. 
      * Running a risk analysis on all organizations might be a performance issue.
      * 
-     * @param organizationIds One or more database ids of organizations. Null is allowed.
+     * @param configuration Configuration details for the execution of a risk analysis.
      */
-    void runRiskAnalysis(Integer... organizationIds);
+    void runRiskAnalysis(RiskAnalysisConfiguration configuration);
 
 }

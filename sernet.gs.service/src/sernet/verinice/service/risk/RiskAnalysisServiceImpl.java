@@ -88,13 +88,13 @@ public class RiskAnalysisServiceImpl implements RiskAnalysisService {
      * @see sernet.verinice.iso27k.service.RiskAnalysisService#runRiskAnalysis(java.lang.Long[])
      */
     @Override
-    public void runRiskAnalysis(Integer... organizationIds) {
+    public void runRiskAnalysis(RiskAnalysisConfiguration configuration) {
         if (LOG.isInfoEnabled()) {
-            LOG.info("Running a risk analysis on organizations with database ids: " + Arrays.toString(organizationIds) + "...");
+            LOG.info("Running a risk analysis on organizations with database ids: " + Arrays.toString(configuration.getOrganizationDbIds()) + "...");
         }     
         long time = initRuntime();   
         
-        VeriniceGraph graph = loadGraph(organizationIds);  
+        VeriniceGraph graph = loadGraph(configuration.getOrganizationDbIds());  
         
         RiskAnalysisJob job = new RiskAnalysisJob(graph, getCnaLinkDao());
         configureRiskCalculator(job);
