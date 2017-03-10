@@ -27,7 +27,8 @@ import sernet.verinice.model.common.CnATreeElement;
 public class ITVerbund extends CnATreeElement 
 	implements IBSIStrukturElement {
 	
-	public static final String TYPE_ID = "itverbund"; //$NON-NLS-1$
+    public static final String TYPE_ID = "itverbund"; //$NON-NLS-1$
+	public static final String SECURE_TYPE_ID = "secureItVerbundDAO"; //$NON-NLS-1$
 	public static final String TYPE_ID_HIBERNATE = "it-verbund"; //$NON-NLS-1$  
 	public static final String PROP_NAME = "itverbund_name"; //$NON-NLS-1$
 	public static final String PROP_TAG = "itverbund_tag"; //$NON-NLS-1$

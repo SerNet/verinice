@@ -173,6 +173,7 @@ This variant:
 		<property name="gebaeudeKategorieDAO" ref="gebaeudeKategorieDAO" />
 		<property name="gefaehrdungsUmsetzungDAO" ref="gefaehrdungsUmsetzungDAO" />
 		<property name="ITVerbundDAO" ref="ITVerbundDAO" />
+		<property name="secureItVerbundDAO" ref="secureItVerbundDAO" />
 		<property name="massnahmenUmsetzungDAO" ref="massnahmenUmsetzungDAO" />
 		<property name="netzKomponenteDAO" ref="netzKomponenteDAO" />
 		<property name="NKKategorieDAO" ref="NKKategorieDAO" />

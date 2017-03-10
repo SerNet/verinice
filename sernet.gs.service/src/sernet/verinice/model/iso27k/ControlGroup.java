@@ -37,6 +37,8 @@ public class ControlGroup extends Group<Control> {
 	public static final String TYPE_ID = "controlgroup"; //$NON-NLS-1$
 	public static final String PROP_NAME = "controlgroup_name"; //$NON-NLS-1$
 	
+	public static final String PROP_IS_CATALOG = "samt_topic_is_catalog";
+
 	public static final String[] CHILD_TYPES = new String[] {Control.TYPE_ID,SamtTopic.TYPE_ID};
 	
 	public ControlGroup() {

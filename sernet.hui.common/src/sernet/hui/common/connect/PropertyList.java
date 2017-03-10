@@ -114,4 +114,13 @@ public class PropertyList implements Serializable, ITypedElement  {
 		this.entityId = entityId;
 	}
 
+	public boolean isEmpty() {
+
+	    if(properties == null){
+	        return true;
+	    }
+
+	    return properties.isEmpty();
+	}
+
 }

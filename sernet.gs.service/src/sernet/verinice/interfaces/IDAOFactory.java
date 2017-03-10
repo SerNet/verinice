@@ -220,6 +220,11 @@ public interface IDAOFactory {
 	 */
 	void setITVerbundDAO(IBaseDao<ITVerbund, Integer> daoToSet);
 
+	/**
+     * Setter method used by spring to inject DAO.
+     */
+    void setSecureItVerbundDAO(IBaseDao<ITVerbund, Integer> daoToSet);
+
 	/** 
 	 * Setter method used by spring to inject DAO.
 	 */

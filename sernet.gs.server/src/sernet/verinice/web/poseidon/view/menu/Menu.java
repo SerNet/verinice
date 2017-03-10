@@ -17,7 +17,7 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view;
+package sernet.verinice.web.poseidon.view.menu;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -36,6 +36,7 @@ import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
+import sernet.verinice.web.poseidon.view.menu.submenu.IsmsCatalogGroupedByOrganizationSubMenu;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -56,6 +57,8 @@ public class Menu {
     private DefaultSubMenu massnahmenUmsetzungSubMenu;
 
     private DefaultSubMenu bausteinUmsNormSubMenu;
+
+    private DefaultSubMenu massnahmenUmsetzungIsms;
 
     @PostConstruct()
     public void initMenu() {
@@ -100,8 +103,7 @@ public class Menu {
         bausteinUmsSubMenu.addElement(bausteinUmsTotal);
 
         try {
-            addItNetworks(bausteinUmsSubMenu, "implementation-bstums-itnetwork.xhtml",
-                    GroupByStrategySum.GET_PARAM_IDENTIFIER);
+            addItNetworks(bausteinUmsSubMenu, "implementation-bstums-itnetwork.xhtml", GroupByStrategySum.GET_PARAM_IDENTIFIER);
         } catch (UnsupportedEncodingException e) {
             log.error("could not create menu item", e);
         }
@@ -122,28 +124,20 @@ public class Menu {
         bausteinUmsNormSubMenu.addElement(bausteinUmsNormTotal);
 
         try {
-            addItNetworks(bausteinUmsNormSubMenu, "implementation-bstums-itnetwork.xhtml",
-                    GroupByStrategyNormalized.GET_PARAM_IDENTIFIER);
+            addItNetworks(bausteinUmsNormSubMenu, "implementation-bstums-itnetwork.xhtml", GroupByStrategyNormalized.GET_PARAM_IDENTIFIER);
         } catch (UnsupportedEncodingException e) {
             log.error("could not create menu item", e);
         }
+
+        massnahmenUmsetzungIsms = new IsmsCatalogGroupedByOrganizationSubMenu("MassnahmenUms. ISMS", menuService);
 
         model.addElement(massnahmenUmsetzungSubMenu);
         model.addElement(bausteinUmsSubMenu);
         model.addElement(bausteinUmsNormSubMenu);
 
-        DefaultMenuItem vdaIsa = new DefaultMenuItem("VDA-ISA");
-        vdaIsa.setIcon("fa fa-fw fa-area-chart");
-
-        DefaultMenuItem controls = new DefaultMenuItem("Controls");
-        controls.setIcon("fa fa-fw fa-wrench");
-
-        DefaultMenuItem risksAnalysis = new DefaultMenuItem("Risikoanalyse");
-        risksAnalysis.setIcon("fa fa-fw fa-bomb");
-
-        model.addElement(controls);
-        model.addElement(vdaIsa);
-        model.addElement(risksAnalysis);
+        if (massnahmenUmsetzungIsms.getElementsCount() > 0) {
+            model.addElement(massnahmenUmsetzungIsms);
+        }
 
         addMiscItems();
     }
