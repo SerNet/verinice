@@ -1,0 +1,19 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:ajaxExceptionHandler type="java.lang.Exception"
+		update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
+
+	<p:dialog id="exceptionDialog"
+		header="Exception: #{pfExceptionHandler.type} occured!"
+		widgetVar="exceptionDialog" height="500px">
+				Message: #{pfExceptionHandler.message} <br />
+StackTrace: <h:outputText
+			value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+		<p:button onclick="document.location.href = document.location.href;"
+			value="Reload!" />
+	</p:dialog>
+</ui:composition>
