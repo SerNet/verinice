@@ -16,18 +16,18 @@
  *     Alexander Koderman - initial API and implementation
  *     Daniel Murygin 
  ******************************************************************************/
-package sernet.gs.ui.rcp.main.actions;
+package sernet.verinice.rcp.risk;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -36,15 +36,17 @@ import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.actions.Messages;
+import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
-import sernet.verinice.iso27k.rcp.RiskAnalysisDialog;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
+import sernet.verinice.rcp.NonModalWizardDialog;
 import sernet.verinice.service.risk.RiskAnalysisConfiguration;
 import sernet.verinice.service.risk.RiskAnalysisService;
 
@@ -55,18 +57,16 @@ import sernet.verinice.service.risk.RiskAnalysisService;
  * @author Alexander Koderman
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
-public class RunRiskAnalysisAction extends RightsEnabledAction implements ISelectionListener  {
+public class RiskAnalysisAction extends RightsEnabledAction implements ISelectionListener  {
 
     public static final String ID = "sernet.gs.ui.rcp.main.runriskanalysisaction"; //$NON-NLS-1$
     
-    private RiskAnalysisDialog dialog;
+    private CnATreeElement selectedOrganization;
     
-    private List<Integer> organizationIds = new LinkedList<>();
+    RiskAnalysisIsoWizard wizard;
     private RiskAnalysisService riskAnalysisService;
     
-    private ITreeSelection selection;
-    
-    public RunRiskAnalysisAction(IWorkbenchWindow window) {
+    public RiskAnalysisAction(IWorkbenchWindow window) {
         setText(Messages.RunRiskAnalysisAction_0);
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_RISK));
@@ -81,7 +81,7 @@ public class RunRiskAnalysisAction extends RightsEnabledAction implements ISelec
     @Override
     public void doRun() {
         final RiskAnalysisConfiguration configuration = createConfiguration();
-        if(configuration==null) {
+        if(isNoOrganizationInConfiguration(configuration)) {
             return;
         }
         try {
@@ -97,19 +97,32 @@ public class RunRiskAnalysisAction extends RightsEnabledAction implements ISelec
         
     }
 
+    private boolean isNoOrganizationInConfiguration(final RiskAnalysisConfiguration configuration) {
+        return configuration==null || configuration.getOrganizationDbIds()==null || configuration.getOrganizationDbIds().length==0;
+    }
+
     private void runRiskAnalysis(RiskAnalysisConfiguration configuration) {
         getRiskAnalysisService().runRiskAnalysis(configuration);
     }
+    
+   
 
     private RiskAnalysisConfiguration createConfiguration() {
         RiskAnalysisConfiguration configuration = null;
-        dialog = new RiskAnalysisDialog(Display.getCurrent().getActiveShell(), selection);
-        if( dialog.open() == Dialog.OK ) {
-            organizationIds = dialog.getOrganizationIds(); 
+        
+        final TitleAreaDialog dialog = createWizard();
+        if (dialog.open() == Window.OK) {
+            List<Integer> organizationIds = wizard.getOrganizationIds(); 
             Integer[] organizationIdArray = organizationIds.toArray(new Integer[organizationIds.size()]);
             configuration = new RiskAnalysisConfiguration(organizationIdArray);
         }
+        
         return configuration;
+    }
+    
+    private TitleAreaDialog createWizard() {
+        wizard = new RiskAnalysisIsoWizard(selectedOrganization);                 
+        return new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
     }
 
     private void addLoadListener() {
@@ -135,15 +148,12 @@ public class RunRiskAnalysisAction extends RightsEnabledAction implements ISelec
     @Override
     public void selectionChanged(IWorkbenchPart arg0, ISelection input) {
         if (input instanceof ITreeSelection) {
+            selectedOrganization = null;
             ITreeSelection selectionCurrent = (ITreeSelection) input;
-            organizationIds.clear();
-            this.selection = null;
-            for (Iterator<?> iter = selection.iterator(); iter.hasNext();) {
+            for (Iterator<?> iter = selectionCurrent.iterator(); iter.hasNext();) {
                 Object selectedObject = iter.next();
                 if (isOrganization(selectedObject)) {
-                    CnATreeElement element = (CnATreeElement) selectedObject;
-                    organizationIds.add(element.getDbId());         
-                    this.selection = selectionCurrent;
+                    selectedOrganization = (CnATreeElement) selectedObject;     
                 }
             }
         }      

@@ -17,7 +17,7 @@
  * Contributors:
  *     Daniel Murygin <dm[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.iso27k.rcp;
+package sernet.verinice.rcp.risk;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,8 +25,6 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -34,58 +32,54 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Shell;
 
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.iso27k.rcp.OrganizationMultiselectWidget;
 import sernet.verinice.model.common.CnATreeElement;
+import sernet.verinice.rcp.account.BaseWizardPage;
 
 /**
- * A diialog to start the execution of a ISO/IEC 27005 risk analysis.
+ * A wizard page to select organizations for the execution of a ISO/IEC 27005 risk analysis.
+ * This page belongs to the wizard class RiskAnalysisIsoWizard.
  * 
  * @author Daniel Murygin <dm@sernet.de>
  */
-public class RiskAnalysisDialog extends TitleAreaDialog {
+public class OrganizationPage extends BaseWizardPage {
 
-    private static final Logger LOG = Logger.getLogger(RiskAnalysisDialog.class);
+    private static final Logger LOG = Logger.getLogger(OrganizationPage.class);
+    public static final String PAGE_NAME = "risk-analysis-wizard-organization-page"; //$NON-NLS-1$
 
     private ITreeSelection selection;
     private CnATreeElement selectedElement;
     private List<Integer> organizationIds = new LinkedList<>();
 
-    private ElementMultiselectWidget organizationWidget = null;
+    private OrganizationMultiselectWidget organizationWidget = null;
 
-    public RiskAnalysisDialog(Shell activeShell) {
-        this(activeShell, (CnATreeElement) null);
+    public OrganizationPage() {
+        this((CnATreeElement) null);
     }
 
-    public RiskAnalysisDialog(Shell activeShell, ITreeSelection selection){
-        this(activeShell, (CnATreeElement)null);
+    public OrganizationPage(ITreeSelection selection){
+        this((CnATreeElement)null);
         this.selection = selection;
     }
     
-    public RiskAnalysisDialog(Shell activeShell, CnATreeElement selectedOrganization) {
-        super(activeShell);
-        setShellStyle(getShellStyle() | SWT.RESIZE | SWT.MAX);
+    public OrganizationPage(CnATreeElement selectedOrganization) {
+        super(PAGE_NAME);
         selectedElement = selectedOrganization;
     }
 
+
     @Override
-    protected Control createDialogArea(Composite parent) {
+    protected void initGui(Composite composite) {
         final int layoutMarginWidth = 10;
         final int layoutMarginHeight = layoutMarginWidth;
-
-        /*
-         * Dialog title, message and layout:
-         */
-
+        
         setTitle("ISO/IEC 27005 Risk Analysis");
         setMessage(
                 "Select at one or more organizations. Click OK to run the risk analysis on this organizations.");
 
-        final Composite composite = (Composite) super.createDialogArea(parent);
         GridLayout layout = (GridLayout) composite.getLayout();
         layout.marginWidth = layoutMarginWidth;
         layout.marginHeight = layoutMarginHeight;
@@ -93,49 +87,52 @@ public class RiskAnalysisDialog extends TitleAreaDialog {
         composite.setLayoutData(gd);
 
         try {
-            organizationWidget = new ElementMultiselectWidget(composite, selection,
+            organizationWidget = new OrganizationMultiselectWidget(composite, selection,
                     selectedElement);
 
         } catch (CommandException ex) {
             LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
-            setMessage(Messages.SamtExportDialog_4, IMessageProvider.ERROR);
-            return null;
+            setMessage("Error while laoding organizations", IMessageProvider.ERROR);
         }
 
         SelectionListener organizationListener = new SelectionAdapter() {
             @Override
-            public void widgetSelected(SelectionEvent e) {
-                Button checkbox = (Button) e.getSource();
-                if (checkbox.getSelection()) {
-
+            public void widgetSelected(SelectionEvent e) {       
+                organizationIds.clear();
+                if (organizationWidget.getSelectedElementSet() != null) {
+                    Set<CnATreeElement> selectedOrganizations  = organizationWidget.getSelectedElementSet();
+                    for (CnATreeElement organization : selectedOrganizations) {
+                        organizationIds.add(organization.getDbId());
+                    }
                 }
+                setPageComplete(isPageComplete());
                 super.widgetSelected(e);
             }
         };
 
         organizationWidget.addSelectionLiustener(organizationListener);
 
-        
-
         composite.pack();
-        return composite;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.dialogs.Dialog#okPressed()
+    
+    /* (non-Javadoc)
+     * @see sernet.verinice.rcp.account.BaseWizardPage#initData()
      */
     @Override
-    protected void okPressed() {
-        organizationIds.clear();
-        if (organizationWidget.getSelectedElementSet() != null) {
-            Set<CnATreeElement> selectedOrganizations  = organizationWidget.getSelectedElementSet();
-            for (CnATreeElement organization : selectedOrganizations) {
-                organizationIds.add(organization.getDbId());
-            }
+    protected void initData() throws Exception {
+        // nothing to do, organizations are loaded in class ScopeMultiselectWidget
+    }
+    
+    /* (non-Javadoc)
+     * @see org.eclipse.jface.wizard.WizardPage#isPageComplete()
+     */
+    @Override
+    public boolean isPageComplete() {
+        boolean complete = !organizationIds.isEmpty();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("page complete: " + complete); //$NON-NLS-1$
         }
-        super.okPressed();
+        return complete;
     }
 
     public Set<CnATreeElement> getSelectedElementSet() {
@@ -149,5 +146,7 @@ public class RiskAnalysisDialog extends TitleAreaDialog {
     public List<Integer> getOrganizationIds() {
         return organizationIds;
     }
+
+
 
 }

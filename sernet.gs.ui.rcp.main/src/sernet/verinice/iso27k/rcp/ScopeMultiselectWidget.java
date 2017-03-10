@@ -3,7 +3,9 @@ package sernet.verinice.iso27k.rcp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.swt.widgets.Composite;
@@ -17,38 +19,61 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.MultiselectWidget;
 
-public class ElementMultiselectWidget extends MultiselectWidget<CnATreeElement> {
-
-    public ElementMultiselectWidget(Composite composite, ITreeSelection selection, CnATreeElement selectedElement) throws CommandException {
+/**
+ * A widget which provides scopes for multi selection. A scope is either a Organization or an
+ * IT network (German: IT-Verbund).
+ * 
+ * Override this class and method getElementClasses() to change the set of CnATreeElement
+ * classes which are provided for selection.
+ *
+ * @author Daniel Murygin <dm{a}sernet{dot}de>
+ */
+public class ScopeMultiselectWidget extends MultiselectWidget<CnATreeElement> {
+            
+    public ScopeMultiselectWidget(Composite composite, ITreeSelection selection, CnATreeElement selectedElement) throws CommandException {     
         super(composite, selection, selectedElement);
         setTitle(Messages.SamtExportDialog_2);
         setShowOnlySelected(false);
-        setShowOnlySelectedCheckbox(false);
+        setShowOnlySelectedCheckbox(false);      
     }
 
-    public ElementMultiselectWidget(Composite composite) throws CommandException {
+    public ScopeMultiselectWidget(Composite composite) throws CommandException {
        super(composite);
        setTitle(Messages.SamtExportDialog_2);
        setShowOnlySelected(false);
        setShowOnlySelectedCheckbox(false);
     }
+    
+    /**
+     * Returns a set of CnATreeElement classes which are loaded
+     * and provided for selection.
+     * 
+     * Override this class and this method to load different classes.
+     * 
+     * @return A set of classes
+     */
+    protected Set<Class<?>> getElementClasses() {
+        Set<Class<?>> elementClasses = new HashSet<>();
+        elementClasses.add(Organization.class);
+        elementClasses.add(ITVerbund.class);
+        return elementClasses;
+    }
 
     protected void initData() throws CommandException {
-        /*
-         * Widgets for selection of an IT network or organization:
-         */
-
-        LoadCnAElementByType<Organization> cmdLoadOrganization = new LoadCnAElementByType<Organization>(Organization.class);
-        cmdLoadOrganization = ServiceFactory.lookupCommandService().executeCommand(cmdLoadOrganization);
-        
-        
-        LoadCnAElementByType<ITVerbund> cmdItVerbund = new LoadCnAElementByType<ITVerbund>(ITVerbund.class);
-        cmdItVerbund = ServiceFactory.lookupCommandService().executeCommand(cmdItVerbund);
-            
         itemList = new ArrayList<CnATreeElement>();
-        itemList.addAll(cmdLoadOrganization.getElements());
-        itemList.addAll(cmdItVerbund.getElements());
+        
+        for (Class<?> clazz : getElementClasses()) {
+            loadElements((Class<CnATreeElement>) clazz);
+        }
+         
         itemList = sortItems(itemList);
+    }
+
+    
+    private void loadElements(Class<CnATreeElement> clazz) throws CommandException {
+        LoadCnAElementByType<CnATreeElement> cmdLoadOrganization = new LoadCnAElementByType<>(clazz);
+        cmdLoadOrganization = ServiceFactory.lookupCommandService().executeCommand(cmdLoadOrganization);
+        itemList.addAll(cmdLoadOrganization.getElements());
     }
     
     protected String getLabel(CnATreeElement elmt) {
