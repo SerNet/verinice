@@ -23,13 +23,14 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 
-import org.apache.log4j.Logger;
-import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
-import org.primefaces.model.menu.DefaultSubMenu;
 import org.primefaces.model.menu.MenuModel;
 
 import sernet.verinice.web.poseidon.services.MenuService;
+import sernet.verinice.web.poseidon.view.menu.menuitem.HomeMenuItem;
+import sernet.verinice.web.poseidon.view.menu.menuitem.IsoObjectsMenuItem;
+import sernet.verinice.web.poseidon.view.menu.menuitem.ItgsControlsMenuItem;
+import sernet.verinice.web.poseidon.view.menu.menuitem.TasksMenuItem;
 import sernet.verinice.web.poseidon.view.menu.submenu.IsmsCatalogGroupedByOrganizationSubMenu;
 import sernet.verinice.web.poseidon.view.menu.submenu.ItgsControlsSubMenu;
 import sernet.verinice.web.poseidon.view.menu.submenu.ItgsModulImplementationCumulatedSubMenu;
@@ -47,27 +48,18 @@ public class MenuView {
     @ManagedProperty("#{menuService}")
     private MenuService menuService;
 
+
     @PostConstruct()
     public void initMenu() {
-
         model = new DefaultMenuModel();
-
-        DefaultMenuItem home = new DefaultMenuItem("Home");
-        home.setUrl("/");
-        home.setIcon("fa fa-fw fa-home");
-        model.addElement(home);
-
-        DefaultSubMenu itgsControls = new ItgsControlsSubMenu(menuService);
-        model.addElement(itgsControls);
-
-        ItgsModulImplementationCumulatedSubMenu element = new ItgsModulImplementationCumulatedSubMenu("BausteinUms. Kum.", menuService);
-        model.addElement(element);
-
-        DefaultSubMenu itgsModuldImplementationNormalizedSubMenu = new ItgsModulImplementationNormalizedSubMenu("BausteinUms. Norm", menuService);
-        model.addElement(itgsModuldImplementationNormalizedSubMenu);
-
-        DefaultSubMenu massnahmenUmsetzungIsms = new IsmsCatalogGroupedByOrganizationSubMenu("MassnahmenUms. ISMS", menuService);
-        model.addElement(massnahmenUmsetzungIsms);
+        model.addElement(new HomeMenuItem());
+        model.addElement(new IsoObjectsMenuItem());
+        model.addElement(new ItgsControlsMenuItem());
+        model.addElement(new TasksMenuItem());
+        model.addElement(new ItgsControlsSubMenu(menuService));
+        model.addElement(new ItgsModulImplementationCumulatedSubMenu("BausteinUms. Kum.", menuService));
+        model.addElement(new ItgsModulImplementationNormalizedSubMenu("BausteinUms. Norm", menuService));
+        model.addElement(new IsmsCatalogGroupedByOrganizationSubMenu("MassnahmenUms. ISMS", menuService));
     }
 
 
