@@ -71,6 +71,23 @@ public class Menu {
         home.setIcon("fa fa-fw fa-home");
         model.addElement(home);
 
+        DefaultMenuItem ismsObjectMenuItem = new DefaultMenuItem("ISO Objects");
+        ismsObjectMenuItem.setUrl("/edit/iso-editor.xhtml");
+        ismsObjectMenuItem.setIcon("fa fa-fw fa-file");
+        model.addElement(ismsObjectMenuItem);
+
+        DefaultMenuItem itgsControlMenuItem = new DefaultMenuItem("ITGS Controls");
+        itgsControlMenuItem.setUrl("/edit/bsi-controls.xhtml");
+        itgsControlMenuItem.setIcon("fa fa-fw fa-check");
+        model.addElement(itgsControlMenuItem);
+
+        DefaultMenuItem tasksMenuItem = new DefaultMenuItem("Tasks");
+        tasksMenuItem.setIcon("fa fa-fw fa-tasks");
+        tasksMenuItem.setUrl("/edit/tasks.xhtml");
+        model.addElement(tasksMenuItem);
+
+
+
         DefaultSubMenu itgsControls = new ItgsControlsSubMenu(menuService);
         model.addElement(itgsControls);
 

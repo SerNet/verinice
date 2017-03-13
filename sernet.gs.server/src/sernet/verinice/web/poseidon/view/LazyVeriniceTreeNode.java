@@ -71,7 +71,6 @@ public class LazyVeriniceTreeNode extends DefaultTreeNode {
 
             childrenLoaded = true;
 
-            data.loadChildren();
             CnATreeElement element = data.getElement();
 
             List<LazyVeriniceTreeNode> elementInformations = new ArrayList<>();
