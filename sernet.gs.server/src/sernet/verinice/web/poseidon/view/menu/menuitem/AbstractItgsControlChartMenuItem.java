@@ -18,7 +18,7 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view.menu.submenu;
+package sernet.verinice.web.poseidon.view.menu.menuitem;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -32,11 +32,11 @@ import sernet.verinice.model.bsi.ITVerbund;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-abstract class AbstractItgsControlMenuItem extends DefaultMenuItem {
+abstract class AbstractItgsControlChartMenuItem extends DefaultMenuItem {
 
     private static final long serialVersionUID = 1L;
 
-    private static final Logger log = Logger.getLogger(AbstractItgsControlMenuItem.class);
+    private static final Logger log = Logger.getLogger(AbstractItgsControlChartMenuItem.class);
 
     private ITVerbund itNetwork;
 
@@ -44,7 +44,7 @@ abstract class AbstractItgsControlMenuItem extends DefaultMenuItem {
 
     abstract String getStrategy();
 
-    AbstractItgsControlMenuItem(ITVerbund itVerbund) {
+    AbstractItgsControlChartMenuItem(ITVerbund itVerbund) {
         super(itVerbund.getTitle());
         super.setIcon("fa fa-fw fa-area-chart");
         this.itNetwork = itVerbund;

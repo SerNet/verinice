@@ -24,6 +24,7 @@ import org.primefaces.model.menu.MenuItem;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.web.poseidon.services.MenuService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
+import sernet.verinice.web.poseidon.view.menu.menuitem.ItgsModulImplementationCumulatedMenuItem;
 
 /**
  *

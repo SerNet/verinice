@@ -18,33 +18,31 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view.menu.submenu;
+package sernet.verinice.web.poseidon.view.menu.menuitem;
 
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsModulImplementationNormalizedMenuItem extends AbstractItgsControlMenuItem {
-
-    ItgsModulImplementationNormalizedMenuItem(ITVerbund itVerbund) {
-        super(itVerbund);
-    }
+public class ItgsControlChartMenuItem extends AbstractItgsControlChartMenuItem {
 
     private static final long serialVersionUID = 1L;
 
+    public ItgsControlChartMenuItem(ITVerbund itVerbund) {
+        super(itVerbund);
+    }
+
     @Override
     String getTemplateFile() {
-        return "implementation-bstums-itnetwork.xhtml";
+        return "implementation-itnetwork.xhtml";
     }
 
     @Override
     String getStrategy() {
-       return GroupByStrategyNormalized.GET_PARAM_IDENTIFIER;
+        return null;
     }
-
 }
 ||||||| merged common ancestors
 =======
@@ -70,29 +68,27 @@ public class ItgsModulImplementationNormalizedMenuItem extends AbstractItgsContr
 package sernet.verinice.web.poseidon.view.menu.submenu;
 
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsModulImplementationNormalizedMenuItem extends AbstractItgsControlMenuItem {
-
-    ItgsModulImplementationNormalizedMenuItem(ITVerbund itVerbund) {
-        super(itVerbund);
-    }
+public class ItgsControlMenuItem extends AbstractItgsControlMenuItem {
 
     private static final long serialVersionUID = 1L;
 
+    public ItgsControlMenuItem(ITVerbund itVerbund) {
+        super(itVerbund);
+    }
+
     @Override
     String getTemplateFile() {
-        return "implementation-bstums-itnetwork.xhtml";
+        return "implementation-itnetwork.xhtml";
     }
 
     @Override
     String getStrategy() {
-       return GroupByStrategyNormalized.GET_PARAM_IDENTIFIER;
+        return null;
     }
-
 }
 >>>>>>> Refactor Menu.

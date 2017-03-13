@@ -18,30 +18,31 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view.menu.submenu;
+package sernet.verinice.web.poseidon.view.menu.menuitem;
 
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsControlMenuItem extends AbstractItgsControlMenuItem {
+public class ItgsModulImplementationCumulatedMenuItem extends AbstractItgsControlChartMenuItem {
 
-    private static final long serialVersionUID = 1L;
-
-    public ItgsControlMenuItem(ITVerbund itVerbund) {
+    public ItgsModulImplementationCumulatedMenuItem(ITVerbund itVerbund) {
         super(itVerbund);
     }
 
+    private static final long serialVersionUID = 1L;
+
     @Override
     String getTemplateFile() {
-        return "implementation-itnetwork.xhtml";
+        return "implementation-bstums-itnetwork.xhtml";
     }
 
     @Override
     String getStrategy() {
-        return null;
+        return GroupByStrategySum.GET_PARAM_IDENTIFIER;
     }
 }
 ||||||| merged common ancestors
@@ -68,27 +69,28 @@ public class ItgsControlMenuItem extends AbstractItgsControlMenuItem {
 package sernet.verinice.web.poseidon.view.menu.submenu;
 
 import sernet.verinice.model.bsi.ITVerbund;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsControlMenuItem extends AbstractItgsControlMenuItem {
+public class ItgsModulImplementationCumulatedMenuItem extends AbstractItgsControlMenuItem {
 
-    private static final long serialVersionUID = 1L;
-
-    public ItgsControlMenuItem(ITVerbund itVerbund) {
+    ItgsModulImplementationCumulatedMenuItem(ITVerbund itVerbund) {
         super(itVerbund);
     }
 
+    private static final long serialVersionUID = 1L;
+
     @Override
     String getTemplateFile() {
-        return "implementation-itnetwork.xhtml";
+        return "implementation-bstums-itnetwork.xhtml";
     }
 
     @Override
     String getStrategy() {
-        return null;
+        return GroupByStrategySum.GET_PARAM_IDENTIFIER;
     }
 }
 >>>>>>> Refactor Menu.

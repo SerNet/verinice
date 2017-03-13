@@ -18,18 +18,18 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view.menu.submenu;
+package sernet.verinice.web.poseidon.view.menu.menuitem;
 
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsModulImplementationCumulatedMenuItem extends AbstractItgsControlMenuItem {
+public class ItgsModulImplementationNormalizedMenuItem extends AbstractItgsControlChartMenuItem {
 
-    ItgsModulImplementationCumulatedMenuItem(ITVerbund itVerbund) {
+    public ItgsModulImplementationNormalizedMenuItem(ITVerbund itVerbund) {
         super(itVerbund);
     }
 
@@ -42,8 +42,9 @@ public class ItgsModulImplementationCumulatedMenuItem extends AbstractItgsContro
 
     @Override
     String getStrategy() {
-        return GroupByStrategySum.GET_PARAM_IDENTIFIER;
+       return GroupByStrategyNormalized.GET_PARAM_IDENTIFIER;
     }
+
 }
 ||||||| merged common ancestors
 =======
@@ -69,15 +70,15 @@ public class ItgsModulImplementationCumulatedMenuItem extends AbstractItgsContro
 package sernet.verinice.web.poseidon.view.menu.submenu;
 
 import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
+import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsModulImplementationCumulatedMenuItem extends AbstractItgsControlMenuItem {
+public class ItgsModulImplementationNormalizedMenuItem extends AbstractItgsControlMenuItem {
 
-    ItgsModulImplementationCumulatedMenuItem(ITVerbund itVerbund) {
+    ItgsModulImplementationNormalizedMenuItem(ITVerbund itVerbund) {
         super(itVerbund);
     }
 
@@ -90,7 +91,8 @@ public class ItgsModulImplementationCumulatedMenuItem extends AbstractItgsContro
 
     @Override
     String getStrategy() {
-        return GroupByStrategySum.GET_PARAM_IDENTIFIER;
+       return GroupByStrategyNormalized.GET_PARAM_IDENTIFIER;
     }
+
 }
 >>>>>>> Refactor Menu.

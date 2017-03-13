@@ -17,35 +17,27 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view.menu.submenu;
+package sernet.verinice.web.poseidon.view.menu.menuitem;
 
-import org.primefaces.model.menu.MenuItem;
-
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.web.poseidon.services.MenuService;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategyNormalized;
-import sernet.verinice.web.poseidon.view.menu.menuitem.ItgsModulImplementationNormalizedMenuItem;
+import org.primefaces.model.menu.DefaultMenuItem;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class ItgsModulImplementationNormalizedSubMenu extends AbstractItgsModulImplementationSubMenu {
+public class TasksMenuItem extends DefaultMenuItem {
+
+    private static final String TITLE = "Tasks";
+
+    private static final String URL = "/edit/tasks.xhtml";
+
+    private static final String ICON = "fa fa-fw fa-tasks";
 
     private static final long serialVersionUID = 1L;
 
-    public ItgsModulImplementationNormalizedSubMenu(String title, MenuService menuService) {
-        super(title, menuService);
+    public TasksMenuItem()  {
+        super(TITLE);
+        super.setIcon(ICON);
+        super.setUrl(URL);
     }
-
-    @Override
-    protected String getStrategy() {
-        return GroupByStrategyNormalized.GET_PARAM_IDENTIFIER;
-    }
-
-    @Override
-    protected MenuItem getMenuItem(ITVerbund itNetwork) {
-        return new ItgsModulImplementationNormalizedMenuItem(itNetwork);
-    }
-
 }
