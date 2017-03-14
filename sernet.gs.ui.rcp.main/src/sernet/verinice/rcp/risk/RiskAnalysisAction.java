@@ -18,37 +18,29 @@
  ******************************************************************************/
 package sernet.verinice.rcp.risk;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
-import java.util.List;
 
-import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PlatformUI;
 
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.ImageCache;
-import sernet.gs.ui.rcp.main.actions.Messages;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
-import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.rcp.NonModalWizardDialog;
-import sernet.verinice.service.risk.RiskAnalysisConfiguration;
-import sernet.verinice.service.risk.RiskAnalysisService;
 
 /**
  * This action class runs a ISO/IEC 27005 risk analysis
@@ -64,10 +56,9 @@ public class RiskAnalysisAction extends RightsEnabledAction implements ISelectio
     private CnATreeElement selectedOrganization;
     
     RiskAnalysisIsoWizard wizard;
-    private RiskAnalysisService riskAnalysisService;
     
     public RiskAnalysisAction(IWorkbenchWindow window) {
-        setText(Messages.RunRiskAnalysisAction_0);
+        setText(Messages.RiskAnalysisAction_Text);
         setId(ID);
         setImageDescriptor(ImageCache.getInstance().getImageDescriptor(ImageCache.ISO27K_RISK));
         setRightID(ActionRightIDs.RISKANALYSIS);
@@ -80,49 +71,20 @@ public class RiskAnalysisAction extends RightsEnabledAction implements ISelectio
      */
     @Override
     public void doRun() {
-        final RiskAnalysisConfiguration configuration = createConfiguration();
-        if(isNoOrganizationInConfiguration(configuration)) {
-            return;
-        }
         try {
-            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(new IRunnableWithProgress() {
-                @Override
-                public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {             
-                    runRiskAnalysis(configuration);                 
-                }
-            });
+            TitleAreaDialog wizardDialog = openWizard(); 
+            if (wizardDialog.open() == Window.OK) {
+                MessageDialog.openInformation(getShell(), Messages.RiskAnalysisAction_FinishDialogTitle, Messages.RiskAnalysisAction_FinishDialogMessage);
+            }
         } catch (Exception e) {
-            ExceptionUtil.log(e, Messages.RunRiskAnalysisAction_2);
+            MessageDialog.openError(getShell(), Messages.RiskAnalysisAction_ErrorDialogTitle, Messages.RiskAnalysisAction_ErrorDialogMessage);
         }
-        
     }
 
-    private boolean isNoOrganizationInConfiguration(final RiskAnalysisConfiguration configuration) {
-        return configuration==null || configuration.getOrganizationDbIds()==null || configuration.getOrganizationDbIds().length==0;
-    }
-
-    private void runRiskAnalysis(RiskAnalysisConfiguration configuration) {
-        getRiskAnalysisService().runRiskAnalysis(configuration);
-    }
-    
-   
-
-    private RiskAnalysisConfiguration createConfiguration() {
-        RiskAnalysisConfiguration configuration = null;
-        
-        final TitleAreaDialog dialog = createWizard();
-        if (dialog.open() == Window.OK) {
-            List<Integer> organizationIds = wizard.getOrganizationIds(); 
-            Integer[] organizationIdArray = organizationIds.toArray(new Integer[organizationIds.size()]);
-            configuration = new RiskAnalysisConfiguration(organizationIdArray);
-        }
-        
-        return configuration;
-    }
-    
-    private TitleAreaDialog createWizard() {
+    private TitleAreaDialog openWizard() {
         wizard = new RiskAnalysisIsoWizard(selectedOrganization);                 
-        return new NonModalWizardDialog(Display.getCurrent().getActiveShell(),wizard);
+        return new NonModalWizardDialog(getShell(),wizard);
+        
     }
 
     private void addLoadListener() {
@@ -163,12 +125,10 @@ public class RiskAnalysisAction extends RightsEnabledAction implements ISelectio
     private boolean isOrganization(Object element) {
         return element instanceof Organization;
     }
+
     
-    private RiskAnalysisService getRiskAnalysisService() {
-        if(riskAnalysisService==null) {
-            riskAnalysisService = (RiskAnalysisService) VeriniceContext.get(VeriniceContext.RISK_ANALYSIS_SERVICE);
-        }
-        return riskAnalysisService;
+    private Shell getShell() {
+        return Display.getCurrent().getActiveShell();
     }
 
 }

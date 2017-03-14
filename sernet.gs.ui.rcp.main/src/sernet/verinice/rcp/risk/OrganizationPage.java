@@ -76,9 +76,9 @@ public class OrganizationPage extends BaseWizardPage {
         final int layoutMarginWidth = 10;
         final int layoutMarginHeight = layoutMarginWidth;
         
-        setTitle("ISO/IEC 27005 Risk Analysis");
+        setTitle(Messages.OrganizationPage_WizardTitle);
         setMessage(
-                "Select at one or more organizations. Click OK to run the risk analysis on this organizations.");
+                Messages.OrganizationPage_WizardMessage);
 
         GridLayout layout = (GridLayout) composite.getLayout();
         layout.marginWidth = layoutMarginWidth;
@@ -92,7 +92,7 @@ public class OrganizationPage extends BaseWizardPage {
 
         } catch (CommandException ex) {
             LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
-            setMessage("Error while laoding organizations", IMessageProvider.ERROR);
+            setMessage(Messages.OrganizationPage_ErrorMessage, IMessageProvider.ERROR);
         }
 
         SelectionListener organizationListener = new SelectionAdapter() {
