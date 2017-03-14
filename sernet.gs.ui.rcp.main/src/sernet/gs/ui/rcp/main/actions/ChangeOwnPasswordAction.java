@@ -73,7 +73,7 @@ public class ChangeOwnPasswordAction extends Action  {
         // this action works for normal users, admins are supposed to change their password differently, since admin acounts can also be defined in the config file
         // where they cannot be edited from within the application.
         // (admins can change the passwords for anybody, this action here only works for the currently logged in user)
-        boolean isAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+        boolean isAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN, ApplicationRoles.ROLE_LOCAL_ADMIN });
         if (isAdmin) {
             MessageDialog.openInformation(window.getShell(), Messages.ChangeOwnPasswordAction_1, Messages.ChangeOwnPasswordAction_2);
             return;
