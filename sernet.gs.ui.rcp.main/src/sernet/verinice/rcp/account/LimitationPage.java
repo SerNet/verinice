@@ -46,12 +46,14 @@ public class LimitationPage extends BaseWizardPage {
     private Configuration account;
     
     private boolean isAdmin = false;
+    private boolean isLocalAdmin = false;
     private boolean isScopeOnly = false;
     private boolean isDesktop = true;
     private boolean isWeb = true;
     private boolean isDeactivated = false;
     
     private Button cbAdmin;
+    private Button cbLocalAdmin;
     private Button cbScopeOnly;
     private Button cbDesktop;
     private Button cbWeb;
@@ -72,15 +74,28 @@ public class LimitationPage extends BaseWizardPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isAdmin = cbAdmin.getSelection();
+                cbLocalAdmin.setEnabled(!isAdmin);
                 configureStandartGroup();
                 changeGroupPage();
             } 
+        });
+        cbLocalAdmin = createCheckbox(composite, Messages.LimitationPage_8, isLocalAdmin);
+        cbLocalAdmin.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                isLocalAdmin = cbLocalAdmin.getSelection();
+                cbAdmin.setEnabled(!isLocalAdmin);
+                cbScopeOnly.setEnabled(!isLocalAdmin);
+                configureStandartGroup();
+                changeGroupPage();
+            }
         });
         cbScopeOnly = createCheckbox(composite, Messages.LimitationPage_4, isScopeOnly);
         cbScopeOnly.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isScopeOnly = cbScopeOnly.getSelection();
+                cbLocalAdmin.setEnabled(!isScopeOnly);
                 configureStandartGroup();
                 changeGroupPage();
             } 
@@ -116,10 +131,12 @@ public class LimitationPage extends BaseWizardPage {
 
     private void configureStandartGroup() {
         deleteStandartGroups();
-        if(isAdmin()) {
-           configureAdminGroup();
+        if (isAdmin()) {
+            configureAdminGroup();
+        } else if (isLocalAdmin()) {
+            configureLocalAdminGroup();
         } else {
-           configureUserGroup();
+            configureUserGroup();
         }
     }
 
@@ -131,6 +148,10 @@ public class LimitationPage extends BaseWizardPage {
         }
     }
     
+    private void configureLocalAdminGroup() {
+        account.addRole(IRightsService.ADMINLOCALDEFAULTGROUPNAME);
+    }
+
     private void configureUserGroup() {
         if(isScopeOnly()) {
             account.addRole(IRightsService.USERSCOPEDEFAULTGROUPNAME);    
@@ -175,6 +196,14 @@ public class LimitationPage extends BaseWizardPage {
 
     public void setAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public boolean isLocalAdmin() {
+        return isLocalAdmin;
+    }
+
+    public void setLocalAdmin(boolean isLocalAdmin) {
+        this.isLocalAdmin = isLocalAdmin;
     }
 
     public boolean isScopeOnly() {
