@@ -110,7 +110,7 @@ public class AccountView extends RightsEnabledView {
     private static final int COMBO_INDEX_YES = 1;
     private static final int COMBO_INDEX_NO = 2;
     private static final int TEXT_COLUMN_WIDTH = 150;
-    private static final int BOOLEAN_COLUMN_WIDTH = 65;
+    private static final int BOOLEAN_COLUMN_WIDTH = 70;
     private static final int MIN_WIDTH_TEXT = 100;
     
     private IAccountSearchParameter parameter = new AccountSearchParameter();
@@ -134,6 +134,7 @@ public class AccountView extends RightsEnabledView {
     private Combo comboOrganization;
     
     private Combo comboAdmin;
+    private Combo comboLocalAdmin;
     private Combo comboScopeOnly;
     
     TableViewer viewer;
@@ -221,7 +222,7 @@ public class AccountView extends RightsEnabledView {
         Composite comboComposite = new Composite(composite, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         comboComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(6, true);
+        GridLayout gridLayout = new GridLayout(7, true);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         comboComposite.setLayout(gridLayout);
@@ -250,6 +251,8 @@ public class AccountView extends RightsEnabledView {
         label.setText(Messages.AccountView_7);
         label = new Label(searchComposite, SWT.WRAP);
         label.setText(Messages.AccountView_8);
+        label = new Label(searchComposite, SWT.WRAP);
+        label.setText(Messages.AccountView_39);
         label = new Label(searchComposite, SWT.WRAP);
         label.setText(Messages.AccountView_9);
         
@@ -329,6 +332,24 @@ public class AccountView extends RightsEnabledView {
             }
         });
         
+        comboLocalAdmin = new Combo(searchComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+        comboLocalAdmin.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        comboLocalAdmin.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (COMBO_INDEX_YES == comboLocalAdmin.getSelectionIndex()) {
+                    AccountView.this.parameter.setIsLocalAdmin(true);
+                }
+                if (COMBO_INDEX_NO == comboLocalAdmin.getSelectionIndex()) {
+                    AccountView.this.parameter.setIsLocalAdmin(false);
+                }
+                if (COMBO_INDEX_BOTH == comboLocalAdmin.getSelectionIndex()) {
+                    AccountView.this.parameter.setIsLocalAdmin(null);
+                }
+                findAccounts();
+            }
+        });
+
         comboScopeOnly = new Combo(searchComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
         comboScopeOnly.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         comboScopeOnly.addSelectionListener(new SelectionAdapter() {
@@ -350,6 +371,7 @@ public class AccountView extends RightsEnabledView {
         final Button searchButton = new Button(searchComposite, SWT.PUSH);
         searchButton.setText(Messages.AccountView_10);
         searchButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 findAccounts();              
             }
@@ -374,6 +396,7 @@ public class AccountView extends RightsEnabledView {
         createTableColumn(Messages.AccountView_15, TEXT_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_16, TEXT_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_17, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
+		createTableColumn(Messages.AccountView_38, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_18, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_19, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
         createTableColumn(Messages.AccountView_20, BOOLEAN_COLUMN_WIDTH, columnIndex++, "");
@@ -473,6 +496,7 @@ public class AccountView extends RightsEnabledView {
             /* (non-Javadoc)
              * @see org.eclipse.jface.action.Action#run()
              */
+            @Override
             public void run() {          
                 findAccounts();            
             }
@@ -608,6 +632,7 @@ public class AccountView extends RightsEnabledView {
             @Override
             public void run() {
                 initYesNoCombo(comboAdmin);
+                initYesNoCombo(comboLocalAdmin);
                 initYesNoCombo(comboScopeOnly);
             }          
         });    

@@ -89,6 +89,10 @@ public final class AccountSearchQueryFactory {
             parameterList.add(Configuration.PROP_ISADMIN);
             parameterList.add(parameter.isAdmin() ? Configuration.PROP_ISADMIN_YES : Configuration.PROP_ISADMIN_NO);
         }        
+        if (parameter.isLocalAdmin() != null) {
+            parameterList.add(Configuration.PROP_ISLOCALADMIN);
+            parameterList.add(parameter.isLocalAdmin() ? Configuration.PROP_ISLOCALADMIN_YES : Configuration.PROP_ISLOCALADMIN_NO);
+        }
         if(parameter.isScopeOnly()!=null) {
             parameterList.add(Configuration.PROP_SCOPE);
             parameterList.add(parameter.isScopeOnly() ? Configuration.PROP_SCOPE_YES : Configuration.PROP_SCOPE_NO);

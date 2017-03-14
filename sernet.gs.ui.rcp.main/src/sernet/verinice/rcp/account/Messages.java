@@ -32,6 +32,8 @@ public class Messages extends NLS {
     public static String AccountView_35;
     public static String AccountView_36;
     public static String AccountView_37;
+    public static String AccountView_38;
+    public static String AccountView_39;
     public static String AccountView_4;
     public static String AccountView_5;
     public static String AccountView_6;

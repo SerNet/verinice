@@ -11,6 +11,7 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     private String firstName;
     private String familyName;
     private Boolean isAdmin;
+    private Boolean isLocalAdmin;
     private Boolean isScopeOnly;
     private Boolean isDeactivated;
     private Integer scopeId;
@@ -25,73 +26,100 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
     /* (non-Javadoc)
      * @see sernet.verinice.interfaces.IAccountSearchParameter#getLogin()
      */
+    @Override
     public String getLogin() {
         return login;
     }
 
+    @Override
     public IAccountSearchParameter setLogin(String login) {
         this.login = login;
         return this;
     }
 
+    @Override
     public String getAccountGroup(){
         return this.accountGroup;
     }
 
+    @Override
     public IAccountSearchParameter setAccountGroup(String accountGroup){
         this.accountGroup = accountGroup;
         return this;
     }
 
+    @Override
     public String getFirstName() {
         return firstName;
     }
 
+    @Override
     public IAccountSearchParameter setFirstName(String firstName) {
         this.firstName = firstName;
         return this;
     }
 
+    @Override
     public String getFamilyName() {
         return familyName;
     }
 
+    @Override
     public IAccountSearchParameter setFamilyName(String familyName) {
         this.familyName = familyName;
         return this;
     }
 
+    @Override
     public Boolean isAdmin() {
         return isAdmin;
     }
 
+    @Override
     public IAccountSearchParameter setIsAdmin(Boolean isAdmin) {
         this.isAdmin = isAdmin;
         return this;
     }
 
+    @Override
+    public Boolean isLocalAdmin() {
+        return isLocalAdmin;
+    }
+
+    @Override
+    public IAccountSearchParameter setIsLocalAdmin(Boolean isLocalAdmin) {
+        this.isLocalAdmin = isLocalAdmin;
+        return this;
+    }
+
+    @Override
     public Boolean isScopeOnly() {
         return isScopeOnly;
     }
 
+    @Override
     public IAccountSearchParameter setIsScopeOnly(Boolean isScopeOnly) {
         this.isScopeOnly = isScopeOnly;
         return this;
     }
 
+    @Override
     public Boolean isDeactivated() {
         return isDeactivated;
     }
 
+    @Override
     public IAccountSearchParameter setIsDeactivated(Boolean isDeactivated) {
         this.isDeactivated = isDeactivated;
         return this;
     }
     
+    @Override
     public Integer getScopeId() {
         return scopeId;
     }
 
+    @Override
     public IAccountSearchParameter setScopeId(Integer scopeId) {
         this.scopeId = scopeId;
         return this;
@@ -110,6 +138,9 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
         }
         if(IS_ADMIN.equals(name)) {
             setIsAdmin((Boolean) value);
+        }
+        if (IS_LOCAL_ADMIN.equals(name)) {
+            setIsLocalAdmin((Boolean) value);
         }
         if(IS_DEACTIVATED.equals(name)) {
             setIsDeactivated((Boolean) value);
@@ -133,6 +164,9 @@ public class AccountSearchParameter implements IAccountSearchParameter, Serializ
             n++;
         }
         if(isAdmin()!=null) {
+            n++;
+        }
+        if (isLocalAdmin() != null) {
             n++;
         }
         if(isDeactivated()!=null) {

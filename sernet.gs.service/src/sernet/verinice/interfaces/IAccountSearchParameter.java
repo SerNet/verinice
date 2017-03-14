@@ -11,6 +11,7 @@ public interface IAccountSearchParameter {
     public static final String FIRST_NAME = "firstName";
     public static final String FAMILY_NAME = "familyName";
     public static final String IS_ADMIN = "isAdmin";
+    public static final String IS_LOCAL_ADMIN = "isLocalAdmin";
     public static final String IS_SCOPE_ONLY = "isScopeOnly";
     public static final String IS_DEACTIVATED = "isDeactivated";
     public static final String SCOPE_ID = "scopeId";
@@ -38,6 +39,10 @@ public interface IAccountSearchParameter {
     Boolean isAdmin();
     IAccountSearchParameter setIsAdmin(Boolean isAdmin);
     
+    Boolean isLocalAdmin();
+
+    IAccountSearchParameter setIsLocalAdmin(Boolean isLocalAdmin);
+
     Boolean isScopeOnly();
     IAccountSearchParameter setIsScopeOnly(Boolean isScopeOnly);
     
