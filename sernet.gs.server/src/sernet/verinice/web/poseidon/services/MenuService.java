@@ -26,6 +26,7 @@ import java.util.TreeSet;
 import javax.faces.bean.ManagedBean;
 
 import sernet.gs.service.NumericStringComparator;
+import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.graph.GraphElementLoader;
 import sernet.verinice.interfaces.graph.IElementFilter;
 import sernet.verinice.interfaces.graph.IGraphService;
@@ -40,7 +41,7 @@ import sernet.verinice.model.iso27k.Organization;
  *
  */
 @ManagedBean(name = "menuService")
-public class MenuService extends GenericChartService {
+public class MenuService {
 
     private Set<ITVerbund> itNetworks;
 
@@ -138,4 +139,10 @@ public class MenuService extends GenericChartService {
         sortedItNetworks.addAll(cnATreeElements);
         return sortedItNetworks;
     }
+
+
+    IGraphService getGraphService() {
+        return (IGraphService) VeriniceContext.get(VeriniceContext.GRAPH_SERVICE);
+    }
+
 }
