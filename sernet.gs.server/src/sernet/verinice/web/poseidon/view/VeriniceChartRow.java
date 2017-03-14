@@ -22,8 +22,6 @@ package sernet.verinice.web.poseidon.view;
 import java.util.UUID;
 
 import org.primefaces.model.chart.ChartModel;
-import org.primefaces.model.chart.HorizontalBarChartModel;
-import org.primefaces.model.chart.PieChartModel;
 
 public class VeriniceChartRow {
 

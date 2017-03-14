@@ -43,7 +43,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.service.DAOFactory;
-import sernet.verinice.web.poseidon.services.ControlService;
+import sernet.verinice.web.poseidon.services.ChartService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
@@ -55,8 +55,8 @@ import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 @ViewScoped
 public class BausteinUmsetzungAllView {
 
-    @ManagedProperty("#{controlService}")
-    private ControlService controlService;
+    @ManagedProperty("#{chartService}")
+    private ChartService chartService;
 
     private List<VeriniceChartRow> charts;
 
@@ -86,7 +86,7 @@ public class BausteinUmsetzungAllView {
     }
 
     private void initTotalCharts() {
-        Map<String, Map<String, Number>> allStates = controlService.groupByMassnahmenStates("", strategy.getStrategy());
+        Map<String, Map<String, Number>> allStates = chartService.groupByMassnahmenStates("", strategy.getStrategy());
         ModulChartsFactory allChartModelFactory = new ModulChartsFactory(allStates);
 
         verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
@@ -118,7 +118,7 @@ public class BausteinUmsetzungAllView {
 
         for (ITVerbund itNetwork : itNetworks) {
 
-            Map<String, Map<String, Number>> states = controlService.groupByMassnahmenStates(itNetwork, strategy.getStrategy());
+            Map<String, Map<String, Number>> states = chartService.groupByMassnahmenStates(itNetwork, strategy.getStrategy());
 
             if (states.isEmpty()) {
                 continue;
@@ -159,14 +159,6 @@ public class BausteinUmsetzungAllView {
         this.charts = charts;
     }
 
-    public ControlService getControlService() {
-        return controlService;
-    }
-
-    public void setControlService(ControlService controlService) {
-        this.controlService = controlService;
-    }
-
     public HorizontalBarChartModel getHorizontalBarChartModel() {
         return horizontalBarChart;
     }
@@ -205,5 +197,13 @@ public class BausteinUmsetzungAllView {
 
     public void setAllItNetworksCalculated(boolean allItNetworksCalculated) {
         this.allItNetworksCalculated = allItNetworksCalculated;
+    }
+
+    public ChartService getChartService() {
+        return chartService;
+    }
+
+    public void setChartService(ChartService chartService) {
+        this.chartService = chartService;
     }
 }

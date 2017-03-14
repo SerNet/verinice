@@ -27,7 +27,7 @@ import javax.faces.bean.ManagedProperty;
 
 import org.primefaces.model.chart.BarChartModel;
 
-import sernet.verinice.web.poseidon.services.ControlService;
+import sernet.verinice.web.poseidon.services.ChartService;
 import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 
 /**
@@ -41,23 +41,15 @@ public class BstUmsetzungTotalView {
 
     private BarChartModel verticalChartModel;
 
-    @ManagedProperty("#{controlService}")
-    private ControlService controlService;
+    @ManagedProperty("#{chartService}")
+    private ChartService chartService;
 
     @PostConstruct
     public void init(){
-        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates("", new GroupByStrategySum());
+        Map<String, Map<String, Number>> data = getChartService().groupByMassnahmenStates("", new GroupByStrategySum());
         ModulChartsFactory chartModelFactory = new ModulChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
-    }
-
-    public ControlService getControlService() {
-        return controlService;
-    }
-
-    public void setControlService(ControlService controlService) {
-        this.controlService = controlService;
     }
 
     public BarChartModel getVerticalChartModel() {
@@ -74,6 +66,14 @@ public class BstUmsetzungTotalView {
 
     public void setHorizontalChartModel(BarChartModel horizontalChartModel) {
         this.horizontalChartModel = horizontalChartModel;
+    }
+
+    public ChartService getChartService() {
+        return chartService;
+    }
+
+    public void setChartService(ChartService chartService) {
+        this.chartService = chartService;
     }
 
 }

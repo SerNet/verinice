@@ -48,9 +48,9 @@ import sernet.verinice.web.poseidon.services.strategy.SimpleSumOfStates;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "controlService")
+@ManagedBean(name = "chartService")
 @SessionScoped
-public class ControlService extends GenericChartService {
+public class ChartService extends GenericChartService {
 
     /**
      * Returns aggregate status of all {@link MassnahmenUmsetzung} in verinice.

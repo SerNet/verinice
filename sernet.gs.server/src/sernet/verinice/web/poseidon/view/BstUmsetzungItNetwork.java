@@ -29,7 +29,7 @@ import javax.faces.context.FacesContext;
 
 import org.primefaces.model.chart.BarChartModel;
 
-import sernet.verinice.web.poseidon.services.ControlService;
+import sernet.verinice.web.poseidon.services.ChartService;
 import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
 /**
@@ -52,8 +52,8 @@ public class BstUmsetzungItNetwork {
 
     private boolean calculated = false;
 
-    @ManagedProperty("#{controlService}")
-    private ControlService controlService;
+    @ManagedProperty("#{chartService}")
+    private ChartService chartService;
 
     @PostConstruct
     public void init() {
@@ -81,18 +81,10 @@ public class BstUmsetzungItNetwork {
     }
 
     private void createCharts() {
-        Map<String, Map<String, Number>> data = controlService.groupByMassnahmenStates(scopeId, strategyBean.getStrategy());
+        Map<String, Map<String, Number>> data = chartService.groupByMassnahmenStates(scopeId, strategyBean.getStrategy());
         ModulChartsFactory chartModelFactory = new ModulChartsFactory(data);
         horizontalChartModel = chartModelFactory.getHorizontalBarChartModel();
         verticalChartModel = chartModelFactory.getVerticalBarChartModel();
-    }
-
-    public ControlService getControlService() {
-        return controlService;
-    }
-
-    public void setControlService(ControlService controlService) {
-        this.controlService = controlService;
     }
 
     public BarChartModel getVerticalChartModel() {
@@ -141,5 +133,13 @@ public class BstUmsetzungItNetwork {
 
     public void setCalculated(boolean calculated) {
         this.calculated = calculated;
+    }
+
+    public ChartService getChartService() {
+        return chartService;
+    }
+
+    public void setChartService(ChartService chartService) {
+        this.chartService = chartService;
     }
 }

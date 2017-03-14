@@ -33,7 +33,7 @@ import sernet.verinice.model.bsi.ITVerbund;
  *
  */
 @ManagedBean(name = "controlServiceDummy")
-public class ControlServiceDummy extends ControlService {
+public class ControlServiceDummy extends ChartService {
 
     @Override
     public SortedMap<String, Number> aggregateMassnahmenUmsetzungStatus() {

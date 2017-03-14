@@ -26,7 +26,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.SortedMap;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
@@ -42,7 +41,7 @@ import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.service.DAOFactory;
-import sernet.verinice.web.poseidon.services.ControlService;
+import sernet.verinice.web.poseidon.services.ChartService;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -52,8 +51,8 @@ import sernet.verinice.web.poseidon.services.ControlService;
 @ViewScoped
 public class AllBsiChartsView {
 
-    @ManagedProperty("#{controlService}")
-    private ControlService controlService;
+    @ManagedProperty("#{chartService}")
+    private ChartService chartService;
 
     private List<VeriniceChartRow> charts;
 
@@ -85,7 +84,7 @@ public class AllBsiChartsView {
 
         for (ITVerbund itNetwork : itNetworks) {
 
-            SortedMap<String, Number> states = getControlService().aggregateMassnahmenUmsetzung(itNetwork);
+            SortedMap<String, Number> states = getChartService().aggregateMassnahmenUmsetzung(itNetwork);
 
             if (states.isEmpty())
                 continue;
@@ -108,7 +107,7 @@ public class AllBsiChartsView {
 
 
     private SortedMap<String, Number> calculateTotal() {
-        SortedMap<String, Number> allStates = controlService.aggregateMassnahmenUmsetzungStatus();
+        SortedMap<String, Number> allStates = chartService.aggregateMassnahmenUmsetzungStatus();
         return allStates;
     }
 
@@ -134,16 +133,6 @@ public class AllBsiChartsView {
     public void setCharts(List<VeriniceChartRow> charts) {
         this.charts = charts;
     }
-
-    public ControlService getControlService() {
-        return controlService;
-    }
-
-    public void setControlService(ControlService controlService) {
-        this.controlService = controlService;
-    }
-
-
 
     public HorizontalBarChartModel getHorizontalBarChartModel() {
         return horizontalBarChartModel;
@@ -185,6 +174,14 @@ public class AllBsiChartsView {
 
     public void setAllItNetworksCalculated(boolean allItNetworksCalculated) {
         this.allItNetworksCalculated = allItNetworksCalculated;
+    }
+
+    public ChartService getChartService() {
+        return chartService;
+    }
+
+    public void setChartService(ChartService chartService) {
+        this.chartService = chartService;
     }
 
 }

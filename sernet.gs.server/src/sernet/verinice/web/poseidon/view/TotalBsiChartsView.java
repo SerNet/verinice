@@ -24,12 +24,11 @@ import java.util.SortedMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.event.ActionEvent;
 
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-import sernet.verinice.web.poseidon.services.ControlService;
+import sernet.verinice.web.poseidon.services.ChartService;
 
 /**
  *
@@ -41,8 +40,8 @@ public class TotalBsiChartsView implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ManagedProperty("#{controlService}")
-    private ControlService controlService;
+    @ManagedProperty("#{chartService}")
+    private ChartService chartService;
 
     private SortedMap<String, Number> states;
 
@@ -61,17 +60,9 @@ public class TotalBsiChartsView implements Serializable {
 
     private SortedMap<String, Number> getStates() {
         if (states == null){
-            states = getControlService().aggregateMassnahmenUmsetzungStatus();
+            states = getChartService().aggregateMassnahmenUmsetzungStatus();
         }
         return states;
-    }
-
-    public ControlService getControlService() {
-        return controlService;
-    }
-
-    public void setControlService(ControlService controlService) {
-        this.controlService = controlService;
     }
 
     public void setPieModel(PieChartModel pieModel) {
@@ -96,5 +87,13 @@ public class TotalBsiChartsView implements Serializable {
 
     public void setCalculated(boolean calculated) {
         this.calculated = calculated;
+    }
+
+    public ChartService getChartService() {
+        return chartService;
+    }
+
+    public void setChartService(ChartService chartService) {
+        this.chartService = chartService;
     }
 }

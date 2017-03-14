@@ -36,7 +36,7 @@ import org.primefaces.component.remotecommand.RemoteCommand;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-import sernet.verinice.web.poseidon.services.ControlService;
+import sernet.verinice.web.poseidon.services.ChartService;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -52,8 +52,8 @@ public class ItNetworkView implements Serializable {
 
     private String itNetwork;
 
-    @ManagedProperty("#{controlService}")
-    private ControlService controlService;
+    @ManagedProperty("#{chartService}")
+    private ChartService chartService;
 
     private SortedMap<String, Number> states;
 
@@ -100,18 +100,10 @@ public class ItNetworkView implements Serializable {
 
     private SortedMap<String, Number> getStates() {
         if (states == null) {
-            states = controlService.aggregateMassnahmenUmsetzung(scopeId);
+            states = chartService.aggregateMassnahmenUmsetzung(scopeId);
         }
 
         return states;
-    }
-
-    public ControlService getControlService() {
-        return controlService;
-    }
-
-    public void setControlService(ControlService controlService) {
-        this.controlService = controlService;
     }
 
     public Integer getScopeId() {
@@ -160,6 +152,14 @@ public class ItNetworkView implements Serializable {
 
     public void setRemoteCommand(RemoteCommand remoteCommand) {
         this.remoteCommand = remoteCommand;
+    }
+
+    public ChartService getChartService() {
+        return chartService;
+    }
+
+    public void setChartService(ChartService chartService) {
+        this.chartService = chartService;
     }
 
     private final class DataLoader implements ActionListener {
