@@ -17,7 +17,7 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view;
+package sernet.verinice.web.poseidon.view.charts;
 
 import java.util.Map;
 
@@ -38,7 +38,7 @@ import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
  */
 @ManagedBean(name = "bstUmsetzungItNetworkView")
 @ViewScoped
-public class BstUmsetzungItNetwork {
+public class BstUmsetzungItNetworkView {
 
     private BarChartModel horizontalChartModel;
 

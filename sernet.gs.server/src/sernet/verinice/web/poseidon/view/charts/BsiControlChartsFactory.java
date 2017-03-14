@@ -17,7 +17,7 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view;
+package sernet.verinice.web.poseidon.view.charts;
 
 import java.util.Map;
 import java.util.SortedMap;
