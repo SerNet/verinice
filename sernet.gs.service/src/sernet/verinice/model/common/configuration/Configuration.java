@@ -67,6 +67,7 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	
 	public static final String PROP_NOTIFICATION = "configuration_mailing_yesno"; //$NON-NLS-1$
 	public static final String PROP_NOTIFICATION_EMAIL = "configuration_mailing_email"; //$NON-NLS-1$
+	public static final String PROP_NOTIFICATION_LICENSE = "configuration_mailing_license"; //$NON-NLS-1$
 	
 	public static final String PROP_NOTIFICATION_GLOBAL = "configuration_mailing_owner"; //$NON-NLS-1$
 	public static final String PROP_NOTIFICATION_GLOBAL_ALL = "configuration_mailing_owner_all"; //$NON-NLS-1$
@@ -136,7 +137,7 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	}
 
 	private void setEntity(Entity entity) {
-		this.entity = entity;		
+		this.entity = entity;
 	}
 
 	public Entity getEntity() {
@@ -367,6 +368,15 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	public void setNotificationEmail(String email) {
 		PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_EMAIL);
 		entity.setSimpleValue(type, email);
+	}
+	
+	public boolean getNotificationLicense(){
+	    return "1".equals(entity.getSimpleValue(PROP_NOTIFICATION_LICENSE));
+	}
+	
+	public void setNotificationLicense(boolean enabled){
+	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_NOTIFICATION_LICENSE);
+	    entity.setSimpleValue(type, (enabled) ? "1" : "0");
 	}
 	
 	public void setNotificationGlobal(boolean b) {

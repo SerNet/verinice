@@ -38,6 +38,7 @@ public class Messages extends NLS {
     public static String AccountView_7;
     public static String AccountView_8;
     public static String AccountView_9;
+    public static String AccountView_LicenseExpired;
     public static String AccountWizard_0;
     public static String AuditorNotificationPage_0;
     public static String AuditorNotificationPage_1;
@@ -62,6 +63,7 @@ public class Messages extends NLS {
     public static String LicenseMgmtPage_Text;
     public static String LicenseMgmtPage_Error_licenseNotAssigneable;
     public static String LicenseMgmtPage_License_Expired;
+    public static String LicenseMgmtPage_Notification;
     public static String LimitationPage_1;
     public static String LimitationPage_2;
     public static String LimitationPage_3;

@@ -35,6 +35,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
@@ -61,6 +63,7 @@ public class LicenseMgmtPage extends BaseWizardPage {
     private Map<String, LicenseManagementEntry> licenseEntryMap;
     private Map<String, String> licenseIdToLabelMap;
     private String user;
+    private boolean sendEmail;
     
     
     public LicenseMgmtPage() {
@@ -76,6 +79,15 @@ public class LicenseMgmtPage extends BaseWizardPage {
      */
     @Override
     protected void initGui(Composite composite) {
+
+        GridData containerGridData = new GridData();
+        containerGridData.horizontalAlignment = SWT.LEFT;
+        containerGridData.verticalAlignment = SWT.CENTER;
+        containerGridData.grabExcessHorizontalSpace = true;
+        containerGridData.grabExcessVerticalSpace = true;
+
+        composite.setLayoutData(containerGridData);
+        
         setTitle(Messages.LicenseMgmtPage_Title);
         setMessage(Messages.LicenseMgmtPage_Text);
 
@@ -87,6 +99,47 @@ public class LicenseMgmtPage extends BaseWizardPage {
                 createLicenseIdCheckbox(composite, licenseList.get(index), 
                         index);
             }
+            
+            Composite emailComposite = new Composite(composite, SWT.BORDER);
+            
+            GridData emailGridData = new GridData();
+            emailGridData.horizontalAlignment = SWT.LEFT;
+            emailGridData.verticalAlignment = SWT.BOTTOM;
+            emailGridData.grabExcessHorizontalSpace = true;
+            emailGridData.grabExcessVerticalSpace = true;  
+            emailComposite.setLayoutData(emailGridData);
+            
+            Button sendEmailButton = new Button(emailComposite, SWT.CHECK );
+            
+            GridLayout gridLayout = new GridLayout(1, false);
+            gridLayout.marginWidth = 5;
+            gridLayout.marginHeight = 5;
+            gridLayout.verticalSpacing = 0;
+            gridLayout.horizontalSpacing = 0;
+            emailComposite.setLayout(gridLayout);
+            GridData gridData = new GridData();
+            gridData.horizontalAlignment = SWT.LEFT;
+            gridData.verticalAlignment = SWT.BOTTOM;
+            gridData.grabExcessHorizontalSpace = true;
+            gridData.grabExcessVerticalSpace = true;
+            sendEmailButton.setLayoutData(gridData);
+            sendEmailButton.setText(Messages.LicenseMgmtPage_Notification);
+            sendEmailButton.setSelection(isSendEmail());
+            sendEmailButton.addSelectionListener(new SelectionListener() {
+                
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    if(e.getSource() instanceof Button){
+                        Button button = (Button)e.getSource();
+                        setSendEmail(button.getSelection());
+                    }
+                }
+                
+                @Override
+                public void widgetDefaultSelected(SelectionEvent e) {
+                    widgetSelected(e);
+                }
+            });
         } catch (LicenseManagementException e){
             String msg = "Error getting vnl-License-Data";
             ExceptionUtil.log(e, msg);
@@ -110,7 +163,13 @@ public class LicenseMgmtPage extends BaseWizardPage {
             @Override
             public int compare(LicenseManagementEntry entry1, 
                     LicenseManagementEntry entry2) {
-                return ncs.compare(entry1.getLicenseID(), entry2.getLicenseID());
+                String licenseId1 = licenseService.decrypt(entry1, 
+                        LicenseManagementEntry.COLUMN_LICENSEID);
+                String licenseId2 = licenseService.decrypt(entry2, 
+                        LicenseManagementEntry.COLUMN_LICENSEID);
+                String label1 = getLicenseLabel(licenseId1);
+                String label2 = getLicenseLabel(licenseId2);
+                return ncs.compare(label1, label2);
             }
         });
         return licenseList;
@@ -331,6 +390,20 @@ public class LicenseMgmtPage extends BaseWizardPage {
         sb.append(slash).append(validUsers).append(closingBracket);
         LOG.debug("LicenseLabel for id:\t" + licenseId + "\t=" + sb.toString());
         return sb.toString();
+    }
+
+    /**
+     * @return the sendEmail
+     */
+    public boolean isSendEmail() {
+        return sendEmail;
+    }
+
+    /**
+     * @param sendEmail the sendEmail to set
+     */
+    public void setSendEmail(boolean sendEmail) {
+        this.sendEmail = sendEmail;
     }
 
 }

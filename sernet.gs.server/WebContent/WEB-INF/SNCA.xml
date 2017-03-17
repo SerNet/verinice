@@ -123,7 +123,15 @@ the value between <param></param> will be used directly if no string is found fo
      <huiproperty
      		name="authorized Content Ids"
      		id="configuration_licensedcontent_ids"
-     		visible="false" />
+     		visible="false"
+     		editable="false" />
+     
+     <huiproperty
+     	name="send email if license is expired"
+     	id="configuration_mailing_license"
+     	visible="false"
+     	editable="false"
+     />
             
 	 <huiproperty
             name="Rollen"
@@ -2348,8 +2356,7 @@ the value between <param></param> will be used directly if no string is found fo
 				id="mnums_name"
                 editable="true"
 				name="Titel"
-				required="true"
-				showInObjectBrowser="true" />
+				required="true" />
             <huiproperty
                 id="mnums_lebenszyklus"
                 name="Lebenszyklus"

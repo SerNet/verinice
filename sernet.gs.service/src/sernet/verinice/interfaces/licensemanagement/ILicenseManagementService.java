@@ -71,7 +71,7 @@ public interface ILicenseManagementService {
             String contentId, boolean decrypt) throws LicenseManagementException;
 
     LicenseManagementEntry getLicenseEntryForLicenseId(
-            String encryptedLicenseId) throws LicenseManagementException;
+            String encryptedLicenseId, boolean decrypt) throws LicenseManagementException;
 
     int getLicenseIdAllocationCount(String licenseId);
 

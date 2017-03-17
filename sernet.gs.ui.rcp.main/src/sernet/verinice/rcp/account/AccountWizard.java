@@ -89,6 +89,7 @@ public class AccountWizard extends Wizard {
             limitationPage.setDeactivated(account.isDeactivatedUser());
             licenseMgmtPage.setUser(account.getUser());
             licenseMgmtPage.setAssignedLicenseIds(account.getAssignedLicenseIds());
+            licenseMgmtPage.setSendEmail(account.getNotificationLicense());
             notificationPage.setNotification(getAccount().isNotificationEnabled());
             notificationPage.setGlobal(getAccount().isNotificationGlobal());
             notificationPage.setNewTasks(getAccount().isNotificationMeasureAssignment());
@@ -131,6 +132,8 @@ public class AccountWizard extends Wizard {
         getAccount().setAuditorNotificationExpirationEnabled(auditorNotificationPage.isDeadlineWarning());
         
         getAccount().setAuditorNotificationExpirationDays(auditorNotificationPage.getDeadlineInDays());
+        
+        getAccount().setNotificationLicense(licenseMgmtPage.isSendEmail());
         
         syncLicenseIdsToAccount();
         return true;

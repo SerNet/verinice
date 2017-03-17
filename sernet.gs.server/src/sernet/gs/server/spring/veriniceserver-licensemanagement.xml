@@ -16,5 +16,31 @@
   <bean id="directoryCreator" class="sernet.verinice.licensemanagement.LMServerDirectoryCreator">
     <property name="vnlLocation" value="${veriniceserver.vnl.repository}" />
   </bean>
+  
+  <bean id="licenseRemover" class="sernet.verinice.licensemanagement.LicenseRemover">
+  	<property name="configurationDao" ref="configurationDao"/>
+  	<property name="licenseService" ref="licenseManagementService"/>
+    <property name="mailSender" ref="mailSender" />
+    <property name="velocityEngine" ref="velocityEngine"/>
+    <property name="emailFrom" value="${veriniceserver.notification.email.from}"/>
+    <property name="replyTo" value="${veriniceserver.notification.email.from}"/>
+    <property name="emailCc" value="${veriniceserver.notification.email.cc}"/>
+    <property name="emailBcc" value="${veriniceserver.notification.email.bcc}"/>   	
+  </bean>
+  
+    <bean id="licenseRemoverJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+    <property name="jobClass" value="sernet.verinice.licensemanagement.RemoveInvalidLicensesJob" />
+    <property name="jobDataAsMap">
+      <map>
+        <entry key="remover" value-ref="licenseRemover" />
+      </map>
+    </property>
+  </bean>
+  
+  <bean id="simpleRemoverTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+  	<property name="jobDetail" ref="licenseRemoverJob"/>
+    <property name="repeatInterval" value="86400000"/> <!-- in milliseconds -->
+    <property name="startDelay" value="1000"/> <!-- in milliseconds -->
+ </bean> 
 
 </beans>

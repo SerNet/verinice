@@ -1,5 +1,6 @@
 package sernet.verinice.rcp.account;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -86,6 +87,9 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
         String licenseId = infos.getLicenseId();
         if (infos.getAssignedUsers()!=newCount){
             refreshColumnTooltip(columnIndex, newCount);
+        }
+        if(infos.getValidUntil().isBefore(LocalDate.now())){
+            return Messages.AccountView_LicenseExpired;
         }
         return convertToX(
                 account.getAssignedLicenseIds().

@@ -296,11 +296,20 @@ public class LicenseManagementServerModeService
     
     @Override
     public LicenseManagementEntry getLicenseEntryForLicenseId(
-            String encryptedLicenseId) throws LicenseManagementException{
+            String licenseId, boolean decrypt) throws LicenseManagementException{
         for(LicenseManagementEntry entry : getExistingLicenses()){
-            if(entry.getLicenseID().equals(encryptedLicenseId)){
-                return entry;
+            if(!decrypt){ // don't use decryption
+                if(entry.getLicenseID().equals(licenseId)){
+                    return entry;
+                }
+            } else { // use decryption
+                String plainEntryLicenseId = 
+                        decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
+                if(plainEntryLicenseId.equals(licenseId)){
+                    return entry;
+                }
             }
+
         }
         return null;
     }
@@ -513,7 +522,7 @@ public class LicenseManagementServerModeService
         String decryptedLicenseId;
         
         Configuration configuration = getConfigurationByUsername(user);
-        LicenseManagementEntry entry = getLicenseEntryForLicenseId(licenseId);
+        LicenseManagementEntry entry = getLicenseEntryForLicenseId(licenseId, false);
         if(licenseIdEncrypted){
             decryptedLicenseId = decrypt(entry, 
                     LicenseManagementEntry.COLUMN_LICENSEID);
