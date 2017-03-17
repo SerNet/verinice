@@ -69,6 +69,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.PlatformUI;
 
+import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.helper.UpdateConfigurationHelper;
@@ -76,6 +77,7 @@ import sernet.gs.ui.rcp.main.bsi.views.Messages;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.common.model.IModelLoadListener;
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
+import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.interfaces.IAccountService;
@@ -84,6 +86,7 @@ import sernet.verinice.model.bsi.BSIModel;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.iso27k.ISO27KModel;
 import sernet.verinice.rcp.RightsEnabledView;
+import sernet.verinice.rcp.account.AccountLoader;
 import sernet.verinice.rcp.account.AccountWizard;
 
 /**
@@ -562,7 +565,14 @@ public class AccountGroupView extends RightsEnabledView
 
     private void applyFilterToAccountGroups(String text) {
 
-        String[] allAccountGroups = accountGroupDataService.getAccountGroups();
+        String[] allAccountGroups;
+        boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        if (isLocalAdmin) {
+            List<String> groupNamesForLocalAdmin = AccountLoader.loadGroupNamesForLocalAdmin();
+            allAccountGroups = groupNamesForLocalAdmin.toArray(new String[groupNamesForLocalAdmin.size()]);
+        } else {
+            allAccountGroups = accountGroupDataService.getAccountGroups();
+        }
 
         if (text == null || text.isEmpty()) {
             accountGroups = allAccountGroups;

@@ -99,6 +99,21 @@ public final class AccountLoader {
         return userRoles;
     }
 
+    public static List<String> loadGroupNamesForLocalAdmin() {
+        List<String> groups = new ArrayList<String>();
+        List<String> groupNames = AccountLoader.loadGroupNames();
+        List<AccountGroup> accountGroups = ServiceFactory.lookupAccountService().listGroups();
+        Set<String> userGroups = AccountLoader.loadCurrentUserGroups();
+        String username = ServiceFactory.lookupAuthService().getUsername();
+
+        for (String groupName : groupNames) {
+            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName, accountGroups, userGroups, username)) {
+                groups.add(groupName);
+            }
+        }
+        return groups;
+    }
+
     public static List<String> loadAccountsAndGroupNamesForLocalAdmin() {
         List<String> accountsAndGroups = AccountLoader.loadLoginNames();
         List<String> groupNames = AccountLoader.loadGroupNames();
