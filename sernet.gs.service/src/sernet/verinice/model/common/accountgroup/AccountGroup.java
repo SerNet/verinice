@@ -39,6 +39,8 @@ public class AccountGroup implements ITypedElement, Serializable, Comparable<Acc
 
     private String name;
 
+    private String creator;
+
     private AccountGroup() {
     };
 
@@ -60,6 +62,14 @@ public class AccountGroup implements ITypedElement, Serializable, Comparable<Acc
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     @Override
