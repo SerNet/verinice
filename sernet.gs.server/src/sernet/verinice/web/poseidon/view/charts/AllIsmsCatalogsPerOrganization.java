@@ -19,40 +19,40 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.charts;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.SortedMap;
+import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
-import sernet.gs.service.NumericStringComparator;
-import sernet.gs.service.RetrieveInfo;
-import sernet.hui.common.VeriniceContext;
-import sernet.verinice.interfaces.IBaseDao;
-import sernet.verinice.model.bsi.ITVerbund;
-import sernet.verinice.service.DAOFactory;
+import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.web.poseidon.services.ChartService;
+import sernet.verinice.web.poseidon.services.MenuService;
 
 /**
+ *
+ *
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-@ManagedBean(name = "allBsiChartsView")
+@ManagedBean(name = "allIsmsCatalogsPerOrganization")
 @ViewScoped
-public class AllBsiChartsView {
+public class AllIsmsCatalogsPerOrganization {
 
     @ManagedProperty("#{chartService}")
     private ChartService chartService;
+
+    @ManagedProperty("#{menuService}")
+    private MenuService menuService;
 
     private List<VeriniceChartRow> charts;
 
@@ -62,69 +62,68 @@ public class AllBsiChartsView {
 
     private boolean totalCalculated;
 
-    private boolean allItNetworksCalculated;
+    private boolean allCatalogsCalculated;
 
-    public void loadTotalData() {
-        SortedMap<String, Number> allStates = calculateTotal();
+    private Map<String, Number> allStates;
+
+    private Integer scopeId;
+
+    @PostConstruct
+    public void init() {
+        readParameter();
+    }
+
+    private void readParameter() {
+        Map<String, String> parameterMap = getParameterMap();
+        this.scopeId = Integer.valueOf(parameterMap.get("scopeId"));
+    }
+
+    private Map<String, String> getParameterMap() {
+        return (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    }
+
+    private void createTotalIsmsCatalogsChartModels() {
         ControlChartsFactory allChartModelFactory = new ControlChartsFactory(allStates);
         pieModel = allChartModelFactory.getPieChartModel();
         horizontalBarChartModel = allChartModelFactory.getHorizontalBarModel();
         totalCalculated = true;
     }
 
-    public void loadDataForAllItNetworks(){
+    public void loadTotalIsmsCatalogs() {
+        charts = new ArrayList<>();
+        allStates = chartService.getIsoControlsData(scopeId);
+        createTotalIsmsCatalogsChartModels();
+    }
+
+    public void loadAllIsmsCatalogs() {
 
         charts = new ArrayList<>();
 
-        DAOFactory daoFactory = (DAOFactory) VeriniceContext.get(VeriniceContext.DAO_FACTORY);
-        IBaseDao<ITVerbund, Serializable> itNetworkDao = daoFactory.getDAO(ITVerbund.class);
-        @SuppressWarnings("unchecked")
-        List<ITVerbund> itNetworks = itNetworkDao.findAll(RetrieveInfo.getPropertyInstance());
-        itNetworks = sortItNetworks(itNetworks);
+        List<ControlGroup> catalogs = menuService.getCatalogs();
+        for (ControlGroup catalog : catalogs) {
 
-        for (ITVerbund itNetwork : itNetworks) {
+            if (catalog.getScopeId().equals(scopeId)) {
 
-            SortedMap<String, Number> states = getChartService().aggregateMassnahmenUmsetzung(itNetwork);
+                Map<String, Number> states = getChartService().getIsoControlsData(scopeId, catalog.getDbId());
 
-            if (states.isEmpty())
-                continue;
+                if (states.isEmpty())
+                    continue;
 
-            VeriniceChartRow item = new VeriniceChartRow();
-            ControlChartsFactory chartModelFactory = new ControlChartsFactory(states);
+                VeriniceChartRow item = new VeriniceChartRow();
+                ControlChartsFactory chartModelFactory = new ControlChartsFactory(states);
 
-            item.setTitle(itNetwork.getTitle());
-            item.setFirstChartModel(chartModelFactory.getPieChartModel());
-            HorizontalBarChartModel horizontalBarModel = chartModelFactory.getHorizontalBarModel();
-            item.setSecondChartModel(horizontalBarModel);
-            Axis axis = horizontalBarModel.getAxis(AxisType.X);
-            axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
-            charts.add(item);
+                item.setTitle(catalog.getTitle());
+                item.setFirstChartModel(chartModelFactory.getPieChartModel());
+                HorizontalBarChartModel horizontalBarModel = chartModelFactory.getHorizontalBarModel();
+                item.setSecondChartModel(horizontalBarModel);
+                Axis axis = horizontalBarModel.getAxis(AxisType.X);
+                axis.setMax(horizontalBarChartModel.getAxis(AxisType.X).getMax());
+                charts.add(item);
+            }
         }
 
-        allItNetworksCalculated = true;
+        allCatalogsCalculated = true;
     }
-
-
-
-    private SortedMap<String, Number> calculateTotal() {
-        SortedMap<String, Number> allStates = chartService.aggregateMassnahmenUmsetzungStatus();
-        return allStates;
-    }
-
-
-
-    private List<ITVerbund> sortItNetworks(List<ITVerbund> itNetworks) {
-        Collections.sort(itNetworks, new Comparator<ITVerbund>() {
-            @Override
-            public int compare(ITVerbund o1, ITVerbund o2) {
-                return new NumericStringComparator().compare(o1.getTitle(), o2.getTitle());
-            }
-        });
-
-        return itNetworks;
-    }
-
-
 
     public List<VeriniceChartRow> getCharts() {
         return charts;
@@ -138,42 +137,32 @@ public class AllBsiChartsView {
         return horizontalBarChartModel;
     }
 
-
-
     public void setHorizontalBarChartModel(HorizontalBarChartModel horizontalBarChartModel) {
         this.horizontalBarChartModel = horizontalBarChartModel;
     }
-
-
 
     public PieChartModel getPieModel() {
         return pieModel;
     }
 
-
-
     public void setPieModel(PieChartModel pieModel) {
         this.pieModel = pieModel;
     }
-
-
 
     public boolean isTotalCalculated() {
         return totalCalculated;
     }
 
-
-
     public void setTotalCalculated(boolean totalCalculated) {
         this.totalCalculated = totalCalculated;
     }
 
-    public boolean isAllItNetworksCalculated() {
-        return allItNetworksCalculated;
+    public boolean isAllCatalogsCalculated() {
+        return allCatalogsCalculated;
     }
 
     public void setAllItNetworksCalculated(boolean allItNetworksCalculated) {
-        this.allItNetworksCalculated = allItNetworksCalculated;
+        this.allCatalogsCalculated = allItNetworksCalculated;
     }
 
     public ChartService getChartService() {
@@ -184,4 +173,11 @@ public class AllBsiChartsView {
         this.chartService = chartService;
     }
 
+    public MenuService getMenuService() {
+        return menuService;
+    }
+
+    public void setMenuService(MenuService menuService) {
+        this.menuService = menuService;
+    }
 }

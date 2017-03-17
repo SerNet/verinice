@@ -34,19 +34,19 @@ import org.primefaces.model.chart.PieChartModel;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public class BsiControlChartsFactory {
+public class ControlChartsFactory {
 
 
-    private SortedMap<String, Number> data;
+    private Map<String, Number> data;
 
 
-    public BsiControlChartsFactory(SortedMap<String, Number> data){
+    public ControlChartsFactory(Map<String, Number> data){
         this.data = data;
     }
 
     public PieChartModel getPieChartModel(){
         PieChartModel model = new PieChartModel();
-        model.setData(ChartUtils.transalteMapKeyLabel(data));
+        model.setData(ChartUtils.translateMapKeyLabel(data));
         model.setExtender("verinicePie");
         model.setSeriesColors(ChartUtils.getColors(data.keySet()));
         return model;
@@ -57,7 +57,7 @@ public class BsiControlChartsFactory {
         BarChartModel barChartModel = new BarChartModel();
 
         ChartSeries series = new ChartSeries();
-        for (Map.Entry<String, Number> entry : ChartUtils.transalteMapKeyLabel(data).entrySet()) {
+        for (Map.Entry<String, Number> entry : ChartUtils.translateMapKeyLabel(data).entrySet()) {
             series.set(entry.getKey(), entry.getValue());
         }
 
@@ -80,7 +80,7 @@ public class BsiControlChartsFactory {
         HorizontalBarChartModel horizontalBarModel = new HorizontalBarChartModel();
 
         ChartSeries series = new ChartSeries();
-        for (Map.Entry<String, Number> entry : ChartUtils.transalteMapKeyLabel(data).entrySet()) {
+        for (Map.Entry<String, Number> entry : ChartUtils.translateMapKeyLabel(data).entrySet()) {
             series.set(entry.getKey(), entry.getValue());
         }
 

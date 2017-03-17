@@ -23,7 +23,7 @@ import java.util.SortedMap;
 
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 
-public interface AggregateControlsStrategy {
+public interface AggregateMassnahmenUmsetzungStrategy {
 
     SortedMap<String, Number> aggregateData(Iterable<MassnahmenUmsetzung> bsiControls);
 

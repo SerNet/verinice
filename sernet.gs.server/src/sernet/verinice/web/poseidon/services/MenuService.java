@@ -19,11 +19,14 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.services;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.hui.common.VeriniceContext;
@@ -41,22 +44,23 @@ import sernet.verinice.model.iso27k.Organization;
  *
  */
 @ManagedBean(name = "menuService")
+@ViewScoped
 public class MenuService {
 
-    private Set<ITVerbund> itNetworks;
+    private List<ITVerbund> itNetworks;
 
-    private Set<Organization> organizations;
+    private List<Organization> organizations;
 
-    private Set<ControlGroup> catalogs;
+    private List<ControlGroup> catalogs;
 
     /**
      * Returns a Set of all IT-Networks which the current logged in user is
      * allowed to see.
      *
      */
-    public Set<ITVerbund> getVisibleItNetworks() {
+    public List<ITVerbund> getVisibleItNetworks() {
 
-        if(itNetworks != null){
+        if (itNetworks != null) {
             return itNetworks;
         }
 
@@ -64,15 +68,14 @@ public class MenuService {
         return itNetworks;
     }
 
-
     /**
-     * Returns a Set of all {@link Organization} which the current logged in user is
-     * allowed to see.
+     * Returns a Set of all {@link Organization} which the current logged in
+     * user is allowed to see.
      *
      */
-    public Set<Organization> getVisibleOrganisations() {
+    public List<Organization> getVisibleOrganisations() {
 
-        if(organizations != null){
+        if (organizations != null) {
             return organizations;
         }
 
@@ -80,17 +83,15 @@ public class MenuService {
         return organizations;
     }
 
+    public List<ControlGroup> getCatalogs() {
 
-    public Set<ControlGroup> getCatalogs() {
-
-        if(catalogs != null){
+        if (catalogs != null) {
             return catalogs;
         }
 
         loadMenuData();
         return catalogs;
     }
-
 
     /**
      * Get all {@link ControlGroup} which are tagged with the SNCA property
@@ -99,17 +100,18 @@ public class MenuService {
     public void loadMenuData() {
 
         IGraphService graphService = getGraphService();
-
         GraphElementLoader graphElementLoader = new GraphElementLoader();
-        graphElementLoader.setTypeIds(new String[] {ITVerbund.TYPE_ID, Organization.TYPE_ID, ControlGroup.TYPE_ID });
+        graphElementLoader.setTypeIds(new String[] { ITVerbund.TYPE_ID, Organization.TYPE_ID, ControlGroup.TYPE_ID });
         graphElementLoader.setElementFilter(new IElementFilter() {
 
             private static final long serialVersionUID = 1L;
 
             @Override
             public boolean check(CnATreeElement element) {
+
                 if (element instanceof ControlGroup) {
-                    String property = element.getEntity().getPropertyValue(ControlGroup.PROP_IS_CATALOG);
+                    ControlGroup controlGroup = (ControlGroup) element;
+                    String property = controlGroup.getEntity().getPropertyValue(ControlGroup.PROP_IS_CATALOG);
                     return "1".equals(property);
                 }
 
@@ -120,13 +122,14 @@ public class MenuService {
         graphService.setLoader(graphElementLoader);
         VeriniceGraph veriniceGraph = graphService.create();
 
-       itNetworks = sortByTitle(veriniceGraph.getElements(ITVerbund.class));
-       organizations = sortByTitle( veriniceGraph.getElements(Organization.class));
-       catalogs = sortByTitle(veriniceGraph.getElements(ControlGroup.class));
+        itNetworks = sortByTitle(veriniceGraph.getElements(ITVerbund.class));
+        organizations = sortByTitle(veriniceGraph.getElements(Organization.class));
+        catalogs = sortByTitle(veriniceGraph.getElements(ControlGroup.class));
     }
 
-    private <T extends CnATreeElement> Set<T> sortByTitle(Set<T> cnATreeElements) {
-        Set<T> sortedItNetworks = new TreeSet<>(new Comparator<T>() {
+    private <T extends CnATreeElement> List<T> sortByTitle(Set<T> cnATreeElements) {
+        List<T> sortedItNetworks = new ArrayList<>();
+        Collections.sort(sortedItNetworks, new Comparator<T>() {
 
             NumericStringComparator comp = new NumericStringComparator();
 
@@ -139,7 +142,6 @@ public class MenuService {
         sortedItNetworks.addAll(cnATreeElements);
         return sortedItNetworks;
     }
-
 
     IGraphService getGraphService() {
         return (IGraphService) VeriniceContext.get(VeriniceContext.GRAPH_SERVICE);

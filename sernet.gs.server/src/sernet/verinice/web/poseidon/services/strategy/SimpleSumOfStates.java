@@ -29,7 +29,7 @@ import sernet.verinice.web.poseidon.services.CompareByTitle;
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
  *
  */
-public final class SimpleSumOfStates implements AggregateControlsStrategy {
+public final class SimpleSumOfStates implements AggregateMassnahmenUmsetzungStrategy {
 
     private SortedMap<String, Number> result;
 

@@ -30,7 +30,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -44,7 +43,6 @@ import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.bsi.ITVerbund;
 import sernet.verinice.service.DAOFactory;
 import sernet.verinice.web.poseidon.services.ChartService;
-import sernet.verinice.web.poseidon.services.strategy.GroupByStrategySum;
 import sernet.verinice.web.poseidon.services.strategy.GroupedByChapterStrategy;
 
 /**

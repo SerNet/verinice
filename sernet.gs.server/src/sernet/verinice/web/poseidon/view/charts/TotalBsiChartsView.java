@@ -52,7 +52,7 @@ public class TotalBsiChartsView implements Serializable {
     private boolean calculated = false;
 
     public void init() {
-        BsiControlChartsFactory chartModelFactory = new BsiControlChartsFactory(getStates());
+        ControlChartsFactory chartModelFactory = new ControlChartsFactory(getStates());
         this.pieModel = chartModelFactory.getPieChartModel();
         this.barModel = chartModelFactory.getBarChart();
         this.calculated = true;

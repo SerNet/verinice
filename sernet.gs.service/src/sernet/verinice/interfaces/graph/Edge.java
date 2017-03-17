@@ -25,10 +25,9 @@ import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.CnALink.RiskTreatment;
 
 /**
- * An Edge is the representation of a link between to
- * objects in a verinice graph. A link between 2 objects
- * can be a parent child relation or a relation defined
- * in file SNCA.xml by element "huirelation".
+ * An Edge is the representation of a link between to objects in a verinice
+ * graph. A link between 2 objects can be a parent child relation or a relation
+ * defined in file SNCA.xml by element "huirelation".
  *
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
@@ -37,9 +36,9 @@ public class Edge implements Serializable {
     private static final long serialVersionUID = -7300388773596283110L;
 
     public static final String RELATIVES = "relatives";
-    
-    private CnATreeElement source;  
-    private CnATreeElement target;   
+
+    private CnATreeElement source;
+    private CnATreeElement target;
     private String type;
     private String description;
     private Integer riskConfidentiality;
@@ -50,10 +49,15 @@ public class Edge implements Serializable {
     private Integer riskAvailabilityWithControls;
     private RiskTreatment riskTreatment;
 
+    // empty constructor for JGraphT class based edge factory
+    public Edge() {
+
+    }
+
     public Edge(CnATreeElement parent, CnATreeElement child) {
         this(parent, child, RELATIVES);
     }
-    
+
     public Edge(CnATreeElement source, CnATreeElement target, String type) {
         super();
         this.source = source;
@@ -189,5 +193,5 @@ public class Edge implements Serializable {
     @Override
     public String toString() {
         return "Edge " + source + "->" + target + " (" + type + ")";
-    } 
+    }
 }

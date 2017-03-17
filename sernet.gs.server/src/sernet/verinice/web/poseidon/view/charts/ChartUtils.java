@@ -30,11 +30,13 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.primefaces.model.chart.ChartModel;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.model.bsi.MassnahmenUmsetzung;
+import sernet.verinice.model.iso27k.Control;
 import sernet.verinice.service.model.IObjectModelService;
 import sernet.verinice.web.Messages;
 
@@ -46,7 +48,9 @@ abstract class ChartUtils {
 
     protected static final String IMPLEMENTATION_STATUS_UNEDITED = "SingleSelectDummyValue";
 
-    private enum  DiagramColors {
+    private static final Logger log = Logger.getLogger(ChartUtils.class);
+
+    private enum DiagramColors {
 
         NO("FF4747"), NOT_APPLICABLE("BFBFBF"), PARTIALLY("FFE47A"), UNEDITED("4a93de"), YES("5fcd79");
 
@@ -66,30 +70,50 @@ abstract class ChartUtils {
 
     static {
         states2Colors = new HashMap<>();
+
+        // Itgs Controls
         states2Colors.put(MassnahmenUmsetzung.P_UMSETZUNG_JA, DiagramColors.YES);
         states2Colors.put(MassnahmenUmsetzung.P_UMSETZUNG_NEIN, DiagramColors.NO);
         states2Colors.put(MassnahmenUmsetzung.P_UMSETZUNG_TEILWEISE, DiagramColors.PARTIALLY);
         states2Colors.put(MassnahmenUmsetzung.P_UMSETZUNG_UNBEARBEITET, DiagramColors.UNEDITED);
         states2Colors.put(MassnahmenUmsetzung.P_UMSETZUNG_ENTBEHRLICH, DiagramColors.NOT_APPLICABLE);
+
+        // Isms Controls
+        states2Colors.put(Control.IMPLEMENTED_YES, DiagramColors.YES);
+        states2Colors.put(Control.IMPLEMENTED_NO, DiagramColors.NO);
+        states2Colors.put(Control.IMPLEMENTED_PARTLY, DiagramColors.PARTIALLY);
+        states2Colors.put(Control.IMPLEMENTED_NOTEDITED, DiagramColors.UNEDITED);
+        states2Colors.put(Control.IMPLEMENTED_NA, DiagramColors.NOT_APPLICABLE);
     }
 
     /**
-     * Maps {@link MassnahmenUmsetzung#getUmsetzung()} to a color schema in
+     * Maps verinice controls implementation states to a color schema in
      * Hex-Code.
+     *
+     * Supported controls are {@link MassnahmenUmsetzung} and {@link Control}.
      *
      * @return A comma seperated list of hex values, which can used to configure
      *         {@link ChartModel}.
      */
-    static String getColors(Iterable<String> massnahmenUmsetzungStates) {
+    static String getColors(Iterable<String> controlStates) {
 
         java.util.List<String> colors = new ArrayList<>();
-        for (String state : massnahmenUmsetzungStates) {
-            colors.add(states2Colors.get(state).toString());
+        for (String state : controlStates) {
+
+            if (states2Colors.containsKey(state)) {
+                colors.add(states2Colors.get(state).toString());
+            } else {
+                log.warn("no color found for state: " + state);
+            }
         }
 
         return StringUtils.join(colors, ",");
     }
 
+    /**
+     * Returns the max value of a collection of numbers by the integer
+     * representation of the number.
+     */
     static Integer getMax(Collection<Number> values) {
 
         if (values == null || values.isEmpty()) {
@@ -105,7 +129,16 @@ abstract class ChartUtils {
         return Collections.max(buffer);
     }
 
-    static <T extends Object> SortedMap<String, T> transalteMapKeyLabel(Map<String, T> states) {
+    /**
+     * Returns a new map where the keys are changed to the human readable labels
+     * defined in the properties files. So the semantic meaning of the mapping
+     * stays the same.
+     *
+     * @param states
+     *            Map which maps properties id to numbers.
+     * @return A map with new human readable labels.
+     */
+    static <T extends Object> SortedMap<String, T> translateMapKeyLabel(Map<String, T> states) {
         SortedMap<String, T> humanReadableLabels = new TreeMap<>(new NumericStringComparator());
         for (Entry<String, T> e : states.entrySet()) {
             humanReadableLabels.put(getLabel(e.getKey()), e.getValue());
@@ -120,13 +153,15 @@ abstract class ChartUtils {
             return Messages.getString(IMPLEMENTATION_STATUS_UNEDITED);
         }
 
+        if (Control.IMPLEMENTED_NOTEDITED.equals(propertyId)) {
+            return Messages.getString(IMPLEMENTATION_STATUS_UNEDITED);
+        }
+
         return getObjectModelService().getLabel(propertyId);
     }
-
 
     private static IObjectModelService getObjectModelService() {
         return (IObjectModelService) VeriniceContext.get(VeriniceContext.OBJECT_MODEL_SERVICE);
     }
-
 
 }

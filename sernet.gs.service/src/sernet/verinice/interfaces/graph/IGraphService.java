@@ -63,4 +63,10 @@ public interface IGraphService {
      */
     VeriniceGraph getGraph();
 
+
+    /**
+     * Initializes and creates a directed verinice graph..
+     */
+    VeriniceGraph createDirectedGraph();
+
 }

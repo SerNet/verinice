@@ -20,7 +20,7 @@
 package sernet.verinice.graph;
 
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +31,14 @@ import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Service;
 
 import sernet.gs.service.TimeFormatter;
 import sernet.verinice.interfaces.IBaseDao;
+import sernet.verinice.interfaces.graph.DirectedVeriniceGraph;
 import sernet.verinice.interfaces.graph.Edge;
 import sernet.verinice.interfaces.graph.IGraphElementLoader;
 import sernet.verinice.interfaces.graph.IGraphService;
+import sernet.verinice.interfaces.graph.UndirectedVeriniceGraph;
 import sernet.verinice.interfaces.graph.VeriniceGraph;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
@@ -73,24 +74,31 @@ public class GraphService implements IGraphService {
     
     private IBaseDao<CnALink, CnALink.Id> cnaLinkDao;
     
-    private Map<String, CnATreeElement> uuidMap = new Hashtable<>();
+    private Map<String, CnATreeElement> uuidMap = new HashMap<>();
 
-   
-    /* (non-Javadoc)
-     * @see sernet.verinice.graph.IGraphService#create()
-     */
     @Override
     public VeriniceGraph create() {
+        graph = new UndirectedVeriniceGraph();
+        doCreate();
+        return graph;
+    }
+
+
+    @Override
+    public VeriniceGraph createDirectedGraph(){
+        graph = new DirectedVeriniceGraph();
+
+        doCreate();
+        return graph;
+    }
+
+    private void doCreate(){
         long time = initRuntime();
-        graph = new VeriniceGraph();
         uuidMap.clear();
-        
         loadVerticesAndRelatives();     
         loadLinks();
-         
         log();
         logRuntime("Graph generation runtime: ", time);
-        return graph;
     }
     
     /**
@@ -141,6 +149,7 @@ public class GraphService implements IGraphService {
             linkCrit.add(Restrictions.in("id.typeId", getRelationIds()));
         }
         linkCrit.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        @SuppressWarnings("unchecked")
         List<CnALink> linkList = getCnaLinkDao().findByCriteria(linkCrit);
         if (LOG.isInfoEnabled()) {
             LOG.info(linkList.size() + " relevant links found");

@@ -19,45 +19,49 @@
  ******************************************************************************/
 package sernet.verinice.web.poseidon.view.menu.submenu;
 
-import java.util.List;
-
+import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.menu.DefaultMenuItem;
 
 import sernet.verinice.model.iso27k.ControlGroup;
 import sernet.verinice.model.iso27k.Organization;
-import sernet.verinice.web.poseidon.services.MenuService;
 
-class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
+/**
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ *
+ */
+public class IsmsOrganziationCatalogMenuItem extends DefaultMenuItem {
 
     private static final long serialVersionUID = 1L;
-
     private Organization organization;
+    private ControlGroup controlGroup;
+    private String templateFile = "/dashboard/isms-control-charts.xhtml";
 
-    private MenuService menuService;
-
-    public OrganizationISMSMassnahmenCatalogSubMenu(Organization organization, MenuService menuService) {
-        super(organization.getTitle());
+    public IsmsOrganziationCatalogMenuItem(Organization organization, ControlGroup controlGroup) {
+        super(controlGroup.getTitle());
         this.organization = organization;
-        this.menuService = menuService;
+        this.controlGroup = controlGroup;
+        setUrl(templateFile);
+        setUrl(createUrl());
     }
 
-    protected void loadChildren() {
-
-        DefaultMenuItem allIsmsChartsMenuItem = new DefaultMenuItem("Alle");
-        allIsmsChartsMenuItem.setUrl("/dashboard/all-isms-control-charts.xhtml?scopeId=" + organization.getDbId());
-        addElement(allIsmsChartsMenuItem);
-
-        DefaultMenuItem totalIsmsChartsMenuItem = new DefaultMenuItem("Gesamt");
-        totalIsmsChartsMenuItem.setUrl("/dashboard/total-isms-control-charts.xhtml?scopeId=" + organization.getDbId());
-        addElement(totalIsmsChartsMenuItem);
-
-        List<ControlGroup> catalogs = menuService.getCatalogs();
-        for (ControlGroup catalog : catalogs) {
-            if (catalog.getScopeId().equals(organization.getDbId())) {
-                addElement(new IsmsOrganziationCatalogMenuItem(organization, catalog));
-            }
-        }
+    private String createUrl(){
+        String param = StringUtils.join(new String[]{getScopeId(), getCatalogId(), getCatalogName(), getOrganizationName()}, "&");
+        return templateFile + "?" + param;
     }
 
+    private String getOrganizationName() {
+        return "organizationName=" + organization.getTitle();
+    }
 
+    private String getCatalogName() {
+        return "catalogName=" + controlGroup.getTitle();
+    }
+
+    private String getCatalogId() {
+        return "catalogId=" + String.valueOf(controlGroup.getDbId());
+    }
+
+    private String getScopeId() {
+        return "scopeId=" + String.valueOf(organization.getScopeId());
+    }
 }

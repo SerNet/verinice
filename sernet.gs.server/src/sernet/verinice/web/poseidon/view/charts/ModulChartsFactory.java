@@ -108,7 +108,7 @@ public class ModulChartsFactory {
     }
 
     private void setData(BarChartModel horizontalBarModel) {
-        for(Entry<String, Map<String, Number>> dataPoint : ChartUtils.transalteMapKeyLabel(this.data).entrySet()) {
+        for(Entry<String, Map<String, Number>> dataPoint : ChartUtils.translateMapKeyLabel(this.data).entrySet()) {
             ChartSeries chartSeries = new ChartSeries(dataPoint.getKey());
             for(Entry<String, Number> e : dataPoint.getValue().entrySet()) {
                 chartSeries.set(e.getKey(), e.getValue());
