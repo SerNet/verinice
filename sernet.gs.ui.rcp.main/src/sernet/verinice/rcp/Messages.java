@@ -38,6 +38,7 @@ public class Messages extends NLS {
     public static String IconSelectDialog_7;
     public static String MultiselectWidget_1;
     public static String MultiselectWidget_3;
+    public static String MultiselectWidget_SelectAll;
     public static String PerspectiveSwitcher_5;
     public static String PerspectiveSwitcher_6;
     public static String PerspectiveSwitcher_7;

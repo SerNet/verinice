@@ -51,5 +51,17 @@ public class OrganizationMultiselectWidget extends ScopeMultiselectWidget {
         elementClasses.add(Organization.class);
         return elementClasses;
     }
+    
+    public boolean isShowOnlySelected() {
+        return false;
+    }
+
+    public boolean isShowOnlySelectedCheckbox() {
+        return false;
+    }
+    
+    public boolean isShowSelectAllCheckbox() {
+        return true;
+    }
 
 }

@@ -816,7 +816,22 @@
                style="push"
                tooltip="%action.tooltip.35">
          </action>
-      </objectContribution>   
+      </objectContribution>
+      <objectContribution
+            adaptable="false"
+            id="sernet.verinice.rcp.risk.RiskAnalysisActionDelegate"
+            objectClass="sernet.verinice.model.iso27k.Organization">
+         <action
+               class="sernet.verinice.rcp.risk.RiskAnalysisActionDelegate"
+               enablesFor="+"
+               icon="icons/sweetie-verinice/png/16-paper-calculate-percent.png"
+               id="sernet.verinice.rcp.risk.RiskAnalysisActionDelegate.action"
+               label="%action.label.risk.analysis.iso"
+               menubarPath="special"
+               style="push"
+               tooltip="%action.tooltip.risk.analysis.iso">
+         </action>
+      </objectContribution>
       <objectContribution
             adaptable="false"
             id="sernet.verinice.rcp.IconSelectAction"

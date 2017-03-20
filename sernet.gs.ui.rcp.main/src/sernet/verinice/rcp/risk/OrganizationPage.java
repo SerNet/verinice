@@ -94,24 +94,21 @@ public class OrganizationPage extends BaseWizardPage {
             LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
             setMessage(Messages.OrganizationPage_ErrorMessage, IMessageProvider.ERROR);
         }
+        
+        
+       
 
         SelectionListener organizationListener = new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {       
-                organizationIds.clear();
-                if (organizationWidget.getSelectedElementSet() != null) {
-                    Set<CnATreeElement> selectedOrganizations  = organizationWidget.getSelectedElementSet();
-                    for (CnATreeElement organization : selectedOrganizations) {
-                        organizationIds.add(organization.getDbId());
-                    }
-                }
-                setPageComplete(isPageComplete());
+                syncSelectedOrganizations();
                 super.widgetSelected(e);
-            }
+            } 
         };
 
         organizationWidget.addSelectionLiustener(organizationListener);
-
+        
+        syncSelectedOrganizations();
         composite.pack();
     }
     
@@ -121,6 +118,17 @@ public class OrganizationPage extends BaseWizardPage {
     @Override
     protected void initData() throws Exception {
         // nothing to do, organizations are loaded in class ScopeMultiselectWidget
+    }
+    
+    private void syncSelectedOrganizations() {
+        organizationIds.clear();
+        if (organizationWidget.getSelectedElementSet() != null) {
+            Set<CnATreeElement> selectedOrganizations  = organizationWidget.getSelectedElementSet();
+            for (CnATreeElement organization : selectedOrganizations) {
+                organizationIds.add(organization.getDbId());
+            }
+        }
+        setPageComplete(isPageComplete());
     }
     
     /* (non-Javadoc)

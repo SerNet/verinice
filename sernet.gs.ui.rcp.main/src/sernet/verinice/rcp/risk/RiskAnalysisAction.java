@@ -44,8 +44,9 @@ import sernet.verinice.rcp.NonModalWizardDialog;
 
 /**
  * This action class runs a ISO/IEC 27005 risk analysis
- * on data in one or more.
+ * on data in one or more organizations.
  *
+ * @see RiskAnalysisActionDelegate
  * @author Alexander Koderman
  * @author Daniel Murygin <dm{a}sernet{dot}de>
  */
@@ -54,8 +55,6 @@ public class RiskAnalysisAction extends RightsEnabledAction implements ISelectio
     public static final String ID = "sernet.gs.ui.rcp.main.runriskanalysisaction"; //$NON-NLS-1$
     
     private CnATreeElement selectedOrganization;
-    
-    RiskAnalysisIsoWizard wizard;
     
     public RiskAnalysisAction(IWorkbenchWindow window) {
         setText(Messages.RiskAnalysisAction_Text);
@@ -82,7 +81,7 @@ public class RiskAnalysisAction extends RightsEnabledAction implements ISelectio
     }
 
     private TitleAreaDialog openWizard() {
-        wizard = new RiskAnalysisIsoWizard(selectedOrganization);                 
+        RiskAnalysisIsoWizard wizard = new RiskAnalysisIsoWizard(selectedOrganization);                 
         return new NonModalWizardDialog(getShell(),wizard);
         
     }
@@ -108,10 +107,10 @@ public class RiskAnalysisAction extends RightsEnabledAction implements ISelectio
      * @see org.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui.IWorkbenchPart, org.eclipse.jface.viewers.ISelection)
      */
     @Override
-    public void selectionChanged(IWorkbenchPart arg0, ISelection input) {
-        if (input instanceof ITreeSelection) {
+    public void selectionChanged(IWorkbenchPart arg0, ISelection selection) {
+        if (selection instanceof ITreeSelection) {
             selectedOrganization = null;
-            ITreeSelection selectionCurrent = (ITreeSelection) input;
+            ITreeSelection selectionCurrent = (ITreeSelection) selection;
             for (Iterator<?> iter = selectionCurrent.iterator(); iter.hasNext();) {
                 Object selectedObject = iter.next();
                 if (isOrganization(selectedObject)) {

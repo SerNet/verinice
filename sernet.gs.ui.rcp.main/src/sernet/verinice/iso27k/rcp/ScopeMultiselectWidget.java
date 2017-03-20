@@ -33,15 +33,12 @@ public class ScopeMultiselectWidget extends MultiselectWidget<CnATreeElement> {
     public ScopeMultiselectWidget(Composite composite, ITreeSelection selection, CnATreeElement selectedElement) throws CommandException {     
         super(composite, selection, selectedElement);
         setTitle(Messages.SamtExportDialog_2);
-        setShowOnlySelected(false);
-        setShowOnlySelectedCheckbox(false);      
     }
 
     public ScopeMultiselectWidget(Composite composite) throws CommandException {
        super(composite);
        setTitle(Messages.SamtExportDialog_2);
-       setShowOnlySelected(false);
-       setShowOnlySelectedCheckbox(false);
+       
     }
     
     /**
@@ -91,12 +88,13 @@ public class ScopeMultiselectWidget extends MultiselectWidget<CnATreeElement> {
         return list;
     }
     
+    public boolean isShowOnlySelected() {
+        return false;
+    }
+
     public boolean isShowOnlySelectedCheckbox() {
         return false;
     }
     
-    public boolean isShowOnlySelected() {
-        return false;
-    }
 
 }

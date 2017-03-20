@@ -64,6 +64,8 @@ public abstract class MultiselectWidget<T> {
     protected boolean showOnlySelected = true;
     protected boolean showOnlySelectedCheckbox = true;
     protected boolean showFilterTextfield = true;
+    protected boolean showSelectAllCheckbox = false;
+    
     protected String filterString = null;
     
     protected Text filter;
@@ -74,6 +76,7 @@ public abstract class MultiselectWidget<T> {
     private Map<T, Button> checkboxMap;
     
     private Button checkboxOnlySelected;
+    private Button buttonSelectAll;
     
     private SelectionListener organizationListener = new SelectionAdapter() {
         @Override
@@ -173,22 +176,27 @@ public abstract class MultiselectWidget<T> {
     }
 
     private void createFilterPanel(Composite parent) {
-        if(isShowFilterTextfield() || isShowOnlySelectedCheckbox()) {
+        if(isToolbarVisible()) {
             Composite filterComp = createFilterComposite(parent);
             if(isShowFilterTextfield()) {
                 createFilterTextfield(filterComp);
             }         
             if(isShowOnlySelectedCheckbox()) {
                 createSelectedCheckbox(filterComp);
+            }         
+            if(isShowSelectAllCheckbox()) {
+                createSelectAllCheckbox(filterComp);
             }
         }
+    }
+
+    private boolean isToolbarVisible() {
+        return isShowFilterTextfield() || isShowOnlySelectedCheckbox() || isShowSelectAllCheckbox();
     }
 
     private void createFilterTextfield(Composite filterComp) {
         Label label = new Label(filterComp, SWT.NONE);
         label.setText(Messages.MultiselectWidget_1);
-        label = new Label(filterComp, SWT.NONE);
-        label.setText(""); //$NON-NLS-1$
         filter = new Text(filterComp, SWT.BORDER);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         filter.setLayoutData(gridData);
@@ -228,12 +236,35 @@ public abstract class MultiselectWidget<T> {
         });
     }
 
+    private void createSelectAllCheckbox(Composite filterComp) {
+        buttonSelectAll = new Button(filterComp, SWT.PUSH);
+        buttonSelectAll.setText(Messages.MultiselectWidget_SelectAll);
+        GridData gridData = new GridData();
+        gridData.widthHint = 120;
+        buttonSelectAll.setLayoutData(gridData);
+        buttonSelectAll.addSelectionListener(new SelectionListener() {          
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                for (T item : checkboxMap.keySet()) {
+                    Button checkbox = checkboxMap.get(item);
+                    checkbox.setSelection(true);
+                    selectedElement = item; 
+                    selectedElementSet.add(item);
+                }
+            }            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+        });
+    }
+
+    
     protected void addCheckboxes() {
         for(T item : itemList) {        
             if(isItemVisible(item)) {
                 boolean selected = preSelectedElements.contains(item);
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(item.toString() + " is visible, select state is: " + selected);
+                    LOG.debug(item.toString() + " is visible, select state is: " + selected); //$NON-NLS-1$
                 }
                 Button checkbox = new Button(innerComposite, SWT.CHECK);
                 checkbox.setText(getLabel(item));
@@ -291,7 +322,7 @@ public abstract class MultiselectWidget<T> {
         Composite comboComposite = new Composite(composite, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         comboComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(2, true);
+        GridLayout gridLayout = new GridLayout(3, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         comboComposite.setLayout(gridLayout);
@@ -319,11 +350,22 @@ public abstract class MultiselectWidget<T> {
         return showFilterTextfield;
     }
 
+    public boolean isShowSelectAllCheckbox() {
+        return showSelectAllCheckbox;
+    }
+
+    public void setShowSelectAllButton(boolean showSelectAllCheckbox) {
+        this.showSelectAllCheckbox = showSelectAllCheckbox;
+    }
+
     public void addSelectionLiustener(SelectionListener listener) {
         if(checkboxMap!=null) {
             for (Button checkbox : checkboxMap.values()) {
                 checkbox.addSelectionListener(listener);
             }
+        }
+        if(buttonSelectAll!=null) {
+            buttonSelectAll.addSelectionListener(listener);
         }
     }
     
