@@ -87,7 +87,6 @@ import sernet.verinice.model.iso27k.Organization;
 import sernet.verinice.model.iso27k.PersonGroup;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
-import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.rcp.ElementTitleCache;
 import sernet.verinice.rcp.RightsEnabledView;
 import sernet.verinice.rcp.TextEventAdapter;
@@ -382,7 +381,7 @@ public class AccountView extends RightsEnabledView {
         
         Set<String> createdLMColumnIds = new HashSet<>();
         
-        try{
+        try {
             columnIndex = creatLMColumns(columnIndex, createdLMColumnIds);
         } catch (LicenseManagementException e){
             String msg = "Error creating license-mgmt-Colums";
@@ -405,19 +404,7 @@ public class AccountView extends RightsEnabledView {
      */
     private int creatLMColumns(int columnIndex, Set<String> createdLMColumnIds) throws LicenseManagementException {
         List<LicenseMessageInfos> licenseInfos = new ArrayList<>();
-        for(LicenseManagementEntry entry : getLMService().getExistingLicenses()){
-            try{
-                LicenseMessageInfos info = 
-                        getLMService().getLicenseMessageInfos(
-                                getUser(), entry.getContentIdentifier(),
-                                entry.getLicenseID(), entry);
-                if(info != null){
-                    licenseInfos.add(info);
-                }
-            } catch (LicenseManagementException e){
-                LOG.error("Error getting license infos", e);
-            }
-        }
+        licenseInfos.addAll(getLMService().getAllLicenseMessageInfos());
 
         Collections.sort(licenseInfos, new Comparator<LicenseMessageInfos>() {
 
@@ -429,10 +416,10 @@ public class AccountView extends RightsEnabledView {
 
         });
 
-        for(int index = 0; index < licenseInfos.size() ; index++){
+        for (int index = 0; index < licenseInfos.size() ; index++){
 
             LicenseMessageInfos infos = licenseInfos.get(index);
-            if(infos != null){
+            if (infos != null){
                 infos.setAccountWizardLabel(LicenseMgmtPage.getLicenseLabelString(infos.getLicenseId()));
                 infos.setAccountViewColumnHeader(getLMColumnHeader(infos.getContentId(), index + 1));
                 lmColumnsMap.put(columnIndex, infos);
@@ -451,7 +438,7 @@ public class AccountView extends RightsEnabledView {
         StringBuilder sb = new StringBuilder();
         sb.append(String.valueOf(index));
         sb.append(". ");
-        if(contentId.length() > 2){
+        if (contentId.length() > 2){
             sb.append(contentId.substring(0, 3));
         } else {
             sb.append(contentId);
@@ -468,7 +455,7 @@ public class AccountView extends RightsEnabledView {
         TableColumn scopeColumn = new TableColumn(viewer.getTable(), SWT.LEFT);
         scopeColumn.setText(title);
         scopeColumn.setWidth(width);
-        if(StringUtils.isEmpty(tooltip)){
+        if (StringUtils.isEmpty(tooltip)){
             scopeColumn.setToolTipText(title);
         } else {
             scopeColumn.setToolTipText(tooltip);
@@ -606,9 +593,9 @@ public class AccountView extends RightsEnabledView {
     }
     
     protected void startInitDataJob() {
-        if(CnAElementFactory.isIsoModelLoaded()) {          
+        if (CnAElementFactory.isIsoModelLoaded()) {          
             JobScheduler.scheduleInitJob(initDataJob);    
-        } else if(modelLoadListener==null) {
+        } else if (modelLoadListener == null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("No model loaded, adding model load listener."); //$NON-NLS-1$
             }
@@ -665,9 +652,9 @@ public class AccountView extends RightsEnabledView {
     
     private String getInput(final Text textFirstName) {
         String input = textFirstName.getText();
-        if(input!=null) {
+        if (input != null) {
             input = input.trim();
-            if(input.isEmpty()) {
+            if (input.isEmpty()) {
                 input = null;
             }
         }
@@ -760,7 +747,7 @@ public class AccountView extends RightsEnabledView {
         }         
         @Override
         public void keyPressed(KeyEvent e) {
-            if('\r'==e.character) {
+            if ('\r' == e.character) {
                 AccountView.this.parameter.setParameter(this.parameter, this.getInput(textField));
                 enterAction.run();
             }
@@ -768,9 +755,9 @@ public class AccountView extends RightsEnabledView {
         
         private String getInput(final Text textFirstName) {
             String input = textFirstName.getText();
-            if(input!=null) {
+            if (input != null) {
                 input = input.trim();
-                if(input.isEmpty()) {
+                if (input.isEmpty()) {
                     input = null;
                 }
             }
