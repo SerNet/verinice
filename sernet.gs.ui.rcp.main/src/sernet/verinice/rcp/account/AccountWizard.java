@@ -77,7 +77,7 @@ public class AccountWizard extends Wizard {
         profilePage = new ProfilePage();
         addPage(profilePage); 
 
-        if(this.account!=null) {
+        if (this.account != null) {
             personPage.setPerson(account.getPerson());
             personPage.setNewAccount(isNewAccount());
             authenticationPage.setLogin(account.getUser());
@@ -146,14 +146,14 @@ public class AccountWizard extends Wizard {
         Set<String> oldLicenseIds = getAccount().getAllLicenseIds();
         Set<String> newLicenseIds = licenseMgmtPage.getAssignedLicenseIds();
         
-        for(String oldLicenseId : oldLicenseIds){
-            if(!newLicenseIds.contains(oldLicenseId)){
+        for (String oldLicenseId : oldLicenseIds){
+            if (!newLicenseIds.contains(oldLicenseId)){
                 // id has been removed in the wizard
                 getAccount().removeLicensedContentId(oldLicenseId);
             }
         }
-        for(String newLicenseId : newLicenseIds){
-            if(!oldLicenseIds.contains(newLicenseId)){
+        for (String newLicenseId : newLicenseIds){
+            if (!oldLicenseIds.contains(newLicenseId)){
                 // license id has been added
                 getAccount().addLicensedContentId(newLicenseId);
             }
@@ -163,7 +163,7 @@ public class AccountWizard extends Wizard {
     @Override
     public IWizardPage getStartingPage() {
         IWizardPage startingPage = super.getStartingPage();
-        if(!isNewAccount()) {
+        if (!isNewAccount()) {
             startingPage = authenticationPage;
         }
         return startingPage;
@@ -171,8 +171,8 @@ public class AccountWizard extends Wizard {
     
     private boolean isNewAccount() {
         boolean isNew = true;
-        if(account!=null) {
-            isNew = (account.getDbId()==null);
+        if (account != null) {
+            isNew = (account.getDbId() == null);
         }
         return isNew;
     }

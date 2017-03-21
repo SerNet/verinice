@@ -52,6 +52,7 @@ public interface ILicenseManagementService {
             String username) throws LicenseManagementException;
 
     IEncryptionService getCryptoService();
+    
 
     Set<String> getAllContentIds(boolean decrypted) 
             throws LicenseManagementException;
@@ -77,11 +78,17 @@ public interface ILicenseManagementService {
 
     Set<String> getLicenseIdsForContentId(String contentId, boolean decrypted) 
             throws LicenseManagementException;
+
+    Set<LicenseManagementEntry> getLicenseEntriesForUserByContentId(
+            String user, String contentId) throws LicenseManagementException;
     
     LicenseMessageInfos getLicenseMessageInfos(String user, String contentId,
             String licenseId,
             LicenseManagementEntry entry)
         throws LicenseManagementException;
+    
+    Set<LicenseMessageInfos> getAllLicenseMessageInfos()
+            throws LicenseManagementException;
 
     File getVNLRepository() throws LicenseManagementException;
 

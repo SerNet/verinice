@@ -169,7 +169,7 @@ public class LicenseManagementEntry implements Serializable {
     }
     
     public String getPropertyByType(String propertyType){
-        switch(propertyType){
+        switch (propertyType){
             case COLUMN_CONTENTID: 
                 return getContentIdentifier();
             case COLUMN_LICENSEID: 

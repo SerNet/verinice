@@ -11,6 +11,7 @@
     <property name="cryptoService" ref="encryptionService" />
     <property name="commandService" ref="hibernateCommandService" />
     <property name="directoryCreator" ref="directoryCreator" />
+    <property name="authService" ref="authService" />
   </bean>
   
   <bean id="directoryCreator" class="sernet.verinice.licensemanagement.LMServerDirectoryCreator">

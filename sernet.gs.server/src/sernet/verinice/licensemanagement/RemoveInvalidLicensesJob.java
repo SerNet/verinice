@@ -40,7 +40,8 @@ public class RemoveInvalidLicensesJob extends QuartzJobBean implements StatefulJ
     private LicenseRemover remover;
     
     /* (non-Javadoc)
-     * @see org.springframework.scheduling.quartz.QuartzJobBean#executeInternal(org.quartz.JobExecutionContext)
+     * @see org.springframework.scheduling.quartz.
+     * QuartzJobBean#executeInternal(org.quartz.JobExecutionContext)
      */
     @Override
     protected void executeInternal(JobExecutionContext arg0) throws JobExecutionException {

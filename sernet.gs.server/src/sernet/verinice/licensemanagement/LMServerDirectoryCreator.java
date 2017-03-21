@@ -62,7 +62,7 @@ public class LMServerDirectoryCreator implements IDirectoryCreator {
         } catch (Exception e){
             LOG.error("Error getting file path", e);
         }    
-        if(LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()){
             LOG.debug("Elasticsearch index root directory: " + location);
         }
         return location;

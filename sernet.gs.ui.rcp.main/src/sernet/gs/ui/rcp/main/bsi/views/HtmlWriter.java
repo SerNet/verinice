@@ -81,13 +81,20 @@ public abstract class HtmlWriter {
     private HtmlWriter() {
     }
 
+    /**
+     * gets the html content to display considering a given object
+     * which used to be an instanceof {@link CnATreeElement}
+     * @param element
+     * @return
+     * @throws GSServiceException
+     */
     public static String getHtml(Object element) throws GSServiceException {
         
         String html = "";
         
         html = handleRequestDynamic(element);
         
-        if(StringUtils.isEmpty(html)){
+        if (StringUtils.isEmpty(html)){
             html = handleRequestStatic(element);
         }
         
@@ -112,10 +119,10 @@ public abstract class HtmlWriter {
             List<PropertyType> htmlProperties = cnaTreeElement
                     .getEntityType().getObjectBrowserPropertyTypes();
             Iterator<PropertyType> iterator = htmlProperties.iterator();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()){
                 sb.append(buildObjectBrowserContent(cnaTreeElement,
                         iterator.next()));
-                if(iterator.hasNext()){
+                if (iterator.hasNext()){
                     sb.append("<br><br>");
                 }
             }
@@ -140,7 +147,7 @@ public abstract class HtmlWriter {
         cnaTreeElement = Retriever.checkRetrieveElement(cnaTreeElement);
         PropertyList propertyList = cnaTreeElement.getEntity().getProperties(
                 propertyType.getId());
-        try{
+        try {
             for (Property property : propertyList.getProperties()) {
                 sb.append((property.isLimitedLicense()) 
                         ? getLicenseRestrictedContent(property)  
@@ -170,13 +177,13 @@ public abstract class HtmlWriter {
                 getLicenseMessageInfos(ServiceFactory.
                         lookupAuthService().getUsername(), 
                         property.getLicenseContentId(), "",  null);
-        if(infos.isNoLicenseAvailable()){
+        if (infos.isNoLicenseAvailable()){
             return Messages.BrowserView_No_License_assigned;
         } else { // license exists, so set label
             infos.setAccountWizardLabel(LicenseMgmtPage.
                     getLicenseLabelString(infos.getLicenseId()));
         }
-        if(infos.getValidUntil().isBefore(LocalDate.now())){
+        if (infos.getValidUntil().isBefore(LocalDate.now())){
             return NLS.bind(Messages.BrowserView_License_Not_Valid_Anymore, 
                     new Object[]{
                             infos.getAccountWizardLabel()
@@ -207,7 +214,7 @@ public abstract class HtmlWriter {
         String encryptedContentId = property.getLicenseContentId();
         String cypherText = property.getPropertyValue();
         String currentUser = ServiceFactory.lookupAuthService().getUsername();
-        try{
+        try {
             return getLicenseMgmtService().decryptRestrictedProperty(
                     encryptedContentId, cypherText, currentUser );
         } catch (NoLicenseAssignedException e){
@@ -274,7 +281,7 @@ public abstract class HtmlWriter {
             if (bst.getUrl() == null || bst.getUrl().isEmpty() 
                     || bst.getUrl().equals(NULL_STRING)) {
             	return toHtml(bst);
-            }else {
+            } else {
             return getHtmlFromStream(GSScraperUtil.getInstance().getModel().
                     getBaustein(bst.getUrl(), bst.getStand()),
                     bst.getEncoding());
@@ -321,7 +328,7 @@ public abstract class HtmlWriter {
             return sb.toString(); 
         }
         
-        if(element instanceof Control){
+        if (element instanceof Control){
             StringBuilder sb = new StringBuilder();
             Control control = (Control)element;
             PropertyType titleProperty = HUITypeFactory.getInstance().
@@ -338,7 +345,7 @@ public abstract class HtmlWriter {
             return sb.toString();
         };
         
-        if(element instanceof SamtTopic){
+        if (element instanceof SamtTopic){
             StringBuilder sb = new StringBuilder();
             SamtTopic samtTopic = (SamtTopic)element;
             PropertyType titleProperty = HUITypeFactory.getInstance().

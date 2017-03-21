@@ -17,6 +17,7 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
+
 package sernet.verinice.licensemanagement;
 
 import java.io.Serializable;
@@ -64,7 +65,8 @@ public class LicenseRemover {
     
     private static final Logger LOG = Logger.getLogger(LicenseRemover.class);
     
-    private static final String DEFAULT_ADDRESS = Messages.getString("LicenseRemover_Adress"); //$NON-NLS-1$
+    private static final String DEFAULT_ADDRESS = Messages.getString(
+            "LicenseRemover_Adress"); //$NON-NLS-1$
 
     IBaseDao<Configuration, Serializable> configurationDao;
     
@@ -109,7 +111,8 @@ public class LicenseRemover {
     }
     
     private void runRemoverThread() {
-        DummyAuthenticationRunnable dummyAuthenticationRunnable = new DummyAuthenticationRunnableExtension();
+        DummyAuthenticationRunnable dummyAuthenticationRunnable = 
+                new DummyAuthenticationRunnableExtension();
         ThreadFactory threadFactory = new CustomNamedThreadGroupFactory("licenseRemover");
         ExecutorService exeService = Executors.newSingleThreadExecutor(threadFactory);
         exeService.execute(dummyAuthenticationRunnable);
@@ -137,7 +140,7 @@ public class LicenseRemover {
                         configuration.removeLicensedContentId(licenseId);
                         configurationDao.saveOrUpdate(configuration);
 
-                        if(configuration.getNotificationLicense()){
+                        if (configuration.getNotificationLicense()){
                             MimeMessagePreparator preparator 
                             = prepareEmail(configuration, 
                                     licenseId, 
@@ -160,7 +163,9 @@ public class LicenseRemover {
      * @param validUntil
      * @return
      */
-    private MimeMessagePreparator prepareEmail(Configuration configuration, String licenseId, LicenseManagementEntry entry, LocalDate validUntil) {
+    private MimeMessagePreparator prepareEmail(Configuration configuration,
+            String licenseId, LicenseManagementEntry entry,
+            LocalDate validUntil) {
         loadPerson(configuration.getDbId());
         emailParam.put(NotificationJob.TEMPLATE_EMAIL, configuration.getNotificationEmail());
         emailParam.put(NotificationJob.TEMPLATE_EMAIL_FROM, getEmailFrom());
@@ -181,16 +186,18 @@ public class LicenseRemover {
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setTo(getEmail());
                 message.setFrom(getEmailFrom());
-                if (getReplyTo()!=null && !getReplyTo().isEmpty()) {
+                if (getReplyTo() != null && !getReplyTo().isEmpty()) {
                     message.setReplyTo(getReplyTo());
                 }
                 message.setSubject(subject); //$NON-NLS-1$
-                String text = VelocityEngineUtils.mergeTemplateIntoString(getVelocityEngine(), getTemplatePath(), VeriniceCharset.CHARSET_UTF_8.name(), emailParam);
+                String text = VelocityEngineUtils.mergeTemplateIntoString(
+                        getVelocityEngine(), getTemplatePath(), 
+                        VeriniceCharset.CHARSET_UTF_8.name(), emailParam);
                 message.setText(text, false);
-                if (getEmailCc()!=null) {
+                if (getEmailCc() != null) {
                     message.setCc(getEmailCc());
                 }
-                if (getEmailBcc()!=null) {
+                if (getEmailBcc() != null) {
                     message.setBcc(getEmailBcc());
                 }
             }
@@ -199,7 +206,7 @@ public class LicenseRemover {
     }
     
     public String getEmail() {
-        return (emailParam!=null) ? emailParam.get(
+        return (emailParam != null) ? emailParam.get(
                 NotificationJob.TEMPLATE_EMAIL) : null;
     }
     
@@ -217,7 +224,7 @@ public class LicenseRemover {
     protected String getTemplatePath() {      
         String langCode = Locale.getDefault().getLanguage();
         String path = TEMPLATE_BASE_PATH + "_" + langCode + TEMPLATE_EXTENSION; //$NON-NLS-1$
-        if(this.getClass().getClassLoader().getResource(path)==null) {
+        if (this.getClass().getClassLoader().getResource(path) == null) {
             path = TEMPLATE_BASE_PATH + TEMPLATE_EXTENSION;
         }
         return path;
@@ -228,7 +235,7 @@ public class LicenseRemover {
      * @param result
      */
     private void loadPerson(Integer dbId) {
-        if(dbId!=null) {
+        if (dbId != null) {
             String hql = "from Configuration as conf " + //$NON-NLS-1$
             "inner join fetch conf.person as person " + //$NON-NLS-1$
             "inner join fetch person.entity as entity " + //$NON-NLS-1$
@@ -244,7 +251,7 @@ public class LicenseRemover {
                     PersonIso person = (PersonIso) element;
                     emailParam.put(NotificationJob.TEMPLATE_NAME, person.getSurname());
                     String anrede = person.getAnrede();
-                    if (anrede!=null && !anrede.isEmpty()) {
+                    if (anrede != null && !anrede.isEmpty()) {
                         emailParam.put(NotificationJob.TEMPLATE_ADDRESS, person.getAnrede());
                     } else {
                         emailParam.put(NotificationJob.TEMPLATE_ADDRESS, DEFAULT_ADDRESS);
@@ -252,9 +259,17 @@ public class LicenseRemover {
                 // handling for bsi persons
                 } else if (element instanceof Person){
                     Person person = (Person) element;
-                    String nachname = (person.getEntity() != null ? (person.getEntity().getSimpleValue("nachname") != null ? person.getEntity().getSimpleValue("nachname") : "Kein Name") : "Kein Name");
+                    String nachname = (person.getEntity() != null ? 
+                            (person.getEntity().getSimpleValue("nachname") != null
+                            ? person.getEntity().getSimpleValue("nachname") 
+                                    : "Kein Name") : "Kein Name");
                     emailParam.put(NotificationJob.TEMPLATE_NAME, nachname);
-                    String anrede = (person.getEntity() != null ? (person.getEntity().getSimpleValue("person_anrede") != null ? person.getEntity().getSimpleValue("person_anrede") : DEFAULT_ADDRESS) : DEFAULT_ADDRESS);
+                    String anrede = (person.getEntity() != null 
+                            ? (person.getEntity().getSimpleValue(
+                                    "person_anrede") != null 
+                                    ? person.getEntity().getSimpleValue(
+                                            "person_anrede") : DEFAULT_ADDRESS) 
+                            : DEFAULT_ADDRESS);
                     emailParam.put(NotificationJob.TEMPLATE_ADDRESS, anrede);
                 }
             }

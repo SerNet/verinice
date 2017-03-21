@@ -17,6 +17,7 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
+
 package sernet.verinice.service;
 
 import java.io.File;
@@ -38,6 +39,7 @@ import org.hibernate.LazyInitializationException;
 
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.CommandException;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IDirectoryCreator;
@@ -51,6 +53,7 @@ import sernet.verinice.model.licensemanagement.NoLicenseAssignedException;
 import sernet.verinice.model.licensemanagement.VNLMapper;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.model.licensemanagement.propertyconverter.PropertyConverter;
+import sernet.verinice.rcp.account.AccountView;
 
 /**
  * @author Sebastian Hagedorn sh[at]sernet.de
@@ -68,6 +71,7 @@ public class LicenseManagementServerModeService
     private IEncryptionService cryptoService;
     private ICommandService commandService;
     private IDirectoryCreator directoryCreator;
+    private IAuthService authService;
     
     protected Set<LicenseManagementEntry> existingLicenses = null;
 
@@ -82,10 +86,10 @@ public class LicenseManagementServerModeService
     @Override
     public boolean isCurrentUserValidForLicense(String username, 
             String encryptedLicenseId, boolean decrypt) 
-                    throws LicenseManagementException{
+                    throws LicenseManagementException {
         LicenseManagementEntry entryToUse = null;
-        for(LicenseManagementEntry entry : getExistingLicenses()){
-            if(entry.getLicenseID().equals(encryptedLicenseId)){
+        for (LicenseManagementEntry entry : getExistingLicenses()) {
+            if (entry.getLicenseID().equals(encryptedLicenseId)) {
                 entryToUse = entry;
                 break;
             }
@@ -114,7 +118,7 @@ public class LicenseManagementServerModeService
 
         LicenseManagementEntry entryToUse = null;
         entryToUse = findEntryForLicenseId(encryptedLicenseId, decrypt);
-        if(entryToUse != null){
+        if (entryToUse != null){
             Object o = decrypt(
                     entryToUse, LicenseManagementEntry.COLUMN_VALIDUNTIL);
             LocalDate ld = LocalDate.parse(o.toString());
@@ -151,7 +155,7 @@ public class LicenseManagementServerModeService
                 }
 
             } else {
-                if(entry.getLicenseID().equals(encryptedLicenseId)){
+                if (entry.getLicenseID().equals(encryptedLicenseId)){
                     entryToUse = entry;
                     break;
                 }
@@ -225,7 +229,7 @@ public class LicenseManagementServerModeService
     public Set<String> getAllLicenseIds(boolean decrypted) 
             throws LicenseManagementException {
         Set<String> allIds = new HashSet<>();
-        for(LicenseManagementEntry entry : getExistingLicenses()){
+        for (LicenseManagementEntry entry : getExistingLicenses()){
             String cypherLicenseId = entry.getLicenseID();
             String plainLicenseId = decrypt(entry, 
                     LicenseManagementEntry.COLUMN_LICENSEID);
@@ -234,18 +238,21 @@ public class LicenseManagementServerModeService
         return allIds;
     }
     
-    private Set<LicenseManagementEntry> getLicenseEntriesForUserByContentId(
+    @Override
+    public Set<LicenseManagementEntry> getLicenseEntriesForUserByContentId(
             String user, String contentId) throws LicenseManagementException{
         Set<LicenseManagementEntry> userLicenses = new HashSet<>();
-        if(user.equals("admin")){ // TODO: catch admin user in client already
-            return getLicenseEntriesForContentId(contentId, false);
-        }
+        
+//        if ( getAuthService().getAdminUsername().equals(user)){
+//            return userLicenses; // superuser
+//        }
+        
         Configuration configuration = getConfigurationByUsername(user);
-        for(LicenseManagementEntry entry : 
+        for (LicenseManagementEntry entry : 
             getLicenseEntriesForContentId(contentId, true)){
             String entryLicenseIdPlain = 
                     decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
-            if(configuration.getAssignedLicenseIds().
+            if (configuration.getAssignedLicenseIds().
                     contains(entryLicenseIdPlain)){
                 userLicenses.add(entry);
             }
@@ -268,13 +275,13 @@ public class LicenseManagementServerModeService
 
         if (decrypt){
             for (LicenseManagementEntry entry : getExistingLicenses()){
-                try{
+                try {
                     String plainContentId = getCryptoService().
                             decryptLicenseRestrictedProperty(entry.getUserPassword(),
                                     encryptedContentId);
                     String plainEntryContentId = decrypt(entry, 
                             LicenseManagementEntry.COLUMN_CONTENTID);
-                    if(plainContentId.equals(plainEntryContentId)){
+                    if (plainContentId.equals(plainEntryContentId)){
                         uniqueEntryCollection.add(entry);
                     }
                 } catch (EncryptionException e){
@@ -286,8 +293,8 @@ public class LicenseManagementServerModeService
             return uniqueEntryCollection;
         }
         
-        for(LicenseManagementEntry entry : getExistingLicenses()){
-            if(entry.getContentIdentifier().equals(encryptedContentId)){
+        for (LicenseManagementEntry entry : getExistingLicenses()){
+            if (entry.getContentIdentifier().equals(encryptedContentId)){
                 uniqueEntryCollection.add(entry);
             }
         }
@@ -297,15 +304,15 @@ public class LicenseManagementServerModeService
     @Override
     public LicenseManagementEntry getLicenseEntryForLicenseId(
             String licenseId, boolean decrypt) throws LicenseManagementException{
-        for(LicenseManagementEntry entry : getExistingLicenses()){
-            if(!decrypt){ // don't use decryption
-                if(entry.getLicenseID().equals(licenseId)){
+        for (LicenseManagementEntry entry : getExistingLicenses()){
+            if (!decrypt){ // don't use decryption
+                if (entry.getLicenseID().equals(licenseId)){
                     return entry;
                 }
             } else { // use decryption
                 String plainEntryLicenseId = 
                         decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
-                if(plainEntryLicenseId.equals(licenseId)){
+                if (plainEntryLicenseId.equals(licenseId)){
                     return entry;
                 }
             }
@@ -325,18 +332,18 @@ public class LicenseManagementServerModeService
             throws LicenseManagementException{
         // unless contentId is crypted with pw and salt, this returns an empty set
         Set<String> uniqueIds = new HashSet<>();
-        for(LicenseManagementEntry entry : getExistingLicenses()){
+        for (LicenseManagementEntry entry : getExistingLicenses()){
             String plainLicenseId = (String)decrypt(entry,
                     LicenseManagementEntry.COLUMN_LICENSEID);
-            if(!decrypted){
-                if(entry.getContentIdentifier().equals(contentId)){
+            if (!decrypted){
+                if (entry.getContentIdentifier().equals(contentId)){
                     uniqueIds.add(plainLicenseId);
                 }
             } else {
                 String plainContentIdEntry = 
                         decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID);
                 String plainContentIdInput = "";
-                try{
+                try {
                     plainContentIdInput = getCryptoService().
                             decryptLicenseRestrictedProperty(entry.getUserPassword(),
                                     contentId);
@@ -344,7 +351,7 @@ public class LicenseManagementServerModeService
                     // this is try & error, so fails are ok here
                     continue;
                 }
-                if(plainContentIdEntry.equals(plainContentIdInput)){
+                if (plainContentIdEntry.equals(plainContentIdInput)){
                     uniqueIds.add(plainLicenseId);
                 }
             }
@@ -376,8 +383,8 @@ public class LicenseManagementServerModeService
     public Set<String> getAllContentIds(boolean decrypted)
         throws LicenseManagementException{
         Set<String> allIds = new HashSet<>();
-        for(LicenseManagementEntry entry : getExistingLicenses()){
-            if(decrypted){
+        for (LicenseManagementEntry entry : getExistingLicenses()){
+            if (decrypted){
                 Object decryptedValue = 
                         decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID);
                 String decryptedString = String.valueOf(decryptedValue);
@@ -399,7 +406,7 @@ public class LicenseManagementServerModeService
     @Override
     public int getLicenseIdAllocationCount(String licenseId) {
         int count = 0;
-        for(Configuration configuration : getAllConfigurations()){
+        for (Configuration configuration : getAllConfigurations()){
             if (configuration.getAssignedLicenseIds().contains(licenseId)) {
                 count++;
             }      
@@ -523,13 +530,13 @@ public class LicenseManagementServerModeService
         
         Configuration configuration = getConfigurationByUsername(user);
         LicenseManagementEntry entry = getLicenseEntryForLicenseId(licenseId, false);
-        if(licenseIdEncrypted){
+        if (licenseIdEncrypted){
             decryptedLicenseId = decrypt(entry, 
                     LicenseManagementEntry.COLUMN_LICENSEID);
         } else {
             decryptedLicenseId = licenseId;
         }
-        if(configuration != null){
+        if (configuration != null){
             configuration.removeLicensedContentId(decryptedLicenseId);
             configurationDao.saveOrUpdate(configuration);
         }
@@ -631,7 +638,7 @@ public class LicenseManagementServerModeService
     public <T extends Object> T decrypt(LicenseManagementEntry entry,
             String propertyType){
         String plainText = "";
-        switch(propertyType){
+        switch (propertyType){
         case LicenseManagementEntry.COLUMN_CONTENTID:
             plainText = getCryptoService().decrypt(entry.getContentIdentifier(), 
                     entry.getUserPassword().toCharArray(), entry.getSalt());
@@ -660,7 +667,7 @@ public class LicenseManagementServerModeService
             String propertyType){
         T returnValue;
         PropertyConverter converter = new PropertyConverter();
-        switch(propertyType){
+        switch (propertyType){
         case LicenseManagementEntry.COLUMN_CONTENTID:
             returnValue = (T)converter.convertToString(property);
             break;
@@ -689,7 +696,7 @@ public class LicenseManagementServerModeService
     @Override
     public Set<LicenseManagementEntry> readVNLFiles() 
             throws LicenseManagementException{
-        if(existingLicenses != null){
+        if (existingLicenses != null){
             existingLicenses.clear();
         } else {
             existingLicenses = new HashSet<>();
@@ -699,8 +706,8 @@ public class LicenseManagementServerModeService
                 new String[]{ILicenseManagementService.
                         VNL_FILE_EXTENSION}, false);
         
-        try{
-            for(File vnlFile : vnlFiles){
+        try {
+            for (File vnlFile : vnlFiles){
                 byte[] fileContent = FileUtils.readFileToByteArray(vnlFile);
                 LicenseManagementEntry entry = VNLMapper.getInstance().
                         unmarshalXML(fileContent);
@@ -738,7 +745,7 @@ public class LicenseManagementServerModeService
      */
     public Set<LicenseManagementEntry> getExistingLicenses() 
             throws LicenseManagementException{
-        if(existingLicenses == null || existingLicenses.size() == 0){
+        if (existingLicenses == null || existingLicenses.size() == 0){
             readVNLFiles();
         }
         return existingLicenses;
@@ -937,6 +944,14 @@ public class LicenseManagementServerModeService
         return isBefore;
     }
 
+    @Override
+    public Set<LicenseMessageInfos> getAllLicenseMessageInfos() throws LicenseManagementException {
+        Set<LicenseMessageInfos> infos = new HashSet<>();
+        for (LicenseManagementEntry entry : getExistingLicenses()){
+            infos.add(getSingleLicenseMessageInfos(entry));
+        }
+        return infos;
+    }
 
     /**
      * creates instance of {@link LicenseMessageInfos} that wraps 
@@ -954,7 +969,17 @@ public class LicenseManagementServerModeService
         LicenseManagementEntry firstEntry = getFirstLicenseForUser(user,
                encryptedContentId, encryptedLicenseId,entry);
         LicenseMessageInfos infos = null;
-        if(firstEntry != null){
+        infos = getSingleLicenseMessageInfos(firstEntry);
+        return infos;
+    }
+
+    /**
+     * @param firstEntry
+     * @return
+     */
+    private LicenseMessageInfos getSingleLicenseMessageInfos(LicenseManagementEntry firstEntry) {
+        LicenseMessageInfos infos;
+        if (firstEntry != null){
             String contentId = 
                     decrypt(firstEntry, LicenseManagementEntry.COLUMN_CONTENTID);
             String licenseId = 
@@ -1003,33 +1028,41 @@ public class LicenseManagementServerModeService
             String encryptedContentId, String encryptedLicenseId,
             LicenseManagementEntry entry) throws LicenseManagementException {
         Set<LicenseManagementEntry> matchingEntries = new HashSet<>();
-        for(LicenseManagementEntry existingEntry : 
+        for (LicenseManagementEntry existingEntry : 
             getLicenseEntriesForUserByContentId(user, encryptedContentId)){
             LicenseManagementEntry matchingEntry = 
                     getMatchingEntries(encryptedContentId, encryptedLicenseId,
                             entry, existingEntry);
-            if(matchingEntry != null){
+            if (matchingEntry != null){
                 matchingEntries.add(matchingEntry);
             }
         }
         
-        return getOldestEntry(matchingEntries);
+        return getValidLongestEntry(matchingEntries);
     }
 
-    protected LicenseManagementEntry getOldestEntry(Set<LicenseManagementEntry>
-    entries){
+    /**
+     * finds the entry of a set of {@link LicenseManagementEntry} instances
+     * that is valid the longest
+     * @param entries
+     * @return
+     */
+    protected LicenseManagementEntry getValidLongestEntry(
+            Set<LicenseManagementEntry> entries){
         if (entries.size() == 1){
             return entries.stream().findFirst().get();
         } else {
             LicenseManagementEntry oldestEntry = null;
-            for (LicenseManagementEntry possibleEntry : entries){
+            for (LicenseManagementEntry possibleEntry : entries) {
                 if (oldestEntry == null){
                     oldestEntry = possibleEntry;
                     continue;
                 } else {
-                    LocalDate current = decrypt(possibleEntry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
-                    LocalDate oldest = decrypt(oldestEntry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
-                    if(oldest.isBefore(current)){
+                    LocalDate current = decrypt(possibleEntry, 
+                            LicenseManagementEntry.COLUMN_VALIDUNTIL);
+                    LocalDate oldest = decrypt(oldestEntry, 
+                            LicenseManagementEntry.COLUMN_VALIDUNTIL);
+                    if (oldest.isBefore(current)) {
                         oldestEntry = possibleEntry;
                         continue;
                     }
@@ -1058,11 +1091,11 @@ public class LicenseManagementServerModeService
             LicenseManagementEntry existingEntry) {
         String plainContentId;
         String plainLicenseId = "";
-        if(entry == null){
+        if (entry == null){
             plainContentId = getCryptoService().
                 decryptLicenseRestrictedProperty(
                         existingEntry.getUserPassword(), encryptedContentId);
-            if(StringUtils.isNotEmpty(encryptedLicenseId)){
+            if (StringUtils.isNotEmpty(encryptedLicenseId)){
                 plainLicenseId = getCryptoService().
                         decryptLicenseRestrictedProperty(
                                 existingEntry.getUserPassword(), encryptedLicenseId);
@@ -1070,7 +1103,7 @@ public class LicenseManagementServerModeService
         } else {
             plainContentId = decrypt(
                     entry, LicenseManagementEntry.COLUMN_CONTENTID);
-            if(StringUtils.isNotEmpty(encryptedLicenseId)){
+            if (StringUtils.isNotEmpty(encryptedLicenseId)){
                 plainLicenseId = decrypt(
                         entry, LicenseManagementEntry.COLUMN_LICENSEID);
             }
@@ -1080,15 +1113,30 @@ public class LicenseManagementServerModeService
                 LicenseManagementEntry.COLUMN_CONTENTID);
         String entryPlainLicenseId = decrypt(existingEntry, 
                 LicenseManagementEntry.COLUMN_LICENSEID);
-        if(StringUtils.isEmpty(plainLicenseId) &&
+        if (StringUtils.isEmpty(plainLicenseId) &&
                 plainContentId.equals(entryPlainContentId)){
             return existingEntry;
-        } else if(StringUtils.isNotEmpty(plainLicenseId) &&
+        } else if (StringUtils.isNotEmpty(plainLicenseId) &&
                 plainLicenseId.equals(entryPlainLicenseId) &&
                 plainContentId.equals(entryPlainContentId)){
             return existingEntry;
         }
         return null;
     }
+
+    /**
+     * @return the authService
+     */
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    /**
+     * @param authService the authService to set
+     */
+    public void setAuthService(IAuthService authService) {
+        this.authService = authService;
+    }
+
 
 }

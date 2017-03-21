@@ -221,8 +221,8 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	    PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);
 	    List<Property> propertyList = getEntity().getProperties(type.getId()).getProperties();
 
-	    for(Property p : propertyList){
-	        if(licenseId.equals(p.getPropertyValue())){
+	    for (Property p : propertyList){
+	        if (licenseId.equals(p.getPropertyValue())){
 	            return;
 	        }
 	    }
@@ -235,6 +235,10 @@ public class Configuration implements Serializable, ITypedElement, Comparable<Co
 	    }
 	}
 	
+	/**
+	 * get all Ids of licenses that are assigned to this user
+	 * @return
+	 */
 	public Set<String> getAllLicenseIds(){
 	    Set<String> allIds = new HashSet<>();
 	       PropertyType type = getTypeFactory().getPropertyType(Configuration.TYPE_ID, PROP_LICENSED_CONTENT_IDS);

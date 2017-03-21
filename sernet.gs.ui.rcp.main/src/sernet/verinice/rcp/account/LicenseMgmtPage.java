@@ -74,9 +74,6 @@ public class LicenseMgmtPage extends BaseWizardPage {
         this.licenseIdToLabelMap = new HashMap<>();
     }
     
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.account.BaseWizardPage#initGui(org.eclipse.swt.widgets.Composite)
-     */
     @Override
     protected void initGui(Composite composite) {
 
@@ -91,11 +88,11 @@ public class LicenseMgmtPage extends BaseWizardPage {
         setTitle(Messages.LicenseMgmtPage_Title);
         setMessage(Messages.LicenseMgmtPage_Text);
 
-        try{
+        try {
             List<LicenseManagementEntry> licenseList = 
                     getSortedExistingLicenses();
             
-            for(int index = 0; index < licenseList.size(); index++){
+            for (int index = 0; index < licenseList.size(); index++){
                 createLicenseIdCheckbox(composite, licenseList.get(index), 
                         index);
             }
@@ -129,7 +126,7 @@ public class LicenseMgmtPage extends BaseWizardPage {
                 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    if(e.getSource() instanceof Button){
+                    if (e.getSource() instanceof Button){
                         Button button = (Button)e.getSource();
                         setSendEmail(button.getSelection());
                     }
@@ -150,6 +147,8 @@ public class LicenseMgmtPage extends BaseWizardPage {
     }
 
     /**
+     * sorts all in the system existing licenses by their label as 
+     * shown in the wizardpage and returns them as a list 
      * @return
      * @throws LicenseManagementException
      */
@@ -176,8 +175,14 @@ public class LicenseMgmtPage extends BaseWizardPage {
     }
 
     /**
+     * creates a checkbox for a given instance of 
+     * {@link de.sernet.model.licensemanagement.LicenseManagementEntry}
+     * , adds an increasing index number as a prefix and optionally
+     * a expired label
+     * 
      * @param composite
      * @param entry
+     * @param index
      */
     private void createLicenseIdCheckbox(Composite composite, 
             LicenseManagementEntry entry, int index) {
@@ -189,9 +194,9 @@ public class LicenseMgmtPage extends BaseWizardPage {
                 LicenseManagementEntry.COLUMN_VALIDUNTIL);
 
         StringBuilder sb = new StringBuilder();
-        sb.append(index+1).append(". ");
+        sb.append(index + 1).append(". ");
         sb.append(getLicenseLabel(plainLicenseId));
-        if(validUntil.isBefore(LocalDate.now())){
+        if (validUntil.isBefore(LocalDate.now())){
             sb.append(Messages.LicenseMgmtPage_License_Expired);
         }
         checkbox.setText(sb.toString());
@@ -229,9 +234,15 @@ public class LicenseMgmtPage extends BaseWizardPage {
         };
     }
     
+    /**
+     * gets the licenseId that belongs to a given label of the wizardpage
+     * 
+     * @param label
+     * @return
+     */
     private String getLicenseIdForLabel(String label){
-        for(Entry<String, String> entry : licenseIdToLabelMap.entrySet()){
-            if(label.equals(entry.getValue())){
+        for (Entry<String, String> entry : licenseIdToLabelMap.entrySet()){
+            if (label.equals(entry.getValue())){
                 return entry.getKey();
             }
         }
@@ -257,9 +268,18 @@ public class LicenseMgmtPage extends BaseWizardPage {
         return checkboxText;
     }
     
+    /**
+     * ensures that checkboxes are only selectable if the license
+     * they are representing still has free slots to assign
+     * if no slots available and checkbox unchecked, checkbox gets disabled
+     * if no slots available and checkbox checked, checkbox gets enabled
+     * if license is expired and checkbox unchecked, checkbox gets disabled
+     * if license if expired and checkbox checked, checkbox gets enabled and 
+     *  disabled when unchecked
+     */
     private void validateCheckboxStatus(){
-        try{
-            for(Button checkbox : checkboxes){
+        try {
+            for (Button checkbox : checkboxes){
                 String checkboxText = checkbox.getText();
 
                 String licenseIdLabel = getLicenseIdForLabel(
@@ -270,17 +290,18 @@ public class LicenseMgmtPage extends BaseWizardPage {
                 boolean hasFreeSlots = 
                         licenseService.
                         hasLicenseIdAssignableSlots(entry.getLicenseID());
-                if(hasFreeSlots){
+                if (hasFreeSlots){
                     checkbox.setEnabled(true);    
                 } else {
-                    if(!checkbox.getSelection()){
+                    if (!checkbox.getSelection()){
                         checkbox.setEnabled(false);
                     }
                 }
-                if(checkbox.getText().endsWith(Messages.LicenseMgmtPage_License_Expired)){
+                if (checkbox.getText().endsWith(Messages.
+                        LicenseMgmtPage_License_Expired)){
                     checkbox.setEnabled(false);
                 }
-                if(checkbox.getSelection()){
+                if (checkbox.getSelection()){
                     checkbox.setEnabled(true);
                 }
             } 
@@ -291,16 +312,17 @@ public class LicenseMgmtPage extends BaseWizardPage {
         }
     }
 
-    /* (non-Javadoc)
-     * @see sernet.verinice.rcp.account.BaseWizardPage#initData()
+    /**
+     * initializes the checkboxes of the wizardpage with the data 
+     * given by the wizard
      */
     @Override
     protected void initData() throws Exception {
-        for(Button checkbox : checkboxes){
+        for (Button checkbox : checkboxes){
             String label = getLicenseIdForLabel(
                     getLicenseLabelFromCheckboxText(checkbox.getText()));
             
-            if(assignedLicenseIds.contains(
+            if (assignedLicenseIds.contains(
                     label)){
                 checkbox.setSelection(true);
                 checkbox.setEnabled(true);
@@ -318,8 +340,8 @@ public class LicenseMgmtPage extends BaseWizardPage {
      */
     public Set<String> getAssignedLicenseIds() {
         assignedLicenseIds = new HashSet<>();
-        for(Button checkbox : checkboxes){
-            if(checkbox.getSelection()){
+        for (Button checkbox : checkboxes){
+            if (checkbox.getSelection()){
                 String checkboxText = checkbox.getText();
                 String licenseLabel = getLicenseLabelFromCheckboxText(
                         checkboxText);
@@ -352,7 +374,7 @@ public class LicenseMgmtPage extends BaseWizardPage {
     }
     
     private String getLicenseLabel(String licenseId){
-        if(licenseIdToLabelMap.containsKey(licenseId)){
+        if (licenseIdToLabelMap.containsKey(licenseId)){
             return licenseIdToLabelMap.get(licenseId);
         }
         StringBuilder sb = new StringBuilder();
@@ -361,8 +383,14 @@ public class LicenseMgmtPage extends BaseWizardPage {
         licenseIdToLabelMap.put(licenseId, label);
         return label;
     }
-    
+
+    /**
+     * builds the string that labels a given licenseId in the client
+     * @param licenseId
+     * @return
+     */
     public static String getLicenseLabelString(String licenseId){
+        StringBuilder sb = new StringBuilder();
         final String singleSpace = " ";
         final String licenseIdDelimiter = "###";
         final String openBracket = "(";
@@ -371,21 +399,20 @@ public class LicenseMgmtPage extends BaseWizardPage {
         final String slash = "/";
         StringTokenizer tokenizer = new StringTokenizer(licenseId,
                 licenseIdDelimiter);
-        StringBuilder sb = new StringBuilder();
-        if(tokenizer.countTokens() != 3){
+        if (tokenizer.countTokens() != 3){
             return licenseId;
         };
         String contentId = tokenizer.nextToken();
         String validUntil = tokenizer.nextToken();
         String validUsers = tokenizer.nextToken();
-        
+
         String assignedUsers = String.valueOf(ServiceFactory.
                 lookupLicenseManagementService().
                 getLicenseIdAllocationCount(licenseId));
-        
+
         sb.append(contentId).append(singleSpace);
         sb.append(dash).append(singleSpace).
-            append(validUntil).append(singleSpace).append(dash);
+        append(validUntil).append(singleSpace).append(dash);
         sb.append(singleSpace).append(openBracket).append(assignedUsers);
         sb.append(slash).append(validUsers).append(closingBracket);
         LOG.debug("LicenseLabel for id:\t" + licenseId + "\t=" + sb.toString());

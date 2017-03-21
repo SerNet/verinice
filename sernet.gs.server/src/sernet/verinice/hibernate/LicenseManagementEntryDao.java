@@ -17,6 +17,7 @@
  * Contributors:
  *     Sebastian Hagedorn sh[at]sernet.de - initial API and implementation
  ******************************************************************************/
+
 package sernet.verinice.hibernate;
 
 import java.io.Serializable;
@@ -51,7 +52,7 @@ public class LicenseManagementEntryDao extends HibernateDao<LicenseManagementEnt
         DetachedCriteria criteria = DetachedCriteria.forClass(LicenseManagementEntry.class);
         criteria.add(Restrictions.eq("dbId", dbId));
         List<LicenseManagementEntry> list = findByCriteria(criteria);
-        if(list.size() == 1){
+        if (list.size() == 1){
             return list.get(0);
         } 
         return null;
@@ -80,7 +81,7 @@ public class LicenseManagementEntryDao extends HibernateDao<LicenseManagementEnt
         DetachedCriteria criteria = DetachedCriteria.forClass(LicenseManagementEntry.class);
         criteria.add(Restrictions.eq("licenseID", licenseId));
         List<LicenseManagementEntry> list = findByCriteria(criteria);
-        if(list.size() == 1){
+        if (list.size() == 1){
             return list.get(0);
         } 
         return null;
