@@ -21,10 +21,8 @@ package sernet.verinice.rcp;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -52,7 +50,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.ImageCache;
+import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.hui.common.VeriniceContext;
 import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IRightsServiceClient;
@@ -65,6 +65,7 @@ import sernet.verinice.model.auth.OriginType;
 import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.auth.ProfileRef;
 import sernet.verinice.model.auth.Userprofile;
+import sernet.verinice.rcp.account.AccountLoader;
 
 /**
  * @author Daniel Murygin <dm[at]sernet[dot]de>
@@ -153,7 +154,8 @@ public class UserprofileDialog extends TitleAreaDialog {
 
         comboLogin = new Combo(comboComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
         comboLogin.addSelectionListener(new SelectionAdapter() {
-              public void widgetSelected(SelectionEvent e) {
+              @Override
+            public void widgetSelected(SelectionEvent e) {
                   comboModel.setSelectedIndex(comboLogin.getSelectionIndex());
                   loadProfiles();
               }
@@ -260,32 +262,32 @@ public class UserprofileDialog extends TitleAreaDialog {
         }
 
         try {
-            List<String> groupNames = getRightService().getGroupnames();
-            for (String groupname : groupNames) {
-                if (groupname != null && !groupname.isEmpty()) {
-                    nameSet.add(groupname);
+            boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+
+            if (isLocalAdmin) {
+                nameSet.addAll(AccountLoader.loadGroupNamesForLocalAdmin());
+            } else {
+                List<String> groupNames = getRightService().getGroupnames();
+                for (String groupname : groupNames) {
+                    if (groupname != null && !groupname.isEmpty()) {
+                        nameSet.add(groupname);
+                    }
                 }
             }
         } catch (Exception ex) {
             LOG.error("account groups loading failed", ex);
         }
 
-        for (String name : nameSet) {
-            comboModel.add(name);
-        }
-
+        comboModel.addAll(nameSet);
         comboModel.sort();
         comboLogin.setItems(comboModel.getLabelArray());
     }
 
     private void setUnselected() {
-        Map<String, String> mapSelected = new HashMap<String, String>(allProfiles.size());
-        for (ProfileRef profile : selectedProfiles) {
-            mapSelected.put(profile.getName(), profile.getName());
-        }
         unselectedProfiles.clear();
+        boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
         for (Profile profile : allProfiles) {
-            if(!mapSelected.containsKey(profile.getName())) {
+            if ((!isLocalAdmin || (isLocalAdmin && AccountLoader.isLocalAdminCreator(profile))) && !containsProfileRef(selectedProfiles, profile.getName())) {
                 // create a reference to the profile
                 ProfileRef profileRef = new ProfileRef();
                 profileRef.setName(profile.getName());
@@ -294,6 +296,17 @@ public class UserprofileDialog extends TitleAreaDialog {
         }
     }
     
+    private boolean containsProfileRef(List<ProfileRef> profileRefs, String profileName) {
+        boolean contains = false;
+        for (ProfileRef profileRef : profileRefs) {
+            if (profileRef.getName().equals(profileName)) {
+                contains = true;
+                break;
+            }
+        }
+        return contains;
+    }
+
     protected void loadProfiles() {
         String selected = comboModel.getSelectedObject();
         loadProfiles(selected);
@@ -321,6 +334,17 @@ public class UserprofileDialog extends TitleAreaDialog {
             selectedProfiles = internalUserprofile.getProfileRef();
         }
         setUnselected();
+        boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        if (isLocalAdmin) {
+            List<ProfileRef> selectedLocalAdminProfileRefs = new ArrayList<ProfileRef>(selectedProfiles.size());
+            for (ProfileRef profileRef : selectedProfiles) {
+                if (AccountLoader.isLocalAdminCreator(getProfil(profileRef))) {
+                    selectedLocalAdminProfileRefs.add(profileRef);
+                }
+            }
+            selectedProfiles = selectedLocalAdminProfileRefs;
+        }
+
         table.setInput(unselectedProfiles);
         tableSelected.setInput(selectedProfiles);
         table.refresh(true);
@@ -329,6 +353,15 @@ public class UserprofileDialog extends TitleAreaDialog {
         addAllButton.setEnabled(!unselectedProfiles.isEmpty());
     }
     
+    private Profile getProfil(ProfileRef profileRef) {
+        for (Profile profile : allProfiles) {
+            if (profile.getName().equals(profileRef.getName())) {
+                return profile;
+            }
+        }
+        return null;
+    }
+
     /* (non-Javadoc)
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
@@ -411,6 +444,7 @@ public class UserprofileDialog extends TitleAreaDialog {
          });
 
         addButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 addSelection();
                 removeAllButton.setEnabled(true);
@@ -428,6 +462,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         });
 
         tableSelected.addSelectionChangedListener(new ISelectionChangedListener() {
+                    @Override
                     public void selectionChanged(SelectionChangedEvent event) {
                         IStructuredSelection selection = (IStructuredSelection) tableSelected.getSelection();
                         List selectionList = selection.toList();
@@ -442,6 +477,7 @@ public class UserprofileDialog extends TitleAreaDialog {
                 });
 
         removeButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 removeSelection();
                 addAllButton.setEnabled(true);
@@ -450,6 +486,7 @@ public class UserprofileDialog extends TitleAreaDialog {
         });
 
         tableSelected.addDoubleClickListener(new IDoubleClickListener() {
+            @Override
             public void doubleClick(DoubleClickEvent event) {
                 removeSelection();
                 addAllButton.setEnabled(true);
@@ -461,6 +498,7 @@ public class UserprofileDialog extends TitleAreaDialog {
             /* (non-Javadoc)
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
+            @Override
             @SuppressWarnings({ "unchecked", "rawtypes" })
             public void widgetSelected(SelectionEvent e) { 
                 selectedProfiles.addAll(unselectedProfiles);
@@ -477,6 +515,7 @@ public class UserprofileDialog extends TitleAreaDialog {
             /* (non-Javadoc)
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 unselectedProfiles.addAll(selectedProfiles);
                 selectedProfiles.clear();
@@ -553,18 +592,21 @@ public class UserprofileDialog extends TitleAreaDialog {
         });
 
         newButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 newProfile();
             }
         });
         
         editButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 editProfile();
             }
         });
 
         removeButton.addSelectionListener(new SelectionAdapter() {
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 deleteProfile();
             }

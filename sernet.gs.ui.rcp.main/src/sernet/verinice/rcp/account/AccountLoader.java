@@ -33,6 +33,8 @@ import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IRightsService;
+import sernet.verinice.model.auth.OriginType;
+import sernet.verinice.model.auth.Profile;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.service.account.AccountSearchParameter;
@@ -139,5 +141,13 @@ public final class AccountLoader {
             }
         }
         return false;
+    }
+
+    public static boolean isLocalAdminCreator(Profile profile) {
+        if (OriginType.DEFAULT.equals(profile.getOrigin())) {
+            return false;
+        }
+        String username = ServiceFactory.lookupAuthService().getUsername();
+        return username != null && username.equals(profile.getCreator());
     }
 }
