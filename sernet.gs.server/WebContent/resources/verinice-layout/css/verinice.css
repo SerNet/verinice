@@ -1,53 +1,67 @@
-/* Logo customizing */
-.login-panel .ui-g-12.logo-container img {
-	width: 90px;
-}
-
+/* Top bar customization */
 .layout-wrapper .topbar .logo {
-	display: inline-block;
-	vertical-align: middle;
-	width: 175px;
-	height: 49px;
-	background:
-		url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top
-		left no-repeat;
-	background-size: 175px 49px;
+  display: inline-block;
+  vertical-align: middle;
+  width: 175px;
+  height: 49px;
+  background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
+  background-size: 175px 49px;
 }
 
-.layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left .logo
-	{
-	background:
-		url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top
-		left no-repeat;
-	background-size: 175px 49px;
+.layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left .logo {
+  background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
+  background-size: 175px 49px;
 }
 
-.layout-wrapper .topbar .topbar-left, .layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left
-	{
-	background-color: #fff;
+.layout-wrapper.menu-layout-overlay .topbar .topbar-left .logo {
+  background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
 }
 
-.veriniceElementTable td:nth-child(1), .veriniceElmentTable th:nth-child(1)
-	{
-	width: 20px;
-	  }
-
-.saveButtonHidden {
-	display: none;
-	visibility: hidden;
+.layout-wrapper.menu-layout-overlay.layout-menu-overlay-active .topbar .topbar-left .logo {
+  background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
 }
 
-  .layout-wrapper.menu-layout-static .topbar .topbar-left {
-    background-color: white;
+.layout-wrapper .topbar .topbar-left {
+  background-color: white;
 }
 
-.ui-panelgrid > * > tr, .ui-panelgrid > * > tr > td.ui-panelgrid-cell {
-    border: none;
+.layout-wrapper.menu-layout-static .topbar .topbar-left {
+  background-color: white;
+}
+
+.layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left {
+  background-color: white;
+}
+
+.layout-wrapper.menu-layout-overlay .topbar .topbar-left {
+  background-color: white;
+}
+
+.layout-wrapper.menu-layout-overlay.layout-menu-overlay-active .topbar .topbar-left {
+  background-color: white;
 }
 
 @media ( max-width : 1024px) {
-	.layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
-		background-image:
-			url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
+  .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
+    background-image: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
   }
+}
+
+/* Login panel customization */
+.login-panel .ui-g-12.logo-container img {
+  width: 90px;
+}
+
+/* Other stuff */
+.veriniceElementTable td:nth-child(1), .veriniceElmentTable th:nth-child(1) {
+  width: 20px;
+}
+
+.saveButtonHidden {
+  display: none;
+  visibility: hidden;
+}
+
+.ui-panelgrid>*>tr, .ui-panelgrid>*>tr>td.ui-panelgrid-cell {
+  border: none;
 }
