@@ -74,13 +74,13 @@ public class RiskAnalysisJob {
      */
     public void runRiskAnalysis() {
         resetRiskValuesOfAssets();
-        analyseRiskOfScenarios();
+        setProbabilityOfScenarios();
         analyseRiskOfAssets();
+        reduceRiskOfScenarios();
     }
     
     /**
-     * Resets the risk values of all assets in a given 
-     * verinice graph.
+     * Resets the risk values of all assets.
      */
     private void resetRiskValuesOfAssets() {
         Set<CnATreeElement> assets = graph.getElements(Asset.TYPE_ID);
@@ -89,56 +89,71 @@ public class RiskAnalysisJob {
         }
         for (CnATreeElement asset : assets) {
             if(LOG.isDebugEnabled()){
-                LOG.debug("Resetting Risk for Asset:\t" + asset.getTitle());
+                LOG.debug("Resetting Risk for Asset: " + asset.getTitle());
             }
             resetRisks((Asset) asset);
         }
     }
 
     /**
-     * Analyses the risk of all incident scenarios in a given 
-     * verinice graph. 
+     * Sets the probability of all incident scenarios.
      */
-    private void analyseRiskOfScenarios() {
+    private void setProbabilityOfScenarios() {
         Set<CnATreeElement> scenarios = graph.getElements(IncidentScenario.TYPE_ID);
         if (LOG.isInfoEnabled()) {
             LOG.info("Number of scenarios: " + scenarios.size());
         }
         for (CnATreeElement scenario : scenarios) {
-            if(LOG.isDebugEnabled()){
-                LOG.debug("Determine Probability for Scenario:\t" 
-                        + scenario.getTitle());
-            }
-            analyseScenario((IncidentScenario) scenario);
+            setProbabilityOfScenario((IncidentScenario) scenario);          
         }
     }
 
     /**
-     * Analyses the risk of an incident scenario.
+     * Sets the probability of an incident scenario.
      * 
-     * 1. The probability of the scenario is set by addition of
-     *    the probability of the threat and the vulnerability.
-     * 2. The reduced probability of the scenario is set by subtracting
-     *    the effect of all linked controls irrespective of whether or not
-     *    the controls are implemented.
-     * 3. The reduced probability of the scenario is set by subtracting
-     *    the effect of all linked and implemented controls.
-     *
+     * The probability of the scenario is set by addition of
+     * the probability of the threat and the vulnerability which are
+     * linked to the scenario.
+     * 
      * @param scenario A single incident scenario which is analyzed
      */
-    private void analyseScenario(IncidentScenario scenario) {
-        // get values from linked threat & vuln, only if automatic mode is activated:
+    private void setProbabilityOfScenario(IncidentScenario scenario) {
+        // get values from linked threat & vuln, only if automatic mode is
+        // activated:
         if (scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_METHOD) == 1) {
             getProbabilityFromThreatAndVulnerability(graph, scenario);
         }
 
         // calculate probability:
         scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY, 0);
-        int myThreat = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_THREAT_PROBABILITY);
+        int myThreat = scenario
+                .getNumericProperty(IncidentScenario.PROP_SCENARIO_THREAT_PROBABILITY);
         int myVuln = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_VULN_PROBABILITY);
         scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY, myThreat + myVuln);
-
-        // now determine probability after all applied controls:
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Scenario: " + scenario.getTitle() + ", probability set: "
+                    + scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY));
+        }
+    }
+    
+    /**
+     * Reduces the probability of all incident scenarios by subtracting
+     * the effect of all linked and implemented controls.
+     */
+    private void reduceRiskOfScenarios() {
+        Set<CnATreeElement> scenarios = graph.getElements(IncidentScenario.TYPE_ID);
+        for (CnATreeElement scenario : scenarios) {
+            reduceRiskOfSzenario((IncidentScenario) scenario);          
+        }
+    }
+    
+    /**
+     * Reduces the probability of a scenario by subtracting
+     * the effect of all linked and implemented controls.
+     *
+     * @param scenario A single incident scenario
+     */
+    private void reduceRiskOfSzenario(IncidentScenario scenario) {    
         // init probability values to value without controls:
         scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS, scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY));
         scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS, scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY));
@@ -199,13 +214,10 @@ public class RiskAnalysisJob {
      */
     private void analyseRiskOfAssets() {
         Set<CnATreeElement> scenarios = graph.getElements(IncidentScenario.TYPE_ID);
-        if (LOG.isInfoEnabled()) {
-            LOG.info("Number of scenarios: " + scenarios.size());
-        }
         // determine risk originating from scenarios for all linked assets:
         for (CnATreeElement scenario : scenarios) {
             if(LOG.isDebugEnabled()){
-                LOG.debug("Determine Risk for Scenario:\t" + scenario.getTitle());
+                LOG.debug("Determine Risk for Scenario: " + scenario.getTitle());
             }                
             analyseRiskOfAssets((IncidentScenario) scenario);       
         }
@@ -225,7 +237,7 @@ public class RiskAnalysisJob {
             analyseRiskOfAsset(graph, scenario, edge);
         }  
         if (LOG.isInfoEnabled()) {
-            LOG.info("Number of links from scenarios to assets: " + edgesToAsset.size());
+            LOG.info("Number of links from scenario to assets: " + edgesToAsset.size());
         }
         long time = RiskAnalysisServiceImpl.initRuntime();
         // Update cnalinks

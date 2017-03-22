@@ -19,7 +19,7 @@
     <!-- A service to run a ISO/IEC 27005 risk analysis -->
     <bean name="riskAnalysisServiceImpl"
         class="sernet.verinice.service.risk.RiskAnalysisServiceImpl">
-        <!-- Risk calcultion method: ADDITION or MULTIPLICATION -->
+        <!-- Risk calculation method: ADDITION or MULTIPLICATION -->
         <property name="riskCalculationMethod" value="ADDITION" />
         <property name="graphService" ref="graphService" />
         <property name="cnaLinkDao" ref="cnaLinkDao" />
