@@ -166,34 +166,37 @@ public class RiskAnalysisJob {
         }
     }
     
-    private void reduceRiskOfSzenarioWithControl(IncidentScenario scenario, CnATreeElement control) {
+    private void reduceRiskOfSzenarioWithControl(IncidentScenario scenario,
+            CnATreeElement control) {
         int controlEffect = control.getNumericProperty(Control.PROP_CONTROL_EFFECT_P);
         int probAfterControl;
-        
+
         // Risk with all controls
         probAfterControl = scenario.getNumericProperty(
                 IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS) - controlEffect;
-        scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS,
-                probAfterControl < 0 ? 0 : probAfterControl);
-        
+        scenario.setNumericProperty(
+                IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS,
+                positiveOrZero(probAfterControl));
+
         // Risk with implemented controls
         if (Control.isImplemented(control.getEntity())) {
-            
-            probAfterControl = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS)
-                    - controlEffect;
+
+            probAfterControl = scenario.getNumericProperty(
+                    IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS) - controlEffect;
             scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS,
-                    probAfterControl < 0 ? 0 : probAfterControl);
+                    positiveOrZero(probAfterControl));
         }
 
         // Risk with planned implemented controls
         if (Control.isPlanned(control.getEntity())) {
             probAfterControl = scenario.getNumericProperty(
                     IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS) - controlEffect;
-            scenario.setNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS,
-                    probAfterControl < 0 ? 0 : probAfterControl);
+            scenario.setNumericProperty(
+                    IncidentScenario.PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS,
+                    positiveOrZero(probAfterControl));
         }
     }
-    
+
     /**
      * Returns the risk for a given business impact of an asset and
      * a given probability of occurrence for a incident scenario.
@@ -273,9 +276,8 @@ public class RiskAnalysisJob {
     }
 
     /**
-     * Abbreviations used in this method to shorten in names of variables:
-     *  - business impact: bi
-     *  - confidentiality: C
+     * Abbreviations used in this method to shorten in names of variables: -
+     * business impact: bi - confidentiality: C
      * 
      * @param scenario
      * @param edgeToAsset
@@ -290,8 +292,8 @@ public class RiskAnalysisJob {
         int probability = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
         int riskC = calculateRisk(biC, probability);
         asset.setNumericProperty(Asset.ASSET_RISK_C,
-                asset.getNumericProperty(Asset.ASSET_RISK_C) + riskC);
-        edgeToAsset.setRiskConfidentiality(riskC);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_RISK_C) + riskC));
+        edgeToAsset.setRiskConfidentiality(positiveOrZero(riskC));
 
         // With implemented controls
         int biWithImplementedControlsC = assetWithReducedCIAValues
@@ -301,8 +303,10 @@ public class RiskAnalysisJob {
         int riskWithImplementedControlsC = calculateRisk(biWithImplementedControlsC,
                 probabilityWithImplementedControls);
         asset.setNumericProperty(Asset.ASSET_CONTROLRISK_C,
-                asset.getNumericProperty(Asset.ASSET_CONTROLRISK_C) + riskWithImplementedControlsC);
-        edgeToAsset.setRiskConfidentialityWithControls(riskWithImplementedControlsC);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_CONTROLRISK_C)
+                        + riskWithImplementedControlsC));
+        edgeToAsset
+                .setRiskConfidentialityWithControls(positiveOrZero(riskWithImplementedControlsC));
 
         // With all controls
         int biWithAllControlsC = assetWithReducedCIAValues
@@ -310,8 +314,8 @@ public class RiskAnalysisJob {
         int probabilityWithAllControls = scenario.getNumericProperty(
                 IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
         int riskWithAllControlsC = calculateRisk(biWithAllControlsC, probabilityWithAllControls);
-        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_C,
-                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_C) + riskWithAllControlsC);
+        asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_C, positiveOrZero(
+                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_C) + riskWithAllControlsC));
 
         // With planned controls
         int biWithPlannedControlsC = assetWithReducedCIAValues
@@ -321,8 +325,8 @@ public class RiskAnalysisJob {
         int riskWithPlannedControlsC = calculateRisk(biWithPlannedControlsC,
                 probabilityWithPlannedControls);
         asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C,
-                asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C)
-                        + riskWithPlannedControlsC);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_C)
+                        + riskWithPlannedControlsC));
     }
     
     /**
@@ -343,8 +347,8 @@ public class RiskAnalysisJob {
         int probability = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
         int riskI = calculateRisk(biI, probability);
         asset.setNumericProperty(Asset.ASSET_RISK_I,
-                asset.getNumericProperty(Asset.ASSET_RISK_I) + riskI);
-        edgeToAsset.setRiskIntegrity(riskI);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_RISK_I) + riskI));
+        edgeToAsset.setRiskIntegrity(positiveOrZero(riskI));
 
         // With implemented controls
         int biWithImplementedControlsI = assetWithReducedCIAValues
@@ -354,8 +358,8 @@ public class RiskAnalysisJob {
         int riskWithImplementedControlsI = calculateRisk(biWithImplementedControlsI,
                 probabilityWithImplementedControls);
         asset.setNumericProperty(Asset.ASSET_CONTROLRISK_I,
-                asset.getNumericProperty(Asset.ASSET_CONTROLRISK_I) + riskWithImplementedControlsI);
-        edgeToAsset.setRiskIntegrityWithControls(riskWithImplementedControlsI);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_CONTROLRISK_I) + riskWithImplementedControlsI));
+        edgeToAsset.setRiskIntegrityWithControls(positiveOrZero(riskWithImplementedControlsI));
 
         // With all controls
         int biWithAllControlsI = assetWithReducedCIAValues
@@ -364,7 +368,7 @@ public class RiskAnalysisJob {
                 IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
         int riskWithAllControlsI = calculateRisk(biWithAllControlsI, probabilityWithAllControls);
         asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_I,
-                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_I) + riskWithAllControlsI);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_I) + riskWithAllControlsI));
 
         // With planned controls
         int biWithPlannedControlsI = assetWithReducedCIAValues
@@ -374,8 +378,8 @@ public class RiskAnalysisJob {
         int riskWithPlannedControlsI = calculateRisk(biWithPlannedControlsI,
                 probabilityWithPlannedControls);
         asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I,
-                asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I)
-                        + riskWithPlannedControlsI);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_I)
+                        + riskWithPlannedControlsI));
     }
     
     /**
@@ -396,8 +400,8 @@ public class RiskAnalysisJob {
         int probability = scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_PROBABILITY);
         int riskA = calculateRisk(biA, probability);
         asset.setNumericProperty(Asset.ASSET_RISK_A,
-                asset.getNumericProperty(Asset.ASSET_RISK_A) + riskA);
-        edgeToAsset.setRiskAvailability(riskA);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_RISK_A) + riskA));
+        edgeToAsset.setRiskAvailability(positiveOrZero(riskA));
 
         // With implemented controls
         int biWithImplementedControlsA = assetWithReducedCIAValues
@@ -407,8 +411,8 @@ public class RiskAnalysisJob {
         int riskWithImplementedControlsA = calculateRisk(biWithImplementedControlsA,
                 probabilityWithImplementedControls);
         asset.setNumericProperty(Asset.ASSET_CONTROLRISK_A,
-                asset.getNumericProperty(Asset.ASSET_CONTROLRISK_A) + riskWithImplementedControlsA);
-        edgeToAsset.setRiskAvailabilityWithControls(riskWithImplementedControlsA);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_CONTROLRISK_A) + riskWithImplementedControlsA));
+        edgeToAsset.setRiskAvailabilityWithControls(positiveOrZero(riskWithImplementedControlsA));
 
         // With all controls
         int biWithAllControlsA = assetWithReducedCIAValues
@@ -417,7 +421,7 @@ public class RiskAnalysisJob {
                 IncidentScenario.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
         int riskWithAllControlsA = calculateRisk(biWithAllControlsA, probabilityWithAllControls);
         asset.setNumericProperty(Asset.ASSET_PLANCONTROLRISK_A,
-                asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_A) + riskWithAllControlsA);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_PLANCONTROLRISK_A) + riskWithAllControlsA));
 
         // With planned controls
         int biWithPlannedControlsA = assetWithReducedCIAValues
@@ -427,8 +431,8 @@ public class RiskAnalysisJob {
         int riskWithPlannedControlsA = calculateRisk(biWithPlannedControlsA,
                 probabilityWithPlannedControls);
         asset.setNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A,
-                asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A)
-                        + riskWithPlannedControlsA);
+                positiveOrZero(asset.getNumericProperty(Asset.ASSET_WITHOUT_NA_PLANCONTROLRISK_A)
+                        + riskWithPlannedControlsA));
     } 
     
     /**
@@ -576,6 +580,15 @@ public class RiskAnalysisJob {
     
     private boolean scenarioAffectsAvailability(IncidentScenario scenario) {
         return scenario.getNumericProperty(IncidentScenario.PROP_SCENARIO_AFFECTS_A) == 1;
+    }
+    
+    /**
+     * @param n
+     *            A positive or negative number
+     * @return The given number if n is positive or 0 if n is 0 or negative
+     */
+    private int positiveOrZero(int n) {
+        return n < 0 ? 0 : n;
     }
     
     private void saveLink(Edge edge) {
