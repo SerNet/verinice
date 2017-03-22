@@ -18,6 +18,9 @@
       name="configurationDao"
       ref="configurationDao" />
     <property
+      name="authService"
+      ref="authService" />
+    <property
       name="commandService"
       ref="commandService" />
     <property

@@ -26,7 +26,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
@@ -104,12 +103,9 @@ public final class AccountLoader {
     public static List<String> loadGroupNamesForLocalAdmin() {
         List<String> groups = new ArrayList<String>();
         List<String> groupNames = AccountLoader.loadGroupNames();
-        List<AccountGroup> accountGroups = ServiceFactory.lookupAccountService().listGroups();
-        Set<String> userGroups = AccountLoader.loadCurrentUserGroups();
-        String username = ServiceFactory.lookupAuthService().getUsername();
 
         for (String groupName : groupNames) {
-            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName, accountGroups, userGroups, username)) {
+            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName)) {
                 groups.add(groupName);
             }
         }
@@ -119,24 +115,25 @@ public final class AccountLoader {
     public static List<String> loadAccountsAndGroupNamesForLocalAdmin() {
         List<String> accountsAndGroups = AccountLoader.loadLoginNames();
         List<String> groupNames = AccountLoader.loadGroupNames();
-        List<AccountGroup> accountGroups = ServiceFactory.lookupAccountService().listGroups();
-        Set<String> userGroups = AccountLoader.loadCurrentUserGroups();
-        String username = ServiceFactory.lookupAuthService().getUsername();
 
         for (String groupName : groupNames) {
-            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName, accountGroups, userGroups, username)) {
+            if (AccountLoader.isLocalAdminOwnerOrCreator(groupName)) {
                 accountsAndGroups.add(groupName);
             }
         }
         return accountsAndGroups;
     }
 
-    public static boolean isLocalAdminOwnerOrCreator(String groupName, List<AccountGroup> accountGroups, Set<String> userGroups, String username) {
+    public static boolean isLocalAdminOwnerOrCreator(String groupName) {
+        Set<String> userGroups = AccountLoader.loadCurrentUserGroups();
         if (IRightsService.ADMINLOCALDEFAULTGROUPNAME.equals(groupName) || userGroups.contains(groupName)) {
             return true;
         }
+
+        List<AccountGroup> accountGroups = ServiceFactory.lookupAccountService().listGroups();
+        String username = ServiceFactory.lookupAuthService().getUsername();
         for (AccountGroup accountGroup : accountGroups) {
-            if (StringUtils.isNotEmpty(accountGroup.getCreator()) && accountGroup.getCreator().equals(username)) {
+            if (accountGroup.getName().equals(groupName) && username.equals(accountGroup.getCreator())) {
                 return true;
             }
         }

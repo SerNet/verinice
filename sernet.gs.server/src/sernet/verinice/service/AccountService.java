@@ -40,6 +40,7 @@ import org.apache.log4j.Logger;
 import sernet.gs.service.ServerInitializer;
 import sernet.verinice.interfaces.IAccountSearchParameter;
 import sernet.verinice.interfaces.IAccountService;
+import sernet.verinice.interfaces.IAuthService;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.interfaces.ICommandService;
 import sernet.verinice.interfaces.IConfigurationService;
@@ -66,6 +67,7 @@ public class AccountService implements IAccountService, Serializable {
 
     private IDao<AccountGroup, Serializable> accountGroupDao;
     private IBaseDao<Configuration, Serializable> configurationDao;
+    private IAuthService authService;
     private ICommandService commandService;
 
     private IConfigurationService configurationService;
@@ -170,6 +172,7 @@ public class AccountService implements IAccountService, Serializable {
         }
 
         AccountGroup group = new AccountGroup(name);
+        group.setCreator(getAuthService().getUsername());
         return getAccountGroupDao().merge(group);
     }
 
@@ -328,6 +331,14 @@ public class AccountService implements IAccountService, Serializable {
         String[] params = new String[] { newRole, oldRole };
         getPermissionDao().updateByQuery(hqlQuery, params);
         rightsServerHandler.discardData();
+    }
+
+    public IAuthService getAuthService() {
+        return authService;
+    }
+
+    public void setAuthService(IAuthService authService) {
+        this.authService = authService;
     }
 
     public ICommandService getCommandService() {

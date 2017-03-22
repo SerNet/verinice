@@ -18,21 +18,17 @@
 package sernet.gs.ui.rcp.main.service.crudcommands;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import sernet.gs.common.ApplicationRoles;
 import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
-import sernet.gs.ui.rcp.main.service.ServiceFactory;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.IBaseDao;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.common.Permission;
-import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.rcp.account.AccountLoader;
 
 /**
@@ -60,22 +56,12 @@ public class LoadPermissions extends GenericCommand {
         permissions = cte.getPermissions();
 
         boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
-
-        Set<String> userGroups = new HashSet<String>();
-        Set<Permission> filteredPermissions = new HashSet<Permission>();
-        String username = "";
-        List<AccountGroup> accountGroups = new ArrayList<AccountGroup>();
-
-        if (isLocalAdmin) {
-            username = ServiceFactory.lookupAuthService().getUsername();
-            userGroups = AccountLoader.loadCurrentUserGroups();
-            accountGroups = ServiceFactory.lookupAccountService().listGroups();
-        }
+        Set<Permission> filteredPermissions = new HashSet<Permission>(permissions.size());
 
         // Hydrate and filter the permissions
         for (Permission p : permissions) {
             if (isLocalAdmin) {
-                if (AccountLoader.isLocalAdminOwnerOrCreator(p.getRole(), accountGroups, userGroups, username)) {
+                if (AccountLoader.isLocalAdminOwnerOrCreator(p.getRole())) {
                     filteredPermissions.add(p);
                 }
             }
