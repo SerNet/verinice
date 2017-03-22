@@ -21,6 +21,10 @@
   background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
 }
 
+.layout-wrapper.menu-layout-horizontal .topbar .topbar-left .logo {
+  background: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}") top left no-repeat;
+}
+
 .layout-wrapper .topbar .topbar-left {
   background-color: white;
 }
@@ -46,6 +50,25 @@
     background-image: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
   }
 }
+
+/* Menu bar in top bar */
+.topbar-menubar {
+  display: inline-block;
+  float: right;
+}
+
+.layout-wrapper.menu-layout-static .topbar-menubar {
+  margin-top: -32px;
+}
+
+.layout-wrapper.menu-layout-overlay .topbar-menubar {
+  margin-top: -32px;
+}
+
+.layout-wrapper.menu-layout-horizontal .topbar-menubar {
+  margin-top: 5px;
+}
+
 
 /* Login panel customization */
 .login-panel .ui-g-12.logo-container img {
