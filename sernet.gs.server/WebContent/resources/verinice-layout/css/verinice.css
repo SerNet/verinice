@@ -69,6 +69,12 @@
   margin-top: 5px;
 }
 
+@media ( max-width : 1024px) {
+    .layout-wrapper.menu-layout-horizontal .topbar-menubar {
+    margin-top: -32px;
+  }
+}
+
 
 /* Login panel customization */
 .login-panel .ui-g-12.logo-container img {
