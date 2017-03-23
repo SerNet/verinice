@@ -45,9 +45,22 @@
   background-color: white;
 }
 
-@media ( max-width : 1024px) {
+@media ( max-width : 1024px ) {
   .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
     background-image: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
+  }
+}
+
+@media ( max-width : 414px ) {
+  .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
+    background: url("#{resource['verinice-layout:images/logo_v_rgb.png']}") top left no-repeat;
+    width: 23px;
+    height: 49px;
+  }
+  .layout-wrapper.menu-layout-overlay .topbar .topbar-left .logo {
+    background: url("#{resource['verinice-layout:images/logo_v_rgb.png']}") top left no-repeat;
+    width: 23px;
+    height: 49px;
   }
 }
 
