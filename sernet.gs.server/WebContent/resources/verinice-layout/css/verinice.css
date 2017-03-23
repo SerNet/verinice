@@ -57,6 +57,10 @@
   float: right;
 }
 
+body .topbar-menubar {
+  border: 0px;
+}
+
 .layout-wrapper.menu-layout-static .topbar-menubar {
   margin-top: -32px;
 }
