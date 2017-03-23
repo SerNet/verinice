@@ -57,26 +57,6 @@
               ajax="false" />
           </p:submenu>
 
-          <p:submenu
-            label="Help"
-            icon="fa fa-life-buoy">
-            <p:menuitem
-              value="Contents"
-              url="#" />
-            <p:submenu
-              label="Search"
-              icon="fa fa-search">
-              <p:submenu label="Text">
-                <p:menuitem
-                  value="Workspace"
-                  url="#" />
-              </p:submenu>
-              <p:menuitem
-                value="File"
-                url="#" />
-            </p:submenu>
-          </p:submenu>
-
           <p:menuitem
             value="Sign Out (#{auth.userName})"
             action="#{userManager.logout}"
