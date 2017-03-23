@@ -22,7 +22,6 @@
       <h:form>
         <p:menubar class="topbar-menubar">
           <p:submenu
-            label="Menu Mode"
             icon="fa fa-bars">
 
             <p:menuitem
@@ -43,7 +42,6 @@
           </p:submenu>
 
           <p:submenu
-            label="Language"
             icon="fa fa-globe">
             <p:menuitem
               value="English"
@@ -58,7 +56,6 @@
           </p:submenu>
 
           <p:menuitem
-            value="Sign Out (#{auth.userName})"
             action="#{userManager.logout}"
             icon="fa fa-sign-out" />
 
