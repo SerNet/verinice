@@ -29,6 +29,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
+import sernet.gs.common.ApplicationRoles;
+import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.rcp.SelectionAdapter;
@@ -69,33 +71,42 @@ public class LimitationPage extends BaseWizardPage {
         setTitle(Messages.LimitationPage_1);
         setMessage(Messages.LimitationPage_2);
         
+        final boolean currentUserIsLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+
         cbAdmin = createCheckbox(composite, Messages.LimitationPage_3, isAdmin);
+        cbAdmin.setEnabled(!currentUserIsLocalAdmin && !isLocalAdmin);
         cbAdmin.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isAdmin = cbAdmin.getSelection();
-                cbLocalAdmin.setEnabled(!isAdmin);
+                cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
                 configureStandartGroup();
                 changeGroupPage();
             } 
         });
         cbLocalAdmin = createCheckbox(composite, Messages.LimitationPage_8, isLocalAdmin);
+        cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
         cbLocalAdmin.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isLocalAdmin = cbLocalAdmin.getSelection();
-                cbAdmin.setEnabled(!isLocalAdmin);
+                cbAdmin.setEnabled(!currentUserIsLocalAdmin && !isLocalAdmin);
                 cbScopeOnly.setEnabled(!isLocalAdmin);
                 configureStandartGroup();
                 changeGroupPage();
             }
         });
         cbScopeOnly = createCheckbox(composite, Messages.LimitationPage_4, isScopeOnly);
+        if (currentUserIsLocalAdmin) {
+            cbScopeOnly.setEnabled(!isAdmin && !isLocalAdmin);
+        } else {
+            cbScopeOnly.setEnabled(!isLocalAdmin);
+        }
         cbScopeOnly.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isScopeOnly = cbScopeOnly.getSelection();
-                cbLocalAdmin.setEnabled(!isScopeOnly);
+                cbLocalAdmin.setEnabled(!isAdmin && !isScopeOnly);
                 configureStandartGroup();
                 changeGroupPage();
             } 
