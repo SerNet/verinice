@@ -10,11 +10,11 @@
     <property name="configurationDao" ref="configurationDao" />
     <property name="cryptoService" ref="encryptionService" />
     <property name="commandService" ref="hibernateCommandService" />
-    <property name="directoryCreator" ref="directoryCreator" />
+    <property name="lmDirectoryCreator" ref="lmDirectoryCreator" />
     <property name="authService" ref="authService" />
   </bean>
   
-  <bean id="directoryCreator" class="sernet.verinice.licensemanagement.LMServerDirectoryCreator">
+  <bean id="lmDirectoryCreator" class="sernet.verinice.licensemanagement.LMServerDirectoryCreator">
     <property name="vnlLocation" value="${veriniceserver.vnl.repository}" />
   </bean>
   

@@ -19,6 +19,11 @@
  ******************************************************************************/
 package sernet.verinice.licensemanagement;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.springframework.core.io.Resource;
@@ -57,7 +62,12 @@ public class LMServerDirectoryCreator implements IDirectoryCreator {
     private String getRootDirectoryPath(){
         String location = null;
         try {
-            // should be the case for tier3 mode, store index in <servlet>/WEB-INF/vnl
+            // should be the case for tier3 mode, store vnl in <servlet>/WEB-INF/vnl
+            File vnlLocation = getVnlLocation().getFile();
+            if ( !vnlLocation.exists() ){
+                Path path = Files.createDirectory(Paths.get(vnlLocation.toURI()));
+                LOG.debug("Path:\t" + path.toAbsolutePath() + " for storing vnl created");
+            };
             location = getVnlLocation().getFile().getAbsoluteFile().getAbsolutePath();
         } catch (Exception e){
             LOG.error("Error getting file path", e);

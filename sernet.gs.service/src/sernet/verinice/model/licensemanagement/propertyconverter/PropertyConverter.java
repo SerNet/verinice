@@ -19,7 +19,9 @@
  ******************************************************************************/
 package sernet.verinice.model.licensemanagement.propertyconverter;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 import org.apache.commons.beanutils.ConvertUtils;
 
@@ -54,9 +56,11 @@ public class PropertyConverter implements IPropertyConverter {
     @Override
     public LocalDate convertToDate(Object property){
         // ensure property is of type long
-        if(!(property instanceof Long)){
-            LocalDate ld = LocalDate.parse((String)property);
-            return ld;
+        if(property instanceof Long){
+            return Instant.ofEpochMilli((
+                    Long)property).
+                    atZone(ZoneId.systemDefault()).
+                    toLocalDate();
         }
         return null;
     }

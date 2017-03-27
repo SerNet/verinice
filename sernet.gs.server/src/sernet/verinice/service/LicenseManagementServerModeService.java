@@ -70,7 +70,7 @@ public class LicenseManagementServerModeService
     private IBaseDao<Configuration, Serializable> configurationDao;
     private IEncryptionService cryptoService;
     private ICommandService commandService;
-    private IDirectoryCreator directoryCreator;
+    private IDirectoryCreator lmDirectoryCreator;
     private IAuthService authService;
     
     protected Set<LicenseManagementEntry> existingLicenses = null;
@@ -223,13 +223,15 @@ public class LicenseManagementServerModeService
 
     /**
      * @return decrypted licenceIds (not contentIds!) of all 
-     * {@link LicenseManagementEntry} available the db
+     * {@link LicenseManagementEntry} available in the system
+     * 
+     * @param decrypted - decrypt licenseIds
      */
     @Override
     public Set<String> getAllLicenseIds(boolean decrypted) 
             throws LicenseManagementException {
         Set<String> allIds = new HashSet<>();
-        for (LicenseManagementEntry entry : getExistingLicenses()){
+        for (LicenseManagementEntry entry : getExistingLicenses()) {
             String cypherLicenseId = entry.getLicenseID();
             String plainLicenseId = decrypt(entry, 
                     LicenseManagementEntry.COLUMN_LICENSEID);
@@ -238,14 +240,18 @@ public class LicenseManagementServerModeService
         return allIds;
     }
     
+    
+    /**
+     * gets all instances of {@link LicenseManagementEntry} that are
+     * representing the given contentId and are assigned to the 
+     * given user
+     * @param user - the user to check for 
+     * @param contentId - the contentId to check for
+     */
     @Override
     public Set<LicenseManagementEntry> getLicenseEntriesForUserByContentId(
-            String user, String contentId) throws LicenseManagementException{
+            String user, String contentId) throws LicenseManagementException {
         Set<LicenseManagementEntry> userLicenses = new HashSet<>();
-        
-//        if ( getAuthService().getAdminUsername().equals(user)){
-//            return userLicenses; // superuser
-//        }
         
         Configuration configuration = getConfigurationByUsername(user);
         for (LicenseManagementEntry entry : 
@@ -301,6 +307,17 @@ public class LicenseManagementServerModeService
         return uniqueEntryCollection;
     }
     
+    
+    /**
+     * gets a single {@link LicenseManagementEntry} for a 
+     * given licenseId
+     * 
+     * @param licenseId - the licenseId that represents the 
+     * {@link LicenseManagementEntry}
+     * @param decrypt - decrypt the licenseId of entry before checking if
+     * equal to given licenseId 
+     * 
+     */
     @Override
     public LicenseManagementEntry getLicenseEntryForLicenseId(
             String licenseId, boolean decrypt) throws LicenseManagementException{
@@ -325,6 +342,7 @@ public class LicenseManagementServerModeService
     /**
      * @return all decrypted licenseIds for a given encrypted contentId
      * @param contentID - the contentId to search for
+     * @param decrypted - decrypt values before comparing to parameter contentId
      */
     @Override
     public Set<String> getLicenseIdsForContentId(String contentId, 
@@ -721,9 +739,12 @@ public class LicenseManagementServerModeService
         return existingLicenses;
     }
     
+    /**
+     * get configured location of vnl-repository
+     */
     @Override
     public File getVNLRepository() throws LicenseManagementException{
-        return new File(directoryCreator.create());
+        return new File(lmDirectoryCreator.create());
     }
 
     /**
@@ -876,15 +897,15 @@ public class LicenseManagementServerModeService
     /**
      * @return the directoryCreator
      */
-    public IDirectoryCreator getDirectoryCreator() {
-        return directoryCreator;
+    public IDirectoryCreator getLmDirectoryCreator() {
+        return lmDirectoryCreator;
     }
 
     /**
      * @param directoryCreator the directoryCreator to set
      */
-    public void setDirectoryCreator(IDirectoryCreator directoryCreator) {
-        this.directoryCreator = directoryCreator;
+    public void setLmDirectoryCreator(IDirectoryCreator directoryCreator) {
+        this.lmDirectoryCreator = directoryCreator;
     }
 
     /**
@@ -944,6 +965,10 @@ public class LicenseManagementServerModeService
         return isBefore;
     }
 
+    /**
+     * get the information wrapping objects ( {@link LicenseMessageInfos} )
+     * for all of the existing licenses 
+     */
     @Override
     public Set<LicenseMessageInfos> getAllLicenseMessageInfos() throws LicenseManagementException {
         Set<LicenseMessageInfos> infos = new HashSet<>();
@@ -955,7 +980,7 @@ public class LicenseManagementServerModeService
 
     /**
      * creates instance of {@link LicenseMessageInfos} that wraps 
-     * information abput a {@link LicenseManagementEntry}
+     * information about a {@link LicenseManagementEntry}
      * @param user
      * @param encryptedContentId
      * @return
@@ -974,21 +999,22 @@ public class LicenseManagementServerModeService
     }
 
     /**
-     * @param firstEntry
+     * create a {@link LicenseMessageInfos} for a given {@link LicenseManagementEntry}
+     * @param entry
      * @return
      */
-    private LicenseMessageInfos getSingleLicenseMessageInfos(LicenseManagementEntry firstEntry) {
+    private LicenseMessageInfos getSingleLicenseMessageInfos(LicenseManagementEntry entry) {
         LicenseMessageInfos infos;
-        if (firstEntry != null){
+        if (entry != null){
             String contentId = 
-                    decrypt(firstEntry, LicenseManagementEntry.COLUMN_CONTENTID);
+                    decrypt(entry, LicenseManagementEntry.COLUMN_CONTENTID);
             String licenseId = 
-                    decrypt(firstEntry, LicenseManagementEntry.COLUMN_LICENSEID);
+                    decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
             LocalDate validUntil = 
-                    decrypt(firstEntry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
+                    decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUNTIL);
             int validUsers = 
-                    decrypt(firstEntry, LicenseManagementEntry.COLUMN_VALIDUSERS);
-            boolean invalidSoon = invalidInTheNextMonth(firstEntry);
+                    decrypt(entry, LicenseManagementEntry.COLUMN_VALIDUSERS);
+            boolean invalidSoon = invalidInTheNextMonth(entry);
             infos = new LicenseMessageInfos();
             infos.setContentId(contentId);
             infos.setInvalidSoon(invalidSoon);

@@ -8,11 +8,11 @@
   <bean id="licenseManagementService" class="sernet.verinice.service.LicenseManagementStandaloneModeService">
     <property name="licenseManagementDao" ref="licenseManagementDao" />
     <property name="commandService" ref="hibernateCommandService" />
-    <property name="directoryCreator" ref="directoryCreator" />
+    <property name="lmDirectoryCreator" ref="lmDirectoryCreator" />
     <property name="cryptoService" ref="encryptionService" />
   </bean>
   
-  <bean id="directoryCreator" class="sernet.verinice.licensemanagement.LMOsgiDirectoryCreator">
+  <bean id="lmDirectoryCreator" class="sernet.verinice.licensemanagement.LMOsgiDirectoryCreator">
     <!-- vnl directory, relative to workspace -->
     <property name="vnlLocation" value="./vnl/" />
   </bean>

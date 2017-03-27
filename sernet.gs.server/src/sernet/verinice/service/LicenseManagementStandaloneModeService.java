@@ -57,7 +57,7 @@ public class LicenseManagementStandaloneModeService
     LicenseManagementEntryDao licenseManagementDao;
     IEncryptionService cryptoService;
     
-    IDirectoryCreator directoryCreator;
+    IDirectoryCreator lmDirectoryCreator;
 
 
     /**
@@ -123,6 +123,11 @@ public class LicenseManagementStandaloneModeService
         
     }
 
+    /**
+     * get location of vnl-repository, in tier2 it is 
+     * <$workspace>/vnl 
+     * (not configurable)
+     */
     @Override
     public File getVNLRepository() throws LicenseManagementException{
         File location = null;
@@ -139,7 +144,7 @@ public class LicenseManagementStandaloneModeService
     }
     
     /**
-     * in standalone mode, read vnl-files from workspace
+     * in standalone mode, read vnl-files from repository
      */
     @Override
     public Set<LicenseManagementEntry> readVNLFiles() 
@@ -238,7 +243,7 @@ public class LicenseManagementStandaloneModeService
     
     /**
      * creates instance of {@link LicenseMessageInfos} that wraps 
-     * information abput a {@link LicenseManagementEntry}
+     * information about a {@link LicenseManagementEntry}
      */
     @Override
     public LicenseMessageInfos getLicenseMessageInfos(String user,
@@ -363,15 +368,15 @@ public class LicenseManagementStandaloneModeService
     /**
      * @return the directoryCreator
      */
-    public IDirectoryCreator getDirectoryCreator() {
-        return directoryCreator;
+    public IDirectoryCreator getLmDirectoryCreator() {
+        return lmDirectoryCreator;
     }
 
     /**
      * @param directoryCreator the directoryCreator to set
      */
-    public void setDirectoryCreator(IDirectoryCreator directoryCreator) {
-        this.directoryCreator = directoryCreator;
+    public void setLmDirectoryCreator(IDirectoryCreator directoryCreator) {
+        this.lmDirectoryCreator = directoryCreator;
     }
 
     /**
