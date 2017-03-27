@@ -36,7 +36,7 @@ public class ItgsControlsSubMenu extends AbstractMainSubMenu {
     private MenuService menuService;
 
     public ItgsControlsSubMenu(MenuService menuService) {
-        super("MassnahmenUms");
+        super("Massnahmen GS");
         this.menuService = menuService;
     }
 

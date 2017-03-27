@@ -30,6 +30,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -70,7 +71,16 @@ public class BausteinUmsetzungAllView {
 
     @PostConstruct
     public void init() {
-        strategy = new GroupedByChapterStrategy();
+        readParameter();
+    }
+
+    private void readParameter() {
+        Map<String, String> parameterMap = getParameterMap();
+        this.strategy = new GroupedByChapterStrategy(parameterMap.get("crunchStrategy"));
+    }
+
+    private Map<String, String> getParameterMap() {
+        return (Map<String, String>) FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
     }
 
     /**
