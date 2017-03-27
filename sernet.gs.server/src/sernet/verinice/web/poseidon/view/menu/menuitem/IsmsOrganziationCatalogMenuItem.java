@@ -17,7 +17,7 @@
  * Contributors:
  *     @author Benjamin Weißenfels <bw[at]sernet[dot]de> - initial API and implementation
  ******************************************************************************/
-package sernet.verinice.web.poseidon.view.menu.submenu;
+package sernet.verinice.web.poseidon.view.menu.menuitem;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.model.menu.DefaultMenuItem;
