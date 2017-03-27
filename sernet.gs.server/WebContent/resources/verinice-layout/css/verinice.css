@@ -26,11 +26,11 @@
 }
 
 .layout-wrapper .topbar .topbar-left {
-  background-color: white;
+  background-color: #F0F3F5;
 }
 
 .layout-wrapper.menu-layout-static .topbar .topbar-left {
-  background-color: white;
+  background-color: #F0F3F5;
 }
 
 .layout-wrapper.menu-layout-static.layout-menu-static-inactive .topbar .topbar-left {
@@ -42,6 +42,10 @@
 }
 
 .layout-wrapper.menu-layout-overlay.layout-menu-overlay-active .topbar .topbar-left {
+  background-color: #F0F3F5;
+}
+
+.layout-wrapper.menu-layout-horizontal .topbar .topbar-left {
   background-color: white;
 }
 
