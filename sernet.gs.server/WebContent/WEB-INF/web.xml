@@ -272,6 +272,11 @@
 		<location>/error/500.xhtml</location>
 	</error-page>
 
+  <mime-mapping>
+    <extension>woff2</extension>
+    <mime-type>application/x-font-woff2</mime-type>
+  </mime-mapping>
+
 	<session-config>
 		<!-- Session idle timeout in min. -->
 		<session-timeout>30</session-timeout>
