@@ -31,6 +31,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.verinice.interfaces.ActionRightIDs;
 import sernet.verinice.model.common.CnATreeElement;
@@ -63,6 +64,8 @@ public class RiskAnalysisActionDelegate extends RightsEnabledActionDelegate
     @Override
     public void doRun(IAction action) {
         try {
+                // Close editors to avoid that stale values remain in an open editor
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */); 
             TitleAreaDialog wizardDialog = openWizard(); 
             if (wizardDialog.open() == Window.OK) {
                 MessageDialog.openInformation(getShell(), Messages.RiskAnalysisAction_FinishDialogTitle, Messages.RiskAnalysisAction_FinishDialogMessage);

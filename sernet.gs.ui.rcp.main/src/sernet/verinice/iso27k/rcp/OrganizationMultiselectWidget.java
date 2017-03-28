@@ -63,5 +63,10 @@ public class OrganizationMultiselectWidget extends ScopeMultiselectWidget {
     public boolean isShowSelectAllCheckbox() {
         return true;
     }
+    
+
+    public boolean isShowDeselectAllCheckbox() {
+        return true;
+    }
 
 }

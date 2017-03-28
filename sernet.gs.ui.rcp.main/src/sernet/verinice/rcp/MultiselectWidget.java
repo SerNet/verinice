@@ -65,6 +65,7 @@ public abstract class MultiselectWidget<T> {
     protected boolean showOnlySelectedCheckbox = true;
     protected boolean showFilterTextfield = true;
     protected boolean showSelectAllCheckbox = false;
+    protected boolean showDeselectAllCheckbox = false;
     
     protected String filterString = null;
     
@@ -77,6 +78,7 @@ public abstract class MultiselectWidget<T> {
     
     private Button checkboxOnlySelected;
     private Button buttonSelectAll;
+    private Button buttonDeselectAll;
     
     private SelectionListener organizationListener = new SelectionAdapter() {
         @Override
@@ -184,8 +186,11 @@ public abstract class MultiselectWidget<T> {
             if(isShowOnlySelectedCheckbox()) {
                 createSelectedCheckbox(filterComp);
             }         
+            if(isShowDeselectAllCheckbox()) {
+                createDeselectAllButton(filterComp);
+            }         
             if(isShowSelectAllCheckbox()) {
-                createSelectAllCheckbox(filterComp);
+                createSelectAllButton(filterComp);
             }
         }
     }
@@ -236,12 +241,9 @@ public abstract class MultiselectWidget<T> {
         });
     }
 
-    private void createSelectAllCheckbox(Composite filterComp) {
-        buttonSelectAll = new Button(filterComp, SWT.PUSH);
-        buttonSelectAll.setText(Messages.MultiselectWidget_SelectAll);
-        GridData gridData = new GridData();
-        gridData.widthHint = 120;
-        buttonSelectAll.setLayoutData(gridData);
+    private void createSelectAllButton(Composite composite) {
+        buttonSelectAll = new Button(composite, SWT.PUSH);
+        configureToggleButton(composite, buttonSelectAll, Messages.MultiselectWidget_SelectAll);
         buttonSelectAll.addSelectionListener(new SelectionListener() {          
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -257,8 +259,33 @@ public abstract class MultiselectWidget<T> {
             }
         });
     }
-
     
+    private void createDeselectAllButton(Composite composite) {
+        buttonDeselectAll = new Button(composite, SWT.PUSH);
+        configureToggleButton(composite, buttonDeselectAll, Messages.MultiselectWidget_Deselect_All);     
+        buttonDeselectAll.addSelectionListener(new SelectionListener() {          
+            @Override
+            public void widgetSelected(SelectionEvent e) {             
+                for (T item : checkboxMap.keySet()) {
+                    Button checkbox = checkboxMap.get(item);
+                    checkbox.setSelection(false);
+                }
+                selectedElement = null; 
+                selectedElementSet.clear();
+            }            
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+        });
+    }
+    
+    private void configureToggleButton(Composite composite, Button button, String text) {
+        button.setText(text);
+        GridData gridData = new GridData();
+        gridData.widthHint = 120;
+        button.setLayoutData(gridData);
+    }
+
     protected void addCheckboxes() {
         for(T item : itemList) {        
             if(isItemVisible(item)) {
@@ -322,7 +349,7 @@ public abstract class MultiselectWidget<T> {
         Composite comboComposite = new Composite(composite, SWT.NONE);
         GridData gridData = new GridData(SWT.FILL, SWT.NONE, true, false);
         comboComposite.setLayoutData(gridData);
-        GridLayout gridLayout = new GridLayout(3, false);
+        GridLayout gridLayout = new GridLayout(4, false);
         gridLayout.marginHeight = 0;
         gridLayout.marginWidth = 0;
         comboComposite.setLayout(gridLayout);
@@ -353,9 +380,17 @@ public abstract class MultiselectWidget<T> {
     public boolean isShowSelectAllCheckbox() {
         return showSelectAllCheckbox;
     }
-
+    
     public void setShowSelectAllButton(boolean showSelectAllCheckbox) {
         this.showSelectAllCheckbox = showSelectAllCheckbox;
+    }
+    
+    public boolean isShowDeselectAllCheckbox() {
+        return showDeselectAllCheckbox;
+    }
+
+    public void setShowDeselectAllButton(boolean showDeselectAllCheckbox) {
+        this.showDeselectAllCheckbox = showDeselectAllCheckbox;
     }
 
     public void addSelectionLiustener(SelectionListener listener) {
@@ -366,6 +401,9 @@ public abstract class MultiselectWidget<T> {
         }
         if(buttonSelectAll!=null) {
             buttonSelectAll.addSelectionListener(listener);
+        }
+        if(buttonDeselectAll!=null) {
+            buttonDeselectAll.addSelectionListener(listener);
         }
     }
     

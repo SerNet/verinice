@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.ImageCache;
 import sernet.gs.ui.rcp.main.actions.RightsEnabledAction;
@@ -71,6 +72,8 @@ public class RiskAnalysisAction extends RightsEnabledAction implements ISelectio
     @Override
     public void doRun() {
         try {
+            // Close editors to avoid that stale values remain in an open editor
+            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().closeAllEditors(true /* ask save */); 
             TitleAreaDialog wizardDialog = openWizard(); 
             if (wizardDialog.open() == Window.OK) {
                 MessageDialog.openInformation(getShell(), Messages.RiskAnalysisAction_FinishDialogTitle, Messages.RiskAnalysisAction_FinishDialogMessage);
