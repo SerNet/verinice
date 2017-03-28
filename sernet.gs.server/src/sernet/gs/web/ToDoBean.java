@@ -39,12 +39,14 @@ import sernet.verinice.service.commands.SaveElement;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -158,6 +160,12 @@ public class ToDoBean {
         grundSchutzExecutionFilter.add(GrundSchutzExecution.EXECUTION_UNTREATED);
 
         sealFilter = new HashSet<>();
+    }
+
+    @PostConstruct
+    public void init() {
+        grundSchutzExecutionFilter.addAll(EnumSet.allOf(GrundSchutzExecution.class));
+        sealFilter.addAll(EnumSet.allOf(Seal.class));
     }
 
     public void loadToDoList() {

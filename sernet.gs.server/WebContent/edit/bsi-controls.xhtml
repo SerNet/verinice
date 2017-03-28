@@ -37,15 +37,15 @@
 									label="#{msg['todo.realization']}"
 									converter="grundSchutzExecutionConverter">
 									<f:selectItem itemLabel="#{msg['todo.no']}"
-										itemValue="#{toDo.getGrundSchutzExecutionNo()}" />
+										itemValue="#{toDo.grundSchutzExecutionNo}" />
 									<f:selectItem itemLabel="#{msg['todo.yes']}"
-										itemValue="#{toDo.getGrundSchutzExecutionYes()}" />
+										itemValue="#{toDo.grundSchutzExecutionYes}" />
 									<f:selectItem itemLabel="#{msg['todo.partly']}"
-										itemValue="#{toDo.getGrundSchutzExecutionPartly()}" />
+										itemValue="#{toDo.grundSchutzExecutionPartly}" />
 									<f:selectItem itemLabel="#{msg['todo.superfluous']}"
-										itemValue="#{toDo.getGrundSchutzExecutionDispensable()}" />
+										itemValue="#{toDo.grundSchutzExecutionDispensable}" />
 									<f:selectItem itemLabel="#{msg['todo.untreated']}"
-										itemValue="#{toDo.getGrundSchutzExecutionUntreated()}" />
+										itemValue="#{toDo.grundSchutzExecutionUntreated}" />
 									<p:ajax event="change" listener="#{toDo.loadToDoList}"
 										update=":tablePanel,:editPanel" process="@this" />
 									<p:ajax event="toggleSelect" listener="#{toDo.loadToDoList}"
@@ -55,10 +55,10 @@
 							<div class="ui-g-4 ui-lg-4 ui-xl-4 ui-md-12 ui-sm-12">
 								<p:selectCheckboxMenu id="sealFilter" value="#{toDo.sealFilter}"
 									converter="sealConverter" label="#{msg['todo.seal']}">
-									<f:selectItem itemLabel="A" itemValue="#{toDo.getSealA()}" />
-									<f:selectItem itemLabel="B" itemValue="#{toDo.getSealB()}" />
-									<f:selectItem itemLabel="C" itemValue="#{toDo.getSealC()}" />
-									<f:selectItem itemLabel="Z" itemValue="#{toDo.getSealZ()}" />
+									<f:selectItem itemLabel="A" itemValue="#{toDo.sealA}" />
+									<f:selectItem itemLabel="B" itemValue="#{toDo.sealB}" />
+									<f:selectItem itemLabel="C" itemValue="#{toDo.sealC}" />
+									<f:selectItem itemLabel="Z" itemValue="#{toDo.sealZ}" />
 									<p:ajax event="toggleSelect" listener="#{toDo.loadToDoList}"
 										update=":tablePanel,:editPanel" process="@this" />
 									<p:ajax event="change" listener="#{toDo.loadToDoList}"
