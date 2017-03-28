@@ -61,10 +61,19 @@
     width: 23px;
     height: 49px;
   }
+
+  .layout-wrapper.menu-layout-static .topbar .topbar-left {
+    background-color: white;
+  }
+
   .layout-wrapper.menu-layout-overlay .topbar .topbar-left .logo {
     background: url("#{resource['verinice-layout:images/logo_v_rgb.png']}") top left no-repeat;
     width: 23px;
     height: 49px;
+  }
+
+  .layout-wrapper.menu-layout-overlay.layout-menu-overlay-active .topbar .topbar-left {
+    background-color: white;
   }
 }
 
