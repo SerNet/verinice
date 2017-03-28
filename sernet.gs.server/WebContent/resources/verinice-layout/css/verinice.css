@@ -49,6 +49,10 @@
   background-color: white;
 }
 
+.layout-wrapper .topbar .sign-out-button {
+  display: none;
+}
+
 @media ( max-width : 1024px ) {
   .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
     background-image: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
@@ -74,6 +78,14 @@
 
   .layout-wrapper.menu-layout-overlay.layout-menu-overlay-active .topbar .topbar-left {
     background-color: white;
+  }
+
+  .layout-wrapper .topbar .sign-out-button {
+    display: inline;
+  }
+
+  .layout-wrapper .topbar .sign-out-button-with-username {
+    display: none;
   }
 }
 

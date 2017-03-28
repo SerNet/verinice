@@ -56,8 +56,14 @@
           </p:submenu>
 
           <p:menuitem
+            class="sign-out-button"
             action="#{userManager.logout}"
             icon="fa fa-sign-out" />
+          <p:menuitem
+            class="sign-out-button-with-username"
+            action="#{userManager.logout}"
+            icon="fa fa-sign-out"
+            value="#{auth.userName}" />
 
         </p:menubar>
       </h:form>
