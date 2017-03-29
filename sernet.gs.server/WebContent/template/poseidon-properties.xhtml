@@ -18,7 +18,7 @@
 						rendered="#{p.isLine and p.isEditable and (not p.isURL)}" />
 					<h:outputText value="#{p.value}"
 						rendered="#{(not i.isText) and (not p.isEditable) and (not p.isURL)}" />
-					<p:inputTextarea rows="3" placeholder="Your Message"
+					<p:inputTextarea rows="3"
 						value="#{p.value}"
 						rendered="#{p.isText and p.isEditable and (not p.isURL)}" />
 
