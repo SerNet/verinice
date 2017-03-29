@@ -22,7 +22,6 @@ package sernet.verinice.web;
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
-import org.primefaces.model.menu.MenuItem;
 import org.primefaces.model.menu.MenuModel;
 
 import sernet.gs.service.SecurityException;
@@ -209,8 +208,12 @@ public class TreeBean implements IElementListener {
     
     private void createMenuModel() {
         menuModel = new DefaultMenuModel();     
-        // Add home item     
-        menuModel.addElement(MenuItemFactory.createNavigationMenuItem());
+        // Add home item
+        DefaultMenuItem home = new DefaultMenuItem();
+        home.setCommand("#{tree.selectPath(0)}");
+        home.setAjax(true);
+        home.setUpdate(":tableForm,:navForm");
+        menuModel.addElement(home);
         
         path.clear();
         createPath(this.getElement());
@@ -219,9 +222,20 @@ public class TreeBean implements IElementListener {
         Integer breadcrumbSize = calculateBreadcrumbSize();
         for (int i = breadcrumbSize; i < path.size(); i++) {
             CnATreeElement pathElement = path.get(i);
-            MenuItem item = MenuItemFactory.createNavigationMenuItem();
-            ((DefaultMenuItem) item).setValue(pathElement.getTitle());
+            DefaultMenuItem item = new DefaultMenuItem();
+            item.setValue(pathElement.getTitle());
+            item.setCommand("#{tree.selectPath(" + i + ")}");
+            item.setUpdate(":tableForm,:navForm");
+            item.setAjax(true);
             menuModel.addElement(item);
+        }
+    }
+
+    public void selectPath(String pathId) {
+        if (pathId != null) {
+            setElement(path.get(Integer.valueOf(pathId)));
+        } else {
+            setElement(loadIsoModel());
         }
     }
 
