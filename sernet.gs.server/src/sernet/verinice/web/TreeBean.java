@@ -54,13 +54,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.view.facelets.FaceletException;
 
 /**
  * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
-@SuppressWarnings("restriction")
 @ManagedBean(name = "tree")
 @SessionScoped
 public class TreeBean implements IElementListener {
