@@ -78,27 +78,7 @@
 
 			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-6 ui-sm-12">
 
-				<h:form id="treeTableForm" rendered="#{auth.isoElements}">
-					<p:panel>
-						<p:treeTable selection="#{veriniceTreeView.selected}"
-							selectionMode="single" id="verinice-objects"
-							value="#{veriniceTreeView.root}" var="node" scrollable="true">
-							<p:ajax event="expand" listener="#{veriniceTreeView.onExpand}" />
-							<p:ajax event="select" listener="#{veriniceTreeView.openElement}"
-								ajax="true" update=":navForm,:editForm,:navForm:newPanel" />
-							<f:facet name="header">
-				Organizations
-			  </f:facet>
-							<p:column width="16">
-								<h:graphicImage value="#{node.icon}" />
-							</p:column>
-							<p:column headerText="Name">
-								<h:outputText value="#{node.title}" />
-							</p:column>
-						</p:treeTable>
-					</p:panel>
-				</h:form>
-
+        <!-- Verinice Tree Elements -->
 				<h:form id="tableForm" rendered="#{auth.isoElements}">
 					<p:panel header="Organizations">
 						<p:dataTable id="elementTable" var="item" value="#{tree.children}"
