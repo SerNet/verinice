@@ -107,6 +107,7 @@ veriniceserver.gsmGenerator.enabled=false
 veriniceserver.gsmGenerator.cron=0 5 3 * * ?
 
 # ISO/IEC 27005 risk analysis
-# Method for risk calculation (case sensitive): ADDITION or MULTIPLICATION 
+# Method for risk calculation (case sensitive): ADDITION or MULTIPLICATION
+# Risk calculation method MULTIPLICATION is in beta stage
 # Default: ADDITION
 veriniceserver.risk.calculation.method=ADDITION
