@@ -14,6 +14,7 @@
 		<p:remoteCommand name="loadLinks" actionListener="#{link.init}"
 			update="editForm:groupAccordion:linkPanel" />
 
+    <p:growl id="msg" life="2000" />
 		<p:panel header="#{edit.title}" rendered="#{edit.element!=null}">
 			<p:outputPanel styleClass="ui-g #{getSaveButtonClass}">
 				<p:remoteCommand name="submitEditForm" process="@form"
@@ -21,7 +22,7 @@
 				<div class="ui-g-4">
 					<p:commandButton id="submit" value="#{msgEdit['save']}"
 						action="#{edit.save}" styleClass="button"
-						update=":editForm :tableForm" />
+						update=":editForm :tableForm msg" />
 				</div>
 				<ui:repeat value="#{edit.actionHandler}" var="actionHandler">
 					<div class="ui-g-4">
