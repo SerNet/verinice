@@ -225,9 +225,6 @@ public class TreeBean implements IElementListener {
         }
     }
 
-    /**
-     * @return
-     */
     private Integer calculateBreadcrumbSize() {
         Integer n = 0;
         if(path.size()>MAX_BREADCRUMB_SIZE) {
@@ -313,10 +310,6 @@ public class TreeBean implements IElementListener {
                 createPath(element.getParent());
             }
         }
-    }
-    
-    public void add() {
-        
     }
     
     private boolean isRoot(CnATreeElement element) {
