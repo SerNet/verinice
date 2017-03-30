@@ -210,7 +210,7 @@ public class TreeBean implements IElementListener {
         menuModel = new DefaultMenuModel();     
         // Add home item
         DefaultMenuItem home = new DefaultMenuItem();
-        home.setCommand("#{tree.selectPath(0)}");
+        home.setCommand("#{tree.init}");
         home.setAjax(true);
         home.setUpdate(":tableForm,:navForm");
         menuModel.addElement(home);
