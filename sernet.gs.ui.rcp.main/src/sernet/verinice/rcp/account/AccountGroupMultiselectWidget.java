@@ -116,5 +116,7 @@ public class AccountGroupMultiselectWidget extends MultiselectWidget<AccountGrou
         }
     }
 
-    
+    public void setEnabled(boolean enabled) {
+        group.getParent().setEnabled(enabled);
+    }
 }

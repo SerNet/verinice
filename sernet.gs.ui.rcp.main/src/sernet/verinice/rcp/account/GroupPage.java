@@ -24,7 +24,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.swt.widgets.Composite;
 
+import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.model.common.accountgroup.AccountGroup;
 import sernet.verinice.model.common.configuration.Configuration;
@@ -60,6 +62,8 @@ public class GroupPage extends BaseWizardPage {
         setMessage(Messages.GroupPage_2);
         
         groupWidget = new AccountGroupMultiselectWidget(composite, account);
+        final boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        groupWidget.setEnabled(!isLocalAdmin);
     }
 
     @Override
