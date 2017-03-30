@@ -53,6 +53,10 @@
   display: none;
 }
 
+.layout-wrapper .footer {
+	padding: 0 22px;
+}
+
 @media ( max-width : 1024px ) {
   .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
     background-image: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
