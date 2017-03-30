@@ -252,6 +252,7 @@ public abstract class MultiselectWidget<T> {
                     checkbox.setSelection(true);
                     selectedElement = item; 
                     selectedElementSet.add(item);
+                    preSelectedElements.add(item);
                 }
             }            
             @Override
@@ -272,6 +273,7 @@ public abstract class MultiselectWidget<T> {
                 }
                 selectedElement = null; 
                 selectedElementSet.clear();
+                preSelectedElements.clear();
             }            
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
