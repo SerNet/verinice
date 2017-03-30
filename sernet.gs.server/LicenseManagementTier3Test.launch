@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.junit.launchconfig">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/sernet.gs.server/testSrc/sernet/verinice/service/test/LicenseManagementTest.java"/>
+<listEntry value="/sernet.gs.server/testSrc/sernet/verinice/service/test/LicenseManagementTier3Test.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
@@ -21,7 +21,7 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.JRE_CONTAINER" value="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-8-openjdk-amd64"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="sernet.verinice.service.test.LicenseManagementTest"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="sernet.verinice.service.test.LicenseManagementTier3Test"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="sernet.gs.server"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dlog4j.configuration=log4j-test-server.xml"/>
 </launchConfiguration>

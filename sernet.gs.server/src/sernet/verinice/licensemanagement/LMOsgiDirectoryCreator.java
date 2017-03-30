@@ -63,7 +63,7 @@ public class LMOsgiDirectoryCreator implements IDirectoryCreator {
     private String getTierDependentIndexLocation(){
         String location = null;
         try {
-            // should be the case for tier2 mode, store index in <userhome>/elasticsearch
+            // should be the case for tier2 mode, store vnl-files in <userhome>/vnl
             location = FileUtils.toFile(new URL(FilenameUtils.concat(
                     System.getProperty(IVeriniceConstants.OSGI_INSTANCE_AREA), 
                     getVnlLocation()))).getAbsolutePath();

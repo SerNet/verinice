@@ -43,7 +43,7 @@ public interface ILicenseManagementService {
     void addLicenseIdAuthorisation(
             String user, String contentId) throws CommandException;
 
-    boolean addVNLToRepository(File vnlFile) throws LicenseManagementException;
+    File addVNLToRepository(File vnlFile) throws LicenseManagementException;
 
     <T extends Object> T  decrypt(
             LicenseManagementEntry entry, String propertyType);

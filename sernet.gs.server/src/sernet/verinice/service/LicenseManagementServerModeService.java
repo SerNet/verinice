@@ -118,6 +118,7 @@ public class LicenseManagementServerModeService
 
         LicenseManagementEntry entryToUse = null;
         entryToUse = findEntryForLicenseId(encryptedLicenseId, decrypt);
+        
         if (entryToUse != null){
             Object o = decrypt(
                     entryToUse, LicenseManagementEntry.COLUMN_VALIDUNTIL);
@@ -779,13 +780,14 @@ public class LicenseManagementServerModeService
      * (has to be added on file-system-layer)
      **/
     @Override
-    public boolean addVNLToRepository(File vnlFile) 
+    public File addVNLToRepository(File vnlFile) 
             throws LicenseManagementException{
         File newVnlInRepo =  new File(FilenameUtils.concat(getVNLRepository().
                 getAbsolutePath(), vnlFile.getName()));
         try {
             FileUtils.copyFile(vnlFile, newVnlInRepo);
-            return true;
+            readVNLFiles(); // refresh the list
+            return newVnlInRepo;
         } catch (IOException e) {
             String msg = "Error adding vnl to repository";
             log.error(msg, e);

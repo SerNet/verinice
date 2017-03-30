@@ -18,7 +18,6 @@
 package sernet.gs.ui.rcp.main.bsi.dialogs;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -51,10 +50,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.PlatformUI;
 
 import sernet.gs.ui.rcp.main.Activator;
-import sernet.gs.ui.rcp.main.ExceptionUtil;
 import sernet.gs.ui.rcp.main.bsi.dialogs.EncryptionDialog.EncryptionMethod;
 import sernet.gs.ui.rcp.main.common.model.CnAElementFactory;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
@@ -68,9 +65,6 @@ import sernet.verinice.iso27k.rcp.JobScheduler;
 import sernet.verinice.iso27k.rcp.Mutex;
 import sernet.verinice.iso27k.rcp.action.ExportAction;
 import sernet.verinice.model.common.CnATreeElement;
-import sernet.verinice.model.licensemanagement.LicenseManagementException;
-import sernet.verinice.model.licensemanagement.VNLMapper;
-import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
 import sernet.verinice.rcp.SWTElementFactory;
 import sernet.verinice.service.commands.SyncCommand;
 import sernet.verinice.service.commands.SyncParameter;
@@ -89,8 +83,6 @@ public class XMLImportDialog extends Dialog {
     private static final Logger LOG = Logger.getLogger(XMLImportDialog.class);
 
     private static final String SYNC_REQUEST = "syncRequest>"; //$NON-NLS-1$
-    private static final String VNL_FILE_EXTENSION = ".vnl";//$NON-NLS-1$
-    private static final int IMPORT_FORMAT_VNL = 2;
 
     private boolean insert;
     private boolean update;
@@ -643,7 +635,6 @@ public class XMLImportDialog extends Dialog {
         FileDialog dialog = new FileDialog(shell, SWT.NULL);
         dialog.setFilterExtensions(new String[] { "*" + VeriniceArchive.EXTENSION_VERINICE_ARCHIVE, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_XML, //$NON-NLS-1$
-                "*" + VNL_FILE_EXTENSION, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_PASSWORD_ENCRPTION, //$NON-NLS-1$
                 "*" + ExportAction.EXTENSION_CERTIFICATE_ENCRPTION}); //$NON-NLS-1$ 
         dialog.setFilterNames(new String[] { Messages.XMLImportDialog_30, Messages.XMLImportDialog_33, Messages.XMLImportDialog_39, Messages.XMLImportDialog_34, Messages.XMLImportDialog_35 });
@@ -733,12 +724,7 @@ public class XMLImportDialog extends Dialog {
                 format = guessFormat(fileData);
                 parameter.setFormat(format);
                 syncCommand = new SyncCommand(parameter, fileData);
-            } else if(format.equals(IMPORT_FORMAT_VNL)){
-                importVNL(dataFile);
-                return null;
-            }
-            
-            else {
+            } else {
                 if (Activator.getDefault().isStandalone()) {
                     String path = dataFile.getPath();
                     syncCommand = new SyncCommand(parameter, path);
@@ -764,42 +750,7 @@ public class XMLImportDialog extends Dialog {
         return syncCommand.getStatus();
     }
     
-    private void importVNL(final File vnlFile) throws CommandException{
-        PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                LicenseManagementEntry entry = null;
-                try {
-                    entry = VNLMapper.getInstance().
-                            unmarshalXML(FileUtils.readFileToByteArray(vnlFile));
-                    if(entry == null){
-                        MessageDialog.openWarning(getParentShell(), "Ungültige Lizenz", "Der Inhalt der zu importierenden Datei sind keine gültigen verinice-Lizenzinformationen ");
-                        return;
-                    }
-                    // check if valid xml
-                    if(entry != null && ServiceFactory.lookupLicenseManagementService().addVNLToRepository(vnlFile)){
-                        showSuccessfulVNLImport(vnlFile.getName());
-                        //TODO show hint for not succesfull import
-                    }
-                } catch (IOException e) {
-                    String msg = "Error reading vnl-Data";
-                    ExceptionUtil.log(e, msg);
-                    LOG.error(msg, e);
-                } catch (LicenseManagementException e){
-                    String msg = "Error adding vnl to repository";
-                    ExceptionUtil.log(e, msg);
-                    LOG.error(msg, e);
-                }
-            }
-        });
-
-    }
-    
-    private void showSuccessfulVNLImport(String filename){
-        MessageDialog.openInformation(getParentShell(), "Lizenzinformation erfolgreich hinzugefügt", "Die Lizenzinformationen aus der Datei " + filename + " wurden erfolgreich im System hinterlegt");
-    }
-
+   
 
     private byte[] decryptWithGenericSalt(byte[] fileData, IEncryptionService service) throws PasswordException {
         byte[] saltBytes = new byte[IEncryptionService.CRYPTO_SALT_DEFAULT_LENGTH];

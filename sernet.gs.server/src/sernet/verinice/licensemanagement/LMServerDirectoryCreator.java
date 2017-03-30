@@ -73,7 +73,7 @@ public class LMServerDirectoryCreator implements IDirectoryCreator {
             LOG.error("Error getting file path", e);
         }    
         if (LOG.isDebugEnabled()){
-            LOG.debug("Elasticsearch index root directory: " + location);
+            LOG.debug("vnl root directory: " + location);
         }
         return location;
     }

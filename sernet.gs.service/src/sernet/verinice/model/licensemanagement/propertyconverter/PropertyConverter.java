@@ -22,6 +22,7 @@ package sernet.verinice.model.licensemanagement.propertyconverter;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.beanutils.ConvertUtils;
 
@@ -61,6 +62,9 @@ public class PropertyConverter implements IPropertyConverter {
                     Long)property).
                     atZone(ZoneId.systemDefault()).
                     toLocalDate();
+        } else if(property instanceof String){
+            return LocalDate.parse((String)property, 
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
         return null;
     }
