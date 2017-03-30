@@ -136,3 +136,10 @@ body .topbar-menubar {
 .ui-panelgrid>*>tr, .ui-panelgrid>*>tr>td.ui-panelgrid-cell {
   border: none;
 }
+
+
+/* BreadCrumbs in ISO Objects view */
+.ui-breadcrumb.iso-objects-nav {
+  display: inline-grid;
+  height: 19px;
+}

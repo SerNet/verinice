@@ -21,30 +21,10 @@
 			<div class="ui-g-12 ui-lg-12">
 				<h:form id="navForm" rendered="#{auth.isoElements}">
 					<div class="card">
-						<p:breadCrumb model="#{tree.menuModel}" styleClass="breadcrumb" />
-					</div>
-					<div class="card">
-						<p:commandButton action="#{tree.init}" oncomplete="loadLinks();"
-							update=":tableForm,:navForm" icon="fa fa-fw fa-home"
-							title="Wurzel" style="height: 36px; vertical-align: middle;" />
-						<p:commandButton action="#{tree.showParent}"
-							oncomplete="loadLinks();"
-							update=":tableForm, :navForm, :editForm, :navForm:newPanel"
-							icon="fa fa-fw fa-arrow-up" title="Nach oben"
-							style="height: 36px; vertical-align: middle;" />
-						<p:commandButton onclick="submitEditForm();"
-							oncomplete="repeatMessage();" disabled="#{edit.element==null}"
-							icon="fa fa-fw fa-save" title="Save"
-							style="height: 36px; vertical-align: middle;" />
-						<p:remoteCommand name="repeatMessage" process="@form"
-							action="#{message.repeat}" />
-						<p:commandButton onclick="confirmation.show()"
-							disabled="#{edit.element==null}" icon="fa fa-fw fa-remove"
-							title="Delete" style="height: 36px; vertical-align: middle;" />
 						<p:commandButton id="newButton"
 							disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"
 							icon="fa fa-fw fa-file-o" title="New"
-							style="height: 36px; vertical-align: middle;" />
+							style="height: 35px" />
 						<p:overlayPanel id="newPanel" for="newButton" hideEffect="fade"
 							dynamic="false">
 							<p:dataTable id="newElementTable" var="h"
@@ -70,6 +50,16 @@
 								value="#{msgTree['confirm-deletion.cancel']}"
 								onclick="confirmation.hide()" type="button" />
 						</p:confirmDialog>
+						<p:commandButton onclick="submitEditForm();"
+							oncomplete="repeatMessage();" disabled="#{edit.element==null}"
+							icon="fa fa-fw fa-save" title="Save"
+							style="height: 35px" />
+						<p:remoteCommand name="repeatMessage" process="@form"
+							action="#{message.repeat}" />
+						<p:commandButton onclick="confirmation.show()"
+							disabled="#{edit.element==null}" icon="fa fa-fw fa-remove"
+							title="Delete" style="height: 35px" />
+						<p:breadCrumb model="#{tree.menuModel}" styleClass="breadcrumb iso-objects-nav" />
 					</div>
 				</h:form>
 			</div>
