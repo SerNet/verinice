@@ -138,8 +138,12 @@ body .topbar-menubar {
 }
 
 
-/* BreadCrumbs in ISO Objects view */
+/* Tool- and navigation bar in ISO Objects view */
 .ui-breadcrumb.iso-objects-nav {
   display: inline-grid;
   height: 19px;
+}
+
+div .iso-objects-toolbar-button {
+  height: 35px;
 }

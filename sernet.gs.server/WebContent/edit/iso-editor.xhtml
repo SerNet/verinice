@@ -17,54 +17,84 @@
 
 	<ui:define name="content" viewname="editor">
 
-		<div class="ui-g">
-			<div class="ui-g-12 ui-lg-12">
-				<h:form id="navForm" rendered="#{auth.isoElements}">
-					<div class="card">
-						<p:commandButton id="newButton"
-							disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"
-							icon="fa fa-fw fa-file-o" title="New"
-							style="height: 35px" />
-						<p:overlayPanel id="newPanel" for="newButton" hideEffect="fade"
-							dynamic="false">
-							<p:dataTable id="newElementTable" var="h"
-								value="#{tree.handlers}" styleClass="noheader">
-								<p:column style="width:16px">
-									<h:graphicImage value="#{h.icon}" />
-								</p:column>
-								<p:column>
-									<p:commandLink value="#{msgTree[h.label]}"
-										actionListener="#{h.execute}" styleClass="#{h.icon}"
-										update=":tableForm,:navForm" />
-								</p:column>
-							</p:dataTable>
-						</p:overlayPanel>
-						<p:confirmDialog id="confirmDialog"
-							message="#{msgTree['confirm-deletion']} #{edit.element.title} ?"
-							header="Delete" severity="alert" widgetVar="confirmation">
-							<p:commandButton id="confirm" actionListener="#{tree.delete}"
-								value="#{msgTree['confirm-deletion.yes']}"
-								update=":tableForm,:navForm,:editForm,:navForm:newPanel"
-								oncomplete="confirmation.hide()" />
-							<p:commandButton id="decline"
-								value="#{msgTree['confirm-deletion.cancel']}"
-								onclick="confirmation.hide()" type="button" />
-						</p:confirmDialog>
-						<p:commandButton onclick="submitEditForm();"
-							oncomplete="repeatMessage();" disabled="#{edit.element==null}"
-							icon="fa fa-fw fa-save" title="Save"
-							style="height: 35px" />
-						<p:remoteCommand name="repeatMessage" process="@form"
-							action="#{message.repeat}" />
-						<p:commandButton onclick="confirmation.show()"
-							disabled="#{edit.element==null}" icon="fa fa-fw fa-remove"
-							title="Delete" style="height: 35px" />
-						<p:breadCrumb model="#{tree.menuModel}" styleClass="breadcrumb iso-objects-nav" />
-					</div>
-				</h:form>
-			</div>
-		</div>
-		<div class="ui-g ui-fluid">
+    <div class="ui-g">
+      <div class="ui-g-12 ui-lg-12">
+        <h:form
+          id="navForm"
+          rendered="#{auth.isoElements}">
+          <div class="card">
+            <p:commandButton
+              id="newButton"
+              disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"
+              icon="fa fa-fw fa-file-o"
+              title="New"
+              styleClass="iso-objects-toolbar-button" />
+            <p:overlayPanel
+              id="newPanel"
+              for="newButton"
+              hideEffect="fade"
+              dynamic="false">
+              <p:dataTable
+                id="newElementTable"
+                var="h"
+                value="#{tree.handlers}"
+                styleClass="noheader">
+                <p:column style="width:16px">
+                  <h:graphicImage value="#{h.icon}" />
+                </p:column>
+                <p:column>
+                  <p:commandLink
+                    value="#{msgTree[h.label]}"
+                    actionListener="#{h.execute}"
+                    styleClass="#{h.icon}"
+                    update=":tableForm,:navForm" />
+                </p:column>
+              </p:dataTable>
+            </p:overlayPanel>
+            <p:confirmDialog
+              id="confirmDialog"
+              message="#{msgTree['confirm-deletion']} #{edit.element.title} ?"
+              header="Delete"
+              severity="alert"
+              widgetVar="confirmation">
+              <p:commandButton
+                id="confirm"
+                actionListener="#{tree.delete}"
+                value="#{msgTree['confirm-deletion.yes']}"
+                update=":tableForm,:navForm,:editForm,:navForm:newPanel"
+                oncomplete="confirmation.hide()" />
+              <p:commandButton
+                id="decline"
+                value="#{msgTree['confirm-deletion.cancel']}"
+                onclick="confirmation.hide()"
+                type="button" />
+            </p:confirmDialog>
+            <p:commandButton
+              onclick="submitEditForm();"
+              oncomplete="repeatMessage();"
+              disabled="#{edit.element==null}"
+              icon="fa fa-fw fa-save"
+              title="Save"
+              styleClass="iso-objects-toolbar-button" />
+            <p:remoteCommand
+              name="repeatMessage"
+              process="@form"
+              action="#{message.repeat}" />
+            <p:commandButton
+              onclick="confirmation.show()"
+              disabled="#{edit.element==null}"
+              icon="fa fa-fw fa-remove"
+              title="Delete"
+              styleClass="iso-objects-toolbar-button" />
+            <p:breadCrumb
+              model="#{tree.menuModel}"
+              styleClass="breadcrumb iso-objects-nav" />
+          </div>
+        </h:form>
+      </div>
+    </div>
+
+    <div class="ui-g ui-fluid">
 
 			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-6 ui-sm-12">
 
