@@ -147,3 +147,11 @@ body .topbar-menubar {
 div .iso-objects-toolbar-button {
   height: 35px;
 }
+
+.new-iso-object-panel.ui-datatable table thead {
+  display: none;
+}
+
+.new-iso-object-panel.ui-datatable table {
+  width: auto;
+}
