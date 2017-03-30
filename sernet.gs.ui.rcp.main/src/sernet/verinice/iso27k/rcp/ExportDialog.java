@@ -77,7 +77,7 @@ public class ExportDialog extends TitleAreaDialog {
     private String filePath;
     private String sourceId;
     
-    private ElementMultiselectWidget organizationWidget = null;
+    private ScopeMultiselectWidget organizationWidget = null;
     
     private Text sourceIdText;
     private Text txtLocation;
@@ -147,7 +147,7 @@ public class ExportDialog extends TitleAreaDialog {
         composite.setLayoutData(gd);
         
         try {
-            organizationWidget = new ElementMultiselectWidget(composite, selection, selectedElement);
+            organizationWidget = new ScopeMultiselectWidget(composite, selection, selectedElement);
             setOrgTitle();
             
         } catch (CommandException ex) {

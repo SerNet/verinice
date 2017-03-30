@@ -43,7 +43,7 @@ import org.eclipse.swt.widgets.Text;
 import sernet.gs.ui.rcp.main.Activator;
 import sernet.gs.ui.rcp.main.preferences.PreferenceConstants;
 import sernet.verinice.interfaces.CommandException;
-import sernet.verinice.iso27k.rcp.ElementMultiselectWidget;
+import sernet.verinice.iso27k.rcp.ScopeMultiselectWidget;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
@@ -117,7 +117,7 @@ public class ServerConnectionToggleDialog extends TitleAreaDialog {
         }
         
         try {
-            organizationWidget = new ElementMultiselectWidget(composite);
+            organizationWidget = new ScopeMultiselectWidget(composite);
         } catch (CommandException ex) {
             LOG.error("Error while loading organizations", ex); //$NON-NLS-1$
             MessageDialog.openError(getShell(), Messages.ServerConnectionToggleDialog_5, Messages.ServerConnectionToggleDialog_6);

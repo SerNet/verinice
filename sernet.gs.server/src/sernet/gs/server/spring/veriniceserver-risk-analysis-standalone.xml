@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--                                                                                  -->
+<!-- Spring Framework configuration file                                              -->
+<!--                                                                                  -->
+<!-- This file contains the configuration of the ISO/IEC 27005 risk analysis service  -->
+<!-- and it is used if verinice is running in operation mode standalone. See file     -->
+<!-- veriniceserver-risk-analysis.xml for the configuration of the service if the     -->
+<!-- verinice server is running in Tomcat.                                            -->
+<!--                                                                                  -->
+<!-- This file is referenced in class InternalServer                                  -->
+<!--                                                                                  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+
+    <!-- A service to run a ISO/IEC 27005 risk analysis -->
+    <bean name="riskAnalysisServiceImpl"
+        class="sernet.verinice.service.risk.RiskAnalysisServiceImpl">
+        <!-- Risk calculation method: ADDITION or MULTIPLICATION -->
+        <property name="riskCalculationMethod" value="ADDITION" />
+        <property name="graphService" ref="graphService" />
+        <property name="cnaLinkDao" ref="cnaLinkDao" />
+    </bean>
+    
+    <!-- Proxy bean for transaction management -->
+    <bean id="riskAnalysisService" parent="baseTxProxy">
+        <property name="target" ref="riskAnalysisServiceImpl" />
+        <property name="transactionAttributes">
+            <props merge="true">
+                <prop key="runRiskAnalysis">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+    </bean>
+</beans>

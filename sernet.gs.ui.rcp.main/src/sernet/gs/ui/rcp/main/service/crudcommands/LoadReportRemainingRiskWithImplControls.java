@@ -26,14 +26,14 @@ import sernet.gs.service.RetrieveInfo;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
 import sernet.verinice.interfaces.ICachedCommand;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
 import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.verinice.model.iso27k.Process;
 import sernet.verinice.service.commands.LoadElementByUuid;
+import sernet.verinice.service.risk.RiskAnalysisHelper;
 
 /**
  *
@@ -81,7 +81,7 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                 List<CnATreeElement> assets = null;
                 List<CnATreeElement> scenarios = null;
                 AssetValueAdapter valueAdapter = null;
-                RiskAnalysisServiceImpl raService = null;
+                RiskAnalysisHelperImpl raService = null;
                 results = new ArrayList<List<String>>(0);
 
                 int cRedCount = 0;
@@ -99,7 +99,7 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                     assets = getCommandService().executeCommand(assetLoader).getElements();
                     for(CnATreeElement asset : assets){
                         valueAdapter = new AssetValueAdapter(asset);
-                        raService = new RiskAnalysisServiceImpl();
+                        raService = new RiskAnalysisHelperImpl();
 
                         // reload asset
                         LoadElementByUuid<CnATreeElement> assetReloader = new LoadElementByUuid<CnATreeElement>(asset.getUuid(), new RetrieveInfo().setLinksDown(true).setLinksUp(true).setLinksDownProperties(true).setLinksUpProperties(true));
@@ -107,7 +107,7 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                         int impactC = valueAdapter.getVertraulichkeit();
                         int impactI = valueAdapter.getIntegritaet();
                         int impactA = valueAdapter.getVerfuegbarkeit();
-                        Integer[] reducedImpact = raService.applyControlsToImpact(IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
+                        Integer[] reducedImpact = raService.applyControlsToImpact(RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
                         if(reducedImpact != null){
                             impactC = reducedImpact[0];
                             impactI = reducedImpact[1];
@@ -118,10 +118,10 @@ public class LoadReportRemainingRiskWithImplControls extends GenericCommand impl
                         LoadReportLinkedElements scenarioLoader = new LoadReportLinkedElements(IncidentScenario.TYPE_ID, asset.getDbId());
                         scenarios = getCommandService().executeCommand(scenarioLoader).getElements();
                         for(CnATreeElement scenario : scenarios){
-                            int probability = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
-                            boolean isCrelevant = scenario.getEntity().getProperties(IRiskAnalysisService.PROP_SCENARIO_AFFECTS_C).getProperty(0).getPropertyValue().equals("1");
-                            boolean isIrelevant = scenario.getEntity().getProperties(IRiskAnalysisService.PROP_SCENARIO_AFFECTS_I).getProperty(0).getPropertyValue().equals("1");
-                            boolean isArelevant = scenario.getEntity().getProperties(IRiskAnalysisService.PROP_SCENARIO_AFFECTS_A).getProperty(0).getPropertyValue().equals("1");
+                            int probability = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+                            boolean isCrelevant = scenario.getEntity().getProperties(RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_C).getProperty(0).getPropertyValue().equals("1");
+                            boolean isIrelevant = scenario.getEntity().getProperties(RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_I).getProperty(0).getPropertyValue().equals("1");
+                            boolean isArelevant = scenario.getEntity().getProperties(RiskAnalysisHelper.PROP_SCENARIO_AFFECTS_A).getProperty(0).getPropertyValue().equals("1");
                             if(isCrelevant){
                                 if((probability + impactC) > toleratedC){
                                     cRedCount++;

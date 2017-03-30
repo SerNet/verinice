@@ -779,9 +779,9 @@ import sernet.verinice.model.iso27k.IncidentScenario;
 import sernet.gs.ui.rcp.main.service.crudcommands.ExecuteHQLInReportCommand;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.iso27k.Asset;
-import sernet.verinice.iso27k.service.IRiskAnalysisService;
+import sernet.verinice.iso27k.service.RiskAnalysisHelper;
 import sernet.verinice.model.iso27k.AssetValueAdapter;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.gs.service.NumericStringComparator;
 import sernet.verinice.report.service.impl.TocHelper2;
 
@@ -883,7 +883,7 @@ for(Asset asset : assetSet){
     
     
     valueAdapter = new AssetValueAdapter(asset);
-    ras = new RiskAnalysisServiceImpl();
+    ras = new RiskAnalysisHelperImpl();
     
     /** Get risk values for implement controls */
     impactC = valueAdapter.getVertraulichkeit();
@@ -900,14 +900,14 @@ for(Asset asset : assetSet){
     }
     
     
-    reducedImpact = ras.applyControlsToImpact(IRiskAnalysisService.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
+    reducedImpact = ras.applyControlsToImpact(RiskAnalysisHelper.RISK_WITH_IMPLEMENTED_CONTROLS, asset, impactC, impactI, impactA);
     if (reducedImpact != null) {
       impactC = reducedImpact[0];
       impactI = reducedImpact[1];
       impactA = reducedImpact[2];
     }
     
-    probabilityWithControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
+    probabilityWithControls = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_CONTROLS);
     
   		if(isCRelevant){
     			treatedRiskC = probabilityWithControls + impactC;
@@ -934,7 +934,7 @@ for(Asset asset : assetSet){
     impactAllI = valueAdapter.getIntegritaet();
     impactAllA = valueAdapter.getVerfuegbarkeit();
     
-    reducedAllImpact = ras.applyControlsToImpact(IRiskAnalysisService.RISK_WITH_ALL_CONTROLS, asset, impactAllC, impactAllI, impactAllA);
+    reducedAllImpact = ras.applyControlsToImpact(RiskAnalysisHelper.RISK_WITH_ALL_CONTROLS, asset, impactAllC, impactAllI, impactAllA);
     if (reducedAllImpact != null) {
       impactAllC = reducedAllImpact[0];
       impactAllI = reducedAllImpact[1];
@@ -942,7 +942,7 @@ for(Asset asset : assetSet){
     }
     
     // get impact with all controls
-    probabilityWithAllControls = scenario.getNumericProperty(IRiskAnalysisService.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
+    probabilityWithAllControls = scenario.getNumericProperty(RiskAnalysisHelper.PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS);
     
 		if(isCRelevant){
     			treatedRiskAllC = probabilityWithAllControls + impactAllC;

@@ -47,6 +47,7 @@ import sernet.verinice.rcp.ProfileEditAction;
 import sernet.verinice.rcp.ServerConnectionToggleAction;
 import sernet.verinice.rcp.account.AccountView;
 import sernet.verinice.rcp.accountgroup.AccountGroupView;
+import sernet.verinice.rcp.risk.RiskAnalysisAction;
 import sernet.verinice.report.rcp.ReportDepositView;
 import sernet.verinice.validation.CnAValidationView;
 
@@ -149,7 +150,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private ImportGstoolNotesAction importGSNotesAction;
 
-    private RunRiskAnalysisAction runRiskAnalysisAction;
+    private RiskAnalysisAction runRiskAnalysisAction;
 
     private ServerConnectionToggleAction serverConnectionToggleAction;
 
@@ -217,7 +218,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         this.importGSNotesAction = new ImportGstoolNotesAction(window, Messages.ApplicationActionBarAdvisor_27);
         this.showPreferencesAction = new ShowPreferencesAction();
         this.bulkEditAction = new ShowBulkEditAction(window, Messages.ApplicationActionBarAdvisor_16);
-        this.runRiskAnalysisAction = new RunRiskAnalysisAction(window);
+        this.runRiskAnalysisAction = new RiskAnalysisAction(window);
         this.accessControlEditAction = new ShowAccessControlEditAction(window, Messages.ApplicationActionBarAdvisor_17);
         this.profileEditAction = new ProfileEditAction(window, Messages.ApplicationActionBarAdvisor_33);
         this.konsolidatorAction = new ShowKonsolidatorAction(window, Messages.ApplicationActionBarAdvisor_18);

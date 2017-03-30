@@ -88,7 +88,7 @@ public class GraphService implements IGraphService {
         loadLinks();
          
         log();
-        logRuntime("create, runtime: ", time);
+        logRuntime("Graph generation runtime: ", time);
         return graph;
     }
     
@@ -102,10 +102,13 @@ public class GraphService implements IGraphService {
             loader.setCnaTreeElementDao(getCnaTreeElementDao());
             elementList.addAll(loader.loadElements());
         }
+        if (LOG.isInfoEnabled()) {
+            LOG.info(elementList.size() + " relevant elements found");
+        }
         for (CnATreeElement element : elementList) {
             graph.addVertex(element);
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Vertex added: " + element.getTitle() );
+                LOG.debug("Vertex added: " + element.getTitle() + " [" + element.getTypeId() + "]" );
             }
             uuidMap.put(element.getUuid(), element);
         }
@@ -149,7 +152,7 @@ public class GraphService implements IGraphService {
                 
                 graph.addEdge(edge);
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Edge added: " + source.getTitle() + " - " + target.getTitle() + ", " + link.getRelationId());
+                    LOG.debug("Edge added: " + source.getTitle() + " <-> " + target.getTitle() + " [" + link.getRelationId() + "]");
                 }
             }
         }

@@ -10,7 +10,7 @@ import sernet.hui.common.connect.HitroUtil;
 import sernet.hui.common.connect.PropertyType;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.GenericCommand;
-import sernet.verinice.iso27k.service.RiskAnalysisServiceImpl;
+import sernet.verinice.iso27k.service.RiskAnalysisHelperImpl;
 import sernet.verinice.model.common.CnALink;
 import sernet.verinice.model.common.CnATreeElement;
 import sernet.verinice.model.iso27k.Asset;
@@ -55,7 +55,7 @@ public class LoadRiskSummary extends GenericCommand {
 	    int probMax = 0;
 	    getLog().debug("LoadReportElements for root_object " + rootElement);
 	    
-	    PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Asset.TYPE_ID, RiskAnalysisServiceImpl.PROP_SCENARIO_PROBABILITY);
+	    PropertyType type = HitroUtil.getInstance().getTypeFactory().getPropertyType(Asset.TYPE_ID, RiskAnalysisHelperImpl.PROP_SCENARIO_PROBABILITY);
 	    probMax = type.getMaxValue();
 	    
 	    Organization org = (Organization) getDaoFactory().getDAO(Organization.TYPE_ID).findById(rootElement);
@@ -93,7 +93,7 @@ public class LoadRiskSummary extends GenericCommand {
         for (CnATreeElement cnATreeElement : items) {
           for (CnALink link: cnATreeElement.getLinksDown()) {
               if (link.getDependency().getTypeId().equals(IncidentScenario.TYPE_ID)) {
-                  Integer prob = link.getDependency().getEntity().getInt(RiskAnalysisServiceImpl.PROP_SCENARIO_PROBABILITY);
+                  Integer prob = link.getDependency().getEntity().getInt(RiskAnalysisHelperImpl.PROP_SCENARIO_PROBABILITY);
                   switch (ciaChoice) {
                   case 'c':
                       risk = link.getRiskConfidentiality();

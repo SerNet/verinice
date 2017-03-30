@@ -27,8 +27,9 @@ package sernet.gs.service;
 public abstract class TimeFormatter {
     
     public static String getHumanRedableTime(long ms) {
-        double x = ms / 1000.0;
+        double x = ms / 1000.0;      
         long seconds = Math.round(x % 60);
+        long miliseconds = Math.round(ms - (seconds * 1000));
         x /= 60;
         long minutes = Math.round(x % 60);
         x /= 60;
@@ -56,7 +57,13 @@ public abstract class TimeFormatter {
                 sb.append(", ");
             }
             sb.append(seconds).append(" s");
-        }        
+        } 
+        if(miliseconds>0 && seconds<1 ) {
+            if(sb.length()>0) {
+                sb.append(", ");
+            }
+            sb.append(miliseconds).append(" ms");
+        }       
         return sb.toString();     
     }
     

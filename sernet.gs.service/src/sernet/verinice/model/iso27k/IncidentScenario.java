@@ -26,6 +26,9 @@ import sernet.verinice.model.bsi.TagHelper;
 import sernet.verinice.model.common.CnATreeElement;
 
 /**
+ * An incident scenario from the ISO/IEC 27000 standard.
+ * See https://en.wikipedia.org/wiki/ISO/IEC_27000-series for details
+ * 
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 @SuppressWarnings("serial")
@@ -40,11 +43,21 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 	public static final String PROP_TAG = "incident_scenario_tag"; //$NON-NLS-1$
 	public static final String PROP_PROBABILITY = "incscen_likelihood"; //$NON-NLS-1$
 	public static final String PROP_GSM_ISM_SCENARIO_CVSS = "gsm_ism_scenario_cvss"; //$NON-NLS-1$
+    public static final String PROP_SCENARIO_METHOD = "incscen_likelihoodmethod";
+    public static final String PROP_SCENARIO_THREAT_PROBABILITY = "incscen_threat_likelihood";
+    public static final String PROP_SCENARIO_VULN_PROBABILITY = "incscen_vuln_level";
+    public static final String PROP_SCENARIO_PROBABILITY = "incscen_likelihood";
+    public static final String PROP_SCENARIO_PROBABILITY_WITH_CONTROLS = "incscen_likelihood_wcontrol";
+    public static final String PROP_SCENARIO_PROBABILITY_WITH_PLANNED_CONTROLS = "incscen_likelihood_wplancontrol";
+    public static final String PROP_SCENARIO_PROBABILITY_WITHOUT_NA_CONTROLS = "incscen_likelihood_without_na_control";
+    public static final String PROP_SCENARIO_AFFECTS_C = "scenario_value_method_confidentiality";
+    public static final String PROP_SCENARIO_AFFECTS_I = "scenario_value_method_integrity";
+    public static final String PROP_SCENARIO_AFFECTS_A = "scenario_value_method_availability";
 
     public static final String REL_INCSCEN_ASSET = "rel_incscen_asset"; //$NON-NLS-1$
     public static final String REL_INCSCEN_VULNERABILITY = "rel_incscen_vulnerability"; //$NON-NLS-1$
     public static final String REL_INCSCEN_THREAT = "rel_incscen_threat"; //$NON-NLS-1$
-	
+
 	/**
 	 * Creates an empty scenario
 	 */
@@ -75,7 +88,7 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 	 */
 	@Override
 	public String getTitle() {
-		return getEntity().getSimpleValue(PROP_NAME);
+		return getEntity().getPropertyValue(PROP_NAME);
 	}
 	
 	@Override
@@ -85,15 +98,15 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 	
 	@Override
     public String getAbbreviation() {
-		return getEntity().getSimpleValue(PROP_ABBR);
+		return getEntity().getPropertyValue(PROP_ABBR);
 	}
 
 	public String getProbability() {
-	    return getEntity().getSimpleValue(PROP_PROBABILITY);
+	    return getEntity().getPropertyValue(PROP_PROBABILITY);
 	}
 	
 	public Double getGsmCvss() {  
-	    String value = getEntity().getSimpleValue(PROP_GSM_ISM_SCENARIO_CVSS);
+	    String value = getEntity().getPropertyValue(PROP_GSM_ISM_SCENARIO_CVSS);
 	    if(value==null || value.isEmpty()) {
 	        return null;
 	    }	    
@@ -120,7 +133,7 @@ public class IncidentScenario extends CnATreeElement implements IISO27kElement {
 	
 	@Override
     public Collection<? extends String> getTags() {
-		return TagHelper.getTags(getEntity().getSimpleValue(PROP_TAG));
+		return TagHelper.getTags(getEntity().getPropertyValue(PROP_TAG));
 	}
 	
 }

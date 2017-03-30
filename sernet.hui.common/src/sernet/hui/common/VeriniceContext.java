@@ -126,6 +126,8 @@ public final class VeriniceContext {
     
     public static final String UPDATE_NEWS_SERVICE = "updateNewsService";
     
+    public static final String RISK_ANALYSIS_SERVICE = "riskAnalysisService";
+    
     private static String serverUrl = null;
 
 	private ThreadLocal<Map<String, Object>> threadLocal = new InheritableThreadLocal<Map<String, Object>>();

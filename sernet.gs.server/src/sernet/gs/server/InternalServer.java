@@ -236,7 +236,8 @@ public class InternalServer implements IInternalServer {
                 + getSearchConfigFiles()
 		        + "classpath:/sernet/gs/server/spring/veriniceserver-reportdeposit-dummy.xml \n" //NON-NLS-1$
 		        + "classpath:/sernet/gs/server/spring/veriniceserver-account-dummy.xml \n" //NON-NLS-1$
-		        + "classpath:/sernet/gs/server/spring/veriniceserver-updatenews.xml"); //NON-NLS-1$
+		        + "classpath:/sernet/gs/server/spring/veriniceserver-updatenews.xml \n" //NON-NLS-1$
+		        + "classpath:/sernet/gs/server/spring/veriniceserver-risk-analysis-standalone.xml"); //NON-NLS-1$
 		
 		dict.put(ContextLoader.CONTEXT_CLASS_PARAM, OsgiBundleXmlWebApplicationContext.class.getName());
 		wc.setContextParam(dict, ctx);
