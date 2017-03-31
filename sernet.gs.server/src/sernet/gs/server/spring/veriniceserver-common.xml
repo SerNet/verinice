@@ -292,6 +292,7 @@ This variant:
     <bean id="configurationServiceImpl" class="sernet.verinice.service.ConfigurationService">
         <property name="configurationDao" ref="configurationDao" />
 		<property name="authService" ref="authService" />
+		<property name="commandService" ref="commandService" />
         <property name="cnaTreeElementDao" ref="cnaTreeElementDao" />
     </bean>
     
