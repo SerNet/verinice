@@ -77,7 +77,7 @@
 									value="#{tree.children}" rowKey="#{item.element.dbId}"
 									selection="#{tree.elementInformation}" selectionMode="single"
 									scrollable="true" resizableColumns="true"
-									rendered="#{!empty tree.children}">
+									emptyMessage="#{!empty tree.children ? '' : msgTree['empty-message']}">
 
 									<p:ajax event="rowSelect" listener="#{tree.openElement}"
 										ajax="true"

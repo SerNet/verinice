@@ -19,6 +19,16 @@
  ******************************************************************************/
 package sernet.verinice.web;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
@@ -43,16 +53,6 @@ import sernet.verinice.model.samt.SamtTopic;
 import sernet.verinice.rcp.tree.ElementManager;
 import sernet.verinice.service.commands.RemoveElement;
 import sernet.verinice.service.iso27k.LoadModel;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
 
 /**
  * 
@@ -429,5 +429,4 @@ public class TreeBean implements IElementListener {
         }
         return model;
     }
-    
 }
