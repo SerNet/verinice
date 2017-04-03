@@ -166,8 +166,12 @@ public class TreeBean implements IElementListener {
     
     
     public void setElementInformation(ElementInformation elementInformation) {
+
         this.elementInformation = elementInformation;
-        setElement(elementInformation.getElement());
+
+        if(elementInformation != null) {
+            setElement(elementInformation.getElement());
+        }
     }
 
     public void init() {
