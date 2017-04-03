@@ -9,20 +9,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:vn="http://www.verinice.org/taglib">
 <ui:composition>
-	<h:form id="editForm" rendered="#{rendered}">
-
-		<p:remoteCommand name="loadLinks" actionListener="#{link.init}"
-			update="editForm:groupAccordion:linkPanel" />
-
-    <p:growl id="msg" life="2000" />
+	<h:form id="editForm">
 		<p:panel header="#{edit.title}" rendered="#{edit.element!=null}">
-			<p:outputPanel styleClass="ui-g #{getSaveButtonClass}">
+			<p:outputPanel styleClass="ui-g #{edit.getSaveButtonClass()}">
 				<p:remoteCommand name="submitEditForm" process="@form"
 					update=":editForm :tableForm :navForm" action="#{edit.save}" />
 				<div class="ui-g-4">
 					<p:commandButton id="submit" value="#{msgEdit['save']}"
-						action="#{edit.save}" styleClass="button"
-						update=":editForm :tableForm msg" />
+						action="#{edit.save}" update=":editForm :tableForm msg" />
 				</div>
 				<ui:repeat value="#{edit.actionHandler}" var="actionHandler">
 					<div class="ui-g-4">
@@ -33,10 +27,9 @@
 				</ui:repeat>
 			</p:outputPanel>
 
-
-			<div class="ui-g">
+			<div class="ui-g ui-fluid">
 				<div class="ui-g-12">
-					<p:accordionPanel id="groupAccordion" style="margin-top:20px">
+					<p:accordionPanel id="groupAccordion">
 						<p:tab title="#{msgEdit['general']}">
 							<vn:pprops list="#{edit.labelPropertyList}"
 								listNoLabel="#{edit.noLabelPropertyList}" />
@@ -155,6 +148,12 @@
 							</p:panel>
 						</p:tab>
 					</p:accordionPanel>
+
+					<p:remoteCommand name="loadLinks" actionListener="#{link.init}"
+						update="editForm:groupAccordion:linkPanel" />
+
+					<p:growl id="msg" life="2000" />
+
 				</div>
 			</div>
 		</p:panel>

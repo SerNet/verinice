@@ -17,131 +17,106 @@
 
 	<ui:define name="content" viewname="editor">
 
-    <div class="ui-g">
-      <div class="ui-g-12 ui-lg-12">
-        <h:form
-          id="navForm"
-          rendered="#{auth.isoElements}">
-          <div class="card">
-            <p:commandButton
-              id="newButton"
-              disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"
-              icon="fa fa-fw fa-file-o"
-              title="New"
-              styleClass="iso-objects-toolbar-button" />
-            <p:overlayPanel
-              id="newPanel"
-              for="newButton"
-              hideEffect="fade"
-              dynamic="false">
-              <p:dataTable
-                id="newElementTable"
-                var="h"
-                value="#{tree.handlers}"
-                styleClass="new-iso-object-panel">
-                <p:column style="width:16px">
-                  <h:graphicImage value="#{h.icon}" />
-                </p:column>
-                <p:column>
-                  <p:commandLink
-                    value="#{msgTree[h.label]}"
-                    actionListener="#{h.execute}"
-                    styleClass="#{h.icon}"
-                    update=":tableForm,:navForm" />
-                </p:column>
-              </p:dataTable>
-            </p:overlayPanel>
-            <p:confirmDialog
-              id="confirmDialog"
-              message="#{msgTree['confirm-deletion']} #{edit.element.title} ?"
-              header="Delete"
-              severity="alert"
-              widgetVar="confirmation">
-              <p:commandButton
-                id="confirm"
-                actionListener="#{tree.delete}"
-                value="#{msgTree['confirm-deletion.yes']}"
-                update=":tableForm,:navForm,:editForm,:navForm:newPanel"
-                oncomplete="confirmation.hide()" />
-              <p:commandButton
-                id="decline"
-                value="#{msgTree['confirm-deletion.cancel']}"
-                onclick="confirmation.hide()"
-                type="button" />
-            </p:confirmDialog>
-
-            <p:commandButton
-              onclick="submitEditForm();"
-              oncomplete="repeatMessage();"
-              disabled="#{edit.element==null}"
-              icon="fa fa-fw fa-save"
-              title="Save"
-              styleClass="iso-objects-toolbar-button" />
-            <p:remoteCommand
-              name="repeatMessage"
-              process="@form"
-              action="#{message.repeat}" />
-            <p:commandButton
-              onclick="confirmation.show()"
-              disabled="#{edit.element==null}"
-              icon="fa fa-fw fa-remove"
-              title="Delete"
-              styleClass="iso-objects-toolbar-button" />
-            <p:breadCrumb
-              model="#{tree.menuModel}"
-              styleClass="iso-objects-nav" />
-          </div>
-        </h:form>
-      </div>
-    </div>
-
-    <div class="ui-g ui-fluid">
-
+		<div class="ui-g">
+			<div class="ui-g-12 ui-lg-12">
+				<h:form id="navForm" rendered="#{auth.isoElements}">
+					<p:breadCrumb model="#{tree.menuModel}" />
+				</h:form>
+			</div>
+		</div>
+		<div class="ui-g">
 			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-6 ui-sm-12">
-
-        <!-- Tree Elements -->
 				<h:form id="tableForm" rendered="#{auth.isoElements}">
 					<p:panel header="ISM Elements">
-						<p:dataTable id="elementTable" var="item" value="#{tree.children}"
-							rowKey="#{item.element.dbId}"
-							selection="#{tree.elementInformation}" selectionMode="single"
-							scrollable="true" resizableColumns="true"
-							rendered="#{!empty tree.children}">
+						<div class="ui-g ui-fluid">
+							<div class="ui-g-4">
+								<p:commandButton id="newButton"
+									disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"
+									icon="fa fa-fw fa-file-o" value="New" title="New" />
+								<p:overlayPanel id="newPanel" for="newButton" hideEffect="fade" dynamic="true">
+									<p:dataTable id="newElementTable" var="h"
+										value="#{tree.handlers}" styleClass="new-iso-object-panel">
+										<p:column style="width:16px">
+											<h:graphicImage value="#{h.icon}" />
+										</p:column>
+										<p:column>
+											<p:commandLink value="#{msgTree[h.label]}"
+												actionListener="#{h.execute}" styleClass="#{h.icon}"
+												update=":tableForm:elementTable,:navForm" />
+										</p:column>
+									</p:dataTable>
+								</p:overlayPanel>
+							</div>
+							<div class="ui-g-4">
+								<p:confirmDialog id="confirmDialog"
+									message="#{msgTree['confirm-deletion']} #{edit.element.title} ?"
+									header="Delete" severity="alert" widgetVar="confirmation">
+									<p:commandButton id="confirm" actionListener="#{tree.delete}"
+										value="#{msgTree['confirm-deletion.yes']}"
+										update=":tableForm,:navForm,:editForm"
+										oncomplete="confirmation.hide()" />
+									<p:commandButton id="decline"
+										value="#{msgTree['confirm-deletion.cancel']}"
+										onclick="confirmation.hide()" type="button" />
+								</p:confirmDialog>
+								<p:commandButton onclick="submitEditForm();"
+									oncomplete="repeatMessage();" disabled="#{edit.element==null}"
+									icon="fa fa-fw fa-save" value="Save" title="Save" />
+								<p:remoteCommand name="repeatMessage" process="@form"
+									action="#{message.repeat}" />
+							</div>
+							<div class="ui-g-4">
+								<p:commandButton onclick="confirmation.show()"
+									disabled="#{edit.element==null}" icon="fa fa-fw fa-remove"
+									value="Delete" title="Delete" />
+							</div>
 
-							<p:ajax event="rowSelect" listener="#{tree.openElement}"
-								ajax="true"
-								update=":tableForm,:navForm,:editForm,:navForm:newPanel" />
+							<!-- Tree Elements -->
+							<div class="ui-g-12">
+								<p:dataTable id="elementTable" var="item"
+									value="#{tree.children}" rowKey="#{item.element.dbId}"
+									selection="#{tree.elementInformation}" selectionMode="single"
+									scrollable="true" resizableColumns="true"
+									rendered="#{!empty tree.children}">
 
-							<p:column width="16" styleClass="td-cell">
-								<h:graphicImage value="#{item.icon}" />
-							</p:column>
-							<p:column headerText="#{msgTree['title']}" sortBy="#{item.title}">
-								<h:outputText value="#{item.title}" />
-							</p:column>
-						</p:dataTable>
+									<p:ajax event="rowSelect" listener="#{tree.openElement}"
+										ajax="true"
+										update=":tableForm,:navForm,:editForm" />
 
-						<p:ajaxExceptionHandler
-							type="javax.faces.application.ViewExpiredException"
-							update="exceptionDialog"
-							onexception="PF('exceptionDialog').show();" />
+									<p:column width="16" styleClass="td-cell">
+										<h:graphicImage value="#{item.icon}" />
+									</p:column>
+									<p:column headerText="#{msgTree['title']}"
+										sortBy="#{item.title}">
+										<h:outputText value="#{item.title}" />
+									</p:column>
+								</p:dataTable>
 
-						<p:ajaxExceptionHandler type="java.lang.NullPointerException"
-							update="exceptionDialog"
-							onexception="PF('exceptionDialog').show();" />
+								<p:ajaxExceptionHandler
+									type="javax.faces.application.ViewExpiredException"
+									update="exceptionDialog"
+									onexception="PF('exceptionDialog').show();" />
 
-						<p:dialog id="exceptionDialog"
-							header="Exception '#{pfExceptionHandler.type}' occured!"
-							widgetVar="exceptionDialog" height="500px">
+								<p:ajaxExceptionHandler type="java.lang.NullPointerException"
+									update="exceptionDialog"
+									onexception="PF('exceptionDialog').show();" />
+
+								<p:dialog id="exceptionDialog"
+									header="Exception '#{pfExceptionHandler.type}' occured!"
+									widgetVar="exceptionDialog" height="500px">
         Message: #{pfExceptionHandler.message} <br />
         StackTrace: <h:outputText
-								value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
-							<br />
+										value="#{pfExceptionHandler.formattedStackTrace}"
+										escape="false" />
+									<br />
 
-							<p:button
-								onclick="document.location.href = document.location.href;"
-								value="Reload!"
-								rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}" />
-						</p:dialog>
+									<p:button
+										onclick="document.location.href = document.location.href;"
+										value="Reload!"
+										rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}" />
+								</p:dialog>
+							</div>
+						</div>
 					</p:panel>
 				</h:form>
 			</div>
