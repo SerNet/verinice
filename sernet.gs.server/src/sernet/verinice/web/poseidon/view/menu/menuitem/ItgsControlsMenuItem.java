@@ -31,7 +31,7 @@ public class ItgsControlsMenuItem extends DefaultMenuItem{
 
     private static final String URL = "/edit/bsi-controls.xhtml";
 
-    private static final String ICON = "fa fa-fw fa-check";
+    private static final String ICON = "fa fa-fw fa-industry";
 
     private static final long serialVersionUID = 1L;
 

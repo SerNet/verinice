@@ -45,7 +45,6 @@ abstract class AbstractItgsControlMenuItem extends DefaultMenuItem {
 
     AbstractItgsControlMenuItem(ITVerbund itVerbund) {
         super(itVerbund.getTitle());
-        super.setIcon("fa fa-fw fa-area-chart");
         this.itNetwork = itVerbund;
         this.setUrl(createUrl());
     }
@@ -69,6 +68,6 @@ abstract class AbstractItgsControlMenuItem extends DefaultMenuItem {
 
     @Override
     public String getIcon() {
-        return "fa fa-fw fa-area-chart";
+        return "fa fa-fw fa-industry";
     }
 }

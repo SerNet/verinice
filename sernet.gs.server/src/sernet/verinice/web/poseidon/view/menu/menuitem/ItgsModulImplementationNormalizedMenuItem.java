@@ -30,6 +30,7 @@ public class ItgsModulImplementationNormalizedMenuItem extends AbstractItgsContr
 
     public ItgsModulImplementationNormalizedMenuItem(ITVerbund itVerbund) {
         super(itVerbund);
+        super.setIcon("fa fa-fw fa-industry");
     }
 
     private static final long serialVersionUID = 1L;

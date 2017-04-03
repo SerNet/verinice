@@ -34,6 +34,7 @@ public class IsmsCatalogGroupedByOrganizationSubMenu extends AbstractMainSubMenu
 
     public IsmsCatalogGroupedByOrganizationSubMenu(String title, MenuService menuService) {
         super(title);
+        this.setIcon("fa fa-fw fa-line-chart");
         this.menuService = menuService;
     }
 

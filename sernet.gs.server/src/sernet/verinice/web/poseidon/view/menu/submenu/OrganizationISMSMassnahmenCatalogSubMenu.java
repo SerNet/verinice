@@ -41,6 +41,7 @@ class OrganizationISMSMassnahmenCatalogSubMenu extends AbstractMainSubMenu {
 
     public OrganizationISMSMassnahmenCatalogSubMenu(Organization organization, MenuService menuService) {
         super(organization.getTitle());
+        this.setIcon("fa fa-fw fa-building");
         this.organization = organization;
         this.menuService = menuService;
     }

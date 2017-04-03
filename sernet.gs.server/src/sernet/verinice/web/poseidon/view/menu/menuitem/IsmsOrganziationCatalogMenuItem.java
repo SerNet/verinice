@@ -42,6 +42,7 @@ public class IsmsOrganziationCatalogMenuItem extends DefaultMenuItem {
         this.controlGroup = controlGroup;
         setUrl(templateFile);
         setUrl(createUrl());
+        setIcon("fa fa-fw fa-area-chart");
     }
 
     private String createUrl(){

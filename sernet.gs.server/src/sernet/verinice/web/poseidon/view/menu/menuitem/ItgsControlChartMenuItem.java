@@ -31,6 +31,7 @@ public class ItgsControlChartMenuItem extends AbstractItgsControlMenuItem {
 
     public ItgsControlChartMenuItem(ITVerbund itVerbund) {
         super(itVerbund);
+        super.setIcon("fa fa-fw fa-industry");
     }
 
     @Override
