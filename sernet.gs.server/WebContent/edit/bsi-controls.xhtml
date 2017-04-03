@@ -27,7 +27,7 @@
 									<p:ajax event="change"
 										update="verbundForm,:elementsForm,:tablePanel,:editPanel"
 										listener="#{toDo.loadToDosForItNetworkItem}" process="@this" />
-									<f:selectItem itemLabel="Select One" itemValue="" />
+									<f:selectItem itemLabel="#{msg['todo.group']}" itemValue="" />
 									<f:selectItems value="#{assetNavigation.itVerbundItems}" />
 								</p:selectOneMenu>
 							</div>
@@ -72,7 +72,13 @@
 			<div class="ui-g-3 ui-lg-3 ui-xl-3 ui-md-12 ui-sm-12">
 				<p:panel header="#{msg['todo.assets']}" rendered="#{auth.bsiTasks}">
 					<h:form id="elementsForm" rendered="#{auth.bsiTasks}">
+
+						<p:outputPanel rendered="#{assetNavigation.selectedItVerbundTitel == null}">
+							<p>#{msg['todo.choose-it-network']}</p>
+						</p:outputPanel>
+
 						<p:accordionPanel id="elementPanel"
+							rendered="#{assetNavigation.selectedItVerbundTitel != null}"
 							style="background-color: #ffffff;">
 							<p:tab title="#{msg['todo.buildings']}"
 								rendered="#{not empty assetNavigation.gebaeudeList}">
