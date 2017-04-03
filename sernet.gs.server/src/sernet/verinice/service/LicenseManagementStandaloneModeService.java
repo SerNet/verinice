@@ -347,13 +347,17 @@ public class LicenseManagementStandaloneModeService
     private LicenseManagementEntry getLicenseEntryToUseForDecryption(
             String encryptedContentId) throws LicenseManagementException {
         for (LicenseManagementEntry existingEntry : getExistingLicenses()){
-            String plainContentId = getCryptoService().
-                    decryptLicenseRestrictedProperty(existingEntry.
-                            getUserPassword(), encryptedContentId);
-            String plainEntryContentId = decrypt(existingEntry, 
-                    LicenseManagementEntry.COLUMN_CONTENTID);
-            if (plainContentId.equals(plainEntryContentId)){
-                return existingEntry;
+            try{
+                String plainEntryContentId = decrypt(existingEntry, 
+                        LicenseManagementEntry.COLUMN_CONTENTID);
+                String plainContentId = getCryptoService().
+                        decryptLicenseRestrictedProperty(existingEntry.
+                                getUserPassword(), encryptedContentId);
+                if (plainContentId.equals(plainEntryContentId)){
+                    return existingEntry;
+                }
+            } catch (EncryptionException e){
+                continue;
             }
         }
         return null;
@@ -362,7 +366,7 @@ public class LicenseManagementStandaloneModeService
     @Override
     public Set<LicenseManagementEntry> getLicenseEntriesForUserByContentId(
             String user, String contentId) throws LicenseManagementException{
-        return getLicenseEntriesForContentId(contentId, false);
+        return getLicenseEntriesForContentId(contentId, true);
     }
 
     /**

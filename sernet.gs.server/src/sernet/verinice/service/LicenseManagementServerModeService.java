@@ -1117,16 +1117,23 @@ public class LicenseManagementServerModeService
     protected LicenseManagementEntry getMatchingEntries(String encryptedContentId,
             String encryptedLicenseId, LicenseManagementEntry entry, 
             LicenseManagementEntry existingEntry) {
-        String plainContentId;
+        String plainContentId = "";
         String plainLicenseId = "";
         if (entry == null){
-            plainContentId = getCryptoService().
-                decryptLicenseRestrictedProperty(
-                        existingEntry.getUserPassword(), encryptedContentId);
-            if (StringUtils.isNotEmpty(encryptedLicenseId)){
-                plainLicenseId = getCryptoService().
+            try{
+                plainContentId = getCryptoService().
                         decryptLicenseRestrictedProperty(
-                                existingEntry.getUserPassword(), encryptedLicenseId);
+                                existingEntry.getUserPassword(), encryptedContentId);
+                if (StringUtils.isNotEmpty(encryptedLicenseId)){
+                    plainLicenseId = getCryptoService().
+                            decryptLicenseRestrictedProperty(
+                                    existingEntry.getUserPassword(), encryptedLicenseId);
+                }
+            } catch (EncryptionException e){
+             // appears only in tier2 and means, that candidate to encrypt
+                // was the wrong one, so we try the next. No error handling
+                // needed here
+                return null;  
             }
         } else {
             plainContentId = decrypt(
