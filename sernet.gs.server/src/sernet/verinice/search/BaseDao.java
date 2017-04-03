@@ -379,6 +379,7 @@ public abstract class BaseDao implements ISearchDao {
         return requestBuilder.execute().actionGet();
     }
     
+    @Override
     public void clear() {
         try {
            getClient().prepareDeleteByQuery(getIndex())
@@ -414,7 +415,7 @@ public abstract class BaseDao implements ISearchDao {
     }
     
     private List<String> getRoleString(String username){
-      List<String> applicationRoles = Arrays.asList(new String[]{ApplicationRoles.ROLE_ADMIN, 
+        List<String> applicationRoles = Arrays.asList(new String[] { ApplicationRoles.ROLE_ADMIN, ApplicationRoles.ROLE_LOCAL_ADMIN,
               ApplicationRoles.ROLE_GUEST,
               ApplicationRoles.ROLE_LDAPUSER, 
               ApplicationRoles.ROLE_USER,
