@@ -164,7 +164,7 @@ public class ToDoBean {
 
     @PostConstruct
     public void init() {
-        grundSchutzExecutionFilter.addAll(EnumSet.allOf(GrundSchutzExecution.class));
+        grundSchutzExecutionFilter.add(GrundSchutzExecution.EXECUTION_UNTREATED);
         sealFilter.addAll(EnumSet.allOf(Seal.class));
     }
 
