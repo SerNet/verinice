@@ -31,11 +31,11 @@
 						escape="false" />
 				</p:column>
 			</p:row>
-			<p:row>
+			<p:row
+				rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}">
 				<p:column colspan="2">
 					<p:button style="width: 100%;"
 						onclick="document.location.href = document.location.href;"
-						rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}"
 						value="Reload!" icon="fa fa-refresh" />
 				</p:column>
 			</p:row>
