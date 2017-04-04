@@ -57,6 +57,10 @@
 	padding: 0 22px;
 }
 
+#exceptionDialog .ui-panelgrid-cell {
+	border: 1px solid #c9cdd2;
+}
+
 @media ( max-width : 1024px ) {
   .layout-wrapper.menu-layout-static .topbar .topbar-left .logo {
     background-image: url("#{resource['verinice-layout:images/logo_verinice_rgb.png']}");
