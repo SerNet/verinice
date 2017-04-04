@@ -125,8 +125,6 @@ public class EditBean {
 
     private boolean groupOpen = false;
 
-    private boolean linkCollapsed = true;
-
     private boolean attachmentOpen = true;
 
     private boolean saveButtonHidden = true;
@@ -187,9 +185,6 @@ public class EditBean {
             getLinkBean().setEntityType(getEntityType());
             getLinkBean().setTypeId(getTypeId());
             getLinkBean().reset();
-            if (!(getLinkCollapsed())) {
-                getLinkBean().init();
-            }
 
             getAttachmentBean().setElement(getElement());
             getAttachmentBean().init();
@@ -791,14 +786,6 @@ public class EditBean {
 
     public void setGroupOpen(boolean groupOpen) {
         this.groupOpen = groupOpen;
-    }
-
-    public boolean getLinkCollapsed() {
-        return linkCollapsed;
-    }
-
-    public void setLinkCollapsed(boolean linkCollapsed) {
-        this.linkCollapsed = linkCollapsed;
     }
 
     public boolean isAttachmentOpen() {
