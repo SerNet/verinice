@@ -25,9 +25,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.menu.DefaultMenuItem;
@@ -155,21 +157,19 @@ public class TreeBean implements IElementListener {
     }
 
     private boolean isGroup() {
-        return this.element!=null 
-                && (this.element instanceof IISO27kGroup || this.element instanceof IISO27kRoot)
-                && !(this.element instanceof Asset);
+        return this.element != null && (this.element instanceof IISO27kGroup || this.element instanceof IISO27kRoot) && !(this.element instanceof Asset);
     }
-    
+
     public ElementInformation getElementInformation() {
-        return this.elementInformation ;
+        return this.elementInformation;
     }
-    
-    
+
     public void setElementInformation(ElementInformation elementInformation) {
 
-        this.elementInformation = elementInformation;
-
-        if(elementInformation != null) {
+        if (elementInformation == null) {
+            this.elementInformation = new ElementInformation(getElement());
+        } else {
+            this.elementInformation = elementInformation;
             setElement(elementInformation.getElement());
         }
     }
@@ -278,11 +278,13 @@ public class TreeBean implements IElementListener {
         } catch (Exception t) {
             LOG.error("Error while opening element", t); //$NON-NLS-1$
             Util.addError("elementTable", Util.getMessage("tree.open.failed")); //$NON-NLS-1$
-        } 
+        }
     }
-    
+
     public void delete() {
-        final String componentElementtable = "elementTable";
+
+        String componentId = "elementTable";
+
         try {
             RemoveElement<CnATreeElement> command = new RemoveElement<>(getElement());
             command = ServiceFactory.lookupCommandService().executeCommand(command);
@@ -290,28 +292,32 @@ public class TreeBean implements IElementListener {
             getChildren().remove(getElementInformation());
             getEditBean().clear();
             getLinkBean().clear();
-            if(isGroup()) {
+            if (isGroup()) {
                 showParent();
             }
-            Util.addInfo(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "deleted", new Object[]{getElementInformation().getTitle()}));
-        } catch( SecurityException e) {
+
+            String message = Util.getMessage(TreeBean.BOUNDLE_NAME, "deleted", new Object[] { getElementInformation().getTitle() });
+            Util.addInfo(componentId, message);
+        } catch (SecurityException e) {
             LOG.error("SecurityException while deleting element.");
-            Util.addError(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
-        } catch( Exception e) {
-            LOG.error("Error while deleting element.");
+            String message = Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security");
+            Util.addErrorDetailed(componentId, message, e.getLocalizedMessage());
+        } catch (Exception e) {
+            LOG.error("Error while deleting element.", e);
             Throwable t = e.getCause();
-            if(t instanceof SecurityException) {
-                Util.addError(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security"));
+
+            if (t instanceof SecurityException) {
+                String message = Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed.security");
+                Util.addErrorDetailed(componentId, message, t.getLocalizedMessage());
             } else {
-                Util.addError(componentElementtable, Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed"));
+                String message = Util.getMessage(TreeBean.BOUNDLE_NAME, "delete.failed");
+                Util.addErrorDetailed(componentId, message, e.getLocalizedMessage());
             }
         }
     }
 
     private boolean isEditable() {
-        return getElement()!=null 
-               && !(getElement() instanceof ISO27KModel)
-               && !(getElement() instanceof ImportIsoGroup);
+        return getElement() != null && !(getElement() instanceof ISO27KModel) && !(getElement() instanceof ImportIsoGroup);
     }
 
     @Override

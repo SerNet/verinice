@@ -27,13 +27,17 @@
 		<div class="ui-g">
 			<div class="ui-g-6 ui-lg-6 ui-xl-6 ui-md-6 ui-sm-12">
 				<h:form id="tableForm" rendered="#{auth.isoElements}">
+
+					<p:growl id="msg" autoUpdate="true" showDetail="true" sticky="true" severity="info" />
+
 					<p:panel header="#{msgTree['iso-elements-panel-title']}">
 						<div class="ui-g ui-fluid">
 							<div class="ui-g-4">
 								<p:commandButton id="newButton"
 									disabled="#{empty tree.handlers or (not auth.addElement and not auth.addGroup)}"
 									icon="fa fa-fw fa-file-o" value="New" title="New" />
-								<p:overlayPanel id="newPanel" for="newButton" hideEffect="fade" dynamic="true">
+								<p:overlayPanel id="newPanel" for="newButton" hideEffect="fade"
+									dynamic="true">
 									<p:dataTable id="newElementTable" var="h"
 										value="#{tree.handlers}" styleClass="new-iso-object-panel">
 										<p:column style="width:16px">
@@ -48,25 +52,39 @@
 								</p:overlayPanel>
 							</div>
 							<div class="ui-g-4">
-								<p:confirmDialog id="confirmDialog"
+								<p:dialog id="confirmDialog" modal="true"
 									message="#{msgTree['confirm-deletion']} #{edit.element.title} ?"
-									header="Delete" severity="alert" widgetVar="confirmation">
-									<p:commandButton id="confirm" actionListener="#{tree.delete}"
-										value="#{msgTree['confirm-deletion.yes']}"
-										update=":tableForm,:navForm,:editForm"
-										oncomplete="confirmation.hide()" />
-									<p:commandButton id="decline"
-										value="#{msgTree['confirm-deletion.cancel']}"
-										onclick="confirmation.hide()" type="button" />
-								</p:confirmDialog>
+									header="Delete" severity="alert" widgetVar="confirmDialog">
+									<p:panelGrid>
+										<p:row>
+											<p:column colspan="2">
+												<h:outputText
+													value="#{msgTree['confirm-deletion']} #{edit.element.title} ?" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<p:commandButton id="confirm"
+													actionListener="#{tree.delete}"
+													value="#{msgTree['confirm-deletion.yes']}"
+													update=":tableForm,:navForm,:editForm"
+													oncomplete="PF('confirmDialog').hide()" />
+											</p:column>
+											<p:column>
+												<p:commandButton id="decline"
+													value="#{msgTree['confirm-deletion.cancel']}"
+													onclick="PF('confirmDialog').hide()" type="button" />
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</p:dialog>
 								<p:commandButton onclick="submitEditForm();"
-									oncomplete="repeatMessage();" disabled="#{edit.element==null}"
+									disabled="#{edit.element==null}"
 									icon="fa fa-fw fa-save" value="Save" title="Save" />
-								<p:remoteCommand name="repeatMessage" process="@form"
-									action="#{message.repeat}" />
+
 							</div>
 							<div class="ui-g-4">
-								<p:commandButton onclick="confirmation.show()"
+								<p:commandButton onclick="PF('confirmDialog').show()"
 									disabled="#{edit.element==null}" icon="fa fa-fw fa-remove"
 									value="Delete" title="Delete" />
 							</div>
@@ -80,8 +98,7 @@
 									emptyMessage="#{!empty tree.children ? '' : msgTree['empty-message']}">
 
 									<p:ajax event="rowSelect" listener="#{tree.openElement}"
-										ajax="true"
-										update=":tableForm,:navForm,:editForm" />
+										ajax="true" update=":tableForm,:navForm,:editForm" />
 
 									<p:column width="16" styleClass="td-cell">
 										<h:graphicImage value="#{item.icon}" />
@@ -92,29 +109,6 @@
 									</p:column>
 								</p:dataTable>
 
-								<p:ajaxExceptionHandler
-									type="javax.faces.application.ViewExpiredException"
-									update="exceptionDialog"
-									onexception="PF('exceptionDialog').show();" />
-
-								<p:ajaxExceptionHandler type="java.lang.NullPointerException"
-									update="exceptionDialog"
-									onexception="PF('exceptionDialog').show();" />
-
-								<p:dialog id="exceptionDialog"
-									header="Exception '#{pfExceptionHandler.type}' occured!"
-									widgetVar="exceptionDialog" height="500px">
-        Message: #{pfExceptionHandler.message} <br />
-        StackTrace: <h:outputText
-										value="#{pfExceptionHandler.formattedStackTrace}"
-										escape="false" />
-									<br />
-
-									<p:button
-										onclick="document.location.href = document.location.href;"
-										value="Reload!"
-										rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}" />
-								</p:dialog>
 							</div>
 						</div>
 					</p:panel>

@@ -28,6 +28,7 @@ import javax.faces.application.FacesMessage.Severity;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
 
 public final class Util {
@@ -83,15 +84,23 @@ public final class Util {
     }
 
 	public static void addInfo(String componentId, String text ) {
-		addMessage(componentId, text, FacesMessage.SEVERITY_INFO );
+		addMessage(componentId, text, null, FacesMessage.SEVERITY_INFO );
 	}
 
 	public static void addError(String componentId, String text ) {
-		addMessage(componentId, text, FacesMessage.SEVERITY_ERROR );
+		addMessage(componentId, text, null, FacesMessage.SEVERITY_ERROR );
 	}
 
-	private static void addMessage(String componentId, String text, Severity severity ) {
-		 FacesMessage message = new FacesMessage(severity, text, null);
+	public static void addInfoDetailed(String componentId, String text, String details){
+	    addMessage(componentId, text, StringEscapeUtils.escapeHtml(details), FacesMessage.SEVERITY_INFO);
+	}
+
+	public static void addErrorDetailed(String componentId, String text, String details){
+        addMessage(componentId, text, StringEscapeUtils.escapeHtml(details), FacesMessage.SEVERITY_ERROR);
+    }
+
+	private static void addMessage(String componentId, String text, String details, Severity severity ) {
+		 FacesMessage message = new FacesMessage(severity, text, details == null ? "" : details);
 	     FacesContext context = FacesContext.getCurrentInstance();
 	     UIComponent component = findComponent(context.getViewRoot(), componentId);
 	     if(component==null) {
