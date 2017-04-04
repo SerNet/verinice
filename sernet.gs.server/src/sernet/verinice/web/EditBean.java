@@ -96,7 +96,7 @@ public class EditBean {
     @ManagedProperty("#{link}")
     private LinkBean linkBean;
 
-    @ManagedProperty("#{attachmentBean}")
+    @ManagedProperty("#{attachment}")
     private AttachmentBean attachmentBean;
 
     private CnATreeElement element;

@@ -50,8 +50,7 @@ import sernet.verinice.service.commands.SaveNote;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  * 
  */
-@ManagedBean
-@SessionScoped
+@ManagedBean(name = "attachment")
 public class AttachmentBean {
 
     private static final Logger LOG = Logger.getLogger(AttachmentBean.class);
@@ -60,10 +59,6 @@ public class AttachmentBean {
     private List<Attachment> attachments;
     private boolean autoUpload = true;
     private boolean useFlash = false;
-
-    public AttachmentBean() {
-    }
-    
 
     public void init() {
         attachments = loadAttachments();  
