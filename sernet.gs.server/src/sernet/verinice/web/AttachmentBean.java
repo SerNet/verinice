@@ -51,6 +51,7 @@ import sernet.verinice.service.commands.SaveNote;
  * 
  */
 @ManagedBean(name = "attachment")
+@SessionScoped
 public class AttachmentBean {
 
     private static final Logger LOG = Logger.getLogger(AttachmentBean.class);
