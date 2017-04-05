@@ -53,6 +53,7 @@ import sernet.gs.ui.rcp.main.service.crudcommands.PrepareObjectWithAccountDataFo
 import sernet.verinice.hibernate.LicenseManagementEntryDao;
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.IAccountSearchParameter;
+import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
 import sernet.verinice.interfaces.licensemanagement.ILicenseManagementService;
 import sernet.verinice.model.common.ChangeLogEntry;
@@ -95,6 +96,9 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
     
     @Resource(name = "encryptionService")
     IEncryptionService cryptoService;
+    
+    @Resource(name = "accountService")
+    IAccountService accountService;
     
     private final static String TEST_USERNAME = "dd";
     
@@ -210,7 +214,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
                     String plainLicenseId = licenseManagementService.decrypt(
                             entry, LicenseManagementEntry.COLUMN_LICENSEID);
                     licenseManagementService.addLicenseIdAuthorisation(
-                            TEST_USERNAME, plainLicenseId);
+                            getConfiguration(TEST_USERNAME), plainLicenseId);
                     count++;
                 }
             }
@@ -286,9 +290,9 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
             
             try {
                 licenseManagementService.addLicenseIdAuthorisation(
-                        TEST_USERNAME, licenseIdExpired);
+                        getConfiguration(TEST_USERNAME), licenseIdExpired);
                 licenseManagementService.addLicenseIdAuthorisation(
-                        TEST_USERNAME, licenseIdValid);
+                        getConfiguration(TEST_USERNAME), licenseIdValid);
                 
             } catch (CommandException e) {
                 LOG.error("Error while assigning license to user", e);
@@ -363,7 +367,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
                 String licenseId = licenseManagementService.
                         decrypt(entry, LicenseManagementEntry.COLUMN_LICENSEID);
                 licenseManagementService.addLicenseIdAuthorisation(
-                        TEST_USERNAME, licenseId);
+                        getConfiguration(TEST_USERNAME), licenseId);
 
                 
                 LocalDate validUntil = licenseManagementService.
@@ -403,7 +407,7 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
                 for (String licenseId : licenseManagementService.
                         getLicenseIdsForContentId(encryptedContentId, false)){
                     licenseManagementService.
-                    addLicenseIdAuthorisation(TEST_USERNAME, licenseId);
+                    addLicenseIdAuthorisation(getConfiguration(TEST_USERNAME), licenseId);
                 }
 
                 Assert.assertTrue(licenseManagementService.
@@ -428,13 +432,13 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
             for (String licenseId : licenseManagementService.
                     getLicenseIdsForContentId(CONTENT_ID, false)){
                 try {
-                    licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, licenseId);
+                    licenseManagementService.addLicenseIdAuthorisation(getConfiguration(TEST_USERNAME), licenseId);
                 } catch (CommandException e) {
                     LOG.error("Error granting license to user", e);
                 }
             }
 
-            licenseManagementService.removeContentIdUserAssignment(TEST_USERNAME, CONTENT_ID);
+            licenseManagementService.removeContentIdUserAssignment(getConfiguration(TEST_USERNAME), CONTENT_ID);
 
             Assert.assertFalse(licenseManagementService.
                     getAuthorisedContentIdsByUser(TEST_USERNAME).contains(CONTENT_ID));
@@ -499,9 +503,9 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         try {
             repoFile1 = licenseManagementService.addVNLToRepository(vnlFile1);
             repoFile2 = licenseManagementService.addVNLToRepository(vnlFile2);
-            licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, 
+            licenseManagementService.addLicenseIdAuthorisation(getConfiguration(TEST_USERNAME), 
                     LICENSE_ID);
-            licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, 
+            licenseManagementService.addLicenseIdAuthorisation(getConfiguration(TEST_USERNAME), 
                     plainLicenseId2);
 
             Assert.assertTrue(licenseManagementService.getAllLicenseIds(false).size() >= 2);
@@ -622,8 +626,8 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         String localLicenseId  = entry.getLicenseID();
         
         try {
-            licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, localLicenseId);
-            licenseManagementService.addLicenseIdAuthorisation(TEST_USERNAME, localLicenseId);
+            licenseManagementService.addLicenseIdAuthorisation(getConfiguration(TEST_USERNAME), localLicenseId);
+            licenseManagementService.addLicenseIdAuthorisation(getConfiguration(TEST_USERNAME), localLicenseId);
         
         Set<String> idsFromDb = licenseManagementService.
                 getAuthorisedContentIdsByUser(TEST_USERNAME);
@@ -706,7 +710,11 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         LicenseManagementEntry cryptedEntry = getSingleCryptedEntry();
     }
     
-
+    private Configuration getConfiguration(String username){
+        IAccountSearchParameter parameter = new AccountSearchParameter();
+        parameter.setLogin(username);
+        return accountService.findAccounts(parameter).get(0);
+    }
     
     
 
@@ -805,6 +813,20 @@ public class LicenseManagementTier3Test extends BeforeEachVNAImportHelper{
         createAccount(personGroup, paramter);
 
         return accountOrg;
+    }
+
+    /**
+     * @return the authService
+     */
+    public IAccountService getAccountService() {
+        return accountService;
+    }
+
+    /**
+     * @param authService the authService to set
+     */
+    public void setAccountService(IAccountService accountService) {
+        this.accountService = accountService;
     }
 
 

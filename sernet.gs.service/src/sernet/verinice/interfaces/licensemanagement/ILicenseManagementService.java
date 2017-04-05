@@ -24,6 +24,7 @@ import java.util.Set;
 
 import sernet.verinice.interfaces.CommandException;
 import sernet.verinice.interfaces.encryption.IEncryptionService;
+import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.licensemanagement.LicenseManagementException;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.model.licensemanagement.hibernate.LicenseManagementEntry;
@@ -41,7 +42,7 @@ public interface ILicenseManagementService {
     public static final int WARNING_VALID_LESS_THAN_DAYS = 31;
     
     void addLicenseIdAuthorisation(
-            String user, String contentId) throws CommandException;
+            Configuration account, String licenseId) throws CommandException;
 
     File addVNLToRepository(File vnlFile) throws LicenseManagementException;
 
@@ -116,11 +117,11 @@ public interface ILicenseManagementService {
     
     void removeAllUsersForLicense(String licenseId);
 
-    void removeContentIdUserAssignment(String user, String contentId)
+    void removeContentIdUserAssignment(Configuration account, String contentId)
             throws LicenseManagementException;
 
     
-    void removeLicenseIdUserAssignment(String user, String licenseId, 
+    void removeLicenseIdUserAssignment(Configuration account, String licenseId, 
             boolean licenseIdEncrypted) throws LicenseManagementException;
 
 

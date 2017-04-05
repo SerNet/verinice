@@ -186,10 +186,11 @@ public class LicenseManagementServerModeService
                 entry = existingEntry;
             }
         }
+        String decryptedLicenseId = null;
         if (entry != null){
             validUsers = decrypt(entry, 
                     LicenseManagementEntry.COLUMN_VALIDUSERS);
-            String decryptedLicenseId = (String)decrypt(
+            decryptedLicenseId = (String)decrypt(
                     entry, LicenseManagementEntry.COLUMN_LICENSEID);
             for (Configuration configuration : getAllConfigurations()) {
                 Set<String> assignedIds = configuration.getAllLicenseIds();
@@ -198,8 +199,12 @@ public class LicenseManagementServerModeService
                 }
             }
         }
-        log.debug(encryptedLicenseId + " currently has (" 
-                + assignedUsers + "/" + validUsers + ") users");
+        if(log.isDebugEnabled()){
+            String debugId = (decryptedLicenseId != null) 
+                    ? decryptedLicenseId : encryptedLicenseId;
+            log.debug(debugId + " currently has (" 
+                    + assignedUsers + "/" + validUsers + ") users");
+        }
         return assignedUsers < validUsers;
 
     }
@@ -463,18 +468,21 @@ public class LicenseManagementServerModeService
      *  by one thread ad a time, to prevent two (or more threads) adding
      *  users at a time producing a assignment of e.g. 6/5
      *  
-     *  @param user - username to authorise
+     *  @param configuration - username to authorise
      *  @param licenseId - licenseId (not contentId!) the user will 
      *  get authorised for
      *  
      * @throws CommandException 
      */
     @Override
-    public synchronized void addLicenseIdAuthorisation(String user, String licenseId) 
+    public synchronized void addLicenseIdAuthorisation(Configuration configuration, String licenseId) 
                 throws CommandException {
-        Configuration configuration = getConfigurationByUsername(user);
         configuration.addLicensedContentId(licenseId);
         configurationDao.merge(configuration, true);
+        if(log.isDebugEnabled()){
+            Configuration reloaded = configurationDao.findById(configuration.getDbId());
+            log.debug("config in db has now licenses:\t" + reloaded.getAssignedLicenseIds().toString());
+        }
     }
 
     /**
@@ -526,15 +534,17 @@ public class LicenseManagementServerModeService
      * 
      * 
      * @param username - user that should be forbidden to use content
-     * @param encryptedContentId - content that should be dereferenced from username
+     * @param encryptedContentId - content that should be dereferenced
+     *  from username
      * 
      */
     @Override
-    public void removeContentIdUserAssignment(String username, 
+    public void removeContentIdUserAssignment(Configuration configuration, 
             String encryptedContentId) throws LicenseManagementException {
         for (LicenseManagementEntry entry : getLicenseEntriesForContentId(
                 encryptedContentId, false)) {
-            removeLicenseIdUserAssignment(username, entry.getLicenseID(), true);
+            removeLicenseIdUserAssignment(configuration, 
+                    entry.getLicenseID(), true);
         }
     }
 
@@ -543,12 +553,13 @@ public class LicenseManagementServerModeService
      * remove a single licenseId assignment from a configuration (user)
      **/
     @Override
-    public void removeLicenseIdUserAssignment(String user, String licenseId, 
-            boolean licenseIdEncrypted) throws LicenseManagementException {
+    public void removeLicenseIdUserAssignment(Configuration configuration, 
+            String licenseId, boolean licenseIdEncrypted) 
+                    throws LicenseManagementException {
         String decryptedLicenseId;
         
-        Configuration configuration = getConfigurationByUsername(user);
-        LicenseManagementEntry entry = getLicenseEntryForLicenseId(licenseId, false);
+        LicenseManagementEntry entry = getLicenseEntryForLicenseId(licenseId,
+                false);
         if (licenseIdEncrypted){
             decryptedLicenseId = decrypt(entry, 
                     LicenseManagementEntry.COLUMN_LICENSEID);

@@ -19,8 +19,6 @@
  ******************************************************************************/
 package sernet.verinice.rcp.account;
 
-import java.util.Set;
-
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.jface.wizard.Wizard;
 
@@ -68,7 +66,7 @@ public class AccountWizard extends Wizard {
         addPage(limitationPage);
         groupPage = new GroupPage(account);
         addPage(groupPage);     
-        licenseMgmtPage = new LicenseMgmtPage();
+        licenseMgmtPage = new LicenseMgmtPage(account);
         addPage(licenseMgmtPage);
         notificationPage = new NotificationPage();
         addPage(notificationPage);
@@ -89,6 +87,7 @@ public class AccountWizard extends Wizard {
             limitationPage.setDeactivated(account.isDeactivatedUser());
             licenseMgmtPage.setUser(account.getUser());
             licenseMgmtPage.setAssignedLicenseIds(account.getAssignedLicenseIds());
+            
             licenseMgmtPage.setSendEmail(account.getNotificationLicense());
             notificationPage.setNotification(getAccount().isNotificationEnabled());
             notificationPage.setGlobal(getAccount().isNotificationGlobal());
@@ -135,30 +134,10 @@ public class AccountWizard extends Wizard {
         
         getAccount().setNotificationLicense(licenseMgmtPage.isSendEmail());
         
-        syncLicenseIdsToAccount();
         return true;
     }
 
-    /**
-     * 
-     */
-    private void syncLicenseIdsToAccount() {
-        Set<String> oldLicenseIds = getAccount().getAllLicenseIds();
-        Set<String> newLicenseIds = licenseMgmtPage.getAssignedLicenseIds();
-        
-        for (String oldLicenseId : oldLicenseIds){
-            if (!newLicenseIds.contains(oldLicenseId)){
-                // id has been removed in the wizard
-                getAccount().removeLicensedContentId(oldLicenseId);
-            }
-        }
-        for (String newLicenseId : newLicenseIds){
-            if (!oldLicenseIds.contains(newLicenseId)){
-                // license id has been added
-                getAccount().addLicensedContentId(newLicenseId);
-            }
-        }
-    }
+
     
     @Override
     public IWizardPage getStartingPage() {
