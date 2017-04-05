@@ -10,16 +10,27 @@
 	<p:outputPanel rendered="#{not empty list}">
 		<div class="ui-g ui-fluid">
 			<c:forEach var="p" items="#{list}">
-				<div class="ui-g-2">
+
+				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-2 ui-xl-2">
 					<p:outputLabel value="#{p.name}" />
 				</div>
-				<div class="ui-g-10">
+
+				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-10 ui-xl-10">
+
+					<p:selectBooleanCheckbox value="#{p['boolean']}"
+						rendered="#{p.isBooleanSelect}" />
+
 					<p:inputText value="#{p.value}"
-						rendered="#{p.isLine and p.isEditable and (not p.isURL)}" />
+						rendered="#{p.isLine and p.isEditable and (not p.isURL)}"
+						styleClass="hui ui-corner-all"
+						valueChangeListener="#{edit.onChange}">
+						<p:ajax update=":editForm:title" />
+						<f:attribute name="key" value="#{p.key}" />
+					</p:inputText>
+
 					<h:outputText value="#{p.value}"
 						rendered="#{(not i.isText) and (not p.isEditable) and (not p.isURL)}" />
-					<p:inputTextarea rows="3"
-						value="#{p.value}"
+					<p:inputTextarea rows="3" value="#{p.value}"
 						rendered="#{p.isText and p.isEditable and (not p.isURL)}" />
 
 					<h:outputText value="#{p.value}" escape="false"
@@ -50,12 +61,36 @@
 							onkeydown="return false;" styleClass="hui" />
 					</p:outputPanel>
 
-					<p>
-						<h:outputText rendered="#{p.isURL}" value="#{p.name}" />
-					</p>
-					<p style="text-align: right">
+					<p:outputPanel rendered="#{p.isLine and p.isEditable and p.isURL}">
+
 						<a href="#{p.URLValue}" target="_blank"> #{p.URLText} </a>
-					</p>
+
+						<p:panel rendered="#{p.isLine and p.isEditable and p.isURL}"
+							header="#{msgEdit['document.editURL']}" style="margin-top: 12px;" collapsed="true"
+							toggleable="true" toggleSpeed="50">
+
+							<div class="ui-g">
+								<div class="ui-g-12">
+									<p:inputText placeholder="#{msgEdit['document.URLValue']}"
+										value="#{p.URLValue}"
+										rendered="#{p.isLine and p.isEditable and p.isURL}" />
+								</div>
+
+								<div class="ui-g-12">
+									<p:inputText placeholder="#{msgEdit['document.URLValue']}"
+										value="#{p.URLText}"
+										rendered="#{p.isLine and p.isEditable and p.isURL}" />
+								</div>
+								<div class="ui-g-12">
+									<p:commandButton value="#{msgEdit['save']}"
+										action="#{edit.save}" styleClass="button"
+										update=":editForm :tableForm" />
+									<p:remoteCommand name="submitEditForm" process="@form"
+										update=":editForm :tableForm :navForm" action="#{edit.save}" />
+								</div>
+							</div>
+						</p:panel>
+					</p:outputPanel>
 				</div>
 			</c:forEach>
 		</div>
