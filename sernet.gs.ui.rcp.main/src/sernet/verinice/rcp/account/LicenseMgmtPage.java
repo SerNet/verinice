@@ -40,6 +40,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 
 import sernet.gs.service.NumericStringComparator;
 import sernet.gs.ui.rcp.main.ExceptionUtil;
@@ -103,7 +104,9 @@ public class LicenseMgmtPage extends BaseWizardPage {
                     createLicenseIdCheckbox(composite, licenseList.get(index), 
                             index);
                 }
-
+            } else {
+                Label label = new Label(composite, SWT.NONE);
+                label.setText(Messages.LicenseMgmtPage_NoLicenseAvailable);
             }
             
             Composite emailComposite = new Composite(composite, SWT.BORDER);

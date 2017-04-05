@@ -64,6 +64,7 @@ public class Messages extends NLS {
     public static String LicenseMgmtPage_Error_licenseNotAssigneable;
     public static String LicenseMgmtPage_License_Expired;
     public static String LicenseMgmtPage_Notification;
+    public static String LicenseMgmtPage_NoLicenseAvailable;
     public static String LimitationPage_1;
     public static String LimitationPage_2;
     public static String LimitationPage_3;
