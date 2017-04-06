@@ -8584,7 +8584,7 @@ Wurden bereits weitere Stellen informiert?
           <huiproperty 
             id="samt_topic_version" 
             editable="false"
-            tags="VDA-ISA.VDA_ISA_Audit,Web" />
+            tags="VDA-ISA,VDA_ISA_Audit,Web" />
             
 			<!-- ISA Audit Field, only displayed when VDA_ISA_Audit filter is active -->            
             <huiproperty id="samt_topic_audit_ra" name="Risk Assessment" tags="VDA_ISA_Audit"
