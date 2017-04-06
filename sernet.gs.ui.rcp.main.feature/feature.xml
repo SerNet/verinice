@@ -251,7 +251,6 @@ Library.
       <import plugin="sernet.gs.reveng"/>
       <import plugin="sernet.hui.swtclient"/>
       <import plugin="sernet.springclient"/>
-      <import plugin="sernet.verinice.encryption"/>
       <import plugin="com.springsource.antlr"/>
    </requires>
 
@@ -1635,13 +1634,6 @@ Library.
 
    <plugin
          id="org.eclipse.birt.report.engine.fonts"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="sernet.verinice.encryption"
          download-size="0"
          install-size="0"
          version="0.0.0"

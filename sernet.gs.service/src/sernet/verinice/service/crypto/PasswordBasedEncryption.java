@@ -51,9 +51,9 @@ public abstract class PasswordBasedEncryption {
      * initializing the AES is deprecated and a generic salt is generated for
      * each encryption. The generic salt is stored as a prefix in the byte[]
      * that represents the cyphertext and will be removed before decryption. See
-     * {@link sernet.verinice.encryption.impl.PasswordBasedEncryption.decrypt(byte[],
+     * {@link sernet.verinice.service.crypto.PasswordBasedEncryption.decrypt(byte[],
      * char[], byte[]) } and
-     * {@link sernet.verinice.encryption.impl.PasswordBasedEncryption.encrypt(byte[],
+     * {@link sernet.verinice.service.crypto.PasswordBasedEncryption.encrypt(byte[],
      * char[], byte[])}
      */
     @Deprecated
