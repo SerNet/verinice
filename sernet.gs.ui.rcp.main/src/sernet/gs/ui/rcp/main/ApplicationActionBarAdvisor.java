@@ -426,7 +426,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         myToolbar.add(this.openBSIModelViewAction);
         myToolbar.add(this.openTodoViewAction);
         myToolbar.add(this.openAuditViewAction);
-        myToolbar.add(this.openDSViewAction);
         myToolbar.add(this.openDocumentViewAction);
 
         myToolbar.add(new Separator());

@@ -20,6 +20,7 @@ package sernet.gs.ui.rcp.main.bsi.views;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -265,7 +266,10 @@ public class DSModelView extends RightsEnabledView {
 			ExceptionUtil.log(e, Messages.DSModelView_6);
 		}
 
-		CnAElementFactory.getInstance().addLoadListener(loadListener);
+        CnAElementFactory.getInstance().addLoadListener(loadListener);
+        MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
+                Messages.DSModelView_7,
+                Messages.DSModelView_8);
 
 	}
 

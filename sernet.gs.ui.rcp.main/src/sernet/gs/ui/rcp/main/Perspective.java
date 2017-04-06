@@ -27,6 +27,11 @@ import sernet.gs.ui.rcp.main.bsi.views.BsiModelView;
 import sernet.verinice.iso27k.rcp.CatalogView;
 import sernet.verinice.iso27k.rcp.ISMView;
 
+/**
+ * BSI GS-Perspektive
+ * 
+ * @author Alexander Koderman <ak[at]sernet[dot]de>
+ */
 public class Perspective implements IPerspectiveFactory {
 	public static final String ID = "sernet.gs.ui.rcp.main.perspective";
 		

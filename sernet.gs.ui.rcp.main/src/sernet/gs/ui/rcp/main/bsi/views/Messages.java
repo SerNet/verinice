@@ -133,6 +133,12 @@ public final class Messages extends NLS {
 
     public static String DSModelView_6;
 
+    public static String DSModelView_7;
+
+    public static String DSModelView_8;
+
+    public static String DSModelView_9;
+
     public static String DSViewLabelProvider_0;
 
     public static String DSViewLabelProvider_1;
