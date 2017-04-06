@@ -12,7 +12,7 @@
 			<c:forEach var="p" items="#{list}">
 
 				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-2 ui-xl-2">
-					<p:outputLabel value="#{p.name}" />
+					<p:outputLabel rendered="#{p.isShowLabel()}" value="#{p.name}" />
 				</div>
 
 				<div class="ui-g-12 ui-sm-12 ui-md-12 ui-lg-10 ui-xl-10">

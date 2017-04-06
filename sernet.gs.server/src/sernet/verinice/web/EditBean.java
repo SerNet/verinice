@@ -642,31 +642,9 @@ public class EditBean {
     }
 
     public List<HuiProperty<String, String>> getLabelPropertyList() {
-        List<HuiProperty<String, String>> labelList = Collections.emptyList();
+        List<HuiProperty<String, String>> emptyList = Collections.emptyList();
         List<HuiProperty<String, String>> list = getPropertyList();
-        if (list != null) {
-            labelList = new LinkedList<HuiProperty<String, String>>();
-            for (HuiProperty<String, String> property : list) {
-                if (property.isShowLabel()) {
-                    labelList.add(property);
-                }
-            }
-        }
-        return labelList;
-    }
-
-    public List<HuiProperty<String, String>> getNoLabelPropertyList() {
-        List<HuiProperty<String, String>> noLabelList = Collections.emptyList();
-        List<HuiProperty<String, String>> list = getPropertyList();
-        if (list != null) {
-            noLabelList = new LinkedList<HuiProperty<String, String>>();
-            for (HuiProperty<String, String> property : list) {
-                if (!property.isShowLabel()) {
-                    noLabelList.add(property);
-                }
-            }
-        }
-        return noLabelList;
+        return list != null ? list : emptyList;
     }
 
     public boolean isAttachmentEnabled() {
