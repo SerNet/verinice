@@ -64,10 +64,13 @@
 
 					<p:outputPanel rendered="#{p.isLine and p.isEditable and p.isURL}">
 
-						<a href="#{p.URLValue}" target="_blank"> #{p.URLText} </a>
+						<p:outputPanel rendered="#{not (p.URLValue eq null or p.URLValue eq '')}"
+							style="margin-bottom: 12px;">
+							<a href="#{p.URLValue}" target="_blank"> #{p.URLText} </a>
+						</p:outputPanel>
 
 						<p:panel rendered="#{p.isLine and p.isEditable and p.isURL}"
-							header="#{msgEdit['document.editURL']}" style="margin-top: 12px;" collapsed="true"
+							header="#{msgEdit['document.editURL']}" collapsed="true"
 							toggleable="true" toggleSpeed="50">
 
 							<div class="ui-g">
