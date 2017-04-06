@@ -22,14 +22,14 @@
 
 					<p:inputText value="#{p.value}"
 						rendered="#{p.isLine and p.isEditable and (not p.isURL)}"
-						styleClass="hui ui-corner-all"
-						valueChangeListener="#{edit.onChange}">
+						styleClass="hui ui-corner-all">
 						<p:ajax update=":editForm:title" />
 						<f:attribute name="key" value="#{p.key}" />
 					</p:inputText>
 
 					<h:outputText value="#{p.value}"
-						rendered="#{(not i.isText) and (not p.isEditable) and (not p.isURL)}" />
+						rendered="#{(not p.isText) and (not p.isEditable) and (not p.isURL)}" />
+
 					<p:inputTextarea rows="3" value="#{p.value}"
 						rendered="#{p.isText and p.isEditable and (not p.isURL)}" />
 
@@ -55,6 +55,7 @@
 								itemLabel="#{option}" itemValue="#{option}" />
 						</p:selectOneMenu>
 					</p:outputPanel>
+
 					<p:outputPanel
 						rendered="#{p.isNumericSelect and empty p.optionList and p.isEditable  and (not p.isURL)}">
 						<p:spinner value="#{p.value}" min="#{p.min}" max="#{p.max}"
@@ -77,7 +78,7 @@
 								</div>
 
 								<div class="ui-g-12">
-									<p:inputText placeholder="#{msgEdit['document.URLValue']}"
+									<p:inputText placeholder="#{msgEdit['document.URLText']}"
 										value="#{p.URLText}"
 										rendered="#{p.isLine and p.isEditable and p.isURL}" />
 								</div>
