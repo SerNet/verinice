@@ -28,28 +28,26 @@
 									icon="fa fa-fw fa-refresh" />
 							</div>
 
-							<div class="ui-g-5">
+							<div class="ui-g-10">
 								<p:commandButton id="completeAll"
 									action="#{task.completeAllTask}"
-									value="#{msgTask['completeAll']}"
-									update=":tableForm:taskTable,:editForm" styleClass="button">
+									value="#{msgTask['completeAll']}" icon="fa fa-fw fa-check"
+									update=":tableForm:taskTable,:editForm">
 									<f:setPropertyActionListener target="#{message.info}"
 										value="Completing all tasks. Please wait..." />
 								</p:commandButton>
 							</div>
-
-							<div class="ui-g-5">
-								<ui:repeat id="outcomeList"
-									value="#{task.selectedTask.outcomes}" var="outcome"
-									rendered="#{task.selectedTask!=null}">
-									<p:commandButton id="complete" action="#{task.completeTask}"
-										value="#{outcome.value}"
-										update=":tableForm,:editForm,:completeHandlerForm">
-										<f:setPropertyActionListener target="#{task.outcomeId}"
-											value="#{outcome.key}" />
-									</p:commandButton>
-								</ui:repeat>
-							</div>
+							<ui:fragment rendered="#{not empty task.selectedTask.outcomes}">
+								<div class="ui-g-12">
+									<p:selectOneButton value="#{task.outcomeId}" label="default">
+										<f:selectItems value="#{task.selectedTask.outcomes}"
+											var="outcome" itemLabel="#{outcome.value}"
+											itemValue="#{outcome.key}" />
+										<p:ajax event="change" listener="#{task.completeTask}"
+											update=":tableForm,:editForm,:completeHandlerForm" />
+									</p:selectOneButton>
+								</div>
+							</ui:fragment>
 
 							<div class="ui-g-12">
 								<p:selectOneMenu id="audit" value="#{task.selectedAuditName}">
@@ -78,24 +76,22 @@
 								</p:panelGrid>
 							</div>
 							<div class="ui-g-12">
-
-								<p:outputPanel id="descriptionPanel">
-									<p:outputPanel rendered="#{task.selectedTask!=null}">
-										<div class="task-description">
-											<p>
-												<h:outputText value="#{task.selectedTask.description}"
-													escape="false" />
-											</p>
-										</div>
-									</p:outputPanel>
-								</p:outputPanel>
+								<ui:fragment id="descriptionPanel"
+									rendered="#{task.selectedTask!=null}">
+									<div class="task-description">
+										<p>
+											<h:outputText value="#{task.selectedTask.description}"
+												escape="false" />
+										</p>
+									</div>
+								</ui:fragment>
 
 								<p:dataTable id="taskTable" var="item" value="#{task.taskList}"
 									rowKey="#{item.id}" selection="#{task.selectedTask}"
 									selectionMode="single" scrollHeight="500" scrollable="true"
 									resizableColumns="true">
 									<p:ajax event="rowSelect" listener="#{task.openTask}"
-										oncomplete="loadLinks();" update=":tableForm,:editForm " />
+										update=":tableForm,:editForm " />
 									<p:column headerText="#{msgTask['title']}"
 										sortBy="#{item.name}" style="width:100px">
 										<h:outputText value="#{item.name}" styleClass="#{item.style}" />
