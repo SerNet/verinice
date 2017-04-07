@@ -27,6 +27,13 @@ import sernet.verinice.model.bsi.MassnahmenUmsetzung;
 import sernet.verinice.service.model.IObjectModelService;
 import sernet.verinice.web.Messages;
 
+/**
+ * Sorts with the {@link NumericStringComparator} by the messages of a property
+ * id.
+ *
+ * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
+ *
+ */
 public final class CompareByTitle implements Comparator<String> {
 
     static final String IMPLEMENTATION_STATUS_UNEDITED = "SingleSelectDummyValue";

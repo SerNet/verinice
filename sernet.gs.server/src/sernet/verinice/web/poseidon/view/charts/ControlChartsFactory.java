@@ -21,6 +21,7 @@ package sernet.verinice.web.poseidon.view.charts;
 
 import java.util.Map;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -29,6 +30,8 @@ import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.HorizontalBarChartModel;
 import org.primefaces.model.chart.LegendPlacement;
 import org.primefaces.model.chart.PieChartModel;
+
+import sernet.verinice.web.poseidon.services.CompareByTitle;
 
 /**
  * @author Benjamin Weißenfels <bw[at]sernet[dot]de>
@@ -41,7 +44,13 @@ public class ControlChartsFactory {
 
 
     public ControlChartsFactory(Map<String, Number> data){
-        this.data = data;
+        this.data = sortDataKeys(data);
+    }
+
+    private Map<String, Number> sortDataKeys(Map<String, Number> unsorted) {
+        SortedMap<String, Number> sortedData = new TreeMap<>(new CompareByTitle());
+        sortedData.putAll(unsorted);
+        return sortedData;
     }
 
     public PieChartModel getPieChartModel(){
