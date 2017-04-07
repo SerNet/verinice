@@ -3,10 +3,14 @@ package sernet.verinice.rcp.account;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 import org.threeten.bp.LocalDate;
 
 import sernet.gs.ui.rcp.main.common.model.PlaceHolder;
@@ -15,7 +19,7 @@ import sernet.verinice.model.common.configuration.Configuration;
 import sernet.verinice.model.licensemanagement.LicenseMessageInfos;
 import sernet.verinice.rcp.ElementTitleCache;
 
-class AccountLabelProvider extends LabelProvider implements ITableLabelProvider {           
+class AccountLabelProvider extends ColumnLabelProvider implements ITableLabelProvider {
 
     private static final Logger LOG = Logger.getLogger(AccountLabelProvider.class);
     
@@ -43,12 +47,12 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
             Configuration account = (Configuration) element;
             GenericPerson person = new GenericPerson(account.getPerson());
             Integer scopeId = account.getPerson().getScopeId();
-            switch (columnIndex) {
+            switch (columnIndex) { 
             case 0:
                 return ElementTitleCache.get(scopeId);
-            case 1:
+            case 1:               
                 return person.getParentName();
-            case 2:
+            case 2:   
                 return account.getUser();
             case 3:
                 return person.getName();
@@ -59,7 +63,7 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
             case 6:
                 return convertToX(account.isLocalAdminUser());
             case 7:
-                return convertToX(account.isScopeOnly());
+                return convertToX(account.isScopeOnly()); 
             case 8:
                 return convertToX(account.isWebUser());
             case 9:
@@ -124,7 +128,7 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
         }
         return ""; //$NON-NLS-1$
     }
-    
+
     public String convertToX(boolean value) {
         return (value) ? "X" : "";
     }
@@ -133,8 +137,18 @@ class AccountLabelProvider extends LabelProvider implements ITableLabelProvider 
     public Image getColumnImage(Object element, int columnIndex) {
         return null;
     }
-    
-    
 
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
+     */
+    @Override
+    public Color getForeground(Object o) {
+        if (o instanceof Configuration && !AccountLoader.isEditAllowed((Configuration) o)) {
+            return Display.getDefault().getSystemColor(SWT.COLOR_GRAY);
+        }
+        return super.getForeground(o);
+    }
 }

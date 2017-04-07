@@ -29,7 +29,9 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import sernet.gs.service.NumericStringComparator;
+import sernet.gs.ui.rcp.main.service.AuthenticationHelper;
 import sernet.gs.ui.rcp.main.service.ServiceFactory;
+import sernet.verinice.interfaces.ApplicationRoles;
 import sernet.verinice.interfaces.IAccountService;
 import sernet.verinice.interfaces.IRightsService;
 import sernet.verinice.model.auth.OriginType;
@@ -45,14 +47,14 @@ import sernet.verinice.service.commands.LoadCurrentUserConfiguration;
  * @author Daniel Murygin <dm[at]sernet[dot]de>
  */
 public final class AccountLoader {
- 
+
     private static final Logger LOG = Logger.getLogger(AccountLoader.class);
 
     private static final NumericStringComparator NSC = new NumericStringComparator();
-    
+
     private AccountLoader() {        
     }
-      
+
     @SuppressWarnings("unchecked")
     public static List<String> loadLoginAndGroupNames() {
         IAccountService accountService = ServiceFactory.lookupAccountService();
@@ -62,7 +64,7 @@ public final class AccountLoader {
         Collections.sort(accountGroups, NSC);
         return accountGroups;
     } 
-    
+
     @SuppressWarnings("unchecked")
     public static List<String> loadLoginNames() {
         IAccountService accountService = ServiceFactory.lookupAccountService();
@@ -70,7 +72,7 @@ public final class AccountLoader {
         Collections.sort(accounts, NSC);
         return accounts;
     } 
-    
+
     @SuppressWarnings("unchecked")
     public static List<String> loadGroupNames() {
         IAccountService accountService = ServiceFactory.lookupAccountService();
@@ -146,5 +148,11 @@ public final class AccountLoader {
         }
         String username = ServiceFactory.lookupAuthService().getUsername();
         return username != null && username.equals(profile.getCreator());
+    }
+
+    public static boolean isEditAllowed(Configuration account) {
+        final boolean isAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_ADMIN });
+        final boolean isLocalAdmin = AuthenticationHelper.getInstance().currentUserHasRole(new String[] { ApplicationRoles.ROLE_LOCAL_ADMIN });
+        return isAdmin || (isLocalAdmin && !account.isAdminUser());
     }
 }
