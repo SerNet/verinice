@@ -64,8 +64,10 @@ public class AllBsiChartsView {
 
     private boolean allItNetworksCalculated;
 
+    private SortedMap<String, Number> allStates;
+
     public void loadTotalData() {
-        SortedMap<String, Number> allStates = calculateTotal();
+        allStates = calculateTotal();
         ControlChartsFactory allChartModelFactory = new ControlChartsFactory(allStates);
         pieModel = allChartModelFactory.getPieChartModel();
         horizontalBarChartModel = allChartModelFactory.getHorizontalBarModel();
@@ -125,6 +127,22 @@ public class AllBsiChartsView {
     }
 
 
+    /**
+     * Checks if the total diagram contains data.
+     *
+     */
+    public boolean dataAvailable(){
+       if(allStates != null){
+           for(Number number  : allStates.values()){
+               if(number.intValue() > 0){
+                   return true;
+               }
+           }
+           return false;
+       } else {
+           return false;
+       }
+    }
 
     public List<VeriniceChartRow> getCharts() {
         return charts;
@@ -182,6 +200,14 @@ public class AllBsiChartsView {
 
     public void setChartService(ChartService chartService) {
         this.chartService = chartService;
+    }
+
+    public SortedMap<String, Number> getAllStates() {
+        return allStates;
+    }
+
+    public void setAllStates(SortedMap<String, Number> allStates) {
+        this.allStates = allStates;
     }
 
 }

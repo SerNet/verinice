@@ -152,3 +152,8 @@ body .topbar-menubar {
 .new-iso-object-panel.ui-datatable table {
   width: auto;
 }
+
+/* No chart data available*/
+p.no-data {
+	text-align: center;
+}

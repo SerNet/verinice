@@ -27,7 +27,7 @@
 							</div>
 						</ui:fragment>
 						<ui:fragment
-							rendered="#{bausteinUmsetzungAllView.totalCalculated}">
+							rendered="#{bausteinUmsetzungAllView.totalCalculated and (not empty bausteinUmsetzungAllView.allStates)}">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="veriniceHorizontalBar" type="bar"
@@ -40,6 +40,11 @@
 										responsive="true" />
 								</div>
 							</div>
+						</ui:fragment>
+
+						<ui:fragment
+							rendered="#{bausteinUmsetzungAllView.totalCalculated and (empty bausteinUmsetzungAllView.allStates)}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</h:form>
 
@@ -57,20 +62,15 @@
 					<p:panel header="Alle IT-Verbünde" toggleable="true">
 						<ui:fragment
 							rendered="#{not bausteinUmsetzungAllView.allItNetworksCalculated}">
-							<p:ajaxStatus
-								style="display:block;margin-bottom:2em; height:50px;">
-								<f:facet name="start">
-									<div style="margin: 0 auto; text-align: center;">
-										<p>Crunching numbers</p>
-										<p:graphicImage name="images/ajax-loader.gif"
-											library="poseidon-layout" />
-									</div>
-								</f:facet>
-							</p:ajaxStatus>
+							<div style="margin: 0 auto; text-align: center;">
+								<p>Crunching numbers</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
 						</ui:fragment>
 
 						<ui:fragment id="charts"
-							rendered="#{bausteinUmsetzungAllView.allItNetworksCalculated}">
+							rendered="#{bausteinUmsetzungAllView.allItNetworksCalculated and (not empty bausteinUmsetzungAllView.charts)}">
 							<ui:repeat value="#{bausteinUmsetzungAllView.charts}" var="chart"
 								toggleable="true">
 								<div class="ui-g">
@@ -88,6 +88,10 @@
 								</div>
 
 							</ui:repeat>
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{bausteinUmsetzungAllView.totalCalculated and (empty bausteinUmsetzungAllView.charts)}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</p:panel>
 				</h:form>

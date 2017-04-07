@@ -28,7 +28,7 @@
 							</div>
 						</ui:fragment>
 						<ui:fragment id="charts"
-							rendered="#{bausteinUmsetzungAllView.totalCalculated}">
+							rendered="#{bausteinUmsetzungAllView.totalCalculated and (not empty bausteinUmsetzungAllView.allStates)}">
 
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
@@ -43,6 +43,11 @@
 								</div>
 							</div>
 						</ui:fragment>
+
+						<ui:fragment rendered="#{bausteinUmsetzungAllView.totalCalculated and (empty bausteinUmsetzungAllView.allStates)}">
+							<p class="no-data" >#{msgWeb['no-data']}</p>
+						</ui:fragment>
+
 					</p:panel>
 				</h:form>
 

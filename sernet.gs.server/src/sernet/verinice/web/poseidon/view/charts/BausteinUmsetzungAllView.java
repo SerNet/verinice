@@ -69,6 +69,8 @@ public class BausteinUmsetzungAllView {
 
     private GroupedByChapterStrategy strategy;
 
+    private Map<String, Map<String, Number>> allStates;
+
     @PostConstruct
     public void init() {
         readParameter();
@@ -94,7 +96,7 @@ public class BausteinUmsetzungAllView {
     }
 
     private void initTotalCharts() {
-        Map<String, Map<String, Number>> allStates = chartService.groupByMassnahmenStates("", strategy.getStrategy());
+        allStates = chartService.groupByMassnahmenStates("", strategy.getStrategy());
         ModulChartsFactory allChartModelFactory = new ModulChartsFactory(allStates);
 
         verticalBarChart = allChartModelFactory.getVerticalBarChartModel();
@@ -213,5 +215,13 @@ public class BausteinUmsetzungAllView {
 
     public void setChartService(ChartService chartService) {
         this.chartService = chartService;
+    }
+
+    public Map<String, Map<String, Number>> getAllStates() {
+        return allStates;
+    }
+
+    public void setAllStates(Map<String, Map<String, Number>> allStates) {
+        this.allStates = allStates;
     }
 }

@@ -20,15 +20,15 @@
 
 				<h:form id="totalChartPanel">
 					<p:panel header="Massnahmenumsetzung gesamt" toggleable="true">
-						<p:outputPanel rendered="#{not allBsiChartsView.totalCalculated}">
+						<ui:fragment rendered="#{not allBsiChartsView.totalCalculated}">
 							<div style="margin: 0 auto; text-align: center;">
 								<p>Crunching numbers</p>
 								<p:graphicImage name="images/ajax-loader.gif"
 									library="poseidon-layout" />
 							</div>
-						</p:outputPanel>
+						</ui:fragment>
 
-						<p:outputPanel rendered="#{allBsiChartsView.totalCalculated}">
+						<ui:fragment rendered="#{allBsiChartsView.totalCalculated and allBsiChartsView.dataAvailable()}">
 							<div class="ui-g">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieChart" type="pie"
@@ -40,7 +40,12 @@
 										responsive="true" />
 								</div>
 							</div>
-						</p:outputPanel>
+						</ui:fragment>
+
+						<ui:fragment
+							rendered="#{allBsiChartsView.totalCalculated and (not allBsiChartsView.dataAvailable())}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
+						</ui:fragment>
 					</p:panel>
 				</h:form>
 
@@ -64,7 +69,7 @@
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{allBsiChartsView.allItNetworksCalculated}">
+							rendered="#{allBsiChartsView.allItNetworksCalculated and (not empty allBsiChartsView.charts)}">
 							<ui:repeat value="#{allBsiChartsView.charts}" var="chart">
 								<div class="ui-g">
 									<div class="ui-g-12 ui-lg-12">
@@ -86,6 +91,11 @@
 								</div>
 
 							</ui:repeat>
+						</ui:fragment>
+
+						<ui:fragment
+							rendered="#{allBsiChartsView.allItNetworksCalculated and (empty allBsiChartsView.charts)}">
+							<p class="no-data">#{msgWeb['no-data']}</p>
 						</ui:fragment>
 					</p:panel>
 				</h:form>
