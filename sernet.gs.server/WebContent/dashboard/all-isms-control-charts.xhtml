@@ -20,28 +20,22 @@
 
 				<h:form id="totalChartPanel">
 					<p:panel header="ISMS Controls all" toggleable="true">
-						<p:outputPanel rendered="#{not allIsmsCatalogsPerOrganization.totalCalculated}">
-							<p:ajaxStatus
-								style="display:block;margin-bottom:2em; height:50px;">
-								<f:facet name="default">
+						<ui:fragment
+							rendered="#{not allIsmsCatalogsPerOrganization.totalCalculated}">
+							<div style="margin: 0 auto; text-align: center;">
+								<p>Crunching numbers</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
 
-								</f:facet>
-
-								<f:facet name="start">
-									<div style="margin: 0 auto; text-align: center;">
-										<p>Crunching numbers</p>
-										<p:graphicImage name="images/ajax-loader.gif"
-											library="poseidon-layout" />
-									</div>
-								</f:facet>
-							</p:ajaxStatus>
-						</p:outputPanel>
-
-						<p:outputPanel rendered="#{allIsmsCatalogsPerOrganization.totalCalculated}">
+						<ui:fragment
+							rendered="#{allIsmsCatalogsPerOrganization.totalCalculated}">
 							<div class="ui-g">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieChart" type="pie"
-										model="#{allIsmsCatalogsPerOrganization.pieModel}" responsive="true" />
+										model="#{allIsmsCatalogsPerOrganization.pieModel}"
+										responsive="true" />
 								</div>
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
 									<p:chart id="verinicePieBar" type="bar"
@@ -49,7 +43,7 @@
 										responsive="true" />
 								</div>
 							</div>
-						</p:outputPanel>
+						</ui:fragment>
 					</p:panel>
 				</h:form>
 
@@ -63,23 +57,19 @@
 			<div class="ui-g-12 ui-lg-12">
 				<h:form id="charts">
 					<p:panel header="Alle Kataloge" toggleable="true">
-						<p:outputPanel
+						<ui:fragment
 							rendered="#{not allIsmsCatalogsPerOrganization.allCatalogsCalculated}">
-							<p:ajaxStatus
-								style="display:block;margin-bottom:2em; height:50px;">
-								<f:facet name="start">
-									<div style="margin: 0 auto; text-align: center;">
-										<p>Crunching numbers</p>
-										<p:graphicImage name="images/ajax-loader.gif"
-											library="poseidon-layout" />
-									</div>
-								</f:facet>
-							</p:ajaxStatus>
-						</p:outputPanel>
+							<div style="margin: 0 auto; text-align: center;">
+								<p>Crunching numbers</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
 
-						<p:outputPanel
+						<ui:fragment
 							rendered="#{allIsmsCatalogsPerOrganization.allCatalogsCalculated}">
-							<ui:repeat value="#{allIsmsCatalogsPerOrganization.charts}" var="chart">
+							<ui:repeat value="#{allIsmsCatalogsPerOrganization.charts}"
+								var="chart">
 								<div class="ui-g">
 									<div class="ui-g-12 ui-lg-12">
 										<h3>#{chart.title}</h3>
@@ -100,14 +90,13 @@
 								</div>
 
 							</ui:repeat>
-						</p:outputPanel>
+						</ui:fragment>
 					</p:panel>
 				</h:form>
 			</div>
 
 			<h:form>
-				<p:remoteCommand
-					id="loadData"
+				<p:remoteCommand id="loadData"
 					action="#{allIsmsCatalogsPerOrganization.loadAllIsmsCatalogs()}"
 					update=":charts" autoRun="true" delay="2" />
 			</h:form>

@@ -18,25 +18,16 @@
 				<h:form id="chartPanel">
 					<p:panel header="#{ismsControlsChartView.organization}">
 
-						<p:outputPanel
+						<ui:fragment
 							rendered="#{not ismsControlsChartView.dataCalculated}">
-							<p:ajaxStatus
-								style="display:block;margin-bottom:2em; height:50px;">
-								<f:facet name="default">
+							<div style="margin: 0 auto; text-align: center;">
+								<p>Crunching numbers</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
 
-								</f:facet>
-
-								<f:facet name="start">
-									<div style="margin: 0 auto; text-align: center;">
-										<p>Crunching numbers</p>
-										<p:graphicImage name="images/ajax-loader.gif"
-											library="poseidon-layout" />
-									</div>
-								</f:facet>
-							</p:ajaxStatus>
-						</p:outputPanel>
-
-						<p:outputPanel id="charts"
+						<ui:fragment id="charts"
 							rendered="#{ismsControlsChartView.dataCalculated}">
 							<div class="ui-g ui-fluid">
 								<p:graphicImage
@@ -51,15 +42,14 @@
 										responsive="true" />
 								</div>
 							</div>
-						</p:outputPanel>
+						</ui:fragment>
 
 					</p:panel>
 				</h:form>
 				<p:messages id="msg" globalOnly="true" autoUpdate="true" />
 
 				<h:form>
-					<p:remoteCommand
-						action="#{ismsControlsChartView.loadData()}"
+					<p:remoteCommand action="#{ismsControlsChartView.loadData()}"
 						autoRun="true" delay="2" update=":chartPanel" />
 				</h:form>
 

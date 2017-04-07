@@ -21,20 +21,11 @@
 				<h:form id="totalChartPanel">
 					<p:panel header="Massnahmenumsetzung gesamt" toggleable="true">
 						<p:outputPanel rendered="#{not allBsiChartsView.totalCalculated}">
-							<p:ajaxStatus
-								style="display:block;margin-bottom:2em; height:50px;">
-								<f:facet name="default">
-
-								</f:facet>
-
-								<f:facet name="start">
-									<div style="margin: 0 auto; text-align: center;">
-										<p>Crunching numbers</p>
-										<p:graphicImage name="images/ajax-loader.gif"
-											library="poseidon-layout" />
-									</div>
-								</f:facet>
-							</p:ajaxStatus>
+							<div style="margin: 0 auto; text-align: center;">
+								<p>Crunching numbers</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
 						</p:outputPanel>
 
 						<p:outputPanel rendered="#{allBsiChartsView.totalCalculated}">
@@ -63,21 +54,16 @@
 			<div class="ui-g-12 ui-lg-12">
 				<h:form id="all-itnetworks">
 					<p:panel header="Alle IT-Verbünde" toggleable="true">
-						<p:outputPanel
+						<ui:fragment
 							rendered="#{not allBsiChartsView.allItNetworksCalculated}">
-							<p:ajaxStatus
-								style="display:block;margin-bottom:2em; height:50px;">
-								<f:facet name="start">
-									<div style="margin: 0 auto; text-align: center;">
-										<p>Crunching numbers</p>
-										<p:graphicImage name="images/ajax-loader.gif"
-											library="poseidon-layout" />
-									</div>
-								</f:facet>
-							</p:ajaxStatus>
-						</p:outputPanel>
+							<div style="margin: 0 auto; text-align: center;">
+								<p>Crunching numbers</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
 
-						<p:outputPanel
+						<ui:fragment
 							rendered="#{allBsiChartsView.allItNetworksCalculated}">
 							<ui:repeat value="#{allBsiChartsView.charts}" var="chart">
 								<div class="ui-g">
@@ -100,7 +86,7 @@
 								</div>
 
 							</ui:repeat>
-						</p:outputPanel>
+						</ui:fragment>
 					</p:panel>
 				</h:form>
 			</div>

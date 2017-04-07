@@ -19,24 +19,15 @@
 			<div class="ui-g-12">
 				<h:form id="chartPanel">
 					<p:panel header="Bausteinumsetzung gesamt">
-						<p:outputPanel
+						<ui:fragment
 							rendered="#{not bausteinUmsetzungAllView.totalCalculated}">
-							<p:ajaxStatus
-								style="display:block;margin-bottom:2em; height:50px;">
-								<f:facet name="default">
-
-								</f:facet>
-
-								<f:facet name="start">
-									<div style="margin: 0 auto; text-align: center;">
-										<p>Crunching numbers</p>
-										<p:graphicImage name="images/ajax-loader.gif"
-											library="poseidon-layout" />
-									</div>
-								</f:facet>
-							</p:ajaxStatus>
-						</p:outputPanel>
-						<p:outputPanel id="charts"
+							<div style="margin: 0 auto; text-align: center;">
+								<p>Crunching numbers</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
+						<ui:fragment id="charts"
 							rendered="#{bausteinUmsetzungAllView.totalCalculated}">
 
 							<div class="ui-g ui-fluid">
@@ -51,7 +42,7 @@
 										responsive="true" />
 								</div>
 							</div>
-						</p:outputPanel>
+						</ui:fragment>
 					</p:panel>
 				</h:form>
 

@@ -20,25 +20,16 @@
 				<h:form id="chartPanel">
 					<p:panel header="Massnahmenumsetzung gesamt">
 
-						<p:outputPanel
+						<ui:fragment
 							rendered="#{not ismsCatalogsPerOrganizationTotal.calculated}">
-							<p:ajaxStatus
-								style="display:block;margin-bottom:2em; height:50px;">
-								<f:facet name="default">
+							<div style="margin: 0 auto; text-align: center;">
+								<p>Crunching numbers</p>
+								<p:graphicImage name="images/ajax-loader.gif"
+									library="poseidon-layout" />
+							</div>
+						</ui:fragment>
 
-								</f:facet>
-
-								<f:facet name="start">
-									<div style="margin: 0 auto; text-align: center;">
-										<p>Crunching numbers</p>
-										<p:graphicImage name="images/ajax-loader.gif"
-											library="poseidon-layout" />
-									</div>
-								</f:facet>
-							</p:ajaxStatus>
-						</p:outputPanel>
-
-						<p:outputPanel id="charts"
+						<ui:fragment id="charts"
 							rendered="#{ismsCatalogsPerOrganizationTotal.calculated}">
 							<div class="ui-g ui-fluid">
 								<div class="ui-g-6 ui-lg-6 ui-md-12 ui-sm-12">
@@ -52,7 +43,7 @@
 										responsive="true" />
 								</div>
 							</div>
-						</p:outputPanel>
+						</ui:fragment>
 					</p:panel>
 				</h:form>
 

@@ -154,16 +154,15 @@
 										</div>
 									</div>
 								</p:outputPanel>
-								<p:outputPanel rendered="#{link.loading}">
-									<p:graphicImage name="images/ajax-loader.gif"
-										library="poseidon-layout" />
-								</p:outputPanel>
+								<ui:fragment rendered="#{link.loading}">
+									<div class="ui-g-12">
+										<p:graphicImage style="text-align: center; margin-left: auto; margin-right: auto;"
+											name="images/ajax-loader.gif" library="poseidon-layout" />
+									</div>
+								</ui:fragment>
 							</p:outputPanel>
 						</p:tab>
 					</p:accordionPanel>
-
-					<p:remoteCommand name="loadLinks" actionListener="#{link.init}"
-						update="editForm:groupAccordion:linkTab" />
 
 					<p:growl id="msg" life="2000" />
 
