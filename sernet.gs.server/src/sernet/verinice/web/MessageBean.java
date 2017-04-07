@@ -37,6 +37,17 @@ public class MessageBean {
         setInfo(null);
     }
     
+    /**
+     * Returns an checked icon if the language match the active setting.
+     */
+    public String getIcon(String language){
+        if(locale.getLanguage().equalsIgnoreCase(language)){
+            return "fa fa-check-circle-o";
+        } else {
+            return "fa fa-circle-o";
+        }
+    }
+
     public void showError() {
         Util.addError("massagePanel", getError()); //$NON-NLS-1$
         setError(null);
